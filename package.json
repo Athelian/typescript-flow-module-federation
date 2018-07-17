@@ -43,6 +43,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
+    "e2e": "cypress open",
+    "postinstall": "npm run flow-typed && npm run apollo-fragments",
     "flow": "flow",
     "flow:coverage": "flow-coverage-report -i 'src/**/*.{js,jsx}' -t html -t json -t text --threshold 80",
     "lint": "eslint 'src/**/*.{js,jsx}'",
@@ -59,8 +61,8 @@
     "check:quality": "npx jsinspect -t 50 src",
     "storybook": "start-storybook -p 6006",
     "build:storybook": "build-storybook",
-    "styleguidist": "styleguidist server",
-    "build:styleguidist": "styleguidist server"
+    "styleguide": "styleguidist server",
+    "build:styleguide": "styleguidist server"
   },
   "browserslist": {
     "development": [
@@ -126,12 +128,12 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.0.0-beta.53",
-    "@babel/plugin-proposal-class-properties": "7.0.0-beta.53",
-    "@babel/preset-env": "7.0.0-beta.53",
-    "@babel/preset-flow": "7.0.0-beta.53",
-    "@babel/preset-react": "7.0.0-beta.53",
-    "@babel/runtime": "7.0.0-beta.53",
+    "@babel/core": "7.0.0-beta.46",
+    "@babel/plugin-proposal-class-properties": "7.0.0-beta.46",
+    "@babel/preset-env": "7.0.0-beta.46",
+    "@babel/preset-flow": "7.0.0-beta.46",
+    "@babel/preset-react": "7.0.0-beta.46",
+    "@babel/runtime": "7.0.0-beta.46",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
     "@storybook/addon-a11y": "^3.4.8",
@@ -158,6 +160,7 @@
     "chalk": "2.4.1",
     "cross-env": "^5.2.0",
     "css-loader": "0.28.11",
+    "cypress": "^3.0.2",
     "dotenv": "5.0.1",
     "dotenv-expand": "4.2.0",
     "eslint": "^4.19.1",
