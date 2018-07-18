@@ -12,6 +12,7 @@ import LoginForm from './components/LoginForm';
 import {
   LoginContainerStyle,
   LoginLogoStyle,
+  LoginErrorStyle,
   LoginLogoNameStyle,
   LoginCopyrightStyle,
   LoginLogoContainerStyle,
@@ -68,9 +69,9 @@ function Login({ location, history }: Props) {
             {loading && <LoadingIcon />}
             {called && data && saveTokenAndRedirect(data.login, () => history.push(redirectUrl))}
             {error && (
-              <p>
+              <div id="errorMsg" classNam={LoginErrorStyle}>
                 <FormattedMessage {...messages.error} />{' '}
-              </p>
+              </div>
             )}
             <LoginForm onLogin={variables => login({ variables })} />{' '}
           </React.Fragment>

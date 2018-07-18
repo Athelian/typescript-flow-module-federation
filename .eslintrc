@@ -2,9 +2,10 @@
   "extends": ["plugin:flowtype/recommended", "airbnb", "prettier", "prettier/react"],
   "env": {
     "jest": true,
-    "browser": true
+    "browser": true,
+    "cypress/globals": true
   },
-  "plugins": ["import", "json", "flowtype", "prettier", "graphql"],
+  "plugins": ["cypress", "import", "json", "flowtype", "prettier", "graphql"],
   "rules": {
     "graphql/template-strings": [
       "error",

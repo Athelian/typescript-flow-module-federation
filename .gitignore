@@ -26,3 +26,6 @@ yarn-error.log*
 # flow
 flow-typed/npm
 flow-coverage
+
+# emotion
+*.emotion.css
