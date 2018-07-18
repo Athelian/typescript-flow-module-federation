@@ -1,0 +1,9 @@
+// @flow
+
+import type { DocumentNode } from 'graphql';
+
+declare module 'graphql-tag' {
+  declare export default function gql(literals: any, ...placeholders: any[]): DocumentNode;
+  declare export function resetCaches(): void;
+  declare export function disableFragmentWarnings(): void;
+}
