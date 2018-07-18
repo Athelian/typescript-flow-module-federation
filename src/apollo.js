@@ -7,6 +7,7 @@ import { createHttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import Raven from 'raven-js';
 import { isDevEnvironment } from './utils/env';
+import { getAuthToken } from './utils/auth';
 import introspectionQueryResultData from './generated/fragmentTypes.json';
 import logger from './utils/logger';
 
@@ -42,7 +43,7 @@ const httpLink = createHttpLink({
 const authLink = setContext((_, { headers }) => ({
   headers: {
     ...headers,
-    authorization: `Bearer `, // FIXME: load jwt token from cookie
+    authorization: `Bearer ${getAuthToken()}`,
   },
 }));
 

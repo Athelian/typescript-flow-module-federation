@@ -3,7 +3,9 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Loadable from 'react-loadable';
+import AuthorizedRoute from 'components/AuthorizedRoute';
 import Login from './modules/login';
+import Order from './modules/order';
 
 const LoadableComponent = loader =>
   Loadable({
@@ -20,6 +22,7 @@ const Routes = () => (
     {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
     <React.StrictMode>
       <Switch>
+        <AuthorizedRoute exact path="/" component={Order} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/internalError" component={InternalError} />
         <Route component={PageNotFound} />
