@@ -1,0 +1,54 @@
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../media/SourceSansPro-Regular.ttf.woff2');
+}
+
+@font-face {
+  font-family: 'Noto Sans JP';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../media/NotoSansJP-Regular.otf');
+}
+
+body {
+  overflow: hidden;
+  font-family: Helvetica , Arial, '游ゴシック体', 'YuGothic', 'メイリオ', 'Meiryo', sans-serif;
+}
+
+body.ssp {
+  font-family: 'Source Sans Pro', Helvetica , Arial, '游ゴシック体', 'YuGothic', 'メイリオ', 'Meiryo', sans-serif;
+}
+
+body.sspnsjp {
+  font-family: 'Source Sans Pro', 'Noto Sans JP', Helvetica , Arial, '游ゴシック体', 'YuGothic', 'メイリオ', 'Meiryo', sans-serif;
+}
+
+button {
+  border: none;
+  background: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+select {
+  border-radius: 0;
+  -webkit-appearance: none;
+  background: url('../media/angle-down.svg') no-repeat calc(100% - 10px) 50%;
+  background-size: 16px 16px;
+}
+
+a {
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  outline: none;
+}
