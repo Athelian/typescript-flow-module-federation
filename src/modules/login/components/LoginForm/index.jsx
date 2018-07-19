@@ -31,9 +31,10 @@ function LoginForm({ onLogin }: Props) {
       validationSchema={LoginSchema}
       onSubmit={onLogin}
       render={({ values, errors, touched, handleChange, handleBlur, handleSubmit, isValid }) => (
-        <form onSubmit={handleSubmit}>
+        <form data-testid="loginForm" onSubmit={handleSubmit}>
           <div className={LoginBoxStyle}>
             <TextInput
+              data-testid="email"
               name="email"
               type="email"
               value={values.email}
@@ -43,6 +44,7 @@ function LoginForm({ onLogin }: Props) {
               error={touched.email && errors.email}
             />
             <TextInput
+              data-testid="password"
               name="password"
               type="password"
               value={values.password}
@@ -52,6 +54,7 @@ function LoginForm({ onLogin }: Props) {
               error={touched.password && errors.password}
             />
             <CustomButton
+              data-testid="submitButton"
               label={<FormattedMessage {...messages.login} />}
               icon={<FontAwesomeIcon icon={faSignInAlt} fixedWidth />}
               color="teal"
