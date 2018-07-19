@@ -22,7 +22,7 @@ import messages from './messages';
 import loginIcon from './media/icon_white.png';
 import loginIconName from './media/logo_white.png';
 
-const LOGIN_MUTAION = gql`
+const LOGIN_MUTATION = gql`
   mutation login($email: Email!, $password: String!) {
     login(email: $email, password: $password) {
       token
@@ -63,7 +63,7 @@ function Login({ location, history }: Props) {
         <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
         <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
       </div>
-      <Mutation mutation={LOGIN_MUTAION}>
+      <Mutation mutation={LOGIN_MUTATION}>
         {(login, { loading, called, error, data }) => (
           <React.Fragment>
             {loading && <LoadingIcon />}
