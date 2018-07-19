@@ -2,10 +2,10 @@ describe('Login', () => {
   it('Show error message when login failed', () => {
     cy.visit('/login');
     const username = 'importer@zenport.io';
-    cy.get('#root > div > form > div > div:nth-child(1) > input')
+    cy.get('input[data-testid="email"]')
       .type(username)
       .should('have.value', username);
-    cy.get('#root > div > form > div > div:nth-child(2) > input')
+    cy.get('input[data-testid="password"]')
       .type('wrong{enter}')
       .should('have.value', 'wrong');
     cy.wait(500);
@@ -16,10 +16,10 @@ describe('Login', () => {
     cy.visit('/login');
     const username = 'importer@zenport.io';
     const password = 'password';
-    cy.get('#root > div > form > div > div:nth-child(1) > input')
+    cy.get('input[data-testid="email"]')
       .type(username)
       .should('have.value', username);
-    cy.get('#root > div > form > div > div:nth-child(2) > input')
+    cy.get('input[data-testid="password"]')
       .type(`${password}{enter}`)
       .should('have.value', password);
     cy.wait(500);
