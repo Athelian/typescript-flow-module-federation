@@ -21,6 +21,7 @@ const CustomButton = ({ label, icon, color, invalid, disabled, ...rest }: Props)
   <button
     type="button"
     className={disabled || invalid ? DisabledButtonStyle(!!invalid) : CustomButtonStyle(color)}
+    disabled={disabled}
     {...rest}
   >
     <span>{label}</span>
