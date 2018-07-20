@@ -37,7 +37,15 @@
             "sourceMap": false
           }
         ],
-        "graphql-tag"
+        "graphql-tag",
+        [
+          "react-remove-properties",
+          {
+            "properties": [
+              "data-testid"
+            ]
+          }
+        ]
       ]
     },
     "development": {
