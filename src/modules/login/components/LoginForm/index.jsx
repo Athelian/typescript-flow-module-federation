@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
-import logger from 'utils/logger';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faSignInAlt from '@fortawesome/fontawesome-pro-solid/faSignInAlt';
 import messages from 'modules/login/messages';
@@ -11,28 +10,31 @@ import { LoginBoxStyle } from 'modules/login/style';
 import TextInput from 'components/TextInput';
 import { CustomButton } from 'components/NavButtons';
 
-const SignUpSchema = Yup.object().shape({
+type Props = {
+  onLogin: Function,
+};
+
+const LoginSchema = Yup.object().shape({
   email: Yup.string()
     .required(<FormattedMessage {...messages.required} />)
     .email(<FormattedMessage {...messages.emailError} />),
   password: Yup.string().required(<FormattedMessage {...messages.required} />),
 });
 
-function LoginForm() {
+function LoginForm({ onLogin }: Props) {
   return (
     <Formik
       initialValues={{
         email: '',
         password: '',
       }}
-      validationSchema={SignUpSchema}
-      onSubmit={values => {
-        logger.warn(values);
-      }}
+      validationSchema={LoginSchema}
+      onSubmit={onLogin}
       render={({ values, errors, touched, handleChange, handleBlur, handleSubmit, isValid }) => (
-        <form onSubmit={handleSubmit}>
+        <form data-testid="loginForm" onSubmit={handleSubmit}>
           <div className={LoginBoxStyle}>
             <TextInput
+              data-testid="email"
               name="email"
               type="email"
               value={values.email}
@@ -42,6 +44,7 @@ function LoginForm() {
               error={touched.email && errors.email}
             />
             <TextInput
+              data-testid="password"
               name="password"
               type="password"
               value={values.password}
@@ -51,6 +54,7 @@ function LoginForm() {
               error={touched.password && errors.password}
             />
             <CustomButton
+              data-testid="submitButton"
               label={<FormattedMessage {...messages.login} />}
               icon={<FontAwesomeIcon icon={faSignInAlt} fixedWidth />}
               color="teal"

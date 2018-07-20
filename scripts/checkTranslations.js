@@ -5,7 +5,7 @@ const chalk = require('chalk');
 const { uniq, difference } = require('ramda');
 const JSON5 = require('json5');
 
-const translationFilesPath = path.join('.', 'src', 'translations');
+const translationFilesPath = path.join('.', 'src','i18n', 'translations');
 const filterFiles = item => path.extname(item.path) === '.json';
 
 const translationFiles = klawSync(translationFilesPath, { filter: filterFiles });
