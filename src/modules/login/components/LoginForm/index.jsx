@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Formik } from 'formik';
+import { Form, Field } from 'zenform';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,6 +9,7 @@ import messages from 'modules/login/messages';
 import { LoginBoxStyle } from 'modules/login/style';
 import TextInput from 'components/TextInput';
 import { CustomButton } from 'components/NavButtons';
+import yupToFormErrors from 'utils/yupToFormErrors';
 
 type Props = {
   onLogin: Function,
@@ -21,37 +22,49 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().required(<FormattedMessage {...messages.required} />),
 });
 
+const onValidate = (values: Object) =>
+  new Promise((resolve, reject) => {
+    LoginSchema.validate(values, { abortEarly: false })
+      .then(() => resolve({}))
+      .catch(error => reject(yupToFormErrors(error)));
+  });
+
 function LoginForm({ onLogin }: Props) {
   return (
-    <Formik
+    <Form
       initialValues={{
         email: '',
         password: '',
       }}
-      validationSchema={LoginSchema}
+      validateOnChange
+      validations={onValidate}
       onSubmit={onLogin}
-      render={({ values, errors, touched, handleChange, handleBlur, handleSubmit, isValid }) => (
-        <form data-testid="loginForm" onSubmit={handleSubmit}>
+      render={({ errors, touched, onSubmit, isInvalid }) => (
+        <form data-testid="loginForm" onSubmit={onSubmit}>
           <div className={LoginBoxStyle}>
-            <TextInput
-              data-testid="email"
+            <Field
               name="email"
-              type="email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              title={<FormattedMessage {...messages.email} />}
-              error={touched.email && errors.email}
+              render={({ input }) => (
+                <TextInput
+                  {...input}
+                  data-testid="email"
+                  type="email"
+                  title={<FormattedMessage {...messages.email} />}
+                  error={touched.email && errors.email}
+                />
+              )}
             />
-            <TextInput
-              data-testid="password"
+            <Field
               name="password"
-              type="password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              title={<FormattedMessage {...messages.password} />}
-              error={touched.password && errors.password}
+              render={({ input }) => (
+                <TextInput
+                  {...input}
+                  data-testid="password"
+                  type="password"
+                  title={<FormattedMessage {...messages.password} />}
+                  error={touched.password && errors.password}
+                />
+              )}
             />
             <CustomButton
               data-testid="submitButton"
@@ -59,7 +72,7 @@ function LoginForm({ onLogin }: Props) {
               icon={<FontAwesomeIcon icon={faSignInAlt} fixedWidth />}
               color="teal"
               type="submit"
-              disabled={!isValid}
+              disabled={isInvalid}
               style={{ boxShadow: 'none', marginTop: '20px' }}
             />
           </div>
