@@ -15,7 +15,7 @@ const DialogContent = ({ onRequestClose }) => (
 storiesOf('Dialog', module).add('normal dialog', () => (
   <DialogProvider>
     {({ openDialog }) => (
-      <button type="button" onClick={() => openDialog(DialogContent, {})}>
+      <button type="button" onClick={() => openDialog(DialogContent, { contentWidth: 300 })}>
         open Dialog
       </button>
     )}

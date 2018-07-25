@@ -1,7 +1,13 @@
 // @flow
 import * as React from 'react';
 import DialogContext from './context';
-import { HiddenStyle, BackdropStyle, FadeOutStyle, DialogStyle } from './style';
+import {
+  HiddenStyle,
+  BackdropStyle,
+  BackDropFadeOutStyle,
+  DialogStyle,
+  DialogFadeOutStyle,
+} from './style';
 
 type Props = {
   children: ({ openDialog: (component: any, props: Object) => void }) => React.Node,
@@ -23,7 +29,7 @@ export default class DialogProvider extends React.Component<Props, State> {
   };
 
   closeDialog = () => {
-    this.setState({ component: null, props: {} });
+    this.setState({ component: null });
   };
 
   state = {
@@ -43,7 +49,17 @@ export default class DialogProvider extends React.Component<Props, State> {
   animationStyle = () => {
     const { shouldApplyAnimation, component } = this.state;
     if (!shouldApplyAnimation) return HiddenStyle;
-    return component ? BackdropStyle : FadeOutStyle;
+    return component ? BackdropStyle : BackDropFadeOutStyle;
+  };
+
+  dialogAnimationStyle = () => {
+    const {
+      shouldApplyAnimation,
+      component,
+      props: { contentWidth },
+    } = this.state;
+    if (!shouldApplyAnimation) return HiddenStyle;
+    return component ? DialogStyle(contentWidth) : DialogFadeOutStyle(contentWidth);
   };
 
   render() {
@@ -55,7 +71,11 @@ export default class DialogProvider extends React.Component<Props, State> {
           {({ component: DialogContent, props, closeDialog, openDialog }) => (
             <React.Fragment>
               <div className={this.animationStyle()} onClick={closeDialog} role="presentation">
-                <div className={DialogStyle} onClick={e => e.stopPropagation()} role="presentation">
+                <div
+                  className={this.dialogAnimationStyle()}
+                  onClick={e => e.stopPropagation()}
+                  role="presentation"
+                >
                   {DialogContent && <DialogContent {...props} onRequestClose={closeDialog} />}
                 </div>
               </div>
