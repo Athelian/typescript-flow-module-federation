@@ -60,7 +60,7 @@ export const shadows = {
 };
 
 export const borderRadiuses = {
-  MAIN: 'border-radius: 3px',
+  MAIN: 'border-radius: 5px',
   CIRCLE: 'border-radius: 50%',
   BUTTON: 'border-radius: 999px',
 };
