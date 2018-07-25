@@ -18,4 +18,3 @@ const DialogContext = React.createContext(
 );
 
 export default DialogContext;
-export const DialogConsumer = DialogContext.Consumer;
