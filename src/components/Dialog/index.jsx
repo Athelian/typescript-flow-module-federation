@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import DialogContext from './context';
-import { BackdropStyle, DialogStyle } from './style';
+import { HiddenStyle, BackdropStyle, FadeOutStyle, DialogStyle } from './style';
 
 type Props = {
   children: ({ openDialog: (component: any, props: Object) => void }) => React.Node,
@@ -12,6 +12,7 @@ type State = {
   props: Object,
   openDialog: (component: React.Node, props: Object) => void,
   closeDialog: () => void,
+  shouldApplyAnimation: boolean,
 };
 
 export default class DialogProvider extends React.Component<Props, State> {
@@ -30,26 +31,34 @@ export default class DialogProvider extends React.Component<Props, State> {
     props: {},
     openDialog: this.openDialog,
     closeDialog: this.closeDialog,
+    shouldApplyAnimation: false,
+  };
+
+  componentDidUpdate() {
+    const { shouldApplyAnimation } = this.state;
+    if (shouldApplyAnimation) return;
+    setTimeout(() => this.setState({ shouldApplyAnimation: true }), 1);
+  }
+
+  animationStyle = () => {
+    const { shouldApplyAnimation, component } = this.state;
+    if (!shouldApplyAnimation) return HiddenStyle;
+    return component ? BackdropStyle : FadeOutStyle;
   };
 
   render() {
     const { children } = this.props;
+    const { shouldApplyAnimation, ...contextValue } = this.state;
     return (
-      <DialogContext.Provider value={{ ...this.state }}>
+      <DialogContext.Provider value={{ ...contextValue }}>
         <DialogContext.Consumer>
           {({ component: DialogContent, props, closeDialog, openDialog }) => (
             <React.Fragment>
-              {DialogContent && (
-                <div className={BackdropStyle} onClick={closeDialog} role="presentation">
-                  <div
-                    className={DialogStyle}
-                    onClick={e => e.stopPropagation()}
-                    role="presentation"
-                  >
-                    <DialogContent {...props} onRequestClose={closeDialog} />
-                  </div>
+              <div className={this.animationStyle()} onClick={closeDialog} role="presentation">
+                <div className={DialogStyle} onClick={e => e.stopPropagation()} role="presentation">
+                  {DialogContent && <DialogContent {...props} onRequestClose={closeDialog} />}
                 </div>
-              )}
+              </div>
               {children({ openDialog })}
             </React.Fragment>
           )}
