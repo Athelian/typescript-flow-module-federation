@@ -10,21 +10,23 @@ type Props = {
 
 type State = {
   component: React.Node,
+  isOpen: boolean,
   props: Object,
 };
 
 export default class DialogProvider extends React.Component<Props, State> {
   state = {
     component: null,
+    isOpen: false,
     props: {},
   };
 
   openDialog = (component: React.Node, props: Object = {}) => {
-    this.setState({ component, props });
+    this.setState({ component, props, isOpen: true });
   };
 
   closeDialog = () => {
-    this.setState({ component: null });
+    this.setState({ isOpen: false });
   };
 
   render() {
@@ -43,17 +45,17 @@ export default class DialogProvider extends React.Component<Props, State> {
     return (
       <DialogContext.Provider value={contextValue}>
         <DialogContext.Consumer>
-          {({ component: DialogContent, props, closeDialog, openDialog }) => (
+          {({ component: DialogContent, props, closeDialog, openDialog, isOpen }) => (
             <React.Fragment>
               <PreventInitialAnimation>
                 <div
-                  className={DialogContent ? BackdropStyle : BackDropFadeOutStyle}
+                  className={isOpen ? BackdropStyle : BackDropFadeOutStyle}
                   onClick={closeDialog}
                   role="presentation"
                 >
                   <div
                     className={
-                      DialogContent ? DialogStyle(contentWidth) : DialogFadeOutStyle(contentWidth)
+                      isOpen ? DialogStyle(contentWidth) : DialogFadeOutStyle(contentWidth)
                     }
                     onClick={e => e.stopPropagation()}
                     role="presentation"

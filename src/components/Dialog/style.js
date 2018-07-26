@@ -9,7 +9,6 @@ export const BackdropStyle = css`
   left: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.3);
-  padding: 100px;
   overflow-y: overlay;
   overflow-x: hidden;
   display: flex;
@@ -30,22 +29,25 @@ export const BackdropStyle = css`
 `;
 
 export const BackDropFadeOutStyle = css`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   @keyframes dissappear {
-    from {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: rgba(0, 0, 0, 0.3);
-    }
     to {
       opacity: 0;
+      z-index: -1;
     }
   }
 
   animation-name: dissappear;
-  animation-duration: 0.4s;
+  animation-duration: 0.3s;
   animation-fill-mode: forwards;
 `;
 
@@ -70,10 +72,8 @@ export const DialogStyle = (contentWidth: number) => css`
 `;
 
 export const DialogFadeOutStyle = (contentWidth: number) => css`
+  width: ${contentWidth}px;
   @keyframes fadeAway {
-    from {
-      width: ${contentWidth}px;
-    }
     to {
       transform: translateY(100px);
       opacity: 0;
