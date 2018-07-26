@@ -39,8 +39,8 @@ function LoginForm({ onLogin }: Props) {
       validateOnChange
       validations={onValidate}
       onSubmit={onLogin}
-      render={({ errors, touched, onSubmit, isInvalid }) => (
-        <form data-testid="loginForm" onSubmit={onSubmit}>
+      render={({ errors, touched, handleSubmit, isInvalid }) => (
+        <form data-testid="loginForm" onSubmit={handleSubmit}>
           <div className={LoginBoxStyle}>
             <Field
               name="email"
