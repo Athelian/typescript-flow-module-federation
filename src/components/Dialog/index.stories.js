@@ -5,7 +5,7 @@ import DialogProvider from './index';
 
 /* eslint-disable react/prop-types */
 const DialogContent = ({ onRequestClose }) => (
-  <div style={{ padding: '50px' }}>
+  <div style={{ padding: '50px', textAlign: 'center' }}>
     <button onClick={onRequestClose} type="button">
       close dialog
     </button>
