@@ -11,6 +11,8 @@ type State = {
 };
 
 export default class PreventInitialAnimation extends React.Component<Props, State> {
+  static defaultProps: Props;
+
   state = {
     shouldApplyAnimation: false,
   };

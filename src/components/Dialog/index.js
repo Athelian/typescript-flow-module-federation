@@ -20,6 +20,8 @@ type State = {
 };
 
 export default class DialogProvider extends React.Component<Props, State> {
+  static defaultProps: Props;
+
   state = {
     component: null,
     isOpen: false,
