@@ -2,10 +2,6 @@
 import { css } from 'react-emotion';
 import { scrollbars, presets } from 'styles/common';
 
-export const HiddenStyle = css`
-  display: none;
-`;
-
 export const BackdropStyle = css`
   position: fixed;
   top: 0;

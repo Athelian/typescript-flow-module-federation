@@ -1,13 +1,8 @@
 // @flow
 import * as React from 'react';
+import PreventInitialAnimation from 'components/PreventInitialAnimation';
 import DialogContext from './context';
-import {
-  HiddenStyle,
-  BackdropStyle,
-  BackDropFadeOutStyle,
-  DialogStyle,
-  DialogFadeOutStyle,
-} from './style';
+import { BackdropStyle, BackDropFadeOutStyle, DialogStyle, DialogFadeOutStyle } from './style';
 
 type Props = {
   children: ({ openDialog: (component: any, props: Object) => void }) => React.Node,
@@ -16,14 +11,14 @@ type Props = {
 type State = {
   component: React.Node,
   props: Object,
-  openDialog: (component: React.Node, props: Object) => void,
-  closeDialog: () => void,
-  shouldApplyAnimation: boolean,
 };
 
 export default class DialogProvider extends React.Component<Props, State> {
-  // declaring no-arrow func to hoist it gives you eslint: don't use bind()
-  // eslint-disable-next-line react/sort-comp
+  state = {
+    component: null,
+    props: {},
+  };
+
   openDialog = (component: React.Node, props: Object = {}) => {
     this.setState({ component, props });
   };
@@ -32,53 +27,41 @@ export default class DialogProvider extends React.Component<Props, State> {
     this.setState({ component: null });
   };
 
-  state = {
-    component: null,
-    props: {},
-    openDialog: this.openDialog,
-    closeDialog: this.closeDialog,
-    shouldApplyAnimation: false,
-  };
-
-  componentDidUpdate() {
-    const { shouldApplyAnimation } = this.state;
-    if (shouldApplyAnimation) return;
-    setTimeout(() => this.setState({ shouldApplyAnimation: true }), 1);
-  }
-
-  animationStyle = () => {
-    const { shouldApplyAnimation, component } = this.state;
-    if (!shouldApplyAnimation) return HiddenStyle;
-    return component ? BackdropStyle : BackDropFadeOutStyle;
-  };
-
-  dialogAnimationStyle = () => {
-    const {
-      shouldApplyAnimation,
-      component,
-      props: { contentWidth },
-    } = this.state;
-    if (!shouldApplyAnimation) return HiddenStyle;
-    return component ? DialogStyle(contentWidth) : DialogFadeOutStyle(contentWidth);
-  };
-
   render() {
     const { children } = this.props;
-    const { shouldApplyAnimation, ...contextValue } = this.state;
+
+    const contextValue = {
+      openDialog: this.openDialog,
+      closeDialog: this.closeDialog,
+      ...this.state,
+    };
+
+    const {
+      props: { contentWidth },
+    } = this.state;
+
     return (
-      <DialogContext.Provider value={{ ...contextValue }}>
+      <DialogContext.Provider value={contextValue}>
         <DialogContext.Consumer>
           {({ component: DialogContent, props, closeDialog, openDialog }) => (
             <React.Fragment>
-              <div className={this.animationStyle()} onClick={closeDialog} role="presentation">
+              <PreventInitialAnimation>
                 <div
-                  className={this.dialogAnimationStyle()}
-                  onClick={e => e.stopPropagation()}
+                  className={DialogContent ? BackdropStyle : BackDropFadeOutStyle}
+                  onClick={closeDialog}
                   role="presentation"
                 >
-                  {DialogContent && <DialogContent {...props} onRequestClose={closeDialog} />}
+                  <div
+                    className={
+                      DialogContent ? DialogStyle(contentWidth) : DialogFadeOutStyle(contentWidth)
+                    }
+                    onClick={e => e.stopPropagation()}
+                    role="presentation"
+                  >
+                    {DialogContent && <DialogContent {...props} onRequestClose={closeDialog} />}
+                  </div>
                 </div>
-              </div>
+              </PreventInitialAnimation>
               {children({ openDialog })}
             </React.Fragment>
           )}
