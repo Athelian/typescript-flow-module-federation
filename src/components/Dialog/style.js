@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { scrollbars, presets } from 'styles/common';
 
-export const BackdropStyle = css`
+const BackDropStyle = css`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -16,6 +16,10 @@ export const BackdropStyle = css`
   align-items: center;
   ${scrollbars.MAIN};
   z-index: 10000;
+`;
+
+export const BackdropFadeInStyle = css`
+  ${BackDropStyle};
 
   @keyframes appear {
     from {
@@ -29,17 +33,12 @@ export const BackdropStyle = css`
 `;
 
 export const BackDropFadeOutStyle = css`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${BackDropStyle};
 
   @keyframes dissappear {
+    from {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
     to {
       opacity: 0;
       z-index: -1;
@@ -47,22 +46,20 @@ export const BackDropFadeOutStyle = css`
   }
 
   animation-name: dissappear;
+  animation-timing-function: ease-out;
   animation-duration: 0.3s;
   animation-fill-mode: forwards;
 `;
 
-export const DialogStyle = (contentWidth: number) => css`
+export const DialogFadeInStyle = (width: number) => css`
   ${presets.BOX};
+  width: ${width}px;
   z-index: 10001;
 
   @keyframes fadeIn {
     from {
       transform: translateY(100px);
-      scale(0, 0);
       opacity: 0;
-    }
-    to {
-      width: ${contentWidth}px;
     }
   }
 
@@ -71,12 +68,15 @@ export const DialogStyle = (contentWidth: number) => css`
   animation-fill-mode: forwards;
 `;
 
-export const DialogFadeOutStyle = (contentWidth: number) => css`
-  width: ${contentWidth}px;
+export const DialogFadeOutStyle = (width: number) => css`
+  ${presets.BOX};
+  width: ${width}px;
+
   @keyframes fadeAway {
     to {
       transform: translateY(100px);
       opacity: 0;
+      z-index: -1;
     }
   }
 

@@ -2,7 +2,12 @@
 import * as React from 'react';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
 import DialogContext from './context';
-import { BackdropStyle, BackDropFadeOutStyle, DialogStyle, DialogFadeOutStyle } from './style';
+import {
+  BackdropFadeInStyle,
+  BackDropFadeOutStyle,
+  DialogFadeInStyle,
+  DialogFadeOutStyle,
+} from './style';
 
 type Props = {
   children: ({ openDialog: (component: any, props: Object) => void }) => React.Node,
@@ -39,7 +44,7 @@ export default class DialogProvider extends React.Component<Props, State> {
     };
 
     const {
-      props: { contentWidth },
+      props: { width },
     } = this.state;
 
     return (
@@ -49,18 +54,22 @@ export default class DialogProvider extends React.Component<Props, State> {
             <React.Fragment>
               <PreventInitialAnimation>
                 <div
-                  className={isOpen ? BackdropStyle : BackDropFadeOutStyle}
+                  className={isOpen ? BackdropFadeInStyle : BackDropFadeOutStyle}
                   onClick={closeDialog}
                   role="presentation"
                 >
                   <div
-                    className={
-                      isOpen ? DialogStyle(contentWidth) : DialogFadeOutStyle(contentWidth)
-                    }
+                    className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
                     onClick={e => e.stopPropagation()}
                     role="presentation"
                   >
-                    {DialogContent && <DialogContent {...props} onRequestClose={closeDialog} />}
+                    {DialogContent && (
+                      <DialogContent
+                        {...props}
+                        onRequestClose={closeDialog}
+                        openDialog={openDialog}
+                      />
+                    )}
                   </div>
                 </div>
               </PreventInitialAnimation>
