@@ -1,17 +1,20 @@
 // @flow
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Loadable from 'react-loadable';
 import AuthorizedRoute from 'components/AuthorizedRoute';
 import Login from './modules/login';
-import Order from './modules/order';
 
 const LoadableComponent = loader =>
+  /* $FlowFixMe: fix later */
   Loadable({
     loader,
     loading: () => null,
   });
+
+// Orders
+const OrderList = LoadableComponent(() => import('./modules/order/list'));
 
 // Error
 const InternalError = LoadableComponent(() => import('./components/InternalError'));
@@ -22,9 +25,11 @@ const Routes = () => (
     {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
     <React.StrictMode>
       <Switch>
-        <AuthorizedRoute exact path="/" component={Order} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/internalError" component={InternalError} />
+        <Redirect exact from="/" to="/order" />
+        {/* order routes */}
+        <AuthorizedRoute exact path="/order" component={OrderList} />
         <Route component={PageNotFound} />
       </Switch>
     </React.StrictMode>
