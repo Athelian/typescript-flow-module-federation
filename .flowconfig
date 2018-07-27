@@ -15,4 +15,6 @@ module.name_mapper='^media\(.*\)$' -> '<PROJECT_ROOT>/src/media/\1'
 module.name_mapper='^styles\(.*\)$' -> '<PROJECT_ROOT>/src/styles/\1'
 module.name_mapper='^types\(.*\)$' -> '<PROJECT_ROOT>/src/types/\1'
 module.name_mapper='^utils\(.*\)$' -> '<PROJECT_ROOT>/src/utils/\1'
+module.file_ext=.graphql
+module.name_mapper.extension='graphql' -> 'empty/object'
 [strict]

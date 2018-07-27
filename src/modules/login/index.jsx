@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,17 +17,9 @@ import {
   LoginLogoContainerStyle,
 } from './style';
 import messages from './messages';
-
+import mutation from './mutation.graphql';
 import loginIcon from './media/icon_white.png';
 import loginIconName from './media/logo_white.png';
-
-const LOGIN_MUTATION = gql`
-  mutation login($email: Email!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-    }
-  }
-`;
 
 type Props = {
   location: {
@@ -63,7 +54,7 @@ function Login({ location, history }: Props) {
         <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
         <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
       </div>
-      <Mutation mutation={LOGIN_MUTATION}>
+      <Mutation mutation={mutation}>
         {(login, { loading, called, error, data }) => (
           <React.Fragment>
             {loading && <LoadingIcon />}
