@@ -2,51 +2,47 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
-import {
-  BackdropFadeInStyle,
-  BackdropFadeOutStyle,
-  DialogFadeInStyle,
-  DialogFadeOutStyle,
-} from './style';
+import { BackdropFadeInStyle, BackdropFadeOutStyle } from 'components/Dialog/style';
+import { SlideInStyle, SlideAwayStyle } from './style';
 
 type Props = {
   isOpen: boolean,
   onRequestClose: () => void,
-  children: ({ openDialog: (options: Object) => void }) => React.Node,
+  children: ({ openSlideView: (options: Object) => void }) => React.Node,
   options: { width: number },
   rootElementId?: string,
 };
 
 const ANIMATION_FINISHED = 500;
 
-export default class Dialog extends React.Component<Props> {
+export default class SlideView extends React.Component<Props> {
   static defaultProps = {
-    rootElementId: 'dialog-root',
+    rootElementId: 'slide-view-root',
   };
 
   constructor() {
     super();
-    this.dialogContainer = document.createElement('div');
+    this.slideViewContainer = document.createElement('div');
   }
 
   componentDidUpdate(prevProps: Props) {
     const { rootElementId } = this.props;
-    const dialogRoot = document.getElementById(rootElementId || 'root');
+    const slideViewRoot = document.getElementById(rootElementId || 'root');
 
-    if (!dialogRoot) return;
+    if (!slideViewRoot) return;
 
     const { isOpen } = this.props;
 
     if (!prevProps.isOpen && isOpen) {
-      dialogRoot.appendChild(this.dialogContainer);
+      slideViewRoot.appendChild(this.slideViewContainer);
     }
 
     if (prevProps.isOpen && !isOpen) {
-      setTimeout(() => dialogRoot.removeChild(this.dialogContainer), ANIMATION_FINISHED);
+      setTimeout(() => slideViewRoot.removeChild(this.slideViewContainer), ANIMATION_FINISHED);
     }
   }
 
-  dialogContainer: HTMLDivElement;
+  slideViewContainer: HTMLDivElement;
 
   render() {
     const {
@@ -66,14 +62,14 @@ export default class Dialog extends React.Component<Props> {
               role="presentation"
             >
               <div
-                className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
+                className={isOpen ? SlideInStyle(width) : SlideAwayStyle(width)}
                 onClick={e => e.stopPropagation()}
                 role="presentation"
               >
                 {children}
               </div>
             </div>,
-            this.dialogContainer
+            this.slideViewContainer
           )}
         </PreventInitialAnimation>
       </div>

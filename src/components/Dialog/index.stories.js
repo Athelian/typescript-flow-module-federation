@@ -1,37 +1,42 @@
-import React from 'react';
+import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
 import { storiesOf } from '@storybook/react';
-import DialogProvider from './index';
+import Dialog from './index';
 
-const NestedDialog = ({ onRequestClose }) => (
-  <div style={{ padding: '50px', textAlign: 'center' }}>
-    <button onClick={onRequestClose} type="button">
-      close dialog
-    </button>
-  </div>
-);
+class DialogControler extends React.Component {
+  state = {
+    isDialogOpen: false,
+  };
 
-const DialogContent = ({ onRequestClose, openDialog }) => (
-  <div style={{ padding: '50px', textAlign: 'center' }}>
-    <button onClick={onRequestClose} type="button">
-      close dialog
-    </button>
-    <div style={{ marginTop: '16px' }}>
-      <button onClick={() => openDialog(NestedDialog, {})} type="button">
-        Open nested dialog
-      </button>
-      <div>which just changes content.</div>
-    </div>
-  </div>
-);
+  open = () => {
+    this.setState({ isDialogOpen: true });
+  };
 
-storiesOf('Dialog', module).add('normal dialog', () => (
-  <DialogProvider>
-    {({ openDialog }) => (
-      <button type="button" onClick={() => openDialog(DialogContent, { width: 300 })}>
-        open Dialog
-      </button>
-    )}
-  </DialogProvider>
-));
+  close = () => {
+    this.setState({ isDialogOpen: false });
+  };
+
+  render() {
+    const { isDialogOpen } = this.state;
+    return (
+      <div>
+        <button type="button" onClick={this.open}>
+          open Dialog
+        </button>
+
+        <Dialog isOpen={isDialogOpen} onRequestClose={this.close} options={{ width: 400 }}>
+          <div style={{ padding: '50px', textAlign: 'center' }}>
+            <button onClick={this.close} type="button">
+              close dialog
+            </button>
+          </div>
+        </Dialog>
+      </div>
+    );
+  }
+}
+
+export default DialogControler;
+
+storiesOf('Dialog', module).add('normal dialog', () => <DialogControler />);
