@@ -195,6 +195,8 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
 
   ```
   yarn build:styleguide
+  cd styleguide
+  now --public // deploy to now.sh
   ```
 
   builds deployment ready styleguide.
@@ -263,26 +265,15 @@ This section describes various build and development tools used in this project 
   First setup shell command for `vscode` from [here](https://code.visualstudio.com/docs/editor/command-line)
 
   ```sh
-  code --install-extension EQuimper.react-native-react-redux &&
   code --install-extension EditorConfig.EditorConfig &&
   code --install-extension Orta.vscode-jest &&
-  code --install-extension christian-kohler.npm-intellisense &&
-  code --install-extension christian-kohler.path-intellisense &&
   code --install-extension dbaeumer.vscode-eslint &&
   code --install-extension esbenp.prettier-vscode &&
   code --install-extension flowtype.flow-for-vscode &&
   code --install-extension joelday.docthis &&
-  code --install-extension lici.require-js &&
-  code --install-extension lihui.vs-color-picker &&
-  code --install-extension mrmlnc.vscode-remark &&
   code --install-extension ms-vscode.node-debug2 &&
   code --install-extension msjsdiag.debugger-for-chrome &&
-  code --install-extension patrys.vscode-code-outline &&
-  code --install-extension sleistner.vscode-fileutils &&
-  code --install-extension waderyan.nodejs-extension-pack &&
-  code --install-extension webfreak.debug &&
-  code --install-extension wix.vscode-import-cost &&
-  code --install-extension xabikos.JavaScriptSnippets
+  code --install-extension wix.vscode-import-cost
   ```
 
 ### Configuration
@@ -290,7 +281,7 @@ This section describes various build and development tools used in this project 
 ```
 ├── config                                // build tool related configs
 │   ├── env.js                            // helper to load appropriate env variables
-│   ├── jest                              // config foler for jest
+│   ├── jest                              // config folder for jest
 │   │   ├── cssTransform.js               // css transformation for jest
 │   │   ├── fileTransform.js              // file transformation for jest
 │   │   └── setupTests.js                 // configuration for setting up jest
@@ -326,7 +317,7 @@ This section describes various build and development tools used in this project 
 │   ├── config.js                         // basic config for storybook
 │   ├── addons.js                         // addons config for storybook
 │   └── webpack.config.js                 // webpack config for storybook
-││
+│
 ├── src                                   // main app, refer app documentation
 │
 ├── scripts                               // folder to organise custom scripts
@@ -461,7 +452,9 @@ build                                    // auto generated build folder containi
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://gitlab.com/zenport.io/web-app/tags).
 
-## Acknowledgments
+### Troubleshooting
+
+Try to run `pkill flow` if you meet a memory issue with `flow` then restart VSCode.
 
 ### Issues
 
