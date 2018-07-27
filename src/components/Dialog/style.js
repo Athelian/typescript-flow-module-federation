@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { scrollbars, presets } from 'styles/common';
 
-const BackDropStyle = css`
+const BackdropStyle = css`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -19,7 +19,7 @@ const BackDropStyle = css`
 `;
 
 export const BackdropFadeInStyle = css`
-  ${BackDropStyle};
+  ${BackdropStyle};
 
   @keyframes appear {
     from {
@@ -32,8 +32,8 @@ export const BackdropFadeInStyle = css`
   animation-fill-mode: forwards;
 `;
 
-export const BackDropFadeOutStyle = css`
-  ${BackDropStyle};
+export const BackdropFadeOutStyle = css`
+  ${BackdropStyle};
 
   @keyframes dissappear {
     from {
