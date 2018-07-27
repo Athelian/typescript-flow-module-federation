@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { equals } from 'ramda';
+import { isEquals } from 'utils/fp';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { WrapperStyle, TooltipStyle, IconStyle } from './style';
 
@@ -38,7 +38,7 @@ export default class Tooltip extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     const { value } = this.props;
-    if (!equals(prevProps.value, value)) {
+    if (!isEquals(prevProps.value, value)) {
       this.show();
       this.startTimeout();
     }
