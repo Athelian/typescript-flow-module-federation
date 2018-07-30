@@ -5,8 +5,11 @@ import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
 import NavBar from './index';
+import EntityIcon from './components/EntityIcon';
 import ViewToggle from './components/ViewToggle';
 import Tabs from './components/Tabs';
+// import FilterInput from './components/FilterInput';
+// import SortInput from './components/SortInput';
 
 class TabsToggle extends React.Component {
   state = {
@@ -23,7 +26,9 @@ class TabsToggle extends React.Component {
 
   render() {
     const { isActive } = this.state;
-    return <Tabs isActive={isActive} onActive={this.onActive} onArchived={this.onArchived} />;
+    return (
+      <Tabs color="RED" isActive={isActive} onActive={this.onActive} onArchived={this.onArchived} />
+    );
   }
 }
 
@@ -31,8 +36,9 @@ storiesOf('Navbar', module).add('title', () => (
   <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
     <div style={{ height: '2000px' }}>
       <NavBar>
-        <ViewToggle />
+        <EntityIcon icon="fasShip" color="RED" />
         <TabsToggle />
+        <ViewToggle color="RED" />
       </NavBar>
       <div style={{ marginTop: '500px' }}>Content</div>
     </div>

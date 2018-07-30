@@ -14,4 +14,5 @@ export const NavBarStyle = css`
 
 export const ChildrenStyle = css`
   flex: 1;
+  display: flex;
 `;

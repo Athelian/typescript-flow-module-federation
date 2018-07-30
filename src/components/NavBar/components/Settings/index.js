@@ -98,7 +98,7 @@ class Settings extends React.Component<Props, State> {
         {isProfileOpen && (
           <div className={DropDownWrapperStyle}>
             <div className={SubMenuWrapperStyle}>
-              <div to="/profile" className={SubMenuItemStyle}>
+              <div className={SubMenuItemStyle}>
                 <div>
                   <Icon icon="fasProfile" />
                 </div>
@@ -106,7 +106,7 @@ class Settings extends React.Component<Props, State> {
                   <FormattedMessage {...messages.profile} />
                 </div>
               </div>
-              <div to="/profile/preferences" className={SubMenuItemStyle}>
+              <div className={SubMenuItemStyle}>
                 <div>
                   <Icon icon="fasCog" />
                 </div>

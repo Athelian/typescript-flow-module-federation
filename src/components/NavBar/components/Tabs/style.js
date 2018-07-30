@@ -4,44 +4,42 @@ import { presets, colors } from 'styles/common';
 
 export const WrapperStyle = css`
   display: flex;
+  height: min-content;
 `;
 
-export const ActiveStyle = (isActive: boolean) => css`
+const TabStyle = css`
   ${presets.BUTTON};
   height: 40px;
   padding: 0 5px;
   white-space: nowrap;
   font-size: 12px;
   letter-spacing: 2px;
-  color: ${isActive ? colors.BLUE : colors.GRAY};
-  border-bottom: 4px solid ${isActive ? colors.BLUE : `${colors.TRANSPARENT}`};
   outline: none;
+`;
+
+export const ActiveStyle = (isActive: boolean, color: string = 'BLUE') => css`
+  ${TabStyle};
+  color: ${isActive ? colors[color] : colors.GRAY_LIGHT};
+  border-bottom: 4px solid ${isActive ? colors[color] : `${colors.TRANSPARENT}`};
   &:hover {
-    border-color: ${isActive ? colors.BLUE : colors.GRAY_LIGHT};
+    border-color: ${isActive ? colors[color] : colors.GRAY_DARK};
   }
   &:focus {
-    color: ${isActive ? colors.BLUE_DARK : colors.GRAY_DARK};
-    border-color: ${isActive ? colors.BLUE_DARK : colors.GRAY};
+    color: ${isActive ? colors[color] : colors.GRAY_DARK};
+    border-color: ${isActive && colors[color]};
   }
 `;
 
-export const ArchivedStyle = (isActive: boolean) => css`
-  ${presets.BUTTON};
-  height: 40px;
-  padding: 0 5px;
-  margin-left: 5px;
-  white-space: nowrap;
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: ${isActive ? colors.GRAY : colors.BLUE};
-  border-bottom: 4px solid ${isActive ? `${colors.TRANSPARENT}` : colors.BLUE};
-  outline: none;
+export const ArchivedStyle = (isActive: boolean, color: string = 'BLUE') => css`
+  ${TabStyle};
+  color: ${isActive ? colors.GRAY_LIGHT : colors[color]};
+  border-bottom: 4px solid ${isActive ? `${colors.TRANSPARENT}` : colors[color]};
   &:hover {
-    border-color: ${isActive ? colors.GRAY_LIGHT : colors.BLUE};
+    border-color: ${isActive ? colors.GRAY_DARK : colors[color]};
   }
   &:focus {
-    color: ${isActive ? colors.GRAY_DARK : colors.BLUE_DARK};
-    border-color: ${isActive ? colors.GRAY : colors.BLUE_DARK};
+    color: ${isActive ? colors.GRAY_DARK : colors[color]};
+    border-color: ${isActive || colors[color]};
   }
 `;
 

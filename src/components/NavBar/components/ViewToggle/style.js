@@ -4,6 +4,7 @@ import { presets, colors, transitions } from 'styles/common';
 
 export const ViewToggleWrapperStyle = css`
   display: flex;
+  height: min-content;
 `;
 
 export const ViewButtonStyle = (isActive: boolean, color: string = 'BLUE') => css`
