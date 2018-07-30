@@ -60,7 +60,7 @@ function Login({ location, history }: Props) {
             {loading && <LoadingIcon />}
             {called && data && saveTokenAndRedirect(data.login, () => history.push(redirectUrl))}
             {error && (
-              <div id="errorMsg" classNam={LoginErrorStyle}>
+              <div id="errorMsg" className={LoginErrorStyle}>
                 <FormattedMessage {...messages.error} />{' '}
               </div>
             )}
