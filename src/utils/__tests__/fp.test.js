@@ -1,6 +1,6 @@
 import { getByPath, getByPathWithDefault } from '../fp';
 
-describe('Functional helper function', () => {
+describe('Functional helper', () => {
   it('should return value from object path', () => {
     const testObj = {
       a: 1,

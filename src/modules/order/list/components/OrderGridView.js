@@ -9,18 +9,28 @@ type Props = {
 };
 
 function OrderGridView({ items, onLoadMore }: Props) {
+  const totalColumns = 3;
   const options = {
     isRowLoaded: index => !!items[index],
     loadMoreRows: onLoadMore,
-    rowCount: 1000,
   };
   return (
     <InfiniteLoaderWrapper
-      type="list"
-      total={items.length}
+      type="grid"
       loaderOptions={options}
-      listOptions={{ width: window.outerWidth, height: window.outerHeight, rowHeight: 100 }}
-      renderItem={({ key, index }) => <OrderItem {...items[index]} key={key} />}
+      renderOptions={{
+        width: window.outerWidth,
+        height: window.outerHeight,
+        columnWidth: window.outerWidth / totalColumns,
+        rowCount: Math.ceil(items.length / totalColumns),
+        rowHeight: 500,
+        columnCount: totalColumns,
+      }}
+      renderItem={({ key, columnIndex, rowIndex, style }) => (
+        <div key={key} style={style}>
+          <OrderItem {...items[rowIndex * 3 + columnIndex]} key={key} />{' '}
+        </div>
+      )}
     />
   );
 }

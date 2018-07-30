@@ -7,11 +7,13 @@ type Props = {
 };
 
 function OrderItem({ id, PO, ...rest }: Props) {
+  if (!id) return null;
+
   return (
-    <div style={{ border: '1px solid green' }}>
+    <React.Fragment>
       <h3> ID: {id} </h3>
       <p> PO: {PO} </p> {JSON.stringify(rest, null, 2)}
-    </div>
+    </React.Fragment>
   );
 }
 
