@@ -2,11 +2,13 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
+import LogoutDialog from 'components/Dialog/LogoutDialog';
 import {
   SettingsWrapperStyle,
   SettingsBodyStyle,
   SettingsCountStyle,
-  DropdownWrapperStyle,
+  NotificationDropDownWrapperStyle,
+  DropDownWrapperStyle,
   SubMenuWrapperStyle,
   SubMenuItemStyle,
 } from './style';
@@ -17,6 +19,7 @@ type Props = {};
 type State = {
   isNotificationOpen: boolean,
   isProfileOpen: boolean,
+  logoutDialogOpen: boolean,
 };
 
 class Settings extends React.Component<Props, State> {
@@ -26,6 +29,7 @@ class Settings extends React.Component<Props, State> {
     this.state = {
       isNotificationOpen: false,
       isProfileOpen: false,
+      logoutDialogOpen: false,
     };
   }
 
@@ -66,14 +70,14 @@ class Settings extends React.Component<Props, State> {
     this.setState({ isProfileOpen: !isProfileOpen, isNotificationOpen: false });
   };
 
-  handleLogout = (client: any) => {
-    client.resetStore();
+  toggleLogoutDialog = () => {
+    this.setState(previous => ({ logoutDialogOpen: !previous.logoutDialogOpen }));
   };
 
   wrapperRef: ?HTMLDivElement;
 
   render() {
-    const { isNotificationOpen, isProfileOpen } = this.state;
+    const { isNotificationOpen, isProfileOpen, logoutDialogOpen } = this.state;
 
     return (
       <div className={SettingsWrapperStyle} ref={this.setWrapperRef}>
@@ -83,28 +87,49 @@ class Settings extends React.Component<Props, State> {
             <Icon icon="fasNotification" />
           </button>
           <button tabIndex={-1} onClick={this.toggleProfile} type="button">
-            <Icon icon="fasProfile" />
+            Z
           </button>
         </div>
         {isNotificationOpen && (
-          <div className={DropdownWrapperStyle}>
+          <div className={NotificationDropDownWrapperStyle}>
             <div className={SubMenuWrapperStyle}>There is nothing to notice you.</div>
           </div>
         )}
         {isProfileOpen && (
-          <div className={DropdownWrapperStyle}>
+          <div className={DropDownWrapperStyle}>
             <div className={SubMenuWrapperStyle}>
               <div to="/profile" className={SubMenuItemStyle}>
-                <Icon icon="farUser" />
-                <FormattedMessage {...messages.profile} />
+                <div>
+                  <Icon icon="fasProfile" />
+                </div>
+                <div>
+                  <FormattedMessage {...messages.profile} />
+                </div>
               </div>
               <div to="/profile/preferences" className={SubMenuItemStyle}>
-                <Icon icon="farCog" />
-                <FormattedMessage {...messages.preferences} />
+                <div>
+                  <Icon icon="fasCog" />
+                </div>
+                <div>
+                  <FormattedMessage {...messages.preferences} />
+                </div>
+              </div>
+              <div
+                className={SubMenuItemStyle}
+                onClick={this.toggleLogoutDialog}
+                role="presentation"
+              >
+                <div>
+                  <Icon icon="fasLogout" />
+                </div>
+                <div>
+                  <FormattedMessage {...messages.logout} />
+                </div>
               </div>
             </div>
           </div>
         )}
+        <LogoutDialog isOpen={logoutDialogOpen} onRequestClose={this.toggleLogoutDialog} />
       </div>
     );
   }

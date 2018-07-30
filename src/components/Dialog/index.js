@@ -12,7 +12,7 @@ import {
 type Props = {
   isOpen: boolean,
   onRequestClose: () => void,
-  children: ({ openDialog: (options: Object) => void }) => React.Node,
+  children: React.Node,
   options: { width: number },
   rootElementId?: string,
 };
@@ -21,7 +21,7 @@ const ANIMATION_FINISHED = 500;
 
 export default class Dialog extends React.Component<Props> {
   static defaultProps = {
-    rootElementId: 'dialog-root',
+    rootElementId: 'root',
   };
 
   constructor() {

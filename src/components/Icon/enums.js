@@ -8,13 +8,14 @@ import farCheck from '@fortawesome/fontawesome-pro-regular/faCheckCircle';
 import fasBan from '@fortawesome/fontawesome-pro-solid/faBan';
 
 import farLogout from '@fortawesome/fontawesome-pro-regular/faSignOutAlt';
-import farUser from '@fortawesome/fontawesome-pro-regular/faUser';
+import fasLogout from '@fortawesome/fontawesome-pro-solid/faSignOutAlt';
+import fasUser from '@fortawesome/fontawesome-pro-solid/faUser';
 import farCogs from '@fortawesome/fontawesome-pro-regular/faCogs';
-import farCog from '@fortawesome/fontawesome-pro-regular/faCog';
+import fasCog from '@fortawesome/fontawesome-pro-solid/faCog';
 import farNotification from '@fortawesome/fontawesome-pro-regular/faBell';
 import fasNotification from '@fortawesome/fontawesome-pro-solid/faBell';
-import farProfile from '@fortawesome/fontawesome-pro-regular/faUserCircle';
-import fasProfile from '@fortawesome/fontawesome-pro-solid/faUserCircle';
+import farProfile from '@fortawesome/fontawesome-pro-regular/faAddressCard';
+import fasProfile from '@fortawesome/fontawesome-pro-solid/faAddressCard';
 
 export default {
   fasShip,
@@ -25,8 +26,9 @@ export default {
   farCheck,
   fasBan,
   farLogout,
-  farUser,
-  farCog,
+  fasLogout,
+  fasUser,
+  fasCog,
   farCogs,
   farNotification,
   fasNotification,
