@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
-import Icon from 'components/Icon';
-import { NavBarStyle, ChildrenWrapperStyle, MandatoryStyle } from './style';
+import Settings from './components/Settings';
+import { NavBarStyle, ChildrenStyle } from './style';
 
 type Props = {
   children: React.Node,
@@ -10,15 +10,8 @@ type Props = {
 function NavBar({ children }: Props) {
   return (
     <div className={NavBarStyle}>
-      <div className={ChildrenWrapperStyle}>{children}</div>
-      <div className={MandatoryStyle}>
-        <div>
-          <Icon icon="fasArchive" />
-        </div>
-        <div>
-          <Icon icon="fasCheck" />
-        </div>
-      </div>
+      <div className={ChildrenStyle}>{children}</div>
+      <Settings />
     </div>
   );
 }

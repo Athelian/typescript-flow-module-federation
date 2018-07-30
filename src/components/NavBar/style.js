@@ -12,13 +12,6 @@ export const NavBarStyle = css`
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 `;
 
-export const ChildrenWrapperStyle = css`
+export const ChildrenStyle = css`
   flex: 1;
-`;
-
-export const MandatoryStyle = css`
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  display: flex;
 `;
