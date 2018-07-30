@@ -2815,23 +2815,6 @@ babel-plugin-check-es2015-constants@^6.22.0:
   dependencies:
     babel-runtime "^6.22.0"
 
-babel-plugin-emotion@^9.2.5:
-  version "9.2.5"
-  resolved "https://registry.yarnpkg.com/babel-plugin-emotion/-/babel-plugin-emotion-9.2.5.tgz#0046e03be5c16276f85380476f88c9fcbf7c9536"
-  dependencies:
-    "@babel/helper-module-imports" "7.0.0-beta.51"
-    "@emotion/babel-utils" "^0.6.4"
-    "@emotion/hash" "^0.6.2"
-    "@emotion/memoize" "^0.6.1"
-    "@emotion/stylis" "^0.6.10"
-    babel-plugin-macros "^2.0.0"
-    babel-plugin-syntax-jsx "^6.18.0"
-    convert-source-map "^1.5.0"
-    find-root "^1.1.0"
-    mkdirp "^0.5.1"
-    source-map "^0.5.7"
-    touch "^1.0.0"
-
 babel-plugin-emotion@^9.2.6:
   version "9.2.6"
   resolved "https://registry.yarnpkg.com/babel-plugin-emotion/-/babel-plugin-emotion-9.2.6.tgz#992d48f316c20610c28a95ae90e6bd193014eec5"
@@ -2963,9 +2946,9 @@ babel-plugin-named-asset-import@1.0.0-next.3e165448:
   version "1.0.0-next.3e165448"
   resolved "https://registry.yarnpkg.com/babel-plugin-named-asset-import/-/babel-plugin-named-asset-import-1.0.0-next.3e165448.tgz#f5ef4e118eeda727fcb7d4847aae1e1cf1bfe36b"
 
-babel-plugin-ramda@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/babel-plugin-ramda/-/babel-plugin-ramda-1.6.1.tgz#600efdcc2fe85620a6619cbccbd491f8699272e8"
+babel-plugin-ramda@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/babel-plugin-ramda/-/babel-plugin-ramda-1.6.2.tgz#006915bf76535a4c4afcc2b6f7b1e372d16fd145"
   dependencies:
     "@babel/helper-module-imports" "^7.0.0-beta.40"
     ramda "0.x"
@@ -5015,9 +4998,9 @@ date-fns@^1.27.2:
   version "1.29.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.29.0.tgz#12e609cdcb935127311d04d33334e2960a2a54e6"
 
-date-fns@^2.0.0-alpha.11:
-  version "2.0.0-alpha.11"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.11.tgz#586e855107dc4717ba4d9f2c41cf12c3b72512c0"
+date-fns@^2.0.0-alpha.14:
+  version "2.0.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.14.tgz#7a8398a4160816fc141ca8541a6d048eddc27ddf"
 
 date-now@^0.1.4:
   version "0.1.4"
@@ -10446,9 +10429,13 @@ prettier-eslint@^8.5.0:
     typescript-eslint-parser "^16.0.0"
     vue-eslint-parser "^2.0.2"
 
-prettier@^1.12.1, prettier@^1.13.7, prettier@^1.7.0:
+prettier@^1.12.1, prettier@^1.7.0:
   version "1.13.7"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.13.7.tgz#850f3b8af784a49a6ea2d2eaa7ed1428a34b7281"
+
+prettier@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.0.tgz#847c235522035fd988100f1f43cf20a7d24f9372"
 
 pretty-bytes@^4.0.2:
   version "4.0.2"
@@ -10886,9 +10873,9 @@ react-group@^1.0.6:
   dependencies:
     prop-types "^15.6.0"
 
-react-hot-loader@^4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.3.tgz#37409a3341c7787563d0972007ba02521f82f5d5"
+react-hot-loader@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.4.tgz#4f9bdd55bb20d77a6ae8931fa1c187e5f0ce6279"
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -10996,9 +10983,9 @@ react-style-proptype@^3.0.0:
   dependencies:
     prop-types "^15.5.4"
 
-react-styleguidist@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/react-styleguidist/-/react-styleguidist-7.1.0.tgz#266c5ff21fc14b3a52567582500ff613583e72c8"
+react-styleguidist@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/react-styleguidist/-/react-styleguidist-7.1.1.tgz#ed1dc2969418884fbb853c4c8303e79ae7ae375d"
   dependencies:
     "@vxna/mini-html-webpack-template" "^0.1.7"
     acorn "^5.7.1"
@@ -11050,6 +11037,7 @@ react-styleguidist@^7.1.0:
     react-group "^1.0.6"
     react-icons "^2.2.7"
     react-lifecycles-compat "^3.0.4"
+    recast "^0.13.0"
     remark "^9.0.0"
     style-loader "^0.21.0"
     to-ast "^1.0.0"
@@ -11068,9 +11056,9 @@ react-test-renderer@^16.4.1:
     prop-types "^15.6.0"
     react-is "^16.4.1"
 
-react-testing-library@^4.1.3:
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-4.1.3.tgz#f90e2b91f1c3567e96d8286a10d7257822269536"
+react-testing-library@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-4.1.5.tgz#6f7bc01b8d67383b6b27900107a1a984807e32cb"
   dependencies:
     dom-testing-library "^3.0.1"
     wait-for-expect "^1.0.0"
@@ -12205,9 +12193,9 @@ staged-git-files@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/staged-git-files/-/staged-git-files-1.1.1.tgz#37c2218ef0d6d26178b1310719309a16a59f8f7b"
 
-start-server-and-test@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/start-server-and-test/-/start-server-and-test-1.5.0.tgz#fbcb50c6a865837b233f932e167d20d3b18d844c"
+start-server-and-test@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/start-server-and-test/-/start-server-and-test-1.7.0.tgz#ceaf0d944dccd3ba4caffbbc9e456ce2ce074243"
   dependencies:
     bluebird "3.5.1"
     check-more-types "2.24.0"
