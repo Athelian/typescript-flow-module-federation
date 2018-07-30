@@ -7,23 +7,22 @@ import { createHttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import Raven from 'raven-js';
 import { isDevEnvironment } from './utils/env';
-import { getAuthToken } from './utils/auth';
+import { getAuthToken, reloadPageOnExpireToken } from './utils/auth';
 import introspectionQueryResultData from './generated/fragmentTypes.json';
 import logger from './utils/logger';
 
 const errorLogger = errors => {
-  if (!isDevEnvironment) {
-    const filterLoginErrors = allErrors =>
-      allErrors.filter(error => !(error.path && error.path.includes('login')));
-
-    filterLoginErrors(errors).forEach(error => {
-      Raven.captureException(error, error);
-    });
-  } else {
-    errors.forEach(({ message, locations, path }) =>
-      logger.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
-    );
-  }
+  errors.forEach(error => {
+    const { message, locations, path } = error;
+    if (!isDevEnvironment) {
+      if (!(path && path.includes('login'))) Raven.captureException(error, error);
+    } else {
+      logger.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+    }
+    if (message.includes('Token is invalid')) {
+      reloadPageOnExpireToken();
+    }
+  });
 };
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
