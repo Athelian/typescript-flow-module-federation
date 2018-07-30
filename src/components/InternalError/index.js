@@ -16,10 +16,14 @@ import {
 import loginIcon from './media/icon_white.png';
 import messages from './messages';
 
-export default function InternalError() {
+type Props = {
+  onReportError: Function,
+};
+
+export default function InternalError({ onReportError }: Props) {
   return (
     <div className={InternalErrorContainerStyle}>
-      <div className={InternalErrorTitleContainerStyle}>
+      <div role="presentation" onClick={onReportError} className={InternalErrorTitleContainerStyle}>
         <h1 className={InternalErrorH1Style}>
           {isDevEnvironment ? (
             <img

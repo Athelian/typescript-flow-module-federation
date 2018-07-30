@@ -8,6 +8,7 @@ export const InternalErrorContainerStyle = css`
   background: ${gradients.BLUE_TEAL_DIAGONAL};
   justify-content: space-between;
   color: #fff;
+  cursor: pointer;
 `;
 
 export const InternalErrorTitleContainerStyle = css`
