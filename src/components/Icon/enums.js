@@ -17,6 +17,9 @@ import fasNotification from '@fortawesome/fontawesome-pro-solid/faBell';
 import farProfile from '@fortawesome/fontawesome-pro-regular/faAddressCard';
 import fasProfile from '@fortawesome/fontawesome-pro-solid/faAddressCard';
 
+import fasWaterfall from '@fortawesome/fontawesome-pro-solid/faThLarge';
+import farTable from '@fortawesome/fontawesome-pro-regular/faTable';
+
 export default {
   fasShip,
   fasTrash,
@@ -34,4 +37,6 @@ export default {
   fasNotification,
   farProfile,
   fasProfile,
+  fasWaterfall,
+  farTable,
 };
