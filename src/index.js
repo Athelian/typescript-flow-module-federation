@@ -30,7 +30,10 @@ const renderApp = Component => {
       <LanguageProvider>
         <React.Fragment>
           {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
-          <Component />
+          {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
+          <React.StrictMode>
+            <Component />
+          </React.StrictMode>
         </React.Fragment>
       </LanguageProvider>
     </ApolloProvider>,

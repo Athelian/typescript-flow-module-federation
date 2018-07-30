@@ -55,8 +55,9 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
         />
       </div>
       <button
-        class="css-nn62a1"
+        class="css-oydwx5"
         data-testid="submitButton"
+        disabled=""
         style="box-shadow: none; margin-top: 20px;"
         type="submit"
       >
@@ -221,8 +222,9 @@ exports[`<LoginForm /> should render without crash 1`] = `
         />
       </div>
       <button
-        class="css-nn62a1"
+        class="css-oydwx5"
         data-testid="submitButton"
+        disabled=""
         style="box-shadow: none; margin-top: 20px;"
         type="submit"
       >

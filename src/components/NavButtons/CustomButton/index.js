@@ -14,13 +14,12 @@ type Props = {
   icon?: any,
   color: 'gray' | 'blue' | 'teal' | 'red',
   disabled?: boolean,
-  invalid?: boolean,
 };
 
-const CustomButton = ({ label, icon, color, invalid, disabled, ...rest }: Props) => (
+const CustomButton = ({ label, icon, color, disabled, ...rest }: Props) => (
   <button
     type="button"
-    className={disabled || invalid ? DisabledButtonStyle(!!invalid) : CustomButtonStyle(color)}
+    className={disabled ? DisabledButtonStyle(!!disabled) : CustomButtonStyle(color)}
     disabled={disabled}
     {...rest}
   >
@@ -32,7 +31,6 @@ const CustomButton = ({ label, icon, color, invalid, disabled, ...rest }: Props)
 CustomButton.defaultProps = {
   icon: '',
   disabled: false,
-  invalid: false,
 };
 
 export default CustomButton;

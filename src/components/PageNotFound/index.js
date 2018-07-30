@@ -15,7 +15,7 @@ import loginIcon from './media/icon_white.png';
 import messages from './messages';
 
 type Props = {
-  goBack: Function,
+  goBack?: Function,
 };
 
 const PageNotFound = ({ goBack }: Props) => (
@@ -46,5 +46,9 @@ const PageNotFound = ({ goBack }: Props) => (
     </div>
   </div>
 );
+
+PageNotFound.defaultProps = {
+  goBack: () => window.history.back(),
+};
 
 export default PageNotFound;

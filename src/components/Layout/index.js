@@ -3,10 +3,10 @@ import * as React from 'react';
 import Raven from 'raven-js';
 import { isDevEnvironment } from 'utils/env';
 import InternalError from 'components/InternalError';
+import Authorized from 'components/Authorized';
 
 type Props = {
   children: React.Node,
-  navBar?: React.Node,
 };
 
 type State = {
@@ -14,10 +14,6 @@ type State = {
 };
 
 export default class Layout extends React.PureComponent<Props, State> {
-  static defaultProps = {
-    navBar: null,
-  };
-
   state: State = { hasError: false };
 
   onReportError = () => {
@@ -34,18 +30,13 @@ export default class Layout extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { navBar, children } = this.props;
+    const { children } = this.props;
     const { hasError } = this.state;
 
     if (hasError) {
       return <InternalError onReportError={this.onReportError} />;
     }
 
-    return (
-      <div>
-        {navBar}
-        {children}
-      </div>
-    );
+    return <Authorized>{children}</Authorized>;
   }
 }

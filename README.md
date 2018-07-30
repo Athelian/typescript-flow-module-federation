@@ -416,7 +416,7 @@ build                                    // auto generated build folder containi
 
   for querying graphql.
 
-* [react-router-dom](https://github.com/ReactTraining/react-router)
+* [reach-router](https://github.com/reach/router)
 
   for managing routes.
 

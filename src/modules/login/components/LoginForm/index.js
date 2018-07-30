@@ -39,7 +39,7 @@ function LoginForm({ onLogin }: Props) {
       validateOnChange
       validations={onValidate}
       onSubmit={onLogin}
-      render={({ errors, touched, handleSubmit, isInvalid }) => (
+      render={({ errors, touched, handleSubmit, isInvalid, isDirty }) => (
         <form data-testid="loginForm" onSubmit={handleSubmit}>
           <div className={LoginBoxStyle}>
             <Field
@@ -72,7 +72,7 @@ function LoginForm({ onLogin }: Props) {
               icon={<FontAwesomeIcon icon={faSignInAlt} fixedWidth />}
               color="teal"
               type="submit"
-              disabled={isInvalid}
+              disabled={isInvalid || !isDirty}
               style={{ boxShadow: 'none', marginTop: '20px' }}
             />
           </div>

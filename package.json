@@ -13,6 +13,7 @@
     "@fortawesome/pro-regular-svg-icons": "^5.2.0",
     "@fortawesome/pro-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
+    "@reach/router": "^1.1.1",
     "apollo-cache-inmemory": "^1.2.6",
     "apollo-client": "^2.3.7",
     "apollo-link": "^1.2.2",
@@ -39,7 +40,6 @@
     "react-intercom": "^1.0.14",
     "react-intl": "^2.4.0",
     "react-loadable": "^5.4.0",
-    "react-router-dom": "^4.3.1",
     "react-virtualized": "^9.20.1",
     "yup": "^0.26.0",
     "zenform": "^0.0.0-beta.9"

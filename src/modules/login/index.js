@@ -22,17 +22,8 @@ import loginIcon from './media/icon_white.png';
 import loginIconName from './media/logo_white.png';
 
 type Props = {
-  location: {
-    state?: {
-      from?: {
-        pathname: string,
-        search: string,
-      },
-    },
-  },
-  history: {
-    push: Function,
-  },
+  redirectUrl?: string,
+  navigate?: Function,
 };
 
 const saveTokenAndRedirect = ({ token }, redirectUrl) => {
@@ -40,13 +31,9 @@ const saveTokenAndRedirect = ({ token }, redirectUrl) => {
   redirectUrl();
 };
 
-function Login({ location, history }: Props) {
-  const redirectUrl =
-    location.state && location.state.from
-      ? `${location.state.from.pathname}${location.state.from.search}`
-      : '/';
-  if (isAuthenticated()) {
-    history.push(redirectUrl);
+function Login({ redirectUrl, navigate }: Props) {
+  if (isAuthenticated() && navigate) {
+    navigate(redirectUrl);
   }
   return !isAuthenticated() ? (
     <div className={LoginContainerStyle}>
@@ -58,7 +45,9 @@ function Login({ location, history }: Props) {
         {(login, { loading, called, error, data }) => (
           <React.Fragment>
             {loading && <LoadingIcon />}
-            {called && data && saveTokenAndRedirect(data.login, () => history.push(redirectUrl))}
+            {called &&
+              data &&
+              saveTokenAndRedirect(data.login, () => navigate && navigate(redirectUrl))}
             {error && (
               <div id="errorMsg" className={LoginErrorStyle}>
                 <FormattedMessage {...messages.error} />{' '}
@@ -81,5 +70,10 @@ function Login({ location, history }: Props) {
     <LoadingIcon />
   );
 }
+
+Login.defaultProps = {
+  redirectUrl: '/',
+  navigate: () => {},
+};
 
 export default Login;

@@ -1,38 +1,33 @@
 // @flow
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { Router } from '@reach/router';
 import Loadable from 'react-loadable';
-import AuthorizedRoute from 'components/AuthorizedRoute';
+import LoadingIcon from './components/LoadingIcon';
 import Login from './modules/login';
+import DashBoard from './modules/dashboard';
+import Layout from './components/Layout';
 
 const LoadableComponent = loader =>
-  /* $FlowFixMe: fix later */
   Loadable({
     loader,
-    loading: () => null,
+    loading: () => <LoadingIcon />,
   });
 
-// Orders
-const OrderList = LoadableComponent(() => import('./modules/order/list'));
-
-// Error
-const InternalError = LoadableComponent(() => import('./components/InternalError'));
 const PageNotFound = LoadableComponent(() => import('./components/PageNotFound'));
+const AsyncOrder = LoadableComponent(() => import('./modules/order'));
+const AsyncProduct = LoadableComponent(() => import('./modules/product'));
 
 const Routes = () => (
   <Router>
-    {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
-    <React.StrictMode>
-      <Switch>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/internalError" component={InternalError} />
-        <Redirect exact from="/" to="/order" />
-        {/* order routes */}
-        <AuthorizedRoute exact path="/order" component={OrderList} />
-        <Route component={PageNotFound} />
-      </Switch>
-    </React.StrictMode>
+    <Layout path="/">
+      <DashBoard path="/" />
+      <AsyncOrder path="order/*" />
+      <AsyncProduct path="product/*" />
+      <PageNotFound default />
+    </Layout>
+    <Login path="/login" />
+    <PageNotFound default />
   </Router>
 );
 
