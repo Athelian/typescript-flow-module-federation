@@ -12,24 +12,19 @@ import {
 
 export const WrapperStyle = css`
   position: relative;
+  margin-left: 16px;
 `;
 
 export const ButtonStyle = css`
   ${presets.BUTTON};
-  ${borderRadiuses.BUTTON};
-  ${shadows.NAV_BUTTON};
   ${transitions.MAIN};
   ${fontSizes.MAIN};
   position: relative;
-  background: #fff;
   color: ${colors.GRAY_LIGHT};
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
+  outline: none;
   &:hover {
-    background-color: ${colors.GRAY_SUPER_LIGHT};
-  }
-  &:focus {
-    border: 1.5px solid ${colors.TEAL};
   }
 `;
 
@@ -80,7 +75,7 @@ export const ButtonsWrapper = css`
 export const ResetButtonStyle = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
-  color: ${colors.BLUE};
+  color: ${colors.TEAL};
   padding: 5px 10px;
   margin-right: 20px;
   text-align: center;
@@ -93,7 +88,7 @@ export const SubmitButtonStyle = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
   color: #fff;
-  background-color: ${colors.BLUE};
+  background-color: ${colors.TEAL};
   ${fontSizes.SMALL};
   ${transitions.MAIN};
   padding: 5px 10px;

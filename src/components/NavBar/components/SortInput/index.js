@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faSortDesc from '@fortawesome/fontawesome-pro-solid/faSortAmountDown';
-import faSortAsc from '@fortawesome/fontawesome-pro-solid/faSortAmountUp';
+import Icon from 'components/Icon';
 import { WrapperStyle, ButtonStyle, InputStyle } from './style';
 
 type Props = {
@@ -15,27 +13,7 @@ type Props = {
   onChange: ({ field: string, ascending: boolean }) => void,
 };
 
-type State = {
-  focus: boolean,
-};
-
-class SortInput extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      focus: false,
-    };
-  }
-
-  onFocus = () => {
-    this.setState({ focus: true });
-  };
-
-  onUnFocus = () => {
-    this.setState({ focus: false });
-  };
-
+class SortInput extends React.Component<Props> {
   onFieldChange = (event: Event) => {
     const { onChange } = this.props;
 
@@ -50,34 +28,20 @@ class SortInput extends React.Component<Props, State> {
     onChange({ field: sort, ascending: !ascending });
   };
 
-  select: ?HTMLSelectElement;
-
   render() {
     const { sort, ascending, fields } = this.props;
-    const { focus } = this.state;
 
     return (
-      <div className={WrapperStyle(focus)}>
-        <select
-          value={sort}
-          onFocus={this.onFocus}
-          onBlur={this.onUnFocus}
-          className={InputStyle}
-          onChange={this.onFieldChange}
-        >
+      <div className={WrapperStyle}>
+        <select value={sort} className={InputStyle} onChange={this.onFieldChange}>
           {fields.map(field => (
             <option value={field.value} key={field.value}>
               {field.title}
             </option>
           ))}
         </select>
-        <button
-          className={ButtonStyle}
-          onFocus={this.onFocus}
-          onBlur={this.onUnFocus}
-          onClick={this.onAscClick}
-        >
-          <FontAwesomeIcon icon={ascending ? faSortAsc : faSortDesc} fixedWidth />
+        <button className={ButtonStyle} onClick={this.onAscClick}>
+          <Icon icon={ascending ? 'faSortAsc' : 'faSortDesc'} />
         </button>
       </div>
     );

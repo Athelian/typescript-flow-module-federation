@@ -5,6 +5,7 @@ import { presets, colors } from 'styles/common';
 export const WrapperStyle = css`
   display: flex;
   height: min-content;
+  margin: 0 0 -10px 16px;
 `;
 
 const TabStyle = css`

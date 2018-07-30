@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Formik, type FormikActions } from 'formik';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faFilter from '@fortawesome/fontawesome-pro-solid/faFilter';
+import Icon from 'components/Icon';
 import {
   WrapperStyle,
   ButtonStyle,
@@ -15,7 +14,7 @@ import {
   ButtonsWrapper,
 } from './style';
 import messages from './messages';
-// import InputGroup from '../../Form/InputGroup';
+import InputGroup from './components/InputGroup';
 
 type Props = {
   initialFilter: Object,
@@ -138,7 +137,7 @@ class FilterInput extends React.Component<Props, State> {
       >
         <button className={ButtonStyle} onClick={this.toggle}>
           {isActive && <span className={ActiveStyle} />}
-          <FontAwesomeIcon icon={faFilter} fixedWidth />
+          <Icon icon="faFilter" />
         </button>
         <div className={ContentStyle(!!fixed, isOpen, isExpanded)}>
           <Formik
@@ -159,7 +158,7 @@ class FilterInput extends React.Component<Props, State> {
               isSubmitting,
             }) => (
               <form className={FormStyle} onSubmit={handleSubmit} onReset={handleReset}>
-                <div>
+                <InputGroup>
                   {children({
                     values,
                     errors,
@@ -169,7 +168,7 @@ class FilterInput extends React.Component<Props, State> {
                     setFieldValue,
                     setFieldTouched,
                   })}
-                </div>
+                </InputGroup>
                 <div className={ButtonsWrapper}>
                   <button className={ResetButtonStyle} type="reset">
                     <FormattedMessage {...messages.reset} />

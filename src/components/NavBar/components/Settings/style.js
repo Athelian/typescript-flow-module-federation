@@ -3,13 +3,8 @@ import { css } from 'react-emotion';
 import { fontSizes, gradients, presets, colors, shadows, layout, transitions } from 'styles/common';
 
 export const SettingsWrapperStyle = css`
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 9998;
   user-select: none;
-  margin: 20px 20px 0 0;
-  height: 40px;
+  margin-right: 20px;
   display: flex;
   align-items: center;
 `;

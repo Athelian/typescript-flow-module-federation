@@ -18,14 +18,23 @@ export const WrapperStyle = (focus: boolean, expand: boolean) => css`
   background: #fff;
   ${borderRadiuses.BUTTON};
   ${shadows.NAV_BUTTON};
-  border: 1.5px solid ${focus ? colors.TEAL : colors.GRAY};
   color: ${colors.GRAY_LIGHT};
   width: ${focus || expand ? '200px' : '40px'};
-  padding: 0 5px 0 7px;
+  height: 30px;
+  margin-left: 16px;
+  ${fontSizes.MAIN};
+  box-sizing: border-box;
   ${transitions.MAIN};
   flex-shrink: 0;
+
   &:hover {
     width: 200px;
+  }
+
+  & > svg {
+    ${layout.HORIZONTAL};
+    ${layout.CENTER};
+    min-width: 30px;
   }
 `;
 
@@ -35,7 +44,6 @@ export const InputStyle = css`
   background: none;
   border: none;
   font-weight: bold;
-  padding: 10px 0 10px 10px;
   width: 100%;
   outline: none;
 `;
@@ -46,6 +54,7 @@ export const ClearButtonStyle = css`
   ${borderRadiuses.CIRCLE};
   color: ${colors.GRAY_LIGHT};
   padding: 5px;
+  outline: none;
   &:hover {
     color: ${colors.BLACK};
   }

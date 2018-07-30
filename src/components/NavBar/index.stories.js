@@ -8,8 +8,9 @@ import NavBar from './index';
 import EntityIcon from './components/EntityIcon';
 import ViewToggle from './components/ViewToggle';
 import Tabs from './components/Tabs';
-// import FilterInput from './components/FilterInput';
-// import SortInput from './components/SortInput';
+import FilterInput from './components/FilterInput';
+import SortInput from './components/SortInput';
+import SearchInput from './components/SearchInput';
 
 class TabsToggle extends React.Component {
   state = {
@@ -39,6 +40,25 @@ storiesOf('Navbar', module).add('title', () => (
         <EntityIcon icon="fasShip" color="RED" />
         <TabsToggle />
         <ViewToggle color="RED" />
+        <SortInput
+          sort={{}}
+          ascending
+          fields={[
+            { title: 'UPDATED AT', value: 'PO' },
+            { title: 'CREATED AT', value: 'exporter' },
+            { title: 'DELTED AT', value: 'updatedAt' },
+            { title: 'BORNED AT', value: 'createdAt' },
+          ]}
+          onChange={() => {}}
+        />
+        <FilterInput initialFilter={{}} onChange={() => {}} width={400}>
+          {() => (
+            <React.Fragment>
+              <input value="" />
+            </React.Fragment>
+          )}
+        </FilterInput>
+        <SearchInput onChange={() => {}} />
       </NavBar>
       <div style={{ marginTop: '500px' }}>Content</div>
     </div>

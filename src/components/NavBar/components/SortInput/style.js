@@ -1,29 +1,22 @@
 // @flow
 import { css } from 'react-emotion';
-import {
-  layout,
-  colors,
-  borderRadiuses,
-  shadows,
-  fontSizes,
-  transitions,
-  presets,
-} from 'styles/common';
+import { layout, colors, borderRadiuses, fontSizes, transitions, presets } from 'styles/common';
 
-export const WrapperStyle = (focus: boolean) => css`
+export const WrapperStyle = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
-  ${borderRadiuses.BUTTON};
-  ${shadows.NAV_BUTTON};
+  ${borderRadiuses.MAIN};
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   position: relative;
   background: #fff;
   overflow: hidden;
-  border: 1.5px solid ${focus ? colors.TEAL : colors.GRAY};
   color: ${colors.GRAY_LIGHT};
-  min-width: 200px;
+  max-width: 200px;
+  height: 30px;
   padding-left: 10px;
-  box-sizing: content-box;
   ${transitions.MAIN};
+  ${fontSizes.MAIN};
+  margin-left: 16px;
 `;
 
 export const ButtonStyle = css`
@@ -32,6 +25,7 @@ export const ButtonStyle = css`
   color: ${colors.GRAY};
   padding: 0px 10px 0px 5px;
   height: 100%;
+  outline: none;
   &:hover {
     background-color: ${colors.GRAY_SUPER_LIGHT};
   }

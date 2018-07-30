@@ -6,7 +6,7 @@ export const NavBarStyle = css`
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px;
+  height: 50px;
   display: flex;
   background: #fff;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
@@ -15,4 +15,5 @@ export const NavBarStyle = css`
 export const ChildrenStyle = css`
   flex: 1;
   display: flex;
+  align-items: center;
 `;

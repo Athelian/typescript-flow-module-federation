@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faSearch from '@fortawesome/fontawesome-pro-regular/faSearch';
-import faClear from '@fortawesome/fontawesome-pro-regular/faTimes';
+import Icon from 'components/Icon';
 import { WrapperStyle, InputStyle, ClearButtonStyle } from './style';
 
 type Props = {
@@ -75,7 +73,7 @@ class SearchInput extends React.Component<Props, State> {
 
     return (
       <div className={WrapperStyle(focus, !!hasContent || !!stayExpanded)}>
-        <FontAwesomeIcon icon={faSearch} fixedWidth />
+        <Icon icon="faSearch" />
         <input
           className={InputStyle}
           type="text"
@@ -87,7 +85,7 @@ class SearchInput extends React.Component<Props, State> {
         />
         {hasContent && (
           <button className={ClearButtonStyle} onClick={this.clear}>
-            <FontAwesomeIcon icon={faClear} fixedWidth />
+            <Icon icon="faClear" />
           </button>
         )}
       </div>
