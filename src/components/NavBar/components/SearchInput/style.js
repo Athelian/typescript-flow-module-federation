@@ -1,14 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import {
-  layout,
-  colors,
-  borderRadiuses,
-  shadows,
-  fontSizes,
-  transitions,
-  presets,
-} from 'styles/common';
+import { layout, colors, borderRadiuses, fontSizes, transitions, presets } from 'styles/common';
 
 export const WrapperStyle = (focus: boolean, expand: boolean) => css`
   ${layout.HORIZONTAL};
@@ -17,24 +9,21 @@ export const WrapperStyle = (focus: boolean, expand: boolean) => css`
   overflow: hidden;
   background: #fff;
   ${borderRadiuses.BUTTON};
-  ${shadows.NAV_BUTTON};
   color: ${colors.GRAY_LIGHT};
-  width: ${focus || expand ? '200px' : '40px'};
+  width: ${focus || expand ? '200px' : '30px'};
   height: 30px;
-  margin-left: 16px;
   ${fontSizes.MAIN};
-  box-sizing: border-box;
   ${transitions.MAIN};
   flex-shrink: 0;
+  ${(focus || expand) && 'border: 1px solid rgba(0, 0, 0, 0.2)'};
 
   &:hover {
     width: 200px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   & > svg {
-    ${layout.HORIZONTAL};
-    ${layout.CENTER};
-    min-width: 30px;
+    padding: 0 5px;
   }
 `;
 

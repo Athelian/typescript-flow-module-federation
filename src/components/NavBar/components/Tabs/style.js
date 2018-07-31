@@ -5,7 +5,7 @@ import { presets, colors } from 'styles/common';
 export const WrapperStyle = css`
   display: flex;
   height: min-content;
-  margin: 0 0 -10px 16px;
+  margin-bottom: -10px;
 `;
 
 const TabStyle = css`
@@ -23,6 +23,7 @@ export const ActiveStyle = (isActive: boolean, color: string = 'BLUE') => css`
   color: ${isActive ? colors[color] : colors.GRAY_LIGHT};
   border-bottom: 4px solid ${isActive ? colors[color] : `${colors.TRANSPARENT}`};
   &:hover {
+    color: ${isActive ? colors[color] : colors.GRAY_DARK};
     border-color: ${isActive ? colors[color] : colors.GRAY_DARK};
   }
   &:focus {
@@ -36,6 +37,7 @@ export const ArchivedStyle = (isActive: boolean, color: string = 'BLUE') => css`
   color: ${isActive ? colors.GRAY_LIGHT : colors[color]};
   border-bottom: 4px solid ${isActive ? `${colors.TRANSPARENT}` : colors[color]};
   &:hover {
+    color: ${isActive ? colors.GRAY_DARK : colors[color]};
     border-color: ${isActive ? colors.GRAY_DARK : colors[color]};
   }
   &:focus {

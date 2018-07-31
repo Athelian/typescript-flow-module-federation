@@ -4,6 +4,7 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
+import TextInput from 'components/TextInput';
 import NavBar from './index';
 import EntityIcon from './components/EntityIcon';
 import ViewToggle from './components/ViewToggle';
@@ -54,7 +55,8 @@ storiesOf('Navbar', module).add('title', () => (
         <FilterInput initialFilter={{}} onChange={() => {}} width={400}>
           {() => (
             <React.Fragment>
-              <input value="" />
+              <SearchInput onChange={() => {}} stayExpanded />
+              <TextInput />
             </React.Fragment>
           )}
         </FilterInput>

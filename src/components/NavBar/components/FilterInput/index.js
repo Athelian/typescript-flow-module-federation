@@ -19,7 +19,6 @@ import InputGroup from './components/InputGroup';
 type Props = {
   initialFilter: Object,
   onChange: (filters: Object) => void,
-  fixed?: boolean,
   children: ({
     values: Object,
     errors: Object,
@@ -28,7 +27,6 @@ type Props = {
     handleBlur: Function,
     setFieldValue: Function,
   }) => React.Node,
-  isExpanded: boolean,
 };
 
 type State = {
@@ -37,10 +35,6 @@ type State = {
 };
 
 class FilterInput extends React.Component<Props, State> {
-  static defaultProps = {
-    fixed: true,
-  };
-
   constructor(props: Props) {
     super(props);
 
@@ -120,12 +114,13 @@ class FilterInput extends React.Component<Props, State> {
     });
 
     onChange(resetFilter);
+    this.close();
   };
 
   wrapperRef: ?HTMLDivElement;
 
   render() {
-    const { initialFilter, children, isExpanded, fixed } = this.props;
+    const { initialFilter, children } = this.props;
     const { isOpen, isActive } = this.state;
 
     return (
@@ -139,7 +134,7 @@ class FilterInput extends React.Component<Props, State> {
           {isActive && <span className={ActiveStyle} />}
           <Icon icon="faFilter" />
         </button>
-        <div className={ContentStyle(!!fixed, isOpen, isExpanded)}>
+        <div className={ContentStyle(isOpen)}>
           <Formik
             initialValues={initialFilter}
             enableReinitialize

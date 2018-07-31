@@ -17,8 +17,8 @@ import fasNotification from '@fortawesome/fontawesome-pro-solid/faBell';
 import farProfile from '@fortawesome/fontawesome-pro-regular/faAddressCard';
 import fasProfile from '@fortawesome/fontawesome-pro-solid/faAddressCard';
 
-import fasWaterfall from '@fortawesome/fontawesome-pro-solid/faThLarge';
-import farTable from '@fortawesome/fontawesome-pro-regular/faTable';
+import fasWaterfall from '@fortawesome/fontawesome-pro-solid/faTh';
+import farTable from '@fortawesome/fontawesome-pro-regular/faThList';
 
 import faSortDesc from '@fortawesome/fontawesome-pro-solid/faSortAmountDown';
 import faSortAsc from '@fortawesome/fontawesome-pro-solid/faSortAmountUp';

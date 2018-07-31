@@ -12,7 +12,6 @@ import {
 
 export const WrapperStyle = css`
   position: relative;
-  margin-left: 16px;
 `;
 
 export const ButtonStyle = css`
@@ -41,24 +40,18 @@ export const ActiveStyle = css`
   right: -1px;
 `;
 
-export const ContentStyle = (fixed: boolean, isOpen: boolean, isExpanded: boolean) => css`
+export const ContentStyle = (isOpen: boolean) => css`
   ${presets.BOX};
   ${transitions.MAIN};
   ${shadows.NAV_BUTTON};
   ${!isOpen && `display: none`};
-  ${fixed
-    ? `
-  position: fixed;
-  top: 70px;
-  left: ${isExpanded ? '220px' : '70px'};
-  right: 20px;
-  `
-    : `
-    top: 50px;
-    position: absolute;
-    width: min-content;
-    z-index: 100;
-  `};
+  position: absolute;
+  width: 300px;
+  top: -10px;
+  left: 36px;
+  position: absolute;
+  width: min-content;
+  z-index: 1000;
   padding: 10px;
 `;
 

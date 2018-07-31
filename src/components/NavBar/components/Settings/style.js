@@ -50,22 +50,22 @@ export const SettingsCountStyle = css`
   flex-shrink: 0;
 `;
 
-export const DropDownWrapperStyle = css`
+const DropDownStyle = css`
   position: absolute;
   top: 40px;
-  right: 0;
   min-width: min-content;
   min-height: min-content;
   margin-top: 10px;
 `;
 
+export const DropDownWrapperStyle = css`
+  ${DropDownStyle};
+  right: 0;
+`;
+
 export const NotificationDropDownWrapperStyle = css`
-  position: absolute;
-  top: 40px;
+  ${DropDownStyle};
   right: 46px;
-  min-width: min-content;
-  min-height: min-content;
-  margin-top: 10px;
 `;
 
 export const SubMenuWrapperStyle = css`
