@@ -3,10 +3,10 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Router } from '@reach/router';
 import Loadable from 'react-loadable';
+import DashBoard from './modules/dashboard';
 import LoadingIcon from './components/LoadingIcon';
 import Login from './modules/login';
-import DashBoard from './modules/dashboard';
-import Layout from './components/Layout';
+import Authorized from './components/Authorized';
 
 const LoadableComponent = loader =>
   Loadable({
@@ -15,18 +15,18 @@ const LoadableComponent = loader =>
   });
 
 const PageNotFound = LoadableComponent(() => import('./components/PageNotFound'));
-const AsyncOrder = LoadableComponent(() => import('./modules/order'));
 const AsyncProduct = LoadableComponent(() => import('./modules/product'));
+const AsyncOrder = LoadableComponent(() => import('./modules/order'));
 
 const Routes = () => (
   <Router>
-    <Layout path="/">
+    <Authorized path="/">
       <DashBoard path="/" />
       <AsyncOrder path="order/*" />
       <AsyncProduct path="product/*" />
       <PageNotFound default />
-    </Layout>
-    <Login path="/login" />
+    </Authorized>
+    <Login path="/login" redirectUrl="/order" />
     <PageNotFound default />
   </Router>
 );

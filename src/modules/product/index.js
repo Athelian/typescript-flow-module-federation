@@ -1,6 +1,11 @@
 // @flow
 import * as React from 'react';
+import Layout from 'components/Layout';
 
-const Product = () => <div>Product</div>;
+const Product = () => (
+  <Layout>
+    <div>Product</div>
+  </Layout>
+);
 
 export default Product;

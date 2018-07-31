@@ -22,8 +22,11 @@ import loginIcon from './media/icon_white.png';
 import loginIconName from './media/logo_white.png';
 
 type Props = {
-  redirectUrl?: string,
-  navigate?: Function,
+  redirectUrl: string,
+};
+
+const navigate = (url: string) => {
+  window.location.href = url;
 };
 
 const saveTokenAndRedirect = ({ token }, redirectUrl) => {
@@ -31,8 +34,8 @@ const saveTokenAndRedirect = ({ token }, redirectUrl) => {
   redirectUrl();
 };
 
-function Login({ redirectUrl, navigate }: Props) {
-  if (isAuthenticated() && navigate) {
+function Login({ redirectUrl }: Props) {
+  if (isAuthenticated()) {
     navigate(redirectUrl);
   }
   return !isAuthenticated() ? (
@@ -45,9 +48,7 @@ function Login({ redirectUrl, navigate }: Props) {
         {(login, { loading, called, error, data }) => (
           <React.Fragment>
             {loading && <LoadingIcon />}
-            {called &&
-              data &&
-              saveTokenAndRedirect(data.login, () => navigate && navigate(redirectUrl))}
+            {called && data && saveTokenAndRedirect(data.login, () => navigate(redirectUrl))}
             {error && (
               <div id="errorMsg" className={LoginErrorStyle}>
                 <FormattedMessage {...messages.error} />{' '}
@@ -70,10 +71,5 @@ function Login({ redirectUrl, navigate }: Props) {
     <LoadingIcon />
   );
 }
-
-Login.defaultProps = {
-  redirectUrl: '/',
-  navigate: () => {},
-};
 
 export default Login;

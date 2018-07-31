@@ -5,6 +5,7 @@ import { ApolloProvider } from 'react-apollo';
 import Raven from 'raven-js';
 import FullStory from 'react-fullstory';
 import LanguageProvider from './modules/language';
+import UIProvider from './modules/ui';
 import { isDevEnvironment, isAppInProduction } from './utils/env';
 import apolloClient from './apollo';
 import Routes from './routes';
@@ -28,13 +29,15 @@ const renderApp = Component => {
   render(
     <ApolloProvider client={apolloClient}>
       <LanguageProvider>
-        <React.Fragment>
-          {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
-          {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
-          <React.StrictMode>
-            <Component />
-          </React.StrictMode>
-        </React.Fragment>
+        <UIProvider>
+          <React.Fragment>
+            {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
+            {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
+            <React.StrictMode>
+              <Component />
+            </React.StrictMode>
+          </React.Fragment>
+        </UIProvider>
       </LanguageProvider>
     </ApolloProvider>,
     container
