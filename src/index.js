@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { render } from 'react-dom';
+import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 import FullStory from 'react-fullstory';
 import LanguageProvider from './modules/language';
@@ -21,8 +21,8 @@ if (!container) {
   throw new Error(`couldn't find element with id root`);
 }
 
-const renderApp = Component => {
-  render(
+const renderApp = (Component, renderFn) => {
+  renderFn(
     <React.Fragment>
       {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
       <ApolloProvider client={apolloClient}>
@@ -40,4 +40,8 @@ const renderApp = Component => {
   );
 };
 
-renderApp(Routes);
+if (container.hasChildNodes()) {
+  renderApp(Routes, hydrate);
+} else {
+  renderApp(Routes, render);
+}
