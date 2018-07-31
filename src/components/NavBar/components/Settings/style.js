@@ -52,7 +52,7 @@ export const SettingsCountStyle = css`
 
 const DropDownStyle = css`
   position: absolute;
-  top: 40px;
+  top: 50px;
   min-width: min-content;
   min-height: min-content;
   margin-top: 10px;
@@ -60,12 +60,12 @@ const DropDownStyle = css`
 
 export const DropDownWrapperStyle = css`
   ${DropDownStyle};
-  right: 0;
+  right: 20px;
 `;
 
 export const NotificationDropDownWrapperStyle = css`
   ${DropDownStyle};
-  right: 46px;
+  right: 66px;
 `;
 
 export const SubMenuWrapperStyle = css`

@@ -8,38 +8,17 @@ import TextInput from 'components/TextInput';
 import NavBar from './index';
 import EntityIcon from './components/EntityIcon';
 import ViewToggle from './components/ViewToggle';
-import Tabs from './components/Tabs';
 import FilterInput from './components/FilterInput';
 import SortInput from './components/SortInput';
 import SearchInput from './components/SearchInput';
-
-class TabsToggle extends React.Component {
-  state = {
-    isActive: true,
-  };
-
-  onActive = () => {
-    this.setState({ isActive: true });
-  };
-
-  onArchived = () => {
-    this.setState({ isActive: false });
-  };
-
-  render() {
-    const { isActive } = this.state;
-    return (
-      <Tabs color="RED" isActive={isActive} onActive={this.onActive} onArchived={this.onArchived} />
-    );
-  }
-}
+import ActiveToggleTabs from './components/Tabs/ActiveToggleTabs';
 
 storiesOf('Navbar', module).add('title', () => (
   <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
     <div style={{ height: '2000px' }}>
       <NavBar>
         <EntityIcon icon="fasShip" color="RED" />
-        <TabsToggle />
+        <ActiveToggleTabs onChange={index => console.log(index)} />
         <ViewToggle />
         <SortInput
           sort={{}}

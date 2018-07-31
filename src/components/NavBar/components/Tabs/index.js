@@ -1,35 +1,50 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { WrapperStyle, ActiveStyle, ArchivedStyle, TabsDisabledStyle } from './style';
-import messages from './messages';
+import { WrapperStyle } from './style';
+import TabItem from './components/TabItem';
 
 type Props = {
+  tabs: Array<{ label: string | React.Node }>,
   disabled?: boolean,
-  isActive?: boolean,
-  onActive: () => void,
-  onArchived: () => void,
+  onChange: number => void,
 };
 
-const defaultProps = {
-  disabled: false,
-  isActive: false,
+type State = {
+  activeIndex: number,
 };
 
-const Tabs = ({ disabled, isActive, onActive, onArchived }: Props) => (
-  <div className={WrapperStyle}>
-    <button onClick={onActive} className={disabled ? TabsDisabledStyle : ActiveStyle(!!isActive)}>
-      <FormattedMessage {...messages.active} />
-    </button>
-    <button
-      onClick={onArchived}
-      className={disabled ? TabsDisabledStyle : ArchivedStyle(!!isActive)}
-    >
-      <FormattedMessage {...messages.archived} />
-    </button>
-  </div>
-);
+class Tabs extends React.Component<Props, State> {
+  static defaultProps = {
+    disabled: false,
+  };
 
-Tabs.defaultProps = defaultProps;
+  state = {
+    activeIndex: 0,
+  };
+
+  handleChange = (index: number) => {
+    this.setState({ activeIndex: index });
+
+    const { onChange } = this.props;
+    onChange(index);
+  };
+
+  render() {
+    const { tabs, ...rest } = this.props;
+    const { activeIndex } = this.state;
+    return (
+      <div className={WrapperStyle}>
+        {tabs.map(({ label }, index) => (
+          <TabItem
+            label={label}
+            active={index === activeIndex}
+            onActive={() => this.handleChange(index)}
+            {...rest}
+          />
+        ))}
+      </div>
+    );
+  }
+}
 
 export default Tabs;
