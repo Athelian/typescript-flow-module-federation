@@ -4,7 +4,7 @@ import { WrapperStyle } from './style';
 import TabItem from './components/TabItem';
 
 type Props = {
-  tabs: Array<{ icon: string, label: string | React.Node }>,
+  tabs: Array<{ id: string, icon: string, label: string | React.Node }>,
   disabled?: boolean,
   onChange: number => void,
 };
@@ -36,6 +36,7 @@ class Tabs extends React.Component<Props, State> {
       <div className={WrapperStyle}>
         {tabs.map((tab, index) => (
           <TabItem
+            key={tab.id}
             active={index === activeIndex}
             onActive={() => this.handleChange(index)}
             {...tab}

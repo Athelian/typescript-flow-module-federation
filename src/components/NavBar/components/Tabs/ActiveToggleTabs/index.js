@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { injectUid } from 'utils/id';
 import Tabs from '../index';
 import messages from '../messages';
 
@@ -14,7 +15,7 @@ const tabs = [
 ];
 
 function ActiveToggleTabs({ onChange }: Props) {
-  return <Tabs tabs={tabs} onChange={onChange} />;
+  return <Tabs tabs={tabs.map(injectUid)} onChange={onChange} />;
 }
 
 export default ActiveToggleTabs;

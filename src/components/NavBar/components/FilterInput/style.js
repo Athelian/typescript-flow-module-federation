@@ -81,12 +81,14 @@ export const ButtonsWrapper = css`
 export const ResetButtonStyle = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
-  color: ${colors.TEAL};
+  color: ${colors.GRAY};
   padding: 5px 10px;
   margin-right: 20px;
   text-align: center;
+  outline: none;
   &:hover {
     background-color: ${colors.GRAY_VERY_LIGHT};
+    color: ${colors.GRAY_DARK};
   }
 `;
 
@@ -99,7 +101,8 @@ export const SubmitButtonStyle = css`
   ${transitions.MAIN};
   padding: 5px 10px;
   text-align: center;
+  outline: none;
   &:hover {
-    background-color: ${colors.BLUE_DARK};
+    background-color: ${colors.TEAL_DARK};
   }
 `;

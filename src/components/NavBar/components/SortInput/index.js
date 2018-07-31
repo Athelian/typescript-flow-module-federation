@@ -22,8 +22,8 @@ class SortInput extends React.Component<Props> {
 
   onAscClick = (e: any) => {
     e.stopPropagation();
-    const { ascending, sort, onChange } = this.props;
-    onChange({ field: sort, ascending: !ascending });
+    const { ascending, sort: field, onChange } = this.props;
+    onChange({ field, ascending: !ascending });
   };
 
   optionItem = ({
@@ -43,7 +43,6 @@ class SortInput extends React.Component<Props> {
 
     return (
       <PureSelectInput
-        value={sort}
         items={fields}
         itemToString={item => (item ? item.title : '')}
         itemToValue={item => (item ? item.value : '')}

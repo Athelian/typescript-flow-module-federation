@@ -4,50 +4,39 @@ import Downshift from 'downshift';
 import { ResetNativeStyle } from './style';
 
 type Props = {
-  value: ?any,
-  optionWrapperStyle: any,
+  children: React.Node,
   onChange?: ({ title: string, value: string }) => void,
-  onBlur?: (string, boolean) => void,
   items: Array<any>,
   itemToValue: any => any,
   itemToString: any => string,
-  children: React.Node,
+  optionWrapperStyle: any,
   renderItem: ({ value: any, isActive: boolean, selected: boolean }) => React.Node,
 };
 
 const defaultProps = {
   onChange: () => {},
-  onBlur: () => {},
 };
 
 function PureSelectInput({
+  children,
   onChange,
-  renderItem,
   items,
   itemToValue,
   itemToString,
-  children,
   optionWrapperStyle,
+  renderItem,
 }: Props) {
   return (
     <Downshift onChange={onChange} itemToString={itemToString} itemToValue={itemToValue}>
-      {({
-        getInputProps,
-        getMenuProps,
-        getItemProps,
-        isOpen,
-        toggleMenu,
-        selectedItem,
-        highlightedIndex,
-      }) => (
+      {({ getMenuProps, getItemProps, isOpen, toggleMenu, selectedItem, highlightedIndex }) => (
         <div className={ResetNativeStyle}>
           <div onClick={toggleMenu} role="presentation">
             {children}
           </div>
           {isOpen && (
-            <ul className={optionWrapperStyle} {...getInputProps} {...getMenuProps()}>
+            <ul className={optionWrapperStyle} {...getMenuProps()}>
               {items.map((item, index) => (
-                <li {...getItemProps({ item })}>
+                <li key={item.value} {...getItemProps({ item })}>
                   {renderItem({
                     value: item,
                     isActive: highlightedIndex === index,
