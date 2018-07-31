@@ -3,29 +3,16 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import OrderGridView from './components/OrderGridView';
-import query from './query.graphql';
 import OrderListView from './components/OrderListView';
+import query from './query.graphql';
 
-type Props = {};
-
-type State = {
+type Props = {
   viewType: string,
 };
 
-class OrderList extends React.Component<Props, State> {
-  static defaultProps: Props;
-
-  state = {
-    viewType: 'list',
-  };
-
-  onToggleView = () => {
-    this.setState(prevState => ({ viewType: prevState.viewType === 'list' ? 'grid' : 'list' }));
-  };
-
+class OrderList extends React.PureComponent<Props> {
   render() {
-    const { viewType } = this.state;
-
+    const { viewType } = this.props;
     return (
       <Query query={query} variables={{ page: 1, perPage: 10 }}>
         {({ loading, error, data }) => {
