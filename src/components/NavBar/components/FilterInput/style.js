@@ -48,11 +48,24 @@ export const ContentStyle = (isOpen: boolean) => css`
   position: absolute;
   width: 300px;
   top: -10px;
-  left: 36px;
+  left: 30px;
   position: absolute;
   width: min-content;
   z-index: 1000;
   padding: 10px;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  animation-name: fadeIn;
+  animation-duration: 0.1s;
+  animation-timing-function: ease-in;
 `;
 
 export const FormStyle = css`

@@ -5,24 +5,16 @@ import { WrapperStyle, InputStyle, ClearButtonStyle } from './style';
 
 type Props = {
   onChange: (value: string) => void,
-  stayExpanded?: boolean,
 };
 
 type State = {
-  focus: boolean,
   query: string,
 };
 
 class SearchInput extends React.Component<Props, State> {
-  static defaultProps = {
-    stayExpanded: false,
-  };
-
-  constructor(props: Props) {
-    super(props);
-
+  constructor() {
+    super();
     this.state = {
-      focus: false,
       query: '',
     };
   }
@@ -43,14 +35,6 @@ class SearchInput extends React.Component<Props, State> {
     }
   }
 
-  onFocus = () => {
-    this.setState({ focus: true });
-  };
-
-  onUnFocus = () => {
-    this.setState({ focus: false });
-  };
-
   onChange = (event: Event) => {
     if (!(event.target instanceof HTMLInputElement)) {
       return;
@@ -67,20 +51,17 @@ class SearchInput extends React.Component<Props, State> {
   timeout: ?TimeoutID;
 
   render() {
-    const { stayExpanded } = this.props;
-    const { focus, query } = this.state;
+    const { query } = this.state;
     const hasContent = !!query;
 
     return (
-      <div className={WrapperStyle(focus, !!hasContent || !!stayExpanded)}>
+      <div className={WrapperStyle}>
         <Icon icon="faSearch" />
         <input
           className={InputStyle}
           type="text"
           value={query}
           spellCheck={false}
-          onFocus={this.onFocus}
-          onBlur={this.onUnFocus}
           onChange={this.onChange}
         />
         {hasContent && (

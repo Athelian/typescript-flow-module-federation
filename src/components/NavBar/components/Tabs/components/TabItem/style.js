@@ -10,12 +10,16 @@ const TabStyle = css`
   font-size: 12px;
   letter-spacing: 2px;
   outline: none;
+  & > span {
+    margin-right: 5px;
+  }
 `;
 
 export const TabItemStyle = (isActive: boolean) => css`
   ${TabStyle};
   color: ${isActive ? colors.TEAL : colors.GRAY_LIGHT};
   border-bottom: 4px solid ${isActive ? colors.TEAL : `${colors.TRANSPARENT}`};
+  transition: 0.2s;
   &:hover {
     color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
     border-color: ${isActive ? colors.TEAL : colors.GRAY_DARK};

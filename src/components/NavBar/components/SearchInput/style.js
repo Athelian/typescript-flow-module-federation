@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout, colors, borderRadiuses, fontSizes, transitions, presets } from 'styles/common';
 
-export const WrapperStyle = (focus: boolean, expand: boolean) => css`
+export const WrapperStyle = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   position: relative;
@@ -10,7 +10,7 @@ export const WrapperStyle = (focus: boolean, expand: boolean) => css`
   background: #fff;
   ${borderRadiuses.BUTTON};
   color: ${colors.GRAY_LIGHT};
-  width: ${focus || expand ? '200px' : '30px'};
+  width: 200px;
   height: 30px;
   ${fontSizes.MAIN};
   ${transitions.MAIN};

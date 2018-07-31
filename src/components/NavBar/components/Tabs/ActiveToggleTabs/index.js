@@ -9,8 +9,8 @@ type Props = {
 };
 
 const tabs = [
-  { label: <FormattedMessage {...messages.active} /> },
-  { label: <FormattedMessage {...messages.archived} /> },
+  { icon: 'fasFolderOpen', label: <FormattedMessage {...messages.active} /> },
+  { icon: 'fasArchive', label: <FormattedMessage {...messages.archived} /> },
 ];
 
 function ActiveToggleTabs({ onChange }: Props) {
