@@ -12,10 +12,10 @@ export const WrapperStyle = css`
   color: ${colors.GRAY_LIGHT};
   max-width: 200px;
   height: 30px;
-  padding-left: 10px;
   ${transitions.MAIN};
   ${fontSizes.MAIN};
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 `;
 
 export const ButtonStyle = css`
@@ -36,15 +36,27 @@ export const ButtonStyle = css`
 `;
 
 export const InputStyle = css`
-  -webkit-appearance: none;
   color: ${colors.BLACK};
-  background: none;
-  border: none;
   ${fontSizes.MAIN};
   font-weight: bold;
   padding: 0 10px;
-  width: 100%;
   height: 100%;
-  outline: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const OptionWrapperStyle = css`
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+`;
+
+export const ItemStyle = (active: boolean, selected: boolean) => css`
+  background: ${active ? '#eee' : '#fff'};
+  background: ${selected && '#aaa'};
+  height: 100%;
+  width: 150px;
+  color: ${selected ? '#fff' : '#555'};
+  padding: 8px;
   cursor: pointer;
 `;
