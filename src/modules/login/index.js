@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,10 +24,6 @@ import loginIconName from './media/logo_white.png';
 
 type Props = {
   redirectUrl: string,
-};
-
-const navigate = (url: string) => {
-  window.location.href = url;
 };
 
 const saveTokenAndRedirect = ({ token }, redirectUrl) => {
