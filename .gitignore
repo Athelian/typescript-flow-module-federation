@@ -32,3 +32,6 @@ flow-coverage
 
 # style guide
 styleguide
+
+# deploy
+.netlify
