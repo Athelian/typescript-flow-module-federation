@@ -27,7 +27,6 @@ module.exports = {
     },
   },
   ignore: [
-    '**/components/AuthorizedRoute/index.js',
     '**/components/NavButtons/index.js',
     '**/components/Tooltips/index.js',
     '**/__tests__/*',

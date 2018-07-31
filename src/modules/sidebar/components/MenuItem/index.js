@@ -22,6 +22,7 @@ const MenuItem = ({
   inactiveIcon,
 }: Props): React.Element<*> => (
   <Link tabIndex={-1} to={path} onClick={setExpandedSubMenuId} className={MenuItemStyle(isActive)}>
+    <span />
     <div className={IconStyle}>
       <FontAwesomeIcon icon={isActive ? activeIcon : inactiveIcon} fixedWidth />
     </div>
