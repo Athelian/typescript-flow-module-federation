@@ -17,6 +17,6 @@ export const ChildrenStyle = css`
   display: flex;
   align-items: center;
   & > div {
-    margin-right: 16px;
+    margin-right: 10px;
   }
 `;

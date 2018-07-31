@@ -40,7 +40,7 @@ storiesOf('Navbar', module).add('title', () => (
       <NavBar>
         <EntityIcon icon="fasShip" color="RED" />
         <TabsToggle />
-        <ViewToggle color="RED" />
+        <ViewToggle />
         <SortInput
           sort={{}}
           ascending

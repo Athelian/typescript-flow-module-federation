@@ -18,31 +18,31 @@ const TabStyle = css`
   outline: none;
 `;
 
-export const ActiveStyle = (isActive: boolean, color: string = 'BLUE') => css`
+export const ActiveStyle = (isActive: boolean) => css`
   ${TabStyle};
-  color: ${isActive ? colors[color] : colors.GRAY_LIGHT};
-  border-bottom: 4px solid ${isActive ? colors[color] : `${colors.TRANSPARENT}`};
+  color: ${isActive ? colors.TEAL : colors.GRAY_LIGHT};
+  border-bottom: 4px solid ${isActive ? colors.TEAL : `${colors.TRANSPARENT}`};
   &:hover {
-    color: ${isActive ? colors[color] : colors.GRAY_DARK};
-    border-color: ${isActive ? colors[color] : colors.GRAY_DARK};
+    color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
+    border-color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
   }
   &:focus {
-    color: ${isActive ? colors[color] : colors.GRAY_DARK};
-    border-color: ${isActive && colors[color]};
+    color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
+    border-color: ${isActive && colors.TEAL};
   }
 `;
 
-export const ArchivedStyle = (isActive: boolean, color: string = 'BLUE') => css`
+export const ArchivedStyle = (isActive: boolean) => css`
   ${TabStyle};
-  color: ${isActive ? colors.GRAY_LIGHT : colors[color]};
-  border-bottom: 4px solid ${isActive ? `${colors.TRANSPARENT}` : colors[color]};
+  color: ${isActive ? colors.GRAY_LIGHT : colors.TEAL};
+  border-bottom: 4px solid ${isActive ? `${colors.TRANSPARENT}` : colors.TEAL};
   &:hover {
-    color: ${isActive ? colors.GRAY_DARK : colors[color]};
-    border-color: ${isActive ? colors.GRAY_DARK : colors[color]};
+    color: ${isActive ? colors.GRAY_DARK : colors.TEAL};
+    border-color: ${isActive ? colors.GRAY_DARK : colors.TEAL};
   }
   &:focus {
-    color: ${isActive ? colors.GRAY_DARK : colors[color]};
-    border-color: ${isActive || colors[color]};
+    color: ${isActive ? colors.GRAY_DARK : colors.TEAL};
+    border-color: ${isActive || colors.TEAL};
   }
 `;
 

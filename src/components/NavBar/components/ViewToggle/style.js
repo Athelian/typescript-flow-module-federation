@@ -7,9 +7,9 @@ export const ViewToggleWrapperStyle = css`
   height: min-content;
 `;
 
-export const ViewButtonStyle = (isActive: boolean, color: string = 'BLUE') => css`
+export const ViewButtonStyle = (isActive: boolean) => css`
   ${presets.BUTTON};
-  color: ${isActive ? colors[color] : colors.GRAY_LIGHT};
+  color: ${isActive ? colors.TEAL : colors.GRAY_LIGHT};
   font-size: 20px;
   padding: 5px 2.5px;
   ${transitions.MAIN};

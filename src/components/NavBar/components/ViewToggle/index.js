@@ -6,7 +6,6 @@ import { ViewToggleWrapperStyle, ViewButtonStyle } from './style';
 type Props = {
   isTableView: boolean,
   changeToggle: Function,
-  color: string,
 };
 
 class ViewToggle extends React.Component<Props> {
@@ -18,17 +17,14 @@ class ViewToggle extends React.Component<Props> {
   };
 
   render() {
-    const { isTableView, color } = this.props;
+    const { isTableView } = this.props;
 
     return (
       <div className={ViewToggleWrapperStyle}>
-        <button
-          onClick={() => this.onClick(false)}
-          className={ViewButtonStyle(!isTableView, color)}
-        >
+        <button onClick={() => this.onClick(false)} className={ViewButtonStyle(!isTableView)}>
           <Icon icon="fasWaterfall" />
         </button>
-        <button onClick={() => this.onClick(true)} className={ViewButtonStyle(isTableView, color)}>
+        <button onClick={() => this.onClick(true)} className={ViewButtonStyle(isTableView)}>
           <Icon icon="farTable" />
         </button>
       </div>

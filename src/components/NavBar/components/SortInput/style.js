@@ -15,9 +15,7 @@ export const WrapperStyle = css`
   padding-left: 10px;
   ${transitions.MAIN};
   ${fontSizes.MAIN};
-  &:hover {
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  }
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 `;
 
 export const ButtonStyle = css`

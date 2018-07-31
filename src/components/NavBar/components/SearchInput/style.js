@@ -15,11 +15,10 @@ export const WrapperStyle = (focus: boolean, expand: boolean) => css`
   ${fontSizes.MAIN};
   ${transitions.MAIN};
   flex-shrink: 0;
-  ${(focus || expand) && 'border: 1px solid rgba(0, 0, 0, 0.2)'};
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 
   &:hover {
     width: 200px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   & > svg {

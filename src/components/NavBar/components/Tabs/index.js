@@ -6,7 +6,6 @@ import messages from './messages';
 
 type Props = {
   disabled?: boolean,
-  color: string,
   isActive?: boolean,
   onActive: () => void,
   onArchived: () => void,
@@ -17,17 +16,14 @@ const defaultProps = {
   isActive: false,
 };
 
-const Tabs = ({ disabled, isActive, onActive, onArchived, color }: Props) => (
+const Tabs = ({ disabled, isActive, onActive, onArchived }: Props) => (
   <div className={WrapperStyle}>
-    <button
-      onClick={onActive}
-      className={disabled ? TabsDisabledStyle : ActiveStyle(!!isActive, color)}
-    >
+    <button onClick={onActive} className={disabled ? TabsDisabledStyle : ActiveStyle(!!isActive)}>
       <FormattedMessage {...messages.active} />
     </button>
     <button
       onClick={onArchived}
-      className={disabled ? TabsDisabledStyle : ArchivedStyle(!!isActive, color)}
+      className={disabled ? TabsDisabledStyle : ArchivedStyle(!!isActive)}
     >
       <FormattedMessage {...messages.archived} />
     </button>
