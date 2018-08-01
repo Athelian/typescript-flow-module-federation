@@ -5,6 +5,7 @@ import { storiesOf } from '@storybook/react';
 import { css } from 'react-emotion';
 import { Formik } from 'formik';
 
+import Icon from 'components/Icon';
 import PureSelectInput from './index';
 
 const items = [
@@ -34,43 +35,76 @@ const WrapperStyle = css`
   padding: 8px;
 `;
 
+const InputStyle = css`
+  display: flex;
+  align-items: center;
+  width: 200px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+
+  & > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-height: 100%;
+  }
+  button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+`;
+
 function optionItem({ value, onHover, selected }) {
   return <div className={ItemStyle(onHover, selected)}>{value.value}</div>;
 }
 
-storiesOf('PureSelectInput', module).add('normal', () => (
-  <div>
-    <Formik>
-      {({ values, setFieldValue }) => (
-        <PureSelectInput
-          value={values.pure}
-          items={items}
-          itemToString={item => (item ? item.value : '')}
-          itemToValue={item => (item ? item.value : '')}
-          renderItem={({ value }) => <div>{value.value}</div>}
-          onChange={value => setFieldValue('pure', value)}
-        >
-          <div>{values.pure ? values.pure.value : 'style less: click me!!'}</div>
-        </PureSelectInput>
-      )}
-    </Formik>
+function Select({ currentValue }) {
+  return <div>{currentValue}</div>;
+}
 
-    <Formik>
-      {({ values, setFieldValue }) => (
-        <PureSelectInput
-          value={values.select}
-          items={items}
-          itemToString={item => (item ? item.value : '')}
-          itemToValue={item => (item ? item.value : '')}
-          renderItem={optionItem}
-          optionWrapperStyle={WrapperStyle}
-          onChange={value => setFieldValue('select', value)}
-        >
-          <div className={WrapperStyle}>
-            {values.select ? values.select.value : 'select with custom style'}
-          </div>
-        </PureSelectInput>
-      )}
-    </Formik>
+storiesOf('PureSelectInput', module).add('normal', () => (
+  <div style={{ display: 'flex' }}>
+    <div style={{ margin: '50px' }}>
+      <Formik>
+        {({ values, setFieldValue }) => (
+          <PureSelectInput
+            value={values.pure}
+            items={items}
+            itemToString={item => (item ? item.value : '')}
+            itemToValue={item => (item ? item.value : '')}
+            renderSelect={
+              <Select currentValue={values.pure ? values.pure.value : 'any title you want'} />
+            }
+            renderOption={({ value }) => <div>{value.value}</div>}
+            onChange={value => setFieldValue('pure', value)}
+            styles={{ select: '', options: '' }}
+          />
+        )}
+      </Formik>
+    </div>
+
+    <div style={{ margin: '50px' }}>
+      <Formik>
+        {({ values, setFieldValue }) => (
+          <PureSelectInput
+            value={values.select}
+            items={items}
+            itemToString={item => (item ? item.value : '')}
+            itemToValue={item => (item ? item.value : '')}
+            renderSelect={
+              <Select currentValue={values.select ? values.select.value : 'any title you want'} />
+            }
+            renderOption={optionItem}
+            clearIcon={<Icon icon="faClear" />}
+            onChange={value => setFieldValue('select', value)}
+            styles={{ select: InputStyle, options: WrapperStyle }}
+          />
+        )}
+      </Formik>
+    </div>
   </div>
 ));

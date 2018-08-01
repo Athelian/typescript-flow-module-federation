@@ -4,40 +4,54 @@ import Downshift from 'downshift';
 import { ResetNativeStyle } from './style';
 
 type Props = {
-  children: React.Node,
+  renderSelect: React.Node,
   onChange?: ({ title: string, value: string }) => void,
   items: Array<any>,
   itemToValue: any => any,
   itemToString: any => string,
-  optionWrapperStyle: any,
-  renderItem: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
+  clearIcon?: React.Node,
+  renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
+  styles: { select: any, options: any },
 };
 
 const defaultProps = {
   onChange: () => {},
+  clearIcon: null,
 };
 
 function PureSelectInput({
-  children,
+  renderSelect,
   onChange,
   items,
   itemToValue,
   itemToString,
-  optionWrapperStyle,
-  renderItem,
+  renderOption,
+  clearIcon,
+  styles,
 }: Props) {
   return (
     <Downshift onChange={onChange} itemToString={itemToString} itemToValue={itemToValue}>
-      {({ getMenuProps, getItemProps, isOpen, toggleMenu, selectedItem, highlightedIndex }) => (
+      {({
+        getMenuProps,
+        getItemProps,
+        isOpen,
+        toggleMenu,
+        selectedItem,
+        highlightedIndex,
+        clearSelection,
+      }) => (
         <div className={ResetNativeStyle}>
-          <div onClick={toggleMenu} role="presentation">
-            {children}
+          <div className={styles.select}>
+            <div onClick={toggleMenu} role="presentation">
+              {renderSelect}
+            </div>
+            {clearIcon && <button onClick={clearSelection}>{clearIcon}</button>}
           </div>
           {isOpen && (
-            <ul className={optionWrapperStyle} {...getMenuProps()}>
+            <ul className={styles.options} {...getMenuProps()}>
               {items.map((item, index) => (
                 <li key={item.value} {...getItemProps({ item })}>
-                  {renderItem({
+                  {renderOption({
                     value: item,
                     onHover: highlightedIndex === index,
                     selected: selectedItem === item,

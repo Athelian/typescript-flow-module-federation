@@ -55,19 +55,20 @@ class SortInput extends React.Component<Props> {
     return (
       <PureSelectInput
         items={fields}
-        itemToString={item => (item ? item.title : '')}
+        itemToString={item => (item ? item.value : '')}
         itemToValue={item => (item ? item.value : '')}
-        renderItem={this.optionItem}
-        optionWrapperStyle={OptionWrapperStyle}
+        renderSelect={
+          <div className={WrapperStyle}>
+            <div className={SelectStyle}>{sort.title}</div>
+            <button className={ButtonStyle} onClick={this.onAscClick}>
+              <Icon icon={ascending ? 'faSortAsc' : 'faSortDesc'} />
+            </button>
+          </div>
+        }
+        renderOption={this.optionItem}
         onChange={this.onFieldChange}
-      >
-        <div className={WrapperStyle}>
-          <div className={SelectStyle}>{sort.title}</div>
-          <button className={ButtonStyle} onClick={this.onAscClick}>
-            <Icon icon={ascending ? 'faSortAsc' : 'faSortDesc'} />
-          </button>
-        </div>
-      </PureSelectInput>
+        styles={{ select: SelectStyle, options: OptionWrapperStyle }}
+      />
     );
   }
 }

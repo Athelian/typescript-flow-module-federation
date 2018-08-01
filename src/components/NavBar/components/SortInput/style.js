@@ -10,7 +10,7 @@ export const WrapperStyle = css`
   background: #fff;
   overflow: hidden;
   color: ${colors.GRAY_LIGHT};
-  max-width: 200px;
+  width: 150px;
   height: 30px;
   ${transitions.MAIN};
   ${fontSizes.MAIN};
@@ -23,10 +23,12 @@ export const SelectStyle = css`
   ${fontSizes.MAIN};
   font-weight: bold;
   padding: 0 10px;
+  flex: 1;
   height: 100%;
   display: flex;
   align-items: center;
-  ${presets.ELLIPSIS};
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 export const ButtonStyle = css`
