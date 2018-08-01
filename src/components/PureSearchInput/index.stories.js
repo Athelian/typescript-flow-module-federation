@@ -1,6 +1,10 @@
-// @flow
+import * as React from 'react';
+/* eslint-disable import/no-extraneous-dependencies */
+import { storiesOf } from '@storybook/react';
 import { css } from 'react-emotion';
+import Icon from 'components/Icon';
 import { layout, colors, borderRadiuses, fontSizes, transitions, presets } from 'styles/common';
+import PureSearchInput from './index';
 
 const InputStyle = css`
   ${fontSizes.MAIN};
@@ -24,7 +28,7 @@ const ClearButtonStyle = css`
   }
 `;
 
-export const SearchInputStyle = css`
+const SearchInputStyle = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   position: relative;
@@ -56,4 +60,18 @@ export const SearchInputStyle = css`
   }
 `;
 
-export default SearchInputStyle;
+storiesOf('PureSearchInput', module).add('normal', () => (
+  <div>
+    <PureSearchInput onChange={query => console.log(query)} />
+    <PureSearchInput
+      style={SearchInputStyle}
+      searchIcon={<Icon icon="faSearch" />}
+      clearButton={({ clearQuery }) => (
+        <button onClick={clearQuery}>
+          <Icon icon="faClear" />
+        </button>
+      )}
+      onChange={query => console.log(query)}
+    />
+  </div>
+));
