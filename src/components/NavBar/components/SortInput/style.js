@@ -18,6 +18,17 @@ export const WrapperStyle = css`
   cursor: pointer;
 `;
 
+export const SelectStyle = css`
+  color: ${colors.BLACK};
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  ${presets.ELLIPSIS};
+`;
+
 export const ButtonStyle = css`
   ${presets.BUTTON};
   ${fontSizes.MAIN};
@@ -35,23 +46,12 @@ export const ButtonStyle = css`
   }
 `;
 
-export const InputStyle = css`
-  color: ${colors.BLACK};
-  ${fontSizes.MAIN};
-  font-weight: bold;
-  padding: 0 10px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-`;
-
 export const OptionWrapperStyle = css`
   background: #fff;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 `;
 
-export const ItemStyle = (active: boolean, selected: boolean) => css`
+export const OptionItemStyle = (active: boolean, selected: boolean) => css`
   background: ${active ? '#eee' : '#fff'};
   background: ${selected && '#aaa'};
   height: 100%;

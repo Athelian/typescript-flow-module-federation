@@ -4,10 +4,11 @@ export const ResetNativeStyle = css`
   ul {
     list-style-type: none;
     position: fixed;
-    padding-left: 0;
+    padding: 0;
+    overflow: hidden;
     li {
-      width: min-content;
       min-width: min-content;
+      width: 100%;
     }
   }
 `;

@@ -1,6 +1,6 @@
-// @flow
 import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable react/prop-types */
 import { storiesOf } from '@storybook/react';
 import { css } from 'react-emotion';
 import { Formik } from 'formik';
@@ -17,34 +17,24 @@ const items = [
 
 const ItemStyle = (active, selected) => css`
   background: ${active ? 'pink' : '#fff'};
-  background: ${selected && 'purple'};
-  height: 100%;
-  width: 150px;
+  background: ${selected && 'skyblue'};
+  width: 200px;
   color: #aaa;
   cursor: pointer;
+  padding: 8px;
 `;
 
-const selectBoxStyle = css`
+const WrapperStyle = css`
   outline: none;
-  border: none;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  padding: 8px;
-  border-radius: 8px;
+  border: 1px solid #ddd;
   font-weight: bold;
   font-size: 12px;
-  width: 100px;
+  width: 200px;
+  padding: 8px;
 `;
 
-function optionItem({
-  value,
-  isActive,
-  selected,
-}: {
-  value: string,
-  isActive: boolean,
-  selected: boolean,
-}) {
-  return <div className={ItemStyle(isActive, selected)}>{value}</div>;
+function optionItem({ value, onHover, selected }) {
+  return <div className={ItemStyle(onHover, selected)}>{value.value}</div>;
 }
 
 storiesOf('PureSelectInput', module).add('normal', () => (
@@ -56,10 +46,10 @@ storiesOf('PureSelectInput', module).add('normal', () => (
         itemToString={item => (item ? item.value : '')}
         itemToValue={item => (item ? item.value : '')}
         renderItem={optionItem}
-        optionWrapperStyle={selectBoxStyle}
+        optionWrapperStyle={WrapperStyle}
         onChange={value => setFieldValue('select', value)}
       >
-        <div className={selectBoxStyle}>{values.select ? values.select.value : 'select'}</div>
+        <div className={WrapperStyle}>{values.select ? values.select.value : 'select'}</div>
       </PureSelectInput>
     )}
   </Formik>

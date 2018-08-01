@@ -2,41 +2,52 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import PureSelectInput from 'components/PureSelectInput';
-import { WrapperStyle, ButtonStyle, OptionWrapperStyle, InputStyle, ItemStyle } from './style';
+import {
+  WrapperStyle,
+  ButtonStyle,
+  OptionWrapperStyle,
+  SelectStyle,
+  OptionItemStyle,
+} from './style';
+
+type Sort = {
+  title: string,
+  value: string,
+};
 
 type Props = {
-  sort: { title: string, value: string },
+  sort: Sort,
   ascending: boolean,
   fields: Array<{
     title: string | React.Node,
     value: string,
   }>,
-  onChange: ({ field: { title: string, value: string }, ascending: boolean }) => void,
+  onChange: ({ field: Sort, ascending: boolean }) => void,
 };
 
 class SortInput extends React.Component<Props> {
-  onFieldChange = (field: { title: string, value: string }) => {
+  onFieldChange = (field: Sort) => {
     const { onChange } = this.props;
     onChange({ field, ascending: false });
   };
 
   onAscClick = (e: any) => {
     e.stopPropagation();
-    const { ascending, sort: field, onChange } = this.props;
-    onChange({ field, ascending: !ascending });
+    const { ascending, sort, onChange } = this.props;
+    onChange({ field: sort, ascending: !ascending });
   };
 
   optionItem = ({
     value,
-    isActive,
+    onHover,
     selected,
   }: {
     // type is used for args
     /* eslint-disable react/no-unused-prop-types */
-    value: { title: string, value: string },
-    isActive: boolean,
+    value: Sort,
+    onHover: boolean,
     selected: boolean,
-  }) => <div className={ItemStyle(isActive, selected)}>{value.title}</div>;
+  }) => <div className={OptionItemStyle(onHover, selected)}>{value.title}</div>;
 
   render() {
     const { sort, ascending, fields } = this.props;
@@ -51,7 +62,7 @@ class SortInput extends React.Component<Props> {
         onChange={this.onFieldChange}
       >
         <div className={WrapperStyle}>
-          <div className={InputStyle}>{sort.title}</div>
+          <div className={SelectStyle}>{sort.title}</div>
           <button className={ButtonStyle} onClick={this.onAscClick}>
             <Icon icon={ascending ? 'faSortAsc' : 'faSortDesc'} />
           </button>

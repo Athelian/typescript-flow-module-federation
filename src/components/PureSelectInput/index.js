@@ -10,7 +10,7 @@ type Props = {
   itemToValue: any => any,
   itemToString: any => string,
   optionWrapperStyle: any,
-  renderItem: ({ value: any, isActive: boolean, selected: boolean }) => React.Node,
+  renderItem: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
 };
 
 const defaultProps = {
@@ -39,7 +39,7 @@ function PureSelectInput({
                 <li key={item.value} {...getItemProps({ item })}>
                   {renderItem({
                     value: item,
-                    isActive: highlightedIndex === index,
+                    onHover: highlightedIndex === index,
                     selected: selectedItem === item,
                   })}
                 </li>
