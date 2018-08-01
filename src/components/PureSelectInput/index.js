@@ -45,7 +45,9 @@ function PureSelectInput({
             <div onClick={toggleMenu} role="presentation">
               {renderSelect(
                 selectedItem && clearIcon ? (
-                  <button onClick={clearSelection}>{clearIcon}</button>
+                  <button type="button" onClick={clearSelection}>
+                    {clearIcon}
+                  </button>
                 ) : null
               )}
             </div>
