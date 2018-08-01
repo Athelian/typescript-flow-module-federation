@@ -1,6 +1,7 @@
 import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { css } from 'react-emotion';
 import Icon from 'components/Icon';
 import { layout, colors, borderRadiuses, fontSizes, transitions, presets } from 'styles/common';
@@ -63,7 +64,7 @@ const SearchInputStyle = css`
 storiesOf('PureSearchInput', module)
   .add('styleless', () => (
     <div>
-      <PureSearchInput onChange={query => query} />
+      <PureSearchInput onChange={action('query changed:')} />
     </div>
   ))
   .add('with searchIcon, clear button', () => (
@@ -71,11 +72,11 @@ storiesOf('PureSearchInput', module)
       <PureSearchInput
         searchIcon={<Icon icon="faSearch" />}
         clearButton={({ clearQuery }) => (
-          <button onClick={clearQuery}>
+          <button type="button" onClick={clearQuery}>
             <Icon icon="faClear" />
           </button>
         )}
-        onChange={query => query}
+        onChange={action('query changed:')}
       />
     </div>
   ))
@@ -85,11 +86,11 @@ storiesOf('PureSearchInput', module)
         style={SearchInputStyle}
         searchIcon={<Icon icon="faSearch" />}
         clearButton={({ clearQuery }) => (
-          <button onClick={clearQuery}>
+          <button type="button" onClick={clearQuery}>
             <Icon icon="faClear" />
           </button>
         )}
-        onChange={query => query}
+        onChange={action('query changed:')}
       />
     </div>
   ));
