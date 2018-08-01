@@ -29,3 +29,9 @@ flow-coverage
 
 # emotion
 *.emotion.css
+
+# style guide
+styleguide
+
+# deploy
+.netlify

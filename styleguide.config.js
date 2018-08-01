@@ -31,6 +31,8 @@ module.exports = {
     '**/components/Tooltips/index.js',
     '**/__tests__/*',
     '**/style.js',
+    '**/context.js',
+    '**/enums.js',
     '**/messages.js',
     '**/*.stories.*',
   ],

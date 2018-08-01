@@ -1,5 +1,5 @@
 // @flow
-import { take } from 'ramda';
+import { takeItems } from 'utils/fp';
 import { addLocaleData } from 'react-intl';
 /* $FlowFixMe: load direct from bundle file */
 import enLocaleData from 'react-intl/locale-data/en';
@@ -36,7 +36,7 @@ export const translationMessages = {
 export const getInitialLocale = (): string => {
   const browserLocale = navigator.languages ? navigator.languages[0] : navigator.language;
 
-  const formattedLocale = take(2, browserLocale);
+  const formattedLocale = takeItems(2, browserLocale);
 
   return appLocales.includes(formattedLocale) ? formattedLocale : 'ja';
 };

@@ -11,3 +11,8 @@ export const setAuthToken = (token: string) => {
 export const removeAuthToken = () => Cookies.remove('token');
 
 export const isAuthenticated = () => !!getAuthToken();
+
+export const reloadPageOnExpireToken = () => {
+  removeAuthToken();
+  window.location.reload();
+};
