@@ -4,7 +4,7 @@ import Downshift from 'downshift';
 import { ResetNativeStyle } from './style';
 
 type Props = {
-  renderSelect: React.Node,
+  renderSelect: (?React.Node) => React.Node,
   onChange?: ({ title: string, value: string }) => void,
   items: Array<any>,
   itemToValue: any => any,
@@ -43,9 +43,12 @@ function PureSelectInput({
         <div className={ResetNativeStyle}>
           <div className={styles.select}>
             <div onClick={toggleMenu} role="presentation">
-              {renderSelect}
+              {renderSelect(
+                selectedItem && clearIcon ? (
+                  <button onClick={clearSelection}>{clearIcon}</button>
+                ) : null
+              )}
             </div>
-            {selectedItem && clearIcon && <button onClick={clearSelection}>{clearIcon}</button>}
           </div>
           {isOpen && (
             <ul className={styles.options} {...getMenuProps()}>

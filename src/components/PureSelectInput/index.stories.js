@@ -61,8 +61,13 @@ function optionItem({ value, onHover, selected }) {
   return <div className={ItemStyle(onHover, selected)}>{value.value}</div>;
 }
 
-function Select({ currentValue }) {
-  return <div>{currentValue}</div>;
+function Select({ currentValue, clearButton }) {
+  return (
+    <div>
+      {currentValue}
+      {clearButton}
+    </div>
+  );
 }
 
 storiesOf('PureSelectInput', module)
@@ -75,9 +80,12 @@ storiesOf('PureSelectInput', module)
             items={items}
             itemToString={item => (item ? item.value : '')}
             itemToValue={item => (item ? item.value : '')}
-            renderSelect={
-              <Select currentValue={values.pure ? values.pure.value : 'any title you want'} />
-            }
+            renderSelect={clearButton => (
+              <Select
+                currentValue={values.pure ? values.pure.value : 'any title you want'}
+                clearButton={clearButton}
+              />
+            )}
             renderOption={({ value }) => <div>{value.value}</div>}
             onChange={value => setFieldValue('pure', value)}
             styles={{ select: '', options: '' }}
@@ -95,9 +103,12 @@ storiesOf('PureSelectInput', module)
             items={items}
             itemToString={item => (item ? item.value : '')}
             itemToValue={item => (item ? item.value : '')}
-            renderSelect={
-              <Select currentValue={values.select ? values.select.value : 'any title you want'} />
-            }
+            renderSelect={clearButton => (
+              <Select
+                currentValue={values.select ? values.select.value : 'any title you want'}
+                clearButton={clearButton}
+              />
+            )}
             renderOption={optionItem}
             clearIcon={<Icon icon="faClear" />}
             onChange={value => setFieldValue('select', value)}
@@ -116,9 +127,12 @@ storiesOf('PureSelectInput', module)
             items={items}
             itemToString={item => (item ? item.value : '')}
             itemToValue={item => (item ? item.value : '')}
-            renderSelect={
-              <Select currentValue={values.select ? values.select.value : 'any title you want'} />
-            }
+            renderSelect={clearButton => (
+              <Select
+                currentValue={values.select ? values.select.value : 'any title you want'}
+                clearButton={clearButton}
+              />
+            )}
             renderOption={optionItem}
             clearIcon={<Icon icon="faClear" />}
             onChange={value => setFieldValue('select', value)}
