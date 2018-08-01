@@ -3,7 +3,7 @@ import * as React from 'react';
 /* eslint-disable react/prop-types */
 import { storiesOf } from '@storybook/react';
 import { css } from 'react-emotion';
-import { Formik } from 'formik';
+import { Form } from 'zenform';
 
 import Icon from 'components/Icon';
 import PureSelectInput from './index';
@@ -66,10 +66,10 @@ function Select({ currentValue }) {
   return <div>{currentValue}</div>;
 }
 
-storiesOf('PureSelectInput', module).add('normal', () => (
-  <div style={{ display: 'flex' }}>
+storiesOf('PureSelectInput', module)
+  .add('style less', () => (
     <div style={{ margin: '50px' }}>
-      <Formik>
+      <Form>
         {({ values, setFieldValue }) => (
           <PureSelectInput
             value={values.pure}
@@ -84,11 +84,33 @@ storiesOf('PureSelectInput', module).add('normal', () => (
             styles={{ select: '', options: '' }}
           />
         )}
-      </Formik>
+      </Form>
     </div>
-
+  ))
+  .add('with clearBtn', () => (
     <div style={{ margin: '50px' }}>
-      <Formik>
+      <Form>
+        {({ values, setFieldValue }) => (
+          <PureSelectInput
+            value={values.select}
+            items={items}
+            itemToString={item => (item ? item.value : '')}
+            itemToValue={item => (item ? item.value : '')}
+            renderSelect={
+              <Select currentValue={values.select ? values.select.value : 'any title you want'} />
+            }
+            renderOption={optionItem}
+            clearIcon={<Icon icon="faClear" />}
+            onChange={value => setFieldValue('select', value)}
+            styles={{ select: '', options: '' }}
+          />
+        )}
+      </Form>
+    </div>
+  ))
+  .add('with styles', () => (
+    <div style={{ margin: '50px' }}>
+      <Form>
         {({ values, setFieldValue }) => (
           <PureSelectInput
             value={values.select}
@@ -104,7 +126,6 @@ storiesOf('PureSelectInput', module).add('normal', () => (
             styles={{ select: InputStyle, options: WrapperStyle }}
           />
         )}
-      </Formik>
+      </Form>
     </div>
-  </div>
-));
+  ));

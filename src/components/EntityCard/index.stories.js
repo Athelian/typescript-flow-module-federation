@@ -5,20 +5,15 @@ import Card from './index';
 import BaseAction from './Actions/BaseAction';
 
 const actions = [
-  <BaseAction action="archive" onClick={() => console.log('archive')} />,
-  <BaseAction action="clone" onClick={() => console.log('onClone')} />,
-  <BaseAction action="remove" onClick={() => console.log('onRemove')} />,
+  <BaseAction action="archive" onClick={() => 'archive'} />,
+  <BaseAction action="clone" onClick={() => 'onClone'} />,
+  <BaseAction action="remove" onClick={() => 'onRemove'} />,
 ];
 
 storiesOf('Card', module)
   .add('Default', () => (
     <div style={{ margin: '100px' }}>
-      <Card
-        color="YELLOW"
-        icon="fasShip"
-        onSelect={() => console.log('card selected!')}
-        actions={actions}
-      >
+      <Card color="YELLOW" icon="fasShip" onSelect={() => 'card selected!'} actions={actions}>
         {() => <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>}
       </Card>
     </div>
@@ -29,7 +24,7 @@ storiesOf('Card', module)
         color="YELLOW"
         icon="fasShip"
         showActionsOnHover
-        onSelect={() => console.log('card selected!')}
+        onSelect={() => 'card selected!'}
         actions={actions}
       >
         {() => <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>}
@@ -43,7 +38,7 @@ storiesOf('Card', module)
       selectable
       selected
       disabled
-      onSelect={() => console.log('card selected!')}
+      onSelect={() => 'card selected!'}
       actions={actions}
     >
       {() => <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>}
@@ -54,7 +49,7 @@ storiesOf('Card', module)
       color="YELLOW"
       icon="fasShip"
       selectable
-      onSelect={() => console.log('card selected!')}
+      onSelect={() => 'card selected!'}
       actions={actions}
     >
       {() => (
@@ -72,7 +67,7 @@ storiesOf('Card', module)
       icon="fasShip"
       selectable
       selected
-      onSelect={() => console.log('card selected!')}
+      onSelect={() => 'card selected!'}
       actions={actions}
     >
       {() => <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>}

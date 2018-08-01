@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Formik, type FormikActions } from 'formik';
+import { Form } from 'zenform';
 import Icon from 'components/Icon';
 import {
   WrapperStyle,
@@ -95,11 +95,10 @@ class FilterInput extends React.Component<Props, State> {
     this.setState(previous => ({ isOpen: !previous.isOpen }));
   };
 
-  submit = (values: Object, form: FormikActions) => {
+  submit = (values: Object) => {
     const { onChange } = this.props;
     this.handleIsActive(values);
     onChange(values);
-    form.setSubmitting(false);
     this.close();
   };
 
@@ -135,7 +134,7 @@ class FilterInput extends React.Component<Props, State> {
           <Icon icon="faFilter" />
         </button>
         <div className={ContentStyle(isOpen)}>
-          <Formik
+          <Form
             initialValues={initialFilter}
             enableReinitialize
             onSubmit={this.submit}

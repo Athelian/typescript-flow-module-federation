@@ -60,18 +60,36 @@ const SearchInputStyle = css`
   }
 `;
 
-storiesOf('PureSearchInput', module).add('normal', () => (
-  <div>
-    <PureSearchInput onChange={query => console.log(query)} />
-    <PureSearchInput
-      style={SearchInputStyle}
-      searchIcon={<Icon icon="faSearch" />}
-      clearButton={({ clearQuery }) => (
-        <button onClick={clearQuery}>
-          <Icon icon="faClear" />
-        </button>
-      )}
-      onChange={query => console.log(query)}
-    />
-  </div>
-));
+storiesOf('PureSearchInput', module)
+  .add('styleless', () => (
+    <div>
+      <PureSearchInput onChange={query => query} />
+    </div>
+  ))
+  .add('with searchIcon, clear button', () => (
+    <div>
+      <PureSearchInput
+        searchIcon={<Icon icon="faSearch" />}
+        clearButton={({ clearQuery }) => (
+          <button onClick={clearQuery}>
+            <Icon icon="faClear" />
+          </button>
+        )}
+        onChange={query => query}
+      />
+    </div>
+  ))
+  .add('with style', () => (
+    <div>
+      <PureSearchInput
+        style={SearchInputStyle}
+        searchIcon={<Icon icon="faSearch" />}
+        clearButton={({ clearQuery }) => (
+          <button onClick={clearQuery}>
+            <Icon icon="faClear" />
+          </button>
+        )}
+        onChange={query => query}
+      />
+    </div>
+  ));

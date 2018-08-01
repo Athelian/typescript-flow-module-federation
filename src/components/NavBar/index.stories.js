@@ -4,8 +4,8 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
+import { Form } from 'zenform';
 import TextInput from 'components/TextInput';
-import { Formik } from 'formik';
 import NavBar from './index';
 import EntityIcon from './components/EntityIcon';
 import ViewToggle from './components/ViewToggle';
@@ -21,38 +21,49 @@ const fields = [
   { title: 'BORNED AT', value: 'createdAt' },
 ];
 
-storiesOf('Navbar', module).add('title', () => (
-  <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
-    <Formik>
-      {({ values, setFieldValue }) => (
-        <div style={{ height: '2000px' }}>
-          <NavBar>
-            <EntityIcon icon="fasShip" color="RED" />
-            <ActiveToggleTabs onChange={index => console.log(index)} />
-            <ViewToggle />
-            <SortInput
-              sort={values.sort && values.sort.field ? values.sort.field : fields[0]}
-              ascending={values.sort ? values.sort.ascending : true}
-              fields={fields}
-              onChange={field => setFieldValue('sort', field)}
-            />
-            <FilterInput
-              initialFilter={{}}
-              onChange={filter => setFieldValue('filter', filter)}
-              width={400}
-            >
-              {({ setFieldValue: changeQuery }) => (
-                <React.Fragment>
-                  <SearchInput onChange={query => changeQuery('query', query)} />
-                  <TextInput />
-                </React.Fragment>
-              )}
-            </FilterInput>
-            <SearchInput onChange={() => {}} />
-          </NavBar>
-          <div style={{ marginTop: '500px' }}>Content</div>
-        </div>
-      )}
-    </Formik>
-  </IntlProvider>
-));
+storiesOf('Navbar', module)
+  .add('itself with icon', () => (
+    <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
+      <div style={{ height: '2000px' }}>
+        <NavBar>
+          <EntityIcon icon="fasShip" color="BLUE" />
+        </NavBar>
+        <div style={{ marginTop: '500px' }}>Content</div>
+      </div>
+    </IntlProvider>
+  ))
+  .add('sample', () => (
+    <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
+      <Form>
+        {({ values, setFieldValue }) => (
+          <div style={{ height: '2000px' }}>
+            <NavBar>
+              <EntityIcon icon="fasShip" color="RED" />
+              <ActiveToggleTabs onChange={index => index} />
+              <ViewToggle />
+              <SortInput
+                sort={values.sort && values.sort.field ? values.sort.field : fields[0]}
+                ascending={values.sort ? values.sort.ascending : true}
+                fields={fields}
+                onChange={field => setFieldValue('sort', field)}
+              />
+              <FilterInput
+                initialFilter={{}}
+                onChange={filter => setFieldValue('filter', filter)}
+                width={400}
+              >
+                {({ setFieldValue: changeQuery }) => (
+                  <React.Fragment>
+                    <SearchInput onChange={query => changeQuery('query', query)} />
+                    <TextInput />
+                  </React.Fragment>
+                )}
+              </FilterInput>
+              <SearchInput onChange={() => {}} />
+            </NavBar>
+            <div style={{ marginTop: '500px' }}>Content</div>
+          </div>
+        )}
+      </Form>
+    </IntlProvider>
+  ));
