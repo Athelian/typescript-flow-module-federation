@@ -27,7 +27,7 @@ class Order extends React.Component<Props, State> {
             navBar={
               <div>
                 <h1> Navbar </h1>
-                <button type="button" onClick={this.onToggleView}>
+                <button style={{ cursor: 'pointer' }} type="button" onClick={this.onToggleView}>
                   View Mode:
                   {viewType}. Click here to change.
                 </button>

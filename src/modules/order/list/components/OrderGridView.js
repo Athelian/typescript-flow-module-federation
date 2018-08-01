@@ -23,12 +23,12 @@ function OrderGridView({ items, onLoadMore }: Props) {
         height: window.outerHeight,
         columnWidth: window.outerWidth / totalColumns,
         rowCount: Math.ceil(items.length / totalColumns),
-        rowHeight: 500,
+        rowHeight: 200,
         columnCount: totalColumns,
       }}
       renderItem={({ key, columnIndex, rowIndex, style }) => (
         <div key={key} style={style}>
-          <OrderItem {...items[rowIndex * 3 + columnIndex]} key={key} />{' '}
+          <OrderItem order={items[rowIndex * 3 + columnIndex]} key={key} />
         </div>
       )}
     />

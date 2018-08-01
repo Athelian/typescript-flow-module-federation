@@ -24,7 +24,7 @@ function OrderListView({ items, onLoadMore }: Props) {
       }}
       renderItem={({ key, index, style }) => (
         <div key={key} style={style}>
-          <OrderItem {...items[index]} />
+          <OrderItem order={items[index]} />
         </div>
       )}
     />
