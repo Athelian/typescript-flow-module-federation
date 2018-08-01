@@ -448,6 +448,21 @@ build                                    // auto generated build folder containi
 
   for importing fontawesome in react.
 
+* [yup](https://github.com/jquense/yupdt)
+
+  for JavaScript object schema validator and object parser.
+
+* [react-snap](https://github.com/stereobooster/react-snap)
+  for static prerendering for SPAs
+
+* [zenform](https://github.com/shrynx/zenform)
+
+for react form management.
+
+- [react-virtualized](https://github.com/bvaughn/react-virtualized)
+
+React components for efficiently rendering large lists and tabular data.
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://gitlab.com/zenport.io/web-app/tags).
