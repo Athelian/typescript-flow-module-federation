@@ -3,9 +3,8 @@ import * as React from 'react';
 /* eslint-disable react/prop-types */
 import { storiesOf } from '@storybook/react';
 import { css } from 'react-emotion';
-import { Form } from 'zenform';
-
 import Icon from 'components/Icon';
+import { Form } from 'components/Form';
 import PureSelectInput from './index';
 
 const items = [
