@@ -23,6 +23,7 @@ type Props = {
   loaderOptions: {
     isRowLoaded: Function,
     loadMoreRows?: Function,
+    rowCount: number,
   },
   renderOptions: {
     rowCount: number,
@@ -32,15 +33,31 @@ type Props = {
     width?: number,
     height?: number,
   },
-  type: 'list' | 'grid',
+  type: 'list' | 'grid' | 'table',
   renderItem: (item: RenderItemProps) => React.Node,
 };
 
 export default class InfiniteLoaderWrapper extends React.Component<Props> {
-  cache = new CellMeasurerCache({
-    fixedWidth: true,
-    minHeight: 50,
-  });
+  constructor(props: Props) {
+    super(props);
+    const {
+      type,
+      renderOptions: { rowHeight = 50, columnWidth = 100 },
+    } = props;
+    this.cache =
+      type === 'list'
+        ? new CellMeasurerCache({
+            fixedWidth: true,
+            minHeight: rowHeight,
+          })
+        : new CellMeasurerCache({
+            defaultWidth: columnWidth,
+            minWidth: columnWidth,
+            fixedHeight: true,
+          });
+  }
+
+  cache: Object;
 
   render() {
     const { loaderOptions, type, renderOptions, renderItem } = this.props;
@@ -83,6 +100,8 @@ export default class InfiniteLoaderWrapper extends React.Component<Props> {
                       {renderItem(item)}
                     </CellMeasurer>
                   )}
+                  width={width}
+                  height={height}
                   {...renderOptions}
                 />
               )

@@ -5,14 +5,16 @@ import OrderItem from './OrderItem';
 
 type Props = {
   items: Array<Object>,
+  total?: number,
   onLoadMore?: Function,
 };
 
-function OrderGridView({ items, onLoadMore }: Props) {
+function OrderGridView({ items, onLoadMore, total = 10 }: Props) {
   const totalColumns = 3;
   const options = {
-    isRowLoaded: index => !!items[index],
+    isRowLoaded: index => items[index],
     loadMoreRows: onLoadMore,
+    rowCount: Math.ceil(total / totalColumns),
   };
   return (
     <InfiniteLoaderWrapper
@@ -22,13 +24,14 @@ function OrderGridView({ items, onLoadMore }: Props) {
         width: window.outerWidth,
         height: window.outerHeight,
         columnWidth: window.outerWidth / totalColumns,
-        rowCount: Math.ceil(items.length / totalColumns),
+        rowCount: Math.ceil(total / totalColumns),
         rowHeight: 200,
         columnCount: totalColumns,
       }}
       renderItem={({ key, columnIndex, rowIndex, style }) => (
         <div key={key} style={style}>
-          <OrderItem order={items[rowIndex * 3 + columnIndex]} key={key} />
+          <h3>#{rowIndex * totalColumns + columnIndex}</h3>
+          <OrderItem order={items[rowIndex * totalColumns + columnIndex]} key={key} />
         </div>
       )}
     />
@@ -37,6 +40,7 @@ function OrderGridView({ items, onLoadMore }: Props) {
 
 OrderGridView.defaultProps = {
   onLoadMore: () => {},
+  total: 10,
 };
 
 export default OrderGridView;

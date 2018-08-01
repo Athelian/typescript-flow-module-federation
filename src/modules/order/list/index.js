@@ -8,19 +8,71 @@ import query from './query.graphql';
 
 type Props = {
   viewType: string,
+  initPage?: number,
+  perPage?: number,
 };
 
 class OrderList extends React.PureComponent<Props> {
+  static defaultProps = {
+    initPage: 1,
+    perPage: 10,
+  };
+
+  loadMorePage = (clientData: { fetchMore: Function, data: ?Object }) => {
+    const { data, fetchMore } = clientData;
+    const nextPage = getByPathWithDefault(1, 'viewer.orders.page', data) + 1;
+    const totalPage = getByPathWithDefault(1, 'viewer.orders.totalPage', data);
+    if (nextPage > totalPage) return;
+
+    const { perPage = 10 } = this.props;
+    fetchMore({
+      variables: {
+        page: nextPage,
+        perPage,
+      },
+      updateQuery: (prevResult, { fetchMoreResult }) => {
+        if (getByPathWithDefault([], 'viewer.orders.nodes', fetchMoreResult).length === 0)
+          return prevResult;
+
+        return {
+          viewer: {
+            ...prevResult.viewer,
+            orders: {
+              ...prevResult.viewer.orders,
+              ...getByPathWithDefault({}, 'viewer.orders', fetchMoreResult),
+              nodes: [
+                ...prevResult.viewer.orders.nodes,
+                ...getByPathWithDefault([], 'viewer.orders.nodes', fetchMoreResult),
+              ],
+            },
+          },
+        };
+      },
+    });
+  };
+
   render() {
-    const { viewType } = this.props;
+    const { viewType, initPage = 1, perPage = 10 } = this.props;
     return (
-      <Query query={query} variables={{ page: 1, perPage: 10 }}>
-        {({ loading, error, data }) => {
+      <Query query={query} variables={{ page: initPage, perPage }}>
+        {({ loading, error, data, fetchMore }) => {
           if (loading) return `Loading...`;
           if (error) return `Error! ${error.message}`;
           if (viewType === 'list')
-            return <OrderListView items={getByPathWithDefault([], 'viewer.orders.nodes', data)} />;
-          return <OrderGridView items={getByPathWithDefault([], 'viewer.orders.nodes', data)} />;
+            return (
+              <OrderListView
+                onLoadMore={() => this.loadMorePage({ fetchMore, data })}
+                total={getByPathWithDefault(1, 'viewer.orders.totalPage', data) * perPage}
+                items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
+              />
+            );
+          return (
+            <OrderGridView
+              onLoadMore={() => this.loadMorePage({ fetchMore, data })}
+              total={getByPathWithDefault(1, 'viewer.orders.totalPage', data) * perPage}
+              items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
+            />
+          );
         }}
       </Query>
     );
