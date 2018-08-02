@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
+import LoadingIcon from 'components/LoadingIcon';
 import OrderGridView from './components/OrderGridView';
 import OrderListView from './components/OrderListView';
 import query from './query.graphql';
@@ -55,25 +56,34 @@ class OrderList extends React.PureComponent<Props> {
     const { viewType, initPage = 1, perPage = 10 } = this.props;
     return (
       <Query query={query} variables={{ page: initPage, perPage }}>
-        {({ loading, data, fetchMore }) => {
+        {({ loading, data, fetchMore, error }) => {
           const nextPage = getByPathWithDefault(1, 'viewer.orders.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'viewer.orders.totalPage', data);
+          if (error) {
+            return error.message;
+          }
           if (viewType === 'list')
             return (
-              <OrderListView
+              <React.Fragment>
+                {loading && <LoadingIcon />}
+                <OrderListView
+                  onLoadMore={() => this.loadMorePage({ fetchMore, data })}
+                  hasMore={nextPage <= totalPage}
+                  isLoading={loading}
+                  items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
+                />
+              </React.Fragment>
+            );
+          return (
+            <React.Fragment>
+              {loading && <LoadingIcon />}
+              <OrderGridView
                 onLoadMore={() => this.loadMorePage({ fetchMore, data })}
                 hasMore={nextPage <= totalPage}
                 isLoading={loading}
                 items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
               />
-            );
-          return (
-            <OrderGridView
-              onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-              hasMore={nextPage <= totalPage}
-              isLoading={loading}
-              items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
-            />
+            </React.Fragment>
           );
         }}
       </Query>

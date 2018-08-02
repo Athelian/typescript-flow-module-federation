@@ -2,41 +2,66 @@
 import { css } from 'react-emotion';
 import {
   presets,
-  layout,
   shadows,
   colors,
   borderRadiuses,
   fontSizesWithHeights,
   fontSizes,
+  layout,
 } from 'styles/common';
 
-export const DetailContainerStyle = css`
-  display: flex;
+export const OrderItemWrapperStyle = css`
+  position: relative;
 `;
 
 export const OrderItemStyle = css`
-  ${layout.VERTICAL};
-  width: 100%;
+  background-color: #fff;
+  ${shadows.WATERFALL};
+  ${borderRadiuses.MAIN};
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  height: min-content;
   padding: 10px;
 `;
 
-export const POStyle = css`
-  ${presets.ELLIPSIS};
+export const ProductItemStyle = css`
+  display: flex;
+  div {
+    img {
+      margin-right: 10px;
+    }
+    &:nth-child(2) {
+      ${presets.ELLIPSIS};
+    }
+  }
+  margin-bottom: 8px;
+`;
+
+export const ImageStyle = css`
+  border-radius: 2px 2px 0 0;
+  height: 50px;
+  width: 50px;
+  ${borderRadiuses.CIRCLE};
+  object-fit: cover;
+  overflow: hidden;
+  background-color: #ccc;
+  user-select: none;
+  margin-bottom: 8px;
+`;
+
+export const ProductNameStyle = css`
   ${fontSizesWithHeights.LARGE};
   color: ${colors.BLACK};
   font-weight: bold;
 `;
 
-export const PODateStyle = css`
-  ${presets.ELLIPSIS};
-  ${fontSizes.MEDIUM};
-  height: 15px;
-  color: ${colors.BLACK};
-  text-align: center;
-  font-weight: bold;
+export const ProductSerialStyle = css`
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.GRAY_DARK};
 `;
 
-export const ExporterStyle = css`
+export const SupplierStyle = css`
   ${presets.ELLIPSIS};
   ${fontSizesWithHeights.MEDIUM};
   color: ${colors.BLACK};
@@ -94,20 +119,8 @@ export const SlashStyle = css`
 `;
 
 export const ChartButtonStyle = css`
-  width: 70px;
-  height: 70px;
-  ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
-  border: 2px solid transparent;
-  &:focus {
-    border-color: ${colors.TEAL};
-    background-color: #fff;
-    ${shadows.NAV_BUTTON_HOVER};
-  }
-  &:hover {
-    background-color: #fff;
-    ${shadows.NAV_BUTTON_HOVER};
-  }
+  width: 72px;
+  height: 72px;
 `;
 
 export const FooterStyle = css`
