@@ -3,6 +3,8 @@ import * as React from 'react';
 import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 import FullStory from 'react-fullstory';
+/* $FlowFixMe: load file directly from node module */
+import 'react-virtualized/styles.css';
 import LanguageProvider from './modules/language';
 import UIProvider from './modules/ui';
 import apolloClient from './apollo';

@@ -55,21 +55,23 @@ class OrderList extends React.PureComponent<Props> {
     const { viewType, initPage = 1, perPage = 10 } = this.props;
     return (
       <Query query={query} variables={{ page: initPage, perPage }}>
-        {({ loading, error, data, fetchMore }) => {
-          if (loading) return `Loading...`;
-          if (error) return `Error! ${error.message}`;
+        {({ loading, data, fetchMore }) => {
+          const nextPage = getByPathWithDefault(1, 'viewer.orders.page', data) + 1;
+          const totalPage = getByPathWithDefault(1, 'viewer.orders.totalPage', data);
           if (viewType === 'list')
             return (
               <OrderListView
                 onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-                total={getByPathWithDefault(1, 'viewer.orders.totalPage', data) * perPage}
+                hasMore={nextPage <= totalPage}
+                isLoading={loading}
                 items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
               />
             );
           return (
             <OrderGridView
               onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-              total={getByPathWithDefault(1, 'viewer.orders.totalPage', data) * perPage}
+              hasMore={nextPage <= totalPage}
+              isLoading={loading}
               items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
             />
           );
