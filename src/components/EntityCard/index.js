@@ -6,7 +6,7 @@ import Actions from './Actions';
 import CornerIcon from './CornerIcon';
 
 type Props = {
-  children: () => React.Node,
+  children: React.Node,
   icon: string,
   color: string,
   actions?: Array<React.Node>,
@@ -110,7 +110,7 @@ export default class Card extends React.Component<Props, State> {
           selectable && (
             <div className={SelectableCardStyle} onClick={onSelect} role="presentation" />
           )}
-        {children()}
+        {children}
       </div>
     );
   }
