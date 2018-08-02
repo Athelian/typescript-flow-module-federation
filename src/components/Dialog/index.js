@@ -21,7 +21,7 @@ const ANIMATION_FINISHED = 500;
 
 export default class Dialog extends React.Component<Props> {
   static defaultProps = {
-    rootElementId: 'root',
+    rootElementId: 'dialog-root',
   };
 
   constructor() {

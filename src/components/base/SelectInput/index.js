@@ -19,7 +19,7 @@ const defaultProps = {
   clearIcon: null,
 };
 
-function PureSelectInput({
+function SelectInput({
   renderSelect,
   onChange,
   items,
@@ -71,6 +71,6 @@ function PureSelectInput({
   );
 }
 
-PureSelectInput.defaultProps = defaultProps;
+SelectInput.defaultProps = defaultProps;
 
-export default PureSelectInput;
+export default SelectInput;
