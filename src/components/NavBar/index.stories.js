@@ -4,7 +4,7 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
-import { Form } from 'zenform';
+import { Form } from 'components/Form';
 import TextInput from 'components/TextInput';
 import NavBar from './index';
 import EntityIcon from './components/EntityIcon';

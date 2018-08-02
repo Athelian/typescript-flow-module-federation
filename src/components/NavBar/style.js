@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const NavBarStyle = css`
+export const NavBarStyle = (isSideBarExpanded: boolean) => css`
   position: fixed;
   top: 0;
   left: 0;
@@ -10,6 +10,8 @@ export const NavBarStyle = css`
   display: flex;
   background: #fff;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  padding-left: ${isSideBarExpanded ? '200px' : '50px'};
 `;
 
 export const ChildrenStyle = css`

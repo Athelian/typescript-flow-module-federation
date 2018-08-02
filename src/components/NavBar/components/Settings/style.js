@@ -42,8 +42,8 @@ export const SettingsCountStyle = css`
   min-width: 16px;
   height: 16px;
   padding: 2px;
-  top: -8px;
-  right: -8px;
+  top: -5px;
+  right: -5px;
   display: flex;
   justify-content: center;
   align-items: center;
