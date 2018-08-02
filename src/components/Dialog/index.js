@@ -2,6 +2,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
+import logger from 'utils/logger';
 import {
   BackdropFadeInStyle,
   BackdropFadeOutStyle,
@@ -30,10 +31,13 @@ export default class Dialog extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { rootElementId } = this.props;
-    const dialogRoot = document.getElementById(rootElementId || 'root');
+    const { rootElementId = 'dialog-root' } = this.props;
+    const dialogRoot = document.getElementById(rootElementId);
 
-    if (!dialogRoot) return;
+    if (!dialogRoot) {
+      logger.warn('Not found the rootElementId', rootElementId);
+      return;
+    }
 
     const { isOpen } = this.props;
 

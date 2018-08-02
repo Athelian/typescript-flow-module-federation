@@ -28,6 +28,7 @@ import faClear from '@fortawesome/fontawesome-pro-regular/faTimes';
 
 import faFilter from '@fortawesome/fontawesome-pro-solid/faFilter';
 import fasFolderOpen from '@fortawesome/fontawesome-pro-solid/faFolderOpen';
+import farOrder from '@fortawesome/fontawesome-pro-regular/faFileEdit';
 
 export default {
   fasShip,
@@ -54,4 +55,5 @@ export default {
   faClear,
   faFilter,
   fasFolderOpen,
+  farOrder,
 };
