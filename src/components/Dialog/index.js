@@ -12,7 +12,7 @@ import {
 type Props = {
   isOpen: boolean,
   onRequestClose: () => void,
-  children: ({ openDialog: (options: Object) => void }) => React.Node,
+  children: React.Node,
   options: { width: number },
   rootElementId?: string,
 };

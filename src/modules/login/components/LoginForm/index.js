@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
-import { Form, Field } from 'zenform';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faSignInAlt from '@fortawesome/fontawesome-pro-solid/faSignInAlt';
 import messages from 'modules/login/messages';
 import { LoginBoxStyle } from 'modules/login/style';
+import { Form, Field } from 'components/Form';
 import TextInput from 'components/TextInput';
 import { CustomButton } from 'components/NavButtons';
 import yupToFormErrors from 'utils/yupToFormErrors';

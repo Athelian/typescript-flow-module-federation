@@ -4,6 +4,9 @@
   "components.NavButtons.save": "保存",
   "components.NavButtons.delete": "削除",
 
+  "components.NavBar.active": "進行中",
+  "components.NavBar.archived": "アーカイブ",
+
   "components.NavBar.filter.apply": "検索",
   "components.NavBar.filter.reset": "リセット",
 
