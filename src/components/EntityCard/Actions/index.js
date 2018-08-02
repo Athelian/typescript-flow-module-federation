@@ -14,17 +14,19 @@ type Props = {
   onClick: () => void,
 };
 
-const Actions = ({ actions, onClick, visible }: Props) => (
-  <PreventInitialAnimation>
-    <div className={WrapperStyle} onClick={onClick} role="presentation">
-      {actions &&
-        actions.map((action, index) => (
-          <div key={action.id} className={visible ? FadeInStyle(index) : FadeOutStyle(index)}>
-            {action.node}
-          </div>
-        ))}
-    </div>
-  </PreventInitialAnimation>
-);
+function Actions({ actions, onClick, visible }: Props) {
+  return (
+    <PreventInitialAnimation>
+      <div className={WrapperStyle} onClick={onClick} role="presentation">
+        {actions &&
+          actions.map((action, index) => (
+            <div key={action.id} className={visible ? FadeInStyle(index) : FadeOutStyle(index)}>
+              {action.node}
+            </div>
+          ))}
+      </div>
+    </PreventInitialAnimation>
+  );
+}
 
 export default Actions;

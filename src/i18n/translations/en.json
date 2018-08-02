@@ -4,6 +4,9 @@
   "components.NavButtons.save": "SAVE",
   "components.NavButtons.delete": "DELETE",
 
+  "components.NavBar.active": "ACTIVE",
+  "components.NavBar.archived": "ARCHIVED",
+
   "components.NavBar.filter.apply": "APPLY",
   "components.NavBar.filter.reset": "RESET",
 
