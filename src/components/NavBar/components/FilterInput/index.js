@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Form } from 'zenform';
+import { Form } from 'components/Form';
 import Icon from 'components/Icon';
 import {
   WrapperStyle,
@@ -9,12 +9,12 @@ import {
   ActiveStyle,
   ContentStyle,
   FormStyle,
+  InputWrapperStyle,
   ResetButtonStyle,
   SubmitButtonStyle,
   ButtonsWrapper,
 } from './style';
 import messages from './messages';
-import InputGroup from './components/InputGroup';
 
 type Props = {
   initialFilter: Object,
@@ -152,7 +152,7 @@ class FilterInput extends React.Component<Props, State> {
               isSubmitting,
             }) => (
               <form className={FormStyle} onSubmit={handleSubmit} onReset={handleReset}>
-                <InputGroup>
+                <div className={InputWrapperStyle}>
                   {children({
                     values,
                     errors,
@@ -162,7 +162,7 @@ class FilterInput extends React.Component<Props, State> {
                     setFieldValue,
                     setFieldTouched,
                   })}
-                </InputGroup>
+                </div>
                 <div className={ButtonsWrapper}>
                   <button className={ResetButtonStyle} type="button">
                     <FormattedMessage {...messages.reset} />

@@ -72,6 +72,11 @@ export const FormStyle = css`
   ${layout.VERTICAL};
 `;
 
+export const InputWrapperStyle = css`
+  display: flex;
+  flex-flow: column wrap;
+`;
+
 export const ButtonsWrapper = css`
   ${layout.HORIZONTAL};
   margin-top: 20px;
