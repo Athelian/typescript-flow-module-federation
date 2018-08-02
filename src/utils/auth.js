@@ -17,8 +17,3 @@ export const reloadPageOnExpireToken = () => {
   removeAuthToken();
   navigate('/login');
 };
-
-export const logout = () => {
-  removeAuthToken();
-  navigate('login');
-};
