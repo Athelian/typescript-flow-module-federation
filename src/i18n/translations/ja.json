@@ -10,15 +10,14 @@
   "components.NavBar.filter.apply": "検索",
   "components.NavBar.filter.reset": "リセット",
 
+  "components.LogoutDialog.confirm": "ログアウトしますか?",
+
   "components.EntityTimeline.cancel": "キャンセル",
   "components.EntityTimeline.defaultEvent": "{user}がアップデートしました。",
-  "components.EntityTimeline.updateEvent":
-    "{user}が{target}間の{field}を{oldValue}から{newValue}へと変更しました。",
-  "components.EntityTimeline.updateEventSet":
-    "{user}が{target}の{field}を{newValue}に設定しました。",
+  "components.EntityTimeline.updateEvent": "{user}が{target}間の{field}を{oldValue}から{newValue}へと変更しました。",
+  "components.EntityTimeline.updateEventSet": "{user}が{target}の{field}を{newValue}に設定しました。",
   "components.EntityTimeline.multipleUpdateEvent": "{user}が{target}を{count}箇所変更しました。",
-  "components.EntityTimeline.multipleUpdateEventChange":
-    "{field}を{oldValue}から{newValue}へと変更しました。",
+  "components.EntityTimeline.multipleUpdateEventChange": "{field}を{oldValue}から{newValue}へと変更しました。",
   "components.EntityTimeline.multipleUpdateEventChangeSet": "{field}を{newValue}に変更しました。",
   "components.EntityTimeline.target.OrderItem": " 商品 \"{identifier}\"",
   "components.EntityTimeline.target.BatchItem": " バッチ \"{identifier}\"",
@@ -78,12 +77,10 @@
   "components.BatchItem.tooltip.quantity": "[数量] {quantity}",
   "components.BatchItem.tooltip.delivery": "[引取日] {delivery}",
   "components.BatchItem.tooltip.exporter": "[輸出者] {exporter}",
-  "components.BatchItem.tooltip.task":
-    "{approvedByLastName} {approvedByFirstName}が{title}を{approvedAt}に承認しました。",
+  "components.BatchItem.tooltip.task": "{approvedByLastName} {approvedByFirstName}が{title}を{approvedAt}に承認しました。",
   "components.BatchItem.tooltip.assignments": "在庫の予約を見る",
   "components.BatchItem.tooltip.notSelectable": "このバッチは既にバッチグループに入っています。",
-  "components.BatchItem.tooltip.exporterError":
-    "このバッチの輸出者は他のバッチの輸出者と異なります。",
+  "components.BatchItem.tooltip.exporterError": "このバッチの輸出者は他のバッチの輸出者と異なります。",
   "components.BatchItem.validation.required": "必須",
   "components.BatchItem.validation.duplicateBatchItem": "バッチをコピーする",
   "components.BatchItem.assignMe": "担当者を選択してください",
@@ -596,8 +593,7 @@
   "containers.Users.tooltip.email": "[Eメール] {email}",
   "containers.Users.tooltip.role": "[役割] {role}",
   "containers.Users.tooltip.details": "詳細を見る",
-  "containers.Users.emailSent":
-    "\"{email}\"にメールを送信しました。メールをご確認後、登録の手続きを行ってください",
+  "containers.Users.emailSent": "\"{email}\"にメールを送信しました。メールをご確認後、登録の手続きを行ってください",
   "containers.Users.noUsers": "データがありません",
 
   "containers.TaskManagement.icon": "アイコン",

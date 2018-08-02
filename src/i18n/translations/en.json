@@ -10,10 +10,11 @@
   "components.NavBar.filter.apply": "APPLY",
   "components.NavBar.filter.reset": "RESET",
 
+  "components.LogoutDialog.confirm": "Are you sure you want to logout?",
+
   "components.EntityTimeline.cancel": "CANCEL",
   "components.EntityTimeline.defaultEvent": "{user} did an update",
-  "components.EntityTimeline.updateEvent":
-    "{user} updated {target} {field} from {oldValue} to {newValue}",
+  "components.EntityTimeline.updateEvent": "{user} updated {target} {field} from {oldValue} to {newValue}",
   "components.EntityTimeline.updateEventSet": "{user} set {target} {field} to {newValue}",
   "components.EntityTimeline.multipleUpdateEvent": "{user} updated {target} {count} fields",
   "components.EntityTimeline.multipleUpdateEventChange": "{field} from {oldValue} to {newValue}",
@@ -76,12 +77,10 @@
   "components.BatchItem.tooltip.quantity": "[Quantity] {quantity}",
   "components.BatchItem.tooltip.delivery": "[Delivery Date] {delivery}",
   "components.BatchItem.tooltip.exporter": "[Exporter] {exporter}",
-  "components.BatchItem.tooltip.task":
-    "{title} approved by {approvedByFirstName} {approvedByLastName} on {approvedAt}",
+  "components.BatchItem.tooltip.task": "{title} approved by {approvedByFirstName} {approvedByLastName} on {approvedAt}",
   "components.BatchItem.tooltip.assignments": "View Assignments",
   "components.BatchItem.tooltip.notSelectable": "This batch is already in a batch group",
-  "components.BatchItem.tooltip.exporterError":
-    "This batch has a different exporter from the others",
+  "components.BatchItem.tooltip.exporterError": "This batch has a different exporter from the others",
   "components.BatchItem.validation.required": "Required",
   "components.BatchItem.validation.duplicateBatchItem": "Duplicate batch item",
   "components.BatchItem.assignMe": "Assign someone",
@@ -98,12 +97,10 @@
   "components.BatchItem.completed": "COMPLETED",
   "components.BatchItem.request": "REQUEST",
 
-  "components.InternalError.message":
-    "An internal error has occurred. Please contact an administrator.",
+  "components.InternalError.message": "An internal error has occurred. Please contact an administrator.",
   "components.InternalError.goHome": "GO HOME",
 
-  "components.PageNotFound.message":
-    "The page could not be found or you don't have permission to view it.",
+  "components.PageNotFound.message": "The page could not be found or you don't have permission to view it.",
   "components.PageNotFound.goBack": "GO BACK",
 
   "components.Header.notification.title": "NOTIFICATIONS",
@@ -371,10 +368,8 @@
   "containers.Orders.quantity": "QUANTITY",
   "containers.Orders.shippedQuantity": "ALREADY CARGO READY QUANTITY",
   "containers.Orders.batchedQuantity": "CURRENTLY BATCHED QUANTITY",
-  "containers.Orders.quantityAbove":
-    "Currently batched quantity is {diff} above the order quantity. Please revise.",
-  "containers.Orders.quantityBelow":
-    "Currently batched quantity is {diff} below the order quantity. Please revise.",
+  "containers.Orders.quantityAbove": "Currently batched quantity is {diff} above the order quantity. Please revise.",
+  "containers.Orders.quantityBelow": "Currently batched quantity is {diff} below the order quantity. Please revise.",
   "containers.Orders.notShippedQuantity": "REST NOT SHIPPED QUANTITY",
   "containers.Orders.shipmentStatus": "SHIPMENT STATUS",
   "containers.Orders.packageName": "PACKAGE NAME",
@@ -598,16 +593,14 @@
   "containers.Users.tooltip.email": "[Email] {email}",
   "containers.Users.tooltip.role": "[Role] {role}",
   "containers.Users.tooltip.details": "View Details",
-  "containers.Users.emailSent":
-    "An email will be sent shortly to \"{email}\" to complete staff sign up.",
+  "containers.Users.emailSent": "An email will be sent shortly to \"{email}\" to complete staff sign up.",
   "containers.Users.noUsers": "No staff found.",
 
   "containers.TaskManagement.icon": "ICON",
   "containers.TaskManagement.title": "TITLE",
   "containers.TaskManagement.description": "DESCRIPTION",
   "containers.TaskManagement.validation.required": "Required",
-  "containers.TaskManagement.title.validation.length":
-    "Must not exceed {max} characters long but got {current}",
+  "containers.TaskManagement.title.validation.length": "Must not exceed {max} characters long but got {current}",
 
   "containers.TaskTemplates.name": "TEMPLATE NAME",
   "containers.TaskTemplates.default": "Set as default",
