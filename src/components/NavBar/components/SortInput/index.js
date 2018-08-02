@@ -67,7 +67,7 @@ class SortInput extends React.Component<Props> {
         )}
         renderOption={this.optionItem}
         onChange={this.onFieldChange}
-        styles={{ select: SelectStyle, options: OptionWrapperStyle }}
+        styles={{ select: '', options: OptionWrapperStyle }}
       />
     );
   }

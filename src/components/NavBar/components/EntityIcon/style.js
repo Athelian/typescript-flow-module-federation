@@ -2,8 +2,8 @@
 import { css } from 'react-emotion';
 import { colors, layout } from 'styles/common';
 
-export const IconStyle = (bgColor: string) => css`
-  background: ${colors[bgColor]};
+export const IconStyle = (color: string) => css`
+  background: ${colors[color]};
   color: #fff;
   display: flex;
   ${layout.CENTER_CENTER};

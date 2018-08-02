@@ -35,14 +35,10 @@ type State = {
 };
 
 class FilterInput extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      isOpen: false,
-      isActive: false,
-    };
-  }
+  state = {
+    isOpen: false,
+    isActive: false,
+  };
 
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);

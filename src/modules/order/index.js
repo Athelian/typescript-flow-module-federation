@@ -2,6 +2,9 @@
 import * as React from 'react';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
+import NavBar from 'components/NavBar';
+import EntityIcon from 'components/NavBar/components/EntityIcon';
+import ViewToggle from 'components/NavBar/components/ViewToggle';
 import OrderList from './list';
 
 type Props = {};
@@ -25,13 +28,10 @@ class Order extends React.Component<Props, State> {
           <Layout
             {...uiState}
             navBar={
-              <div>
-                <h1> Navbar </h1>
-                <button style={{ cursor: 'pointer' }} type="button" onClick={this.onToggleView}>
-                  View Mode:
-                  {viewType}. Click here to change.
-                </button>
-              </div>
+              <NavBar>
+                <EntityIcon icon="fasShip" color="RED" />
+                <ViewToggle changeToggle={this.onToggleView} isTableView={viewType === 'list'} />
+              </NavBar>
             }
           >
             <OrderList viewType={viewType} />
