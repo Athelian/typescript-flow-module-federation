@@ -16,8 +16,8 @@ export type Props = {
 
 type RenderProps = {
   renderComponent: React.Node,
-  type: 'grid' | 'list' | 'table',
-  columnCount?: number,
+  type: 'grid' | 'list',
+  totalColumns?: number,
 };
 
 export default function InfiniteLoader({
@@ -27,7 +27,7 @@ export default function InfiniteLoader({
   onLoadNextPage,
   renderComponent,
   type,
-  columnCount = 3,
+  totalColumns = 3,
   ...rest
 }: Props & RenderProps) {
   const rowCount = hasNextPage ? list.length + 1 : list.length;
@@ -50,15 +50,14 @@ export default function InfiniteLoader({
         ) : (
           <RenderComponent
             ref={registerChild}
-            columnCount={columnCount}
             onSectionRendered={({
               columnStartIndex,
               columnStopIndex,
               rowStartIndex,
               rowStopIndex,
             }) => {
-              const startIndex = rowStartIndex * columnCount + columnStartIndex;
-              const stopIndex = rowStopIndex * columnCount + columnStopIndex;
+              const startIndex = rowStartIndex * totalColumns + columnStartIndex;
+              const stopIndex = rowStopIndex * totalColumns + columnStopIndex;
 
               onRowsRendered({ startIndex, stopIndex });
             }}
