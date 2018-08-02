@@ -15,7 +15,7 @@ type Props = {
   disabled?: boolean,
   selected?: boolean,
   onSelect?: () => void,
-  wrapperClassName?: string,
+  style?: Object,
 };
 
 type State = {
@@ -32,7 +32,7 @@ export default class Card extends React.Component<Props, State> {
     disabled: false,
     selected: false,
     onSelect: () => {},
-    wrapperClassName: '',
+    style: {},
   };
 
   state = {
@@ -78,7 +78,7 @@ export default class Card extends React.Component<Props, State> {
       disabled,
       selected,
       onSelect,
-      wrapperClassName = '',
+      style,
     } = this.props;
 
     const { actionsAreShown } = this.state;
@@ -87,7 +87,8 @@ export default class Card extends React.Component<Props, State> {
 
     return (
       <div
-        className={`${CardStyle(!!disabled, !!selected, !!selectable)} ${wrapperClassName}`}
+        style={style}
+        className={CardStyle(!!disabled, !!selected, !!selectable)}
         onMouseOver={this.onMouseOver}
         onMouseOut={this.onMouseOut}
         onFocus={this.onMouseOver}
