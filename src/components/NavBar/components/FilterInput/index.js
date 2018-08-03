@@ -51,7 +51,11 @@ class FilterInput extends React.Component<Props, State> {
   hasAnyFilter = (values: Object) => {
     let isActive = false;
     Object.values(values).forEach(value => {
-      if (value) isActive = true;
+      if (value) {
+        isActive = true;
+        return false;
+      }
+      return true;
     });
     return isActive;
   };
