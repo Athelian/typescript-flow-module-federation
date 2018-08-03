@@ -11,6 +11,8 @@
   "components.NavBar.filter.reset": "リセット",
 
   "components.LogoutDialog.confirm": "ログアウトしますか?",
+  "components.LogoutDialog.logout": "ログアウト",
+  "components.LogoutDialog.cancel": "キャンセル",
 
   "components.EntityTimeline.cancel": "キャンセル",
   "components.EntityTimeline.defaultEvent": "{user}がアップデートしました。",

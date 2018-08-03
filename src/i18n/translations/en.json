@@ -11,6 +11,8 @@
   "components.NavBar.filter.reset": "RESET",
 
   "components.LogoutDialog.confirm": "Are you sure you want to logout?",
+  "components.LogoutDialog.logout": "LOGOUT",
+  "components.LogoutDialog.cancel": "CANCEL",
 
   "components.EntityTimeline.cancel": "CANCEL",
   "components.EntityTimeline.defaultEvent": "{user} did an update",

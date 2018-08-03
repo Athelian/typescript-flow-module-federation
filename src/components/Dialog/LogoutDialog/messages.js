@@ -6,9 +6,9 @@ export default defineMessages({
     id: 'components.LogoutDialog.confirm',
   },
   logout: {
-    id: 'components.Header.profile.logout',
+    id: 'components.LogoutDialog.logout',
   },
   cancel: {
-    id: 'components.NavButtons.cancel',
+    id: 'components.LogoutDialog.cancel',
   },
 });

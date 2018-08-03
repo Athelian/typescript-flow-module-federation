@@ -44,24 +44,16 @@ class FilterInput extends React.Component<Props, State> {
 
   componentDidMount() {
     const { initialFilter } = this.props;
-    this.handleIsActive(initialFilter);
+    const isActive = this.hasAnyFilter(initialFilter);
+    this.setState({ isActive });
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    this.handleIsActive(nextProps.initialFilter);
-  }
-
-  handleIsActive = (values: Object) => {
+  hasAnyFilter = (values: Object) => {
     let isActive = false;
     Object.values(values).forEach(value => {
-      if (value) {
-        isActive = true;
-        return false;
-      }
-      return true;
+      if (value) isActive = true;
     });
-
-    this.setState({ isActive });
+    return isActive;
   };
 
   open = () => {
@@ -78,8 +70,9 @@ class FilterInput extends React.Component<Props, State> {
 
   submit = (values: Object) => {
     const { onChange } = this.props;
-    this.handleIsActive(values);
+    const isActive = this.hasAnyFilter(values);
     onChange(values);
+    this.setState({ isActive });
     this.close();
   };
 
@@ -104,7 +97,7 @@ class FilterInput extends React.Component<Props, State> {
     return (
       <div className={WrapperStyle}>
         <button type="button" className={ButtonStyle} onClick={this.toggle}>
-          {isActive && <span className={ActiveStyle} />}
+          {(isActive || this.hasAnyFilter(initialFilter)) && <span className={ActiveStyle} />}
           <Icon icon="faFilter" />
         </button>
         <OutsideClickHandler onOutsideClick={this.close}>
