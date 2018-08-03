@@ -61,26 +61,24 @@ export default class Dialog extends React.Component<Props> {
     } = this.props;
 
     return (
-      <div>
-        <PreventInitialAnimation isChildrenVisible={isOpen}>
-          {ReactDOM.createPortal(
+      <PreventInitialAnimation isChildrenVisible>
+        {ReactDOM.createPortal(
+          <div
+            className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
+            onClick={onRequestClose}
+            role="presentation"
+          >
             <div
-              className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
-              onClick={onRequestClose}
+              className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
+              onClick={e => e.stopPropagation()}
               role="presentation"
             >
-              <div
-                className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
-                onClick={e => e.stopPropagation()}
-                role="presentation"
-              >
-                {children}
-              </div>
-            </div>,
-            this.dialogContainer
-          )}
-        </PreventInitialAnimation>
-      </div>
+              {children}
+            </div>
+          </div>,
+          this.dialogContainer
+        )}
+      </PreventInitialAnimation>
     );
   }
 }
