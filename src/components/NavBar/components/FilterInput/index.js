@@ -113,7 +113,6 @@ class FilterInput extends React.Component<Props, State> {
               initialValues={initialFilter}
               enableReinitialize
               onSubmit={this.submit}
-              onReset={this.reset}
               render={({
                 values,
                 errors,
@@ -139,7 +138,7 @@ class FilterInput extends React.Component<Props, State> {
                     })}
                   </div>
                   <div className={ButtonsWrapper}>
-                    <button className={ResetButtonStyle} type="button">
+                    <button className={ResetButtonStyle} type="button" onClick={this.reset}>
                       <FormattedMessage {...messages.reset} />
                     </button>
                     <button className={SubmitButtonStyle} type="submit" disabled={isSubmitting}>

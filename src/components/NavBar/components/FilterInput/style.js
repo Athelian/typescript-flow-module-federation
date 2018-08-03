@@ -33,11 +33,10 @@ export const ActiveStyle = css`
   background-color: ${colors.RED};
   color: #fff;
   font-size: 11px;
-  padding: 2px 4px;
-  width: 15px;
-  height: 15px;
-  top: -1px;
-  right: -1px;
+  width: 10px;
+  height: 10px;
+  top: 2px;
+  right: 3px;
 `;
 
 export const ContentStyle = (isOpen: boolean) => css`
