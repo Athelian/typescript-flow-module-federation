@@ -10,11 +10,12 @@ export const WrapperStyle = css`
 `;
 
 export const ContentWrapperStyle = css`
-  height: 100vh;
+  height: calc(100vh - 50px);
   width: 100%;
   overflow-x: hidden;
   overflow-y: overlay;
   ${scrollbars.MAIN};
+  margin-top: 50px;
 `;
 
 export const ContentStyle = (loading: boolean) =>
