@@ -40,17 +40,21 @@ class Settings extends React.Component<Props, State> {
   };
 
   toggleNotification = () => {
-    const { isNotificationOpen } = this.state;
-    this.setState({ isNotificationOpen: !isNotificationOpen, isProfileOpen: false });
+    this.setState(prevState => ({
+      isNotificationOpen: !prevState.isNotificationOpen,
+      isProfileOpen: false,
+    }));
   };
 
   toggleProfile = () => {
-    const { isProfileOpen } = this.state;
-    this.setState({ isProfileOpen: !isProfileOpen, isNotificationOpen: false });
+    this.setState(prevState => ({
+      isProfileOpen: !prevState.isProfileOpen,
+      isNotificationOpen: false,
+    }));
   };
 
   toggleLogoutDialog = () => {
-    this.setState(previous => ({ logoutDialogOpen: !previous.logoutDialogOpen }));
+    this.setState(prevState => ({ logoutDialogOpen: !prevState.logoutDialogOpen }));
   };
 
   render() {

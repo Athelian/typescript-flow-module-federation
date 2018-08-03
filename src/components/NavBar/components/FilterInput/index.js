@@ -59,7 +59,7 @@ class FilterInput extends React.Component<Props, State> {
   };
 
   toggle = () => {
-    this.setState(previous => ({ isOpen: !previous.isOpen }));
+    this.setState(prevState => ({ isOpen: !prevState.isOpen }));
   };
 
   submit = (values: Object) => {
