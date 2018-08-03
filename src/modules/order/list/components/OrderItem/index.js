@@ -25,6 +25,7 @@ import {
   SlashStyle,
   ChartButtonStyle,
   FooterStyle,
+  WrapperCardStyle,
 } from './style';
 import RingChart from '../RingChart';
 import OrderItemDetail from '../OrderItemDetail';
@@ -32,10 +33,10 @@ import OrderItemDetail from '../OrderItemDetail';
 type Props = {
   order: ?Order,
   intl: intlShape,
-  style?: Object,
+  width?: number,
 };
 
-const OrderItem = ({ order, intl, style }: Props) => {
+const OrderItem = ({ order, intl, width }: Props) => {
   if (!order) return null;
 
   const { PO, date, exporter, items } = order;
@@ -44,8 +45,10 @@ const OrderItem = ({ order, intl, style }: Props) => {
 
   const totalUnshippedQuantity = totalQuantity - order.shippedQuantity;
 
+  const wrapperClassName = width ? WrapperCardStyle(width) : '';
+
   return (
-    <EntityCard style={style} color="BLUE" icon="farOrder">
+    <EntityCard color="BLUE" icon="farOrder" wrapperClassName={wrapperClassName}>
       <div className={OrderItemStyle}>
         <div className={POStyle} title={intl.formatMessage(messages.tooltipPO, { PO })}>
           {PO}
@@ -139,7 +142,7 @@ const OrderItem = ({ order, intl, style }: Props) => {
 };
 
 OrderItem.defaultProps = {
-  style: {},
+  width: 0,
 };
 
 export default injectIntl(OrderItem);

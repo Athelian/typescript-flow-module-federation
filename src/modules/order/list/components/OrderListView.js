@@ -31,7 +31,7 @@ function OrderListView({ items, onLoadMore, hasMore, isLoading }: Props) {
           rowRenderer={({ key, index, style }) =>
             isRowLoaded({ index }) ? (
               <div key={key} style={style}>
-                <OrderItem order={items[index]} style={{ width }} />
+                <OrderItem order={items[index]} width={width} />
               </div>
             ) : (
               <div key={key} style={style}>
