@@ -113,3 +113,7 @@ export const ChartButtonStyle = css`
 export const FooterStyle = css`
   ${layout.HORIZONTAL};
 `;
+
+export const WrapperCardStyle = (width: number) => css`
+  width: ${width}px;
+`;
