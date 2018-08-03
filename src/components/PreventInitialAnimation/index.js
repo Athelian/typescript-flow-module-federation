@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { HiddenStyle } from './style';
 
 type Props = {
   children: React.Node,
+  isChildrenVisible?: boolean,
 };
 
 type State = {
@@ -11,7 +11,9 @@ type State = {
 };
 
 export default class PreventInitialAnimation extends React.Component<Props, State> {
-  static defaultProps: Props;
+  static defaultProps = {
+    isChildrenVisible: false,
+  };
 
   state = {
     shouldApplyAnimation: false,
@@ -19,13 +21,14 @@ export default class PreventInitialAnimation extends React.Component<Props, Stat
 
   componentDidUpdate() {
     const { shouldApplyAnimation } = this.state;
-    if (shouldApplyAnimation) return;
+    const { isChildrenVisible } = this.props;
+    if (shouldApplyAnimation || !isChildrenVisible) return;
     setTimeout(() => this.setState({ shouldApplyAnimation: true }), 1);
   }
 
   render() {
     const { children } = this.props;
     const { shouldApplyAnimation } = this.state;
-    return <div className={!shouldApplyAnimation && HiddenStyle}>{children}</div>;
+    return <div>{shouldApplyAnimation && children}</div>;
   }
 }

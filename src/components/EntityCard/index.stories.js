@@ -15,7 +15,7 @@ storiesOf('Card', module)
   .add('Default', () => (
     <div style={{ margin: '100px' }}>
       <Card color="YELLOW" icon="fasShip" onSelect={action('Card Selected!!')} actions={actions}>
-        {() => <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>}
+        <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>
       </Card>
     </div>
   ))
@@ -28,7 +28,7 @@ storiesOf('Card', module)
         onSelect={action('Card Selected!!')}
         actions={actions}
       >
-        {() => <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>}
+        <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>
       </Card>
     </div>
   ))
@@ -42,7 +42,7 @@ storiesOf('Card', module)
       onSelect={action('Card Selected!!')}
       actions={actions}
     >
-      {() => <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>}
+      <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>
     </Card>
   ))
   .add('Selectable', () => (
@@ -53,13 +53,11 @@ storiesOf('Card', module)
       onSelect={action('Card Selected!!')}
       actions={actions}
     >
-      {() => (
-        <div style={{ width: '200px', height: '250px' }}>
-          <a href="https://zeport.io">
-            make sure any link inside a card dont go anywhere if the card is selectable
-          </a>
-        </div>
-      )}
+      <div style={{ width: '200px', height: '250px' }}>
+        <a href="https://zeport.io">
+          make sure any link inside a card dont go anywhere if the card is selectable
+        </a>
+      </div>
     </Card>
   ))
   .add('Selected', () => (
@@ -71,6 +69,6 @@ storiesOf('Card', module)
       onSelect={action('Card Selected!!')}
       actions={actions}
     >
-      {() => <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>}
+      <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>
     </Card>
   ));

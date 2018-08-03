@@ -16,7 +16,7 @@ type Props = {
 
 function Actions({ actions, onClick, visible }: Props) {
   return (
-    <PreventInitialAnimation>
+    <PreventInitialAnimation isChildrenVisible={visible}>
       <div className={WrapperStyle} onClick={onClick} role="presentation">
         {actions &&
           actions.map((action, index) => (
