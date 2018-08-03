@@ -1,24 +1,12 @@
 // @flow
-import * as React from 'react';
-import { UIConsumer } from 'modules/ui';
-import Settings from './components/Settings';
-import { NavBarStyle, ChildrenStyle } from './style';
-
-type Props = {
-  children: React.Node,
-};
-
-function NavBar({ children }: Props) {
-  return (
-    <UIConsumer>
-      {({ isSideBarExpanded }) => (
-        <div className={NavBarStyle(isSideBarExpanded)}>
-          <div className={ChildrenStyle}>{children}</div>
-          <Settings />
-        </div>
-      )}
-    </UIConsumer>
-  );
-}
+import NavBar from './NavBar';
+import EntityIcon from './components/EntityIcon';
+import ViewToggle from './components/ViewToggle';
+import FilterInput from './components/FilterInput';
+import SortInput from './components/SortInput';
+import SearchInput from './components/SearchInput';
+import ActiveToggleTabs from './components/Tabs/ActiveToggleTabs';
 
 export default NavBar;
+
+export { EntityIcon, ViewToggle, FilterInput, SortInput, SearchInput, ActiveToggleTabs };
