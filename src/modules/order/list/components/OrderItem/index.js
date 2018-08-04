@@ -10,8 +10,9 @@ import faBatched from '@fortawesome/fontawesome-pro-solid/faBox';
 import faShipped from '@fortawesome/fontawesome-pro-solid/faShip';
 import { type Order } from 'modules/order/type.js.flow';
 import messages from 'modules/order/messages';
-import EntityCard from 'components/EntityCard';
+import EntityCard, { EntityAction } from 'components/EntityCard';
 import Dialog from 'components/Dialog';
+import logger from 'utils/logger';
 import {
   OrderItemStyle,
   DetailContainerStyle,
@@ -34,10 +35,11 @@ type Props = {
   order: ?Order,
   intl: intlShape,
   width?: number,
+  showPlaceHolder?: boolean,
 };
 
-const OrderItem = ({ order, intl, width }: Props) => {
-  if (!order) return null;
+const OrderItem = ({ order, intl, width, showPlaceHolder }: Props) => {
+  if (!order) return '';
 
   const { PO, date, exporter, items } = order;
 
@@ -47,8 +49,16 @@ const OrderItem = ({ order, intl, width }: Props) => {
 
   const wrapperClassName = width ? WrapperCardStyle(width) : '';
 
+  const actions = [
+    <EntityAction icon="fasClone" onClick={() => logger.warn('clone')} />,
+    <EntityAction icon="fasArchive" onClick={() => logger.warn('complete')} />,
+    <EntityAction icon="fasTrash" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+  ];
+
+  if (showPlaceHolder) return 'PLACEHOLDER ON SCROLL';
+
   return (
-    <EntityCard color="BLUE" icon="farOrder" wrapperClassName={wrapperClassName}>
+    <EntityCard color="BLUE" icon="farOrder" actions={actions} wrapperClassName={wrapperClassName}>
       <div className={OrderItemStyle}>
         <div className={POStyle} title={intl.formatMessage(messages.tooltipPO, { PO })}>
           {PO}
@@ -143,6 +153,7 @@ const OrderItem = ({ order, intl, width }: Props) => {
 
 OrderItem.defaultProps = {
   width: 0,
+  showPlaceHolder: false,
 };
 
 export default injectIntl(OrderItem);

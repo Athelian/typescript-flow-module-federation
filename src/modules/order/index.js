@@ -18,22 +18,34 @@ type Props = {};
 
 type State = {
   viewType: string,
+  status: 'Active' | 'Completed',
 };
 
 class Order extends React.Component<Props, State> {
-  state = { viewType: 'grid' };
+  state = { viewType: 'grid', status: 'Active' };
 
-  onToggleView = () => {
-    this.setState(prevState => ({ viewType: prevState.viewType === 'list' ? 'grid' : 'list' }));
+  onToggleView = (viewType: string) => {
+    this.setState({ viewType });
+  };
+
+  onChangeStatus = (tabPosition: number) => {
+    if (!tabPosition) {
+      this.setState({ status: 'Active' });
+    } else {
+      this.setState({
+        status: 'Completed',
+      });
+    }
   };
 
   render() {
-    const { viewType } = this.state;
+    const { viewType, ...filters } = this.state;
+    const pagination = { page: 1, perPage: 10 };
     const fields = [
-      { title: 'UPDATED AT', value: 'PO' },
-      { title: 'CREATED AT', value: 'exporter' },
-      { title: 'DELETED AT', value: 'updatedAt' },
-      { title: 'BORNED AT', value: 'createdAt' },
+      { title: 'PO NO.', value: 'PO' },
+      { title: 'EXPORTER', value: 'exporter' },
+      { title: 'LAST MODIFIED', value: 'updatedAt' },
+      { title: 'CREATED ON', value: 'createdAt' },
     ];
     return (
       <UIConsumer>
@@ -45,10 +57,15 @@ class Order extends React.Component<Props, State> {
                 {({ values, setFieldValue }) => (
                   <NavBar>
                     <EntityIcon icon="farOrder" color="RED" />
-                    <ActiveToggleTabs onChange={index => console.warn('index', index)} />
+                    <ActiveToggleTabs onChange={index => this.onChangeStatus(index)} />
                     <ViewToggle
                       changeToggle={this.onToggleView}
-                      isTableView={viewType === 'list'}
+                      selectedView={viewType}
+                      viewTypes={[
+                        { icon: 'fasWaterfall', type: 'grid' },
+                        { icon: 'farTable', type: 'table' },
+                        { icon: 'farList', type: 'list' },
+                      ]}
                     />
                     <SortInput
                       sort={values.sort && values.sort.field ? values.sort.field : fields[0]}
@@ -74,7 +91,7 @@ class Order extends React.Component<Props, State> {
               </Form>
             }
           >
-            <OrderList viewType={viewType} />
+            <OrderList viewType={viewType} {...filters} {...pagination} />
           </Layout>
         )}
       </UIConsumer>
