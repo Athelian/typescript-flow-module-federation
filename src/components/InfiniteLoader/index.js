@@ -6,9 +6,7 @@ import {
 } from 'react-virtualized';
 
 export type Props = {
-  /** Are there more items to load? (This information comes from the most recent API request.) */
   hasNextPage: boolean,
-  /** Are we currently loading a page of items? (This may be an in-flight flag in your Redux store for example.) */
   isNextPageLoading: boolean,
   list: Array<Object>,
   onLoadNextPage: Function,
@@ -30,42 +28,59 @@ export default function InfiniteLoader({
   columnCount = 3,
   ...rest
 }: Props & RenderProps) {
-  const rowCount = hasNextPage ? list.length + 1 : list.length;
-
+  const rowCount = hasNextPage ? list.length + columnCount : list.length;
   const loadMoreRows = isNextPageLoading ? () => {} : onLoadNextPage;
-
   const isRowLoaded = ({ index }) => !hasNextPage || index < list.length;
-
   const RenderComponent = renderComponent;
+
   return (
     <BaseInfiniteLoader isRowLoaded={isRowLoaded} loadMoreRows={loadMoreRows} rowCount={rowCount}>
       {({ onRowsRendered, registerChild }) =>
-        type === 'list' ? (
-          <RenderComponent
-            ref={registerChild}
-            onRowsRendered={onRowsRendered}
-            rowCount={rowCount}
-            {...rest}
-          />
-        ) : (
-          <RenderComponent
-            ref={registerChild}
-            columnCount={columnCount}
-            onSectionRendered={({
-              columnStartIndex,
-              columnStopIndex,
-              rowStartIndex,
-              rowStopIndex,
-            }) => {
-              const startIndex = rowStartIndex * columnCount + columnStartIndex;
-              const stopIndex = rowStopIndex * columnCount + columnStopIndex;
+        (() => {
+          if (type === 'list')
+            return (
+              <RenderComponent
+                ref={registerChild}
+                onRowsRendered={onRowsRendered}
+                rowCount={rowCount}
+                {...rest}
+              />
+            );
 
-              onRowsRendered({ startIndex, stopIndex });
-            }}
-            rowCount={rowCount}
-            {...rest}
-          />
-        )
+          if (type === 'table') {
+            const { children, ...restProps } = rest;
+            return (
+              <RenderComponent
+                ref={registerChild}
+                onRowsRendered={onRowsRendered}
+                rowCount={rowCount}
+                {...restProps}
+              >
+                {children}
+              </RenderComponent>
+            );
+          }
+
+          return (
+            <RenderComponent
+              ref={registerChild}
+              columnCount={columnCount}
+              onSectionRendered={({
+                columnStartIndex,
+                columnStopIndex,
+                rowStartIndex,
+                rowStopIndex,
+              }) => {
+                const startIndex = rowStartIndex * columnCount + columnStartIndex;
+                const stopIndex = rowStopIndex * columnCount + columnStopIndex;
+
+                onRowsRendered({ startIndex, stopIndex });
+              }}
+              rowCount={rowCount}
+              {...rest}
+            />
+          );
+        })()
       }
     </BaseInfiniteLoader>
   );

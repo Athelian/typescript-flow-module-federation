@@ -31,15 +31,16 @@ function OrderGridView({ items, onLoadMore, isLoading, hasMore }: Props) {
           onLoadNextPage={onLoadMore}
           list={items}
           width={width}
-          height={window.innerHeight - 50}
+          height={window.outerHeight - 50}
           rowCount={Math.ceil(items.length / totalColumns(width, columnWidth))}
           rowHeight={170}
           columnWidth={columnWidth}
           columnCount={totalColumns(width, columnWidth)}
-          cellRenderer={({ key, columnIndex, rowIndex, style }) =>
+          cellRenderer={({ key, isScrolling, columnIndex, rowIndex, style }) =>
             isRowLoaded({ index: rowIndex * totalColumns(width, columnWidth) + columnIndex }) ? (
               <div key={key} style={style}>
                 <OrderItem
+                  showPlaceHolder={isScrolling}
                   order={items[rowIndex * totalColumns(width, columnWidth) + columnIndex]}
                   key={key}
                 />
