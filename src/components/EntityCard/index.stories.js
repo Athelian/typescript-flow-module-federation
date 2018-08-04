@@ -3,12 +3,12 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Card from './index';
-import BaseAction from './Actions/BaseAction';
+import EntityAction from './Actions/EntityAction';
 
 const actions = [
-  <BaseAction action="archive" onClick={action('Archived!!')} />,
-  <BaseAction action="clone" onClick={action('Cloned!!')} />,
-  <BaseAction action="remove" onClick={action('Removed!!')} />,
+  <EntityAction icon="fasClone" onClick={action('Cloned!!')} />,
+  <EntityAction icon="fasArchive" onClick={action('Removed!!')} />,
+  <EntityAction icon="fasTrash" hoverColor="RED" onClick={action('Archived!!')} />,
 ];
 
 storiesOf('Card', module)
