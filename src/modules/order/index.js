@@ -4,6 +4,7 @@ import Layout from 'components/Layout';
 import { Form } from 'components/Form';
 import TextInput from 'components/TextInput';
 import { UIConsumer } from 'modules/ui';
+import logger from 'utils/logger';
 import NavBar, {
   EntityIcon,
   ViewToggle,
@@ -40,6 +41,7 @@ class Order extends React.Component<Props, State> {
       this.setState(prevState => ({
         ...prevState,
         filter: {
+          ...prevState.filter,
           status: 'Active',
         },
       }));
@@ -47,6 +49,7 @@ class Order extends React.Component<Props, State> {
       this.setState(prevState => ({
         ...prevState,
         filter: {
+          ...prevState.filter,
           status: 'Completed',
         },
       }));
@@ -54,7 +57,7 @@ class Order extends React.Component<Props, State> {
   };
 
   render() {
-    const { viewType } = this.state;
+    const { viewType, sort } = this.state;
     const fields = [
       { title: 'PO NO.', value: 'PO' },
       { title: 'EXPORTER', value: 'exporter' },
@@ -68,7 +71,7 @@ class Order extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <Form>
-                {({ values, setFieldValue }) => (
+                {() => (
                   <NavBar>
                     <EntityIcon icon="farOrder" color="RED" />
                     <ActiveToggleTabs onChange={index => this.onChangeStatus(index)} />
@@ -82,14 +85,19 @@ class Order extends React.Component<Props, State> {
                       ]}
                     />
                     <SortInput
-                      sort={values.sort && values.sort.field ? values.sort.field : fields[0]}
-                      ascending={values.sort ? values.sort.ascending : true}
+                      sort={fields.find(item => item.value === sort.field) || fields[0]}
+                      ascending={sort.direction !== 'DESC'}
                       fields={fields}
-                      onChange={field => setFieldValue('sort', field)}
+                      onChange={({ field: { value }, ascending }) =>
+                        this.setState(prevState => ({
+                          ...prevState,
+                          sort: { field: value, direction: ascending ? 'ASC' : 'DESC' },
+                        }))
+                      }
                     />
                     <FilterInput
                       initialFilter={{}}
-                      onChange={newFilter => setFieldValue('filter', newFilter)}
+                      onChange={newFilter => logger.warn('filter', newFilter)}
                       width={400}
                     >
                       {({ setFieldValue: changeQuery }) => (
