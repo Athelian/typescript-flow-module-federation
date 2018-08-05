@@ -5,10 +5,14 @@ import StyleLessSearchInput from 'components/base/SearchInput';
 import { SearchInputStyle } from './style';
 
 type Props = {
-  onChange: (value: string) => void,
+  onChange: Function,
+  onBlur?: Function,
+  onClear: Function,
+  name: string,
+  value: string,
 };
 
-function SearchInput({ onChange }: Props) {
+function SearchInput(props: Props) {
   return (
     <StyleLessSearchInput
       style={SearchInputStyle}
@@ -18,9 +22,13 @@ function SearchInput({ onChange }: Props) {
           <Icon icon="faClear" />
         </button>
       )}
-      onChange={onChange}
+      {...props}
     />
   );
 }
+
+SearchInput.defaultProps = {
+  onBlur: () => {},
+};
 
 export default SearchInput;
