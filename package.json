@@ -34,6 +34,7 @@
     "raven-js": "^3.26.4",
     "react": "^16.4.2",
     "react-apollo": "^2.1.9",
+    "react-debounce-input": "^3.2.0",
     "react-dom": "^16.4.2",
     "react-emotion": "^9.2.6",
     "react-fullstory": "^1.0.3",
