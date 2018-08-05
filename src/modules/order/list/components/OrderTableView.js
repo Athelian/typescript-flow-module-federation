@@ -14,6 +14,13 @@ type Props = {
 };
 
 function OrderTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
+  const tableData = items.map(({ PO, exporter, ...rest }) => ({
+    PO,
+    name: exporter.name,
+    updatedAt: rest.updatedAt,
+    createdAt: rest.createdAt,
+    total: rest.items.length,
+  }));
   return (
     <AutoSizer disableHeight>
       {({ width }) => (
@@ -25,13 +32,33 @@ function OrderTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
           hasNextPage={hasMore}
           isNextPageLoading={isLoading}
           onLoadNextPage={onLoadMore}
-          list={items}
-          rowGetter={({ index }) => items[index]}
+          list={tableData}
+          rowGetter={({ index }) => tableData[index] || {}}
           columns={[
             {
               label: 'PO',
               dataKey: 'PO',
               width: 100,
+            },
+            {
+              label: 'Items count',
+              dataKey: 'total',
+              width: 100,
+            },
+            {
+              label: 'Exporter',
+              dataKey: 'name',
+              width: 200,
+            },
+            {
+              label: 'Last Modified',
+              dataKey: 'updatedAt',
+              width: 200,
+            },
+            {
+              label: 'Created On',
+              dataKey: 'createdAt',
+              width: 200,
             },
           ]}
         />
