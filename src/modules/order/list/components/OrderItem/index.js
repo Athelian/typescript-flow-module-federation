@@ -35,10 +35,9 @@ type Props = {
   order: ?Order,
   intl: intlShape,
   width?: number,
-  showPlaceHolder?: boolean,
 };
 
-const OrderItem = ({ order, intl, width, showPlaceHolder }: Props) => {
+const OrderItem = ({ order, intl, width }: Props) => {
   if (!order) return '';
 
   const { PO, date, exporter, items } = order;
@@ -54,8 +53,6 @@ const OrderItem = ({ order, intl, width, showPlaceHolder }: Props) => {
     <EntityAction icon="fasArchive" onClick={() => logger.warn('complete')} />,
     <EntityAction icon="fasTrash" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
-
-  if (showPlaceHolder) return 'PLACEHOLDER ON SCROLL';
 
   return (
     <EntityCard color="BLUE" icon="farOrder" actions={actions} wrapperClassName={wrapperClassName}>
@@ -153,7 +150,6 @@ const OrderItem = ({ order, intl, width, showPlaceHolder }: Props) => {
 
 OrderItem.defaultProps = {
   width: 0,
-  showPlaceHolder: false,
 };
 
 export default injectIntl(OrderItem);

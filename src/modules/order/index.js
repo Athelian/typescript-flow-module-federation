@@ -13,16 +13,23 @@ import NavBar, {
   ActiveToggleTabs,
 } from 'components/NavBar';
 import OrderList from './list';
+import type { Props as State } from './list';
 
 type Props = {};
 
-type State = {
-  viewType: string,
-  status: 'Active' | 'Completed',
-};
-
+// TODO: We will restructure when we're working on new form system
 class Order extends React.Component<Props, State> {
-  state = { viewType: 'grid', status: 'Active' };
+  state = {
+    viewType: 'grid',
+    filter: {
+      status: 'Active',
+    },
+    sort: {
+      field: 'updatedAt',
+      direction: 'DESC',
+    },
+    perPage: 10,
+  };
 
   onToggleView = (viewType: string) => {
     this.setState({ viewType });
@@ -30,17 +37,24 @@ class Order extends React.Component<Props, State> {
 
   onChangeStatus = (tabPosition: number) => {
     if (!tabPosition) {
-      this.setState({ status: 'Active' });
+      this.setState(prevState => ({
+        ...prevState,
+        filter: {
+          status: 'Active',
+        },
+      }));
     } else {
-      this.setState({
-        status: 'Completed',
-      });
+      this.setState(prevState => ({
+        ...prevState,
+        filter: {
+          status: 'Completed',
+        },
+      }));
     }
   };
 
   render() {
-    const { viewType, ...filters } = this.state;
-    const pagination = { page: 1, perPage: 10 };
+    const { viewType } = this.state;
     const fields = [
       { title: 'PO NO.', value: 'PO' },
       { title: 'EXPORTER', value: 'exporter' },
@@ -75,7 +89,7 @@ class Order extends React.Component<Props, State> {
                     />
                     <FilterInput
                       initialFilter={{}}
-                      onChange={filter => setFieldValue('filter', filter)}
+                      onChange={newFilter => setFieldValue('filter', newFilter)}
                       width={400}
                     >
                       {({ setFieldValue: changeQuery }) => (
@@ -91,7 +105,7 @@ class Order extends React.Component<Props, State> {
               </Form>
             }
           >
-            <OrderList viewType={viewType} {...filters} {...pagination} />
+            <OrderList {...this.state} />
           </Layout>
         )}
       </UIConsumer>

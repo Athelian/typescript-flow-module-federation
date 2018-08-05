@@ -8,10 +8,15 @@ import OrderListView from './components/OrderListView';
 import OrderTableView from './components/OrderTableView';
 import query from './query.graphql';
 
-type Props = {
+export type Props = {
   viewType: string,
-  status: string,
-  page: number,
+  filter: {
+    status: string,
+  },
+  sort: {
+    field: string,
+    direction: string,
+  },
   perPage: number,
 };
 
@@ -23,14 +28,11 @@ class OrderList extends React.PureComponent<Props> {
     const totalPage = getByPathWithDefault(1, 'viewer.orders.totalPage', data);
     if (nextPage > totalPage) return;
 
-    const { perPage, status } = this.props;
+    const { viewType, ...filtersAndSort } = this.props;
     fetchMore({
       variables: {
         page: nextPage,
-        perPage,
-        filter: {
-          status,
-        },
+        ...filtersAndSort,
       },
       updateQuery: (prevResult, { fetchMoreResult }) => {
         if (getByPathWithDefault([], 'viewer.orders.nodes', fetchMoreResult).length === 0)
@@ -54,15 +56,16 @@ class OrderList extends React.PureComponent<Props> {
   };
 
   render() {
-    const { viewType, page, perPage, status } = this.props;
+    const { viewType, ...filtersAndSort } = this.props;
     return (
-      <Query query={query} variables={{ page, perPage, filter: { status } }}>
+      <Query query={query} variables={{ page: 1, ...filtersAndSort }}>
         {({ loading, data, fetchMore, error }) => {
           const nextPage = getByPathWithDefault(1, 'viewer.orders.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'viewer.orders.totalPage', data);
           if (error) {
             return error.message;
           }
+
           if (loading) return <LoadingIcon />;
 
           if (viewType === 'list')

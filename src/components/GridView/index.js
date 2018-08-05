@@ -24,8 +24,42 @@ type Props = InfiniteLoaderProps & {
   cellRenderer: RenderRowProps => React.Node,
 };
 
-export default class ListView extends React.PureComponent<Props> {
+export default class GridView extends React.PureComponent<Props> {
   render() {
-    return <InfiniteLoader type="grid" renderComponent={Grid} {...this.props} />;
+    const {
+      columnCount,
+      hasNextPage,
+      onLoadNextPage,
+      list,
+      isNextPageLoading,
+      ...rest
+    } = this.props;
+    return (
+      <InfiniteLoader
+        onLoadNextPage={onLoadNextPage}
+        hasNextPage={hasNextPage}
+        list={list}
+        isNextPageLoading={isNextPageLoading}
+      >
+        {({ onRowsRendered, registerChild }) => (
+          <Grid
+            ref={registerChild}
+            columnCount={columnCount}
+            onSectionRendered={({
+              columnStartIndex,
+              columnStopIndex,
+              rowStartIndex,
+              rowStopIndex,
+            }) => {
+              const startIndex = rowStartIndex * columnCount + columnStartIndex;
+              const stopIndex = rowStopIndex * columnCount + columnStopIndex;
+
+              onRowsRendered({ startIndex, stopIndex });
+            }}
+            {...rest}
+          />
+        )}
+      </InfiniteLoader>
+    );
   }
 }

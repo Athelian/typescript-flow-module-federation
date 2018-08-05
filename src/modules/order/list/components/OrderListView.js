@@ -28,10 +28,10 @@ function OrderListView({ items, onLoadMore, hasMore, isLoading }: Props) {
           isNextPageLoading={isLoading}
           onLoadNextPage={onLoadMore}
           list={items}
-          rowRenderer={({ key, index, isScrolling, style }) =>
+          rowRenderer={({ key, index, style }) =>
             isRowLoaded({ index }) ? (
               <div key={key} style={style}>
-                <OrderItem order={items[index]} width={width} showPlaceHolder={isScrolling} />
+                <OrderItem order={items[index]} width={width} />
               </div>
             ) : (
               <div key={key} style={style}>

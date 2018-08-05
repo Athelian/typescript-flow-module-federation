@@ -23,6 +23,19 @@ type Props = InfiniteLoaderProps & {
 
 export default class ListView extends React.PureComponent<Props> {
   render() {
-    return <InfiniteLoader type="list" renderComponent={List} {...this.props} />;
+    const { hasNextPage, onLoadNextPage, list, isNextPageLoading, ...rest } = this.props;
+    const rowCount = hasNextPage ? list.length + 1 : list.length;
+    return (
+      <InfiniteLoader
+        onLoadNextPage={onLoadNextPage}
+        hasNextPage={hasNextPage}
+        list={list}
+        isNextPageLoading={isNextPageLoading}
+      >
+        {({ onRowsRendered, registerChild }) => (
+          <List ref={registerChild} onRowsRendered={onRowsRendered} rowCount={rowCount} {...rest} />
+        )}
+      </InfiniteLoader>
+    );
   }
 }

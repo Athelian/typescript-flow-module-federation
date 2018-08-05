@@ -20,12 +20,22 @@ type Props = InfiniteLoaderProps & {
 
 export default class TableView extends React.PureComponent<Props> {
   render() {
-    const { columns, ...rest } = this.props;
+    const { hasNextPage, onLoadNextPage, list, isNextPageLoading, columns, ...rest } = this.props;
+    const rowCount = hasNextPage ? list.length + 1 : list.length;
     return (
-      <InfiniteLoader type="table" renderComponent={Table} {...rest}>
-        {columns.map(item => (
-          <Column key={item.dataKey} {...item} />
-        ))}
+      <InfiniteLoader
+        onLoadNextPage={onLoadNextPage}
+        hasNextPage={hasNextPage}
+        list={list}
+        isNextPageLoading={isNextPageLoading}
+      >
+        {({ onRowsRendered, registerChild }) => (
+          <Table ref={registerChild} onRowsRendered={onRowsRendered} rowCount={rowCount} {...rest}>
+            {columns.map(item => (
+              <Column key={item.dataKey} {...item} />
+            ))}
+          </Table>
+        )}
       </InfiniteLoader>
     );
   }

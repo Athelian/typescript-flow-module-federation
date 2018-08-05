@@ -31,26 +31,33 @@ function OrderGridView({ items, onLoadMore, isLoading, hasMore }: Props) {
           onLoadNextPage={onLoadMore}
           list={items}
           width={width}
-          height={window.outerHeight - 50}
-          rowCount={Math.ceil(items.length / totalColumns(width, columnWidth))}
+          height={window.innerHeight - 50}
+          rowCount={Math.ceil(items.length / totalColumns(width, columnWidth)) + 1}
           rowHeight={170}
           columnWidth={columnWidth}
           columnCount={totalColumns(width, columnWidth)}
-          cellRenderer={({ key, isScrolling, columnIndex, rowIndex, style }) =>
-            isRowLoaded({ index: rowIndex * totalColumns(width, columnWidth) + columnIndex }) ? (
-              <div key={key} style={style}>
-                <OrderItem
-                  showPlaceHolder={isScrolling}
-                  order={items[rowIndex * totalColumns(width, columnWidth) + columnIndex]}
-                  key={key}
-                />
-              </div>
-            ) : (
-              <div key={key} style={style}>
-                <LoadingIcon />
-              </div>
-            )
-          }
+          cellRenderer={({ key, columnIndex, rowIndex, style }) => {
+            const currentIndex = rowIndex * totalColumns(width, columnWidth) + columnIndex;
+            if (isRowLoaded({ index: currentIndex })) {
+              return (
+                <div key={key} style={style}>
+                  <OrderItem
+                    order={items[rowIndex * totalColumns(width, columnWidth) + columnIndex]}
+                    key={key}
+                  />
+                </div>
+              );
+            }
+
+            if (currentIndex === items.length)
+              return (
+                <div key={key} style={style}>
+                  <LoadingIcon />
+                </div>
+              );
+
+            return <div key={key} style={style} />;
+          }}
         />
       )}
     </AutoSizer>
