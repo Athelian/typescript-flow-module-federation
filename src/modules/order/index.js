@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Layout from 'components/Layout';
-import { Form } from 'components/Form';
+import { Form, Field, FieldObserver } from 'components/Form';
 import TextInput from 'components/TextInput';
 import { UIConsumer } from 'modules/ui';
 import logger from 'utils/logger';
@@ -14,17 +14,25 @@ import NavBar, {
   ActiveToggleTabs,
 } from 'components/NavBar';
 import OrderList from './list';
-import type { Props as State } from './list';
 
 type Props = {};
+type State = {
+  viewType: string,
+  query: string,
+  status: string,
+  sort: {
+    field: string,
+    direction: string,
+  },
+  perPage: number,
+};
 
 // TODO: We will restructure when we're working on new form system
-class Order extends React.Component<Props, State> {
+class OrderModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
-    filter: {
-      status: 'Active',
-    },
+    query: '',
+    status: 'Active',
     sort: {
       field: 'updatedAt',
       direction: 'DESC',
@@ -32,32 +40,13 @@ class Order extends React.Component<Props, State> {
     perPage: 10,
   };
 
-  onToggleView = (viewType: string) => {
-    this.setState({ viewType });
-  };
-
-  onChangeStatus = (tabPosition: number) => {
-    if (!tabPosition) {
-      this.setState(prevState => ({
-        ...prevState,
-        filter: {
-          ...prevState.filter,
-          status: 'Active',
-        },
-      }));
-    } else {
-      this.setState(prevState => ({
-        ...prevState,
-        filter: {
-          ...prevState.filter,
-          status: 'Completed',
-        },
-      }));
-    }
+  onChangeFilter = (field: string, newValue: any) => {
+    this.setState(prevState => ({ ...prevState, [field]: newValue }));
   };
 
   render() {
-    const { viewType, sort } = this.state;
+    const { viewType, sort, perPage, ...filters } = this.state;
+    // TODO: i18n message
     const fields = [
       { title: 'PO NO.', value: 'PO' },
       { title: 'EXPORTER', value: 'exporter' },
@@ -70,50 +59,69 @@ class Order extends React.Component<Props, State> {
           <Layout
             {...uiState}
             navBar={
-              <Form>
-                {() => (
-                  <NavBar>
-                    <EntityIcon icon="farOrder" color="RED" />
-                    <ActiveToggleTabs onChange={index => this.onChangeStatus(index)} />
-                    <ViewToggle
-                      changeToggle={this.onToggleView}
-                      selectedView={viewType}
-                      viewTypes={[
-                        { icon: 'fasWaterfall', type: 'grid' },
-                        { icon: 'farTable', type: 'table' },
-                        { icon: 'farList', type: 'list' },
-                      ]}
-                    />
-                    <SortInput
-                      sort={fields.find(item => item.value === sort.field) || fields[0]}
-                      ascending={sort.direction !== 'DESC'}
-                      fields={fields}
-                      onChange={({ field: { value }, ascending }) =>
-                        this.setState(prevState => ({
-                          ...prevState,
-                          sort: { field: value, direction: ascending ? 'ASC' : 'DESC' },
-                        }))
-                      }
-                    />
-                    <FilterInput
-                      initialFilter={{}}
-                      onChange={newFilter => logger.warn('filter', newFilter)}
-                      width={400}
-                    >
-                      {({ setFieldValue: changeQuery }) => (
-                        <React.Fragment>
-                          <SearchInput onChange={query => changeQuery('query', query)} />
-                          <TextInput onBlur={() => {}} onChange={() => {}} />
-                        </React.Fragment>
-                      )}
-                    </FilterInput>
-                    <SearchInput onChange={() => {}} />
-                  </NavBar>
-                )}
-              </Form>
+              <NavBar>
+                <EntityIcon icon="farOrder" color="RED" />
+                <ActiveToggleTabs
+                  onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
+                />
+                <ViewToggle
+                  changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
+                  selectedView={viewType}
+                  viewTypes={[
+                    { icon: 'fasWaterfall', type: 'grid' },
+                    { icon: 'farTable', type: 'table' },
+                    { icon: 'farList', type: 'list' },
+                  ]}
+                />
+                <SortInput
+                  sort={fields.find(item => item.value === sort.field) || fields[0]}
+                  ascending={sort.direction !== 'DESC'}
+                  fields={fields}
+                  onChange={({ field: { value }, ascending }) =>
+                    this.onChangeFilter('sort', {
+                      field: value,
+                      direction: ascending ? 'ASC' : 'DESC',
+                    })
+                  }
+                />
+                <Form initialValues={{ ...filters }}>
+                  {({ values, setFieldValue }) => (
+                    <React.Fragment>
+                      <FilterInput
+                        initialFilter={{}}
+                        onChange={newFilter => logger.warn('filter', newFilter)}
+                        width={400}
+                      >
+                        {({ setFieldValue: changeQuery }) => (
+                          <React.Fragment>
+                            <SearchInput
+                              value=""
+                              name="search"
+                              onClear={() => changeQuery('query', '')}
+                              onChange={newValue => changeQuery('query', newValue)}
+                            />
+                            <TextInput onBlur={() => {}} onChange={() => {}} />
+                          </React.Fragment>
+                        )}
+                      </FilterInput>
+                      <Field
+                        value={values.query}
+                        name="query"
+                        render={({ input }) => (
+                          <SearchInput {...input} onClear={() => setFieldValue('query', '')} />
+                        )}
+                      />
+                      <FieldObserver
+                        name="query"
+                        onChange={({ value }) => this.onChangeFilter('query', value)}
+                      />
+                    </React.Fragment>
+                  )}
+                </Form>
+              </NavBar>
             }
           >
-            <OrderList {...this.state} />
+            <OrderList sort={sort} viewType={viewType} perPage={perPage} filter={filters} />
           </Layout>
         )}
       </UIConsumer>
@@ -121,4 +129,4 @@ class Order extends React.Component<Props, State> {
   }
 }
 
-export default Order;
+export default OrderModule;

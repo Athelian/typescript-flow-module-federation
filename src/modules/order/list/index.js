@@ -8,9 +8,10 @@ import OrderListView from './components/OrderListView';
 import OrderTableView from './components/OrderTableView';
 import query from './query.graphql';
 
-export type Props = {
+type Props = {
   viewType: string,
   filter: {
+    query: string,
     status: string,
   },
   sort: {
