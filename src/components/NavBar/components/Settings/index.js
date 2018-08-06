@@ -68,7 +68,12 @@ class Settings extends React.Component<Props, State> {
             <div className={SettingsCountStyle}>{3}</div>
             <Icon icon="fasNotification" />
           </button>
-          <button tabIndex={-1} onClick={this.toggleProfile} type="button">
+          <button
+            data-testid="setting-button"
+            tabIndex={-1}
+            onClick={this.toggleProfile}
+            type="button"
+          >
             Z
           </button>
         </div>
@@ -102,6 +107,7 @@ class Settings extends React.Component<Props, State> {
                 <div
                   className={SubMenuItemStyle}
                   onClick={this.toggleLogoutDialog}
+                  data-testid="logout-button"
                   role="presentation"
                 >
                   <div>

@@ -23,7 +23,7 @@ function LogoutDialog({ isOpen, onRequestClose, onCancel, onConfirm }: Props) {
           <button onClick={onCancel} type="button">
             <FormattedMessage {...messages.cancel} />
           </button>
-          <button onClick={onConfirm} type="button">
+          <button data-testid="logout-confirm-button" onClick={onConfirm} type="button">
             <FormattedMessage {...messages.logout} />
           </button>
         </div>
