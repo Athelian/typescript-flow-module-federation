@@ -7,7 +7,8 @@ import { UIConsumer } from 'modules/ui';
 import logger from 'utils/logger';
 import NavBar, {
   EntityIcon,
-  ViewToggle,
+  // NOTE: hide for now
+  // ViewToggle,
   FilterInput,
   SortInput,
   SearchInput,
@@ -64,7 +65,7 @@ class OrderModule extends React.Component<Props, State> {
                 <ActiveToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
                 />
-                <ViewToggle
+                {/* <ViewToggle
                   changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
                   selectedView={viewType}
                   viewTypes={[
@@ -72,7 +73,7 @@ class OrderModule extends React.Component<Props, State> {
                     { icon: 'farTable', type: 'table' },
                     { icon: 'farList', type: 'list' },
                   ]}
-                />
+                /> */}
                 <SortInput
                   sort={fields.find(item => item.value === sort.field) || fields[0]}
                   ascending={sort.direction !== 'DESC'}
