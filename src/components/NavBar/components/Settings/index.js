@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { logout } from 'utils/auth';
+import { reloadPageOnExpireToken as logout } from 'utils/auth';
 import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';

@@ -32,9 +32,7 @@
         [
           "emotion",
           {
-            "hoist": true,
-            "extractStatic": true,
-            "sourceMap": false
+            "hoist": true
           }
         ],
         "graphql-tag",

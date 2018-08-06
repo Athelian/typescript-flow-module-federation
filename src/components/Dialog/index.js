@@ -2,6 +2,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
+import logger from 'utils/logger';
 import {
   BackdropFadeInStyle,
   BackdropFadeOutStyle,
@@ -30,10 +31,13 @@ export default class Dialog extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { rootElementId } = this.props;
-    const dialogRoot = document.getElementById(rootElementId || 'root');
+    const { rootElementId = 'dialog-root' } = this.props;
+    const dialogRoot = document.getElementById(rootElementId);
 
-    if (!dialogRoot) return;
+    if (!dialogRoot) {
+      logger.warn('Not found the rootElementId', rootElementId);
+      return;
+    }
 
     const { isOpen } = this.props;
 
@@ -57,26 +61,24 @@ export default class Dialog extends React.Component<Props> {
     } = this.props;
 
     return (
-      <div>
-        <PreventInitialAnimation isChildrenVisible={isOpen}>
-          {ReactDOM.createPortal(
+      <PreventInitialAnimation isChildrenVisible>
+        {ReactDOM.createPortal(
+          <div
+            className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
+            onClick={onRequestClose}
+            role="presentation"
+          >
             <div
-              className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
-              onClick={onRequestClose}
+              className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
+              onClick={e => e.stopPropagation()}
               role="presentation"
             >
-              <div
-                className={isOpen ? DialogFadeInStyle(width) : DialogFadeOutStyle(width)}
-                onClick={e => e.stopPropagation()}
-                role="presentation"
-              >
-                {children}
-              </div>
-            </div>,
-            this.dialogContainer
-          )}
-        </PreventInitialAnimation>
-      </div>
+              {children}
+            </div>
+          </div>,
+          this.dialogContainer
+        )}
+      </PreventInitialAnimation>
     );
   }
 }

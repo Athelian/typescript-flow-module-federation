@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { BooleanValue } from 'react-values';
 import { injectIntl } from 'react-intl';
 import type { intlShape } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,8 +10,12 @@ import faBatched from '@fortawesome/fontawesome-pro-solid/faBox';
 import faShipped from '@fortawesome/fontawesome-pro-solid/faShip';
 import { type Order } from 'modules/order/type.js.flow';
 import messages from 'modules/order/messages';
+import EntityCard, { EntityAction } from 'components/EntityCard';
+import Dialog from 'components/Dialog';
+import logger from 'utils/logger';
 import {
   OrderItemStyle,
+  DetailContainerStyle,
   POStyle,
   PODateStyle,
   ExporterStyle,
@@ -21,15 +26,19 @@ import {
   SlashStyle,
   ChartButtonStyle,
   FooterStyle,
+  WrapperCardStyle,
 } from './style';
+import RingChart from '../RingChart';
+import OrderItemDetail from '../OrderItemDetail';
 
 type Props = {
   order: ?Order,
   intl: intlShape,
+  width?: number,
 };
 
-const OrderItem = ({ order, intl }: Props) => {
-  if (!order) return null;
+const OrderItem = ({ order, intl, width }: Props) => {
+  if (!order) return '';
 
   const { PO, date, exporter, items } = order;
 
@@ -37,8 +46,16 @@ const OrderItem = ({ order, intl }: Props) => {
 
   const totalUnshippedQuantity = totalQuantity - order.shippedQuantity;
 
+  const wrapperClassName = width ? WrapperCardStyle(width) : '';
+
+  const actions = [
+    <EntityAction icon="fasClone" onClick={() => logger.warn('clone')} />,
+    <EntityAction icon="fasArchive" onClick={() => logger.warn('complete')} />,
+    <EntityAction icon="fasTrash" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+  ];
+
   return (
-    <div>
+    <EntityCard color="BLUE" icon="farOrder" actions={actions} wrapperClassName={wrapperClassName}>
       <div className={OrderItemStyle}>
         <div className={POStyle} title={intl.formatMessage(messages.tooltipPO, { PO })}>
           {PO}
@@ -56,13 +73,38 @@ const OrderItem = ({ order, intl }: Props) => {
           {date}
         </div>
         <div className={FooterStyle}>
-          <button
-            type="button"
-            className={ChartButtonStyle}
-            title={intl.formatMessage(messages.tooltipOpenChart)}
-          >
-            {totalQuantity}
-          </button>
+          <BooleanValue>
+            {({ value: isOpen, toggle }) => (
+              <React.Fragment>
+                <Dialog
+                  isOpen={isOpen}
+                  onRequestClose={toggle}
+                  options={{ width: Math.min(180 * items.length, window.innerWidth - 100) }}
+                >
+                  <div className={DetailContainerStyle}>
+                    {items.map(item => (
+                      <OrderItemDetail orderItem={item} key={item.id} />
+                    ))}
+                  </div>
+                </Dialog>
+                <button
+                  type="button"
+                  className={ChartButtonStyle}
+                  onClick={() => items.length && toggle()}
+                >
+                  <RingChart
+                    totalValue={totalQuantity}
+                    values={[
+                      { value: order.batchedQuantity, color: 'BLUE' },
+                      { value: order.shippedQuantity, color: 'TEAL' },
+                    ]}
+                    cascadeTotalValue
+                    showRedMargin
+                  />
+                </button>
+              </React.Fragment>
+            )}
+          </BooleanValue>
           <div className={QuantitiesWrapper}>
             <div
               className={QuantityStyle('GRAY_DARK')}
@@ -102,8 +144,12 @@ const OrderItem = ({ order, intl }: Props) => {
           </div>
         </div>
       </div>
-    </div>
+    </EntityCard>
   );
+};
+
+OrderItem.defaultProps = {
+  width: 0,
 };
 
 export default injectIntl(OrderItem);

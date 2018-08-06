@@ -53,26 +53,24 @@ export default class SlideView extends React.Component<Props> {
     } = this.props;
 
     return (
-      <div>
-        <PreventInitialAnimation>
-          {ReactDOM.createPortal(
+      <PreventInitialAnimation isChildrenVisible>
+        {ReactDOM.createPortal(
+          <div
+            className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
+            onClick={onRequestClose}
+            role="presentation"
+          >
             <div
-              className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
-              onClick={onRequestClose}
+              className={isOpen ? SlideInStyle(width) : SlideAwayStyle(width)}
+              onClick={e => e.stopPropagation()}
               role="presentation"
             >
-              <div
-                className={isOpen ? SlideInStyle(width) : SlideAwayStyle(width)}
-                onClick={e => e.stopPropagation()}
-                role="presentation"
-              >
-                {children}
-              </div>
-            </div>,
-            this.slideViewContainer
-          )}
-        </PreventInitialAnimation>
-      </div>
+              {children}
+            </div>
+          </div>,
+          this.slideViewContainer
+        )}
+      </PreventInitialAnimation>
     );
   }
 }

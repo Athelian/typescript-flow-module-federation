@@ -1,42 +1,67 @@
 // @flow
 import * as React from 'react';
-import InfiniteLoaderWrapper from 'components/InfiniteLoaderWrapper';
+import {
+  AutoSizer,
+  /* $FlowFixMe: not have flow type yet */
+} from 'react-virtualized';
+import GridView from 'components/GridView';
+import LoadingIcon from 'components/LoadingIcon';
 import OrderItem from './OrderItem';
 
 type Props = {
   items: Array<Object>,
-  onLoadMore?: Function,
+  onLoadMore: Function,
+  hasMore: boolean,
+  isLoading: boolean,
 };
 
-function OrderGridView({ items, onLoadMore }: Props) {
-  const totalColumns = 3;
-  const options = {
-    isRowLoaded: index => !!items[index],
-    loadMoreRows: onLoadMore,
-  };
-  return (
-    <InfiniteLoaderWrapper
-      type="grid"
-      loaderOptions={options}
-      renderOptions={{
-        width: window.outerWidth,
-        height: window.outerHeight,
-        columnWidth: window.outerWidth / totalColumns,
-        rowCount: Math.ceil(items.length / totalColumns),
-        rowHeight: 200,
-        columnCount: totalColumns,
-      }}
-      renderItem={({ key, columnIndex, rowIndex, style }) => (
-        <div key={key} style={style}>
-          <OrderItem order={items[rowIndex * 3 + columnIndex]} key={key} />
-        </div>
-      )}
-    />
-  );
+function totalColumns(width, columnWidth) {
+  return parseInt(width / columnWidth, 10) || 1;
 }
 
-OrderGridView.defaultProps = {
-  onLoadMore: () => {},
-};
+function OrderGridView({ items, onLoadMore, isLoading, hasMore }: Props) {
+  const isRowLoaded = ({ index }) => !hasMore || index < items.length;
+  const columnWidth = 200;
+  return (
+    <AutoSizer disableHeight>
+      {({ width }) => (
+        <GridView
+          hasNextPage={hasMore}
+          isNextPageLoading={isLoading}
+          onLoadNextPage={onLoadMore}
+          list={items}
+          width={width}
+          height={window.innerHeight - 50}
+          rowCount={Math.ceil(items.length / totalColumns(width, columnWidth)) + 1}
+          rowHeight={170}
+          columnWidth={columnWidth}
+          columnCount={totalColumns(width, columnWidth)}
+          cellRenderer={({ key, columnIndex, rowIndex, style }) => {
+            const currentIndex = rowIndex * totalColumns(width, columnWidth) + columnIndex;
+            if (isRowLoaded({ index: currentIndex })) {
+              return (
+                <div key={key} style={style}>
+                  <OrderItem
+                    order={items[rowIndex * totalColumns(width, columnWidth) + columnIndex]}
+                    key={key}
+                  />
+                </div>
+              );
+            }
+
+            if (currentIndex === items.length)
+              return (
+                <div key={key} style={style}>
+                  <LoadingIcon />
+                </div>
+              );
+
+            return <div key={key} style={style} />;
+          }}
+        />
+      )}
+    </AutoSizer>
+  );
+}
 
 export default OrderGridView;

@@ -19,6 +19,7 @@ import fasProfile from '@fortawesome/fontawesome-pro-solid/faAddressCard';
 
 import fasWaterfall from '@fortawesome/fontawesome-pro-solid/faTh';
 import farTable from '@fortawesome/fontawesome-pro-regular/faThList';
+import farList from '@fortawesome/fontawesome-pro-regular/faList';
 
 import faSortDesc from '@fortawesome/fontawesome-pro-solid/faSortAmountDown';
 import faSortAsc from '@fortawesome/fontawesome-pro-solid/faSortAmountUp';
@@ -28,6 +29,7 @@ import faClear from '@fortawesome/fontawesome-pro-regular/faTimes';
 
 import faFilter from '@fortawesome/fontawesome-pro-solid/faFilter';
 import fasFolderOpen from '@fortawesome/fontawesome-pro-solid/faFolderOpen';
+import farOrder from '@fortawesome/fontawesome-pro-regular/faFileEdit';
 
 export default {
   fasShip,
@@ -54,4 +56,6 @@ export default {
   faClear,
   faFilter,
   fasFolderOpen,
+  farOrder,
+  farList,
 };

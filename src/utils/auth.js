@@ -15,10 +15,5 @@ export const isAuthenticated = () => !!getAuthToken();
 
 export const reloadPageOnExpireToken = () => {
   removeAuthToken();
-  window.location.reload();
-};
-
-export const logout = () => {
-  removeAuthToken();
-  navigate('login');
+  navigate('/login');
 };

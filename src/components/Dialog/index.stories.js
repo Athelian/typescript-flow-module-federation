@@ -1,42 +1,25 @@
 import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable react/prop-types */
 import { storiesOf } from '@storybook/react';
+import { BooleanValue } from 'react-values';
 import Dialog from './index';
 
-class DialogControler extends React.Component {
-  state = {
-    isDialogOpen: false,
-  };
-
-  open = () => {
-    this.setState({ isDialogOpen: true });
-  };
-
-  close = () => {
-    this.setState({ isDialogOpen: false });
-  };
-
-  render() {
-    const { isDialogOpen } = this.state;
-    return (
-      <div>
-        <button type="button" onClick={this.open}>
+storiesOf('Dialog', module).add('normal dialog', () => (
+  <BooleanValue>
+    {({ value: isOpen, toggle }) => (
+      <React.Fragment>
+        <button type="button" onClick={toggle}>
           open Dialog
         </button>
-
-        <Dialog isOpen={isDialogOpen} onRequestClose={this.close} options={{ width: 400 }}>
+        <div id="dialog-root" />
+        <Dialog isOpen={isOpen} onRequestClose={toggle} options={{ width: 400 }}>
           <div style={{ padding: '50px', textAlign: 'center' }}>
-            <button onClick={this.close} type="button">
+            <button onClick={toggle} type="button">
               close dialog
             </button>
           </div>
         </Dialog>
-      </div>
-    );
-  }
-}
-
-export default DialogControler;
-
-storiesOf('Dialog', module).add('normal dialog', () => <DialogControler />);
+      </React.Fragment>
+    )}
+  </BooleanValue>
+));

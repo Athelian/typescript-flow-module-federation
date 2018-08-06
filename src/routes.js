@@ -10,7 +10,6 @@ import Login from './modules/login';
 import Authorized from './components/Authorized';
 
 const LoadableComponent = loader =>
-  /* $FlowFixMe: ignore this error with loadable ops parameter */
   Loadable({
     loader,
     loading: () => <LoadingIcon />,

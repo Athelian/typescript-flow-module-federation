@@ -19,12 +19,22 @@ export default class PreventInitialAnimation extends React.Component<Props, Stat
     shouldApplyAnimation: false,
   };
 
+  componentDidMount() {
+    this.isMount = true;
+  }
+
   componentDidUpdate() {
     const { shouldApplyAnimation } = this.state;
     const { isChildrenVisible } = this.props;
     if (shouldApplyAnimation || !isChildrenVisible) return;
-    setTimeout(() => this.setState({ shouldApplyAnimation: true }), 1);
+    setTimeout(() => this.isMount && this.setState({ shouldApplyAnimation: true }), 1);
   }
+
+  componentWillUnmount() {
+    this.isMount = false;
+  }
+
+  isMount: boolean;
 
   render() {
     const { children } = this.props;

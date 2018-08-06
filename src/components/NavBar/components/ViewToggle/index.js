@@ -4,37 +4,35 @@ import Icon from 'components/Icon';
 import { ViewToggleWrapperStyle, ViewButtonStyle } from './style';
 
 type Props = {
-  isTableView: boolean,
+  viewTypes: Array<{
+    icon: string,
+    type: 'grid' | 'list' | 'table',
+  }>,
+  selectedView: string,
   changeToggle: Function,
 };
 
 class ViewToggle extends React.Component<Props> {
-  onClick = (next: boolean) => {
-    const { isTableView, changeToggle } = this.props;
-    if (isTableView !== next) {
-      changeToggle();
-    }
+  onClick = (viewType: string) => {
+    const { changeToggle } = this.props;
+    changeToggle(viewType);
   };
 
   render() {
-    const { isTableView } = this.props;
+    const { selectedView, viewTypes } = this.props;
 
     return (
       <div className={ViewToggleWrapperStyle}>
-        <button
-          type="button"
-          onClick={() => this.onClick(false)}
-          className={ViewButtonStyle(!isTableView)}
-        >
-          <Icon icon="fasWaterfall" />
-        </button>
-        <button
-          type="button"
-          onClick={() => this.onClick(true)}
-          className={ViewButtonStyle(isTableView)}
-        >
-          <Icon icon="farTable" />
-        </button>
+        {viewTypes.map(({ icon, type }) => (
+          <button
+            key={type}
+            type="button"
+            onClick={() => this.onClick(type)}
+            className={ViewButtonStyle(selectedView === type)}
+          >
+            <Icon icon={icon} />
+          </button>
+        ))}
       </div>
     );
   }

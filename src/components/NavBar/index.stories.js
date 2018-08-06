@@ -6,7 +6,7 @@ import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
 import { Form } from 'components/Form';
 import TextInput from 'components/TextInput';
-import NavBar from './index';
+import NavBar from './NavBar';
 import EntityIcon from './components/EntityIcon';
 import ViewToggle from './components/ViewToggle';
 import FilterInput from './components/FilterInput';
