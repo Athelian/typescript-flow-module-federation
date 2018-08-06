@@ -8,9 +8,11 @@ import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
 type Props = {
   isOpen: boolean,
   onRequestClose: () => void,
+  onCancel: () => void,
+  onConfirm: () => void,
 };
 
-function LogoutDialog({ isOpen, onRequestClose }: Props) {
+function LogoutDialog({ isOpen, onRequestClose, onCancel, onConfirm }: Props) {
   return (
     <Dialog isOpen={isOpen} onRequestClose={onRequestClose} options={{ width: 300 }}>
       <div className={DialogStyle}>
@@ -18,10 +20,10 @@ function LogoutDialog({ isOpen, onRequestClose }: Props) {
           <FormattedMessage {...messages.confirm} />
         </div>
         <div className={ButtonsStyle}>
-          <button onClick={onRequestClose} type="button">
+          <button onClick={onCancel} type="button">
             <FormattedMessage {...messages.cancel} />
           </button>
-          <button onClick={onRequestClose} type="button">
+          <button data-testid="logout-confirm-button" onClick={onConfirm} type="button">
             <FormattedMessage {...messages.logout} />
           </button>
         </div>
