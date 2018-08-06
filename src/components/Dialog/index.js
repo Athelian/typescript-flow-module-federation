@@ -58,7 +58,7 @@ export default class Dialog extends React.Component<Props> {
 
     return (
       <div>
-        <PreventInitialAnimation>
+        <PreventInitialAnimation isChildrenVisible={isOpen}>
           {ReactDOM.createPortal(
             <div
               className={isOpen ? BackdropFadeInStyle : BackdropFadeOutStyle}
