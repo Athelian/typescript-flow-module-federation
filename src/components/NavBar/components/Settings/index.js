@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { logout } from 'utils/auth';
 import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -67,7 +68,12 @@ class Settings extends React.Component<Props, State> {
             <div className={SettingsCountStyle}>{3}</div>
             <Icon icon="fasNotification" />
           </button>
-          <button tabIndex={-1} onClick={this.toggleProfile} type="button">
+          <button
+            data-testid="setting-button"
+            tabIndex={-1}
+            onClick={this.toggleProfile}
+            type="button"
+          >
             Z
           </button>
         </div>
@@ -101,6 +107,7 @@ class Settings extends React.Component<Props, State> {
                 <div
                   className={SubMenuItemStyle}
                   onClick={this.toggleLogoutDialog}
+                  data-testid="logout-button"
                   role="presentation"
                 >
                   <div>
@@ -114,7 +121,12 @@ class Settings extends React.Component<Props, State> {
             </div>
           </OutsideClickHandler>
         )}
-        <LogoutDialog isOpen={logoutDialogOpen} onRequestClose={this.toggleLogoutDialog} />
+        <LogoutDialog
+          isOpen={logoutDialogOpen}
+          onRequestClose={this.toggleLogoutDialog}
+          onCancel={this.toggleLogoutDialog}
+          onConfirm={logout}
+        />
       </div>
     );
   }
