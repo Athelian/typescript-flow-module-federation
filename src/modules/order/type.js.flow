@@ -1,0 +1,34 @@
+// @flow
+
+export type OrderItem = {
+  id: string,
+  quantity: number,
+  batchedQuantity: number,
+  shippedQuantity: number,
+  productExporterSupplier: {
+    supplier: ?{
+      name: string,
+    },
+    product: {
+      name: string,
+      serial: string,
+      files: Array<{
+        path: string,
+      }>,
+    },
+  },
+};
+
+export type Order = {
+  id: string,
+  PO: string,
+  date: ?Date,
+  exporter: {
+    name: string,
+  },
+  batchedQuantity: number,
+  shippedQuantity: number,
+  updatedAt: string | Date,
+  createdAt: string | Date,
+  items: Array<OrderItem>,
+};

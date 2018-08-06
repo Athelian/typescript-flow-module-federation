@@ -1,0 +1,25 @@
+{
+  "extends": ["plugin:flowtype/recommended", "airbnb", "prettier", "prettier/react"],
+  "env": {
+    "jest": true,
+    "browser": true,
+    "cypress/globals": true
+  },
+  "plugins": ["cypress", "import", "json", "flowtype", "prettier", "graphql"],
+  "rules": {
+    "graphql/template-strings": [
+      "error",
+      {
+        "env": "apollo"
+      }
+    ],
+    "react/jsx-filename-extension": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    }
+  }
+}
