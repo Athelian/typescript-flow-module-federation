@@ -1,9 +1,14 @@
 // @flow
 import * as React from 'react';
 
-const initialIsSideBarExpandedState = JSON.parse(
-  window.localStorage.getItem('is-sidebar-expanded')
-);
+const getIsSidebarExpanded = () => {
+  const initialIsSidebarExpandedState = window.localStorage.getItem('is-sidebar-expanded');
+  return initialIsSidebarExpandedState === 'yes';
+};
+const setIsSidebarExpanded = val => {
+  const setValue = val ? 'yes' : 'no';
+  window.localStorage.setItem('is-sidebar-expanded', setValue);
+};
 
 const UIContext = React.createContext({
   isSideBarExpanded: true,
@@ -20,13 +25,13 @@ type State = {
 
 class UIProvider extends React.Component<Props, State> {
   state = {
-    isSideBarExpanded: initialIsSideBarExpandedState != null ? initialIsSideBarExpandedState : true,
+    isSideBarExpanded: getIsSidebarExpanded(),
   };
 
   toggleSideBarExpansion = () => {
     this.setState(prevState => {
       const newIsSideBarExpanded = !prevState.isSideBarExpanded;
-      window.localStorage.setItem('is-sidebar-expanded', newIsSideBarExpanded);
+      setIsSidebarExpanded(newIsSideBarExpanded);
       return { isSideBarExpanded: newIsSideBarExpanded };
     });
   };
