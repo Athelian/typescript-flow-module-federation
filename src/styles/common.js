@@ -22,6 +22,7 @@ export const colors = {
   PURPLE: '#a34fff',
   PURPLE_DARK: '#802fd9',
   TRANSPARENT: 'rgba(0, 0, 0, 0)',
+  SHIPMENT_BLUE: '#0861B1',
 };
 
 export const gradients = {

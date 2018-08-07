@@ -35,6 +35,8 @@ import faExporter from '@fortawesome/fontawesome-pro-solid/faIndustryAlt';
 import faSupplier from '@fortawesome/fontawesome-pro-regular/faIndustry';
 import faMore from '@fortawesome/fontawesome-pro-solid/faPlus';
 import farProduct from '@fortawesome/fontawesome-pro-solid/faCube';
+import faEye from '@fortawesome/fontawesome-pro-regular/faEye';
+import faBatches from '@fortawesome/fontawesome-pro-solid/faBox';
 
 export default {
   fasShip,
@@ -63,8 +65,13 @@ export default {
   fasFolderOpen,
   farOrder,
   farList,
+<<<<<<< HEAD
   faExporter,
   faSupplier,
   faMore,
   farProduct,
+=======
+  faEye,
+  faBatches,
+>>>>>>> feat(core): setup shipment list view based on order list
 };

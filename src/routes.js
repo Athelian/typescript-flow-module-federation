@@ -17,6 +17,7 @@ const LoadableComponent = loader =>
 
 const AsyncProduct = LoadableComponent(() => import('./modules/product'));
 const AsyncOrder = LoadableComponent(() => import('./modules/order'));
+const AsyncShipment = LoadableComponent(() => import('./modules/shipment'));
 
 const Routes = () => (
   <Router>
@@ -24,6 +25,7 @@ const Routes = () => (
       <DashBoard path="/" />
       <AsyncOrder path="order/*" />
       <AsyncProduct path="product/*" />
+      <AsyncShipment path="shipment/*" />
       <PageNotFound default />
     </Authorized>
     <Login path="/login" redirectUrl="/order" />
