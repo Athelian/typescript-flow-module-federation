@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { DebounceInput } from 'react-debounce-input';
+import TextInput from '../TextInput';
 
 type Props = {
   style: any,
@@ -20,7 +20,7 @@ function SearchInput(props: Props) {
   return (
     <div className={style}>
       {searchIcon && searchIcon}
-      <DebounceInput type="text" value={value} spellCheck={false} debounceTimeout={500} {...rest} />
+      <TextInput type="text" value={value} debounceTimeout={500} {...rest} />
       {hasContent && clearButton && clearButton({ clearQuery: onClear })}
     </div>
   );

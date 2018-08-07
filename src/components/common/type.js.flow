@@ -1,0 +1,136 @@
+// @flow
+
+export type DefaultHTMLProps = {
+  /**
+   *
+   *
+   * @type {string}
+   */
+  id?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  className?: string,
+  /**
+   *
+   * Style object following React convention
+   * @type {Object}
+   */
+  style?: Object,
+};
+
+export type DefaultInputProps = {
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  required?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  autofocus?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  disabled?: boolean,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  name?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  type?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  value?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  placeholder?: string,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  onChange?: Function,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  onBlur?: Function,
+};
+
+export type DefaultSelectProps = {
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  required?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  autofocus?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  disabled?: boolean,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  name?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  placeholder?: string,
+  /**
+   *
+   *
+   * @type {number}
+   */
+  size?: number,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  multiple?: boolean,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  onChange?: Function,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  onBlur?: Function,
+};
