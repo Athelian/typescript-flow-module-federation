@@ -31,6 +31,11 @@ import faFilter from '@fortawesome/fontawesome-pro-solid/faFilter';
 import fasFolderOpen from '@fortawesome/fontawesome-pro-solid/faFolderOpen';
 import farOrder from '@fortawesome/fontawesome-pro-regular/faFileEdit';
 
+import faExporter from '@fortawesome/fontawesome-pro-solid/faIndustryAlt';
+import faSupplier from '@fortawesome/fontawesome-pro-regular/faIndustry';
+import faMore from '@fortawesome/fontawesome-pro-solid/faPlus';
+import farProduct from '@fortawesome/fontawesome-pro-solid/faCube';
+
 export default {
   fasShip,
   fasTrash,
@@ -58,4 +63,8 @@ export default {
   fasFolderOpen,
   farOrder,
   farList,
+  faExporter,
+  faSupplier,
+  faMore,
+  farProduct,
 };
