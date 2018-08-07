@@ -4,16 +4,19 @@ import {
   AutoSizer,
   /* $FlowFixMe: not have flow type yet */
 } from 'react-virtualized';
+import { injectIntl, intlShape } from 'react-intl';
 import TableView from 'components/TableView';
+import messages from '../../messages';
 
 type Props = {
   items: Array<Object>,
   hasMore: boolean,
   isLoading: boolean,
   onLoadMore: Function,
+  intl: intlShape,
 };
 
-function ProductTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
+function ProductTableView({ items, onLoadMore, hasMore, isLoading, intl }: Props) {
   const tableData = items.map(({ name, serial, exporterSuppliers, ...rest }) => ({
     name,
     serial,
@@ -37,27 +40,27 @@ function ProductTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
           rowGetter={({ index }) => tableData[index] || {}}
           columns={[
             {
-              label: 'NAME',
+              label: intl.formatMessage(messages.name),
               dataKey: 'name',
               width: 100,
             },
             {
-              label: 'Serial',
+              label: intl.formatMessage(messages.serial),
               dataKey: 'serial',
               width: 100,
             },
             {
-              label: 'Exporter',
+              label: intl.formatMessage(messages.exporter),
               dataKey: 'exporter',
               width: 200,
             },
             {
-              label: 'Last Modified',
+              label: intl.formatMessage(messages.updatedAt),
               dataKey: 'updatedAt',
               width: 200,
             },
             {
-              label: 'Created On',
+              label: intl.formatMessage(messages.createdAt),
               dataKey: 'createdAt',
               width: 200,
             },
@@ -68,4 +71,4 @@ function ProductTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
   );
 }
 
-export default ProductTableView;
+export default injectIntl(ProductTableView);

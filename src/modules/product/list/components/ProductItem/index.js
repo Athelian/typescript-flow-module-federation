@@ -19,7 +19,6 @@ import {
   IconStyle,
   MoreStyle,
   HiddenStyle,
-  // CopyButtonWrapperStyle,
   ProductItemWrapperStyle,
 } from './style';
 
@@ -93,9 +92,6 @@ const ProductItem = ({ product, intl }: Props) => {
           </div>
         </div>
       </EntityCard>
-      {/* <div className={CopyButtonWrapperStyle}>
-        <CopyButton to={{ pathname: '/product/new', state: { sourceProductId: id } }} />
-      </div> */}
     </div>
   );
 };

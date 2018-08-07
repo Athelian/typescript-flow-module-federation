@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import { Form, Field, FieldObserver } from 'components/Form';
 import TextInput from 'components/TextInput';
@@ -14,8 +15,12 @@ import NavBar, {
   ActiveToggleTabs,
 } from 'components/NavBar';
 import ProductList from './list';
+import messages from './messages';
 
-type Props = {};
+type Props = {
+  intl: intlShape,
+};
+
 type State = {
   viewType: string,
   query: string,
@@ -46,12 +51,13 @@ class ProductModule extends React.Component<Props, State> {
 
   render() {
     const { viewType, sort, perPage, ...filters } = this.state;
-    // TODO: i18n message
+    const { intl } = this.props;
+
     const fields = [
-      { title: 'NAME', value: 'name' },
-      { title: 'SERIAL', value: 'serial' },
-      { title: 'LAST MODIFIED', value: 'updatedAt' },
-      { title: 'CREATED ON', value: 'createdAt' },
+      { title: intl.formatMessage(messages.name), value: 'name' },
+      { title: intl.formatMessage(messages.serial), value: 'serial' },
+      { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+      { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     ];
     return (
       <UIConsumer>
@@ -128,4 +134,4 @@ class ProductModule extends React.Component<Props, State> {
   }
 }
 
-export default ProductModule;
+export default injectIntl(ProductModule);
