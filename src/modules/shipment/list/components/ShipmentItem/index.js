@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
+import Timeline from 'modules/shipment/components/Timeline';
 import {
   WrapperStyle,
   ShipmentInfoWrapperStyle,
@@ -64,7 +65,7 @@ const ShipmentItem = ({ shipment }: Props) => (
       <div className={EyeIconStyle}>
         <Icon icon="faEye" />
       </div>
-      {/* <Timeline shipment={shipment} /> */}
+      <Timeline shipment={shipment} onStepClick={() => {}} />
     </div>
   </div>
 );

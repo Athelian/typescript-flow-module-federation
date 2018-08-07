@@ -21,7 +21,7 @@ type Props = {
   perPage: number,
 };
 
-class OrderList extends React.PureComponent<Props> {
+class ShipmentList extends React.PureComponent<Props> {
   loadMorePage = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;
@@ -103,4 +103,4 @@ class OrderList extends React.PureComponent<Props> {
   }
 }
 
-export default OrderList;
+export default ShipmentList;

@@ -64,6 +64,7 @@ export const TagsWrapperStyle = css`
   height: 18px;
 `;
 
+// @TODO replace #fff with computeColorHex(color)
 export const TagStyle = (color: string) => css`
   ${borderRadiuses.MAIN};
   ${fontSizesWithHeights.SMALL};
@@ -74,7 +75,7 @@ export const TagStyle = (color: string) => css`
   padding: 0 4px;
   font-weight: bold;
   margin: 0 0 0 5px;
-  color: ${color};
+  color: #fff;
   height: min-content;
   width: min-content;
   user-select: none;

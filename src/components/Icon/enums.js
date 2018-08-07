@@ -65,13 +65,10 @@ export default {
   fasFolderOpen,
   farOrder,
   farList,
-<<<<<<< HEAD
   faExporter,
   faSupplier,
   faMore,
   farProduct,
-=======
   faEye,
   faBatches,
->>>>>>> feat(core): setup shipment list view based on order list
 };
