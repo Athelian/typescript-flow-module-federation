@@ -1,14 +1,14 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 
-class JumpToSection extends React.PureComponent {
-  static propTypes = {
-    children: React.Node,
-  };
+type Props = {
+  children: React.Node,
+};
+type State = {
+  activeNode: ?string,
+};
 
-  static defaultProps = {
-    children: [],
-  };
-
+class JumpToSection extends React.PureComponent<Props, State> {
   state = {
     activeNode: null,
   };
@@ -40,7 +40,7 @@ class JumpToSection extends React.PureComponent {
     });
   };
 
-  handleClick = id => () => {
+  handleClick = (id: string) => () => {
     const node = document.querySelector(`#${id}`);
     if (node) {
       node.scrollIntoView({ block: 'start', behavior: 'smooth' });
@@ -48,7 +48,7 @@ class JumpToSection extends React.PureComponent {
   };
 
   ensureLastHeightOfSection = () => {
-    const documentHeight = document.body.offsetHeight;
+    const { offsetHeight: documentHeight } = document.body || {};
     const { children } = this.props;
     const childNum = React.Children.count(children);
     const lastChild = React.Children.toArray(children)[childNum - 1];
