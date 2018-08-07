@@ -1,0 +1,124 @@
+// @flow
+// import type { Tag } from './tag';
+// import type { File, Image } from './file';
+
+type Tag = {
+  id: string,
+  name: string,
+  description: ?string,
+  color: string,
+};
+
+type File = {
+  id: string,
+  path: string,
+  type: string,
+  memo: ?string,
+};
+
+type Image = {
+  id?: ?string,
+  path: string,
+  type: string,
+};
+
+export type DetailedProductExporterSupplier = {
+  id: string,
+  status: 'Active' | 'Inactive' | '',
+  exporter: {
+    id: string,
+    name: string,
+  },
+  supplier?: {
+    id: string,
+    name: string,
+  },
+  files: Array<File>,
+  origin: ?string,
+  price: ?number,
+  currency: ?string,
+  unit: ?string,
+  size: ?string,
+  volume: ?number,
+  weight: ?number,
+  productionLeadTime: ?number,
+  packageName: ?string,
+  packageGrossWeight: ?number,
+  packageVolume: ?number,
+  packageMaxQuantity: ?number,
+  packageSize: ?string,
+  inspectionFee: ?number,
+  memo: ?string,
+  metadata: ?Array<{
+    key: string,
+    value: ?string,
+  }>,
+};
+
+export type DetailedProduct = {
+  id: string,
+  status: string,
+  name: string,
+  serial: string,
+  JANCode: ?string,
+  HSCode: ?string,
+  material: ?string,
+  tags: Array<Tag>,
+  files: Array<Image>,
+  exporterSuppliers: Array<DetailedProductExporterSupplier>,
+  metadata: ?any,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type Filter = {
+  exporterId: string,
+  supplierId?: string,
+};
+
+export type PES = {
+  id: string,
+  price: ?number,
+  currency: ?string,
+  unit: ?string,
+  volume: ?number,
+  weight: ?number,
+  packageName: ?string,
+  packageGrossWeight: ?number,
+  packageVolume: ?number,
+  packageMaxQuantity: ?number,
+  packageSize: ?string,
+  product: {
+    name: string,
+    serial: string,
+  },
+  exporter: {
+    name: string,
+  },
+  supplier?: {
+    name: string,
+  },
+};
+
+export type Product = {
+  id: string,
+  name: string,
+  serial: string,
+  exporterSuppliers: Array<{
+    id: string,
+    exporter: {
+      id: string,
+      name: string,
+    },
+    supplier?: {
+      id: string,
+      name: string,
+    },
+  }>,
+  files: Array<{
+    path: string,
+  }>,
+  createdAt: string,
+  updatedAt: string,
+  tags: Array<Tag>,
+};
