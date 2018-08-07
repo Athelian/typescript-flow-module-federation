@@ -13,13 +13,14 @@ type Props = {
   onLoadMore: Function,
 };
 
-function OrderTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
-  const tableData = items.map(({ PO, exporter, ...rest }) => ({
-    PO,
-    name: exporter.name,
+function ProductTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
+  const tableData = items.map(({ name, serial, exporterSuppliers, ...rest }) => ({
+    name,
+    serial,
+    exporter: exporterSuppliers[exporterSuppliers.length - 1].name,
     updatedAt: rest.updatedAt,
     createdAt: rest.createdAt,
-    total: rest.items.length,
+    total: items.length,
   }));
   return (
     <AutoSizer disableHeight>
@@ -36,18 +37,18 @@ function OrderTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
           rowGetter={({ index }) => tableData[index] || {}}
           columns={[
             {
-              label: 'PO',
-              dataKey: 'PO',
+              label: 'NAME',
+              dataKey: 'name',
               width: 100,
             },
             {
-              label: 'Items count',
-              dataKey: 'total',
+              label: 'Serial',
+              dataKey: 'serial',
               width: 100,
             },
             {
               label: 'Exporter',
-              dataKey: 'name',
+              dataKey: 'exporter',
               width: 200,
             },
             {
@@ -67,4 +68,4 @@ function OrderTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
   );
 }
 
-export default OrderTableView;
+export default ProductTableView;

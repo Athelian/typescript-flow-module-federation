@@ -39,7 +39,7 @@ const ProductItem = ({ product, intl }: Props) => {
 
   return (
     <div className={ProductItemWrapperStyle}>
-      <EntityCard color="RED" icon="fasShip">
+      <EntityCard color="RED" icon="farProduct">
         <div className={ProductItemStyle}>
           <img src={image} alt={name} className={ImageStyle} />
           <div className={NameStyle} title={intl.formatMessage(messages.tooltipName, { name })}>

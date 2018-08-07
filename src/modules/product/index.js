@@ -7,8 +7,7 @@ import { UIConsumer } from 'modules/ui';
 import logger from 'utils/logger';
 import NavBar, {
   EntityIcon,
-  // NOTE: hide for now
-  // ViewToggle,
+  ViewToggle,
   FilterInput,
   SortInput,
   SearchInput,
@@ -49,7 +48,8 @@ class ProductModule extends React.Component<Props, State> {
     const { viewType, sort, perPage, ...filters } = this.state;
     // TODO: i18n message
     const fields = [
-      { title: 'EXPORTER', value: 'exporter' },
+      { title: 'NAME', value: 'name' },
+      { title: 'SERIAL', value: 'serial' },
       { title: 'LAST MODIFIED', value: 'updatedAt' },
       { title: 'CREATED ON', value: 'createdAt' },
     ];
@@ -64,15 +64,14 @@ class ProductModule extends React.Component<Props, State> {
                 <ActiveToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Inactive' : 'Active')}
                 />
-                {/* <ViewToggle
+                <ViewToggle
                   changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
                   selectedView={viewType}
                   viewTypes={[
                     { icon: 'fasWaterfall', type: 'grid' },
                     { icon: 'farTable', type: 'table' },
-                    { icon: 'farList', type: 'list' },
                   ]}
-                /> */}
+                />
                 <SortInput
                   sort={fields.find(item => item.value === sort.field) || fields[0]}
                   ascending={sort.direction !== 'DESC'}
