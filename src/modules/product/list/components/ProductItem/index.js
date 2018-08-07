@@ -3,9 +3,10 @@ import React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import { type Product } from 'modules/product/type.js.flow';
 import messages from 'modules/product/messages';
-import EntityCard from 'components/EntityCard';
+import EntityCard, { EntityAction } from 'components/EntityCard';
 import Icon from 'components/Icon';
 import FallbackImage from 'media/logo_fallback.jpg';
+import logger from 'utils/logger';
 import {
   ProductItemStyle,
   ImageStyle,
@@ -27,6 +28,12 @@ type Props = {
   intl: intlShape,
 };
 
+const actions = [
+  <EntityAction icon="fasClone" onClick={() => logger.warn('clone')} />,
+  <EntityAction icon="fasArchive" onClick={() => logger.warn('complete')} />,
+  <EntityAction icon="fasTrash" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+];
+
 const ProductItem = ({ product, intl }: Props) => {
   if (!product) return '';
 
@@ -39,7 +46,7 @@ const ProductItem = ({ product, intl }: Props) => {
 
   return (
     <div className={ProductItemWrapperStyle}>
-      <EntityCard color="RED" icon="farProduct">
+      <EntityCard color="RED" icon="farProduct" actions={actions}>
         <div className={ProductItemStyle}>
           <img src={image} alt={name} className={ImageStyle} />
           <div className={NameStyle} title={intl.formatMessage(messages.tooltipName, { name })}>
