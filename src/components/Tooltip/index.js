@@ -24,8 +24,6 @@ type State = {
 };
 
 class Tooltip extends React.Component<Props, State> {
-  static Message = TooltipMessage;
-
   state = { hover: false };
 
   toggle = () => {
@@ -53,3 +51,4 @@ class Tooltip extends React.Component<Props, State> {
 }
 
 export default Tooltip;
+export { TooltipMessage };

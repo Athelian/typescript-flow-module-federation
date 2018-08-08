@@ -3,7 +3,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { css } from 'react-emotion';
 
-import Tooltip from './index';
+import Tooltip, { TooltipMessage } from './index';
 
 const ContainerStyle = css`
   display: flex;
@@ -11,8 +11,6 @@ const ContainerStyle = css`
   align-content: center;
   margin-top: 250px;
 `;
-
-const TooltipMessage = Tooltip.Message;
 
 storiesOf('Tooltip', module)
   .add('info', () => (
