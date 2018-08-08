@@ -14,7 +14,6 @@ type Props = {
 };
 
 function BatchTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
-  console.log(items);
   const tableData = items.map(({ id, no, orderItem, quantity, ...rest }) => ({
     id,
     no,

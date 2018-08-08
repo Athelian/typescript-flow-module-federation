@@ -7,6 +7,7 @@ export const WrapperStyle = css`
   width: 100%;
   overflow: hidden;
   position: relative;
+  padding: 24px;
 `;
 
 export const ContentWrapperStyle = css`
