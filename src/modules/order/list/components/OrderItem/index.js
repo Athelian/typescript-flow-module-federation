@@ -55,7 +55,12 @@ const OrderItem = ({ order, intl, width }: Props) => {
   ];
 
   return (
-    <EntityCard color="BLUE" icon="farOrder" actions={actions} wrapperClassName={wrapperClassName}>
+    <EntityCard
+      icon="farOrder"
+      color="ORANGE_DARK"
+      actions={actions}
+      wrapperClassName={wrapperClassName}
+    >
       <div className={OrderItemStyle}>
         <div className={POStyle} title={intl.formatMessage(messages.tooltipPO, { PO })}>
           {PO}

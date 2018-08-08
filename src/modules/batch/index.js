@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import { Form, Field, FieldObserver } from 'components/Form';
 import TextInput from 'components/TextInput';
@@ -7,16 +8,19 @@ import { UIConsumer } from 'modules/ui';
 import logger from 'utils/logger';
 import NavBar, {
   EntityIcon,
-  // NOTE: hide for now
-  // ViewToggle,
+  ViewToggle,
   FilterInput,
   SortInput,
   SearchInput,
   ActiveToggleTabs,
 } from 'components/NavBar';
 import OrderList from './list';
+import messages from './messages';
 
-type Props = {};
+type Props = {
+  intl: intlShape,
+};
+
 type State = {
   viewType: string,
   query: string,
@@ -29,7 +33,7 @@ type State = {
 };
 
 // TODO: We will restructure when we're working on new form system
-class OrderModule extends React.Component<Props, State> {
+class BatchModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
     query: '',
@@ -47,13 +51,37 @@ class OrderModule extends React.Component<Props, State> {
 
   render() {
     const { viewType, sort, perPage, ...filters } = this.state;
-    // TODO: i18n message
+    const { intl } = this.props;
+
     const fields = [
-      { title: 'PO NO.', value: 'PO' },
-      { title: 'EXPORTER', value: 'exporter' },
-      { title: 'LAST MODIFIED', value: 'updatedAt' },
-      { title: 'CREATED ON', value: 'createdAt' },
+      { title: intl.formatMessage(messages.batchNo), value: 'no' },
+      { title: intl.formatMessage(messages.PO), value: 'PO' },
+      {
+        title: intl.formatMessage(messages.productName),
+        value: 'product',
+      },
+      {
+        title: intl.formatMessage(messages.deliveredAt),
+        value: 'deliveredAt',
+      },
+      {
+        title: intl.formatMessage(messages.expiredAt),
+        value: 'expiredAt',
+      },
+      {
+        title: intl.formatMessage(messages.producedAt),
+        value: 'producedAt',
+      },
+      {
+        title: intl.formatMessage(messages.updatedAt),
+        value: 'updatedAt',
+      },
+      {
+        title: intl.formatMessage(messages.createdAt),
+        value: 'createdAt',
+      },
     ];
+
     return (
       <UIConsumer>
         {uiState => (
@@ -61,19 +89,18 @@ class OrderModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="farOrder" color="ORANGE_DARK" />
+                <EntityIcon icon="faBatches" color="BATCH_GREEN" />
                 <ActiveToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
                 />
-                {/* <ViewToggle
+                <ViewToggle
                   changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
                   selectedView={viewType}
                   viewTypes={[
                     { icon: 'fasWaterfall', type: 'grid' },
                     { icon: 'farTable', type: 'table' },
-                    { icon: 'farList', type: 'list' },
                   ]}
-                /> */}
+                />
                 <SortInput
                   sort={fields.find(item => item.value === sort.field) || fields[0]}
                   ascending={sort.direction !== 'DESC'}
@@ -130,4 +157,4 @@ class OrderModule extends React.Component<Props, State> {
   }
 }
 
-export default OrderModule;
+export default injectIntl(BatchModule);
