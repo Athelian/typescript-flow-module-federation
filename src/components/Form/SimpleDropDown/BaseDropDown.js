@@ -55,6 +55,8 @@ export default class SimpleDropDown extends React.PureComponent<SimpleDropDownPr
     }
   };
 
+  isReadOnly = (isWrite?: boolean, isEditable: boolean) => !isWrite || !isEditable;
+
   render() {
     const {
       isRead,
@@ -89,7 +91,7 @@ export default class SimpleDropDown extends React.PureComponent<SimpleDropDownPr
                           name={name}
                           ref={this.selectRef}
                           disabled={!isWrite}
-                          readOnly={!isWrite}
+                          readOnly={this.isReadOnly(isWrite, isEditable)}
                           onKeyDown={evt => this.onKeyDown(evt, onToggleEditMode)}
                           onChange={this.handleChange}
                           value={value}

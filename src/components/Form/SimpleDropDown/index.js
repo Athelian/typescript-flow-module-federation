@@ -8,7 +8,7 @@ import BaseDropDown from './BaseDropDown';
 type Props = PermissionProps & SimpleDropDownProps;
 
 export default function SimpleDropDown(props: Props) {
-  const { permissions, isFullEdit, ...rest } = props;
+  const { permissions, ...rest } = props;
   return (
     <Permission permissions={permissions}>
       {allowActions => <BaseDropDown {...rest} {...allowActions} />}

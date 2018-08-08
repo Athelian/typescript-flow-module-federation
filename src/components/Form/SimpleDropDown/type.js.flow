@@ -49,12 +49,6 @@ export type SimpleDropDownProps = DefaultHTMLProps &
     /**
      *
      *
-     * @type {boolean}
-     */
-    isFullEdit?: boolean,
-    /**
-     *
-     *
      * @type {Array<{
      *     value: string,
      *     label: string,
