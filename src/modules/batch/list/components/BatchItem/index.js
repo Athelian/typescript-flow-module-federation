@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import { Form } from 'components/Form';
-import { equals } from 'ramda';
+import { isEquals } from 'utils/fp';
 import Icon from 'components/Icon';
 import type { BatchItem } from 'modules/batch/type.js.flow';
 import { formatDateTimeToDate } from 'utils/date';
@@ -123,6 +123,8 @@ class BatchItemCard extends React.Component<Props, State> {
     const { batch, hideImage, intl, withAssignmentsModal, readOnly, dateOverride } = this.props;
     const { isEdit } = this.state;
 
+    if (!batch) return null;
+
     const { product } =
       batch.orderItem.productExporterSupplier && batch.orderItem.productExporterSupplier;
 
@@ -230,7 +232,7 @@ class BatchItemCard extends React.Component<Props, State> {
           validate={() => ({})}
           onSubmit={(values, { setSubmitting }) => {
             const { quantity, deliveredAt } = batch;
-            if (!equals(values, { quantity, deliveredAt })) {
+            if (!isEquals(values, { quantity, deliveredAt })) {
               // onBatchItemChange(values);
             }
             setSubmitting(false);
@@ -259,16 +261,14 @@ class BatchItemCard extends React.Component<Props, State> {
                   ) : (
                     <input
                       name="quantity"
-                      value={values.quantity}
+                      value={values.quantity || 0}
                       type={readOnly ? 'readOnly' : 'inlineEdit'}
-                      align="center"
                       onClick={event => {
                         if (!readOnly) {
                           event.stopPropagation();
                           this.editQuantity();
                         }
                       }}
-                      hideLabel
                       onChange={setFieldValue}
                       // onBlur={() => {
                       //   if (errors.quantity) {
