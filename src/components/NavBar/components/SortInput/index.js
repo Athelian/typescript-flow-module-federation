@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import StyleLessSelectInput from 'components/base/SelectInput';
+import { SelectInput as StyleLessSelectInput } from 'components/base';
 import {
   WrapperStyle,
   ButtonStyle,

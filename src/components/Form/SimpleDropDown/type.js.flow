@@ -1,0 +1,61 @@
+// @flow
+import * as React from 'react';
+import type { DefaultHTMLProps, DefaultSelectProps } from 'components/common/type.js.flow';
+
+export type SimpleDropDownProps = DefaultHTMLProps &
+  DefaultSelectProps & {
+    /**
+     *
+     *
+     * @type {string}
+     */
+    label?: string | React.Node,
+    /**
+     *
+     *
+     * @type {(string | Array<string>)}
+     */
+    value?: string | Array<string>,
+    /**
+     *
+     *
+     * @type {string}
+     */
+    errorMessage?: string | React.Node,
+    /**
+     *
+     *
+     * @type {string}
+     */
+    warningMessage?: string | React.Node,
+    /**
+     *
+     *
+     * @type {string}
+     */
+    infoMessage?: string | React.Node,
+    /**
+     *
+     *
+     * @type {boolean}
+     */
+    isRead?: boolean,
+    /**
+     *
+     *
+     * @type {boolean}
+     */
+    isWrite?: boolean,
+    /**
+     *
+     *
+     * @type {Array<{
+     *     value: string,
+     *     label: string,
+     *   }>}
+     */
+    options: Array<{
+      value: string,
+      label: string | React.Node,
+    }>,
+  };

@@ -1,4 +1,5 @@
 // @flow
+/* $FlowFixMe: useWith is not exist */
 import {
   is,
   path,
@@ -6,6 +7,7 @@ import {
   /* $FlowFixMe: useWith is not exist */
   useWith,
   split,
+  range,
   identity,
   equals,
   take,
@@ -18,7 +20,6 @@ import {
   isEmpty,
   omit,
 } from 'ramda';
-
 /**
  * See if an object (val) is an instance of the supplied constructor. This function will check up the inheritance chain, if any.
  */
@@ -33,6 +34,11 @@ export const isEquals = equals;
  * Returns the first n elements of the given list
  */
 export const takeItems = take;
+
+/**
+ *  Returns a list of numbers from from (inclusive) to to (exclusive).
+ */
+export const inRange = range;
 
 /**
  * Return value from object with path

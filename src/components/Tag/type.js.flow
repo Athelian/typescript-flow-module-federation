@@ -1,0 +1,14 @@
+// @flow
+
+export type Tag = {
+  id: string,
+  name: string,
+  description: ?string,
+  color: string,
+};
+
+export type TagForm = {
+  name: string,
+  description: ?string,
+  color: string,
+};

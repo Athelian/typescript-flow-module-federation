@@ -3,7 +3,7 @@ import * as React from 'react';
 
 const getIsSidebarExpanded = () => {
   const initialIsSidebarExpandedState = window.localStorage.getItem('is-sidebar-expanded');
-  return initialIsSidebarExpandedState === 'yes';
+  return initialIsSidebarExpandedState === 'yes' || !initialIsSidebarExpandedState;
 };
 const setIsSidebarExpanded = val => {
   const setValue = val ? 'yes' : 'no';
