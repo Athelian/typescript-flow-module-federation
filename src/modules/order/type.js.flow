@@ -32,3 +32,29 @@ export type Order = {
   createdAt: string | Date,
   items: Array<OrderItem>,
 };
+
+export type SelectableOrderItem = {
+  id: string,
+  quantity: number,
+  price: number,
+  order: {
+    PO: string,
+    currency: string,
+    exporter: {
+      id: string,
+    },
+  },
+  productExporterSupplier: {
+    product: {
+      name: string,
+      serial: string,
+      files: Array<{
+        path: string,
+      }>,
+    },
+  },
+  batchItems: Array<{
+    no: string,
+    quantity: number,
+  }>,
+};
