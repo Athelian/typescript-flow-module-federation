@@ -37,6 +37,15 @@ import faMore from '@fortawesome/fontawesome-pro-solid/faPlus';
 import farProduct from '@fortawesome/fontawesome-pro-solid/faCube';
 import faEye from '@fortawesome/fontawesome-pro-regular/faEye';
 import faBatches from '@fortawesome/fontawesome-pro-solid/faBox';
+import faTransit from '@fortawesome/fontawesome-pro-solid/faLifeRing';
+
+import faCargoReady from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
+import faPort from '@fortawesome/fontawesome-pro-solid/faAnchor';
+import fasPlane from '@fortawesome/fontawesome-pro-solid/faPlane';
+import fasUnknown from '@fortawesome/fontawesome-pro-solid/faQuestion';
+import faCustoms from '@fortawesome/fontawesome-pro-solid/faClipboardList';
+import faWarehouse from '@fortawesome/fontawesome-pro-solid/faWarehouseAlt';
+import faTruckLoading from '@fortawesome/fontawesome-pro-solid/faTruckLoading';
 
 export default {
   fasShip,
@@ -71,4 +80,12 @@ export default {
   farProduct,
   faEye,
   faBatches,
+  faTransit,
+  faCargoReady,
+  faPort,
+  fasPlane,
+  fasUnknown,
+  faCustoms,
+  faWarehouse,
+  faTruckLoading,
 };
