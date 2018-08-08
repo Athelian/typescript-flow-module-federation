@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedDate as FormattedDateIntl, FormattedRelative, FormattedTime } from 'react-intl';
-import { is } from 'ramda';
+import { isDataType } from 'utils/fp';
 
 type Props = {
   value: ?string | ?Date,
@@ -12,25 +12,25 @@ const FormattedDate = ({ value, mode = 'date' }: Props) => {
   if (!value) return '';
   switch (mode) {
     case 'date':
-      return <FormattedDateIntl value={is(Date, value) ? value : new Date(value)} />;
+      return <FormattedDateIntl value={isDataType(Date, value) ? value : new Date(value)} />;
     case 'date-no-year':
       return (
         <FormattedDateIntl
-          value={is(Date, value) ? value : new Date(value)}
+          value={isDataType(Date, value) ? value : new Date(value)}
           month="2-digit"
           day="2-digit"
         />
       );
     case 'relative':
-      return <FormattedRelative value={is(Date, value) ? value : new Date(value)} />;
+      return <FormattedRelative value={isDataType(Date, value) ? value : new Date(value)} />;
     case 'time':
-      return <FormattedTime value={is(Date, value) ? value : new Date(value)} />;
+      return <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />;
     case 'time-relative':
       return (
         <React.Fragment>
-          <FormattedTime value={is(Date, value) ? value : new Date(value)} />
+          <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />
           {` (`}
-          <FormattedRelative value={is(Date, value) ? value : new Date(value)} />
+          <FormattedRelative value={isDataType(Date, value) ? value : new Date(value)} />
           {`)`}
         </React.Fragment>
       );
