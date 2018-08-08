@@ -47,6 +47,12 @@ import faCustoms from '@fortawesome/fontawesome-pro-solid/faClipboardList';
 import faWarehouse from '@fortawesome/fontawesome-pro-solid/faWarehouseAlt';
 import faTruckLoading from '@fortawesome/fontawesome-pro-solid/faTruckLoading';
 
+import faOrder from '@fortawesome/fontawesome-pro-solid/faFileEdit';
+import faBatchGroup from '@fortawesome/fontawesome-pro-solid/faTasks';
+import faInventory from '@fortawesome/fontawesome-pro-solid/faInventory';
+import faEdit from '@fortawesome/fontawesome-pro-solid/faPencil';
+import faCheck from '@fortawesome/fontawesome-pro-regular/faCheck';
+
 export default {
   fasShip,
   fasTrash,
@@ -88,4 +94,9 @@ export default {
   faCustoms,
   faWarehouse,
   faTruckLoading,
+  faOrder,
+  faBatchGroup,
+  faInventory,
+  faEdit,
+  faCheck,
 };

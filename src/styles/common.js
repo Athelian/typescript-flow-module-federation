@@ -6,6 +6,7 @@ export const colors = {
   TEAL_DARK: '#0bbc94',
   TEAL_VERY_DARK: '#08a380',
   TEAL_LIGHT: '#caeee6',
+  BATCH_GREEN: '#12B937',
   BLACK: '#555',
   GRAY: '#bbb',
   GRAY_DARK: '#aaa',
