@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { isValuable, isValuables } from 'utils/value';
+import { isValuable, isValuables } from 'utils/fp';
 import ConfirmMessage from './ConfirmMessage';
 import ChangedValue from './ChangedValue';
 import Description from './Description';

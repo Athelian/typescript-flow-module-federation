@@ -12,10 +12,7 @@ const colorMap = {
 };
 
 type TooltipEnumType = 'info' | 'edited' | 'warning' | 'error';
-const getColorFromType = (type: TooltipEnumType) => {
-  const color = colorMap[type];
-  return color == null ? colors.GRAY_DARK : color;
-};
+const getColorFromType = (type: TooltipEnumType) => colorMap[type] || colors.GRAY_DARK;
 
 type Props = {
   title: React.Node,
