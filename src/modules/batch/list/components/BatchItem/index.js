@@ -285,7 +285,7 @@ class BatchItemCard extends React.Component<Props, State> {
               <div className={VerticalDividerStyle} />
 
               {dateOverride ? (
-                <div className={DateOverrideSectionStyle} title={dateOverride.htmlTitle}>
+                <div className={DateOverrideSectionStyle}>
                   <div className={LabelStyle}>{dateOverride.title}</div>
                   <div className={DateStyle}>
                     <FormattedDate value={dateOverride.value} />
