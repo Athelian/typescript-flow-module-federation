@@ -53,6 +53,8 @@ import faInventory from '@fortawesome/fontawesome-pro-solid/faInventory';
 import faEdit from '@fortawesome/fontawesome-pro-solid/faPencil';
 import faCheck from '@fortawesome/fontawesome-pro-regular/faCheck';
 
+import faArrowDown from '@fortawesome/fontawesome-pro-solid/faArrowDown';
+
 export default {
   fasShip,
   fasTrash,
@@ -99,4 +101,5 @@ export default {
   faInventory,
   faEdit,
   faCheck,
+  faArrowDown,
 };

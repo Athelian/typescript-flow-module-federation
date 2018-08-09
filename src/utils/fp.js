@@ -51,3 +51,6 @@ export const getByPath = useWith(path, [split('.')]);
 export const getByPathWithDefault = useWith(pathOr, [identity, split('.')]);
 
 export { pipe, when, either, map, reject, isNil, isEmpty, omit };
+
+export const isValuable = (val: any) => val != null;
+export const isValuables = (...arr: Array<any>) => arr.every(val => val != null);

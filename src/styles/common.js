@@ -58,7 +58,7 @@ export const shadows = {
   MEDIUM: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)',
   NAV_BUTTON: 'box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2)',
   NAV_BUTTON_HOVER: 'box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3)',
-  TOOLTIP: 'box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2)',
+  TOOLTIP: 'box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)',
 };
 
 export const borderRadiuses = {
