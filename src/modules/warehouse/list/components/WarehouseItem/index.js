@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import Card from 'components/EntityCard';
 import messages from 'modules/warehouse/messages';
-import type { Warehouse } from 'modules/warehouse/types.js.flow';
+import type { Warehouse } from 'modules/warehouse/type.js.flow';
 import Icon from 'components/Icon';
 import { WarehouseItemStyle, NameStyle, PlaceStyle, IconStyle } from './style';
 
