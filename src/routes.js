@@ -19,6 +19,7 @@ const AsyncProduct = LoadableComponent(() => import('./modules/product'));
 const AsyncOrder = LoadableComponent(() => import('./modules/order'));
 const AsyncShipment = LoadableComponent(() => import('./modules/shipment'));
 const AsyncBatch = LoadableComponent(() => import('./modules/batch'));
+const AsyncWarehouse = LoadableComponent(() => import('./modules/warehouse'));
 
 const Routes = () => (
   <Router>
@@ -28,6 +29,7 @@ const Routes = () => (
       <AsyncProduct path="product/*" />
       <AsyncShipment path="shipment/*" />
       <AsyncBatch path="batch/*" />
+      <AsyncWarehouse path="warehouse/*" />
       <PageNotFound default />
     </Authorized>
     <Login path="/login" redirectUrl="/order" />

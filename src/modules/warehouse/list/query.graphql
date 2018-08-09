@@ -1,0 +1,12 @@
+query($filter: WarehouseFilterInput, $page: Int!, $perPage: Int!) {
+  viewer {
+    warehouses(filter: $filter, page: $page, perPage: $perPage) {
+      nodes {
+        id
+        name
+        locality
+        region
+      }
+    }
+  }
+}
