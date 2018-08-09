@@ -20,6 +20,7 @@ export const TabItemStyle = (isActive: boolean) => css`
   color: ${isActive ? colors.TEAL : colors.GRAY_LIGHT};
   border-bottom: 4px solid ${isActive ? colors.TEAL : `${colors.TRANSPARENT}`};
   transition: 0.2s;
+  margin-right: 5px;
   &:hover {
     color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
     border-color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
