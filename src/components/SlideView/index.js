@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
 import { BackdropFadeInStyle, BackdropFadeOutStyle } from 'components/Dialog/style';
+import logger from 'utils/logger';
 import { SlideInStyle, SlideAwayStyle } from './style';
 
 type Props = {
@@ -26,10 +27,13 @@ export default class SlideView extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { rootElementId } = this.props;
-    const slideViewRoot = document.getElementById(rootElementId || 'root');
+    const { rootElementId = 'slide-view-root' } = this.props;
+    const slideViewRoot = document.getElementById(rootElementId);
 
-    if (!slideViewRoot) return;
+    if (!slideViewRoot) {
+      logger.warn('Not found the rootElementId', rootElementId);
+      return;
+    }
 
     const { isOpen } = this.props;
 
