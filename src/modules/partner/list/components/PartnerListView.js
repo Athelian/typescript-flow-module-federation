@@ -15,7 +15,7 @@ type Props = {
   onLoadMore: Function,
 };
 
-function WarehouseListView({ items, onLoadMore, hasMore, isLoading }: Props) {
+function PartnerListView({ items, onLoadMore, hasMore, isLoading }: Props) {
   const isRowLoaded = ({ index }) => !hasMore || index < items.length;
   return (
     <AutoSizer disableHeight>
@@ -45,4 +45,4 @@ function WarehouseListView({ items, onLoadMore, hasMore, isLoading }: Props) {
   );
 }
 
-export default WarehouseListView;
+export default PartnerListView;

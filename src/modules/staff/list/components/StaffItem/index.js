@@ -20,7 +20,7 @@ type Props = {
   intl: intlShape,
 };
 
-function UserItem({ user, intl }: Props) {
+function StaffItem({ user, intl }: Props) {
   if (!user) return null;
   const { email, role, firstName, lastName, tags } = user;
   return (
@@ -61,4 +61,4 @@ function UserItem({ user, intl }: Props) {
   );
 }
 
-export default injectIntl(UserItem);
+export default injectIntl(StaffItem);

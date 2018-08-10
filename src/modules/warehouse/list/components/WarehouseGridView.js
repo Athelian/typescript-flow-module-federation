@@ -19,7 +19,7 @@ function totalColumns(width, columnWidth) {
   return parseInt(width / columnWidth, 10) || 1;
 }
 
-function OrderGridView({ items, onLoadMore, isLoading, hasMore }: Props) {
+function WarehouseGridView({ items, onLoadMore, isLoading, hasMore }: Props) {
   const isRowLoaded = ({ index }) => !hasMore || index < items.length;
   const columnWidth = 200;
   return (
@@ -64,4 +64,4 @@ function OrderGridView({ items, onLoadMore, isLoading, hasMore }: Props) {
   );
 }
 
-export default OrderGridView;
+export default WarehouseGridView;

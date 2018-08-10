@@ -15,7 +15,7 @@ type Props = {
   onLoadMore: Function,
 };
 
-function BatchListView({ items, onLoadMore, hasMore, isLoading }: Props) {
+function TagListView({ items, onLoadMore, hasMore, isLoading }: Props) {
   const isRowLoaded = ({ index }) => !hasMore || index < items.length;
   return (
     <AutoSizer disableHeight>
@@ -45,4 +45,4 @@ function BatchListView({ items, onLoadMore, hasMore, isLoading }: Props) {
   );
 }
 
-export default BatchListView;
+export default TagListView;

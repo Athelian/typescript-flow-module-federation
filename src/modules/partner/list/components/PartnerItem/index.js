@@ -2,7 +2,7 @@
 import React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import { type Partner } from 'modules/partner/type.js.flow';
-import messages from '../../../messages';
+import messages from 'modules/partner/messages';
 import { NameStyle, Name2Style, TypeStyle, PartnerItemStyle } from './style';
 
 type Props = {

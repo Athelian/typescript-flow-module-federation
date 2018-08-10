@@ -13,7 +13,7 @@ type Props = {
   onLoadMore: Function,
 };
 
-function WarehouseTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
+function PartnerTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
   const tableData = items.map(({ PO, exporter, ...rest }) => ({
     PO,
     name: exporter.name,
@@ -67,4 +67,4 @@ function WarehouseTableView({ items, onLoadMore, hasMore, isLoading }: Props) {
   );
 }
 
-export default WarehouseTableView;
+export default PartnerTableView;

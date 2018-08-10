@@ -22,7 +22,7 @@ type State = {
 };
 
 // TODO: We will restructure when we're working on new form system
-class BatchModule extends React.Component<Props, State> {
+class TagsModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
     query: '',
@@ -87,4 +87,4 @@ class BatchModule extends React.Component<Props, State> {
   }
 }
 
-export default injectIntl(BatchModule);
+export default injectIntl(TagsModule);
