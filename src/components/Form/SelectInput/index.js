@@ -29,7 +29,7 @@ function SelectInput({ value, items, onChange, error }: Props) {
       items={items}
       itemToString={item => (item ? item.label : '')}
       itemToValue={item => (item ? item.value : '')}
-      clearIcon={<Icon icon="faTimes" />}
+      clearIcon={<Icon icon="CLEAR" />}
       onChange={onChange}
       styles={{ select: SelectWrapperStyle(!!error), options: OptionWrapperStyle }}
       renderSelect={({ clearButton, isOpen }) => (
@@ -37,7 +37,7 @@ function SelectInput({ value, items, onChange, error }: Props) {
           <div>{value && value.label}</div>
           <div className={ClearButtonStyle}>{clearButton}</div>
           <div className={ArrowDownStyle(isOpen)}>
-            <Icon icon="faChevronDown" />
+            <Icon icon="CHEVRON_DOWN" />
           </div>
         </div>
       )}

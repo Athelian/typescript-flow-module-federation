@@ -40,6 +40,7 @@ import EYE from '@fortawesome/fontawesome-pro-regular/faEye';
 import ARROW_DOWN from '@fortawesome/fontawesome-pro-solid/faArrowDown';
 import PLACE from '@fortawesome/fontawesome-pro-solid/faMapMarkerAlt';
 import WARNING from '@fortawesome/fontawesome-pro-solid/faExclamationCircle';
+import CHEVRON_DOWN from '@fortawesome/fontawesome-pro-solid/faChevronDown';
 
 // Shipment Timeline
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
@@ -94,6 +95,7 @@ export default {
   ARROW_DOWN,
   PLACE,
   WARNING,
+  CHEVRON_DOWN,
 
   CARGO_READY,
   PORT,
