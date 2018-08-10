@@ -25,7 +25,7 @@ function StaffItem({ user, intl }: Props) {
   const { email, role, firstName, lastName, tags } = user;
   return (
     <Card
-      icon="faUsers"
+      icon="STAFF"
       color="GRAY_LIGHT"
       onClick={() => {
         // history.push(`/staff/${id}`);
@@ -45,7 +45,7 @@ function StaffItem({ user, intl }: Props) {
       </div>
       <div className={SubFieldStyle} title={intl.formatMessage(messages.tooltipRole, { role })}>
         <div className={IconStyle}>
-          <Icon icon="faIdBadge" />
+          <Icon icon="ID_BADGE" />
         </div>
 
         <b>{role}</b>

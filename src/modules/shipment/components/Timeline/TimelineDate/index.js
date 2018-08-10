@@ -51,7 +51,7 @@ const TimelineDate = ({ timelineDate, align }: Props) => {
         {align === 'right' &&
           actualDate && (
             <div className={IconStyle(color)}>
-              <Icon icon="CONFIRM" />
+              <Icon icon="CHECKED" />
             </div>
           )}
 
@@ -60,7 +60,7 @@ const TimelineDate = ({ timelineDate, align }: Props) => {
         {align === 'left' &&
           actualDate && (
             <div className={IconStyle(color)}>
-              <Icon icon="CONFIRM" />
+              <Icon icon="CHECKED" />
             </div>
           )}
       </div>
@@ -69,7 +69,7 @@ const TimelineDate = ({ timelineDate, align }: Props) => {
         {align === 'right' &&
           (estimatedDateWarning ? (
             <div className={IconStyle(color)}>
-              <Icon icon="faWarning" />
+              <Icon icon="WARNING" />
             </div>
           ) : (
             <div className={DelayStyle(delay)}>
@@ -85,7 +85,7 @@ const TimelineDate = ({ timelineDate, align }: Props) => {
         {align === 'left' &&
           (estimatedDateWarning ? (
             <div className={IconStyle(color)}>
-              <Icon icon="faWarning" />
+              <Icon icon="WARNING" />
             </div>
           ) : (
             <div className={DelayStyle(delay)}>

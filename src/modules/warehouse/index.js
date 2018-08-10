@@ -33,7 +33,7 @@ class WarehouseModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="faWarehouse" color="WAREHOUSE_MUD" />
+                <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
                 <ActiveToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Inactive' : 'Active')}
                 />

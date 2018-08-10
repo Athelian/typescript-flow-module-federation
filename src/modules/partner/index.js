@@ -33,7 +33,7 @@ class PartnerModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="faPartner" color="BLACK" />
+                <EntityIcon icon="PARTNER" color="BLACK" />
               </NavBar>
             }
           >

@@ -43,11 +43,11 @@ class TagsModule extends React.Component<Props, State> {
     const { intl } = this.props;
 
     const tabs = [
-      { icon: 'farProduct', label: intl.formatMessage(messages.productTags) },
-      { icon: 'fasShip', label: intl.formatMessage(messages.shipmentTags) },
-      { icon: 'faUsers', label: intl.formatMessage(messages.userTags) },
-      { icon: 'faBatches', label: intl.formatMessage(messages.batchTags) },
-      { icon: 'faRequest', label: intl.formatMessage(messages.requestTags) },
+      { icon: 'PRODUCT', label: intl.formatMessage(messages.productTags) },
+      { icon: 'SHIPMENT', label: intl.formatMessage(messages.shipmentTags) },
+      { icon: 'STAFF', label: intl.formatMessage(messages.userTags) },
+      { icon: 'BATCH', label: intl.formatMessage(messages.batchTags) },
+      // { icon: 'REQUEST', label: intl.formatMessage(messages.requestTags) },
     ];
 
     return (
@@ -57,7 +57,7 @@ class TagsModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="faTags" color="PURPLE" />
+                <EntityIcon icon="TAGS" color="PURPLE" />
                 <Form initialValues={{ ...filters }}>
                   {({ values, setFieldValue }) => (
                     <React.Fragment>

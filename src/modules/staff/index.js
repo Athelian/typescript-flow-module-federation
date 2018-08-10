@@ -33,7 +33,7 @@ class StaffModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="faUsers" color="GRAY_LIGHT" />
+                <EntityIcon icon="STAFF" color="GRAY_LIGHT" />
               </NavBar>
             }
           >

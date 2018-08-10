@@ -18,8 +18,8 @@ const WarehouseItem = ({ warehouse, intl }: Props) => {
 
   return (
     <Card
-      color="WAREHOUSE_MUD"
-      icon="faWarehouse"
+      color="WAREHOUSE"
+      icon="WAREHOUSE"
       onClick={() => {}}
       title={intl.formatMessage(messages.tooltipDetails)}
     >
@@ -32,7 +32,7 @@ const WarehouseItem = ({ warehouse, intl }: Props) => {
         </div>
         <div className={PlaceStyle} title={intl.formatMessage(messages.tooltipPlace, { place })}>
           <div className={IconStyle}>
-            <Icon icon="faPlace" />
+            <Icon icon="PLACE" />
           </div>
           <b>{place}</b>
         </div>
