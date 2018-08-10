@@ -3,7 +3,6 @@ import * as React from 'react';
 import Raven from 'raven-js';
 import { isDevEnvironment } from 'utils/env';
 import InternalError from 'components/InternalError';
-import SideBar from 'modules/sidebar';
 import { DesktopWrapperStyle } from 'styles/main';
 import { WrapperStyle, ContentStyle, ContentWrapperStyle } from './style';
 
@@ -46,14 +45,11 @@ export default class Layout extends React.PureComponent<Props, State> {
     }
 
     return (
-      <div>
-        <SideBar />
-        <div className={DesktopWrapperStyle(isSideBarExpanded)}>
-          <div className={WrapperStyle}>
-            {navBar}
-            <div className={ContentWrapperStyle}>
-              <div className={ContentStyle}>{children} </div>
-            </div>
+      <div className={DesktopWrapperStyle(isSideBarExpanded)}>
+        <div className={WrapperStyle}>
+          {navBar}
+          <div className={ContentWrapperStyle}>
+            <div className={ContentStyle}>{children}</div>
           </div>
         </div>
       </div>
