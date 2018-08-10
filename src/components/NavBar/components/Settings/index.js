@@ -66,7 +66,7 @@ class Settings extends React.Component<Props, State> {
         <div className={SettingsBodyStyle}>
           <button tabIndex={-1} onClick={this.toggleNotification} type="button">
             <div className={SettingsCountStyle}>{3}</div>
-            <Icon icon="fasNotification" />
+            <Icon icon="NOTIFICATION" />
           </button>
           <button
             data-testid="setting-button"
@@ -90,7 +90,7 @@ class Settings extends React.Component<Props, State> {
               <div className={SubMenuWrapperStyle}>
                 <div className={SubMenuItemStyle}>
                   <div>
-                    <Icon icon="fasProfile" />
+                    <Icon icon="PROFILE" />
                   </div>
                   <div>
                     <FormattedMessage {...messages.profile} />
@@ -98,7 +98,7 @@ class Settings extends React.Component<Props, State> {
                 </div>
                 <div className={SubMenuItemStyle}>
                   <div>
-                    <Icon icon="fasCog" />
+                    <Icon icon="SETTINGS" />
                   </div>
                   <div>
                     <FormattedMessage {...messages.preferences} />
@@ -111,7 +111,7 @@ class Settings extends React.Component<Props, State> {
                   role="presentation"
                 >
                   <div>
-                    <Icon icon="fasLogout" />
+                    <Icon icon="LOGOUT" />
                   </div>
                   <div>
                     <FormattedMessage {...messages.logout} />

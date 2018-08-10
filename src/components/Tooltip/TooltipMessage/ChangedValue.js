@@ -10,7 +10,7 @@ type Props = {
 const ChangedValue = ({ oldValue, newValue }: Props) => (
   <div className={ChangeValueStyle}>
     <span>{oldValue}</span>
-    <Icon icon="faArrowDown" />
+    <Icon icon="ARROW_DOWN" />
     <span className={ChangesSpanStyle}>{newValue}</span>
   </div>
 );

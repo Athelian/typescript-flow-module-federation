@@ -92,7 +92,7 @@ class FilterInput extends React.Component<Props, State> {
       <div className={WrapperStyle}>
         <button type="button" className={ButtonStyle} onClick={this.toggle}>
           {(isActive || this.hasAnyFilter(initialFilter)) && <span className={ActiveStyle} />}
-          <Icon icon="faFilter" />
+          <Icon icon="FILTER" />
         </button>
         <OutsideClickHandler onOutsideClick={this.close}>
           <div className={ContentStyle(isOpen)}>

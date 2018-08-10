@@ -14,9 +14,14 @@ const defaultProps = {
   disabled: false,
 };
 
+const getTransportIcon = (transportType: ?string) => {
+  if (transportType === 'Air') return 'PLANE';
+  if (transportType === 'Ship') return 'SHIPMENT';
+  return 'UNKNOWN';
+};
+
 const VoyageIcon = ({ transportType, color, disabled = false, onClick }: Props) => {
-  let icon = transportType === 'Air' ? 'fasPlane' : 'fasShip';
-  if (!transportType) icon = 'fasUnknown';
+  const icon = getTransportIcon(transportType);
 
   return (
     <button type="button" onClick={onClick} className={VoyageIconStyle(color, disabled)}>

@@ -107,10 +107,6 @@ export const OrderWrapperStyle = css`
   ${LinkWrapperStyle};
 `;
 
-export const BatchGroupWrapperStyle = css`
-  ${LinkWrapperStyle};
-`;
-
 export const ShipmentWrapperStyle = css`
   ${LinkWrapperStyle};
 `;

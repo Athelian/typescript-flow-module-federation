@@ -16,10 +16,10 @@ function SearchInput(props: Props) {
   return (
     <StyleLessSearchInput
       style={SearchInputStyle}
-      searchIcon={<Icon icon="faSearch" />}
+      searchIcon={<Icon icon="SEARCH" />}
       clearButton={({ clearQuery }) => (
         <button type="button" onClick={clearQuery}>
-          <Icon icon="faClear" />
+          <Icon icon="CLEAR" />
         </button>
       )}
       {...props}

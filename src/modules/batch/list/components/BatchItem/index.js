@@ -27,7 +27,6 @@ import {
   LinkIconStyle,
   LinkValueStyle,
   OrderWrapperStyle,
-  BatchGroupWrapperStyle,
   ShipmentWrapperStyle,
   InfoWrapperStyle,
   QuantitySectionStyle,
@@ -146,7 +145,7 @@ class BatchItemCard extends React.Component<Props, State> {
     );
 
     return (
-      <Card icon="faBatches" color="BATCH_GREEN">
+      <Card icon="BATCH" color="BATCH">
         {!hideImage && (
           <div className={ProductImageWrapperStyle}>
             <div className={ImageWrapperStyle}>
@@ -160,7 +159,7 @@ class BatchItemCard extends React.Component<Props, State> {
                   }}
                   className={ProductIconStyle}
                 >
-                  <Icon icon="farProduct" />
+                  <Icon icon="PRODUCT" />
                 </button>
                 <div className={ProductSerialStyle}>{product.serial}</div>
               </div>
@@ -181,25 +180,9 @@ class BatchItemCard extends React.Component<Props, State> {
               }}
               className={LinkIconStyle(true)}
             >
-              <Icon icon="faOrder" />
+              <Icon icon="ORDER" />
             </button>
             <div className={LinkValueStyle}>{batch.orderItem.order.PO}</div>
-          </div>
-
-          <div className={BatchGroupWrapperStyle}>
-            <button
-              type="button"
-              onClick={event => {
-                event.stopPropagation();
-                if (batch.batchGroup) {
-                  // history.push(`/batchGroup/${encodeId(batch.batchGroup.id)}`);
-                }
-              }}
-              className={LinkIconStyle(!!batch.batchGroup)}
-            >
-              <Icon icon="faBatchGroup" />
-            </button>
-            <div className={LinkValueStyle}>{batch.batchGroup && batch.batchGroup.no}</div>
           </div>
 
           <div className={ShipmentWrapperStyle}>
@@ -213,7 +196,7 @@ class BatchItemCard extends React.Component<Props, State> {
               }}
               className={LinkIconStyle(!!batch.shipment)}
             >
-              <Icon icon="fasShip" />
+              <Icon icon="SHIPMENT" />
             </button>
             <div className={LinkValueStyle}>{batch.shipment && (batch.shipment.no || 'N/A')}</div>
           </div>
@@ -303,7 +286,7 @@ class BatchItemCard extends React.Component<Props, State> {
                     }}
                   >
                     <div className={EditDateIconStyle}>
-                      <Icon icon="faEdit" />
+                      <Icon icon="EDIT" />
                     </div>
                     <div className={LabelStyle}>{intl.formatMessage(messages.shortDeliveryAt)}</div>
                   </button>
@@ -318,7 +301,7 @@ class BatchItemCard extends React.Component<Props, State> {
             <React.Fragment>
               <div className={LatestTaskWrapperStyle}>
                 <div className={LatestTaskStyle}>
-                  <Icon icon="faCheck" />
+                  <Icon icon="CONFIRM" />
                   {/* iconSet.find(icon => {
                         const findIcon =
                           batch.batchGroup &&
@@ -350,14 +333,14 @@ class BatchItemCard extends React.Component<Props, State> {
             onClick={this.openAssignEditModal}
           >
             <div className={EyeIconStyle}>
-              <Icon icon="faEye" />
+              <Icon icon="EYE" />
             </div>
             {batch.assignments.length > (hasLatestTask ? 2 : 3) ? (
               <React.Fragment>
                 <div className={StackedAssignmentsWrapperStyle}>
                   <div className={AssignmentStyle(inventoryQuantity < 0)} style={{ zIndex: 4 }}>
                     <div className={QuantityOverlayStyle(batch.realQuantity, inventoryQuantity)} />
-                    <Icon icon="faInventory" />
+                    <Icon icon="INVENTORY" />
                   </div>
 
                   {batch.assignments.slice(0, hasLatestTask ? 2 : 3).map((assignment, index) => (
@@ -383,7 +366,7 @@ class BatchItemCard extends React.Component<Props, State> {
               <React.Fragment>
                 <div className={AssignmentStyle(inventoryQuantity < 0)}>
                   <div className={QuantityOverlayStyle(batch.realQuantity, inventoryQuantity)} />
-                  <Icon icon="faInventory" />
+                  <Icon icon="INVENTORY" />
                 </div>
 
                 {batch.assignments.map((assignment, index) => (

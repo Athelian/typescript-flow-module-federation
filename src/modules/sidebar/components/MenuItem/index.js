@@ -10,7 +10,6 @@ type Props = {
   name: React.Element<*>,
   path: string,
   activeIcon: any,
-  inactiveIcon: any,
 };
 
 const MenuItem = ({
@@ -19,12 +18,11 @@ const MenuItem = ({
   path,
   name,
   activeIcon,
-  inactiveIcon,
 }: Props): React.Element<*> => (
   <Link tabIndex={-1} to={path} onClick={setExpandedSubMenuId} className={MenuItemStyle(isActive)}>
     <span />
     <div className={IconStyle}>
-      <FontAwesomeIcon icon={isActive ? activeIcon : inactiveIcon} fixedWidth />
+      <FontAwesomeIcon icon={activeIcon} fixedWidth />
     </div>
     {name}
   </Link>

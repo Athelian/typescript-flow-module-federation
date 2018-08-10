@@ -48,7 +48,7 @@ const ShipmentItem = ({ shipment }: Props) => (
           }}
         >
           <div>
-            <Icon icon="faBatches" />
+            <Icon icon="BATCH" />
             {shipment.batchItems.length}
           </div>
         </button>
@@ -63,7 +63,7 @@ const ShipmentItem = ({ shipment }: Props) => (
       role="presentation"
     >
       <div className={EyeIconStyle}>
-        <Icon icon="faEye" />
+        <Icon icon="EYE" />
       </div>
       <Timeline shipment={shipment} onStepClick={() => {}} />
     </div>

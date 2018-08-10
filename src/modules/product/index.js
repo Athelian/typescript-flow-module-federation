@@ -66,17 +66,14 @@ class ProductModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="farProduct" color="RED" />
+                <EntityIcon icon="PRODUCT" color="PRODUCT" />
                 <ActiveToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Inactive' : 'Active')}
                 />
                 <ViewToggle
                   changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
                   selectedView={viewType}
-                  viewTypes={[
-                    { icon: 'fasWaterfall', type: 'grid' },
-                    { icon: 'farTable', type: 'table' },
-                  ]}
+                  viewTypes={[{ icon: 'CARD', type: 'grid' }, { icon: 'TABLE', type: 'table' }]}
                 />
                 <SortInput
                   sort={fields.find(item => item.value === sort.field) || fields[0]}

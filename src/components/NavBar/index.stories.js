@@ -26,7 +26,7 @@ storiesOf('Navbar', module)
     <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
       <div style={{ height: '2000px' }}>
         <NavBar>
-          <EntityIcon icon="fasShip" color="BLUE" />
+          <EntityIcon icon="SHIPMENT" color="BLUE" />
         </NavBar>
         <div style={{ marginTop: '500px' }}>Content</div>
       </div>
@@ -38,7 +38,7 @@ storiesOf('Navbar', module)
         {({ values, setFieldValue }) => (
           <div style={{ height: '2000px' }}>
             <NavBar>
-              <EntityIcon icon="fasShip" color="RED" />
+              <EntityIcon icon="SHIPMENT" color="RED" />
               <ActiveToggleTabs onChange={index => index} />
               <ViewToggle />
               <SortInput

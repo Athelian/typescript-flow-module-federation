@@ -61,7 +61,7 @@ class OrderModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="farOrder" color="ORANGE_DARK" />
+                <EntityIcon icon="ORDER" color="ORDER" />
                 <ActiveToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
                 />
@@ -69,9 +69,9 @@ class OrderModule extends React.Component<Props, State> {
                   changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
                   selectedView={viewType}
                   viewTypes={[
-                    { icon: 'fasWaterfall', type: 'grid' },
-                    { icon: 'farTable', type: 'table' },
-                    { icon: 'farList', type: 'list' },
+                    { icon: 'WATERFALL', type: 'grid' },
+                    { icon: 'TABLE', type: 'table' },
+                    { icon: 'LIST', type: 'list' },
                   ]}
                 /> */}
                 <SortInput
