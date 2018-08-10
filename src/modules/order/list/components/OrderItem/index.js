@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { injectIntl } from 'react-intl';
 import type { intlShape } from 'react-intl';
@@ -13,6 +14,7 @@ import messages from 'modules/order/messages';
 import EntityCard, { EntityAction } from 'components/EntityCard';
 import Dialog from 'components/Dialog';
 import logger from 'utils/logger';
+import { encodeId } from 'utils/id';
 import {
   OrderItemStyle,
   DetailContainerStyle,
@@ -40,7 +42,7 @@ type Props = {
 const OrderItem = ({ order, intl, width }: Props) => {
   if (!order) return '';
 
-  const { PO, date, exporter, items } = order;
+  const { id, PO, date, exporter, items } = order;
 
   const totalQuantity = items.reduce((total, item) => total + item.quantity || 0, 0);
 
@@ -56,7 +58,11 @@ const OrderItem = ({ order, intl, width }: Props) => {
 
   return (
     <EntityCard icon="ORDER" color="ORDER" actions={actions} wrapperClassName={wrapperClassName}>
-      <div className={OrderItemStyle}>
+      <div
+        className={OrderItemStyle}
+        onClick={() => navigate(`/order/${encodeId(id)}`)}
+        role="presentation"
+      >
         <div className={POStyle} title={intl.formatMessage(messages.tooltipPO, { PO })}>
           {PO}
         </div>
@@ -78,7 +84,10 @@ const OrderItem = ({ order, intl, width }: Props) => {
               <React.Fragment>
                 <Dialog
                   isOpen={isOpen}
-                  onRequestClose={toggle}
+                  onRequestClose={evt => {
+                    evt.stopPropagation();
+                    toggle();
+                  }}
                   options={{ width: Math.min(180 * items.length, window.innerWidth - 100) }}
                 >
                   <div className={DetailContainerStyle}>
@@ -90,7 +99,10 @@ const OrderItem = ({ order, intl, width }: Props) => {
                 <button
                   type="button"
                   className={ChartButtonStyle}
-                  onClick={() => items.length && toggle()}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                    if (items.length) toggle();
+                  }}
                 >
                   <RingChart
                     totalValue={totalQuantity}

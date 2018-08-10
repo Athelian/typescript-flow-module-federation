@@ -6,7 +6,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import OrderGridView from './components/OrderGridView';
 import OrderListView from './components/OrderListView';
 import OrderTableView from './components/OrderTableView';
-import query from './query.graphql';
+import query from './query';
 
 type Props = {
   viewType: string,
