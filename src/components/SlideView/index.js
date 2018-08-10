@@ -9,7 +9,7 @@ import { SlideInStyle, SlideAwayStyle } from './style';
 type Props = {
   isOpen: boolean,
   onRequestClose: () => void,
-  children: ({ openSlideView: (options: Object) => void }) => React.Node,
+  children: React.Node,
   options: { width: number },
   rootElementId?: string,
 };
