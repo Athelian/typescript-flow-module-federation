@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Location } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { zenMenuStyle, MenuBody } from './style';
 import menuConfig from './menuConfig';
@@ -26,36 +27,41 @@ class SideBar extends React.PureComponent<Props, State> {
 
   render() {
     const { expandedSubMenuId } = this.state;
-    const { location } = window;
     return (
-      <UIConsumer>
-        {uiState => (
-          <div className={zenMenuStyle(uiState.isSideBarExpanded)}>
-            <Logo {...uiState} />
-            <div className={MenuBody}>
-              {menuConfig.map(
-                menu =>
-                  menu.type === 'menuitem' ? (
-                    <MenuItem
-                      {...menu}
-                      key={menu.path}
-                      isActive={`/${location.pathname.split('/')[1]}` === menu.path}
-                      setExpandedSubMenuId={() => this.setExpandedSubMenuId(menu.id)}
-                    />
-                  ) : (
-                    <SubMenu
-                      {...menu}
-                      key={menu.id}
-                      activeLink={location.pathname}
-                      isExpanded={expandedSubMenuId === menu.id}
-                      setExpandedSubMenuId={this.setExpandedSubMenuId}
-                    />
-                  )
+      <Location>
+        {({ location }) =>
+          location.pathname !== '/login' && (
+            <UIConsumer>
+              {uiState => (
+                <div className={zenMenuStyle(uiState.isSideBarExpanded)}>
+                  <Logo {...uiState} />
+                  <div className={MenuBody}>
+                    {menuConfig.map(
+                      menu =>
+                        menu.type === 'menuitem' ? (
+                          <MenuItem
+                            {...menu}
+                            key={menu.path}
+                            isActive={`/${location.pathname.split('/')[1]}` === menu.path}
+                            setExpandedSubMenuId={() => this.setExpandedSubMenuId(menu.id)}
+                          />
+                        ) : (
+                          <SubMenu
+                            {...menu}
+                            key={menu.id}
+                            activeLink={location.pathname}
+                            isExpanded={expandedSubMenuId === menu.id}
+                            setExpandedSubMenuId={this.setExpandedSubMenuId}
+                          />
+                        )
+                    )}
+                  </div>
+                </div>
               )}
-            </div>
-          </div>
-        )}
-      </UIConsumer>
+            </UIConsumer>
+          )
+        }
+      </Location>
     );
   }
 }
