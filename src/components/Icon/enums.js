@@ -38,6 +38,8 @@ import CONFIRM from '@fortawesome/fontawesome-pro-solid/faCheck';
 import ADD from '@fortawesome/fontawesome-pro-solid/faPlus';
 import EYE from '@fortawesome/fontawesome-pro-regular/faEye';
 import ARROW_DOWN from '@fortawesome/fontawesome-pro-solid/faArrowDown';
+import PLACE from '@fortawesome/fontawesome-pro-solid/faMapMarkerAlt';
+import WARNING from '@fortawesome/fontawesome-pro-solid/faExclamationCircle';
 
 // Shipment Timeline
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
@@ -47,6 +49,9 @@ import UNKNOWN from '@fortawesome/fontawesome-pro-solid/faQuestion';
 import TRANSIT from '@fortawesome/fontawesome-pro-solid/faLifeRing';
 import CUSTOMS from '@fortawesome/fontawesome-pro-solid/faClipboardList';
 import DELIVERY_READY from '@fortawesome/fontawesome-pro-solid/faTruckLoading';
+
+// Staff
+import ID_BADGE from '@fortawesome/fontawesome-pro-solid/faIdBadge';
 
 export default {
   ORDER,
@@ -87,6 +92,8 @@ export default {
   ADD,
   EYE,
   ARROW_DOWN,
+  PLACE,
+  WARNING,
 
   CARGO_READY,
   PORT,
@@ -95,4 +102,6 @@ export default {
   TRANSIT,
   CUSTOMS,
   DELIVERY_READY,
+
+  ID_BADGE,
 };

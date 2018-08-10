@@ -1,0 +1,7 @@
+// @flow
+export type Partner = {
+  id: string,
+  name: string,
+  name2: string,
+  type: string,
+};

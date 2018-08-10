@@ -1,0 +1,7 @@
+// @flow
+export type Warehouse = {
+  id: string,
+  name: string,
+  locality: ?string,
+  region: ?string,
+};
