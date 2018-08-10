@@ -49,18 +49,13 @@ const OrderItem = ({ order, intl, width }: Props) => {
   const wrapperClassName = width ? WrapperCardStyle(width) : '';
 
   const actions = [
-    <EntityAction icon="fasClone" onClick={() => logger.warn('clone')} />,
-    <EntityAction icon="fasArchive" onClick={() => logger.warn('complete')} />,
-    <EntityAction icon="fasTrash" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+    <EntityAction icon="CLONE" onClick={() => logger.warn('clone')} />,
+    <EntityAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+    <EntityAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
 
   return (
-    <EntityCard
-      icon="farOrder"
-      color="ORANGE_DARK"
-      actions={actions}
-      wrapperClassName={wrapperClassName}
-    >
+    <EntityCard icon="ORDER" color="ORDER" actions={actions} wrapperClassName={wrapperClassName}>
       <div className={OrderItemStyle}>
         <div className={POStyle} title={intl.formatMessage(messages.tooltipPO, { PO })}>
           {PO}

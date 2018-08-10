@@ -61,7 +61,7 @@ class SortInput extends React.Component<Props> {
           <div className={WrapperStyle}>
             <div className={SelectStyle}>{sort.title}</div>
             <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
-              <Icon icon={ascending ? 'faSortAsc' : 'faSortDesc'} />
+              <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
             </button>
           </div>
         )}

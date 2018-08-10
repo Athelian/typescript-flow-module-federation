@@ -110,7 +110,7 @@ storiesOf('PureSelectInput', module)
               />
             )}
             renderOption={optionItem}
-            clearIcon={<Icon icon="faClear" />}
+            clearIcon={<Icon icon="CLEAR" />}
             onChange={value => setFieldValue('select', value)}
             styles={{ select: '', options: '' }}
           />
@@ -134,7 +134,7 @@ storiesOf('PureSelectInput', module)
               />
             )}
             renderOption={optionItem}
-            clearIcon={<Icon icon="faClear" />}
+            clearIcon={<Icon icon="CLEAR" />}
             onChange={value => setFieldValue('select', value)}
             styles={{ select: InputStyle, options: WrapperStyle }}
           />

@@ -36,7 +36,7 @@ const TimelineTransitItem = ({
     <div className={HeaderStyle}>{getPortName(transportType, leftVoyage.arrivalPort)}</div>
     <div className={IconWrapperStyle}>
       <HorizontalLine color={leftColor} />
-      <TimelineIcon icon="faTransit" color={leftColor} onClick={() => onClick(portIndex)} />
+      <TimelineIcon icon="TRANSIT" color={leftColor} onClick={() => onClick(portIndex)} />
       <HorizontalLine color={rightColor} />
       <VoyageIcon
         transportType={transportType}

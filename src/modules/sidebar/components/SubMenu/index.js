@@ -10,7 +10,6 @@ import { IconStyle } from '../MenuItem/style';
 const SubMenu = ({
   id,
   name,
-  inactiveIcon,
   activeIcon,
   isExpanded,
   setExpandedSubMenuId,
@@ -19,7 +18,6 @@ const SubMenu = ({
 }: {
   id: number,
   name: React.Element<*>,
-  inactiveIcon: any,
   activeIcon: any,
   isExpanded: boolean,
   setExpandedSubMenuId: Function,
@@ -45,7 +43,7 @@ const SubMenu = ({
       >
         <span />
         <div className={IconStyle}>
-          <FontAwesomeIcon icon={isExpanded || isActive ? activeIcon : inactiveIcon} fixedWidth />
+          <FontAwesomeIcon icon={activeIcon} fixedWidth />
         </div>
         {name}
         <FontAwesomeIcon

@@ -25,7 +25,7 @@ const Timeline = ({ shipment, onStepClick }: Props) => {
     <div className={TimelineWrapperStyle}>
       <TimelineItem
         header={shipment.exporter && shipment.exporter.name}
-        icon="faCargoReady"
+        icon="CARGO_READY"
         timelineDate={shipment.cargoReadyDate}
         color={arrayOfColors[0]}
         align="left"
@@ -33,7 +33,7 @@ const Timeline = ({ shipment, onStepClick }: Props) => {
       />
       <TimelineItem
         header={getPortName(shipment.transportType, shipment.voyages[0].departurePort)}
-        icon="faPort"
+        icon="PORT"
         timelineDate={shipment.voyages[0].departureDate}
         showVoyageIcon
         transportType={shipment.transportType}
@@ -62,14 +62,14 @@ const Timeline = ({ shipment, onStepClick }: Props) => {
           shipment.transportType,
           shipment.voyages[shipment.voyages.length - 1].arrivalPort
         )}
-        icon="faPort"
+        icon="PORT"
         timelineDate={shipment.voyages[shipment.voyages.length - 1].arrivalDate}
         color={arrayOfColors[arrayOfColors.length - 4]}
         align="right"
         onClick={() => onStepClick(arrayOfColors.length - 3)}
       />
       <TimelineItem
-        icon="faCustoms"
+        icon="CUSTOMS"
         timelineDate={customClearanceDate}
         color={arrayOfColors[arrayOfColors.length - 3]}
         align="right"
@@ -77,14 +77,14 @@ const Timeline = ({ shipment, onStepClick }: Props) => {
       />
       <TimelineItem
         header={warehouse && warehouse.name}
-        icon="faWarehouse"
+        icon="WAREHOUSE"
         timelineDate={warehouseArrivalDate}
         color={arrayOfColors[arrayOfColors.length - 2]}
         align="right"
         onClick={() => onStepClick(arrayOfColors.length - 1)}
       />
       <TimelineItem
-        icon="faTruckLoading"
+        icon="DELIVERY_READY"
         timelineDate={deliveryReadyDate}
         color={arrayOfColors[arrayOfColors.length - 1]}
         align="right"

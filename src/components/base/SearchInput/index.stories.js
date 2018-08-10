@@ -70,10 +70,10 @@ storiesOf('PureSearchInput', module)
   .add('with searchIcon, clear button', () => (
     <div>
       <PureSearchInput
-        searchIcon={<Icon icon="faSearch" />}
+        searchIcon={<Icon icon="SEARCH" />}
         clearButton={({ clearQuery }) => (
           <button type="button" onClick={clearQuery}>
-            <Icon icon="faClear" />
+            <Icon icon="CLEAR" />
           </button>
         )}
         onChange={action('query changed:')}
@@ -84,10 +84,10 @@ storiesOf('PureSearchInput', module)
     <div>
       <PureSearchInput
         style={SearchInputStyle}
-        searchIcon={<Icon icon="faSearch" />}
+        searchIcon={<Icon icon="SEARCH" />}
         clearButton={({ clearQuery }) => (
           <button type="button" onClick={clearQuery}>
-            <Icon icon="faClear" />
+            <Icon icon="CLEAR" />
           </button>
         )}
         onChange={action('query changed:')}

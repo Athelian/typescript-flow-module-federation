@@ -21,9 +21,9 @@ const defaultProps = {
 };
 
 const getIcon = (disabled, selectable, selected, icon) => {
-  if (disabled) return 'fasBan';
-  if (selectable && selected) return 'fasCheck';
-  if (selectable && !selected) return 'farCheck';
+  if (disabled) return 'DISABLED';
+  if (selectable && selected) return 'CHECKED';
+  if (selectable && !selected) return 'UNCHECKED';
   return icon;
 };
 

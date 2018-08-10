@@ -28,9 +28,9 @@ type Props = {
 };
 
 const actions = [
-  <EntityAction icon="fasClone" onClick={() => logger.warn('clone')} />,
-  <EntityAction icon="fasArchive" onClick={() => logger.warn('complete')} />,
-  <EntityAction icon="fasTrash" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+  <EntityAction icon="CLONE" onClick={() => logger.warn('clone')} />,
+  <EntityAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+  <EntityAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
 ];
 
 const ProductItem = ({ product, intl }: Props) => {
@@ -45,7 +45,7 @@ const ProductItem = ({ product, intl }: Props) => {
 
   return (
     <div className={ProductItemWrapperStyle}>
-      <EntityCard color="RED" icon="farProduct" actions={actions}>
+      <EntityCard color="PRODUCT" icon="PRODUCT" actions={actions}>
         <div className={ProductItemStyle}>
           <img src={image} alt={name} className={ImageStyle} />
           <div className={NameStyle} title={intl.formatMessage(messages.tooltipName, { name })}>
@@ -62,10 +62,10 @@ const ProductItem = ({ product, intl }: Props) => {
             title={intl.formatMessage(messages.tooltipExporter, { exporter: exporter.name })}
           >
             <div className={IconStyle}>
-              <Icon icon="faExporter" />
+              <Icon icon="EXPORTER" />
             </div>
             <div className={isPesMultiple ? MoreStyle : `${MoreStyle} ${HiddenStyle}`}>
-              <Icon icon="faMore" />
+              <Icon icon="ADD" />
             </div>
             {exporter.name}
           </div>
@@ -76,10 +76,10 @@ const ProductItem = ({ product, intl }: Props) => {
             })}
           >
             <div className={IconStyle}>
-              <Icon icon="faSupplier" />
+              <Icon icon="SUPPLIER" />
             </div>
             <div className={isPesMultiple ? MoreStyle : `${MoreStyle} ${HiddenStyle}`}>
-              <Icon icon="faMore" />
+              <Icon icon="ADD" />
             </div>
             {(supplier && supplier.name) || ''}
           </div>

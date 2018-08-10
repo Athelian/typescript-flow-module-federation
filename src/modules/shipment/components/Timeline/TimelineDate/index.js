@@ -51,7 +51,7 @@ const TimelineDate = ({ timelineDate, align }: Props) => {
         {align === 'right' &&
           actualDate && (
             <div className={IconStyle(color)}>
-              <Icon icon="faCheck" />
+              <Icon icon="CONFIRM" />
             </div>
           )}
 
@@ -60,7 +60,7 @@ const TimelineDate = ({ timelineDate, align }: Props) => {
         {align === 'left' &&
           actualDate && (
             <div className={IconStyle(color)}>
-              <Icon icon="faCheck" />
+              <Icon icon="CONFIRM" />
             </div>
           )}
       </div>

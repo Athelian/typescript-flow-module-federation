@@ -1,19 +1,20 @@
 export const colors = {
+  BLACK: '#555',
+
   BLUE: '#0b6ede',
   BLUE_DARK: '#0756af',
-  LIGHT_TEAL: 'rgba(13, 218, 172, 0.2)',
   TEAL: '#11d1a6',
   TEAL_DARK: '#0bbc94',
   TEAL_VERY_DARK: '#08a380',
   TEAL_LIGHT: '#caeee6',
-  BATCH_GREEN: '#12B937',
-  BLACK: '#555',
+
   GRAY: '#bbb',
   GRAY_DARK: '#aaa',
   GRAY_LIGHT: '#ccc',
   GRAY_VERY_LIGHT: '#ddd',
   GRAY_SUPER_LIGHT: '#eee',
   ALMOST_WHITE: '#f3f3f3',
+
   RED: '#ef4848',
   RED_DARK: '#b11717',
   YELLOW: '#ffd400',
@@ -22,8 +23,21 @@ export const colors = {
   ORANGE_DARK: '#fc9719',
   PURPLE: '#a34fff',
   PURPLE_DARK: '#802fd9',
+
   TRANSPARENT: 'rgba(0, 0, 0, 0)',
-  SHIPMENT_BLUE: '#0861B1',
+
+  PRODUCT: '#F12C2C',
+  ORDER: '#ED5724',
+  ORDER_ITEM: '#FBAA1D',
+  BATCH: '#12B937',
+  SHIPMENT: '#00529C',
+  CONTAINER_GROUP: '#2489CD',
+  CONTAINER: '#30A8E4',
+  CONTAINER_ITEM: '#8BDDFF',
+  TASK: '#B196C9',
+  WAREHOUSE: '#9D865A',
+  STAFF: '#98A2AC',
+  PARTNER: '#474D4D',
 };
 
 export const gradients = {

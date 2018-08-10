@@ -13,7 +13,7 @@ const actions = [
 <div style={{ marginTop: '50px', display: 'flex', justifyContent: 'space-around' }}>
   <Card
     color="YELLOW"
-    icon="fasShip"
+    icon="SHIPMENT"
     onSelect={() => (action = 'onSelect')}
     actions={actions}
     selectable
@@ -22,7 +22,7 @@ const actions = [
   </Card>
   <Card
     color="BLUE"
-    icon="fasShip"
+    icon="SHIPMENT"
     onSelect={() => (action = 'onSelect')}
     actions={actions}
     selectable
@@ -32,7 +32,7 @@ const actions = [
   </Card>
   <Card
     color="RED"
-    icon="fasShip"
+    icon="SHIPMENT"
     onSelect={() => (action = 'onSelect')}
     actions={actions}
     selectable
@@ -59,7 +59,7 @@ const actions = [
 <div style={{ marginTop: '50px' }}>
   <Card
     color="YELLOW"
-    icon="fasShip"
+    icon="SHIPMENT"
     onSelect={() => (action = 'onSelect')}
     actions={actions}
     showActionsOnHover

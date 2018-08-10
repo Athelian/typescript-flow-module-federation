@@ -76,7 +76,7 @@ class ShipmentModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="fasShip" color="SHIPMENT_BLUE" />
+                <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
                 <ActiveToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
                 />

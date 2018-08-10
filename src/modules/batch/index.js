@@ -89,17 +89,14 @@ class BatchModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="faBatches" color="BATCH_GREEN" />
+                <EntityIcon icon="BATCH" color="BATCH" />
                 <ActiveToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
                 />
                 <ViewToggle
                   changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
                   selectedView={viewType}
-                  viewTypes={[
-                    { icon: 'fasWaterfall', type: 'grid' },
-                    { icon: 'farTable', type: 'table' },
-                  ]}
+                  viewTypes={[{ icon: 'CARD', type: 'grid' }, { icon: 'TABLE', type: 'table' }]}
                 />
                 <SortInput
                   sort={fields.find(item => item.value === sort.field) || fields[0]}

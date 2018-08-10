@@ -6,15 +6,15 @@ import Card from './index';
 import EntityAction from './Actions/EntityAction';
 
 const actions = [
-  <EntityAction icon="fasClone" onClick={action('Cloned!!')} />,
-  <EntityAction icon="fasArchive" onClick={action('Removed!!')} />,
-  <EntityAction icon="fasTrash" hoverColor="RED" onClick={action('Archived!!')} />,
+  <EntityAction icon="CLONE" onClick={action('Cloned!!')} />,
+  <EntityAction icon="REMOVE" hoverColor="RED" onClick={action('Removed!!')} />,
+  <EntityAction icon="ARCHIVE" onClick={action('Archived!!')} />,
 ];
 
 storiesOf('Card', module)
   .add('Default', () => (
     <div style={{ margin: '100px' }}>
-      <Card color="YELLOW" icon="fasShip" onSelect={action('Card Selected!!')} actions={actions}>
+      <Card color="YELLOW" icon="SHIPMENT" onSelect={action('Card Selected!!')} actions={actions}>
         <div style={{ width: '200px', height: '250px' }}>Card Inner Content</div>
       </Card>
     </div>
@@ -23,7 +23,7 @@ storiesOf('Card', module)
     <div style={{ margin: '100px' }}>
       <Card
         color="YELLOW"
-        icon="fasShip"
+        icon="SHIPMENT"
         showActionsOnHover
         onSelect={action('Card Selected!!')}
         actions={actions}
@@ -35,7 +35,7 @@ storiesOf('Card', module)
   .add('Disabled', () => (
     <Card
       color="YELLOW"
-      icon="fasShip"
+      icon="SHIPMENT"
       selectable
       selected
       disabled
@@ -48,7 +48,7 @@ storiesOf('Card', module)
   .add('Selectable', () => (
     <Card
       color="YELLOW"
-      icon="fasShip"
+      icon="SHIPMENT"
       selectable
       onSelect={action('Card Selected!!')}
       actions={actions}
@@ -63,7 +63,7 @@ storiesOf('Card', module)
   .add('Selected', () => (
     <Card
       color="YELLOW"
-      icon="fasShip"
+      icon="SHIPMENT"
       selectable
       selected
       onSelect={action('Card Selected!!')}

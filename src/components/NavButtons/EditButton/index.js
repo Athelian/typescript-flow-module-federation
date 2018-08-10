@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import faEdit from '@fortawesome/fontawesome-pro-solid/faPencil';
+import Icon from 'components/Icon';
 import CustomButton from '../CustomButton';
 import messages from '../messages';
 
@@ -14,7 +13,7 @@ const EditButton = ({ disabled, ...rest }: Props) => (
   <CustomButton
     label={<FormattedMessage {...messages.edit} />}
     color="blue"
-    icon={<FontAwesomeIcon icon={faEdit} fixedWidth />}
+    icon={<Icon icon="EDIT" />}
     disabled={disabled}
     {...rest}
   />
