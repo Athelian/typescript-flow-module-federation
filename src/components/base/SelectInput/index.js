@@ -4,7 +4,7 @@ import Downshift from 'downshift';
 import { ResetNativeStyle } from './style';
 
 type Props = {
-  renderSelect: (?React.Node) => React.Node,
+  renderSelect: ({ clearButton: ?React.Node, isOpen: boolean }) => React.Node,
   onChange?: ({ title: string, value: string }) => void,
   items: Array<any>,
   itemToValue: any => any,
@@ -42,20 +42,28 @@ function SelectInput({
       }) => (
         <div className={ResetNativeStyle}>
           <div className={styles.select}>
-            <div onClick={toggleMenu} role="presentation">
-              {renderSelect(
-                selectedItem && clearIcon ? (
-                  <button type="button" onClick={clearSelection}>
-                    {clearIcon}
-                  </button>
-                ) : null
-              )}
+            <div onClick={toggleMenu} role="presentation" style={{ width: '100%' }}>
+              {renderSelect({
+                clearButton:
+                  selectedItem && clearIcon ? (
+                    <button
+                      type="button"
+                      onClick={e => {
+                        e.stopPropagation();
+                        clearSelection();
+                      }}
+                    >
+                      {clearIcon}
+                    </button>
+                  ) : null,
+                isOpen,
+              })}
             </div>
           </div>
           {isOpen && (
             <ul className={styles.options} {...getMenuProps()}>
               {items.map((item, index) => (
-                <li key={item.value} {...getItemProps({ item })}>
+                <li key={item.id} {...getItemProps({ item })}>
                   {renderOption({
                     value: item,
                     onHover: highlightedIndex === index,
