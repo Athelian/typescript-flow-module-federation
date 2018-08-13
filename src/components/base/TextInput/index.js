@@ -7,8 +7,8 @@ type Props = {
   value: string,
 };
 
-function SearchInput(props: Props) {
+function TextInput(props: Props) {
   return <DebounceInput type="text" spellCheck={false} debounceTimeout={500} {...props} />;
 }
 
-export default SearchInput;
+export default TextInput;
