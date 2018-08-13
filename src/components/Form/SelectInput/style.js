@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, borderRadiuses } from 'styles/common';
+import { layout, colors, borderRadiuses, transitions } from 'styles/common';
 
 export const SelectWrapperStyle = (isError: boolean) => css`
   display: flex;
@@ -8,6 +8,7 @@ export const SelectWrapperStyle = (isError: boolean) => css`
   ${borderRadiuses.MAIN};
   border: 1px solid ${isError ? colors.RED : 'transparent'};
   cursor: pointer;
+  ${transitions.MAIN};
 
   &:hover {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);

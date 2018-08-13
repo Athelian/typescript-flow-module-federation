@@ -4,13 +4,17 @@ import TextInput from '../TextInput';
 
 type Props = {
   style: any,
-  searchIcon: React.Node,
+  searchIcon?: React.Node,
   clearButton: ({ clearQuery: () => void }) => React.Node,
   onChange: Function,
   onBlur: Function,
   onClear: Function,
   name: string,
   value: string,
+};
+
+const defaultProps = {
+  searchIcon: null,
 };
 
 function SearchInput(props: Props) {
@@ -25,5 +29,7 @@ function SearchInput(props: Props) {
     </div>
   );
 }
+
+SearchInput.defaultProps = defaultProps;
 
 export default SearchInput;

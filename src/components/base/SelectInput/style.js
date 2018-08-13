@@ -21,5 +21,3 @@ export const ArrowDownStyle = (isOpen: boolean) => css`
   ${transitions.EXPAND};
   transform: rotate(${isOpen ? '180' : '0'}deg);
 `;
-
-export default ResetNativeStyle;
