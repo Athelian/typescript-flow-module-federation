@@ -14,6 +14,9 @@
   "components.LogoutDialog.logout": "LOGOUT",
   "components.LogoutDialog.cancel": "CANCEL",
 
+  "components.ConfirmDialog.confirm": "CONFIRM",
+  "components.ConfirmDialog.cancel": "CANCEL",
+
   "components.EntityTimeline.cancel": "CANCEL",
   "components.EntityTimeline.defaultEvent": "{user} did an update",
   "components.EntityTimeline.updateEvent": "{user} updated {target} {field} from {oldValue} to {newValue}",
