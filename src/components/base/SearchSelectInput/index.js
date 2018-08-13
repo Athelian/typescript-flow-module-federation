@@ -41,8 +41,6 @@ class SelectInput extends React.Component<Props> {
     const { onSearch } = this.props;
     const { value: query } = e.target;
 
-    if (query.trim()) return;
-
     if (this.timeout) {
       clearTimeout(this.timeout);
       this.timeout = null;
