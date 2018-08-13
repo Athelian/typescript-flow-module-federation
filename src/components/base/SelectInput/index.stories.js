@@ -3,9 +3,8 @@ import * as React from 'react';
 /* eslint-disable react/prop-types */
 import { storiesOf } from '@storybook/react';
 import { css } from 'react-emotion';
-import Icon from 'components/Icon';
 import { Form } from 'components/Form';
-import PureSelectInput from './index';
+import PureSearchSelectInput from './index';
 
 const items = [
   { value: 'apple' },
@@ -15,26 +14,7 @@ const items = [
   { value: 'banana' },
 ];
 
-const ItemStyle = (active, selected) => css`
-  background: ${active ? 'lightgreen' : '#fff'};
-  background: ${selected && 'teal'};
-  width: 200px;
-  color: #aaa;
-  cursor: pointer;
-  padding: 8px;
-`;
-
-const WrapperStyle = css`
-  outline: none;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 12px;
-  width: 200px;
-  padding: 8px;
-`;
-
-const InputStyle = css`
+const InputWrapperStyle = css`
   display: flex;
   align-items: center;
   width: 200px;
@@ -44,12 +24,15 @@ const InputStyle = css`
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
   cursor: pointer;
 
-  & > div {
+  div {
     flex: 1;
-    display: flex;
-    align-items: center;
-    min-height: 100%;
   }
+
+  input {
+    outline: none;
+    border: none;
+  }
+
   button {
     border: none;
     outline: none;
@@ -57,86 +40,61 @@ const InputStyle = css`
   }
 `;
 
+const OptionWrapperStyle = css`
+  outline: none;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 8px;
+`;
+
+const ItemStyle = (active, selected) => css`
+  background: ${active ? 'skyblue' : '#fff'};
+  background: ${selected && 'teal'};
+  color: ${selected ? '#fff' : '#555'};
+  cursor: pointer;
+  padding: 8px;
+`;
+
 function optionItem({ value, onHover, selected }) {
   return <div className={ItemStyle(onHover, selected)}>{value.value}</div>;
 }
 
-function Select({ currentValue, clearButton }) {
-  return (
-    <div>
-      {currentValue}
-      {clearButton}
-    </div>
-  );
-}
-
-storiesOf('PureSelectInput', module)
-  .add('style less', () => (
+storiesOf('SelectInput', module)
+  .add('non style', () => (
     <div style={{ margin: '50px' }}>
       <Form>
         {({ values, setFieldValue }) => (
-          <PureSelectInput
-            value={values.pure}
+          <PureSearchSelectInput
+            value={values.select}
             items={items}
             itemToString={item => (item ? item.value : '')}
             itemToValue={item => (item ? item.value : '')}
-            renderSelect={clearButton => (
-              <Select
-                currentValue={values.pure ? values.pure.value : 'any title you want'}
-                clearButton={clearButton}
-              />
-            )}
+            renderSelect={renderSelect => renderSelect}
             renderOption={({ value }) => <div>{value.value}</div>}
-            onChange={value => setFieldValue('pure', value)}
-            styles={{ select: '', options: '' }}
+            clearable
+            onChange={value => setFieldValue('select', value)}
+            wrapperStyle={{ select: '', options: '' }}
           />
         )}
       </Form>
     </div>
   ))
-  .add('with clearBtn', () => (
+  .add('with custom style', () => (
     <div style={{ margin: '50px' }}>
       <Form>
         {({ values, setFieldValue }) => (
-          <PureSelectInput
+          <PureSearchSelectInput
             value={values.select}
             items={items}
             itemToString={item => (item ? item.value : '')}
             itemToValue={item => (item ? item.value : '')}
-            renderSelect={clearButton => (
-              <Select
-                currentValue={values.select ? values.select.value : 'any title you want'}
-                clearButton={clearButton}
-              />
-            )}
+            renderSelect={renderSelect => renderSelect}
             renderOption={optionItem}
-            clearIcon={<Icon icon="CLEAR" />}
+            clearable
             onChange={value => setFieldValue('select', value)}
-            styles={{ select: '', options: '' }}
-          />
-        )}
-      </Form>
-    </div>
-  ))
-  .add('with styles', () => (
-    <div style={{ margin: '50px' }}>
-      <Form>
-        {({ values, setFieldValue }) => (
-          <PureSelectInput
-            value={values.select}
-            items={items}
-            itemToString={item => (item ? item.value : '')}
-            itemToValue={item => (item ? item.value : '')}
-            renderSelect={clearButton => (
-              <Select
-                currentValue={values.select ? values.select.value : 'any title you want'}
-                clearButton={clearButton}
-              />
-            )}
-            renderOption={optionItem}
-            clearIcon={<Icon icon="CLEAR" />}
-            onChange={value => setFieldValue('select', value)}
-            styles={{ select: InputStyle, options: WrapperStyle }}
+            wrapperStyle={{ select: InputWrapperStyle, options: OptionWrapperStyle }}
           />
         )}
       </Form>

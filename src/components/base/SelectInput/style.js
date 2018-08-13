@@ -1,4 +1,6 @@
+// @flow
 import { css } from 'react-emotion';
+import { transitions } from 'styles/common';
 
 export const ResetNativeStyle = css`
   ul {
@@ -13,6 +15,11 @@ export const ResetNativeStyle = css`
       width: 100%;
     }
   }
+`;
+
+export const ArrowDownStyle = (isOpen: boolean) => css`
+  ${transitions.EXPAND};
+  transform: rotate(${isOpen ? '180' : '0'}deg);
 `;
 
 export default ResetNativeStyle;

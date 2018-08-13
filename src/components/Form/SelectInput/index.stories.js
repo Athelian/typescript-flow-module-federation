@@ -22,6 +22,7 @@ storiesOf('Form/SelectInput', module)
             value={values.selection}
             items={items}
             onChange={value => setFieldValue('selection', value)}
+            clearable
           />
         )}
       </Form>
@@ -36,6 +37,7 @@ storiesOf('Form/SelectInput', module)
             error="Error"
             items={items}
             onChange={value => setFieldValue('selection', value)}
+            clearable
           />
         )}
       </Form>
