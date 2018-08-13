@@ -45,7 +45,7 @@ export type TextInputProps = DefaultHTMLProps &
      *
      * @type {boolean}
      */
-    isFullEdit?: boolean,
+    editable?: boolean,
     /**
      *
      *

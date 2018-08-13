@@ -40,7 +40,6 @@ export default class BaseNumberInput extends React.PureComponent<Props> {
     onChange: () => {},
     onBlur: () => {},
     formatter: (value: number | string) => value,
-    onToggleEditMode: () => {},
   };
 
   onKeyDown = (evt: KeyboardEvent, onToggleEditMode: Function) => {
@@ -130,6 +129,7 @@ export default class BaseNumberInput extends React.PureComponent<Props> {
     const {
       isRead,
       isWrite,
+      editable,
       errorMessage,
       infoMessage,
       warningMessage,
@@ -142,7 +142,7 @@ export default class BaseNumberInput extends React.PureComponent<Props> {
     } = this.props;
     if (!isRead) return null;
     return (
-      <Editable>
+      <Editable editable={!!editable}>
         {(isEditable, onToggleEditMode) => (
           <HoverWrapper>
             {isHover => (
@@ -150,6 +150,7 @@ export default class BaseNumberInput extends React.PureComponent<Props> {
                 <Label htmlFor={id}>
                   {infoMessage && <InfoTooltip info={infoMessage} />}
                   {label}
+                  {required && ' * '}
                   <input
                     id={id}
                     required={required}
@@ -163,7 +164,6 @@ export default class BaseNumberInput extends React.PureComponent<Props> {
                     onBlur={this.handleBlur}
                     {...rest}
                   />
-                  {required && ' * '}
                   {errorMessage && <ErrorTooltip error={errorMessage} />}
                   {warningMessage && <WarningTooltip warning={warningMessage} />}
                 </Label>

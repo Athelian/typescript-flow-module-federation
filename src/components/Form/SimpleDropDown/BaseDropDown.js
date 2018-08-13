@@ -21,7 +21,6 @@ export default class SimpleDropDown extends React.PureComponent<SimpleDropDownPr
     label: '',
     placeholder: '...',
     onChange: () => {},
-    onToggleEditMode: () => {},
   };
 
   onKeyDown = (evt: KeyboardEvent, onToggleEditMode: Function) => {
@@ -61,6 +60,7 @@ export default class SimpleDropDown extends React.PureComponent<SimpleDropDownPr
     const {
       isRead,
       isWrite,
+      editable,
       errorMessage,
       infoMessage,
       warningMessage,
@@ -75,7 +75,7 @@ export default class SimpleDropDown extends React.PureComponent<SimpleDropDownPr
     } = this.props;
     if (!isRead) return null;
     return (
-      <Editable>
+      <Editable editable={!!editable}>
         {(isEditable, onToggleEditMode) => (
           <HoverWrapper>
             {isHover => (
@@ -84,6 +84,7 @@ export default class SimpleDropDown extends React.PureComponent<SimpleDropDownPr
                   <Label htmlFor={id}>
                     {infoMessage && <InfoTooltip info={infoMessage} />}
                     {label}
+                    {required && ' * '}
                     <div className={WrapperStyle}>
                       {
                         <select
@@ -110,7 +111,6 @@ export default class SimpleDropDown extends React.PureComponent<SimpleDropDownPr
                       }
                     </div>
                   </Label>
-                  {required && ' * '}
                   {errorMessage && <ErrorTooltip error={errorMessage} />}
                   {warningMessage && <WarningTooltip warning={warningMessage} />}
                 </div>

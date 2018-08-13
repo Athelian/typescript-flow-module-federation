@@ -49,6 +49,12 @@ export type SimpleDropDownProps = DefaultHTMLProps &
     /**
      *
      *
+     * @type {boolean}
+     */
+    editable?: boolean,
+    /**
+     *
+     *
      * @type {Array<{
      *     value: string,
      *     label: string,

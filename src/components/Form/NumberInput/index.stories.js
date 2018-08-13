@@ -18,9 +18,28 @@ storiesOf('Form/NumberInput', module)
       />
     </form>
   ))
+  .add('with input style', () => (
+    <form onSubmit={action('submit')}>
+      <NumberInput
+        required
+        editable
+        name="qty"
+        label="Qty"
+        onChange={action('onChange')}
+        onBlur={action('onBlur')}
+        value={10}
+        permissions="rw"
+      />
+    </form>
+  ))
   .add('readonly', () => (
     <form onSubmit={action('onSubmit')}>
       <NumberInput label="Age" value={30} permissions="r" />
+    </form>
+  ))
+  .add('no permission', () => (
+    <form onSubmit={action('onSubmit')}>
+      <NumberInput label="Age" value={30} permissions="" />
     </form>
   ))
   .add('support formatter', () => (

@@ -37,6 +37,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
     const {
       isRead,
       isWrite,
+      editable,
       errorMessage,
       infoMessage,
       warningMessage,
@@ -49,7 +50,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
     } = this.props;
     if (!isRead) return null;
     return (
-      <Editable>
+      <Editable editable={!!editable}>
         {(isEditable, onToggleEditMode) => (
           <HoverWrapper>
             {isHover => (
@@ -57,6 +58,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
                 <Label htmlFor={id}>
                   {infoMessage && <InfoTooltip info={infoMessage} />}
                   {label}
+                  {required && ' * '}
                   <DebounceTextInput
                     {...rest}
                     id={id}
@@ -68,7 +70,6 @@ export default class BaseTextInput extends React.PureComponent<Props> {
                     className={InputStyle(!!errorMessage)}
                     onKeyDown={evt => this.onKeyDown(evt, onToggleEditMode)}
                   />
-                  {required && ' * '}
                   {errorMessage && <ErrorTooltip error={errorMessage} />}
                   {warningMessage && <WarningTooltip warning={warningMessage} />}
                 </Label>
