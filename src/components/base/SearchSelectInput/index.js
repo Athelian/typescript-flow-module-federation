@@ -17,11 +17,9 @@ type Props = {
   disabled?: boolean,
   required?: boolean,
   readOnly?: boolean,
-  clearable?: boolean,
   placeholder?: string,
   onSearch?: Function,
   onBlur?: Function,
-  onOpen?: Function,
 };
 
 class SelectInput extends React.Component<Props> {
@@ -34,7 +32,6 @@ class SelectInput extends React.Component<Props> {
     placeholder: '',
     onSearch: () => {},
     onBlur: () => {},
-    onOpen: () => {},
   };
 
   handleChangeQuery = (e: any) => {
@@ -68,7 +65,6 @@ class SelectInput extends React.Component<Props> {
       itemToValue,
       itemToString,
       renderOption,
-      clearable,
       wrapperStyle,
       disabled,
       required,
@@ -106,7 +102,7 @@ class SelectInput extends React.Component<Props> {
                     />
                   </div>
                   {selectedItem &&
-                    clearable && (
+                    !required && (
                       <button type="button" onClick={clearSelection}>
                         <Icon icon="CLEAR" />
                       </button>

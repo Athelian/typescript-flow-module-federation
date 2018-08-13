@@ -12,7 +12,6 @@ type Props = {
   itemToString: any => string,
   renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
   wrapperStyle: { select: any, options: any },
-  clearable?: boolean,
   disabled?: boolean,
   required?: boolean,
   placeholder?: string,
@@ -20,7 +19,6 @@ type Props = {
 
 const defaultProps = {
   onChange: () => {},
-  clearable: false,
   disabled: false,
   required: false,
   placeholder: '',
@@ -33,7 +31,6 @@ function SelectInput({
   itemToValue,
   itemToString,
   renderOption,
-  clearable,
   wrapperStyle,
   disabled,
   required,
@@ -67,7 +64,7 @@ function SelectInput({
                   />
                 </div>
                 {selectedItem &&
-                  clearable && (
+                  !required && (
                     <button type="button" onClick={clearSelection}>
                       <Icon icon="CLEAR" />
                     </button>

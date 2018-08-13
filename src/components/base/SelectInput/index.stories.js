@@ -73,7 +73,6 @@ storiesOf('SelectInput', module)
             itemToValue={item => (item ? item.value : '')}
             renderSelect={renderSelect => renderSelect}
             renderOption={({ value }) => <div>{value.value}</div>}
-            clearable
             onChange={value => setFieldValue('select', value)}
             wrapperStyle={{ select: '', options: '' }}
           />
@@ -92,7 +91,6 @@ storiesOf('SelectInput', module)
             itemToValue={item => (item ? item.value : '')}
             renderSelect={renderSelect => renderSelect}
             renderOption={optionItem}
-            clearable
             onChange={value => setFieldValue('select', value)}
             wrapperStyle={{ select: InputWrapperStyle, options: OptionWrapperStyle }}
           />
