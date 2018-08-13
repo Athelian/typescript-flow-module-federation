@@ -19,6 +19,8 @@ const orderSectionFields = pickByProps([
   'updatedAt',
   'deliveryPlace',
   'date',
+  'currency',
+  'incoterms',
 ]);
 
 export default function OrderForm({ order }: Props) {
