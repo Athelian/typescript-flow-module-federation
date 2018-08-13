@@ -25,11 +25,16 @@ type State = {
 };
 
 class Settings extends React.Component<Props, State> {
-  state = {
-    isNotificationOpen: false,
-    isProfileOpen: false,
-    logoutDialogOpen: false,
-  };
+  constructor() {
+    super();
+    this.state = {
+      isNotificationOpen: false,
+      isProfileOpen: false,
+      logoutDialogOpen: false,
+    };
+    this.NotificationRef = React.createRef();
+    this.ProfileRef = React.createRef();
+  }
 
   handleClickOutside = () => {
     const { isNotificationOpen, isProfileOpen } = this.state;
@@ -58,13 +63,22 @@ class Settings extends React.Component<Props, State> {
     this.setState(prevState => ({ logoutDialogOpen: !prevState.logoutDialogOpen }));
   };
 
+  NotificationRef: any;
+
+  ProfileRef: any;
+
   render() {
     const { isNotificationOpen, isProfileOpen, logoutDialogOpen } = this.state;
 
     return (
       <div className={SettingsWrapperStyle}>
         <div className={SettingsBodyStyle}>
-          <button tabIndex={-1} onClick={this.toggleNotification} type="button">
+          <button
+            tabIndex={-1}
+            onClick={this.toggleNotification}
+            type="button"
+            ref={this.NotificationRef}
+          >
             <div className={SettingsCountStyle}>{3}</div>
             <Icon icon="NOTIFICATION" />
           </button>
@@ -73,19 +87,26 @@ class Settings extends React.Component<Props, State> {
             tabIndex={-1}
             onClick={this.toggleProfile}
             type="button"
+            ref={this.ProfileRef}
           >
             Z
           </button>
         </div>
         {isNotificationOpen && (
-          <OutsideClickHandler onOutsideClick={this.handleClickOutside}>
+          <OutsideClickHandler
+            onOutsideClick={this.handleClickOutside}
+            ignoreElements={[this.NotificationRef && this.NotificationRef.current]}
+          >
             <div className={NotificationDropDownWrapperStyle}>
               <div className={SubMenuWrapperStyle}>There is nothing to notice you.</div>
             </div>
           </OutsideClickHandler>
         )}
         {isProfileOpen && (
-          <OutsideClickHandler onOutsideClick={this.handleClickOutside}>
+          <OutsideClickHandler
+            onOutsideClick={this.handleClickOutside}
+            ignoreElements={[this.ProfileRef && this.ProfileRef.current]}
+          >
             <div className={DropDownWrapperStyle}>
               <div className={SubMenuWrapperStyle}>
                 <div className={SubMenuItemStyle}>
