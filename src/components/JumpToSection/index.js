@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import scrollIntoView from 'scroll-into-view-if-needed';
 import logger from 'utils/logger';
 
 type Props = {
@@ -10,39 +11,30 @@ type Props = {
 
 type State = {
   activeNode: ?string,
-  ratio: number,
 };
 
 class JumpToSection extends React.PureComponent<Props, State> {
   static defaultProps = {
     rootViewPort: null,
-    threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+    threshold: [0, 0.1, 0.2, 0.8, 0.9, 1],
   };
 
   state = {
     activeNode: null,
-    ratio: 0,
   };
 
   componentDidMount() {
     logger.warn('create IntersectionObserver');
-    this.sectionIds = [];
     const { rootViewPort, threshold } = this.props;
     this.io = new IntersectionObserver(
       entries => {
-        logger.warn('entries', entries, this.sectionIds);
         if (entries.length) {
           const intersectSections = entries.filter(item => item.isIntersecting);
-          const hideSections = entries.filter(item => !item.isIntersecting);
-          logger.warn('intersect', intersectSections);
-          logger.warn('hide', hideSections);
           const [activeSection] = intersectSections.sort(
             (first, second) => second.intersectionRatio - first.intersectionRatio
           );
-          logger.warn('active', activeSection);
 
           if (!activeSection) {
-            logger.warn('not found active section', this.state);
             return;
           }
 
@@ -51,8 +43,7 @@ class JumpToSection extends React.PureComponent<Props, State> {
             target: { id: activeNode },
           } = activeSection;
           const ratio = intersectionRatio * 100;
-          logger.warn('intersectionRatio', ratio);
-          if (ratio > 50) this.setState(() => ({ activeNode, ratio }));
+          if (ratio > 50) this.setState(() => ({ activeNode }));
         }
       },
       {
@@ -63,10 +54,22 @@ class JumpToSection extends React.PureComponent<Props, State> {
     );
     const { children } = this.props;
     React.Children.forEach(children, child => {
-      const element = document.querySelector(`#${child.props.link}`);
+      const { link } = child.props;
+      const element = document.querySelector(`#${link}`);
       if (element) {
-        this.sectionIds.push(child.props.link);
         this.io.observe(element);
+      } else {
+        // wait for the element is rendering on DOM
+        const retryFindElement = () => {
+          const retryElement = document.querySelector(`#${link}`);
+          if (!retryElement) {
+            requestAnimationFrame(retryFindElement);
+          } else {
+            this.io.observe(retryElement);
+          }
+        };
+
+        requestAnimationFrame(retryFindElement);
       }
     });
   }
@@ -78,12 +81,11 @@ class JumpToSection extends React.PureComponent<Props, State> {
 
   handleClick = (id: string) => () => {
     const node = document.querySelector(`#${id}`);
-    if (node) {
-      node.scrollIntoView({ block: 'start', behavior: 'smooth' });
-    }
+    scrollIntoView(node, {
+      behavior: 'smooth',
+      scrollMode: 'if-needed',
+    });
   };
-
-  sectionIds: Array<string>;
 
   io: IntersectionObserver;
 
