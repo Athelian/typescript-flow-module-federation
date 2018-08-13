@@ -1,25 +1,139 @@
 // @flow
 import * as React from 'react';
+import * as Yup from 'yup';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
-import { WrapperStyle } from './style';
+import UserAvatar from 'components/UserAvatar';
+import { FormattedMessage } from 'react-intl';
+import yupToFormErrors from 'utils/yupToFormErrors';
+import { Form, Field, TextInput, TagsInput } from 'components/Form';
+import { WrapperStyle, HeaderSectionStyle, InputsWrapperStyle } from './style';
+import messages from './messages';
 
-const OrderSection = () => (
+type Props = {
+  isNew: boolean,
+  onSubmit: (values: Object) => void,
+  initialValues: {
+    updatedAt?: Date,
+    status?: string,
+    PI?: string,
+    PO?: string,
+    deliveryPlace?: string,
+    date?: Date,
+  },
+};
+
+const OrderSchema = Yup.object().shape({
+  PO: Yup.string().required(),
+  currency: Yup.string().required(),
+  deliveryPlace: Yup.string().required(),
+  exporter: Yup.string().required(),
+});
+
+const onValidate = (values: Object) =>
+  new Promise((resolve, reject) => {
+    OrderSchema.validate(values, { abortEarly: false })
+      .then(() => resolve({}))
+      .catch(error => reject(yupToFormErrors(error)));
+  });
+
+const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
   <div className={WrapperStyle}>
-    <BooleanValue>
-      {({ value: opened, toggle }) => (
-        <React.Fragment>
-          <button type="button" onClick={toggle}>
-            Exporter
-          </button>
-          <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: 400 }}>
-            <div style={{ padding: '50px', textAlign: 'center' }}>
-              <h1>Select exporter</h1>
-            </div>
-          </SlideView>
-        </React.Fragment>
+    <div className={HeaderSectionStyle}>
+      <h3>Orders</h3>
+      <div>
+        {!isNew && (
+          <React.Fragment>
+            <p>Last Modified: {initialValues.updatedAt}</p>
+            <UserAvatar profileUrl="" />
+          </React.Fragment>
+        )}
+        <p>Status: {initialValues.status} </p>
+      </div>
+    </div>
+    <Form
+      initialValues={initialValues}
+      validateOnChange
+      validateOnBlur
+      validations={onValidate}
+      onSubmit={onSubmit}
+      render={({ errors, touched }) => (
+        <div className={InputsWrapperStyle}>
+          <div>
+            <Field
+              name="PO"
+              render={({ input }) => (
+                <TextInput
+                  {...input}
+                  id="PO"
+                  label="PO NO"
+                  title={<FormattedMessage {...messages.required} />}
+                  errorMessage={touched.NO && errors.NO}
+                  required
+                  editable={isNew}
+                />
+              )}
+            />
+            <Field
+              name="PI"
+              render={({ input }) => (
+                <TextInput
+                  {...input}
+                  id="PI"
+                  label="PI NO"
+                  title={<FormattedMessage {...messages.required} />}
+                  errorMessage={touched.PI && errors.PI}
+                  editable={isNew}
+                />
+              )}
+            />
+            <Field
+              name="date"
+              render={({ input }) => (
+                <TextInput
+                  {...input}
+                  id="poDate"
+                  type="date"
+                  label="PO ISSUANCE DATE"
+                  title={<FormattedMessage {...messages.required} />}
+                  errorMessage={touched.date && errors.date}
+                  editable={isNew}
+                />
+              )}
+            />
+            <Field
+              name="deliveryPlace"
+              render={({ input }) => (
+                <TextInput
+                  {...input}
+                  id="deliveryPlace"
+                  label="PLACE OF DELIVERY"
+                  title={<FormattedMessage {...messages.deliveryPlace} />}
+                  errorMessage={touched.deliveryPlace && errors.deliveryPlace}
+                  editable={isNew}
+                />
+              )}
+            />
+            <TagsInput editable={isNew} label="TAGS" id="tags" name="tags" tags={[]} />
+          </div>
+          <BooleanValue>
+            {({ value: opened, toggle }) => (
+              <React.Fragment>
+                <button type="button" onClick={toggle}>
+                  Exporter
+                </button>
+                <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: 400 }}>
+                  <div style={{ padding: '50px', textAlign: 'center' }}>
+                    <h1>Select exporter</h1>
+                  </div>
+                </SlideView>
+              </React.Fragment>
+            )}
+          </BooleanValue>
+        </div>
       )}
-    </BooleanValue>
+    />
   </div>
 );
+
 export default OrderSection;

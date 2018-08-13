@@ -67,11 +67,7 @@ class OrderModule extends React.Component<Props, State> {
                 <ViewToggle
                   changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
                   selectedView={viewType}
-                  viewTypes={[
-                    { icon: 'WATERFALL', type: 'grid' },
-                    { icon: 'TABLE', type: 'table' },
-                    { icon: 'LIST', type: 'list' },
-                  ]}
+                  viewTypes={[{ icon: 'CARD', type: 'grid' }, { icon: 'TABLE', type: 'table' }]}
                 />
                 <SortInput
                   sort={fields.find(item => item.value === sort.field) || fields[0]}

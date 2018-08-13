@@ -8,6 +8,8 @@ import LoadingIcon from 'components/LoadingIcon';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import { decodeId } from 'utils/id';
+import logger from 'utils/logger';
+import { getByPathWithDefault } from 'utils/fp';
 import OrderForm from './form';
 import SectionNavigation from './form/components/SectionNavigation';
 import LogsButton from './form/components/LogsButton';
@@ -47,6 +49,8 @@ class OrderFormContainer extends React.PureComponent<Props, State> {
 
   render() {
     const { orderId } = this.props;
+    logger.warn('orderId', orderId);
+    const isNew = orderId === 'new';
     const { isSlideViewOpen, type } = this.state;
     return (
       <UIConsumer>
@@ -66,7 +70,7 @@ class OrderFormContainer extends React.PureComponent<Props, State> {
               </NavBar>
             }
           >
-            {!orderId ? (
+            {isNew || !orderId ? (
               <OrderForm order={{}} />
             ) : (
               <Query query={query} variables={{ id: decodeId(orderId) }}>
@@ -76,8 +80,7 @@ class OrderFormContainer extends React.PureComponent<Props, State> {
                   }
 
                   if (loading) return <LoadingIcon />;
-
-                  return <OrderForm order={data || {}} />;
+                  return <OrderForm order={getByPathWithDefault({}, 'order', data)} />;
                 }}
               </Query>
             )}
