@@ -1,5 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
+import { transitions } from 'styles/common';
 
 export const ResetNativeStyle = css`
   position: relative;
@@ -19,4 +20,7 @@ export const ResetNativeStyle = css`
   }
 `;
 
-export default ResetNativeStyle;
+export const ArrowDownStyle = (isOpen: boolean) => css`
+  ${transitions.EXPAND};
+  transform: rotate(${isOpen ? '180' : '0'}deg);
+`;

@@ -127,7 +127,7 @@ class OrderModule extends React.Component<Props, State> {
                   value={filters.query}
                   name="search"
                   onClear={() => this.onChangeFilter({ query: '' })}
-                  onChange={newValue => this.onChangeFilter({ query: newValue })}
+                  onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />
                 <Link to="new"> New </Link>
               </NavBar>

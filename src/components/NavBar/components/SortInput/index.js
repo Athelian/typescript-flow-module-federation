@@ -32,7 +32,7 @@ class SortInput extends React.Component<Props> {
   };
 
   render() {
-    const { ascending, fields, sort } = this.props;
+    const { sort, ascending, fields } = this.props;
 
     return (
       <StyleLessSelectInput

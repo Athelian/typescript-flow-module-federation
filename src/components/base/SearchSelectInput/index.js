@@ -2,8 +2,7 @@
 import * as React from 'react';
 import Downshift from 'downshift';
 import Icon from 'components/Icon';
-import { ResetNativeStyle } from 'components/base/SelectInput/style';
-import { ArrowDownStyle } from 'components/Form/SelectInput/style';
+import { ResetNativeStyle, ArrowDownStyle } from 'components/base/SelectInput/style';
 
 type Props = {
   name: string,

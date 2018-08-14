@@ -9,15 +9,13 @@ type Props = {
   types?: Array<string>,
 };
 
+const defaultPartnerTypes = ['Exporter', 'Supplier', 'Forwarder'];
+
 const defaultProps = {
-  types: ['Exporter', 'Supplier', 'Forwarder'],
+  types: defaultPartnerTypes,
 };
 
-function PartnerSelectInput({
-  value,
-  onChange,
-  types = ['Exporter', 'Supplier', 'Forwarder'],
-}: Props) {
+function PartnerSelectInput({ value, onChange, types = defaultPartnerTypes }: Props) {
   return (
     <PartnerListProvider>
       {({ data, loading }) => (
