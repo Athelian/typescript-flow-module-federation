@@ -10,7 +10,7 @@ type Props = {
   isOpen: boolean,
   onRequestClose: () => void,
   children: React.Node,
-  options: { width: number },
+  options: { width: number | string },
   rootElementId?: string,
 };
 
