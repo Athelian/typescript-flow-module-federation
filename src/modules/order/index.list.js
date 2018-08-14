@@ -1,11 +1,9 @@
 // @flow
 import * as React from 'react';
 import { Link } from '@reach/router';
+import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
-import { Form, Field, FieldObserver } from 'components/Form';
-import TextInput from 'components/TextInput';
 import { UIConsumer } from 'modules/ui';
-import logger from 'utils/logger';
 import NavBar, {
   EntityIcon,
   ViewToggle,
@@ -14,9 +12,14 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
+import PartnerSelectInput from 'components/PartnerSelectInput';
 import OrderList from './list';
+import messages from './messages';
 
-type Props = {};
+type Props = {
+  intl: intlShape,
+};
+
 type State = {
   viewType: string,
   query: string,
@@ -40,19 +43,21 @@ class OrderModule extends React.Component<Props, State> {
     perPage: 10,
   };
 
-  onChangeFilter = (field: string, newValue: any) => {
-    this.setState(prevState => ({ ...prevState, [field]: newValue }));
+  onChangeFilter = (newValue: any) => {
+    this.setState(prevState => ({ ...prevState, ...newValue }));
   };
 
   render() {
     const { viewType, sort, perPage, ...filters } = this.state;
-    // TODO: i18n message
+    const { intl } = this.props;
+
     const fields = [
-      { title: 'PO NO.', value: 'PO' },
-      { title: 'EXPORTER', value: 'exporter' },
-      { title: 'LAST MODIFIED', value: 'updatedAt' },
-      { title: 'CREATED ON', value: 'createdAt' },
+      { title: intl.formatMessage(messages.poSort), value: 'PO' },
+      { title: intl.formatMessage(messages.exporterSort), value: 'exporter' },
+      { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
+      { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
     ];
+
     return (
       <UIConsumer>
         {uiState => (
@@ -62,10 +67,12 @@ class OrderModule extends React.Component<Props, State> {
               <NavBar>
                 <EntityIcon icon="ORDER" color="ORDER" />
                 <StatusToggleTabs
-                  onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
+                  onChange={index =>
+                    this.onChangeFilter({ status: index ? 'Completed' : 'Active' })
+                  }
                 />
                 <ViewToggle
-                  changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
+                  changeToggle={newViewType => this.onChangeFilter({ viewType: newViewType })}
                   selectedView={viewType}
                   viewTypes={[{ icon: 'CARD', type: 'grid' }, { icon: 'TABLE', type: 'table' }]}
                 />
@@ -74,47 +81,55 @@ class OrderModule extends React.Component<Props, State> {
                   ascending={sort.direction !== 'DESC'}
                   fields={fields}
                   onChange={({ field: { value }, ascending }) =>
-                    this.onChangeFilter('sort', {
-                      field: value,
-                      direction: ascending ? 'ASC' : 'DESC',
+                    this.onChangeFilter({
+                      sort: {
+                        field: value,
+                        direction: ascending ? 'ASC' : 'DESC',
+                      },
                     })
                   }
                 />
-                <Form initialValues={{ ...filters }}>
+                <FilterInput
+                  initialFilter={{}}
+                  onChange={newFilter => this.onChangeFilter({ ...newFilter })}
+                  width={400}
+                >
                   {({ values, setFieldValue }) => (
                     <React.Fragment>
-                      <FilterInput
-                        initialFilter={{}}
-                        onChange={newFilter => logger.warn('filter', newFilter)}
-                        width={400}
-                      >
-                        {({ setFieldValue: changeQuery }) => (
-                          <React.Fragment>
-                            <SearchInput
-                              value=""
-                              name="search"
-                              onClear={() => changeQuery('query', '')}
-                              onChange={newValue => changeQuery('query', newValue)}
-                            />
-                            <TextInput onBlur={() => {}} onChange={() => {}} />
-                          </React.Fragment>
-                        )}
-                      </FilterInput>
-                      <Field
+                      <SearchInput
                         value={values.query}
-                        name="query"
-                        render={({ input }) => (
-                          <SearchInput {...input} onClear={() => setFieldValue('query', '')} />
-                        )}
+                        name="search"
+                        onClear={() => setFieldValue('query', '')}
+                        onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <FieldObserver
-                        name="query"
-                        onChange={({ value }) => this.onChangeFilter('query', value)}
+                      <PartnerSelectInput
+                        title="Exporter"
+                        types={['Exporter']}
+                        value={values.exporterId}
+                        onChange={v => setFieldValue('exporterId', v ? v.id : null)}
                       />
-                      <Link to="new"> New </Link>
+                      <PartnerSelectInput
+                        title="Supplier"
+                        types={['Supplier']}
+                        value={values.supplierId}
+                        onChange={v => setFieldValue('supplierId', v ? v.id : null)}
+                      />
+                      <PartnerSelectInput
+                        title="Forwarder"
+                        types={['Forwarder']}
+                        value={values.userId}
+                        onChange={v => setFieldValue('userId', v ? v.id : null)}
+                      />
                     </React.Fragment>
                   )}
-                </Form>
+                </FilterInput>
+                <SearchInput
+                  value={filters.query}
+                  name="search"
+                  onClear={() => this.onChangeFilter({ query: '' })}
+                  onChange={newQuery => this.onChangeFilter({ query: newQuery })}
+                />
+                <Link to="new"> New </Link>
               </NavBar>
             }
           >
@@ -126,4 +141,4 @@ class OrderModule extends React.Component<Props, State> {
   }
 }
 
-export default OrderModule;
+export default injectIntl(OrderModule);

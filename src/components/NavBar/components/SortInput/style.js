@@ -18,14 +18,20 @@ export const WrapperStyle = css`
   position: relative;
   background: #fff;
   overflow: hidden;
-  color: ${colors.BLACK};
   width: 150px;
   height: 30px;
   align-items: center;
   padding: 0 0 0 5px;
   ${transitions.MAIN};
-  ${fontSizes.MAIN};
   ${shadows.NAV_BUTTON};
+  ${fontSizes.MAIN};
+
+  input {
+    border: none;
+    outline: none;
+    color: ${colors.BLACK};
+    cursor: pointer;
+  }
 `;
 
 export const SelectStyle = css`

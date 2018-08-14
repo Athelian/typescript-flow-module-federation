@@ -709,5 +709,10 @@
   "containers.SignUp.confirmPassword": "パスワードを認証する",
   "containers.SignUp.signUp": "サインアップ",
   "containers.SignUp.validation.required": "必須",
-  "containers.SignUp.validation.notEqualPassword": "同じパスワードを入力してください。"
+  "containers.SignUp.validation.notEqualPassword": "同じパスワードを入力してください。",
+
+  "modules.order.list.sort.po": "PO No",
+  "modules.order.list.sort.exporter": "輸出者",
+  "modules.order.list.sort.createdAt": "作成日",
+  "modules.order.list.sort.updatedAt": "最終編集日"
 }

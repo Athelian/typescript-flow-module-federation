@@ -2,33 +2,46 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import StyleLessSelectInput from 'components/base/SelectInput';
-import { SelectWrapperStyle, OptionWrapperStyle, OptionStyle, InputStyle } from './style';
+import { SelectWrapperStyle, OptionWrapperStyle, OptionStyle, ArrowDownStyle } from './style';
 
 type Props = {
   value: any,
   items: Array<any>,
   onChange: () => void,
   error?: any,
-  rest: any,
+  itemToString: any => string,
+  itemToValue: any => any,
 };
 
 const defaultProps = {
   error: null,
 };
 
-function SelectInput({ value, items, onChange, error, ...rest }: Props) {
+function SelectInput({ value, items, onChange, error, itemToString, itemToValue, ...rest }: Props) {
   return (
     <StyleLessSelectInput
       value={value}
       items={items}
-      itemToString={item => (item ? item.label : '')}
-      itemToValue={item => (item ? item.value : '')}
+      itemToString={itemToString}
+      itemToValue={itemToValue}
       clearIcon={<Icon icon="CLEAR" />}
       onChange={onChange}
-      wrapperStyle={{ select: SelectWrapperStyle(!!error), options: OptionWrapperStyle }}
-      renderSelect={renderSelect => <div className={InputStyle}>{renderSelect}</div>}
+      wrapperStyle={{ options: OptionWrapperStyle }}
+      renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
+        <div className={SelectWrapperStyle(!!error)}>
+          {input}
+          {selectedItem && (
+            <button type="button" onClick={clearSelection}>
+              <Icon icon="CLEAR" />
+            </button>
+          )}
+          <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+            <Icon icon="CHEVRON_DOWN" />
+          </button>
+        </div>
+      )}
       renderOption={({ value: item, onHover, selected }) => (
-        <div className={OptionStyle(onHover, selected)}>{item.label}</div>
+        <div className={OptionStyle(onHover, selected)}>{itemToString(item)}</div>
       )}
       {...rest}
     />

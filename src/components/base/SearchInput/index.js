@@ -19,7 +19,16 @@ const defaultProps = {
 };
 
 function SearchInput(props: Props) {
-  const { searchIcon, clearButton, className, inputClassName, value, onClear, ...rest } = props;
+  const {
+    searchIcon,
+    clearButton,
+    className,
+    inputClassName,
+    value,
+    onClear,
+    onChange,
+    ...rest
+  } = props;
   const hasContent = !!value;
 
   return (
@@ -30,6 +39,7 @@ function SearchInput(props: Props) {
         type="text"
         value={value}
         debounceTimeout={500}
+        onChange={evt => onChange(evt.target.value.trim())}
         {...rest}
       />
       {hasContent && clearButton && clearButton({ clearQuery: onClear })}

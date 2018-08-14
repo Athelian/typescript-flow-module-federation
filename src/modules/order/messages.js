@@ -317,4 +317,16 @@ export default defineMessages({
   addAdjustment: {
     id: 'containers.Orders.addAdjustment',
   },
+  poSort: {
+    id: 'modules.order.list.sort.po',
+  },
+  exporterSort: {
+    id: 'modules.order.list.sort.exporter',
+  },
+  createdAtSort: {
+    id: 'modules.order.list.sort.createdAt',
+  },
+  updatedAtSort: {
+    id: 'modules.order.list.sort.updatedAt',
+  },
 });

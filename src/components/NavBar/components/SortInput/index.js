@@ -2,13 +2,7 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import { SelectInput as StyleLessSelectInput } from 'components/base';
-import {
-  WrapperStyle,
-  ButtonStyle,
-  OptionWrapperStyle,
-  SelectStyle,
-  OptionItemStyle,
-} from './style';
+import { WrapperStyle, ButtonStyle, OptionWrapperStyle, OptionItemStyle } from './style';
 
 type Sort = {
   title: string,
@@ -45,9 +39,9 @@ class SortInput extends React.Component<Props> {
         items={fields}
         itemToString={item => (item ? item.title : '')}
         itemToValue={item => (item ? item.value : '')}
-        renderSelect={() => (
+        renderSelect={({ input, selectedItem, toggle }) => (
           <div className={WrapperStyle}>
-            <div className={SelectStyle}>{sort.title}</div>
+            {selectedItem ? input : <input value={sort.title} onClick={toggle} readOnly />}
             <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
               <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
             </button>
@@ -57,7 +51,7 @@ class SortInput extends React.Component<Props> {
           <div className={OptionItemStyle(onHover, selected)}>{value.title}</div>
         )}
         onChange={this.onFieldChange}
-        styles={{ select: '', options: OptionWrapperStyle }}
+        styles={{ options: OptionWrapperStyle }}
       />
     );
   }

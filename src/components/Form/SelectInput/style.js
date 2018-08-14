@@ -1,38 +1,28 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, borderRadiuses, transitions } from 'styles/common';
+import { colors, borderRadiuses, transitions } from 'styles/common';
 
 export const SelectWrapperStyle = (isError: boolean) => css`
   display: flex;
   flex-wrap: nowrap;
   ${borderRadiuses.MAIN};
   border: 1px solid ${isError ? colors.RED : 'transparent'};
-  cursor: pointer;
   ${transitions.MAIN};
-
-  &:hover {
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-export const OptionWrapperStyle = css`
-  display: flex;
-  flex-flow: column wrap;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-`;
-
-export const InputStyle = css`
-  ${layout.HORIZONTAL};
   align-items: center;
   height: 30px;
   padding: 0 8px;
   box-sizing: border-box;
-  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
+
   div {
     height: 100%;
     display: flex;
-    align-items: center;
     flex: 1;
+
     input {
       font-size: 14px;
       font-weight: bold;
@@ -44,6 +34,7 @@ export const InputStyle = css`
       background: transparent;
     }
   }
+
   button {
     outline: none;
     border: none;
@@ -55,11 +46,13 @@ export const InputStyle = css`
     display: flex;
     align-items: center;
   }
-  &:not(:hover) {
-    button:first-child {
-      display: none;
-    }
-  }
+`;
+
+export const OptionWrapperStyle = css`
+  display: flex;
+  flex-flow: column wrap;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  width: 100px;
 `;
 
 export const OptionStyle = (onHover: boolean, selected: boolean) => css`
@@ -67,4 +60,10 @@ export const OptionStyle = (onHover: boolean, selected: boolean) => css`
   background-color: ${selected && colors.TEAL};
   color: ${selected ? '#fff' : colors.BLACK};
   padding: 8px;
+  width: 100%;
+`;
+
+export const ArrowDownStyle = (isOpen: boolean) => css`
+  ${transitions.EXPAND};
+  transform: rotate(${isOpen ? '180' : '0'}deg);
 `;
