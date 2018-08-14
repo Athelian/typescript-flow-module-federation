@@ -1,49 +1,64 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, gradients, presets, colors, shadows, layout, transitions } from 'styles/common';
+import {
+  fontSizes,
+  gradients,
+  presets,
+  colors,
+  shadows,
+  layout,
+  borderRadiuses,
+  transitions,
+} from 'styles/common';
 
 export const SettingsWrapperStyle = css`
-  user-select: none;
-  margin-right: 20px;
+  position: relative;
   display: flex;
+  padding: 0 20px;
   align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  height: 50px;
 `;
 
-export const SettingsBodyStyle = css`
-  display: flex;
-  align-items: center;
-  & > button {
-    ${presets.BUTTON};
-    position: relative;
-    font-size: 20px;
-    width: 30px;
-    height: 30px;
-    margin-left: 16px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-    outline: none;
-    &:first-child {
-      background: ${gradients.BLUE_TEAL_DIAGONAL};
-      color: #fff;
-    }
-    &:nth-child(2) {
-      background: rgba(0, 0, 0, 0.2);
-      color: #fff;
-    }
+const ButtonStyle = css`
+  ${presets.BUTTON};
+  position: relative;
+  ${fontSizes.HUGE};
+  width: 30px;
+  height: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  ${borderRadiuses.CIRCLE};
+  &:hover,
+  &:focus {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   }
 `;
 
-export const SettingsCountStyle = css`
+export const NotificationButtonStyle = css`
+  ${ButtonStyle};
+  background: ${gradients.BLUE_TEAL_DIAGONAL};
+  color: #fff;
+  margin: 0 20px 0 0;
+`;
+
+export const ProfileButtonStyle = css`
+  ${ButtonStyle};
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+`;
+
+export const NotificationBadgeStyle = css`
   position: absolute;
-  border-radius: 50%;
+  border-radius: 8px;
   background-color: ${colors.RED};
   color: #fff;
-  font-size: 10px;
+  ${fontSizes.SMALL};
   min-width: 16px;
   height: 16px;
-  padding: 2px;
-  top: -5px;
-  right: -5px;
+  padding: 0 3px;
+  top: -4px;
+  right: -4px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,10 +67,9 @@ export const SettingsCountStyle = css`
 
 const DropDownStyle = css`
   position: absolute;
-  top: 50px;
+  top: 60px;
   min-width: min-content;
   min-height: min-content;
-  margin-top: 10px;
 `;
 
 export const DropDownWrapperStyle = css`

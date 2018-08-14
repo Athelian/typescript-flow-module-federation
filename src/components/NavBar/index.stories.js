@@ -12,7 +12,7 @@ import ViewToggle from './components/ViewToggle';
 import FilterInput from './components/FilterInput';
 import SortInput from './components/SortInput';
 import SearchInput from './components/SearchInput';
-import ActiveToggleTabs from './components/Tabs/ActiveToggleTabs';
+import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
 
 const fields = [
   { title: 'UPDATED AT', value: 'PO' },
@@ -39,7 +39,7 @@ storiesOf('Navbar', module)
           <div style={{ height: '2000px' }}>
             <NavBar>
               <EntityIcon icon="SHIPMENT" color="RED" />
-              <ActiveToggleTabs onChange={index => index} />
+              <StatusToggleTabs onChange={index => index} />
               <ViewToggle />
               <SortInput
                 sort={values.sort && values.sort.field ? values.sort.field : fields[0]}

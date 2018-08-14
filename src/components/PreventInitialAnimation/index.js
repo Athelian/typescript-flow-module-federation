@@ -39,6 +39,6 @@ export default class PreventInitialAnimation extends React.Component<Props, Stat
   render() {
     const { children } = this.props;
     const { shouldApplyAnimation } = this.state;
-    return <div>{shouldApplyAnimation && children}</div>;
+    return <React.Fragment>{shouldApplyAnimation && children}</React.Fragment>;
   }
 }

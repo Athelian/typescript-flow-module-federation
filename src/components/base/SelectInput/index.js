@@ -31,7 +31,7 @@ function SelectInput({
   itemToValue,
   itemToString,
   renderOption,
-  wrapperStyle,
+  wrapperStyle = { select: '', options: '' },
   disabled,
   required,
   placeholder,
@@ -82,7 +82,7 @@ function SelectInput({
                   {renderOption({
                     value: item,
                     onHover: highlightedIndex === index,
-                    selected: selectedItem === item,
+                    selected: itemToValue(selectedItem) === itemToValue(item),
                   })}
                 </li>
               ))}

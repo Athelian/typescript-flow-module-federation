@@ -3,8 +3,9 @@ import * as React from 'react';
 import TextInput from '../TextInput';
 
 type Props = {
-  style: any,
-  searchIcon?: React.Node,
+  className: any,
+  inputClassName: any,
+  searchIcon?: ?React.Node,
   clearButton: ({ clearQuery: () => void }) => React.Node,
   onChange: Function,
   onBlur: Function,
@@ -18,13 +19,19 @@ const defaultProps = {
 };
 
 function SearchInput(props: Props) {
-  const { searchIcon, clearButton, style, value, onClear, ...rest } = props;
+  const { searchIcon, clearButton, className, inputClassName, value, onClear, ...rest } = props;
   const hasContent = !!value;
 
   return (
-    <div className={style}>
+    <div className={className}>
       {searchIcon && searchIcon}
-      <TextInput type="text" value={value} debounceTimeout={500} {...rest} />
+      <TextInput
+        className={inputClassName}
+        type="text"
+        value={value}
+        debounceTimeout={500}
+        {...rest}
+      />
       {hasContent && clearButton && clearButton({ clearQuery: onClear })}
     </div>
   );

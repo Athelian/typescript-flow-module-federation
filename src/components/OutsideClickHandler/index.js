@@ -3,12 +3,6 @@ import * as React from 'react';
 
 type Props = {
   /**
-   * classname
-   *
-   * @type {string}
-   */
-  className?: string,
-  /**
    * List of element we want to ignore.
    * `onOutsideClick()` won't call if click on that element.
    *
@@ -65,11 +59,7 @@ export default class OutsideClickHandler extends React.PureComponent<Props> {
   wrapperRef: HTMLDivElement;
 
   render() {
-    const { className, children } = this.props;
-    return (
-      <div className={className} ref={this.setChildNodeRef}>
-        {children}
-      </div>
-    );
+    const { children } = this.props;
+    return <div ref={this.setChildNodeRef}>{children}</div>;
   }
 }

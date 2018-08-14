@@ -12,7 +12,7 @@ import NavBar, {
   FilterInput,
   SortInput,
   SearchInput,
-  ActiveToggleTabs,
+  StatusToggleTabs,
 } from 'components/NavBar';
 import OrderList from './list';
 import messages from './messages';
@@ -90,7 +90,7 @@ class BatchModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <EntityIcon icon="BATCH" color="BATCH" />
-                <ActiveToggleTabs
+                <StatusToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
                 />
                 <ViewToggle

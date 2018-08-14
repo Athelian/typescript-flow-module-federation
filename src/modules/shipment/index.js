@@ -11,7 +11,7 @@ import NavBar, {
   FilterInput,
   SortInput,
   SearchInput,
-  ActiveToggleTabs,
+  StatusToggleTabs,
 } from 'components/NavBar';
 import OrderList from './list';
 import messages from './messages';
@@ -77,7 +77,7 @@ class ShipmentModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
-                <ActiveToggleTabs
+                <StatusToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
                 />
                 <SortInput

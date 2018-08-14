@@ -7,8 +7,9 @@ import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import {
   SettingsWrapperStyle,
-  SettingsBodyStyle,
-  SettingsCountStyle,
+  NotificationButtonStyle,
+  ProfileButtonStyle,
+  NotificationBadgeStyle,
   NotificationDropDownWrapperStyle,
   DropDownWrapperStyle,
   SubMenuWrapperStyle,
@@ -38,6 +39,7 @@ class Settings extends React.Component<Props, State> {
 
   handleClickOutside = () => {
     const { isNotificationOpen, isProfileOpen } = this.state;
+
     if (isNotificationOpen) {
       this.toggleNotification();
     } else if (isProfileOpen) {
@@ -69,29 +71,33 @@ class Settings extends React.Component<Props, State> {
 
   render() {
     const { isNotificationOpen, isProfileOpen, logoutDialogOpen } = this.state;
+    const DUMMY_BADGE = 3;
+    const DUMMY_USER = 'Z';
 
     return (
       <div className={SettingsWrapperStyle}>
-        <div className={SettingsBodyStyle}>
-          <button
-            tabIndex={-1}
-            onClick={this.toggleNotification}
-            type="button"
-            ref={this.NotificationRef}
-          >
-            <div className={SettingsCountStyle}>{3}</div>
-            <Icon icon="NOTIFICATION" />
-          </button>
-          <button
-            data-testid="setting-button"
-            tabIndex={-1}
-            onClick={this.toggleProfile}
-            type="button"
-            ref={this.ProfileRef}
-          >
-            Z
-          </button>
-        </div>
+        <button
+          className={NotificationButtonStyle}
+          tabIndex={-1}
+          onClick={this.toggleNotification}
+          type="button"
+          ref={this.NotificationRef}
+        >
+          <div className={NotificationBadgeStyle}>{DUMMY_BADGE > 99 ? '99+' : DUMMY_BADGE}</div>
+          <Icon icon="NOTIFICATION" />
+        </button>
+
+        <button
+          className={ProfileButtonStyle}
+          data-testid="setting-button"
+          tabIndex={-1}
+          onClick={this.toggleProfile}
+          type="button"
+          ref={this.ProfileRef}
+        >
+          {DUMMY_USER}
+        </button>
+
         {isNotificationOpen && (
           <OutsideClickHandler
             onOutsideClick={this.handleClickOutside}
@@ -102,6 +108,7 @@ class Settings extends React.Component<Props, State> {
             </div>
           </OutsideClickHandler>
         )}
+
         {isProfileOpen && (
           <OutsideClickHandler
             onOutsideClick={this.handleClickOutside}
@@ -142,6 +149,7 @@ class Settings extends React.Component<Props, State> {
             </div>
           </OutsideClickHandler>
         )}
+
         <LogoutDialog
           isOpen={logoutDialogOpen}
           onRequestClose={this.toggleLogoutDialog}

@@ -3,7 +3,6 @@ import { css } from 'react-emotion';
 import {
   presets,
   layout,
-  shadows,
   colors,
   borderRadiuses,
   fontSizesWithHeights,
@@ -102,11 +101,9 @@ export const ChartButtonStyle = css`
   &:focus {
     border-color: ${colors.TEAL};
     background-color: #fff;
-    ${shadows.NAV_BUTTON_HOVER};
   }
   &:hover {
     background-color: #fff;
-    ${shadows.NAV_BUTTON_HOVER};
   }
 `;
 

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
-import NavBar, { EntityIcon, ActiveToggleTabs } from 'components/NavBar';
+import NavBar, { EntityIcon, StatusToggleTabs } from 'components/NavBar';
 import WarehouseList from './list';
 
 type Props = {};
@@ -34,7 +34,7 @@ class WarehouseModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
-                <ActiveToggleTabs
+                <StatusToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Inactive' : 'Active')}
                 />
               </NavBar>
