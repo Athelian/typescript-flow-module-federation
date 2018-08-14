@@ -43,6 +43,7 @@
     "react-intercom": "^1.0.14",
     "react-intl": "^2.4.0",
     "react-loadable": "^5.5.0",
+    "react-measure": "^2.1.0",
     "react-values": "^0.2.4",
     "react-virtualized": "^9.20.1",
     "scroll-into-view-if-needed": "^2.2.16",
@@ -57,7 +58,7 @@
     "cy:open": "cypress open",
     "cy:install": "cypress install",
     "e2e": "start-server-and-test start http://localhost:3000 cy:open",
-    "postinstall": "sh ./postinstall.sh",
+    "postinstall": "node scripts/postbuild.js",
     "flow": "flow",
     "flow:coverage": "flow-coverage-report -i 'src/**/*.{js,jsx}' -t html -t json -t text --threshold 80",
     "lint": "eslint 'src/**/*.{js,jsx}'",
@@ -175,6 +176,7 @@
     "css-loader": "0.28.11",
     "cypress": "^3.0.3",
     "cypress-testing-library": "^2.2.0",
+    "cz-conventional-changelog": "^2.1.0",
     "dotenv": "5.0.1",
     "dotenv-expand": "4.2.0",
     "eslint": "^4.19.1",
@@ -220,6 +222,7 @@
     "resolve": "1.6.0",
     "rimraf": "^2.6.2",
     "sass-loader": "7.0.1",
+    "shelljs": "^0.8.2",
     "start-server-and-test": "^1.7.0",
     "style-loader": "0.21.0",
     "svgr": "1.9.2",
@@ -232,5 +235,10 @@
     "webpack-dev-server": "3.1.4",
     "webpack-manifest-plugin": "2.0.3",
     "whatwg-fetch": "2.0.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
