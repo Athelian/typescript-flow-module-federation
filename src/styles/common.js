@@ -223,56 +223,9 @@ export const presets = {
     cursor: pointer;
     user-select: none;
     border: 0;
-    ${transitions.MAIN}
-    &:focus {
-      outline: 0;
-    }
-  `,
-  DASHED_BUTTON: `
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
     ${transitions.MAIN};
-    ${borderRadiuses.MAIN};
-    color: ${colors.GRAY_LIGHT};
-    border: 4px dashed ${colors.GRAY_LIGHT};
-    &:hover {
-      border-color: ${colors.TEAL};
-      color: ${colors.TEAL};
-      background-color: rgba(0,0,0,0.05);
-    }
     &:focus {
       outline: 0;
-      border-color: ${colors.TEAL};
-    }
-    &:active {
-      color: ${colors.TEAL};
-      background-color: rgba(0,0,0,0.05);
-    }
-  `,
-  DELETE_BUTTON: `
-    ${borderRadiuses.CIRCLE};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    ${transitions.MAIN}
-    color: ${colors.GRAY_LIGHT};
-    font-size: 24px;
-    width: min-content;
-    flex-shrink: 0;
-    border: 2px solid #fff;
-    background-color: #fff;
-    ${shadows.NAV_BUTTON};
-    &:hover {
-      color: ${colors.RED};
-      ${shadows.NAV_BUTTON_HOVER};
-    }
-    &:focus {
-      border-color: ${colors.RED};
     }
   `,
   ELLIPSIS: `

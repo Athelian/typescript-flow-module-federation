@@ -7,8 +7,9 @@ import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import {
   SettingsWrapperStyle,
-  SettingsBodyStyle,
-  SettingsCountStyle,
+  NotificationButtonStyle,
+  ProfileButtonStyle,
+  NotificationBadgeStyle,
   NotificationDropDownWrapperStyle,
   DropDownWrapperStyle,
   SubMenuWrapperStyle,
@@ -38,6 +39,7 @@ class Settings extends React.Component<Props, State> {
 
   handleClickOutside = () => {
     const { isNotificationOpen, isProfileOpen } = this.state;
+
     if (isNotificationOpen) {
       this.toggleNotification();
     } else if (isProfileOpen) {
@@ -69,6 +71,8 @@ class Settings extends React.Component<Props, State> {
 
   render() {
     const { isNotificationOpen, isProfileOpen, logoutDialogOpen } = this.state;
+    const DUMMY_BADGE = 3;
+    const DUMMY_USER = 'Z';
 
     return (
       <div className={SettingsWrapperStyle}>
@@ -83,13 +87,14 @@ class Settings extends React.Component<Props, State> {
             <Icon icon="NOTIFICATION" />
           </button>
           <button
-            data-testid="setting-button"
+            className={NotificationButtonStyle}
             tabIndex={-1}
-            onClick={this.toggleProfile}
+            onClick={this.toggleNotification}
             type="button"
             ref={this.ProfileRef}
           >
-            Z
+            <div className={NotificationBadgeStyle}>{DUMMY_BADGE > 99 ? '99+' : DUMMY_BADGE}</div>
+            <Icon icon="NOTIFICATION" />
           </button>
         </div>
         {isNotificationOpen && (
@@ -141,7 +146,18 @@ class Settings extends React.Component<Props, State> {
               </div>
             </div>
           </OutsideClickHandler>
+        ) : (
+          <button
+            className={ProfileButtonStyle}
+            data-testid="setting-button"
+            tabIndex={-1}
+            onClick={this.toggleProfile}
+            type="button"
+          >
+            {DUMMY_USER}
+          </button>
         )}
+
         <LogoutDialog
           isOpen={logoutDialogOpen}
           onRequestClose={this.toggleLogoutDialog}
