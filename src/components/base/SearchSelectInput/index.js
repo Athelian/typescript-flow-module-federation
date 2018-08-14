@@ -65,7 +65,7 @@ class SelectInput extends React.Component<Props> {
       itemToValue,
       itemToString,
       renderOption,
-      wrapperStyle,
+      wrapperStyle = { select: '', options: '' },
       disabled,
       required,
       readOnly,

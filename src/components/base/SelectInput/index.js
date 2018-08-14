@@ -31,7 +31,7 @@ function SelectInput({
   itemToValue,
   itemToString,
   renderOption,
-  wrapperStyle,
+  wrapperStyle = { select: '', options: '' },
   disabled,
   required,
   placeholder,

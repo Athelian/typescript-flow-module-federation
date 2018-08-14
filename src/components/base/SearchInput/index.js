@@ -5,7 +5,7 @@ import TextInput from '../TextInput';
 type Props = {
   className: any,
   inputClassName: any,
-  searchIcon: React.Node,
+  searchIcon?: ?React.Node,
   clearButton: ({ clearQuery: () => void }) => React.Node,
   onChange: Function,
   onBlur: Function,
@@ -24,7 +24,7 @@ function SearchInput(props: Props) {
 
   return (
     <div className={className}>
-      {searchIcon}
+      {searchIcon && searchIcon}
       <TextInput
         className={inputClassName}
         type="text"

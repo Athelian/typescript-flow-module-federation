@@ -12,7 +12,7 @@ import NavBar, {
   FilterInput,
   SortInput,
   SearchInput,
-  ActiveToggleTabs,
+  StatusToggleTabs,
 } from 'components/NavBar';
 import OrderList from './list';
 
@@ -61,7 +61,7 @@ class OrderModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <EntityIcon icon="ORDER" color="ORDER" />
-                <ActiveToggleTabs
+                <StatusToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
                 />
                 <ViewToggle
