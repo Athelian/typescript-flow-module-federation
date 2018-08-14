@@ -1,22 +1,27 @@
 // @flow
 import * as React from 'react';
 import Downshift from 'downshift';
-import { ResetNativeStyle } from './style';
+import Icon from 'components/Icon';
+import { ResetNativeStyle, ArrowDownStyle } from './style';
 
 type Props = {
   renderSelect: (?React.Node) => React.Node,
-  onChange?: ({ title: string, value: string }) => void,
+  onChange?: any => void,
   items: Array<any>,
   itemToValue: any => any,
   itemToString: any => string,
-  clearIcon?: React.Node,
   renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
-  styles: { select: any, options: any },
+  wrapperStyle: { select: any, options: any },
+  disabled?: boolean,
+  required?: boolean,
+  placeholder?: string,
 };
 
 const defaultProps = {
   onChange: () => {},
-  clearIcon: null,
+  disabled: false,
+  required: false,
+  placeholder: '',
 };
 
 function SelectInput({
@@ -26,34 +31,52 @@ function SelectInput({
   itemToValue,
   itemToString,
   renderOption,
-  clearIcon,
-  styles,
+  wrapperStyle,
+  disabled,
+  required,
+  placeholder,
 }: Props) {
   return (
     <Downshift onChange={onChange} itemToString={itemToString} itemToValue={itemToValue}>
       {({
-        getMenuProps,
         getItemProps,
         isOpen,
         toggleMenu,
         selectedItem,
         highlightedIndex,
         clearSelection,
+        getInputProps,
       }) => (
         <div className={ResetNativeStyle}>
-          <div className={styles.select}>
-            <div onClick={toggleMenu} role="presentation">
-              {renderSelect(
-                selectedItem && clearIcon ? (
-                  <button type="button" onClick={clearSelection}>
-                    {clearIcon}
-                  </button>
-                ) : null
-              )}
-            </div>
+          <div className={wrapperStyle.select}>
+            {renderSelect(
+              <React.Fragment>
+                <div onClick={toggleMenu} role="presentation">
+                  <input
+                    readOnly
+                    type="text"
+                    {...getInputProps({
+                      placeholder,
+                      spellCheck: false,
+                      disabled,
+                      required,
+                    })}
+                  />
+                </div>
+                {selectedItem &&
+                  !required && (
+                    <button type="button" onClick={clearSelection}>
+                      <Icon icon="CLEAR" />
+                    </button>
+                  )}
+                <button type="button" onClick={toggleMenu} className={ArrowDownStyle(isOpen)}>
+                  <Icon icon="CHEVRON_DOWN" />
+                </button>
+              </React.Fragment>
+            )}
           </div>
           {isOpen && (
-            <ul className={styles.options} {...getMenuProps()}>
+            <ul className={wrapperStyle.options}>
               {items.map((item, index) => (
                 <li key={item.value} {...getItemProps({ item })}>
                   {renderOption({

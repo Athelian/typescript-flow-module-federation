@@ -2,16 +2,17 @@ import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { css } from 'react-emotion';
 import { Form } from 'components/Form';
 import PureSearchSelectInput from './index';
 
 const items = [
-  { value: 'apple' },
-  { value: 'pear' },
-  { value: 'orange' },
-  { value: 'grape' },
-  { value: 'banana' },
+  { label: 'APPLE', value: 'apple' },
+  { label: 'PEAR', value: 'pear' },
+  { label: 'ORANGE', value: 'orange' },
+  { label: 'GRAPE', value: 'grape' },
+  { label: 'BANANA', value: 'banana' },
 ];
 
 const InputWrapperStyle = css`
@@ -58,10 +59,10 @@ const ItemStyle = (active, selected) => css`
 `;
 
 function optionItem({ value, onHover, selected }) {
-  return <div className={ItemStyle(onHover, selected)}>{value.value}</div>;
+  return <div className={ItemStyle(onHover, selected)}>{value.label}</div>;
 }
 
-storiesOf('SelectInput', module)
+storiesOf('SearchSelectInput', module)
   .add('non style', () => (
     <div style={{ margin: '50px' }}>
       <Form>
@@ -69,12 +70,14 @@ storiesOf('SelectInput', module)
           <PureSearchSelectInput
             value={values.select}
             items={items}
-            itemToString={item => (item ? item.value : '')}
+            itemToString={item => (item ? item.label : '')}
             itemToValue={item => (item ? item.value : '')}
             renderSelect={renderSelect => renderSelect}
-            renderOption={({ value }) => <div>{value.value}</div>}
+            renderOption={({ value }) => <div>{value.label}</div>}
             onChange={value => setFieldValue('select', value)}
             wrapperStyle={{ select: '', options: '' }}
+            onSearch={action('search')}
+            clearable
           />
         )}
       </Form>
@@ -85,14 +88,17 @@ storiesOf('SelectInput', module)
       <Form>
         {({ values, setFieldValue }) => (
           <PureSearchSelectInput
+            name="select"
             value={values.select}
             items={items}
-            itemToString={item => (item ? item.value : '')}
+            itemToString={item => (item ? item.label : '')}
             itemToValue={item => (item ? item.value : '')}
             renderSelect={renderSelect => renderSelect}
             renderOption={optionItem}
+            clearable
             onChange={value => setFieldValue('select', value)}
             wrapperStyle={{ select: InputWrapperStyle, options: OptionWrapperStyle }}
+            onSearch={action('search')}
           />
         )}
       </Form>
