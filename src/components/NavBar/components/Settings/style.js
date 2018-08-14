@@ -13,15 +13,12 @@ import {
 
 export const SettingsWrapperStyle = css`
   position: relative;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: min-content;
-  grid-template-rows: 50px;
-  grid-gap: 20px;
+  display: flex;
   padding: 0 20px;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   flex: 1;
+  height: 50px;
 `;
 
 const ButtonStyle = css`
@@ -42,6 +39,7 @@ export const NotificationButtonStyle = css`
   ${ButtonStyle};
   background: ${gradients.BLUE_TEAL_DIAGONAL};
   color: #fff;
+  margin: 0 20px 0 0;
 `;
 
 export const ProfileButtonStyle = css`

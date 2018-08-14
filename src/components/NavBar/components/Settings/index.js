@@ -76,27 +76,28 @@ class Settings extends React.Component<Props, State> {
 
     return (
       <div className={SettingsWrapperStyle}>
-        <div className={SettingsBodyStyle}>
-          <button
-            tabIndex={-1}
-            onClick={this.toggleNotification}
-            type="button"
-            ref={this.NotificationRef}
-          >
-            <div className={SettingsCountStyle}>{3}</div>
-            <Icon icon="NOTIFICATION" />
-          </button>
-          <button
-            className={NotificationButtonStyle}
-            tabIndex={-1}
-            onClick={this.toggleNotification}
-            type="button"
-            ref={this.ProfileRef}
-          >
-            <div className={NotificationBadgeStyle}>{DUMMY_BADGE > 99 ? '99+' : DUMMY_BADGE}</div>
-            <Icon icon="NOTIFICATION" />
-          </button>
-        </div>
+        <button
+          className={NotificationButtonStyle}
+          tabIndex={-1}
+          onClick={this.toggleNotification}
+          type="button"
+          ref={this.NotificationRef}
+        >
+          <div className={NotificationBadgeStyle}>{DUMMY_BADGE > 99 ? '99+' : DUMMY_BADGE}</div>
+          <Icon icon="NOTIFICATION" />
+        </button>
+
+        <button
+          className={ProfileButtonStyle}
+          data-testid="setting-button"
+          tabIndex={-1}
+          onClick={this.toggleProfile}
+          type="button"
+          ref={this.ProfileRef}
+        >
+          {DUMMY_USER}
+        </button>
+
         {isNotificationOpen && (
           <OutsideClickHandler
             onOutsideClick={this.handleClickOutside}
@@ -107,6 +108,7 @@ class Settings extends React.Component<Props, State> {
             </div>
           </OutsideClickHandler>
         )}
+
         {isProfileOpen && (
           <OutsideClickHandler
             onOutsideClick={this.handleClickOutside}
@@ -146,16 +148,6 @@ class Settings extends React.Component<Props, State> {
               </div>
             </div>
           </OutsideClickHandler>
-        ) : (
-          <button
-            className={ProfileButtonStyle}
-            data-testid="setting-button"
-            tabIndex={-1}
-            onClick={this.toggleProfile}
-            type="button"
-          >
-            {DUMMY_USER}
-          </button>
         )}
 
         <LogoutDialog
