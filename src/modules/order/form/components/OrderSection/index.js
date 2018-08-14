@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import yupToFormErrors from 'utils/yupToFormErrors';
 import { getByPathWithDefault } from 'utils/fp';
 import { Form, Field, TextInput, DropDown, TagsInput } from 'components/Form';
+import SelectExporters from '../SelectExporters';
 import { WrapperStyle, HeaderSectionStyle, InputsWrapperStyle } from './style';
 import messages from './messages';
 
@@ -179,10 +180,8 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                 <button type="button" onClick={toggle}>
                   Exporter
                 </button>
-                <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: 400 }}>
-                  <div style={{ padding: '50px', textAlign: 'center' }}>
-                    <h1>Select exporter</h1>
-                  </div>
+                <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: '60vw' }}>
+                  <SelectExporters />
                 </SlideView>
               </React.Fragment>
             )}
