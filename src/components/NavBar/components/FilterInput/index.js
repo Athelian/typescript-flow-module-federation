@@ -112,6 +112,7 @@ class FilterInput extends React.Component<Props, State> {
                 setFieldValue,
                 setFieldTouched,
                 isSubmitting,
+                resetForm,
               }) => (
                 <form className={FormStyle} onSubmit={handleSubmit} onReset={handleReset}>
                   <div className={InputWrapperStyle}>
@@ -129,7 +130,10 @@ class FilterInput extends React.Component<Props, State> {
                     <button
                       className={ResetButtonStyle}
                       type="button"
-                      onClick={() => this.reset(values)}
+                      onClick={() => {
+                        resetForm();
+                        this.reset(values);
+                      }}
                     >
                       <FormattedMessage {...messages.reset} />
                     </button>
