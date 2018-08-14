@@ -709,5 +709,10 @@
   "containers.SignUp.confirmPassword": "CONFIRM PASSWORD",
   "containers.SignUp.signUp": "SIGN UP",
   "containers.SignUp.validation.required": "Required",
-  "containers.SignUp.validation.notEqualPassword": "Please enter same passwords"
+  "containers.SignUp.validation.notEqualPassword": "Please enter same passwords",
+
+  "modules.order.list.sort.po": "PO No",
+  "modules.order.list.sort.exporter": "Exporter",
+  "modules.order.list.sort.createdAt": "Created At",
+  "modules.order.list.sort.updatedAt": "Updated At"
 }

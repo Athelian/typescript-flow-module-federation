@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Link } from '@reach/router';
+import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import NavBar, {
@@ -13,8 +14,12 @@ import NavBar, {
 } from 'components/NavBar';
 import PartnerSelectInput from 'components/PartnerSelectInput';
 import OrderList from './list';
+import messages from './messages';
 
-type Props = {};
+type Props = {
+  intl: intlShape,
+};
+
 type State = {
   viewType: string,
   query: string,
@@ -44,12 +49,13 @@ class OrderModule extends React.Component<Props, State> {
 
   render() {
     const { viewType, sort, perPage, ...filters } = this.state;
-    // TODO: i18n message
+    const { intl } = this.props;
+
     const fields = [
-      { title: 'PO NO.', value: 'PO' },
-      { title: 'EXPORTER', value: 'exporter' },
-      { title: 'LAST MODIFIED', value: 'updatedAt' },
-      { title: 'CREATED ON', value: 'createdAt' },
+      { title: intl.formatMessage(messages.poSort), value: 'PO' },
+      { title: intl.formatMessage(messages.exporterSort), value: 'exporter' },
+      { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
+      { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
     ];
 
     return (
@@ -135,4 +141,4 @@ class OrderModule extends React.Component<Props, State> {
   }
 }
 
-export default OrderModule;
+export default injectIntl(OrderModule);
