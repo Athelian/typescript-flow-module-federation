@@ -1,68 +1,93 @@
 // @flow
 import * as React from 'react';
+import scrollIntoView from 'scroll-into-view-if-needed';
+import logger from 'utils/logger';
 
 type Props = {
   children: React.Node,
+  rootViewPort?: ?HTMLDivElement,
+  threshold?: Array<number>,
 };
+
 type State = {
   activeNode: ?string,
 };
 
 class JumpToSection extends React.PureComponent<Props, State> {
+  static defaultProps = {
+    rootViewPort: null,
+    threshold: [0, 0.1, 0.2, 0.8, 0.9, 1],
+  };
+
   state = {
     activeNode: null,
   };
 
   componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
-    this.handleScroll();
-    this.ensureLastHeightOfSection();
+    logger.warn('create IntersectionObserver');
+    const { rootViewPort, threshold } = this.props;
+    this.io = new IntersectionObserver(
+      entries => {
+        if (entries.length) {
+          const intersectSections = entries.filter(item => item.isIntersecting);
+          const [activeSection] = intersectSections.sort(
+            (first, second) => second.intersectionRatio - first.intersectionRatio
+          );
+
+          if (!activeSection) {
+            return;
+          }
+
+          const {
+            intersectionRatio,
+            target: { id: activeNode },
+          } = activeSection;
+          const ratio = intersectionRatio * 100;
+          if (ratio > 50) this.setState(() => ({ activeNode }));
+        }
+      },
+      {
+        threshold,
+        root: rootViewPort,
+        rootMargin: '0px',
+      }
+    );
+    const { children } = this.props;
+    React.Children.forEach(children, child => {
+      const { link } = child.props;
+      const element = document.querySelector(`#${link}`);
+      if (element) {
+        this.io.observe(element);
+      } else {
+        // wait for the element is rendering on DOM
+        const retryFindElement = () => {
+          const retryElement = document.querySelector(`#${link}`);
+          if (!retryElement) {
+            requestAnimationFrame(retryFindElement);
+          } else {
+            this.io.observe(retryElement);
+          }
+        };
+
+        requestAnimationFrame(retryFindElement);
+      }
+    });
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    logger.warn('remove IntersectionObserver');
+    this.io.disconnect();
   }
-
-  handleScroll = () => {
-    const { children } = this.props;
-    const ids = React.Children.map(children, child => child.props.link);
-    ids.forEach(id => {
-      const node = document.querySelector(`#${id}`) || {};
-      const { pageYOffset } = window;
-      const nodeYPosition = node.offsetTop + node.offsetHeight;
-
-      const scrollPassedTheTop = pageYOffset >= node.offsetTop;
-      const scrollNotPassedTheBottom = nodeYPosition > pageYOffset;
-      const scrollInNodeArea = scrollPassedTheTop && scrollNotPassedTheBottom;
-      if (scrollInNodeArea) {
-        this.setState({ activeNode: id });
-      }
-    });
-  };
 
   handleClick = (id: string) => () => {
     const node = document.querySelector(`#${id}`);
-    if (node) {
-      node.scrollIntoView({ block: 'start', behavior: 'smooth' });
-    }
+    scrollIntoView(node, {
+      behavior: 'smooth',
+      scrollMode: 'if-needed',
+    });
   };
 
-  ensureLastHeightOfSection = () => {
-    const { offsetHeight: documentHeight } = document.body || {};
-    const { children } = this.props;
-    const childNum = React.Children.count(children);
-    const lastChild = React.Children.toArray(children)[childNum - 1];
-    const lastSectionId = lastChild && lastChild.props.link;
-
-    const lastSectionNode = document.querySelector(`#${lastSectionId}`) || {};
-    const lastSectionNodePosition = lastSectionNode.offsetTop + lastSectionNode.offsetHeight;
-    const screenHeight = window.screen.height;
-    const topOffsetAtButtonOfScreen = documentHeight - screenHeight;
-    if (lastSectionNode.offsetTop >= topOffsetAtButtonOfScreen) {
-      const growNumber = screenHeight - (documentHeight - lastSectionNodePosition);
-      lastSectionNode.style.minHeight = `${growNumber}px`;
-    }
-  };
+  io: IntersectionObserver;
 
   render() {
     const { children } = this.props;

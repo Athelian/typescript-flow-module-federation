@@ -123,6 +123,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
     const {
       isRead,
       isWrite,
+      editable,
       errorMessage,
       infoMessage,
       warningMessage,
@@ -139,7 +140,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
     if (!isRead) return null;
 
     return (
-      <Editable>
+      <Editable editable={!!editable}>
         {isEditable => (
           <HoverWrapper>
             {isHover => (
@@ -147,6 +148,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                 <Label htmlFor={id}>
                   {infoMessage && <InfoTooltip info={infoMessage} />}
                   {label}
+                  {required && ' * '}
                   <Downshift
                     itemCount={tags.length}
                     itemToString={i => (i ? i.id : '')}
@@ -273,7 +275,6 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                     )}
                   </Downshift>
                 </Label>
-                {required && ' * '}
                 {errorMessage && <ErrorTooltip error={errorMessage} />}
                 {warningMessage && <WarningTooltip warning={warningMessage} />}
               </div>

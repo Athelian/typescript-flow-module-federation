@@ -20,6 +20,22 @@ storiesOf('Form/SimpleDropDown', module)
       />
     </form>
   ))
+  .add('with select input style', () => (
+    <form onSubmit={action('onSubmit')}>
+      <DropDown
+        required
+        editable
+        name="qty"
+        placeholder="Please select the quantity"
+        label="Qty"
+        onChange={action('onChange')}
+        onBlur={action('onBlur')}
+        value="one"
+        options={[{ value: 'one', label: 'One' }, { value: 'two', label: 'Two' }]}
+        permissions="rw"
+      />
+    </form>
+  ))
   .add('with selected value', () => (
     <form onSubmit={action('submit')}>
       <DropDown

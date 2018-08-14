@@ -12,7 +12,7 @@ import {
 
 type Props = {
   isOpen: boolean,
-  onRequestClose: () => void,
+  onRequestClose: (evt: Event) => void,
   children: React.Node,
   options: { width: number },
   rootElementId?: string,

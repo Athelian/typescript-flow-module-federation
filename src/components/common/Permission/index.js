@@ -12,14 +12,28 @@ type State = {
   isWrite: boolean,
 };
 
+const defaultProps = {
+  permissions: 'rw',
+};
+
 export default class Permission extends React.PureComponent<Props, State> {
+  static defaultProps = defaultProps;
+
   constructor(props: Props) {
     super(props);
 
-    this.state = {
-      isWrite: props.permissions.includes(WRITE),
-      isRead: props.permissions.includes(READ),
-    };
+    const { permissions } = props;
+    if (permissions) {
+      this.state = {
+        isWrite: permissions.includes(WRITE),
+        isRead: permissions.includes(READ),
+      };
+    } else {
+      this.state = {
+        isWrite: false,
+        isRead: false,
+      };
+    }
   }
 
   render() {

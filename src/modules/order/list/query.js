@@ -1,11 +1,9 @@
-query ($filter: OrderFilterInput, $sort: SortInput, $page: Int!, $perPage: Int!) {
-      viewer {
-        orders(
-          filter: $filter,
-          sort: $sort,
-          page: $page,
-          perPage: $perPage
-        ) {
+import gql from 'graphql-tag';
+
+export const orderListQuery = gql`
+  query($filter: OrderFilterInput, $sort: SortInput, $page: Int!, $perPage: Int!) {
+    viewer {
+      orders(filter: $filter, sort: $sort, page: $page, perPage: $perPage) {
         nodes {
           id
           PO
@@ -47,3 +45,6 @@ query ($filter: OrderFilterInput, $sort: SortInput, $page: Int!, $perPage: Int!)
       }
     }
   }
+`;
+
+export default orderListQuery;

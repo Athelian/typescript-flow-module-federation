@@ -18,6 +18,20 @@ storiesOf('Form/TextInput', module)
       />
     </form>
   ))
+  .add('with input style', () => (
+    <form onSubmit={action('submit')}>
+      <TextInput
+        required
+        editable
+        label="Email:"
+        type="email"
+        name="email"
+        onChange={action('onChange')}
+        onBlur={action('onBlur')}
+        permissions="rw"
+      />
+    </form>
+  ))
   .add('with info tooltip', () => (
     <form onSubmit={action('submit')}>
       <TextInput

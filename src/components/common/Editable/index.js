@@ -5,6 +5,7 @@ import OutsideClickHandler from 'components/OutsideClickHandler';
 
 type Props = DefaultHTMLProps & {
   children: Function,
+  editable: boolean,
 };
 
 type State = {
@@ -12,12 +13,17 @@ type State = {
 };
 
 export default class Editable extends React.Component<Props, State> {
-  state = {
-    isEditMode: false,
-  };
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      isEditMode: props.editable,
+    };
+  }
 
   onToggleEditMode = (isEditMode: boolean) => {
-    this.setState(() => ({ isEditMode }));
+    const { editable } = this.props;
+    this.setState(() => ({ isEditMode: isEditMode || editable }));
   };
 
   onClicks = () => {
@@ -32,7 +38,7 @@ export default class Editable extends React.Component<Props, State> {
   };
 
   render() {
-    const { children, ...rest } = this.props;
+    const { children, editable, ...rest } = this.props;
     const { isEditMode } = this.state;
     return (
       <OutsideClickHandler onOutsideClick={this.onOutsideClick}>

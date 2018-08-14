@@ -73,6 +73,12 @@ export type Props = DefaultHTMLProps & {
   /**
    *
    *
+   * @type {boolean}
+   */
+  editable?: boolean,
+  /**
+   *
+   *
    */
   onChange?: (string, any) => void,
   /**

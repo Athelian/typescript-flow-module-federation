@@ -43,6 +43,12 @@ export type NumberInputProps = DefaultHTMLProps &
     /**
      *
      *
+     * @type {boolean}
+     */
+    editable?: boolean,
+    /**
+     *
+     *
      * @type {Function}
      */
     formatter?: Function,

@@ -6,5 +6,5 @@ export type PermissionProps = {
    *
    * @type {('r' | 'w' | 'rw')}
    */
-  permissions: 'r' | 'w' | 'rw',
+  permissions?: 'r' | 'w' | 'rw',
 };
