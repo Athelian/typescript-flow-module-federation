@@ -14,8 +14,8 @@ const tabs = [
   { icon: 'ARCHIVE', label: <FormattedMessage {...messages.archived} /> },
 ];
 
-function ActiveToggleTabs({ onChange }: Props) {
+function StatusToggleTabs({ onChange }: Props) {
   return <Tabs tabs={tabs.map(injectUid)} onChange={onChange} />;
 }
 
-export default ActiveToggleTabs;
+export default StatusToggleTabs;

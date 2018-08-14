@@ -12,7 +12,7 @@ import NavBar, {
   FilterInput,
   SortInput,
   SearchInput,
-  ActiveToggleTabs,
+  StatusToggleTabs,
 } from 'components/NavBar';
 import ProductList from './list';
 import messages from './messages';
@@ -67,7 +67,7 @@ class ProductModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <EntityIcon icon="PRODUCT" color="PRODUCT" />
-                <ActiveToggleTabs
+                <StatusToggleTabs
                   onChange={index => this.onChangeFilter('status', index ? 'Inactive' : 'Active')}
                 />
                 <ViewToggle
