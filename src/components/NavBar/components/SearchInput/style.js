@@ -1,28 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, borderRadiuses, fontSizes, transitions, presets } from 'styles/common';
-
-const InputStyle = css`
-  ${fontSizes.MAIN};
-  color: ${colors.BLACK};
-  background: none;
-  border: none;
-  font-weight: bold;
-  width: 100%;
-  outline: none;
-`;
-
-const ClearButtonStyle = css`
-  ${presets.BUTTON};
-  ${fontSizes.MAIN};
-  ${borderRadiuses.CIRCLE};
-  color: ${colors.GRAY_LIGHT};
-  padding: 5px;
-  outline: none;
-  &:hover {
-    color: ${colors.BLACK};
-  }
-`;
+import {
+  layout,
+  colors,
+  borderRadiuses,
+  fontSizes,
+  transitions,
+  presets,
+  shadows,
+} from 'styles/common';
 
 export const SearchInputStyle = css`
   ${layout.HORIZONTAL};
@@ -31,29 +17,44 @@ export const SearchInputStyle = css`
   overflow: hidden;
   background: #fff;
   ${borderRadiuses.BUTTON};
-  color: ${colors.GRAY_LIGHT};
   width: 200px;
   height: 30px;
-  ${fontSizes.MAIN};
   ${transitions.MAIN};
   flex-shrink: 0;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-
-  &:hover {
-    width: 200px;
-  }
-
-  & > svg {
-    padding: 0 5px;
-  }
-
-  input {
-    ${InputStyle};
-  }
-
-  button {
-    ${ClearButtonStyle};
-  }
+  ${shadows.NAV_BUTTON};
 `;
 
-export default SearchInputStyle;
+export const SearchIconStyle = css`
+  ${fontSizes.MAIN};
+  color: ${colors.GRAY_LIGHT};
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+export const InputStyle = css`
+  ${fontSizes.MAIN};
+  color: ${colors.BLACK};
+  background: none;
+  border: none;
+  font-weight: bold;
+  width: 100%;
+  outline: none;
+  height: 30px;
+`;
+
+export const ClearButtonStyle = css`
+  ${presets.BUTTON};
+  ${fontSizes.MAIN};
+  color: ${colors.GRAY_LIGHT};
+  height: 30px;
+  width: 30px;
+  flex-shrink: 0;
+  &:hover,
+  &:focus {
+    color: ${colors.RED};
+  }
+`;

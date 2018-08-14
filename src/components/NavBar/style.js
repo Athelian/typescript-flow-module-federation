@@ -22,6 +22,6 @@ export const ChildrenWrapperStyle = css`
   grid-auto-flow: column;
   grid-auto-columns: min-content;
   grid-template-rows: 50px;
-  grid-gap: 10px;
+  grid-gap: 20px;
   align-items: center;
 `;

@@ -22,7 +22,7 @@ export const WrapperStyle = css`
   width: 150px;
   height: 30px;
   align-items: center;
-  padding: 0 5px;
+  padding: 0 0 0 5px;
   ${transitions.MAIN};
   ${fontSizes.MAIN};
   ${shadows.NAV_BUTTON};
@@ -34,6 +34,7 @@ export const SelectStyle = css`
   flex: 1;
   height: 20px;
   border-right: 1px solid ${colors.GRAY_VERY_LIGHT};
+  padding: 0 5px 0 0;
   ${presets.ELLIPSIS};
 `;
 
