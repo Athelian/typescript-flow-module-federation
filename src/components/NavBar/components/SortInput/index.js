@@ -37,25 +37,13 @@ class SortInput extends React.Component<Props> {
     onChange({ field: sort, ascending: !ascending });
   };
 
-  optionItem = ({
-    value,
-    onHover,
-    selected,
-  }: {
-    // type is used for args
-    /* eslint-disable react/no-unused-prop-types */
-    value: Sort,
-    onHover: boolean,
-    selected: boolean,
-  }) => <div className={OptionItemStyle(onHover, selected)}>{value.title}</div>;
-
   render() {
     const { sort, ascending, fields } = this.props;
 
     return (
       <StyleLessSelectInput
         items={fields}
-        itemToString={item => (item ? item.value : '')}
+        itemToString={item => (item ? item.title : '')}
         itemToValue={item => (item ? item.value : '')}
         renderSelect={() => (
           <div className={WrapperStyle}>
@@ -65,7 +53,9 @@ class SortInput extends React.Component<Props> {
             </button>
           </div>
         )}
-        renderOption={this.optionItem}
+        renderOption={({ value, onHover, selected }) => (
+          <div className={OptionItemStyle(onHover, selected)}>{value.title}</div>
+        )}
         onChange={this.onFieldChange}
         styles={{ select: '', options: OptionWrapperStyle }}
       />

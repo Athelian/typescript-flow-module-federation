@@ -3,6 +3,7 @@ import { css } from 'react-emotion';
 import { transitions } from 'styles/common';
 
 export const ResetNativeStyle = css`
+  position: relative;
   ul {
     list-style-type: none;
     margin: 0;

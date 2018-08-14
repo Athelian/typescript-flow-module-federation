@@ -27,7 +27,6 @@ export const CustomButtonStyle = color => {
     &:hover {
       background-color: ${hoverColor};
       transform: translateY(-1px);
-      ${shadows.NAV_BUTTON_HOVER};
     }
     &:focus {
       border-color: #fff;

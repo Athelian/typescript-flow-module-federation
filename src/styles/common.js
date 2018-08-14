@@ -69,9 +69,9 @@ export const fontSizesWithHeights = {
 
 export const shadows = {
   WATERFALL: 'box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.1)',
+  DROPDOWN: 'box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2)',
   MEDIUM: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)',
-  NAV_BUTTON: 'box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2)',
-  NAV_BUTTON_HOVER: 'box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3)',
+  NAV_BUTTON: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)',
   TOOLTIP: 'box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)',
 };
 
