@@ -76,6 +76,7 @@ class FilterInput extends React.Component<Props, State> {
     this.setState({ isActive: false });
 
     const resetFilter = {};
+
     Object.keys(values).forEach(key => {
       resetFilter[key] = null;
     });
@@ -125,7 +126,11 @@ class FilterInput extends React.Component<Props, State> {
                     })}
                   </div>
                   <div className={ButtonsWrapper}>
-                    <button className={ResetButtonStyle} type="button" onClick={this.reset}>
+                    <button
+                      className={ResetButtonStyle}
+                      type="button"
+                      onClick={() => this.reset(values)}
+                    >
                       <FormattedMessage {...messages.reset} />
                     </button>
                     <button className={SubmitButtonStyle} type="submit" disabled={isSubmitting}>
