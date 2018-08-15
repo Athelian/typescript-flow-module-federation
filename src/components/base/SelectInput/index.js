@@ -16,10 +16,11 @@ type Props = {
   itemToValue: any => any,
   itemToString: any => string,
   renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
-  wrapperStyle?: { options: any },
+  styles?: { input: any, options: any },
   disabled?: boolean,
   required?: boolean,
   placeholder?: string,
+  defaultSelectedItem?: any,
 };
 
 const defaultProps = {
@@ -27,7 +28,8 @@ const defaultProps = {
   disabled: false,
   required: false,
   placeholder: '',
-  wrapperStyle: { options: '' },
+  styles: { input: '', options: '' },
+  defaultSelectedItem: null,
 };
 
 function SelectInput({
@@ -37,13 +39,19 @@ function SelectInput({
   itemToValue,
   itemToString,
   renderOption,
-  wrapperStyle = { select: '', options: '' },
+  styles,
+  defaultSelectedItem,
   disabled,
   required,
   placeholder,
 }: Props) {
   return (
-    <Downshift onChange={onChange} itemToString={itemToString} itemToValue={itemToValue}>
+    <Downshift
+      defaultSelectedItem={defaultSelectedItem}
+      onChange={onChange}
+      itemToString={itemToString}
+      itemToValue={itemToValue}
+    >
       {({
         getItemProps,
         isOpen,
@@ -56,18 +64,17 @@ function SelectInput({
         <div className={ResetNativeStyle}>
           {renderSelect({
             input: (
-              <div onClick={toggleMenu} role="presentation">
-                <input
-                  readOnly
-                  type="text"
-                  {...getInputProps({
-                    placeholder,
-                    spellCheck: false,
-                    disabled,
-                    required,
-                  })}
-                />
-              </div>
+              <input
+                className={styles && styles.input}
+                onClick={toggleMenu}
+                {...getInputProps({
+                  placeholder,
+                  spellCheck: false,
+                  disabled,
+                  required,
+                  readOnly: true,
+                })}
+              />
             ),
             isOpen,
             clearSelection,
@@ -75,7 +82,7 @@ function SelectInput({
             toggle: toggleMenu,
           })}
           {isOpen && (
-            <ul className={wrapperStyle && wrapperStyle.options}>
+            <ul className={styles && styles.options}>
               {items.map((item, index) => (
                 <li key={itemToValue(item)} {...getItemProps({ item })}>
                   {renderOption({

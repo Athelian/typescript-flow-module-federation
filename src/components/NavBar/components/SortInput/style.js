@@ -25,23 +25,20 @@ export const WrapperStyle = css`
   ${transitions.MAIN};
   ${shadows.NAV_BUTTON};
   ${fontSizes.MAIN};
-
-  input {
-    border: none;
-    outline: none;
-    color: ${colors.BLACK};
-    cursor: pointer;
-  }
 `;
 
-export const SelectStyle = css`
+export const InputStyle = css`
   ${fontSizes.MAIN};
   font-weight: bold;
   flex: 1;
   height: 20px;
+  border: none;
+  outline: none;
   border-right: 1px solid ${colors.GRAY_VERY_LIGHT};
   padding: 0 5px 0 0;
   ${presets.ELLIPSIS};
+  color: ${colors.BLACK};
+  cursor: pointer;
 `;
 
 export const ButtonStyle = css`

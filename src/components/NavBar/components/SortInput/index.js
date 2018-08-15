@@ -1,8 +1,14 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { SelectInput as StyleLessSelectInput } from 'components/base';
-import { WrapperStyle, ButtonStyle, OptionWrapperStyle, OptionItemStyle } from './style';
+import { SelectInput as BaseSelectInput } from 'components/base';
+import {
+  WrapperStyle,
+  InputStyle,
+  ButtonStyle,
+  OptionWrapperStyle,
+  OptionItemStyle,
+} from './style';
 
 type Sort = {
   title: string,
@@ -35,13 +41,14 @@ class SortInput extends React.Component<Props> {
     const { sort, ascending, fields } = this.props;
 
     return (
-      <StyleLessSelectInput
+      <BaseSelectInput
         items={fields}
         itemToString={item => (item ? item.title : '')}
         itemToValue={item => (item ? item.value : '')}
-        renderSelect={({ input, selectedItem, toggle }) => (
+        renderSelect={({ input, selectedItem }) => (
           <div className={WrapperStyle}>
-            {selectedItem ? input : <input value={sort.title} onClick={toggle} readOnly />}
+            {/* styles.input prop that <BaseSelectInput /> takes is applied to this input */}
+            {selectedItem && input}
             <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
               <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
             </button>
@@ -51,7 +58,8 @@ class SortInput extends React.Component<Props> {
           <div className={OptionItemStyle(onHover, selected)}>{value.title}</div>
         )}
         onChange={this.onFieldChange}
-        styles={{ options: OptionWrapperStyle }}
+        styles={{ input: InputStyle, options: OptionWrapperStyle }}
+        defaultSelectedItem={sort}
       />
     );
   }

@@ -2,7 +2,14 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import StyleLessSelectInput from 'components/base/SelectInput';
-import { SelectWrapperStyle, OptionWrapperStyle, OptionStyle, ArrowDownStyle } from './style';
+import {
+  SelectWrapperStyle,
+  InputStyle,
+  ButtonStyle,
+  OptionWrapperStyle,
+  OptionStyle,
+  ArrowDownStyle,
+} from './style';
 
 type Props = {
   value: any,
@@ -26,12 +33,12 @@ function SelectInput({ value, items, onChange, error, itemToString, itemToValue,
       itemToValue={itemToValue}
       clearIcon={<Icon icon="CLEAR" />}
       onChange={onChange}
-      wrapperStyle={{ options: OptionWrapperStyle }}
+      styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
         <div className={SelectWrapperStyle(!!error)}>
           {input}
           {selectedItem && (
-            <button type="button" onClick={clearSelection}>
+            <button type="button" onClick={clearSelection} className={ButtonStyle}>
               <Icon icon="CLEAR" />
             </button>
           )}
