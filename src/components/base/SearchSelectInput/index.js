@@ -7,6 +7,7 @@ type Props = {
   name: string,
   value: any,
   onChange?: (name: string, value: any) => void,
+  onSearch?: string => void,
   items: Array<any>,
   itemToValue: any => any,
   itemToString: any => string,
@@ -27,7 +28,7 @@ type Props = {
   onBlur?: Function,
 };
 
-class SelectInput extends React.Component<Props> {
+class SearchSelectInput extends React.Component<Props> {
   static defaultProps = {
     onChange: () => {},
     disabled: false,
@@ -66,6 +67,7 @@ class SelectInput extends React.Component<Props> {
     const {
       renderSelect,
       onChange,
+      onSearch,
       items,
       itemToValue,
       itemToString,
@@ -94,6 +96,7 @@ class SelectInput extends React.Component<Props> {
                 <input
                   className={styles.input}
                   onClick={toggleMenu}
+                  onChange={onSearch}
                   type="text"
                   {...getInputProps({
                     placeholder,
@@ -131,4 +134,4 @@ class SelectInput extends React.Component<Props> {
   }
 }
 
-export default SelectInput;
+export default SearchSelectInput;
