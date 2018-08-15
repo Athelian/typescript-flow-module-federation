@@ -19,7 +19,7 @@ export const CustomButtonStyle = color => {
     background-color: ${mainColor};
     ${borderRadiuses.BUTTON};
     ${shadows.NAV_BUTTON};
-    height: 40px;
+    height: 30px;
     padding: 0 10px;
     font-size: 20px;
     color: #fff;

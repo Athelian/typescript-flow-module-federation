@@ -13,6 +13,7 @@ import NavBar, {
   StatusToggleTabs,
 } from 'components/NavBar';
 import PartnerSelectInput from 'components/PartnerSelectInput';
+import NewButton from 'components/NavButtons/NewButton';
 import OrderList from './list';
 import messages from './messages';
 
@@ -129,7 +130,9 @@ class OrderModule extends React.Component<Props, State> {
                   onClear={() => this.onChangeFilter({ query: '' })}
                   onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />
-                <Link to="new"> New </Link>
+                <Link to="new">
+                  <NewButton />
+                </Link>
               </NavBar>
             }
           >
