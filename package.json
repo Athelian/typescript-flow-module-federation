@@ -44,6 +44,7 @@
     "react-intl": "^2.4.0",
     "react-loadable": "^5.5.0",
     "react-measure": "^2.1.0",
+    "react-tiny-virtual-list": "^2.2.0",
     "react-values": "^0.2.4",
     "react-virtualized": "^9.20.1",
     "scroll-into-view-if-needed": "^2.2.16",
