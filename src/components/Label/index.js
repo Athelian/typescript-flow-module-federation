@@ -11,12 +11,13 @@ export type Props = {
   error?: string | React.Node,
   warning?: string | React.Node,
   hideLabel?: boolean,
+  horizontal?: boolean,
 };
 
 const Label = (props: Props) => {
-  const { title, required, info, error, warning, hideLabel, children } = props;
+  const { title, required, info, error, warning, hideLabel, horizontal, children } = props;
   return (
-    <div className={LabelWrapperStyle}>
+    <div className={LabelWrapperStyle(!!horizontal)}>
       {!hideLabel && error && <ErrorTooltip error={error} />}
       {!hideLabel && warning && <WarningTooltip warning={warning} />}
       {!hideLabel && info && <InfoTooltip error={info} />}
@@ -33,6 +34,7 @@ const Label = (props: Props) => {
 Label.defaultProps = {
   hideLabel: false,
   required: false,
+  horizontal: false,
   title: '',
   info: '',
   warning: '',

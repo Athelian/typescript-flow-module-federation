@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
+import InputGroup from 'components/Form/InputGroup';
 import { UIConsumer } from 'modules/ui';
 import NavBar, {
   EntityIcon,
@@ -102,24 +103,26 @@ class OrderModule extends React.Component<Props, State> {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <PartnerSelectInput
-                        title="Exporter"
-                        types={['Exporter']}
-                        value={values.exporterId}
-                        onChange={v => setFieldValue('exporterId', v ? v.id : null)}
-                      />
-                      <PartnerSelectInput
-                        title="Supplier"
-                        types={['Supplier']}
-                        value={values.supplierId}
-                        onChange={v => setFieldValue('supplierId', v ? v.id : null)}
-                      />
-                      <PartnerSelectInput
-                        title="Forwarder"
-                        types={['Forwarder']}
-                        value={values.userId}
-                        onChange={v => setFieldValue('userId', v ? v.id : null)}
-                      />
+                      <InputGroup>
+                        <PartnerSelectInput
+                          title="Exporter"
+                          types={['Exporter']}
+                          value={values.exporterId}
+                          onChange={v => setFieldValue('exporterId', v ? v.id : null)}
+                        />
+                        <PartnerSelectInput
+                          title="Supplier"
+                          types={['Supplier']}
+                          value={values.supplierId}
+                          onChange={v => setFieldValue('supplierId', v ? v.id : null)}
+                        />
+                        <PartnerSelectInput
+                          title="Forwarder"
+                          types={['Forwarder']}
+                          value={values.userId}
+                          onChange={v => setFieldValue('userId', v ? v.id : null)}
+                        />
+                      </InputGroup>
                     </React.Fragment>
                   )}
                 </FilterInput>

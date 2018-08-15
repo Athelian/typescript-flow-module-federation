@@ -2,10 +2,11 @@
 import { css } from 'react-emotion';
 import { colors, fontSizesWithHeights, presets } from 'styles/common';
 
-export const LabelWrapperStyle = css`
+export const LabelWrapperStyle = (horizontal: boolean) => css`
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${horizontal ? 'row' : 'column'};
+  ${horizontal && 'justify-content: space-between'};
   flex: 1;
   min-height: min-content;
   max-height: min-content;
