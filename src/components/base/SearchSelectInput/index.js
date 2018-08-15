@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
 import Downshift from 'downshift';
-import Icon from 'components/Icon';
-import { ResetNativeStyle, ArrowDownStyle } from 'components/base/SelectInput/style';
+import { ResetNativeStyle } from 'components/base/SelectInput/style';
 
 type Props = {
   name: string,
@@ -11,9 +10,15 @@ type Props = {
   items: Array<any>,
   itemToValue: any => any,
   itemToString: any => string,
-  renderSelect: (?React.Node) => React.Node,
+  renderSelect: ({
+    input: React.Node,
+    isOpen: boolean,
+    clearSelection: () => void,
+    toggle: () => void,
+    selectedItem: any,
+  }) => React.Node,
   renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
-  wrapperStyle: { select: any, options: any },
+  styles: { input: any, options: any },
   disabled?: boolean,
   required?: boolean,
   readOnly?: boolean,
@@ -65,7 +70,7 @@ class SelectInput extends React.Component<Props> {
       itemToValue,
       itemToString,
       renderOption,
-      wrapperStyle = { select: '', options: '' },
+      styles = { input: '', options: '' },
       disabled,
       required,
       readOnly,
@@ -84,37 +89,30 @@ class SelectInput extends React.Component<Props> {
           getInputProps,
         }) => (
           <div className={ResetNativeStyle}>
-            <div className={wrapperStyle.select}>
-              {renderSelect(
-                <React.Fragment>
-                  <div onClick={toggleMenu} role="presentation">
-                    <input
-                      type="text"
-                      {...getInputProps({
-                        placeholder,
-                        spellCheck: false,
-                        disabled,
-                        required,
-                        readOnly,
-                        onBlur: this.handleBlur,
-                        onChange: this.handleChangeQuery,
-                      })}
-                    />
-                  </div>
-                  {selectedItem &&
-                    !required && (
-                      <button type="button" onClick={clearSelection}>
-                        <Icon icon="CLEAR" />
-                      </button>
-                    )}
-                  <button type="button" onClick={toggleMenu} className={ArrowDownStyle(isOpen)}>
-                    <Icon icon="CHEVRON_DOWN" />
-                  </button>
-                </React.Fragment>
-              )}
-            </div>
+            {renderSelect({
+              input: (
+                <input
+                  className={styles.input}
+                  onClick={toggleMenu}
+                  type="text"
+                  {...getInputProps({
+                    placeholder,
+                    spellCheck: false,
+                    disabled,
+                    required,
+                    readOnly,
+                    onBlur: this.handleBlur,
+                    onChange: this.handleChangeQuery,
+                  })}
+                />
+              ),
+              isOpen,
+              toggle: toggleMenu,
+              selectedItem,
+              clearSelection,
+            })}
             {isOpen && (
-              <ul className={wrapperStyle.options}>
+              <ul className={styles.options}>
                 {items.map((item, index) => (
                   <li key={item.value} {...getItemProps({ item })}>
                     {renderOption({
