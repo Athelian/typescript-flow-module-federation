@@ -1,21 +1,23 @@
 // @flow
 import * as React from 'react';
-import { WrapperStyle, FieldStyle } from './style';
+import { InputWrapperStyle } from './style';
 
 type Props = {
   children: React.Node,
-  direction?: 'column' | 'row',
+  direction?: 'row' | 'column',
+  fieldGap?: number,
 };
 
 const defaultProps = {
   direction: 'row',
+  fieldGap: 8,
 };
 
-function InputGroup({ children, direction = 'row' }: Props) {
+function InputGroup({ children, direction = 'row', fieldGap = 8 }: Props) {
   return (
-    <div className={WrapperStyle(direction)}>
+    <div className={InputWrapperStyle(direction, fieldGap)}>
       {React.Children.map(children, child => (
-        <div className={FieldStyle}>{React.cloneElement(child)}</div>
+        <div>{React.cloneElement(child)}</div>
       ))}
     </div>
   );

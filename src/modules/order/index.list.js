@@ -96,34 +96,32 @@ class OrderModule extends React.Component<Props, State> {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <React.Fragment>
+                    <InputGroup fieldGap={16}>
                       <SearchInput
                         value={values.query}
                         name="search"
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <InputGroup direction="column">
-                        <PartnerSelectInput
-                          title="Exporter"
-                          types={['Exporter']}
-                          value={values.exporterId}
-                          onChange={v => setFieldValue('exporterId', v ? v.id : null)}
-                        />
-                        <PartnerSelectInput
-                          title="Supplier"
-                          types={['Supplier']}
-                          value={values.supplierId}
-                          onChange={v => setFieldValue('supplierId', v ? v.id : null)}
-                        />
-                        <PartnerSelectInput
-                          title="Forwarder"
-                          types={['Forwarder']}
-                          value={values.userId}
-                          onChange={v => setFieldValue('userId', v ? v.id : null)}
-                        />
-                      </InputGroup>
-                    </React.Fragment>
+                      <PartnerSelectInput
+                        title="Exporter"
+                        types={['Exporter']}
+                        value={values.exporterId}
+                        onChange={v => setFieldValue('exporterId', v ? v.id : null)}
+                      />
+                      <PartnerSelectInput
+                        title="Supplier"
+                        types={['Supplier']}
+                        value={values.supplierId}
+                        onChange={v => setFieldValue('supplierId', v ? v.id : null)}
+                      />
+                      <PartnerSelectInput
+                        title="Forwarder"
+                        types={['Forwarder']}
+                        value={values.userId}
+                        onChange={v => setFieldValue('userId', v ? v.id : null)}
+                      />
+                    </InputGroup>
                   )}
                 </FilterInput>
                 <SearchInput

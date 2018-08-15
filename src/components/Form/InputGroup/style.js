@@ -1,12 +1,11 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const FieldStyle = css`
-  margin: 8px;
+export const InputWrapperStyle = (direction: 'column' | 'row', gap: number) => css`
+  display: grid;
+  grid-auto-flow: ${direction};
+  ${direction === 'row' ? '  grid-auto-rows: min-content' : 'grid-auto-column: min-content'};
+  grid-gap: ${gap}px;
 `;
 
-export const WrapperStyle = (direction: 'column' | 'row') => css`
-  display: flex;
-  flex-direction: ${direction};
-  margin: 16px 0;
-`;
+export default InputWrapperStyle;
