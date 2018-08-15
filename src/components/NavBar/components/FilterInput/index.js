@@ -37,10 +37,15 @@ type State = {
 };
 
 class FilterInput extends React.Component<Props, State> {
-  state = {
-    isOpen: false,
-    isActive: false,
-  };
+  constructor() {
+    super();
+    this.state = {
+      isOpen: false,
+      isActive: false,
+    };
+
+    this.filterButtonRef = React.createRef();
+  }
 
   componentDidMount() {
     const { initialFilter } = this.props;
@@ -85,17 +90,27 @@ class FilterInput extends React.Component<Props, State> {
     this.close();
   };
 
+  filterButtonRef: any;
+
   render() {
     const { initialFilter, children } = this.props;
     const { isOpen, isActive } = this.state;
 
     return (
       <div className={WrapperStyle}>
-        <button type="button" className={ButtonStyle} onClick={this.toggle}>
+        <button
+          type="button"
+          className={ButtonStyle}
+          onClick={this.toggle}
+          ref={this.filterButtonRef}
+        >
           {(isActive || this.hasAnyFilter(initialFilter)) && <span className={ActiveStyle} />}
           <Icon icon="FILTER" />
         </button>
-        <OutsideClickHandler onOutsideClick={this.close}>
+        <OutsideClickHandler
+          onOutsideClick={this.close}
+          ignoreElements={[this.filterButtonRef && this.filterButtonRef.current]}
+        >
           <div className={ContentStyle(isOpen)}>
             <Form
               initialValues={initialFilter}
