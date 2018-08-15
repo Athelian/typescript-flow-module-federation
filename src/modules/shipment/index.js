@@ -2,10 +2,7 @@
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
-import { Form, Field, FieldObserver } from 'components/Form';
-import TextInput from 'components/TextInput';
 import { UIConsumer } from 'modules/ui';
-import logger from 'utils/logger';
 import NavBar, {
   EntityIcon,
   FilterInput,
@@ -13,6 +10,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
+import PartnerSelectInput from 'components/PartnerSelectInput';
 import OrderList from './list';
 import messages from './messages';
 
@@ -44,8 +42,8 @@ class ShipmentModule extends React.Component<Props, State> {
     perPage: 10,
   };
 
-  onChangeFilter = (field: string, newValue: any) => {
-    this.setState(prevState => ({ ...prevState, [field]: newValue }));
+  onChangeFilter = (newValue: any) => {
+    this.setState(prevState => ({ ...prevState, ...newValue }));
   };
 
   render() {
@@ -78,53 +76,52 @@ class ShipmentModule extends React.Component<Props, State> {
               <NavBar>
                 <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
                 <StatusToggleTabs
-                  onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
+                  onChange={index =>
+                    this.onChangeFilter({ status: index ? 'Completed' : 'Active' })
+                  }
                 />
                 <SortInput
                   sort={fields.find(item => item.value === sort.field) || fields[0]}
                   ascending={sort.direction !== 'DESC'}
                   fields={fields}
                   onChange={({ field: { value }, ascending }) =>
-                    this.onChangeFilter('sort', {
-                      field: value,
-                      direction: ascending ? 'ASC' : 'DESC',
+                    this.onChangeFilter({
+                      sort: {
+                        field: value,
+                        direction: ascending ? 'ASC' : 'DESC',
+                      },
                     })
                   }
                 />
-                <Form initialValues={{ ...filters }}>
+                <FilterInput
+                  initialFilter={{}}
+                  onChange={newFilter => this.onChangeFilter(newFilter)}
+                  width={400}
+                >
                   {({ values, setFieldValue }) => (
                     <React.Fragment>
-                      <FilterInput
-                        initialFilter={{}}
-                        onChange={newFilter => logger.warn('filter', newFilter)}
-                        width={400}
-                      >
-                        {({ setFieldValue: changeQuery }) => (
-                          <React.Fragment>
-                            <SearchInput
-                              value=""
-                              name="search"
-                              onClear={() => changeQuery('query', '')}
-                              onChange={newValue => changeQuery('query', newValue)}
-                            />
-                            <TextInput onBlur={() => {}} onChange={() => {}} />
-                          </React.Fragment>
-                        )}
-                      </FilterInput>
-                      <Field
+                      <SearchInput
                         value={values.query}
                         name="query"
-                        render={({ input }) => (
-                          <SearchInput {...input} onClear={() => setFieldValue('query', '')} />
-                        )}
+                        onClear={() => setFieldValue('query', '')}
+                        onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <FieldObserver
-                        name="query"
-                        onChange={({ value }) => this.onChangeFilter('query', value)}
+                      <PartnerSelectInput
+                        title="Forwarder"
+                        types={['Forwarder']}
+                        value={values.userId}
+                        onChange={v => setFieldValue('userId', v ? v.id : null)}
+                        placeholder="Forwarder"
                       />
                     </React.Fragment>
                   )}
-                </Form>
+                </FilterInput>
+                <SearchInput
+                  value={filters.query}
+                  name="query"
+                  onClear={() => this.onChangeFilter({ query: '' })}
+                  onChange={newQuery => this.onChangeFilter({ query: newQuery })}
+                />
               </NavBar>
             }
           >

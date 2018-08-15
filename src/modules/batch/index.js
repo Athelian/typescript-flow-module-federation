@@ -2,10 +2,7 @@
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
-import { Form, Field, FieldObserver } from 'components/Form';
-import TextInput from 'components/TextInput';
 import { UIConsumer } from 'modules/ui';
-import logger from 'utils/logger';
 import NavBar, {
   EntityIcon,
   ViewToggle,
@@ -14,6 +11,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
+import PartnerSelectInput from 'components/PartnerSelectInput';
 import OrderList from './list';
 import messages from './messages';
 
@@ -45,8 +43,8 @@ class BatchModule extends React.Component<Props, State> {
     perPage: 10,
   };
 
-  onChangeFilter = (field: string, newValue: any) => {
-    this.setState(prevState => ({ ...prevState, [field]: newValue }));
+  onChangeFilter = (newValue: any) => {
+    this.setState(prevState => ({ ...prevState, ...newValue }));
   };
 
   render() {
@@ -91,10 +89,12 @@ class BatchModule extends React.Component<Props, State> {
               <NavBar>
                 <EntityIcon icon="BATCH" color="BATCH" />
                 <StatusToggleTabs
-                  onChange={index => this.onChangeFilter('status', index ? 'Completed' : 'Active')}
+                  onChange={index =>
+                    this.onChangeFilter({ status: index ? 'Completed' : 'Active' })
+                  }
                 />
                 <ViewToggle
-                  changeToggle={newViewType => this.onChangeFilter('viewType', newViewType)}
+                  changeToggle={newViewType => this.onChangeFilter({ viewType: newViewType })}
                   selectedView={viewType}
                   viewTypes={[{ icon: 'CARD', type: 'grid' }, { icon: 'TABLE', type: 'table' }]}
                 />
@@ -103,46 +103,54 @@ class BatchModule extends React.Component<Props, State> {
                   ascending={sort.direction !== 'DESC'}
                   fields={fields}
                   onChange={({ field: { value }, ascending }) =>
-                    this.onChangeFilter('sort', {
-                      field: value,
-                      direction: ascending ? 'ASC' : 'DESC',
+                    this.onChangeFilter({
+                      sort: {
+                        field: value,
+                        direction: ascending ? 'ASC' : 'DESC',
+                      },
                     })
                   }
                 />
-                <Form initialValues={{ ...filters }}>
+                <FilterInput
+                  initialFilter={{}}
+                  onChange={newFilter => this.onChangeFilter(newFilter)}
+                  width={400}
+                >
                   {({ values, setFieldValue }) => (
                     <React.Fragment>
-                      <FilterInput
-                        initialFilter={{}}
-                        onChange={newFilter => logger.warn('filter', newFilter)}
-                        width={400}
-                      >
-                        {({ setFieldValue: changeQuery }) => (
-                          <React.Fragment>
-                            <SearchInput
-                              value=""
-                              name="search"
-                              onClear={() => changeQuery('query', '')}
-                              onChange={newValue => changeQuery('query', newValue)}
-                            />
-                            <TextInput onBlur={() => {}} onChange={() => {}} />
-                          </React.Fragment>
-                        )}
-                      </FilterInput>
-                      <Field
+                      <SearchInput
                         value={values.query}
                         name="query"
-                        render={({ input }) => (
-                          <SearchInput {...input} onClear={() => setFieldValue('query', '')} />
-                        )}
+                        onClear={() => setFieldValue('query', '')}
+                        onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <FieldObserver
-                        name="query"
-                        onChange={({ value }) => this.onChangeFilter('query', value)}
+                      <PartnerSelectInput
+                        title="Exporter"
+                        types={['Exporter']}
+                        value={values.exporterId}
+                        onChange={v => setFieldValue('exporterId', v ? v.id : null)}
+                      />
+                      <PartnerSelectInput
+                        title="Supplier"
+                        types={['Supplier']}
+                        value={values.supplierId}
+                        onChange={v => setFieldValue('supplierId', v ? v.id : null)}
+                      />
+                      <PartnerSelectInput
+                        title="Forwarder"
+                        types={['Forwarder']}
+                        value={values.userId}
+                        onChange={v => setFieldValue('userId', v ? v.id : null)}
                       />
                     </React.Fragment>
                   )}
-                </Form>
+                </FilterInput>
+                <SearchInput
+                  name="query"
+                  value={filters.query}
+                  onClear={() => this.onChangeFilter({ query: '' })}
+                  onChange={newQuery => this.onChangeFilter({ query: newQuery })}
+                />
               </NavBar>
             }
           >
