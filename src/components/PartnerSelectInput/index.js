@@ -44,9 +44,9 @@ function PartnerSelectInput({
               <SearchSelectInput
                 value={value}
                 items={filterItems(query, data)}
-                onChange={v => {
-                  if (!v) clear();
-                  onChange(v);
+                onChange={item => {
+                  if (!item) clear();
+                  onChange(item);
                 }}
                 onSearch={set}
                 loading={loading}

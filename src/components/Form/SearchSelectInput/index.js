@@ -9,7 +9,7 @@ import {
   OptionWrapperStyle,
   OptionStyle,
   ArrowDownStyle,
-} from './style';
+} from '../SelectInput/style';
 
 type Props = {
   value: any,
@@ -35,14 +35,15 @@ function SelectInput({ error, itemToString, ...rest }: Props) {
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
         <div className={SelectWrapperStyle(!!error)}>
           {input}
-          {selectedItem && (
+          {selectedItem ? (
             <button type="button" onClick={clearSelection} className={ButtonStyle}>
               <Icon icon="CLEAR" />
             </button>
+          ) : (
+            <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+              <Icon icon="CHEVRON_DOWN" />
+            </button>
           )}
-          <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
-            <Icon icon="CHEVRON_DOWN" />
-          </button>
         </div>
       )}
       renderOption={({ value: item, onHover, selected }) => (
