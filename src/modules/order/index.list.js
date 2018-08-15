@@ -103,7 +103,7 @@ class OrderModule extends React.Component<Props, State> {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <InputGroup>
+                      <InputGroup direction="column">
                         <PartnerSelectInput
                           title="Exporter"
                           types={['Exporter']}
