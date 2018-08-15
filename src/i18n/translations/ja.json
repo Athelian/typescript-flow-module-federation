@@ -348,6 +348,7 @@
   "containers.Orders.loadPort": "積地",
   "containers.Orders.dischargePort": "揚地",
   "containers.Orders.exporter": "輸出者",
+  "containers.Orders.forwarder": "フォワーダー",
   "containers.Orders.memo": "メモ",
   "containers.Orders.createdAt": "作成日",
   "containers.Orders.updatedAt": "最終編集日",

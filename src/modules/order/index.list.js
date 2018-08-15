@@ -104,19 +104,19 @@ class OrderModule extends React.Component<Props, State> {
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
                       <PartnerSelectInput
-                        title="Exporter"
+                        title={intl.formatMessage(messages.exporter)}
                         types={['Exporter']}
                         value={values.exporterId}
                         onChange={v => setFieldValue('exporterId', v ? v.id : null)}
                       />
                       <PartnerSelectInput
-                        title="Supplier"
+                        title={intl.formatMessage(messages.supplier)}
                         types={['Supplier']}
                         value={values.supplierId}
                         onChange={v => setFieldValue('supplierId', v ? v.id : null)}
                       />
                       <PartnerSelectInput
-                        title="Forwarder"
+                        title={intl.formatMessage(messages.forwarder)}
                         types={['Forwarder']}
                         value={values.userId}
                         onChange={v => setFieldValue('userId', v ? v.id : null)}

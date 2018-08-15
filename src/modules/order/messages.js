@@ -95,6 +95,9 @@ export default defineMessages({
   exporter: {
     id: 'containers.Orders.exporter',
   },
+  forwarder: {
+    id: 'containers.Orders.forwarder',
+  },
   memo: {
     id: 'containers.Orders.memo',
   },
