@@ -14,6 +14,9 @@
   "components.LogoutDialog.logout": "ログアウト",
   "components.LogoutDialog.cancel": "キャンセル",
 
+  "components.ConfirmDialog.confirm": "OK",
+  "components.ConfirmDialog.cancel": "キャンセル",
+
   "components.EntityTimeline.cancel": "キャンセル",
   "components.EntityTimeline.defaultEvent": "{user}がアップデートしました。",
   "components.EntityTimeline.updateEvent": "{user}が{target}間の{field}を{oldValue}から{newValue}へと変更しました。",
