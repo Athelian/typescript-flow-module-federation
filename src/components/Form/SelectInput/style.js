@@ -2,17 +2,20 @@
 import { css } from 'react-emotion';
 import { colors, borderRadiuses, transitions, presets, fontSizes } from 'styles/common';
 
-export const SelectWrapperStyle = (isError: boolean) => css`
+export const SelectWrapperStyle = (isError: boolean, isOpen: boolean) => css`
   display: flex;
   flex-wrap: nowrap;
   ${borderRadiuses.MAIN};
-  border: 1px solid ${isError ? colors.RED : 'transparent'};
+  border: 1px solid transparent;
+  border-color: ${isError && colors.RED};
+  border-color: ${isOpen && '#11D1A6'};
   ${transitions.MAIN};
   align-items: center;
   height: 30px;
   padding: 0 8px;
   box-sizing: border-box;
   cursor: pointer;
+  ${isOpen && 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)'};
 
   &:hover {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);

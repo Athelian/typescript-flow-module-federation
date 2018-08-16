@@ -10,7 +10,7 @@ import {
   shadows,
   transitions,
 } from 'styles/common';
-import { computeTextColor } from 'modules/product/list/components/ProductItem/style';
+import { computeTextColor } from 'components/Tag/style';
 
 export const ProductImageWrapperStyle = css`
   position: absolute;
