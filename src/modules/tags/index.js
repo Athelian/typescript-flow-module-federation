@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
-import { Form, Field, FieldObserver } from 'components/Form';
 import Layout from 'components/Layout';
 import Tabs from 'components/NavBar/components/Tabs';
 import { UIConsumer } from 'modules/ui';
@@ -34,12 +33,12 @@ class TagsModule extends React.Component<Props, State> {
     this.setState({ tabIndex });
   };
 
-  onChangeFilter = (field: string, newValue: any) => {
-    this.setState(prevState => ({ ...prevState, [field]: newValue }));
+  onChangeFilter = (newValue: any) => {
+    this.setState(prevState => ({ ...prevState, ...newValue }));
   };
 
   render() {
-    const { viewType, perPage, tabIndex, ...filters } = this.state;
+    const { query } = this.state;
     const { intl } = this.props;
 
     const tabs = [
@@ -47,7 +46,6 @@ class TagsModule extends React.Component<Props, State> {
       { icon: 'SHIPMENT', label: intl.formatMessage(messages.shipmentTags) },
       { icon: 'STAFF', label: intl.formatMessage(messages.userTags) },
       { icon: 'BATCH', label: intl.formatMessage(messages.batchTags) },
-      // { icon: 'REQUEST', label: intl.formatMessage(messages.requestTags) },
     ];
 
     return (
@@ -58,24 +56,15 @@ class TagsModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <EntityIcon icon="TAGS" color="PURPLE" />
-                <Form initialValues={{ ...filters }}>
-                  {({ values, setFieldValue }) => (
-                    <React.Fragment>
-                      <Tabs tabs={tabs.map(injectUid)} onChange={this.onChangeTabs} />
-                      <Field
-                        value={values.query}
-                        name="query"
-                        render={({ input }) => (
-                          <SearchInput {...input} onClear={() => setFieldValue('query', '')} />
-                        )}
-                      />
-                      <FieldObserver
-                        name="query"
-                        onChange={({ value }) => this.onChangeFilter('query', value)}
-                      />
-                    </React.Fragment>
-                  )}
-                </Form>
+                <React.Fragment>
+                  <Tabs tabs={tabs.map(injectUid)} onChange={this.onChangeTabs} />
+                  <SearchInput
+                    name="query"
+                    value={query}
+                    onClear={() => this.onChangeFilter({ query: '' })}
+                    onChange={newQuery => this.onChangeFilter({ query: newQuery })}
+                  />
+                </React.Fragment>
               </NavBar>
             }
           >
