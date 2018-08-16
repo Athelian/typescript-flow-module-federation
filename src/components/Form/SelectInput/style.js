@@ -46,7 +46,7 @@ export const OptionWrapperStyle = css`
   display: flex;
   flex-flow: column wrap;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  width: 100px;
+  width: 200px;
 `;
 
 export const OptionStyle = (onHover: boolean, selected: boolean) => css`

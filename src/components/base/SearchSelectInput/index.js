@@ -5,7 +5,6 @@ import { ResetNativeStyle } from 'components/base/SelectInput/style';
 
 type Props = {
   name: string,
-  value: any,
   onChange?: (name: string, value: any) => void,
   onSearch?: string => void,
   items: Array<any>,
