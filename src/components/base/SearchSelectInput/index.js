@@ -116,7 +116,7 @@ class SearchSelectInput extends React.Component<Props> {
             {isOpen && (
               <ul className={styles.options}>
                 {items.map((item, index) => (
-                  <li key={item.value} {...getItemProps({ item })}>
+                  <li key={itemToValue(item)} {...getItemProps({ item })}>
                     {renderOption({
                       value: item,
                       onHover: highlightedIndex === index,
