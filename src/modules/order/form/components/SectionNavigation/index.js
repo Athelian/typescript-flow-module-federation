@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import SectionNavigationWrapper from './style';
+import { TabItemStyle } from 'components/NavBar/components/Tabs/components/TabItem/style';
 
 type Props = {
   children: React.Node,
@@ -20,12 +20,9 @@ export default class SectionNavigation extends React.PureComponent<Props> {
     const { children, active, onClick } = this.props;
     return (
       <div>
-        <button
-          type="button"
-          className={SectionNavigationWrapper(active || false)}
-          onClick={onClick}
-        >
+        <button type="button" className={TabItemStyle(!!active)} onClick={onClick}>
           {children}
+          <span />
         </button>
       </div>
     );
