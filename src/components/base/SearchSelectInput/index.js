@@ -7,7 +7,7 @@ import { isEquals } from 'utils/fp';
 type Props = {
   name: string,
   value: any,
-  onChange?: (name: string, value: any) => void,
+  onChange?: any => void,
   onSearch?: string => void,
   items: Array<any>,
   itemToValue: any => any,
@@ -67,18 +67,22 @@ class SearchSelectInput extends React.Component<Props, State> {
   }
 
   handleChangeQuery = (e: any) => {
-    const { onSearch } = this.props;
+    const { onChange, onSearch } = this.props;
     const { value: query } = e.target;
-    this.setState({ inputValue: query });
-
     if (this.timeout) {
       clearTimeout(this.timeout);
       this.timeout = null;
     }
 
-    this.timeout = setTimeout(() => {
-      if (onSearch) onSearch(query);
-    }, 500);
+    if (!query.trim()) {
+      this.setState({ inputValue: query, selectedItem: null });
+      if (onChange) onChange(null);
+    } else {
+      this.setState({ inputValue: query });
+      this.timeout = setTimeout(() => {
+        if (onSearch) onSearch(query);
+      }, 500);
+    }
   };
 
   handleBlur = () => {

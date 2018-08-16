@@ -111,7 +111,7 @@ class OrderModule extends React.Component<Props, State> {
                         value={values.exporterId}
                         onChange={v => setFieldValue('exporterId', v ? v.id : null)}
                       />
-                      {/* <PartnerSelectInput
+                      <PartnerSelectInput
                         title={intl.formatMessage(messages.supplier)}
                         label={intl.formatMessage(messages.supplier)}
                         types={['Supplier']}
@@ -124,7 +124,7 @@ class OrderModule extends React.Component<Props, State> {
                         types={['Forwarder']}
                         value={values.userId}
                         onChange={v => setFieldValue('userId', v ? v.id : null)}
-                      /> */}
+                      />
                     </InputGroup>
                   )}
                 </FilterInput>
