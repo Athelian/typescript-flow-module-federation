@@ -4,7 +4,6 @@ import matchSorter from 'match-sorter';
 import PartnerListProvider from 'providers/PartnerList';
 import Label from 'components/Label';
 import type { LabelProps } from 'components/Label/type.js.flow';
-import { ErrorTooltip, WarningTooltip, InfoTooltip } from 'components/Tooltips';
 import SearchSelectInput from 'components/Form/SearchSelectInput';
 import { StringValue } from 'react-values';
 
@@ -20,12 +19,7 @@ function PartnerSelectInput({
   value,
   onChange,
   types = defaultPartnerTypes,
-  required,
-  info,
-  error,
-  warning,
-  title,
-  hideLabel,
+  ...labelProps
 }: Props) {
   const filterItems = (query: string, data: Array<any>) => {
     const items = data.filter(item => types.includes(item.type));
@@ -38,9 +32,7 @@ function PartnerSelectInput({
       {({ data, loading }) => (
         <StringValue defaultValue="">
           {({ value: query, set, clear }) => (
-            <Label title={title} htmlFor={value} hideLabel={hideLabel}>
-              {info && <InfoTooltip info={info} />}
-              {required && ' * '}
+            <Label htmlFor={value} {...labelProps}>
               <SearchSelectInput
                 value={value}
                 items={filterItems(query, data)}
@@ -53,8 +45,6 @@ function PartnerSelectInput({
                 itemToString={item => (item ? item.name : '')}
                 itemToValue={item => (item ? item.id : null)}
               />
-              {error && <ErrorTooltip error={error} />}
-              {warning && <WarningTooltip warning={warning} />}
             </Label>
           )}
         </StringValue>
