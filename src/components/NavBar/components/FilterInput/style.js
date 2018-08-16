@@ -47,7 +47,7 @@ export const ContentStyle = (isOpen: boolean) => css`
   position: absolute;
   width: 300px;
   top: -10px;
-  left: 30px;
+  left: 40px;
   position: absolute;
   width: min-content;
   z-index: 1000;

@@ -348,6 +348,7 @@
   "containers.Orders.loadPort": "LOAD PORT",
   "containers.Orders.dischargePort": "DISCHARGE PORT",
   "containers.Orders.exporter": "EXPORTER",
+  "containers.Orders.forwarder": "FORWARDER",
   "containers.Orders.memo": "MEMO",
   "containers.Orders.createdAt": "CREATED ON",
   "containers.Orders.updatedAt": "LAST MODIFIED",
