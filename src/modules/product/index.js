@@ -111,12 +111,6 @@ class ProductModule extends React.Component<Props, State> {
                         value={values.supplierId}
                         onChange={v => setFieldValue('supplierId', v ? v.id : null)}
                       />
-                      <PartnerSelectInput
-                        title="Forwarder"
-                        types={['Forwarder']}
-                        value={values.userId}
-                        onChange={v => setFieldValue('userId', v ? v.id : null)}
-                      />
                     </React.Fragment>
                   )}
                 </FilterInput>

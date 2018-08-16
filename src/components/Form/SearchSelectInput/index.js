@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import StyleLessSelectInput from 'components/base/SelectInput';
+import StyleLessSelectInput from 'components/base/SearchSelectInput';
 import {
   SelectWrapperStyle,
   InputStyle,
@@ -9,12 +9,12 @@ import {
   OptionWrapperStyle,
   OptionStyle,
   ArrowDownStyle,
-} from './style';
+} from '../SelectInput/style';
 
 type Props = {
-  value: any,
   items: Array<any>,
   onChange: () => void,
+  onSearch: string => void,
   error?: any,
   itemToString: any => string,
   itemToValue: any => any,
@@ -24,15 +24,12 @@ const defaultProps = {
   error: null,
 };
 
-function SelectInput({ value, items, onChange, error, itemToString, itemToValue, ...rest }: Props) {
+function SelectInput({ error, itemToString, ...rest }: Props) {
   return (
     <StyleLessSelectInput
-      value={value}
-      items={items}
+      name="name"
       itemToString={itemToString}
-      itemToValue={itemToValue}
       clearIcon={<Icon icon="CLEAR" />}
-      onChange={onChange}
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
         <div className={SelectWrapperStyle(!!error)}>

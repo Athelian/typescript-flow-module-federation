@@ -5,6 +5,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { css } from 'react-emotion';
 import { Form } from 'components/Form';
+import Icon from 'components/Icon';
 import PureSearchSelectInput from './index';
 
 const items = [
@@ -62,6 +63,22 @@ function optionItem({ value, onHover, selected }) {
   return <div className={ItemStyle(onHover, selected)}>{value.label}</div>;
 }
 
+function renderSelect({ input, selectedItem, clearSelection, toggle }) {
+  return (
+    <div>
+      {input}
+      {selectedItem && (
+        <button type="button" onClick={clearSelection}>
+          <Icon icon="CLEAR" />
+        </button>
+      )}
+      <button type="button" onClick={toggle}>
+        <Icon icon="CHEVRON_DOWN" />
+      </button>
+    </div>
+  );
+}
+
 storiesOf('SearchSelectInput', module)
   .add('non style', () => (
     <div style={{ margin: '50px' }}>
@@ -72,10 +89,10 @@ storiesOf('SearchSelectInput', module)
             items={items}
             itemToString={item => (item ? item.label : '')}
             itemToValue={item => (item ? item.value : '')}
-            renderSelect={renderSelect => renderSelect}
+            renderSelect={renderSelect}
             renderOption={({ value }) => <div>{value.label}</div>}
             onChange={value => setFieldValue('select', value)}
-            wrapperStyle={{ select: '', options: '' }}
+            styles={{ input: '', options: '' }}
             onSearch={action('search')}
             clearable
           />
@@ -93,11 +110,11 @@ storiesOf('SearchSelectInput', module)
             items={items}
             itemToString={item => (item ? item.label : '')}
             itemToValue={item => (item ? item.value : '')}
-            renderSelect={renderSelect => renderSelect}
+            renderSelect={renderSelect}
             renderOption={optionItem}
             clearable
             onChange={value => setFieldValue('select', value)}
-            wrapperStyle={{ select: InputWrapperStyle, options: OptionWrapperStyle }}
+            styles={{ input: InputWrapperStyle, options: OptionWrapperStyle }}
             onSearch={action('search')}
           />
         )}

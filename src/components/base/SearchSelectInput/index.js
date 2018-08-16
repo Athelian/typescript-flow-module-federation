@@ -1,19 +1,24 @@
 // @flow
 import * as React from 'react';
 import Downshift from 'downshift';
-import Icon from 'components/Icon';
-import { ResetNativeStyle, ArrowDownStyle } from 'components/base/SelectInput/style';
+import { ResetNativeStyle } from 'components/base/SelectInput/style';
 
 type Props = {
   name: string,
-  value: any,
   onChange?: (name: string, value: any) => void,
+  onSearch?: string => void,
   items: Array<any>,
   itemToValue: any => any,
   itemToString: any => string,
-  renderSelect: (?React.Node) => React.Node,
+  renderSelect: ({
+    input: React.Node,
+    isOpen: boolean,
+    clearSelection: () => void,
+    toggle: () => void,
+    selectedItem: any,
+  }) => React.Node,
   renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
-  wrapperStyle: { select: any, options: any },
+  styles: { input: any, options: any },
   disabled?: boolean,
   required?: boolean,
   readOnly?: boolean,
@@ -22,7 +27,7 @@ type Props = {
   onBlur?: Function,
 };
 
-class SelectInput extends React.Component<Props> {
+class SearchSelectInput extends React.Component<Props> {
   static defaultProps = {
     onChange: () => {},
     disabled: false,
@@ -61,11 +66,12 @@ class SelectInput extends React.Component<Props> {
     const {
       renderSelect,
       onChange,
+      onSearch,
       items,
       itemToValue,
       itemToString,
       renderOption,
-      wrapperStyle = { select: '', options: '' },
+      styles = { input: '', options: '' },
       disabled,
       required,
       readOnly,
@@ -84,39 +90,33 @@ class SelectInput extends React.Component<Props> {
           getInputProps,
         }) => (
           <div className={ResetNativeStyle}>
-            <div className={wrapperStyle.select}>
-              {renderSelect(
-                <React.Fragment>
-                  <div onClick={toggleMenu} role="presentation">
-                    <input
-                      type="text"
-                      {...getInputProps({
-                        placeholder,
-                        spellCheck: false,
-                        disabled,
-                        required,
-                        readOnly,
-                        onBlur: this.handleBlur,
-                        onChange: this.handleChangeQuery,
-                      })}
-                    />
-                  </div>
-                  {selectedItem &&
-                    !required && (
-                      <button type="button" onClick={clearSelection}>
-                        <Icon icon="CLEAR" />
-                      </button>
-                    )}
-                  <button type="button" onClick={toggleMenu} className={ArrowDownStyle(isOpen)}>
-                    <Icon icon="CHEVRON_DOWN" />
-                  </button>
-                </React.Fragment>
-              )}
-            </div>
+            {renderSelect({
+              input: (
+                <input
+                  className={styles.input}
+                  onClick={toggleMenu}
+                  onChange={onSearch}
+                  type="text"
+                  {...getInputProps({
+                    placeholder,
+                    spellCheck: false,
+                    disabled,
+                    required,
+                    readOnly,
+                    onBlur: this.handleBlur,
+                    onChange: this.handleChangeQuery,
+                  })}
+                />
+              ),
+              isOpen,
+              toggle: toggleMenu,
+              selectedItem,
+              clearSelection,
+            })}
             {isOpen && (
-              <ul className={wrapperStyle.options}>
+              <ul className={styles.options}>
                 {items.map((item, index) => (
-                  <li key={item.value} {...getItemProps({ item })}>
+                  <li key={itemToValue(item)} {...getItemProps({ item })}>
                     {renderOption({
                       value: item,
                       onHover: highlightedIndex === index,
@@ -133,4 +133,4 @@ class SelectInput extends React.Component<Props> {
   }
 }
 
-export default SelectInput;
+export default SearchSelectInput;

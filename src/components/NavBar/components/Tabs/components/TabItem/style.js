@@ -38,7 +38,7 @@ export const TabItemStyle = (isActive: boolean) => css`
 `;
 
 export const DisabledStyle = css`
-  ${TabItemStyle};
+  ${TabItemStyle(false)};
 `;
 
 export const IconStyle = css`
