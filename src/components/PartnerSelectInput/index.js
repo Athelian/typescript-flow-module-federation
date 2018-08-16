@@ -34,6 +34,7 @@ function PartnerSelectInput({
           {({ value: query, set, clear }) => (
             <Label htmlFor={value} {...labelProps}>
               <SearchSelectInput
+                value={value}
                 items={filterItems(query, data)}
                 onChange={item => {
                   if (!item) clear();

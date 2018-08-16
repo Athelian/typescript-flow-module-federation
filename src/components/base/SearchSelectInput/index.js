@@ -2,9 +2,11 @@
 import * as React from 'react';
 import Downshift from 'downshift';
 import { ResetNativeStyle } from 'components/base/SelectInput/style';
+import { isEquals } from 'utils/fp';
 
 type Props = {
   name: string,
+  value: any,
   onChange?: (name: string, value: any) => void,
   onSearch?: string => void,
   items: Array<any>,
@@ -27,7 +29,12 @@ type Props = {
   onBlur?: Function,
 };
 
-class SearchSelectInput extends React.Component<Props> {
+type State = {
+  inputValue: string,
+  selectedItem: any,
+};
+
+class SearchSelectInput extends React.Component<Props, State> {
   static defaultProps = {
     onChange: () => {},
     disabled: false,
@@ -39,9 +46,30 @@ class SearchSelectInput extends React.Component<Props> {
     onBlur: () => {},
   };
 
+  constructor(props: Props) {
+    super(props);
+    const { value, items, itemToValue } = props;
+    const selectedItem = value
+      ? (items || []).find(item => isEquals(itemToValue(item), value))
+      : null;
+
+    this.state = {
+      inputValue: '',
+      selectedItem,
+    };
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const { value } = this.props;
+    if (prevProps.value && !value) {
+      this.handleChange(null);
+    }
+  }
+
   handleChangeQuery = (e: any) => {
     const { onSearch } = this.props;
     const { value: query } = e.target;
+    this.setState({ inputValue: query });
 
     if (this.timeout) {
       clearTimeout(this.timeout);
@@ -55,9 +83,13 @@ class SearchSelectInput extends React.Component<Props> {
 
   handleBlur = () => {
     const { name, onBlur } = this.props;
-    if (onBlur) {
-      onBlur(name, true);
-    }
+    if (onBlur) onBlur(name, true);
+  };
+
+  handleChange = (selectedItem: any) => {
+    const { onChange, itemToString } = this.props;
+    this.setState({ selectedItem, inputValue: itemToString(selectedItem) });
+    if (onChange) onChange(selectedItem);
   };
 
   timeout: ?TimeoutID;
@@ -65,8 +97,6 @@ class SearchSelectInput extends React.Component<Props> {
   render() {
     const {
       renderSelect,
-      onChange,
-      onSearch,
       items,
       itemToValue,
       itemToString,
@@ -78,13 +108,14 @@ class SearchSelectInput extends React.Component<Props> {
       placeholder,
     } = this.props;
 
+    const { inputValue, selectedItem } = this.state;
+
     return (
-      <Downshift onChange={onChange} itemToString={itemToString} itemToValue={itemToValue}>
+      <Downshift onChange={this.handleChange} itemToString={itemToString} itemToValue={itemToValue}>
         {({
           getItemProps,
           isOpen,
           toggleMenu,
-          selectedItem,
           highlightedIndex,
           clearSelection,
           getInputProps,
@@ -93,16 +124,16 @@ class SearchSelectInput extends React.Component<Props> {
             {renderSelect({
               input: (
                 <input
-                  className={styles.input}
-                  onClick={toggleMenu}
-                  onChange={onSearch}
                   type="text"
+                  className={styles.input}
+                  placeholder={placeholder}
+                  disabled={disabled}
+                  required={required}
+                  readOnly={readOnly}
+                  onClick={toggleMenu}
                   {...getInputProps({
-                    placeholder,
+                    value: inputValue,
                     spellCheck: false,
-                    disabled,
-                    required,
-                    readOnly,
                     onBlur: this.handleBlur,
                     onChange: this.handleChangeQuery,
                   })}

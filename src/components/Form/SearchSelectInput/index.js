@@ -12,6 +12,7 @@ import {
 } from '../SelectInput/style';
 
 type Props = {
+  value: any,
   items: Array<any>,
   onChange: () => void,
   onSearch: string => void,
