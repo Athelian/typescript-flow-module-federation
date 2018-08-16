@@ -16,6 +16,7 @@ export const SelectWrapperStyle = (isError: boolean, isOpen: boolean) => css`
   box-sizing: border-box;
   cursor: pointer;
   ${isOpen && 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)'};
+  background: #fff;
 
   &:hover {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
@@ -50,6 +51,7 @@ export const OptionWrapperStyle = css`
   flex-flow: column wrap;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   width: 200px;
+  background: #fff;
 `;
 
 export const OptionStyle = (onHover: boolean, selected: boolean) => css`

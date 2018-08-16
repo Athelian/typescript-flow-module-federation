@@ -12,7 +12,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import PartnerSelectInput from 'components/PartnerSelectInput';
+import PartnerSelectInput from 'components/Form/PartnerSelectInput';
 import NewButton from 'components/NavButtons/NewButton';
 import OrderList from './list';
 import messages from './messages';

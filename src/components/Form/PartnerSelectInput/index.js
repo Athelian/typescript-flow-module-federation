@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import matchSorter from 'match-sorter';
 import PartnerListProvider from 'providers/PartnerList';
 import Label from 'components/Label';

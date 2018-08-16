@@ -4,6 +4,7 @@ import { transitions } from 'styles/common';
 
 export const ResetNativeStyle = css`
   position: relative;
+  width: 100%;
   ul {
     list-style-type: none;
     position: fixed;

@@ -1,19 +1,21 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, transitions, fontSizes } from 'styles/common';
+import { colors, transitions, fontSizes, borderRadiuses } from 'styles/common';
 
 export const InputStyle = (isError: boolean) => css`
   color: ${colors.BLACK};
-  border-radius: 2px;
-  border: none;
-  border-bottom: 2px solid ${isError ? colors.RED : colors.GRAY_VERY_LIGHT};
+  border: 2px solid ${isError ? colors.RED : 'transparent'};
   ${fontSizes.MAIN};
   font-weight: bold;
-  padding: 10px;
+  padding: 0 8px;
+  ${borderRadiuses.MAIN};
   background: #fff;
-  height: 40px;
-  width: 90%;
+  height: 30px;
+  width: 100%;
   ${transitions.MAIN};
+  &:hover {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
   &[disabled] {
     background: ${colors.GRAY_SUPER_LIGHT};
   }

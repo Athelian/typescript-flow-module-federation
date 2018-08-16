@@ -6,6 +6,7 @@ import OrderSection from './components/OrderSection';
 import ItemSection from './components/ItemSection';
 import DocumentSection from './components/DocumentSection';
 import ShipmentSection from './components/ShipmentSection';
+import SectionHeader from './components/SectionHeader';
 
 type Props = {
   order: Object,
@@ -29,6 +30,18 @@ export default function OrderForm({ order }: Props) {
   return (
     <React.Fragment>
       <div id="orderSection">
+        <SectionHeader icon="ORDER" title="ORDER">
+          <div>
+            Status
+            {/* {!isNew && (
+              <React.Fragment>
+                <p>Last Modified: {initialValues.updatedAt}</p>
+                <UserAvatar profileUrl="" />
+              </React.Fragment>
+            )}
+            <p>Status: {initialValues.status} </p> */}
+          </div>
+        </SectionHeader>
         <OrderSection
           id="orderSection"
           isNew={isNew}
@@ -37,12 +50,15 @@ export default function OrderForm({ order }: Props) {
         />
       </div>
       <div id="itemSection">
+        <SectionHeader icon="CART" title={`ITEMS (${20})`} />
         <ItemSection />
       </div>
       <div id="documentSection">
+        <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />
         <DocumentSection />
       </div>
       <div id="shipmentSection">
+        <SectionHeader icon="SHIPMENT" title={`SHIPMENTS (${20})`} />
         <ShipmentSection />
       </div>
     </React.Fragment>

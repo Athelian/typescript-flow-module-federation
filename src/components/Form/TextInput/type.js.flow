@@ -12,6 +12,11 @@ export type TextInputProps = DefaultHTMLProps &
     label?: string | React.Node,
     /**
      *
+     * @type {boolean}
+     */
+    horizontal?: boolean,
+    /**
+     *
      *
      * @type {string}
      */
