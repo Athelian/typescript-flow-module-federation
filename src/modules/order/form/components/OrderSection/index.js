@@ -18,6 +18,8 @@ import {
   InputsWrapperStyle,
   ExporterSectionStyle,
   ExporterCardStyle,
+  TagsInputStyle,
+  QuantitySummaryStyle,
 } from './style';
 import messages from './messages';
 
@@ -58,7 +60,7 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
       validations={onValidate}
       onSubmit={onSubmit}
       render={({ values, errors, touched, setFieldValue }) => (
-        <React.Fragment>
+        <div>
           <div className={FormWrapperStyle}>
             <div className={InputsWrapperStyle}>
               <InputGroup fieldGap={16}>
@@ -74,6 +76,8 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       required
                       editable={isNew}
                       horizontal
+                      width={300}
+                      hasHoverStyle
                       onChange={setFieldValue}
                     />
                   )}
@@ -89,6 +93,8 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       errorMessage={touched.PI && errors.PI}
                       editable={isNew}
                       horizontal
+                      width={300}
+                      hasHoverStyle
                       onChange={setFieldValue}
                     />
                   )}
@@ -105,6 +111,8 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       errorMessage={touched.date && errors.date}
                       editable={isNew}
                       horizontal
+                      width={300}
+                      hasHoverStyle
                       onChange={setFieldValue}
                     />
                   )}
@@ -114,18 +122,22 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                   value={values.currency}
                   onChange={v => setFieldValue('currency', v)}
                   horizontal
+                  width={300}
                   required
+                  hasHoverStyle
                 />
                 <IntercomInput
                   title={<FormattedMessage {...messages.incoterms} />}
                   value={values.incoterms}
                   onChange={v => setFieldValue('incoterms', v)}
                   horizontal
+                  width={300}
                   required
+                  hasHoverStyle
                 />
                 <Field
                   name="deliveryPlace"
-                  rener={({ input }) => (
+                  render={({ input }) => (
                     <TextInput
                       {...input}
                       id="deliveryPlace"
@@ -134,6 +146,8 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       errorMessage={touched.deliveryPlace && errors.deliveryPlace}
                       editable={isNew}
                       horizontal
+                      hasHoverStyle
+                      width={300}
                       onChange={setFieldValue}
                     />
                   )}
@@ -160,17 +174,73 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
               </BooleanValue>
             </div>
           </div>
-          <TagsInput
-            title="TAGS"
-            editable={isNew}
-            label="TAGS"
-            id="tags"
-            name="tags"
-            tagType="productTags"
-            value={values.tags}
-            onChange={setFieldValue}
-          />
-        </React.Fragment>
+          <div className={TagsInputStyle}>
+            <TagsInput
+              title={<FormattedMessage {...messages.tags} />}
+              editable={isNew}
+              label="TAGS"
+              id="tags"
+              name="tags"
+              tagType="productTags"
+              value={values.tags}
+              onChange={setFieldValue}
+            />
+          </div>
+          <div className={QuantitySummaryStyle}>
+            <InputGroup fieldGap={16}>
+              <TextInput
+                id="PO"
+                label="PO NO"
+                title={<FormattedMessage {...messages.totalOrderedQuantity} />}
+                horizontal
+                width={300}
+                readOnly
+              />
+              <TextInput
+                id="PI"
+                label="PI NO"
+                title={<FormattedMessage {...messages.batchedQuantity} />}
+                horizontal
+                width={300}
+                readOnly
+              />
+              <TextInput
+                id="poDate"
+                label="PO ISSUANCE DATE"
+                title={<FormattedMessage {...messages.shippedQuantity} />}
+                horizontal
+                width={300}
+                readOnly
+              />
+            </InputGroup>
+            <InputGroup fieldGap={16}>
+              <TextInput
+                id="PO"
+                label="PO NO"
+                title={<FormattedMessage {...messages.totalOrderPrice} />}
+                horizontal
+                width={300}
+                readOnly
+              />
+              <TextInput
+                id="PI"
+                label="PI NO"
+                title={<FormattedMessage {...messages.totalOrderedQuantity} />}
+                horizontal
+                width={300}
+                readOnly
+              />
+              <TextInput
+                id="poDate"
+                label="PO ISSUANCE DATE"
+                title={<FormattedMessage {...messages.totalBatchedQuantity} />}
+                horizontal
+                width={300}
+                readOnly
+              />
+            </InputGroup>
+          </div>
+        </div>
       )}
     />
   </div>

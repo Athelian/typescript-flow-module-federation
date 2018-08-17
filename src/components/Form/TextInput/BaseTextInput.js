@@ -29,7 +29,6 @@ export default class BaseTextInput extends React.PureComponent<Props> {
 
   handleChange = (e: any) => {
     const { value } = e.target;
-    if (!value) return;
     const { name, onChange } = this.props;
     if (onChange) onChange(name, value);
   };
@@ -37,7 +36,18 @@ export default class BaseTextInput extends React.PureComponent<Props> {
   isReadOnly = (isWrite?: boolean, isEditable: boolean) => !isWrite || !isEditable;
 
   render() {
-    const { isRead, isWrite, editable, errorMessage, id, value, formatter, ...rest } = this.props;
+    const {
+      isRead,
+      isWrite,
+      editable,
+      errorMessage,
+      id,
+      value,
+      hasHoverStyle,
+      formatter,
+      width,
+      ...rest
+    } = this.props;
     if (!isRead) return null;
     return (
       <Editable editable={!!editable}>
@@ -49,7 +59,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
               id={id}
               readOnly={this.isReadOnly(isWrite, isEditable)}
               value={this.isReadOnly(isWrite, isEditable) ? formatter && formatter(value) : value}
-              className={InputStyle(!!errorMessage)}
+              className={InputStyle(!!errorMessage, !!hasHoverStyle && !value, width)}
               onKeyDown={evt => this.onKeyDown(evt, onToggleEditMode)}
             />
           </Label>

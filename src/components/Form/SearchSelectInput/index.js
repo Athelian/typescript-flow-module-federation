@@ -19,13 +19,17 @@ type Props = {
   error?: any,
   itemToString: any => string,
   itemToValue: any => any,
+  hasHoverStyle?: boolean,
+  width?: ?number,
 };
 
 const defaultProps = {
   error: null,
+  hasHoverStyle: false,
+  width: null,
 };
 
-function SelectInput({ error, itemToString, ...rest }: Props) {
+function SelectInput({ error, itemToString, width, hasHoverStyle, ...rest }: Props) {
   return (
     <StyleLessSelectInput
       name="name"
@@ -33,7 +37,9 @@ function SelectInput({ error, itemToString, ...rest }: Props) {
       clearIcon={<Icon icon="CLEAR" />}
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
-        <div className={SelectWrapperStyle(!!error, isOpen)}>
+        <div
+          className={SelectWrapperStyle(!!error, isOpen, !!hasHoverStyle && !selectedItem, width)}
+        >
           {input}
           {selectedItem ? (
             <button type="button" onClick={clearSelection} className={ButtonStyle}>

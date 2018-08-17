@@ -15,7 +15,7 @@ export const FormWrapperStyle = css`
 export const ExporterSectionStyle = css`
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
 `;
 
 export const InputsWrapperStyle = css`
@@ -34,5 +34,24 @@ export const ExporterCardStyle = css`
   }
   div {
     text-align: center;
+  }
+`;
+
+export const TagsInputStyle = css`
+  margin-top: 16px;
+`;
+
+export const QuantitySummaryStyle = css`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  & > div {
+    flex: 1;
+    &:first-child {
+      margin-right: 60px;
+    }
+    &:nth-child(2) {
+      margin-left: 60px;
+    }
   }
 `;

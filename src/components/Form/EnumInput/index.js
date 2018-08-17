@@ -11,9 +11,11 @@ type Props = LabelProps & {
   value: any,
   onChange: any => void,
   enumType: string,
+  hasHoverStyle: boolean,
+  width?: ?number,
 };
 
-function EnumInput({ value, onChange, enumType, ...labelProps }: Props) {
+function EnumInput({ value, onChange, enumType, hasHoverStyle, width, ...labelProps }: Props) {
   const filterItems = (query: string, items: Array<any>) => {
     if (!query) return items;
     return matchSorter(items, query, { keys: ['name', 'description'] });
@@ -30,6 +32,7 @@ function EnumInput({ value, onChange, enumType, ...labelProps }: Props) {
             {({ value: query, set, clear }) => (
               <Label htmlFor={value} {...labelProps}>
                 <SearchSelectInput
+                  value={value}
                   items={filterItems(query, data)}
                   onChange={item => {
                     if (!item) clear();
@@ -40,6 +43,8 @@ function EnumInput({ value, onChange, enumType, ...labelProps }: Props) {
                   itemToString={item => (item ? item.name : '')}
                   itemToValue={item => (item ? item.id : null)}
                   error={labelProps.error}
+                  hasHoverStyle={hasHoverStyle}
+                  width={width}
                 />
               </Label>
             )}

@@ -47,6 +47,10 @@ export const PrefixStyle = (color: string) => css`
   ${fontSizes.MEDIUM};
   font-weight: bold;
   margin-right: 3px;
+  * {
+    ${layout.HORIZONTAL};
+    ${layout.CENTER};
+  }
 `;
 
 export const SuffixStyle = (color: string) => css`
@@ -54,4 +58,8 @@ export const SuffixStyle = (color: string) => css`
   ${fontSizes.MEDIUM};
   font-weight: bold;
   margin-left: 3px;
+  * {
+    ${layout.HORIZONTAL};
+    ${layout.CENTER};
+  }
 `;
