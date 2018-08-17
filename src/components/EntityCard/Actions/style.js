@@ -4,7 +4,7 @@ import { css } from 'react-emotion';
 export const WrapperStyle = css`
   display: flex;
   position: absolute;
-  bottom: calc(100% + 10px);
+  bottom: calc(100% + 5px);
   right: 0;
   &:hover {
     div {

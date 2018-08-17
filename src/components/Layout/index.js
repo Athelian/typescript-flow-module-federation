@@ -4,7 +4,7 @@ import Raven from 'raven-js';
 import { isDevEnvironment } from 'utils/env';
 import InternalError from 'components/InternalError';
 import { DesktopWrapperStyle } from 'styles/main';
-import { WrapperStyle, ContentStyle, ContentWrapperStyle } from './style';
+import { WrapperStyle, ContentWrapperStyle } from './style';
 
 type Props = {
   children: React.Node,
@@ -48,9 +48,7 @@ export default class Layout extends React.PureComponent<Props, State> {
       <div className={DesktopWrapperStyle(isSideBarExpanded)}>
         <div className={WrapperStyle}>
           {navBar}
-          <div className={ContentWrapperStyle}>
-            <div className={ContentStyle}>{children}</div>
-          </div>
+          <div className={ContentWrapperStyle}>{children}</div>
         </div>
       </div>
     );

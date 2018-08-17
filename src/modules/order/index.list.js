@@ -140,7 +140,7 @@ class OrderModule extends React.Component<Props, State> {
               </NavBar>
             }
           >
-            <OrderList sort={sort} viewType={viewType} perPage={perPage} filter={filters} />
+            <OrderList viewType={viewType} sort={sort} perPage={perPage} filter={filters} />
           </Layout>
         )}
       </UIConsumer>

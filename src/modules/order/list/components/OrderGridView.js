@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
-import Measure from 'react-measure';
-import GridView from 'components/GridView';
-import LoadingIcon from 'components/LoadingIcon';
+import GridView from './GridView';
 import OrderItem from './OrderItem';
 
 type Props = {
@@ -10,68 +8,32 @@ type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
+  renderItem?: (item: Object) => React.Node,
 };
 
-function totalColumns(width, columnWidth) {
-  return parseInt(width / columnWidth, 10) || 1;
-}
+const defaultRenderItem = (item: Object) => <OrderItem key={item.id} order={item} />;
 
-class OrderGridView extends React.PureComponent<Props> {
-  render() {
-    const { items, onLoadMore, hasMore, isLoading } = this.props;
-    const isRowLoaded = ({ index }) => !hasMore || index < items.length;
-    const columnWidth = 200;
-    return (
-      <Measure bounds>
-        {({ measureRef, contentRect }) => (
-          <div ref={measureRef}>
-            <GridView
-              hasNextPage={hasMore}
-              isNextPageLoading={isLoading}
-              onLoadNextPage={onLoadMore}
-              list={items}
-              width={contentRect.bounds.width}
-              height={window.innerHeight - 50}
-              rowCount={
-                Math.ceil(items.length / totalColumns(contentRect.bounds.width, columnWidth)) + 1
-              }
-              rowHeight={170}
-              columnWidth={columnWidth}
-              columnCount={totalColumns(contentRect.bounds.width, columnWidth)}
-              cellRenderer={({ key, columnIndex, rowIndex, style }) => {
-                const currentIndex =
-                  rowIndex * totalColumns(contentRect.bounds.width, columnWidth) + columnIndex;
-                if (isRowLoaded({ index: currentIndex })) {
-                  return (
-                    <div key={key} style={style}>
-                      <OrderItem
-                        order={
-                          items[
-                            rowIndex * totalColumns(contentRect.bounds.width, columnWidth) +
-                              columnIndex
-                          ]
-                        }
-                        key={key}
-                      />
-                    </div>
-                  );
-                }
+const defaultProps = {
+  renderItem: defaultRenderItem,
+};
 
-                if (currentIndex === items.length)
-                  return (
-                    <div key={key} style={style}>
-                      <LoadingIcon />
-                    </div>
-                  );
+const OrderGridView = (props: Props) => {
+  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
 
-                return <div key={key} style={style} />;
-              }}
-            />
-          </div>
-        )}
-      </Measure>
-    );
-  }
-}
+  return (
+    <GridView
+      onLoadMore={onLoadMore}
+      hasMore={hasMore}
+      isLoading={isLoading}
+      itemWidth={200}
+      isEmpty={items.length === 0}
+      emptyMessage="No orders found"
+    >
+      {items.map(item => renderItem(item))}
+    </GridView>
+  );
+};
+
+OrderGridView.defaultProps = defaultProps;
 
 export default OrderGridView;
