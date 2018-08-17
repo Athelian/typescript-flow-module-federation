@@ -21,7 +21,7 @@ export const CustomButtonStyle = color => {
     ${shadows.NAV_BUTTON};
     height: 30px;
     padding: 0 10px;
-    font-size: 20px;
+    font-size: 14px;
     color: #fff;
     border: 2px solid ${colors.TRANSPARENT};
     &:hover {

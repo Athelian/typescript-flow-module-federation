@@ -42,13 +42,14 @@ class SortInput extends React.Component<Props> {
 
     return (
       <BaseSelectInput
+        value={sort.value}
         items={fields}
         itemToString={item => (item ? item.title : '')}
         itemToValue={item => (item ? item.value : '')}
-        renderSelect={({ input, selectedItem }) => (
+        renderSelect={({ input }) => (
           <div className={WrapperStyle}>
             {/* styles.input prop that <BaseSelectInput /> takes is applied to this input */}
-            {selectedItem && input}
+            {input}
             <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
               <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
             </button>
@@ -59,7 +60,6 @@ class SortInput extends React.Component<Props> {
         )}
         onChange={this.onFieldChange}
         styles={{ input: InputStyle, options: OptionWrapperStyle }}
-        defaultSelectedItem={sort}
       />
     );
   }

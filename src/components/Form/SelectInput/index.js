@@ -35,7 +35,7 @@ function SelectInput({ value, items, onChange, error, itemToString, itemToValue,
       onChange={onChange}
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
-        <div className={SelectWrapperStyle(!!error)}>
+        <div className={SelectWrapperStyle(!!error, isOpen)}>
           {input}
           {selectedItem ? (
             <button type="button" onClick={clearSelection} className={ButtonStyle}>

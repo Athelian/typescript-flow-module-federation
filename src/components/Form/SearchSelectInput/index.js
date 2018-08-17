@@ -12,6 +12,7 @@ import {
 } from '../SelectInput/style';
 
 type Props = {
+  value: any,
   items: Array<any>,
   onChange: () => void,
   onSearch: string => void,
@@ -32,7 +33,7 @@ function SelectInput({ error, itemToString, ...rest }: Props) {
       clearIcon={<Icon icon="CLEAR" />}
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
-        <div className={SelectWrapperStyle(!!error)}>
+        <div className={SelectWrapperStyle(!!error, isOpen)}>
           {input}
           {selectedItem ? (
             <button type="button" onClick={clearSelection} className={ButtonStyle}>

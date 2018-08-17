@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 import { presets, colors, layout, fontSizesWithHeights, borderRadiuses } from 'styles/common';
-import { computeTextColor } from 'modules/product/list/components/ProductItem/style';
+import { computeTextColor } from 'components/Tag/style';
 
 export const NameStyle = css`
   ${presets.ELLIPSIS};

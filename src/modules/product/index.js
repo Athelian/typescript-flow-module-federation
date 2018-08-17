@@ -12,6 +12,7 @@ import NavBar, {
   StatusToggleTabs,
 } from 'components/NavBar';
 import PartnerSelectInput from 'components/PartnerSelectInput';
+import InputGroup from 'components/Form/InputGroup';
 import ProductList from './list';
 import messages from './messages';
 
@@ -92,10 +93,10 @@ class ProductModule extends React.Component<Props, State> {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <React.Fragment>
+                    <InputGroup fieldGap={16}>
                       <SearchInput
-                        value=""
-                        name="search"
+                        value={values.query}
+                        name="query"
                         onClear={() => setFieldValue('query', '')}
                         onChange={newQuery => setFieldValue('query', newQuery)}
                       />
@@ -111,12 +112,12 @@ class ProductModule extends React.Component<Props, State> {
                         value={values.supplierId}
                         onChange={v => setFieldValue('supplierId', v ? v.id : null)}
                       />
-                    </React.Fragment>
+                    </InputGroup>
                   )}
                 </FilterInput>
                 <SearchInput
-                  value=""
-                  name="search"
+                  value={filters.query}
+                  name="query"
                   onClear={() => this.onChangeFilter({ query: '' })}
                   onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />
