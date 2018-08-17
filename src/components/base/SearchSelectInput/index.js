@@ -3,6 +3,7 @@ import * as React from 'react';
 import Downshift from 'downshift';
 import { ResetNativeStyle } from 'components/base/SelectInput/style';
 import { isEquals } from 'utils/fp';
+import DebounceInput from 'react-debounce-input';
 
 type Props = {
   name: string,
@@ -69,19 +70,13 @@ class SearchSelectInput extends React.Component<Props, State> {
   handleChangeQuery = (e: any) => {
     const { onChange, onSearch } = this.props;
     const { value: query } = e.target;
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-      this.timeout = null;
-    }
 
     if (!query.trim()) {
       this.setState({ inputValue: query, selectedItem: null });
       if (onChange) onChange(null);
     } else {
       this.setState({ inputValue: query });
-      this.timeout = setTimeout(() => {
-        if (onSearch) onSearch(query);
-      }, 500);
+      if (onSearch) onSearch(query);
     }
   };
 
@@ -95,8 +90,6 @@ class SearchSelectInput extends React.Component<Props, State> {
     this.setState({ selectedItem, inputValue: itemToString(selectedItem) });
     if (onChange) onChange(selectedItem);
   };
-
-  timeout: ?TimeoutID;
 
   render() {
     const {
@@ -127,17 +120,17 @@ class SearchSelectInput extends React.Component<Props, State> {
           <div className={ResetNativeStyle}>
             {renderSelect({
               input: (
-                <input
-                  type="text"
+                <DebounceInput
                   className={styles.input}
                   placeholder={placeholder}
                   disabled={disabled}
                   required={required}
                   readOnly={readOnly}
                   onClick={toggleMenu}
+                  debounceTimeout={500}
+                  spellCheck={false}
                   {...getInputProps({
                     value: inputValue,
-                    spellCheck: false,
                     onBlur: this.handleBlur,
                     onChange: this.handleChangeQuery,
                   })}

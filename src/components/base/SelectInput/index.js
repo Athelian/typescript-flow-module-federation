@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Downshift from 'downshift';
 import { isEquals } from 'utils/fp';
+import DebounceInput from 'react-debounce-input';
 import { ResetNativeStyle } from './style';
 
 type Props = {
@@ -22,7 +23,6 @@ type Props = {
   disabled?: boolean,
   required?: boolean,
   placeholder?: string,
-  defaultSelectedItem?: any,
 };
 
 type State = {
@@ -36,7 +36,6 @@ class SelectInput extends React.Component<Props, State> {
     required: false,
     placeholder: '',
     styles: { input: '', options: '' },
-    defaultSelectedItem: null,
   };
 
   constructor(props: Props) {
@@ -72,7 +71,6 @@ class SelectInput extends React.Component<Props, State> {
       itemToString,
       renderOption,
       styles,
-      defaultSelectedItem,
       disabled,
       required,
       placeholder,
@@ -81,12 +79,7 @@ class SelectInput extends React.Component<Props, State> {
     const { selectedItem } = this.state;
 
     return (
-      <Downshift
-        defaultSelectedItem={defaultSelectedItem}
-        onChange={this.handleChange}
-        itemToString={itemToString}
-        itemToValue={itemToValue}
-      >
+      <Downshift onChange={this.handleChange} itemToString={itemToString} itemToValue={itemToValue}>
         {({
           getItemProps,
           isOpen,
@@ -98,15 +91,16 @@ class SelectInput extends React.Component<Props, State> {
           <div className={ResetNativeStyle}>
             {renderSelect({
               input: (
-                <input
+                <DebounceInput
+                  readOnly
+                  spellCheck={false}
+                  debounceTimeout={500}
                   className={styles && styles.input}
                   onClick={toggleMenu}
+                  disabled={disabled}
+                  required={required}
                   {...getInputProps({
-                    value: placeholder,
-                    spellCheck: false,
-                    disabled,
-                    required,
-                    readOnly: true,
+                    value: itemToString(selectedItem) || placeholder,
                   })}
                 />
               ),
