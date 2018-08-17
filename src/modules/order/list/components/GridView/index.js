@@ -2,12 +2,14 @@
 import * as React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import LoadingIcon from 'components/LoadingIcon';
-import { GridViewWrapperStyle } from './style';
+import { GridViewWrapperStyle, EmptyMessageStyle } from './style';
 
 type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
+  isEmpty: boolean,
+  emptyMessage: any,
   itemWidth: number,
   spacing?: number,
   children: any,
@@ -18,10 +20,23 @@ const defaultProps = {
 };
 
 function GridView(props: Props) {
-  const { onLoadMore, hasMore, isLoading, itemWidth, spacing, children } = props;
+  const {
+    onLoadMore,
+    hasMore,
+    isLoading,
+    isEmpty,
+    emptyMessage,
+    itemWidth,
+    spacing,
+    children,
+  } = props;
 
   if (isLoading) {
     return <LoadingIcon />;
+  }
+
+  if (isEmpty) {
+    return <div className={EmptyMessageStyle}>{emptyMessage}</div>;
   }
 
   return (
