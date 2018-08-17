@@ -57,7 +57,7 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
       validateOnBlur
       validations={onValidate}
       onSubmit={onSubmit}
-      render={({ errors, touched }) => (
+      render={({ values, errors, touched, setFieldValue }) => (
         <React.Fragment>
           <div className={FormWrapperStyle}>
             <div className={InputsWrapperStyle}>
@@ -69,11 +69,12 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       {...input}
                       id="PO"
                       label="PO NO"
-                      title={<FormattedMessage {...messages.required} />}
+                      title={<FormattedMessage {...messages.PO} />}
                       errorMessage={touched.NO && errors.NO}
                       required
                       editable={isNew}
                       horizontal
+                      onChange={setFieldValue}
                     />
                   )}
                 />
@@ -84,10 +85,11 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       {...input}
                       id="PI"
                       label="PI NO"
-                      title={<FormattedMessage {...messages.required} />}
+                      title={<FormattedMessage {...messages.PI} />}
                       errorMessage={touched.PI && errors.PI}
                       editable={isNew}
                       horizontal
+                      onChange={setFieldValue}
                     />
                   )}
                 />
@@ -99,30 +101,31 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       id="poDate"
                       type="date"
                       label="PO ISSUANCE DATE"
-                      title={<FormattedMessage {...messages.required} />}
+                      title={<FormattedMessage {...messages.date} />}
                       errorMessage={touched.date && errors.date}
                       editable={isNew}
                       horizontal
+                      onChange={setFieldValue}
                     />
                   )}
                 />
                 <CurrencyInput
-                  title="Currency"
-                  value={{}}
-                  onChange={e => console.log(e)}
+                  title={<FormattedMessage {...messages.currency} />}
+                  value={values.currency}
+                  onChange={v => setFieldValue('currency', v)}
                   horizontal
                   required
                 />
                 <IntercomInput
-                  title="Intercom"
-                  value={{}}
-                  onChange={e => console.log(e)}
+                  title={<FormattedMessage {...messages.incoterms} />}
+                  value={values.incoterms}
+                  onChange={v => setFieldValue('incoterms', v)}
                   horizontal
                   required
                 />
                 <Field
                   name="deliveryPlace"
-                  render={({ input }) => (
+                  rener={({ input }) => (
                     <TextInput
                       {...input}
                       id="deliveryPlace"
@@ -131,6 +134,7 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       errorMessage={touched.deliveryPlace && errors.deliveryPlace}
                       editable={isNew}
                       horizontal
+                      onChange={setFieldValue}
                     />
                   )}
                 />
@@ -156,7 +160,16 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
               </BooleanValue>
             </div>
           </div>
-          <TagsInput editable={isNew} label="TAGS" id="tags" name="tags" tags={[]} />
+          <TagsInput
+            title="TAGS"
+            editable={isNew}
+            label="TAGS"
+            id="tags"
+            name="tags"
+            tagType="productTags"
+            value={values.tags}
+            onChange={setFieldValue}
+          />
         </React.Fragment>
       )}
     />

@@ -27,6 +27,13 @@ export default class BaseTextInput extends React.PureComponent<Props> {
     }
   };
 
+  handleChange = (e: any) => {
+    const { value } = e.target;
+    if (!value) return;
+    const { name, onChange } = this.props;
+    if (onChange) onChange(name, value);
+  };
+
   isReadOnly = (isWrite?: boolean, isEditable: boolean) => !isWrite || !isEditable;
 
   render() {
@@ -38,6 +45,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
           <Label htmlFor={id} {...rest}>
             <DebounceTextInput
               {...rest}
+              onChange={this.handleChange}
               id={id}
               readOnly={this.isReadOnly(isWrite, isEditable)}
               value={this.isReadOnly(isWrite, isEditable) ? formatter && formatter(value) : value}
