@@ -13,11 +13,11 @@ export const ContentWrapperStyle = css`
   height: calc(100vh - 50px);
   width: 100%;
   overflow-x: hidden;
-  overflow-y: overlay;
+  overflow-y: auto;
   ${scrollbars.MAIN};
   margin-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  ${transitions.MAIN};
+  ${transitions.EXPAND};
 `;

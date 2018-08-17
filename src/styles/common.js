@@ -132,7 +132,7 @@ export const scrollbars = {
     &::-webkit-scrollbar-thumb {
       border-radius: 10px;
       background-color: ${colors.GRAY_LIGHT};
-      border: 6px solid transparent;
+      border: 7px solid transparent;
       background-clip: content-box;
       &:hover {
         background-color: ${colors.GRAY};

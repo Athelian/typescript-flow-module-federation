@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
-import LoadingIcon from 'components/LoadingIcon';
-import OrderGridView from './components/OrderGridView';
+import OrderGridView from './components/GridView';
 import OrderListView from './components/OrderListView';
 import OrderTableView from './components/OrderTableView';
 import query from './query';
@@ -61,19 +60,19 @@ class OrderList extends React.PureComponent<Props> {
     return (
       <Query query={query} variables={{ page: 1, ...filtersAndSort }}>
         {({ loading, data, fetchMore, error }) => {
-          const nextPage = getByPathWithDefault(1, 'viewer.orders.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'viewer.orders.totalPage', data);
           if (error) {
             return error.message;
           }
 
-          if (loading) return <LoadingIcon />;
+          const nextPage = getByPathWithDefault(1, 'viewer.orders.page', data) + 1;
+          const totalPage = getByPathWithDefault(1, 'viewer.orders.totalPage', data);
+          const hasMore = nextPage <= totalPage;
 
           if (viewType === 'list')
             return (
               <OrderListView
                 onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-                hasMore={nextPage <= totalPage}
+                hasMore={hasMore}
                 isLoading={loading}
                 items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
               />
@@ -83,7 +82,7 @@ class OrderList extends React.PureComponent<Props> {
             return (
               <OrderTableView
                 onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-                hasMore={nextPage <= totalPage}
+                hasMore={hasMore}
                 isLoading={loading}
                 items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
               />
@@ -92,7 +91,7 @@ class OrderList extends React.PureComponent<Props> {
           return (
             <OrderGridView
               onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-              hasMore={nextPage <= totalPage}
+              hasMore={hasMore}
               isLoading={loading}
               items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
             />
