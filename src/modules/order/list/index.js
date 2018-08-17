@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import OrderGridView from './components/GridView';
 import OrderListView from './components/OrderListView';
 import OrderTableView from './components/OrderTableView';
@@ -55,7 +55,13 @@ class OrderList extends React.PureComponent<Props> {
     });
   };
 
-  loadMore = (fetchMore: Function, nextPage: number) => {
+  loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
+    const { data, fetchMore } = clientData;
+    if (!data) return;
+    const nextPage = getByPathWithDefault(1, 'viewer.orders.page', data) + 1;
+    const totalPage = getByPathWithDefault(1, 'viewer.orders.totalPage', data);
+    if (nextPage > totalPage) return;
+
     const { viewType, ...filtersAndSort } = this.props;
 
     fetchMore({
@@ -64,6 +70,15 @@ class OrderList extends React.PureComponent<Props> {
         ...filtersAndSort,
       },
       updateQuery: (prevResult, { fetchMoreResult }) => {
+        const { filter, sort, perPage } = this.props;
+        if (
+          !isEquals({ filter, sort, perPage }, filtersAndSort) ||
+          getByPathWithDefault({}, 'viewer.orders.page', prevResult) + 1 !==
+            getByPathWithDefault({}, 'viewer.orders.page', fetchMoreResult)
+        ) {
+          return prevResult;
+        }
+
         if (getByPathWithDefault([], 'viewer.orders.nodes', fetchMoreResult).length === 0)
           return prevResult;
 
@@ -87,7 +102,7 @@ class OrderList extends React.PureComponent<Props> {
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
-      <Query query={query} variables={{ page: 1, ...filtersAndSort }}>
+      <Query query={query} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
         {({ loading, data, fetchMore, error }) => {
           if (error) {
             return error.message;
@@ -119,8 +134,9 @@ class OrderList extends React.PureComponent<Props> {
 
           return (
             <OrderGridView
-              loadMore={(page: number) => this.loadMore(fetchMore, page)}
+              loadMore={() => this.loadMore({ fetchMore, data })}
               hasMore={hasMore}
+              isLoading={loading}
               items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
             />
           );

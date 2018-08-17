@@ -9,11 +9,16 @@ type Props = {
   items: Array<Object>,
   loadMore: Function,
   hasMore: boolean,
+  isLoading: boolean,
 };
 
 class OrderGridView extends React.PureComponent<Props> {
   render() {
-    const { items, loadMore, hasMore } = this.props;
+    const { items, loadMore, hasMore, isLoading } = this.props;
+
+    if (isLoading) {
+      return <LoadingIcon />;
+    }
 
     return (
       <InfiniteScroll
