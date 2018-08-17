@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
-import OrderGridView from './components/GridView';
+import OrderGridView from './components/OrderGridView';
 import OrderListView from './components/OrderListView';
 import OrderTableView from './components/OrderTableView';
 import query from './query';
@@ -134,10 +134,10 @@ class OrderList extends React.PureComponent<Props> {
 
           return (
             <OrderGridView
-              loadMore={() => this.loadMore({ fetchMore, data })}
+              items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
+              onLoadMore={() => this.loadMore({ fetchMore, data })}
               hasMore={hasMore}
               isLoading={loading}
-              items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
             />
           );
         }}
