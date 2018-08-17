@@ -8,20 +8,25 @@ type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
+  renderItem?: (item: Object) => React.Node,
 };
 
-class OrderGridView extends React.PureComponent<Props> {
-  render() {
-    const { items, onLoadMore, hasMore, isLoading } = this.props;
+const defaultRenderItem = (item: Object) => <OrderItem key={item.id} order={item} />;
 
-    return (
-      <GridView onLoadMore={onLoadMore} hasMore={hasMore} isLoading={isLoading} itemWidth={200}>
-        {items.map(item => (
-          <OrderItem key={item.id} order={item} />
-        ))}
-      </GridView>
-    );
-  }
-}
+const defaultProps = {
+  renderItem: defaultRenderItem,
+};
+
+const OrderGridView = (props: Props) => {
+  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
+
+  return (
+    <GridView onLoadMore={onLoadMore} hasMore={hasMore} isLoading={isLoading} itemWidth={200}>
+      {items.map(item => renderItem(item))}
+    </GridView>
+  );
+};
+
+OrderGridView.defaultProps = defaultProps;
 
 export default OrderGridView;
