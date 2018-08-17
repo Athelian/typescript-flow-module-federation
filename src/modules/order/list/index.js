@@ -55,6 +55,35 @@ class OrderList extends React.PureComponent<Props> {
     });
   };
 
+  loadMore = (fetchMore: Function, nextPage: number) => {
+    const { viewType, ...filtersAndSort } = this.props;
+
+    fetchMore({
+      variables: {
+        page: nextPage,
+        ...filtersAndSort,
+      },
+      updateQuery: (prevResult, { fetchMoreResult }) => {
+        if (getByPathWithDefault([], 'viewer.orders.nodes', fetchMoreResult).length === 0)
+          return prevResult;
+
+        return {
+          viewer: {
+            ...prevResult.viewer,
+            orders: {
+              ...prevResult.viewer.orders,
+              ...getByPathWithDefault({}, 'viewer.orders', fetchMoreResult),
+              nodes: [
+                ...prevResult.viewer.orders.nodes,
+                ...getByPathWithDefault([], 'viewer.orders.nodes', fetchMoreResult),
+              ],
+            },
+          },
+        };
+      },
+    });
+  };
+
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
@@ -90,9 +119,8 @@ class OrderList extends React.PureComponent<Props> {
 
           return (
             <OrderGridView
-              onLoadMore={() => this.loadMorePage({ fetchMore, data })}
+              loadMore={(page: number) => this.loadMore(fetchMore, page)}
               hasMore={hasMore}
-              isLoading={loading}
               items={getByPathWithDefault([], 'viewer.orders.nodes', data)}
             />
           );

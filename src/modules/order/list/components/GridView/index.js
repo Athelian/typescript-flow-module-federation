@@ -1,26 +1,33 @@
 // @flow
 import * as React from 'react';
+import InfiniteScroll from 'react-infinite-scroller';
+import LoadingIcon from 'components/LoadingIcon';
 import OrderItem from '../OrderItem';
 import { GridViewWrapperStyle } from './style';
 
 type Props = {
   items: Array<Object>,
-  onLoadMore: Function,
+  loadMore: Function,
   hasMore: boolean,
-  isLoading: boolean,
 };
 
 class OrderGridView extends React.PureComponent<Props> {
   render() {
-    const { items, onLoadMore, hasMore, isLoading } = this.props;
-    const a = { onLoadMore, hasMore, isLoading };
-    console.log(a);
+    const { items, loadMore, hasMore } = this.props;
+
     return (
-      <div className={GridViewWrapperStyle}>
+      <InfiniteScroll
+        className={GridViewWrapperStyle}
+        loadMore={loadMore}
+        hasMore={hasMore}
+        loader={<LoadingIcon key="loading" />}
+        threshold={500}
+        useWindow={false}
+      >
         {items.map(item => (
           <OrderItem key={item.id} order={item} />
         ))}
-      </div>
+      </InfiniteScroll>
     );
   }
 }
