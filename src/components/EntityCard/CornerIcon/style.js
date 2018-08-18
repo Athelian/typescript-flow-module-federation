@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors } from 'styles/common';
+import { presets, colors, fontSizes } from 'styles/common';
 
 export const IconStyle = (color: string, disabled: boolean, actionsOnHover: boolean) => css`
   ${presets.BUTTON};
@@ -9,11 +9,12 @@ export const IconStyle = (color: string, disabled: boolean, actionsOnHover: bool
   right: 0;
   width: 20px;
   height: 20px;
+  ${fontSizes.SMALL};
   color: ${disabled ? 'rgba(0, 0, 0, 0.25)' : '#fff'};
   background: ${colors[color]};
   cursor: ${actionsOnHover ? 'default' : 'pointer'};
   ${disabled && 'cursor: not-allowed'};
-  z-index: 1;
+  z-index: 0;
   box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.15);
   border-radius: 0 5px 0 5px;
   &:before {

@@ -8,16 +8,16 @@ export const CardStyle = (disabled: boolean, selected: boolean, selectable: bool
   ${presets.BOX};
   box-shadow: ${selectable && !disabled && selected
     ? '0 5px 15px rgba(17, 209, 166, 0.5)'
-    : '0 10px 30px rgba(0,0,0,0.1)'};
+    : '0 10px 30px rgba(0, 0, 0, 0.1)'};
   transition: all 0.2s linear;
   position: relative;
-  ${selectable && 'cursor: pointer'};
+  cursor: pointer;
   ${disabled && 'cursor: not-allowed'};
 
   &:hover {
     box-shadow: ${selected
       ? '0 10px 30px rgba(17, 209, 166, 0.5)'
-      : '0 10px 15px rgba(0, 0, 0, 0.3)'};
+      : '0 10px 30px rgba(0, 0, 0, 0.2)'};
     ${disabled && 'box-shadow: 0 10px 30px rgba(0,0,0,0.1)'};
   }
 `;
