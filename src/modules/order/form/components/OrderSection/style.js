@@ -1,11 +1,11 @@
 // @flow
 import { css } from 'react-emotion';
+import { borderRadiuses } from 'styles/common';
 
 export const WrapperStyle = css`
-  min-width: min-content;
-  min-height: min-content;
   background: #fff;
   padding: 40px 100px;
+  ${borderRadiuses.MAIN};
 `;
 
 export const FormWrapperStyle = css`

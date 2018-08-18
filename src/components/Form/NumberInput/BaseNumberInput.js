@@ -3,7 +3,6 @@ import * as React from 'react';
 import HoverWrapper from 'components/common/HoverWrapper';
 import Editable from 'components/common/Editable';
 import Label from 'components/Label';
-import { ErrorTooltip, WarningTooltip, InfoTooltip } from 'components/Tooltips';
 import { inRange } from 'utils/fp';
 import {
   TAB_KEY,
@@ -137,6 +136,8 @@ export default class BaseNumberInput extends React.PureComponent<Props> {
       label,
       required,
       value,
+      width,
+      align = 'right',
       formatter,
       ...rest
     } = this.props;
@@ -147,10 +148,7 @@ export default class BaseNumberInput extends React.PureComponent<Props> {
           <HoverWrapper>
             {isHover => (
               <div className={HoverStyle(isHover && isWrite)}>
-                <Label htmlFor={id}>
-                  {infoMessage && <InfoTooltip info={infoMessage} />}
-                  {label}
-                  {required && ' * '}
+                <Label htmlFor={id} title={label} {...rest}>
                   <input
                     id={id}
                     required={required}
@@ -160,12 +158,10 @@ export default class BaseNumberInput extends React.PureComponent<Props> {
                     value={
                       this.isReadOnly(isWrite, isEditable) ? formatter && formatter(value) : value
                     }
-                    className={NumberInputStyle(!!errorMessage)}
+                    className={NumberInputStyle(!!errorMessage, width, align)}
                     onBlur={this.handleBlur}
                     {...rest}
                   />
-                  {errorMessage && <ErrorTooltip error={errorMessage} />}
-                  {warningMessage && <WarningTooltip warning={warningMessage} />}
                 </Label>
               </div>
             )}

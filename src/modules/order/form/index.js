@@ -1,12 +1,25 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { pickByProps } from 'utils/fp';
 import logger from 'utils/logger';
+import Icon from 'components/Icon';
+import UserAvatar from 'components/UserAvatar';
+import FormattedDate from 'components/FormattedDate';
 import OrderSection from './components/OrderSection';
 import ItemSection from './components/ItemSection';
 import DocumentSection from './components/DocumentSection';
 import ShipmentSection from './components/ShipmentSection';
 import SectionHeader from './components/SectionHeader';
+import {
+  WrapperStyle,
+  ToggleButtonStyle,
+  UpdatedAtStyle,
+  StatusStyle,
+  HeaderRightStyle,
+  UserIconStyle,
+} from './style';
+import orderSectionMesssages from './components/OrderSection/messages';
 
 type Props = {
   order: Object,
@@ -22,31 +35,55 @@ const orderSectionFields = pickByProps([
   'date',
   'currency',
   'incoterms',
+  'totalPrice',
+  'batchedQuantity',
+  'shippedQuantity',
+  'items',
 ]);
 
 export default function OrderForm({ order }: Props) {
   const isNew = Object.keys(order).length === 0;
   logger.warn('order', order);
+  const orderValues = orderSectionFields(order);
   return (
-    <React.Fragment>
+    <div className={WrapperStyle}>
       <div id="orderSection">
         <SectionHeader icon="ORDER" title="ORDER">
-          <div>
-            Status
-            {/* {!isNew && (
-              <React.Fragment>
-                <p>Last Modified: {initialValues.updatedAt}</p>
-                <UserAvatar profileUrl="" />
-              </React.Fragment>
+          <div className={HeaderRightStyle}>
+            {!isNew && (
+              <div className={UpdatedAtStyle}>
+                <FormattedMessage {...orderSectionMesssages.updatedAt} />
+                <span>
+                  <FormattedDate value={new Date(orderValues.updatedAt)} />
+                </span>
+                <div className={UserIconStyle}>
+                  <UserAvatar profileUrl="" />
+                </div>
+              </div>
             )}
-            <p>Status: {initialValues.status} </p> */}
+            <div className={StatusStyle(true)}>
+              <Icon icon="ACTIVE" />
+              {orderValues.status}
+            </div>
+            <button
+              type="button"
+              className={ToggleButtonStyle}
+              tabIndex={-1}
+              onClick={e => console.log(e)}
+            >
+              {orderValues.status === 'Active' ? (
+                <Icon icon="TOGGLE_ON" />
+              ) : (
+                <Icon icon="TOGGLE_OFF" />
+              )}
+            </button>
           </div>
         </SectionHeader>
         <OrderSection
           id="orderSection"
           isNew={isNew}
           onSubmit={values => logger.warn(values)}
-          initialValues={{ ...orderSectionFields(order) }}
+          initialValues={{ ...orderValues }}
         />
       </div>
       <div id="itemSection">
@@ -61,6 +98,6 @@ export default function OrderForm({ order }: Props) {
         <SectionHeader icon="SHIPMENT" title={`SHIPMENTS (${20})`} />
         <ShipmentSection />
       </div>
-    </React.Fragment>
+    </div>
   );
 }

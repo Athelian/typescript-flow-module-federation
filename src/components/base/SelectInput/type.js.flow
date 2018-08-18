@@ -1,0 +1,23 @@
+// @flow
+import type {
+  DefaultHTMLProps,
+  DefaultInputProps,
+  ZenInputProps,
+} from 'components/common/type.js.flow';
+
+export type SelectInputProps = DefaultHTMLProps &
+  DefaultInputProps &
+  ZenInputProps & {
+    items: Array<any>,
+    itemToString: any => string,
+    itemToValue: any => any,
+    renderSelect: ({
+      input: React.Node,
+      isOpen: boolean,
+      clearSelection: () => void,
+      toggle: () => void,
+      selectedItem: any,
+    }) => React.Node,
+    renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
+    styles: { input: any, options: any },
+  };

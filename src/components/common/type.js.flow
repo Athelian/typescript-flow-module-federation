@@ -43,6 +43,12 @@ export type DefaultInputProps = {
   /**
    *
    *
+   * @type {boolean}
+   */
+  readOnly?: boolean,
+  /**
+   *
+   *
    * @type {string}
    */
   name?: string,
@@ -133,4 +139,77 @@ export type DefaultSelectProps = {
    * @type {Function}
    */
   onBlur?: Function,
+};
+
+export type ZenInputProps = {
+  /**
+   *
+   *
+   * @type {string}
+   */
+  label?: string | React.Node,
+  /**
+   *
+   * @type {boolean}
+   */
+  horizontal?: boolean,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  errorMessage?: string | React.Node,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  warningMessage?: string | React.Node,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  infoMessage?: string | React.Node,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  isRead?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  isWrite?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  editable?: boolean,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  formatter?: Function,
+  /**
+   *
+   * text-align
+   * @type {string}
+   */
+  align?: 'left' | 'right' | 'center',
+  /**
+   *
+   * input width px
+   * @type {string}
+   */
+  width?: string,
+  /**
+   *
+   * @type {boolean}
+   */
+  hasHoverStyle?: boolean,
 };

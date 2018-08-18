@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import StyleLessSelectInput from 'components/base/SearchSelectInput';
+import BaseSearchSelectInput from 'components/base/SearchSelectInput';
+import type { SearchSelectInputProps as Props } from './type.js.flow';
 import {
   SelectWrapperStyle,
   InputStyle,
@@ -11,34 +12,26 @@ import {
   ArrowDownStyle,
 } from '../SelectInput/style';
 
-type Props = {
-  value: any,
-  items: Array<any>,
-  onChange: () => void,
-  onSearch: string => void,
-  error?: any,
-  itemToString: any => string,
-  itemToValue: any => any,
-  hasHoverStyle?: boolean,
-  width?: ?number,
-};
-
-const defaultProps = {
-  error: null,
-  hasHoverStyle: false,
-  width: null,
-};
-
-function SelectInput({ error, itemToString, width, hasHoverStyle, ...rest }: Props) {
+function SearchSelectInput({
+  itemToString,
+  itemToValue,
+  items,
+  hasHoverStyle,
+  errorMessage,
+  width,
+  ...rest
+}: Props) {
   return (
-    <StyleLessSelectInput
-      name="name"
-      itemToString={itemToString}
-      clearIcon={<Icon icon="CLEAR" />}
+    <BaseSearchSelectInput
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
         <div
-          className={SelectWrapperStyle(!!error, isOpen, !!hasHoverStyle && !selectedItem, width)}
+          className={SelectWrapperStyle(
+            !!errorMessage,
+            isOpen,
+            !!hasHoverStyle && !selectedItem,
+            width
+          )}
         >
           {input}
           {selectedItem ? (
@@ -55,11 +48,12 @@ function SelectInput({ error, itemToString, width, hasHoverStyle, ...rest }: Pro
       renderOption={({ value: item, onHover, selected }) => (
         <div className={OptionStyle(onHover, selected)}>{itemToString(item)}</div>
       )}
+      itemToString={itemToString}
+      itemToValue={itemToValue}
+      items={items}
       {...rest}
     />
   );
 }
 
-SelectInput.defaultProps = defaultProps;
-
-export default SelectInput;
+export default SearchSelectInput;

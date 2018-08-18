@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import faUser from '@fortawesome/fontawesome-pro-solid/faUser';
+import Icon from 'components/Icon';
 import { WrapperStyle } from './style';
 
 type Props = {
@@ -17,7 +16,7 @@ function UserAvatar({ profileUrl, width, height, alt }: Props) {
       {profileUrl ? (
         <img alt={alt} src={profileUrl} width={width} height={height} />
       ) : (
-        <FontAwesomeIcon icon={faUser} />
+        <Icon icon="USER" />
       )}
     </div>
   );

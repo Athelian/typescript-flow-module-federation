@@ -13,6 +13,7 @@ export const TitleWrapperStyle = css`
   align-items: center;
   color: ${colors.GRAY};
   ${fontSizes.HUGE};
+  margin-left: -40px;
 `;
 
 export const TitleStyle = css`

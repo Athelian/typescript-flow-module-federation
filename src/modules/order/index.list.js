@@ -93,7 +93,7 @@ class OrderModule extends React.Component<Props, State> {
                   {({ values, setFieldValue }) => (
                     <InputGroup fieldGap={16}>
                       <SearchInput
-                        name="search"
+                        name="query"
                         value={values.query}
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
@@ -104,6 +104,7 @@ class OrderModule extends React.Component<Props, State> {
                         types={['Exporter']}
                         value={values.exporterId}
                         onChange={v => setFieldValue('exporterId', v ? v.id : null)}
+                        horizontal={false}
                       />
                       <PartnerSelectInput
                         title={intl.formatMessage(messages.supplier)}
@@ -111,6 +112,7 @@ class OrderModule extends React.Component<Props, State> {
                         types={['Supplier']}
                         value={values.supplierId}
                         onChange={v => setFieldValue('supplierId', v ? v.id : null)}
+                        horizontal={false}
                       />
                       <PartnerSelectInput
                         title={intl.formatMessage(messages.forwarder)}
@@ -118,13 +120,14 @@ class OrderModule extends React.Component<Props, State> {
                         types={['Forwarder']}
                         value={values.userId}
                         onChange={v => setFieldValue('userId', v ? v.id : null)}
+                        horizontal={false}
                       />
                     </InputGroup>
                   )}
                 </FilterInput>
                 <SearchInput
                   value={filters.query}
-                  name="search"
+                  name="query"
                   onClear={() => this.onChangeFilter({ query: '' })}
                   onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />

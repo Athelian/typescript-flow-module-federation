@@ -1,0 +1,10 @@
+// @flow
+import type { SearchSelectInputProps } from 'components/Form/SearchSelectInput/type.js.flow';
+
+export type EnumInputProps = SearchSelectInputProps & {
+  /**
+   *
+   * @type {string}
+   */
+  enumType: string,
+};

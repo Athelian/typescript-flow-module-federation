@@ -2,7 +2,12 @@
 import { css } from 'react-emotion';
 import { colors, transitions, fontSizes, borderRadiuses } from 'styles/common';
 
-export const InputStyle = (isError: boolean, hasHoverStyle: boolean, width: ?number) => css`
+export const InputStyle = (
+  isError: boolean,
+  hasHoverStyle: boolean,
+  width: ?string,
+  align: 'left' | 'right' | 'center'
+) => css`
   color: ${colors.BLACK};
   border: 2px solid ${isError ? colors.RED : 'transparent'};
   ${fontSizes.MAIN};
@@ -11,7 +16,8 @@ export const InputStyle = (isError: boolean, hasHoverStyle: boolean, width: ?num
   ${borderRadiuses.MAIN};
   background: #fff;
   height: 30px;
-  width: ${width ? `${width}px` : '100%'};
+  width: ${width || '100%'};
+  text-align: ${align};
   ${transitions.MAIN};
   ${hasHoverStyle && 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)'};
   &:hover {

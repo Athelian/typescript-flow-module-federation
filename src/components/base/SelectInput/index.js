@@ -4,26 +4,7 @@ import Downshift from 'downshift';
 import { isEquals } from 'utils/fp';
 import DebounceInput from 'react-debounce-input';
 import { ResetNativeStyle } from './style';
-
-type Props = {
-  renderSelect: ({
-    input: React.Node,
-    isOpen: boolean,
-    clearSelection: () => void,
-    toggle: () => void,
-    selectedItem: any,
-  }) => React.Node,
-  value: any,
-  onChange?: any => void,
-  items: Array<any>,
-  itemToValue: any => any,
-  itemToString: any => string,
-  renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
-  styles?: { input: any, options: any },
-  disabled?: boolean,
-  required?: boolean,
-  placeholder?: string,
-};
+import type { SelectInputProps as Props } from './type.js.flow';
 
 type State = {
   selectedItem: any,

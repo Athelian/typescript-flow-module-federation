@@ -130,6 +130,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
       value,
       tags,
       multiSelect,
+      onChange,
       ...labelProps
     } = this.props;
     const { focused } = this.state;

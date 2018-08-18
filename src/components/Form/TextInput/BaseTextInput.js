@@ -46,6 +46,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
       hasHoverStyle,
       formatter,
       width,
+      align = 'right',
       ...rest
     } = this.props;
     if (!isRead) return null;
@@ -59,7 +60,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
               id={id}
               readOnly={this.isReadOnly(isWrite, isEditable)}
               value={this.isReadOnly(isWrite, isEditable) ? formatter && formatter(value) : value}
-              className={InputStyle(!!errorMessage, !!hasHoverStyle && !value, width)}
+              className={InputStyle(!!errorMessage, !!hasHoverStyle && !value, width, align)}
               onKeyDown={evt => this.onKeyDown(evt, onToggleEditMode)}
             />
           </Label>

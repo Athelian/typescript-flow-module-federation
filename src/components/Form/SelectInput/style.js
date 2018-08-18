@@ -6,7 +6,7 @@ export const SelectWrapperStyle = (
   isError: boolean,
   isOpen: boolean,
   hasHoverStyle: boolean,
-  width: ?number
+  width: ?string
 ) => css`
   display: flex;
   flex-wrap: nowrap;
@@ -16,7 +16,7 @@ export const SelectWrapperStyle = (
   border-color: ${isOpen && '#11D1A6'};
   ${transitions.MAIN};
   align-items: center;
-  width: ${width ? `${width}px` : '100%'};
+  width: ${width || '100%'};
   height: 30px;
   padding: 0 8px;
   box-sizing: border-box;
