@@ -137,7 +137,7 @@ export default class BaseNumberInput extends React.PureComponent<Props> {
       required,
       value,
       width,
-      align = 'right',
+      align = 'left',
       formatter,
       ...rest
     } = this.props;

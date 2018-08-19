@@ -46,7 +46,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
       hasHoverStyle,
       formatter,
       width,
-      align = 'right',
+      align = 'left',
       ...rest
     } = this.props;
     if (!isRead) return null;

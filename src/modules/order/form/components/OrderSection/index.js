@@ -78,6 +78,7 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       width="200px"
                       hasHoverStyle
                       onChange={setFieldValue}
+                      horizontal
                     />
                   )}
                 />
@@ -94,6 +95,7 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       width="200px"
                       hasHoverStyle
                       onChange={setFieldValue}
+                      horizontal
                     />
                   )}
                 />
@@ -111,6 +113,7 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       width="200px"
                       hasHoverStyle
                       onChange={setFieldValue}
+                      horizontal
                     />
                   )}
                 />
@@ -118,6 +121,7 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                   title={<FormattedMessage {...messages.currency} />}
                   value={values.currency}
                   onChange={v => setFieldValue('currency', v)}
+                  horizontal
                   width="200px"
                   required
                   hasHoverStyle
@@ -126,6 +130,7 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                   title={<FormattedMessage {...messages.incoterms} />}
                   value={values.incoterms}
                   onChange={v => setFieldValue('incoterms', v)}
+                  horizontal
                   width="200px"
                   required
                   hasHoverStyle
@@ -143,6 +148,7 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       hasHoverStyle
                       width="200px"
                       onChange={setFieldValue}
+                      horizontal
                     />
                   )}
                 />
@@ -194,19 +200,25 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                 label={<FormattedMessage {...messages.totalOrderedQuantity} />}
                 value={values.totalOrderedQuantity || 0}
                 width="200px"
+                align="right"
                 readOnly
+                horizontal
               />
               <NumberInput
                 label={<FormattedMessage {...messages.batchedQuantity} />}
                 value={values.batchedQuantity || 0}
                 width="200px"
+                align="right"
                 readOnly
+                horizontal
               />
               <NumberInput
                 label={<FormattedMessage {...messages.shippedQuantity} />}
                 value={values.shippedQuantity || 0}
                 width="200px"
+                align="right"
                 readOnly
+                horizontal
               />
             </InputGroup>
             <InputGroup fieldGap={16}>
@@ -214,19 +226,25 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                 value={values.totalPrice || 0}
                 label={<FormattedMessage {...messages.totalOrderPrice} />}
                 width="200px"
+                align="right"
                 readOnly
+                horizontal
               />
               <NumberInput
                 value={values.items ? values.items.length : 0}
                 label={<FormattedMessage {...messages.totalOrderedQuantity} />}
                 width="200px"
+                align="right"
                 readOnly
+                horizontal
               />
               <NumberInput
                 label={<FormattedMessage {...messages.totalBatchedQuantity} />}
                 value={values.batchedQuantity || 0}
                 width="200px"
+                align="right"
                 readOnly
+                horizontal
               />
             </InputGroup>
           </div>

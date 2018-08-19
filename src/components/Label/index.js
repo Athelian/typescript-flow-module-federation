@@ -34,7 +34,7 @@ const Label = (props: Props) => {
 Label.defaultProps = {
   hideLabel: false,
   required: false,
-  horizontal: true,
+  horizontal: false,
   title: '',
   info: '',
   warning: '',
