@@ -16,7 +16,7 @@ function SearchSelectInput({
   itemToString,
   itemToValue,
   items,
-  hasHoverStyle,
+  defaultHover,
   errorMessage,
   width,
   ...rest
@@ -29,7 +29,7 @@ function SearchSelectInput({
           className={SelectWrapperStyle(
             !!errorMessage,
             isOpen,
-            !!hasHoverStyle && !selectedItem,
+            !!defaultHover && !selectedItem,
             width
           )}
         >

@@ -4,7 +4,7 @@ import { colors, transitions, fontSizes, borderRadiuses } from 'styles/common';
 
 export const InputStyle = (
   isError: boolean,
-  hasHoverStyle: boolean,
+  defaultHover: boolean,
   width: ?string,
   align: 'left' | 'right' | 'center'
 ) => css`
@@ -19,7 +19,7 @@ export const InputStyle = (
   width: ${width || '100%'};
   text-align: ${align};
   ${transitions.MAIN};
-  ${hasHoverStyle && 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)'};
+  ${defaultHover && 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)'};
   &:hover {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   }

@@ -211,5 +211,5 @@ export type ZenInputProps = {
    *
    * @type {boolean}
    */
-  hasHoverStyle?: boolean,
+  defaultHover?: boolean,
 };

@@ -43,7 +43,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
       errorMessage,
       id,
       value,
-      hasHoverStyle,
+      defaultHover,
       formatter,
       width,
       align = 'left',
@@ -60,7 +60,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
               id={id}
               readOnly={this.isReadOnly(isWrite, isEditable)}
               value={this.isReadOnly(isWrite, isEditable) ? formatter && formatter(value) : value}
-              className={InputStyle(!!errorMessage, !!hasHoverStyle && !value, width, align)}
+              className={InputStyle(!!errorMessage, !!defaultHover && !value, width, align)}
               onKeyDown={evt => this.onKeyDown(evt, onToggleEditMode)}
             />
           </Label>

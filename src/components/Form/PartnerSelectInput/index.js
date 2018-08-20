@@ -9,10 +9,13 @@ import { StringValue } from 'react-values';
 type Props = {
   value: any,
   onChange: any => void,
-  types: Array<string>,
+  types?: Array<string>,
 };
 
 const defaultPartnerTypes = ['Exporter', 'Supplier', 'Forwarder'];
+const defaultProps = {
+  types: defaultPartnerTypes,
+};
 
 function PartnerSelectInput({ value, onChange, types = defaultPartnerTypes, ...rest }: Props) {
   const filterItems = (query: string, data: Array<any>) => {
@@ -47,5 +50,7 @@ function PartnerSelectInput({ value, onChange, types = defaultPartnerTypes, ...r
     </PartnerListProvider>
   );
 }
+
+PartnerSelectInput.defaultProps = defaultProps;
 
 export default PartnerSelectInput;

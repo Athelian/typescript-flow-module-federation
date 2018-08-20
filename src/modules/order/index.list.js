@@ -104,7 +104,6 @@ class OrderModule extends React.Component<Props, State> {
                         types={['Exporter']}
                         value={values.exporterId}
                         onChange={v => setFieldValue('exporterId', v ? v.id : null)}
-                        horizontal={false}
                       />
                       <PartnerSelectInput
                         title={intl.formatMessage(messages.supplier)}
@@ -112,7 +111,6 @@ class OrderModule extends React.Component<Props, State> {
                         types={['Supplier']}
                         value={values.supplierId}
                         onChange={v => setFieldValue('supplierId', v ? v.id : null)}
-                        horizontal={false}
                       />
                       <PartnerSelectInput
                         title={intl.formatMessage(messages.forwarder)}
@@ -120,7 +118,6 @@ class OrderModule extends React.Component<Props, State> {
                         types={['Forwarder']}
                         value={values.userId}
                         onChange={v => setFieldValue('userId', v ? v.id : null)}
-                        horizontal={false}
                       />
                     </InputGroup>
                   )}

@@ -5,7 +5,7 @@ import { colors, borderRadiuses, transitions, presets, fontSizes } from 'styles/
 export const SelectWrapperStyle = (
   isError: boolean,
   isOpen: boolean,
-  hasHoverStyle: boolean,
+  defaultHover: boolean,
   width: ?string
 ) => css`
   display: flex;
@@ -21,7 +21,7 @@ export const SelectWrapperStyle = (
   padding: 0 8px;
   box-sizing: border-box;
   cursor: pointer;
-  ${(isOpen || hasHoverStyle) && 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)'};
+  ${(isOpen || defaultHover) && 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)'};
   background: #fff;
 
   &:hover {
