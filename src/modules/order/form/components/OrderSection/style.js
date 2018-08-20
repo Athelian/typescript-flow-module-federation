@@ -4,7 +4,7 @@ import { borderRadiuses } from 'styles/common';
 
 export const WrapperStyle = css`
   background: #fff;
-  padding: 40px 100px;
+  width: 880px;
   ${borderRadiuses.MAIN};
 `;
 

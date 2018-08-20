@@ -1,53 +1,67 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, transitions, colors, borderRadiuses, layout } from 'styles/common';
+import { presets, transitions, colors, borderRadiuses, layout, fontSizes } from 'styles/common';
 
-export const WrapperStyle = css`
+export const OrderFormWrapperStyle = css`
   width: 1060px;
-  margin: 80px auto;
-  display: flex;
-  flex-direction: column;
-  & > div {
-    width: 960px;
-    margin-bottom: 80px;
-  }
+  ${layout.GRID_VERTICAL};
+  grid-gap: 40px;
+  padding: 50px 0;
 `;
 
-export const UpdatedAtStyle = css`
-  ${layout.HORIZONTAL};
-  ${layout.CENTER};
-  color: ${colors.GRAY};
-  margin-right: 50px;
-  span {
-    color: ${colors.BLACK};
-    margin: 5px;
-  }
+export const SectionWrapperStyle = css`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const LastModifiedWrapperStyle = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
+  align-items: center;
+`;
+
+export const LabelStyle = css`
+  ${presets.ELLIPSIS};
+  ${fontSizes.SMALL};
+  color: ${colors.GRAY_DARK};
+  letter-spacing: 2px;
+`;
+
+export const ValueStyle = css`
+  ${presets.ELLIPSIS};
+  color: ${colors.BLACK};
+  font-weight: bold;
+  ${fontSizes.MAIN};
 `;
 
 export const UserIconStyle = css`
   display: flex;
   ${layout.CENTER_CENTER};
   color: #fff;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
   ${borderRadiuses.CIRCLE};
-  background: #aaa;
+  background-color: ${colors.GRAY_LIGHT};
   img {
     object-fit: cover;
   }
 `;
 
 export const StatusStyle = (active: boolean) => css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
   color: ${active ? colors.TEAL : colors.GRAY};
-  svg {
-    margin-right: 5px;
-  }
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  align-items: center;
 `;
 
 export const ToggleButtonStyle = css`
   ${presets.BUTTON};
-  font-size: 30px;
-  margin: 0 0 0 10px;
+  font-size: 20px;
   &:hover {
     & > svg {
       opacity: 0.8;
@@ -57,14 +71,9 @@ export const ToggleButtonStyle = css`
     ${transitions.MAIN};
   }
   & > .fa-toggle-off {
-    color: #eee;
+    color: ${colors.GRAY_DARK};
   }
   & > .fa-toggle-on {
     color: ${colors.TEAL};
   }
-`;
-
-export const HeaderRightStyle = css`
-  display: flex;
-  align-items: center;
 `;

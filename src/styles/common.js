@@ -214,6 +214,16 @@ layout.GRID_FORM = `
   grid-auto-rows: auto;
   min-width: min-content;
 `;
+layout.GRID_VERTICAL = `
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+`;
+layout.GRID_HORIZONTAL = `
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+`;
 
 export const presets = {
   BUTTON: `

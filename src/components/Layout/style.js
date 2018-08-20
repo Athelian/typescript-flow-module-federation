@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { scrollbars, transitions } from 'styles/common';
 
-export const WrapperStyle = css`
+export const LayoutWrapperStyle = css`
   height: 100vh;
   width: 100%;
   overflow: hidden;
@@ -12,7 +12,7 @@ export const WrapperStyle = css`
 export const ContentWrapperStyle = css`
   height: calc(100vh - 50px);
   width: 100%;
-  padding: 50px;
+  min-width: min-content;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.MAIN};
