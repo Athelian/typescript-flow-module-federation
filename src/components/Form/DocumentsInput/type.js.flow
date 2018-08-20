@@ -1,0 +1,13 @@
+// @flow
+
+export type Document = {
+  id?: ?string,
+  path: string,
+  type: string,
+  memo: string,
+};
+
+export type FileType = {
+  label: string,
+  type: string,
+};

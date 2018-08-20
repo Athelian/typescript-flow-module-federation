@@ -92,7 +92,7 @@ export default function OrderForm({ order }: Props) {
       </div>
       <div id="documentSection">
         <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />
-        <DocumentSection />
+        <DocumentSection initialValues={{ files: order.files }} />
       </div>
       <div id="shipmentSection">
         <SectionHeader icon="SHIPMENT" title={`SHIPMENTS (${20})`} />
