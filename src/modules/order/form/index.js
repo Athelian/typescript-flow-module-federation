@@ -45,6 +45,7 @@ export default function OrderForm({ order }: Props) {
   const isNew = Object.keys(order).length === 0;
   logger.warn('order', order);
   const orderValues = orderSectionFields(order);
+  const isActive = orderValues.status === 'Active';
   return (
     <div className={WrapperStyle}>
       <div id="orderSection">
@@ -61,8 +62,8 @@ export default function OrderForm({ order }: Props) {
                 </div>
               </div>
             )}
-            <div className={StatusStyle(true)}>
-              <Icon icon="ACTIVE" />
+            <div className={StatusStyle(isActive)}>
+              <Icon icon={isActive ? 'ACTIVE' : 'ARCHIVE'} />
               {orderValues.status}
             </div>
             <button
@@ -71,11 +72,7 @@ export default function OrderForm({ order }: Props) {
               tabIndex={-1}
               onClick={e => logger.warn(e)}
             >
-              {orderValues.status === 'Active' ? (
-                <Icon icon="TOGGLE_ON" />
-              ) : (
-                <Icon icon="TOGGLE_OFF" />
-              )}
+              {isActive ? <Icon icon="TOGGLE_ON" /> : <Icon icon="TOGGLE_OFF" />}
             </button>
           </div>
         </SectionHeader>

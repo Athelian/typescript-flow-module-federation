@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
-import SelectInput from 'components/Form/SelectInput';
+import { StringValue } from 'react-values';
+import matchSorter from 'match-sorter';
+import SearchSelectInput from 'components/Form/SearchSelectInput';
 import TextAreaInput from 'components/Form/TextInput';
 import Icon from 'components/Icon';
 import Display from 'components/Display';
@@ -81,18 +83,25 @@ class DocumentItem extends React.Component<Props, State> {
               hideLabel
             />
           ) : (
-            <SelectInput
-              name={`${name}.type`}
-              value={value.type}
-              items={types}
-              itemToValue={v => (v ? v.type : null)}
-              itemToString={v => (v ? v.label : '')}
-              hideLabel
-              required
-              readOnly={readOnly}
-              onChange={() => {}}
-              onBlur={onBlur}
-            />
+            <StringValue>
+              {({ value: q, set, clear }) => (
+                <SearchSelectInput
+                  name={`${name}.type`}
+                  value={value.type}
+                  items={matchSorter(types, q, { keys: ['type', 'label'] })}
+                  itemToValue={v => (v ? v.type : null)}
+                  itemToString={v => (v ? v.label : '')}
+                  hideLabel
+                  required
+                  readOnly={readOnly}
+                  onChange={item => {
+                    if (!item) clear();
+                  }}
+                  onBlur={onBlur}
+                  onSearch={set}
+                />
+              )}
+            </StringValue>
           )}
           <div className={FileExtensionIconStyle(fileIcon.color)}>
             <Icon icon={fileIcon.icon} />

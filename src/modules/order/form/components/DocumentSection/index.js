@@ -4,7 +4,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import { Form } from 'components/Form';
 import DocumentsInput from 'components/Form/DocumentsInput';
 import messages from 'modules/order/messages';
-import { WrapperStyle } from './style';
+import { DocumentSectionStyle } from './style';
 
 type Props = {
   initialValues: Object,
@@ -15,7 +15,7 @@ function DocumentSection({ intl, initialValues }: Props) {
   return (
     <Form initialValues={initialValues}>
       {({ values, setFieldValue }) => (
-        <div className={WrapperStyle}>
+        <div className={DocumentSectionStyle}>
           <DocumentsInput
             name="files"
             folder="order"

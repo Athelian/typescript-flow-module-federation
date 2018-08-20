@@ -133,7 +133,7 @@ class DocumentsInput extends React.Component<Props, State> {
                 </div>
               ))}
 
-            {readOnly || (
+            {!readOnly && (
               <div className={DocumentListStyle}>
                 {value &&
                   value.map((document, index) => {
