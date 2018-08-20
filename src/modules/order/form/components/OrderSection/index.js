@@ -10,6 +10,7 @@ import CurrencyInput from 'components/Form/CurrencyInput';
 import IncotermsInput from 'components/Form/IncotermsInput';
 import EntityCard from 'components/EntityCard';
 import Label from 'components/Label';
+import messages from 'modules/order/messages';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import SelectExporters from '../SelectExporters';
 import {
@@ -21,7 +22,6 @@ import {
   TagsInputStyle,
   QuantitySummaryStyle,
 } from './style';
-import messages from './messages';
 
 type Props = {
   isNew: boolean,

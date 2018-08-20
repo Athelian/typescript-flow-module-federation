@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { pickByProps } from 'utils/fp';
 import logger from 'utils/logger';
+import orderSectionMesssages from 'modules/order/messages';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
@@ -19,7 +20,6 @@ import {
   HeaderRightStyle,
   UserIconStyle,
 } from './style';
-import orderSectionMesssages from './components/OrderSection/messages';
 
 type Props = {
   order: Object,
