@@ -66,7 +66,6 @@ import ID_BADGE from '@fortawesome/fontawesome-pro-solid/faIdBadge';
 // Document Input
 import EXCEL from '@fortawesome/fontawesome-pro-solid/faFileExcel';
 import IMAGE from '@fortawesome/fontawesome-pro-solid/faFileImage';
-import FILE from '@fortawesome/fontawesome-pro-solid/faFileAlt';
 import PDF from '@fortawesome/fontawesome-pro-solid/faFilePdf';
 import POWER_POINT from '@fortawesome/fontawesome-pro-solid/faFilePowerpoint';
 import WORD from '@fortawesome/fontawesome-pro-solid/faFileWord';
@@ -134,7 +133,6 @@ export default {
 
   EXCEL,
   IMAGE,
-  FILE,
   PDF,
   POWER_POINT,
   WORD,

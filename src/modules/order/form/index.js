@@ -69,7 +69,7 @@ export default function OrderForm({ order }: Props) {
               type="button"
               className={ToggleButtonStyle}
               tabIndex={-1}
-              onClick={e => console.log(e)}
+              onClick={e => logger.warn(e)}
             >
               {orderValues.status === 'Active' ? (
                 <Icon icon="TOGGLE_ON" />

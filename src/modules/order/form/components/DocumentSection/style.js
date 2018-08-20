@@ -1,9 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
+import { colors, borderRadiuses } from 'styles/common';
 
 export const WrapperStyle = css`
-  min-height: 500px;
-  background: green;
+  padding: 35px 20px;
+  background-color: #fff;
+  color: ${colors.GRAY};
+  ${borderRadiuses.MAIN};
 `;
 
 export default WrapperStyle;

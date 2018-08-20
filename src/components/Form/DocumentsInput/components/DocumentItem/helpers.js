@@ -56,7 +56,7 @@ export const computeIcon = (fileExtension: string) => {
   if (iconSearched) {
     return { icon: iconSearched.icon, color: iconSearched.color };
   }
-  return { icon: 'FILE', color: 'GRAY_LIGHT' };
+  return { icon: 'DOCUMENT', color: 'GRAY_LIGHT' };
 };
 
 export const getFileExtension = (filePath: string): string => filePath.split('.').pop();

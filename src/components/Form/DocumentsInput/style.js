@@ -2,11 +2,6 @@
 import { css } from 'react-emotion';
 import { layout, presets, colors, borderRadiuses, fontSizes } from 'styles/common';
 
-export const WrapperStyle = css`
-  padding: 35px 20px;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-`;
-
 export const DocumentListStyle = css`
   display: grid;
   grid-template-columns: repeat(auto-fit, 140px);

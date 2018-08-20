@@ -2,6 +2,7 @@
 import Raven from 'raven-js';
 import { isDevEnvironment } from 'utils/env';
 import { getAuthToken } from 'utils/auth';
+import logger from 'utils/logger';
 import axios from 'axios';
 
 export const uploadDocument = (
@@ -31,7 +32,7 @@ export const uploadDocument = (
       if (!isDevEnvironment) {
         Raven.captureException(err);
       } else {
-        console.error(err);
+        logger.error(err);
       }
       onError(err);
     });

@@ -6,13 +6,7 @@ import Icon from 'components/Icon';
 import DocumentItem from './components/DocumentItem';
 import type { Document, FileType } from './type.js.flow';
 import { uploadDocument } from './actions';
-import {
-  WrapperStyle,
-  DocumentListStyle,
-  AddDocumentStyle,
-  ProgressStyle,
-  NoDocumentsStyle,
-} from './style';
+import { DocumentListStyle, AddDocumentStyle, ProgressStyle, NoDocumentsStyle } from './style';
 import messages from './messages';
 
 type Props = {
@@ -119,7 +113,7 @@ class DocumentsInput extends React.Component<Props, State> {
       <FieldArray
         name={name}
         render={({ fields: arrayHelpers }) => (
-          <div className={WrapperStyle}>
+          <div>
             {readOnly &&
               (value && value.length > 0 ? (
                 <div className={DocumentListStyle}>
