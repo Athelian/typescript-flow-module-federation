@@ -1,26 +1,23 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import matchSorter from 'match-sorter';
 import PartnerListProvider from 'providers/PartnerList';
 import Label from 'components/Label';
-import type { LabelProps } from 'components/Label/type.js.flow';
 import SearchSelectInput from 'components/Form/SearchSelectInput';
 import { StringValue } from 'react-values';
 
-type Props = LabelProps & {
+type Props = {
   value: any,
   onChange: any => void,
   types?: Array<string>,
 };
 
 const defaultPartnerTypes = ['Exporter', 'Supplier', 'Forwarder'];
+const defaultProps = {
+  types: defaultPartnerTypes,
+};
 
-function PartnerSelectInput({
-  value,
-  onChange,
-  types = defaultPartnerTypes,
-  ...labelProps
-}: Props) {
+function PartnerSelectInput({ value, onChange, types = defaultPartnerTypes, ...rest }: Props) {
   const filterItems = (query: string, data: Array<any>) => {
     const items = data.filter(item => types.includes(item.type));
     if (!query) return items;
@@ -32,7 +29,7 @@ function PartnerSelectInput({
       {({ data, loading }) => (
         <StringValue defaultValue="">
           {({ value: query, set, clear }) => (
-            <Label htmlFor={value} {...labelProps}>
+            <Label htmlFor={value} {...rest}>
               <SearchSelectInput
                 value={value}
                 items={filterItems(query, data)}
@@ -44,7 +41,7 @@ function PartnerSelectInput({
                 loading={loading}
                 itemToString={item => (item ? item.name : '')}
                 itemToValue={item => (item ? item.id : null)}
-                error={labelProps.error}
+                {...rest}
               />
             </Label>
           )}
@@ -53,5 +50,7 @@ function PartnerSelectInput({
     </PartnerListProvider>
   );
 }
+
+PartnerSelectInput.defaultProps = defaultProps;
 
 export default PartnerSelectInput;

@@ -1,55 +1,8 @@
 // @flow
-import * as React from 'react';
-import type { DefaultHTMLProps, DefaultInputProps } from 'components/common/type.js.flow';
+import type {
+  DefaultHTMLProps,
+  DefaultInputProps,
+  ZenInputProps,
+} from 'components/common/type.js.flow';
 
-export type NumberInputProps = DefaultHTMLProps &
-  DefaultInputProps & {
-    /**
-     *
-     *
-     * @type {string}
-     */
-    label?: string | React.Node,
-    /**
-     *
-     *
-     * @type {string}
-     */
-    errorMessage?: string | React.Node,
-    /**
-     *
-     *
-     * @type {string}
-     */
-    warningMessage?: string | React.Node,
-    /**
-     *
-     *
-     * @type {string}
-     */
-    infoMessage?: string | React.Node,
-    /**
-     *
-     *
-     * @type {boolean}
-     */
-    isRead?: boolean,
-    /**
-     *
-     *
-     * @type {boolean}
-     */
-    isWrite?: boolean,
-    /**
-     *
-     *
-     * @type {boolean}
-     */
-    editable?: boolean,
-    /**
-     *
-     *
-     * @type {Function}
-     */
-    formatter?: Function,
-  };
+export type NumberInputProps = DefaultHTMLProps & DefaultInputProps & ZenInputProps;

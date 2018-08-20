@@ -2,7 +2,12 @@
 import { css } from 'react-emotion';
 import { colors, borderRadiuses, transitions, presets, fontSizes } from 'styles/common';
 
-export const SelectWrapperStyle = (isError: boolean, isOpen: boolean) => css`
+export const SelectWrapperStyle = (
+  isError: boolean,
+  isOpen: boolean,
+  defaultHover: boolean,
+  width: ?string
+) => css`
   display: flex;
   flex-wrap: nowrap;
   ${borderRadiuses.MAIN};
@@ -11,11 +16,13 @@ export const SelectWrapperStyle = (isError: boolean, isOpen: boolean) => css`
   border-color: ${isOpen && '#11D1A6'};
   ${transitions.MAIN};
   align-items: center;
+  width: ${width || '100%'};
   height: 30px;
   padding: 0 8px;
   box-sizing: border-box;
   cursor: pointer;
-  ${isOpen && 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)'};
+  ${(isOpen || defaultHover) && 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)'};
+  background: #fff;
 
   &:hover {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
@@ -50,6 +57,7 @@ export const OptionWrapperStyle = css`
   flex-flow: column wrap;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   width: 200px;
+  background: #fff;
 `;
 
 export const OptionStyle = (onHover: boolean, selected: boolean) => css`

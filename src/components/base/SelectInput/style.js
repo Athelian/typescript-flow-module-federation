@@ -6,7 +6,7 @@ export const ResetNativeStyle = css`
   position: relative;
   ul {
     list-style-type: none;
-    position: fixed;
+    position: absolute;
     margin: 0;
     padding: 0;
     margin-top: 4px;

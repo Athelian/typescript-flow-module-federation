@@ -18,13 +18,24 @@ type Props = {
   error?: any,
   itemToString: any => string,
   itemToValue: any => any,
+  defaultHover?: boolean,
 };
 
 const defaultProps = {
   error: null,
+  defaultHover: false,
 };
 
-function SelectInput({ value, items, onChange, error, itemToString, itemToValue, ...rest }: Props) {
+function SelectInput({
+  value,
+  items,
+  onChange,
+  error,
+  defaultHover,
+  itemToString,
+  itemToValue,
+  ...rest
+}: Props) {
   return (
     <StyleLessSelectInput
       value={value}
@@ -35,7 +46,7 @@ function SelectInput({ value, items, onChange, error, itemToString, itemToValue,
       onChange={onChange}
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
-        <div className={SelectWrapperStyle(!!error, isOpen)}>
+        <div className={SelectWrapperStyle(!!error, isOpen, !!defaultHover && !selectedItem)}>
           {input}
           {selectedItem ? (
             <button type="button" onClick={clearSelection} className={ButtonStyle}>

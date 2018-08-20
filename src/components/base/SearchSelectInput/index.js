@@ -4,31 +4,7 @@ import Downshift from 'downshift';
 import { ResetNativeStyle } from 'components/base/SelectInput/style';
 import { isEquals } from 'utils/fp';
 import DebounceInput from 'react-debounce-input';
-
-type Props = {
-  name: string,
-  value: any,
-  onChange?: any => void,
-  onSearch?: string => void,
-  items: Array<any>,
-  itemToValue: any => any,
-  itemToString: any => string,
-  renderSelect: ({
-    input: React.Node,
-    isOpen: boolean,
-    clearSelection: () => void,
-    toggle: () => void,
-    selectedItem: any,
-  }) => React.Node,
-  renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
-  styles: { input: any, options: any },
-  disabled?: boolean,
-  required?: boolean,
-  readOnly?: boolean,
-  placeholder?: string,
-  onSearch?: Function,
-  onBlur?: Function,
-};
+import type { SearchSelectInputProps as Props } from './type.js.flow';
 
 type State = {
   inputValue: string,
@@ -41,7 +17,6 @@ class SearchSelectInput extends React.Component<Props, State> {
     disabled: false,
     required: false,
     readOnly: false,
-    clearable: false,
     placeholder: '',
     onSearch: () => {},
     onBlur: () => {},
@@ -93,15 +68,15 @@ class SearchSelectInput extends React.Component<Props, State> {
 
   render() {
     const {
-      renderSelect,
       items,
       itemToValue,
       itemToString,
+      renderSelect,
       renderOption,
       styles = { input: '', options: '' },
+      readOnly,
       disabled,
       required,
-      readOnly,
       placeholder,
     } = this.props;
 

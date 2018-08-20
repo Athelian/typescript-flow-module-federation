@@ -1,0 +1,26 @@
+// @flow
+import * as React from 'react';
+
+import type {
+  DefaultHTMLProps,
+  DefaultInputProps,
+  ZenInputProps,
+} from 'components/common/type.js.flow';
+
+export type SearchSelectInputProps = DefaultHTMLProps &
+  DefaultInputProps &
+  ZenInputProps & {
+    items: Array<any>,
+    onSearch: string => void,
+    itemToString: any => string,
+    itemToValue: any => any,
+    renderSelect: ({
+      input: React.Node,
+      isOpen: boolean,
+      clearSelection: () => void,
+      toggle: () => void,
+      selectedItem: any,
+    }) => React.Node,
+    renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
+    styles: { input: any, options: any },
+  };

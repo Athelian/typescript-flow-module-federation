@@ -8,7 +8,6 @@ import matchSorter from 'match-sorter';
 import HoverWrapper from 'components/common/HoverWrapper';
 import Editable from 'components/common/Editable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ErrorTooltip, WarningTooltip, InfoTooltip } from 'components/Tooltips';
 import Label from 'components/Label';
 import Tag from 'components/Tag';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
@@ -125,16 +124,14 @@ export default class BaseTagsInput extends React.Component<Props, State> {
       isWrite,
       editable,
       errorMessage,
-      infoMessage,
-      warningMessage,
       id,
-      label,
-      required,
       disabled,
       readOnly,
       value,
       tags,
       multiSelect,
+      onChange,
+      ...labelProps
     } = this.props;
     const { focused } = this.state;
     if (!isRead) return null;
@@ -145,10 +142,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
           <HoverWrapper>
             {isHover => (
               <div className={HoverStyle(isHover && isWrite)}>
-                <Label htmlFor={id}>
-                  {infoMessage && <InfoTooltip info={infoMessage} />}
-                  {label}
-                  {required && ' * '}
+                <Label htmlFor={id} {...labelProps}>
                   <Downshift
                     itemCount={tags.length}
                     itemToString={i => (i ? i.id : '')}
@@ -275,8 +269,6 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                     )}
                   </Downshift>
                 </Label>
-                {errorMessage && <ErrorTooltip error={errorMessage} />}
-                {warningMessage && <WarningTooltip warning={warningMessage} />}
               </div>
             )}
           </HoverWrapper>

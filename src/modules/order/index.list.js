@@ -12,7 +12,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import PartnerSelectInput from 'components/PartnerSelectInput';
+import PartnerSelectInput from 'components/Form/PartnerSelectInput';
 import NewButton from 'components/NavButtons/NewButton';
 import OrderList from './list';
 import messages from './messages';
@@ -93,7 +93,7 @@ class OrderModule extends React.Component<Props, State> {
                   {({ values, setFieldValue }) => (
                     <InputGroup fieldGap={16}>
                       <SearchInput
-                        name="search"
+                        name="query"
                         value={values.query}
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
@@ -124,7 +124,7 @@ class OrderModule extends React.Component<Props, State> {
                 </FilterInput>
                 <SearchInput
                   value={filters.query}
-                  name="search"
+                  name="query"
                   onClear={() => this.onChangeFilter({ query: '' })}
                   onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />

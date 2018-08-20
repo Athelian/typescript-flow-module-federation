@@ -41,6 +41,10 @@ import ARROW_DOWN from '@fortawesome/fontawesome-pro-solid/faArrowDown';
 import PLACE from '@fortawesome/fontawesome-pro-solid/faMapMarkerAlt';
 import WARNING from '@fortawesome/fontawesome-pro-solid/faExclamationCircle';
 import CHEVRON_DOWN from '@fortawesome/fontawesome-pro-solid/faChevronDown';
+import DOCUMENT from '@fortawesome/fontawesome-pro-solid/faFileAlt';
+import TOGGLE_ON from '@fortawesome/fontawesome-pro-solid/faToggleOn';
+import TOGGLE_OFF from '@fortawesome/fontawesome-pro-solid/faToggleOff';
+import INFO from '@fortawesome/fontawesome-pro-solid/faInfoCircle';
 
 // Shipment Timeline
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
@@ -50,6 +54,9 @@ import UNKNOWN from '@fortawesome/fontawesome-pro-solid/faQuestion';
 import TRANSIT from '@fortawesome/fontawesome-pro-solid/faLifeRing';
 import CUSTOMS from '@fortawesome/fontawesome-pro-solid/faClipboardList';
 import DELIVERY_READY from '@fortawesome/fontawesome-pro-solid/faTruckLoading';
+
+// Batch Items
+import CART from '@fortawesome/fontawesome-pro-solid/faShoppingCart';
 
 // Staff
 import ID_BADGE from '@fortawesome/fontawesome-pro-solid/faIdBadge';
@@ -96,6 +103,10 @@ export default {
   PLACE,
   WARNING,
   CHEVRON_DOWN,
+  DOCUMENT,
+  TOGGLE_ON,
+  TOGGLE_OFF,
+  INFO,
 
   CARGO_READY,
   PORT,
@@ -104,6 +115,8 @@ export default {
   TRANSIT,
   CUSTOMS,
   DELIVERY_READY,
+
+  CART,
 
   ID_BADGE,
 };

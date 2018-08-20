@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, transitions, fontSizes } from 'styles/common';
 
-export const NumberInputStyle = (isError: boolean) => css`
+export const NumberInputStyle = (isError: boolean, width: ?string, align: string) => css`
   color: ${colors.BLACK};
   border-radius: 2px;
   border: none;
@@ -12,7 +12,8 @@ export const NumberInputStyle = (isError: boolean) => css`
   padding: 10px;
   background: #fff;
   height: 40px;
-  width: 90%;
+  width: ${width || '100%'};
+  text-align: ${align};
   ${transitions.MAIN};
   &[disabled] {
     background: ${colors.GRAY_SUPER_LIGHT};
