@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import ProductGridView from './components/ProductGridView';
-// import ProductListView from './components/ProductListView';
-// import ProductTableView from './components/ProductTableView';
 import { productListQuery } from './query';
 
 type Props = {
@@ -81,10 +79,6 @@ class ProductList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'viewer.products.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'viewer.products.totalPage', data);
           const hasMore = nextPage <= totalPage;
-
-          if (viewType === 'list') return null;
-
-          if (viewType === 'table') return null;
 
           return (
             <ProductGridView

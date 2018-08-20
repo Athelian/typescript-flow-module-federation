@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import OrderGridView from './components/OrderGridView';
-// import OrderListView from './components/OrderListView';
-// import OrderTableView from './components/OrderTableView';
 import query from './query';
 
 type Props = {
@@ -77,10 +75,6 @@ class OrderList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'viewer.orders.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'viewer.orders.totalPage', data);
           const hasMore = nextPage <= totalPage;
-
-          if (viewType === 'list') return null;
-
-          if (viewType === 'table') return null;
 
           return (
             <OrderGridView

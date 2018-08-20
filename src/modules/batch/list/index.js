@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import BatchGridView from './components/BatchGridView';
-// import BatchListView from './components/BatchListView';
-// import BatchTableView from './components/BatchTableView';
 import { batchItemListQuery } from './query';
 
 type Props = {
@@ -81,10 +79,6 @@ class BatchList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'viewer.batchItems.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'viewer.batchItems.totalPage', data);
           const hasMore = nextPage <= totalPage;
-
-          if (viewType === 'list') return null;
-
-          if (viewType === 'table') return null;
 
           return (
             <BatchGridView

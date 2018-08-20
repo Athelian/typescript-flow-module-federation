@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import StaffGridView from './components/StaffGridView';
-// import StaffListView from './components/StaffListView';
-// import StaffTableView from './components/StaffTableView';
 import { userListQuery } from './query';
 
 type Props = {
@@ -79,10 +77,6 @@ class StaffList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'viewer.group.users.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'viewer.group.users.totalPage', data);
           const hasMore = nextPage <= totalPage;
-
-          if (viewType === 'list') return null;
-
-          if (viewType === 'table') return null;
 
           return (
             <StaffGridView

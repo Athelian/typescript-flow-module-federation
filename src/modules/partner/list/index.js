@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import PartnerGridView from './components/PartnerGridView';
-// import PartnerListView from './components/PartnerListView';
-// import PartnerTableView from './components/PartnerTableView';
 import query from './query.graphql';
 
 type Props = {
@@ -75,10 +73,6 @@ class PartnerList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'viewer.group.partners.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'viewer.group.partners.totalPage', data);
           const hasMore = nextPage <= totalPage;
-
-          if (viewType === 'list') return null;
-
-          if (viewType === 'table') return null;
 
           return (
             <PartnerGridView

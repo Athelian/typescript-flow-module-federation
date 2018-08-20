@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import ShipmentGridView from './components/ShipmentGridView';
-// import ShipmentListView from './components/ShipmentListView';
-// import ShipmentTableView from './components/ShipmentTableView';
 import { shipmentListQuery } from './query';
 
 type Props = {
@@ -81,10 +79,6 @@ class ShipmentList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'viewer.shipments.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'viewer.shipments.totalPage', data);
           const hasMore = nextPage <= totalPage;
-
-          if (viewType === 'list') return null;
-
-          if (viewType === 'table') return null;
 
           return (
             <ShipmentGridView
