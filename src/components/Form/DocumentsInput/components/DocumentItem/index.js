@@ -6,7 +6,7 @@ import SearchSelectInput from 'components/Form/SearchSelectInput';
 import TextAreaInput from 'components/Form/TextInput';
 import Icon from 'components/Icon';
 import Display from 'components/Display';
-import type { Document, FileType } from '../../type.js.flow';
+import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
 import { computeIcon, getFileExtension, getFileName } from './helpers';
 import {
   DocumentWrapperStyle,
