@@ -52,6 +52,7 @@ class OrderFormContainer extends React.PureComponent<Props, State> {
     logger.warn('orderId', orderId);
     const isNew = orderId === 'new';
     const { isSlideViewOpen, type } = this.state;
+
     return (
       <UIConsumer>
         {uiState => (
@@ -61,10 +62,10 @@ class OrderFormContainer extends React.PureComponent<Props, State> {
               <NavBar>
                 <EntityIcon icon="ORDER" color="ORDER" />
                 <JumpToSection>
-                  <SectionNavigation link="orderSection">ORDER</SectionNavigation>
-                  <SectionNavigation link="itemSection">ITEMS</SectionNavigation>
-                  <SectionNavigation link="documentSection">DOCUMENTS</SectionNavigation>
-                  <SectionNavigation link="shipmentSection">SHIPMENTS</SectionNavigation>
+                  <SectionNavigation link="orderSection" label="ORDER" icon="ORDER" />
+                  <SectionNavigation link="itemSection" label="ITEMS" icon="ORDER_ITEM" />
+                  <SectionNavigation link="documentSection" label="DOCUMENTS" icon="DOCUMENT" />
+                  <SectionNavigation link="shipmentSection" label="SHIPMENTS" icon="SHIPMENT" />
                 </JumpToSection>
                 <LogsButton onClick={() => this.onOpenSlideView('logs')} />
               </NavBar>

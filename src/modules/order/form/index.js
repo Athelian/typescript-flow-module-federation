@@ -93,7 +93,7 @@ export default function OrderForm({ order }: Props) {
         />
       </div>
       <div className={SectionWrapperStyle} id="itemSection">
-        <SectionHeader icon="CART" title={`ITEMS (${20})`} />
+        <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${20})`} />
         <ItemSection />
       </div>
       <div className={SectionWrapperStyle} id="documentSection">

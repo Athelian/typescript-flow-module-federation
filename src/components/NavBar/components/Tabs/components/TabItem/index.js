@@ -8,7 +8,7 @@ type Props = {
   label: string | React.Node,
   disabled?: boolean,
   active: boolean,
-  onActive: number => void,
+  onClick: number => void,
 };
 
 const defaultProps = {
@@ -16,10 +16,10 @@ const defaultProps = {
   icon: null,
 };
 
-const TabItem = ({ icon = '', label, disabled, active, onActive }: Props) => (
+const TabItem = ({ icon = '', label, disabled, active, onClick }: Props) => (
   <button
     type="button"
-    onClick={onActive}
+    onClick={onClick}
     className={disabled ? DisabledStyle : TabItemStyle(active)}
   >
     <div className={IconStyle}>

@@ -1,14 +1,18 @@
 // @flow
 import * as React from 'react';
-import { TabItemStyle } from 'components/NavBar/components/Tabs/components/TabItem/style';
+import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 
 type Props = {
-  children: React.Node,
+  icon?: string,
+  label: string | React.Node,
+  disabled?: boolean,
   active?: boolean,
   onClick?: Function,
 };
 
 const defaultProps = {
+  icon: null,
+  disabled: false,
   active: false,
   onClick: () => {},
 };
@@ -17,14 +21,9 @@ export default class SectionNavigation extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
   render() {
-    const { children, active, onClick } = this.props;
+    const { icon, label, disabled, active = false, onClick = () => {} } = this.props;
     return (
-      <div>
-        <button type="button" className={TabItemStyle(!!active)} onClick={onClick}>
-          {children}
-          <span />
-        </button>
-      </div>
+      <TabItem icon={icon} label={label} disabled={disabled} active={active} onClick={onClick} />
     );
   }
 }
