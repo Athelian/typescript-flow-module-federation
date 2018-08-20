@@ -1,54 +1,61 @@
 // @flow
 import * as React from 'react';
-import { colors } from 'styles/common';
-import { TooltipWrapperStyle, TooltipBoxStyle, TooltipArrowStyle } from './style';
+import Icon from 'components/Icon';
+import { WarningTooltip, InfoTooltip, ErrorTooltip } from 'components/Tooltips';
 import TooltipMessage from './TooltipMessage';
+import ChangedValueTooltip from './Tooltip';
 
-const colorMap = {
-  info: colors.GRAY_DARK,
-  edited: colors.TEAL_DARK,
-  warning: colors.YELLOW_DARK,
-  error: colors.RED_DARK,
+const getTooltip = (error, warning, info) => {
+  if (error) return { type: 'error', icon: 'WARNING' };
+  if (warning) return { type: 'warning', icon: 'WARNING' };
+  if (info) return { type: 'info', icon: 'INFO' };
+  return { type: 'edited', icon: 'INFO' };
 };
-
-type TooltipEnumType = 'info' | 'edited' | 'warning' | 'error';
-const getColorFromType = (type: TooltipEnumType) => colorMap[type] || colors.GRAY_DARK;
 
 type Props = {
-  title: React.Node,
-  type: TooltipEnumType,
-  children: React.Node,
+  info?: string | React.Node,
+  error?: string | React.Node,
+  warning?: string | React.Node,
+  oldValue?: string,
+  newValue?: string,
+  description?: string,
 };
-type State = {
-  hover: boolean,
+
+const defaultProps = {
+  info: '',
+  error: '',
+  warning: '',
+  oldValue: '',
+  newValue: '',
+  description: '',
 };
 
-class Tooltip extends React.Component<Props, State> {
-  state = { hover: false };
-
-  toggle = () => {
-    this.setState(({ hover }) => ({ hover: !hover }));
-  };
-
-  render() {
-    const { hover } = this.state;
-    const { title, type, children } = this.props;
-    const color = getColorFromType(type);
-    return (
-      <div
-        className={TooltipWrapperStyle}
-        onMouseOver={this.toggle}
-        onMouseOut={this.toggle}
-        onFocus={this.toggle}
-        onBlur={this.toggle}
-      >
-        {children}
-        <div className={TooltipArrowStyle({ hover, color })} />
-        <div className={TooltipBoxStyle({ hover, color })}>{title}</div>
-      </div>
-    );
-  }
+function Tooltip({ error, warning, info, oldValue, newValue, description }: Props) {
+  const tooltip = getTooltip(error, warning, info);
+  return oldValue && newValue ? (
+    <ChangedValueTooltip
+      type={tooltip.type}
+      content={
+        <TooltipMessage
+          title={error || warning || info}
+          oldValue={oldValue}
+          newValue={newValue}
+          description={description}
+        />
+      }
+    >
+      <Icon icon={tooltip.icon} />
+    </ChangedValueTooltip>
+  ) : (
+    <React.Fragment>
+      {error && <ErrorTooltip error={error} />}
+      {warning && <WarningTooltip warning={warning} />}
+      {info && <InfoTooltip info={info} />}
+    </React.Fragment>
+  );
 }
+
+Tooltip.defaultProps = defaultProps;
 
 export default Tooltip;
 export { TooltipMessage };

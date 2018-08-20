@@ -44,6 +44,7 @@ import CHEVRON_DOWN from '@fortawesome/fontawesome-pro-solid/faChevronDown';
 import DOCUMENT from '@fortawesome/fontawesome-pro-solid/faFileAlt';
 import TOGGLE_ON from '@fortawesome/fontawesome-pro-solid/faToggleOn';
 import TOGGLE_OFF from '@fortawesome/fontawesome-pro-solid/faToggleOff';
+import INFO from '@fortawesome/fontawesome-pro-solid/faInfoCircle';
 
 // Shipment Timeline
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
@@ -105,6 +106,7 @@ export default {
   DOCUMENT,
   TOGGLE_ON,
   TOGGLE_OFF,
+  INFO,
 
   CARGO_READY,
   PORT,

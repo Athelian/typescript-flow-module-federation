@@ -7,11 +7,11 @@ const distanceSize = 16;
 
 export const TooltipWrapperStyle = css`
   position: relative;
-  cursor: help;
 `;
 
 export const TooltipBoxStyle = ({ hover, color }) => css`
-  ${!hover && `opacity: 0;`};
+  ${!hover && `display: none`};
+  ${!hover && `opacity: 0`};
   position: absolute;
   left: 50%;
   ${transitions.MAIN};

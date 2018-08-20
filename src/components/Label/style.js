@@ -5,6 +5,7 @@ import { colors, fontSizesWithHeights } from 'styles/common';
 export const LabelWrapperStyle = (horizontal: boolean) => css`
   position: relative;
   display: flex;
+  ${horizontal && 'align-items: center'};
   flex-direction: ${horizontal ? 'row' : 'column'};
   ${horizontal && 'justify-content: space-between'};
   flex: 1;
@@ -20,4 +21,10 @@ export const LabelStyle = css`
   letter-spacing: 2px;
   user-select: none;
   margin-right: 15px;
+  display: flex;
+`;
+
+export const TooltipStyle = css`
+  position: absolute;
+  left: -5px;
 `;

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
-import { WarningTooltip, InfoTooltip, ErrorTooltip } from 'components/Tooltips';
-import { LabelWrapperStyle, LabelStyle } from './style';
+import Tooltip from 'components/Tooltip';
+import { LabelWrapperStyle, LabelStyle, TooltipStyle } from './style';
 
 export type Props = {
   children: React.Node,
@@ -15,15 +15,21 @@ export type Props = {
 };
 
 const Label = (props: Props) => {
-  const { title, required, info, error, warning, hideLabel, horizontal, children } = props;
+  const { title, required, hideLabel, horizontal, children, error, warning, info } = props;
+  const showTooltip = (!hideLabel && !!error) || !!warning || !!info;
+  const tooltipProps = { error, warning, info };
   return (
     <div className={LabelWrapperStyle(!!horizontal)}>
-      {!hideLabel && error && <ErrorTooltip error={error} />}
-      {!hideLabel && warning && <WarningTooltip warning={warning} />}
-      {!hideLabel && info && <InfoTooltip error={info} />}
       {!hideLabel && (
         <div className={LabelStyle}>
-          {title || ''} {required ? '*' : ''}
+          {showTooltip && (
+            <div className={TooltipStyle}>
+              <Tooltip {...tooltipProps} />
+            </div>
+          )}
+          <div>
+            {title || ''} {required ? '*' : ''}
+          </div>
         </div>
       )}
       {children}
