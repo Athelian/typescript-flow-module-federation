@@ -1,65 +1,58 @@
 // @flow
 import * as React from 'react';
-import InfiniteLoader from 'components/InfiniteLoader';
-import type { Props as InfiniteLoaderProps } from 'components/InfiniteLoader';
-/* $FlowFixMe: not have flow type yet */
-import { Grid } from 'react-virtualized';
+import InfiniteScroll from 'react-infinite-scroller';
+import LoadingIcon from 'components/LoadingIcon';
+import { GridViewWrapperStyle, EmptyMessageStyle } from './style';
 
-type RenderRowProps = {
-  columnIndex: number, // Horizontal (column) index of cell
-  isScrolling: boolean, // The List is currently being scrolled
-  isVisible: boolean, // This row is visible within the List (eg it is not an overscanned row)
-  key: number, // Unique key within array of rendered rows
-  parent: React.Ref<typeof Grid>, // Reference to the parent List (instance)
-  rowIndex: number, // Vertical (row) index of cell
-  style: Object, // Style object to be applied to row (to position it);
+type Props = {
+  onLoadMore: Function,
+  hasMore: boolean,
+  isLoading: boolean,
+  isEmpty: boolean,
+  emptyMessage: any,
+  itemWidth: number,
+  spacing?: number,
+  children: any,
 };
 
-type Props = InfiniteLoaderProps & {
-  height: number,
-  width: number,
-  rowHeight: number,
-  columnCount: number,
-  columnWidth: number | (({ index: number }) => number),
-  cellRenderer: RenderRowProps => React.Node,
+const defaultProps = {
+  spacing: 30,
 };
 
-export default class GridView extends React.PureComponent<Props> {
-  render() {
-    const {
-      columnCount,
-      hasNextPage,
-      onLoadNextPage,
-      list,
-      isNextPageLoading,
-      ...rest
-    } = this.props;
-    return (
-      <InfiniteLoader
-        onLoadNextPage={onLoadNextPage}
-        hasNextPage={hasNextPage}
-        list={list}
-        isNextPageLoading={isNextPageLoading}
-      >
-        {({ onRowsRendered, registerChild }) => (
-          <Grid
-            ref={registerChild}
-            columnCount={columnCount}
-            onSectionRendered={({
-              columnStartIndex,
-              columnStopIndex,
-              rowStartIndex,
-              rowStopIndex,
-            }) => {
-              const startIndex = rowStartIndex * columnCount + columnStartIndex;
-              const stopIndex = rowStopIndex * columnCount + columnStopIndex;
+function GridView(props: Props) {
+  const {
+    onLoadMore,
+    hasMore,
+    isLoading,
+    isEmpty,
+    emptyMessage,
+    itemWidth,
+    spacing,
+    children,
+  } = props;
 
-              onRowsRendered({ startIndex, stopIndex });
-            }}
-            {...rest}
-          />
-        )}
-      </InfiniteLoader>
-    );
+  if (isLoading) {
+    return <LoadingIcon />;
   }
+
+  if (isEmpty) {
+    return <div className={EmptyMessageStyle}>{emptyMessage}</div>;
+  }
+
+  return (
+    <InfiniteScroll
+      className={GridViewWrapperStyle(itemWidth, spacing || 30)}
+      loadMore={onLoadMore}
+      hasMore={hasMore}
+      loader={<LoadingIcon key="loading" />}
+      threshold={500}
+      useWindow={false}
+    >
+      {children}
+    </InfiniteScroll>
+  );
 }
+
+GridView.defaultProps = defaultProps;
+
+export default GridView;

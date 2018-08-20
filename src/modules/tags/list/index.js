@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import matchSorter from 'match-sorter';
-import LoadingIcon from 'components/LoadingIcon';
 import type { Tag } from 'components/Tag/type.js.flow';
-import TagListView from './components/TagListView';
+import TagGridView from './components/TagGridView';
 import {
   productTagsQuery,
   shipmentTagsQuery,
@@ -22,19 +21,7 @@ type Props = {
 };
 
 class TagList extends React.PureComponent<Props> {
-  constructor() {
-    super();
-
-    this.tagQueries = [
-      productTagsQuery,
-      shipmentTagsQuery,
-      userTagsQuery,
-      batchTagsQuery,
-      requestTagsQuery,
-    ];
-  }
-
-  loadMorePage = (clientData: { fetchMore: Function, data: ?Object }) => {
+  loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;
 
@@ -47,12 +34,22 @@ class TagList extends React.PureComponent<Props> {
     if (nextPage > totalPage) return;
 
     const { viewType, ...filtersAndSort } = this.props;
+
     fetchMore({
       variables: {
         page: nextPage,
         ...filtersAndSort,
       },
       updateQuery: (prevResult, { fetchMoreResult }) => {
+        const { perPage } = this.props;
+        if (
+          !isEquals({ perPage }, filtersAndSort) ||
+          getByPathWithDefault({}, `viewer.${tagsByTab}.page`, prevResult) + 1 !==
+            getByPathWithDefault({}, `viewer.${tagsByTab}.page`, fetchMoreResult)
+        ) {
+          return prevResult;
+        }
+
         if (getByPathWithDefault([], `viewer.${tagsByTab}`, fetchMoreResult).length === 0)
           return prevResult;
 
@@ -77,33 +74,38 @@ class TagList extends React.PureComponent<Props> {
     return filteredTags;
   };
 
-  tagQueries: Array<string>;
-
   render() {
     const { viewType, tabIndex = 0, ...filtersAndSort } = this.props;
 
-    const query = this.tagQueries[tabIndex];
+    const tagQueries = [
+      productTagsQuery,
+      shipmentTagsQuery,
+      userTagsQuery,
+      batchTagsQuery,
+      requestTagsQuery,
+    ];
+    const query = tagQueries[tabIndex];
 
     const tags = ['productTags', 'shipmentTags', 'userTags', 'batchTags', 'requestTags'];
     const tagsByTab = tags[tabIndex];
 
     return (
-      <Query query={query} variables={{ page: 1, ...filtersAndSort }}>
+      <Query query={query} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
         {({ loading, data, fetchMore, error }) => {
-          const nextPage = getByPathWithDefault(1, `viewer.${tagsByTab}.page`, data) + 1;
-          const totalPage = getByPathWithDefault(1, `viewer.${tagsByTab}.totalPage`, data);
           if (error) {
             return error.message;
           }
 
-          if (loading) return <LoadingIcon />;
+          const nextPage = getByPathWithDefault(1, `viewer.${tagsByTab}.page`, data) + 1;
+          const totalPage = getByPathWithDefault(1, `viewer.${tagsByTab}.totalPage`, data);
+          const hasMore = nextPage <= totalPage;
 
           return (
-            <TagListView
-              onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-              hasMore={nextPage <= totalPage}
-              isLoading={loading}
+            <TagGridView
               items={this.filterTags(getByPathWithDefault([], `viewer.${tagsByTab}`, data))}
+              onLoadMore={() => this.loadMore({ fetchMore, data })}
+              hasMore={hasMore}
+              isLoading={loading}
             />
           );
         }}

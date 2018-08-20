@@ -1,67 +1,39 @@
 // @flow
 import * as React from 'react';
-import {
-  AutoSizer,
-  /* $FlowFixMe: not have flow type yet */
-} from 'react-virtualized';
 import GridView from 'components/GridView';
-import LoadingIcon from 'components/LoadingIcon';
-import StaffItem from './StaffItem';
+import StaffCard from './StaffCard';
 
 type Props = {
   items: Array<Object>,
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
+  renderItem?: (item: Object) => React.Node,
 };
 
-function totalColumns(width, columnWidth) {
-  return parseInt(width / columnWidth, 10) || 1;
-}
+const defaultRenderItem = (item: Object) => <StaffCard key={item.id} staff={item} />;
 
-function StaffGridView({ items, onLoadMore, isLoading, hasMore }: Props) {
-  const isRowLoaded = ({ index }) => !hasMore || index < items.length;
-  const columnWidth = 200;
+const defaultProps = {
+  renderItem: defaultRenderItem,
+};
+
+const StaffGridView = (props: Props) => {
+  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
+
   return (
-    <AutoSizer disableHeight>
-      {({ width }) => (
-        <GridView
-          hasNextPage={hasMore}
-          isNextPageLoading={isLoading}
-          onLoadNextPage={onLoadMore}
-          list={items}
-          width={width}
-          height={window.innerHeight - 50}
-          rowCount={Math.ceil(items.length / totalColumns(width, columnWidth)) + 1}
-          rowHeight={170}
-          columnWidth={columnWidth}
-          columnCount={totalColumns(width, columnWidth)}
-          cellRenderer={({ key, columnIndex, rowIndex, style }) => {
-            const currentIndex = rowIndex * totalColumns(width, columnWidth) + columnIndex;
-            if (isRowLoaded({ index: currentIndex })) {
-              return (
-                <div key={key} style={style}>
-                  <StaffItem
-                    user={items[rowIndex * totalColumns(width, columnWidth) + columnIndex]}
-                    key={key}
-                  />
-                </div>
-              );
-            }
-
-            if (currentIndex === items.length)
-              return (
-                <div key={key} style={style}>
-                  <LoadingIcon />
-                </div>
-              );
-
-            return <div key={key} style={style} />;
-          }}
-        />
-      )}
-    </AutoSizer>
+    <GridView
+      onLoadMore={onLoadMore}
+      hasMore={hasMore}
+      isLoading={isLoading}
+      itemWidth={200}
+      isEmpty={items.length === 0}
+      emptyMessage="No staff found"
+    >
+      {items.map(item => renderItem(item))}
+    </GridView>
   );
-}
+};
+
+StaffGridView.defaultProps = defaultProps;
 
 export default StaffGridView;

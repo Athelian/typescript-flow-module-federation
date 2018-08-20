@@ -7,7 +7,6 @@ import InputGroup from 'components/Form/InputGroup';
 import { UIConsumer } from 'modules/ui';
 import NavBar, {
   EntityIcon,
-  ViewToggle,
   FilterInput,
   SortInput,
   SearchInput,
@@ -72,11 +71,6 @@ class OrderModule extends React.Component<Props, State> {
                   onChange={index =>
                     this.onChangeFilter({ status: index ? 'Completed' : 'Active' })
                   }
-                />
-                <ViewToggle
-                  changeToggle={newViewType => this.onChangeFilter({ viewType: newViewType })}
-                  selectedView={viewType}
-                  viewTypes={[{ icon: 'CARD', type: 'grid' }, { icon: 'TABLE', type: 'table' }]}
                 />
                 <SortInput
                   sort={fields.find(item => item.value === sort.field) || fields[0]}

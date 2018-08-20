@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
-import LoadingIcon from 'components/LoadingIcon';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import StaffGridView from './components/StaffGridView';
-import StaffListView from './components/StaffListView';
-import StaffTableView from './components/StaffTableView';
+// import StaffListView from './components/StaffListView';
+// import StaffTableView from './components/StaffTableView';
 import { userListQuery } from './query';
 
 type Props = {
@@ -17,7 +16,7 @@ type Props = {
 };
 
 class StaffList extends React.PureComponent<Props> {
-  loadMorePage = (clientData: { fetchMore: Function, data: ?Object }) => {
+  loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;
     const nextPage = getByPathWithDefault(1, 'viewer.group.users.page', data) + 1;
@@ -25,12 +24,22 @@ class StaffList extends React.PureComponent<Props> {
     if (nextPage > totalPage) return;
 
     const { viewType, ...filtersAndSort } = this.props;
+
     fetchMore({
       variables: {
         page: nextPage,
         ...filtersAndSort,
       },
       updateQuery: (prevResult, { fetchMoreResult }) => {
+        const { filter, perPage } = this.props;
+        if (
+          !isEquals({ filter, perPage }, filtersAndSort) ||
+          getByPathWithDefault({}, 'viewer.group.users.page', prevResult) + 1 !==
+            getByPathWithDefault({}, 'viewer.group.users.page', fetchMoreResult)
+        ) {
+          return prevResult;
+        }
+
         if (getByPathWithDefault([], 'viewer.group.users.nodes', fetchMoreResult).length === 0)
           return prevResult;
 
@@ -57,42 +66,30 @@ class StaffList extends React.PureComponent<Props> {
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
-      <Query query={userListQuery} variables={{ page: 1, ...filtersAndSort }}>
+      <Query
+        query={userListQuery}
+        variables={{ page: 1, ...filtersAndSort }}
+        fetchPolicy="network-only"
+      >
         {({ loading, data, fetchMore, error }) => {
-          const nextPage = getByPathWithDefault(1, 'viewer.group.users.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'viewer.group.users.totalPage', data);
           if (error) {
             return error.message;
           }
 
-          if (loading) return <LoadingIcon />;
+          const nextPage = getByPathWithDefault(1, 'viewer.group.users.page', data) + 1;
+          const totalPage = getByPathWithDefault(1, 'viewer.group.users.totalPage', data);
+          const hasMore = nextPage <= totalPage;
 
-          if (viewType === 'list')
-            return (
-              <StaffListView
-                onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-                hasMore={nextPage <= totalPage}
-                isLoading={loading}
-                items={getByPathWithDefault([], 'viewer.group.users.nodes', data)}
-              />
-            );
+          if (viewType === 'list') return null;
 
-          if (viewType === 'table')
-            return (
-              <StaffTableView
-                onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-                hasMore={nextPage <= totalPage}
-                isLoading={loading}
-                items={getByPathWithDefault([], 'viewer.group.users.nodes', data)}
-              />
-            );
+          if (viewType === 'table') return null;
 
           return (
             <StaffGridView
-              onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-              hasMore={nextPage <= totalPage}
-              isLoading={loading}
               items={getByPathWithDefault([], 'viewer.group.users.nodes', data)}
+              onLoadMore={() => this.loadMore({ fetchMore, data })}
+              hasMore={hasMore}
+              isLoading={loading}
             />
           );
         }}

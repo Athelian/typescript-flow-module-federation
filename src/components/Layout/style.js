@@ -12,7 +12,7 @@ export const WrapperStyle = css`
 export const ContentWrapperStyle = css`
   height: calc(100vh - 50px);
   width: 100%;
-  padding: 50px 0;
+  padding: 50px;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.MAIN};
