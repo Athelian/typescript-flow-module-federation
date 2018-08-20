@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import WarehouseGridView from './components/WarehouseGridView';
-// import WarehouseListView from './components/WarehouseListView';
-// import WarehouseTableView from './components/WarehouseTableView';
 import query from './query.graphql';
 
 type Props = {
@@ -72,10 +70,6 @@ class WarehouseList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'viewer.warehouses.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'viewer.warehouses.totalPage', data);
           const hasMore = nextPage <= totalPage;
-
-          if (viewType === 'list') return null;
-
-          if (viewType === 'table') return null;
 
           return (
             <WarehouseGridView
