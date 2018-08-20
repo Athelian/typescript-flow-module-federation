@@ -453,15 +453,16 @@ build                                    // auto generated build folder containi
   for JavaScript object schema validator and object parser.
 
 * [react-snap](https://github.com/stereobooster/react-snap)
+
   for static prerendering for SPAs
 
 * [zenform](https://github.com/shrynx/zenform)
 
-for react form management.
+  for react form management.
 
-- [react-virtualized](https://github.com/bvaughn/react-virtualized)
+- [react-infinite-scroller](https://github.com/CassetteRocks/react-infinite-scroller)
 
-React components for efficiently rendering large lists and tabular data.
+  simple wrapper to infinitely fetch data on scroll
 
 ## Versioning
 

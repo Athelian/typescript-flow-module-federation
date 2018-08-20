@@ -11,8 +11,6 @@ import loadFonts from './fonts';
 import { isAppInProduction } from './utils/env';
 import errorReport from './errorReport';
 import './styles/reset.css';
-/* $FlowFixMe: load css from node module */
-import 'react-virtualized/styles.css';
 
 loadFonts();
 errorReport();
