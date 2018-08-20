@@ -45,6 +45,8 @@ import DOCUMENT from '@fortawesome/fontawesome-pro-solid/faFileAlt';
 import TOGGLE_ON from '@fortawesome/fontawesome-pro-solid/faToggleOn';
 import TOGGLE_OFF from '@fortawesome/fontawesome-pro-solid/faToggleOff';
 import INFO from '@fortawesome/fontawesome-pro-solid/faInfoCircle';
+import MEMO from '@fortawesome/fontawesome-pro-solid/faAlignJustify';
+import DOWNLOAD from '@fortawesome/fontawesome-pro-solid/faDownload';
 
 // Shipment Timeline
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
@@ -60,6 +62,13 @@ import CART from '@fortawesome/fontawesome-pro-solid/faShoppingCart';
 
 // Staff
 import ID_BADGE from '@fortawesome/fontawesome-pro-solid/faIdBadge';
+
+// Document Input
+import EXCEL from '@fortawesome/fontawesome-pro-solid/faFileExcel';
+import IMAGE from '@fortawesome/fontawesome-pro-solid/faFileImage';
+import PDF from '@fortawesome/fontawesome-pro-solid/faFilePdf';
+import POWER_POINT from '@fortawesome/fontawesome-pro-solid/faFilePowerpoint';
+import WORD from '@fortawesome/fontawesome-pro-solid/faFileWord';
 
 export default {
   ORDER,
@@ -107,6 +116,8 @@ export default {
   TOGGLE_ON,
   TOGGLE_OFF,
   INFO,
+  MEMO,
+  DOWNLOAD,
 
   CARGO_READY,
   PORT,
@@ -119,4 +130,10 @@ export default {
   CART,
 
   ID_BADGE,
+
+  EXCEL,
+  IMAGE,
+  PDF,
+  POWER_POINT,
+  WORD,
 };

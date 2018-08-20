@@ -1,8 +1,11 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const WrapperStyle = css`
-  min-width: 100px;
+export const AvatarWrapperStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
 `;
 
-export default WrapperStyle;
+export default AvatarWrapperStyle;
