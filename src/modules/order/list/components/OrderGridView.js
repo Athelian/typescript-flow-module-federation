@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
-import GridView from './GridView';
-import OrderItem from './OrderItem';
+import GridView from 'components/GridView';
+import OrderCard from './OrderCard';
 
 type Props = {
   items: Array<Object>,
@@ -11,7 +11,7 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <OrderItem key={item.id} order={item} />;
+const defaultRenderItem = (item: Object) => <OrderCard key={item.id} order={item} />;
 
 const defaultProps = {
   renderItem: defaultRenderItem,

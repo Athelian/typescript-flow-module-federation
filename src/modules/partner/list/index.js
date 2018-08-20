@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
-import LoadingIcon from 'components/LoadingIcon';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import PartnerGridView from './components/PartnerGridView';
-import PartnerListView from './components/PartnerListView';
-import PartnerTableView from './components/PartnerTableView';
+// import PartnerListView from './components/PartnerListView';
+// import PartnerTableView from './components/PartnerTableView';
 import query from './query.graphql';
 
 type Props = {
@@ -17,7 +16,7 @@ type Props = {
 };
 
 class PartnerList extends React.PureComponent<Props> {
-  loadMorePage = (clientData: { fetchMore: Function, data: ?Object }) => {
+  loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;
     const nextPage = getByPathWithDefault(1, 'viewer.group.partners.page', data) + 1;
@@ -25,12 +24,22 @@ class PartnerList extends React.PureComponent<Props> {
     if (nextPage > totalPage) return;
 
     const { viewType, ...filtersAndSort } = this.props;
+
     fetchMore({
       variables: {
         page: nextPage,
         ...filtersAndSort,
       },
       updateQuery: (prevResult, { fetchMoreResult }) => {
+        const { filter, perPage } = this.props;
+        if (
+          !isEquals({ filter, perPage }, filtersAndSort) ||
+          getByPathWithDefault({}, 'viewer.group.partners.page', prevResult) + 1 !==
+            getByPathWithDefault({}, 'viewer.group.partners.page', fetchMoreResult)
+        ) {
+          return prevResult;
+        }
+
         if (getByPathWithDefault([], 'viewer.group.partners.nodes', fetchMoreResult).length === 0)
           return prevResult;
 
@@ -57,42 +66,26 @@ class PartnerList extends React.PureComponent<Props> {
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
-      <Query query={query} variables={{ page: 1, ...filtersAndSort }}>
+      <Query query={query} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
         {({ loading, data, fetchMore, error }) => {
-          const nextPage = getByPathWithDefault(1, 'viewer.group.partners.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'viewer.group.partners.totalPage', data);
           if (error) {
             return error.message;
           }
 
-          if (loading) return <LoadingIcon />;
+          const nextPage = getByPathWithDefault(1, 'viewer.group.partners.page', data) + 1;
+          const totalPage = getByPathWithDefault(1, 'viewer.group.partners.totalPage', data);
+          const hasMore = nextPage <= totalPage;
 
-          if (viewType === 'list')
-            return (
-              <PartnerListView
-                onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-                hasMore={nextPage <= totalPage}
-                isLoading={loading}
-                items={getByPathWithDefault([], 'viewer.group.partners.nodes', data)}
-              />
-            );
+          if (viewType === 'list') return null;
 
-          if (viewType === 'table')
-            return (
-              <PartnerTableView
-                onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-                hasMore={nextPage <= totalPage}
-                isLoading={loading}
-                items={getByPathWithDefault([], 'viewer.group.partners.nodes', data)}
-              />
-            );
+          if (viewType === 'table') return null;
 
           return (
             <PartnerGridView
-              onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-              hasMore={nextPage <= totalPage}
-              isLoading={loading}
               items={getByPathWithDefault([], 'viewer.group.partners.nodes', data)}
+              onLoadMore={() => this.loadMore({ fetchMore, data })}
+              hasMore={hasMore}
+              isLoading={loading}
             />
           );
         }}

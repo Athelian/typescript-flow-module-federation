@@ -1,48 +1,14 @@
 // @flow
 import * as React from 'react';
-import Layout from 'components/Layout';
-import { UIConsumer } from 'modules/ui';
-import NavBar, { EntityIcon } from 'components/NavBar';
-import StaffList from './list';
+import { Router } from '@reach/router';
+import StaffListContainer from './index.list';
+import StaffFormContainer from './index.form';
 
-type Props = {};
-type State = {
-  viewType: string,
-  status: string,
-  perPage: number,
-};
+const StaffApp = () => (
+  <Router>
+    <StaffListContainer path="/" />
+    <StaffFormContainer path=":staffId" />
+  </Router>
+);
 
-// TODO: We will restructure when we're working on new form system
-class StaffModule extends React.Component<Props, State> {
-  state = {
-    viewType: 'grid',
-    status: 'Active',
-    perPage: 10,
-  };
-
-  onChangeFilter = (field: string, newValue: any) => {
-    this.setState(prevState => ({ ...prevState, [field]: newValue }));
-  };
-
-  render() {
-    const { viewType, perPage, ...filters } = this.state;
-    return (
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <EntityIcon icon="STAFF" color="GRAY_LIGHT" />
-              </NavBar>
-            }
-          >
-            <StaffList viewType={viewType} perPage={perPage} filter={filters} />
-          </Layout>
-        )}
-      </UIConsumer>
-    );
-  }
-}
-
-export default StaffModule;
+export default StaffApp;

@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
-import LoadingIcon from 'components/LoadingIcon';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import WarehouseGridView from './components/WarehouseGridView';
-import WarehouseListView from './components/WarehouseListView';
-import WarehouseTableView from './components/WarehouseTableView';
+// import WarehouseListView from './components/WarehouseListView';
+// import WarehouseTableView from './components/WarehouseTableView';
 import query from './query.graphql';
 
 type Props = {
@@ -17,7 +16,7 @@ type Props = {
 };
 
 class WarehouseList extends React.PureComponent<Props> {
-  loadMorePage = (clientData: { fetchMore: Function, data: ?Object }) => {
+  loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;
     const nextPage = getByPathWithDefault(1, 'viewer.warehouses.page', data) + 1;
@@ -25,12 +24,22 @@ class WarehouseList extends React.PureComponent<Props> {
     if (nextPage > totalPage) return;
 
     const { viewType, ...filtersAndSort } = this.props;
+
     fetchMore({
       variables: {
         page: nextPage,
         ...filtersAndSort,
       },
       updateQuery: (prevResult, { fetchMoreResult }) => {
+        const { filter, perPage } = this.props;
+        if (
+          !isEquals({ filter, perPage }, filtersAndSort) ||
+          getByPathWithDefault({}, 'viewer.warehouses.page', prevResult) + 1 !==
+            getByPathWithDefault({}, 'viewer.warehouses.page', fetchMoreResult)
+        ) {
+          return prevResult;
+        }
+
         if (getByPathWithDefault([], 'viewer.warehouses.nodes', fetchMoreResult).length === 0)
           return prevResult;
 
@@ -54,42 +63,26 @@ class WarehouseList extends React.PureComponent<Props> {
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
-      <Query query={query} variables={{ page: 1, ...filtersAndSort }}>
+      <Query query={query} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
         {({ loading, data, fetchMore, error }) => {
-          const nextPage = getByPathWithDefault(1, 'viewer.warehouses.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'viewer.warehouses.totalPage', data);
           if (error) {
             return error.message;
           }
 
-          if (loading) return <LoadingIcon />;
+          const nextPage = getByPathWithDefault(1, 'viewer.warehouses.page', data) + 1;
+          const totalPage = getByPathWithDefault(1, 'viewer.warehouses.totalPage', data);
+          const hasMore = nextPage <= totalPage;
 
-          if (viewType === 'list')
-            return (
-              <WarehouseListView
-                onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-                hasMore={nextPage <= totalPage}
-                isLoading={loading}
-                items={getByPathWithDefault([], 'viewer.warehouses.nodes', data)}
-              />
-            );
+          if (viewType === 'list') return null;
 
-          if (viewType === 'table')
-            return (
-              <WarehouseTableView
-                onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-                hasMore={nextPage <= totalPage}
-                isLoading={loading}
-                items={getByPathWithDefault([], 'viewer.warehouses.nodes', data)}
-              />
-            );
+          if (viewType === 'table') return null;
 
           return (
             <WarehouseGridView
-              onLoadMore={() => this.loadMorePage({ fetchMore, data })}
-              hasMore={nextPage <= totalPage}
-              isLoading={loading}
               items={getByPathWithDefault([], 'viewer.warehouses.nodes', data)}
+              onLoadMore={() => this.loadMore({ fetchMore, data })}
+              hasMore={hasMore}
+              isLoading={loading}
             />
           );
         }}
