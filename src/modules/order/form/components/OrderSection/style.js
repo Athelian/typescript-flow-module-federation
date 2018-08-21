@@ -1,40 +1,43 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses } from 'styles/common';
+import { presets, layout, fontSizesWithHeights, colors } from 'styles/common';
 
-export const WrapperStyle = css`
-  background: #fff;
+export const OrderSectionWrapperStyle = css`
+  ${presets.BOX};
+  width: 880px;
   padding: 40px 100px;
-  ${borderRadiuses.MAIN};
 `;
 
-export const FormWrapperStyle = css`
-  display: flex;
+export const MainFieldsWrapperStyle = css`
+  ${layout.GRID_HORIZONTAL};
+  justify-content: space-between;
 `;
 
 export const ExporterSectionStyle = css`
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-`;
-
-export const InputsWrapperStyle = css`
-  flex: 2;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 10px;
 `;
 
 export const ExporterCardStyle = css`
   width: 200px;
   height: 230px;
-  cursor: pointer;
-  img {
-    border-radius: 5px 5px 0 0;
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  div {
-    text-align: center;
-  }
+`;
+
+export const ExporterCardImageStyle = css`
+  border-radius: 5px 5px 0 0;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+`;
+
+export const ExporterNameStyle = css`
+  color: ${colors.BLACK};
+  font-weight: bold;
+  ${fontSizesWithHeights.MAIN};
+  ${presets.ELLIPSIS};
+  text-align: center;
+  width: 200px;
+  padding: 0 10px;
 `;
 
 export const TagsInputStyle = css`
@@ -44,14 +47,4 @@ export const TagsInputStyle = css`
 export const QuantitySummaryStyle = css`
   display: flex;
   justify-content: space-between;
-  margin-top: 32px;
-  & > div {
-    flex: 1;
-    &:first-child {
-      margin-right: 60px;
-    }
-    &:nth-child(2) {
-      margin-left: 60px;
-    }
-  }
 `;

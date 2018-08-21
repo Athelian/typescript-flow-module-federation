@@ -17,7 +17,7 @@ function InputGroup({ children, direction = 'row', fieldGap = 8 }: Props) {
   return (
     <div className={InputWrapperStyle(direction, fieldGap)}>
       {React.Children.map(children, child => (
-        <div>{child}</div>
+        <React.Fragment>{child}</React.Fragment>
       ))}
     </div>
   );

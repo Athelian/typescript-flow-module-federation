@@ -7,8 +7,8 @@ export const IconStyle = (color: string) => css`
   color: #fff;
   display: flex;
   ${layout.CENTER_CENTER};
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   ${fontSizes.HUGE};
 `;
 

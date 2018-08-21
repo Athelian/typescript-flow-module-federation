@@ -10,7 +10,7 @@ import PARTNER from '@fortawesome/fontawesome-pro-solid/faHandshake';
 import STAFF from '@fortawesome/fontawesome-pro-solid/faUsers';
 import SETTINGS from '@fortawesome/fontawesome-pro-solid/faCog';
 import TAGS from '@fortawesome/fontawesome-pro-solid/faTags';
-import ORDER_ITEM from '@fortawesome/fontawesome-pro-solid/faBoxAlt';
+import ORDER_ITEM from '@fortawesome/fontawesome-pro-solid/faShoppingCart';
 import NOTIFICATION from '@fortawesome/fontawesome-pro-solid/faBell';
 import PROFILE from '@fortawesome/fontawesome-pro-solid/faAddressCard';
 import LOGOUT from '@fortawesome/fontawesome-pro-solid/faSignOutAlt';
@@ -56,9 +56,6 @@ import UNKNOWN from '@fortawesome/fontawesome-pro-solid/faQuestion';
 import TRANSIT from '@fortawesome/fontawesome-pro-solid/faLifeRing';
 import CUSTOMS from '@fortawesome/fontawesome-pro-solid/faClipboardList';
 import DELIVERY_READY from '@fortawesome/fontawesome-pro-solid/faTruckLoading';
-
-// Batch Items
-import CART from '@fortawesome/fontawesome-pro-solid/faShoppingCart';
 
 // Staff
 import ID_BADGE from '@fortawesome/fontawesome-pro-solid/faIdBadge';
@@ -126,8 +123,6 @@ export default {
   TRANSIT,
   CUSTOMS,
   DELIVERY_READY,
-
-  CART,
 
   ID_BADGE,
 

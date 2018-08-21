@@ -38,7 +38,7 @@ class Tabs extends React.Component<Props, State> {
           <TabItem
             key={tab.id}
             active={index === activeIndex}
-            onActive={() => this.handleChange(index)}
+            onClick={() => this.handleChange(index)}
             {...tab}
             {...rest}
           />

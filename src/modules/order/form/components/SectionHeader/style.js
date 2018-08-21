@@ -1,22 +1,26 @@
 import { css } from 'react-emotion';
-import { colors, fontSizes } from 'styles/common';
+import { presets, colors, fontSizes, layout } from 'styles/common';
 
-export const WrapperStyle = css`
-  display: flex;
-  height: 40px;
+export const SectionHeaderWrapperStyle = css`
+  grid-template-columns: 1fr;
+  ${layout.GRID_HORIZONTAL};
+  grid-template-rows: 40px;
+  grid-gap: 40px;
   align-items: center;
+  width: 960px;
+  padding: 0 40px 0 0;
 `;
 
 export const TitleWrapperStyle = css`
-  flex: 1;
   display: flex;
   align-items: center;
-  color: ${colors.GRAY};
-  ${fontSizes.HUGE};
-  margin-left: -40px;
+  ${fontSizes.LARGE};
+  color: ${colors.GRAY_DARK};
 `;
 
 export const TitleStyle = css`
+  ${presets.ELLIPSIS};
+  font-weight: bold;
   letter-spacing: 2px;
 `;
 
