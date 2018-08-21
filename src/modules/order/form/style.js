@@ -22,20 +22,6 @@ export const LastModifiedWrapperStyle = css`
   align-items: center;
 `;
 
-export const LabelStyle = css`
-  ${presets.ELLIPSIS};
-  ${fontSizes.SMALL};
-  color: ${colors.GRAY_DARK};
-  letter-spacing: 2px;
-`;
-
-export const ValueStyle = css`
-  ${presets.ELLIPSIS};
-  color: ${colors.BLACK};
-  font-weight: bold;
-  ${fontSizes.MAIN};
-`;
-
 export const UserIconStyle = css`
   display: flex;
   ${layout.CENTER_CENTER};

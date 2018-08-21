@@ -8,4 +8,5 @@ export type LabelProps = {
   error?: string | React.Node,
   warning?: string | React.Node,
   hideLabel?: boolean,
+  vertical?: boolean,
 };

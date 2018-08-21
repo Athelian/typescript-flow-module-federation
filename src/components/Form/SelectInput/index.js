@@ -18,12 +18,12 @@ type Props = {
   error?: any,
   itemToString: any => string,
   itemToValue: any => any,
-  defaultHover?: boolean,
+  forceHoverStyle?: boolean,
 };
 
 const defaultProps = {
   error: null,
-  defaultHover: false,
+  forceHoverStyle: false,
 };
 
 function SelectInput({
@@ -31,7 +31,7 @@ function SelectInput({
   items,
   onChange,
   error,
-  defaultHover,
+  forceHoverStyle,
   itemToString,
   itemToValue,
   ...rest
@@ -46,7 +46,7 @@ function SelectInput({
       onChange={onChange}
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
-        <div className={SelectWrapperStyle(!!error, isOpen, !!defaultHover && !selectedItem)}>
+        <div className={SelectWrapperStyle(!!error, isOpen, !!forceHoverStyle && !selectedItem)}>
           {input}
           {selectedItem ? (
             <button type="button" onClick={clearSelection} className={ButtonStyle}>

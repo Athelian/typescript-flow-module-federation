@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import { FormattedMessage } from 'react-intl';
+import Display from 'components/Display';
 import FormattedNumber from 'components/FormattedNumber';
 import yupToFormErrors from 'utils/yupToFormErrors';
 import { Form, Field, TextInput, TagsInput, InputGroup } from 'components/Form';
@@ -23,7 +24,6 @@ import {
   ExporterNameStyle,
   TagsInputStyle,
   QuantitySummaryStyle,
-  ValueStyle,
 } from './style';
 
 type Props = {
@@ -78,15 +78,13 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                     <TextInput
                       {...input}
                       id="PO"
-                      label="PO NO"
                       title={<FormattedMessage {...messages.PO} />}
                       errorMessage={touched.NO && errors.NO}
                       required
                       editable={isNew}
                       width="200px"
-                      defaultHover
                       onChange={setFieldValue}
-                      horizontal
+                      align="right"
                     />
                   )}
                 />
@@ -96,14 +94,12 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                     <TextInput
                       {...input}
                       id="PI"
-                      label="PI NO"
                       title={<FormattedMessage {...messages.PI} />}
                       errorMessage={touched.PI && errors.PI}
                       editable={isNew}
                       width="200px"
-                      defaultHover
                       onChange={setFieldValue}
-                      horizontal
+                      align="right"
                     />
                   )}
                 />
@@ -114,14 +110,12 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                       {...input}
                       id="poDate"
                       type="date"
-                      label="PO ISSUANCE DATE"
                       title={<FormattedMessage {...messages.date} />}
                       errorMessage={touched.date && errors.date}
                       editable={isNew}
                       width="200px"
-                      defaultHover
                       onChange={setFieldValue}
-                      horizontal
+                      align="right"
                     />
                   )}
                 />
@@ -129,19 +123,15 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                   title={<FormattedMessage {...messages.currency} />}
                   value={values.currency}
                   onChange={v => setFieldValue('currency', v)}
-                  horizontal
                   width="200px"
                   required
-                  defaultHover
                 />
                 <IncotermsInput
                   title={<FormattedMessage {...messages.incoterms} />}
                   value={values.incoterms}
                   onChange={v => setFieldValue('incoterms', v)}
-                  horizontal
                   width="200px"
                   required
-                  defaultHover
                 />
                 <Field
                   name="deliveryPlace"
@@ -149,20 +139,18 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                     <TextInput
                       {...input}
                       id="deliveryPlace"
-                      label="PLACE OF DELIVERY"
                       title={<FormattedMessage {...messages.deliveryPlace} />}
                       errorMessage={touched.deliveryPlace && errors.deliveryPlace}
                       editable={isNew}
-                      defaultHover
                       width="200px"
                       onChange={setFieldValue}
-                      horizontal
+                      align="right"
                     />
                   )}
                 />
               </InputGroup>
               <div className={ExporterSectionStyle}>
-                <Label title={<FormattedMessage {...messages.exporter} />} required>
+                <Label title={<FormattedMessage {...messages.exporter} />} required vertical>
                   <BooleanValue>
                     {({ value: opened, toggle }) => (
                       <React.Fragment>
@@ -193,7 +181,6 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
               <TagsInput
                 title={<FormattedMessage {...messages.tags} />}
                 editable={isNew}
-                label="TAGS"
                 id="tags"
                 name="tags"
                 tagType="productTags"
@@ -203,39 +190,27 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
             </div>
             <div className={QuantitySummaryStyle}>
               <InputGroup fieldGap={20}>
-                <Label title="ORDERED QTY" horizontal>
-                  <div className={ValueStyle}>
-                    <FormattedNumber value={totalOrderedQuantity} />
-                  </div>
-                </Label>
-                <Label title="BATCHED QTY" horizontal>
-                  <div className={ValueStyle}>
-                    <FormattedNumber value={values.batchedQuantity} />
-                  </div>
-                </Label>
-                <Label title="SHIPPED QTY" horizontal>
-                  <div className={ValueStyle}>
-                    <FormattedNumber value={values.shippedQuantity} />
-                  </div>
-                </Label>
+                <Display title="ORDERED QTY">
+                  <FormattedNumber value={totalOrderedQuantity} />
+                </Display>
+                <Display title="BATCHED QTY">
+                  <FormattedNumber value={values.batchedQuantity} />
+                </Display>
+                <Display title="SHIPPED QTY">
+                  <FormattedNumber value={values.shippedQuantity} />
+                </Display>
               </InputGroup>
 
               <InputGroup fieldGap={20}>
-                <Label title="TOTAL PRICE" horizontal>
-                  <div className={ValueStyle}>
-                    <FormattedNumber value={values.totalPrice} />
-                  </div>
-                </Label>
-                <Label title="TOTAL ITEMS" horizontal>
-                  <div className={ValueStyle}>
-                    <FormattedNumber value={values.items ? values.items.length : 0} />
-                  </div>
-                </Label>
-                <Label title="TOTAL BATCHES" horizontal>
-                  <div className={ValueStyle}>
-                    <FormattedNumber value={totalBatches} />
-                  </div>
-                </Label>
+                <Display title="TOTAL PRICE">
+                  <FormattedNumber value={values.totalPrice} />
+                </Display>
+                <Display title="TOTAL ITEMS">
+                  <FormattedNumber value={values.items ? values.items.length : 0} />
+                </Display>
+                <Display title="TOTAL BATCHES">
+                  <FormattedNumber value={totalBatches} />
+                </Display>
               </InputGroup>
             </div>
           </React.Fragment>

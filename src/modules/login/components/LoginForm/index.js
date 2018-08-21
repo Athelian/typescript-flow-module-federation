@@ -7,7 +7,7 @@ import faSignInAlt from '@fortawesome/fontawesome-pro-solid/faSignInAlt';
 import messages from 'modules/login/messages';
 import { LoginBoxStyle } from 'modules/login/style';
 import { Form, Field } from 'components/Form';
-import TextInput from 'components/TextInput';
+import TextInput from 'components/Form/TextInput';
 import { CustomButton } from 'components/NavButtons';
 import yupToFormErrors from 'utils/yupToFormErrors';
 
@@ -39,7 +39,7 @@ function LoginForm({ onLogin }: Props) {
       validateOnChange
       validations={onValidate}
       onSubmit={onLogin}
-      render={({ errors, touched, handleSubmit, isInvalid, isDirty }) => (
+      render={({ errors, touched, handleSubmit, isInvalid, isDirty, setFieldValue }) => (
         <form data-testid="loginForm" onSubmit={handleSubmit}>
           <div className={LoginBoxStyle}>
             <Field
@@ -51,6 +51,9 @@ function LoginForm({ onLogin }: Props) {
                   type="email"
                   title={<FormattedMessage {...messages.email} />}
                   error={touched.email && errors.email}
+                  vertical
+                  forceHoverStyle
+                  onChange={setFieldValue}
                 />
               )}
             />
@@ -63,6 +66,9 @@ function LoginForm({ onLogin }: Props) {
                   type="password"
                   title={<FormattedMessage {...messages.password} />}
                   error={touched.password && errors.password}
+                  vertical
+                  forceHoverStyle
+                  onChange={setFieldValue}
                 />
               )}
             />

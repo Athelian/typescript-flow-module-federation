@@ -64,6 +64,8 @@ class DocumentItem extends React.Component<Props, State> {
     const fileName = getFileName(value.path);
     const fileIcon = computeIcon(fileExtension);
 
+    const type = types.find(t => t.type === value.type);
+
     return (
       <div className={DocumentWrapperStyle(isExpanded)}>
         {!readOnly && (
@@ -73,15 +75,7 @@ class DocumentItem extends React.Component<Props, State> {
         )}
         <div className={DocumentCardStyle}>
           {readOnly ? (
-            <Display
-              value={(() => {
-                const type = types.find(t => t.type === value.type);
-
-                return type ? type.label : '';
-              })()}
-              ellipsis
-              hideLabel
-            />
+            <Display hideLabel>{type ? type.label : ''}</Display>
           ) : (
             <StringValue>
               {({ value: q, set, clear }) => (

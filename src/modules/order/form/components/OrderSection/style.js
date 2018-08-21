@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, layout, fontSizes, fontSizesWithHeights, colors } from 'styles/common';
+import { presets, layout, fontSizesWithHeights, colors } from 'styles/common';
 
 export const OrderSectionWrapperStyle = css`
   ${presets.BOX};
@@ -47,11 +47,4 @@ export const TagsInputStyle = css`
 export const QuantitySummaryStyle = css`
   display: flex;
   justify-content: space-between;
-`;
-
-export const ValueStyle = css`
-  ${presets.ELLIPSIS};
-  font-weight: bold;
-  color: ${colors.BLACK};
-  ${fontSizes.MAIN};
 `;

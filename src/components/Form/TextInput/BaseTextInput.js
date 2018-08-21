@@ -30,6 +30,7 @@ export default class BaseTextInput extends React.PureComponent<Props> {
   handleChange = (e: any) => {
     const { value } = e.target;
     const { name, onChange } = this.props;
+
     if (onChange) onChange(name, value);
   };
 
@@ -43,24 +44,25 @@ export default class BaseTextInput extends React.PureComponent<Props> {
       errorMessage,
       id,
       value,
-      defaultHover,
+      forceHoverStyle,
       formatter,
       width,
       align = 'left',
+      vertical,
       ...rest
     } = this.props;
     if (!isRead) return null;
     return (
       <Editable editable={!!editable}>
         {(isEditable, onToggleEditMode) => (
-          <Label htmlFor={id} {...rest}>
+          <Label htmlFor={id} vertical={vertical} {...rest}>
             <DebounceTextInput
               {...rest}
               onChange={this.handleChange}
               id={id}
               readOnly={this.isReadOnly(isWrite, isEditable)}
               value={this.isReadOnly(isWrite, isEditable) ? formatter && formatter(value) : value}
-              className={InputStyle(!!errorMessage, !!defaultHover && !value, width, align)}
+              className={InputStyle(!!errorMessage, !!forceHoverStyle, width, align)}
               onKeyDown={evt => this.onKeyDown(evt, onToggleEditMode)}
             />
           </Label>

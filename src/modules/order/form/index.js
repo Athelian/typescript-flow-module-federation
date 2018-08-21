@@ -7,6 +7,7 @@ import messages from 'modules/order/messages';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
+import Display from 'components/Display';
 import OrderSection from './components/OrderSection';
 import ItemSection from './components/ItemSection';
 import DocumentSection from './components/DocumentSection';
@@ -16,8 +17,6 @@ import {
   OrderFormWrapperStyle,
   SectionWrapperStyle,
   LastModifiedWrapperStyle,
-  LabelStyle,
-  ValueStyle,
   ToggleButtonStyle,
   StatusStyle,
   UserIconStyle,
@@ -47,6 +46,7 @@ export default function OrderForm({ order }: Props) {
   const isNew = Object.keys(order).length === 0;
   logger.warn('order', order);
   const orderValues = orderSectionFields(order);
+  const isActive = orderValues.status === 'Active';
 
   return (
     <div className={OrderFormWrapperStyle}>
@@ -55,19 +55,16 @@ export default function OrderForm({ order }: Props) {
           {!isNew && (
             <React.Fragment>
               <div className={LastModifiedWrapperStyle}>
-                <div className={LabelStyle}>
-                  <FormattedMessage {...messages.updatedAt} />
-                </div>
-                <div className={ValueStyle}>
+                <Display title={<FormattedMessage {...messages.updatedAt} />}>
                   <FormattedDate value={new Date(orderValues.updatedAt)} />
-                </div>
+                </Display>
                 <div className={UserIconStyle}>
                   <UserAvatar profileUrl="" />
                 </div>
               </div>
 
-              <div className={StatusStyle(true)}>
-                <Icon icon="ACTIVE" />
+              <div className={StatusStyle(isActive)}>
+                <Icon icon={isActive ? 'ACTIVE' : 'ARCHIVED'} />
                 {orderValues.status}
                 <button
                   type="button"
@@ -75,11 +72,7 @@ export default function OrderForm({ order }: Props) {
                   tabIndex={-1}
                   onClick={() => {}}
                 >
-                  {orderValues.status === 'Active' ? (
-                    <Icon icon="TOGGLE_ON" />
-                  ) : (
-                    <Icon icon="TOGGLE_OFF" />
-                  )}
+                  {isActive ? <Icon icon="TOGGLE_ON" /> : <Icon icon="TOGGLE_OFF" />}
                 </button>
               </div>
             </React.Fragment>
