@@ -9,9 +9,14 @@ import { ProductCardWrapperStyle } from './style';
 
 type Props = {
   product: ?Product,
+  onClick?: (id: string) => void,
 };
 
-const ProductCard = ({ product }: Props) => {
+const defaultProps = {
+  onClick: id => navigate(`/product/${encodeId(id)}`),
+};
+
+const ProductCard = ({ product, onClick }: Props) => {
   if (!product) return '';
 
   const { id } = product;
@@ -24,15 +29,13 @@ const ProductCard = ({ product }: Props) => {
 
   return (
     <EntityCard icon="PRODUCT" color="PRODUCT" actions={actions}>
-      <div
-        className={ProductCardWrapperStyle}
-        onClick={() => navigate(`/product/${encodeId(id)}`)}
-        role="presentation"
-      >
+      <div className={ProductCardWrapperStyle} onClick={onClick} role="presentation">
         {id}
       </div>
     </EntityCard>
   );
 };
+
+ProductCard.defaultProps = defaultProps;
 
 export default ProductCard;
