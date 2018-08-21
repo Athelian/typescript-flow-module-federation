@@ -13,6 +13,7 @@ import ItemSection from './components/ItemSection';
 import DocumentSection from './components/DocumentSection';
 import ShipmentSection from './components/ShipmentSection';
 import SectionHeader from './components/SectionHeader';
+import { OrderFormConsumer } from './provider';
 import {
   OrderFormWrapperStyle,
   SectionWrapperStyle,
@@ -24,6 +25,7 @@ import {
 
 type Props = {
   order: Object,
+  onChange: ({ observeValues: Object, onValidate: Object => Promise<Object> }) => mixed,
 };
 
 const orderSectionFields = pickByProps([
@@ -42,7 +44,10 @@ const orderSectionFields = pickByProps([
   'items',
 ]);
 
-export default function OrderForm({ order }: Props) {
+const hasSelectExporter = (order: Object) =>
+  (order.exporter && order.exporter.id) || order.exporterId;
+
+export default function OrderForm({ order, onChange }: Props) {
   const isNew = Object.keys(order).length === 0;
   logger.warn('order', order);
   const orderValues = orderSectionFields(order);
@@ -81,13 +86,24 @@ export default function OrderForm({ order }: Props) {
         <OrderSection
           id="orderSection"
           isNew={isNew}
-          onSubmit={values => logger.warn(values)}
+          onChange={onChange}
           initialValues={{ ...orderValues }}
         />
       </div>
       <div className={SectionWrapperStyle} id="itemSection">
-        <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${20})`} />
-        <ItemSection />
+        <OrderFormConsumer>
+          {formState => (
+            <React.Fragment>
+              <SectionHeader
+                icon="ORDER_ITEM"
+                title={`ITEMS (${formState.formData.items.length})`}
+              />
+              <ItemSection
+                isReady={hasSelectExporter(order) || hasSelectExporter(formState.formData)}
+              />
+            </React.Fragment>
+          )}
+        </OrderFormConsumer>
       </div>
       <div className={SectionWrapperStyle} id="documentSection">
         <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />

@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import Display from 'components/Display';
 import FormattedNumber from 'components/FormattedNumber';
 import yupToFormErrors from 'utils/yupToFormErrors';
-import { Form, Field, TextInput, TagsInput, InputGroup } from 'components/Form';
+import { Form, FormObserver, Field, TextInput, TagsInput, InputGroup } from 'components/Form';
 import CurrencyInput from 'components/Form/CurrencyInput';
 import IncotermsInput from 'components/Form/IncotermsInput';
 import EntityCard from 'components/EntityCard';
@@ -28,7 +28,7 @@ import {
 
 type Props = {
   isNew: boolean,
-  onSubmit: (values: Object) => void,
+  onChange: Function,
   initialValues: {
     updatedAt?: Date,
     status?: string,
@@ -54,14 +54,13 @@ const onValidate = (values: Object) =>
       .catch(error => reject(yupToFormErrors(error)));
   });
 
-const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
+const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
   <div className={OrderSectionWrapperStyle}>
     <Form
       initialValues={initialValues}
       validateOnChange
       validateOnBlur
       validations={onValidate}
-      onSubmit={onSubmit}
       render={({ values, errors, touched, setFieldValue }) => {
         const totalOrderedQuantity = values.items ? values.items.length : 0;
         const totalBatches = values.items
@@ -119,19 +118,19 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                     />
                   )}
                 />
+                {/* FIXME: enum input is wrong when send the selected value */}
                 <CurrencyInput
                   title={<FormattedMessage {...messages.currency} />}
                   value={values.currency}
-                  onChange={v => setFieldValue('currency', v)}
+                  onChange={({ name }) => setFieldValue('currency', name)}
                   width="200px"
                   required
                 />
                 <IncotermsInput
                   title={<FormattedMessage {...messages.incoterms} />}
                   value={values.incoterms}
-                  onChange={v => setFieldValue('incoterms', v)}
+                  onChange={({ name }) => setFieldValue('incoterms', name)}
                   width="200px"
-                  required
                 />
                 <Field
                   name="deliveryPlace"
@@ -161,7 +160,11 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                               src={FALLBACK_IMAGE}
                               alt="exporter_image"
                             />
-                            <div className={ExporterNameStyle}>Exporter A</div>
+                            <div className={ExporterNameStyle}>
+                              {values.exporter && values.exporter.id
+                                ? values.exporter.name
+                                : 'Exporter'}
+                            </div>
                           </div>
                         </EntityCard>
                         <SlideView
@@ -169,7 +172,10 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                           onRequestClose={toggle}
                           options={{ width: '60vw' }}
                         >
-                          <SelectExporters />
+                          <SelectExporters
+                            selected={values.exporter}
+                            onSelect={({ name, id }) => setFieldValue('exporter', { id, name })}
+                          />
                         </SlideView>
                       </React.Fragment>
                     )}
@@ -213,6 +219,9 @@ const OrderSection = ({ isNew, onSubmit, initialValues }: Props) => (
                 </Display>
               </InputGroup>
             </div>
+            <FormObserver
+              onChange={({ values: observeValues }) => onChange({ observeValues, onValidate })}
+            />
           </React.Fragment>
         );
       }}
