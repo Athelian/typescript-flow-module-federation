@@ -5,7 +5,7 @@ export const SectionHeaderWrapperStyle = css`
   grid-template-columns: 1fr;
   ${layout.GRID_HORIZONTAL};
   grid-template-rows: 40px;
-  grid-gap: 10px;
+  grid-gap: 40px;
   align-items: center;
   width: 960px;
   padding: 0 40px 0 0;
