@@ -2,20 +2,37 @@
 import gql from 'graphql-tag';
 import { userListFieldsFragment } from '../userList/fragment';
 
-export const detailedBatchItemFragment = gql`
-  fragment detailedBatchItem on BatchItem {
+export const detailedBatchFragment = gql`
+  fragment detailedBatchFragment on Batch {
     id
-    status
+    archived
     no
     quantity
-    realQuantity
-    unassignedQuantity
     packageQuantity
     packageName
-    packageGrossWeight
-    packageVolume
-    packageMaxQuantity
-    packageSize
+    packageGrossWeight {
+      value
+      metric
+    }
+    packageVolume {
+      value
+      metric
+    }
+    packageCapacity
+    packageSize {
+      length {
+        value
+        metric
+      }
+      width {
+        value
+        metric
+      }
+      height {
+        value
+        metric
+      }
+    }
     memo
     producedAt
     deliveredAt
@@ -24,20 +41,32 @@ export const detailedBatchItemFragment = gql`
     updatedAt
     orderItem {
       id
-      price
+      price {
+        amount
+        currency
+      }
       order {
         id
-        PO
+        poNo
         currency
         exporter {
           id
         }
       }
-      productExporterSupplier {
+      productProvider {
         id
-        inspectionFee
-        weight
-        volume
+        inspectionFee {
+          amount
+          currency
+        }
+        unitWeight {
+          value
+          metric
+        }
+        unitVolume {
+          value
+          metric
+        }
         exporter {
           id
           name
@@ -46,62 +75,26 @@ export const detailedBatchItemFragment = gql`
           id
           name
           serial
-          files {
-            path
-          }
         }
       }
     }
-    tags {
-      id
-      name
-      description
-      color
-    }
-    assignments {
+    batchAssignments {
       id
       quantity
       memo
       user {
         ...userListFields
       }
-      request {
-        id
-        client
-        quantity
-      }
     }
-    adjustments {
+    batchAdjustments {
       id
-      type
+      reason
       quantity
       memo
-    }
-    shipment {
-      id
-      no
-      currentStatus
-      cargoReady
-    }
-    batchGroup {
-      id
-      no
-      taskManagement {
-        id
-        lastApprovedTask {
-          id
-          icon
-          title
-          approvedAt
-          approvedBy {
-            ...userListFields
-          }
-        }
-      }
     }
   }
 
   ${userListFieldsFragment}
 `;
 
-export default detailedBatchItemFragment;
+export default detailedBatchFragment;

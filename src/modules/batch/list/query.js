@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import { violationFragment } from '../../../graphql/violations/fragment';
 // import { removeTypename } from 'utils/data';
 
 const userListFragment = gql`
@@ -10,28 +11,21 @@ const userListFragment = gql`
 `;
 
 export const batchItemListFragment = gql`
-  fragment batchItemListFields on BatchItem {
+  fragment batchItemListFields on Batch {
     id
     createdAt
     updatedAt
     no
-    status
+    archived
     quantity
-    realQuantity
     deliveredAt
-    tags {
+    batchAdjustments {
       id
-      name
-      color
-      description
-    }
-    adjustments {
-      id
-      type
+      reason
       quantity
       memo
     }
-    assignments {
+    batchAssignments {
       id
       quantity
       user {
@@ -39,45 +33,22 @@ export const batchItemListFragment = gql`
       }
       memo
     }
-    batchGroup {
-      id
-      no
-      taskManagement {
-        id
-        lastApprovedTask {
-          id
-          icon
-          title
-          approvedAt
-          approvedBy {
-            ...userListFields
-          }
-        }
-      }
-    }
-    shipment {
-      id
-      no
-    }
     orderItem {
       id
       order {
         id
-        PO
+        poNo
         exporter {
           id
           name
         }
       }
-      productExporterSupplier {
+      productProvider {
         id
         product {
           id
           name
           serial
-          files {
-            path
-          }
         }
       }
     }
@@ -87,15 +58,13 @@ export const batchItemListFragment = gql`
 `;
 
 export const batchItemListQuery = gql`
-  query($filter: BatchItemFilterInput!, $sort: SortInput, $page: Int!, $perPage: Int!) {
-    viewer {
-      batchItems(filter: $filter, sort: $sort, page: $page, perPage: $perPage) {
-        nodes {
-          ...batchItemListFields
-        }
-        page
-        totalPage
+  query($page: Int!, $perPage: Int!) {
+    batches(page: $page, perPage: $perPage) {
+      nodes {
+        ...batchItemListFields
       }
+      page
+      totalPage
     }
   }
 
@@ -103,17 +72,16 @@ export const batchItemListQuery = gql`
 `;
 
 export const matchingBatchListQuery = gql`
-  query($filter: BatchItemFilterInput!, $sort: SortInput, $page: Int!, $perPage: Int!) {
-    viewer {
-      batchItems(filter: $filter, sort: $sort, page: $page, perPage: $perPage) {
-        nodes {
-          id
-        }
+  query($page: Int!, $perPage: Int!) {
+    batches(page: $page, perPage: $perPage) {
+      nodes {
+        id
       }
     }
   }
 `;
 
+/*
 export const batchItemsDataQuery = gql`
   query($ids: [ID!]!) {
     batchItems(ids: $ids) {
@@ -127,28 +95,35 @@ export const batchItemsDataQuery = gql`
     }
   }
 `;
+*/
 
 export const parseBatchItemsDataQueryData = (result: Object): Array<Object> =>
   result.data.batchItems;
 // removeTypename(result.data.batchItems);
 
 export const applyBatchItemChangeMutation = gql`
-  mutation($id: ID!, $input: UpdateBatchItemInput!) {
-    updateBatchItem(id: $id, input: $input) {
-      quantity
-      deliveredAt
-      assignments {
-        id
+  mutation($id: ID!, $input: BatchUpdateInput!) {
+    batchUpdate(id: $id, input: $input) {
+      batch {
         quantity
-        user {
-          ...userListFields
+        deliveredAt
+        batchAssignments {
+          id
+          quantity
+          user {
+            ...userListFields
+          }
+          memo
         }
-        memo
+      }
+      violations {
+        ...violationFragment
       }
     }
   }
 
   ${userListFragment}
+  ${violationFragment}
 `;
 
 type MatchingBatchListData = {

@@ -1,6 +1,7 @@
 // @flow
-import gql from 'graphql-tag';
+// import gql from 'graphql-tag';
 
+/*
 const userListFragment = gql`
   fragment userListFields on User {
     firstName
@@ -121,7 +122,9 @@ export const shipmentListQuery = gql`
 
   ${shipmentFragment}
 `;
+*/
 
+// eslint-disable-next-line import/prefer-default-export
 export const parseShipmentData = (shipment: Object) => ({
   ...shipment,
   voyages: shipment.voyages.map(voyage => ({

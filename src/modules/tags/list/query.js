@@ -1,5 +1,6 @@
-import gql from 'graphql-tag';
+// import gql from 'graphql-tag';
 
+/*
 const tagFragment = gql`
   fragment tagFields on Tag {
     id
@@ -63,3 +64,4 @@ export const requestTagsQuery = gql`
   }
   ${tagFragment}
 `;
+*/

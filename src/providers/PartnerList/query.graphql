@@ -1,12 +1,11 @@
 query($page: Int!, $perPage: Int!) {
   viewer {
-    group {
-      partners(page: $page, perPage: $perPage) {
-        nodes {
-          id
-          name
-          name2
-          type
+    user {
+      group {
+        partners(page: $page, perPage: $perPage) {
+          nodes {
+            id
+          }
         }
       }
     }

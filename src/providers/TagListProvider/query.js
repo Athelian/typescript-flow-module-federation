@@ -1,6 +1,7 @@
 // @flow
-import gql from 'graphql-tag';
+// import gql from 'graphql-tag';
 
+/*
 const productTagsQuery = gql`
   query {
     viewer {
@@ -53,6 +54,7 @@ const batchTagsQuery = gql`
   }
 `;
 
+
 export { productTagsQuery, shipmentTagsQuery, userTagsQuery, batchTagsQuery };
 
 const tagsQuery = {
@@ -61,5 +63,6 @@ const tagsQuery = {
   userTags: userTagsQuery,
   batchTags: batchTagsQuery,
 };
+*/
 
-export default (tagType: string) => tagsQuery[tagType];
+export default (tagType: string) => tagType;

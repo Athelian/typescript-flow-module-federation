@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { reloadPageOnExpireToken as logout } from 'utils/auth';
+import { Mutation } from 'react-apollo';
 import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
+import { AuthenticationConsumer } from 'modules/authentication';
+import query from './query.graphql';
 import {
   SettingsWrapperStyle,
   NotificationButtonStyle,
@@ -150,12 +152,27 @@ class Settings extends React.Component<Props, State> {
           </OutsideClickHandler>
         )}
 
-        <LogoutDialog
-          isOpen={logoutDialogOpen}
-          onRequestClose={this.toggleLogoutDialog}
-          onCancel={this.toggleLogoutDialog}
-          onConfirm={logout}
-        />
+        <AuthenticationConsumer>
+          {({ setAuthenticated }) => (
+            <Mutation
+              mutation={query}
+              onCompleted={() => {
+                setAuthenticated(false);
+              }}
+            >
+              {logout => (
+                <LogoutDialog
+                  isOpen={logoutDialogOpen}
+                  onRequestClose={this.toggleLogoutDialog}
+                  onCancel={this.toggleLogoutDialog}
+                  onConfirm={() => {
+                    logout({});
+                  }}
+                />
+              )}
+            </Mutation>
+          )}
+        </AuthenticationConsumer>
       </div>
     );
   }
