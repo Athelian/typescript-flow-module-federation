@@ -13,7 +13,7 @@ const iconMap = {
 };
 
 const colorMap = {
-  info: colors.GRAY,
+  info: colors.TEAL,
   changed: colors.GRAY,
   warning: colors.YELLOW,
   error: colors.RED,
