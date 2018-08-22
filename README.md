@@ -276,6 +276,26 @@ This section describes various build and development tools used in this project 
   code --install-extension wix.vscode-import-cost
   ```
 
+### Graphql
+
+We generated graphql things from our server and output on `src/generated` by [graphql-cli](https://github.com/graphql-cli/graphql-cli) and [graphql-cli-generate-fragments](https://github.com/develomark/graphql-cli-generate-fragments)
+
+```
+src/generated
+├── fragmentTypes.json
+├── schema.graphql
+└── zenport.fragments.graphql
+```
+
+```sh
+#1. Generate fragmentTypes.json for apollo client
+yarn apollo-fragments
+#2. Download latest schema from our graphql server
+graphql get-schema
+#3. Generate fragments
+graphql generate-fragments
+```
+
 ### Configuration
 
 ```
