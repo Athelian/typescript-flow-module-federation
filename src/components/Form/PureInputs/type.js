@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react';
 
 export type PureInputProps = {
   value?: any,
@@ -7,6 +8,8 @@ export type PureInputProps = {
   onChange?: Function,
   onBlur?: Function,
   onFocus?: Function,
+  setFocus: Function,
+  setBlur: Function,
   align?: 'left' | 'right' | 'center',
 };
 

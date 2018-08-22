@@ -1,17 +1,21 @@
 // @flow
-import { type PureInputProps, pureInputDefaultProps } from 'components/Form/PureInputs/type.js.flow';
+import { type PureInputProps, pureInputDefaultProps } from 'components/Form/PureInputs/type';
 
 export type StyledInputProps = PureInputProps & {
-  disabled?: boolean,
   hasError?: boolean,
+  disabled?: boolean,
   forceHoverStyle?: boolean,
 };
 
 export const styledInputDefaultProps = {
   ...pureInputDefaultProps,
-  disabled: false,
   hasError: false,
+  disabled: false,
   forceHoverStyle: false,
+};
+
+export type StyledInputStates = {
+  isFocused: boolean,
 };
 
 export default styledInputDefaultProps;
