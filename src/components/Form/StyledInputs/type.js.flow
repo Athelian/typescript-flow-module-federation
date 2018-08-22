@@ -1,5 +1,5 @@
 // @flow
-import { type PureInputProps, pureInputDefaultProps } from 'components/Form/PureInputs';
+import { type PureInputProps, pureInputDefaultProps } from 'components/Form/PureInputs/type.js.flow';
 
 export type StyledInputProps = PureInputProps & {
   disabled?: boolean,
