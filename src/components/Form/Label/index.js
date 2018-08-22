@@ -4,12 +4,11 @@ import { LabelWrapperStyle } from './style';
 
 export type Props = {
   required?: boolean,
-  children?: string | React.Node,
+  children: string | React.Node,
 };
 
 const defaultProps = {
   required: false,
-  children: '',
 };
 
 const Label = ({ required, children }: Props) => (
