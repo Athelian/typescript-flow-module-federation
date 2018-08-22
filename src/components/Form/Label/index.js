@@ -4,7 +4,7 @@ import { LabelWrapperStyle } from './style';
 
 export type Props = {
   required?: boolean,
-  children: string | React.Node,
+  children: React.Node,
 };
 
 const defaultProps = {
