@@ -1,9 +1,6 @@
 import React from 'react';
-import { css } from 'react-emotion';
+import { DividerStyle } from './style';
 
-const DividerStyle = css`
-  height: 1px;
-  background: #fff;
-`;
+export const Divider = () => <div className={DividerStyle} />;
 
-export default <div className={DividerStyle} />;
+export default Divider;
