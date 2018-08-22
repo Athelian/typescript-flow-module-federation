@@ -9,9 +9,14 @@ import { PartnerCardWrapperStyle } from './style';
 
 type Props = {
   partner: ?Partner,
+  onClick?: (id: string) => void,
 };
 
-const PartnerCard = ({ partner }: Props) => {
+const defaultProps = {
+  onClick: id => navigate(`/partner/${encodeId(id)}`),
+};
+
+const PartnerCard = ({ partner, onClick }: Props) => {
   if (!partner) return '';
 
   const { id } = partner;
@@ -24,15 +29,13 @@ const PartnerCard = ({ partner }: Props) => {
 
   return (
     <EntityCard icon="PARTNER" color="PARTNER" actions={actions}>
-      <div
-        className={PartnerCardWrapperStyle}
-        onClick={() => navigate(`/partner/${encodeId(id)}`)}
-        role="presentation"
-      >
+      <div className={PartnerCardWrapperStyle} onClick={onClick} role="presentation">
         {id}
       </div>
     </EntityCard>
   );
 };
+
+PartnerCard.defaultProps = defaultProps;
 
 export default PartnerCard;
