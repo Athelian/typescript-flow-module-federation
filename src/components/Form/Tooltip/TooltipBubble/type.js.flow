@@ -2,12 +2,12 @@
 type BubblePositionType = 'top' | 'bottom' | 'left' | 'right';
 
 export type TooltipBubbleProps = {
-  errorMessage?: string | React.Node,
-  warningMessage?: string | React.Node,
-  infoMessage?: string | React.Node,
+  errorMessage?: React.Node,
+  warningMessage?: React.Node,
+  infoMessage?: React.Node,
   changedValues?: {
-    oldValue: any,
-    newValue: any,
+    oldValue: React.Node,
+    newValue: React.Node,
   },
   position?: BubblePositionType,
 };
