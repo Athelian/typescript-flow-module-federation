@@ -1,9 +1,16 @@
 // @flow
 import { css } from 'react-emotion';
+import { colors, borderRadiuses } from 'styles/common';
 
 export const IconStyle = (color: string) => css`
-  background: ${color};
-  color: #fff;
+  color: ${color};
+  cursor: pointer;
 `;
 
-export default IconStyle;
+export const ChangedStyle = css`
+  width: 15px;
+  height: 15px;
+  background: ${colors.TEAL};
+  ${borderRadiuses.CIRCLE};
+  cursor: pointer;
+`;

@@ -1,5 +1,5 @@
 // @flow
-type BubblePositionType = 'top' | 'bottom' | 'left' | 'right';
+export type BubblePositionType = 'top' | 'bottom' | 'left' | 'right';
 
 export type TooltipBubbleProps = {
   errorMessage?: React.Node,
@@ -16,10 +16,7 @@ export const defaultTooltipBubbleProps = {
   errorMessage: '',
   warningMessage: '',
   infoMessage: '',
-  changedValues: {
-    oldValue: null,
-    newValue: null,
-  },
+  changedValues: null,
   position: 'top',
 };
 

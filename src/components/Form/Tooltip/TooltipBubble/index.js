@@ -1,9 +1,16 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { TooltipBubbleWrapperStyle, ArrowDownStyle } from './style';
 import Divider from './components/Divider';
-import { type TooltipBubbleProps as Props, defaultTooltipBubbleProps } from './type.js.flow';
+import {
+  TooltipBubbleWrapperStyle,
+  UpperMessageStyle,
+  OldValueStyle,
+  NewValueStyle,
+  ArrowDownStyle,
+  InfoMessageStyle,
+} from './style';
+import { type TooltipBubbleProps as Props, defaultTooltipBubbleProps } from './type';
 
 const TooltipBubble = ({
   errorMessage,
@@ -14,26 +21,22 @@ const TooltipBubble = ({
 }: Props) => (
   <div className={TooltipBubbleWrapperStyle(position)}>
     {(errorMessage || warningMessage) && (
-      <div>
-        <div>{errorMessage || warningMessage}</div>
-        <Divider />
-      </div>
+      <React.Fragment>
+        <div className={UpperMessageStyle}>{errorMessage || warningMessage}</div>
+        {(changedValues || infoMessage) && <Divider />}
+      </React.Fragment>
     )}
     {changedValues && (
-      <div>
-        <div>{changedValues.oldValue}</div>
+      <React.Fragment>
+        <div className={OldValueStyle}>{changedValues.oldValue}</div>
         <div className={ArrowDownStyle}>
           <Icon icon="ARROW_DOWN" />
         </div>
-        <div>{changedValues.newValue}</div>
-      </div>
+        <div className={NewValueStyle}>{changedValues.newValue}</div>
+        {infoMessage && <Divider />}
+      </React.Fragment>
     )}
-    {infoMessage && (
-      <div>
-        <Divider />
-        <div>{infoMessage}</div>
-      </div>
-    )}
+    {infoMessage && <div className={InfoMessageStyle}>{infoMessage}</div>}
   </div>
 );
 
