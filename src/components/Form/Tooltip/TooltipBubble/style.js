@@ -8,10 +8,7 @@ const paddingSize = 10;
 const distanceSize = 8;
 const bubbleBackgroundColor = 'rgba(0, 0, 0, 0.4)';
 
-const onTopStyle = css`
-  top: -${distanceSize}px;
-  transform: translateY(-100%);
-  margin-left: -${widthSize / 2}px;
+const arrowOnTop = css`
   &:after {
     border-right: ${distanceSize}px solid transparent;
     border-left: ${distanceSize}px solid transparent;
@@ -20,9 +17,14 @@ const onTopStyle = css`
   }
 `;
 
-const onLeftStyle = css`
-  right: ${distanceSize * 2.5}px;
-  transform: translateY(-43%);
+const onTopStyle = css`
+  top: -${distanceSize}px;
+  transform: translateY(-100%);
+  margin-left: -${widthSize / 2}px;
+  ${arrowOnTop};
+`;
+
+const arrowOnLeft = css`
   &:after {
     border-bottom: ${distanceSize}px solid transparent;
     border-top: ${distanceSize}px solid transparent;
@@ -32,9 +34,13 @@ const onLeftStyle = css`
   }
 `;
 
-const onRightStyle = css`
-  left: ${distanceSize * 2.5}px;
+const onLeftStyle = css`
+  right: ${distanceSize * 3}px;
   transform: translateY(-43%);
+  ${arrowOnLeft};
+`;
+
+const arrowOnRight = css`
   &:after {
     border-bottom: ${distanceSize}px solid transparent;
     border-top: ${distanceSize}px solid transparent;
@@ -44,16 +50,26 @@ const onRightStyle = css`
   }
 `;
 
-const onBottomStyle = css`
-  bottom: -${distanceSize}px;
-  margin-left: -${widthSize / 2}px;
-  transform: translateY(100%);
+const onRightStyle = css`
+  left: ${distanceSize * 3}px;
+  transform: translateY(-43%);
+  ${arrowOnRight};
+`;
+
+const arrowOnBottom = css`
   &:after {
     border-right: ${distanceSize}px solid transparent;
     border-left: ${distanceSize}px solid transparent;
     border-bottom: ${distanceSize}px solid ${bubbleBackgroundColor};
     top: -${distanceSize}px;
   }
+`;
+
+const onBottomStyle = css`
+  bottom: -${distanceSize}px;
+  margin-left: -${widthSize / 2}px;
+  transform: translateY(100%);
+  ${arrowOnBottom};
 `;
 
 export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
@@ -68,6 +84,7 @@ export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
   display: flex;
   flex-flow: column wrap;
   align-items: center;
+
   ${position === 'top' && onTopStyle};
   ${position === 'left' && onLeftStyle};
   ${position === 'right' && onRightStyle};

@@ -21,12 +21,12 @@ storiesOf('Form/Tooltip', module)
     </div>
   ))
   .add('info & changed', () => (
-    <div style={{ margin: '400px' }}>
+    <div style={{ margin: '200px' }}>
       <Tooltip changedValues={{ oldValue: 'old', newValue: 'new' }} infoMessage="Info msgeeeee" />
     </div>
   ))
   .add('error only', () => (
-    <div style={{ margin: '400px' }}>
+    <div style={{ margin: '200px' }}>
       <Tooltip errorMessage="Error aluuuyo" infoMessage="Info msgeeeee" />
     </div>
   ))
@@ -66,12 +66,12 @@ storiesOf('Form/Tooltip', module)
     </div>
   ))
   .add('warning only', () => (
-    <div style={{ margin: '400px' }}>
+    <div style={{ margin: '200px' }}>
       <Tooltip warningMessage="Warning aluuuyo" infoMessage="Info msgeeeee" />
     </div>
   ))
   .add('warning & changed', () => (
-    <div style={{ margin: '400px' }}>
+    <div style={{ margin: '200px' }}>
       <Tooltip
         warningMessage="Warning aluuuyo"
         changedValues={{ oldValue: 'old', newValue: 'new' }}
@@ -80,7 +80,7 @@ storiesOf('Form/Tooltip', module)
     </div>
   ))
   .add('changed only', () => (
-    <div style={{ margin: '400px' }}>
+    <div style={{ margin: '200px' }}>
       <Tooltip changedValues={{ oldValue: 'old', newValue: 'new' }} />
     </div>
   ));
