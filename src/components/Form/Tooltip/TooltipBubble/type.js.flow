@@ -1,0 +1,26 @@
+// @flow
+type BubblePositionType = 'top' | 'bottom' | 'left' | 'right';
+
+export type TooltipBubbleProps = {
+  errorMessage?: string | React.Node,
+  warningMessage?: string | React.Node,
+  infoMessage?: string | React.Node,
+  changedValues?: {
+    oldValue: any,
+    newValue: any,
+  },
+  position?: BubblePositionType,
+};
+
+export const defaultTooltipBubbleProps = {
+  errorMessage: '',
+  warningMessage: '',
+  infoMessage: '',
+  changedValues: {
+    oldValue: null,
+    newValue: null,
+  },
+  position: 'top',
+};
+
+export default defaultTooltipBubbleProps;
