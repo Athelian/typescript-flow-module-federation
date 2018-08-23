@@ -2,17 +2,17 @@
 import * as React from 'react';
 
 export type PureInputProps = {
-  value?: any,
-  name?: string,
-  placeholder?: string | React.Node,
-  onChange?: Function,
-  onBlur?: Function,
-  onFocus?: Function,
+  value: any,
+  name: string,
+  placeholder: string | React.Node,
+  onChange: Function,
+  onBlur: Function,
+  onFocus: Function,
   setFocus: (value: boolean) => void,
-  align?: 'left' | 'right' | 'center',
+  align: 'left' | 'right' | 'center',
 };
 
-export const pureInputDefaultProps = {
+export const defaultPureInputProps = {
   value: null,
   name: '',
   placeholder: '',
@@ -22,4 +22,4 @@ export const pureInputDefaultProps = {
   align: 'right',
 };
 
-export default pureInputDefaultProps;
+export default defaultPureInputProps;

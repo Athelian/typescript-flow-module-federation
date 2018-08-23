@@ -3,28 +3,28 @@ import * as React from 'react';
 import { DebounceInput } from 'react-debounce-input';
 import {
   type PureInputProps as Props,
-  pureInputDefaultProps,
+  defaultPureInputProps,
 } from 'components/Form/PureInputs/type';
 
-class PureTextInput extends React.Component<Props> {
-  static defaultProps = pureInputDefaultProps;
+export default class PureTextInput extends React.Component<Props> {
+  static defaultProps = defaultPureInputProps;
 
   handleFocus = () => {
-    const { setFocus, onFocus = () => {} } = this.props;
+    const { setFocus, onFocus } = this.props;
 
     setFocus(true);
     onFocus();
   };
 
   handleBlur = () => {
-    const { setFocus, onBlur = () => {} } = this.props;
+    const { setFocus, onBlur } = this.props;
 
     setFocus(false);
     onBlur();
   };
 
   render() {
-    const { align = 'right', setFocus, ...rest } = this.props;
+    const { align, setFocus, ...rest } = this.props;
     return (
       <DebounceInput
         style={{ textAlign: align }}
@@ -38,7 +38,3 @@ class PureTextInput extends React.Component<Props> {
     );
   }
 }
-
-PureTextInput.defaultProps = pureInputDefaultProps;
-
-export default PureTextInput;

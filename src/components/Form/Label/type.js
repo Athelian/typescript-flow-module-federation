@@ -1,13 +1,11 @@
 // @flow
-import * as React from 'react';
 
 export type LabelProps = {
-  required?: boolean,
-  children: React.Node,
+  required: boolean,
 };
 
-export const labelDefaultProps = {
+export const defaultLabelProps = {
   required: false,
 };
 
-export default labelDefaultProps;
+export default defaultLabelProps;

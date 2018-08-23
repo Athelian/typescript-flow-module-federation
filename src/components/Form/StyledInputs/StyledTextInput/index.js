@@ -4,15 +4,15 @@ import Display from 'components/Form/Display';
 import { PureTextInput } from 'components/Form/PureInputs';
 import {
   type StyledInputProps as Props,
-  styledInputDefaultProps,
+  defaultStyledInputProps,
   type StyledInputStates,
 } from 'components/Form/StyledInputs/type';
 import { StyledTextInputWrapperStyle, StyledTextInputStyle } from './style';
 
 type State = StyledInputStates;
 
-class StyledTextInput extends React.Component<Props, State> {
-  static defaultProps = styledInputDefaultProps;
+export default class StyledTextInput extends React.Component<Props, State> {
+  static defaultProps = defaultStyledInputProps;
 
   state = {
     isFocused: false,
@@ -23,14 +23,9 @@ class StyledTextInput extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      hasError = false,
-      disabled = false,
-      forceHoverStyle = false,
-      width = '100%',
-      ...pureTextInputProps
-    } = this.props;
+    const { hasError, disabled, forceHoverStyle, width, pureInputProps } = this.props;
     const { isFocused } = this.state;
+    pureInputProps.setFocus = this.setFocus;
 
     return (
       <div
@@ -43,19 +38,11 @@ class StyledTextInput extends React.Component<Props, State> {
         )}
       >
         {disabled ? (
-          <Display align={pureTextInputProps.align}>{pureTextInputProps.value}</Display>
+          <Display align={pureInputProps.align}>{pureInputProps.value}</Display>
         ) : (
-          <PureTextInput
-            {...pureTextInputProps}
-            className={StyledTextInputStyle}
-            setFocus={this.setFocus}
-          />
+          <PureTextInput {...pureInputProps} className={StyledTextInputStyle} />
         )}
       </div>
     );
   }
 }
-
-StyledTextInput.defaultProps = styledInputDefaultProps;
-
-export default StyledTextInput;

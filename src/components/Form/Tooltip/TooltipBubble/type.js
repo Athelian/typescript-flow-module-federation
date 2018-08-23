@@ -1,22 +1,25 @@
 // @flow
-export type BubblePositionType = 'top' | 'bottom'; // @TODO | 'left' | 'right';
+export type BubblePositionType = 'top' | 'bottom';
 
 export type TooltipBubbleProps = {
-  errorMessage?: React.Node,
-  warningMessage?: React.Node,
-  infoMessage?: React.Node,
-  changedValues?: {
+  errorMessage: React.Node,
+  warningMessage: React.Node,
+  infoMessage: React.Node,
+  changedValues: {
     oldValue: React.Node,
     newValue: React.Node,
   },
-  position?: BubblePositionType,
+  position: BubblePositionType,
 };
 
 export const defaultTooltipBubbleProps = {
   errorMessage: '',
   warningMessage: '',
   infoMessage: '',
-  changedValues: null,
+  changedValues: {
+    oldValue: '',
+    newValue: '',
+  },
   position: 'top',
 };
 

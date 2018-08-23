@@ -3,23 +3,15 @@ import React from 'react';
 import { isEquals } from 'utils/fp';
 import TooltipBubble from './TooltipBubble';
 import TooltipIcon from './TooltipIcon';
-import type { TooltipBubbleProps } from './TooltipBubble/type';
+import { type TooltipProps as Props, defaultTooltipProps } from './type';
 import { TooltipWrapperStyle, BubbleWrapperStyle } from './style';
-
-type Props = TooltipBubbleProps & {
-  preShow?: boolean,
-  showDuration?: number,
-};
 
 type State = {
   isShown: boolean,
 };
 
 export default class Tooltip extends React.Component<Props, State> {
-  static defaultProps = {
-    preShow: false,
-    showDuration: 500,
-  };
+  static defaultProps = defaultTooltipProps;
 
   state = {
     isShown: false,
@@ -45,11 +37,15 @@ export default class Tooltip extends React.Component<Props, State> {
     this.clearTimeout();
   }
 
-  getTooltipType = ({ errorMessage, warningMessage, changedValues }: TooltipBubbleProps) => {
+  getTooltipType = () => {
+    const { tooltipBubbleProps } = this.props;
+    const { errorMessage, warningMessage, changedValues, infoMessage } = tooltipBubbleProps;
+
     if (errorMessage) return 'error';
     if (warningMessage) return 'warning';
     if (changedValues) return 'changed';
-    return 'info';
+    if (infoMessage) return 'info';
+    return '';
   };
 
   show = () => {
@@ -82,20 +78,28 @@ export default class Tooltip extends React.Component<Props, State> {
   timeout: ?TimeoutID;
 
   render() {
-    const { infoMessage, ...rest } = this.props;
-    const { errorMessage, warningMessage, changedValues } = rest;
-    const tooltipMessage = { errorMessage, warningMessage, changedValues };
-    const type = this.getTooltipType(tooltipMessage);
+    const { tooltipBubbleProps } = this.props;
     const { isShown } = this.state;
-    return (
-      <div className={TooltipWrapperStyle}>
-        <div className={BubbleWrapperStyle(isShown)}>
-          <TooltipBubble infoMessage={infoMessage} {...rest} />
+
+    const type = this.getTooltipType();
+
+    if (type) {
+      return (
+        <div className={TooltipWrapperStyle}>
+          <div className={BubbleWrapperStyle(isShown)}>
+            <TooltipBubble {...tooltipBubbleProps} />
+          </div>
+          <div
+            onMouseOver={this.show}
+            onFocus={this.show}
+            onMouseOut={this.hide}
+            onBlur={this.hide}
+          >
+            <TooltipIcon type={type} hasInfo={!!tooltipBubbleProps.infoMessage} />
+          </div>
         </div>
-        <div onMouseOver={this.show} onFocus={this.show} onMouseOut={this.hide} onBlur={this.hide}>
-          <TooltipIcon type={type} hasInfo={!!infoMessage} />
-        </div>
-      </div>
-    );
+      );
+    }
+    return null;
   }
 }

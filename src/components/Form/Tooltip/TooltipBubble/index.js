@@ -20,25 +20,36 @@ const TooltipBubble = ({
   position,
 }: Props) => (
   <div className={TooltipBubbleWrapperStyle(position)}>
-    {(errorMessage || warningMessage) && (
+    {errorMessage && (
       <React.Fragment>
-        <div className={UpperMessageStyle}>{errorMessage || warningMessage}</div>
+        <div className={UpperMessageStyle}>{errorMessage}</div>
+        {(warningMessage || changedValues || infoMessage) && <Divider />}
+      </React.Fragment>
+    )}
+
+    {warningMessage && (
+      <React.Fragment>
+        <div className={UpperMessageStyle}>{warningMessage}</div>
         {(changedValues || infoMessage) && <Divider />}
       </React.Fragment>
     )}
-    {changedValues && (
-      <React.Fragment>
-        <div className={OldValueStyle}>{changedValues.oldValue}</div>
-        <div className={ArrowDownStyle}>
-          <Icon icon="ARROW_DOWN" />
-        </div>
-        <div className={NewValueStyle}>{changedValues.newValue}</div>
-        {infoMessage && <Divider />}
-      </React.Fragment>
-    )}
+
+    {changedValues.oldValue &&
+      changedValues.newValue && (
+        <React.Fragment>
+          <div className={OldValueStyle}>{changedValues.oldValue}</div>
+          <div className={ArrowDownStyle}>
+            <Icon icon="ARROW_DOWN" />
+          </div>
+          <div className={NewValueStyle}>{changedValues.newValue}</div>
+          {infoMessage && <Divider />}
+        </React.Fragment>
+      )}
+
     {infoMessage && <div className={InfoMessageStyle}>{infoMessage}</div>}
   </div>
 );
 
 TooltipBubble.defaultProps = defaultTooltipBubbleProps;
+
 export default TooltipBubble;

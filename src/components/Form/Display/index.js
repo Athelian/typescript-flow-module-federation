@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DisplayWrapperStyle } from './style';
 
 type Props = {
-  align?: 'left' | 'right' | 'center',
+  align: 'left' | 'right' | 'center',
   children: React.Node,
 };
 
@@ -11,7 +11,7 @@ const defaultProps = {
   align: 'right',
 };
 
-const Display = ({ align = 'right', children }: Props) => (
+const Display = ({ align, children }: Props) => (
   <div className={DisplayWrapperStyle(align)}>{children}</div>
 );
 

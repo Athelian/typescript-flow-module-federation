@@ -1,34 +1,30 @@
 // @flow
 import * as React from 'react';
-import { type LabelProps, labelDefaultProps } from 'components/Form/Label/type';
+import { type LabelProps, defaultLabelProps } from 'components/Form/Label/type';
+import { type TooltipProps, defaultTooltipProps } from 'components/Form/Tooltip/type';
 import Label from 'components/Form/Label';
+import Tooltip from 'components/Form/Tooltip';
 import { FieldItemWrapperStyle } from './style';
 
-type Props = LabelProps & {
-  vertical?: boolean,
+type Props = {
+  vertical: boolean,
   label: React.Node,
   input: (hasError: boolean) => React.Node,
+  labelProps: LabelProps,
+  tooltipProps: TooltipProps,
 };
 
 const defaultProps = {
-  ...labelDefaultProps,
   vertical: false,
+  labelProps: defaultLabelProps,
+  tooltipProps: defaultTooltipProps,
 };
 
-// Correct snippet when I have tooltip in
-//
-// const FieldItem = ({ vertical, label, input, required, ...tooltipProps }: Props) => (
-//   <div className={FieldItemWrapperStyle(!!vertical)}>
-//     <Tooltip {...tooltipProps} />
-//     <Label required={required}>{label}</Label>
-//     {input(!!tooltipProps.errorMessage)}
-//   </div>
-// );
-
-const FieldItem = ({ vertical = false, label, input, required }: Props) => (
+const FieldItem = ({ vertical, label, input, labelProps, tooltipProps }: Props) => (
   <div className={FieldItemWrapperStyle(vertical)}>
-    <Label required={required}>{label}</Label>
-    {input(false)}
+    <Tooltip {...tooltipProps} />
+    <Label {...labelProps}>{label}</Label>
+    {input(!!tooltipProps.tooltipBubbleProps.errorMessage)}
   </div>
 );
 

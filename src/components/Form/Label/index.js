@@ -1,15 +1,19 @@
 // @flow
 import * as React from 'react';
-import { type LabelProps as Props, labelDefaultProps } from './type';
+import { type LabelProps, defaultLabelProps } from './type';
 import { LabelWrapperStyle } from './style';
 
-const Label = ({ required = false, children }: Props) => (
+type Props = LabelProps & {
+  children: React.Node,
+};
+
+const Label = ({ required, children }: Props) => (
   <div className={LabelWrapperStyle}>
     {children}
     {required && ' *'}
   </div>
 );
 
-Label.defaultProps = labelDefaultProps;
+Label.defaultProps = defaultLabelProps;
 
 export default Label;
