@@ -1,30 +1,29 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { colors } from 'styles/common';
-import { IconStyle, ChangedStyle } from './style';
+import { IconStyle } from './style';
 import type { TooltipIconProps as Props } from './type.js.flow';
 
 const iconMap = {
   info: 'INFO',
-  changed: null,
+  changed: 'CIRCLE',
   warning: 'WARNING',
   error: 'WARNING',
 };
 
 const colorMap = {
-  info: colors.GRAY,
-  changed: colors.TEAL,
-  warning: colors.YELLOW,
-  error: colors.RED,
+  info: 'GRAY',
+  changed: 'TEAL',
+  warning: 'YELLOW',
+  error: 'RED',
 };
 
 const TooltipIcon = ({ type, hasInfo }: Props) => {
-  const icon = iconMap[type] || (hasInfo && iconMap.info);
-  const color = hasInfo && type === 'changed' ? colors.TEAL : colorMap[type];
+  const icon = iconMap[hasInfo ? 'info' : type];
+  const color = colorMap[type];
   return (
     <div className={IconStyle(color)}>
-      {icon ? <Icon icon={icon} /> : <div className={ChangedStyle} />}
+      <Icon icon={icon} />
     </div>
   );
 };

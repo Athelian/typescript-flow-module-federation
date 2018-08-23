@@ -20,10 +20,15 @@ storiesOf('Form/Tooltip', module)
   ))
   .add('error only', () => (
     <div style={{ margin: '200px' }}>
+      <Tooltip errorMessage="Error aluuuyo" />
+    </div>
+  ))
+  .add('error & info', () => (
+    <div style={{ margin: '200px' }}>
       <Tooltip errorMessage="Error aluuuyo" infoMessage="Info msgeeeee" />
     </div>
   ))
-  .add('error & changed', () => (
+  .add('error & changed & info', () => (
     <div style={{ margin: '200px' }}>
       <div style={{ marginBottom: '20px' }}>
         <Tooltip
@@ -43,10 +48,15 @@ storiesOf('Form/Tooltip', module)
   ))
   .add('warning only', () => (
     <div style={{ margin: '200px' }}>
+      <Tooltip warningMessage="Warning aluuuyo" />
+    </div>
+  ))
+  .add('warning & info', () => (
+    <div style={{ margin: '200px' }}>
       <Tooltip warningMessage="Warning aluuuyo" infoMessage="Info msgeeeee" />
     </div>
   ))
-  .add('warning & changed', () => (
+  .add('warning & changed & info', () => (
     <div style={{ margin: '200px' }}>
       <Tooltip
         warningMessage="Warning aluuuyo"

@@ -47,6 +47,7 @@ import TOGGLE_OFF from '@fortawesome/fontawesome-pro-solid/faToggleOff';
 import INFO from '@fortawesome/fontawesome-pro-solid/faInfoCircle';
 import MEMO from '@fortawesome/fontawesome-pro-solid/faAlignJustify';
 import DOWNLOAD from '@fortawesome/fontawesome-pro-solid/faDownload';
+import CIRCLE from '@fortawesome/fontawesome-pro-solid/faCircle';
 
 // Shipment Timeline
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
@@ -115,6 +116,7 @@ export default {
   INFO,
   MEMO,
   DOWNLOAD,
+  CIRCLE,
 
   CARGO_READY,
   PORT,

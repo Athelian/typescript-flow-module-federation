@@ -1,12 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-import { shadows, fontSizesWithHeights, borderRadiuses } from 'styles/common';
+import { colors, shadows, fontSizesWithHeights, borderRadiuses } from 'styles/common';
 import type { BubblePositionType } from './type';
 
 const bubbleWidth = 150;
 const arrowSize = 8;
-const iconHeight = 15.5;
-const bubbleBackgroundColor = 'rgba(0, 0, 0, 0.4)';
+const iconHeight = 20;
+const bubbleBackgroundColor = colors.BLACK;
 
 const arrowForTop = css`
   &:after {
@@ -17,11 +17,9 @@ const arrowForTop = css`
   }
 `;
 
-// @FIXME: need this somehow, otherwise get wrong position.
-const tweakForTopArrow = 3;
 const onTopStyle = css`
   left: 0;
-  bottom: ${iconHeight + arrowSize + tweakForTopArrow}px;
+  bottom: ${iconHeight + arrowSize}px;
   margin-left: -${bubbleWidth / 2}px;
   ${arrowForTop};
 `;
