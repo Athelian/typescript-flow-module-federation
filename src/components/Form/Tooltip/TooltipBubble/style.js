@@ -6,7 +6,6 @@ import type { BubblePositionType } from './type';
 const bubbleWidth = 150;
 const arrowSize = 8;
 const iconHeight = 15.5;
-const tweakForTopArrow = 3; // @FIXME: need this somehow, otherwise get wrong position.
 const bubbleBackgroundColor = 'rgba(0, 0, 0, 0.4)';
 
 const arrowForTop = css`
@@ -18,6 +17,8 @@ const arrowForTop = css`
   }
 `;
 
+// @FIXME: need this somehow, otherwise get wrong position.
+const tweakForTopArrow = 3;
 const onTopStyle = css`
   left: 0;
   bottom: ${iconHeight + arrowSize + tweakForTopArrow}px;
