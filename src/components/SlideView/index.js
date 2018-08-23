@@ -14,8 +14,6 @@ type Props = {
   rootElementId?: string,
 };
 
-const ANIMATION_FINISHED = 500;
-
 export default class SlideView extends React.Component<Props> {
   static defaultProps = {
     rootElementId: 'slide-view-root',
@@ -40,9 +38,12 @@ export default class SlideView extends React.Component<Props> {
     if (!prevProps.isOpen && isOpen) {
       slideViewRoot.appendChild(this.slideViewContainer);
     }
+  }
 
-    if (prevProps.isOpen && !isOpen) {
-      setTimeout(() => slideViewRoot.removeChild(this.slideViewContainer), ANIMATION_FINISHED);
+  componentWillUnmount() {
+    const container = this.slideViewContainer;
+    if (container.parentNode) {
+      container.parentNode.removeChild(container);
     }
   }
 
