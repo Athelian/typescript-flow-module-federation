@@ -8,8 +8,7 @@ export type PureInputProps = {
   onChange?: Function,
   onBlur?: Function,
   onFocus?: Function,
-  setFocus: Function,
-  setBlur: Function,
+  setFocus: (value: boolean) => void,
   align?: 'left' | 'right' | 'center',
 };
 

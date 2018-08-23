@@ -25,8 +25,8 @@ const defaultProps = {
 //   </div>
 // );
 
-const FieldItem = ({ vertical, label, input, required }: Props) => (
-  <div className={FieldItemWrapperStyle(!!vertical)}>
+const FieldItem = ({ vertical = false, label, input, required }: Props) => (
+  <div className={FieldItemWrapperStyle(vertical)}>
     <Label required={required}>{label}</Label>
     {input(false)}
   </div>

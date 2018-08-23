@@ -5,6 +5,7 @@ export type StyledInputProps = PureInputProps & {
   hasError?: boolean,
   disabled?: boolean,
   forceHoverStyle?: boolean,
+  width?: string,
 };
 
 export const styledInputDefaultProps = {
@@ -12,6 +13,7 @@ export const styledInputDefaultProps = {
   hasError: false,
   disabled: false,
   forceHoverStyle: false,
+  width: '100%',
 };
 
 export type StyledInputStates = {

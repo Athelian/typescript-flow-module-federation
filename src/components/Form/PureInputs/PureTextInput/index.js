@@ -10,25 +10,21 @@ class PureTextInput extends React.Component<Props> {
   static defaultProps = pureInputDefaultProps;
 
   handleFocus = () => {
-    const { setFocus, onFocus } = this.props;
+    const { setFocus, onFocus = () => {} } = this.props;
 
-    setFocus();
-    if (onFocus) {
-      onFocus();
-    }
+    setFocus(true);
+    onFocus();
   };
 
   handleBlur = () => {
-    const { setBlur, onBlur } = this.props;
+    const { setFocus, onBlur = () => {} } = this.props;
 
-    setBlur();
-    if (onBlur) {
-      onBlur();
-    }
+    setFocus(false);
+    onBlur();
   };
 
   render() {
-    const { align, setFocus, setBlur, ...rest } = this.props;
+    const { align = 'right', setFocus, ...rest } = this.props;
     return (
       <DebounceInput
         style={{ textAlign: align }}

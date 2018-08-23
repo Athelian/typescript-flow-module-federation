@@ -18,25 +18,28 @@ class StyledTextInput extends React.Component<Props, State> {
     isFocused: false,
   };
 
-  setFocus = () => {
-    this.setState({ isFocused: true });
-  };
-
-  setBlur = () => {
-    this.setState({ isFocused: false });
+  setFocus = (value: boolean) => {
+    this.setState({ isFocused: value });
   };
 
   render() {
-    const { hasError, disabled, forceHoverStyle, ...pureTextInputProps } = this.props;
+    const {
+      hasError = false,
+      disabled = false,
+      forceHoverStyle = false,
+      width = '100%',
+      ...pureTextInputProps
+    } = this.props;
     const { isFocused } = this.state;
 
     return (
       <div
         className={StyledTextInputWrapperStyle(
           isFocused,
-          !!hasError,
-          !!disabled,
-          !!forceHoverStyle
+          hasError,
+          disabled,
+          forceHoverStyle,
+          width
         )}
       >
         {disabled ? (
@@ -46,7 +49,6 @@ class StyledTextInput extends React.Component<Props, State> {
             {...pureTextInputProps}
             className={StyledTextInputStyle}
             setFocus={this.setFocus}
-            setBlur={this.setBlur}
           />
         )}
       </div>
