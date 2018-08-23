@@ -67,9 +67,8 @@ export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
 
 const MessageStyle = css`
   display: flex;
-  flex-wrap: wrap;
-  white-space: nowrap;
-  max-width: 300px;
+  justify-content: center;
+  width: 100%;
 `;
 
 export const UpperMessageStyle = css`

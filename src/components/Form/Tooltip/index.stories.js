@@ -27,7 +27,7 @@ storiesOf('Form/Tooltip', module)
     <div style={{ margin: '200px' }}>
       <div style={{ marginBottom: '20px' }}>
         <Tooltip
-          errorMessage="Error aluuuyo"
+          errorMessage="Error aluuuyo, please check your chuck and swipe left for you wife"
           changedValues={{ oldValue: 'old', newValue: 'new' }}
           infoMessage="Info msgeeeee"
         />
