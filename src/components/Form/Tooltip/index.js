@@ -4,14 +4,12 @@ import { isEquals } from 'utils/fp';
 import TooltipBubble from './TooltipBubble';
 import TooltipIcon from './TooltipIcon';
 import type { TooltipBubbleProps } from './TooltipBubble/type';
-import type { TooltipIconProps } from './TooltipIcon/type.js.flow';
 import { TooltipWrapperStyle, BubbleWrapperStyle } from './style';
 
-type Props = TooltipBubbleProps &
-  TooltipIconProps & {
-    preShow?: boolean,
-    showDuration?: number,
-  };
+type Props = TooltipBubbleProps & {
+  preShow?: boolean,
+  showDuration?: number,
+};
 
 type State = {
   isShown: boolean,

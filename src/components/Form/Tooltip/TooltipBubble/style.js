@@ -3,73 +3,42 @@ import { css } from 'react-emotion';
 import { shadows, fontSizesWithHeights, borderRadiuses } from 'styles/common';
 import type { BubblePositionType } from './type';
 
-const widthSize = 150;
-const paddingSize = 10;
-const distanceSize = 8;
+const bubbleWidth = 150;
+const arrowSize = 8;
+const iconHeight = 15.5;
+const tweakForTopArrow = 3; // @FIXME: need this somehow, otherwise get wrong position.
 const bubbleBackgroundColor = 'rgba(0, 0, 0, 0.4)';
 
-const arrowOnTop = css`
+const arrowForTop = css`
   &:after {
-    border-right: ${distanceSize}px solid transparent;
-    border-left: ${distanceSize}px solid transparent;
-    border-top: ${distanceSize}px solid ${bubbleBackgroundColor};
-    bottom: -${distanceSize}px;
+    border-right: ${arrowSize}px solid transparent;
+    border-left: ${arrowSize}px solid transparent;
+    border-top: ${arrowSize}px solid ${bubbleBackgroundColor};
+    bottom: -${arrowSize}px;
   }
 `;
 
 const onTopStyle = css`
-  top: -${distanceSize}px;
-  transform: translateY(-100%);
-  margin-left: -${widthSize / 2}px;
-  ${arrowOnTop};
+  left: 0;
+  bottom: ${iconHeight + arrowSize + tweakForTopArrow}px;
+  margin-left: -${bubbleWidth / 2}px;
+  ${arrowForTop};
 `;
 
-const arrowOnLeft = css`
+const arrowForBottom = css`
   &:after {
-    border-bottom: ${distanceSize}px solid transparent;
-    border-top: ${distanceSize}px solid transparent;
-    border-left: ${distanceSize}px solid ${bubbleBackgroundColor};
-    top: calc(50% - 8px);
-    right: -${distanceSize}px;
-  }
-`;
-
-const onLeftStyle = css`
-  right: ${distanceSize * 3}px;
-  transform: translateY(-43%);
-  ${arrowOnLeft};
-`;
-
-const arrowOnRight = css`
-  &:after {
-    border-bottom: ${distanceSize}px solid transparent;
-    border-top: ${distanceSize}px solid transparent;
-    border-right: ${distanceSize}px solid ${bubbleBackgroundColor};
-    top: calc(50% - 8px);
-    left: -${distanceSize}px;
-  }
-`;
-
-const onRightStyle = css`
-  left: ${distanceSize * 3}px;
-  transform: translateY(-43%);
-  ${arrowOnRight};
-`;
-
-const arrowOnBottom = css`
-  &:after {
-    border-right: ${distanceSize}px solid transparent;
-    border-left: ${distanceSize}px solid transparent;
-    border-bottom: ${distanceSize}px solid ${bubbleBackgroundColor};
-    top: -${distanceSize}px;
+    border-right: ${arrowSize}px solid transparent;
+    border-left: ${arrowSize}px solid transparent;
+    border-bottom: ${arrowSize}px solid ${bubbleBackgroundColor};
+    top: -${arrowSize}px;
   }
 `;
 
 const onBottomStyle = css`
-  bottom: -${distanceSize}px;
-  margin-left: -${widthSize / 2}px;
-  transform: translateY(100%);
-  ${arrowOnBottom};
+  left: 0;
+  top: ${iconHeight + arrowSize}px;
+  margin-left: -${bubbleWidth / 2}px;
+  ${arrowForBottom};
 `;
 
 export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
@@ -77,8 +46,8 @@ export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
   ${shadows.TOOLTIP};
   ${fontSizesWithHeights.MEDIUM};
   background: ${bubbleBackgroundColor};
-  width: ${widthSize}px;
-  padding: ${paddingSize}px;
+  width: ${bubbleWidth}px;
+  padding: 10px;
   color: #fff;
   ${borderRadiuses.MAIN};
   display: flex;
@@ -86,15 +55,11 @@ export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
   align-items: center;
 
   ${position === 'top' && onTopStyle};
-  ${position === 'left' && onLeftStyle};
-  ${position === 'right' && onRightStyle};
   ${position === 'bottom' && onBottomStyle};
 
   &:after {
     content: '';
     display: block;
-    width: 0;
-    height: 0;
     position: absolute;
   }
 `;

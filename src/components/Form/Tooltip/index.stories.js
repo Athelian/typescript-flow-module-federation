@@ -9,13 +9,6 @@ storiesOf('Form/Tooltip', module)
       <div style={{ marginBottom: '20px' }}>
         <Tooltip infoMessage="Info msgeeeee" position="top" />
       </div>
-      <div style={{ marginBottom: '20px' }}>
-        <Tooltip infoMessage="Info msgeeeee" position="left" />
-      </div>
-
-      <div style={{ marginBottom: '20px' }}>
-        <Tooltip infoMessage="Info msgeeeee" position="right" />
-      </div>
 
       <Tooltip infoMessage="Info msgeeeee" position="bottom" />
     </div>
@@ -37,23 +30,6 @@ storiesOf('Form/Tooltip', module)
           errorMessage="Error aluuuyo"
           changedValues={{ oldValue: 'old', newValue: 'new' }}
           infoMessage="Info msgeeeee"
-        />
-      </div>
-      <div style={{ marginBottom: '20px' }}>
-        <Tooltip
-          errorMessage="Error aluuuyo"
-          changedValues={{ oldValue: 'old', newValue: 'new' }}
-          infoMessage="Info msgeeeee"
-          position="left"
-        />
-      </div>
-
-      <div style={{ marginBottom: '20px' }}>
-        <Tooltip
-          errorMessage="Error aluuuyo"
-          changedValues={{ oldValue: 'old', newValue: 'new' }}
-          infoMessage="Info msgeeeee"
-          position="right"
         />
       </div>
 

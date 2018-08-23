@@ -1,5 +1,5 @@
 // @flow
-export type BubblePositionType = 'top' | 'bottom' | 'left' | 'right';
+export type BubblePositionType = 'top' | 'bottom'; // @TODO | 'left' | 'right';
 
 export type TooltipBubbleProps = {
   errorMessage?: React.Node,

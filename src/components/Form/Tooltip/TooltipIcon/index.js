@@ -24,7 +24,7 @@ const TooltipIcon = ({ type, hasInfo }: Props) => {
   const color = hasInfo && type === 'changed' ? colors.TEAL : colorMap[type];
   return (
     <div className={IconStyle(color)}>
-      {icon ? <Icon icon={icon} /> : <svg className={ChangedStyle} />}
+      {icon ? <Icon icon={icon} /> : <div className={ChangedStyle} />}
     </div>
   );
 };
