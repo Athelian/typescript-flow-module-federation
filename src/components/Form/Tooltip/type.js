@@ -1,11 +1,13 @@
 // @flow
 import { type TooltipBubbleProps, defaultTooltipBubbleProps } from './TooltipBubble/type';
 
-export type TooltipProps = {
+type OptionalProps = {
   preShow: boolean,
   showDuration: number,
   tooltipBubbleProps: TooltipBubbleProps,
 };
+
+export type TooltipProps = OptionalProps & {};
 
 export const defaultTooltipProps = {
   preShow: false,

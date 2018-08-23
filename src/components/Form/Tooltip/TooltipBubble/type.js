@@ -1,7 +1,7 @@
 // @flow
 export type BubblePositionType = 'top' | 'bottom';
 
-export type TooltipBubbleProps = {
+type OptionalProps = {
   errorMessage: React.Node,
   warningMessage: React.Node,
   infoMessage: React.Node,
@@ -11,6 +11,8 @@ export type TooltipBubbleProps = {
   },
   position: BubblePositionType,
 };
+
+export type TooltipBubbleProps = OptionalProps & {};
 
 export const defaultTooltipBubbleProps = {
   errorMessage: '',

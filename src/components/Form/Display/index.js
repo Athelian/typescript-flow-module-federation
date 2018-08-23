@@ -2,8 +2,11 @@
 import * as React from 'react';
 import { DisplayWrapperStyle } from './style';
 
-type Props = {
+type OptionalProps = {
   align: 'left' | 'right' | 'center',
+};
+
+type Props = OptionalProps & {
   children: React.Node,
 };
 

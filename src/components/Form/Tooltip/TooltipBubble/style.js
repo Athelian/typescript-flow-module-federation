@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, shadows, fontSizesWithHeights, borderRadiuses } from 'styles/common';
+import { colors, shadows, fontSizesWithHeights, borderRadiuses, fontSizes } from 'styles/common';
 import type { BubblePositionType } from './type';
 
 const bubbleWidth = 150;
 const arrowSize = 8;
 const iconHeight = 20;
+const iconWidth = 20;
 const bubbleBackgroundColor = colors.BLACK;
 
 const arrowForTop = css`
@@ -20,7 +21,7 @@ const arrowForTop = css`
 const onTopStyle = css`
   left: 0;
   bottom: ${iconHeight + arrowSize}px;
-  margin-left: -${bubbleWidth / 2}px;
+  margin-left: -${bubbleWidth / 2 - iconWidth / 2}px;
   ${arrowForTop};
 `;
 
@@ -36,7 +37,7 @@ const arrowForBottom = css`
 const onBottomStyle = css`
   left: 0;
   top: ${iconHeight + arrowSize}px;
-  margin-left: -${bubbleWidth / 2}px;
+  margin-left: -${bubbleWidth / 2 - iconWidth / 2}px;
   ${arrowForBottom};
 `;
 
@@ -82,7 +83,7 @@ export const ArrowDownStyle = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 12px;
+  ${fontSizes.SMALL};
 `;
 
 export const NewValueStyle = css`

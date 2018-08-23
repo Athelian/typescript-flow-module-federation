@@ -7,7 +7,16 @@ import { FormattedMessage } from 'react-intl';
 import Display from 'components/Display';
 import FormattedNumber from 'components/FormattedNumber';
 import yupToFormErrors from 'utils/yupToFormErrors';
-import { Form, FormObserver, Field, TextInput, TagsInput, InputGroup } from 'components/Form';
+import {
+  FieldItem,
+  StyledTextInput,
+  Form,
+  FormObserver,
+  Field,
+  TextInput,
+  TagsInput,
+  InputGroup,
+} from 'components/Form';
 import CurrencyInput from 'components/Form/CurrencyInput';
 import IncotermsInput from 'components/Form/IncotermsInput';
 import EntityCard from 'components/EntityCard';
@@ -66,7 +75,6 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
         const totalBatches = values.items
           ? values.items.reduce((total, item) => total + item.batchItems.length, 0)
           : 0;
-
         return (
           <React.Fragment>
             <div className={MainFieldsWrapperStyle}>
@@ -74,16 +82,27 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 <Field
                   name="PO"
                   render={({ input }) => (
-                    <TextInput
-                      {...input}
-                      id="PO"
-                      title={<FormattedMessage {...messages.PO} />}
-                      errorMessage={touched.NO && errors.NO}
-                      required
-                      editable={isNew}
-                      width="200px"
-                      onChange={setFieldValue}
-                      align="right"
+                    <FieldItem
+                      label={<FormattedMessage {...messages.PO} />}
+                      input={hasError => (
+                        <StyledTextInput
+                          forceHoverStyle={isNew}
+                          hasError={hasError}
+                          width="200px"
+                          pureInputProps={{
+                            ...input,
+                            id: 'PO',
+                          }}
+                        />
+                      )}
+                      labelProps={{
+                        required: true,
+                      }}
+                      tooltipProps={{
+                        tooltipBubbleProps: {
+                          errorMessage: errors.PO,
+                        },
+                      }}
                     />
                   )}
                 />

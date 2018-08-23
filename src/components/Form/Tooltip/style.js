@@ -2,7 +2,12 @@
 import { css } from 'react-emotion';
 import { transitions } from 'styles/common';
 
-export const TooltipWrapperStyle = css`
+export const TooltipAbsoluteWrapperStyle = css`
+  position: absolute;
+  left: -20px;
+`;
+
+export const TooltipRelativeWrapperStyle = css`
   position: relative;
   width: 20px;
   height: 20px;

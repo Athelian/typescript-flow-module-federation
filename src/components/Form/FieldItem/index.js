@@ -6,12 +6,15 @@ import Label from 'components/Form/Label';
 import Tooltip from 'components/Form/Tooltip';
 import { FieldItemWrapperStyle } from './style';
 
-type Props = {
+type OptionalProps = {
   vertical: boolean,
-  label: React.Node,
-  input: (hasError: boolean) => React.Node,
   labelProps: LabelProps,
   tooltipProps: TooltipProps,
+};
+
+type Props = OptionalProps & {
+  label: React.Node,
+  input: (hasError: boolean) => React.Node,
 };
 
 const defaultProps = {

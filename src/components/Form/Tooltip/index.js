@@ -4,7 +4,11 @@ import { isEquals } from 'utils/fp';
 import TooltipBubble from './TooltipBubble';
 import TooltipIcon from './TooltipIcon';
 import { type TooltipProps as Props, defaultTooltipProps } from './type';
-import { TooltipWrapperStyle, BubbleWrapperStyle } from './style';
+import {
+  TooltipAbsoluteWrapperStyle,
+  TooltipRelativeWrapperStyle,
+  BubbleWrapperStyle,
+} from './style';
 
 type State = {
   isShown: boolean,
@@ -85,17 +89,19 @@ export default class Tooltip extends React.Component<Props, State> {
 
     if (type) {
       return (
-        <div className={TooltipWrapperStyle}>
-          <div className={BubbleWrapperStyle(isShown)}>
-            <TooltipBubble {...tooltipBubbleProps} />
-          </div>
-          <div
-            onMouseOver={this.show}
-            onFocus={this.show}
-            onMouseOut={this.hide}
-            onBlur={this.hide}
-          >
-            <TooltipIcon type={type} hasInfo={!!tooltipBubbleProps.infoMessage} />
+        <div className={TooltipAbsoluteWrapperStyle}>
+          <div className={TooltipRelativeWrapperStyle}>
+            <div className={BubbleWrapperStyle(isShown)}>
+              <TooltipBubble {...tooltipBubbleProps} />
+            </div>
+            <div
+              onMouseOver={this.show}
+              onFocus={this.show}
+              onMouseOut={this.hide}
+              onBlur={this.hide}
+            >
+              <TooltipIcon type={type} hasInfo={!!tooltipBubbleProps.infoMessage} />
+            </div>
           </div>
         </div>
       );

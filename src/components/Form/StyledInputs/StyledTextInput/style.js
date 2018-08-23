@@ -17,6 +17,7 @@ export const StyledTextInputWrapperStyle = (
   background-color: ${disabled ? colors.GRAY_SUPER_LIGHT : '#fff'};
   height: 30px;
   width: ${width};
+  min-width: ${width};
   ${transitions.MAIN};
   ${forceHoverStyle || isFocused
     ? shadows.INPUT
