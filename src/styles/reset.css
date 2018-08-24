@@ -38,6 +38,15 @@ a {
   text-decoration: none;
 }
 
+input {
+  border: none;
+  padding: 0;
+}
+
+input:focus {
+  outline: none;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

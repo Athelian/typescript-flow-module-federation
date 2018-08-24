@@ -3,23 +3,19 @@ import React from 'react';
 import { isEquals } from 'utils/fp';
 import TooltipBubble from './TooltipBubble';
 import TooltipIcon from './TooltipIcon';
-import type { TooltipBubbleProps } from './TooltipBubble/type';
-import { TooltipWrapperStyle, BubbleWrapperStyle } from './style';
-
-type Props = TooltipBubbleProps & {
-  preShow?: boolean,
-  showDuration?: number,
-};
+import { type TooltipProps as Props, defaultTooltipProps } from './type';
+import {
+  TooltipAbsoluteWrapperStyle,
+  TooltipRelativeWrapperStyle,
+  BubbleWrapperStyle,
+} from './style';
 
 type State = {
   isShown: boolean,
 };
 
 export default class Tooltip extends React.Component<Props, State> {
-  static defaultProps = {
-    preShow: false,
-    showDuration: 500,
-  };
+  static defaultProps = defaultTooltipProps;
 
   state = {
     isShown: false,
@@ -45,11 +41,29 @@ export default class Tooltip extends React.Component<Props, State> {
     this.clearTimeout();
   }
 
-  getTooltipType = ({ errorMessage, warningMessage, changedValues }: TooltipBubbleProps) => {
+  getTooltipType = () => {
+    const { tooltipBubbleOptions } = this.props;
+    const { errorMessage, warningMessage, infoMessage } = tooltipBubbleOptions;
+
     if (errorMessage) return 'error';
     if (warningMessage) return 'warning';
-    if (changedValues) return 'changed';
-    return 'info';
+    if (this.showChanged()) return 'changed';
+    if (infoMessage) return 'info';
+    return '';
+  };
+
+  showChanged = () => {
+    const { isNew, tooltipBubbleOptions } = this.props;
+    const { changedValues } = tooltipBubbleOptions;
+    const { oldValue, newValue } = changedValues;
+
+    const showChanged = !!(
+      !isNew &&
+      (!oldValue ? !!newValue : true) &&
+      !isEquals(oldValue, newValue)
+    );
+
+    return showChanged;
   };
 
   show = () => {
@@ -82,20 +96,32 @@ export default class Tooltip extends React.Component<Props, State> {
   timeout: ?TimeoutID;
 
   render() {
-    const { infoMessage, ...rest } = this.props;
-    const { errorMessage, warningMessage, changedValues } = rest;
-    const tooltipMessage = { errorMessage, warningMessage, changedValues };
-    const type = this.getTooltipType(tooltipMessage);
+    const { tooltipBubbleOptions } = this.props;
     const { isShown } = this.state;
-    return (
-      <div className={TooltipWrapperStyle}>
-        <div className={BubbleWrapperStyle(isShown)}>
-          <TooltipBubble infoMessage={infoMessage} {...rest} />
+
+    const type = this.getTooltipType();
+
+    if (type) {
+      return (
+        <div className={TooltipAbsoluteWrapperStyle}>
+          <div className={TooltipRelativeWrapperStyle}>
+            <div className={BubbleWrapperStyle(isShown)}>
+              <TooltipBubble showChanged={this.showChanged()} {...tooltipBubbleOptions} />
+            </div>
+            <div
+              onMouseOver={this.show}
+              onFocus={this.show}
+              onMouseOut={this.hide}
+              onBlur={this.hide}
+            >
+              <TooltipIcon type={type} hasInfo={!!tooltipBubbleOptions.infoMessage} />
+            </div>
+          </div>
         </div>
-        <div onMouseOver={this.show} onFocus={this.show} onMouseOut={this.hide} onBlur={this.hide}>
-          <TooltipIcon type={type} hasInfo={!!infoMessage} />
-        </div>
-      </div>
-    );
+      );
+    }
+    return null;
   }
 }
+
+Tooltip.defaultProps = defaultTooltipProps;

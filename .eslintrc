@@ -13,7 +13,9 @@
         "env": "apollo"
       }
     ],
-    "react/jsx-filename-extension": 0
+    "react/jsx-filename-extension": 0,
+    "react/default-props-match-prop-types": ["error", { "allowRequiredDefaults": true }],
+    "react/require-default-props": 0
   },
   "settings": {
     "import/resolver": {

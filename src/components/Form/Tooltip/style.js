@@ -1,8 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-import { transitions } from 'styles/common';
 
-export const TooltipWrapperStyle = css`
+export const TooltipAbsoluteWrapperStyle = css`
+  position: absolute;
+  left: -20px;
+`;
+
+export const TooltipRelativeWrapperStyle = css`
   position: relative;
   width: 20px;
   height: 20px;
@@ -12,6 +16,5 @@ export const TooltipWrapperStyle = css`
 `;
 
 export const BubbleWrapperStyle = (isShown: boolean) => css`
-  opacity: ${isShown ? '1' : '0'};
-  ${transitions.MAIN};
+  display: ${isShown ? 'block' : 'none'};
 `;

@@ -1,14 +1,10 @@
 // @flow
 import * as React from 'react';
+import { type LabelProps, defaultLabelProps } from './type';
 import { LabelWrapperStyle } from './style';
 
-export type Props = {
-  required?: boolean,
+type Props = LabelProps & {
   children: React.Node,
-};
-
-const defaultProps = {
-  required: false,
 };
 
 const Label = ({ required, children }: Props) => (
@@ -18,5 +14,6 @@ const Label = ({ required, children }: Props) => (
   </div>
 );
 
-Label.defaultProps = defaultProps;
+Label.defaultProps = defaultLabelProps;
+
 export default Label;
