@@ -6,7 +6,7 @@ import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { AuthenticationConsumer } from 'modules/authentication';
-import query from './query.graphql';
+import query from './mutation.graphql';
 import {
   SettingsWrapperStyle,
   NotificationButtonStyle,

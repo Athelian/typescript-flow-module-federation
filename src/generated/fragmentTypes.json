@@ -14,6 +14,7 @@
           { "name": "Partner" },
           { "name": "Product" },
           { "name": "ProductProvider" },
+          { "name": "Tag" },
           { "name": "User" }
         ]
       },
@@ -27,7 +28,8 @@
           { "name": "Order" },
           { "name": "OrderItem" },
           { "name": "Product" },
-          { "name": "ProductProvider" }
+          { "name": "ProductProvider" },
+          { "name": "Tag" }
         ]
       },
       {
@@ -43,6 +45,16 @@
           { "name": "BatchAssignment" },
           { "name": "OrderItem" },
           { "name": "ProductProvider" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Tagged",
+        "possibleTypes": [
+          { "name": "Batch" },
+          { "name": "Order" },
+          { "name": "Product" },
+          { "name": "User" }
         ]
       }
     ]

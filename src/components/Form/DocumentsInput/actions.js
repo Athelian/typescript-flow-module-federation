@@ -20,7 +20,7 @@ export const uploadDocument = (
     data: form,
     responseType: 'text',
     headers: {
-      Authorization: `Bearer `, // TODO
+      // TODO: Provide authentication when uploading files (tbd how in the future)
     },
     onUploadProgress(progressEvent) {
       onProgress(progressEvent);

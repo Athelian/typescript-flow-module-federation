@@ -5,13 +5,7 @@ import { getByPathWithDefault, isEquals } from 'utils/fp';
 import matchSorter from 'match-sorter';
 import type { Tag } from 'components/Tag/type.js.flow';
 import TagGridView from './components/TagGridView';
-import {
-  productTagsQuery,
-  shipmentTagsQuery,
-  userTagsQuery,
-  batchTagsQuery,
-  requestTagsQuery,
-} from './query';
+import { tagsQuery } from './query';
 
 type Props = {
   viewType: string,
@@ -26,7 +20,7 @@ class TagList extends React.PureComponent<Props> {
     if (!data) return;
 
     const { tabIndex } = this.props;
-    const tags = ['productTags', 'shipmentTags', 'userTags', 'batchTags', 'requestTags'];
+    const tags = ['Product', 'Shipment', 'User', 'Batch', 'Order'];
     const tagsByTab = tags[tabIndex];
 
     const nextPage = getByPathWithDefault(1, `viewer.${tagsByTab}.page`, data) + 1;
@@ -70,27 +64,21 @@ class TagList extends React.PureComponent<Props> {
     const { query } = this.props;
     if (!query) return tags;
 
-    const filteredTags = matchSorter(tags, query.trim(), { keys: ['description', 'name'] });
-    return filteredTags;
+    return matchSorter(tags, query.trim(), { keys: ['description', 'name'] });
   };
 
   render() {
     const { viewType, tabIndex = 0, ...filtersAndSort } = this.props;
 
-    const tagQueries = [
-      productTagsQuery,
-      shipmentTagsQuery,
-      userTagsQuery,
-      batchTagsQuery,
-      requestTagsQuery,
-    ];
-    const query = tagQueries[tabIndex];
-
-    const tags = ['productTags', 'shipmentTags', 'userTags', 'batchTags', 'requestTags'];
+    const tags = ['Product', 'Shipment', 'User', 'Batch', 'Order'];
     const tagsByTab = tags[tabIndex];
 
     return (
-      <Query query={query} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
+      <Query
+        query={tagsQuery}
+        variables={{ page: 1, perPage: 100, entityTypes: [tagsByTab], ...filtersAndSort }}
+        fetchPolicy="network-only"
+      >
         {({ loading, data, fetchMore, error }) => {
           if (error) {
             return error.message;
@@ -102,7 +90,7 @@ class TagList extends React.PureComponent<Props> {
 
           return (
             <TagGridView
-              items={this.filterTags(getByPathWithDefault([], `viewer.${tagsByTab}`, data))}
+              items={this.filterTags(getByPathWithDefault([], `tags.nodes`, data))}
               onLoadMore={() => this.loadMore({ fetchMore, data })}
               hasMore={hasMore}
               isLoading={loading}

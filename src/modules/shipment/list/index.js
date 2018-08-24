@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import ShipmentGridView from './components/ShipmentGridView';
-// import { shipmentListQuery } from './query';
 
 type Props = {
   viewType: string,
@@ -66,7 +65,7 @@ class ShipmentList extends React.PureComponent<Props> {
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
-      <Query query={{}} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
+      <Query query={null} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
         {({ loading, data, fetchMore, error }) => {
           if (error) {
             return error.message;

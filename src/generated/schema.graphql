@@ -1,7 +1,7 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Aug 21 2018 14:28:30 GMT+0900 (JST)
+# timestamp: Fri Aug 24 2018 11:41:30 GMT+0900 (JST)
 
-type Batch implements Model & Owned & Package {
+type Batch implements Model & Owned & Package & Tagged {
   archived: Boolean!
   orderItem: OrderItem!
   no: String!
@@ -26,6 +26,7 @@ type Batch implements Model & Owned & Package {
   packageVolume: MetricValue
   packageSize: Size
   packageCapacity: Float
+  tags: [Tag!]!
 }
 
 type BatchAdjustment implements Model & Owned & Sortable {
@@ -736,9 +737,11 @@ type Mutation {
   orderUpdate(id: ID!, input: OrderUpdateInput!): OrderMutated!
   batchCreate(input: BatchCreateInput!): BatchMutated!
   batchUpdate(id: ID!, input: BatchUpdateInput!): BatchMutated!
+  tagCreate(input: TagCreateInput!): TagMutated!
+  tagUpdate(id: ID!, input: TagUpdateInput!): TagMutated!
 }
 
-type Order implements Model & Owned {
+type Order implements Model & Owned & Tagged {
   archived: Boolean!
   exporter: Group!
   poNo: String!
@@ -757,6 +760,7 @@ type Order implements Model & Owned {
   updatedBy: User
   deletedBy: User
   ownedBy: Group!
+  tags: [Tag!]!
 }
 
 input OrderCreateInput {
@@ -768,6 +772,7 @@ input OrderCreateInput {
   incoterm: Incoterm
   deliveryPlace: String
   memo: String
+  tagIds: [ID!]
   orderItems: [OrderItemCreateInput!]
 }
 
@@ -889,6 +894,7 @@ input OrderUpdateInput {
   incoterm: Incoterm
   deliveryPlace: String
   memo: String
+  tagIds: [ID!]
   orderItems: [OrderItemUpdateInput!]
 }
 
@@ -944,7 +950,7 @@ input PriceInput {
   currency: Currency!
 }
 
-type Product implements Model & Owned {
+type Product implements Model & Owned & Tagged {
   archived: Boolean!
   name: String!
   serial: String!
@@ -960,6 +966,7 @@ type Product implements Model & Owned {
   updatedBy: User
   deletedBy: User
   ownedBy: Group!
+  tags: [Tag!]!
 }
 
 input ProductCreateInput {
@@ -1058,12 +1065,15 @@ input ProductUpdateInput {
 
 type Query {
   viewer: Viewer!
+  authenticated: Boolean!
   product(id: ID!): Product
   products(page: Int! = 1, perPage: Int! = 10): ProductPagination!
   order(id: ID!): Order
   orders(page: Int! = 1, perPage: Int! = 10): OrderPagination!
   batch(id: ID!): Batch
   batches(page: Int! = 1, perPage: Int! = 10): BatchPagination!
+  tag(id: ID!): Tag
+  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterByInput): TagPagination!
 }
 
 type Size {
@@ -1082,6 +1092,65 @@ interface Sortable {
   sort: Int!
 }
 
+type Tag implements Model & Owned {
+  name: String!
+  description: String
+  color: String
+  entityTypes: [TagEntityType!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+input TagCreateInput {
+  name: ID!
+  description: String
+  color: String!
+  entityTypes: [TagEntityType!]!
+}
+
+enum TagEntityType {
+  Product
+  Order
+  Batch
+  Shipment
+  User
+}
+
+input TagFilterByInput {
+  entityTypes: [TagEntityType!]
+}
+
+interface Tagged {
+  tags: [Tag!]!
+}
+
+type TagMutated {
+  tag: Tag
+  violations: [Violation!]
+}
+
+type TagPagination {
+  nodes: [Tag!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input TagUpdateInput {
+  name: ID
+  description: String
+  color: String
+  entityTypes: [TagEntityType!]
+}
+
 type Token {
   token: String!
 }
@@ -1091,7 +1160,7 @@ type TokenMutated {
   violations: [Violation!]
 }
 
-type User implements Model {
+type User implements Model & Tagged {
   email: String!
   group: Group
   role: String!
@@ -1111,6 +1180,7 @@ type User implements Model {
   createdBy: User
   updatedBy: User
   deletedBy: User
+  tags: [Tag!]!
 }
 
 type Viewer {

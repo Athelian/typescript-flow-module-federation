@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faLanguage from '@fortawesome/fontawesome-pro-regular/faLanguage';
 import { LanguageConsumer } from 'modules/language';
+import { AuthenticationConsumer } from 'modules/authentication';
 import LoadingIcon from 'components/LoadingIcon';
 import LoginForm from './components/LoginForm';
 import {
@@ -17,66 +18,59 @@ import {
   LoginLogoContainerStyle,
 } from './style';
 import messages from './messages';
-import { loginMutation } from './query';
+import { loginMutation } from './mutation';
 import loginIcon from './media/icon_white.png';
 import loginIconName from './media/logo_white.png';
-import { AuthenticationConsumer } from '../authentication';
 
 type Props = {
   redirectUrl: string,
 };
 
-function Login({ redirectUrl }: Props) {
-  // TODO: check if user is authenticated
-
-  return (
-    <AuthenticationConsumer>
-      {({ authenticated, setAuthenticated }) =>
-        authenticated ? (
-          <Location>
-            {({ location }) => <Redirect from={location.pathname} to={redirectUrl} noThrow />}
-          </Location>
-        ) : (
-          <div className={LoginContainerStyle}>
-            <div className={LoginLogoContainerStyle}>
-              <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
-              <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
-            </div>
-            <Mutation
-              mutation={loginMutation}
-              onCompleted={({ login }) => {
-                if (login.violations === null) {
-                  setAuthenticated(true);
-                }
-              }}
-            >
-              {(login, { loading, error }) => (
-                <React.Fragment>
-                  {loading && <LoadingIcon />}
-                  {error && (
-                    <div id="errorMsg" className={LoginErrorStyle}>
-                      <FormattedMessage {...messages.error} />{' '}
-                    </div>
-                  )}
-                  <LoginForm onLogin={variables => login({ variables: { input: variables } })} />
-                </React.Fragment>
-              )}
-            </Mutation>
-            <footer className={LoginCopyrightStyle}>
-              <span>
-                © {new Date().getFullYear()} Zenport Inc.{' '}
-                <LanguageConsumer>
-                  {({ changeLocale }) => (
-                    <FontAwesomeIcon icon={faLanguage} onClick={changeLocale} />
-                  )}
-                </LanguageConsumer>
-              </span>
-            </footer>
+const Login = ({ redirectUrl }: Props) => (
+  <AuthenticationConsumer>
+    {({ authenticated, setAuthenticated }) =>
+      authenticated ? (
+        <Location>
+          {({ location }) => <Redirect from={location.pathname} to={redirectUrl} noThrow />}
+        </Location>
+      ) : (
+        <div className={LoginContainerStyle}>
+          <div className={LoginLogoContainerStyle}>
+            <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
+            <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
           </div>
-        )
-      }
-    </AuthenticationConsumer>
-  );
-}
+          <Mutation
+            mutation={loginMutation}
+            onCompleted={({ login }) => {
+              if (login.violations === null) {
+                setAuthenticated(true);
+              }
+            }}
+          >
+            {(login, { loading, error }) => (
+              <React.Fragment>
+                {loading && <LoadingIcon />}
+                {error && (
+                  <div id="errorMsg" className={LoginErrorStyle}>
+                    <FormattedMessage {...messages.error} />{' '}
+                  </div>
+                )}
+                <LoginForm onLogin={variables => login({ variables: { input: variables } })} />
+              </React.Fragment>
+            )}
+          </Mutation>
+          <footer className={LoginCopyrightStyle}>
+            <span>
+              © {new Date().getFullYear()} Zenport Inc.{' '}
+              <LanguageConsumer>
+                {({ changeLocale }) => <FontAwesomeIcon icon={faLanguage} onClick={changeLocale} />}
+              </LanguageConsumer>
+            </span>
+          </footer>
+        </div>
+      )
+    }
+  </AuthenticationConsumer>
+);
 
 export default Login;

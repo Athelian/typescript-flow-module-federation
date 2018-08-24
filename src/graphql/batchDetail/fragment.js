@@ -78,6 +78,12 @@ export const detailedBatchFragment = gql`
         }
       }
     }
+    tags {
+      id
+      name
+      description
+      color
+    }
     batchAssignments {
       id
       quantity

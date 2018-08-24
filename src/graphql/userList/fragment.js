@@ -8,6 +8,12 @@ export const userListFieldsFragment = gql`
     role
     firstName
     lastName
+    tags {
+      id
+      name
+      description
+      color
+    }
     createdAt
     updatedAt
   }
