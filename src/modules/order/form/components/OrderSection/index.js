@@ -90,7 +90,6 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                           hasError={hasError}
                           width="200px"
                           pureTextInputProps={{
-                            // ...defaultPureTextInputProps,
                             ...input,
                           }}
                         />
@@ -99,7 +98,6 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                         required: true,
                       }}
                       tooltipProps={{
-                        // ...defaultTooltipProps,
                         isNew,
                         tooltipBubbleProps: {
                           errorMessage: errors.PO,
@@ -123,13 +121,11 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                           hasError={hasError}
                           width="200px"
                           pureTextInputProps={{
-                            // ...defaultPureTextInputProps,
                             ...input,
                           }}
                         />
                       )}
                       tooltipProps={{
-                        // ...defaultTooltipProps,
                         isNew,
                         tooltipBubbleProps: {
                           changedValues: {
@@ -182,13 +178,11 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                           hasError={hasError}
                           width="200px"
                           pureTextInputProps={{
-                            // ...defaultPureTextInputProps,
                             ...input,
                           }}
                         />
                       )}
                       tooltipProps={{
-                        // ...defaultTooltipProps,
                         isNew,
                         tooltipBubbleProps: {
                           changedValues: {

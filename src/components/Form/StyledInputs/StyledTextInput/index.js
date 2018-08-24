@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Display from 'components/Form/Display';
 import { PureTextInput } from 'components/Form/PureInputs';
+import { defaultPureTextInputProps } from 'components/Form/PureInputs/PureTextInput/type';
 import { type StyledInputStates } from 'components/Form/StyledInputs/type';
 import { type StyledTextInputProps as Props, defaultStyledTextInputProps } from './type';
 import { StyledTextInputWrapperStyle, StyledTextInputStyle } from './style';
@@ -20,8 +21,9 @@ export default class StyledTextInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { hasError, disabled, forceHoverStyle, width, pureTextInputProps } = this.props;
+    const { hasError, disabled, forceHoverStyle, width, pureTextInputOptions } = this.props;
     const { isFocused } = this.state;
+    const mergedPureTextInputOptiosn = { ...defaultPureTextInputProps, ...pureTextInputOptions };
 
     return (
       <div
@@ -34,10 +36,10 @@ export default class StyledTextInput extends React.Component<Props, State> {
         )}
       >
         {disabled ? (
-          <Display align={pureTextInputProps.align}>{pureTextInputProps.value}</Display>
+          <Display align={pureTextInputOptions.align}>{pureTextInputOptions.value}</Display>
         ) : (
           <PureTextInput
-            {...pureTextInputProps}
+            {...mergedPureTextInputOptiosn}
             className={StyledTextInputStyle}
             setFocus={this.setFocus}
           />

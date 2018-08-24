@@ -42,8 +42,8 @@ export default class Tooltip extends React.Component<Props, State> {
   }
 
   getTooltipType = () => {
-    const { tooltipBubbleProps } = this.props;
-    const { errorMessage, warningMessage, infoMessage } = tooltipBubbleProps;
+    const { tooltipBubbleOptions } = this.props;
+    const { errorMessage, warningMessage, infoMessage } = tooltipBubbleOptions;
 
     if (errorMessage) return 'error';
     if (warningMessage) return 'warning';
@@ -53,8 +53,8 @@ export default class Tooltip extends React.Component<Props, State> {
   };
 
   showChanged = () => {
-    const { isNew, tooltipBubbleProps } = this.props;
-    const { changedValues } = tooltipBubbleProps;
+    const { isNew, tooltipBubbleOptions } = this.props;
+    const { changedValues } = tooltipBubbleOptions;
     const { oldValue, newValue } = changedValues;
 
     const showChanged = !!(
@@ -96,7 +96,7 @@ export default class Tooltip extends React.Component<Props, State> {
   timeout: ?TimeoutID;
 
   render() {
-    const { tooltipBubbleProps } = this.props;
+    const { tooltipBubbleOptions } = this.props;
     const { isShown } = this.state;
 
     const type = this.getTooltipType();
@@ -106,7 +106,7 @@ export default class Tooltip extends React.Component<Props, State> {
         <div className={TooltipAbsoluteWrapperStyle}>
           <div className={TooltipRelativeWrapperStyle}>
             <div className={BubbleWrapperStyle(isShown)}>
-              <TooltipBubble showChanged={this.showChanged()} {...tooltipBubbleProps} />
+              <TooltipBubble showChanged={this.showChanged()} {...tooltipBubbleOptions} />
             </div>
             <div
               onMouseOver={this.show}
@@ -114,7 +114,7 @@ export default class Tooltip extends React.Component<Props, State> {
               onMouseOut={this.hide}
               onBlur={this.hide}
             >
-              <TooltipIcon type={type} hasInfo={!!tooltipBubbleProps.infoMessage} />
+              <TooltipIcon type={type} hasInfo={!!tooltipBubbleOptions.infoMessage} />
             </div>
           </div>
         </div>

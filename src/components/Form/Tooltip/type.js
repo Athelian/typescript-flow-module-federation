@@ -5,7 +5,7 @@ type OptionalProps = {
   preShow: boolean,
   showDuration: number,
   isNew: boolean,
-  tooltipBubbleProps: TooltipBubbleProps,
+  tooltipBubbleOptions: TooltipBubbleProps,
 };
 
 export type TooltipProps = OptionalProps & {};
@@ -14,7 +14,7 @@ export const defaultTooltipProps = {
   preShow: false,
   showDuration: 500,
   isNew: false,
-  tooltipBubbleProps: defaultTooltipBubbleProps,
+  tooltipBubbleOptions: defaultTooltipBubbleProps,
 };
 
 export default defaultTooltipProps;

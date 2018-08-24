@@ -6,14 +6,14 @@ import {
 } from 'components/Form/PureInputs/PureTextInput/type';
 
 type OptionalProps = {
-  pureTextInputProps: PureTextInputProps,
+  pureTextInputOptions: PureTextInputProps,
 };
 
 export type StyledTextInputProps = StyledInputProps & OptionalProps & {};
 
 export const defaultStyledTextInputProps = {
   ...defaultStyledInputProps,
-  pureTextInputProps: defaultPureTextInputProps,
+  pureTextInputOptions: defaultPureTextInputProps,
 };
 
 export default defaultStyledInputProps;

@@ -8,8 +8,8 @@ import { FieldItemWrapperStyle } from './style';
 
 type OptionalProps = {
   vertical: boolean,
-  labelProps: LabelProps,
-  tooltipProps: TooltipProps,
+  labelOptions: LabelProps,
+  tooltipOptions: TooltipProps,
 };
 
 type Props = OptionalProps & {
@@ -19,17 +19,21 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   vertical: false,
-  labelProps: defaultLabelProps,
-  tooltipProps: defaultTooltipProps,
+  labelOptions: defaultLabelProps,
+  tooltipOptions: defaultTooltipProps,
 };
 
-const FieldItem = ({ vertical, label, input, labelProps, tooltipProps }: Props) => (
-  <div className={FieldItemWrapperStyle(vertical)}>
-    <Tooltip {...tooltipProps} />
-    <Label {...labelProps}>{label}</Label>
-    {input(!!tooltipProps.tooltipBubbleProps.errorMessage)}
-  </div>
-);
+const FieldItem = ({ vertical, label, input, labelOptions, tooltipOptions }: Props) => {
+  const mergedLabelOptions = { ...defaultLabelProps, ...labelOptions };
+  const mergedTooltipOptions = { ...defaultTooltipProps, ...tooltipOptions };
+  return (
+    <div className={FieldItemWrapperStyle(vertical)}>
+      <Tooltip {...mergedTooltipOptions} />
+      <Label {...mergedLabelOptions}>{label}</Label>
+      {input(!!tooltipOptions.tooltipBubbleOptions.errorMessage)}
+    </div>
+  );
+};
 
 FieldItem.defaultProps = defaultProps;
 
