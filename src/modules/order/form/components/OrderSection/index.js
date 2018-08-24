@@ -8,7 +8,8 @@ import Display from 'components/Display';
 import FormattedNumber from 'components/FormattedNumber';
 import yupToFormErrors from 'utils/yupToFormErrors';
 import {
-  FormTextInput,
+  FieldItem,
+  StyledTextInput,
   Form,
   FormObserver,
   Field,
@@ -81,26 +82,62 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 <Field
                   name="PO"
                   render={({ input }) => (
-                    <FormTextInput
+                    <FieldItem
                       label={<FormattedMessage {...messages.PO} />}
-                      {...input}
-                      initialValue={initialValues.PO}
-                      required
-                      errorMessage={errors.PO}
-                      isNew={isNew}
-                      width="200px"
+                      input={hasError => (
+                        <StyledTextInput
+                          forceHoverStyle={isNew}
+                          hasError={hasError}
+                          width="200px"
+                          pureTextInputProps={{
+                            // ...defaultPureTextInputProps,
+                            ...input,
+                          }}
+                        />
+                      )}
+                      labelProps={{
+                        required: true,
+                      }}
+                      tooltipProps={{
+                        // ...defaultTooltipProps,
+                        isNew,
+                        tooltipBubbleProps: {
+                          errorMessage: errors.PO,
+                          changedValues: {
+                            oldValue: initialValues.PO,
+                            newValue: input.value,
+                          },
+                        },
+                      }}
                     />
                   )}
                 />
                 <Field
                   name="PI"
                   render={({ input }) => (
-                    <FormTextInput
+                    <FieldItem
                       label={<FormattedMessage {...messages.PI} />}
-                      {...input}
-                      initialValue={initialValues.PI}
-                      isNew={isNew}
-                      width="200px"
+                      input={hasError => (
+                        <StyledTextInput
+                          forceHoverStyle={isNew}
+                          hasError={hasError}
+                          width="200px"
+                          pureTextInputProps={{
+                            // ...defaultPureTextInputProps,
+                            ...input,
+                          }}
+                        />
+                      )}
+                      tooltipProps={{
+                        // ...defaultTooltipProps,
+                        isNew,
+                        tooltipBubbleProps: {
+                          changedValues: {
+                            oldValue: initialValues.PI,
+                            newValue: input.value,
+                          },
+                        },
+                      }}
                     />
                   )}
                 />
@@ -137,12 +174,29 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 <Field
                   name="deliveryPlace"
                   render={({ input }) => (
-                    <FormTextInput
+                    <FieldItem
                       label={<FormattedMessage {...messages.deliveryPlace} />}
-                      {...input}
-                      initialValue={initialValues.deliveryPlace}
-                      isNew={isNew}
-                      width="200px"
+                      input={hasError => (
+                        <StyledTextInput
+                          forceHoverStyle={isNew}
+                          hasError={hasError}
+                          width="200px"
+                          pureTextInputProps={{
+                            // ...defaultPureTextInputProps,
+                            ...input,
+                          }}
+                        />
+                      )}
+                      tooltipProps={{
+                        // ...defaultTooltipProps,
+                        isNew,
+                        tooltipBubbleProps: {
+                          changedValues: {
+                            oldValue: initialValues.deliveryPlace,
+                            newValue: input.value,
+                          },
+                        },
+                      }}
                     />
                   )}
                 />

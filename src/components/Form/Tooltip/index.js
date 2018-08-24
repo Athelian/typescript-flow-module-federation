@@ -43,13 +43,27 @@ export default class Tooltip extends React.Component<Props, State> {
 
   getTooltipType = () => {
     const { tooltipBubbleProps } = this.props;
-    const { errorMessage, warningMessage, changedValues, infoMessage } = tooltipBubbleProps;
+    const { errorMessage, warningMessage, infoMessage } = tooltipBubbleProps;
 
     if (errorMessage) return 'error';
     if (warningMessage) return 'warning';
-    if (changedValues) return 'changed';
+    if (this.showChanged()) return 'changed';
     if (infoMessage) return 'info';
     return '';
+  };
+
+  showChanged = () => {
+    const { isNew, tooltipBubbleProps } = this.props;
+    const { changedValues } = tooltipBubbleProps;
+    const { oldValue, newValue } = changedValues;
+
+    const showChanged = !!(
+      !isNew &&
+      (!oldValue ? !!newValue : true) &&
+      !isEquals(oldValue, newValue)
+    );
+
+    return showChanged;
   };
 
   show = () => {
@@ -92,7 +106,7 @@ export default class Tooltip extends React.Component<Props, State> {
         <div className={TooltipAbsoluteWrapperStyle}>
           <div className={TooltipRelativeWrapperStyle}>
             <div className={BubbleWrapperStyle(isShown)}>
-              <TooltipBubble {...tooltipBubbleProps} />
+              <TooltipBubble showChanged={this.showChanged()} {...tooltipBubbleProps} />
             </div>
             <div
               onMouseOver={this.show}
