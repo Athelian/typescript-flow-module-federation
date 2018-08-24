@@ -35,6 +35,7 @@ import UNCHECKED from '@fortawesome/fontawesome-pro-regular/faCheckCircle';
 import DISABLED from '@fortawesome/fontawesome-pro-solid/faBan';
 import EDIT from '@fortawesome/fontawesome-pro-solid/faPencil';
 import CONFIRM from '@fortawesome/fontawesome-pro-solid/faCheck';
+import MINUS from '@fortawesome/fontawesome-pro-solid/faMinus';
 import ADD from '@fortawesome/fontawesome-pro-solid/faPlus';
 import EYE from '@fortawesome/fontawesome-pro-regular/faEye';
 import ARROW_DOWN from '@fortawesome/fontawesome-pro-solid/faArrowDown';
@@ -104,6 +105,7 @@ export default {
   DISABLED,
   EDIT,
   CONFIRM,
+  MINUS,
   ADD,
   EYE,
   ARROW_DOWN,
