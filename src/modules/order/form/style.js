@@ -36,10 +36,10 @@ export const UserIconStyle = css`
   }
 `;
 
-export const StatusStyle = (active: boolean) => css`
+export const StatusStyle = (archived: boolean) => css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
-  color: ${active ? colors.TEAL : colors.GRAY};
+  color: ${archived ? colors.GRAY : colors.TEAL};
   ${fontSizes.MAIN};
   font-weight: bold;
   align-items: center;

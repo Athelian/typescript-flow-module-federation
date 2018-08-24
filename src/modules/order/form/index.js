@@ -29,15 +29,13 @@ type Props = {
 };
 
 const orderSectionFields = pickByProps([
-  'PI',
-  'PO',
+  'piNo',
+  'poNo',
   'exporter',
-  'status',
-  'updatedAt',
   'deliveryPlace',
-  'date',
+  'issuedAt',
   'currency',
-  'incoterms',
+  'incoterm',
   'totalPrice',
   'batchedQuantity',
   'shippedQuantity',
@@ -51,7 +49,6 @@ export default function OrderForm({ order, onChange }: Props) {
   const isNew = Object.keys(order).length === 0;
   logger.warn('order', order);
   const orderValues = orderSectionFields(order);
-  const isActive = orderValues.status === 'Active';
 
   return (
     <div className={OrderFormWrapperStyle}>
@@ -61,23 +58,23 @@ export default function OrderForm({ order, onChange }: Props) {
             <React.Fragment>
               <div className={LastModifiedWrapperStyle}>
                 <Display title={<FormattedMessage {...messages.updatedAt} />}>
-                  <FormattedDate value={new Date(orderValues.updatedAt)} />
+                  <FormattedDate value={new Date(order.updatedAt)} />
                 </Display>
                 <div className={UserIconStyle}>
                   <UserAvatar profileUrl="" />
                 </div>
               </div>
 
-              <div className={StatusStyle(isActive)}>
-                <Icon icon={isActive ? 'ACTIVE' : 'ARCHIVED'} />
-                {orderValues.status}
+              <div className={StatusStyle(order.archived)}>
+                <Icon icon={order.archived ? 'ARCHIVED' : 'ACTIVE'} />
+                {order.archived ? 'Archived' : 'Active'}
                 <button
                   type="button"
                   className={ToggleButtonStyle}
                   tabIndex={-1}
                   onClick={() => {}}
                 >
-                  {isActive ? <Icon icon="TOGGLE_ON" /> : <Icon icon="TOGGLE_OFF" />}
+                  {order.archived ? <Icon icon="TOGGLE_OFF" /> : <Icon icon="TOGGLE_ON" />}
                 </button>
               </div>
             </React.Fragment>

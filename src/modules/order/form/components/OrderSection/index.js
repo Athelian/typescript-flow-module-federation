@@ -39,19 +39,17 @@ type Props = {
   isNew: boolean,
   onChange: Function,
   initialValues: {
-    updatedAt?: Date,
-    status?: string,
-    PI?: string,
-    PO?: string,
+    piNo?: string,
+    poNo?: string,
     currency?: string,
-    incoterms?: string,
+    incoterm?: string,
     deliveryPlace?: string,
-    date?: Date,
+    issuedAt?: Date,
   },
 };
 
 const OrderSchema = Yup.object().shape({
-  PO: Yup.string().required(),
+  poNo: Yup.string().required(),
   currency: Yup.string().required(),
   exporter: Yup.string().required(),
 });
@@ -71,6 +69,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
       validateOnBlur
       validations={onValidate}
       render={({ values, errors, touched, setFieldValue }) => {
+        console.log(values);
         const totalOrderedQuantity = values.items ? values.items.length : 0;
         const totalBatches = values.items
           ? values.items.reduce((total, item) => total + item.batchItems.length, 0)
@@ -80,7 +79,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
             <div className={MainFieldsWrapperStyle}>
               <InputGroup fieldGap={20}>
                 <Field
-                  name="PO"
+                  name="poNo"
                   render={({ input }) => (
                     <FieldItem
                       label={<FormattedMessage {...messages.PO} />}
@@ -89,20 +88,20 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                           forceHoverStyle={isNew}
                           hasError={hasError}
                           width="200px"
-                          pureTextInputProps={{
+                          pureTextInputOptions={{
                             ...input,
                           }}
                         />
                       )}
-                      labelProps={{
+                      labelOptions={{
                         required: true,
                       }}
-                      tooltipProps={{
+                      tooltipOptions={{
                         isNew,
-                        tooltipBubbleProps: {
-                          errorMessage: errors.PO,
+                        tooltipBubbleOptions: {
+                          errorMessage: errors.poNo,
                           changedValues: {
-                            oldValue: initialValues.PO,
+                            oldValue: initialValues.poNo,
                             newValue: input.value,
                           },
                         },
@@ -111,7 +110,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                   )}
                 />
                 <Field
-                  name="PI"
+                  name="piNo"
                   render={({ input }) => (
                     <FieldItem
                       label={<FormattedMessage {...messages.PI} />}
@@ -120,16 +119,16 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                           forceHoverStyle={isNew}
                           hasError={hasError}
                           width="200px"
-                          pureTextInputProps={{
+                          pureTextInputOptions={{
                             ...input,
                           }}
                         />
                       )}
-                      tooltipProps={{
+                      tooltipOptions={{
                         isNew,
-                        tooltipBubbleProps: {
+                        tooltipBubbleOptions: {
                           changedValues: {
-                            oldValue: initialValues.PI,
+                            oldValue: initialValues.piNo,
                             newValue: input.value,
                           },
                         },
@@ -138,14 +137,13 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                   )}
                 />
                 <Field
-                  name="date"
+                  name="issuedAt"
                   render={({ input }) => (
                     <TextInput
                       {...input}
-                      id="poDate"
                       type="date"
                       title={<FormattedMessage {...messages.date} />}
-                      errorMessage={touched.date && errors.date}
+                      errorMessage={touched.issuedAt && errors.issuedAt}
                       editable={isNew}
                       width="200px"
                       onChange={setFieldValue}
@@ -163,8 +161,8 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 />
                 <IncotermsInput
                   title={<FormattedMessage {...messages.incoterms} />}
-                  value={values.incoterms}
-                  onChange={({ name }) => setFieldValue('incoterms', name)}
+                  value={values.incoterm}
+                  onChange={({ name }) => setFieldValue('incoterm', name)}
                   width="200px"
                 />
                 <Field
@@ -177,14 +175,14 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                           forceHoverStyle={isNew}
                           hasError={hasError}
                           width="200px"
-                          pureTextInputProps={{
+                          pureTextInputOptions={{
                             ...input,
                           }}
                         />
                       )}
-                      tooltipProps={{
+                      tooltipOptions={{
                         isNew,
-                        tooltipBubbleProps: {
+                        tooltipBubbleOptions: {
                           changedValues: {
                             oldValue: initialValues.deliveryPlace,
                             newValue: input.value,
@@ -236,7 +234,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 editable={isNew}
                 id="tags"
                 name="tags"
-                tagType="productTags"
+                tagType="Order"
                 value={values.tags}
                 onChange={setFieldValue}
               />

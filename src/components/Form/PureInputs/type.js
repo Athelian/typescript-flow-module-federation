@@ -16,7 +16,7 @@ export type PureInputRequiredProps = {
 };
 
 export const defaultPureInputProps = {
-  value: null,
+  value: '',
   name: '',
   placeholder: '',
   onChange: null,
