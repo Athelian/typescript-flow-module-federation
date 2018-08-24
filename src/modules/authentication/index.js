@@ -4,14 +4,9 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import query from './query.graphql';
 
-type ContextProps = {
-  authenticated: boolean,
-  setAuthenticated: boolean => void,
-};
-
-const AuthenticationContext = React.createContext<ContextProps>({
+const AuthenticationContext = React.createContext({
   authenticated: false,
-  setAuthenticated: () => {},
+  setAuthenticated: authenticated => authenticated,
 });
 
 type Props = {

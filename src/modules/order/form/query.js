@@ -1,6 +1,5 @@
 // @flow
 import gql from 'graphql-tag';
-import { userListFieldsFragment } from 'graphql/userList/fragment';
 import { productProviderListFragment } from 'graphql/productProviderList/fragment';
 import { detailedBatchFragment } from 'graphql/batchDetail/fragment';
 
@@ -40,7 +39,6 @@ export const orderDetailQuery = gql`
   }
 
   ${productProviderListFragment}
-  ${userListFieldsFragment}
   ${detailedBatchFragment}
 `;
 

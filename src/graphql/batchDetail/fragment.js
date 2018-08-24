@@ -89,7 +89,7 @@ export const detailedBatchFragment = gql`
       quantity
       memo
       user {
-        ...userListFields
+        ...userListFieldsFragment
       }
     }
     batchAdjustments {
