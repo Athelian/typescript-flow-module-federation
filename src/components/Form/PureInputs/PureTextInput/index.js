@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
-import {
-  type PureInputProps as Props,
-  defaultPureInputProps,
-} from 'components/Form/PureInputs/type';
+import { type PureInputRequiredProps } from 'components/Form/PureInputs/type';
+import { type PureTextInputProps, defaultPureTextInputProps } from './type';
+
+type Props = PureTextInputProps & PureInputRequiredProps;
 
 export default class PureTextInput extends React.Component<Props> {
-  static defaultProps = defaultPureInputProps;
+  static defaultProps = defaultPureTextInputProps;
 
   handleFocus = (event: any) => {
     const { setFocus, onFocus } = this.props;

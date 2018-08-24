@@ -109,3 +109,5 @@ export default class Tooltip extends React.Component<Props, State> {
     return null;
   }
 }
+
+Tooltip.defaultProps = defaultTooltipProps;

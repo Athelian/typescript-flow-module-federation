@@ -8,8 +8,7 @@ import Display from 'components/Display';
 import FormattedNumber from 'components/FormattedNumber';
 import yupToFormErrors from 'utils/yupToFormErrors';
 import {
-  FieldItem,
-  StyledTextInput,
+  FormTextInput,
   Form,
   FormObserver,
   Field,
@@ -82,42 +81,26 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 <Field
                   name="PO"
                   render={({ input }) => (
-                    <FieldItem
+                    <FormTextInput
                       label={<FormattedMessage {...messages.PO} />}
-                      input={hasError => (
-                        <StyledTextInput
-                          forceHoverStyle={isNew}
-                          hasError={hasError}
-                          width="200px"
-                          pureInputProps={{
-                            ...input,
-                            id: 'PO',
-                          }}
-                        />
-                      )}
-                      labelProps={{
-                        required: true,
-                      }}
-                      tooltipProps={{
-                        tooltipBubbleProps: {
-                          errorMessage: errors.PO,
-                        },
-                      }}
+                      {...input}
+                      initialValue={initialValues.PO}
+                      required
+                      errorMessage={errors.PO}
+                      isNew={isNew}
+                      width="200px"
                     />
                   )}
                 />
                 <Field
                   name="PI"
                   render={({ input }) => (
-                    <TextInput
+                    <FormTextInput
+                      label={<FormattedMessage {...messages.PI} />}
                       {...input}
-                      id="PI"
-                      title={<FormattedMessage {...messages.PI} />}
-                      errorMessage={touched.PI && errors.PI}
-                      editable={isNew}
+                      initialValue={initialValues.PI}
+                      isNew={isNew}
                       width="200px"
-                      onChange={setFieldValue}
-                      align="right"
                     />
                   )}
                 />
@@ -154,15 +137,12 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 <Field
                   name="deliveryPlace"
                   render={({ input }) => (
-                    <TextInput
+                    <FormTextInput
+                      label={<FormattedMessage {...messages.deliveryPlace} />}
                       {...input}
-                      id="deliveryPlace"
-                      title={<FormattedMessage {...messages.deliveryPlace} />}
-                      errorMessage={touched.deliveryPlace && errors.deliveryPlace}
-                      editable={isNew}
+                      initialValue={initialValues.deliveryPlace}
+                      isNew={isNew}
                       width="200px"
-                      onChange={setFieldValue}
-                      align="right"
                     />
                   )}
                 />

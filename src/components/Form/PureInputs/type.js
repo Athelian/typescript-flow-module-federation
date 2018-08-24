@@ -1,24 +1,27 @@
 // @flow
 import * as React from 'react';
 
-export type PureInputProps = {
+export type PureInputOptionalProps = {
   value: any,
   name: string,
   placeholder: string | React.Node,
-  onChange: Function,
-  onBlur: Function,
-  onFocus: Function,
-  setFocus: (value: boolean) => void,
+  onChange: ?Function,
+  onBlur: ?Function,
+  onFocus: ?Function,
   align: 'left' | 'right' | 'center',
+};
+
+export type PureInputRequiredProps = {
+  setFocus: (value: boolean) => void,
 };
 
 export const defaultPureInputProps = {
   value: null,
   name: '',
   placeholder: '',
-  onChange: () => {},
-  onBlur: () => {},
-  onFocus: () => {},
+  onChange: null,
+  onBlur: null,
+  onFocus: null,
   align: 'right',
 };
 

@@ -1,12 +1,10 @@
 // @flow
-import { type PureInputProps, defaultPureInputProps } from 'components/Form/PureInputs/type';
 
 type OptionalProps = {
   hasError: boolean,
   disabled: boolean,
   forceHoverStyle: boolean,
   width: string,
-  pureInputProps: PureInputProps,
 };
 
 export type StyledInputProps = OptionalProps & {};
@@ -16,7 +14,6 @@ export const defaultStyledInputProps = {
   disabled: false,
   forceHoverStyle: false,
   width: '100%',
-  pureInputProps: defaultPureInputProps,
 };
 
 export type StyledInputStates = {
