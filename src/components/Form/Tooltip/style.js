@@ -16,5 +16,8 @@ export const TooltipRelativeWrapperStyle = css`
 `;
 
 export const BubbleWrapperStyle = (isShown: boolean) => css`
-  display: ${isShown ? 'block' : 'none'};
+  display: ${!isShown && 'none'};
+  &:hover {
+    display: block;
+  }
 `;

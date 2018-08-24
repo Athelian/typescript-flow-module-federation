@@ -1,6 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, shadows, fontSizesWithHeights, borderRadiuses, fontSizes } from 'styles/common';
+import {
+  colors,
+  shadows,
+  fontSizesWithHeights,
+  borderRadiuses,
+  fontSizes,
+  presets,
+} from 'styles/common';
 import type { BubblePositionType } from './type';
 
 const bubbleWidth = 150;
@@ -65,8 +72,6 @@ export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
 `;
 
 const MessageStyle = css`
-  display: flex;
-  justify-content: center;
   width: 100%;
 `;
 
@@ -76,6 +81,8 @@ export const UpperMessageStyle = css`
 `;
 
 export const OldValueStyle = css`
+  ${presets.ELLIPSIS};
+  ${MessageStyle};
   padding: 5px;
 `;
 
@@ -87,6 +94,8 @@ export const ArrowDownStyle = css`
 `;
 
 export const NewValueStyle = css`
+  ${presets.ELLIPSIS};
+  ${MessageStyle};
   padding: 5px;
 `;
 
