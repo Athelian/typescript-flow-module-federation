@@ -4,7 +4,6 @@ import gql from 'graphql-tag';
 export const userDetailQuery = gql`
   query {
     viewer {
-      permissions
       user {
         id
         email
@@ -17,15 +16,7 @@ export const userDetailQuery = gql`
           id
           name
           name2
-          type
-          partners(page: 1, perPage: 1000) {
-            nodes {
-              id
-              name
-              name2
-              type
-            }
-          }
+          types
         }
       }
     }

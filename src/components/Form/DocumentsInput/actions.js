@@ -1,7 +1,6 @@
 // @flow
 import Raven from 'raven-js';
 import { isDevEnvironment } from 'utils/env';
-import { getAuthToken } from 'utils/auth';
 import logger from 'utils/logger';
 import axios from 'axios';
 
@@ -21,7 +20,7 @@ export const uploadDocument = (
     data: form,
     responseType: 'text',
     headers: {
-      Authorization: `Bearer ${getAuthToken()}`,
+      // TODO: Provide authentication when uploading files (tbd how in the future)
     },
     onUploadProgress(progressEvent) {
       onProgress(progressEvent);

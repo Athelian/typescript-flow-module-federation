@@ -1,13 +1,12 @@
 // @flow
+import { navigate } from '@reach/router';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
-import { setContext } from 'apollo-link-context';
 import { createHttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import Raven from 'raven-js';
 import { isDevEnvironment } from './utils/env';
-import { getAuthToken, reloadPageOnExpireToken } from './utils/auth';
 import introspectionQueryResultData from './generated/fragmentTypes.json';
 import logger from './utils/logger';
 
@@ -19,9 +18,6 @@ const errorLogger = errors => {
     } else {
       logger.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
     }
-    if (message.includes('Token is invalid')) {
-      reloadPageOnExpireToken();
-    }
   });
 };
 
@@ -32,22 +28,20 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
   if (networkError) {
     logger.error(`[Network error]: ${networkError}`);
+
+    if (networkError.statusCode === 401) {
+      navigate('/login');
+    }
   }
 });
 
 const httpLink = createHttpLink({
   uri: `${process.env.ZENPORT_SERVER_URL || ''}/graphql`,
+  credentials: 'include',
 });
 
-const authLink = setContext((_, { headers }) => ({
-  headers: {
-    ...headers,
-    authorization: `Bearer ${getAuthToken()}`,
-  },
-}));
-
 const client = new ApolloClient({
-  link: ApolloLink.from([authLink, errorLink, httpLink]),
+  link: ApolloLink.from([errorLink, httpLink]),
   cache: new InMemoryCache({
     fragmentMatcher: new IntrospectionFragmentMatcher({
       introspectionQueryResultData,

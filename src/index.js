@@ -3,6 +3,7 @@ import * as React from 'react';
 import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 import FullStory from 'react-fullstory';
+import AuthenticationProvider from './modules/authentication';
 import LanguageProvider from './modules/language';
 import UIProvider from './modules/ui';
 import apolloClient from './apollo';
@@ -26,14 +27,16 @@ const renderApp = (Component, renderFn) => {
     <React.Fragment>
       {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
       <ApolloProvider client={apolloClient}>
-        <LanguageProvider>
-          <UIProvider>
-            {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
-            <React.StrictMode>
-              <Component />
-            </React.StrictMode>
-          </UIProvider>
-        </LanguageProvider>
+        <AuthenticationProvider>
+          <LanguageProvider>
+            <UIProvider>
+              {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
+              <React.StrictMode>
+                <Component />
+              </React.StrictMode>
+            </UIProvider>
+          </LanguageProvider>
+        </AuthenticationProvider>
       </ApolloProvider>
     </React.Fragment>,
     container

@@ -5,11 +5,11 @@ export const productListFragment = gql`
   fragment productListFragment on Product {
     id
     name
-    status
+    archived
     serial
     createdAt
     updatedAt
-    exporterSuppliers {
+    productProviders {
       id
       exporter {
         id
@@ -20,28 +20,17 @@ export const productListFragment = gql`
         name
       }
     }
-    files {
-      path
-    }
-    tags {
-      id
-      name
-      description
-      color
-    }
   }
 `;
 
 export const productListQuery = gql`
-  query products($filter: ProductFilterInput, $sort: SortInput, $page: Int!, $perPage: Int!) {
-    viewer {
-      products(filter: $filter, sort: $sort, page: $page, perPage: $perPage) {
-        nodes {
-          ...productListFragment
-        }
-        page
-        totalPage
+  query products($page: Int!, $perPage: Int!) {
+    products(page: $page, perPage: $perPage) {
+      nodes {
+        ...productListFragment
       }
+      page
+      totalPage
     }
   }
 

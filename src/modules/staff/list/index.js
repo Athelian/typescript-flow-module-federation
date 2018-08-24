@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import StaffGridView from './components/StaffGridView';
-import { userListQuery } from './query';
 
 type Props = {
   viewType: string,
@@ -64,11 +63,7 @@ class StaffList extends React.PureComponent<Props> {
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
-      <Query
-        query={userListQuery}
-        variables={{ page: 1, ...filtersAndSort }}
-        fetchPolicy="network-only"
-      >
+      <Query query={null} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
         {({ loading, data, fetchMore, error }) => {
           if (error) {
             return error.message;

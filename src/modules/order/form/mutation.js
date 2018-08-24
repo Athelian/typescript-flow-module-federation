@@ -1,26 +1,33 @@
 // @flow
 import gql from 'graphql-tag';
+import { violationFragment } from 'graphql/violations/fragment';
 import type { OrderForm } from '../type.js.flow';
 
 export const createOrderMutation = gql`
-  mutation createOrder($input: CreateDeepOrderInput!) {
-    createDeepOrder(input: $input) {
-      id
+  mutation orderCreate($input: OrderCreateInput!) {
+    orderCreate(input: $input) {
+      order {
+        id
+      }
+      violations {
+        ...violationFragment
+      }
     }
   }
+
+  ${violationFragment}
 `;
 
 export const prepareCreateOrderInput = ({ items = [], ...data }: OrderForm) => ({
   ...data,
-  items: items.map(({ batchItems, productExporterSupplier, ...item }) => ({
+  batchItems: items.map(({ batchItems, productExporterSupplier, ...item }) => ({
     ...item,
-    productExporterSupplierId: productExporterSupplier.id,
-    batchItems: batchItems.map(({ assignments, tags, ...batchItem }) => ({
+    productProviderId: productExporterSupplier.id,
+    batches: batchItems.map(({ assignments, tags, ...batchItem }) => ({
       ...batchItem,
-      tags: tags ? tags.map(t => t.id) : null,
-      assignments: assignments.map(({ user, request, ...assign }) => ({
+      tagIds: tags ? tags.map(t => t.id) : null,
+      batchAssignments: assignments.map(({ user, ...assign }) => ({
         userId: user.id,
-        requestId: request ? request.id : null,
         ...assign,
       })),
     })),
@@ -28,25 +35,31 @@ export const prepareCreateOrderInput = ({ items = [], ...data }: OrderForm) => (
 });
 
 export const updateOrderMutation = gql`
-  mutation updateOrder($id: ID!, $input: UpdateDeepOrderInput!) {
-    updateDeepOrder(id: $id, input: $input) {
-      id
+  mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
+    orderUpdate(id: $id, input: $input) {
+      order {
+        id
+      }
+      violations {
+        ...violationFragment
+      }
     }
   }
+
+  ${violationFragment}
 `;
 
 export const prepareUpdateOrderInput = ({ items = [], exporterId, ...data }: OrderForm) => ({
   ...data,
-  items: items.map(({ batchItems, productExporterSupplier, ...item }) => ({
+  batchItems: items.map(({ batchItems, productExporterSupplier, ...item }) => ({
     ...item,
-    productExporterSupplierId: productExporterSupplier.id,
+    productProviderId: productExporterSupplier.id,
     batchItems: batchItems.map(
       ({ hasShipment, hasBatchGroup, shipment, batchGroup, assignments, tags, ...batchItem }) => ({
         ...batchItem,
-        tags: tags ? tags.map(t => t.id) : null,
-        assignments: assignments.map(({ user, request, ...assign }) => ({
+        tagIds: tags ? tags.map(t => t.id) : null,
+        batchAssignments: assignments.map(({ user, ...assign }) => ({
           userId: user.id,
-          requestId: request ? request.id : null,
           ...assign,
         })),
       })

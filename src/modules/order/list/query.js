@@ -1,48 +1,37 @@
 import gql from 'graphql-tag';
 
 export const orderListQuery = gql`
-  query($filter: OrderFilterInput, $sort: SortInput, $page: Int!, $perPage: Int!) {
-    viewer {
-      orders(filter: $filter, sort: $sort, page: $page, perPage: $perPage) {
-        nodes {
+  query($page: Int!, $perPage: Int!) {
+    orders(page: $page, perPage: $perPage) {
+      nodes {
+        id
+        poNo
+        issuedAt
+        exporter {
           id
-          PO
-          date
-          exporter {
+          name
+        }
+        updatedAt
+        createdAt
+        orderItems {
+          id
+          quantity
+          productProvider {
             id
-            name
-          }
-          batchedQuantity
-          shippedQuantity
-          updatedAt
-          createdAt
-          items {
-            id
-            quantity
-            batchedQuantity
-            shippedQuantity
-            productExporterSupplier {
+            supplier {
               id
-              supplier {
-                id
-                name
-              }
-              product {
-                id
-                name
-                serial
-                files {
-                  id
-                  path
-                  type
-                }
-              }
+              name
+            }
+            product {
+              id
+              name
+              serial
             }
           }
         }
-        page
-        totalPage
       }
+      page
+      totalPage
     }
   }
 `;

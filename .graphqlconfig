@@ -5,10 +5,7 @@
       "extensions": {
         "endpoints": {
           "dev": {
-            "url": "https://dev.zenport.io/graphql",
-            "headers": {
-              "Authorization": "Bearer ${env:ZENPORT_AUTH_TOKEN}"
-            }
+            "url": "https://graphql-staging.zenport.io/graphql"
           }
         },
         "generate-fragments": {
