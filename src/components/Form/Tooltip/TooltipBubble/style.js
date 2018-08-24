@@ -75,15 +75,20 @@ const MessageStyle = css`
   width: 100%;
 `;
 
+const ValueStyle = css`
+  ${presets.ELLIPSIS};
+  width: 100%;
+  text-align: center;
+  padding: 5px;
+`;
+
 export const UpperMessageStyle = css`
   ${MessageStyle};
   padding-bottom: 5px;
 `;
 
 export const OldValueStyle = css`
-  ${presets.ELLIPSIS};
-  ${MessageStyle};
-  padding: 5px;
+  ${ValueStyle};
 `;
 
 export const ArrowDownStyle = css`
@@ -94,9 +99,7 @@ export const ArrowDownStyle = css`
 `;
 
 export const NewValueStyle = css`
-  ${presets.ELLIPSIS};
-  ${MessageStyle};
-  padding: 5px;
+  ${ValueStyle};
 `;
 
 export const InfoMessageStyle = css`

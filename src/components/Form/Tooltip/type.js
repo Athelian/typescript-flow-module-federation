@@ -12,7 +12,7 @@ export type TooltipProps = OptionalProps & {};
 
 export const defaultTooltipProps = {
   preShow: false,
-  showDuration: 2000,
+  showDuration: 1500,
   isNew: false,
   tooltipBubbleOptions: defaultTooltipBubbleProps,
 };
