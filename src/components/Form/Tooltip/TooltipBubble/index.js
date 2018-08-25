@@ -28,14 +28,14 @@ const TooltipBubble = ({
     {errorMessage && (
       <React.Fragment>
         <div className={UpperMessageStyle}>{errorMessage}</div>
-        {(warningMessage || changedValues || infoMessage) && <Divider />}
+        {(warningMessage || changedValues.oldValue || infoMessage) && <Divider />}
       </React.Fragment>
     )}
 
     {warningMessage && (
       <React.Fragment>
         <div className={UpperMessageStyle}>{warningMessage}</div>
-        {(changedValues || infoMessage) && <Divider />}
+        {(changedValues.oldValue || infoMessage) && <Divider />}
       </React.Fragment>
     )}
 

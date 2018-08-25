@@ -31,7 +31,14 @@ export default class Tooltip extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!isEquals(prevProps, this.props)) {
+    const {
+      tooltipBubbleOptions: { errorMessage: prevError },
+    } = prevProps;
+    const {
+      tooltipBubbleOptions: { errorMessage: currentError },
+    } = this.props;
+
+    if (!isEquals(prevError, currentError)) {
       this.show();
       this.startTimeout();
     }
@@ -54,14 +61,11 @@ export default class Tooltip extends React.Component<Props, State> {
 
   showChanged = () => {
     const { isNew, tooltipBubbleOptions } = this.props;
-    const { changedValues } = tooltipBubbleOptions;
-    const { oldValue, newValue } = changedValues;
+    const {
+      changedValues: { oldValue, newValue },
+    } = tooltipBubbleOptions;
 
-    const showChanged = !!(
-      !isNew &&
-      (!oldValue ? !!newValue : true) &&
-      !isEquals(oldValue, newValue)
-    );
+    const showChanged = !isNew && (!!oldValue || !!newValue) && !isEquals(oldValue, newValue);
 
     return showChanged;
   };
