@@ -11,7 +11,12 @@ import DropDown from './SimpleDropDown';
 import TagsInput from './TagsInput';
 import InputGroup from './InputGroup';
 import FieldItem from './FieldItem';
-import { StyledNumberInput, StyledPasswordInput, StyledTextInput } from './StyledInputs';
+import {
+  StyledEmailInput,
+  StyledNumberInput,
+  StyledPasswordInput,
+  StyledTextInput,
+} from './StyledInputs';
 
 export const Form = ZenForm;
 export const Field = ZenField;
@@ -21,6 +26,7 @@ export const FieldArray = ZenFieldArray;
 
 export {
   FieldItem,
+  StyledEmailInput,
   StyledNumberInput,
   StyledPasswordInput,
   StyledTextInput,

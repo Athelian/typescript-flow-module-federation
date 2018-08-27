@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faSignInAlt from '@fortawesome/fontawesome-pro-solid/faSignInAlt';
 import messages from 'modules/login/messages';
 import { LoginBoxStyle } from 'modules/login/style';
-import { FieldItem, StyledTextInput, StyledPasswordInput, Form, Field } from 'components/Form';
+import { FieldItem, StyledEmailInput, StyledPasswordInput, Form, Field } from 'components/Form';
 import { CustomButton } from 'components/NavButtons';
 import yupToFormErrors from 'utils/yupToFormErrors';
 
@@ -48,7 +48,7 @@ function LoginForm({ onLogin }: Props) {
                   data-testid="email"
                   label={<FormattedMessage {...messages.email} />}
                   input={hasError => (
-                    <StyledTextInput
+                    <StyledEmailInput
                       isFocused={meta.isActive}
                       forceHoverStyle
                       hasError={hasError}
