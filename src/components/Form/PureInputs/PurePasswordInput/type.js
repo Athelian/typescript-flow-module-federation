@@ -1,10 +1,7 @@
 // @flow
-import {
-  type PureInputOptionalProps,
-  defaultPureInputProps,
-} from 'components/Form/PureInputs/type';
+import { type PureInputProps, defaultPureInputProps } from 'components/Form/PureInputs/type';
 
-type OptionalProps = PureInputOptionalProps & {};
+type OptionalProps = PureInputProps & {};
 
 export type PurePasswordInputProps = OptionalProps & {};
 

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 
-export type PureInputOptionalProps = {
+type OptionalProps = {
   value: any,
   name: string,
   placeholder: string | React.Node,
@@ -11,9 +11,7 @@ export type PureInputOptionalProps = {
   align: 'left' | 'right' | 'center',
 };
 
-export type PureInputRequiredProps = {
-  setFocus: (value: boolean) => void,
-};
+export type PureInputProps = OptionalProps & {};
 
 export const defaultPureInputProps = {
   value: '',

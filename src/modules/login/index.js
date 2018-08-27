@@ -45,11 +45,6 @@ const Login = ({ redirectUrl }: Props) => (
           >
             {(login, { loading, error }) => (
               <React.Fragment>
-                {error && (
-                  <div id="errorMsg" className={LoginErrorStyle}>
-                    <FormattedMessage {...messages.error} />{' '}
-                  </div>
-                )}
                 {loading ? (
                   <LoadingIcon />
                 ) : (
@@ -59,6 +54,11 @@ const Login = ({ redirectUrl }: Props) => (
                       <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
                     </div>
                     <LoginForm onLogin={variables => login({ variables: { input: variables } })} />
+                    {error && (
+                      <div id="errorMsg" className={LoginErrorStyle}>
+                        <FormattedMessage {...messages.error} />{' '}
+                      </div>
+                    )}
                   </React.Fragment>
                 )}
               </React.Fragment>

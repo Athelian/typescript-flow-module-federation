@@ -43,16 +43,17 @@ function LoginForm({ onLogin }: Props) {
           <div className={LoginBoxStyle}>
             <Field
               name="email"
-              render={({ input }) => (
+              render={({ input, meta }) => (
                 <FieldItem
                   data-testid="email"
                   label={<FormattedMessage {...messages.email} />}
                   input={hasError => (
                     <StyledTextInput
+                      isFocused={meta.isActive}
                       forceHoverStyle
                       hasError={hasError}
                       width="200px"
-                      pureTextInputOptions={{
+                      pureInputOptions={{
                         ...input,
                         align: 'left',
                       }}
@@ -70,16 +71,17 @@ function LoginForm({ onLogin }: Props) {
             />
             <Field
               name="password"
-              render={({ input }) => (
+              render={({ input, meta }) => (
                 <FieldItem
                   data-testid="password"
                   label={<FormattedMessage {...messages.password} />}
                   input={hasError => (
                     <StyledPasswordInput
+                      isFocused={meta.isActive}
                       forceHoverStyle
                       hasError={hasError}
                       width="200px"
-                      purePasswordInputOptions={{
+                      pureInputOptions={{
                         ...input,
                         align: 'left',
                       }}

@@ -79,15 +79,16 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
               <InputGroup fieldGap={20}>
                 <Field
                   name="poNo"
-                  render={({ input }) => (
+                  render={({ input, meta }) => (
                     <FieldItem
                       label={<FormattedMessage {...messages.PO} />}
                       input={hasError => (
                         <StyledTextInput
+                          isFocused={meta.isActive}
                           forceHoverStyle={isNew}
                           hasError={hasError}
                           width="200px"
-                          pureTextInputOptions={{
+                          pureInputOptions={{
                             ...input,
                           }}
                         />
@@ -98,7 +99,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                       tooltipOptions={{
                         isNew,
                         tooltipBubbleOptions: {
-                          errorMessage: errors.poNo,
+                          errorMessage: touched.poNo && errors.poNo,
                           changedValues: {
                             oldValue: initialValues.poNo,
                             newValue: input.value,
@@ -110,15 +111,16 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 />
                 <Field
                   name="piNo"
-                  render={({ input }) => (
+                  render={({ input, meta }) => (
                     <FieldItem
                       label={<FormattedMessage {...messages.PI} />}
                       input={hasError => (
                         <StyledTextInput
+                          isFocused={meta.isActive}
                           forceHoverStyle={isNew}
                           hasError={hasError}
                           width="200px"
-                          pureTextInputOptions={{
+                          pureInputOptions={{
                             ...input,
                           }}
                         />
@@ -166,15 +168,16 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 />
                 <Field
                   name="deliveryPlace"
-                  render={({ input }) => (
+                  render={({ input, meta }) => (
                     <FieldItem
                       label={<FormattedMessage {...messages.deliveryPlace} />}
                       input={hasError => (
                         <StyledTextInput
+                          isFocused={meta.isActive}
                           forceHoverStyle={isNew}
                           hasError={hasError}
                           width="200px"
-                          pureTextInputOptions={{
+                          pureInputOptions={{
                             ...input,
                           }}
                         />
