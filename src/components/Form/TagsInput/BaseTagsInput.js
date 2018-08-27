@@ -53,25 +53,25 @@ export default class BaseTagsInput extends React.Component<Props, State> {
   };
 
   handleAdd = (tag: TagType) => {
-    const { value, multiSelect } = this.props;
+    const { values, multiSelect } = this.props;
 
     if (multiSelect) {
-      this.handleChange([...(value || []), tag]);
+      this.handleChange([...(values || []), tag]);
     } else {
       this.handleChange([tag]);
     }
   };
 
   handleRemove = (tag: TagType) => {
-    const { value } = this.props;
+    const { values } = this.props;
 
-    this.handleChange((value || []).filter(t => t.id !== tag.id));
+    this.handleChange((values || []).filter(t => t.id !== tag.id));
   };
 
   handleDownshiftChange = (selectedItem: TagType) => {
-    const { value } = this.props;
+    const { values } = this.props;
 
-    if ((value || []).map(t => t.id).includes(selectedItem.id)) {
+    if ((values || []).map(t => t.id).includes(selectedItem.id)) {
       this.handleRemove(selectedItem);
     } else {
       this.handleAdd(selectedItem);
@@ -118,17 +118,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
   isReadOnly = (isWrite?: boolean, isEditable: boolean) => !isWrite || !isEditable;
 
   render() {
-    const {
-      isRead,
-      isWrite,
-      editable,
-      errorMessage,
-      disabled,
-      readOnly,
-      value,
-      tags,
-      multiSelect,
-    } = this.props;
+    const { isRead, isWrite, editable, disabled, readOnly, values, tags, multiSelect } = this.props;
     const { focused } = this.state;
     if (!isRead) return null;
 
@@ -160,13 +150,12 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                       className={WrapperStyle(
                         focused,
                         disabled || false,
-                        readOnly || this.isReadOnly(isWrite, isEditable),
-                        !!errorMessage
+                        readOnly || this.isReadOnly(isWrite, isEditable)
                       )}
                     >
                       <div className={SelectionWrapperStyle}>
-                        {value &&
-                          value.map(tag => (
+                        {values &&
+                          values.map(tag => (
                             <Tag
                               key={tag.id}
                               tag={tag}
@@ -187,7 +176,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                           ))}
                         {isWrite && (
                           <div className={InputStyle}>
-                            {(multiSelect || !value || value.length === 0) && (
+                            {(multiSelect || !values || values.length === 0) && (
                               <input
                                 type="text"
                                 {...getInputProps({
@@ -196,8 +185,13 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                                   onKeyDown: e => {
                                     switch (e.key) {
                                       case 'Backspace':
-                                        if (!inputValue && value && value.length > 0 && !e.repeat) {
-                                          this.handleRemove(value[value.length - 1]);
+                                        if (
+                                          !inputValue &&
+                                          values &&
+                                          values.length > 0 &&
+                                          !e.repeat
+                                        ) {
+                                          this.handleRemove(values[values.length - 1]);
                                         }
                                         break;
                                       default:
@@ -212,26 +206,25 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                                 })}
                               />
                             )}
-                            {isHover &&
-                              isWrite && (
-                                <button
-                                  {...getToggleButtonProps()}
-                                  type="button"
-                                  className={ExpandButtonStyle}
-                                  disabled={disabled}
-                                >
-                                  <FontAwesomeIcon
-                                    className={ArrowDownStyle(isOpen)}
-                                    icon={faChevron}
-                                    fixedWidth
-                                  />
-                                </button>
-                              )}
+                            {isWrite && (
+                              <button
+                                {...getToggleButtonProps()}
+                                type="button"
+                                className={ExpandButtonStyle}
+                                disabled={disabled}
+                              >
+                                <FontAwesomeIcon
+                                  className={ArrowDownStyle(isOpen)}
+                                  icon={faChevron}
+                                  fixedWidth
+                                />
+                              </button>
+                            )}
                             {isOpen && (
                               <div className={ListWrapperStyle}>
                                 {this.computeFilteredTags(inputValue).map((tag, index) => {
                                   const isActive = highlightedIndex === index;
-                                  const isSelected = (value || []).map(t => t.id).includes(tag.id);
+                                  const isSelected = (values || []).map(t => t.id).includes(tag.id);
 
                                   return (
                                     <div

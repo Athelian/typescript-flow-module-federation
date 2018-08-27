@@ -1,101 +1,24 @@
 // @flow
-import * as React from 'react';
-import type { DefaultHTMLProps } from 'components/common/type.js.flow';
+import type {
+  DefaultHTMLProps,
+  DefaultInputProps,
+  ZenInputProps,
+} from 'components/common/type.js.flow';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
 
-export type Props = DefaultHTMLProps & {
-  /**
-   *
-   *
-   * @type {string}
-   */
-  name: string,
-  /**
-   *
-   *
-   * @type {string}
-   */
-  label?: string | React.Node,
-  /**
-   *
-   *
-   * @type {string}
-   */
-  errorMessage?: string | React.Node,
-  /**
-   *
-   *
-   * @type {string}
-   */
-  warningMessage?: string | React.Node,
-  /**
-   *
-   *
-   * @type {string}
-   */
-  infoMessage?: string | React.Node,
-  /**
-   *
-   *
-   * @type {?Array<TagType>}
-   */
-  value: ?Array<TagType>,
-  /**
-   *
-   *
-   * @type {boolean}
-   */
-  disabled?: boolean,
-  /**
-   *
-   *
-   * @type {boolean}
-   */
-  required?: boolean,
-  /**
-   *
-   *
-   * @type {boolean}
-   */
-  readOnly?: boolean,
-  /**
-   *
-   *
-   * @type {boolean}
-   */
-  isRead?: boolean,
-  /**
-   *
-   *
-   * @type {boolean}
-   */
-  isWrite?: boolean,
-  /**
-   *
-   *
-   * @type {boolean}
-   */
-  editable?: boolean,
-  /**
-   *
-   *
-   */
-  onChange?: (string, any) => void,
-  /**
-   *
-   *
-   */
-  onBlur?: (string, boolean) => void,
-  /**
-   *
-   *
-   * @type {boolean}
-   */
-  multiSelect: boolean,
-  /**
-   *
-   *
-   * @type {Array<TagType>}
-   */
-  tags: Array<TagType>,
-};
+export type Props = DefaultHTMLProps &
+  DefaultInputProps &
+  ZenInputProps & {
+    /**
+     * @type {?Array<TagType>}
+     */
+    values: ?Array<TagType>,
+    /**
+     * @type {boolean}
+     */
+    multiSelect: boolean,
+    /**
+     * @type {Array<TagType>}
+     */
+    tags: Array<TagType>,
+  };

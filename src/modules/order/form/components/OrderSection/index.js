@@ -20,8 +20,10 @@ import {
 } from 'components/Form';
 import CurrencyInput from 'components/Form/CurrencyInput';
 import IncotermsInput from 'components/Form/IncotermsInput';
+import Divider from 'components/Divider';
 import EntityCard from 'components/EntityCard';
 import Label from 'components/Label';
+import { colors } from 'styles/common';
 import messages from 'modules/order/messages';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import SelectExporters from '../SelectExporters';
@@ -34,6 +36,7 @@ import {
   ExporterNameStyle,
   TagsInputStyle,
   QuantitySummaryStyle,
+  DividerStyle,
 } from './style';
 
 type Props = {
@@ -259,11 +262,14 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                     id="tags"
                     name="tags"
                     tagType="Order"
-                    value={values.tags}
+                    values={values.tags}
                     onChange={setFieldValue}
                   />
                 )}
               />
+              <div className={DividerStyle}>
+                <Divider color={colors.GRAY_LIGHT} />
+              </div>
             </div>
             <div className={QuantitySummaryStyle}>
               <InputGroup fieldGap={20}>

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import Divider from './components/Divider';
+import Divider from 'components/Divider';
 import {
   TooltipBubbleWrapperStyle,
   UpperMessageStyle,

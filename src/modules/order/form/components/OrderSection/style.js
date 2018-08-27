@@ -41,10 +41,14 @@ export const ExporterNameStyle = css`
 `;
 
 export const TagsInputStyle = css`
-  margin: 20px 0;
+  margin-top: 20px;
 `;
 
 export const QuantitySummaryStyle = css`
   display: flex;
   justify-content: space-between;
+`;
+
+export const DividerStyle = css`
+  margin: 40px 0;
 `;
