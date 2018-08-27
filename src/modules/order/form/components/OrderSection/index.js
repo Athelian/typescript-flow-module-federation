@@ -5,15 +5,16 @@ import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import { FormattedMessage } from 'react-intl';
 import Display from 'components/Display';
+import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import yupToFormErrors from 'utils/yupToFormErrors';
 import {
   FieldItem,
   StyledTextInput,
+  StyledDateInput,
   Form,
   FormObserver,
   Field,
-  TextInput,
   TagsInput,
   InputGroup,
 } from 'components/Form';
@@ -139,16 +140,32 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 />
                 <Field
                   name="issuedAt"
-                  render={({ input }) => (
-                    <TextInput
-                      {...input}
-                      type="date"
-                      title={<FormattedMessage {...messages.date} />}
-                      errorMessage={touched.issuedAt && errors.issuedAt}
-                      editable={isNew}
-                      width="200px"
-                      onChange={setFieldValue}
-                      align="right"
+                  render={({ input, meta }) => (
+                    <FieldItem
+                      label={<FormattedMessage {...messages.date} />}
+                      input={hasError => (
+                        <StyledDateInput
+                          isFocused={meta.isActive}
+                          forceHoverStyle={isNew}
+                          hasError={hasError}
+                          width="200px"
+                          pureInputOptions={{
+                            ...input,
+                          }}
+                        />
+                      )}
+                      labelOptions={{
+                        required: true,
+                      }}
+                      tooltipOptions={{
+                        isNew,
+                        tooltipBubbleOptions: {
+                          changedValues: {
+                            oldValue: <FormattedDate value={initialValues.issuedAt} />,
+                            newValue: input.value,
+                          },
+                        },
+                      }}
                     />
                   )}
                 />

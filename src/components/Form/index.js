@@ -12,6 +12,7 @@ import TagsInput from './TagsInput';
 import InputGroup from './InputGroup';
 import FieldItem from './FieldItem';
 import {
+  StyledDateInput,
   StyledEmailInput,
   StyledNumberInput,
   StyledPasswordInput,
@@ -26,6 +27,7 @@ export const FieldArray = ZenFieldArray;
 
 export {
   FieldItem,
+  StyledDateInput,
   StyledEmailInput,
   StyledNumberInput,
   StyledPasswordInput,
