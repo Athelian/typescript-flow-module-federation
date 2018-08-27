@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faSignInAlt from '@fortawesome/fontawesome-pro-solid/faSignInAlt';
 import messages from 'modules/login/messages';
 import { LoginBoxStyle } from 'modules/login/style';
-import { Form, Field } from 'components/Form';
-import TextInput from 'components/Form/TextInput';
+import { FieldItem, StyledTextInput, StyledPasswordInput, Form, Field } from 'components/Form';
 import { CustomButton } from 'components/NavButtons';
 import yupToFormErrors from 'utils/yupToFormErrors';
 
@@ -39,36 +38,60 @@ function LoginForm({ onLogin }: Props) {
       validateOnChange
       validations={onValidate}
       onSubmit={onLogin}
-      render={({ errors, touched, handleSubmit, isInvalid, isDirty, setFieldValue }) => (
+      render={({ errors, touched, handleSubmit, isInvalid, isDirty }) => (
         <form data-testid="loginForm" onSubmit={handleSubmit}>
           <div className={LoginBoxStyle}>
             <Field
               name="email"
               render={({ input }) => (
-                <TextInput
-                  {...input}
+                <FieldItem
                   data-testid="email"
-                  type="email"
-                  title={<FormattedMessage {...messages.email} />}
-                  error={touched.email && errors.email}
+                  label={<FormattedMessage {...messages.email} />}
+                  input={hasError => (
+                    <StyledTextInput
+                      forceHoverStyle
+                      hasError={hasError}
+                      width="200px"
+                      pureTextInputOptions={{
+                        ...input,
+                        align: 'left',
+                      }}
+                    />
+                  )}
+                  tooltipOptions={{
+                    isNew: true,
+                    tooltipBubbleOptions: {
+                      errorMessage: touched.email && errors.email,
+                    },
+                  }}
                   vertical
-                  forceHoverStyle
-                  onChange={setFieldValue}
                 />
               )}
             />
             <Field
               name="password"
               render={({ input }) => (
-                <TextInput
-                  {...input}
+                <FieldItem
                   data-testid="password"
-                  type="password"
-                  title={<FormattedMessage {...messages.password} />}
-                  error={touched.password && errors.password}
+                  label={<FormattedMessage {...messages.password} />}
+                  input={hasError => (
+                    <StyledPasswordInput
+                      forceHoverStyle
+                      hasError={hasError}
+                      width="200px"
+                      purePasswordInputOptions={{
+                        ...input,
+                        align: 'left',
+                      }}
+                    />
+                  )}
+                  tooltipOptions={{
+                    isNew: true,
+                    tooltipBubbleOptions: {
+                      errorMessage: touched.password && errors.password,
+                    },
+                  }}
                   vertical
-                  forceHoverStyle
-                  onChange={setFieldValue}
                 />
               )}
             />

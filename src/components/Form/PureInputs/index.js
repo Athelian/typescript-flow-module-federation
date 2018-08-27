@@ -1,6 +1,5 @@
 // @flow
+import PurePasswordInput from './PurePasswordInput';
 import PureTextInput from './PureTextInput';
 
-export default PureTextInput;
-
-export { PureTextInput };
+export { PurePasswordInput, PureTextInput };

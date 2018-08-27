@@ -4,6 +4,7 @@ import { isEquals } from 'utils/fp';
 import TooltipBubble from './TooltipBubble';
 import TooltipIcon from './TooltipIcon';
 import { type TooltipProps as Props, defaultTooltipProps } from './type';
+import { type TooltipBubbleProps, defaultTooltipBubbleProps } from './TooltipBubble/type';
 import {
   TooltipAbsoluteWrapperStyle,
   TooltipRelativeWrapperStyle,
@@ -48,22 +49,21 @@ export default class Tooltip extends React.Component<Props, State> {
     this.clearTimeout();
   }
 
-  getTooltipType = () => {
-    const { tooltipBubbleOptions } = this.props;
-    const { errorMessage, warningMessage, infoMessage } = tooltipBubbleOptions;
+  getTooltipType = (mergedTooltipBubbleOptions: TooltipBubbleProps) => {
+    const { errorMessage, warningMessage, infoMessage } = mergedTooltipBubbleOptions;
 
     if (errorMessage) return 'error';
     if (warningMessage) return 'warning';
-    if (this.showChanged()) return 'changed';
+    if (this.showChanged(mergedTooltipBubbleOptions)) return 'changed';
     if (infoMessage) return 'info';
     return '';
   };
 
-  showChanged = () => {
-    const { isNew, tooltipBubbleOptions } = this.props;
+  showChanged = (mergedTooltipBubbleOptions: TooltipBubbleProps) => {
+    const { isNew } = this.props;
     const {
       changedValues: { oldValue, newValue },
-    } = tooltipBubbleOptions;
+    } = mergedTooltipBubbleOptions;
 
     const showChanged = !isNew && (!!oldValue || !!newValue) && !isEquals(oldValue, newValue);
 
@@ -102,15 +102,19 @@ export default class Tooltip extends React.Component<Props, State> {
   render() {
     const { tooltipBubbleOptions } = this.props;
     const { isShown } = this.state;
+    const mergedTooltipBubbleOptions = { ...defaultTooltipBubbleProps, ...tooltipBubbleOptions };
 
-    const type = this.getTooltipType();
+    const type = this.getTooltipType(mergedTooltipBubbleOptions);
 
     if (type) {
       return (
         <div className={TooltipAbsoluteWrapperStyle}>
           <div className={TooltipRelativeWrapperStyle}>
             <div className={BubbleWrapperStyle(isShown)}>
-              <TooltipBubble showChanged={this.showChanged()} {...tooltipBubbleOptions} />
+              <TooltipBubble
+                showChanged={this.showChanged(mergedTooltipBubbleOptions)}
+                {...mergedTooltipBubbleOptions}
+              />
             </div>
             <div
               onMouseOver={this.show}

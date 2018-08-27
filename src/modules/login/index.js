@@ -35,10 +35,6 @@ const Login = ({ redirectUrl }: Props) => (
         </Location>
       ) : (
         <div className={LoginContainerStyle}>
-          <div className={LoginLogoContainerStyle}>
-            <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
-            <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
-          </div>
           <Mutation
             mutation={loginMutation}
             onCompleted={({ login }) => {
@@ -49,13 +45,22 @@ const Login = ({ redirectUrl }: Props) => (
           >
             {(login, { loading, error }) => (
               <React.Fragment>
-                {loading && <LoadingIcon />}
                 {error && (
                   <div id="errorMsg" className={LoginErrorStyle}>
                     <FormattedMessage {...messages.error} />{' '}
                   </div>
                 )}
-                <LoginForm onLogin={variables => login({ variables: { input: variables } })} />
+                {loading ? (
+                  <LoadingIcon />
+                ) : (
+                  <React.Fragment>
+                    <div className={LoginLogoContainerStyle}>
+                      <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
+                      <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
+                    </div>
+                    <LoginForm onLogin={variables => login({ variables: { input: variables } })} />
+                  </React.Fragment>
+                )}
               </React.Fragment>
             )}
           </Mutation>

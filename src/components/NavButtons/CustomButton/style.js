@@ -42,17 +42,17 @@ export const CustomButtonStyle = color => {
   `;
 };
 
-export const DisabledButtonStyle = invalid => css`
+export const DisabledButtonStyle = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
   ${shadows.NAV_BUTTON};
-  height: 40px;
+  height: 30px;
   padding: 0 10px;
-  font-size: 20px;
+  font-size: 14px;
   border: 2px solid ${colors.TRANSPARENT};
   background-color: ${colors.GRAY_LIGHT};
   color: ${colors.GRAY_DARK};
-  cursor: ${invalid ? 'pointer' : 'default'};
+  cursor: 'default';
   & > span {
     ${fontSizes.SMALL};
     letter-spacing: 2px;

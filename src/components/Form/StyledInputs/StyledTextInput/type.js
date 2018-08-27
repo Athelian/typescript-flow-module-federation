@@ -16,4 +16,4 @@ export const defaultStyledTextInputProps = {
   pureTextInputOptions: defaultPureTextInputProps,
 };
 
-export default defaultStyledInputProps;
+export default defaultStyledTextInputProps;

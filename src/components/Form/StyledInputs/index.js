@@ -1,6 +1,5 @@
 // @flow
+import StyledPasswordInput from './StyledPasswordInput';
 import StyledTextInput from './StyledTextInput';
 
-export default StyledTextInput;
-
-export { StyledTextInput };
+export { StyledPasswordInput, StyledTextInput };

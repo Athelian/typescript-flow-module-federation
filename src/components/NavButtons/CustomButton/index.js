@@ -19,7 +19,7 @@ type Props = {
 const CustomButton = ({ label, icon, color, disabled, ...rest }: Props) => (
   <button
     type="button"
-    className={disabled ? DisabledButtonStyle(!!disabled) : CustomButtonStyle(color)}
+    className={disabled ? DisabledButtonStyle : CustomButtonStyle(color)}
     disabled={disabled}
     {...rest}
   >
