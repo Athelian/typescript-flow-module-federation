@@ -22,8 +22,8 @@ class BatchList extends React.PureComponent<Props> {
   loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;
-    const nextPage = getByPathWithDefault(1, 'viewer.batchItems.page', data) + 1;
-    const totalPage = getByPathWithDefault(1, 'viewer.batchItems.totalPage', data);
+    const nextPage = getByPathWithDefault(1, 'batches.page', data) + 1;
+    const totalPage = getByPathWithDefault(1, 'batches.totalPage', data);
     if (nextPage > totalPage) return;
 
     const { viewType, ...filtersAndSort } = this.props;
@@ -37,26 +37,23 @@ class BatchList extends React.PureComponent<Props> {
         const { filter, sort, perPage } = this.props;
         if (
           !isEquals({ filter, sort, perPage }, filtersAndSort) ||
-          getByPathWithDefault({}, 'viewer.batchItems.page', prevResult) + 1 !==
-            getByPathWithDefault({}, 'viewer.batchItems.page', fetchMoreResult)
+          getByPathWithDefault({}, 'batches.page', prevResult) + 1 !==
+            getByPathWithDefault({}, 'batches.page', fetchMoreResult)
         ) {
           return prevResult;
         }
 
-        if (getByPathWithDefault([], 'viewer.batchItems.nodes', fetchMoreResult).length === 0)
+        if (getByPathWithDefault([], 'batches.nodes', fetchMoreResult).length === 0)
           return prevResult;
 
         return {
-          viewer: {
-            ...prevResult.viewer,
-            batchItems: {
-              ...prevResult.viewer.batchItems,
-              ...getByPathWithDefault({}, 'viewer.batchItems', fetchMoreResult),
-              nodes: [
-                ...prevResult.viewer.batchItems.nodes,
-                ...getByPathWithDefault([], 'viewer.batchItems.nodes', fetchMoreResult),
-              ],
-            },
+          batches: {
+            ...prevResult.batches,
+            ...getByPathWithDefault({}, 'batches', fetchMoreResult),
+            nodes: [
+              ...prevResult.batches.nodes,
+              ...getByPathWithDefault([], 'batches.nodes', fetchMoreResult),
+            ],
           },
         };
       },
