@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Downshift from 'downshift';
-import { ResetNativeStyle } from 'components/base/SelectInput/style';
+import { ResetNativeStyle } from 'components/Form/PureInputs/PureSelectInput/style';
 import { isEquals } from 'utils/fp';
 import DebounceInput from 'react-debounce-input';
 import type { SearchSelectInputProps as Props } from './type.js.flow';

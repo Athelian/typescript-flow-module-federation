@@ -10,7 +10,7 @@ import {
   OptionWrapperStyle,
   OptionStyle,
   ArrowDownStyle,
-} from '../SelectInput/style';
+} from '../StyledSelectInput/style';
 
 function SearchSelectInput({
   itemToString,
