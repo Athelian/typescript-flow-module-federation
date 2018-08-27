@@ -4,7 +4,10 @@ import Downshift from 'downshift';
 import { ResetNativeStyle } from 'components/Form/PureInputs/PureSelectInput/style';
 import { isEquals } from 'utils/fp';
 import DebounceInput from 'react-debounce-input';
-import type { SearchSelectInputProps as Props } from './type.js.flow';
+import {
+  type PureSearchSelectInputProps as Props,
+  defaultPureSearchSelectInputProps,
+} from './type';
 
 type State = {
   inputValue: string,
@@ -12,15 +15,7 @@ type State = {
 };
 
 class SearchSelectInput extends React.Component<Props, State> {
-  static defaultProps = {
-    onChange: () => {},
-    disabled: false,
-    required: false,
-    readOnly: false,
-    placeholder: '',
-    onSearch: () => {},
-    onBlur: () => {},
-  };
+  static defaultProps = defaultPureSearchSelectInputProps;
 
   constructor(props: Props) {
     super(props);
@@ -74,10 +69,6 @@ class SearchSelectInput extends React.Component<Props, State> {
       renderSelect,
       renderOption,
       styles = { input: '', options: '' },
-      readOnly,
-      disabled,
-      required,
-      placeholder,
     } = this.props;
 
     const { inputValue, selectedItem } = this.state;
@@ -97,10 +88,6 @@ class SearchSelectInput extends React.Component<Props, State> {
               input: (
                 <DebounceInput
                   className={styles.input}
-                  placeholder={placeholder}
-                  disabled={disabled}
-                  required={required}
-                  readOnly={readOnly}
                   onClick={toggleMenu}
                   debounceTimeout={500}
                   spellCheck={false}

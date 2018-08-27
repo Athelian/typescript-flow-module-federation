@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import BaseSearchSelectInput from 'components/base/SearchSelectInput';
-import type { SearchSelectInputProps as Props } from './type.js.flow';
+import StyledSearchSelectInput from 'components/Form/PureInputs/PureSearchSelectInput';
+import {
+  type StyledSearchSelectInputProps as Props,
+  defaultStyledSearchSelectInputProps,
+} from './type';
 import {
   SelectWrapperStyle,
   InputStyle,
@@ -17,20 +20,22 @@ function SearchSelectInput({
   itemToValue,
   items,
   forceHoverStyle,
-  errorMessage,
+  hasError,
   width,
+  disabled,
   ...rest
 }: Props) {
   return (
-    <BaseSearchSelectInput
+    <StyledSearchSelectInput
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
         <div
           className={SelectWrapperStyle(
-            !!errorMessage,
+            hasError,
             isOpen,
-            !!forceHoverStyle && !selectedItem,
-            width
+            forceHoverStyle && !selectedItem,
+            width,
+            disabled
           )}
         >
           {input}
@@ -55,5 +60,7 @@ function SearchSelectInput({
     />
   );
 }
+
+SearchSelectInput.defaultProps = defaultStyledSearchSelectInputProps;
 
 export default SearchSelectInput;

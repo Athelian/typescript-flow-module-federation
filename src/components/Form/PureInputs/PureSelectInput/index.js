@@ -4,20 +4,14 @@ import Downshift from 'downshift';
 import { isEquals } from 'utils/fp';
 import DebounceInput from 'react-debounce-input';
 import { ResetNativeStyle } from './style';
-import type { SelectInputProps as Props } from './type.js.flow';
+import { type PureSelectInputProps as Props, defaultPureSelectInputProps } from './type';
 
 type State = {
   selectedItem: any,
 };
 
 class SelectInput extends React.Component<Props, State> {
-  static defaultProps = {
-    onChange: () => {},
-    disabled: false,
-    required: false,
-    placeholder: '',
-    styles: { input: '', options: '' },
-  };
+  static defaultProps = defaultPureSelectInputProps;
 
   constructor(props: Props) {
     super(props);
@@ -52,8 +46,6 @@ class SelectInput extends React.Component<Props, State> {
       itemToString,
       renderOption,
       styles,
-      disabled,
-      required,
       placeholder,
     } = this.props;
 
@@ -78,8 +70,6 @@ class SelectInput extends React.Component<Props, State> {
                   debounceTimeout={500}
                   className={styles && styles.input}
                   onClick={toggleMenu}
-                  disabled={disabled}
-                  required={required}
                   {...getInputProps({
                     value: itemToString(selectedItem) || placeholder,
                   })}

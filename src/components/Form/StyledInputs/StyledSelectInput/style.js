@@ -1,18 +1,20 @@
 // @flow
 import { css } from 'react-emotion';
 import { colors, borderRadiuses, transitions, presets, fontSizes } from 'styles/common';
+import { StyledInputWrapperStyle } from 'components/Form/StyledInputs/style';
 
 export const SelectWrapperStyle = (
-  isError: boolean,
+  hasError: boolean,
   isOpen: boolean,
   forceHoverStyle: boolean,
-  width: ?string
+  width: ?string,
+  disabled: boolean
 ) => css`
   display: flex;
   flex-wrap: nowrap;
   ${borderRadiuses.MAIN};
   border: 1px solid transparent;
-  border-color: ${isError && colors.RED};
+  border-color: ${hasError && colors.RED};
   border-color: ${isOpen && '#11D1A6'};
   ${transitions.MAIN};
   align-items: center;
@@ -27,6 +29,8 @@ export const SelectWrapperStyle = (
   &:hover {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   }
+
+  ${StyledInputWrapperStyle(isOpen, hasError, disabled, forceHoverStyle, width || '100%')};
 `;
 
 export const InputStyle = css`
