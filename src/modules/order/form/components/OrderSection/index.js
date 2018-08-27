@@ -69,7 +69,6 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
       validateOnBlur
       validations={onValidate}
       render={({ values, errors, touched, setFieldValue }) => {
-        console.log(values);
         const totalOrderedQuantity = values.items ? values.items.length : 0;
         const totalBatches = values.items
           ? values.items.reduce((total, item) => total + item.batchItems.length, 0)
@@ -219,7 +218,9 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                         >
                           <SelectExporters
                             selected={values.exporter}
-                            onSelect={({ name, id }) => setFieldValue('exporter', { id, name })}
+                            onSelect={({ group: { name }, id }) =>
+                              setFieldValue('exporter', { id, name })
+                            }
                           />
                         </SlideView>
                       </React.Fragment>

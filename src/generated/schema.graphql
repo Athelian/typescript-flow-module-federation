@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Aug 24 2018 11:41:30 GMT+0900 (JST)
+# timestamp: Mon Aug 27 2018 14:26:40 GMT+0900 (JST)
 
 type Batch implements Model & Owned & Package & Tagged {
   archived: Boolean!
@@ -911,17 +911,13 @@ interface Package {
 }
 
 type Partner implements Model {
+  group: Group!
+  types: [GroupType!]!
+  name: String
+  code: String
   confirmed: Boolean!
-  leftGroup: Group!
-  leftTypes: [GroupType!]!
-  leftName: String
-  leftCode: String
-  leftConfirmedAt: DateTime
-  rightGroup: Group!
-  rightTypes: [GroupType!]!
-  rightName: String
-  rightCode: String
-  rightConfirmedAt: DateTime
+  approvedAt: DateTime
+  approvedByPartnerAt: DateTime
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!

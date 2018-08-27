@@ -13,11 +13,14 @@ class PartnerList extends React.PureComponent<Props> {
     const { children } = this.props;
     return (
       <Query query={query} variables={{ page: 1, perPage: 20 }}>
-        {({ loading, data }) =>
+        {({ loading, data, error }) =>
           children({
             data:
-              !loading && data ? getByPathWithDefault([], 'viewer.group.partners.nodes', data) : [],
+              !loading && data
+                ? getByPathWithDefault([], 'viewer.user.group.partners.nodes', data)
+                : [],
             loading,
+            error,
           })
         }
       </Query>
