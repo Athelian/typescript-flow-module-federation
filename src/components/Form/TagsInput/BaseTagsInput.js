@@ -65,13 +65,13 @@ export default class BaseTagsInput extends React.Component<Props, State> {
   handleRemove = (tag: TagType) => {
     const { values } = this.props;
 
-    this.handleChange((values || []).filter(t => t.id !== tag.id));
+    if (values) this.handleChange(values.filter(t => t.id !== tag.id));
   };
 
   handleDownshiftChange = (selectedItem: TagType) => {
     const { values } = this.props;
 
-    if ((values || []).map(t => t.id).includes(selectedItem.id)) {
+    if (values && values.map(t => t.id).includes(selectedItem.id)) {
       this.handleRemove(selectedItem);
     } else {
       this.handleAdd(selectedItem);
@@ -149,7 +149,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                     <div
                       className={WrapperStyle(
                         focused,
-                        disabled || false,
+                        !!disabled,
                         readOnly || this.isReadOnly(isWrite, isEditable)
                       )}
                     >
