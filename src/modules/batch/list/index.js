@@ -76,13 +76,13 @@ class BatchList extends React.PureComponent<Props> {
             return error.message;
           }
 
-          const nextPage = getByPathWithDefault(1, 'viewer.batchItems.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'viewer.batchItems.totalPage', data);
+          const nextPage = getByPathWithDefault(1, 'batches.page', data) + 1;
+          const totalPage = getByPathWithDefault(1, 'batches.totalPage', data);
           const hasMore = nextPage <= totalPage;
 
           return (
             <BatchGridView
-              items={getByPathWithDefault([], 'viewer.batchItems.nodes', data)}
+              items={getByPathWithDefault([], 'batches.nodes', data)}
               onLoadMore={() => this.loadMore({ fetchMore, data })}
               hasMore={hasMore}
               isLoading={loading}
