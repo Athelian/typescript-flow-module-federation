@@ -1,10 +1,9 @@
 // @flow
 import * as React from 'react';
-import { UserConsumer } from 'modules/user';
+import PartnerListProvider from 'providers/PartnerList';
 import { EntityIcon } from 'components/NavBar';
 import PartnerGridView from 'modules/partner/list/components/PartnerGridView';
 import PartnerCard from 'modules/partner/list/components/PartnerCard';
-import { getByPathWithDefault } from 'utils/fp';
 import { SelectedItemStyle } from './style';
 
 type Props = {
@@ -24,17 +23,16 @@ const defaultProps = {
 
 function SelectExporters({ selected, onSelect }: Props) {
   return (
-    <UserConsumer>
-      {({ user }) => (
+    <PartnerListProvider>
+      {({ loading, data, error }) => (
         <div>
           <EntityIcon icon="PARTNER" color="BLACK" />
           <PartnerGridView
+            error={error}
             hasMore={false}
-            isLoading={false}
+            isLoading={loading}
             onLoadMore={() => {}}
-            items={getByPathWithDefault([], 'group.partners.nodes', user).filter(
-              item => item.type === 'Exporter'
-            )}
+            items={data.filter(partner => partner.types.includes('Exporter'))}
             selected={selected}
             renderItem={item => (
               <div
@@ -50,7 +48,7 @@ function SelectExporters({ selected, onSelect }: Props) {
           />
         </div>
       )}
-    </UserConsumer>
+    </PartnerListProvider>
   );
 }
 

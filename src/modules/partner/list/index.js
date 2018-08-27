@@ -14,11 +14,16 @@ type Props = {
 };
 
 class PartnerList extends React.PureComponent<Props> {
+  constructor() {
+    super();
+    this.partnerPath = 'viewer.user.group.partners';
+  }
+
   loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;
-    const nextPage = getByPathWithDefault(1, 'viewer.group.partners.page', data) + 1;
-    const totalPage = getByPathWithDefault(1, 'viewer.group.partners.totalPage', data);
+    const nextPage = getByPathWithDefault(1, `${this.partnerPath}.page`, data) + 1;
+    const totalPage = getByPathWithDefault(1, `${this.partnerPath}.totalPage`, data);
     if (nextPage > totalPage) return;
 
     const { viewType, ...filtersAndSort } = this.props;
@@ -32,13 +37,13 @@ class PartnerList extends React.PureComponent<Props> {
         const { filter, perPage } = this.props;
         if (
           !isEquals({ filter, perPage }, filtersAndSort) ||
-          getByPathWithDefault({}, 'viewer.group.partners.page', prevResult) + 1 !==
-            getByPathWithDefault({}, 'viewer.group.partners.page', fetchMoreResult)
+          getByPathWithDefault({}, `${this.partnerPath}.page`, prevResult) + 1 !==
+            getByPathWithDefault({}, `${this.partnerPath}.page`, fetchMoreResult)
         ) {
           return prevResult;
         }
 
-        if (getByPathWithDefault([], 'viewer.group.partners.nodes', fetchMoreResult).length === 0)
+        if (getByPathWithDefault([], `${this.partnerPath}.nodes`, fetchMoreResult).length === 0)
           return prevResult;
 
         return {
@@ -48,10 +53,10 @@ class PartnerList extends React.PureComponent<Props> {
               ...prevResult.viewer.group,
               partners: {
                 ...prevResult.viewer.partners,
-                ...getByPathWithDefault({}, 'viewer.group.partners', fetchMoreResult),
+                ...getByPathWithDefault({}, this.partnerPath, fetchMoreResult),
                 nodes: [
                   ...prevResult.viewer.partners.nodes,
-                  ...getByPathWithDefault([], 'viewer.group.partners.nodes', fetchMoreResult),
+                  ...getByPathWithDefault([], `${this.partnerPath}.nodes`, fetchMoreResult),
                 ],
               },
             },
@@ -60,6 +65,8 @@ class PartnerList extends React.PureComponent<Props> {
       },
     });
   };
+
+  partnerPath: string;
 
   render() {
     const { viewType, ...filtersAndSort } = this.props;
@@ -70,13 +77,13 @@ class PartnerList extends React.PureComponent<Props> {
             return error.message;
           }
 
-          const nextPage = getByPathWithDefault(1, 'viewer.group.partners.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'viewer.group.partners.totalPage', data);
+          const nextPage = getByPathWithDefault(1, `${this.partnerPath}.page`, data) + 1;
+          const totalPage = getByPathWithDefault(1, `${this.partnerPath}.totalPage`, data);
           const hasMore = nextPage <= totalPage;
 
           return (
             <PartnerGridView
-              items={getByPathWithDefault([], 'viewer.group.partners.nodes', data)}
+              items={getByPathWithDefault([], `${this.partnerPath}.nodes`, data)}
               onLoadMore={() => this.loadMore({ fetchMore, data })}
               hasMore={hasMore}
               isLoading={loading}
