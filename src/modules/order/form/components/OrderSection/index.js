@@ -250,14 +250,19 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
               </div>
             </div>
             <div className={TagsInputStyle}>
-              <TagsInput
-                title={<FormattedMessage {...messages.tags} />}
-                editable={isNew}
-                id="tags"
-                name="tags"
-                tagType="Order"
-                value={values.tags}
-                onChange={setFieldValue}
+              <FieldItem
+                vertical
+                label={<FormattedMessage {...messages.tags} />}
+                input={() => (
+                  <TagsInput
+                    editable={isNew}
+                    id="tags"
+                    name="tags"
+                    tagType="Order"
+                    value={values.tags}
+                    onChange={setFieldValue}
+                  />
+                )}
               />
             </div>
             <div className={QuantitySummaryStyle}>

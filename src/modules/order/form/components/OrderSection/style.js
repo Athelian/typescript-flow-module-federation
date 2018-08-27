@@ -41,7 +41,7 @@ export const ExporterNameStyle = css`
 `;
 
 export const TagsInputStyle = css`
-  margin-top: 16px;
+  margin: 20px 0;
 `;
 
 export const QuantitySummaryStyle = css`
