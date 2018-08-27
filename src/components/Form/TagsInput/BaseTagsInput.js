@@ -175,7 +175,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                             />
                           ))}
                         {isWrite && (
-                          <div className={InputStyle}>
+                          <div className={InputStyle(isHover)}>
                             {(multiSelect || !values || values.length === 0) && (
                               <input
                                 type="text"

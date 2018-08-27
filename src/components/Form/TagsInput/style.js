@@ -61,25 +61,25 @@ export const ArrowDownStyle = (isOpen: boolean) => css`
   transform: rotate(${isOpen ? '180' : '0'}deg);
 `;
 
-export const InputStyle = css`
+export const InputStyle = (isHover: boolean) => css`
   ${layout.HORIZONTAL};
   flex: auto;
   position: relative;
+  ${borderRadiuses.MAIN};
+  ${isHover && shadows.DROPDOWN};
   input {
     flex: 1;
     color: ${colors.BLACK};
     ${fontSizes.MAIN};
     border: none;
     font-weight: bold;
-    padding: 5px 0;
+    padding: 5px 0 5px 8px;
     background-color: transparent;
     width: 80px;
     &:focus {
       outline: none;
     }
   }
-  ${shadows.DROPDOWN};
-  ${borderRadiuses.MAIN};
 `;
 
 export const ListWrapperStyle = css`
