@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { StyledInputWrapperStyle, StyledInputStyle } from 'components/Form/StyledInputs/style';
 
-export const StyledTextInputWrapperStyle = (
+export const StyledNumberInputWrapperStyle = (
   isFocused: boolean,
   hasError: boolean,
   disabled: boolean,
@@ -12,6 +12,11 @@ export const StyledTextInputWrapperStyle = (
   ${StyledInputWrapperStyle(isFocused, hasError, disabled, forceHoverStyle, width)};
 `;
 
-export const StyledTextInputStyle = css`
+export const StyledNumberInputStyle = css`
   ${StyledInputStyle};
+  &::-webkit-outer-spin-button,
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 `;
