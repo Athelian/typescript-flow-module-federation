@@ -55,8 +55,8 @@ export default class BaseTagsInput extends React.Component<Props, State> {
   handleAdd = (tag: TagType) => {
     const { values, multiSelect } = this.props;
 
-    if (multiSelect) {
-      this.handleChange([...(values || []), tag]);
+    if (multiSelect && values) {
+      this.handleChange([...values, tag]);
     } else {
       this.handleChange([tag]);
     }
@@ -224,7 +224,8 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                               <div className={ListWrapperStyle}>
                                 {this.computeFilteredTags(inputValue).map((tag, index) => {
                                   const isActive = highlightedIndex === index;
-                                  const isSelected = (values || []).map(t => t.id).includes(tag.id);
+                                  const isSelected =
+                                    values && values.map(t => t.id).includes(tag.id);
 
                                   return (
                                     <div
