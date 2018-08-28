@@ -3,6 +3,27 @@ import { css } from 'react-emotion';
 import { colors, borderRadiuses, transitions, presets, fontSizes, scrollbars } from 'styles/common';
 import { StyledInputWrapperStyle } from 'components/Form/StyledInputs/style';
 
+export const ResetNativeStyle = css`
+  position: relative;
+`;
+
+export const ResetOptionWrapperStyle = css`
+  list-style-type: none;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  margin-top: 5px;
+  overflow: hidden;
+  z-index: 1;
+  min-width: min-content;
+`;
+
+export const ResetOptionStyle = css`
+  min-width: min-content;
+  width: 100%;
+  white-space: nowrap;
+`;
+
 export const SelectWrapperStyle = (
   hasError: boolean,
   isOpen: boolean,
@@ -10,6 +31,7 @@ export const SelectWrapperStyle = (
   width: ?string,
   disabled: boolean
 ) => css`
+  ${ResetNativeStyle};
   display: flex;
   flex-wrap: nowrap;
   ${borderRadiuses.MAIN};
@@ -57,6 +79,7 @@ export const ButtonStyle = css`
 `;
 
 export const OptionWrapperStyle = css`
+  ${ResetOptionWrapperStyle};
   display: flex;
   flex-flow: column;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
@@ -70,15 +93,15 @@ export const OptionWrapperStyle = css`
 `;
 
 export const OptionStyle = (onHover: boolean, selected: boolean) => css`
+  ${ResetOptionStyle};
   background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
   ${presets.BUTTON};
   justify-content: flex-start;
-  padding: 0 5px;
+  padding: 10px 5px;
   color: ${selected ? colors.TEAL : colors.BLACK};
   ${fontSizes.MAIN};
   font-weight: bold;
   flex: 1;
-  height: 30px;
   ${presets.ELLIPSIS};
 `;
 

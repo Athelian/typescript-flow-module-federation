@@ -3,6 +3,7 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import StyledSearchSelectInput from 'components/Form/PureInputs/PureSearchSelectInput';
 import Display from 'components/Form/Display';
+import DebounceInput from 'react-debounce-input';
 import {
   type StyledSearchSelectInputProps as Props,
   defaultStyledSearchSelectInputProps,
@@ -30,8 +31,15 @@ function SearchSelectInput({
     <Display align={rest.align}> {rest.value}</Display>
   ) : (
     <StyledSearchSelectInput
-      styles={{ input: InputStyle, options: OptionWrapperStyle }}
-      renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
+      renderSelect={({
+        value,
+        handleQueryChange,
+        isOpen,
+        toggle,
+        selectedItem,
+        clearSelection,
+        getInputProps,
+      }) => (
         <div
           className={SelectWrapperStyle(
             hasError,
@@ -41,7 +49,16 @@ function SearchSelectInput({
             disabled
           )}
         >
-          {input}
+          <DebounceInput
+            className={InputStyle}
+            onClick={toggle}
+            debounceTimeout={500}
+            spellCheck={false}
+            {...getInputProps({
+              value,
+              onChange: handleQueryChange,
+            })}
+          />
           {selectedItem ? (
             <button type="button" onClick={clearSelection} className={ButtonStyle}>
               <Icon icon="CLEAR" />
@@ -53,8 +70,18 @@ function SearchSelectInput({
           )}
         </div>
       )}
-      renderOption={({ value: item, onHover, selected }) => (
-        <div className={OptionStyle(onHover, selected)}>{itemToString(item)}</div>
+      renderOptions={({ highlightedIndex, selectedItem, getItemProps }) => (
+        <div className={OptionWrapperStyle}>
+          {items.map((item, index) => (
+            <div
+              key={itemToValue(item)}
+              className={OptionStyle(highlightedIndex === index, selectedItem === item)}
+              {...getItemProps({ item })}
+            >
+              {itemToString(item)}
+            </div>
+          ))}
+        </div>
       )}
       itemToString={itemToString}
       itemToValue={itemToValue}
