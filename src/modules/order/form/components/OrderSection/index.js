@@ -177,7 +177,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                   name="currency"
                   title={<FormattedMessage {...messages.currency} />}
                   value={values.currency}
-                  onChange={(name, value) => setFieldValue('currency', value)}
+                  onChange={value => setFieldValue('currency', value)}
                   width="200px"
                   required
                 />
@@ -185,7 +185,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                   name="incoterm"
                   title={<FormattedMessage {...messages.incoterms} />}
                   value={values.incoterm}
-                  onChange={(name, value) => setFieldValue('incoterm', value)}
+                  onChange={value => setFieldValue('incoterm', value)}
                   width="200px"
                 />
                 <Field

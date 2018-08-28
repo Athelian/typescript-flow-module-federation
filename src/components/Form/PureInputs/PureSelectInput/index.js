@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Downshift from 'downshift';
 import { isEquals } from 'utils/fp';
-import DebounceInput from 'react-debounce-input';
 import { ResetNativeStyle } from './style';
 import { type PureSelectInputProps as Props, defaultPureSelectInputProps } from './type';
 
@@ -47,6 +46,7 @@ class SelectInput extends React.Component<Props, State> {
       renderOption,
       styles,
       placeholder,
+      align,
     } = this.props;
 
     const { selectedItem } = this.state;
@@ -64,7 +64,7 @@ class SelectInput extends React.Component<Props, State> {
           <div className={ResetNativeStyle}>
             {renderSelect({
               input: (
-                <DebounceInput
+                <input
                   readOnly
                   spellCheck={false}
                   debounceTimeout={500}
@@ -73,6 +73,7 @@ class SelectInput extends React.Component<Props, State> {
                   {...getInputProps({
                     value: itemToString(selectedItem) || placeholder,
                   })}
+                  style={{ textAlign: align }}
                 />
               ),
               isOpen,

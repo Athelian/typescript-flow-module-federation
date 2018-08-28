@@ -69,6 +69,7 @@ class SearchSelectInput extends React.Component<Props, State> {
       renderSelect,
       renderOption,
       styles = { input: '', options: '' },
+      align,
     } = this.props;
 
     const { inputValue, selectedItem } = this.state;
@@ -96,6 +97,7 @@ class SearchSelectInput extends React.Component<Props, State> {
                     onBlur: this.handleBlur,
                     onChange: this.handleChangeQuery,
                   })}
+                  style={{ textAlign: align }}
                 />
               ),
               isOpen,

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import StyledSearchSelectInput from 'components/Form/PureInputs/PureSearchSelectInput';
+import Display from 'components/Form/Display';
 import {
   type StyledSearchSelectInputProps as Props,
   defaultStyledSearchSelectInputProps,
@@ -25,7 +26,9 @@ function SearchSelectInput({
   disabled,
   ...rest
 }: Props) {
-  return (
+  return disabled ? (
+    <Display align={rest.align}> {rest.value}</Display>
+  ) : (
     <StyledSearchSelectInput
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (

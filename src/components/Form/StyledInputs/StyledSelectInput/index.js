@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import PureSelectInput from 'components/Form/PureInputs/PureSelectInput';
+import Display from 'components/Form/Display';
 import { type StyledSelectInputProps as Props, defaultStyledSelectInputProps } from './type';
 import {
   SelectWrapperStyle,
@@ -23,7 +24,9 @@ function SelectInput({
   disabled,
   ...rest
 }: Props) {
-  return (
+  return disabled ? (
+    <Display align={rest.align}> {rest.value}</Display>
+  ) : (
     <PureSelectInput
       items={items}
       itemToString={itemToString}
