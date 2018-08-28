@@ -174,20 +174,49 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                   )}
                 />
                 {/* FIXME: enum input is wrong when send the selected value */}
-                <CurrencyInput
+                <Field
                   name="currency"
-                  title={<FormattedMessage {...messages.currency} />}
-                  value={values.currency}
-                  onChange={value => setFieldValue('currency', value)}
-                  width="200px"
-                  required
+                  render={({ input, meta }) => (
+                    <FieldItem
+                      label={<FormattedMessage {...messages.currency} />}
+                      input={hasError => (
+                        <CurrencyInput
+                          value={values.currency}
+                          onChange={value => setFieldValue('currency', value)}
+                          width="200px"
+                          forceHoverStyle={isNew}
+                          required
+                          isFocused={meta.isActive}
+                          hasError={hasError}
+                          pureInputOptions={{
+                            ...input,
+                          }}
+                        />
+                      )}
+                    />
+                  )}
                 />
-                <IncotermInput
+                <Field
                   name="incoterm"
-                  title={<FormattedMessage {...messages.incoterms} />}
-                  value={values.incoterm}
-                  onChange={value => setFieldValue('incoterm', value)}
-                  width="200px"
+                  render={({ input, meta }) => (
+                    <FieldItem
+                      label={<FormattedMessage {...messages.incoterms} />}
+                      input={hasError => (
+                        <IncotermInput
+                          value={values.incoterm}
+                          onChange={value => setFieldValue('incoterm', value)}
+                          width="200px"
+                          forceHoverStyle={isNew}
+                          required
+                          isFocused={meta.isActive}
+                          hasError={hasError}
+                          pureInputOptions={{
+                            ...input,
+                          }}
+                        />
+                      )}
+                    />
+                  )}
                 />
                 <Field
                   name="deliveryPlace"
