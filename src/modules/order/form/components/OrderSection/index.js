@@ -12,6 +12,7 @@ import {
   FieldItem,
   StyledTextInput,
   StyledDateInput,
+  DashedPlusButton,
   Form,
   FormObserver,
   Field,
@@ -165,7 +166,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                         tooltipBubbleOptions: {
                           changedValues: {
                             oldValue: <FormattedDate value={initialValues.issuedAt} />,
-                            newValue: input.value,
+                            newValue: <FormattedDate value={input.value} />,
                           },
                         },
                       }}
@@ -222,29 +223,34 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                   <BooleanValue>
                     {({ value: opened, toggle }) => (
                       <React.Fragment>
-                        <EntityCard icon="PARTNER" color="BLACK">
-                          <div className={ExporterCardStyle} role="presentation" onClick={toggle}>
-                            <img
-                              className={ExporterCardImageStyle}
-                              src={FALLBACK_IMAGE}
-                              alt="exporter_image"
-                            />
-                            <div className={ExporterNameStyle}>
-                              {values.exporter && values.exporter.id
-                                ? values.exporter.name
-                                : 'Exporter'}
+                        {!values.exporter ? (
+                          <DashedPlusButton width="200px" height="230px" onClick={toggle} />
+                        ) : (
+                          <EntityCard icon="PARTNER" color="PARTNER">
+                            <div className={ExporterCardStyle} role="presentation" onClick={toggle}>
+                              <img
+                                className={ExporterCardImageStyle}
+                                src={FALLBACK_IMAGE}
+                                alt="exporter_image"
+                              />
+                              <div className={ExporterNameStyle}>
+                                {values.exporter && values.exporter.id
+                                  ? values.exporter.name
+                                  : 'Exporter'}
+                              </div>
                             </div>
-                          </div>
-                        </EntityCard>
+                          </EntityCard>
+                        )}
+
                         <SlideView
                           isOpen={opened}
                           onRequestClose={toggle}
-                          options={{ width: '60vw' }}
+                          options={{ width: '1030px' }}
                         >
                           <SelectExporters
                             selected={values.exporter}
-                            onSelect={({ group: { name }, id }) =>
-                              setFieldValue('exporter', { id, name })
+                            onSelect={({ group, name }) =>
+                              setFieldValue('exporter', { id: group.id, name: name || group.name })
                             }
                           />
                         </SlideView>

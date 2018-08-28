@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
 import PartnerListProvider from 'providers/PartnerList';
-import { EntityIcon } from 'components/NavBar';
+import Layout from 'components/Layout';
+import NavBar, { EntityIcon } from 'components/NavBar';
 import PartnerGridView from 'modules/partner/list/components/PartnerGridView';
 import PartnerCard from 'modules/partner/list/components/PartnerCard';
-import { SelectedItemStyle } from './style';
 
 type Props = {
   selected?: ?{
@@ -21,36 +21,35 @@ const defaultProps = {
   },
 };
 
-function SelectExporters({ selected, onSelect }: Props) {
-  return (
-    <PartnerListProvider>
-      {({ loading, data, error }) => (
-        <div>
-          <EntityIcon icon="PARTNER" color="BLACK" />
-          <PartnerGridView
-            error={error}
-            hasMore={false}
-            isLoading={loading}
-            onLoadMore={() => {}}
-            items={data.filter(partner => partner.types.includes('Exporter'))}
-            selected={selected}
-            renderItem={item => (
-              <div
-                key={item.id}
-                role="presentation"
-                className={SelectedItemStyle(
-                  !!selected && !!selected.id && item.id === selected.id
-                )}
-              >
-                <PartnerCard partner={item} onClick={() => onSelect(item)} />
-              </div>
-            )}
-          />
-        </div>
-      )}
-    </PartnerListProvider>
-  );
-}
+const SelectExporters = ({ selected, onSelect }: Props) => (
+  <PartnerListProvider>
+    {({ loading, data }) => (
+      <Layout
+        navBar={
+          <NavBar>
+            <EntityIcon icon="PARTNER" color="BLACK" />
+          </NavBar>
+        }
+      >
+        <PartnerGridView
+          hasMore={false}
+          isLoading={loading}
+          onLoadMore={() => {}}
+          items={data.filter(partner => partner.types.includes('Exporter'))}
+          renderItem={item => (
+            <PartnerCard
+              partner={item}
+              onSelect={() => onSelect(item)}
+              selectable
+              selected={!!selected && !!selected.id && item.group.id === selected.id}
+              key={item.id}
+            />
+          )}
+        />
+      </Layout>
+    )}
+  </PartnerListProvider>
+);
 
 SelectExporters.defaultProps = defaultProps;
 

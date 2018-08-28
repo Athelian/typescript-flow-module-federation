@@ -4,13 +4,13 @@ import * as ReactDOM from 'react-dom';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
 import { BackdropFadeInStyle, BackdropFadeOutStyle } from 'components/Dialog/style';
 import logger from 'utils/logger';
-import { SlideInStyle, SlideAwayStyle } from './style';
+import { SlideInStyle, SlideAwayStyle, SlideViewContentStyle } from './style';
 
 type Props = {
   isOpen: boolean,
   onRequestClose: () => void,
   children: React.Node,
-  options: { width: number | string },
+  options: { width: string },
   rootElementId?: string,
 };
 
@@ -70,7 +70,7 @@ export default class SlideView extends React.Component<Props> {
               onClick={e => e.stopPropagation()}
               role="presentation"
             >
-              {children}
+              <div className={SlideViewContentStyle}>{children}</div>
             </div>
           </div>,
           this.slideViewContainer

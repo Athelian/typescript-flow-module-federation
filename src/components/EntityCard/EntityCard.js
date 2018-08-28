@@ -87,7 +87,7 @@ export default class EntityCard extends React.Component<Props, State> {
 
     return (
       <div
-        className={`${CardStyle(!!disabled, !!selected, !!selectable)} ${wrapperClassName}`}
+        className={`${CardStyle(!!disabled)} ${wrapperClassName}`}
         onMouseOver={this.onMouseOver}
         onMouseOut={this.onMouseOut}
         onFocus={this.onMouseOver}
@@ -111,7 +111,11 @@ export default class EntityCard extends React.Component<Props, State> {
         />
         {!disabled &&
           selectable && (
-            <div className={SelectableCardStyle} onClick={onSelect} role="presentation" />
+            <div
+              className={SelectableCardStyle(!!selected)}
+              onClick={onSelect}
+              role="presentation"
+            />
           )}
         {children}
       </div>

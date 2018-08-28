@@ -16,7 +16,7 @@ const defaultProps = {
   onClick: id => navigate(`/partner/${encodeId(id)}`),
 };
 
-const PartnerCard = ({ partner, onClick }: Props) => {
+const PartnerCard = ({ partner, onClick, ...rest }: Props) => {
   if (!partner) return '';
 
   const { id } = partner;
@@ -28,7 +28,7 @@ const PartnerCard = ({ partner, onClick }: Props) => {
   ];
 
   return (
-    <EntityCard icon="PARTNER" color="PARTNER" actions={actions}>
+    <EntityCard icon="PARTNER" color="PARTNER" actions={actions} {...rest}>
       <div className={PartnerCardWrapperStyle} onClick={onClick} role="presentation">
         {id}
       </div>

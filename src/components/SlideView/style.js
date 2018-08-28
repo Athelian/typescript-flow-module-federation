@@ -1,8 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
-import { isDataType } from 'utils/fp';
 
-const SlideViewStyle = css`
+const SlideViewWrapperStyle = css`
   position: absolute;
   top: 0;
   right: 0;
@@ -12,13 +11,13 @@ const SlideViewStyle = css`
   z-index: 10001;
 `;
 
-export const SlideInStyle = (width: number | string) => css`
-  ${SlideViewStyle};
-  width: ${isDataType(Number, width) ? `${width}px` : width};
+export const SlideInStyle = (width: string) => css`
+  ${SlideViewWrapperStyle};
+  width: ${width};
 
   @keyframes slideIn {
     from {
-      right: -${width}px;
+      right: -${width};
     }
     to {
       right: 0;
@@ -31,19 +30,23 @@ export const SlideInStyle = (width: number | string) => css`
 `;
 
 export const SlideAwayStyle = (width: number | string) => css`
-  ${SlideViewStyle};
-  width: ${isDataType(Number, width) ? `${width}px` : width};
+  ${SlideViewWrapperStyle};
+  width: ${width};
 
   @keyframes slideAway {
     from {
       right: 0;
     }
     to {
-      right: -${width}px;
+      right: -${width};
     }
   }
 
   animation-name: slideAway;
-  animation-duration: 0.2s;
+  animation-duration: 0.3s;
   animation-fill-mode: forwards;
+`;
+
+export const SlideViewContentStyle = css`
+  position: relative;
 `;

@@ -2,10 +2,10 @@
 import { css } from 'react-emotion';
 import { transitions } from 'styles/common';
 
-export const NavBarStyle = (isSideBarExpanded: boolean) => css`
+export const NavBarStyle = css`
   display: flex;
   align-items: center;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -13,7 +13,6 @@ export const NavBarStyle = (isSideBarExpanded: boolean) => css`
   background: #fff;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   z-index: 1;
-  padding-left: ${isSideBarExpanded ? '200px' : '50px'};
   ${transitions.EXPAND};
 `;
 

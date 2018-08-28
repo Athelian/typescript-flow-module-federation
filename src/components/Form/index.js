@@ -18,6 +18,7 @@ import {
   StyledPasswordInput,
   StyledTextInput,
 } from './StyledInputs';
+import DashedPlusButton from './DashedPlusButton';
 
 export const Form = ZenForm;
 export const Field = ZenField;
@@ -32,6 +33,7 @@ export {
   StyledNumberInput,
   StyledPasswordInput,
   StyledTextInput,
+  DashedPlusButton,
   NumberInput,
   TextInput,
   DropDown,

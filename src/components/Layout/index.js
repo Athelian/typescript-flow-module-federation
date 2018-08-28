@@ -7,19 +7,21 @@ import { DesktopWrapperStyle } from 'styles/main';
 import { LayoutWrapperStyle, ContentWrapperStyle } from './style';
 
 type Props = {
+  isSideBarExpanded?: boolean,
+  navBar: React.Node,
   children: React.Node,
-  isSideBarExpanded: boolean,
-  navBar?: React.Node,
 };
 
 type State = {
   hasError: boolean,
 };
 
+const defaultProps = {
+  navBar: '',
+};
+
 export default class Layout extends React.PureComponent<Props, State> {
-  static defaultProps = {
-    navBar: '',
-  };
+  static defaultProps = defaultProps;
 
   state: State = { hasError: false };
 
@@ -37,7 +39,7 @@ export default class Layout extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { children, navBar, isSideBarExpanded } = this.props;
+    const { isSideBarExpanded, navBar, children } = this.props;
     const { hasError } = this.state;
 
     if (hasError) {

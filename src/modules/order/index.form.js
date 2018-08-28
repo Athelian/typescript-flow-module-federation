@@ -36,13 +36,15 @@ class OrderFormContainer extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
   onCancel = () => {
-    navigate('/order');
+    navigate(`/order`);
   };
 
   onSave = (formData: Object, saveOrder: Function) => {
     const { orderId } = this.props;
+
     const isNew = orderId === 'new';
     const input = isNew ? prepareCreateOrderInput(formData) : prepareUpdateOrderInput(formData);
+
     if (isNew) {
       saveOrder({ variables: { input } });
     } else if (orderId) {
@@ -108,7 +110,7 @@ class OrderFormContainer extends React.PureComponent<Props> {
                                 <SlideView
                                   isOpen={opened}
                                   onRequestClose={toggle}
-                                  options={{ width: 400 }}
+                                  options={{ width: '1030px' }}
                                 >
                                   <div style={{ padding: '50px', textAlign: 'center' }}>
                                     <h1>Logs</h1>
