@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
-import WarehouseGridView from './components/WarehouseGridView';
+import WarehouseGridView from './WarehouseGridView';
 import query from './query.graphql';
 
 type Props = {

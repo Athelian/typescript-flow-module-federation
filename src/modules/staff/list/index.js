@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
-import StaffGridView from './components/StaffGridView';
+import StaffGridView from './StaffGridView';
 
 type Props = {
   viewType: string,

@@ -3,8 +3,8 @@ import * as React from 'react';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import PartnerGridView from 'modules/partner/list/components/PartnerGridView';
-import PartnerCard from 'modules/partner/list/components/PartnerCard';
+import PartnerGridView from 'modules/partner/list/PartnerGridView';
+import { PartnerCard } from 'components/Cards';
 
 type Props = {
   selected?: ?{

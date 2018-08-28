@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { EntityIcon } from 'components/NavBar';
-import ProductGridView from 'modules/product/list/components/ProductGridView';
-import ProductCard from 'modules/product/list/components/ProductCard';
+import ProductGridView from 'modules/product/list/ProductGridView';
+import { ProductCard } from 'components/Cards';
 import LoadingIcon from 'components/LoadingIcon';
 import { productListQuery } from 'modules/product/list/query';
 import { getByPathWithDefault } from 'utils/fp';
