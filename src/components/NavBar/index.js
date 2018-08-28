@@ -6,7 +6,16 @@ import FilterInput from './components/FilterInput';
 import SortInput from './components/SortInput';
 import SearchInput from './components/SearchInput';
 import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
+import SectionNavBar from './SectionNavBar';
 
 export default NavBar;
 
-export { EntityIcon, ViewToggle, FilterInput, SortInput, SearchInput, StatusToggleTabs };
+export {
+  EntityIcon,
+  ViewToggle,
+  FilterInput,
+  SortInput,
+  SearchInput,
+  StatusToggleTabs,
+  SectionNavBar,
+};

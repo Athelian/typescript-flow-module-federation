@@ -91,14 +91,18 @@ class OrderFormContainer extends React.PureComponent<Props> {
                           <EntityIcon icon="ORDER" color="ORDER" />
                           <JumpToSection>
                             <SectionNavigation link="orderSection" label="ORDER" icon="ORDER" />
-                            <SectionNavigation link="itemSection" label="ITEMS" icon="ORDER_ITEM" />
                             <SectionNavigation
-                              link="documentSection"
+                              link="itemsSection"
+                              label="ITEMS"
+                              icon="ORDER_ITEM"
+                            />
+                            <SectionNavigation
+                              link="documentsSection"
                               label="DOCUMENTS"
                               icon="DOCUMENT"
                             />
                             <SectionNavigation
-                              link="shipmentSection"
+                              link="shipmentsSection"
                               label="SHIPMENTS"
                               icon="SHIPMENT"
                             />

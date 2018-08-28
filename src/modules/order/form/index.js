@@ -9,7 +9,7 @@ import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import Display from 'components/Display';
 import OrderSection from './components/OrderSection';
-import ItemSection from './components/ItemSection';
+import ItemsSection from './components/ItemsSection';
 import DocumentSection from './components/DocumentSection';
 import ShipmentSection from './components/ShipmentSection';
 import SectionHeader from './components/SectionHeader';
@@ -48,6 +48,7 @@ const hasSelectExporter = (order: Object) =>
 export default function OrderForm({ order, onChange }: Props) {
   const isNew = Object.keys(order).length === 0;
   logger.warn('order', order);
+
   const orderValues = orderSectionFields(order);
 
   return (
@@ -80,14 +81,9 @@ export default function OrderForm({ order, onChange }: Props) {
             </React.Fragment>
           )}
         </SectionHeader>
-        <OrderSection
-          id="orderSection"
-          isNew={isNew}
-          onChange={onChange}
-          initialValues={{ ...orderValues }}
-        />
+        <OrderSection isNew={isNew} onChange={onChange} initialValues={{ ...orderValues }} />
       </div>
-      <div className={SectionWrapperStyle} id="itemSection">
+      <div className={SectionWrapperStyle} id="itemsSection">
         <OrderFormConsumer>
           {formState => (
             <React.Fragment>
@@ -95,18 +91,18 @@ export default function OrderForm({ order, onChange }: Props) {
                 icon="ORDER_ITEM"
                 title={`ITEMS (${formState.formData.items.length})`}
               />
-              <ItemSection
+              <ItemsSection
                 isReady={hasSelectExporter(order) || hasSelectExporter(formState.formData)}
               />
             </React.Fragment>
           )}
         </OrderFormConsumer>
       </div>
-      <div className={SectionWrapperStyle} id="documentSection">
+      <div className={SectionWrapperStyle} id="documentsSection">
         <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />
         <DocumentSection initialValues={{ files: order.files }} />
       </div>
-      <div className={SectionWrapperStyle} id="shipmentSection">
+      <div className={SectionWrapperStyle} id="shipmentsSection">
         <SectionHeader icon="SHIPMENT" title={`SHIPMENTS (${20})`} />
         <ShipmentSection />
       </div>
