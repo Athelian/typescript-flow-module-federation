@@ -57,7 +57,8 @@ export const ButtonStyle = css`
 export const OptionWrapperStyle = css`
   ${presets.BOX};
   ${shadows.DROPDOWN};
-  margin-top: 5px;
+  position: absolute;
+  top: 45px;
 `;
 
 export const OptionItemStyle = (onHover: boolean, selected: boolean) => css`

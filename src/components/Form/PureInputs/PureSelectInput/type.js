@@ -2,21 +2,22 @@
 import * as React from 'react';
 import { type PureInputProps, defaultPureInputProps } from 'components/Form/PureInputs/type';
 
-type OptionalProps = PureInputProps;
-
-export type PureSelectInputProps = OptionalProps & {
+export type PureSelectInputProps = PureInputProps & {
   items: Array<any>,
   itemToString: any => string,
   itemToValue: any => any,
   renderSelect: ({
-    input: React.Node,
     isOpen: boolean,
     clearSelection: () => void,
     toggle: () => void,
     selectedItem: any,
+    getInputProps: Function,
   }) => React.Node,
-  renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
-  styles: { input: any, options: any },
+  renderOptions: ({
+    highlightedIndex: number,
+    selectedItem: any,
+    getItemProps: Function,
+  }) => React.Node,
 };
 
 export const defaultPureSelectInputProps = {

@@ -31,9 +31,7 @@ function SelectInput({
       items={items}
       itemToString={itemToString}
       itemToValue={itemToValue}
-      clearIcon={<Icon icon="CLEAR" />}
-      styles={{ input: InputStyle, options: OptionWrapperStyle }}
-      renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
+      renderSelect={({ isOpen, toggle, selectedItem, clearSelection, getInputProps }) => (
         <div
           className={SelectWrapperStyle(
             hasError,
@@ -43,7 +41,15 @@ function SelectInput({
             disabled
           )}
         >
-          {input}
+          <input
+            readOnly
+            spellCheck={false}
+            className={InputStyle}
+            onClick={toggle}
+            {...getInputProps({
+              value: itemToString(selectedItem),
+            })}
+          />
           {selectedItem ? (
             <button type="button" onClick={clearSelection} className={ButtonStyle}>
               <Icon icon="CLEAR" />
@@ -55,8 +61,18 @@ function SelectInput({
           )}
         </div>
       )}
-      renderOption={({ value: item, onHover, selected }) => (
-        <div className={OptionStyle(onHover, selected)}>{itemToString(item)}</div>
+      renderOptions={({ highlightedIndex, selectedItem, getItemProps }) => (
+        <div className={OptionWrapperStyle}>
+          {items.map((item, index) => (
+            <div
+              key={itemToValue(item)}
+              className={OptionStyle(highlightedIndex === index, selectedItem === item)}
+              {...getItemProps({ item })}
+            >
+              {itemToString(item)}
+            </div>
+          ))}
+        </div>
       )}
       {...rest}
     />
