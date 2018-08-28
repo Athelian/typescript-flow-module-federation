@@ -70,7 +70,10 @@ class SortInput extends React.Component<Props> {
             {fields.map((item, index) => (
               <div
                 key={itemToValue(item)}
-                className={OptionItemStyle(highlightedIndex === index, selectedItem === item)}
+                className={OptionItemStyle(
+                  highlightedIndex === index,
+                  itemToValue(selectedItem) === itemToValue(item)
+                )}
                 {...getItemProps({ item })}
               >
                 {item.title}
