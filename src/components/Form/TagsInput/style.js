@@ -1,23 +1,19 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, layout, colors, transitions, fontSizes, scrollbars } from 'styles/common';
+import {
+  presets,
+  layout,
+  colors,
+  transitions,
+  fontSizes,
+  scrollbars,
+  shadows,
+  borderRadiuses,
+} from 'styles/common';
 
-function bottomColor(isError, focused) {
-  if (isError) return colors.RED;
-
-  return focused ? colors.TEAL : colors.GRAY_VERY_LIGHT;
-}
-
-export const WrapperStyle = (
-  focused: boolean,
-  disabled: boolean,
-  readonly: boolean,
-  isError: boolean
-) => css`
+export const WrapperStyle = (focused: boolean, disabled: boolean, readonly: boolean) => css`
   ${layout.HORIZONTAL};
   ${transitions.MAIN};
-  border-radius: 2px;
-  border-bottom: 2px solid ${bottomColor(isError, focused)};
   background: #fff;
   ${disabled && `background: ${colors.GRAY_SUPER_LIGHT}`};
   ${readonly &&
@@ -65,17 +61,19 @@ export const ArrowDownStyle = (isOpen: boolean) => css`
   transform: rotate(${isOpen ? '180' : '0'}deg);
 `;
 
-export const InputStyle = css`
+export const InputStyle = (isHover: boolean) => css`
   ${layout.HORIZONTAL};
   flex: auto;
   position: relative;
+  ${borderRadiuses.MAIN};
+  ${isHover && shadows.DROPDOWN};
   input {
     flex: 1;
     color: ${colors.BLACK};
     ${fontSizes.MAIN};
     border: none;
     font-weight: bold;
-    padding: 10px 0;
+    padding: 5px 0 5px 8px;
     background-color: transparent;
     width: 80px;
     &:focus {

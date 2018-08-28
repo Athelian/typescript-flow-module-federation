@@ -8,7 +8,6 @@ import matchSorter from 'match-sorter';
 import HoverWrapper from 'components/common/HoverWrapper';
 import Editable from 'components/common/Editable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Label from 'components/Label';
 import Tag from 'components/Tag';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
 import { HoverStyle } from 'components/common/HoverWrapper/style';
@@ -54,25 +53,25 @@ export default class BaseTagsInput extends React.Component<Props, State> {
   };
 
   handleAdd = (tag: TagType) => {
-    const { value, multiSelect } = this.props;
+    const { values, multiSelect } = this.props;
 
-    if (multiSelect) {
-      this.handleChange([...(value || []), tag]);
+    if (multiSelect && values) {
+      this.handleChange([...values, tag]);
     } else {
       this.handleChange([tag]);
     }
   };
 
   handleRemove = (tag: TagType) => {
-    const { value } = this.props;
+    const { values } = this.props;
 
-    this.handleChange((value || []).filter(t => t.id !== tag.id));
+    if (values) this.handleChange(values.filter(t => t.id !== tag.id));
   };
 
   handleDownshiftChange = (selectedItem: TagType) => {
-    const { value } = this.props;
+    const { values } = this.props;
 
-    if ((value || []).map(t => t.id).includes(selectedItem.id)) {
+    if (values && values.map(t => t.id).includes(selectedItem.id)) {
       this.handleRemove(selectedItem);
     } else {
       this.handleAdd(selectedItem);
@@ -119,20 +118,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
   isReadOnly = (isWrite?: boolean, isEditable: boolean) => !isWrite || !isEditable;
 
   render() {
-    const {
-      isRead,
-      isWrite,
-      editable,
-      errorMessage,
-      id,
-      disabled,
-      readOnly,
-      value,
-      tags,
-      multiSelect,
-      onChange,
-      ...labelProps
-    } = this.props;
+    const { isRead, isWrite, editable, disabled, readOnly, values, tags, multiSelect } = this.props;
     const { focused } = this.state;
     if (!isRead) return null;
 
@@ -142,133 +128,128 @@ export default class BaseTagsInput extends React.Component<Props, State> {
           <HoverWrapper>
             {isHover => (
               <div className={HoverStyle(isHover && isWrite)}>
-                <Label htmlFor={id} {...labelProps}>
-                  <Downshift
-                    itemCount={tags.length}
-                    itemToString={i => (i ? i.id : '')}
-                    selectedItem={null}
-                    onChange={this.handleDownshiftChange}
-                    onStateChange={this.handleStateChange}
-                    stateReducer={this.stateReducer}
-                  >
-                    {({
-                      getInputProps,
-                      getToggleButtonProps,
-                      getItemProps,
-                      isOpen,
-                      inputValue,
-                      highlightedIndex,
-                      clearSelection,
-                      reset,
-                    }) => (
-                      <div
-                        className={WrapperStyle(
-                          focused,
-                          disabled || false,
-                          readOnly || this.isReadOnly(isWrite, isEditable),
-                          !!errorMessage
-                        )}
-                      >
-                        <div className={SelectionWrapperStyle}>
-                          {value &&
-                            value.map(tag => (
-                              <Tag
-                                key={tag.id}
-                                tag={tag}
-                                suffix={
-                                  isWrite && (
-                                    <button
-                                      type="button"
-                                      className={RemoveStyle}
-                                      onClick={() => {
-                                        this.handleRemove(tag);
-                                      }}
-                                    >
-                                      <FontAwesomeIcon icon={faTimes} fixedWidth />
-                                    </button>
-                                  )
-                                }
-                              />
-                            ))}
-                          {isWrite && (
-                            <div className={InputStyle}>
-                              {(multiSelect || !value || value.length === 0) && (
-                                <input
-                                  type="text"
-                                  {...getInputProps({
-                                    spellCheck: false,
-                                    disabled,
-                                    onKeyDown: e => {
-                                      switch (e.key) {
-                                        case 'Backspace':
-                                          if (
-                                            !inputValue &&
-                                            value &&
-                                            value.length > 0 &&
-                                            !e.repeat
-                                          ) {
-                                            this.handleRemove(value[value.length - 1]);
-                                          }
-                                          break;
-                                        default:
-                                      }
-                                    },
-                                    onFocus: this.handleInputFocus,
-                                    onBlur: () => {
-                                      this.handleInputBlur();
-                                      reset();
-                                      clearSelection();
-                                    },
-                                  })}
-                                />
-                              )}
-                              {isHover &&
+                <Downshift
+                  itemCount={tags.length}
+                  itemToString={i => (i ? i.id : '')}
+                  selectedItem={null}
+                  onChange={this.handleDownshiftChange}
+                  onStateChange={this.handleStateChange}
+                  stateReducer={this.stateReducer}
+                >
+                  {({
+                    getInputProps,
+                    getToggleButtonProps,
+                    getItemProps,
+                    isOpen,
+                    inputValue,
+                    highlightedIndex,
+                    clearSelection,
+                    reset,
+                  }) => (
+                    <div
+                      className={WrapperStyle(
+                        focused,
+                        !!disabled,
+                        readOnly || this.isReadOnly(isWrite, isEditable)
+                      )}
+                    >
+                      <div className={SelectionWrapperStyle}>
+                        {values &&
+                          values.map(tag => (
+                            <Tag
+                              key={tag.id}
+                              tag={tag}
+                              suffix={
                                 isWrite && (
                                   <button
-                                    {...getToggleButtonProps()}
                                     type="button"
-                                    className={ExpandButtonStyle}
-                                    disabled={disabled}
+                                    className={RemoveStyle}
+                                    onClick={() => {
+                                      this.handleRemove(tag);
+                                    }}
                                   >
-                                    <FontAwesomeIcon
-                                      className={ArrowDownStyle(isOpen)}
-                                      icon={faChevron}
-                                      fixedWidth
-                                    />
+                                    <FontAwesomeIcon icon={faTimes} fixedWidth />
                                   </button>
-                                )}
-                              {isOpen && (
-                                <div className={ListWrapperStyle}>
-                                  {this.computeFilteredTags(inputValue).map((tag, index) => {
-                                    const isActive = highlightedIndex === index;
-                                    const isSelected = (value || [])
-                                      .map(t => t.id)
-                                      .includes(tag.id);
+                                )
+                              }
+                            />
+                          ))}
+                        {isWrite && (
+                          <div className={InputStyle(isHover)}>
+                            {(multiSelect || !values || values.length === 0) && (
+                              <input
+                                type="text"
+                                {...getInputProps({
+                                  spellCheck: false,
+                                  disabled,
+                                  onKeyDown: e => {
+                                    switch (e.key) {
+                                      case 'Backspace':
+                                        if (
+                                          !inputValue &&
+                                          values &&
+                                          values.length > 0 &&
+                                          !e.repeat
+                                        ) {
+                                          this.handleRemove(values[values.length - 1]);
+                                        }
+                                        break;
+                                      default:
+                                    }
+                                  },
+                                  onFocus: this.handleInputFocus,
+                                  onBlur: () => {
+                                    this.handleInputBlur();
+                                    reset();
+                                    clearSelection();
+                                  },
+                                })}
+                              />
+                            )}
+                            {isWrite && (
+                              <button
+                                {...getToggleButtonProps()}
+                                type="button"
+                                className={ExpandButtonStyle}
+                                disabled={disabled}
+                              >
+                                <FontAwesomeIcon
+                                  className={ArrowDownStyle(isOpen)}
+                                  icon={faChevron}
+                                  fixedWidth
+                                />
+                              </button>
+                            )}
+                            {isOpen && (
+                              <div className={ListWrapperStyle}>
+                                {this.computeFilteredTags(inputValue).map((tag, index) => {
+                                  const isActive = highlightedIndex === index;
+                                  const isSelected =
+                                    values && values.map(t => t.id).includes(tag.id);
 
-                                    return (
-                                      <div
-                                        key={tag.id}
-                                        className={ItemStyle(isActive)}
-                                        {...getItemProps({ item: tag })}
-                                      >
-                                        <div className={SelectedWrapperStyle(isActive)}>
-                                          {isSelected && (
-                                            <FontAwesomeIcon icon={faCheck} fixedWidth />
-                                          )}
-                                        </div>
-                                        <Tag tag={tag} />
+                                  return (
+                                    <div
+                                      key={tag.id}
+                                      className={ItemStyle(isActive)}
+                                      {...getItemProps({ item: tag })}
+                                    >
+                                      <div className={SelectedWrapperStyle(isActive)}>
+                                        {isSelected && (
+                                          <FontAwesomeIcon icon={faCheck} fixedWidth />
+                                        )}
                                       </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
+                                      <Tag tag={tag} />
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </Downshift>
-                </Label>
+                    </div>
+                  )}
+                </Downshift>
               </div>
             )}
           </HoverWrapper>
