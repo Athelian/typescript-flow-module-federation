@@ -2,7 +2,7 @@
 import React from 'react';
 import { navigate } from '@reach/router';
 import { type Tag } from 'modules/tags/type.js.flow';
-import EntityCard, { EntityAction } from 'components/EntityCard';
+import BaseCard, { CardAction } from 'components/Cards';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import { TagCardWrapperStyle } from './style';
@@ -17,13 +17,13 @@ const TagCard = ({ tag }: Props) => {
   const { id } = tag;
 
   const actions = [
-    <EntityAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <EntityAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <EntityAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
+    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
 
   return (
-    <EntityCard icon="TAGS" color="GRAY_LIGHT" actions={actions}>
+    <BaseCard icon="TAGS" color="GRAY_LIGHT" actions={actions}>
       <div
         className={TagCardWrapperStyle}
         onClick={() => navigate(`/tag/${encodeId(id)}`)}
@@ -31,7 +31,7 @@ const TagCard = ({ tag }: Props) => {
       >
         {id}
       </div>
-    </EntityCard>
+    </BaseCard>
   );
 };
 

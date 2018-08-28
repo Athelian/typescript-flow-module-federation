@@ -24,7 +24,7 @@ type State = {
 
 const TOGGLE_TIMEOUT = 500;
 
-export default class EntityCard extends React.Component<Props, State> {
+export default class BaseCard extends React.Component<Props, State> {
   static defaultProps = {
     actions: [],
     showActionsOnHover: false,

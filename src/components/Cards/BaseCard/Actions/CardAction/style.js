@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, colors, borderRadiuses, shadows } from 'styles/common';
 
-export const ButtonStyle = (hoverColor: string) => css`
+export const CardActionStyle = (hoverColor: string) => css`
   ${presets.BUTTON};
   width: 20px;
   height: 20px;
@@ -18,4 +18,4 @@ export const ButtonStyle = (hoverColor: string) => css`
   ${shadows.TOOLTIP};
 `;
 
-export default ButtonStyle;
+export default CardActionStyle;

@@ -2,7 +2,7 @@
 import React from 'react';
 import { navigate } from '@reach/router';
 import { type User as Staff } from 'modules/staff/type.js.flow';
-import EntityCard, { EntityAction } from 'components/EntityCard';
+import BaseCard, { CardAction } from 'components/Cards';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import { StaffCardWrapperStyle } from './style';
@@ -17,13 +17,13 @@ const StaffCard = ({ staff }: Props) => {
   const { id } = staff;
 
   const actions = [
-    <EntityAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <EntityAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <EntityAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
+    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
 
   return (
-    <EntityCard icon="STAFF" color="STAFF" actions={actions}>
+    <BaseCard icon="STAFF" color="STAFF" actions={actions}>
       <div
         className={StaffCardWrapperStyle}
         onClick={() => navigate(`/staff/${encodeId(id)}`)}
@@ -31,7 +31,7 @@ const StaffCard = ({ staff }: Props) => {
       >
         {id}
       </div>
-    </EntityCard>
+    </BaseCard>
   );
 };
 

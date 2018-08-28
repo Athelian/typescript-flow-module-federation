@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const WrapperStyle = css`
+export const ActionsWrapperStyle = css`
   display: flex;
   position: absolute;
   bottom: calc(100% + 5px);

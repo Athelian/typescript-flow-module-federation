@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { navigate } from '@reach/router';
 import type { BatchItem } from 'modules/batch/type.js.flow';
-import EntityCard, { EntityAction } from 'components/EntityCard';
+import BaseCard, { CardAction } from 'components/Cards';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import { BatchCardWrapperStyle } from './style';
@@ -17,12 +17,12 @@ const BatchCard = ({ batch }: Props) => {
   const { id } = batch;
 
   const actions = [
-    <EntityAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <EntityAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
 
   return (
-    <EntityCard icon="BATCH" color="BATCH" actions={actions}>
+    <BaseCard icon="BATCH" color="BATCH" actions={actions}>
       <div
         className={BatchCardWrapperStyle}
         onClick={() => navigate(`/batch/${encodeId(id)}`)}
@@ -30,7 +30,7 @@ const BatchCard = ({ batch }: Props) => {
       >
         {id}
       </div>
-    </EntityCard>
+    </BaseCard>
   );
 };
 

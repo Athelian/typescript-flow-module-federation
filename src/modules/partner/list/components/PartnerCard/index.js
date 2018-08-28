@@ -2,7 +2,7 @@
 import React from 'react';
 import { navigate } from '@reach/router';
 import { type Partner } from 'modules/partner/type.js.flow';
-import EntityCard, { EntityAction } from 'components/EntityCard';
+import BaseCard, { CardAction } from 'components/Cards';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import { PartnerCardWrapperStyle } from './style';
@@ -22,17 +22,17 @@ const PartnerCard = ({ partner, onClick, ...rest }: Props) => {
   const { id } = partner;
 
   const actions = [
-    <EntityAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <EntityAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <EntityAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
+    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
 
   return (
-    <EntityCard icon="PARTNER" color="PARTNER" actions={actions} {...rest}>
+    <BaseCard icon="PARTNER" color="PARTNER" actions={actions} {...rest}>
       <div className={PartnerCardWrapperStyle} onClick={onClick} role="presentation">
         {id}
       </div>
-    </EntityCard>
+    </BaseCard>
   );
 };
 

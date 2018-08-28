@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
-import { WrapperStyle, FadeInStyle, FadeOutStyle } from './style';
+import { ActionsWrapperStyle, FadeInStyle, FadeOutStyle } from './style';
 
 type Action = {
   id: string,
@@ -17,7 +17,7 @@ type Props = {
 function Actions({ actions, onClick, visible }: Props) {
   return (
     <PreventInitialAnimation isChildrenVisible={visible}>
-      <div className={WrapperStyle} onClick={onClick} role="presentation">
+      <div className={ActionsWrapperStyle} onClick={onClick} role="presentation">
         {actions &&
           actions.map((action, index) => (
             <div key={action.id} className={visible ? FadeInStyle(index) : FadeOutStyle(index)}>

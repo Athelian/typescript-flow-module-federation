@@ -2,7 +2,7 @@
 import React from 'react';
 import { navigate } from '@reach/router';
 import { type Order } from 'modules/order/type.js.flow';
-import EntityCard, { EntityAction } from 'components/EntityCard';
+import BaseCard, { CardAction } from 'components/Cards';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import { OrderCardWrapperStyle } from './style';
@@ -17,13 +17,13 @@ const OrderCard = ({ order }: Props) => {
   const { id } = order;
 
   const actions = [
-    <EntityAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <EntityAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <EntityAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
+    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
 
   return (
-    <EntityCard icon="ORDER" color="ORDER" actions={actions}>
+    <BaseCard icon="ORDER" color="ORDER" actions={actions}>
       <div
         className={OrderCardWrapperStyle}
         onClick={() => navigate(`/order/${encodeId(id)}`)}
@@ -31,7 +31,7 @@ const OrderCard = ({ order }: Props) => {
       >
         {id}
       </div>
-    </EntityCard>
+    </BaseCard>
   );
 };
 
