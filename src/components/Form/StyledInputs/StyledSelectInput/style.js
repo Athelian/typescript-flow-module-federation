@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, borderRadiuses, transitions, presets, fontSizes } from 'styles/common';
+import { colors, borderRadiuses, transitions, presets, fontSizes, scrollbars } from 'styles/common';
 import { StyledInputWrapperStyle } from 'components/Form/StyledInputs/style';
 
 export const SelectWrapperStyle = (
@@ -58,10 +58,15 @@ export const ButtonStyle = css`
 
 export const OptionWrapperStyle = css`
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   width: 200px;
   background: #fff;
+  ${borderRadiuses.MAIN};
+  max-height: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  ${scrollbars.SMALL};
 `;
 
 export const OptionStyle = (onHover: boolean, selected: boolean) => css`

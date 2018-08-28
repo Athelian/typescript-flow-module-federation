@@ -2,7 +2,9 @@
 import * as React from 'react';
 import { type PureInputProps, defaultPureInputProps } from 'components/Form/PureInputs/type';
 
-export type PureSelectInputProps = PureInputProps & {
+type OptionalProps = PureInputProps;
+
+export type PureSelectInputProps = OptionalProps & {
   items: Array<any>,
   itemToString: any => string,
   itemToValue: any => any,

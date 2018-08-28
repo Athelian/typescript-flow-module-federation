@@ -1,7 +1,12 @@
 // @flow
 import * as React from 'react';
+import { css } from 'emotion';
 import Downshift from 'downshift';
-import { ResetNativeStyle } from 'components/Form/PureInputs/PureSelectInput/style';
+import {
+  ResetNativeStyle,
+  ResetOptionWrapperStyle,
+  ResetOptionStyle,
+} from 'components/Form/PureInputs/PureSelectInput/style';
 import { isEquals } from 'utils/fp';
 import DebounceInput from 'react-debounce-input';
 import {
@@ -106,9 +111,17 @@ class SearchSelectInput extends React.Component<Props, State> {
               clearSelection,
             })}
             {isOpen && (
-              <ul className={styles.options}>
+              <ul
+                className={css`
+                  ${ResetOptionWrapperStyle} ${styles.options};
+                `}
+              >
                 {items.map((item, index) => (
-                  <li key={itemToValue(item)} {...getItemProps({ item })}>
+                  <li
+                    className={ResetOptionStyle}
+                    key={itemToValue(item)}
+                    {...getItemProps({ item })}
+                  >
                     {renderOption({
                       value: item,
                       onHover: highlightedIndex === index,

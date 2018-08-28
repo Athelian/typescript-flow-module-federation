@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react';
+import { css } from 'emotion';
 import Downshift from 'downshift';
 import { isEquals } from 'utils/fp';
-import { ResetNativeStyle } from './style';
+import { ResetNativeStyle, ResetOptionWrapperStyle, ResetOptionStyle } from './style';
 import { type PureSelectInputProps as Props, defaultPureSelectInputProps } from './type';
 
 type State = {
@@ -67,7 +68,6 @@ class SelectInput extends React.Component<Props, State> {
                 <input
                   readOnly
                   spellCheck={false}
-                  debounceTimeout={500}
                   className={styles && styles.input}
                   onClick={toggleMenu}
                   {...getInputProps({
@@ -82,9 +82,17 @@ class SelectInput extends React.Component<Props, State> {
               toggle: toggleMenu,
             })}
             {isOpen && (
-              <ul className={styles && styles.options}>
+              <ul
+                className={css`
+                  ${ResetOptionWrapperStyle} ${styles && styles.options};
+                `}
+              >
                 {items.map((item, index) => (
-                  <li key={itemToValue(item)} {...getItemProps({ item })}>
+                  <li
+                    className={ResetOptionStyle}
+                    key={itemToValue(item)}
+                    {...getItemProps({ item })}
+                  >
                     {renderOption({
                       value: item,
                       onHover: highlightedIndex === index,
