@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import EnumProvider from 'providers/enum';
-import SearchSelectInput from 'components/Form/SearchSelectInput';
+import SearchSelectInput from 'components/Form/StyledInputs/StyledSearchSelectInput';
 import matchSorter from 'match-sorter';
 import Label from 'components/Label';
 import { StringValue } from 'react-values';

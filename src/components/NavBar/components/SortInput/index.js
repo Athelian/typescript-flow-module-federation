@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { SelectInput as BaseSelectInput } from 'components/base';
+import { PureSelectInput } from 'components/Form/PureInputs';
 import {
   WrapperStyle,
   InputStyle,
@@ -41,14 +41,14 @@ class SortInput extends React.Component<Props> {
     const { sort, ascending, fields } = this.props;
 
     return (
-      <BaseSelectInput
+      <PureSelectInput
         value={sort.value}
         items={fields}
         itemToString={item => (item ? item.title : '')}
         itemToValue={item => (item ? item.value : '')}
         renderSelect={({ input }) => (
           <div className={WrapperStyle}>
-            {/* styles.input prop that <BaseSelectInput /> takes is applied to this input */}
+            {/* styles.input prop that <PureSelectInput /> takes is applied to this input */}
             {input}
             <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
               <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />

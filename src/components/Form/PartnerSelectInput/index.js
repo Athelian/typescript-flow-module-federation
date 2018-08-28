@@ -3,7 +3,7 @@ import * as React from 'react';
 import matchSorter from 'match-sorter';
 import PartnerListProvider from 'providers/PartnerList';
 import Label from 'components/Label';
-import SearchSelectInput from 'components/Form/SearchSelectInput';
+import SearchSelectInput from 'components/Form/StyledInputs/StyledSearchSelectInput';
 import { StringValue } from 'react-values';
 
 type Props = {

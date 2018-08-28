@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { StringValue } from 'react-values';
 import matchSorter from 'match-sorter';
-import SearchSelectInput from 'components/Form/SearchSelectInput';
+import SearchSelectInput from 'components/Form/StyledInputs/StyledSearchSelectInput';
 import TextAreaInput from 'components/Form/TextInput';
 import Icon from 'components/Icon';
 import Display from 'components/Display';

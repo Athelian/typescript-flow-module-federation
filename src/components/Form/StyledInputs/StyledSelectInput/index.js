@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import StyleLessSelectInput from 'components/base/SelectInput';
+import PureSelectInput from 'components/Form/PureInputs/PureSelectInput';
+import Display from 'components/Form/Display';
+import { type StyledSelectInputProps as Props, defaultStyledSelectInputProps } from './type';
 import {
   SelectWrapperStyle,
   InputStyle,
@@ -11,42 +13,36 @@ import {
   ArrowDownStyle,
 } from './style';
 
-type Props = {
-  value: any,
-  items: Array<any>,
-  onChange: () => void,
-  error?: any,
-  itemToString: any => string,
-  itemToValue: any => any,
-  forceHoverStyle?: boolean,
-};
-
-const defaultProps = {
-  error: null,
-  forceHoverStyle: false,
-};
-
 function SelectInput({
-  value,
   items,
-  onChange,
   error,
   forceHoverStyle,
   itemToString,
   itemToValue,
+  hasError,
+  width,
+  disabled,
   ...rest
 }: Props) {
-  return (
-    <StyleLessSelectInput
-      value={value}
+  return disabled ? (
+    <Display align={rest.align}> {rest.value}</Display>
+  ) : (
+    <PureSelectInput
       items={items}
       itemToString={itemToString}
       itemToValue={itemToValue}
       clearIcon={<Icon icon="CLEAR" />}
-      onChange={onChange}
       styles={{ input: InputStyle, options: OptionWrapperStyle }}
       renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
-        <div className={SelectWrapperStyle(!!error, isOpen, !!forceHoverStyle && !selectedItem)}>
+        <div
+          className={SelectWrapperStyle(
+            hasError,
+            isOpen,
+            forceHoverStyle && !selectedItem,
+            width,
+            disabled
+          )}
+        >
           {input}
           {selectedItem ? (
             <button type="button" onClick={clearSelection} className={ButtonStyle}>
@@ -67,6 +63,6 @@ function SelectInput({
   );
 }
 
-SelectInput.defaultProps = defaultProps;
+SelectInput.defaultProps = defaultStyledSelectInputProps;
 
 export default SelectInput;

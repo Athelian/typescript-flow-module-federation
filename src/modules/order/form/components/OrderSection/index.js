@@ -19,7 +19,7 @@ import {
   InputGroup,
 } from 'components/Form';
 import CurrencyInput from 'components/Form/CurrencyInput';
-import IncotermsInput from 'components/Form/IncotermsInput';
+import IncotermInput from 'components/Form/IncotermInput';
 import Divider from 'components/Divider';
 import EntityCard from 'components/EntityCard';
 import Label from 'components/Label';
@@ -174,16 +174,18 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                 />
                 {/* FIXME: enum input is wrong when send the selected value */}
                 <CurrencyInput
+                  name="currency"
                   title={<FormattedMessage {...messages.currency} />}
                   value={values.currency}
-                  onChange={({ name }) => setFieldValue('currency', name)}
+                  onChange={value => setFieldValue('currency', value)}
                   width="200px"
                   required
                 />
-                <IncotermsInput
+                <IncotermInput
+                  name="incoterm"
                   title={<FormattedMessage {...messages.incoterms} />}
                   value={values.incoterm}
-                  onChange={({ name }) => setFieldValue('incoterm', name)}
+                  onChange={value => setFieldValue('incoterm', value)}
                   width="200px"
                 />
                 <Field
