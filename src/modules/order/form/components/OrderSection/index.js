@@ -22,7 +22,7 @@ import {
 import CurrencyInput from 'components/Form/CurrencyInput';
 import IncotermInput from 'components/Form/IncotermInput';
 import Divider from 'components/Divider';
-import EntityCard from 'components/EntityCard';
+import BaseCard from 'components/Cards';
 import Label from 'components/Label';
 import { colors } from 'styles/common';
 import messages from 'modules/order/messages';
@@ -226,7 +226,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                         {!values.exporter ? (
                           <DashedPlusButton width="200px" height="230px" onClick={toggle} />
                         ) : (
-                          <EntityCard icon="PARTNER" color="PARTNER">
+                          <BaseCard icon="PARTNER" color="PARTNER">
                             <div className={ExporterCardStyle} role="presentation" onClick={toggle}>
                               <img
                                 className={ExporterCardImageStyle}
@@ -239,7 +239,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                                   : 'Exporter'}
                               </div>
                             </div>
-                          </EntityCard>
+                          </BaseCard>
                         )}
 
                         <SlideView

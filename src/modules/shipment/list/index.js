@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
-import ShipmentGridView from './components/ShipmentGridView';
+import ShipmentGridView from './ShipmentGridView';
 
 type Props = {
   viewType: string,

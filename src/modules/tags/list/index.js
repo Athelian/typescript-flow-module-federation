@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import matchSorter from 'match-sorter';
 import type { Tag } from 'components/Tag/type.js.flow';
-import TagGridView from './components/TagGridView';
+import TagGridView from './TagGridView';
 import { tagsQuery } from './query';
 
 type Props = {

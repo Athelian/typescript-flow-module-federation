@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
-import BatchGridView from './components/BatchGridView';
+import BatchGridView from './BatchGridView';
 import { batchItemListQuery } from './query';
 
 type Props = {
