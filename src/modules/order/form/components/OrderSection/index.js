@@ -10,17 +10,17 @@ import FormattedNumber from 'components/FormattedNumber';
 import yupToFormErrors from 'utils/yupToFormErrors';
 import {
   FieldItem,
-  StyledTextInput,
-  StyledDateInput,
+  TextInput,
+  DateInput,
   DashedPlusButton,
   Form,
   FormObserver,
   Field,
   TagsInput,
   InputGroup,
+  CurrencyInput,
+  IncotermInput,
 } from 'components/Form';
-import CurrencyInput from 'components/Form/CurrencyInput';
-import IncotermInput from 'components/Form/IncotermInput';
 import Divider from 'components/Divider';
 import BaseCard from 'components/Cards';
 import Label from 'components/Label';
@@ -88,7 +88,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                     <FieldItem
                       label={<FormattedMessage {...messages.PO} />}
                       input={hasError => (
-                        <StyledTextInput
+                        <TextInput
                           isFocused={meta.isActive}
                           forceHoverStyle={isNew}
                           hasError={hasError}
@@ -120,7 +120,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                     <FieldItem
                       label={<FormattedMessage {...messages.PI} />}
                       input={hasError => (
-                        <StyledTextInput
+                        <TextInput
                           isFocused={meta.isActive}
                           forceHoverStyle={isNew}
                           hasError={hasError}
@@ -148,7 +148,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                     <FieldItem
                       label={<FormattedMessage {...messages.date} />}
                       input={hasError => (
-                        <StyledDateInput
+                        <DateInput
                           isFocused={meta.isActive}
                           forceHoverStyle={isNew}
                           hasError={hasError}
@@ -224,7 +224,7 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                     <FieldItem
                       label={<FormattedMessage {...messages.deliveryPlace} />}
                       input={hasError => (
-                        <StyledTextInput
+                        <TextInput
                           isFocused={meta.isActive}
                           forceHoverStyle={isNew}
                           hasError={hasError}

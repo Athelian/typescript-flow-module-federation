@@ -3,7 +3,7 @@ import * as React from 'react';
 import EnumProvider from 'providers/enum';
 import matchSorter from 'match-sorter';
 import { StringValue } from 'react-values';
-import SearchSelectInput from '../StyledSearchSelectInput';
+import SearchSelectInput from '../StyledSelectInput/StyledSearchSelectInput';
 import type { EnumInputProps as Props } from './type.js.flow';
 
 function EnumInput({ value, onChange, enumType, ...rest }: Props) {

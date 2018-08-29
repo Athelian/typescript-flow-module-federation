@@ -4,17 +4,12 @@ import Icon from 'components/Icon';
 import PureSearchSelectInput from 'components/Form/PureInputs/PureSearchSelectInput';
 import Display from 'components/Form/Display';
 import DebounceInput from 'react-debounce-input';
-import StyledDropDownList from '../StyledSelectInput/components/StyledDropdownList';
+import StyledDropDownList from '../components/StyledDropdownList';
 import {
   type StyledSearchSelectInputProps as Props,
   defaultStyledSearchSelectInputProps,
 } from './type';
-import {
-  SelectWrapperStyle,
-  InputStyle,
-  ClearButtonStyle,
-  ArrowDownStyle,
-} from '../StyledSelectInput/style';
+import { SelectWrapperStyle, InputStyle, ClearButtonStyle, ArrowDownStyle } from '../style';
 
 function SearchSelectInput({
   itemToString,
