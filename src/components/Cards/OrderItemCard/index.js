@@ -2,9 +2,28 @@
 import React from 'react';
 import { type OrderItem } from 'modules/order/type.js.flow';
 import logger from 'utils/logger';
-import { Label, Display, StyledNumberInput } from 'components/Form';
+import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
+import Icon from 'components/Icon';
+import Tag from 'components/Tag';
+import { Label, Display, StyledNumberInput, StyledPriceInput } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
-import { OrderItemCardWrapperStyle, QuantityWrapperStyle, TotalPriceWrapperStyle } from './style';
+import {
+  OrderItemCardWrapperStyle,
+  ProductWrapperStyle,
+  ProductImageStyle,
+  ProductInfoWrapperStyle,
+  ProductNameStyle,
+  ProductSerialStyle,
+  ProductSupplierStyle,
+  ProductTagsWrapperStyle,
+  ProductIconLinkStyle,
+  BodyWrapperStyle,
+  QuantityWrapperStyle,
+  UnitPriceWrapperStyle,
+  SyncButtonStyle,
+  DividerStyle,
+  TotalPriceWrapperStyle,
+} from './style';
 
 type Props = {
   item: ?OrderItem,
@@ -14,15 +33,25 @@ type Props = {
 const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
   if (!item) return '';
 
-  const { id } = item;
-
   const actions = [
     <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
     <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
 
-  const dummyStuff = {
-    isNew: false,
+  const isNew = false;
+  const currency = 'JPY';
+  const dummyProduct = {
+    name: 'Apple',
+    serial: 'FA-064893',
+    supplier: 'Supplier B',
+  };
+  const dummyTag = {
+    id: '1',
+    name: 'Fruit',
+    color: '#7b6dbb',
+    description: '',
+  };
+  const dummyQuantity = {
     isActive: false,
     hasError: false,
     input: {
@@ -30,28 +59,77 @@ const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
       value: 100,
     },
   };
+  const dummyPrice = {
+    isActive: false,
+    hasError: false,
+    input: {
+      name: 'foo',
+      value: 40,
+    },
+  };
 
   return (
     <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" actions={actions} {...rest}>
       <div className={OrderItemCardWrapperStyle} onClick={onClick} role="presentation">
-        <div className={QuantityWrapperStyle}>
-          <Label>QUANTITY</Label>
-          <StyledNumberInput
-            isFocused={dummyStuff.isActive}
-            forceHoverStyle={dummyStuff.isNew}
-            hasError={dummyStuff.hasError}
-            width="95px"
-            height="20px"
-            pureInputOptions={{
-              ...dummyStuff.input,
-            }}
-          />
+        <div className={ProductWrapperStyle}>
+          <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
+
+          <div className={ProductInfoWrapperStyle}>
+            <div className={ProductNameStyle}>{dummyProduct.name}</div>
+            <div className={ProductSerialStyle}>{dummyProduct.serial}</div>
+            <div className={ProductSupplierStyle}>
+              <Icon icon="SUPPLIER" />
+              {dummyProduct.supplier}
+            </div>
+            <div className={ProductTagsWrapperStyle}>
+              <Tag tag={dummyTag} />
+            </div>
+          </div>
+
+          <button className={ProductIconLinkStyle} type="button">
+            <Icon icon="PRODUCT" />
+          </button>
         </div>
-        <div className={TotalPriceWrapperStyle}>
-          <Label>PRICE</Label>
-          <Display>JPY 4,000</Display>
+
+        <div className={BodyWrapperStyle}>
+          <div className={QuantityWrapperStyle}>
+            <Label required>QTY</Label>
+            <StyledNumberInput
+              isFocused={dummyQuantity.isActive}
+              forceHoverStyle={isNew}
+              hasError={dummyQuantity.hasError}
+              width="90px"
+              height="20px"
+              pureInputOptions={{
+                ...dummyQuantity.input,
+              }}
+            />
+          </div>
+          <div className={UnitPriceWrapperStyle}>
+            <button className={SyncButtonStyle} type="button">
+              SYNC
+              <Icon icon="SYNC" />
+            </button>
+            <Label required>PRICE</Label>
+            <StyledPriceInput
+              currency={currency}
+              isFocused={dummyPrice.isActive}
+              forceHoverStyle={isNew}
+              hasError={dummyPrice.hasError}
+              width="90px"
+              height="20px"
+              pureInputOptions={{
+                ...dummyPrice.input,
+              }}
+            />
+          </div>
+          <div className={DividerStyle} />
+          Chart Goes Here
+          <div className={TotalPriceWrapperStyle}>
+            <Label>TOTAL</Label>
+            <Display>4,000 {currency}</Display>
+          </div>
         </div>
-        {id}
       </div>
     </BaseCard>
   );

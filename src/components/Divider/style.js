@@ -1,9 +1,10 @@
 // @flow
 import { css } from 'react-emotion';
+import { colors } from 'styles/common';
 
-export const DividerStyle = (lineWidth: ?string = '1px', color: ?string = '#fff') => css`
-  height: ${lineWidth};
-  background-color: ${color};
+export const DividerStyle = (height: string, color: string) => css`
+  height: ${height};
+  background-color: ${colors[color]};
   width: 100%;
 `;
 

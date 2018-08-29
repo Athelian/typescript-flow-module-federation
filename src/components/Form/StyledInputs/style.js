@@ -20,6 +20,7 @@ export const StyledInputWrapperStyle = (
   height: ${height};
   width: ${width};
   min-width: ${width};
+  cursor: text;
   ${transitions.MAIN};
   ${forceHoverStyle || isFocused
     ? shadows.INPUT

@@ -3,10 +3,17 @@ import React from 'react';
 import { DividerStyle } from './style';
 
 type Props = {
-  lineWidth?: string,
-  color?: string,
+  height: string,
+  color: string,
 };
 
-const Divider = ({ lineWidth, color }: Props) => <div className={DividerStyle(lineWidth, color)} />;
+const defaultProps = {
+  height: '1px',
+  color: 'GRAY_VERY_LIGHT',
+};
+
+const Divider = ({ height, color }: Props) => <div className={DividerStyle(height, color)} />;
+
+Divider.defaultProps = defaultProps;
 
 export default Divider;

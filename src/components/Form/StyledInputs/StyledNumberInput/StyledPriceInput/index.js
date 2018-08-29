@@ -4,10 +4,11 @@ import Display from 'components/Form/Display';
 import FormattedNumber from 'components/FormattedNumber';
 import { PureNumberInput } from 'components/Form/PureInputs';
 import { defaultPureNumberInputProps } from 'components/Form/PureInputs/PureNumberInput/type';
-import { type StyledNumberInputProps as Props, defaultStyledNumberInputProps } from './type';
-import { StyledNumberInputWrapperStyle, StyledNumberInputStyle } from './style';
+import { type StyledPriceInputProps as Props, defaultStyledPriceInputProps } from './type';
+import { StyledPriceInputWrapperStyle, StyledPriceInputStyle, CurrencyStyle } from './style';
 
-const StyledNumberInput = ({
+const StyledPriceInput = ({
+  currency,
   isFocused,
   hasError,
   disabled,
@@ -20,7 +21,7 @@ const StyledNumberInput = ({
 
   return (
     <div
-      className={StyledNumberInputWrapperStyle(
+      className={StyledPriceInputWrapperStyle(
         isFocused,
         hasError,
         disabled,
@@ -32,14 +33,18 @@ const StyledNumberInput = ({
       {disabled ? (
         <Display align={pureInputOptions.align}>
           <FormattedNumber value={pureInputOptions.value} />
+          {currency ? `${currency} ` : ''}
         </Display>
       ) : (
-        <PureNumberInput {...mergedPureInputOptions} className={StyledNumberInputStyle} />
+        <React.Fragment>
+          <PureNumberInput {...mergedPureInputOptions} className={StyledPriceInputStyle} />
+          <div className={CurrencyStyle}>{currency}</div>
+        </React.Fragment>
       )}
     </div>
   );
 };
 
-StyledNumberInput.defaultProps = defaultStyledNumberInputProps;
+StyledPriceInput.defaultProps = defaultStyledPriceInputProps;
 
-export default StyledNumberInput;
+export default StyledPriceInput;

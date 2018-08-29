@@ -17,6 +17,7 @@ import {
   StyledDateInput,
   StyledEmailInput,
   StyledNumberInput,
+  StyledPriceInput,
   StyledPasswordInput,
   StyledTextInput,
 } from './StyledInputs';
@@ -35,6 +36,7 @@ export {
   StyledDateInput,
   StyledEmailInput,
   StyledNumberInput,
+  StyledPriceInput,
   StyledPasswordInput,
   StyledTextInput,
   DashedPlusButton,
