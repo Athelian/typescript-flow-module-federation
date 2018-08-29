@@ -23,7 +23,7 @@ function StyledDropDownList({
     <div className={OptionWrapperStyle}>
       {items.map((item, index) => (
         <div
-          key={itemToValue(item)}
+          key={itemToValue(item) || item.id || `option-${index}`}
           className={OptionStyle(highlightedIndex === index, selectedItem === item)}
           {...getItemProps({ item })}
         >
