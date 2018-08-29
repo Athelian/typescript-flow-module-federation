@@ -3,15 +3,9 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import PureSelectInput from 'components/Form/PureInputs/PureSelectInput';
 import Display from 'components/Form/Display';
+import StyledDropDownList from 'components/Form/StyledInputs/StyledSelectInput/components/StyledDropdownList';
 import { type StyledSelectInputProps as Props, defaultStyledSelectInputProps } from './type';
-import {
-  SelectWrapperStyle,
-  InputStyle,
-  ButtonStyle,
-  OptionWrapperStyle,
-  OptionStyle,
-  ArrowDownStyle,
-} from './style';
+import { SelectWrapperStyle, InputStyle, ButtonStyle, ArrowDownStyle } from './style';
 
 function SelectInput({
   items,
@@ -22,18 +16,17 @@ function SelectInput({
   hasError,
   width,
   disabled,
+  align,
   ...rest
 }: Props) {
   return disabled ? (
-    <Display align={rest.align}> {rest.value}</Display>
+    <Display align={align}> {rest.value}</Display>
   ) : (
     <PureSelectInput
       items={items}
       itemToString={itemToString}
       itemToValue={itemToValue}
-      clearIcon={<Icon icon="CLEAR" />}
-      styles={{ input: InputStyle, options: OptionWrapperStyle }}
-      renderSelect={({ input, isOpen, toggle, clearSelection, selectedItem }) => (
+      renderSelect={({ isOpen, toggle, selectedItem, clearSelection, getInputProps }) => (
         <div
           className={SelectWrapperStyle(
             hasError,
@@ -43,20 +36,44 @@ function SelectInput({
             disabled
           )}
         >
-          {input}
-          {selectedItem ? (
-            <button type="button" onClick={clearSelection} className={ButtonStyle}>
-              <Icon icon="CLEAR" />
-            </button>
-          ) : (
-            <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
-              <Icon icon="CHEVRON_DOWN" />
-            </button>
-          )}
+          {align === 'right' &&
+            (selectedItem ? (
+              <button type="button" onClick={clearSelection} className={ButtonStyle}>
+                <Icon icon="CLEAR" />
+              </button>
+            ) : (
+              <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+                <Icon icon="CHEVRON_DOWN" />
+              </button>
+            ))}
+          <input
+            readOnly
+            spellCheck={false}
+            className={InputStyle}
+            onClick={toggle}
+            {...getInputProps({
+              value: itemToString(selectedItem),
+            })}
+          />
+          {align === 'left' &&
+            (selectedItem ? (
+              <button type="button" onClick={clearSelection} className={ButtonStyle}>
+                <Icon icon="CLEAR" />
+              </button>
+            ) : (
+              <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+                <Icon icon="CHEVRON_DOWN" />
+              </button>
+            ))}
         </div>
       )}
-      renderOption={({ value: item, onHover, selected }) => (
-        <div className={OptionStyle(onHover, selected)}>{itemToString(item)}</div>
+      renderOptions={optionProps => (
+        <StyledDropDownList
+          items={items}
+          itemToValue={itemToValue}
+          itemToString={itemToString}
+          {...optionProps}
+        />
       )}
       {...rest}
     />

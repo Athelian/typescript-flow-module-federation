@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react';
 import Downshift from 'downshift';
-import { ResetNativeStyle } from 'components/Form/PureInputs/PureSelectInput/style';
 import { isEquals } from 'utils/fp';
-import DebounceInput from 'react-debounce-input';
 import {
   type PureSearchSelectInputProps as Props,
   defaultPureSearchSelectInputProps,
@@ -62,62 +60,36 @@ class SearchSelectInput extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      items,
-      itemToValue,
-      itemToString,
-      renderSelect,
-      renderOption,
-      styles = { input: '', options: '' },
-      align,
-    } = this.props;
+    const { itemToValue, itemToString, renderSelect, renderOptions } = this.props;
 
     const { inputValue, selectedItem } = this.state;
 
     return (
       <Downshift onChange={this.handleChange} itemToString={itemToString} itemToValue={itemToValue}>
         {({
+          getInputProps,
           getItemProps,
           isOpen,
-          toggleMenu,
+          toggleMenu: toggle,
           highlightedIndex,
           clearSelection,
-          getInputProps,
         }) => (
-          <div className={ResetNativeStyle}>
+          <div>
             {renderSelect({
-              input: (
-                <DebounceInput
-                  className={styles.input}
-                  onClick={toggleMenu}
-                  debounceTimeout={500}
-                  spellCheck={false}
-                  {...getInputProps({
-                    value: inputValue,
-                    onBlur: this.handleBlur,
-                    onChange: this.handleChangeQuery,
-                  })}
-                  style={{ textAlign: align }}
-                />
-              ),
+              value: inputValue,
+              handleQueryChange: this.handleChangeQuery,
               isOpen,
-              toggle: toggleMenu,
+              toggle,
               selectedItem,
               clearSelection,
+              getInputProps,
             })}
-            {isOpen && (
-              <ul className={styles.options}>
-                {items.map((item, index) => (
-                  <li key={itemToValue(item)} {...getItemProps({ item })}>
-                    {renderOption({
-                      value: item,
-                      onHover: highlightedIndex === index,
-                      selected: selectedItem === item,
-                    })}
-                  </li>
-                ))}
-              </ul>
-            )}
+            {isOpen &&
+              renderOptions({
+                highlightedIndex,
+                selectedItem,
+                getItemProps,
+              })}
           </div>
         )}
       </Downshift>

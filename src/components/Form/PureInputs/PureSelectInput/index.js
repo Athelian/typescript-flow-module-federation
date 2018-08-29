@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Downshift from 'downshift';
 import { isEquals } from 'utils/fp';
-import { ResetNativeStyle } from './style';
 import { type PureSelectInputProps as Props, defaultPureSelectInputProps } from './type';
 
 type State = {
@@ -38,16 +37,7 @@ class SelectInput extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      renderSelect,
-      items,
-      itemToValue,
-      itemToString,
-      renderOption,
-      styles,
-      placeholder,
-      align,
-    } = this.props;
+    const { renderSelect, itemToValue, itemToString, renderOptions } = this.props;
 
     const { selectedItem } = this.state;
 
@@ -56,44 +46,25 @@ class SelectInput extends React.Component<Props, State> {
         {({
           getItemProps,
           isOpen,
-          toggleMenu,
+          toggleMenu: toggle,
           highlightedIndex,
           clearSelection,
           getInputProps,
         }) => (
-          <div className={ResetNativeStyle}>
+          <div>
             {renderSelect({
-              input: (
-                <input
-                  readOnly
-                  spellCheck={false}
-                  debounceTimeout={500}
-                  className={styles && styles.input}
-                  onClick={toggleMenu}
-                  {...getInputProps({
-                    value: itemToString(selectedItem) || placeholder,
-                  })}
-                  style={{ textAlign: align }}
-                />
-              ),
               isOpen,
-              clearSelection,
+              toggle,
               selectedItem,
-              toggle: toggleMenu,
+              clearSelection,
+              getInputProps,
             })}
-            {isOpen && (
-              <ul className={styles && styles.options}>
-                {items.map((item, index) => (
-                  <li key={itemToValue(item)} {...getItemProps({ item })}>
-                    {renderOption({
-                      value: item,
-                      onHover: highlightedIndex === index,
-                      selected: itemToValue(selectedItem) === itemToValue(item),
-                    })}
-                  </li>
-                ))}
-              </ul>
-            )}
+            {isOpen &&
+              renderOptions({
+                highlightedIndex,
+                selectedItem,
+                getItemProps,
+              })}
           </div>
         )}
       </Downshift>

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, borderRadiuses, transitions, presets, fontSizes } from 'styles/common';
+import { colors, borderRadiuses, transitions } from 'styles/common';
 import { StyledInputWrapperStyle } from 'components/Form/StyledInputs/style';
 
 export const SelectWrapperStyle = (
@@ -10,6 +10,7 @@ export const SelectWrapperStyle = (
   width: ?string,
   disabled: boolean
 ) => css`
+  position: relative;
   display: flex;
   flex-wrap: nowrap;
   ${borderRadiuses.MAIN};
@@ -54,27 +55,6 @@ export const ButtonStyle = css`
   font-size: 12px;
   display: flex;
   align-items: center;
-`;
-
-export const OptionWrapperStyle = css`
-  display: flex;
-  flex-flow: column wrap;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  width: 200px;
-  background: #fff;
-`;
-
-export const OptionStyle = (onHover: boolean, selected: boolean) => css`
-  background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
-  ${presets.BUTTON};
-  justify-content: flex-start;
-  padding: 0 5px;
-  color: ${selected ? colors.TEAL : colors.BLACK};
-  ${fontSizes.MAIN};
-  font-weight: bold;
-  flex: 1;
-  height: 30px;
-  ${presets.ELLIPSIS};
 `;
 
 export const ArrowDownStyle = (isOpen: boolean) => css`

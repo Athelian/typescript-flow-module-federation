@@ -39,27 +39,48 @@ class SortInput extends React.Component<Props> {
 
   render() {
     const { sort, ascending, fields } = this.props;
+    const itemToString = item => (item ? item.title : '');
+    const itemToValue = item => (item ? item.value : '');
 
     return (
       <PureSelectInput
         value={sort.value}
         items={fields}
-        itemToString={item => (item ? item.title : '')}
-        itemToValue={item => (item ? item.value : '')}
-        renderSelect={({ input }) => (
+        itemToString={itemToString}
+        itemToValue={itemToValue}
+        onChange={this.onFieldChange}
+        renderSelect={({ toggle, selectedItem, getInputProps }) => (
           <div className={WrapperStyle}>
-            {/* styles.input prop that <PureSelectInput /> takes is applied to this input */}
-            {input}
+            <input
+              readOnly
+              spellCheck={false}
+              className={InputStyle}
+              onClick={toggle}
+              {...getInputProps({
+                value: itemToString(selectedItem),
+              })}
+            />
             <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
               <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
             </button>
           </div>
         )}
-        renderOption={({ value, onHover, selected }) => (
-          <div className={OptionItemStyle(onHover, selected)}>{value.title}</div>
+        renderOptions={({ highlightedIndex, selectedItem, getItemProps }) => (
+          <div className={OptionWrapperStyle}>
+            {fields.map((item, index) => (
+              <div
+                key={itemToValue(item)}
+                className={OptionItemStyle(
+                  highlightedIndex === index,
+                  itemToValue(selectedItem) === itemToValue(item)
+                )}
+                {...getItemProps({ item })}
+              >
+                {item.title}
+              </div>
+            ))}
+          </div>
         )}
-        onChange={this.onFieldChange}
-        styles={{ input: InputStyle, options: OptionWrapperStyle }}
       />
     );
   }

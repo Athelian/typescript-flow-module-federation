@@ -7,14 +7,17 @@ export type PureSelectInputProps = PureInputProps & {
   itemToString: any => string,
   itemToValue: any => any,
   renderSelect: ({
-    input: React.Node,
     isOpen: boolean,
     clearSelection: () => void,
     toggle: () => void,
     selectedItem: any,
+    getInputProps: Function,
   }) => React.Node,
-  renderOption: ({ value: any, onHover: boolean, selected: boolean }) => React.Node,
-  styles: { input: any, options: any },
+  renderOptions: ({
+    highlightedIndex: number,
+    selectedItem: any,
+    getItemProps: Function,
+  }) => React.Node,
 };
 
 export const defaultPureSelectInputProps = {
