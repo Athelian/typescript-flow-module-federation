@@ -7,15 +7,17 @@ export const StyledInputWrapperStyle = (
   hasError: boolean,
   disabled: boolean,
   forceHoverStyle: boolean,
-  width: string
+  width: string,
+  height: string
 ) => css`
+  position: relative;
   display: flex;
   align-items: center;
   border: 1px solid ${hasError ? colors.RED : 'transparent'};
   ${isFocused && `border-color: ${hasError ? colors.RED : colors.TEAL}`};
   ${borderRadiuses.MAIN};
   background-color: ${disabled ? colors.GRAY_SUPER_LIGHT : '#fff'};
-  height: 30px;
+  height: ${height};
   width: ${width};
   min-width: ${width};
   ${transitions.MAIN};

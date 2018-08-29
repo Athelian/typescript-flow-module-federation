@@ -7,6 +7,7 @@ type OptionalProps = {
   disabled: boolean,
   forceHoverStyle: boolean,
   width: string,
+  height: string,
   pureInputOptions: PureInputProps,
 };
 
@@ -18,6 +19,7 @@ export const defaultStyledInputProps = {
   disabled: false,
   forceHoverStyle: false,
   width: '100%',
+  height: '30px',
   pureInputOptions: defaultPureInputProps,
 };
 

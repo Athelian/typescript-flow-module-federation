@@ -12,13 +12,21 @@ const StyledDateInput = ({
   disabled,
   forceHoverStyle,
   width,
+  height,
   pureInputOptions,
 }: Props) => {
   const mergedPureInputOptions = { ...defaultPureDateInputProps, ...pureInputOptions };
 
   return (
     <div
-      className={StyledDateInputWrapperStyle(isFocused, hasError, disabled, forceHoverStyle, width)}
+      className={StyledDateInputWrapperStyle(
+        isFocused,
+        hasError,
+        disabled,
+        forceHoverStyle,
+        width,
+        height
+      )}
     >
       {disabled ? (
         <Display align={pureInputOptions.align}>{pureInputOptions.value}</Display>

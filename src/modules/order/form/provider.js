@@ -7,7 +7,7 @@ import type { OrderForm as FormState } from '../type.js.flow';
 const defaultState = {
   isReady: false,
   formData: {
-    items: [],
+    orderItems: [],
     files: [],
   },
   onChange: () => {},

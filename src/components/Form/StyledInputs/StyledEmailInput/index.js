@@ -12,6 +12,7 @@ const StyledEmailInput = ({
   disabled,
   forceHoverStyle,
   width,
+  height,
   pureInputOptions,
 }: Props) => {
   const mergedPureInputOptions = { ...defaultPureEmailInputProps, ...pureInputOptions };
@@ -23,7 +24,8 @@ const StyledEmailInput = ({
         hasError,
         disabled,
         forceHoverStyle,
-        width
+        width,
+        height
       )}
     >
       {disabled ? (

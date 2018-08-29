@@ -12,13 +12,21 @@ const StyledTextInput = ({
   disabled,
   forceHoverStyle,
   width,
+  height,
   pureInputOptions,
 }: Props) => {
   const mergedPureInputOptions = { ...defaultPureTextInputProps, ...pureInputOptions };
 
   return (
     <div
-      className={StyledTextInputWrapperStyle(isFocused, hasError, disabled, forceHoverStyle, width)}
+      className={StyledTextInputWrapperStyle(
+        isFocused,
+        hasError,
+        disabled,
+        forceHoverStyle,
+        width,
+        height
+      )}
     >
       {disabled ? (
         <Display align={pureInputOptions.align}>{pureInputOptions.value}</Display>

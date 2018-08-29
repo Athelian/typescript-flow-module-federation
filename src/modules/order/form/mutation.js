@@ -18,10 +18,10 @@ export const createOrderMutation = gql`
   ${violationFragment}
 `;
 
-export const prepareCreateOrderInput = ({ items = [], ...data }: OrderForm) => ({
+export const prepareCreateOrderInput = ({ orderItems = [], ...data }: OrderForm) => ({
   ...data,
-  batchItems: items.map(({ batchItems, productExporterSupplier, ...item }) => ({
-    ...item,
+  batchItems: orderItems.map(({ batchItems, productExporterSupplier, ...orderItem }) => ({
+    ...orderItem,
     productProviderId: productExporterSupplier.id,
     batches: batchItems.map(({ assignments, tags, ...batchItem }) => ({
       ...batchItem,
@@ -49,10 +49,10 @@ export const updateOrderMutation = gql`
   ${violationFragment}
 `;
 
-export const prepareUpdateOrderInput = ({ items = [], exporterId, ...data }: OrderForm) => ({
+export const prepareUpdateOrderInput = ({ orderItems = [], exporterId, ...data }: OrderForm) => ({
   ...data,
-  batchItems: items.map(({ batchItems, productExporterSupplier, ...item }) => ({
-    ...item,
+  batchItems: orderItems.map(({ batchItems, productExporterSupplier, ...orderItem }) => ({
+    ...orderItem,
     productProviderId: productExporterSupplier.id,
     batchItems: batchItems.map(
       ({ hasShipment, hasBatchGroup, shipment, batchGroup, assignments, tags, ...batchItem }) => ({

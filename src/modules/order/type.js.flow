@@ -2,23 +2,21 @@
 import type { BatchItemForm } from 'modules/batch/type.js.flow';
 import type { PES } from 'modules/product/type.js.flow';
 
+type Batch = {
+  id: string,
+};
+
+type ProductProvider = {
+  id: string,
+};
+
 export type OrderItem = {
   id: string,
+  sort: number,
   quantity: number,
-  batchedQuantity: number,
-  shippedQuantity: number,
-  productExporterSupplier: {
-    supplier: ?{
-      name: string,
-    },
-    product: {
-      name: string,
-      serial: string,
-      files: Array<{
-        path: string,
-      }>,
-    },
-  },
+  price: number,
+  batches: Batch,
+  productProvider: ProductProvider,
 };
 
 export type Order = {
@@ -32,7 +30,7 @@ export type Order = {
   shippedQuantity: number,
   updatedAt: string | Date,
   createdAt: string | Date,
-  items: Array<OrderItem>,
+  orderItems: Array<OrderItem>,
 };
 
 export type SelectableOrderItem = {
@@ -77,7 +75,7 @@ export type OrderForm = {
   deliveryPlace?: ?string,
   currency?: string,
   memo?: ?string,
-  items: Array<OrderItemForm>,
+  orderItems: Array<OrderItemForm>,
   files: Array<{
     path: string,
     type: string,

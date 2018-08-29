@@ -12,7 +12,7 @@ import {
 import {
   SelectWrapperStyle,
   InputStyle,
-  ButtonStyle,
+  ClearButtonStyle,
   ArrowDownStyle,
 } from '../StyledSelectInput/style';
 
@@ -23,6 +23,7 @@ function SearchSelectInput({
   forceHoverStyle,
   hasError,
   width,
+  height,
   disabled,
   align,
   ...rest
@@ -46,12 +47,13 @@ function SearchSelectInput({
             isOpen,
             forceHoverStyle && !selectedItem,
             width,
+            height,
             disabled
           )}
         >
           {align === 'right' &&
             (selectedItem ? (
-              <button type="button" onClick={clearSelection} className={ButtonStyle}>
+              <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
                 <Icon icon="CLEAR" />
               </button>
             ) : (
@@ -72,7 +74,7 @@ function SearchSelectInput({
           />
           {align === 'left' &&
             (selectedItem ? (
-              <button type="button" onClick={clearSelection} className={ButtonStyle}>
+              <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
                 <Icon icon="CLEAR" />
               </button>
             ) : (

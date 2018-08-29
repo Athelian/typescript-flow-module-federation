@@ -89,7 +89,7 @@ export default function OrderForm({ order, onChange }: Props) {
             <React.Fragment>
               <SectionHeader
                 icon="ORDER_ITEM"
-                title={`ITEMS (${formState.formData.items.length})`}
+                title={`ITEMS (${formState.formData.orderItems.length})`}
               />
               <ItemsSection
                 isReady={hasSelectExporter(order) || hasSelectExporter(formState.formData)}

@@ -12,6 +12,7 @@ const StyledNumberInput = ({
   disabled,
   forceHoverStyle,
   width,
+  height,
   pureInputOptions,
 }: Props) => {
   const mergedPureInputOptions = { ...defaultPureNumberInputProps, ...pureInputOptions };
@@ -23,7 +24,8 @@ const StyledNumberInput = ({
         hasError,
         disabled,
         forceHoverStyle,
-        width
+        width,
+        height
       )}
     >
       {disabled ? (

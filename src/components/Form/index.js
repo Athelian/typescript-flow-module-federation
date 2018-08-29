@@ -11,6 +11,8 @@ import DropDown from './SimpleDropDown';
 import TagsInput from './TagsInput';
 import InputGroup from './InputGroup';
 import FieldItem from './FieldItem';
+import Label from './Label';
+import Display from './Display';
 import {
   StyledDateInput,
   StyledEmailInput,
@@ -28,6 +30,8 @@ export const FieldArray = ZenFieldArray;
 
 export {
   FieldItem,
+  Label,
+  Display,
   StyledDateInput,
   StyledEmailInput,
   StyledNumberInput,

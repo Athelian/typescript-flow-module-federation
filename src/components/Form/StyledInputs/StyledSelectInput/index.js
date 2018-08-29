@@ -5,7 +5,7 @@ import PureSelectInput from 'components/Form/PureInputs/PureSelectInput';
 import Display from 'components/Form/Display';
 import StyledDropDownList from 'components/Form/StyledInputs/StyledSelectInput/components/StyledDropdownList';
 import { type StyledSelectInputProps as Props, defaultStyledSelectInputProps } from './type';
-import { SelectWrapperStyle, InputStyle, ButtonStyle, ArrowDownStyle } from './style';
+import { SelectWrapperStyle, InputStyle, ClearButtonStyle, ArrowDownStyle } from './style';
 
 function SelectInput({
   items,
@@ -15,6 +15,7 @@ function SelectInput({
   itemToValue,
   hasError,
   width,
+  height,
   disabled,
   align,
   ...rest
@@ -33,12 +34,13 @@ function SelectInput({
             isOpen,
             forceHoverStyle && !selectedItem,
             width,
+            height,
             disabled
           )}
         >
           {align === 'right' &&
             (selectedItem ? (
-              <button type="button" onClick={clearSelection} className={ButtonStyle}>
+              <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
                 <Icon icon="CLEAR" />
               </button>
             ) : (
@@ -57,7 +59,7 @@ function SelectInput({
           />
           {align === 'left' &&
             (selectedItem ? (
-              <button type="button" onClick={clearSelection} className={ButtonStyle}>
+              <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
                 <Icon icon="CLEAR" />
               </button>
             ) : (

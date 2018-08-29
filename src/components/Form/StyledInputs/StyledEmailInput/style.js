@@ -7,9 +7,10 @@ export const StyledEmailInputWrapperStyle = (
   hasError: boolean,
   disabled: boolean,
   forceHoverStyle: boolean,
-  width: string
+  width: string,
+  height: string
 ) => css`
-  ${StyledInputWrapperStyle(isFocused, hasError, disabled, forceHoverStyle, width)};
+  ${StyledInputWrapperStyle(isFocused, hasError, disabled, forceHoverStyle, width, height)};
 `;
 
 export const StyledEmailInputStyle = css`

@@ -12,6 +12,7 @@ const StyledPasswordInput = ({
   disabled,
   forceHoverStyle,
   width,
+  height,
   pureInputOptions,
 }: Props) => {
   const mergedPureInputOptions = { ...defaultPurePasswordInputProps, ...pureInputOptions };
@@ -23,7 +24,8 @@ const StyledPasswordInput = ({
         hasError,
         disabled,
         forceHoverStyle,
-        width
+        width,
+        height
       )}
     >
       {disabled ? (
