@@ -1,5 +1,5 @@
 // @flow
 import React from 'react';
-import EnumInput from 'components/Form/StyledInputs/StyledEnumInput';
+import EnumInput from '../EnumInput';
 
 export default (rest: Object) => <EnumInput {...rest} enumType="Incoterm" />;

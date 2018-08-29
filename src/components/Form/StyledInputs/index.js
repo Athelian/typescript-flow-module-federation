@@ -5,12 +5,10 @@ import StyledNumberInput from './StyledNumberInput';
 import StyledPriceInput from './StyledNumberInput/StyledPriceInput';
 import StyledPasswordInput from './StyledPasswordInput';
 import StyledTextInput from './StyledTextInput';
-import StyledEnumInput from './StyledEnumInput';
-import CurrencyInput from './StyledEnumInput/CurrencyInput';
-import IncotermInput from './StyledEnumInput/IncotermInput';
+import { StyledEnumInput, StyledCurrencyInput, StyledIncotermInput } from './StyledEnumInput';
 import StyledSelectInput from './StyledSelectInput';
 import StyledSearchSelectInput from './StyledSelectInput/StyledSearchSelectInput';
-import PartnerSelectInput from './StyledSelectInput/StyledSearchSelectInput/PartnerSelectInput';
+import StyledPartnerSelectInput from './StyledSelectInput/StyledSearchSelectInput/PartnerSelectInput';
 
 export {
   StyledDateInput,
@@ -20,9 +18,9 @@ export {
   StyledPasswordInput,
   StyledTextInput,
   StyledEnumInput,
-  CurrencyInput,
-  IncotermInput,
+  StyledCurrencyInput,
+  StyledIncotermInput,
   StyledSelectInput,
   StyledSearchSelectInput,
-  PartnerSelectInput,
+  StyledPartnerSelectInput,
 };

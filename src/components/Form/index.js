@@ -21,9 +21,9 @@ import {
   StyledEnumInput as EnumInput,
   StyledSearchSelectInput as SearchSelectInput,
   StyledSelectInput as SelectInput,
-  PartnerSelectInput,
-  CurrencyInput,
-  IncotermInput,
+  StyledPartnerSelectInput as PartnerSelectInput,
+  StyledCurrencyInput as CurrencyInput,
+  StyledIncotermInput as IncotermInput,
 } from './StyledInputs';
 import DashedPlusButton from './DashedPlusButton';
 
