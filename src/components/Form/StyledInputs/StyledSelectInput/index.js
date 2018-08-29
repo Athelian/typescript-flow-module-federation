@@ -3,15 +3,9 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import PureSelectInput from 'components/Form/PureInputs/PureSelectInput';
 import Display from 'components/Form/Display';
+import StyledDropDownList from 'components/Form/StyledInputs/StyledSelectInput/components/StyledDropdownList';
 import { type StyledSelectInputProps as Props, defaultStyledSelectInputProps } from './type';
-import {
-  SelectWrapperStyle,
-  InputStyle,
-  ButtonStyle,
-  OptionWrapperStyle,
-  OptionStyle,
-  ArrowDownStyle,
-} from './style';
+import { SelectWrapperStyle, InputStyle, ButtonStyle, ArrowDownStyle } from './style';
 
 function SelectInput({
   items,
@@ -22,10 +16,11 @@ function SelectInput({
   hasError,
   width,
   disabled,
+  align,
   ...rest
 }: Props) {
   return disabled ? (
-    <Display align={rest.align}> {rest.value}</Display>
+    <Display align={align}> {rest.value}</Display>
   ) : (
     <PureSelectInput
       items={items}
@@ -41,6 +36,16 @@ function SelectInput({
             disabled
           )}
         >
+          {align === 'right' &&
+            (selectedItem ? (
+              <button type="button" onClick={clearSelection} className={ButtonStyle}>
+                <Icon icon="CLEAR" />
+              </button>
+            ) : (
+              <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+                <Icon icon="CHEVRON_DOWN" />
+              </button>
+            ))}
           <input
             readOnly
             spellCheck={false}
@@ -50,29 +55,25 @@ function SelectInput({
               value: itemToString(selectedItem),
             })}
           />
-          {selectedItem ? (
-            <button type="button" onClick={clearSelection} className={ButtonStyle}>
-              <Icon icon="CLEAR" />
-            </button>
-          ) : (
-            <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
-              <Icon icon="CHEVRON_DOWN" />
-            </button>
-          )}
+          {align === 'left' &&
+            (selectedItem ? (
+              <button type="button" onClick={clearSelection} className={ButtonStyle}>
+                <Icon icon="CLEAR" />
+              </button>
+            ) : (
+              <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+                <Icon icon="CHEVRON_DOWN" />
+              </button>
+            ))}
         </div>
       )}
-      renderOptions={({ highlightedIndex, selectedItem, getItemProps }) => (
-        <div className={OptionWrapperStyle}>
-          {items.map((item, index) => (
-            <div
-              key={itemToValue(item)}
-              className={OptionStyle(highlightedIndex === index, selectedItem === item)}
-              {...getItemProps({ item })}
-            >
-              {itemToString(item)}
-            </div>
-          ))}
-        </div>
+      renderOptions={optionProps => (
+        <StyledDropDownList
+          items={items}
+          itemToValue={itemToValue}
+          itemToString={itemToString}
+          {...optionProps}
+        />
       )}
       {...rest}
     />
