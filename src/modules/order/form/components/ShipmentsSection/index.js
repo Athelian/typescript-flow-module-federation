@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { WrapperStyle } from './style';
 
-function ShipmentSection() {
+function ShipmentsSection() {
   return <div className={WrapperStyle}>Shipment</div>;
 }
 
-export default ShipmentSection;
+export default ShipmentsSection;

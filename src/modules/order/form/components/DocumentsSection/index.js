@@ -11,7 +11,7 @@ type Props = {
   intl: intlShape,
 };
 
-function DocumentSection({ intl, initialValues }: Props) {
+function DocumentsSection({ intl, initialValues }: Props) {
   return (
     <Form initialValues={initialValues}>
       {({ values, setFieldValue }) => (
@@ -32,4 +32,4 @@ function DocumentSection({ intl, initialValues }: Props) {
   );
 }
 
-export default injectIntl(DocumentSection);
+export default injectIntl(DocumentsSection);

@@ -1,9 +1,11 @@
 // @flow
 import { css } from 'react-emotion';
+import { presets } from 'styles/common';
 
 export const WrapperStyle = css`
-  min-height: 500px;
-  background: #dadada;
+  ${presets.BOX};
+  width: 880px;
+  padding: 40px;
 `;
 
 export default WrapperStyle;
