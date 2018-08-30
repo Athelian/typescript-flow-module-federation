@@ -1,6 +1,8 @@
 // @flow
 import { Container } from 'unstated';
 import yupToFormErrors from 'utils/yupToFormErrors';
+import logger from 'utils/logger';
+import { isEquals } from 'utils/fp';
 
 type FormState = {
   errors: Object,
@@ -29,14 +31,18 @@ export default class FormContainer extends Container<FormState> {
   };
 
   onValidation = (formData: Object, ValidationSchema: any) => {
+    logger.warn('validation', formData);
+    const { errors } = this.state;
     ValidationSchema.validate(formData, { abortEarly: false })
       .then(() => {
-        this.setState({ errors: {} });
+        if (Object.keys(errors).length) this.setState({ errors: {} });
       })
       .catch(yupErrors => {
-        this.setState({
-          errors: yupToFormErrors(yupErrors),
-        });
+        const newErrors = yupToFormErrors(yupErrors);
+        if (!isEquals(newErrors, errors))
+          this.setState({
+            errors: newErrors,
+          });
       });
   };
 }

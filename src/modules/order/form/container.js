@@ -1,17 +1,17 @@
 // @flow
 import { Container } from 'unstated';
-// import * as Yup from 'yup';
+import * as Yup from 'yup';
 
 type FormState = {
   orderItems: Array<any>,
   files: Array<any>,
 };
 
-// const OrderSchema = Yup.object().shape({
-//   poNo: Yup.string().required(),
-//   currency: Yup.string().required(),
-//   exporter: Yup.string().required(),
-// });
+const OrderSchema = Yup.object().shape({
+  poNo: Yup.string().required(),
+  currency: Yup.string().required(),
+  exporter: Yup.string().required(),
+});
 
 export default class OrderFormContainer extends Container<FormState> {
   state = {
@@ -24,4 +24,6 @@ export default class OrderFormContainer extends Container<FormState> {
       [name]: value,
     });
   };
+
+  validationRules = () => OrderSchema;
 }

@@ -87,7 +87,7 @@ const CacheFieldItem = withCache(FieldItem, ['isActive', 'error', 'value']);
 const OrderSection = ({ isNew, initialValues }: Props) => (
   <div className={OrderSectionWrapperStyle}>
     <Subscribe to={[OrderFormContainer]}>
-      {({ state: values, setFieldValue }) => {
+      {({ state: values, setFieldValue, validationRules }) => {
         const totalOrderedQuantity = values.orderItems ? values.orderItems.length : 0;
         const totalBatches = values.orderItems
           ? values.orderItems.reduce((total, item) => total + item.batchItems.length, 0)
@@ -109,6 +109,10 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                             name="poNo"
                             initValue={values.poNo}
                             onFinish={value => setFieldValue('poNo', value)}
+                            validationOnChange
+                            onValidate={newValue =>
+                              formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                            }
                             {...formHelper}
                           >
                             {({ value, onChange, ...inputHandlers }) => (
