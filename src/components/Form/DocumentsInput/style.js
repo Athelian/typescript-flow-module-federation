@@ -11,21 +11,18 @@ export const DocumentListStyle = css`
 
 export const AddDocumentStyle = css`
   ${presets.BUTTON};
-  ${layout.LAYOUT};
-  ${layout.CENTER_CENTER};
   ${borderRadiuses.MAIN};
+  font-size: 30px;
+  color: rgba(0, 0, 0, 0.2);
+  border: 5px dashed rgba(0, 0, 0, 0.2);
+  background: none;
   width: 140px;
   height: 160px;
-  border: 5px dashed ${colors.GRAY_LIGHT};
-  color: ${colors.GRAY_LIGHT}
-  font-size: 40px;
-  &:hover {
+  &:hover,
+  :focus {
     color: ${colors.TEAL};
-    background-color: rgba(0, 0, 0, 0.05);
-    border-color: ${colors.GRAY};
-  }
-  &:focus {
     border-color: ${colors.TEAL};
+    background-color: rgba(0, 0, 0, 0.1);
   }
 `;
 

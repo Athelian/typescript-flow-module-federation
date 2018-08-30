@@ -10,8 +10,8 @@ import FormattedDate from 'components/FormattedDate';
 import Display from 'components/Display';
 import OrderSection from './components/OrderSection';
 import ItemsSection from './components/ItemsSection';
-import DocumentSection from './components/DocumentSection';
-import ShipmentSection from './components/ShipmentSection';
+import DocumentsSection from './components/DocumentsSection';
+import ShipmentsSection from './components/ShipmentsSection';
 import SectionHeader from './components/SectionHeader';
 import { OrderFormConsumer } from './provider';
 import {
@@ -100,11 +100,11 @@ export default function OrderForm({ order, onChange }: Props) {
       </div>
       <div className={SectionWrapperStyle} id="documentsSection">
         <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />
-        <DocumentSection initialValues={{ files: order.files }} />
+        <DocumentsSection initialValues={{ files: order.files }} />
       </div>
       <div className={SectionWrapperStyle} id="shipmentsSection">
         <SectionHeader icon="SHIPMENT" title={`SHIPMENTS (${20})`} />
-        <ShipmentSection />
+        <ShipmentsSection />
       </div>
     </div>
   );
