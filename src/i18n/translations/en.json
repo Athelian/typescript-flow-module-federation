@@ -124,6 +124,9 @@
 
   "components.FormattedName.name": "{firstName} {lastName}",
 
+  "components.QuantityChart.batchedQuantity": "BATCHED QTY",
+  "components.QuantityChart.shippedQuantity": "SHIPPED QTY",
+
   "containers.Notifications.title": "NOTIFICATIONS",
   "containers.Notifications.readAll": "MARK ALL AS READ",
   "containers.Notifications.noNotifications": "No notifications",

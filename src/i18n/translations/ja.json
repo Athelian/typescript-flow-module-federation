@@ -124,6 +124,9 @@
 
   "components.FormattedName.name": "{lastName} {firstName}",
 
+  "components.QuantityChart.batchedQuantity": "バッチ数",
+  "components.QuantityChart.shippedQuantity": "船積数",
+
   "containers.Notifications.title": "お知らせ",
   "containers.Notifications.readAll": "全て既読にする",
   "containers.Notifications.noNotifications": "お知らせはありません。",

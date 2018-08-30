@@ -2,17 +2,17 @@
 import * as React from 'react';
 import FormattedNumber from 'components/FormattedNumber';
 
-import { NumberStyle } from './style';
+import BadgeStyle from './style';
 
 type Props = {
   value: number,
   color: string,
 };
 
-export default function Number({ value = 0, color }: Props) {
+export default function Badge({ value, color }: Props) {
   return (
-    <span className={NumberStyle(color)}>
+    <div className={BadgeStyle(color)}>
       <FormattedNumber value={value} />
-    </span>
+    </div>
   );
 }

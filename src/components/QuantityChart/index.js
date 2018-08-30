@@ -1,30 +1,31 @@
 // @flow
 
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
-
 import Display from 'components/Display';
-import { colors } from 'styles/common';
+
 import {
-  iconStyle,
-  barStyle,
-  progressBarStyle,
-  centerTopNumberStyle,
-  centerBottomNumberStyle,
-  numberLineStyle,
-  batchedBadgeStyle,
-  shippedBadgeStyle,
-} from 'components/QuantityChart/style';
-import Number from 'components/QuantityChart/Number';
-import Badge from 'components/QuantityChart/Badge';
+  IconStyle,
+  BarStyle,
+  ProgressBarStyle,
+  NumberLineStyle,
+  CenterTopNumberStyle,
+  CenterBottomNumberStyle,
+  BatchedBadgeStyle,
+  ShippedBadgeStyle,
+} from './style';
+import Number from './Number';
+import Badge from './Badge';
+import messages from './messages';
 
 type Props = {
   orderedQuantity: number,
   batchedQuantity: number,
   shippedQuantity: number,
   hasLabel: boolean,
-  numBatched: number,
-  numShipped: number,
+  batched: number,
+  shipped: number,
 };
 
 export default function QuantityChart({
@@ -32,63 +33,76 @@ export default function QuantityChart({
   batchedQuantity,
   shippedQuantity,
   hasLabel,
-  numBatched,
-  numShipped,
+  batched,
+  shipped,
 }: Props) {
+  const batchedQTYTitle = <FormattedMessage {...messages.batchedQuantity} />;
+  const shippedQTYTitle = <FormattedMessage {...messages.shippedQuantity} />;
+
   return (
     <div>
       <div>
         {hasLabel ? (
-          <Display ellipsis title="BATCHED QTY">
-            <Number color={colors.BATCH} value={batchedQuantity} />
-            <Number color={colors.GRAY} value={orderedQuantity - batchedQuantity} />
+          <Display ellipsis title={batchedQTYTitle}>
+            <Number color="BATCH" value={batchedQuantity} />
+            <Number color="GRAY" value={orderedQuantity - batchedQuantity} />
           </Display>
         ) : (
-          <div className={numberLineStyle()}>
-            <span className={centerTopNumberStyle()}>
-              <Number color={colors.BATCH} value={batchedQuantity} />
-              <Number color={colors.GRAY} value={orderedQuantity - batchedQuantity} />
+          <div className={NumberLineStyle}>
+            <span className={CenterTopNumberStyle}>
+              <Number color="BATCH" value={batchedQuantity} />
+              <Number color="GRAY" value={orderedQuantity - batchedQuantity} />
             </span>
           </div>
         )}
 
-        <div className={barStyle()}>
-          <div className={progressBarStyle(colors.BATCH, batchedQuantity / orderedQuantity)}>
-            <div className={iconStyle()}>
+        <div className={BarStyle}>
+          <div
+            className={ProgressBarStyle(
+              'BATCH',
+              orderedQuantity === 0 ? 0 : batchedQuantity / orderedQuantity
+            )}
+          >
+            <div className={IconStyle('BATCH')}>
               <Icon icon="BATCH" />
             </div>
 
-            {numBatched && (
-              <div className={batchedBadgeStyle()}>
-                <Badge value={numBatched} color={colors.BATCH} />
+            {batched && (
+              <div className={BatchedBadgeStyle}>
+                <Badge value={batched} color="BATCH" />
               </div>
             )}
           </div>
         </div>
       </div>
       <div>
-        <div className={barStyle()}>
-          <div className={progressBarStyle(colors.SHIPMENT, shippedQuantity / orderedQuantity)}>
-            <div className={iconStyle()}>
+        <div className={BarStyle}>
+          <div
+            className={ProgressBarStyle(
+              'SHIPMENT',
+              orderedQuantity === 0 ? 0 : shippedQuantity / orderedQuantity
+            )}
+          >
+            <div className={IconStyle('SHIPMENT')}>
               <Icon icon="SHIPMENT" />
             </div>
 
-            {numBatched && (
-              <div className={shippedBadgeStyle()}>
-                <Badge value={numShipped} color={colors.SHIPMENT} />
+            {shipped && (
+              <div className={ShippedBadgeStyle}>
+                <Badge value={shipped} color="SHIPMENT" />
               </div>
             )}
           </div>
           {hasLabel ? (
-            <Display title="SHIPPED QTY">
-              <Number color={colors.SHIPMENT} value={shippedQuantity} />
-              <Number color={colors.GRAY} value={orderedQuantity - shippedQuantity} />
+            <Display ellipsis title={shippedQTYTitle}>
+              <Number color="SHIPMENT" value={shippedQuantity} />
+              <Number color="GRAY" value={orderedQuantity - shippedQuantity} />
             </Display>
           ) : (
-            <div className={numberLineStyle()}>
-              <span className={centerBottomNumberStyle()}>
-                <Number color={colors.SHIPMENT} value={shippedQuantity} />
-                <Number color={colors.GRAY} value={orderedQuantity - shippedQuantity} />
+            <div className={NumberLineStyle}>
+              <span className={CenterBottomNumberStyle}>
+                <Number color="SHIPMENT" value={shippedQuantity} />
+                <Number color="GRAY" value={orderedQuantity - shippedQuantity} />
               </span>
             </div>
           )}
