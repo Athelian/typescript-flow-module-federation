@@ -8,6 +8,7 @@ import { PartnerSelectInput } from 'components/Form';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';
+import Icon from 'components/Icon';
 import messages from 'modules/order/messages';
 import logger from 'utils/logger';
 import ExpandButtons from './components/ExpandButtons';
@@ -18,6 +19,11 @@ import {
   ItemStyle,
   BatchAreaStyle,
   BatchAreaHeaderStyle,
+  TitleWrapperStyle,
+  TitleStyle,
+  IconStyle,
+  BatchGridStyle,
+  BatchStyle,
   EmptyMessageStyle,
 } from './style';
 import SelectProducts from '../SelectProducts';
@@ -92,12 +98,16 @@ function ItemSection({ isReady, intl }: Props) {
                     </InputGroup>
                   )}
                 </FilterInput>
+
                 <SearchInput
                   value={filtersAndSort.query}
                   name="search"
                   onClear={() => onChangeFilter({ query: '' })}
                   onChange={newQuery => onChangeFilter({ query: newQuery })}
                 />
+
+                <ExpandButtons expanded={allItemsExpanded} onClick={toggleExpand} />
+
                 <BooleanValue>
                   {({ value: opened, toggle }) => (
                     <React.Fragment>
@@ -122,8 +132,6 @@ function ItemSection({ isReady, intl }: Props) {
                     </React.Fragment>
                   )}
                 </BooleanValue>
-
-                <ExpandButtons expanded={allItemsExpanded} onClick={toggleExpand} />
               </SectionNavBar>
               <div className={ItemsSectionBodyStyle}>
                 {/* FIXME: items.length > 0 */}
@@ -137,15 +145,21 @@ function ItemSection({ isReady, intl }: Props) {
                           // TODO: add this condition item.batchItems.length > 0 && (
                           <div className={BatchAreaStyle}>
                             <div className={BatchAreaHeaderStyle}>
-                              {intl.formatMessage(messages.batch)}
+                              <div className={TitleWrapperStyle}>
+                                <div className={IconStyle}>
+                                  <Icon icon="BATCH" />
+                                </div>
+                                <div className={TitleStyle}>BATCHES (4)</div>
+                              </div>
                               <NewButton
                                 title={intl.formatMessage(messages.newItems)}
                                 disabled={!isReady}
                                 onClick={toggleExpand}
                               />
                             </div>
-                            <div className={ItemGridStyle}>
-                              <div className={ItemStyle}>
+
+                            <div className={BatchGridStyle}>
+                              <div className={BatchStyle}>
                                 <OrderBatchCard batch={{ id: index }} />
                               </div>
                             </div>

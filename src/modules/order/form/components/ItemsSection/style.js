@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, borderRadiuses, colors, scrollbars, fontSizes } from 'styles/common';
+import { presets, borderRadiuses, colors, scrollbars, fontSizes, layout } from 'styles/common';
 
 export const ItemsSectionWrapperStyle = css`
   position: relative;
@@ -15,7 +15,7 @@ export const ItemsSectionBodyStyle = css`
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  max-height: 80vh;
+  max-height: 70vh;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
@@ -24,36 +24,65 @@ export const ItemsSectionBodyStyle = css`
 export const ItemGridStyle = css`
   display: flex;
   flex-wrap: wrap;
+  padding: 15px 0 15px 10px;
 `;
 
 export const ItemStyle = css`
   display: flex;
-  margin: 10px;
+  margin: 15px 10px;
 `;
 
 export const BatchAreaStyle = css`
   flex: 1;
   min-width: 640px;
   min-height: min-content;
-  height: 300px;
-  margin-left: 20px;
+  margin-left: 10px;
   background: ${colors.GRAY_LIGHT};
   ${borderRadiuses.MAIN};
-  padding: 0 10px;
   display: flex;
   flex-flow: column wrap;
 `;
 
 export const BatchAreaHeaderStyle = css`
+  grid-template-columns: 1fr;
+  ${layout.GRID_HORIZONTAL};
+  grid-template-rows: 40px;
+  grid-gap: 40px;
+  align-items: center;
+  padding: 0 10px 0 0;
+`;
+
+export const TitleWrapperStyle = css`
+  display: flex;
+  align-items: center;
   ${fontSizes.LARGE};
   color: ${colors.GRAY_DARK};
+`;
+
+export const TitleStyle = css`
+  ${presets.ELLIPSIS};
   font-weight: bold;
   letter-spacing: 2px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
+`;
+
+export const IconStyle = css`
+  width: 40px;
   height: 40px;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+export const BatchGridStyle = css`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px 0 0 0;
+`;
+
+export const BatchStyle = css`
+  display: flex;
+  margin: 15px 10px;
 `;
 
 export const EmptyMessageStyle = css`
