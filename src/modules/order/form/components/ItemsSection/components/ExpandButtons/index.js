@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Icon from 'components/Icon';
-import { ExpandButtonsWrapperStyle, ExpandButtonStyle, IconStyle } from './style';
+import { ExpandButtonsWrapperStyle, IconStyle } from './style';
 
 type Props = {
   expanded: boolean,
@@ -9,14 +9,12 @@ type Props = {
 };
 
 const ExpandButtons = ({ expanded, onClick }: Props) => (
-  <div className={ExpandButtonsWrapperStyle}>
-    <div className={ExpandButtonStyle} onClick={onClick} role="presentation">
-      <div className={IconStyle}>
-        <Icon icon="BATCH" />
-      </div>
-      <div className={IconStyle}>
-        <Icon icon={expanded ? 'COMPRESS' : 'EXPAND'} />
-      </div>
+  <div className={ExpandButtonsWrapperStyle} onClick={onClick} role="presentation">
+    <div className={IconStyle}>
+      <Icon icon="BATCH" />
+    </div>
+    <div className={IconStyle}>
+      <Icon icon={expanded ? 'COMPRESS' : 'EXPAND'} />
     </div>
   </div>
 );

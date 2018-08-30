@@ -54,8 +54,11 @@ export const DisabledButtonStyle = css`
   color: ${colors.GRAY_DARK};
   cursor: 'default';
   & > span {
+    white-space: nowrap;
     ${fontSizes.SMALL};
     letter-spacing: 2px;
-    margin: 0 5px 0 0;
+  }
+  & > svg {
+    margin: 0 0 0 5px;
   }
 `;
