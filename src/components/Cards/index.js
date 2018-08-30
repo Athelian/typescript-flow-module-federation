@@ -1,5 +1,6 @@
 import BaseCard, { CardAction } from './BaseCard';
 import BatchCard from './BatchCard';
+import OrderBatchCard from './OrderBatchCard';
 import OrderCard from './OrderCard';
 import OrderItemCard from './OrderItemCard';
 import PartnerCard from './PartnerCard';
@@ -14,6 +15,7 @@ export default BaseCard;
 export {
   CardAction,
   BatchCard,
+  OrderBatchCard,
   OrderCard,
   OrderItemCard,
   PartnerCard,

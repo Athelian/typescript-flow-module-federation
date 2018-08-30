@@ -15,7 +15,6 @@ export const OrderItemCardWrapperStyle = css`
   align-items: center;
   width: 195px;
   height: 200px;
-  ${fontSizes.MAIN};
 `;
 
 export const ProductWrapperStyle = css`

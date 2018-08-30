@@ -5,7 +5,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import InputGroup from 'components/Form/InputGroup';
 import { SectionNavBar, FilterInput, SortInput, SearchInput } from 'components/NavBar';
 import { PartnerSelectInput } from 'components/Form';
-import { OrderItemCard } from 'components/Cards';
+import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';
 import messages from 'modules/order/messages';
@@ -105,7 +105,8 @@ function ItemSection({ isReady, intl }: Props) {
             </BooleanValue>
           </SectionNavBar>
           <div className={ItemsSectionBodyStyle}>
-            <OrderItemCard item={{ id: '1', quantity: 100 }} />
+            <OrderItemCard item={{ id: '1' }} />
+            <OrderBatchCard batch={{ id: '1' }} />
             <div className={EmptyMessageStyle}>No Items found / Please choose Exporter first</div>
           </div>
         </div>

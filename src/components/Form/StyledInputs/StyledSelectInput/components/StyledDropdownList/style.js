@@ -38,10 +38,11 @@ export const OptionStyle = (onHover: boolean, selected: boolean) => css`
   background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
   ${presets.BUTTON};
   justify-content: flex-start;
-  padding: 10px 5px;
+  padding: 5px;
   color: ${selected ? colors.TEAL : colors.BLACK};
   ${fontSizes.MAIN};
   font-weight: bold;
   flex: 1;
   ${presets.ELLIPSIS};
+  flex-shrink: 0;
 `;

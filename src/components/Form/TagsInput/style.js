@@ -24,13 +24,15 @@ export const WrapperStyle = (focused: boolean, disabled: boolean, readonly: bool
 `;
 
 export const SelectionWrapperStyle = css`
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
   align-items: center;
   width: 100%;
   & > *:not(:last-child) {
     margin: 6px 10px 6px 0;
-  }
+  } */
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 10px;
 `;
 
 export const RemoveStyle = css`

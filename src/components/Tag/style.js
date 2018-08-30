@@ -34,7 +34,7 @@ export const TagStyle = (color: string) => css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   background-color: ${color};
-  padding: 3px 5px;
+  padding: 0 5px;
   font-weight: bold;
   color: ${computeTextColor(color)};
   height: min-content;
