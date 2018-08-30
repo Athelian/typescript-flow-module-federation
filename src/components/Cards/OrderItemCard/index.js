@@ -5,7 +5,7 @@ import logger from 'utils/logger';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import { Label, Display, StyledNumberInput, StyledPriceInput } from 'components/Form';
+import { Label, Display, NumberInput, PriceInput } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderItemCardWrapperStyle,
@@ -94,7 +94,7 @@ const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
         <div className={BodyWrapperStyle}>
           <div className={QuantityWrapperStyle}>
             <Label required>QTY</Label>
-            <StyledNumberInput
+            <NumberInput
               isFocused={dummyQuantity.isActive}
               forceHoverStyle={isNew}
               hasError={dummyQuantity.hasError}
@@ -111,7 +111,7 @@ const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
               <Icon icon="SYNC" />
             </button>
             <Label required>PRICE</Label>
-            <StyledPriceInput
+            <PriceInput
               currency={currency}
               isFocused={dummyPrice.isActive}
               forceHoverStyle={isNew}

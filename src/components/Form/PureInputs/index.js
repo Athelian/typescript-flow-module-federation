@@ -4,6 +4,7 @@ import PureEmailInput from './PureEmailInput';
 import PureNumberInput from './PureNumberInput';
 import PurePasswordInput from './PurePasswordInput';
 import PureTextInput from './PureTextInput';
+import PureTextAreaInput from './PureTextAreaInput';
 import PureSelectInput from './PureSelectInput';
 
 export {
@@ -12,5 +13,6 @@ export {
   PureNumberInput,
   PurePasswordInput,
   PureTextInput,
+  PureTextAreaInput,
   PureSelectInput,
 };

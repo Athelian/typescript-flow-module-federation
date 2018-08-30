@@ -4,7 +4,7 @@ import { BooleanValue, ObjectValue } from 'react-values';
 import { injectIntl, intlShape } from 'react-intl';
 import InputGroup from 'components/Form/InputGroup';
 import { SectionNavBar, FilterInput, SortInput, SearchInput } from 'components/NavBar';
-import PartnerSelectInput from 'components/Form/PartnerSelectInput';
+import { PartnerSelectInput } from 'components/Form';
 import { OrderItemCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';

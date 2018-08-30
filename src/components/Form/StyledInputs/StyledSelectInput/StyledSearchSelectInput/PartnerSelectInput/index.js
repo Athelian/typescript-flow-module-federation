@@ -2,9 +2,8 @@
 import * as React from 'react';
 import matchSorter from 'match-sorter';
 import PartnerListProvider from 'providers/PartnerList';
-import Label from 'components/Label';
-import SearchSelectInput from 'components/Form/StyledInputs/StyledSearchSelectInput';
 import { StringValue } from 'react-values';
+import SearchSelectInput from '../index';
 
 type Props = {
   value: any,
@@ -29,21 +28,19 @@ function PartnerSelectInput({ value, onChange, types = defaultPartnerTypes, ...r
       {({ data, loading }) => (
         <StringValue defaultValue="">
           {({ value: query, set, clear }) => (
-            <Label htmlFor={value} {...rest}>
-              <SearchSelectInput
-                value={value}
-                items={filterItems(query, data)}
-                onChange={item => {
-                  if (!item) clear();
-                  onChange(item);
-                }}
-                onSearch={set}
-                loading={loading}
-                itemToString={item => (item ? item.name : '')}
-                itemToValue={item => (item ? item.id : null)}
-                {...rest}
-              />
-            </Label>
+            <SearchSelectInput
+              value={value}
+              items={filterItems(query, data)}
+              onChange={item => {
+                if (!item) clear();
+                onChange(item);
+              }}
+              onSearch={set}
+              loading={loading}
+              itemToString={item => (item ? item.name : '')}
+              itemToValue={item => (item ? item.id : null)}
+              {...rest}
+            />
           )}
         </StringValue>
       )}

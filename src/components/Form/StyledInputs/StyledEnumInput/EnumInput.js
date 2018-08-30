@@ -1,10 +1,9 @@
 // @flow
 import * as React from 'react';
 import EnumProvider from 'providers/enum';
-import SearchSelectInput from 'components/Form/StyledInputs/StyledSearchSelectInput';
 import matchSorter from 'match-sorter';
-import Label from 'components/Label';
 import { StringValue } from 'react-values';
+import SearchSelectInput from '../StyledSelectInput/StyledSearchSelectInput';
 import type { EnumInputProps as Props } from './type.js.flow';
 
 function EnumInput({ value, onChange, enumType, ...rest }: Props) {
@@ -22,21 +21,19 @@ function EnumInput({ value, onChange, enumType, ...rest }: Props) {
         return (
           <StringValue defaultValue="">
             {({ value: query, set, clear }) => (
-              <Label htmlFor={value} {...rest}>
-                <SearchSelectInput
-                  value={value}
-                  items={filterItems(query, data)}
-                  onChange={item => {
-                    if (!item) clear();
-                    if (onChange) onChange(item);
-                  }}
-                  onSearch={set}
-                  loading={loading}
-                  itemToString={item => (item ? item.name : '')}
-                  itemToValue={item => (item ? item.id : null)}
-                  {...rest}
-                />
-              </Label>
+              <SearchSelectInput
+                value={value}
+                items={filterItems(query, data)}
+                onChange={item => {
+                  if (!item) clear();
+                  if (onChange) onChange(item);
+                }}
+                onSearch={set}
+                loading={loading}
+                itemToString={item => (item ? item.name : '')}
+                itemToValue={item => (item ? item.id : null)}
+                {...rest}
+              />
             )}
           </StringValue>
         );
