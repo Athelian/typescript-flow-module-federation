@@ -12,7 +12,7 @@ export default function withFieldInput(
   WrappedComponent: React.ComponentType<any>,
   runValidation: boolean = true
 ) {
-  return class FieldInputWrappedComponent extends React.Component<Props> {
+  return class FieldInputWrappedComponent extends React.PureComponent<Props> {
     onChange = (event: SyntheticInputEvent<*>): void => {
       if (event.persist) {
         event.persist();
@@ -44,12 +44,13 @@ export default function withFieldInput(
     };
 
     render() {
+      const { setFieldTouched, setActiveField, setFieldValue, ...rest } = this.props;
       return (
         <WrappedComponent
           onBlur={this.onBlur}
           onFocus={this.onFocus}
           onChange={this.onChange}
-          {...this.props}
+          {...rest}
         />
       );
     }

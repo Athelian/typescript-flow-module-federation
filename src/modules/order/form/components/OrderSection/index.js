@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import OrderFormContainer from 'modules/order/form/container';
-import FormContainer from 'modules/form/container';
+import { FormContainer, FormField } from 'modules/form';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import withFieldInput from 'hoc/withFieldInput';
@@ -97,11 +97,7 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
             <div className={MainFieldsWrapperStyle}>
               <InputGroup fieldGap={20}>
                 <Subscribe to={[FormContainer]}>
-                  {({
-                    state: { touched, errors, activeField },
-                    setActiveField,
-                    setFieldTouched,
-                  }) => (
+                  {({ state: { touched, errors, activeField }, ...formHelper }) => (
                     <React.Fragment>
                       <CacheFieldItem
                         error={touched.poNo && errors.poNo}
@@ -109,18 +105,28 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                         isActive={activeField === 'poNo'}
                         label={<FormattedMessage {...messages.PO} />}
                         input={hasError => (
-                          <TextInput
+                          <FormField
                             name="poNo"
-                            value={values.poNo}
-                            isNew={isNew}
-                            isActive={activeField === 'poNo'}
-                            error={touched.poNo && errors.poNo}
-                            hasError={hasError}
-                            width="200px"
-                            setActiveField={setActiveField}
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                          />
+                            initValue={values.poNo}
+                            onFinish={value => setFieldValue('poNo', value)}
+                            {...formHelper}
+                          >
+                            {({ value, onChange, ...inputHandlers }) => (
+                              <StyledTextInput
+                                forceHoverStyle={isNew}
+                                isFocused={activeField === 'poNo'}
+                                error={touched.poNo && errors.poNo}
+                                hasError={hasError}
+                                width="200px"
+                                pureInputOptions={{
+                                  name: 'PoNo',
+                                  value,
+                                  onChange: evt => onChange(evt.target.value),
+                                  ...inputHandlers,
+                                }}
+                              />
+                            )}
+                          </FormField>
                         )}
                         labelOptions={{
                           required: true,
@@ -150,9 +156,8 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                             error={errors.piNo}
                             hasError={hasError}
                             width="200px"
-                            setActiveField={setActiveField}
+                            {...formHelper}
                             setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
                           />
                         )}
                         labelOptions={{
@@ -183,9 +188,8 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                             error={errors.issueAt}
                             hasError={hasError}
                             width="200px"
-                            setActiveField={setActiveField}
                             setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
+                            {...formHelper}
                           />
                         )}
                         labelOptions={{
@@ -216,9 +220,8 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                             hasError={hasError}
                             onChange={value => setFieldValue('currency', value)}
                             width="200px"
-                            setActiveField={setActiveField}
                             setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
+                            {...formHelper}
                           />
                         )}
                       />
@@ -305,15 +308,17 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                           onRequestClose={toggle}
                           options={{ width: '1030px' }}
                         >
-                          <SelectExporters
-                            selected={values.exporter}
-                            onSelect={({ group, name }) =>
-                              setFieldValue('exporter', {
-                                id: group.id,
-                                name: name || group.name,
-                              })
-                            }
-                          />
+                          {opened && (
+                            <SelectExporters
+                              selected={values.exporter}
+                              onSelect={({ group, name }) =>
+                                setFieldValue('exporter', {
+                                  id: group.id,
+                                  name: name || group.name,
+                                })
+                              }
+                            />
+                          )}
                         </SlideView>
                       </React.Fragment>
                     )}

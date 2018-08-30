@@ -20,7 +20,15 @@ if (!isAppInProduction) {
   // $FlowFixMe: not have flow typed yet
   const { whyDidYouUpdate } = require('why-did-you-update');
   whyDidYouUpdate(React, {
-    exclude: [/^Consumer/, /^Subscribe/, /^FormattedMessage/, /^InjectIntl/, /^DebounceInput/],
+    exclude: [
+      /^Consumer/,
+      /^Subscribe/,
+      /^FormattedMessage/,
+      /^InjectIntl/,
+      /^DebounceInput/,
+      /^Query/,
+      /^Mutation/,
+    ],
   });
 }
 
@@ -37,7 +45,7 @@ if (!container) {
 
 const renderApp = (Component, renderFn) => {
   renderFn(
-    <React.Fragment>
+    <div>
       {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
       <ApolloProvider client={apolloClient}>
         <AuthenticationProvider>
@@ -51,7 +59,7 @@ const renderApp = (Component, renderFn) => {
           </LanguageProvider>
         </AuthenticationProvider>
       </ApolloProvider>
-    </React.Fragment>,
+    </div>,
     container
   );
 };
