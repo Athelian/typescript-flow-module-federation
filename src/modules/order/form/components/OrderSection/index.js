@@ -13,15 +13,15 @@ import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import {
   FieldItem,
-  StyledTextInput,
-  StyledDateInput,
+  TextInput as StyledTextInput,
+  DateInput as StyledDateInput,
   DashedPlusButton,
   Field,
   TagsInput,
   InputGroup,
+  CurrencyInput,
+  IncotermInput,
 } from 'components/Form';
-import CurrencyInput from 'components/Form/CurrencyInput';
-import IncotermInput from 'components/Form/IncotermInput';
 import Divider from 'components/Divider';
 import BaseCard from 'components/Cards';
 import Label from 'components/Label';
