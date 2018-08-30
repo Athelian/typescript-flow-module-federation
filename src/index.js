@@ -14,8 +14,17 @@ import { isAppInProduction } from './utils/env';
 import errorReport from './errorReport';
 import './styles/reset.css';
 
+if (!isAppInProduction) {
+  /* eslint-disable import/no-extraneous-dependencies */
+  /* eslint-disable global-require */
+  // $FlowFixMe: not have flow typed yet
+  const { whyDidYouUpdate } = require('why-did-you-update');
+  whyDidYouUpdate(React, { exclude: [/^Connect/] });
+}
+
 loadFonts();
 errorReport();
+
 UNSTATED.isEnabled = !isAppInProduction;
 
 const container = document.querySelector('#root');
