@@ -22,16 +22,18 @@ export const BarStyle = css`
 `;
 
 export const ProgressBarStyle = (color: string, percent: number) => {
+  // I want to color with alpha=0.5 ,so #000000 will be #00000080.
+  const backgroundColor = `${colors[color]}80`;
   if (percent === 1) {
     return css`
-      background-color: ${colors[color]}80;
+      background-color: ${backgroundColor};
       ${borderRadiuses.BUTTON};
       height: inherit;
       width: ${percent * 100}%;
     `;
   }
   return css`
-    background-color: ${colors[color]}80;
+    background-color: ${backgroundColor};
     border-top-left-radius: 999px;
     border-bottom-left-radius: 999px;
     height: inherit;
