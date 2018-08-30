@@ -3,10 +3,10 @@ import { type PureInputProps, defaultPureInputProps } from 'components/Form/Pure
 
 type OptionalProps = PureInputProps & {};
 
-export type PureTextInputProps = OptionalProps & {};
+export type PureTextAreaInputProps = OptionalProps & {};
 
-export const defaultPureTextInputProps = {
+export const defaultPureTextAreaInputProps = {
   ...defaultPureInputProps,
 };
 
-export default defaultPureTextInputProps;
+export default defaultPureTextAreaInputProps;
