@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
 import { Router } from '@reach/router';
-import OrderListContainer from './index.list';
-import OrderFormContainer from './index.form';
+import OrderListModule from './index.list';
+import OrderFormModule from './index.form';
 
 const OrderApp = () => (
   <Router>
-    <OrderListContainer path="/" />
-    <OrderFormContainer path=":orderId" />
+    <OrderListModule path="/" />
+    <OrderFormModule path=":orderId" />
   </Router>
 );
 

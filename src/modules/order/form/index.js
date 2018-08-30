@@ -25,7 +25,6 @@ import {
 
 type Props = {
   order: Object,
-  onChange: ({ observeValues: Object, onValidate: Object => Promise<Object> }) => mixed,
 };
 
 const orderSectionFields = pickByProps([
@@ -45,7 +44,7 @@ const orderSectionFields = pickByProps([
 const hasSelectExporter = (order: Object) =>
   (order.exporter && order.exporter.id) || order.exporterId;
 
-export default function OrderForm({ order, onChange }: Props) {
+export default function OrderForm({ order }: Props) {
   const isNew = Object.keys(order).length === 0;
   logger.warn('order', order);
 
@@ -81,7 +80,7 @@ export default function OrderForm({ order, onChange }: Props) {
             </React.Fragment>
           )}
         </SectionHeader>
-        <OrderSection isNew={isNew} onChange={onChange} initialValues={{ ...orderValues }} />
+        <OrderSection isNew={isNew} initialValues={{ ...orderValues }} />
       </div>
       <div className={SectionWrapperStyle} id="itemsSection">
         <OrderFormConsumer>
