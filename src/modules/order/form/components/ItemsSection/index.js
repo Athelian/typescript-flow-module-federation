@@ -152,7 +152,7 @@ function ItemSection({ isReady, intl }: Props) {
                                 <div className={TitleStyle}>BATCHES (4)</div>
                               </div>
                               <NewButton
-                                title={intl.formatMessage(messages.newItems)}
+                                title="NEW BATCH"
                                 disabled={!isReady}
                                 onClick={toggleExpand}
                               />
