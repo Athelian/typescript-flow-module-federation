@@ -5,6 +5,7 @@ import StyledNumberInput from './StyledNumberInput';
 import StyledPriceInput from './StyledNumberInput/StyledPriceInput';
 import StyledPasswordInput from './StyledPasswordInput';
 import StyledTextInput from './StyledTextInput';
+import StyledTextAreaInput from './StyledTextAreaInput';
 import { StyledEnumInput, StyledCurrencyInput, StyledIncotermInput } from './StyledEnumInput';
 import StyledSelectInput from './StyledSelectInput';
 import StyledSearchSelectInput from './StyledSelectInput/StyledSearchSelectInput';
@@ -17,6 +18,7 @@ export {
   StyledPriceInput,
   StyledPasswordInput,
   StyledTextInput,
+  StyledTextAreaInput,
   StyledEnumInput,
   StyledCurrencyInput,
   StyledIncotermInput,
