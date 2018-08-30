@@ -37,7 +37,7 @@ export const BatchAreaStyle = css`
   min-width: 640px;
   min-height: min-content;
   margin-left: 10px;
-  background: ${colors.GRAY_LIGHT};
+  background: ${colors.GRAY_VERY_LIGHT};
   ${borderRadiuses.MAIN};
   display: flex;
   flex-flow: column wrap;
