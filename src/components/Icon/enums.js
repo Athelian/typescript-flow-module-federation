@@ -50,6 +50,8 @@ import MEMO from '@fortawesome/fontawesome-pro-solid/faAlignJustify';
 import DOWNLOAD from '@fortawesome/fontawesome-pro-solid/faDownload';
 import CIRCLE from '@fortawesome/fontawesome-pro-solid/faCircle';
 import SYNC from '@fortawesome/fontawesome-pro-solid/faSync';
+import EXPAND from '@fortawesome/fontawesome-pro-solid/faExpandAlt';
+import COMPRESS from '@fortawesome/fontawesome-pro-solid/faCompressAlt';
 
 // Shipment Timeline
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
@@ -121,6 +123,8 @@ export default {
   DOWNLOAD,
   CIRCLE,
   SYNC,
+  EXPAND,
+  COMPRESS,
 
   CARGO_READY,
   PORT,

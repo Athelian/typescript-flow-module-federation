@@ -718,5 +718,9 @@
   "modules.order.list.sort.po": "PO No",
   "modules.order.list.sort.exporter": "Exporter",
   "modules.order.list.sort.createdAt": "Created At",
-  "modules.order.list.sort.updatedAt": "Updated At"
+  "modules.order.list.sort.updatedAt": "Updated At",
+
+  "modules.order.form.batch": "BATCH",
+  "modules.order.form.noItems": "No Items found / Please choose Exporter first",
+  "modules.order.form.newItems": "NEW ITEMS"
 }
