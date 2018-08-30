@@ -332,4 +332,13 @@ export default defineMessages({
   updatedAtSort: {
     id: 'modules.order.list.sort.updatedAt',
   },
+  batch: {
+    id: 'modules.order.form.batch',
+  },
+  noItems: {
+    id: 'modules.order.form.noItems',
+  },
+  newItems: {
+    id: 'modules.order.form.newItems',
+  },
 });

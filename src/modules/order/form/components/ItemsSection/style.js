@@ -8,7 +8,6 @@ export const ItemsSectionWrapperStyle = css`
   width: 880px;
   padding: 50px 0 0 0;
   height: min-content;
-  max-height: 80vh;
 `;
 
 export const ItemsSectionBodyStyle = css`
@@ -16,10 +15,45 @@ export const ItemsSectionBodyStyle = css`
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  height: 100%;
+  max-height: 80vh;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
+`;
+
+export const ItemGridStyle = css`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+export const ItemStyle = css`
+  display: flex;
+  margin: 10px;
+`;
+
+export const BatchAreaStyle = css`
+  flex: 1;
+  min-width: 640px;
+  min-height: min-content;
+  height: 300px;
+  margin-left: 20px;
+  background: ${colors.GRAY_LIGHT};
+  ${borderRadiuses.MAIN};
+  padding: 0 10px;
+  display: flex;
+  flex-flow: column wrap;
+`;
+
+export const BatchAreaHeaderStyle = css`
+  ${fontSizes.LARGE};
+  color: ${colors.GRAY_DARK};
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  height: 40px;
+  align-items: center;
 `;
 
 export const EmptyMessageStyle = css`
