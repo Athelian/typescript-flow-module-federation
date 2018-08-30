@@ -126,15 +126,15 @@ function ItemSection({ isReady, intl }: Props) {
                 <ExpandButtons expanded={allItemsExpanded} onClick={toggleExpand} />
               </SectionNavBar>
               <div className={ItemsSectionBodyStyle}>
-                {/* items.length > 0 */}
+                {/* FIXME: items.length > 0 */}
                 {true ? (
                   <div className={ItemGridStyle}>
-                    {/* items.map */}
+                    {/* FIXME: items.map */}
                     {[...Array(10).keys()].map(index => (
                       <div className={ItemStyle}>
                         <OrderItemCard item={{ id: index, quantity: 100 }} />
                         {allItemsExpanded && (
-                          // item.batchItems.length > 0 && (
+                          // TODO: add this condition item.batchItems.length > 0 && (
                           <div className={BatchAreaStyle}>
                             <div className={BatchAreaHeaderStyle}>
                               {intl.formatMessage(messages.batch)}
