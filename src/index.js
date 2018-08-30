@@ -19,7 +19,9 @@ if (!isAppInProduction) {
   /* eslint-disable global-require */
   // $FlowFixMe: not have flow typed yet
   const { whyDidYouUpdate } = require('why-did-you-update');
-  whyDidYouUpdate(React, { exclude: [/^Connect/] });
+  whyDidYouUpdate(React, {
+    exclude: [/^Consumer/, /^Subscribe/, /^FormattedMessage/, /^InjectIntl/, /^DebounceInput/],
+  });
 }
 
 loadFonts();

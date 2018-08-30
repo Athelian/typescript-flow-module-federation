@@ -10,7 +10,7 @@ type State = {
   isHover: boolean,
 };
 
-export default class HoverWrapper extends React.Component<Props, State> {
+export default class HoverWrapper extends React.PureComponent<Props, State> {
   state = {
     isHover: false,
   };
