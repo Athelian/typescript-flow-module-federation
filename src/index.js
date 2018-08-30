@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
+import UNSTATED from 'unstated-debug';
 import FullStory from 'react-fullstory';
 import AuthenticationProvider from './modules/authentication';
 import LanguageProvider from './modules/language';
@@ -15,6 +16,7 @@ import './styles/reset.css';
 
 loadFonts();
 errorReport();
+UNSTATED.isEnabled = !isAppInProduction;
 
 const container = document.querySelector('#root');
 
