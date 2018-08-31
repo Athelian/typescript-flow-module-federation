@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Aug 27 2018 14:26:40 GMT+0900 (JST)
+# timestamp: Fri Aug 31 2018 18:00:43 GMT+0900 (GMT+09:00)
 
 type Batch implements Model & Owned & Package & Tagged {
   archived: Boolean!
@@ -676,7 +676,7 @@ type Group implements Model {
   country: String
   disabled: Boolean!
   dummy: Boolean!
-  partners(page: Int! = 1, perPage: Int! = 10): PartnerPagination!
+  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPagination!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -927,6 +927,12 @@ type Partner implements Model {
   deletedBy: User
 }
 
+input PartnerFilterInput {
+  query: String
+  types: [GroupType!]
+  confirmed: Boolean
+}
+
 type PartnerPagination {
   nodes: [Partner!]!
   page: Int!
@@ -934,6 +940,11 @@ type PartnerPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+input PartnerSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
 }
 
 type Price {
@@ -1032,6 +1043,29 @@ input ProductProviderCreateInput {
   packageCapacity: Float
 }
 
+input ProductProviderFilterInput {
+  query: String
+  exporterId: String
+  supplierId: String
+  tagIds: [ID!]
+}
+
+type ProductProviderPagination {
+  nodes: [ProductProvider!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input ProductProviderSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+  serial: SortOrder
+}
+
 input ProductProviderUpdateInput {
   id: ID
   exporterId: ID
@@ -1064,12 +1098,14 @@ type Query {
   authenticated: Boolean!
   product(id: ID!): Product
   products(page: Int! = 1, perPage: Int! = 10): ProductPagination!
+  productProvider(id: ID!): ProductProvider
+  productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPagination!
   order(id: ID!): Order
   orders(page: Int! = 1, perPage: Int! = 10): OrderPagination!
   batch(id: ID!): Batch
   batches(page: Int! = 1, perPage: Int! = 10): BatchPagination!
   tag(id: ID!): Tag
-  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterByInput): TagPagination!
+  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput): TagPagination!
 }
 
 type Size {
@@ -1086,6 +1122,11 @@ input SizeInput {
 
 interface Sortable {
   sort: Int!
+}
+
+enum SortOrder {
+  ASCENDING
+  DESCENDING
 }
 
 type Tag implements Model & Owned {
@@ -1118,7 +1159,7 @@ enum TagEntityType {
   User
 }
 
-input TagFilterByInput {
+input TagFilterInput {
   entityTypes: [TagEntityType!]
 }
 

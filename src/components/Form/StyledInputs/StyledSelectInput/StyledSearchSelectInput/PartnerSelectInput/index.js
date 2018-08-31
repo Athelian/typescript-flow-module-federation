@@ -7,28 +7,26 @@ import SearchSelectInput from '../index';
 import { type PartnerSelectInputProps as Props, defaultPartnerSelectInputProps } from './type';
 
 function PartnerSelectInput({ onChange, types, ...rest }: Props) {
-  const filterItems = (query: string, data: Array<any>) => {
-    const items = data.filter(item => types.includes(item.type));
+  const filterItems = (query: string, items: Array<any>) => {
     if (!query) return items;
-    return matchSorter(items, query, { keys: ['name'] });
+    return matchSorter(items, query, { keys: ['group.name'] });
   };
 
   return (
-    <PartnerListProvider>
+    <PartnerListProvider types={types}>
       {({ data, loading }) => (
         <StringValue defaultValue="">
           {({ value: query, set, clear }) => (
             <SearchSelectInput
               pureInputOptions={{
                 items: filterItems(query, data),
-                itemToString: item => (item ? item.name : ''),
+                itemToString: item => (item ? item.group.name : ''),
                 itemToValue: item => (item ? item.id : null),
-                onChange,
+                onChange: item => {
+                  if (!item) clear();
+                  if (onChange) onChange(item);
+                },
                 ...rest,
-              }}
-              onChange={item => {
-                if (!item) clear();
-                if (onChange) onChange(item);
               }}
               onSearch={set}
               loading={loading}

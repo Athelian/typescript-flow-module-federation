@@ -1,13 +1,12 @@
-query($page: Int!, $perPage: Int!) {
+query($page: Int!, $perPage: Int!, $filterBy: PartnerFilterInput, $sortBy: PartnerSortInput) {
   viewer {
     user {
       id
       group {
         id
-        partners(page: $page, perPage: $perPage) {
+        partners(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
           nodes {
             id
-            name
             types
             group {
               id
