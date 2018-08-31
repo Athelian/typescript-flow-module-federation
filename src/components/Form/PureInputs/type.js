@@ -3,12 +3,12 @@ import * as React from 'react';
 
 type OptionalProps = {
   value: any,
-  name?: string,
-  placeholder?: string | React.Node,
-  onChange?: ?Function,
-  onBlur?: ?Function,
-  onFocus?: ?Function,
-  align?: 'left' | 'right' | 'center',
+  name: string,
+  placeholder: string | React.Node,
+  onChange: ?Function,
+  onBlur: ?Function,
+  onFocus: ?Function,
+  align: 'left' | 'right' | 'center',
 };
 
 export type PureInputProps = OptionalProps;
