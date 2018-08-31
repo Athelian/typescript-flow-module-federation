@@ -6,8 +6,10 @@ import {
 import { defaultStyledInputProps } from 'components/Form/StyledInputs/type';
 import type { StyledSearchSelectInputProps } from '../StyledSelectInput/StyledSearchSelectInput/type';
 
+type OptionalProps = PureSelectInputProps;
+
 export type EnumInputProps = StyledSearchSelectInputProps & {
-  pureInputOptions: PureSelectInputProps,
+  pureInputOptions: OptionalProps,
   enumType: string,
 };
 
