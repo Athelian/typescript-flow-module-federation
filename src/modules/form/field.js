@@ -22,7 +22,7 @@ const defaultProps = {
   validationOnBlur: false,
   onValidate: () => {},
 };
-export default class FormField extends React.Component<Props, State> {
+export default class FormField extends React.PureComponent<Props, State> {
   static defaultProps = defaultProps;
 
   constructor(props: Props) {
@@ -67,9 +67,10 @@ export default class FormField extends React.Component<Props, State> {
   };
 
   render() {
-    const { children } = this.props;
+    const { children, name } = this.props;
     const { value } = this.state;
     return children({
+      name,
       value,
       onChange: this.onChange,
       onFocus: this.onFocus,
