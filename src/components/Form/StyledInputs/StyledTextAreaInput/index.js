@@ -3,10 +3,10 @@ import * as React from 'react';
 import Display from 'components/Form/Display';
 import { PureTextAreaInput } from 'components/Form/PureInputs';
 import { defaultPureTextInputProps } from 'components/Form/PureInputs/PureTextInput/type';
-import { type StyledTextInputProps as Props, defaultStyledTextInputProps } from './type';
+import { type StyledTextAreaInputProps as Props, defaultStyledTextAreaInputProps } from './type';
 import { StyledTextInputWrapperStyle, StyledTextInputStyle } from './style';
 
-const StyledTextInput = ({
+const StyledTextAreaInput = ({
   isFocused,
   hasError,
   disabled,
@@ -37,6 +37,6 @@ const StyledTextInput = ({
   );
 };
 
-StyledTextInput.defaultProps = defaultStyledTextInputProps;
+StyledTextAreaInput.defaultProps = defaultStyledTextAreaInputProps;
 
-export default StyledTextInput;
+export default StyledTextAreaInput;

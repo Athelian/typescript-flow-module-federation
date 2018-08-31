@@ -2,15 +2,13 @@
 import * as React from 'react';
 import Downshift from 'downshift';
 import { isEquals } from 'utils/fp';
-import { type PureSelectInputProps as Props, defaultPureSelectInputProps } from './type';
+import { type PureSelectInputProps as Props } from './type';
 
 type State = {
   selectedItem: any,
 };
 
 class SelectInput extends React.Component<Props, State> {
-  static defaultProps = defaultPureSelectInputProps;
-
   constructor(props: Props) {
     super(props);
     const { value, items, itemToValue } = props;
@@ -37,8 +35,7 @@ class SelectInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { renderSelect, itemToValue, itemToString, renderOptions } = this.props;
-
+    const { itemToString, itemToValue, renderSelect, renderOptions } = this.props;
     const { selectedItem } = this.state;
 
     return (

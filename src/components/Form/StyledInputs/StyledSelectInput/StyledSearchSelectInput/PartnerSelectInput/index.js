@@ -3,20 +3,16 @@ import * as React from 'react';
 import matchSorter from 'match-sorter';
 import PartnerListProvider from 'providers/PartnerList';
 import { StringValue } from 'react-values';
+import { type PureInputProps } from 'components/Form/PureInputs/type';
 import SearchSelectInput from '../index';
 
-type Props = {
-  value: any,
-  onChange: any => void,
+type Props = PureInputProps & {
   types?: Array<string>,
 };
 
 const defaultPartnerTypes = ['Exporter', 'Supplier', 'Forwarder'];
-const defaultProps = {
-  types: defaultPartnerTypes,
-};
 
-function PartnerSelectInput({ value, onChange, types = defaultPartnerTypes, ...rest }: Props) {
+function PartnerSelectInput({ onChange, types = defaultPartnerTypes, ...rest }: Props) {
   const filterItems = (query: string, data: Array<any>) => {
     const items = data.filter(item => types.includes(item.type));
     if (!query) return items;
@@ -29,17 +25,19 @@ function PartnerSelectInput({ value, onChange, types = defaultPartnerTypes, ...r
         <StringValue defaultValue="">
           {({ value: query, set, clear }) => (
             <SearchSelectInput
-              value={value}
-              items={filterItems(query, data)}
+              pureInputOptions={{
+                items: filterItems(query, data),
+                itemToString: item => (item ? item.name : ''),
+                itemToValue: item => (item ? item.id : null),
+                onChange,
+                ...rest,
+              }}
               onChange={item => {
                 if (!item) clear();
-                onChange(item);
+                if (onChange) onChange(item);
               }}
               onSearch={set}
               loading={loading}
-              itemToString={item => (item ? item.name : '')}
-              itemToValue={item => (item ? item.id : null)}
-              {...rest}
             />
           )}
         </StringValue>
@@ -47,7 +45,5 @@ function PartnerSelectInput({ value, onChange, types = defaultPartnerTypes, ...r
     </PartnerListProvider>
   );
 }
-
-PartnerSelectInput.defaultProps = defaultProps;
 
 export default PartnerSelectInput;

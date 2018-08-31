@@ -8,25 +8,19 @@ import { type StyledSelectInputProps as Props, defaultStyledSelectInputProps } f
 import { SelectWrapperStyle, InputStyle, ClearButtonStyle, ArrowDownStyle } from './style';
 
 function SelectInput({
-  items,
-  error,
-  forceHoverStyle,
-  itemToString,
-  itemToValue,
   hasError,
+  disabled,
+  forceHoverStyle,
   width,
   height,
-  disabled,
-  align,
-  ...rest
+  pureInputOptions,
 }: Props) {
+  const { align, value, items, itemToString, itemToValue } = pureInputOptions;
   return disabled ? (
-    <Display align={align}> {rest.value}</Display>
+    <Display align={align}> {value}</Display>
   ) : (
     <PureSelectInput
-      items={items}
-      itemToString={itemToString}
-      itemToValue={itemToValue}
+      {...pureInputOptions}
       renderSelect={({ isOpen, toggle, selectedItem, clearSelection, getInputProps }) => (
         <div
           className={SelectWrapperStyle(
@@ -77,7 +71,6 @@ function SelectInput({
           {...optionProps}
         />
       )}
-      {...rest}
     />
   );
 }

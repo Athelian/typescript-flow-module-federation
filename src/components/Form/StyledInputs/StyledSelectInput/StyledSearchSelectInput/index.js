@@ -12,23 +12,25 @@ import {
 import { SelectWrapperStyle, InputStyle, ClearButtonStyle, ArrowDownStyle } from '../style';
 
 function SearchSelectInput({
-  itemToString,
-  itemToValue,
-  items,
   forceHoverStyle,
   hasError,
   width,
   height,
   disabled,
-  align,
-  ...rest
+  pureInputOptions,
 }: Props) {
+  const { align, value, items, itemToString, itemToValue } = pureInputOptions;
+
   return disabled ? (
-    <Display align={align}> {rest.value}</Display>
+    <Display align={align}>{value}</Display>
   ) : (
     <PureSearchSelectInput
+      {...pureInputOptions}
+      itemToString={itemToString}
+      itemToValue={itemToValue}
+      items={items}
       renderSelect={({
-        value,
+        value: inputValue,
         handleQueryChange,
         isOpen,
         toggle,
@@ -63,7 +65,7 @@ function SearchSelectInput({
             spellCheck={false}
             style={{ textAlign: align }}
             {...getInputProps({
-              value,
+              value: inputValue,
               onChange: handleQueryChange,
             })}
           />
@@ -87,10 +89,6 @@ function SearchSelectInput({
           {...optionProps}
         />
       )}
-      itemToString={itemToString}
-      itemToValue={itemToValue}
-      items={items}
-      {...rest}
     />
   );
 }

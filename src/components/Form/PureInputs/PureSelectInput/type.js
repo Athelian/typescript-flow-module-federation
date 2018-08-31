@@ -6,6 +6,11 @@ export type PureSelectInputProps = PureInputProps & {
   items: Array<any>,
   itemToString: any => string,
   itemToValue: any => any,
+  renderOptions: ({
+    highlightedIndex: number,
+    selectedItem: any,
+    getItemProps: Function,
+  }) => React.Node,
   renderSelect: ({
     isOpen: boolean,
     clearSelection: () => void,
@@ -13,11 +18,12 @@ export type PureSelectInputProps = PureInputProps & {
     selectedItem: any,
     getInputProps: Function,
   }) => React.Node,
-  renderOptions: ({
-    highlightedIndex: number,
-    selectedItem: any,
-    getItemProps: Function,
-  }) => React.Node,
+};
+
+export type ExternPureSelectInputProps = PureInputProps & {
+  items: Array<any>,
+  itemToString: any => string,
+  itemToValue: any => any,
 };
 
 export const defaultPureSelectInputProps = {
