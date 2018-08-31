@@ -156,7 +156,6 @@ class DocumentsInput extends React.Component<Props, State> {
                 {uploading ? (
                   <div className={ProgressStyle}>{`${progress}%`}</div>
                 ) : (
-                  // eslint-disable-next-line jsx-a11y/label-has-for
                   <label className={AddDocumentStyle}>
                     <Icon icon="ADD" />
                     <input

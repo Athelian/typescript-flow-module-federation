@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
+import UNSTATED from 'unstated-debug';
 import FullStory from 'react-fullstory';
 import AuthenticationProvider from './modules/authentication';
 import LanguageProvider from './modules/language';
@@ -13,8 +14,28 @@ import { isAppInProduction } from './utils/env';
 import errorReport from './errorReport';
 import './styles/reset.css';
 
+if (!isAppInProduction) {
+  /* eslint-disable import/no-extraneous-dependencies */
+  /* eslint-disable global-require */
+  // $FlowFixMe: not have flow typed yet
+  const { whyDidYouUpdate } = require('why-did-you-update');
+  whyDidYouUpdate(React, {
+    exclude: [
+      /^Consumer/,
+      /^Subscribe/,
+      /^FormattedMessage/,
+      /^InjectIntl/,
+      /^DebounceInput/,
+      /^Query/,
+      /^Mutation/,
+    ],
+  });
+}
+
 loadFonts();
 errorReport();
+
+UNSTATED.isEnabled = !isAppInProduction;
 
 const container = document.querySelector('#root');
 
@@ -24,7 +45,7 @@ if (!container) {
 
 const renderApp = (Component, renderFn) => {
   renderFn(
-    <React.Fragment>
+    <div>
       {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
       <ApolloProvider client={apolloClient}>
         <AuthenticationProvider>
@@ -38,7 +59,7 @@ const renderApp = (Component, renderFn) => {
           </LanguageProvider>
         </AuthenticationProvider>
       </ApolloProvider>
-    </React.Fragment>,
+    </div>,
     container
   );
 };

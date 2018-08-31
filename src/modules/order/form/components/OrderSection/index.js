@@ -1,21 +1,20 @@
 // @flow
 import * as React from 'react';
-import * as Yup from 'yup';
+import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import SlideView from 'components/SlideView';
+import OrderFormContainer from 'modules/order/form/container';
+import { FormContainer, FormField } from 'modules/form';
 import { FormattedMessage } from 'react-intl';
+import SlideView from 'components/SlideView';
+import withCache from 'hoc/withCache';
 import Display from 'components/Display';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
-import yupToFormErrors from 'utils/yupToFormErrors';
 import {
   FieldItem,
   TextInput,
   DateInput,
   DashedPlusButton,
-  Form,
-  FormObserver,
-  Field,
   TagsInput,
   InputGroup,
   CurrencyInput,
@@ -42,210 +41,248 @@ import {
 
 type Props = {
   isNew: boolean,
-  onChange: Function,
-  initialValues: {
-    piNo?: string,
-    poNo?: string,
-    currency?: string,
-    incoterm?: string,
-    deliveryPlace?: string,
-    issuedAt?: Date,
-  },
+  initialValues: Object,
 };
 
-const OrderSchema = Yup.object().shape({
-  poNo: Yup.string().required(),
-  currency: Yup.string().required(),
-  exporter: Yup.string().required(),
-});
+const CacheFieldItem = withCache(FieldItem, ['cacheBy']);
 
-const onValidate = (values: Object) =>
-  new Promise((resolve, reject) => {
-    OrderSchema.validate(values, { abortEarly: false })
-      .then(() => resolve({}))
-      .catch(error => reject(yupToFormErrors(error)));
-  });
-
-const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
+const OrderSection = ({ isNew, initialValues }: Props) => (
   <div className={OrderSectionWrapperStyle}>
-    <Form
-      initialValues={initialValues}
-      validateOnChange
-      validateOnBlur
-      validations={onValidate}
-      render={({ values, errors, touched, setFieldValue }) => {
-        const totalOrderedQuantity = values.items ? values.items.length : 0;
-        const totalBatches = values.items
-          ? values.items.reduce((total, item) => total + item.batchItems.length, 0)
+    <Subscribe to={[OrderFormContainer]}>
+      {({ state: values, setFieldValue, validationRules }) => {
+        const totalOrderedQuantity = values.orderItems ? values.orderItems.length : 0;
+        const totalBatches = values.orderItems
+          ? values.orderItems.reduce((total, item) => total + item.batchItems.length, 0)
           : 0;
         return (
           <React.Fragment>
             <div className={MainFieldsWrapperStyle}>
               <InputGroup fieldGap={20}>
-                <Field
-                  name="poNo"
-                  render={({ input, meta }) => (
-                    <FieldItem
-                      label={<FormattedMessage {...messages.PO} />}
-                      input={hasError => (
-                        <TextInput
-                          isFocused={meta.isActive}
-                          forceHoverStyle={isNew}
-                          hasError={hasError}
-                          width="200px"
-                          pureInputOptions={{
-                            ...input,
-                          }}
-                        />
-                      )}
-                      labelOptions={{
-                        required: true,
-                      }}
-                      tooltipOptions={{
-                        isNew,
-                        tooltipBubbleOptions: {
-                          errorMessage: touched.poNo && errors.poNo,
-                          changedValues: {
-                            oldValue: initialValues.poNo,
-                            newValue: input.value,
+                <Subscribe to={[FormContainer]}>
+                  {({ state: { touched, errors, activeField }, ...formHelper }) => (
+                    <React.Fragment>
+                      <CacheFieldItem
+                        label={<FormattedMessage {...messages.PO} />}
+                        cacheBy={{
+                          value: values.poNo,
+                          error: touched.poNo && errors.poNo,
+                          isFocused: activeField === 'poNo',
+                        }}
+                        input={hasError => (
+                          <FormField
+                            name="poNo"
+                            initValue={values.poNo}
+                            onFinish={value => setFieldValue('poNo', value)}
+                            validationOnChange
+                            onValidate={newValue =>
+                              formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                            }
+                            {...formHelper}
+                          >
+                            {({ value, name, onChange, ...inputHandlers }) => (
+                              <TextInput
+                                forceHoverStyle={isNew}
+                                isFocused={activeField === name}
+                                error={touched[name] && errors[name]}
+                                hasError={hasError}
+                                width="200px"
+                                pureInputOptions={{
+                                  name,
+                                  value,
+                                  onChange: evt => onChange(evt.target.value),
+                                  ...inputHandlers,
+                                }}
+                              />
+                            )}
+                          </FormField>
+                        )}
+                        labelOptions={{
+                          required: true,
+                        }}
+                        tooltipOptions={{
+                          isNew,
+                          tooltipBubbleOptions: {
+                            errorMessage: errors.poNo,
+                            changedValues: {
+                              oldValue: initialValues.poNo,
+                              newValue: values.poNo,
+                            },
                           },
-                        },
-                      }}
-                    />
-                  )}
-                />
-                <Field
-                  name="piNo"
-                  render={({ input, meta }) => (
-                    <FieldItem
-                      label={<FormattedMessage {...messages.PI} />}
-                      input={hasError => (
-                        <TextInput
-                          isFocused={meta.isActive}
-                          forceHoverStyle={isNew}
-                          hasError={hasError}
-                          width="200px"
-                          pureInputOptions={{
-                            ...input,
-                          }}
-                        />
-                      )}
-                      tooltipOptions={{
-                        isNew,
-                        tooltipBubbleOptions: {
-                          changedValues: {
-                            oldValue: initialValues.piNo,
-                            newValue: input.value,
+                        }}
+                      />
+                      <CacheFieldItem
+                        cacheBy={{
+                          value: values.piNo,
+                          error: touched.piNo && errors.piNo,
+                          isFocused: activeField === 'piNo',
+                        }}
+                        label={<FormattedMessage {...messages.PI} />}
+                        input={hasError => (
+                          <FormField
+                            name="piNo"
+                            initValue={values.piNo}
+                            onFinish={value => setFieldValue('piNo', value)}
+                            {...formHelper}
+                          >
+                            {({ value, name, onChange, ...inputHandlers }) => (
+                              <TextInput
+                                forceHoverStyle={isNew}
+                                isFocused={activeField === name}
+                                error={touched[name] && errors[name]}
+                                hasError={hasError}
+                                width="200px"
+                                pureInputOptions={{
+                                  name,
+                                  value,
+                                  onChange: evt => onChange(evt.target.value),
+                                  ...inputHandlers,
+                                }}
+                              />
+                            )}
+                          </FormField>
+                        )}
+                        labelOptions={{
+                          required: false,
+                        }}
+                        tooltipOptions={{
+                          isNew,
+                          tooltipBubbleOptions: {
+                            changedValues: {
+                              oldValue: initialValues.piNo,
+                              newValue: values.piNo,
+                            },
                           },
-                        },
-                      }}
-                    />
-                  )}
-                />
-                <Field
-                  name="issuedAt"
-                  render={({ input, meta }) => (
-                    <FieldItem
-                      label={<FormattedMessage {...messages.date} />}
-                      input={hasError => (
-                        <DateInput
-                          isFocused={meta.isActive}
-                          forceHoverStyle={isNew}
-                          hasError={hasError}
-                          width="200px"
-                          pureInputOptions={{
-                            ...input,
-                          }}
-                        />
-                      )}
-                      labelOptions={{
-                        required: true,
-                      }}
-                      tooltipOptions={{
-                        isNew,
-                        tooltipBubbleOptions: {
-                          changedValues: {
-                            oldValue: <FormattedDate value={initialValues.issuedAt} />,
-                            newValue: <FormattedDate value={input.value} />,
+                        }}
+                      />
+
+                      <CacheFieldItem
+                        cacheBy={{
+                          value: values.issueAt,
+                          error: touched.issueAt && errors.issueAt,
+                          isFocused: activeField === 'issueAt',
+                        }}
+                        label={<FormattedMessage {...messages.date} />}
+                        input={hasError => (
+                          <FormField
+                            name="issueAt"
+                            initValue={values.issueAt}
+                            onFinish={value => setFieldValue('issueAt', value)}
+                            {...formHelper}
+                            j
+                          >
+                            {({ value, name, onChange, ...inputHandlers }) => (
+                              <DateInput
+                                forceHoverStyle={isNew}
+                                isFocused={activeField === name}
+                                error={touched[name] && errors[name]}
+                                hasError={hasError}
+                                width="200px"
+                                pureInputOptions={{
+                                  name,
+                                  value,
+                                  onChange: evt => onChange(evt.target.value),
+                                  ...inputHandlers,
+                                }}
+                              />
+                            )}
+                          </FormField>
+                        )}
+                        labelOptions={{
+                          required: false,
+                        }}
+                        tooltipOptions={{
+                          isNew,
+                          tooltipBubbleOptions: {
+                            changedValues: {
+                              oldValue: <FormattedDate value={initialValues.issueAt} />,
+                              newValue: <FormattedDate value={values.issueAt} />,
+                            },
                           },
-                        },
-                      }}
-                    />
-                  )}
-                />
-                {/* FIXME: enum input is wrong when send the selected value */}
-                <Field
-                  name="currency"
-                  render={({ input, meta }) => (
-                    <FieldItem
-                      label={<FormattedMessage {...messages.currency} />}
-                      input={hasError => (
-                        <CurrencyInput
-                          value={values.currency}
-                          onChange={value => setFieldValue('currency', value)}
-                          width="200px"
-                          forceHoverStyle={isNew}
-                          required
-                          isFocused={meta.isActive}
-                          hasError={hasError}
-                          pureInputOptions={{
-                            ...input,
-                          }}
-                        />
-                      )}
-                    />
-                  )}
-                />
-                <Field
-                  name="incoterm"
-                  render={({ input, meta }) => (
-                    <FieldItem
-                      label={<FormattedMessage {...messages.incoterms} />}
-                      input={hasError => (
-                        <IncotermInput
-                          value={values.incoterm}
-                          onChange={value => setFieldValue('incoterm', value)}
-                          width="200px"
-                          forceHoverStyle={isNew}
-                          required
-                          isFocused={meta.isActive}
-                          hasError={hasError}
-                          pureInputOptions={{
-                            ...input,
-                          }}
-                        />
-                      )}
-                    />
-                  )}
-                />
-                <Field
-                  name="deliveryPlace"
-                  render={({ input, meta }) => (
-                    <FieldItem
-                      label={<FormattedMessage {...messages.deliveryPlace} />}
-                      input={hasError => (
-                        <TextInput
-                          isFocused={meta.isActive}
-                          forceHoverStyle={isNew}
-                          hasError={hasError}
-                          width="200px"
-                          pureInputOptions={{
-                            ...input,
-                          }}
-                        />
-                      )}
-                      tooltipOptions={{
-                        isNew,
-                        tooltipBubbleOptions: {
-                          changedValues: {
-                            oldValue: initialValues.deliveryPlace,
-                            newValue: input.value,
+                        }}
+                      />
+
+                      <CacheFieldItem
+                        label={<FormattedMessage {...messages.currency} />}
+                        input={hasError => (
+                          <CurrencyInput
+                            name="currency"
+                            value={values.currency}
+                            isNew={isNew}
+                            required
+                            isActive={activeField === 'currency'}
+                            error={errors.currency}
+                            hasError={hasError}
+                            onChange={value => setFieldValue('currency', value)}
+                            width="200px"
+                            {...formHelper}
+                          />
+                        )}
+                      />
+                      <CacheFieldItem
+                        label={<FormattedMessage {...messages.incoterms} />}
+                        input={hasError => (
+                          <IncotermInput
+                            name="incoterm"
+                            value={values.incoterm}
+                            isNew={isNew}
+                            required
+                            isActive={activeField === 'incoterm'}
+                            error={errors.incoterm}
+                            hasError={hasError}
+                            onChange={value => setFieldValue('incoterm', value)}
+                            width="200px"
+                            {...formHelper}
+                          />
+                        )}
+                      />
+
+                      <CacheFieldItem
+                        cacheBy={{
+                          value: values.deliveryPlace,
+                          error: touched.deliveryPlace && errors.deliveryPlace,
+                          isFocused: activeField === 'deliveryPlace',
+                        }}
+                        label={<FormattedMessage {...messages.deliveryPlace} />}
+                        input={hasError => (
+                          <FormField
+                            name="deliveryPlace"
+                            initValue={values.deliveryPlace}
+                            onFinish={value => setFieldValue('deliveryPlace', value)}
+                            {...formHelper}
+                          >
+                            {({ value, name, onChange, ...inputHandlers }) => (
+                              <TextInput
+                                forceHoverStyle={isNew}
+                                isFocused={activeField === name}
+                                error={touched[name] && errors[name]}
+                                hasError={hasError}
+                                width="200px"
+                                pureInputOptions={{
+                                  name,
+                                  value,
+                                  onChange: evt => onChange(evt.target.value),
+                                  ...inputHandlers,
+                                }}
+                              />
+                            )}
+                          </FormField>
+                        )}
+                        labelOptions={{
+                          required: false,
+                        }}
+                        tooltipOptions={{
+                          isNew,
+                          tooltipBubbleOptions: {
+                            changedValues: {
+                              oldValue: initialValues.deliveryPlace,
+                              newValue: values.deliveryPlace,
+                            },
                           },
-                        },
-                      }}
-                    />
+                        }}
+                      />
+                    </React.Fragment>
                   )}
-                />
+                </Subscribe>
               </InputGroup>
               <div className={ExporterSectionStyle}>
                 <Label title={<FormattedMessage {...messages.exporter} />} required vertical>
@@ -276,12 +313,17 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                           onRequestClose={toggle}
                           options={{ width: '1030px' }}
                         >
-                          <SelectExporters
-                            selected={values.exporter}
-                            onSelect={({ group, name }) =>
-                              setFieldValue('exporter', { id: group.id, name: name || group.name })
-                            }
-                          />
+                          {opened && (
+                            <SelectExporters
+                              selected={values.exporter}
+                              onSelect={({ group, name }) =>
+                                setFieldValue('exporter', {
+                                  id: group.id,
+                                  name: name || group.name,
+                                })
+                              }
+                            />
+                          )}
                         </SlideView>
                       </React.Fragment>
                     )}
@@ -326,20 +368,17 @@ const OrderSection = ({ isNew, onChange, initialValues }: Props) => (
                   <FormattedNumber value={values.totalPrice} />
                 </Display>
                 <Display title="TOTAL ITEMS">
-                  <FormattedNumber value={values.items ? values.items.length : 0} />
+                  <FormattedNumber value={values.orderItems ? values.orderItems.length : 0} />
                 </Display>
                 <Display title="TOTAL BATCHES">
                   <FormattedNumber value={totalBatches} />
                 </Display>
               </InputGroup>
             </div>
-            <FormObserver
-              onChange={({ values: observeValues }) => onChange({ observeValues, onValidate })}
-            />
           </React.Fragment>
         );
       }}
-    />
+    </Subscribe>
   </div>
 );
 

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { pickByProps } from 'utils/fp';
 import logger from 'utils/logger';
@@ -8,12 +9,12 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import Display from 'components/Display';
+import OrderFormContainer from './container';
 import OrderSection from './components/OrderSection';
 import ItemsSection from './components/ItemsSection';
 import DocumentsSection from './components/DocumentsSection';
 import ShipmentsSection from './components/ShipmentsSection';
 import SectionHeader from './components/SectionHeader';
-import { OrderFormConsumer } from './provider';
 import {
   OrderFormWrapperStyle,
   SectionWrapperStyle,
@@ -25,7 +26,6 @@ import {
 
 type Props = {
   order: Object,
-  onChange: ({ observeValues: Object, onValidate: Object => Promise<Object> }) => mixed,
 };
 
 const orderSectionFields = pickByProps([
@@ -45,7 +45,7 @@ const orderSectionFields = pickByProps([
 const hasSelectExporter = (order: Object) =>
   (order.exporter && order.exporter.id) || order.exporterId;
 
-export default function OrderForm({ order, onChange }: Props) {
+export default function OrderForm({ order }: Props) {
   const isNew = Object.keys(order).length === 0;
   logger.warn('order', order);
 
@@ -81,22 +81,17 @@ export default function OrderForm({ order, onChange }: Props) {
             </React.Fragment>
           )}
         </SectionHeader>
-        <OrderSection isNew={isNew} onChange={onChange} initialValues={{ ...orderValues }} />
+        <OrderSection isNew={isNew} initialValues={{ ...orderValues }} />
       </div>
       <div className={SectionWrapperStyle} id="itemsSection">
-        <OrderFormConsumer>
-          {formState => (
+        <Subscribe to={[OrderFormContainer]}>
+          {({ state: values }) => (
             <React.Fragment>
-              <SectionHeader
-                icon="ORDER_ITEM"
-                title={`ITEMS (${formState.formData.orderItems.length})`}
-              />
-              <ItemsSection
-                isReady={hasSelectExporter(order) || hasSelectExporter(formState.formData)}
-              />
+              <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
+              <ItemsSection isReady={hasSelectExporter(order) || hasSelectExporter(values)} />
             </React.Fragment>
           )}
-        </OrderFormConsumer>
+        </Subscribe>
       </div>
       <div className={SectionWrapperStyle} id="documentsSection">
         <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />
