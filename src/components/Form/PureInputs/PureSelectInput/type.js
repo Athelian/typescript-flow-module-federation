@@ -2,10 +2,17 @@
 import * as React from 'react';
 import { type PureInputProps, defaultPureInputProps } from 'components/Form/PureInputs/type';
 
-export type PureSelectInputProps = PureInputProps & {
+type OptionalProps = PureInputProps;
+
+export type PureSelectInputProps = OptionalProps & {
   items: Array<any>,
   itemToString: any => string,
   itemToValue: any => any,
+  renderOptions: ({
+    highlightedIndex: number,
+    selectedItem: any,
+    getItemProps: Function,
+  }) => React.Node,
   renderSelect: ({
     isOpen: boolean,
     clearSelection: () => void,
@@ -13,11 +20,12 @@ export type PureSelectInputProps = PureInputProps & {
     selectedItem: any,
     getInputProps: Function,
   }) => React.Node,
-  renderOptions: ({
-    highlightedIndex: number,
-    selectedItem: any,
-    getItemProps: Function,
-  }) => React.Node,
+};
+
+export type ExternPureSelectInputProps = OptionalProps & {
+  items: Array<any>,
+  itemToString: any => string,
+  itemToValue: any => any,
 };
 
 export const defaultPureSelectInputProps = {

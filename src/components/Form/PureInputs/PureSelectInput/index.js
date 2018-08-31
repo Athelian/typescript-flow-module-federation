@@ -37,8 +37,7 @@ class SelectInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { renderSelect, itemToValue, itemToString, renderOptions } = this.props;
-
+    const { itemToString, itemToValue, renderSelect, renderOptions } = this.props;
     const { selectedItem } = this.state;
 
     return (

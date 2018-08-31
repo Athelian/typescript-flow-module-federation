@@ -11,7 +11,7 @@ type OptionalProps = {
   align: 'left' | 'right' | 'center',
 };
 
-export type PureInputProps = OptionalProps & {};
+export type PureInputProps = OptionalProps;
 
 export const defaultPureInputProps = {
   value: '',
