@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
 import { Router } from '@reach/router';
-import BatchListContainer from './index.list';
-import BatchFormContainer from './index.form';
+import BatchListModule from './index.list';
+import BatchFormModule from './index.form';
 
 const BatchApp = () => (
   <Router>
-    <BatchListContainer path="/" />
-    <BatchFormContainer path=":batchId" />
+    <BatchListModule path="/" />
+    <BatchFormModule path=":batchId" />
   </Router>
 );
 

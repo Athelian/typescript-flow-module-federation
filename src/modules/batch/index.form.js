@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
 
-const BatchFormContainer = () => <div>WIP</div>;
+const BatchFormModule = () => <div>WIP</div>;
 
-export default BatchFormContainer;
+export default BatchFormModule;

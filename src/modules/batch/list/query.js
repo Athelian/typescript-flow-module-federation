@@ -8,34 +8,20 @@ const userListFragment = gql`
   }
 `;
 
-export const batchItemListFragment = gql`
-  fragment batchItemListFields on Batch {
+export const batchListFragment = gql`
+  fragment batchListFields on Batch {
     id
-    createdAt
-    updatedAt
     no
-    archived
     quantity
     deliveredAt
     tags {
       id
       name
-      description
       color
     }
     batchAdjustments {
       id
-      reason
       quantity
-      memo
-    }
-    batchAssignments {
-      id
-      quantity
-      user {
-        ...userListFields
-      }
-      memo
     }
     orderItem {
       id
@@ -61,16 +47,16 @@ export const batchItemListFragment = gql`
   ${userListFragment}
 `;
 
-export const batchItemListQuery = gql`
+export const batchListQuery = gql`
   query($page: Int!, $perPage: Int!) {
     batches(page: $page, perPage: $perPage) {
       nodes {
-        ...batchItemListFields
+        ...batchListFields
       }
       page
       totalPage
     }
   }
 
-  ${batchItemListFragment}
+  ${batchListFragment}
 `;

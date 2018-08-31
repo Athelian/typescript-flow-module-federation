@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import BatchGridView from './BatchGridView';
-import { batchItemListQuery } from './query';
+import { batchListQuery } from './query';
 
 type Props = {
   viewType: string,
@@ -64,7 +64,7 @@ class BatchList extends React.PureComponent<Props> {
     const { viewType, ...filtersAndSort } = this.props;
     return (
       <Query
-        query={batchItemListQuery}
+        query={batchListQuery}
         variables={{ page: 1, ...filtersAndSort }}
         fetchPolicy="network-only"
       >

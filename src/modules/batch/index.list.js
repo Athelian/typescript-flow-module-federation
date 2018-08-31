@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+// import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
+import InputGroup from 'components/Form/InputGroup';
 import { UIConsumer } from 'modules/ui';
 import NavBar, {
   EntityIcon,
@@ -29,7 +31,7 @@ type State = {
   perPage: number,
 };
 
-class BatchModule extends React.Component<Props, State> {
+class BatchListModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
     query: '',
@@ -110,7 +112,7 @@ class BatchModule extends React.Component<Props, State> {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <React.Fragment>
+                    <InputGroup fieldGap={20}>
                       <SearchInput
                         value={values.query}
                         name="query"
@@ -135,7 +137,7 @@ class BatchModule extends React.Component<Props, State> {
                         value={values.userId}
                         onChange={v => setFieldValue('userId', v ? v.id : null)}
                       />
-                    </React.Fragment>
+                    </InputGroup>
                   )}
                 </FilterInput>
                 <SearchInput
@@ -147,7 +149,7 @@ class BatchModule extends React.Component<Props, State> {
               </NavBar>
             }
           >
-            <BatchList sort={sort} viewType={viewType} perPage={perPage} filter={filters} />
+            <BatchList viewType={viewType} sort={sort} perPage={perPage} filter={filters} />
           </Layout>
         )}
       </UIConsumer>
@@ -155,4 +157,4 @@ class BatchModule extends React.Component<Props, State> {
   }
 }
 
-export default injectIntl(BatchModule);
+export default injectIntl(BatchListModule);

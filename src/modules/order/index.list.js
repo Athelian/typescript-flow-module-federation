@@ -91,7 +91,7 @@ class OrderModule extends React.Component<Props, State> {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <InputGroup fieldGap={16}>
+                    <InputGroup fieldGap={20}>
                       <SearchInput
                         name="query"
                         value={values.query}
@@ -123,8 +123,8 @@ class OrderModule extends React.Component<Props, State> {
                   )}
                 </FilterInput>
                 <SearchInput
-                  value={filters.query}
                   name="query"
+                  value={filters.query}
                   onClear={() => this.onChangeFilter({ query: '' })}
                   onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />
