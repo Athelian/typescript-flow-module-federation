@@ -3,9 +3,8 @@ import * as React from 'react';
 import EnumProvider from 'providers/enum';
 import matchSorter from 'match-sorter';
 import { StringValue } from 'react-values';
-import { defaultPureInputProps } from 'components/Form/PureInputs/type';
 import SearchSelectInput from '../StyledSelectInput/StyledSearchSelectInput';
-import type { EnumInputProps as Props } from './type';
+import { type EnumInputProps as Props, defaultStyledEnumInputProps } from './type';
 
 function EnumInput({ enumType, pureInputOptions, ...rest }: Props) {
   const { onChange } = pureInputOptions;
@@ -46,6 +45,6 @@ function EnumInput({ enumType, pureInputOptions, ...rest }: Props) {
   );
 }
 
-EnumInput.defaultProps = defaultPureInputProps;
+EnumInput.defaultProps = defaultStyledEnumInputProps;
 
 export default EnumInput;

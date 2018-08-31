@@ -11,9 +11,9 @@ export type EnumInputProps = StyledSearchSelectInputProps & {
   enumType: string,
 };
 
-export const defaultStyledEmailInputProps = {
+export const defaultStyledEnumInputProps = {
   ...defaultStyledInputProps,
   pureInputOptions: defaultPureSelectInputProps,
 };
 
-export default defaultStyledEmailInputProps;
+export default defaultStyledEnumInputProps;
