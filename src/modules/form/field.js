@@ -4,9 +4,9 @@ import * as React from 'react';
 type Props = {
   initValue: any,
   name: string,
-  onFinish: (value: any) => void,
   onValidate?: (value: any) => void,
   setFieldTouched: (field: string, isTouched: boolean) => void,
+  setFieldValue: (field: string, value: any) => void,
   setActiveField: (field: string) => void,
   children: React.Node,
   validationOnChange?: boolean,
@@ -22,6 +22,7 @@ const defaultProps = {
   validationOnBlur: false,
   onValidate: () => {},
 };
+
 export default class FormField extends React.PureComponent<Props, State> {
   static defaultProps = defaultProps;
 
@@ -34,7 +35,11 @@ export default class FormField extends React.PureComponent<Props, State> {
     };
   }
 
-  onFocus = () => {
+  onFocus = (event: SyntheticFocusEvent<*>) => {
+    if (event.persist) {
+      event.persist();
+    }
+
     const { name, setActiveField } = this.props;
     setActiveField(name);
   };
@@ -42,7 +47,12 @@ export default class FormField extends React.PureComponent<Props, State> {
   /**
    * Save local state on change, it could run validation
    */
-  onChange = (value: any) => {
+  onChange = (event: SyntheticInputEvent<*>): void => {
+    if (event.persist) {
+      event.persist();
+    }
+
+    const { value } = event.target;
     this.setState({ value }, () => {
       const { validationOnChange, onValidate, name } = this.props;
       if (validationOnChange && onValidate) {
@@ -54,8 +64,12 @@ export default class FormField extends React.PureComponent<Props, State> {
   /**
    * Send the value to container/context when finish editing
    */
-  onBlur = () => {
-    const { onFinish } = this.props;
+  onBlur = (event: SyntheticFocusEvent<*>) => {
+    if (event.persist) {
+      event.persist();
+    }
+
+    const { setFieldValue } = this.props;
     const { value } = this.state;
     const { name, validationOnBlur, onValidate, setFieldTouched, setActiveField } = this.props;
     if (validationOnBlur && onValidate) {
@@ -63,7 +77,7 @@ export default class FormField extends React.PureComponent<Props, State> {
     }
     setFieldTouched(name, true);
     setActiveField('');
-    onFinish(value);
+    setFieldValue(name, value);
   };
 
   render() {

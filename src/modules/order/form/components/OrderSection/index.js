@@ -72,14 +72,14 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                           <FormField
                             name="poNo"
                             initValue={values.poNo}
-                            onFinish={value => setFieldValue('poNo', value)}
                             validationOnChange
                             onValidate={newValue =>
                               formHelper.onValidation({ ...values, ...newValue }, validationRules())
                             }
+                            setFieldValue={setFieldValue}
                             {...formHelper}
                           >
-                            {({ value, name, onChange, ...inputHandlers }) => (
+                            {({ name, ...inputHandlers }) => (
                               <TextInput
                                 forceHoverStyle={isNew}
                                 isFocused={activeField === name}
@@ -88,8 +88,6 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                                 width="200px"
                                 pureInputOptions={{
                                   name,
-                                  value,
-                                  onChange: evt => onChange(evt.target.value),
                                   ...inputHandlers,
                                 }}
                               />
@@ -121,10 +119,10 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                           <FormField
                             name="piNo"
                             initValue={values.piNo}
-                            onFinish={value => setFieldValue('piNo', value)}
+                            setFieldValue={setFieldValue}
                             {...formHelper}
                           >
-                            {({ value, name, onChange, ...inputHandlers }) => (
+                            {({ name, ...inputHandlers }) => (
                               <TextInput
                                 forceHoverStyle={isNew}
                                 isFocused={activeField === name}
@@ -133,8 +131,6 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                                 width="200px"
                                 pureInputOptions={{
                                   name,
-                                  value,
-                                  onChange: evt => onChange(evt.target.value),
                                   ...inputHandlers,
                                 }}
                               />
@@ -166,11 +162,11 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                           <FormField
                             name="issueAt"
                             initValue={values.issueAt}
-                            onFinish={value => setFieldValue('issueAt', value)}
+                            setFieldValue={setFieldValue}
                             {...formHelper}
                             j
                           >
-                            {({ value, name, onChange, ...inputHandlers }) => (
+                            {({ name, ...inputHandlers }) => (
                               <DateInput
                                 forceHoverStyle={isNew}
                                 isFocused={activeField === name}
@@ -179,8 +175,6 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                                 width="200px"
                                 pureInputOptions={{
                                   name,
-                                  value,
-                                  onChange: evt => onChange(evt.target.value),
                                   ...inputHandlers,
                                 }}
                               />
@@ -247,10 +241,10 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                           <FormField
                             name="deliveryPlace"
                             initValue={values.deliveryPlace}
-                            onFinish={value => setFieldValue('deliveryPlace', value)}
+                            setFieldValue={setFieldValue}
                             {...formHelper}
                           >
-                            {({ value, name, onChange, ...inputHandlers }) => (
+                            {({ name, ...inputHandlers }) => (
                               <TextInput
                                 forceHoverStyle={isNew}
                                 isFocused={activeField === name}
@@ -259,8 +253,6 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                                 width="200px"
                                 pureInputOptions={{
                                   name,
-                                  value,
-                                  onChange: evt => onChange(evt.target.value),
                                   ...inputHandlers,
                                 }}
                               />
