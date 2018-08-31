@@ -1,6 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import * as Yup from 'yup';
+import { isEquals } from 'utils/fp';
 
 type FormState = {
   orderItems: Array<any>,
@@ -24,6 +25,8 @@ export default class OrderFormContainer extends Container<FormState> {
       [name]: value,
     });
   };
+
+  isDirty = (values: any) => !isEquals(values, this.state);
 
   validationRules = () => OrderSchema;
 }

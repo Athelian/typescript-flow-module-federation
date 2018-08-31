@@ -120,7 +120,7 @@ class OrderFormModule extends React.PureComponent<Props> {
 
                       <Subscribe to={[OrderFormContainer]}>
                         {formState =>
-                          (isNew || formState.isDirty({ items: [], files: [] })) && (
+                          (isNew || formState.isDirty({ orderItems: [], files: [] })) && (
                             <React.Fragment>
                               <CancelButton disabled={false} onClick={this.onCancel}>
                                 Cancel
