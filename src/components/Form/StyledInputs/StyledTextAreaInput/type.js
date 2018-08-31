@@ -1,19 +1,19 @@
 // @flow
 import { type StyledInputProps, defaultStyledInputProps } from 'components/Form/StyledInputs/type';
 import {
-  type PureTextInputProps,
-  defaultPureTextInputProps,
-} from 'components/Form/PureInputs/PureTextInput/type';
+  type PureTextAreaInputProps,
+  defaultPureTextAreaInputProps,
+} from 'components/Form/PureInputs/PureTextAreaInput/type';
 
 type OptionalProps = StyledInputProps & {
-  pureInputOptions: PureTextInputProps,
+  pureInputOptions: PureTextAreaInputProps,
 };
 
 export type StyledTextAreaInputProps = OptionalProps;
 
 export const defaultStyledTextAreaInputProps = {
   ...defaultStyledInputProps,
-  pureInputOptions: defaultPureTextInputProps,
+  pureInputOptions: defaultPureTextAreaInputProps,
 };
 
 export default defaultStyledTextAreaInputProps;

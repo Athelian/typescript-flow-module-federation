@@ -5,7 +5,9 @@ import {
   defaultPureSelectInputProps,
 } from 'components/Form/PureInputs/PureSelectInput/type';
 
-export type StyledSelectInputProps = StyledInputProps & {
+type OptionalProps = StyledInputProps;
+
+export type StyledSelectInputProps = OptionalProps & {
   pureInputOptions: ExternPureSelectInputProps,
 };
 

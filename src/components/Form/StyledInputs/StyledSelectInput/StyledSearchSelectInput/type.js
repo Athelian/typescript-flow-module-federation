@@ -4,9 +4,11 @@ import {
   defaultStyledSelectInputProps,
 } from 'components/Form/StyledInputs/StyledSelectInput/type';
 
-export type StyledSearchSelectInputProps = StyledSelectInputProps & {
+type OptionalProps = {
   onSearch: string => void,
 };
+
+export type StyledSearchSelectInputProps = StyledSelectInputProps & OptionalProps;
 
 export const defaultStyledSearchSelectInputProps = {
   ...defaultStyledSelectInputProps,
