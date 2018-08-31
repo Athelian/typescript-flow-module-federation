@@ -8,12 +8,6 @@ type FormState = {
   files: Array<any>,
 };
 
-const OrderSchema = Yup.object().shape({
-  poNo: Yup.string().required(),
-  currency: Yup.string().required(),
-  exporter: Yup.string().required(),
-});
-
 export default class OrderFormContainer extends Container<FormState> {
   state = {
     orderItems: [],
@@ -28,5 +22,10 @@ export default class OrderFormContainer extends Container<FormState> {
 
   isDirty = (values: any) => !isEquals(values, this.state);
 
-  validationRules = () => OrderSchema;
+  validationRules = () =>
+    Yup.object().shape({
+      poNo: Yup.string().required(),
+      currency: Yup.string().required(),
+      exporter: Yup.string().required(),
+    });
 }

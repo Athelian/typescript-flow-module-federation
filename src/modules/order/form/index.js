@@ -86,12 +86,10 @@ export default function OrderForm({ order }: Props) {
       <div className={SectionWrapperStyle} id="itemsSection">
         <Subscribe to={[OrderFormContainer]}>
           {({ state: values }) => (
-            <React.Fragment>
-              <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
-              <ItemsSection isReady={hasSelectExporter(order) || hasSelectExporter(values)} />
-            </React.Fragment>
+            <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
           )}
         </Subscribe>
+        <ItemsSection isReady={hasSelectExporter(order)} />
       </div>
       <div className={SectionWrapperStyle} id="documentsSection">
         <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />
