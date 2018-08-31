@@ -3,12 +3,12 @@ import * as React from 'react';
 
 export type PureInputProps = {
   value: any,
-  name: string,
-  placeholder: string | React.Node,
-  onChange: ?Function,
-  onBlur: ?Function,
-  onFocus: ?Function,
-  align: 'left' | 'right' | 'center',
+  name?: string,
+  placeholder?: string | React.Node,
+  onChange?: ?Function,
+  onBlur?: ?Function,
+  onFocus?: ?Function,
+  align?: 'left' | 'right' | 'center',
 };
 
 export const defaultPureInputProps = {
