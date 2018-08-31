@@ -3,16 +3,10 @@ import * as React from 'react';
 import matchSorter from 'match-sorter';
 import PartnerListProvider from 'providers/PartnerList';
 import { StringValue } from 'react-values';
-import { type PureInputProps } from 'components/Form/PureInputs/type';
 import SearchSelectInput from '../index';
+import { type PartnerSelectInputProps as Props, defaultPartnerSelectInputProps } from './type';
 
-type Props = PureInputProps & {
-  types?: Array<string>,
-};
-
-const defaultPartnerTypes = ['Exporter', 'Supplier', 'Forwarder'];
-
-function PartnerSelectInput({ onChange, types = defaultPartnerTypes, ...rest }: Props) {
+function PartnerSelectInput({ onChange, types, ...rest }: Props) {
   const filterItems = (query: string, data: Array<any>) => {
     const items = data.filter(item => types.includes(item.type));
     if (!query) return items;
@@ -46,4 +40,5 @@ function PartnerSelectInput({ onChange, types = defaultPartnerTypes, ...rest }: 
   );
 }
 
+PartnerSelectInput.defaultProps = defaultPartnerSelectInputProps;
 export default PartnerSelectInput;
