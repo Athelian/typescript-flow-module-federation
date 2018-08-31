@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
 import { navigate } from '@reach/router';
-import { type Shipment } from 'modules/shipment/type.js.flow';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
+import type { ShipmentListCard } from './type.js.flow';
 import BaseCard, { CardAction } from '../BaseCard';
 import { ShipmentCardWrapperStyle } from './style';
 
 type Props = {
-  shipment: ?Shipment,
+  shipment: ?ShipmentListCard,
 };
 
 const ShipmentCard = ({ shipment }: Props) => {

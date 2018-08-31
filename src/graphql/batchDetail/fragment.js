@@ -6,10 +6,18 @@ export const detailedBatchFragment = gql`
   fragment detailedBatchFragment on Batch {
     id
     archived
+    updatedAt
+    updatedBy {
+      ...userListFieldsFragment
+    }
     no
     quantity
-    packageQuantity
+    producedAt
+    deliveredAt
+    expiredAt
     packageName
+    packageQuantity
+    packageCapacity
     packageGrossWeight {
       value
       metric
@@ -18,7 +26,6 @@ export const detailedBatchFragment = gql`
       value
       metric
     }
-    packageCapacity
     packageSize {
       length {
         value
@@ -33,14 +40,9 @@ export const detailedBatchFragment = gql`
         metric
       }
     }
-    memo
-    producedAt
-    deliveredAt
-    expiredAt
-    createdAt
-    updatedAt
     orderItem {
       id
+      quantity
       price {
         amount
         currency
@@ -48,52 +50,36 @@ export const detailedBatchFragment = gql`
       order {
         id
         poNo
-        currency
-        exporter {
-          id
-        }
       }
       productProvider {
         id
-        inspectionFee {
-          amount
-          currency
-        }
-        unitWeight {
-          value
-          metric
-        }
-        unitVolume {
-          value
-          metric
-        }
-        exporter {
-          id
-          name
-        }
         product {
           id
           name
           serial
+        }
+        exporter {
+          id
+          name
+        }
+        supplier {
+          id
+          name
         }
       }
     }
     tags {
       id
       name
-      description
       color
-    }
-    batchAssignments {
-      id
-      quantity
-      memo
-      user {
-        ...userListFieldsFragment
-      }
     }
     batchAdjustments {
       id
+      sort
+      updatedAt
+      updatedBy {
+        ...userListFieldsFragment
+      }
       reason
       quantity
       memo
