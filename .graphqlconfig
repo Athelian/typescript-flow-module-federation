@@ -9,8 +9,8 @@
           }
         },
         "generate-fragments": {
-          "output": "src/generated/zenport.fragments.graphql",
-          "generator": "graphql"
+          "output": "src/generated/zenport.fragments.js",
+          "generator": "js"
         }
       }
     }

@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import { userNameFragment } from 'graphql/userList/fragment';
 
 export const batchDetailQuery = gql`
   query($id: ID!) {
@@ -8,7 +9,7 @@ export const batchDetailQuery = gql`
       archived
       updatedAt
       updatedBy {
-        ...userListFieldsFragment
+        ...userNameFragment
       }
       no
       quantity
@@ -78,7 +79,7 @@ export const batchDetailQuery = gql`
         sort
         updatedAt
         updatedBy {
-          ...userListFieldsFragment
+          ...userNameFragment
         }
         reason
         quantity
@@ -86,6 +87,8 @@ export const batchDetailQuery = gql`
       }
     }
   }
+
+  ${userNameFragment}
 `;
 
 export default batchDetailQuery;
