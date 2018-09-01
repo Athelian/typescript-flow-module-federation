@@ -1,76 +1,42 @@
 // @flow
 import gql from 'graphql-tag';
+import {
+  BatchFragment,
+  OrderItemNoNestingFragment,
+  UserNoNestingFragment,
+  GroupNoNestingFragment,
+  MetricValueNoNestingFragment,
+} from 'generated/zenport.fragments';
 
-const userListFragment = gql`
-  fragment userListFields on User {
-    firstName
-    lastName
+const SizeNoNestingFragment = `fragment SizeNoNesting on Size {
+  length {
+    ...MetricValueNoNesting
   }
-`;
-
-export const batchItemListFragment = gql`
-  fragment batchItemListFields on Batch {
-    id
-    createdAt
-    updatedAt
-    no
-    archived
-    quantity
-    deliveredAt
-    tags {
-      id
-      name
-      description
-      color
-    }
-    batchAdjustments {
-      id
-      reason
-      quantity
-      memo
-    }
-    batchAssignments {
-      id
-      quantity
-      user {
-        ...userListFields
-      }
-      memo
-    }
-    orderItem {
-      id
-      order {
-        id
-        poNo
-        exporter {
-          id
-          name
-        }
-      }
-      productProvider {
-        id
-        product {
-          id
-          name
-          serial
-        }
-      }
-    }
+  width {
+    ...MetricValueNoNesting
   }
+  height {
+    ...MetricValueNoNesting
+  }
+}`;
 
-  ${userListFragment}
-`;
-
-export const batchItemListQuery = gql`
+export const batchListQuery = gql`
   query($page: Int!, $perPage: Int!) {
     batches(page: $page, perPage: $perPage) {
       nodes {
-        ...batchItemListFields
+        ...Batch
       }
       page
       totalPage
     }
   }
 
-  ${batchItemListFragment}
+  ${BatchFragment}
+  ${OrderItemNoNestingFragment}
+  ${UserNoNestingFragment}
+  ${GroupNoNestingFragment}
+  ${MetricValueNoNestingFragment}
+  ${SizeNoNestingFragment}
 `;
+
+export default batchListQuery;

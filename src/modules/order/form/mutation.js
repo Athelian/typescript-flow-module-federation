@@ -20,16 +20,12 @@ export const createOrderMutation = gql`
 
 export const prepareCreateOrderInput = ({ orderItems = [], ...data }: OrderForm) => ({
   ...data,
-  batchItems: orderItems.map(({ batchItems, productExporterSupplier, ...orderItem }) => ({
+  orderItems: orderItems.map(({ batches, productExporterSupplier, ...orderItem }) => ({
     ...orderItem,
     productProviderId: productExporterSupplier.id,
-    batches: batchItems.map(({ assignments, tags, ...batchItem }) => ({
-      ...batchItem,
+    batches: batches.map(({ assignments, tags, ...batch }) => ({
+      ...batch,
       tagIds: tags ? tags.map(t => t.id) : null,
-      batchAssignments: assignments.map(({ user, ...assign }) => ({
-        userId: user.id,
-        ...assign,
-      })),
     })),
   })),
 });
@@ -49,20 +45,14 @@ export const updateOrderMutation = gql`
   ${violationFragment}
 `;
 
-export const prepareUpdateOrderInput = ({ orderItems = [], exporterId, ...data }: OrderForm) => ({
+export const prepareUpdateOrderInput = ({ orderItems = [], ...data }: OrderForm) => ({
   ...data,
-  batchItems: orderItems.map(({ batchItems, productExporterSupplier, ...orderItem }) => ({
+  orderItems: orderItems.map(({ batches, productExporterSupplier, ...orderItem }) => ({
     ...orderItem,
     productProviderId: productExporterSupplier.id,
-    batchItems: batchItems.map(
-      ({ hasShipment, hasBatchGroup, shipment, batchGroup, assignments, tags, ...batchItem }) => ({
-        ...batchItem,
-        tagIds: tags ? tags.map(t => t.id) : null,
-        batchAssignments: assignments.map(({ user, ...assign }) => ({
-          userId: user.id,
-          ...assign,
-        })),
-      })
-    ),
+    batches: batches.map(({ assignments, tags, ...batch }) => ({
+      ...batch,
+      tagIds: tags ? tags.map(t => t.id) : null,
+    })),
   })),
 });

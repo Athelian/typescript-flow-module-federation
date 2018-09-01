@@ -19,4 +19,10 @@ export const userListFieldsFragment = gql`
   }
 `;
 
-export default userListFieldsFragment;
+export const userNameFragment = gql`
+  fragment userNameFragment on User {
+    id
+    firstName
+    lastName
+  }
+`;

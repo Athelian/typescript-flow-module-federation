@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Aug 31 2018 18:00:43 GMT+0900 (GMT+09:00)
+# timestamp: Sat Sep 01 2018 17:50:25 GMT+0900 (Tokyo Standard Time)
 
 type Batch implements Model & Owned & Package & Tagged {
   archived: Boolean!

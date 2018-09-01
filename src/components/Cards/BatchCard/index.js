@@ -1,14 +1,14 @@
 // @flow
 import * as React from 'react';
 import { navigate } from '@reach/router';
-import type { BatchItem } from 'modules/batch/type.js.flow';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
+import type { BatchListCard } from './type.js.flow';
 import BaseCard, { CardAction } from '../BaseCard';
 import { BatchCardWrapperStyle } from './style';
 
 type Props = {
-  batch: ?BatchItem,
+  batch: ?BatchListCard,
 };
 
 const BatchCard = ({ batch }: Props) => {
