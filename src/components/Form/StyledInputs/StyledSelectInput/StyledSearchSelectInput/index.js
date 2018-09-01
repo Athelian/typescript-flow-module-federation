@@ -17,6 +17,7 @@ function SearchSelectInput({
   width,
   height,
   disabled,
+  onSearch,
   pureInputOptions,
 }: Props) {
   const { align, value, items, itemToString, itemToValue } = pureInputOptions;
@@ -26,6 +27,7 @@ function SearchSelectInput({
   ) : (
     <PureSearchSelectInput
       {...pureInputOptions}
+      onSearch={onSearch}
       itemToString={itemToString}
       itemToValue={itemToValue}
       items={items}

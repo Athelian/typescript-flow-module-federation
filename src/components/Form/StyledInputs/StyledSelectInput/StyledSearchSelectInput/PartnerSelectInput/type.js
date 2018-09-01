@@ -11,7 +11,7 @@ export type PartnerSelectInputProps = OptionalProps & {
 };
 
 export const defaultPartnerSelectInputProps = {
-  types: ['Exporter', 'Supplier', 'Forwarder'],
+  types: ['Exporter', 'Importer', 'Supplier', 'Forwarder', 'Warehouse'],
 };
 
 export default defaultPartnerSelectInputProps;

@@ -22,7 +22,7 @@ const defaultProps = {
 };
 
 const SelectExporters = ({ selected, onSelect }: Props) => (
-  <PartnerListProvider>
+  <PartnerListProvider types={['Exporter']}>
     {({ loading, data }) => (
       <Layout
         navBar={

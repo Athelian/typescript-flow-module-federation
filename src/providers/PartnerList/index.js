@@ -5,14 +5,15 @@ import { getByPathWithDefault } from 'utils/fp';
 import query from './query.graphql';
 
 type Props = {
+  types: Array<string>,
   children: any,
 };
 
 class PartnerList extends React.PureComponent<Props> {
   render() {
-    const { children } = this.props;
+    const { children, types } = this.props;
     return (
-      <Query query={query} variables={{ page: 1, perPage: 20 }}>
+      <Query query={query} variables={{ page: 1, perPage: 20, filterBy: { types } }}>
         {({ loading, data, error }) =>
           children({
             data:
