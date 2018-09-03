@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, StringValue } from 'react-values';
 import OrderFormContainer from 'modules/order/form/container';
 import { FormContainer, FormField } from 'modules/form';
 import { FormattedMessage } from 'react-intl';
@@ -16,10 +16,16 @@ import {
   DefaultStyle,
   TextInput,
   DateInput,
+  SearchSelectInput,
+  DefaultSearchSelect,
+  DefaultOptions,
   DashedPlusButton,
   TagsInput,
   InputGroup,
 } from 'components/Form';
+import EnumProvider from 'providers/enum';
+import matchSorter from 'match-sorter';
+
 import Divider from 'components/Divider';
 import BaseCard from 'components/Cards';
 import { colors } from 'styles/common';
@@ -124,7 +130,6 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                             input={
                               <DefaultStyle
                                 isFocused={activeField === name}
-                                hasError={touched[name] && errors[name]}
                                 forceHoverStyle={isNew}
                                 width="200px"
                               >
@@ -160,7 +165,6 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                               <DefaultStyle
                                 type="date"
                                 isFocused={activeField === name}
-                                hasError={touched[name] && errors[name]}
                                 forceHoverStyle={isNew}
                                 width="200px"
                               >
@@ -170,7 +174,85 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                           />
                         )}
                       </FormField>
-                      CurrencyInput IncotermInput
+
+                      <FormField
+                        name="currency"
+                        initValue={values.currency}
+                        setFieldValue={setFieldValue}
+                        {...formHelper}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <FieldItem
+                            label={
+                              <Label>
+                                <FormattedMessage {...messages.currency} />
+                              </Label>
+                            }
+                            tooltip={
+                              <Tooltip
+                                isNew={isNew}
+                                errorMessage={touched[name] && errors[name]}
+                                changedValues={{
+                                  oldValue: initialValues[name],
+                                  newValue: values[name],
+                                }}
+                              />
+                            }
+                            input={
+                              <EnumProvider enumType="Currency">
+                                {({ loading, error, data }) => {
+                                  if (loading) return null;
+                                  if (error) return `Error!: ${error}`;
+
+                                  const filterItems = (query: string, items: Array<any>) => {
+                                    if (!query) return items;
+                                    return matchSorter(items, query, {
+                                      keys: ['name', 'description'],
+                                    });
+                                  };
+
+                                  return (
+                                    <StringValue defaultValue="">
+                                      {({ value: query, set, clear }) => (
+                                        <SearchSelectInput
+                                          name={name}
+                                          {...inputHandlers}
+                                          items={filterItems(query, data)}
+                                          itemToString={item => (item ? item.name : '')}
+                                          itemToValue={item => (item ? item.id : null)}
+                                          renderSelect={({ ...rest }) => (
+                                            <DefaultSearchSelect
+                                              {...rest}
+                                              hasError={touched[name] && errors[name]}
+                                              forceHoverStyle={isNew}
+                                              width="200px"
+                                              isOpen={activeField === name}
+                                            />
+                                          )}
+                                          renderOptions={({ ...rest }) => (
+                                            <DefaultOptions
+                                              {...rest}
+                                              items={filterItems(query, data)}
+                                              itemToString={item => (item ? item.name : '')}
+                                              itemToValue={item => (item ? item.id : null)}
+                                            />
+                                          )}
+                                          onChange={item => {
+                                            if (!item) clear();
+                                            setFieldValue('currency', item && item.name);
+                                          }}
+                                          onSearch={set}
+                                        />
+                                      )}
+                                    </StringValue>
+                                  );
+                                }}
+                              </EnumProvider>
+                            }
+                          />
+                        )}
+                      </FormField>
+
                       <FormField
                         name="deliveryPlace"
                         initValue={values.deliveryPlace}
@@ -211,50 +293,51 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                 </Subscribe>
               </InputGroup>
               <div className={ExporterSectionStyle}>
-                <Label title={<FormattedMessage {...messages.exporter} />} required vertical>
-                  <BooleanValue>
-                    {({ value: opened, toggle }) => (
-                      <React.Fragment>
-                        {!values.exporter ? (
-                          <DashedPlusButton width="200px" height="230px" onClick={toggle} />
-                        ) : (
-                          <BaseCard icon="PARTNER" color="PARTNER">
-                            <div className={ExporterCardStyle} role="presentation" onClick={toggle}>
-                              <img
-                                className={ExporterCardImageStyle}
-                                src={FALLBACK_IMAGE}
-                                alt="exporter_image"
-                              />
-                              <div className={ExporterNameStyle}>
-                                {values.exporter && values.exporter.id
-                                  ? values.exporter.name
-                                  : 'Exporter'}
-                              </div>
-                            </div>
-                          </BaseCard>
-                        )}
-
-                        <SlideView
-                          isOpen={opened}
-                          onRequestClose={toggle}
-                          options={{ width: '1030px' }}
-                        >
-                          {opened && (
-                            <SelectExporters
-                              selected={values.exporter}
-                              onSelect={({ group, name }) =>
-                                setFieldValue('exporter', {
-                                  id: group.id,
-                                  name: name || group.name,
-                                })
-                              }
-                            />
-                          )}
-                        </SlideView>
-                      </React.Fragment>
-                    )}
-                  </BooleanValue>
+                <Label required>
+                  <FormattedMessage {...messages.exporter} />
                 </Label>
+                <BooleanValue>
+                  {({ value: opened, toggle }) => (
+                    <React.Fragment>
+                      {!values.exporter ? (
+                        <DashedPlusButton width="200px" height="230px" onClick={toggle} />
+                      ) : (
+                        <BaseCard icon="PARTNER" color="PARTNER">
+                          <div className={ExporterCardStyle} role="presentation" onClick={toggle}>
+                            <img
+                              className={ExporterCardImageStyle}
+                              src={FALLBACK_IMAGE}
+                              alt="exporter_image"
+                            />
+                            <div className={ExporterNameStyle}>
+                              {values.exporter && values.exporter.id
+                                ? values.exporter.name
+                                : 'Exporter'}
+                            </div>
+                          </div>
+                        </BaseCard>
+                      )}
+
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={toggle}
+                        options={{ width: '1030px' }}
+                      >
+                        {opened && (
+                          <SelectExporters
+                            selected={values.exporter}
+                            onSelect={({ group, name }) =>
+                              setFieldValue('exporter', {
+                                id: group.id,
+                                name: name || group.name,
+                              })
+                            }
+                          />
+                        )}
+                      </SlideView>
+                    </React.Fragment>
+                  )}
+                </BooleanValue>
               </div>
             </div>
             <div className={TagsInputStyle}>
