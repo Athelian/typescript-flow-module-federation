@@ -18,7 +18,7 @@ type Props = {
   perPage: number,
 };
 
-class BatchList extends React.PureComponent<Props> {
+class BatchList extends React.Component<Props> {
   loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;

@@ -33,7 +33,7 @@ const defaultProps = {
   orderId: '',
 };
 
-class OrderFormModule extends React.PureComponent<Props> {
+class OrderFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   onCancel = () => {

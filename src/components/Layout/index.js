@@ -20,7 +20,7 @@ const defaultProps = {
   navBar: '',
 };
 
-export default class Layout extends React.PureComponent<Props, State> {
+export default class Layout extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
   state: State = { hasError: false };

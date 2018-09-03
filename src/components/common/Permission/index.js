@@ -16,7 +16,7 @@ const defaultProps = {
   permissions: 'rw',
 };
 
-export default class Permission extends React.PureComponent<Props, State> {
+export default class Permission extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
   constructor(props: Props) {

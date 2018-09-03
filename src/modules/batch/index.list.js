@@ -12,7 +12,6 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import { PartnerSelectInput } from 'components/Form';
 import BatchList from './list';
 import messages from './messages';
 
@@ -119,7 +118,7 @@ class BatchListModule extends React.Component<Props, State> {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <PartnerSelectInput
+                      {/* <PartnerSelectInput
                         title="Exporter"
                         types={['Exporter']}
                         value={values.exporterId}
@@ -136,7 +135,7 @@ class BatchListModule extends React.Component<Props, State> {
                         types={['Forwarder']}
                         value={values.userId}
                         onChange={v => setFieldValue('userId', v ? v.id : null)}
-                      />
+                      /> */}
                     </InputGroup>
                   )}
                 </FilterInput>

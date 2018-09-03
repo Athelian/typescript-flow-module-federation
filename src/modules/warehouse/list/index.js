@@ -13,7 +13,7 @@ type Props = {
   perPage: number,
 };
 
-class WarehouseList extends React.PureComponent<Props> {
+class WarehouseList extends React.Component<Props> {
   loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;

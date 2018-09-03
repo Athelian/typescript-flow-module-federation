@@ -5,27 +5,28 @@ import {
   FormObserver as ZenFormObserver,
   FieldArray as ZenFieldArray,
 } from 'zenform';
-import DropDown from './SimpleDropDown';
+import {
+  DateInput,
+  EmailInput,
+  NumberInput,
+  PasswordInput,
+  SearchSelectInput,
+  SelectInput,
+  TextAreaInput,
+  TextInput,
+  DefaultStyle,
+  DefaultPriceStyle,
+  DefaultOptions,
+  DefaultSearchSelect,
+  DefaultSelect,
+} from './Inputs';
 import TagsInput from './TagsInput';
 import InputGroup from './InputGroup';
 import FieldItem from './FieldItem';
 import Label from './Label';
+import Tooltip from './Tooltip';
+import TooltipBubble from './Tooltip/TooltipBubble';
 import Display from './Display';
-import {
-  StyledDateInput as DateInput,
-  StyledEmailInput as EmailInput,
-  StyledNumberInput as NumberInput,
-  StyledPasswordInput as PasswordInput,
-  StyledPriceInput as PriceInput,
-  StyledTextInput as TextInput,
-  StyledTextAreaInput as TextAreaInput,
-  StyledEnumInput as EnumInput,
-  StyledSearchSelectInput as SearchSelectInput,
-  StyledSelectInput as SelectInput,
-  StyledPartnerSelectInput as PartnerSelectInput,
-  StyledCurrencyInput as CurrencyInput,
-  StyledIncotermInput as IncotermInput,
-} from './StyledInputs';
 import DashedPlusButton from './DashedPlusButton';
 
 export const Form = ZenForm;
@@ -35,24 +36,25 @@ export const FormObserver = ZenFormObserver;
 export const FieldArray = ZenFieldArray;
 
 export {
-  FieldItem,
-  Label,
-  Display,
   DateInput,
   EmailInput,
   NumberInput,
   PasswordInput,
-  PriceInput,
-  TextInput,
-  TextAreaInput,
-  EnumInput,
   SearchSelectInput,
-  PartnerSelectInput,
   SelectInput,
-  CurrencyInput,
-  IncotermInput,
+  TextAreaInput,
+  TextInput,
+  DefaultStyle,
+  DefaultPriceStyle,
+  DefaultOptions,
+  DefaultSearchSelect,
+  DefaultSelect,
+  FieldItem,
+  Label,
+  Tooltip,
+  TooltipBubble,
+  Display,
   DashedPlusButton,
-  DropDown,
   TagsInput,
   InputGroup,
 };

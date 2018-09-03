@@ -117,8 +117,6 @@ class DocumentItem extends React.Component<Props, State> {
         </div>
         <div className={MemoWrapperStyle(isExpanded)}>
           <TextAreaInput
-            title="MEMO"
-            rows={4}
             value={value.memo || ''}
             name={`${name}.memo`}
             onChange={e => {
@@ -131,7 +129,6 @@ class DocumentItem extends React.Component<Props, State> {
                 onBlur(`${name}.memo`, true);
               }
             }}
-            readOnly={readOnly}
           />
         </div>
         <button

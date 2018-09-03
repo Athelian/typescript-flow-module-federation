@@ -2,12 +2,15 @@
 import * as React from 'react';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 
-type Props = {
-  icon?: string,
+type OptionalProps = {
+  icon: string,
+  disabled: boolean,
+  active: boolean,
+  onClick: Function,
+};
+
+type Props = OptionalProps & {
   label: string | React.Node,
-  disabled?: boolean,
-  active?: boolean,
-  onClick?: Function,
 };
 
 const defaultProps = {
@@ -17,13 +20,10 @@ const defaultProps = {
   onClick: () => {},
 };
 
-export default class SectionNavigation extends React.PureComponent<Props> {
-  static defaultProps = defaultProps;
+const SectionNavigation = ({ icon, label, disabled, active, onClick }: Props) => (
+  <TabItem icon={icon} label={label} disabled={disabled} active={active} onClick={onClick} />
+);
 
-  render() {
-    const { icon, label, disabled, active = false, onClick = () => {} } = this.props;
-    return (
-      <TabItem icon={icon} label={label} disabled={disabled} active={active} onClick={onClick} />
-    );
-  }
-}
+SectionNavigation.defaultProps = defaultProps;
+
+export default SectionNavigation;

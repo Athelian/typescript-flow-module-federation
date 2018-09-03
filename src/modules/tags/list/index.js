@@ -14,7 +14,7 @@ type Props = {
   tabIndex: number,
 };
 
-class TagList extends React.PureComponent<Props> {
+class TagList extends React.Component<Props> {
   loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;

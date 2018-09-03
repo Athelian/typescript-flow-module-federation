@@ -12,7 +12,6 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import { PartnerSelectInput } from 'components/Form';
 import NewButton from 'components/NavButtons/NewButton';
 import OrderList from './list';
 import messages from './messages';
@@ -98,7 +97,7 @@ class OrderModule extends React.Component<Props, State> {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <PartnerSelectInput
+                      {/* <PartnerSelectInput
                         title={intl.formatMessage(messages.exporter)}
                         label={intl.formatMessage(messages.exporter)}
                         types={['Exporter']}
@@ -118,7 +117,7 @@ class OrderModule extends React.Component<Props, State> {
                         types={['Forwarder']}
                         value={values.userId}
                         onChange={v => setFieldValue('userId', v ? v.id : null)}
-                      />
+                      /> */}
                     </InputGroup>
                   )}
                 </FilterInput>

@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions';
 import { css } from 'react-emotion';
 import Icon from 'components/Icon';
 import { layout, colors, borderRadiuses, fontSizes, transitions, presets } from 'styles/common';
-import PureSearchInput from './index';
+import SearchInput from './index';
 
 const InputStyle = css`
   ${fontSizes.MAIN};
@@ -61,15 +61,15 @@ const SearchInputStyle = css`
   }
 `;
 
-storiesOf('PureSearchInput', module)
+storiesOf('SearchInput', module)
   .add('styleless', () => (
     <div>
-      <PureSearchInput onChange={action('query changed:')} />
+      <SearchInput onChange={action('query changed:')} />
     </div>
   ))
   .add('with searchIcon, clear button', () => (
     <div>
-      <PureSearchInput
+      <SearchInput
         searchIcon={<Icon icon="SEARCH" />}
         clearButton={({ clearQuery }) => (
           <button type="button" onClick={clearQuery}>
@@ -82,7 +82,7 @@ storiesOf('PureSearchInput', module)
   ))
   .add('with style', () => (
     <div>
-      <PureSearchInput
+      <SearchInput
         style={SearchInputStyle}
         searchIcon={<Icon icon="SEARCH" />}
         clearButton={({ clearQuery }) => (

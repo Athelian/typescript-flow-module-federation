@@ -12,7 +12,7 @@ type State = {
   isEditMode: boolean,
 };
 
-export default class Editable extends React.PureComponent<Props, State> {
+export default class Editable extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 

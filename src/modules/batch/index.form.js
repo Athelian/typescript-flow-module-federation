@@ -26,7 +26,7 @@ const defaultProps = {
   batchId: '',
 };
 
-class BatchFormModule extends React.PureComponent<Props> {
+class BatchFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   onCancel = () => {

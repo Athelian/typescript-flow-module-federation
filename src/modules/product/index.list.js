@@ -10,7 +10,6 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import { PartnerSelectInput } from 'components/Form';
 import InputGroup from 'components/Form/InputGroup';
 import ProductList from './list';
 import messages from './messages';
@@ -94,7 +93,7 @@ class ProductModule extends React.Component<Props, State> {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newQuery => setFieldValue('query', newQuery)}
                       />
-                      <PartnerSelectInput
+                      {/* <PartnerSelectInput
                         title="Exporter"
                         types={['Exporter']}
                         value={values.exporterId}
@@ -105,7 +104,7 @@ class ProductModule extends React.Component<Props, State> {
                         types={['Supplier']}
                         value={values.supplierId}
                         onChange={v => setFieldValue('supplierId', v ? v.id : null)}
-                      />
+                      /> */}
                     </InputGroup>
                   )}
                 </FilterInput>

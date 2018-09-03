@@ -36,7 +36,7 @@ type State = {
   isActive: boolean,
 };
 
-class FilterInput extends React.PureComponent<Props, State> {
+class FilterInput extends React.Component<Props, State> {
   constructor() {
     super();
     this.state = {
