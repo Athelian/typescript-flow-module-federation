@@ -124,6 +124,11 @@
 
   "components.FormattedName.name": "{firstName} {lastName}",
 
+  "components.ActivateDialog.activate": "ACTIVATE",
+  "components.ActivateDialog.cancel": "CANCEL",
+  "components.ArchiveDialog.archive": "ARCHIVE",
+  "components.ArchiveDialog.cancel": "CANCEL",
+
   "components.QuantityChart.batchedQuantity": "BATCHED QTY",
   "components.QuantityChart.shippedQuantity": "SHIPPED QTY",
 
@@ -722,6 +727,19 @@
   "modules.order.list.sort.exporter": "Exporter",
   "modules.order.list.sort.createdAt": "Created At",
   "modules.order.list.sort.updatedAt": "Updated At",
+
+  "modules.order.form.activateDialog.confirmMsg": "Are you sure you want to activate this {order}?",
+  "modules.order.form.activateDialog.unshippedMsg": "This will activate {unshipped}/{total} {batches} as well.",
+  "modules.order.form.activateDialog.shippedMsg": "{shipped}/{total} {batches} are already active because they are in active {shipments}.",
+
+  "modules.order.form.archiveDialog.confirmMsg": "Are you sure you want to activate this {order}?",
+  "modules.order.form.archiveDialog.unshippedMsg": "This will activate {unshipped}/{total} {batches} as well.",
+  "modules.order.form.archiveDialog.shippedMsg": "{shipped}/{total} {batches} are already active because they are in active {shipments}.",
+  "modules.order.form.archiveDialog.warnMsg": "You need to archive those shipments in order to archive these batches.",
+
+  "modules.order.form.dialog.order": "order",
+  "modules.order.form.dialog.batches": "batches",
+  "modules.order.form.dialog.shipments": "shipments",
 
   "modules.order.form.batch": "BATCH",
   "modules.order.form.noItems": "No Items found / Please choose Exporter first",

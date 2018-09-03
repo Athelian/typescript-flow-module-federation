@@ -124,6 +124,11 @@
 
   "components.FormattedName.name": "{lastName} {firstName}",
 
+  "components.ActivateDialog.activate": "アクティブ",
+  "components.ActivateDialog.cancel": "キャンセル",
+  "components.ArchiveDialog.archive": "アーカイブ",
+  "components.ArchiveDialog.cancel": "キャンセル",
+
   "components.QuantityChart.batchedQuantity": "バッチ数",
   "components.QuantityChart.shippedQuantity": "船積数",
 
@@ -722,6 +727,19 @@
   "modules.order.list.sort.exporter": "輸出者",
   "modules.order.list.sort.createdAt": "作成日",
   "modules.order.list.sort.updatedAt": "最終編集日",
+
+  "modules.order.form.activateDialog.confirmMsg": "本当に該当{order}をアクティブしたいですか？",
+  "modules.order.form.activateDialog.unshippedMsg": "{unshipped}/{total} {batches} がアクティブできます。",
+  "modules.order.form.activateDialog.shippedMsg": "{shipped}/{total} {batches} がもうアクティブ済み、アクティブの {shipments} の中から。",
+
+  "modules.order.form.archiveDialog.confirmMsg": "本当に該当{order}をアーカイブしたいですか？",
+  "modules.order.form.archiveDialog.unshippedMsg": "{unshipped}/{total} {batches} がアーカイブできます。",
+  "modules.order.form.archiveDialog.shippedMsg": "{shipped}/{total} {batches} がもうアーカイブ済み、アーカイブの {shipments} の中から。",
+  "modules.order.form.archiveDialog.warnMsg": "出荷済みのバッチをアーカイブしなければいけません。",
+
+  "modules.order.form.dialog.order": "注文",
+  "modules.order.form.dialog.batches": "バッチ",
+  "modules.order.form.dialog.shipments": "出荷",
 
   "modules.order.form.batch": "バッチ",
   "modules.order.form.noItems": "商品がありません。輸出者を選択してください。",

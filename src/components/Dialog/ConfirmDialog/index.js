@@ -1,21 +1,20 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import type { ConfirmDialogProps } from 'components/Dialog/type';
+
 import Dialog from '../index';
 import messages from './messages';
 import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
 
-type Props = {
-  isOpen: boolean,
-  onRequestClose: () => void,
-  onCancel: () => void,
-  onConfirm: () => void,
-  message: string,
-  // dialog width
-  width: number,
-};
-
-function ConfirmDialog({ isOpen, onRequestClose, onCancel, onConfirm, message, width }: Props) {
+function ConfirmDialog({
+  isOpen,
+  onRequestClose,
+  onCancel,
+  onConfirm,
+  message,
+  width,
+}: ConfirmDialogProps) {
   return (
     <Dialog isOpen={isOpen} onRequestClose={onRequestClose} options={{ width }}>
       <div className={DialogStyle}>

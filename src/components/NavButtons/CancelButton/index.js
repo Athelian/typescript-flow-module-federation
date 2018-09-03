@@ -7,7 +7,7 @@ import CustomButton from '../CustomButton';
 import messages from '../messages';
 
 type Props = {
-  disabled: boolean,
+  disabled?: boolean,
 };
 
 const CancelButton = ({ disabled, ...rest }: Props) => (
