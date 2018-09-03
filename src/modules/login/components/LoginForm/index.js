@@ -8,11 +8,11 @@ import messages from 'modules/login/messages';
 import { LoginBoxStyle } from 'modules/login/style';
 import {
   FieldItem,
-  StandardStyle,
+  DefaultStyle,
   Label,
   Tooltip,
-  PureEmailInput,
-  PurePasswordInput,
+  EmailInput,
+  PasswordInput,
   Form,
   Field,
 } from 'components/Form';
@@ -62,14 +62,14 @@ function LoginForm({ onLogin }: Props) {
                   }
                   tooltip={<Tooltip isNew errorMessage={touched.email && errors.email} />}
                   input={
-                    <StandardStyle
+                    <DefaultStyle
                       isFocused={meta.isActive}
                       hasError={touched.email && errors.email}
                       forceHoverStyle
                       width="200px"
                     >
-                      <PureEmailInput data-testid="email" align="left" name {...input} />
-                    </StandardStyle>
+                      <EmailInput data-testid="email" align="left" name {...input} />
+                    </DefaultStyle>
                   }
                 />
               )}
@@ -86,14 +86,14 @@ function LoginForm({ onLogin }: Props) {
                   }
                   tooltip={<Tooltip isNew errorMessage={touched.password && errors.password} />}
                   input={
-                    <StandardStyle
+                    <DefaultStyle
                       isFocused={meta.isActive}
                       hasError={touched.password && errors.password}
                       forceHoverStyle
                       width="200px"
                     >
-                      <PurePasswordInput data-testid="password" align="left" name {...input} />
-                    </StandardStyle>
+                      <PasswordInput data-testid="password" align="left" name {...input} />
+                    </DefaultStyle>
                   }
                 />
               )}

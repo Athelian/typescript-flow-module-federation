@@ -27,7 +27,7 @@ type State = {
   logoutDialogOpen: boolean,
 };
 
-class Settings extends React.PureComponent<Props, State> {
+class Settings extends React.Component<Props, State> {
   constructor() {
     super();
     this.state = {

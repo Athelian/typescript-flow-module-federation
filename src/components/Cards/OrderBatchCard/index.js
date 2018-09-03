@@ -5,14 +5,7 @@ import logger from 'utils/logger';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
-import {
-  StandardStyle,
-  Label,
-  Display,
-  PureTextInput,
-  PureDateInput,
-  PureNumberInput,
-} from 'components/Form';
+import { DefaultStyle, Label, Display, TextInput, DateInput, NumberInput } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderBatchCardWrapperStyle,
@@ -91,7 +84,7 @@ const OrderBatchCard = ({ batch, onClick, ...rest }: Props) => {
     <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
       <div className={OrderBatchCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={BatchNoWrapperStyle}>
-          <StandardStyle
+          <DefaultStyle
             isFocused={dummyNo.isActive}
             hasError={dummyNo.hasError}
             forceHoverStyle={isNew}
@@ -102,13 +95,13 @@ const OrderBatchCard = ({ batch, onClick, ...rest }: Props) => {
               align: 'left',
             }}
           >
-            <PureTextInput align="left" {...dummyNo.input} />
-          </StandardStyle>
+            <TextInput align="left" {...dummyNo.input} />
+          </DefaultStyle>
         </div>
 
         <div className={QuantityWrapperStyle}>
           <Label required>QTY</Label>
-          <StandardStyle
+          <DefaultStyle
             type="number"
             isFocused={dummyQuantity.isActive}
             hasError={dummyQuantity.hasError}
@@ -116,13 +109,13 @@ const OrderBatchCard = ({ batch, onClick, ...rest }: Props) => {
             width="90px"
             height="20px"
           >
-            <PureNumberInput {...dummyQuantity.input} />
-          </StandardStyle>
+            <NumberInput {...dummyQuantity.input} />
+          </DefaultStyle>
         </div>
 
         <div className={DeliveryDateWrapperStyle}>
           <Label>DELIVERY</Label>
-          <StandardStyle
+          <DefaultStyle
             type="date"
             isFocused={dummyDate.isActive}
             hasError={dummyDate.hasError}
@@ -130,8 +123,8 @@ const OrderBatchCard = ({ batch, onClick, ...rest }: Props) => {
             width="90px"
             height="20px"
           >
-            <PureDateInput {...dummyDate.input} />
-          </StandardStyle>
+            <DateInput {...dummyDate.input} />
+          </DefaultStyle>
         </div>
 
         <div className={DividerStyle} />

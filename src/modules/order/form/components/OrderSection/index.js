@@ -13,9 +13,9 @@ import {
   Label,
   Display,
   Tooltip,
-  StandardStyle,
-  PureTextInput,
-  PureDateInput,
+  DefaultStyle,
+  TextInput,
+  DateInput,
   DashedPlusButton,
   TagsInput,
   InputGroup,
@@ -87,14 +87,14 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                               />
                             }
                             input={
-                              <StandardStyle
+                              <DefaultStyle
                                 isFocused={activeField === name}
                                 hasError={touched[name] && errors[name]}
                                 forceHoverStyle={isNew}
                                 width="200px"
                               >
-                                <PureTextInput name={name} {...inputHandlers} />
-                              </StandardStyle>
+                                <TextInput name={name} {...inputHandlers} />
+                              </DefaultStyle>
                             }
                           />
                         )}
@@ -122,14 +122,14 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                               />
                             }
                             input={
-                              <StandardStyle
+                              <DefaultStyle
                                 isFocused={activeField === name}
                                 hasError={touched[name] && errors[name]}
                                 forceHoverStyle={isNew}
                                 width="200px"
                               >
-                                <PureTextInput name={name} {...inputHandlers} />
-                              </StandardStyle>
+                                <TextInput name={name} {...inputHandlers} />
+                              </DefaultStyle>
                             }
                           />
                         )}
@@ -157,15 +157,15 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                               />
                             }
                             input={
-                              <StandardStyle
+                              <DefaultStyle
                                 type="date"
                                 isFocused={activeField === name}
                                 hasError={touched[name] && errors[name]}
                                 forceHoverStyle={isNew}
                                 width="200px"
                               >
-                                <PureDateInput name={name} {...inputHandlers} />
-                              </StandardStyle>
+                                <DateInput name={name} {...inputHandlers} />
+                              </DefaultStyle>
                             }
                           />
                         )}
@@ -194,14 +194,14 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                               />
                             }
                             input={
-                              <StandardStyle
+                              <DefaultStyle
                                 isFocused={activeField === name}
                                 hasError={touched[name] && errors[name]}
                                 forceHoverStyle={isNew}
                                 width="200px"
                               >
-                                <PureTextInput name={name} {...inputHandlers} />
-                              </StandardStyle>
+                                <TextInput name={name} {...inputHandlers} />
+                              </DefaultStyle>
                             }
                           />
                         )}

@@ -13,7 +13,7 @@ type State = {
   activeNode: ?string,
 };
 
-class JumpToSection extends React.PureComponent<Props, State> {
+class JumpToSection extends React.Component<Props, State> {
   static defaultProps = {
     rootViewPort: null,
     threshold: [0, 0.1, 0.2, 0.8, 0.9, 1],

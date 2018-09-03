@@ -23,7 +23,7 @@ const defaultProps = {
   onValidate: () => {},
 };
 
-export default class FormField extends React.PureComponent<Props, State> {
+export default class FormField extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
   constructor(props: Props) {

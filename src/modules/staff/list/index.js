@@ -12,7 +12,7 @@ type Props = {
   perPage: number,
 };
 
-class StaffList extends React.PureComponent<Props> {
+class StaffList extends React.Component<Props> {
   loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;

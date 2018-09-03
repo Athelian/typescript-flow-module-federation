@@ -6,22 +6,20 @@ import {
   FieldArray as ZenFieldArray,
 } from 'zenform';
 import {
-  PureDateInput,
-  PureEmailInput,
-  PureNumberInput,
-  PurePasswordInput,
-  PureSearchSelectInput,
-  PureSelectInput,
-  PureTextAreaInput,
-  PureTextInput,
-} from './PureInputs';
-import {
-  StandardStyle,
-  StandardPriceStyle,
-  StandardOptions,
-  StandardSearchSelect,
-  StandardSelect,
-} from './InputStyles';
+  DateInput,
+  EmailInput,
+  NumberInput,
+  PasswordInput,
+  SearchSelectInput,
+  SelectInput,
+  TextAreaInput,
+  TextInput,
+  DefaultStyle,
+  DefaultPriceStyle,
+  DefaultOptions,
+  DefaultSearchSelect,
+  DefaultSelect,
+} from './Inputs';
 import TagsInput from './TagsInput';
 import InputGroup from './InputGroup';
 import FieldItem from './FieldItem';
@@ -38,19 +36,19 @@ export const FormObserver = ZenFormObserver;
 export const FieldArray = ZenFieldArray;
 
 export {
-  PureDateInput,
-  PureEmailInput,
-  PureNumberInput,
-  PurePasswordInput,
-  PureSearchSelectInput,
-  PureSelectInput,
-  PureTextAreaInput,
-  PureTextInput,
-  StandardStyle,
-  StandardPriceStyle,
-  StandardOptions,
-  StandardSearchSelect,
-  StandardSelect,
+  DateInput,
+  EmailInput,
+  NumberInput,
+  PasswordInput,
+  SearchSelectInput,
+  SelectInput,
+  TextAreaInput,
+  TextInput,
+  DefaultStyle,
+  DefaultPriceStyle,
+  DefaultOptions,
+  DefaultSearchSelect,
+  DefaultSelect,
   FieldItem,
   Label,
   Tooltip,

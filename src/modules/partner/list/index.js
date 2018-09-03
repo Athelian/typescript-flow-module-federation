@@ -13,7 +13,7 @@ type Props = {
   perPage: number,
 };
 
-class PartnerList extends React.PureComponent<Props> {
+class PartnerList extends React.Component<Props> {
   constructor() {
     super();
     this.partnerPath = 'viewer.user.group.partners';

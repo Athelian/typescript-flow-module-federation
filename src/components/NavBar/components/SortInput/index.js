@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { PureSelectInput } from 'components/Form/PureInputs';
+import { SelectInput } from 'components/Form/Inputs';
 import {
   WrapperStyle,
   InputStyle,
@@ -43,7 +43,7 @@ class SortInput extends React.Component<Props> {
     const itemToValue = item => (item ? item.value : '');
 
     return (
-      <PureSelectInput
+      <SelectInput
         value={sort.value}
         items={fields}
         itemToString={itemToString}

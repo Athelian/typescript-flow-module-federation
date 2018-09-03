@@ -9,24 +9,19 @@ type Props = {
   children: any,
 };
 
-class PartnerList extends React.PureComponent<Props> {
-  render() {
-    const { children, types } = this.props;
-    return (
-      <Query query={query} variables={{ page: 1, perPage: 20, filterBy: { types } }}>
-        {({ loading, data, error }) =>
-          children({
-            data:
-              !loading && data
-                ? getByPathWithDefault([], 'viewer.user.group.partners.nodes', data)
-                : [],
-            loading,
-            error,
-          })
-        }
-      </Query>
-    );
-  }
-}
+const PartnerList = ({ types, children }: Props) => (
+  <Query query={query} variables={{ page: 1, perPage: 20, filterBy: { types } }}>
+    {({ loading, data, error }) =>
+      children({
+        data:
+          !loading && data
+            ? getByPathWithDefault([], 'viewer.user.group.partners.nodes', data)
+            : [],
+        loading,
+        error,
+      })
+    }
+  </Query>
+);
 
 export default PartnerList;

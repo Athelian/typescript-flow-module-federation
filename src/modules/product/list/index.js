@@ -18,7 +18,7 @@ type Props = {
   perPage: number,
 };
 
-class ProductList extends React.PureComponent<Props> {
+class ProductList extends React.Component<Props> {
   loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;

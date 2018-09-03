@@ -23,7 +23,7 @@ type Props = {
   onOutsideClick: Function,
 };
 
-export default class OutsideClickHandler extends React.PureComponent<Props> {
+export default class OutsideClickHandler extends React.Component<Props> {
   static defaultProps = { className: '', ignoreElements: [] };
 
   componentDidMount() {

@@ -14,7 +14,7 @@ type State = {
   expandedSubMenuId: number | null,
 };
 
-class SideBar extends React.PureComponent<Props, State> {
+class SideBar extends React.Component<Props, State> {
   state = {
     expandedSubMenuId: null,
   };
