@@ -5,7 +5,6 @@ type OptionalProps = {
   value: any,
   name: string,
   onChange: ?Function,
-  onBlur: ?Function,
   onSearch: string => void,
 };
 
@@ -31,7 +30,6 @@ export const defaultSearchSelectInputProps = {
   value: '',
   name: '',
   onChange: null,
-  onBlur: null,
   onSearch: () => {},
 };
 

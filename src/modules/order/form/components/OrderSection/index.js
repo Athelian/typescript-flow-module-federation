@@ -184,7 +184,7 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                         {({ name, ...inputHandlers }) => (
                           <FieldItem
                             label={
-                              <Label>
+                              <Label required>
                                 <FormattedMessage {...messages.currency} />
                               </Label>
                             }
@@ -239,7 +239,83 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                                           )}
                                           onChange={item => {
                                             if (!item) clear();
-                                            setFieldValue('currency', item && item.name);
+                                            setFieldValue(name, item && item.name);
+                                          }}
+                                          onSearch={set}
+                                        />
+                                      )}
+                                    </StringValue>
+                                  );
+                                }}
+                              </EnumProvider>
+                            }
+                          />
+                        )}
+                      </FormField>
+
+                      <FormField
+                        name="incoterm"
+                        initValue={values.incoterm}
+                        setFieldValue={setFieldValue}
+                        {...formHelper}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <FieldItem
+                            label={
+                              <Label>
+                                <FormattedMessage {...messages.incoterms} />
+                              </Label>
+                            }
+                            tooltip={
+                              <Tooltip
+                                isNew={isNew}
+                                changedValues={{
+                                  oldValue: initialValues[name],
+                                  newValue: values[name],
+                                }}
+                              />
+                            }
+                            input={
+                              <EnumProvider enumType="Incoterm">
+                                {({ loading, error, data }) => {
+                                  if (loading) return null;
+                                  if (error) return `Error!: ${error}`;
+
+                                  const filterItems = (query: string, items: Array<any>) => {
+                                    if (!query) return items;
+                                    return matchSorter(items, query, {
+                                      keys: ['name', 'description'],
+                                    });
+                                  };
+
+                                  return (
+                                    <StringValue defaultValue="">
+                                      {({ value: query, set, clear }) => (
+                                        <SearchSelectInput
+                                          name={name}
+                                          {...inputHandlers}
+                                          items={filterItems(query, data)}
+                                          itemToString={item => (item ? item.name : '')}
+                                          itemToValue={item => (item ? item.id : null)}
+                                          renderSelect={({ ...rest }) => (
+                                            <DefaultSearchSelect
+                                              {...rest}
+                                              forceHoverStyle={isNew}
+                                              width="200px"
+                                              isOpen={activeField === name}
+                                            />
+                                          )}
+                                          renderOptions={({ ...rest }) => (
+                                            <DefaultOptions
+                                              {...rest}
+                                              items={filterItems(query, data)}
+                                              itemToString={item => (item ? item.name : '')}
+                                              itemToValue={item => (item ? item.id : null)}
+                                            />
+                                          )}
+                                          onChange={item => {
+                                            if (!item) clear();
+                                            setFieldValue(name, item && item.name);
                                           }}
                                           onSearch={set}
                                         />
