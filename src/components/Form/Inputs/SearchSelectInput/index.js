@@ -45,11 +45,6 @@ class SearchSelectInput extends React.Component<Props, State> {
     }
   };
 
-  handleBlur = () => {
-    const { name, onBlur } = this.props;
-    if (onBlur) onBlur(name, true);
-  };
-
   handleChange = (selectedItem: any) => {
     const { onChange, itemToString } = this.props;
     this.setState({ selectedItem, inputValue: itemToString(selectedItem) });

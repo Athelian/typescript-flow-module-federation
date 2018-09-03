@@ -11,10 +11,11 @@ type Props = {
 
 const EnumProvider = ({ enumType, children }: Props) => (
   <Query query={query} variables={{ enumType }}>
-    {({ loading, data }) =>
+    {({ loading, error, data }) =>
       children({
-        data: !loading && data ? getByPathWithDefault([], '__type.enumValues', data) : [],
         loading,
+        error,
+        data: !loading && data ? getByPathWithDefault([], '__type.enumValues', data) : [],
       })
     }
   </Query>

@@ -58,7 +58,7 @@ function DefaultSearchSelect({
         isFocused: isOpen,
         hasError,
         disabled,
-        forceHoverStyle: forceHoverStyle && !selectedItem,
+        forceHoverStyle,
         width,
         height,
       })}
