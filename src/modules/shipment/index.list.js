@@ -10,7 +10,6 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import { PartnerSelectInput } from 'components/Form';
 import ShipmentList from './list';
 import messages from './messages';
 
@@ -96,13 +95,13 @@ class ShipmentModule extends React.Component<Props, State> {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <PartnerSelectInput
+                      {/* <PartnerSelectInput
                         title="Forwarder"
                         types={['Forwarder']}
                         value={values.userId}
                         onChange={v => setFieldValue('userId', v ? v.id : null)}
                         placeholder="Forwarder"
-                      />
+                      /> */}
                     </React.Fragment>
                   )}
                 </FilterInput>

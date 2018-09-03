@@ -1,30 +1,37 @@
 // @flow
-import { type PureInputProps } from 'components/Form/PureInputs/type';
-import { defaultPureSelectInputProps } from 'components/Form/PureInputs/PureSelectInput/type';
+import { type RenderOptionsProps } from 'components/Form/PureInputs/PureSelectInput/type';
 
-export type PureSearchSelectInputProps = PureInputProps & {
-  items: Array<any>,
-  itemToString: any => string,
-  itemToValue: any => any,
-  renderSelect: ({
-    isOpen: boolean,
-    clearSelection: () => void,
-    toggle: () => void,
-    selectedItem: any,
-    value: string,
-    handleQueryChange: Function,
-    getInputProps: Function,
-  }) => React.Node,
-  renderOptions: ({
-    highlightedIndex: number,
-    selectedItem: any,
-    getItemProps: Function,
-  }) => React.Node,
+type OptionalProps = {
+  value: any,
+  name: string,
+  onChange: ?Function,
+  onBlur: ?Function,
   onSearch: string => void,
 };
 
+export type RenderSearchSelectProps = {
+  isOpen: boolean,
+  clearSelection: () => void,
+  toggle: () => void,
+  selectedItem: any,
+  getInputProps: Function,
+  value: string,
+  handleQueryChange: Function,
+};
+
+export type PureSearchSelectInputProps = OptionalProps & {
+  items: Array<any>,
+  itemToString: any => string,
+  itemToValue: any => any,
+  renderSelect: RenderSearchSelectProps => React.Node,
+  renderOptions: RenderOptionsProps => React.Node,
+};
+
 export const defaultPureSearchSelectInputProps = {
-  ...defaultPureSelectInputProps,
+  value: '',
+  name: '',
+  onChange: null,
+  onBlur: null,
   onSearch: () => {},
 };
 

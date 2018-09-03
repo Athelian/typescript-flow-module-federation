@@ -6,7 +6,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faSignInAlt from '@fortawesome/fontawesome-pro-solid/faSignInAlt';
 import messages from 'modules/login/messages';
 import { LoginBoxStyle } from 'modules/login/style';
-import { FieldItem, EmailInput, PasswordInput, Form, Field } from 'components/Form';
+import {
+  FieldItem,
+  StandardStyle,
+  Label,
+  Tooltip,
+  PureEmailInput,
+  PurePasswordInput,
+  Form,
+  Field,
+} from 'components/Form';
 import { CustomButton } from 'components/NavButtons';
 import yupToFormErrors from 'utils/yupToFormErrors';
 
@@ -45,27 +54,23 @@ function LoginForm({ onLogin }: Props) {
               name="email"
               render={({ input, meta }) => (
                 <FieldItem
-                  data-testid="email"
-                  label={<FormattedMessage {...messages.email} />}
-                  input={hasError => (
-                    <EmailInput
-                      isFocused={meta.isActive}
-                      forceHoverStyle
-                      hasError={hasError}
-                      width="200px"
-                      pureInputOptions={{
-                        ...input,
-                        align: 'left',
-                      }}
-                    />
-                  )}
-                  tooltipOptions={{
-                    isNew: true,
-                    tooltipBubbleOptions: {
-                      errorMessage: touched.email && errors.email,
-                    },
-                  }}
                   vertical
+                  label={
+                    <Label>
+                      <FormattedMessage {...messages.email} />
+                    </Label>
+                  }
+                  tooltip={<Tooltip isNew errorMessage={touched.email && errors.email} />}
+                  input={
+                    <StandardStyle
+                      isFocused={meta.isActive}
+                      hasError={touched.email && errors.email}
+                      forceHoverStyle
+                      width="200px"
+                    >
+                      <PureEmailInput data-testid="email" align="left" name {...input} />
+                    </StandardStyle>
+                  }
                 />
               )}
             />
@@ -73,27 +78,23 @@ function LoginForm({ onLogin }: Props) {
               name="password"
               render={({ input, meta }) => (
                 <FieldItem
-                  data-testid="password"
-                  label={<FormattedMessage {...messages.password} />}
-                  input={hasError => (
-                    <PasswordInput
-                      isFocused={meta.isActive}
-                      forceHoverStyle
-                      hasError={hasError}
-                      width="200px"
-                      pureInputOptions={{
-                        ...input,
-                        align: 'left',
-                      }}
-                    />
-                  )}
-                  tooltipOptions={{
-                    isNew: true,
-                    tooltipBubbleOptions: {
-                      errorMessage: touched.password && errors.password,
-                    },
-                  }}
                   vertical
+                  label={
+                    <Label>
+                      <FormattedMessage {...messages.password} />
+                    </Label>
+                  }
+                  tooltip={<Tooltip isNew errorMessage={touched.password && errors.password} />}
+                  input={
+                    <StandardStyle
+                      isFocused={meta.isActive}
+                      hasError={touched.password && errors.password}
+                      forceHoverStyle
+                      width="200px"
+                    >
+                      <PurePasswordInput data-testid="password" align="left" name {...input} />
+                    </StandardStyle>
+                  }
                 />
               )}
             />

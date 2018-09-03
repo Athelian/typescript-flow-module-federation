@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { StringValue } from 'react-values';
 import matchSorter from 'match-sorter';
-import { TextAreaInput, SearchSelectInput } from 'components/Form';
+import { PureTextAreaInput, PureSearchSelectInput } from 'components/Form';
 import Icon from 'components/Icon';
 import Display from 'components/Display';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
@@ -78,7 +78,7 @@ class DocumentItem extends React.Component<Props, State> {
           ) : (
             <StringValue>
               {({ value: q, set, clear }) => (
-                <SearchSelectInput
+                <PureSearchSelectInput
                   name={`${name}.type`}
                   value={value.type}
                   items={matchSorter(types, q, { keys: ['type', 'label'] })}
@@ -116,9 +116,7 @@ class DocumentItem extends React.Component<Props, State> {
           </div>
         </div>
         <div className={MemoWrapperStyle(isExpanded)}>
-          <TextAreaInput
-            title="MEMO"
-            rows={4}
+          <PureTextAreaInput
             value={value.memo || ''}
             name={`${name}.memo`}
             onChange={e => {
@@ -131,7 +129,6 @@ class DocumentItem extends React.Component<Props, State> {
                 onBlur(`${name}.memo`, true);
               }
             }}
-            readOnly={readOnly}
           />
         </div>
         <button

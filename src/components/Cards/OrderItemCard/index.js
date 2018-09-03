@@ -5,7 +5,13 @@ import logger from 'utils/logger';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import { Label, Display, NumberInput, PriceInput } from 'components/Form';
+import {
+  StandardStyle,
+  Label,
+  Display,
+  PureNumberInput,
+  StandardPriceStyle,
+} from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderItemCardWrapperStyle,
@@ -94,16 +100,16 @@ const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
         <div className={BodyWrapperStyle}>
           <div className={QuantityWrapperStyle}>
             <Label required>QTY</Label>
-            <NumberInput
+            <StandardStyle
+              type="number"
               isFocused={dummyQuantity.isActive}
-              forceHoverStyle={isNew}
               hasError={dummyQuantity.hasError}
+              forceHoverStyle={isNew}
               width="90px"
               height="20px"
-              pureInputOptions={{
-                ...dummyQuantity.input,
-              }}
-            />
+            >
+              <PureNumberInput {...dummyQuantity.input} />
+            </StandardStyle>
           </div>
           <div className={UnitPriceWrapperStyle}>
             <button className={SyncButtonStyle} type="button">
@@ -111,17 +117,16 @@ const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
               <Icon icon="SYNC" />
             </button>
             <Label required>PRICE</Label>
-            <PriceInput
+            <StandardPriceStyle
               currency={currency}
               isFocused={dummyPrice.isActive}
-              forceHoverStyle={isNew}
               hasError={dummyPrice.hasError}
+              forceHoverStyle={isNew}
               width="90px"
               height="20px"
-              pureInputOptions={{
-                ...dummyPrice.input,
-              }}
-            />
+            >
+              <PureNumberInput {...dummyPrice.input} />
+            </StandardPriceStyle>
           </div>
           <div className={DividerStyle} />
           Chart Goes Here

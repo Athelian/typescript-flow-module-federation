@@ -1,9 +1,14 @@
 // @flow
 import * as React from 'react';
-import { type PureTextAreaInputProps as Props, defaultPureTextAreaInputProps } from './type';
+import {
+  type PureInputProps as Props,
+  defaultPureInputProps,
+} from 'components/Form/PureInputs/type';
 
-const PureTextAreaInput = ({ align, ...rest }: Props) => <textarea {...rest} spellCheck={false} />;
+const PureTextAreaInput = ({ align, ...rest }: Props) => (
+  <textarea style={{ textAlign: align }} {...rest} spellCheck={false} />
+);
 
-PureTextAreaInput.defaultProps = defaultPureTextAreaInputProps;
+PureTextAreaInput.defaultProps = defaultPureInputProps;
 
 export default PureTextAreaInput;

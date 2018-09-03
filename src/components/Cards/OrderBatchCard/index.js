@@ -5,7 +5,14 @@ import logger from 'utils/logger';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
-import { Label, Display, TextInput, DateInput, NumberInput } from 'components/Form';
+import {
+  StandardStyle,
+  Label,
+  Display,
+  PureTextInput,
+  PureDateInput,
+  PureNumberInput,
+} from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderBatchCardWrapperStyle,
@@ -84,45 +91,47 @@ const OrderBatchCard = ({ batch, onClick, ...rest }: Props) => {
     <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
       <div className={OrderBatchCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={BatchNoWrapperStyle}>
-          <TextInput
+          <StandardStyle
             isFocused={dummyNo.isActive}
-            forceHoverStyle={isNew}
             hasError={dummyNo.hasError}
+            forceHoverStyle={isNew}
             width="165px"
             height="20px"
             pureInputOptions={{
               ...dummyNo.input,
               align: 'left',
             }}
-          />
+          >
+            <PureTextInput align="left" {...dummyNo.input} />
+          </StandardStyle>
         </div>
 
         <div className={QuantityWrapperStyle}>
           <Label required>QTY</Label>
-          <NumberInput
+          <StandardStyle
+            type="number"
             isFocused={dummyQuantity.isActive}
-            forceHoverStyle={isNew}
             hasError={dummyQuantity.hasError}
+            forceHoverStyle={isNew}
             width="90px"
             height="20px"
-            pureInputOptions={{
-              ...dummyQuantity.input,
-            }}
-          />
+          >
+            <PureNumberInput {...dummyQuantity.input} />
+          </StandardStyle>
         </div>
 
         <div className={DeliveryDateWrapperStyle}>
           <Label>DELIVERY</Label>
-          <DateInput
+          <StandardStyle
+            type="date"
             isFocused={dummyDate.isActive}
-            forceHoverStyle={isNew}
             hasError={dummyDate.hasError}
+            forceHoverStyle={isNew}
             width="90px"
             height="20px"
-            pureInputOptions={{
-              ...dummyDate.input,
-            }}
-          />
+          >
+            <PureDateInput {...dummyDate.input} />
+          </StandardStyle>
         </div>
 
         <div className={DividerStyle} />

@@ -4,7 +4,6 @@ import { BooleanValue, ObjectValue } from 'react-values';
 import { injectIntl, intlShape } from 'react-intl';
 import InputGroup from 'components/Form/InputGroup';
 import { SectionNavBar, FilterInput, SortInput, SearchInput } from 'components/NavBar';
-import { PartnerSelectInput } from 'components/Form';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';
@@ -74,7 +73,7 @@ function ItemSection({ isReady, intl }: Props) {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      <PartnerSelectInput
+                      {/* <PartnerSelectInput
                         title={intl.formatMessage(messages.exporter)}
                         label={intl.formatMessage(messages.exporter)}
                         types={['Exporter']}
@@ -94,7 +93,7 @@ function ItemSection({ isReady, intl }: Props) {
                         types={['Forwarder']}
                         value={values.userId}
                         onChange={v => setFieldValue('userId', v ? v.id : null)}
-                      />
+                      /> */}
                     </InputGroup>
                   )}
                 </FilterInput>

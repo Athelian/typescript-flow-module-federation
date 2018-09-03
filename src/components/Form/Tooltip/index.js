@@ -3,7 +3,6 @@ import React from 'react';
 import { isEquals } from 'utils/fp';
 import TooltipBubble from './TooltipBubble';
 import TooltipIcon from './TooltipIcon';
-import { type TooltipProps as Props, defaultTooltipProps } from './type';
 import { type TooltipBubbleProps, defaultTooltipBubbleProps } from './TooltipBubble/type';
 import {
   TooltipAbsoluteWrapperStyle,
@@ -11,12 +10,27 @@ import {
   BubbleWrapperStyle,
 } from './style';
 
+type OptionalProps = TooltipBubbleProps & {
+  preShow: boolean,
+  showDuration: number,
+  isNew: boolean,
+};
+
+type Props = OptionalProps;
+
+const defaultProps = {
+  ...defaultTooltipBubbleProps,
+  preShow: false,
+  showDuration: 1500,
+  isNew: false,
+};
+
 type State = {
   isShown: boolean,
 };
 
 export default class Tooltip extends React.Component<Props, State> {
-  static defaultProps = defaultTooltipProps;
+  static defaultProps = defaultProps;
 
   state = {
     isShown: false,
@@ -32,12 +46,8 @@ export default class Tooltip extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    const {
-      tooltipBubbleOptions: { errorMessage: prevError },
-    } = prevProps;
-    const {
-      tooltipBubbleOptions: { errorMessage: currentError },
-    } = this.props;
+    const { errorMessage: prevError } = prevProps;
+    const { errorMessage: currentError } = this.props;
 
     if (!isEquals(prevError, currentError)) {
       this.show();
@@ -49,21 +59,21 @@ export default class Tooltip extends React.Component<Props, State> {
     this.clearTimeout();
   }
 
-  getTooltipType = (mergedTooltipBubbleOptions: TooltipBubbleProps) => {
-    const { errorMessage, warningMessage, infoMessage } = mergedTooltipBubbleOptions;
+  getTooltipType = () => {
+    const { errorMessage, warningMessage, infoMessage } = this.props;
 
     if (errorMessage) return 'error';
     if (warningMessage) return 'warning';
-    if (this.showChanged(mergedTooltipBubbleOptions)) return 'changed';
+    if (this.showChanged()) return 'changed';
     if (infoMessage) return 'info';
     return '';
   };
 
-  showChanged = (mergedTooltipBubbleOptions: TooltipBubbleProps) => {
-    const { isNew } = this.props;
+  showChanged = () => {
     const {
+      isNew,
       changedValues: { oldValue, newValue },
-    } = mergedTooltipBubbleOptions;
+    } = this.props;
 
     const showChanged = !isNew && (!!oldValue || !!newValue) && !isEquals(oldValue, newValue);
 
@@ -100,11 +110,10 @@ export default class Tooltip extends React.Component<Props, State> {
   timeout: ?TimeoutID;
 
   render() {
-    const { tooltipBubbleOptions } = this.props;
+    const { errorMessage, warningMessage, infoMessage, changedValues, position } = this.props;
     const { isShown } = this.state;
-    const mergedTooltipBubbleOptions = { ...defaultTooltipBubbleProps, ...tooltipBubbleOptions };
 
-    const type = this.getTooltipType(mergedTooltipBubbleOptions);
+    const type = this.getTooltipType();
 
     if (type) {
       return (
@@ -112,8 +121,12 @@ export default class Tooltip extends React.Component<Props, State> {
           <div className={TooltipRelativeWrapperStyle}>
             <div className={BubbleWrapperStyle(isShown)}>
               <TooltipBubble
-                showChanged={this.showChanged(mergedTooltipBubbleOptions)}
-                {...mergedTooltipBubbleOptions}
+                showChanged={this.showChanged()}
+                errorMessage={errorMessage}
+                warningMessage={warningMessage}
+                infoMessage={infoMessage}
+                changedValues={changedValues}
+                position={position}
               />
             </div>
             <div
@@ -122,7 +135,7 @@ export default class Tooltip extends React.Component<Props, State> {
               onMouseOut={this.hide}
               onBlur={this.hide}
             >
-              <TooltipIcon type={type} hasInfo={!!tooltipBubbleOptions.infoMessage} />
+              <TooltipIcon type={type} hasInfo={!!infoMessage} />
             </div>
           </div>
         </div>
@@ -131,5 +144,3 @@ export default class Tooltip extends React.Component<Props, State> {
     return null;
   }
 }
-
-Tooltip.defaultProps = defaultTooltipProps;

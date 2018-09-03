@@ -6,22 +6,22 @@ import OrderFormContainer from 'modules/order/form/container';
 import { FormContainer, FormField } from 'modules/form';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
-import Display from 'components/Display';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import {
   FieldItem,
-  TextInput,
-  DateInput,
+  Label,
+  Display,
+  Tooltip,
+  StandardStyle,
+  PureTextInput,
+  PureDateInput,
   DashedPlusButton,
   TagsInput,
   InputGroup,
-  CurrencyInput,
-  IncotermInput,
 } from 'components/Form';
 import Divider from 'components/Divider';
 import BaseCard from 'components/Cards';
-import Label from 'components/Label';
 import { colors } from 'styles/common';
 import messages from 'modules/order/messages';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
@@ -51,6 +51,7 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
         const totalBatches = values.orderItems
           ? values.orderItems.reduce((total, item) => total + item.batchItems.length, 0)
           : 0;
+
         return (
           <React.Fragment>
             <div className={MainFieldsWrapperStyle}>
@@ -70,37 +71,34 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                       >
                         {({ name, ...inputHandlers }) => (
                           <FieldItem
-                            label={<FormattedMessage {...messages.PO} />}
-                            input={hasError => (
-                              <TextInput
-                                forceHoverStyle={isNew}
-                                isFocused={activeField === name}
-                                error={touched[name] && errors[name]}
-                                hasError={hasError}
-                                width="200px"
-                                pureInputOptions={{
-                                  name,
-                                  ...inputHandlers,
-                                }}
-                              />
-                            )}
-                            labelOptions={{
-                              required: true,
-                            }}
-                            tooltipOptions={{
-                              isNew,
-                              tooltipBubbleOptions: {
-                                errorMessage: touched[name] && errors[name],
-                                changedValues: {
+                            label={
+                              <Label required>
+                                <FormattedMessage {...messages.PO} />
+                              </Label>
+                            }
+                            tooltip={
+                              <Tooltip
+                                isNew={isNew}
+                                errorMessage={touched[name] && errors[name]}
+                                changedValues={{
                                   oldValue: initialValues[name],
                                   newValue: values[name],
-                                },
-                              },
-                            }}
+                                }}
+                              />
+                            }
+                            input={
+                              <StandardStyle
+                                isFocused={activeField === name}
+                                hasError={touched[name] && errors[name]}
+                                forceHoverStyle={isNew}
+                                width="200px"
+                              >
+                                <PureTextInput name={name} {...inputHandlers} />
+                              </StandardStyle>
+                            }
                           />
                         )}
                       </FormField>
-
                       <FormField
                         name="piNo"
                         initValue={values.piNo}
@@ -109,31 +107,33 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                       >
                         {({ name, ...inputHandlers }) => (
                           <FieldItem
-                            label={<FormattedMessage {...messages.PI} />}
-                            input={() => (
-                              <TextInput
-                                forceHoverStyle={isNew}
-                                isFocused={activeField === name}
-                                width="200px"
-                                pureInputOptions={{
-                                  name,
-                                  ...inputHandlers,
-                                }}
-                              />
-                            )}
-                            tooltipOptions={{
-                              isNew,
-                              tooltipBubbleOptions: {
-                                changedValues: {
+                            label={
+                              <Label>
+                                <FormattedMessage {...messages.PI} />
+                              </Label>
+                            }
+                            tooltip={
+                              <Tooltip
+                                isNew={isNew}
+                                changedValues={{
                                   oldValue: initialValues[name],
                                   newValue: values[name],
-                                },
-                              },
-                            }}
+                                }}
+                              />
+                            }
+                            input={
+                              <StandardStyle
+                                isFocused={activeField === name}
+                                hasError={touched[name] && errors[name]}
+                                forceHoverStyle={isNew}
+                                width="200px"
+                              >
+                                <PureTextInput name={name} {...inputHandlers} />
+                              </StandardStyle>
+                            }
                           />
                         )}
                       </FormField>
-
                       <FormField
                         name="issueAt"
                         initValue={values.issuAt}
@@ -142,67 +142,35 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                       >
                         {({ name, ...inputHandlers }) => (
                           <FieldItem
-                            label={<FormattedMessage {...messages.date} />}
-                            input={() => (
-                              <DateInput
-                                forceHoverStyle={isNew}
-                                isFocused={activeField === name}
-                                width="200px"
-                                pureInputOptions={{
-                                  name,
-                                  ...inputHandlers,
-                                }}
-                              />
-                            )}
-                            tooltipOptions={{
-                              isNew,
-                              tooltipBubbleOptions: {
-                                changedValues: {
+                            label={
+                              <Label>
+                                <FormattedMessage {...messages.date} />
+                              </Label>
+                            }
+                            tooltip={
+                              <Tooltip
+                                isNew={isNew}
+                                changedValues={{
                                   oldValue: <FormattedDate value={initialValues[name]} />,
                                   newValue: <FormattedDate value={values[name]} />,
-                                },
-                              },
-                            }}
+                                }}
+                              />
+                            }
+                            input={
+                              <StandardStyle
+                                type="date"
+                                isFocused={activeField === name}
+                                hasError={touched[name] && errors[name]}
+                                forceHoverStyle={isNew}
+                                width="200px"
+                              >
+                                <PureDateInput name={name} {...inputHandlers} />
+                              </StandardStyle>
+                            }
                           />
                         )}
                       </FormField>
-
-                      <FieldItem
-                        label={<FormattedMessage {...messages.currency} />}
-                        input={hasError => (
-                          <CurrencyInput
-                            name="currency"
-                            value={values.currency}
-                            isNew={isNew}
-                            required
-                            isActive={activeField === 'currency'}
-                            error={errors.currency}
-                            hasError={hasError}
-                            onChange={value => setFieldValue('currency', value)}
-                            width="200px"
-                            {...formHelper}
-                          />
-                        )}
-                      />
-
-                      <FieldItem
-                        label={<FormattedMessage {...messages.incoterms} />}
-                        input={hasError => (
-                          <IncotermInput
-                            name="incoterm"
-                            value={values.incoterm}
-                            isNew={isNew}
-                            required
-                            isActive={activeField === 'incoterm'}
-                            error={errors.incoterm}
-                            hasError={hasError}
-                            onChange={value => setFieldValue('incoterm', value)}
-                            width="200px"
-                            {...formHelper}
-                          />
-                        )}
-                      />
-
+                      CurrencyInput IncotermInput
                       <FormField
                         name="deliveryPlace"
                         initValue={values.deliveryPlace}
@@ -211,27 +179,30 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                       >
                         {({ name, ...inputHandlers }) => (
                           <FieldItem
-                            label={<FormattedMessage {...messages.deliveryPlace} />}
-                            input={() => (
-                              <TextInput
-                                forceHoverStyle={isNew}
-                                isFocused={activeField === name}
-                                width="200px"
-                                pureInputOptions={{
-                                  name,
-                                  ...inputHandlers,
-                                }}
-                              />
-                            )}
-                            tooltipOptions={{
-                              isNew,
-                              tooltipBubbleOptions: {
-                                changedValues: {
+                            label={
+                              <Label>
+                                <FormattedMessage {...messages.deliveryPlace} />
+                              </Label>
+                            }
+                            tooltip={
+                              <Tooltip
+                                isNew={isNew}
+                                changedValues={{
                                   oldValue: initialValues[name],
                                   newValue: values[name],
-                                },
-                              },
-                            }}
+                                }}
+                              />
+                            }
+                            input={
+                              <StandardStyle
+                                isFocused={activeField === name}
+                                hasError={touched[name] && errors[name]}
+                                forceHoverStyle={isNew}
+                                width="200px"
+                              >
+                                <PureTextInput name={name} {...inputHandlers} />
+                              </StandardStyle>
+                            }
                           />
                         )}
                       </FormField>
@@ -289,8 +260,12 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
             <div className={TagsInputStyle}>
               <FieldItem
                 vertical
-                label={<FormattedMessage {...messages.tags} />}
-                input={() => (
+                label={
+                  <Label>
+                    <FormattedMessage {...messages.tags} />
+                  </Label>
+                }
+                input={
                   <TagsInput
                     editable={isNew}
                     id="tags"
@@ -299,8 +274,9 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                     values={values.tags}
                     onChange={setFieldValue}
                   />
-                )}
+                }
               />
+
               <div className={DividerStyle}>
                 <Divider color={colors.GRAY_LIGHT} />
               </div>
