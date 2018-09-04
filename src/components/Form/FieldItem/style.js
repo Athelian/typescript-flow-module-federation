@@ -9,4 +9,7 @@ export const FieldItemWrapperStyle = (vertical: boolean) => css`
   width: 100%;
 `;
 
-export default FieldItemWrapperStyle;
+export const TooltipAbsoluteWrapperStyle = css`
+  position: absolute;
+  left: -20px;
+`;

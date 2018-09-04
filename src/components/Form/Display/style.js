@@ -10,6 +10,7 @@ export const DisplayWrapperStyle = (align: 'left' | 'right' | 'center') => css`
   ${borderRadiuses.MAIN};
   text-align: ${align};
   width: 100%;
+  max-width: min-content;
 `;
 
 export default DisplayWrapperStyle;

@@ -28,6 +28,8 @@ import Tooltip from './Tooltip';
 import TooltipBubble from './Tooltip/TooltipBubble';
 import Display from './Display';
 import DashedPlusButton from './DashedPlusButton';
+import SectionHeader from './SectionHeader';
+import LastModified from './SectionHeader/LastModified';
 
 export const Form = ZenForm;
 export const Field = ZenField;
@@ -57,4 +59,6 @@ export {
   DashedPlusButton,
   TagsInput,
   InputGroup,
+  SectionHeader,
+  LastModified,
 };

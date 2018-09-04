@@ -2,9 +2,8 @@
 import * as React from 'react';
 import { StringValue } from 'react-values';
 import matchSorter from 'match-sorter';
-import { TextAreaInput, SearchSelectInput } from 'components/Form';
+import { TextAreaInput, SearchSelectInput, Display } from 'components/Form';
 import Icon from 'components/Icon';
-import Display from 'components/Display';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
 import { computeIcon, getFileExtension, getFileName } from './helpers';
 import {
@@ -74,7 +73,7 @@ class DocumentItem extends React.Component<Props, State> {
         )}
         <div className={DocumentCardStyle}>
           {readOnly ? (
-            <Display hideLabel>{type ? type.label : ''}</Display>
+            <Display>{type ? type.label : ''}</Display>
           ) : (
             <StringValue>
               {({ value: q, set, clear }) => (

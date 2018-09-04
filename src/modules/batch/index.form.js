@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Provider } from 'unstated';
+import { Provider, Subscribe } from 'unstated';
 import { Query, Mutation } from 'react-apollo';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
@@ -10,6 +10,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import BatchForm from './form';
+import BatchFormContainer from './form/container';
 import query from './form/query';
 import {
   createBatchMutation,
@@ -88,20 +89,25 @@ class BatchFormModule extends React.Component<Props> {
                   {isNew || !batchId ? (
                     <BatchForm batch={{}} />
                   ) : (
-                    <Query
-                      query={query}
-                      variables={{ id: decodeId(batchId) }}
-                      fetchPolicy="network-only"
-                    >
-                      {({ loading, data, error }) => {
-                        if (error) {
-                          return error.message;
-                        }
+                    <Subscribe to={[BatchFormContainer]}>
+                      {({ initDetailValues }) => (
+                        <Query
+                          query={query}
+                          variables={{ id: decodeId(batchId) }}
+                          fetchPolicy="network-only"
+                          onCompleted={detail => initDetailValues(detail.batch)}
+                        >
+                          {({ loading, data, error }) => {
+                            if (error) {
+                              return error.message;
+                            }
 
-                        if (loading) return <LoadingIcon />;
-                        return <BatchForm batch={getByPathWithDefault({}, 'batch', data)} />;
-                      }}
-                    </Query>
+                            if (loading) return <LoadingIcon />;
+                            return <BatchForm batch={getByPathWithDefault({}, 'batch', data)} />;
+                          }}
+                        </Query>
+                      )}
+                    </Subscribe>
                   )}
                 </Layout>
               )}

@@ -3,8 +3,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
-import Display from 'components/Display';
-
+import { Display, Label } from 'components/Form';
 import {
   IconStyle,
   BarStyle,
@@ -43,10 +42,13 @@ export default function QuantityChart({
     <div>
       <div>
         {hasLabel ? (
-          <Display ellipsis title={batchedQTYTitle}>
-            <Number color="BATCH" value={batchedQuantity} />
-            <Number color="GRAY" value={orderedQuantity - batchedQuantity} />
-          </Display>
+          <>
+            <Label>{batchedQTYTitle}</Label>
+            <Display>
+              <Number color="BATCH" value={batchedQuantity} />
+              <Number color="GRAY" value={orderedQuantity - batchedQuantity} />
+            </Display>
+          </>
         ) : (
           <div className={NumberLineStyle}>
             <span className={CenterTopNumberStyle}>
@@ -94,10 +96,13 @@ export default function QuantityChart({
             )}
           </div>
           {hasLabel ? (
-            <Display ellipsis title={shippedQTYTitle}>
-              <Number color="SHIPMENT" value={shippedQuantity} />
-              <Number color="GRAY" value={orderedQuantity - shippedQuantity} />
-            </Display>
+            <>
+              <Label>{shippedQTYTitle}</Label>
+              <Display>
+                <Number color="SHIPMENT" value={shippedQuantity} />
+                <Number color="GRAY" value={orderedQuantity - shippedQuantity} />
+              </Display>
+            </>
           ) : (
             <div className={NumberLineStyle}>
               <span className={CenterBottomNumberStyle}>

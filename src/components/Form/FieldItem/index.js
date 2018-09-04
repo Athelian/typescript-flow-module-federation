@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FieldItemWrapperStyle } from './style';
+import { FieldItemWrapperStyle, TooltipAbsoluteWrapperStyle } from './style';
 
 type OptionalProps = {
   vertical: boolean,
@@ -18,7 +18,7 @@ const defaultProps = {
 
 const FieldItem = ({ vertical, tooltip, label, input }: Props) => (
   <div className={FieldItemWrapperStyle(vertical)}>
-    {tooltip}
+    {tooltip && <div className={TooltipAbsoluteWrapperStyle}>{tooltip}</div>}
     {label}
     {input}
   </div>
