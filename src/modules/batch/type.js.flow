@@ -29,16 +29,6 @@ type BatchCommon = {
       metric: string,
     },
   },
-  tags?: ?Array<{
-    id: string,
-    name: string,
-    color: string,
-  }>,
-};
-
-export type BatchNew = BatchCommon & {
-  no: string,
-  quantity: number,
   orderItem: {
     id: string,
     quantity: number,
@@ -67,6 +57,16 @@ export type BatchNew = BatchCommon & {
       },
     },
   },
+  tags?: ?Array<{
+    id: string,
+    name: string,
+    color: string,
+  }>,
+};
+
+export type BatchNew = BatchCommon & {
+  no: string,
+  quantity: number,
   batchAdjustments?: ?Array<{
     reason: 'Inspection' | 'Lost' | 'Other',
     quantity: number,

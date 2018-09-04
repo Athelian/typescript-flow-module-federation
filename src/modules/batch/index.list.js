@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-// import { Link } from '@reach/router';
+import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import InputGroup from 'components/Form/InputGroup';
@@ -12,6 +12,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
+import { NewButton } from 'components/NavButtons';
 import BatchList from './list';
 import messages from './messages';
 
@@ -118,24 +119,6 @@ class BatchListModule extends React.Component<Props, State> {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      {/* <PartnerSelectInput
-                        title="Exporter"
-                        types={['Exporter']}
-                        value={values.exporterId}
-                        onChange={v => setFieldValue('exporterId', v ? v.id : null)}
-                      />
-                      <PartnerSelectInput
-                        title="Supplier"
-                        types={['Supplier']}
-                        value={values.supplierId}
-                        onChange={v => setFieldValue('supplierId', v ? v.id : null)}
-                      />
-                      <PartnerSelectInput
-                        title="Forwarder"
-                        types={['Forwarder']}
-                        value={values.userId}
-                        onChange={v => setFieldValue('userId', v ? v.id : null)}
-                      /> */}
                     </InputGroup>
                   )}
                 </FilterInput>
@@ -145,6 +128,9 @@ class BatchListModule extends React.Component<Props, State> {
                   onClear={() => this.onChangeFilter({ query: '' })}
                   onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />
+                <Link to="new">
+                  <NewButton />
+                </Link>
               </NavBar>
             }
           >

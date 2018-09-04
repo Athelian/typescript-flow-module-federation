@@ -12,11 +12,11 @@ import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
+import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import OrderForm from './form';
 import OrderFormContainer from './form/container';
-import SectionNavigation from './form/components/SectionNavigation';
 import LogsButton from './form/components/LogsButton';
 import query from './form/query';
 import {
@@ -91,18 +91,10 @@ class OrderFormModule extends React.PureComponent<Props> {
                     <NavBar>
                       <EntityIcon icon="ORDER" color="ORDER" />
                       <JumpToSection>
-                        <SectionNavigation link="orderSection" label="ORDER" icon="ORDER" />
-                        <SectionNavigation link="itemsSection" label="ITEMS" icon="ORDER_ITEM" />
-                        <SectionNavigation
-                          link="documentsSection"
-                          label="DOCUMENTS"
-                          icon="DOCUMENT"
-                        />
-                        <SectionNavigation
-                          link="shipmentsSection"
-                          label="SHIPMENTS"
-                          icon="SHIPMENT"
-                        />
+                        <SectionTabs link="orderSection" label="ORDER" icon="ORDER" />
+                        <SectionTabs link="itemsSection" label="ITEMS" icon="ORDER_ITEM" />
+                        <SectionTabs link="documentsSection" label="DOCUMENTS" icon="DOCUMENT" />
+                        <SectionTabs link="shipmentsSection" label="SHIPMENTS" icon="SHIPMENT" />
                       </JumpToSection>
                       <BooleanValue>
                         {({ value: opened, toggle }) =>

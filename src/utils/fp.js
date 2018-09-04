@@ -40,6 +40,10 @@ export const takeItems = take;
  */
 export const inRange = range;
 
+export const isEither = either;
+
+export const mapOver = map;
+
 /**
  * Return value from object with path
  */
@@ -52,7 +56,7 @@ export const pickByProps = pick;
  */
 export const getByPathWithDefault = useWith(pathOr, [identity, split('.')]);
 
-export { pipe, when, either, map, reject, isNil, isEmpty, omit, pick };
+export { pipe, when, reject, isNil, isEmpty, omit, pick };
 
 export const isValuable = (val: any) => val != null;
 export const isValuables = (...arr: Array<any>) => arr.every(val => val != null);

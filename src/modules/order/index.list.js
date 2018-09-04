@@ -12,7 +12,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import NewButton from 'components/NavButtons/NewButton';
+import { NewButton } from 'components/NavButtons';
 import OrderList from './list';
 import messages from './messages';
 

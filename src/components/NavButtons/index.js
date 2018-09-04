@@ -5,5 +5,6 @@ import DeleteButton from './DeleteButton';
 import EditButton from './EditButton';
 import ListButton from './ListButton';
 import SaveButton from './SaveButton';
+import NewButton from './NewButton';
 
-export { CancelButton, CustomButton, DeleteButton, EditButton, ListButton, SaveButton };
+export { CancelButton, CustomButton, DeleteButton, EditButton, ListButton, SaveButton, NewButton };

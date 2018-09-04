@@ -3,6 +3,7 @@ import { Container } from 'unstated';
 import * as Yup from 'yup';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
+import { removeTypename } from 'utils/data';
 
 type FormState = {
   batchAdjustments: Array<any>,
@@ -23,13 +24,15 @@ export default class BatchFormContainer extends Container<FormState> {
     });
   };
 
-  isDirty = (values: any) => !isEquals(values, this.state);
+  isDirty = (values: any) => !isEquals(values, this.batch);
 
   initDetailValues = (values: any) => {
-    this.setState(values);
-    this.batch = values;
+    const parsedValues = removeTypename(values);
+    /* $FlowFixMe Kaka will fix with magic */
+    this.setState(parsedValues);
+    this.batch = parsedValues;
 
-    logger.warn('setValues for batch detail', values);
+    logger.warn('setValues for batch detail', parsedValues);
     logger.warn('batch detail', this.batch);
   };
 
