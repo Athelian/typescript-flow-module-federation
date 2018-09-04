@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Sep 06 2018 14:05:42 GMT+0900 (Tokyo Standard Time)
+# timestamp: Tue Sep 04 2018 17:56:49 GMT+0900 (JST)
 
 type Batch implements Model & Owned & Package & Tagged {
   archived: Boolean!
@@ -101,7 +101,6 @@ input BatchCreateInput {
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
-  packageQuantity: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -136,7 +135,6 @@ input BatchUpdateInput {
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
-  packageQuantity: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -853,7 +851,6 @@ input OrderItemBatchCreateInput {
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
-  packageQuantity: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -873,7 +870,6 @@ input OrderItemBatchUpdateInput {
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
-  packageQuantity: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput

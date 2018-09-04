@@ -9,7 +9,7 @@
           }
         },
         "generate-fragments": {
-          "output": "src/generated/zenport.fragments.js",
+          "output": "src/generated/fragments.js",
           "generator": "js"
         }
       }

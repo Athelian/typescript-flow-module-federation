@@ -176,7 +176,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                       isLoading={loading}
                       items={getByPathWithDefault([], 'productProviders.nodes', data)}
                       renderItem={item => (
-                        <div className={ItemWrapperStyle}>
+                        <div key={item.id} className={ItemWrapperStyle}>
                           {selected.includes(item) && (
                             <div className={NumberBarStyle}>
                               <NumberValue
@@ -195,7 +195,6 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                             product={item}
                             selectable
                             selected={selected.includes(item)}
-                            key={item.id}
                             onSelect={() => onSelectProduct({ selected, item, push, set })}
                           />
                         </div>
