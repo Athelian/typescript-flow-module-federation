@@ -1,5 +1,0 @@
-Tooltip example:
-
-```js
-<Tooltip />
-```

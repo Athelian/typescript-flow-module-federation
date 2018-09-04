@@ -4,11 +4,7 @@ import { isEquals } from 'utils/fp';
 import TooltipBubble from './TooltipBubble';
 import TooltipIcon from './TooltipIcon';
 import { type TooltipBubbleProps, defaultTooltipBubbleProps } from './TooltipBubble/type';
-import {
-  TooltipAbsoluteWrapperStyle,
-  TooltipRelativeWrapperStyle,
-  BubbleWrapperStyle,
-} from './style';
+import { TooltipRelativeWrapperStyle, BubbleWrapperStyle } from './style';
 
 type OptionalProps = TooltipBubbleProps & {
   preShow: boolean,
@@ -117,26 +113,24 @@ export default class Tooltip extends React.Component<Props, State> {
 
     if (type) {
       return (
-        <div className={TooltipAbsoluteWrapperStyle}>
-          <div className={TooltipRelativeWrapperStyle}>
-            <div className={BubbleWrapperStyle(isShown)}>
-              <TooltipBubble
-                showChanged={this.showChanged()}
-                errorMessage={errorMessage}
-                warningMessage={warningMessage}
-                infoMessage={infoMessage}
-                changedValues={changedValues}
-                position={position}
-              />
-            </div>
-            <div
-              onMouseOver={this.show}
-              onFocus={this.show}
-              onMouseOut={this.hide}
-              onBlur={this.hide}
-            >
-              <TooltipIcon type={type} hasInfo={!!infoMessage} />
-            </div>
+        <div className={TooltipRelativeWrapperStyle}>
+          <div className={BubbleWrapperStyle(isShown)}>
+            <TooltipBubble
+              showChanged={this.showChanged()}
+              errorMessage={errorMessage}
+              warningMessage={warningMessage}
+              infoMessage={infoMessage}
+              changedValues={changedValues}
+              position={position}
+            />
+          </div>
+          <div
+            onMouseOver={this.show}
+            onFocus={this.show}
+            onMouseOut={this.hide}
+            onBlur={this.hide}
+          >
+            <TooltipIcon type={type} hasInfo={!!infoMessage} />
           </div>
         </div>
       );

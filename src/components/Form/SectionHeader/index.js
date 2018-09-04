@@ -6,7 +6,7 @@ import { SectionHeaderWrapperStyle, TitleWrapperStyle, TitleStyle, IconStyle } f
 type Props = {
   icon: string,
   title: string,
-  children?: ?React.Node,
+  children: React.Node,
 };
 
 const defaultProps = {

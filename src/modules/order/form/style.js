@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, transitions, colors, borderRadiuses, layout, fontSizes } from 'styles/common';
+import { presets, transitions, colors, layout, fontSizes } from 'styles/common';
 
 export const OrderFormWrapperStyle = css`
   width: 1060px;
@@ -14,26 +14,6 @@ export const SectionWrapperStyle = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-
-export const LastModifiedWrapperStyle = css`
-  ${layout.GRID_HORIZONTAL};
-  grid-gap: 5px;
-  align-items: center;
-`;
-
-export const UserIconStyle = css`
-  display: flex;
-  ${layout.CENTER_CENTER};
-  color: #fff;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  ${borderRadiuses.CIRCLE};
-  background-color: ${colors.GRAY_LIGHT};
-  img {
-    object-fit: cover;
-  }
 `;
 
 export const StatusStyle = (archived: boolean) => css`

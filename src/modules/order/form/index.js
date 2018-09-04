@@ -1,26 +1,20 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { FormattedMessage } from 'react-intl';
 import { pickByProps } from 'utils/fp';
 import messages from 'modules/order/messages';
 import Icon from 'components/Icon';
-import UserAvatar from 'components/UserAvatar';
-import FormattedDate from 'components/FormattedDate';
-import Display from 'components/Display';
+import { SectionHeader, LastModified } from 'components/Form';
 import OrderFormContainer from './container';
 import OrderSection from './components/OrderSection';
 import ItemsSection from './components/ItemsSection';
 import DocumentsSection from './components/DocumentsSection';
 import ShipmentsSection from './components/ShipmentsSection';
-import SectionHeader from './components/SectionHeader';
 import {
   OrderFormWrapperStyle,
   SectionWrapperStyle,
-  LastModifiedWrapperStyle,
   ToggleButtonStyle,
   StatusStyle,
-  UserIconStyle,
 } from './style';
 
 type Props = {
@@ -52,14 +46,7 @@ export default function OrderForm({ order }: Props) {
         <SectionHeader icon="ORDER" title="ORDER">
           {!isNew && (
             <>
-              <div className={LastModifiedWrapperStyle}>
-                <Display title={<FormattedMessage {...messages.updatedAt} />}>
-                  <FormattedDate value={new Date(order.updatedAt)} />
-                </Display>
-                <div className={UserIconStyle}>
-                  <UserAvatar profileUrl="" />
-                </div>
-              </div>
+              <LastModified updatedAt={order.updatedAt} />
 
               <div className={StatusStyle(order.archived)}>
                 <Icon icon={order.archived ? 'ARCHIVED' : 'ACTIVE'} />
