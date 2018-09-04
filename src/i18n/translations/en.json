@@ -30,7 +30,7 @@
   "components.EntityTimeline.target.ContainerGroup": "Container Group",
   "components.EntityTimeline.target.BatchGroup": "Batch Group",
 
-  "components.BatchItem.batchNo": "BATCH ID",
+  "components.BatchItem.batchNo": "BATCH NO",
   "components.BatchItem.quantity": "QUANTITY",
   "components.BatchItem.shortQuantity": "QTY",
   "components.BatchItem.inventory": "INVENTORY",

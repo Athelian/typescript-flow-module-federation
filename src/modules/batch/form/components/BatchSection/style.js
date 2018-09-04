@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, layout, fontSizesWithHeights, colors } from 'styles/common';
 
-export const OrderSectionWrapperStyle = css`
+export const BatchSectionWrapperStyle = css`
   ${presets.BOX};
   width: 880px;
   padding: 40px 100px;
@@ -13,24 +13,24 @@ export const MainFieldsWrapperStyle = css`
   justify-content: space-between;
 `;
 
-export const ExporterSectionStyle = css`
+export const ItemSectionStyle = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 10px;
 `;
 
-export const ExporterCardStyle = css`
+export const ItemCardStyle = css`
   width: 200px;
   height: 230px;
 `;
 
-export const ExporterCardImageStyle = css`
+export const ItemCardImageStyle = css`
   border-radius: 5px 5px 0 0;
   width: 100%;
   height: 200px;
   object-fit: cover;
 `;
 
-export const ExporterNameStyle = css`
+export const ItemNameStyle = css`
   color: ${colors.BLACK};
   font-weight: bold;
   ${fontSizesWithHeights.MAIN};

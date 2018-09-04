@@ -25,7 +25,7 @@ function SectionHeader({ updatedAt }: Props) {
           <FormattedMessage {...messages.updatedAt} />
         </Label>
         <Display>
-          <FormattedDate value={new Date(updatedAt)} />
+          <FormattedDate value={updatedAt} />
         </Display>
       </div>
       <div className={UserIconStyle}>

@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { pickByProps } from 'utils/fp';
-import messages from 'modules/order/messages';
 import Icon from 'components/Icon';
 import { SectionHeader, LastModified } from 'components/Form';
 import OrderFormContainer from './container';

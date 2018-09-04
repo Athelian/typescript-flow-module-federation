@@ -17,7 +17,7 @@ type Props = OptionalProps;
 const defaultProps = {
   ...defaultTooltipBubbleProps,
   preShow: false,
-  showDuration: 1500,
+  showDuration: 1,
   isNew: false,
 };
 
