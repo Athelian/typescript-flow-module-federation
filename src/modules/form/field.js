@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import logger from 'utils/logger';
 
 type Props = {
   initValue: any,
@@ -53,8 +54,9 @@ export default class FormField extends React.Component<Props, State> {
     }
 
     const { value } = event.target;
+    const { validationOnChange, onValidate, name } = this.props;
+    logger.warn(`onChange for ${name}`, value);
     this.setState({ value }, () => {
-      const { validationOnChange, onValidate, name } = this.props;
       if (validationOnChange && onValidate) {
         onValidate({ [name]: value });
       }

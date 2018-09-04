@@ -5,6 +5,8 @@ type OptionalProps = {
   value: any,
   name: string,
   onChange: ?Function,
+  onBlur: ?Function,
+  onFocus: ?Function,
   onSearch: string => void,
 };
 

@@ -20,7 +20,7 @@ class SearchSelectInput extends React.Component<Props, State> {
       : null;
 
     this.state = {
-      inputValue: '',
+      inputValue: value || '',
       selectedItem,
     };
   }
@@ -51,13 +51,29 @@ class SearchSelectInput extends React.Component<Props, State> {
     if (onChange) onChange(selectedItem);
   };
 
+  handleBlur = (evt: Object) => {
+    const { onBlur } = this.props;
+    if (onBlur) onBlur(evt);
+  };
+
+  handleFocus = (evt: Object) => {
+    const { onFocus } = this.props;
+    if (onFocus) onFocus(evt);
+  };
+
   render() {
     const { itemToValue, itemToString, renderSelect, renderOptions } = this.props;
 
     const { inputValue, selectedItem } = this.state;
 
     return (
-      <Downshift onChange={this.handleChange} itemToString={itemToString} itemToValue={itemToValue}>
+      <Downshift
+        defaultInputValue={inputValue}
+        defaultSelectedItem={selectedItem}
+        onChange={this.handleChange}
+        itemToString={itemToString}
+        itemToValue={itemToValue}
+      >
         {({
           getInputProps,
           getItemProps,
@@ -70,6 +86,8 @@ class SearchSelectInput extends React.Component<Props, State> {
             {renderSelect({
               value: inputValue,
               handleQueryChange: this.handleChangeQuery,
+              onBlur: this.handleBlur,
+              onFocus: this.handleFocus,
               isOpen,
               toggle,
               selectedItem,

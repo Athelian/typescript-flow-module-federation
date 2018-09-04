@@ -2,9 +2,11 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue, StringValue } from 'react-values';
+import { FormattedMessage } from 'react-intl';
+import matchSorter from 'match-sorter';
+import logger from 'utils/logger';
 import OrderFormContainer from 'modules/order/form/container';
 import { FormContainer, FormField } from 'modules/form';
-import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
@@ -24,8 +26,6 @@ import {
   InputGroup,
 } from 'components/Form';
 import EnumProvider from 'providers/enum';
-import logger from 'utils/logger';
-import matchSorter from 'match-sorter';
 import Divider from 'components/Divider';
 import BaseCard from 'components/Cards';
 import { colors } from 'styles/common';
@@ -55,6 +55,64 @@ const filterItems = (query: string, items: Array<any>) => {
     keys: ['name', 'description'],
   });
 };
+
+function createSelectInput({ enumType, inputHandlers, name, touched, errors, isNew, activeField }) {
+  return (
+    <EnumProvider enumType={enumType}>
+      {({ loading, error, data }) => {
+        if (loading) return null;
+        if (error) return `Error!: ${error}`;
+        return (
+          <StringValue
+            defaultValue={inputHandlers.value}
+            onChange={newValue =>
+              inputHandlers.onChange({
+                target: {
+                  value: newValue || '',
+                },
+              })
+            }
+          >
+            {({ value: query, set, clear }) => (
+              <SearchSelectInput
+                name={name}
+                {...inputHandlers}
+                items={filterItems(query, data)}
+                itemToString={item => (item ? item.name : '')}
+                itemToValue={item => (item ? item.name : '')}
+                renderSelect={({ ...rest }) => (
+                  <DefaultSearchSelect
+                    {...rest}
+                    hasError={touched[name] && errors[name]}
+                    forceHoverStyle={isNew}
+                    width="200px"
+                    isOpen={activeField === name}
+                  />
+                )}
+                renderOptions={({ ...rest }) => (
+                  <DefaultOptions
+                    {...rest}
+                    items={filterItems(query, data)}
+                    itemToString={item => (item ? item.name : '')}
+                    itemToValue={item => (item ? item.name : '')}
+                  />
+                )}
+                onChange={item => {
+                  logger.warn('SearchSelectInput onChange', item);
+                  if (!item) clear();
+                  set(item && item.name);
+                }}
+                onBlur={inputHandlers.onBlur}
+                onFocus={inputHandlers.onFocus}
+                onSearch={set}
+              />
+            )}
+          </StringValue>
+        );
+      }}
+    </EnumProvider>
+  );
+}
 
 const OrderSection = ({ isNew, initialValues }: Props) => (
   <div className={OrderSectionWrapperStyle}>
@@ -196,6 +254,10 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                         name="currency"
                         initValue={values.currency}
                         setFieldValue={setFieldValue}
+                        validationOnChange
+                        onValidate={newValue =>
+                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                        }
                         {...formHelper}
                       >
                         {({ name, ...inputHandlers }) => (
@@ -215,60 +277,15 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                                 }}
                               />
                             }
-                            input={
-                              <EnumProvider enumType="Currency">
-                                {({ loading, error, data }) => {
-                                  if (loading) return null;
-                                  if (error) return `Error!: ${error}`;
-
-                                  return (
-                                    <StringValue
-                                      defaultValue={inputHandlers.value}
-                                      onChange={newValue => {
-                                        logger.warn('newValue', newValue);
-                                        setFieldValue(name, newValue);
-                                        formHelper.onValidation(
-                                          { ...values, [name]: newValue },
-                                          validationRules()
-                                        );
-                                      }}
-                                    >
-                                      {({ value: query, set, clear }) => (
-                                        <SearchSelectInput
-                                          name={name}
-                                          {...inputHandlers}
-                                          items={filterItems(query, data)}
-                                          itemToString={item => (item ? item.name : '')}
-                                          itemToValue={item => (item ? item.id : null)}
-                                          renderSelect={({ ...rest }) => (
-                                            <DefaultSearchSelect
-                                              {...rest}
-                                              hasError={touched[name] && errors[name]}
-                                              forceHoverStyle={isNew}
-                                              width="200px"
-                                              isOpen={activeField === name}
-                                            />
-                                          )}
-                                          renderOptions={({ ...rest }) => (
-                                            <DefaultOptions
-                                              {...rest}
-                                              items={filterItems(query, data)}
-                                              itemToString={item => (item ? item.name : '')}
-                                              itemToValue={item => (item ? item.id : null)}
-                                            />
-                                          )}
-                                          onChange={item => {
-                                            if (!item) clear();
-                                            setFieldValue(name, item && item.name);
-                                          }}
-                                          onSearch={set}
-                                        />
-                                      )}
-                                    </StringValue>
-                                  );
-                                }}
-                              </EnumProvider>
-                            }
+                            input={createSelectInput({
+                              enumType: 'Currency',
+                              inputHandlers,
+                              name,
+                              touched,
+                              errors,
+                              isNew,
+                              activeField,
+                            })}
                           />
                         )}
                       </FormField>
@@ -295,58 +312,15 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                                 }}
                               />
                             }
-                            input={
-                              <EnumProvider enumType="Incoterm">
-                                {({ loading, error, data }) => {
-                                  if (loading) return null;
-                                  if (error) return `Error!: ${error}`;
-
-                                  return (
-                                    <StringValue
-                                      defaultValue={inputHandlers.value}
-                                      onChange={newValue => {
-                                        setFieldValue(name, newValue);
-                                        formHelper.onValidation(
-                                          { ...values, [name]: newValue },
-                                          validationRules()
-                                        );
-                                      }}
-                                    >
-                                      {({ value: query, set, clear }) => (
-                                        <SearchSelectInput
-                                          name={name}
-                                          {...inputHandlers}
-                                          items={filterItems(query, data)}
-                                          itemToString={item => (item ? item.name : '')}
-                                          itemToValue={item => (item ? item.id : null)}
-                                          renderSelect={({ ...rest }) => (
-                                            <DefaultSearchSelect
-                                              {...rest}
-                                              forceHoverStyle={isNew}
-                                              width="200px"
-                                              isOpen={activeField === name}
-                                            />
-                                          )}
-                                          renderOptions={({ ...rest }) => (
-                                            <DefaultOptions
-                                              {...rest}
-                                              items={filterItems(query, data)}
-                                              itemToString={item => (item ? item.name : '')}
-                                              itemToValue={item => (item ? item.id : null)}
-                                            />
-                                          )}
-                                          onChange={item => {
-                                            if (!item) clear();
-                                            setFieldValue(name, item && item.name);
-                                          }}
-                                          onSearch={set}
-                                        />
-                                      )}
-                                    </StringValue>
-                                  );
-                                }}
-                              </EnumProvider>
-                            }
+                            input={createSelectInput({
+                              enumType: 'Incoterm',
+                              inputHandlers,
+                              name,
+                              touched,
+                              errors,
+                              isNew,
+                              activeField,
+                            })}
                           />
                         )}
                       </FormField>
@@ -429,19 +403,15 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                             {({ onValidation }) => (
                               <SelectExporters
                                 selected={values.exporter}
-                                onSelect={({ group, name }) => {
-                                  setFieldValue('exporter', {
-                                    id: group.id,
-                                    name: name || group.name,
-                                  });
+                                onCancel={toggle}
+                                onSelect={newValue => {
+                                  toggle();
+                                  setFieldValue('exporter', newValue);
                                   setFieldValue('orderItems', []);
                                   onValidation(
                                     {
                                       ...values,
-                                      exporter: {
-                                        id: group.id,
-                                        name: name || group.name,
-                                      },
+                                      exporter: newValue,
                                     },
                                     validationRules()
                                   );
