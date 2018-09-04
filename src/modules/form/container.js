@@ -30,6 +30,11 @@ export default class FormContainer extends Container<FormState> {
     }));
   };
 
+  isReady = () => {
+    const { errors, touched } = this.state;
+    return Object.keys(errors).length === 0 && Object.keys(touched).length > 0;
+  };
+
   onValidation = (formData: Object, ValidationSchema: any) => {
     logger.warn('validation', formData);
     const { errors } = this.state;

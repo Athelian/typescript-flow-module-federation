@@ -3,16 +3,16 @@ import { css } from 'react-emotion';
 import { shadows, colors, presets, fontSizes, borderRadiuses } from 'styles/common';
 
 export const IncrementInputWrapperStyle = () => css`
-  height: 30px;
+  height: 25px;
   width: 100%;
   display: grid;
-  grid-template-columns: 30px auto 30px;
+  grid-template-columns: 25px auto 25px;
   grid-gap: 10px;
 `;
 
 export const IncrementButtonStyle = () => css`
-  height: 30px;
-  width: 30px;
+  height: 25px;
+  width: 25px;
   ${shadows.TOOLTIP};
   color: ${colors.GRAY_LIGHT};
   ${presets.BUTTON};

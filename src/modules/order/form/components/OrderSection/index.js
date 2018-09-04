@@ -24,8 +24,8 @@ import {
   InputGroup,
 } from 'components/Form';
 import EnumProvider from 'providers/enum';
+import logger from 'utils/logger';
 import matchSorter from 'match-sorter';
-
 import Divider from 'components/Divider';
 import BaseCard from 'components/Cards';
 import { colors } from 'styles/common';
@@ -49,13 +49,24 @@ type Props = {
   initialValues: Object,
 };
 
+const filterItems = (query: string, items: Array<any>) => {
+  if (!query) return items;
+  return matchSorter(items, query, {
+    keys: ['name', 'description'],
+  });
+};
+
 const OrderSection = ({ isNew, initialValues }: Props) => (
   <div className={OrderSectionWrapperStyle}>
     <Subscribe to={[OrderFormContainer]}>
-      {({ state: values, setFieldValue, validationRules }) => {
+      {({ state, setFieldValue, validationRules }) => {
+        const values = { ...initialValues, ...state };
         const totalOrderedQuantity = values.orderItems ? values.orderItems.length : 0;
         const totalBatches = values.orderItems
-          ? values.orderItems.reduce((total, item) => total + item.batchItems.length, 0)
+          ? values.orderItems.reduce(
+              (total, item) => (total + item.batches ? item.batches.length : 0),
+              0
+            )
           : 0;
 
         return (
@@ -109,6 +120,9 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                         name="piNo"
                         initValue={values.piNo}
                         setFieldValue={setFieldValue}
+                        onValidate={newValue =>
+                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                        }
                         {...formHelper}
                       >
                         {({ name, ...inputHandlers }) => (
@@ -140,9 +154,12 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                         )}
                       </FormField>
                       <FormField
-                        name="issueAt"
-                        initValue={values.issuAt}
+                        name="issuedAt"
+                        initValue={values.issuedAt}
                         setFieldValue={setFieldValue}
+                        onValidate={newValue =>
+                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                        }
                         {...formHelper}
                       >
                         {({ name, ...inputHandlers }) => (
@@ -204,15 +221,18 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                                   if (loading) return null;
                                   if (error) return `Error!: ${error}`;
 
-                                  const filterItems = (query: string, items: Array<any>) => {
-                                    if (!query) return items;
-                                    return matchSorter(items, query, {
-                                      keys: ['name', 'description'],
-                                    });
-                                  };
-
                                   return (
-                                    <StringValue defaultValue="">
+                                    <StringValue
+                                      defaultValue={inputHandlers.value}
+                                      onChange={newValue => {
+                                        logger.warn('newValue', newValue);
+                                        setFieldValue(name, newValue);
+                                        formHelper.onValidation(
+                                          { ...values, [name]: newValue },
+                                          validationRules()
+                                        );
+                                      }}
+                                    >
                                       {({ value: query, set, clear }) => (
                                         <SearchSelectInput
                                           name={name}
@@ -263,7 +283,7 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                           <FieldItem
                             label={
                               <Label>
-                                <FormattedMessage {...messages.incoterms} />
+                                <FormattedMessage {...messages.incoterm} />
                               </Label>
                             }
                             tooltip={
@@ -281,15 +301,17 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                                   if (loading) return null;
                                   if (error) return `Error!: ${error}`;
 
-                                  const filterItems = (query: string, items: Array<any>) => {
-                                    if (!query) return items;
-                                    return matchSorter(items, query, {
-                                      keys: ['name', 'description'],
-                                    });
-                                  };
-
                                   return (
-                                    <StringValue defaultValue="">
+                                    <StringValue
+                                      defaultValue={inputHandlers.value}
+                                      onChange={newValue => {
+                                        setFieldValue(name, newValue);
+                                        formHelper.onValidation(
+                                          { ...values, [name]: newValue },
+                                          validationRules()
+                                        );
+                                      }}
+                                    >
                                       {({ value: query, set, clear }) => (
                                         <SearchSelectInput
                                           name={name}
@@ -333,6 +355,9 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                         name="deliveryPlace"
                         initValue={values.deliveryPlace}
                         setFieldValue={setFieldValue}
+                        onValidate={newValue =>
+                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                        }
                         {...formHelper}
                       >
                         {({ name, ...inputHandlers }) => (
@@ -400,15 +425,30 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                         options={{ width: '1030px' }}
                       >
                         {opened && (
-                          <SelectExporters
-                            selected={values.exporter}
-                            onSelect={({ group, name }) =>
-                              setFieldValue('exporter', {
-                                id: group.id,
-                                name: name || group.name,
-                              })
-                            }
-                          />
+                          <Subscribe to={[FormContainer]}>
+                            {({ onValidation }) => (
+                              <SelectExporters
+                                selected={values.exporter}
+                                onSelect={({ group, name }) => {
+                                  setFieldValue('exporter', {
+                                    id: group.id,
+                                    name: name || group.name,
+                                  });
+                                  setFieldValue('orderItems', []);
+                                  onValidation(
+                                    {
+                                      ...values,
+                                      exporter: {
+                                        id: group.id,
+                                        name: name || group.name,
+                                      },
+                                    },
+                                    validationRules()
+                                  );
+                                }}
+                              />
+                            )}
+                          </Subscribe>
                         )}
                       </SlideView>
                     </React.Fragment>

@@ -14,18 +14,26 @@ export const createOrderMutation = gql`
       }
     }
   }
-
   ${violationFragment}
 `;
 
-export const prepareCreateOrderInput = ({ orderItems = [], ...data }: OrderForm) => ({
+export const prepareCreateOrderInput = ({
+  orderItems = [],
+  exporter = {},
+  tags = [],
+  issuedAt = '',
+  ...data
+}: Object): OrderForm => ({
   ...data,
+  exporterId: exporter.id,
+  issuedAt: issuedAt ? new Date(issuedAt) : null,
+  tagIds: tags.map(({ id }) => id),
   orderItems: orderItems.map(({ batches, productExporterSupplier, ...orderItem }) => ({
     ...orderItem,
     productProviderId: productExporterSupplier.id,
-    batches: batches.map(({ assignments, tags, ...batch }) => ({
+    batches: batches.map(({ assignments, tags: tagsArr = [], ...batch }) => ({
       ...batch,
-      tagIds: tags ? tags.map(t => t.id) : null,
+      tagIds: tagsArr ? tagsArr.map(t => t.id) : null,
     })),
   })),
 });
@@ -41,12 +49,22 @@ export const updateOrderMutation = gql`
       }
     }
   }
-
   ${violationFragment}
 `;
 
-export const prepareUpdateOrderInput = ({ orderItems = [], ...data }: OrderForm) => ({
+export const prepareUpdateOrderInput = ({
+  id,
+  createdAt,
+  updatedAt,
+  __typename,
+  issuedAt = '',
+  orderItems = [],
+  exporter = {},
+  ...data
+}: Object): OrderForm => ({
   ...data,
+  exporterId: exporter.id,
+  issuedAt: issuedAt ? new Date(issuedAt) : null,
   orderItems: orderItems.map(({ batches, productExporterSupplier, ...orderItem }) => ({
     ...orderItem,
     productProviderId: productExporterSupplier.id,

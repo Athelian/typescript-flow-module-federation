@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { pickByProps } from 'utils/fp';
-import logger from 'utils/logger';
 import messages from 'modules/order/messages';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
@@ -39,16 +38,12 @@ const orderSectionFields = pickByProps([
   'totalPrice',
   'batchedQuantity',
   'shippedQuantity',
-  'items',
+  'orderItems',
 ]);
-
-const hasSelectExporter = (order: Object) =>
-  (order.exporter && order.exporter.id) || order.exporterId;
+const itemSectionFields = pickByProps(['exporter', 'orderItems']);
 
 export default function OrderForm({ order }: Props) {
   const isNew = Object.keys(order).length === 0;
-  logger.warn('order', order);
-
   const orderValues = orderSectionFields(order);
 
   return (
@@ -56,7 +51,7 @@ export default function OrderForm({ order }: Props) {
       <div className={SectionWrapperStyle} id="orderSection">
         <SectionHeader icon="ORDER" title="ORDER">
           {!isNew && (
-            <React.Fragment>
+            <>
               <div className={LastModifiedWrapperStyle}>
                 <Display title={<FormattedMessage {...messages.updatedAt} />}>
                   <FormattedDate value={new Date(order.updatedAt)} />
@@ -78,18 +73,24 @@ export default function OrderForm({ order }: Props) {
                   {order.archived ? <Icon icon="TOGGLE_OFF" /> : <Icon icon="TOGGLE_ON" />}
                 </button>
               </div>
-            </React.Fragment>
+            </>
           )}
         </SectionHeader>
         <OrderSection isNew={isNew} initialValues={{ ...orderValues }} />
       </div>
       <div className={SectionWrapperStyle} id="itemsSection">
         <Subscribe to={[OrderFormContainer]}>
-          {({ state: values }) => (
-            <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
+          {({ state: values, setFieldValue }) => (
+            <>
+              <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
+              <ItemsSection
+                initialValues={{ ...itemSectionFields(values) }}
+                isNew={isNew}
+                onSelectItems={orderItems => setFieldValue('orderItems', orderItems)}
+              />
+            </>
           )}
         </Subscribe>
-        <ItemsSection isReady={hasSelectExporter(order)} />
       </div>
       <div className={SectionWrapperStyle} id="documentsSection">
         <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />

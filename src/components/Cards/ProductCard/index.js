@@ -16,7 +16,7 @@ const defaultProps = {
   onClick: id => navigate(`/product/${encodeId(id)}`),
 };
 
-const ProductCard = ({ product, onClick }: Props) => {
+const ProductCard = ({ product, onClick, ...rest }: Props) => {
   if (!product) return '';
 
   const { id } = product;
@@ -28,7 +28,7 @@ const ProductCard = ({ product, onClick }: Props) => {
   ];
 
   return (
-    <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions}>
+    <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} {...rest}>
       <div className={ProductCardWrapperStyle} onClick={onClick} role="presentation">
         {id}
       </div>

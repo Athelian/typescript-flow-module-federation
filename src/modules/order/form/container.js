@@ -2,17 +2,20 @@
 import { Container } from 'unstated';
 import * as Yup from 'yup';
 import { isEquals } from 'utils/fp';
+import logger from 'utils/logger';
 
 type FormState = {
   orderItems: Array<any>,
-  files: Array<any>,
+};
+
+const initValues = {
+  orderItems: [],
 };
 
 export default class OrderFormContainer extends Container<FormState> {
-  state = {
-    orderItems: [],
-    files: [],
-  };
+  state = initValues;
+
+  order = initValues;
 
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
@@ -20,7 +23,15 @@ export default class OrderFormContainer extends Container<FormState> {
     });
   };
 
-  isDirty = (values: any) => !isEquals(values, this.state);
+  isDirty = (values: any) => !isEquals(values, this.order);
+
+  initDetailValues = (values: any) => {
+    this.setState(values);
+    this.order = values;
+
+    logger.warn('setValues for order detail', values);
+    logger.warn('order detail', this.order);
+  };
 
   validationRules = () =>
     Yup.object().shape({

@@ -6,6 +6,7 @@ import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
+import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton } from 'components/NavButtons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
@@ -33,7 +34,7 @@ const defaultProps = {
   orderId: '',
 };
 
-class OrderFormModule extends React.Component<Props> {
+class OrderFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
   onCancel = () => {
@@ -58,7 +59,9 @@ class OrderFormModule extends React.Component<Props> {
     const isNew = orderId === 'new';
     if (isNew) {
       const {
-        createDeepOrder: { id },
+        orderCreate: {
+          order: { id },
+        },
       } = result;
       navigate(`/order/${encodeId(id)}`);
     }
@@ -102,36 +105,38 @@ class OrderFormModule extends React.Component<Props> {
                         />
                       </JumpToSection>
                       <BooleanValue>
-                        {({ value: opened, toggle }) => (
-                          <React.Fragment>
-                            {!isNew && <LogsButton onClick={toggle} />}
-                            <SlideView
-                              isOpen={opened}
-                              onRequestClose={toggle}
-                              options={{ width: '1030px' }}
-                            >
-                              <div style={{ padding: '50px', textAlign: 'center' }}>
-                                <h1>Logs</h1>
-                              </div>
-                            </SlideView>
-                          </React.Fragment>
-                        )}
+                        {({ value: opened, toggle }) =>
+                          !isNew && (
+                            <>
+                              <LogsButton onClick={toggle} />
+                              <SlideView
+                                isOpen={opened}
+                                onRequestClose={toggle}
+                                options={{ width: '1030px' }}
+                              >
+                                <div style={{ padding: '50px', textAlign: 'center' }}>
+                                  <h1>Logs</h1>
+                                </div>
+                              </SlideView>
+                            </>
+                          )
+                        }
                       </BooleanValue>
 
-                      <Subscribe to={[OrderFormContainer]}>
-                        {formState =>
-                          (isNew || formState.isDirty({ orderItems: [], files: [] })) && (
-                            <React.Fragment>
+                      <Subscribe to={[OrderFormContainer, FormContainer]}>
+                        {(formState, form) =>
+                          (isNew || formState.isDirty(formState.state)) && (
+                            <>
                               <CancelButton disabled={false} onClick={this.onCancel}>
                                 Cancel
                               </CancelButton>
                               <SaveButton
-                                disabled={!formState.state.isReady}
-                                onClick={() => this.onSave(formState.state.formData, saveOrder)}
+                                disabled={!form.isReady()}
+                                onClick={() => this.onSave(formState.state, saveOrder)}
                               >
                                 Save
                               </SaveButton>
-                            </React.Fragment>
+                            </>
                           )
                         }
                       </Subscribe>
@@ -143,20 +148,25 @@ class OrderFormModule extends React.Component<Props> {
                   {isNew || !orderId ? (
                     <OrderForm order={{}} />
                   ) : (
-                    <Query
-                      query={query}
-                      variables={{ id: decodeId(orderId) }}
-                      fetchPolicy="network-only"
-                    >
-                      {({ loading, data, error }) => {
-                        if (error) {
-                          return error.message;
-                        }
+                    <Subscribe to={[OrderFormContainer]}>
+                      {({ initDetailValues }) => (
+                        <Query
+                          query={query}
+                          variables={{ id: decodeId(orderId) }}
+                          fetchPolicy="network-only"
+                          onCompleted={detail => initDetailValues(detail.order)}
+                        >
+                          {({ loading, data, error }) => {
+                            if (error) {
+                              return error.message;
+                            }
 
-                        if (loading) return <LoadingIcon />;
-                        return <OrderForm order={getByPathWithDefault({}, 'order', data)} />;
-                      }}
-                    </Query>
+                            if (loading) return <LoadingIcon />;
+                            return <OrderForm order={getByPathWithDefault({}, 'order', data)} />;
+                          }}
+                        </Query>
+                      )}
+                    </Subscribe>
                   )}
                 </Layout>
               )}

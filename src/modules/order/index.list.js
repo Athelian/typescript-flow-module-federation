@@ -97,27 +97,6 @@ class OrderModule extends React.Component<Props, State> {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      {/* <PartnerSelectInput
-                        title={intl.formatMessage(messages.exporter)}
-                        label={intl.formatMessage(messages.exporter)}
-                        types={['Exporter']}
-                        value={values.exporterId}
-                        onChange={v => setFieldValue('exporterId', v ? v.id : null)}
-                      />
-                      <PartnerSelectInput
-                        title={intl.formatMessage(messages.supplier)}
-                        label={intl.formatMessage(messages.supplier)}
-                        types={['Supplier']}
-                        value={values.supplierId}
-                        onChange={v => setFieldValue('supplierId', v ? v.id : null)}
-                      />
-                      <PartnerSelectInput
-                        title={intl.formatMessage(messages.forwarder)}
-                        label={intl.formatMessage(messages.forwarder)}
-                        types={['Forwarder']}
-                        value={values.userId}
-                        onChange={v => setFieldValue('userId', v ? v.id : null)}
-                      /> */}
                     </InputGroup>
                   )}
                 </FilterInput>
