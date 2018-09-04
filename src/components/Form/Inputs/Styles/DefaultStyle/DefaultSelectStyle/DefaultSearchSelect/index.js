@@ -50,6 +50,7 @@ function DefaultSearchSelect({
   getInputProps,
   value,
   handleQueryChange,
+  ...rest
 }: Props) {
   return (
     <div
@@ -81,6 +82,7 @@ function DefaultSearchSelect({
         {...getInputProps({
           value,
           onChange: handleQueryChange,
+          ...rest,
         })}
       />
       {align === 'left' &&
