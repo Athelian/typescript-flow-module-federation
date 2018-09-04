@@ -20,10 +20,10 @@ const defaultProps = {
   onClick: () => {},
 };
 
-const SectionNavigation = ({ icon, label, disabled, active, onClick }: Props) => (
+const SectionTabs = ({ icon, label, disabled, active, onClick }: Props) => (
   <TabItem icon={icon} label={label} disabled={disabled} active={active} onClick={onClick} />
 );
 
-SectionNavigation.defaultProps = defaultProps;
+SectionTabs.defaultProps = defaultProps;
 
-export default SectionNavigation;
+export default SectionTabs;

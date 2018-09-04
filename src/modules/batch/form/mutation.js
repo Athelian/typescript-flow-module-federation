@@ -39,7 +39,19 @@ export const updateBatchMutation = gql`
   ${violationFragment}
 `;
 
-export const prepareUpdateBatchInput = ({ tags, ...data }: BatchDetail) => ({
+export const prepareUpdateBatchInput = ({
+  id,
+  createdAt,
+  updatedAt,
+  updatedBy,
+  __typename,
+  orderItem,
+  /* FIXME: REMOVE PACKAGE QUANTITY HERE WHEN MAXIME FIXES IT */
+  packageQuantity,
+  tags,
+  ...data
+}: BatchDetail) => ({
   ...data,
+  orderItemId: orderItem.id,
   tagIds: tags ? tags.map(t => t.id) : null,
 });

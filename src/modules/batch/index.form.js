@@ -6,7 +6,11 @@ import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon } from 'components/NavBar';
+import { SaveButton, CancelButton } from 'components/NavButtons';
 import LoadingIcon from 'components/LoadingIcon';
+import { FormContainer } from 'modules/form';
+import JumpToSection from 'components/JumpToSection';
+import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import BatchForm from './form';
@@ -75,12 +79,28 @@ class BatchFormModule extends React.Component<Props> {
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
-              {(saveOrder, { loading: isLoading, error: apiError }) => (
+              {(saveBatch, { loading: isLoading, error: apiError }) => (
                 <Layout
                   {...uiState}
                   navBar={
                     <NavBar>
                       <EntityIcon icon="BATCH" color="BATCH" />
+                      <JumpToSection>
+                        <SectionTabs link="batchSection" label="BATCH" icon="BATCH" />
+                      </JumpToSection>
+                      <Subscribe to={[BatchFormContainer, FormContainer]}>
+                        {(formState, form) =>
+                          (isNew || formState.isDirty(formState.state)) && (
+                            <>
+                              <CancelButton disabled={false} onClick={this.onCancel} />
+                              <SaveButton
+                                disabled={!form.isReady()}
+                                onClick={() => this.onSave(formState.state, saveBatch)}
+                              />
+                            </>
+                          )
+                        }
+                      </Subscribe>
                     </NavBar>
                   }
                 >
