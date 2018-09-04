@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
+import loadMore from 'utils/loadMore';
 import OrderGridView from './OrderGridView';
 import query from './query';
 
@@ -18,48 +19,7 @@ type Props = {
   perPage: number,
 };
 
-class OrderList extends React.Component<Props> {
-  loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
-    const { data, fetchMore } = clientData;
-    if (!data) return;
-    const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
-    const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
-    if (nextPage > totalPage) return;
-
-    const { viewType, ...filtersAndSort } = this.props;
-
-    fetchMore({
-      variables: {
-        page: nextPage,
-        ...filtersAndSort,
-      },
-      updateQuery: (prevResult, { fetchMoreResult }) => {
-        const { filter, sort, perPage } = this.props;
-        if (
-          !isEquals({ filter, sort, perPage }, filtersAndSort) ||
-          getByPathWithDefault({}, 'orders.page', prevResult) + 1 !==
-            getByPathWithDefault({}, 'orders.page', fetchMoreResult)
-        ) {
-          return prevResult;
-        }
-
-        if (getByPathWithDefault([], 'orders.nodes', fetchMoreResult).length === 0)
-          return prevResult;
-
-        return {
-          orders: {
-            ...prevResult.viewer.orders,
-            ...getByPathWithDefault({}, 'orders', fetchMoreResult),
-            nodes: [
-              ...prevResult.viewer.orders.nodes,
-              ...getByPathWithDefault([], 'orders.nodes', fetchMoreResult),
-            ],
-          },
-        };
-      },
-    });
-  };
-
+class OrderList extends React.PureComponent<Props> {
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
@@ -76,7 +36,7 @@ class OrderList extends React.Component<Props> {
           return (
             <OrderGridView
               items={getByPathWithDefault([], 'orders.nodes', data)}
-              onLoadMore={() => this.loadMore({ fetchMore, data })}
+              onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orders')}
               hasMore={hasMore}
               isLoading={loading}
             />

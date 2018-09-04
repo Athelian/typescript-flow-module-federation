@@ -19,7 +19,7 @@ type State = {
 
 const defaultProps = {
   validationOnChange: false,
-  validationOnBlur: false,
+  validationOnBlur: true,
   onValidate: () => {},
 };
 

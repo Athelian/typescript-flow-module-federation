@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { injectIntl, intlShape } from 'react-intl';
+import OrderFormContainer from 'modules/order/form/container';
 import InputGroup from 'components/Form/InputGroup';
 import { SectionNavBar, FilterInput, SortInput, SearchInput } from 'components/NavBar';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
@@ -9,7 +11,6 @@ import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import messages from 'modules/order/messages';
-import logger from 'utils/logger';
 import ExpandButtons from './components/ExpandButtons';
 import {
   ItemsSectionWrapperStyle,
@@ -28,20 +29,33 @@ import {
 import SelectProducts from '../SelectProducts';
 
 type Props = {
-  isReady: boolean,
   intl: intlShape,
+  initialValues: {
+    orderItems: Array<any>,
+    exporter: {
+      id: string,
+    },
+  },
+  isNew: boolean,
+  onSelectItems: Function,
 };
 
-function ItemSection({ isReady, intl }: Props) {
+function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
   const fields = [
     { title: intl.formatMessage(messages.poSort), value: 'PO' },
-    { title: intl.formatMessage(messages.exporterSort), value: 'exporter' },
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
+  const { orderItems = [], exporter = {} } = initialValues;
+
+  const defaultValues = {
+    perPage: 12,
+    filterBy: { exporterId: exporter.id },
+    sort: { field: 'updatedAt', direction: 'DESC' },
+  };
 
   return (
-    <ObjectValue defaultValue={{ perPage: 12, sort: { field: 'updatedAt', direction: 'DESC' } }}>
+    <ObjectValue defaultValue={defaultValues}>
       {({ value: filtersAndSort, set: onChangeFilter }) => (
         <BooleanValue>
           {({ value: allItemsExpanded, toggle: toggleExpand }) => (
@@ -73,27 +87,6 @@ function ItemSection({ isReady, intl }: Props) {
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      {/* <PartnerSelectInput
-                        title={intl.formatMessage(messages.exporter)}
-                        label={intl.formatMessage(messages.exporter)}
-                        types={['Exporter']}
-                        value={values.exporterId}
-                        onChange={v => setFieldValue('exporterId', v ? v.id : null)}
-                      />
-                      <PartnerSelectInput
-                        title={intl.formatMessage(messages.supplier)}
-                        label={intl.formatMessage(messages.supplier)}
-                        types={['Supplier']}
-                        value={values.supplierId}
-                        onChange={v => setFieldValue('supplierId', v ? v.id : null)}
-                      />
-                      <PartnerSelectInput
-                        title={intl.formatMessage(messages.forwarder)}
-                        label={intl.formatMessage(messages.forwarder)}
-                        types={['Forwarder']}
-                        value={values.userId}
-                        onChange={v => setFieldValue('userId', v ? v.id : null)}
-                      /> */}
                     </InputGroup>
                   )}
                 </FilterInput>
@@ -110,11 +103,15 @@ function ItemSection({ isReady, intl }: Props) {
                 <BooleanValue>
                   {({ value: opened, toggle }) => (
                     <React.Fragment>
-                      <NewButton
-                        title={intl.formatMessage(messages.newItems)}
-                        disabled={!isReady}
-                        onClick={toggle}
-                      />
+                      <Subscribe to={[OrderFormContainer]}>
+                        {({ state }) => (
+                          <NewButton
+                            title={intl.formatMessage(messages.newItems)}
+                            disabled={!((state.exporter && state.exporter.id) || !isNew)}
+                            onClick={toggle}
+                          />
+                        )}
+                      </Subscribe>
                       <SlideView
                         isOpen={opened}
                         onRequestClose={toggle}
@@ -122,9 +119,12 @@ function ItemSection({ isReady, intl }: Props) {
                       >
                         {opened && (
                           <SelectProducts
-                            onSelect={logger.warn}
-                            filtersAndSort={filtersAndSort}
-                            onLoadMore={logger.warn}
+                            onSelect={selectedItems => {
+                              onSelectItems(selectedItems);
+                              toggle();
+                            }}
+                            exporter={exporter && exporter.id}
+                            onCancel={toggle}
                           />
                         )}
                       </SlideView>
@@ -133,13 +133,11 @@ function ItemSection({ isReady, intl }: Props) {
                 </BooleanValue>
               </SectionNavBar>
               <div className={ItemsSectionBodyStyle}>
-                {/* FIXME: items.length > 0 */}
-                {true ? (
+                {orderItems.length > 0 ? (
                   <div className={ItemGridStyle}>
-                    {/* FIXME: items.map */}
-                    {[...Array(10).keys()].map(index => (
-                      <div className={ItemStyle}>
-                        <OrderItemCard item={{ id: index, quantity: 100 }} />
+                    {orderItems.map(item => (
+                      <div className={ItemStyle} key={item.id}>
+                        <OrderItemCard item={{ id: item.id, quantity: 100 }} />
                         {allItemsExpanded && (
                           // TODO: add this condition item.batchItems.length > 0 && (
                           <div className={BatchAreaStyle}>
@@ -150,16 +148,20 @@ function ItemSection({ isReady, intl }: Props) {
                                 </div>
                                 <div className={TitleStyle}>BATCHES (4)</div>
                               </div>
-                              <NewButton
-                                title="NEW BATCH"
-                                disabled={!isReady}
-                                onClick={toggleExpand}
-                              />
+                              <Subscribe to={[OrderFormContainer]}>
+                                {state => (
+                                  <NewButton
+                                    title="NEW BATCH"
+                                    disabled={!(state.exporter && state.exporter.id)}
+                                    onClick={toggleExpand}
+                                  />
+                                )}
+                              </Subscribe>
                             </div>
 
                             <div className={BatchGridStyle}>
                               <div className={BatchStyle}>
-                                <OrderBatchCard batch={{ id: index }} />
+                                <OrderBatchCard batch={{ id: item.id }} />
                               </div>
                             </div>
                           </div>

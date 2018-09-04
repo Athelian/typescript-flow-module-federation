@@ -83,7 +83,7 @@ export default defineMessages({
   PI: {
     id: 'containers.Orders.PI',
   },
-  incoterms: {
+  incoterm: {
     id: 'containers.Orders.incoterms',
   },
   deliveryPlace: {
@@ -322,6 +322,12 @@ export default defineMessages({
   },
   poSort: {
     id: 'modules.order.list.sort.po',
+  },
+  nameSort: {
+    id: 'modules.order.list.sort.name',
+  },
+  serialSort: {
+    id: 'modules.order.list.sort.serial',
   },
   exporterSort: {
     id: 'modules.order.list.sort.exporter',
