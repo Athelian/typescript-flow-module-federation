@@ -18,9 +18,16 @@ import {
   TextInput,
   NumberInput,
   DateInput,
+  TagsInput,
 } from 'components/Form';
 import messages from 'modules/batch/messages';
-import { BatchSectionWrapperStyle, MainFieldsWrapperStyle, ItemSectionStyle } from './style';
+import {
+  BatchSectionWrapperStyle,
+  MainFieldsWrapperStyle,
+  ItemSectionStyle,
+  TagsInputStyle,
+  DividerStyle,
+} from './style';
 
 type Props = {
   isNew: boolean,
@@ -265,6 +272,28 @@ const BatchSection = ({ isNew, initialValues }: Props) => (
                   )}
                 </BooleanValue>
               </div>
+            </div>
+            <div className={TagsInputStyle}>
+              <FieldItem
+                vertical
+                label={
+                  <Label>
+                    <FormattedMessage {...messages.tags} />
+                  </Label>
+                }
+                input={
+                  <TagsInput
+                    editable={isNew}
+                    id="tags"
+                    name="tags"
+                    tagType="Batch"
+                    values={values.tags}
+                    onChange={setFieldValue}
+                  />
+                }
+              />
+
+              <div className={DividerStyle} />
             </div>
           </>
         );

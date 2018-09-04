@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, layout, fontSizesWithHeights, colors } from 'styles/common';
+import { presets, layout, colors } from 'styles/common';
 
 export const BatchSectionWrapperStyle = css`
   ${presets.BOX};
@@ -18,28 +18,6 @@ export const ItemSectionStyle = css`
   grid-gap: 10px;
 `;
 
-export const ItemCardStyle = css`
-  width: 200px;
-  height: 230px;
-`;
-
-export const ItemCardImageStyle = css`
-  border-radius: 5px 5px 0 0;
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-`;
-
-export const ItemNameStyle = css`
-  color: ${colors.BLACK};
-  font-weight: bold;
-  ${fontSizesWithHeights.MAIN};
-  ${presets.ELLIPSIS};
-  text-align: center;
-  width: 200px;
-  padding: 0 10px;
-`;
-
 export const TagsInputStyle = css`
   margin-top: 20px;
 `;
@@ -51,4 +29,7 @@ export const QuantitySummaryStyle = css`
 
 export const DividerStyle = css`
   margin: 40px 0;
+  height: 1px;
+  background-color: ${colors.GRAY_VERY_LIGHT};
+  width: 100%;
 `;
