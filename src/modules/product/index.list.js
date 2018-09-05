@@ -10,7 +10,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import InputGroup from 'components/Form/InputGroup';
+import GridWrapper from 'components/GridWrapper';
 import ProductList from './list';
 import messages from './messages';
 
@@ -86,26 +86,14 @@ class ProductModule extends React.Component<Props, State> {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <InputGroup fieldGap={16}>
+                    <GridWrapper>
                       <SearchInput
                         value={values.query}
                         name="query"
                         onClear={() => setFieldValue('query', '')}
                         onChange={newQuery => setFieldValue('query', newQuery)}
                       />
-                      {/* <PartnerSelectInput
-                        title="Exporter"
-                        types={['Exporter']}
-                        value={values.exporterId}
-                        onChange={v => setFieldValue('exporterId', v ? v.id : null)}
-                      />
-                      <PartnerSelectInput
-                        title="Supplier"
-                        types={['Supplier']}
-                        value={values.supplierId}
-                        onChange={v => setFieldValue('supplierId', v ? v.id : null)}
-                      /> */}
-                    </InputGroup>
+                    </GridWrapper>
                   )}
                 </FilterInput>
                 <SearchInput

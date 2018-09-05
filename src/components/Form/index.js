@@ -21,7 +21,6 @@ import {
   DefaultSelect,
 } from './Inputs';
 import TagsInput from './TagsInput';
-import InputGroup from './InputGroup';
 import FieldItem from './FieldItem';
 import Label from './Label';
 import Tooltip from './Tooltip';
@@ -58,7 +57,6 @@ export {
   Display,
   DashedPlusButton,
   TagsInput,
-  InputGroup,
   SectionHeader,
   LastModified,
 };

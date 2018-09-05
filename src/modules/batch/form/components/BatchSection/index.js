@@ -8,9 +8,9 @@ import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormContainer, FormField } from 'modules/form';
 import { OrderItemCard } from 'components/Cards';
+import GridWrapper from 'components/GridWrapper';
 import {
   FieldItem,
-  InputGroup,
   Label,
   Tooltip,
   DefaultStyle,
@@ -43,209 +43,207 @@ const BatchSection = ({ isNew, initialValues }: Props) => (
         return (
           <>
             <div className={MainFieldsWrapperStyle}>
-              <InputGroup fieldGap={20}>
-                <Subscribe to={[FormContainer]}>
-                  {({ state: { touched, errors, activeField }, ...formHelper }) => (
-                    <>
-                      <FormField
-                        name="no"
-                        initValue={values.no}
-                        validationOnChange
-                        onValidate={newValue =>
-                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
-                        }
-                        setFieldValue={setFieldValue}
-                        {...formHelper}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <FieldItem
-                            label={
-                              <Label required>
-                                <FormattedMessage {...messages.batchNo} />
-                              </Label>
-                            }
-                            tooltip={
-                              <Tooltip
-                                isNew={isNew}
-                                errorMessage={touched[name] && errors[name]}
-                                changedValues={{
-                                  oldValue: initialValues[name],
-                                  newValue: values[name],
-                                }}
-                              />
-                            }
-                            input={
-                              <DefaultStyle
-                                isFocused={activeField === name}
-                                hasError={touched[name] && errors[name]}
-                                forceHoverStyle={isNew}
-                                width="200px"
-                              >
-                                <TextInput name={name} {...inputHandlers} />
-                              </DefaultStyle>
-                            }
-                          />
-                        )}
-                      </FormField>
+              <Subscribe to={[FormContainer]}>
+                {({ state: { touched, errors, activeField }, ...formHelper }) => (
+                  <GridWrapper>
+                    <FormField
+                      name="no"
+                      initValue={values.no}
+                      validationOnChange
+                      onValidate={newValue =>
+                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      }
+                      setFieldValue={setFieldValue}
+                      {...formHelper}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <FieldItem
+                          label={
+                            <Label required>
+                              <FormattedMessage {...messages.batchNo} />
+                            </Label>
+                          }
+                          tooltip={
+                            <Tooltip
+                              isNew={isNew}
+                              errorMessage={touched[name] && errors[name]}
+                              changedValues={{
+                                oldValue: initialValues[name],
+                                newValue: values[name],
+                              }}
+                            />
+                          }
+                          input={
+                            <DefaultStyle
+                              isFocused={activeField === name}
+                              hasError={touched[name] && errors[name]}
+                              forceHoverStyle={isNew}
+                              width="200px"
+                            >
+                              <TextInput name={name} {...inputHandlers} />
+                            </DefaultStyle>
+                          }
+                        />
+                      )}
+                    </FormField>
 
-                      <FormField
-                        name="quantity"
-                        initValue={values.quantity}
-                        validationOnChange
-                        onValidate={newValue =>
-                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
-                        }
-                        setFieldValue={setFieldValue}
-                        {...formHelper}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <FieldItem
-                            label={<Label required>INITIAL QUANTITY</Label>}
-                            tooltip={
-                              <Tooltip
-                                isNew={isNew}
-                                errorMessage={touched[name] && errors[name]}
-                                changedValues={{
-                                  oldValue: initialValues[name],
-                                  newValue: values[name],
-                                }}
-                              />
-                            }
-                            input={
-                              <DefaultStyle
-                                type="number"
-                                isFocused={activeField === name}
-                                hasError={touched[name] && errors[name]}
-                                forceHoverStyle={isNew}
-                                width="200px"
-                              >
-                                <NumberInput name={name} {...inputHandlers} />
-                              </DefaultStyle>
-                            }
-                          />
-                        )}
-                      </FormField>
+                    <FormField
+                      name="quantity"
+                      initValue={values.quantity}
+                      validationOnChange
+                      onValidate={newValue =>
+                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      }
+                      setFieldValue={setFieldValue}
+                      {...formHelper}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <FieldItem
+                          label={<Label required>INITIAL QUANTITY</Label>}
+                          tooltip={
+                            <Tooltip
+                              isNew={isNew}
+                              errorMessage={touched[name] && errors[name]}
+                              changedValues={{
+                                oldValue: initialValues[name],
+                                newValue: values[name],
+                              }}
+                            />
+                          }
+                          input={
+                            <DefaultStyle
+                              type="number"
+                              isFocused={activeField === name}
+                              hasError={touched[name] && errors[name]}
+                              forceHoverStyle={isNew}
+                              width="200px"
+                            >
+                              <NumberInput name={name} {...inputHandlers} />
+                            </DefaultStyle>
+                          }
+                        />
+                      )}
+                    </FormField>
 
-                      <FormField
-                        name="deliveredAt"
-                        initValue={values.deliveredAt}
-                        setFieldValue={setFieldValue}
-                        onValidate={newValue =>
-                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
-                        }
-                        {...formHelper}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <FieldItem
-                            label={
-                              <Label>
-                                <FormattedMessage {...messages.deliveredAt} />
-                              </Label>
-                            }
-                            tooltip={
-                              <Tooltip
-                                isNew={isNew}
-                                changedValues={{
-                                  oldValue: <FormattedDate value={initialValues[name]} />,
-                                  newValue: <FormattedDate value={values[name]} />,
-                                }}
-                              />
-                            }
-                            input={
-                              <DefaultStyle
-                                type="date"
-                                isFocused={activeField === name}
-                                forceHoverStyle={isNew}
-                                width="200px"
-                              >
-                                <DateInput name={name} {...inputHandlers} />
-                              </DefaultStyle>
-                            }
-                          />
-                        )}
-                      </FormField>
+                    <FormField
+                      name="deliveredAt"
+                      initValue={values.deliveredAt}
+                      setFieldValue={setFieldValue}
+                      onValidate={newValue =>
+                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      }
+                      {...formHelper}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage {...messages.deliveredAt} />
+                            </Label>
+                          }
+                          tooltip={
+                            <Tooltip
+                              isNew={isNew}
+                              changedValues={{
+                                oldValue: <FormattedDate value={initialValues[name]} />,
+                                newValue: <FormattedDate value={values[name]} />,
+                              }}
+                            />
+                          }
+                          input={
+                            <DefaultStyle
+                              type="date"
+                              isFocused={activeField === name}
+                              forceHoverStyle={isNew}
+                              width="200px"
+                            >
+                              <DateInput name={name} {...inputHandlers} />
+                            </DefaultStyle>
+                          }
+                        />
+                      )}
+                    </FormField>
 
-                      <FormField
-                        name="expiredAt"
-                        initValue={values.expiredAt}
-                        setFieldValue={setFieldValue}
-                        onValidate={newValue =>
-                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
-                        }
-                        {...formHelper}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <FieldItem
-                            label={
-                              <Label>
-                                <FormattedMessage {...messages.expiredAt} />
-                              </Label>
-                            }
-                            tooltip={
-                              <Tooltip
-                                isNew={isNew}
-                                changedValues={{
-                                  oldValue: <FormattedDate value={initialValues[name]} />,
-                                  newValue: <FormattedDate value={values[name]} />,
-                                }}
-                              />
-                            }
-                            input={
-                              <DefaultStyle
-                                type="date"
-                                isFocused={activeField === name}
-                                forceHoverStyle={isNew}
-                                width="200px"
-                              >
-                                <DateInput name={name} {...inputHandlers} />
-                              </DefaultStyle>
-                            }
-                          />
-                        )}
-                      </FormField>
+                    <FormField
+                      name="expiredAt"
+                      initValue={values.expiredAt}
+                      setFieldValue={setFieldValue}
+                      onValidate={newValue =>
+                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      }
+                      {...formHelper}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage {...messages.expiredAt} />
+                            </Label>
+                          }
+                          tooltip={
+                            <Tooltip
+                              isNew={isNew}
+                              changedValues={{
+                                oldValue: <FormattedDate value={initialValues[name]} />,
+                                newValue: <FormattedDate value={values[name]} />,
+                              }}
+                            />
+                          }
+                          input={
+                            <DefaultStyle
+                              type="date"
+                              isFocused={activeField === name}
+                              forceHoverStyle={isNew}
+                              width="200px"
+                            >
+                              <DateInput name={name} {...inputHandlers} />
+                            </DefaultStyle>
+                          }
+                        />
+                      )}
+                    </FormField>
 
-                      <FormField
-                        name="producedAt"
-                        initValue={values.producedAt}
-                        setFieldValue={setFieldValue}
-                        onValidate={newValue =>
-                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
-                        }
-                        {...formHelper}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <FieldItem
-                            label={
-                              <Label>
-                                <FormattedMessage {...messages.producedAt} />
-                              </Label>
-                            }
-                            tooltip={
-                              <Tooltip
-                                isNew={isNew}
-                                changedValues={{
-                                  oldValue: <FormattedDate value={initialValues[name]} />,
-                                  newValue: <FormattedDate value={values[name]} />,
-                                }}
-                              />
-                            }
-                            input={
-                              <DefaultStyle
-                                type="date"
-                                isFocused={activeField === name}
-                                forceHoverStyle={isNew}
-                                width="200px"
-                              >
-                                <DateInput name={name} {...inputHandlers} />
-                              </DefaultStyle>
-                            }
-                          />
-                        )}
-                      </FormField>
-                    </>
-                  )}
-                </Subscribe>
-              </InputGroup>
+                    <FormField
+                      name="producedAt"
+                      initValue={values.producedAt}
+                      setFieldValue={setFieldValue}
+                      onValidate={newValue =>
+                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      }
+                      {...formHelper}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage {...messages.producedAt} />
+                            </Label>
+                          }
+                          tooltip={
+                            <Tooltip
+                              isNew={isNew}
+                              changedValues={{
+                                oldValue: <FormattedDate value={initialValues[name]} />,
+                                newValue: <FormattedDate value={values[name]} />,
+                              }}
+                            />
+                          }
+                          input={
+                            <DefaultStyle
+                              type="date"
+                              isFocused={activeField === name}
+                              forceHoverStyle={isNew}
+                              width="200px"
+                            >
+                              <DateInput name={name} {...inputHandlers} />
+                            </DefaultStyle>
+                          }
+                        />
+                      )}
+                    </FormField>
+                  </GridWrapper>
+                )}
+              </Subscribe>
               <div className={ItemSectionStyle}>
                 <Label required>
                   <FormattedMessage {...messages.orderItem} />
