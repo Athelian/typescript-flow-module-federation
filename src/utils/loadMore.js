@@ -17,6 +17,8 @@ const loadMore = (
   fetchMore({
     variables: {
       ...filtersAndSort,
+      filter: filtersAndSort.filter,
+      sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
       page: nextPage,
     },
     updateQuery: (prevResult, { fetchMoreResult }) => {
