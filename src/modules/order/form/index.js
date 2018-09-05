@@ -72,7 +72,9 @@ export default function OrderForm({ order }: Props) {
               <ItemsSection
                 initialValues={{ ...itemSectionFields(values) }}
                 isNew={isNew}
-                onSelectItems={orderItems => setFieldValue('orderItems', orderItems)}
+                onSelectItems={orderItems =>
+                  setFieldValue('orderItems', [...values.orderItems, ...orderItems])
+                }
               />
             </>
           )}

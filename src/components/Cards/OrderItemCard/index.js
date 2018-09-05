@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { type OrderItem } from 'modules/order/type.js.flow';
-import logger from 'utils/logger';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -28,14 +27,16 @@ import {
 type Props = {
   item: ?OrderItem,
   onClick?: (id: string) => void,
+  onClone: Function,
+  onRemove: Function,
 };
 
-const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
+const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => {
   if (!item) return '';
 
   const actions = [
-    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+    <CardAction icon="CLONE" onClick={onClone} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
   ];
 
   const isNew = false;

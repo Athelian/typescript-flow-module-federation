@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue, ObjectValue } from 'react-values';
+import { BooleanValue, ObjectValue, ArrayValue } from 'react-values';
 import { injectIntl, intlShape } from 'react-intl';
 import OrderFormContainer from 'modules/order/form/container';
 import GridColumn from 'components/GridColumn';
@@ -133,45 +133,60 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                 </BooleanValue>
               </SectionNavBar>
               <div className={ItemsSectionBodyStyle}>
-                {orderItems.length > 0 ? (
-                  <div className={ItemGridStyle}>
-                    {orderItems.map(item => (
-                      <div className={ItemStyle} key={item.id}>
-                        <OrderItemCard item={{ id: item.id, quantity: 100 }} />
-                        {allItemsExpanded && (
-                          // TODO: add this condition item.batchItems.length > 0 && (
-                          <div className={BatchAreaStyle}>
-                            <div className={BatchAreaHeaderStyle}>
-                              <div className={TitleWrapperStyle}>
-                                <div className={IconStyle}>
-                                  <Icon icon="BATCH" />
+                <ArrayValue defaultValue={[]}>
+                  {({ value: selected, push, set }) =>
+                    orderItems.length > 0 ? (
+                      <div className={ItemGridStyle}>
+                        {orderItems.map(item => (
+                          <div className={ItemStyle} key={item.id}>
+                            <OrderItemCard
+                              item={{ id: item.id, quantity: 100 }}
+                              onClick={() => {
+                                if (!selected.includes(item.id)) {
+                                  push(item.id);
+                                } else {
+                                  set(selected.filter(selectedId => selectedId !== item.id));
+                                }
+                              }}
+                            />
+                            {(allItemsExpanded || selected.includes(item.id)) && (
+                              // TODO: add this condition item.batchItems.length > 0 && (
+                              <div className={BatchAreaStyle}>
+                                <div className={BatchAreaHeaderStyle}>
+                                  <div className={TitleWrapperStyle}>
+                                    <div className={IconStyle}>
+                                      <Icon icon="BATCH" />
+                                    </div>
+                                    <div className={TitleStyle}>BATCHES (4)</div>
+                                  </div>
+                                  <Subscribe to={[OrderFormContainer]}>
+                                    {state => (
+                                      <NewButton
+                                        title="NEW BATCH"
+                                        disabled={!(state.exporter && state.exporter.id)}
+                                        onClick={toggleExpand}
+                                      />
+                                    )}
+                                  </Subscribe>
                                 </div>
-                                <div className={TitleStyle}>BATCHES (4)</div>
-                              </div>
-                              <Subscribe to={[OrderFormContainer]}>
-                                {state => (
-                                  <NewButton
-                                    title="NEW BATCH"
-                                    disabled={!(state.exporter && state.exporter.id)}
-                                    onClick={toggleExpand}
-                                  />
-                                )}
-                              </Subscribe>
-                            </div>
 
-                            <div className={BatchGridStyle}>
-                              <div className={BatchStyle}>
-                                <OrderBatchCard batch={{ id: item.id }} />
+                                <div className={BatchGridStyle}>
+                                  <div className={BatchStyle}>
+                                    <OrderBatchCard batch={{ id: item.id }} />
+                                  </div>
+                                </div>
                               </div>
-                            </div>
+                            )}
                           </div>
-                        )}
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className={EmptyMessageStyle}>{intl.formatMessage(messages.noItems)}</div>
-                )}
+                    ) : (
+                      <div className={EmptyMessageStyle}>
+                        {intl.formatMessage(messages.noItems)}
+                      </div>
+                    )
+                  }
+                </ArrayValue>
               </div>
             </div>
           )}
