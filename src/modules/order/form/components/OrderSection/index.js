@@ -425,25 +425,32 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
               </div>
             </div>
             <div className={TagsInputStyle}>
-              <FieldItem
-                vertical
-                label={
-                  <Label>
-                    <FormattedMessage {...messages.tags} />
-                  </Label>
-                }
-                input={
-                  <TagsInput
-                    editable={isNew}
-                    id="tags"
-                    name="tags"
-                    tagType="Order"
-                    values={values.tags}
-                    onChange={setFieldValue}
+              <Subscribe to={[FormContainer]}>
+                {({ state: formState, ...formHelper }) => (
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage {...messages.tags} />
+                      </Label>
+                    }
+                    input={
+                      <TagsInput
+                        editable={isNew}
+                        id="tags"
+                        name="tags"
+                        tagType="Order"
+                        values={values.tags}
+                        onChange={(field, tags) => {
+                          setFieldValue(field, tags);
+                          formHelper.setFieldTouched('tags');
+                          formHelper.onValidation(values, validationRules());
+                        }}
+                      />
+                    }
                   />
-                }
-              />
-
+                )}
+              </Subscribe>
               <div className={DividerStyle}>
                 <Divider color={colors.GRAY_LIGHT} />
               </div>
