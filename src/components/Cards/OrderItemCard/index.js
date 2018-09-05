@@ -93,7 +93,11 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
         </div>
 
         <div className={BodyWrapperStyle}>
-          <div className={QuantityWrapperStyle}>
+          <div
+            className={QuantityWrapperStyle}
+            onClick={evt => evt.stopPropagation()}
+            role="presentation"
+          >
             <Label required>QTY</Label>
             <DefaultStyle
               type="number"
@@ -106,7 +110,11 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
               <NumberInput {...dummyQuantity.input} />
             </DefaultStyle>
           </div>
-          <div className={UnitPriceWrapperStyle}>
+          <div
+            className={UnitPriceWrapperStyle}
+            onClick={evt => evt.stopPropagation()}
+            role="presentation"
+          >
             <button className={SyncButtonStyle} type="button">
               SYNC
               <Icon icon="SYNC" />
