@@ -76,7 +76,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
   return (
     <ObjectValue
       defaultValue={{
-        perPage: 20,
+        perPage: 4,
         page: 1,
         filter: {
           exporterId: exporter,

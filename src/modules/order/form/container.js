@@ -16,7 +16,7 @@ const initValues = {
 export default class OrderFormContainer extends Container<FormState> {
   state = initValues;
 
-  order = initValues;
+  originalValues = initValues;
 
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
@@ -24,21 +24,21 @@ export default class OrderFormContainer extends Container<FormState> {
     });
   };
 
-  isDirty = (values: any) => !isEquals(values, this.order);
+  isDirty = (values: any) => !isEquals(values, this.originalValues);
 
   onSuccess = () => {
     logger.warn('onSuccess');
-    this.order = this.state;
+    this.originalValues = this.state;
   };
 
   initDetailValues = (values: Object) => {
     const parsedValues = removeTypename(values);
     // $FlowFixMe missing type for map function in ramda
     this.setState(parsedValues);
-    this.order = parsedValues;
+    this.originalValues = parsedValues;
 
     logger.warn('setValues for order detail', values);
-    logger.warn('order detail', this.order);
+    logger.warn('order detail', this.originalValues);
   };
 
   validationRules = () =>

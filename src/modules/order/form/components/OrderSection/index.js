@@ -46,7 +46,6 @@ import {
 
 type Props = {
   isNew: boolean,
-  initialValues: Object,
 };
 
 const filterItems = (query: string, items: Array<any>) => {
@@ -114,10 +113,10 @@ function createSelectInput({ enumType, inputHandlers, name, touched, errors, isN
   );
 }
 
-const OrderSection = ({ isNew, initialValues }: Props) => (
+const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
     <Subscribe to={[OrderFormContainer]}>
-      {({ state, setFieldValue, validationRules }) => {
+      {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {
         const values = { ...initialValues, ...state };
         const totalOrderedQuantity = values.orderItems ? values.orderItems.length : 0;
         const totalBatches = values.orderItems

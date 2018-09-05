@@ -50,7 +50,7 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
 
   const defaultValues = {
     perPage: 12,
-    filterBy: { exporterId: exporter.id },
+    filter: { exporterId: exporter.id },
     sort: { field: 'updatedAt', direction: 'DESC' },
   };
 
@@ -67,6 +67,7 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                   fields={fields}
                   onChange={({ field: { value }, ascending }) =>
                     onChangeFilter({
+                      ...filtersAndSort,
                       sort: {
                         field: value,
                         direction: ascending ? 'ASC' : 'DESC',
@@ -76,7 +77,12 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                 />
                 <FilterInput
                   initialFilter={{}}
-                  onChange={newFilter => onChangeFilter({ ...newFilter })}
+                  onChange={filters =>
+                    onChangeFilter({
+                      ...filtersAndSort,
+                      filter: { ...filtersAndSort.filter, ...filters },
+                    })
+                  }
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
@@ -94,8 +100,18 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                 <SearchInput
                   value={filtersAndSort.query}
                   name="search"
-                  onClear={() => onChangeFilter({ query: '' })}
-                  onChange={newQuery => onChangeFilter({ query: newQuery })}
+                  onClear={() =>
+                    onChangeFilter({
+                      ...filtersAndSort,
+                      filter: { ...filtersAndSort.filter, query: '' },
+                    })
+                  }
+                  onChange={newQuery =>
+                    onChangeFilter({
+                      ...filtersAndSort,
+                      filter: { ...filtersAndSort.filter, query: newQuery },
+                    })
+                  }
                 />
 
                 <ExpandButtons expanded={allItemsExpanded} onClick={toggleExpand} />
@@ -138,18 +154,18 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                     orderItems.length > 0 ? (
                       <div className={ItemGridStyle}>
                         {orderItems.map(item => (
-                          <div className={ItemStyle} key={item.id}>
+                          <div className={ItemStyle} key={item.uid}>
                             <OrderItemCard
                               item={{ id: item.id, quantity: 100 }}
                               onClick={() => {
-                                if (!selected.includes(item.id)) {
-                                  push(item.id);
+                                if (!selected.includes(item.uid)) {
+                                  push(item.uid);
                                 } else {
-                                  set(selected.filter(selectedId => selectedId !== item.id));
+                                  set(selected.filter(selectedId => selectedId !== item.uid));
                                 }
                               }}
                             />
-                            {(allItemsExpanded || selected.includes(item.id)) && (
+                            {(allItemsExpanded || selected.includes(item.uid)) && (
                               // TODO: add this condition item.batchItems.length > 0 && (
                               <div className={BatchAreaStyle}>
                                 <div className={BatchAreaHeaderStyle}>
