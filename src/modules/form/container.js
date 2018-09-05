@@ -10,12 +10,18 @@ type FormState = {
   activeField: string,
 };
 
+const EmptyValidation = {
+  validate: (value, options) => Promise.resolve({ value, options }),
+};
+
+const initState = {
+  errors: {},
+  touched: {},
+  activeField: '',
+};
+
 export default class FormContainer extends Container<FormState> {
-  state = {
-    errors: {},
-    touched: {},
-    activeField: '',
-  };
+  state = initState;
 
   setActiveField = (activeField: string) => {
     this.setState({ activeField });
@@ -30,12 +36,17 @@ export default class FormContainer extends Container<FormState> {
     }));
   };
 
+  onReset = () => {
+    logger.warn('onReset');
+    this.setState(() => initState);
+  };
+
   isReady = () => {
     const { errors, touched } = this.state;
     return Object.keys(errors).length === 0 && Object.keys(touched).length > 0;
   };
 
-  onValidation = (formData: Object, ValidationSchema: any) => {
+  onValidation = (formData: Object, ValidationSchema: any = EmptyValidation) => {
     logger.warn('validation', formData);
     const { errors } = this.state;
     ValidationSchema.validate(formData, { abortEarly: false })

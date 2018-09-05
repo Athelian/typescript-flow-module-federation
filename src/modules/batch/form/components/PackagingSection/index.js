@@ -11,7 +11,7 @@ import {
   DefaultStyle,
   DefaultWeightStyle,
   DefaultVolumeStyle,
-  // DefaultDimensionStyle,
+  DefaultDimensionStyle,
   TextInput,
   NumberInput,
 } from 'components/Form';
@@ -19,16 +19,13 @@ import { PackagingSectionWrapperStyle } from './style';
 
 type Props = {
   isNew: boolean,
-  initialValues: Object,
 };
 
-const PackagingSection = ({ isNew, initialValues }: Props) => (
+const PackagingSection = ({ isNew }: Props) => (
   <div className={PackagingSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ state, setFieldValue, validationRules }) => {
-        const values = { ...initialValues, ...state };
-        console.warn('initialValues', initialValues);
-        console.warn('values', values);
+      {({ originalValues, state, setFieldValue, validationRules }) => {
+        const values = { ...originalValues, ...state };
 
         return (
           <Subscribe to={[FormContainer]}>
@@ -36,7 +33,7 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
               <GridColumn>
                 <FormField
                   name="packageName"
-                  initValue={values.packageName}
+                  initValue={originalValues.packageName}
                   validationOnChange
                   onValidate={newValue =>
                     formHelper.onValidation({ ...values, ...newValue }, validationRules())
@@ -51,7 +48,7 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
                         <Tooltip
                           isNew={isNew}
                           changedValues={{
-                            oldValue: initialValues[name],
+                            oldValue: originalValues[name],
                             newValue: values[name],
                           }}
                         />
@@ -71,7 +68,7 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
 
                 <FormField
                   name="packageCapacity"
-                  initValue={values.packageCapacity}
+                  initValue={originalValues.packageCapacity}
                   validationOnChange
                   onValidate={newValue =>
                     formHelper.onValidation({ ...values, ...newValue }, validationRules())
@@ -86,7 +83,7 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
                         <Tooltip
                           isNew={isNew}
                           changedValues={{
-                            oldValue: initialValues[name],
+                            oldValue: originalValues[name],
                             newValue: values[name],
                           }}
                         />
@@ -107,7 +104,7 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
 
                 <FormField
                   name="packageQuantity"
-                  initValue={values.packageQuantity}
+                  initValue={originalValues.packageQuantity}
                   validationOnChange
                   onValidate={newValue =>
                     formHelper.onValidation({ ...values, ...newValue }, validationRules())
@@ -122,7 +119,7 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
                         <Tooltip
                           isNew={isNew}
                           changedValues={{
-                            oldValue: initialValues[name],
+                            oldValue: originalValues[name],
                             newValue: values[name],
                           }}
                         />
@@ -142,8 +139,8 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
                 </FormField>
 
                 <FormField
-                  name="packageGrossWeight"
-                  initValue={values.packageGrossWeight}
+                  name="packageGrossWeight_value"
+                  initValue={originalValues.packageGrossWeight_value}
                   validationOnChange
                   onValidate={newValue =>
                     formHelper.onValidation({ ...values, ...newValue }, validationRules())
@@ -151,50 +148,35 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
                   setFieldValue={setFieldValue}
                   {...formHelper}
                 >
-                  {({ name, value, onChange, ...inputHandlers }) => (
+                  {({ name, ...inputHandlers }) => (
                     <FieldItem
                       label={<Label>PKG GROSS WEIGHT</Label>}
                       tooltip={
                         <Tooltip
                           isNew={isNew}
                           changedValues={{
-                            oldValue: `${initialValues[name].value} ${initialValues[name].metric}`,
-                            newValue: `${values[name].value} ${values[name].metric}`,
+                            oldValue: originalValues[name],
+                            newValue: values[name],
                           }}
                         />
                       }
                       input={
                         <DefaultWeightStyle
-                          unit={value.metric}
+                          unit={values.packageGrossWeight_metric}
                           isFocused={activeField === name}
                           forceHoverStyle={isNew}
                           width="200px"
                         >
-                          <NumberInput
-                            name={name}
-                            value={value.value}
-                            onChange={evt =>
-                              onChange({
-                                target: {
-                                  value: {
-                                    value: evt.target.value,
-                                    metric: 'kg',
-                                  },
-                                },
-                              })
-                            }
-                            {...inputHandlers}
-                          />
+                          <NumberInput name={name} {...inputHandlers} />
                         </DefaultWeightStyle>
                       }
                     />
                   )}
                 </FormField>
-                <h3>{JSON.stringify(values.packageVolume)}</h3>
+
                 <FormField
-                  name="packageVolume"
-                  key={`${values.packageVolume.value}-${values.packageVolume.metric}`}
-                  initValue={values.packageVolume}
+                  name="packageVolume_value"
+                  initValue={originalValues.packageVolume_value}
                   validationOnChange
                   onValidate={newValue =>
                     formHelper.onValidation({ ...values, ...newValue }, validationRules())
@@ -202,53 +184,35 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
                   setFieldValue={setFieldValue}
                   {...formHelper}
                 >
-                  {({ name, value, onChange, ...inputHandlers }) =>
-                    console.warn('test', value) || (
-                      <FieldItem
-                        label={<Label>PKG VOLUME</Label>}
-                        tooltip={
-                          <Tooltip
-                            isNew={isNew}
-                            changedValues={{
-                              oldValue: `${initialValues[name].value} ${
-                                initialValues[name].metric
-                              }`,
-                              newValue: `${values[name].value} ${values[name].metric}`,
-                            }}
-                          />
-                        }
-                        input={
-                          <DefaultVolumeStyle
-                            unit={value.metric}
-                            isFocused={activeField === name}
-                            forceHoverStyle={isNew}
-                            width="200px"
-                          >
-                            <NumberInput
-                              name={name}
-                              value={value.value}
-                              onChange={evt =>
-                                onChange({
-                                  target: {
-                                    value: {
-                                      value: evt.target.value,
-                                      metric: 'cm³',
-                                    },
-                                  },
-                                })
-                              }
-                              {...inputHandlers}
-                            />
-                          </DefaultVolumeStyle>
-                        }
-                      />
-                    )
-                  }
+                  {({ name, ...inputHandlers }) => (
+                    <FieldItem
+                      label={<Label>PKG VOLUME</Label>}
+                      tooltip={
+                        <Tooltip
+                          isNew={isNew}
+                          changedValues={{
+                            oldValue: originalValues[name],
+                            newValue: values[name],
+                          }}
+                        />
+                      }
+                      input={
+                        <DefaultVolumeStyle
+                          unit={values.packageVolume_metric}
+                          isFocused={activeField === name}
+                          forceHoverStyle={isNew}
+                          width="200px"
+                        >
+                          <NumberInput name={name} {...inputHandlers} />
+                        </DefaultVolumeStyle>
+                      }
+                    />
+                  )}
                 </FormField>
 
-                {/* <FormField
-                  name="packageSizeLength"
-                  initValue={values.packageSize.length}
+                <FormField
+                  name="packageSize_length_value"
+                  initValue={originalValues.packageSize_length_value}
                   validationOnChange
                   onValidate={newValue =>
                     formHelper.onValidation({ ...values, ...newValue }, validationRules())
@@ -256,47 +220,104 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
                   setFieldValue={setFieldValue}
                   {...formHelper}
                 >
-                  {({ name, value, onChange, ...inputHandlers }) => (
+                  {({ name, ...inputHandlers }) => (
                     <FieldItem
                       label={<Label>PKG LENGTH</Label>}
                       tooltip={
                         <Tooltip
                           isNew={isNew}
                           changedValues={{
-                            oldValue: `${initialValues.packageSize.length.value} ${
-                              initialValues.packageSize.length.metric
-                            }`,
-                            newValue: `${value.value} ${value.metric}`,
+                            oldValue: originalValues[name],
+                            newValue: values[name],
                           }}
                         />
                       }
                       input={
                         <DefaultDimensionStyle
-                          unit={value.metric}
+                          unit={values.packageSize_length_metric}
                           isFocused={activeField === name}
                           forceHoverStyle={isNew}
                           width="200px"
                         >
-                          <NumberInput
-                            name={name}
-                            value={value.value}
-                            onChange={evt =>
-                              onChange({
-                                target: {
-                                  value: {
-                                    value: evt.target.value,
-                                    metric: 'cm',
-                                  },
-                                },
-                              })
-                            }
-                            {...inputHandlers}
-                          />
+                          <NumberInput name={name} {...inputHandlers} />
                         </DefaultDimensionStyle>
                       }
                     />
                   )}
-                </FormField> */}
+                </FormField>
+
+                <FormField
+                  name="packageSize_width_value"
+                  initValue={originalValues.packageSize_width_value}
+                  validationOnChange
+                  onValidate={newValue =>
+                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                  }
+                  setFieldValue={setFieldValue}
+                  {...formHelper}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <FieldItem
+                      label={<Label>PKG WIDTH</Label>}
+                      tooltip={
+                        <Tooltip
+                          isNew={isNew}
+                          changedValues={{
+                            oldValue: originalValues[name],
+                            newValue: values[name],
+                          }}
+                        />
+                      }
+                      input={
+                        <DefaultDimensionStyle
+                          unit={values.packageSize_width_metric}
+                          isFocused={activeField === name}
+                          forceHoverStyle={isNew}
+                          width="200px"
+                        >
+                          <NumberInput name={name} {...inputHandlers} />
+                        </DefaultDimensionStyle>
+                      }
+                    />
+                  )}
+                </FormField>
+
+                <FormField
+                  name="packageSize_height_value"
+                  initValue={originalValues.packageSize_height_value}
+                  validationOnChange
+                  onValidate={newValue =>
+                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                  }
+                  setFieldValue={setFieldValue}
+                  {...formHelper}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <FieldItem
+                      label={<Label>PKG HEIGHT</Label>}
+                      tooltip={
+                        <Tooltip
+                          isNew={isNew}
+                          changedValues={{
+                            oldValue: originalValues[name],
+                            newValue: values[name],
+                          }}
+                        />
+                      }
+                      input={
+                        <DefaultDimensionStyle
+                          unit={values.packageSize_height_metric}
+                          isFocused={activeField === name}
+                          forceHoverStyle={isNew}
+                          width="200px"
+                        >
+                          <NumberInput name={name} {...inputHandlers} />
+                        </DefaultDimensionStyle>
+                      }
+                    />
+                  )}
+                </FormField>
+
               </GridColumn>
             )}
           </Subscribe>

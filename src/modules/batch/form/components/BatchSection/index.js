@@ -31,14 +31,13 @@ import {
 
 type Props = {
   isNew: boolean,
-  initialValues: Object,
 };
 
-const BatchSection = ({ isNew, initialValues }: Props) => (
+const BatchSection = ({ isNew }: Props) => (
   <div className={BatchSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ state, setFieldValue, validationRules }) => {
-        const values = { ...initialValues, ...state };
+      {({ originalValues, state, setFieldValue, validationRules }) => {
+        const values = { ...originalValues, ...state };
 
         return (
           <>
@@ -68,7 +67,7 @@ const BatchSection = ({ isNew, initialValues }: Props) => (
                               isNew={isNew}
                               errorMessage={touched[name] && errors[name]}
                               changedValues={{
-                                oldValue: initialValues[name],
+                                oldValue: originalValues[name],
                                 newValue: values[name],
                               }}
                             />
@@ -105,7 +104,7 @@ const BatchSection = ({ isNew, initialValues }: Props) => (
                               isNew={isNew}
                               errorMessage={touched[name] && errors[name]}
                               changedValues={{
-                                oldValue: initialValues[name],
+                                oldValue: originalValues[name],
                                 newValue: values[name],
                               }}
                             />
@@ -145,7 +144,7 @@ const BatchSection = ({ isNew, initialValues }: Props) => (
                             <Tooltip
                               isNew={isNew}
                               changedValues={{
-                                oldValue: <FormattedDate value={initialValues[name]} />,
+                                oldValue: <FormattedDate value={originalValues[name]} />,
                                 newValue: <FormattedDate value={values[name]} />,
                               }}
                             />
@@ -184,7 +183,7 @@ const BatchSection = ({ isNew, initialValues }: Props) => (
                             <Tooltip
                               isNew={isNew}
                               changedValues={{
-                                oldValue: <FormattedDate value={initialValues[name]} />,
+                                oldValue: <FormattedDate value={originalValues[name]} />,
                                 newValue: <FormattedDate value={values[name]} />,
                               }}
                             />
@@ -223,7 +222,7 @@ const BatchSection = ({ isNew, initialValues }: Props) => (
                             <Tooltip
                               isNew={isNew}
                               changedValues={{
-                                oldValue: <FormattedDate value={initialValues[name]} />,
+                                oldValue: <FormattedDate value={originalValues[name]} />,
                                 newValue: <FormattedDate value={values[name]} />,
                               }}
                             />

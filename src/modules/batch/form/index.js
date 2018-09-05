@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import logger from 'utils/logger';
 import Icon from 'components/Icon';
 import { Tooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import BatchSection from './components/BatchSection';
@@ -13,7 +12,6 @@ type Props = {
 
 export default function BatchForm({ batch }: Props) {
   const isNew = Object.keys(batch).length === 0;
-  logger.warn('render batch', batch);
 
   return (
     <div className={BatchFormWrapperStyle}>
@@ -34,12 +32,12 @@ export default function BatchForm({ batch }: Props) {
             </>
           )}
         </SectionHeader>
-        <BatchSection isNew={isNew} initialValues={{ ...batch }} />
+        <BatchSection isNew={isNew} />
       </SectionWrapper>
 
       <SectionWrapper id="packagingSection">
         <SectionHeader icon="PACKAGING" title="PACKAGING" />
-        <PackagingSection isNew={isNew} initialValues={{ ...batch }} />
+        <PackagingSection isNew={isNew} />
       </SectionWrapper>
     </div>
   );
