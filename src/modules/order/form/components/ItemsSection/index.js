@@ -4,7 +4,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { injectIntl, intlShape } from 'react-intl';
 import OrderFormContainer from 'modules/order/form/container';
-import InputGroup from 'components/Form/InputGroup';
+import GridColumn from 'components/GridColumn';
 import { SectionNavBar, FilterInput, SortInput, SearchInput } from 'components/NavBar';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
@@ -80,14 +80,14 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <InputGroup fieldGap={16}>
+                    <GridColumn>
                       <SearchInput
                         name="search"
                         value={values.query}
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                    </InputGroup>
+                    </GridColumn>
                   )}
                 </FilterInput>
 
