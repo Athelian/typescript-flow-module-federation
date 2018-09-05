@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import logger from 'utils/logger';
-import {isEquals} from 'utils/fp'
 
 type Props = {
   initValue: any,
@@ -31,21 +30,11 @@ export default class FormField extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const {name, initValue } = props;
+    const { name, initValue } = props;
     logger.warn(`initValue for ${name}`, initValue);
     this.state = {
       value: initValue,
     };
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-   logger.warn('nextProps',nextProps);
-   const { initValue } = this.props;
-   if(!isEquals(initValue, nextProps.initValue)) {
-     this.setState({
-       value: initValue
-     })
-   }
   }
 
   onFocus = (event: SyntheticFocusEvent<*>) => {

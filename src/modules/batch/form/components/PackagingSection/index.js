@@ -27,8 +27,8 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
     <Subscribe to={[BatchFormContainer]}>
       {({ state, setFieldValue, validationRules }) => {
         const values = { ...initialValues, ...state };
-        console.warn('initialValues', initialValues)
-        console.warn('values', values)
+        console.warn('initialValues', initialValues);
+        console.warn('values', values);
 
         return (
           <Subscribe to={[FormContainer]}>
@@ -193,6 +193,7 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
                 <h3>{JSON.stringify(values.packageVolume)}</h3>
                 <FormField
                   name="packageVolume"
+                  key={`${values.packageVolume.value}-${values.packageVolume.metric}`}
                   initValue={values.packageVolume}
                   validationOnChange
                   onValidate={newValue =>
@@ -201,44 +202,48 @@ const PackagingSection = ({ isNew, initialValues }: Props) => (
                   setFieldValue={setFieldValue}
                   {...formHelper}
                 >
-                  {({ name, value, onChange, ...inputHandlers }) => console.warn('test',value) || (
-                    <FieldItem
-                      label={<Label>PKG VOLUME</Label>}
-                      tooltip={
-                        <Tooltip
-                          isNew={isNew}
-                          changedValues={{
-                            oldValue: `${initialValues[name].value} ${initialValues[name].metric}`,
-                            newValue: `${values[name].value} ${values[name].metric}`,
-                          }}
-                        />
-                      }
-                      input={
-                        <DefaultVolumeStyle
-                          unit={value.metric}
-                          isFocused={activeField === name}
-                          forceHoverStyle={isNew}
-                          width="200px"
-                        >
-                          <NumberInput
-                            name={name}
-                            value={value.value}
-                            onChange={evt =>
-                              onChange({
-                                target: {
-                                  value: {
-                                    value: evt.target.value,
-                                    metric: 'cm³',
-                                  },
-                                },
-                              })
-                            }
-                            {...inputHandlers}
+                  {({ name, value, onChange, ...inputHandlers }) =>
+                    console.warn('test', value) || (
+                      <FieldItem
+                        label={<Label>PKG VOLUME</Label>}
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            changedValues={{
+                              oldValue: `${initialValues[name].value} ${
+                                initialValues[name].metric
+                              }`,
+                              newValue: `${values[name].value} ${values[name].metric}`,
+                            }}
                           />
-                        </DefaultVolumeStyle>
-                      }
-                    />
-                  )}
+                        }
+                        input={
+                          <DefaultVolumeStyle
+                            unit={value.metric}
+                            isFocused={activeField === name}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <NumberInput
+                              name={name}
+                              value={value.value}
+                              onChange={evt =>
+                                onChange({
+                                  target: {
+                                    value: {
+                                      value: evt.target.value,
+                                      metric: 'cm³',
+                                    },
+                                  },
+                                })
+                              }
+                              {...inputHandlers}
+                            />
+                          </DefaultVolumeStyle>
+                        }
+                      />
+                    )
+                  }
                 </FormField>
 
                 {/* <FormField

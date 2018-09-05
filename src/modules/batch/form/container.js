@@ -94,13 +94,11 @@ export default class BatchFormContainer extends Container<FormState> {
 
   isDirty = (values: any) => !isEquals(values, this.batch);
 
-  initDetailValues = async (values: any) => {
+  initDetailValues = (values: any) => {
     const parsedValues = removeTypename(removeNulls(values));
-    logger.warn('parsedValues',parsedValues)
-    /* $FlowFixMe Kaka will fix with magic */
-   
-    await this.setState(parsedValues);
-    logger.warn('after state', this.state)
+    logger.warn('parsedValues', parsedValues);
+    // $FlowFixMe: missing type define for map's ramda function
+    this.setState(parsedValues);
     this.batch = parsedValues;
 
     logger.warn('setValues for batch detail', parsedValues);
