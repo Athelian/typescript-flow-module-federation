@@ -10,7 +10,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import GridWrapper from 'components/GridWrapper';
+import GridColumn from 'components/GridColumn';
 import ProductList from './list';
 import messages from './messages';
 
@@ -86,14 +86,14 @@ class ProductModule extends React.Component<Props, State> {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <GridWrapper>
+                    <GridColumn>
                       <SearchInput
                         value={values.query}
                         name="query"
                         onClear={() => setFieldValue('query', '')}
                         onChange={newQuery => setFieldValue('query', newQuery)}
                       />
-                    </GridWrapper>
+                    </GridColumn>
                   )}
                 </FilterInput>
                 <SearchInput

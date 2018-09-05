@@ -10,7 +10,7 @@ import { FormContainer, FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
-import GridWrapper from 'components/GridWrapper';
+import GridColumn from 'components/GridColumn';
 import {
   FieldItem,
   Label,
@@ -132,7 +132,7 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
             <div className={MainFieldsWrapperStyle}>
               <Subscribe to={[FormContainer]}>
                 {({ state: { touched, errors, activeField }, ...formHelper }) => (
-                  <GridWrapper>
+                  <GridColumn>
                     <FormField
                       name="poNo"
                       initValue={values.poNo}
@@ -362,7 +362,7 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                         />
                       )}
                     </FormField>
-                  </GridWrapper>
+                  </GridColumn>
                 )}
               </Subscribe>
               <div className={ExporterSectionStyle}>
@@ -449,7 +449,7 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
               </div>
             </div>
             <div className={QuantitySummaryStyle}>
-              <GridWrapper>
+              <GridColumn>
                 <FieldItem
                   label={<Label>ORDERED QTY</Label>}
                   input={
@@ -474,9 +474,9 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                     </Display>
                   }
                 />
-              </GridWrapper>
+              </GridColumn>
 
-              <GridWrapper>
+              <GridColumn>
                 <FieldItem
                   label={<Label>TOTAL PRICE</Label>}
                   input={
@@ -501,7 +501,7 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
                     </Display>
                   }
                 />
-              </GridWrapper>
+              </GridColumn>
             </div>
           </>
         );

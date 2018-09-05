@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
-import GridWrapper from 'components/GridWrapper';
+import GridColumn from 'components/GridColumn';
 import { UIConsumer } from 'modules/ui';
 import NavBar, {
   EntityIcon,
@@ -112,14 +112,14 @@ class BatchListModule extends React.Component<Props, State> {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <GridWrapper>
+                    <GridColumn>
                       <SearchInput
                         value={values.query}
                         name="query"
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                    </GridWrapper>
+                    </GridColumn>
                   )}
                 </FilterInput>
                 <SearchInput

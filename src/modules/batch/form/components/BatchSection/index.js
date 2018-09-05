@@ -8,7 +8,7 @@ import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormContainer, FormField } from 'modules/form';
 import { OrderItemCard } from 'components/Cards';
-import GridWrapper from 'components/GridWrapper';
+import GridColumn from 'components/GridColumn';
 import {
   FieldItem,
   Label,
@@ -45,7 +45,7 @@ const BatchSection = ({ isNew, initialValues }: Props) => (
             <div className={MainFieldsWrapperStyle}>
               <Subscribe to={[FormContainer]}>
                 {({ state: { touched, errors, activeField }, ...formHelper }) => (
-                  <GridWrapper>
+                  <GridColumn>
                     <FormField
                       name="no"
                       initValue={values.no}
@@ -241,7 +241,7 @@ const BatchSection = ({ isNew, initialValues }: Props) => (
                         />
                       )}
                     </FormField>
-                  </GridWrapper>
+                  </GridColumn>
                 )}
               </Subscribe>
               <div className={ItemSectionStyle}>

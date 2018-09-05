@@ -4,7 +4,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue, NumberValue } from 'react-values';
 import ProductGridView from 'modules/product/list/ProductGridView';
-import GridWrapper from 'components/GridWrapper';
+import GridColumn from 'components/GridColumn';
 import IncrementInput from 'components/IncrementInput';
 import { ProductCard } from 'components/Cards';
 import {
@@ -116,14 +116,14 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <GridWrapper>
+                    <GridColumn>
                       <SearchInput
                         name="search"
                         value={values.query}
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                    </GridWrapper>
+                    </GridColumn>
                   )}
                 </FilterInput>
                 <SearchInput
