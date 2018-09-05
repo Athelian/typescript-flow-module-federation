@@ -16,6 +16,9 @@ import {
   TextInput,
   DefaultStyle,
   DefaultPriceStyle,
+  DefaultWeightStyle,
+  DefaultVolumeStyle,
+  DefaultDimensionStyle,
   DefaultOptions,
   DefaultSearchSelect,
   DefaultSelect,
@@ -29,6 +32,7 @@ import Display from './Display';
 import DashedPlusButton from './DashedPlusButton';
 import SectionHeader from './SectionHeader';
 import LastModified from './SectionHeader/LastModified';
+import SectionWrapper from './SectionWrapper';
 
 export const Form = ZenForm;
 export const Field = ZenField;
@@ -47,6 +51,9 @@ export {
   TextInput,
   DefaultStyle,
   DefaultPriceStyle,
+  DefaultWeightStyle,
+  DefaultVolumeStyle,
+  DefaultDimensionStyle,
   DefaultOptions,
   DefaultSearchSelect,
   DefaultSelect,
@@ -59,4 +66,5 @@ export {
   TagsInput,
   SectionHeader,
   LastModified,
+  SectionWrapper,
 };

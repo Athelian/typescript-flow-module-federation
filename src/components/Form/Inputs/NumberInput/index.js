@@ -9,7 +9,7 @@ class NumberInput extends React.Component<Props> {
     const { onChange } = this.props;
 
     if (onChange) {
-      const intEvent = { ...evt, target: { value: parseInt(evt.target.value, 10) } };
+      const intEvent = { ...evt, target: { value: parseFloat(evt.target.value) } };
       onChange(intEvent);
     }
   };

@@ -46,8 +46,6 @@ export const prepareUpdateBatchInput = ({
   updatedBy,
   __typename,
   orderItem,
-  /* FIXME: REMOVE PACKAGE QUANTITY HERE WHEN MAXIME FIXES IT */
-  packageQuantity,
   tags,
   ...data
 }: BatchDetail) => ({

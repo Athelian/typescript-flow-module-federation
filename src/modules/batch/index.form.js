@@ -88,6 +88,9 @@ class BatchFormModule extends React.Component<Props> {
                       <JumpToSection>
                         <SectionTabs link="batchSection" label="BATCH" icon="BATCH" />
                       </JumpToSection>
+                      <JumpToSection>
+                        <SectionTabs link="packagingSection" label="PACKAGING" icon="PACKAGING" />
+                      </JumpToSection>
                       <Subscribe to={[BatchFormContainer, FormContainer]}>
                         {(formState, form) =>
                           (isNew || formState.isDirty(formState.state)) && (
