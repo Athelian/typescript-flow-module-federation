@@ -15,6 +15,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
+import logger from 'utils/logger';
 import OrderForm from './form';
 import OrderFormContainer from './form/container';
 import LogsButton from './form/components/LogsButton';
@@ -41,7 +42,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     navigate(`/order`);
   };
 
-  onSave = (formData: Object, saveOrder: Function) => {
+  onSave = (formData: Object, saveOrder: Function, onSuccess: Function = () => {}) => {
     const { orderId } = this.props;
 
     const isNew = orderId === 'new';
@@ -52,6 +53,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     } else if (orderId) {
       saveOrder({ variables: { input, id: decodeId(orderId) } });
     }
+    onSuccess();
   };
 
   onMutationCompleted = (result: Object) => {
@@ -65,6 +67,7 @@ class OrderFormModule extends React.PureComponent<Props> {
       } = result;
       navigate(`/order/${encodeId(id)}`);
     }
+    logger.warn('result', result);
   };
 
   render() {
@@ -124,7 +127,12 @@ class OrderFormModule extends React.PureComponent<Props> {
                               </CancelButton>
                               <SaveButton
                                 disabled={!form.isReady()}
-                                onClick={() => this.onSave(formState.state, saveOrder)}
+                                onClick={() =>
+                                  this.onSave(formState.state, saveOrder, () => {
+                                    formState.onSuccess();
+                                    form.onReset();
+                                  })
+                                }
                               >
                                 Save
                               </SaveButton>

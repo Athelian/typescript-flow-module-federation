@@ -26,6 +26,11 @@ export default class OrderFormContainer extends Container<FormState> {
 
   isDirty = (values: any) => !isEquals(values, this.order);
 
+  onSuccess = () => {
+    logger.warn('onSuccess');
+    this.order = this.state;
+  };
+
   initDetailValues = (values: Object) => {
     const parsedValues = removeTypename(values);
     // $FlowFixMe missing type for map function in ramda
