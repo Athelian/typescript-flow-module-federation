@@ -1,4 +1,5 @@
 // @flow
+import type { Tag as TagNameAndColor } from 'modules/tags/type.js.flow';
 
 export type MetricValue = {
   value: number,
@@ -9,12 +10,6 @@ export type UserNameAndAvatar = {
   firstName: string,
   lastName: string,
   avatar: ?string,
-  id: string,
-};
-
-export type TagNameAndColor = {
-  name: string,
-  color: string,
   id: string,
 };
 
@@ -50,6 +45,12 @@ export type BatchQuery = {
   },
   shipment: ?{
     id: string,
+    blNo: string,
+    containerGroups: Array<{
+      warehouseArrival: {
+        date: Date,
+      },
+    }>,
   },
   no: string,
   quantity: number,

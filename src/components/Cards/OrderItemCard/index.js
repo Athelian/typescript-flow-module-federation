@@ -31,7 +31,7 @@ type Props = {
   item: ?OrderItem,
   onClick?: (id: string) => void,
   currency: string,
-  onChange: Function,
+  saveOnBlur: Function,
   onClone: Function,
   onRemove: Function,
 };
@@ -41,7 +41,7 @@ const OrderItemCard = ({
   onClick,
   onRemove,
   onClone,
-  onChange,
+  saveOnBlur,
   currency,
   ...rest
 }: Props) => {
@@ -59,35 +59,35 @@ const OrderItemCard = ({
   const { name, serial, tags = [] } = product;
 
   return (
-    <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" actions={actions} {...rest}>
-      <div className={OrderItemCardWrapperStyle} onClick={onClick} role="presentation">
-        <div className={ProductWrapperStyle}>
-          <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
+    <ObjectValue
+      defaultValue={{
+        quantity: item.quantity,
+        price: item.price,
+      }}
+    >
+      {({ value: { quantity, price }, set, assign }) => (
+        <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" actions={actions} {...rest}>
+          <div className={OrderItemCardWrapperStyle} onClick={onClick} role="presentation">
+            <div className={ProductWrapperStyle}>
+              <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
 
-          <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameStyle}>{name}</div>
-            <div className={ProductSerialStyle}>{serial}</div>
-            <div className={ProductSupplierStyle}>
-              <Icon icon="SUPPLIER" />
-              {supplier && supplier.name}
-            </div>
-            <div className={ProductTagsWrapperStyle}>
-              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
-            </div>
-          </div>
+              <div className={ProductInfoWrapperStyle}>
+                <div className={ProductNameStyle}>{name}</div>
+                <div className={ProductSerialStyle}>{serial}</div>
+                <div className={ProductSupplierStyle}>
+                  <Icon icon="SUPPLIER" />
+                  {supplier && supplier.name}
+                </div>
+                <div className={ProductTagsWrapperStyle}>
+                  {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+                </div>
+              </div>
 
-          <button className={ProductIconLinkStyle} type="button">
-            <Icon icon="PRODUCT" />
-          </button>
-        </div>
-        <ObjectValue
-          defaultValue={{
-            quantity: item.quantity,
-            price: item.price,
-          }}
-          onChange={newValue => onChange(newValue)}
-        >
-          {({ value: { quantity, price }, set, assign }) => (
+              <button className={ProductIconLinkStyle} type="button">
+                <Icon icon="PRODUCT" />
+              </button>
+            </div>
+
             <div className={BodyWrapperStyle}>
               <div
                 className={QuantityWrapperStyle}
@@ -99,6 +99,7 @@ const OrderItemCard = ({
                   <NumberInput
                     value={quantity}
                     onChange={evt => set('quantity', evt.target.value)}
+                    onBlur={() => saveOnBlur({ quantity, price })}
                   />
                 </DefaultStyle>
               </div>
@@ -142,7 +143,8 @@ const OrderItemCard = ({
                 <DefaultPriceStyle currency={currency} width="90px" height="20px">
                   <NumberInput
                     value={price.amount}
-                    onChange={evt => set('price.amount', evt.target.value)}
+                    onChange={evt => assign({ price: { amount: evt.target.value, currency } })}
+                    onBlur={() => saveOnBlur({ quantity, price })}
                   />
                 </DefaultPriceStyle>
               </div>
@@ -156,10 +158,10 @@ const OrderItemCard = ({
                 </Display>
               </div>
             </div>
-          )}
-        </ObjectValue>
-      </div>
-    </BaseCard>
+          </div>
+        </BaseCard>
+      )}
+    </ObjectValue>
   );
 };
 

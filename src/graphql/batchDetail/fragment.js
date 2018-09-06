@@ -75,6 +75,12 @@ export const detailedBatchFragment = gql`
     }
     shipment {
       id
+      blNo
+      containerGroups {
+        warehouseArrival {
+          date
+        }
+      }
     }
     batchAdjustments {
       id

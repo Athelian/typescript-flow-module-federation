@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import * as Yup from 'yup';
-import { isEquals } from 'utils/fp';
+import { isEquals, setIn } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import logger from 'utils/logger';
 
@@ -21,6 +21,20 @@ export default class OrderFormContainer extends Container<FormState> {
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
       [name]: value,
+    });
+  };
+
+  setFieldArrayValue = (name: string, index: number, value: any) => {
+    // eslint-disable-next-line
+    const values = this.state[name];
+    let existValue = values[index];
+    Object.keys(value).forEach(path => {
+      existValue = setIn(path, value[path], existValue);
+    });
+
+    values.splice(index, 1, existValue);
+    this.setState({
+      [name]: values,
     });
   };
 

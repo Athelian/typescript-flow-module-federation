@@ -15,7 +15,7 @@ type Props = {
   order: Object,
 };
 
-const itemSectionFields = pickByProps(['exporter', 'orderItems', 'currency']);
+const itemSectionFields = pickByProps(['exporter', 'orderItems']);
 
 export default function OrderForm({ order }: Props) {
   const isNew = Object.keys(order).length === 0;
