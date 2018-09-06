@@ -46,7 +46,6 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
 
   const { name, serial, tags = [] } = product;
 
-  console.warn('tags', tags);
   return (
     <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" actions={actions} {...rest}>
       <div className={OrderItemCardWrapperStyle} onClick={onClick} role="presentation">

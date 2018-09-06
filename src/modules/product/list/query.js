@@ -57,7 +57,26 @@ export const productProvidersQuery = gql`
   ) {
     productProviders(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
-        ...productListFragment
+        id
+        exporter {
+          id
+          name
+        }
+        supplier {
+          id
+          name
+        }
+        product {
+          id
+          name
+          serial
+          tags {
+            id
+            name
+            color
+            description
+          }
+        }
       }
       page
       totalPage

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue, ArrayValue } from 'react-values';
 import { injectIntl, intlShape } from 'react-intl';
+import { injectUid } from 'utils/id';
 import OrderFormContainer from 'modules/order/form/container';
 import GridColumn from 'components/GridColumn';
 import { SectionNavBar, FilterInput, SortInput, SearchInput } from 'components/NavBar';
@@ -136,7 +137,17 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                         {opened && (
                           <SelectProducts
                             onSelect={selectedItems => {
-                              onSelectItems(selectedItems);
+                              onSelectItems(
+                                selectedItems.map(productProvider =>
+                                  injectUid({
+                                    productProvider,
+                                    price: {
+                                      amount: 0,
+                                      currency: '',
+                                    },
+                                  })
+                                )
+                              );
                               toggle();
                             }}
                             exporter={exporter && exporter.id}
