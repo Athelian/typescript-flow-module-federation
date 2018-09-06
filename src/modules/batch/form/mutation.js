@@ -24,6 +24,7 @@ export const prepareCreateBatchInput = ({
   no,
   quantity,
   orderItem,
+  shipment,
   tags,
   packageGrossWeight_value,
   packageVolume_value,
@@ -33,8 +34,14 @@ export const prepareCreateBatchInput = ({
   ...rest
 }: Object): BatchCreate => {
   const dataCopy = {};
-  if (packageGrossWeight_value) dataCopy.packageGrossWeight_metric = 'kg';
-  if (packageVolume_value) dataCopy.packageVolume_metric = 'cm³';
+  if (packageGrossWeight_value) {
+    dataCopy.packageGrossWeight_value = packageGrossWeight_value;
+    dataCopy.packageGrossWeight_metric = 'kg';
+  }
+  if (packageVolume_value) {
+    dataCopy.packageVolume_value = packageVolume_value;
+    dataCopy.packageVolume_metric = 'cm³';
+  }
   if (
     packageSize_length_value ||
     packageSize_length_value === 0 ||
@@ -43,19 +50,32 @@ export const prepareCreateBatchInput = ({
     packageSize_height_value ||
     packageSize_height_value === 0
   ) {
-    if (!packageSize_length_value) dataCopy.packageSize_length_value = 0;
-    if (!packageSize_width_value) dataCopy.packageSize_width_metric = 0;
-    if (!packageSize_height_value) dataCopy.packageSize_height_metric = 0;
+    if (!packageSize_length_value) {
+      dataCopy.packageSize_length_value = 0;
+    } else {
+      dataCopy.packageSize_length_value = packageSize_length_value;
+    }
+    if (!packageSize_width_value) {
+      dataCopy.packageSize_width_value = 0;
+    } else {
+      dataCopy.packageSize_width_value = packageSize_width_value;
+    }
+    if (!packageSize_height_value) {
+      dataCopy.packageSize_height_value = 0;
+    } else {
+      dataCopy.packageSize_height_value = packageSize_height_value;
+    }
     dataCopy.packageSize_length_metric = 'cm';
     dataCopy.packageSize_width_metric = 'cm';
     dataCopy.packageSize_height_metric = 'cm';
   }
 
   return {
-    ...unflatten({ ...rest, dataCopy }),
+    ...unflatten({ ...rest, ...dataCopy }),
     no,
     quantity,
     orderItemId: orderItem.id,
+    shipmentId: shipment.id,
     tagIds: tags ? tags.map(t => t.id) : null,
   };
 };
@@ -82,6 +102,7 @@ export const prepareUpdateBatchInput = ({
   updatedAt,
   updatedBy,
   orderItem,
+  shipment,
   tags,
   packageGrossWeight_value,
   packageVolume_value,
@@ -92,8 +113,14 @@ export const prepareUpdateBatchInput = ({
 }: Object): BatchUpdate => {
   const dataCopy = {};
 
-  if (packageGrossWeight_value) dataCopy.packageGrossWeight_metric = 'kg';
-  if (packageVolume_value) dataCopy.packageVolume_metric = 'cm³';
+  if (packageGrossWeight_value) {
+    dataCopy.packageGrossWeight_value = packageGrossWeight_value;
+    dataCopy.packageGrossWeight_metric = 'kg';
+  }
+  if (packageVolume_value) {
+    dataCopy.packageVolume_value = packageVolume_value;
+    dataCopy.packageVolume_metric = 'cm³';
+  }
   if (
     packageSize_length_value ||
     packageSize_length_value === 0 ||
@@ -102,17 +129,30 @@ export const prepareUpdateBatchInput = ({
     packageSize_height_value ||
     packageSize_height_value === 0
   ) {
-    if (!packageSize_length_value) dataCopy.packageSize_length_value = 0;
-    if (!packageSize_width_value) dataCopy.packageSize_width_metric = 0;
-    if (!packageSize_height_value) dataCopy.packageSize_height_metric = 0;
+    if (!packageSize_length_value) {
+      dataCopy.packageSize_length_value = 0;
+    } else {
+      dataCopy.packageSize_length_value = packageSize_length_value;
+    }
+    if (!packageSize_width_value) {
+      dataCopy.packageSize_width_value = 0;
+    } else {
+      dataCopy.packageSize_width_value = packageSize_width_value;
+    }
+    if (!packageSize_height_value) {
+      dataCopy.packageSize_height_value = 0;
+    } else {
+      dataCopy.packageSize_height_value = packageSize_height_value;
+    }
     dataCopy.packageSize_length_metric = 'cm';
     dataCopy.packageSize_width_metric = 'cm';
     dataCopy.packageSize_height_metric = 'cm';
   }
 
   return {
-    ...unflatten({ ...rest, dataCopy }),
+    ...unflatten({ ...rest, ...dataCopy }),
     orderItemId: orderItem.id,
+    shipmentId: shipment.id,
     tagIds: tags ? tags.map(t => t.id) : null,
   };
 };
