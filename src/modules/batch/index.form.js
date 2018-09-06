@@ -116,7 +116,7 @@ class BatchFormModule extends React.Component<Props> {
                   {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !batchId ? (
-                    <BatchForm batch={{}} />
+                    <BatchForm batch={{}} isNew />
                   ) : (
                     <Subscribe to={[BatchFormContainer]}>
                       {({ initDetailValues }) => (

@@ -1,5 +1,5 @@
 // @flow
-import type { BatchNew } from 'modules/batch/type.js.flow';
+import type { BatchCreate } from 'modules/batch/type.js.flow';
 import type { PES } from 'modules/product/type.js.flow';
 
 type Batch = {
@@ -63,7 +63,7 @@ export type OrderItemForm = {
   productExporterSupplier: PES,
   quantity?: number,
   price?: number,
-  batches: Array<BatchNew>,
+  batches: Array<BatchCreate>,
 };
 
 export type OrderForm = {
