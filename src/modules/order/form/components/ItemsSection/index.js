@@ -5,6 +5,7 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import { injectIntl, intlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import OrderFormContainer from 'modules/order/form/container';
+import FormContainer from 'modules/form/container';
 import { SectionNavBar } from 'components/NavBar';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
@@ -108,23 +109,27 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                       <div className={ItemGridStyle}>
                         {orderItems.map((item, index) => (
                           <div className={ItemStyle} key={item.id}>
-                            <OrderItemCard
-                              item={item}
-                              currency={currency}
-                              saveOnBlur={newValue =>
-                                setFieldArrayValue('orderItems', index, newValue)
-                              }
-                              selected={selected.includes(item.id)}
-                              selectable
-                              onClick={() => {
-                                if (!selected.includes(item.id)) {
-                                  push(item.id);
-                                } else {
-                                  set(selected.filter(selectedId => selectedId !== item.id));
-                                }
-                              }}
-                            />
-
+                            <Subscribe to={[FormContainer]}>
+                              {({ setFieldTouched }) => (
+                                <OrderItemCard
+                                  item={item}
+                                  currency={currency}
+                                  saveOnBlur={newValue => {
+                                    setFieldArrayValue('orderItems', index, newValue);
+                                    setFieldTouched('orderItems');
+                                  }}
+                                  selected={selected.includes(item.id)}
+                                  selectable
+                                  onClick={() => {
+                                    if (!selected.includes(item.id)) {
+                                      push(item.id);
+                                    } else {
+                                      set(selected.filter(selectedId => selectedId !== item.id));
+                                    }
+                                  }}
+                                />
+                              )}
+                            </Subscribe>
                             {(allItemsExpanded || selected.includes(item.id)) &&
                               (item.batches && (
                                 <ArrayValue
@@ -155,14 +160,19 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                                       <div className={BatchGridStyle}>
                                         {batches.map((batch, position) => (
                                           <div className={BatchStyle} key={batch.id}>
-                                            <OrderBatchCard
-                                              batch={batch}
-                                              currency={currency}
-                                              price={item.price}
-                                              saveOnBlur={updatedBatch =>
-                                                changeBatch(position, 1, updatedBatch)
-                                              }
-                                            />
+                                            <Subscribe to={[FormContainer]}>
+                                              {({ setFieldTouched }) => (
+                                                <OrderBatchCard
+                                                  batch={batch}
+                                                  currency={currency}
+                                                  price={item.price}
+                                                  saveOnBlur={updatedBatch => {
+                                                    setFieldTouched('batches');
+                                                    changeBatch(position, 1, updatedBatch);
+                                                  }}
+                                                />
+                                              )}
+                                            </Subscribe>
                                           </div>
                                         ))}
                                       </div>
