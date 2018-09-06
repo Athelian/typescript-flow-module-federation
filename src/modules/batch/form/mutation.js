@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
 import { unflatten } from 'utils/data';
-import type { BatchNew, BatchDetail } from '../type.js.flow';
+import type { BatchNew } from '../type.js.flow';
 
 export const createBatchMutation = gql`
   mutation batchCreate($input: BatchCreateInput!) {
@@ -54,7 +54,7 @@ export const prepareUpdateBatchInput = ({
   packageSize_width_value,
   packageSize_height_value,
   ...rest
-}: Object): BatchDetail => {
+}: any): any => {
   const dataCopy = {};
   if (packageGrossWeight_value) dataCopy.packageGrossWeight_metric = 'kg';
   if (packageVolume_value) dataCopy.packageVolume_metric = 'cm³';

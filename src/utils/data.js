@@ -118,17 +118,3 @@ export const unflatten = (target: any) => {
 
   return output;
 };
-
-export const flatten2 = (c: any) => {
-  const d = '_';
-  const r = {};
-  (function f(o, p) {
-    if (o) {
-      Object.keys(o).forEach(k => {
-        if (o[k] && /Array|Object/.test(o[k].constructor.name)) f(o[k], p ? `${p}${d}${k}` : k);
-        (r[p ? `${p}${d}${k}` : k] = o[k]);
-      });
-    }
-  })(c);
-  return r;
-};
