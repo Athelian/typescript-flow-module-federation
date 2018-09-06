@@ -7,11 +7,11 @@ export const SectionHeaderWrapperStyle = css`
   grid-template-rows: 40px;
   grid-gap: 40px;
   align-items: center;
-  width: 960px;
-  padding: 0 40px 0 0;
+  width: 880px;
 `;
 
 export const TitleWrapperStyle = css`
+  position: relative;
   display: flex;
   align-items: center;
   ${fontSizes.LARGE};
@@ -25,6 +25,8 @@ export const TitleStyle = css`
 `;
 
 export const IconStyle = css`
+  position: absolute;
+  left: -40px;
   width: 40px;
   height: 40px;
   display: flex;

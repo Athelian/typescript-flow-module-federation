@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { pickByProps } from 'utils/fp';
 import Icon from 'components/Icon';
-import { SectionHeader, LastModified } from 'components/Form';
+import { SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import OrderFormContainer from './container';
 import OrderSection from './components/OrderSection';
 import ItemsSection from './components/ItemsSection';
@@ -11,7 +11,6 @@ import DocumentsSection from './components/DocumentsSection';
 import ShipmentsSection from './components/ShipmentsSection';
 import {
   OrderFormWrapperStyle,
-  SectionWrapperStyle,
   ToggleButtonStyle,
   StatusStyle,
 } from './style';
@@ -41,7 +40,7 @@ export default function OrderForm({ order }: Props) {
 
   return (
     <div className={OrderFormWrapperStyle}>
-      <div className={SectionWrapperStyle} id="orderSection">
+      <SectionWrapper id="orderSection">
         <SectionHeader icon="ORDER" title="ORDER">
           {!isNew && (
             <>
@@ -63,8 +62,9 @@ export default function OrderForm({ order }: Props) {
           )}
         </SectionHeader>
         <OrderSection isNew={isNew} initialValues={{ ...orderValues }} />
-      </div>
-      <div className={SectionWrapperStyle} id="itemsSection">
+      </SectionWrapper>
+
+      <SectionWrapper id="itemsSection">
         <Subscribe to={[OrderFormContainer]}>
           {({ state: values, setFieldValue }) => (
             <>
@@ -77,15 +77,17 @@ export default function OrderForm({ order }: Props) {
             </>
           )}
         </Subscribe>
-      </div>
-      <div className={SectionWrapperStyle} id="documentsSection">
+      </SectionWrapper>
+
+      <SectionWrapper id="documentsSection">
         <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />
         <DocumentsSection initialValues={{ files: order.files }} />
-      </div>
-      <div className={SectionWrapperStyle} id="shipmentsSection">
+      </SectionWrapper>
+
+      <SectionWrapper id="shipmentsSection">
         <SectionHeader icon="SHIPMENT" title={`SHIPMENTS (${20})`} />
         <ShipmentsSection />
-      </div>
+      </SectionWrapper>
     </div>
   );
 }

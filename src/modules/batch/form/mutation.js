@@ -1,7 +1,8 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
-import type { BatchNew, BatchDetail } from '../type.js.flow';
+import { unflatten } from 'utils/data';
+import type { BatchNew } from '../type.js.flow';
 
 export const createBatchMutation = gql`
   mutation batchCreate($input: BatchCreateInput!) {
@@ -39,19 +40,31 @@ export const updateBatchMutation = gql`
   ${violationFragment}
 `;
 
+/* eslint-disable */
 export const prepareUpdateBatchInput = ({
   id,
   createdAt,
   updatedAt,
   updatedBy,
-  __typename,
   orderItem,
-  /* FIXME: REMOVE PACKAGE QUANTITY HERE WHEN MAXIME FIXES IT */
-  packageQuantity,
   tags,
-  ...data
-}: BatchDetail) => ({
-  ...data,
-  orderItemId: orderItem.id,
-  tagIds: tags ? tags.map(t => t.id) : null,
-});
+  packageGrossWeight_value,
+  packageVolume_value,
+  packageSize_length_value,
+  packageSize_width_value,
+  packageSize_height_value,
+  ...rest
+}: any): any => {
+  const dataCopy = {};
+  if (packageGrossWeight_value) dataCopy.packageGrossWeight_metric = 'kg';
+  if (packageVolume_value) dataCopy.packageVolume_metric = 'cm³';
+  if (packageSize_length_value) dataCopy.packageSize_length_metric = 'cm';
+  if (packageSize_width_value) dataCopy.packageSize_width_metric = 'cm';
+  if (packageSize_height_value) dataCopy.packageSize_height_metric = 'cm';
+
+  return {
+    ...unflatten({ ...rest, dataCopy }),
+    orderItemId: orderItem.id,
+    tagIds: tags ? tags.map(t => t.id) : null,
+  };
+};

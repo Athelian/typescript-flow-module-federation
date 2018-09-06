@@ -38,7 +38,7 @@ class BatchFormModule extends React.Component<Props> {
     navigate(`/batch`);
   };
 
-  onSave = (formData: Object, saveBatch: Function) => {
+  onSave = (formData: Object, saveBatch: Function, onSuccess: Function = () => {}) => {
     const { batchId } = this.props;
 
     const isNew = batchId === 'new';
@@ -49,6 +49,7 @@ class BatchFormModule extends React.Component<Props> {
     } else if (batchId) {
       saveBatch({ variables: { input, id: decodeId(batchId) } });
     }
+    onSuccess();
   };
 
   onMutationCompleted = (result: Object) => {
@@ -88,6 +89,9 @@ class BatchFormModule extends React.Component<Props> {
                       <JumpToSection>
                         <SectionTabs link="batchSection" label="BATCH" icon="BATCH" />
                       </JumpToSection>
+                      <JumpToSection>
+                        <SectionTabs link="packagingSection" label="PACKAGING" icon="PACKAGING" />
+                      </JumpToSection>
                       <Subscribe to={[BatchFormContainer, FormContainer]}>
                         {(formState, form) =>
                           (isNew || formState.isDirty(formState.state)) && (
@@ -95,7 +99,12 @@ class BatchFormModule extends React.Component<Props> {
                               <CancelButton disabled={false} onClick={this.onCancel} />
                               <SaveButton
                                 disabled={!form.isReady()}
-                                onClick={() => this.onSave(formState.state, saveBatch)}
+                                onClick={() =>
+                                  this.onSave(formState.state, saveBatch, () => {
+                                    formState.onSuccess();
+                                    form.onReset();
+                                  })
+                                }
                               />
                             </>
                           )

@@ -52,6 +52,7 @@ import CIRCLE from '@fortawesome/fontawesome-pro-solid/faCircle';
 import SYNC from '@fortawesome/fontawesome-pro-solid/faSync';
 import EXPAND from '@fortawesome/fontawesome-pro-solid/faExpandAlt';
 import COMPRESS from '@fortawesome/fontawesome-pro-solid/faCompressAlt';
+import PACKAGING from '@fortawesome/fontawesome-pro-solid/faTape';
 
 // Shipment Timeline
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
@@ -125,6 +126,7 @@ export default {
   SYNC,
   EXPAND,
   COMPRESS,
+  PACKAGING,
 
   CARGO_READY,
   PORT,
