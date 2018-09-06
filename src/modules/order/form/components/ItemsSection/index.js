@@ -42,6 +42,7 @@ type Props = {
 function generateBatchItem(item, batches) {
   return {
     tags: [],
+    quantity: 0,
     batchAdjustments: [],
     id: `${item.id}-batch-id-${batches.length + 1}`,
     no: `batch no ${batches.length + 1}`,
@@ -126,8 +127,13 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
 
                             {(allItemsExpanded || selected.includes(item.id)) &&
                               (item.batches && (
-                                <ArrayValue defaultValue={item.batches}>
-                                  {({ value: batches, push: addNewBatch }) => (
+                                <ArrayValue
+                                  defaultValue={item.batches}
+                                  onChange={batches =>
+                                    setFieldArrayValue('orderItems', index, { batches })
+                                  }
+                                >
+                                  {({ value: batches, push: addNewBatch, splice: changeBatch }) => (
                                     <div className={BatchAreaStyle}>
                                       <div className={BatchAreaHeaderStyle}>
                                         <div className={TitleWrapperStyle}>
@@ -147,12 +153,15 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                                       </div>
 
                                       <div className={BatchGridStyle}>
-                                        {batches.map(batch => (
+                                        {batches.map((batch, position) => (
                                           <div className={BatchStyle} key={batch.id}>
                                             <OrderBatchCard
                                               batch={batch}
                                               currency={currency}
                                               price={item.price}
+                                              saveOnBlur={updatedBatch =>
+                                                changeBatch(position, 1, updatedBatch)
+                                              }
                                             />
                                           </div>
                                         ))}
