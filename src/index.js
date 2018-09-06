@@ -14,7 +14,7 @@ import { isAppInProduction } from './utils/env';
 import errorReport from './errorReport';
 import './styles/reset.css';
 
-if (!isAppInProduction) {
+if (!isAppInProduction && process.env.ZENPORT_PROFILER) {
   /* eslint-disable import/no-extraneous-dependencies */
   /* eslint-disable global-require */
   // $FlowFixMe: not have flow typed yet
