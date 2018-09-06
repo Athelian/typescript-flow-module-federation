@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { NumberValue } from 'react-values';
 import { type OrderItem } from 'modules/order/type.js.flow';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
@@ -27,11 +28,13 @@ import {
 type Props = {
   item: ?OrderItem,
   onClick?: (id: string) => void,
+  currency: string,
+  onChange: Function,
   onClone: Function,
   onRemove: Function,
 };
 
-const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => {
+const OrderItemCard = ({ item, onClick, onRemove, onClone, onChange, ...rest }: Props) => {
   if (!item) return '';
 
   const actions = [
@@ -40,8 +43,9 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
   ];
 
   const {
-    productProvider: { product, supplier },
+    productProvider: { product, supplier, unitPrice },
     price: { currency, amount },
+    quantity,
   } = item;
 
   const { name, serial, tags = [] } = product;
@@ -60,7 +64,7 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
               {supplier && supplier.name}
             </div>
             <div className={ProductTagsWrapperStyle}>
-              {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
           </div>
 
@@ -77,7 +81,11 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
           >
             <Label required>QTY</Label>
             <DefaultStyle type="number" width="90px" height="20px">
-              <NumberInput />
+              <NumberValue defaultValue={quantity}>
+                {({ value, set }) => (
+                  <NumberInput value={value} onChange={evt => set(evt.target.value)} />
+                )}
+              </NumberValue>
             </DefaultStyle>
           </div>
           <div
@@ -85,14 +93,24 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <button className={SyncButtonStyle} type="button">
-              SYNC
-              <Icon icon="SYNC" />
-            </button>
-            <Label required>PRICE</Label>
-            <DefaultPriceStyle currency={currency} width="90px" height="20px">
-              <NumberInput value={amount} onChange={() => {}} />
-            </DefaultPriceStyle>
+            <NumberValue defaultValue={amount}>
+              {({ value, set }) => (
+                <>
+                  <button
+                    className={SyncButtonStyle}
+                    type="button"
+                    onClick={() => set(unitPrice.amount)}
+                  >
+                    SYNC
+                    <Icon icon="SYNC" />
+                  </button>
+                  <Label required>PRICE</Label>
+                  <DefaultPriceStyle currency={currency} width="90px" height="20px">
+                    <NumberInput value={value} onChange={evt => set(evt.target.value)} />
+                  </DefaultPriceStyle>
+                </>
+              )}
+            </NumberValue>
           </div>
           <div className={DividerStyle} />
           Chart Goes Here
