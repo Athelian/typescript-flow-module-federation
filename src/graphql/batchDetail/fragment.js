@@ -73,6 +73,9 @@ export const detailedBatchFragment = gql`
       name
       color
     }
+    shipment {
+      id
+    }
     batchAdjustments {
       id
       sort

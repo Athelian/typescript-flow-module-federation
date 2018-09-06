@@ -3,16 +3,17 @@ import { css } from 'react-emotion';
 
 import { borderRadiuses, fontSizes, colors } from 'styles/common';
 
-export const IconStyle = (color: string) => css`
+export const IconStyle = css`
   ${fontSizes.SMALL};
   height: 20px;
   width: 20px;
   ${borderRadiuses.CIRCLE};
-  background-color: ${colors[color]};
+  background-color: rgba(0, 0, 0, 0.4);
   color: white;
   display: inline-block;
   line-height: 20px;
   text-align: center;
+  vertical-align: bottom;
 `;
 
 export const BarStyle = css`
@@ -21,25 +22,12 @@ export const BarStyle = css`
   background-color: rgba(0, 0, 0, 0.2);
 `;
 
-export const ProgressBarStyle = (color: string, percent: number) => {
-  // I want to color with alpha=0.5 ,so #000000 will be #00000080.
-  const backgroundColor = `${colors[color]}80`;
-  if (percent === 1) {
-    return css`
-      background-color: ${backgroundColor};
-      ${borderRadiuses.BUTTON};
-      height: inherit;
-      width: ${percent * 100}%;
-    `;
-  }
-  return css`
-    background-color: ${backgroundColor};
-    border-top-left-radius: 999px;
-    border-bottom-left-radius: 999px;
-    height: inherit;
-    width: ${percent * 100}%;
-  `;
-};
+export const ProgressBarStyle = (color: string, percent: number) => css`
+  background-color: ${colors[color]};
+  ${borderRadiuses.BUTTON};
+  height: inherit;
+  width: ${percent > 1 ? 100 : percent * 100}%;
+`;
 
 export const NumberLineStyle = css`
   text-align: center;

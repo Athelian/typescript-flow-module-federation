@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
-import { Display, Label } from 'components/Form';
+import { Display, Label, FieldItem } from 'components/Form';
 import {
   IconStyle,
   BarStyle,
@@ -23,8 +23,8 @@ type Props = {
   batchedQuantity: number,
   shippedQuantity: number,
   hasLabel: boolean,
-  batched: number,
-  shipped: number,
+  batched?: number,
+  shipped?: number,
 };
 
 export default function QuantityChart({
@@ -42,13 +42,15 @@ export default function QuantityChart({
     <div>
       <div>
         {hasLabel ? (
-          <>
-            <Label>{batchedQTYTitle}</Label>
-            <Display>
-              <Number color="BATCH" value={batchedQuantity} />
-              <Number color="GRAY" value={orderedQuantity - batchedQuantity} />
-            </Display>
-          </>
+          <FieldItem
+            label={<Label>{batchedQTYTitle}</Label>}
+            input={
+              <Display>
+                <Number color="BATCH" value={batchedQuantity} />
+                <Number color="GRAY" value={orderedQuantity - batchedQuantity} />
+              </Display>
+            }
+          />
         ) : (
           <div className={NumberLineStyle}>
             <span className={CenterTopNumberStyle}>
@@ -65,7 +67,7 @@ export default function QuantityChart({
               orderedQuantity === 0 ? 0 : batchedQuantity / orderedQuantity
             )}
           >
-            <div className={IconStyle('BATCH')}>
+            <div className={IconStyle}>
               <Icon icon="BATCH" />
             </div>
 
@@ -85,7 +87,7 @@ export default function QuantityChart({
               orderedQuantity === 0 ? 0 : shippedQuantity / orderedQuantity
             )}
           >
-            <div className={IconStyle('SHIPMENT')}>
+            <div className={IconStyle}>
               <Icon icon="SHIPMENT" />
             </div>
 
@@ -96,13 +98,15 @@ export default function QuantityChart({
             )}
           </div>
           {hasLabel ? (
-            <>
-              <Label>{shippedQTYTitle}</Label>
-              <Display>
-                <Number color="SHIPMENT" value={shippedQuantity} />
-                <Number color="GRAY" value={orderedQuantity - shippedQuantity} />
-              </Display>
-            </>
+            <FieldItem
+              label={<Label>{shippedQTYTitle}</Label>}
+              input={
+                <Display>
+                  <Number color="SHIPMENT" value={shippedQuantity} />
+                  <Number color="GRAY" value={orderedQuantity - shippedQuantity} />
+                </Display>
+              }
+            />
           ) : (
             <div className={NumberLineStyle}>
               <span className={CenterBottomNumberStyle}>

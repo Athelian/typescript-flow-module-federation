@@ -45,8 +45,9 @@ export const TagsInputStyle = css`
 `;
 
 export const QuantitySummaryStyle = css`
-  display: flex;
-  justify-content: space-between;
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 100px;
+  grid-template-columns: repeat(2, 1fr);
 `;
 
 export const DividerStyle = css`

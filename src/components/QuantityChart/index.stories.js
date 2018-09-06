@@ -23,7 +23,7 @@ storiesOf('QuantityChart', module)
   .add('styling 1 (ja)', () => (
     <IntlProvider locale="ja" messages={translationMessages.ja} textComponent={React.Fragment}>
       <div style={{ marginTop: '50px', width: '200px' }}>
-        <QuantityChart orderedQuantity={500} batchedQuantity={500} shippedQuantity={250} hasLabel />
+        <QuantityChart orderedQuantity={500} batchedQuantity={300} shippedQuantity={400} hasLabel />
       </div>
     </IntlProvider>
   ))

@@ -9,12 +9,10 @@ import OrderFormContainer from 'modules/order/form/container';
 import { FormContainer, FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import FormattedDate from 'components/FormattedDate';
-import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 import {
   FieldItem,
   Label,
-  Display,
   Tooltip,
   DefaultStyle,
   TextInput,
@@ -32,6 +30,7 @@ import { colors } from 'styles/common';
 import messages from 'modules/order/messages';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import SelectExporters from '../SelectExporters';
+import TotalSummary from './components/TotalSummary';
 import {
   OrderSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -113,18 +112,69 @@ function createSelectInput({ enumType, inputHandlers, name, touched, errors, isN
   );
 }
 
+function getQuantitySummary(orderItems: any) {
+  let orderedQuantity = 0;
+  let batchedQuantity = 0;
+  let shippedQuantity = 0;
+  let totalPrice = 0;
+  let totalItems = 0;
+  let activeBatches = 0;
+  let archivedBatches = 0;
+
+  if (orderItems) {
+    totalItems = orderItems.length;
+
+    orderItems.forEach(item => {
+      orderedQuantity += item.quantity ? item.quantity : 0;
+      totalPrice += item.price ? item.price.amount : 0;
+
+      if (item.batches) {
+        item.batches.forEach(batch => {
+          batchedQuantity += batch.quantity;
+          if (batch.batchAdjustments) {
+            batch.batchAdjustments.forEach(batchAdjustment => {
+              batchedQuantity -= batchAdjustment.quantity;
+            });
+          }
+          if (batch.shipment) {
+            shippedQuantity += batch.quantity;
+          }
+          if (batch.archived) {
+            archivedBatches += 1;
+          } else {
+            activeBatches += 1;
+          }
+        });
+      }
+    });
+  }
+
+  return {
+    orderedQuantity,
+    batchedQuantity,
+    shippedQuantity,
+    totalPrice,
+    totalItems,
+    activeBatches,
+    archivedBatches,
+  };
+}
 const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
     <Subscribe to={[OrderFormContainer]}>
       {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {
         const values = { ...initialValues, ...state };
-        const totalOrderedQuantity = values.orderItems ? values.orderItems.length : 0;
-        const totalBatches = values.orderItems
-          ? values.orderItems.reduce(
-              (total, item) => (total + item.batches ? item.batches.length : 0),
-              0
-            )
-          : 0;
+        const { orderItems, currency } = values;
+
+        const {
+          orderedQuantity,
+          batchedQuantity,
+          shippedQuantity,
+          totalPrice,
+          totalItems,
+          activeBatches,
+          archivedBatches,
+        } = getQuantitySummary(orderItems);
 
         return (
           <>
@@ -455,59 +505,16 @@ const OrderSection = ({ isNew }: Props) => (
               </div>
             </div>
             <div className={QuantitySummaryStyle}>
-              <GridColumn>
-                <FieldItem
-                  label={<Label>ORDERED QTY</Label>}
-                  input={
-                    <Display>
-                      <FormattedNumber value={totalOrderedQuantity} />
-                    </Display>
-                  }
-                />
-                <FieldItem
-                  label={<Label>BATCHED QTY</Label>}
-                  input={
-                    <Display>
-                      <FormattedNumber value={values.batchedQuantity} />
-                    </Display>
-                  }
-                />
-                <FieldItem
-                  label={<Label>SHIPPED QTY</Label>}
-                  input={
-                    <Display>
-                      <FormattedNumber value={values.shippedQuantity} />
-                    </Display>
-                  }
-                />
-              </GridColumn>
-
-              <GridColumn>
-                <FieldItem
-                  label={<Label>TOTAL PRICE</Label>}
-                  input={
-                    <Display>
-                      <FormattedNumber value={values.totalPrice} />
-                    </Display>
-                  }
-                />
-                <FieldItem
-                  label={<Label>TOTAL ITEMS</Label>}
-                  input={
-                    <Display>
-                      <FormattedNumber value={values.orderItems ? values.orderItems.length : 0} />
-                    </Display>
-                  }
-                />
-                <FieldItem
-                  label={<Label>TOTAL BATCHES</Label>}
-                  input={
-                    <Display>
-                      <FormattedNumber value={totalBatches} />
-                    </Display>
-                  }
-                />
-              </GridColumn>
+              <TotalSummary
+                orderedQuantity={orderedQuantity}
+                batchedQuantity={batchedQuantity}
+                shippedQuantity={shippedQuantity}
+                currency={currency}
+                totalPrice={totalPrice}
+                totalItems={totalItems}
+                activeBatches={activeBatches}
+                archivedBatches={archivedBatches}
+              />
             </div>
           </>
         );
