@@ -1,46 +1,10 @@
 // @flow
 import gql from 'graphql-tag';
-import { userNameFragment } from 'graphql/userList/fragment';
 
 export const batchDetailQuery = gql`
   query($id: ID!) {
     batch(id: $id) {
-      id
       archived
-      updatedAt
-      updatedBy {
-        ...userNameFragment
-      }
-      no
-      quantity
-      producedAt
-      deliveredAt
-      expiredAt
-      packageName
-      packageQuantity
-      packageCapacity
-      packageGrossWeight {
-        value
-        metric
-      }
-      packageVolume {
-        value
-        metric
-      }
-      packageSize {
-        length {
-          value
-          metric
-        }
-        width {
-          value
-          metric
-        }
-        height {
-          value
-          metric
-        }
-      }
       orderItem {
         id
         quantity
@@ -69,26 +33,68 @@ export const batchDetailQuery = gql`
           }
         }
       }
-      tags {
+      shipment {
         id
-        name
-        color
       }
+      no
+      quantity
+      packageQuantity
+      producedAt
+      deliveredAt
+      expiredAt
       batchAdjustments {
-        id
-        sort
-        updatedAt
-        updatedBy {
-          ...userNameFragment
-        }
         reason
         quantity
         memo
+        id
+        updatedAt
+        updatedBy {
+          firstName
+          lastName
+          avatar
+          id
+        }
+        sort
+      }
+      id
+      updatedAt
+      updatedBy {
+        firstName
+        lastName
+        avatar
+        id
+      }
+      packageName
+      packageGrossWeight {
+        value
+        metric
+      }
+      packageVolume {
+        value
+        metric
+      }
+      packageSize {
+        length {
+          value
+          metric
+        }
+        width {
+          value
+          metric
+        }
+        height {
+          value
+          metric
+        }
+      }
+      packageCapacity
+      tags {
+        name
+        color
+        id
       }
     }
   }
-
-  ${userNameFragment}
 `;
 
 export default batchDetailQuery;

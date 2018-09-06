@@ -1,9 +1,10 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Sat Sep 01 2018 17:50:25 GMT+0900 (Tokyo Default Time)
+# timestamp: Thu Sep 06 2018 14:05:42 GMT+0900 (Tokyo Standard Time)
 
 type Batch implements Model & Owned & Package & Tagged {
   archived: Boolean!
   orderItem: OrderItem!
+  shipment: Shipment
   no: String!
   quantity: Float!
   packageQuantity: Float
@@ -96,9 +97,11 @@ input BatchAssignmentUpdateInput {
 input BatchCreateInput {
   no: String!
   quantity: Float!
+  shipmentId: ID
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
+  packageQuantity: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -129,9 +132,11 @@ input BatchUpdateInput {
   archived: Boolean
   no: String
   quantity: Float
+  shipmentId: ID
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
+  packageQuantity: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -142,6 +147,22 @@ input BatchUpdateInput {
   orderItemId: ID
   batchAssignments: [BatchAssignmentUpdateInput!]
   batchAdjustments: [BatchAdjustmentUpdateInput!]
+}
+
+type ContainerGroup implements Model & Owned & Sortable {
+  customClearance: TimelineDate!
+  warehouseArrival: TimelineDate!
+  deliveryReady: TimelineDate!
+  shipment: Shipment!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+  sort: Int!
 }
 
 input CredentialsInput {
@@ -708,6 +729,11 @@ enum Incoterm {
   DDP
 }
 
+enum LoadType {
+  FCL
+  LCL
+}
+
 type MetricValue {
   value: Float!
   metric: String!
@@ -752,6 +778,7 @@ type Order implements Model & Owned & Tagged {
   deliveryPlace: String
   memo: String
   orderItems: [OrderItem!]!
+  shipments: [Shipment!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -822,9 +849,11 @@ input OrderItemBatchAssignmentUpdateInput {
 input OrderItemBatchCreateInput {
   no: String!
   quantity: Float!
+  shipmentId: ID
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
+  packageQuantity: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -840,9 +869,11 @@ input OrderItemBatchUpdateInput {
   archived: Boolean
   no: String
   quantity: Float
+  shipmentId: ID
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
+  packageQuantity: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -1104,8 +1135,45 @@ type Query {
   orders(page: Int! = 1, perPage: Int! = 10): OrderPagination!
   batch(id: ID!): Batch
   batches(page: Int! = 1, perPage: Int! = 10): BatchPagination!
+  shipment(id: ID!): Shipment
+  shipments(page: Int! = 1, perPage: Int! = 10): ShipmentPagination!
   tag(id: ID!): Tag
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput): TagPagination!
+}
+
+type Shipment implements Model & Owned & Tagged {
+  archived: Boolean!
+  no: String!
+  blNo: String
+  blDate: DateTime
+  bookingNo: String
+  bookingDate: DateTime
+  invoiceNo: String
+  incoterm: Incoterm
+  loadType: LoadType
+  transportType: TransportType
+  carrier: String
+  cargoReady: TimelineDate!
+  voyages: [Voyage!]!
+  containerGroups: [ContainerGroup!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+  tags: [Tag!]!
+}
+
+type ShipmentPagination {
+  nodes: [Shipment!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
 }
 
 type Size {
@@ -1188,6 +1256,44 @@ input TagUpdateInput {
   entityTypes: [TagEntityType!]
 }
 
+type TimelineDate implements Model & Owned {
+  date: DateTime
+  assignedTo: [User!]!
+  approvedBy: User
+  approvedAt: DateTime
+  timelineDateRevisions: [TimelineDateRevision!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+type TimelineDateRevision implements Model & Owned & Sortable {
+  date: DateTime!
+  type: TimelineDateRevisionType!
+  memo: String
+  timelineDate: TimelineDate!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+  sort: Int!
+}
+
+enum TimelineDateRevisionType {
+  Delay
+  Ahead
+  Other
+}
+
 type Token {
   token: String!
 }
@@ -1195,6 +1301,11 @@ type Token {
 type TokenMutated {
   token: Token
   violations: [Violation!]
+}
+
+enum TransportType {
+  Sea
+  Air
 }
 
 type User implements Model & Tagged {
@@ -1235,4 +1346,23 @@ type Violation {
 type ViolationParameter {
   key: String!
   value: String!
+}
+
+type Voyage implements Model & Owned & Sortable {
+  vesselName: String
+  vesselCode: String
+  departurePort: String
+  arrivalPort: String
+  departure: TimelineDate!
+  arrival: TimelineDate!
+  shipment: Shipment!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+  sort: Int!
 }

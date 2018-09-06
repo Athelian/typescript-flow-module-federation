@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
 import { unflatten } from 'utils/data';
-import type { BatchNew } from '../type.js.flow';
+import type { BatchCreate, BatchUpdate } from '../type.js.flow';
 
 export const createBatchMutation = gql`
   mutation batchCreate($input: BatchCreateInput!) {
@@ -19,11 +19,46 @@ export const createBatchMutation = gql`
   ${violationFragment}
 `;
 
-export const prepareCreateBatchInput = ({ tags, orderItem, ...data }: BatchNew) => ({
-  ...data,
-  orderItemId: orderItem.id,
-  tagIds: tags ? tags.map(t => t.id) : null,
-});
+/* eslint-disable */
+export const prepareCreateBatchInput = ({
+  no,
+  quantity,
+  orderItem,
+  tags,
+  packageGrossWeight_value,
+  packageVolume_value,
+  packageSize_length_value,
+  packageSize_width_value,
+  packageSize_height_value,
+  ...rest
+}: Object): BatchCreate => {
+  const dataCopy = {};
+  if (packageGrossWeight_value) dataCopy.packageGrossWeight_metric = 'kg';
+  if (packageVolume_value) dataCopy.packageVolume_metric = 'cm³';
+  if (
+    packageSize_length_value ||
+    packageSize_length_value === 0 ||
+    packageSize_width_value ||
+    packageSize_width_value === 0 ||
+    packageSize_height_value ||
+    packageSize_height_value === 0
+  ) {
+    if (!packageSize_length_value) dataCopy.packageSize_length_value = 0;
+    if (!packageSize_width_value) dataCopy.packageSize_width_metric = 0;
+    if (!packageSize_height_value) dataCopy.packageSize_height_metric = 0;
+    dataCopy.packageSize_length_metric = 'cm';
+    dataCopy.packageSize_width_metric = 'cm';
+    dataCopy.packageSize_height_metric = 'cm';
+  }
+
+  return {
+    ...unflatten({ ...rest, dataCopy }),
+    no,
+    quantity,
+    orderItemId: orderItem.id,
+    tagIds: tags ? tags.map(t => t.id) : null,
+  };
+};
 
 export const updateBatchMutation = gql`
   mutation batchUpdate($id: ID!, $input: BatchUpdateInput!) {
@@ -54,13 +89,26 @@ export const prepareUpdateBatchInput = ({
   packageSize_width_value,
   packageSize_height_value,
   ...rest
-}: any): any => {
+}: Object): BatchUpdate => {
   const dataCopy = {};
+
   if (packageGrossWeight_value) dataCopy.packageGrossWeight_metric = 'kg';
   if (packageVolume_value) dataCopy.packageVolume_metric = 'cm³';
-  if (packageSize_length_value) dataCopy.packageSize_length_metric = 'cm';
-  if (packageSize_width_value) dataCopy.packageSize_width_metric = 'cm';
-  if (packageSize_height_value) dataCopy.packageSize_height_metric = 'cm';
+  if (
+    packageSize_length_value ||
+    packageSize_length_value === 0 ||
+    packageSize_width_value ||
+    packageSize_width_value === 0 ||
+    packageSize_height_value ||
+    packageSize_height_value === 0
+  ) {
+    if (!packageSize_length_value) dataCopy.packageSize_length_value = 0;
+    if (!packageSize_width_value) dataCopy.packageSize_width_metric = 0;
+    if (!packageSize_height_value) dataCopy.packageSize_height_metric = 0;
+    dataCopy.packageSize_length_metric = 'cm';
+    dataCopy.packageSize_width_metric = 'cm';
+    dataCopy.packageSize_height_metric = 'cm';
+  }
 
   return {
     ...unflatten({ ...rest, dataCopy }),

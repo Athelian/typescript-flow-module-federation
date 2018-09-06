@@ -1,34 +1,25 @@
 // @flow
 
-type BatchCommon = {
-  producedAt?: ?string,
-  deliveredAt?: ?string,
-  expiredAt?: ?string,
-  packageName?: ?string,
-  packageQuantity?: ?number,
-  packageCapacity?: ?number,
-  packageGrossWeight?: ?{
-    value: number,
-    metric: string,
-  },
-  packageVolume?: ?{
-    value: number,
-    metric: string,
-  },
-  packageSize?: ?{
-    length: {
-      value: number,
-      metric: string,
-    },
-    width: {
-      value: number,
-      metric: string,
-    },
-    height: {
-      value: number,
-      metric: string,
-    },
-  },
+export type MetricValue = {
+  value: number,
+  metric: string,
+};
+
+export type UserNameAndAvatar = {
+  firstName: string,
+  lastName: string,
+  avatar: ?string,
+  id: string,
+};
+
+export type TagNameAndColor = {
+  name: string,
+  color: string,
+  id: string,
+};
+
+export type BatchQuery = {
+  archived: boolean,
   orderItem: {
     id: string,
     quantity: number,
@@ -57,43 +48,89 @@ type BatchCommon = {
       },
     },
   },
-  tags?: ?Array<{
+  shipment: ?{
     id: string,
-    name: string,
-    color: string,
-  }>,
-};
-
-export type BatchNew = BatchCommon & {
+  },
   no: string,
   quantity: number,
-  batchAdjustments?: ?Array<{
+  packageQuantity: ?number,
+  producedAt: ?string,
+  deliveredAt: ?string,
+  expiredAt: ?string,
+  batchAdjustments: ?Array<{
     reason: 'Inspection' | 'Lost' | 'Other',
     quantity: number,
     memo: ?string,
+    id: string,
+    updatedAt: string,
+    updatedBy: ?UserNameAndAvatar,
+    sort: number,
+  }>,
+  id: string,
+  updatedAt: string,
+  updatedBy: ?UserNameAndAvatar,
+  packageName: ?string,
+  packageGrossWeight: ?MetricValue,
+  packageVolume: ?MetricValue,
+  packageSize: ?{
+    length: MetricValue,
+    width: MetricValue,
+    height: MetricValue,
+  },
+  packageCapacity: ?number,
+  tags: Array<TagNameAndColor>,
+};
+
+export type BatchCreate = {
+  no: string,
+  quantity: number,
+  shipmentId?: ?string,
+  producedAt?: ?string,
+  deliveredAt?: ?string,
+  expiredAt?: ?string,
+  packageQuantity?: ?number,
+  packageName?: ?string,
+  packageGrossWeight?: ?MetricValue,
+  packageVolume?: ?MetricValue,
+  packageSize?: ?{
+    length: MetricValue,
+    width: MetricValue,
+    height: MetricValue,
+  },
+  packageCapacity?: ?number,
+  tagIds?: ?Array<string>,
+  orderItemId: string,
+  batchAdjustments?: ?Array<{
+    reason: 'Inspection' | 'Lost' | 'Other',
+    quantity: number,
+    memo?: ?string,
   }>,
 };
 
-export type BatchDetail = BatchCommon & {
-  id: string,
-  archived?: boolean,
-  updatedAt: string,
-  updatedBy: {
-    firstName: string,
-    lastName: string,
+export type BatchUpdate = {
+  archived?: ?boolean,
+  no?: ?string,
+  quantity?: ?number,
+  shipmentId?: ?string,
+  producedAt?: ?string,
+  deliveredAt?: ?string,
+  expiredAt?: ?string,
+  packageQuantity?: ?number,
+  packageName?: ?string,
+  packageGrossWeight?: ?MetricValue,
+  packageVolume?: ?MetricValue,
+  packageSize?: ?{
+    length: MetricValue,
+    width: MetricValue,
+    height: MetricValue,
   },
-  no?: string,
-  quantity?: number,
+  packageCapacity?: ?number,
+  tagIds?: ?Array<string>,
+  orderItemId?: ?string,
   batchAdjustments?: ?Array<{
-    id: string,
-    sort: number,
-    updatedAt: string,
-    updatedBy: {
-      firstName: string,
-      lastName: string,
-    },
+    id?: ?string,
     reason: 'Inspection' | 'Lost' | 'Other',
     quantity: number,
-    memo: ?string,
+    memo?: ?string,
   }>,
 };
