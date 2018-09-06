@@ -39,36 +39,14 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
     <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
   ];
 
-  const isNew = false;
-  const currency = 'JPY';
-  const dummyProduct = {
-    name: 'Apple',
-    serial: 'FA-064893',
-    supplier: 'Supplier B',
-  };
-  const dummyTag = {
-    id: '1',
-    name: 'Fruit',
-    color: '#7b6dbb',
-    description: '',
-  };
-  const dummyQuantity = {
-    isActive: false,
-    hasError: false,
-    input: {
-      name: 'foo',
-      value: 100,
-    },
-  };
-  const dummyPrice = {
-    isActive: false,
-    hasError: false,
-    input: {
-      name: 'foo',
-      value: 40,
-    },
-  };
+  const {
+    productProvider: { product, supplier },
+    price: { currency, amount },
+  } = item;
 
+  const { name, serial, tags = [] } = product;
+
+  console.warn('tags', tags);
   return (
     <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" actions={actions} {...rest}>
       <div className={OrderItemCardWrapperStyle} onClick={onClick} role="presentation">
@@ -76,14 +54,14 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
           <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
 
           <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameStyle}>{dummyProduct.name}</div>
-            <div className={ProductSerialStyle}>{dummyProduct.serial}</div>
+            <div className={ProductNameStyle}>{name}</div>
+            <div className={ProductSerialStyle}>{serial}</div>
             <div className={ProductSupplierStyle}>
               <Icon icon="SUPPLIER" />
-              {dummyProduct.supplier}
+              {supplier && supplier.name}
             </div>
             <div className={ProductTagsWrapperStyle}>
-              <Tag tag={dummyTag} />
+              {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
           </div>
 
@@ -99,15 +77,8 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
             role="presentation"
           >
             <Label required>QTY</Label>
-            <DefaultStyle
-              type="number"
-              isFocused={dummyQuantity.isActive}
-              hasError={dummyQuantity.hasError}
-              forceHoverStyle={isNew}
-              width="90px"
-              height="20px"
-            >
-              <NumberInput {...dummyQuantity.input} />
+            <DefaultStyle type="number" width="90px" height="20px">
+              <NumberInput />
             </DefaultStyle>
           </div>
           <div
@@ -120,22 +91,17 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => 
               <Icon icon="SYNC" />
             </button>
             <Label required>PRICE</Label>
-            <DefaultPriceStyle
-              currency={currency}
-              isFocused={dummyPrice.isActive}
-              hasError={dummyPrice.hasError}
-              forceHoverStyle={isNew}
-              width="90px"
-              height="20px"
-            >
-              <NumberInput {...dummyPrice.input} />
+            <DefaultPriceStyle currency={currency} width="90px" height="20px">
+              <NumberInput value={amount} onChange={() => {}} />
             </DefaultPriceStyle>
           </div>
           <div className={DividerStyle} />
           Chart Goes Here
           <div className={TotalPriceWrapperStyle}>
             <Label>TOTAL</Label>
-            <Display>4,000 {currency}</Display>
+            <Display>
+              {amount} {currency}
+            </Display>
           </div>
         </div>
       </div>

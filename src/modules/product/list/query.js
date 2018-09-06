@@ -19,6 +19,17 @@ export const productListFragment = gql`
         id
         name
       }
+      product {
+        id
+        name
+        serial
+        tags {
+          id
+          name
+          color
+          description
+        }
+      }
     }
   }
 `;
@@ -46,7 +57,7 @@ export const productProvidersQuery = gql`
   ) {
     productProviders(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
-        id
+        ...productListFragment
       }
       page
       totalPage

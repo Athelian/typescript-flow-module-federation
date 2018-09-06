@@ -1,6 +1,7 @@
 // @flow
 import type { BatchCreate } from 'modules/batch/type.js.flow';
 import type { PES } from 'modules/product/type.js.flow';
+import type { Tag } from 'modules/tags/type.js.flow';
 
 type Batch = {
   id: string,
@@ -8,13 +9,29 @@ type Batch = {
 
 type ProductProvider = {
   id: string,
+  product: {
+    id: string,
+    name: string,
+    serial: string,
+    tags?: Array<Tag>,
+  },
+  unitPrice: {
+    amount: number,
+    currency: string,
+  },
+  supplier: {
+    name: string,
+  },
 };
 
 export type OrderItem = {
   id: string,
   sort: number,
   quantity: number,
-  price: number,
+  price: {
+    amount: number,
+    currency: string,
+  },
   batches: Batch,
   productProvider: ProductProvider,
 };

@@ -20,6 +20,7 @@ export const orderDetailQuery = gql`
       tags {
         id
         name
+        color
       }
       orderItems {
         id

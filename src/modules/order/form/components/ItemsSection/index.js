@@ -46,7 +46,7 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const { orderItems = [], exporter = {} } = initialValues;
+  const { orderItems, exporter = {} } = initialValues;
 
   const defaultValues = {
     perPage: 12,
@@ -118,7 +118,7 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
 
                 <BooleanValue>
                   {({ value: opened, toggle }) => (
-                    <React.Fragment>
+                    <>
                       <Subscribe to={[OrderFormContainer]}>
                         {({ state }) => (
                           <NewButton
@@ -144,7 +144,7 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                           />
                         )}
                       </SlideView>
-                    </React.Fragment>
+                    </>
                   )}
                 </BooleanValue>
               </SectionNavBar>
@@ -154,18 +154,18 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                     orderItems.length > 0 ? (
                       <div className={ItemGridStyle}>
                         {orderItems.map(item => (
-                          <div className={ItemStyle} key={item.uid}>
+                          <div className={ItemStyle} key={item.id}>
                             <OrderItemCard
-                              item={{ id: item.id, quantity: 100 }}
+                              item={item}
                               onClick={() => {
-                                if (!selected.includes(item.uid)) {
-                                  push(item.uid);
+                                if (!selected.includes(item.id)) {
+                                  push(item.id);
                                 } else {
-                                  set(selected.filter(selectedId => selectedId !== item.uid));
+                                  set(selected.filter(selectedId => selectedId !== item.id));
                                 }
                               }}
                             />
-                            {(allItemsExpanded || selected.includes(item.uid)) && (
+                            {(allItemsExpanded || selected.includes(item.id)) && (
                               // TODO: add this condition item.batchItems.length > 0 && (
                               <div className={BatchAreaStyle}>
                                 <div className={BatchAreaHeaderStyle}>
