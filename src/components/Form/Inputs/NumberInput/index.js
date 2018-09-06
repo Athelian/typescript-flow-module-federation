@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { type InputProps as Props, defaultInputProps } from 'components/Form/Inputs/type';
+import { toFloat } from 'utils/number';
 
 class NumberInput extends React.Component<Props> {
   static defaultProps = defaultInputProps;
@@ -9,7 +10,7 @@ class NumberInput extends React.Component<Props> {
     const { onChange } = this.props;
 
     if (onChange) {
-      const intEvent = { ...evt, target: { value: parseFloat(evt.target.value) } };
+      const intEvent = { ...evt, target: { value: toFloat(evt.target.value) } };
       onChange(intEvent);
     }
   };

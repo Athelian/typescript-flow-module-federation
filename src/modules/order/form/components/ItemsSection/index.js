@@ -36,6 +36,7 @@ type Props = {
     exporter: {
       id: string,
     },
+    currency: string,
   },
   isNew: boolean,
   onSelectItems: Function,
@@ -47,7 +48,7 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const { orderItems, exporter = {} } = initialValues;
+  const { orderItems, currency, exporter = {} } = initialValues;
 
   const defaultValues = {
     perPage: 12,
@@ -141,6 +142,8 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                                 selectedItems.map(productProvider =>
                                   injectUid({
                                     productProvider,
+                                    batches: [],
+                                    quantity: 0,
                                     price: {
                                       amount: 0,
                                       currency: '',
@@ -168,6 +171,8 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                           <div className={ItemStyle} key={item.id}>
                             <OrderItemCard
                               item={item}
+                              currency={currency}
+                              onChange={console.warn}
                               onClick={() => {
                                 if (!selected.includes(item.id)) {
                                   push(item.id);
@@ -176,34 +181,28 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                                 }
                               }}
                             />
-                            {(allItemsExpanded || selected.includes(item.id)) && (
-                              // TODO: add this condition item.batchItems.length > 0 && (
-                              <div className={BatchAreaStyle}>
-                                <div className={BatchAreaHeaderStyle}>
-                                  <div className={TitleWrapperStyle}>
-                                    <div className={IconStyle}>
-                                      <Icon icon="BATCH" />
+                            {(allItemsExpanded || selected.includes(item.id)) &&
+                              (item.batches && (
+                                <div className={BatchAreaStyle}>
+                                  <div className={BatchAreaHeaderStyle}>
+                                    <div className={TitleWrapperStyle}>
+                                      <div className={IconStyle}>
+                                        <Icon icon="BATCH" />
+                                      </div>
+                                      <div className={TitleStyle}>
+                                        BATCHES ({item.batches.length})
+                                      </div>
                                     </div>
-                                    <div className={TitleStyle}>BATCHES (4)</div>
+                                    <NewButton title="NEW BATCH" onClick={() => {}} />
                                   </div>
-                                  <Subscribe to={[OrderFormContainer]}>
-                                    {state => (
-                                      <NewButton
-                                        title="NEW BATCH"
-                                        disabled={!(state.exporter && state.exporter.id)}
-                                        onClick={toggleExpand}
-                                      />
-                                    )}
-                                  </Subscribe>
-                                </div>
 
-                                <div className={BatchGridStyle}>
-                                  <div className={BatchStyle}>
-                                    <OrderBatchCard batch={{ id: item.id }} />
+                                  <div className={BatchGridStyle}>
+                                    <div className={BatchStyle}>
+                                      <OrderBatchCard batch={{ id: item.id }} />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            )}
+                              ))}
                           </div>
                         ))}
                       </div>

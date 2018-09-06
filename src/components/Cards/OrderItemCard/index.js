@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
-import { NumberValue } from 'react-values';
+import { ObjectValue, BooleanValue } from 'react-values';
 import { type OrderItem } from 'modules/order/type.js.flow';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import FormattedNumber from 'components/FormattedNumber';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { DefaultStyle, Label, Display, NumberInput, DefaultPriceStyle } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -34,7 +36,15 @@ type Props = {
   onRemove: Function,
 };
 
-const OrderItemCard = ({ item, onClick, onRemove, onClone, onChange, ...rest }: Props) => {
+const OrderItemCard = ({
+  item,
+  onClick,
+  onRemove,
+  onClone,
+  onChange,
+  currency,
+  ...rest
+}: Props) => {
   if (!item) return '';
 
   const actions = [
@@ -44,8 +54,6 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, onChange, ...rest }: 
 
   const {
     productProvider: { product, supplier, unitPrice },
-    price: { currency, amount },
-    quantity,
   } = item;
 
   const { name, serial, tags = [] } = product;
@@ -72,55 +80,84 @@ const OrderItemCard = ({ item, onClick, onRemove, onClone, onChange, ...rest }: 
             <Icon icon="PRODUCT" />
           </button>
         </div>
-
-        <div className={BodyWrapperStyle}>
-          <div
-            className={QuantityWrapperStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
-            <Label required>QTY</Label>
-            <DefaultStyle type="number" width="90px" height="20px">
-              <NumberValue defaultValue={quantity}>
-                {({ value, set }) => (
-                  <NumberInput value={value} onChange={evt => set(evt.target.value)} />
-                )}
-              </NumberValue>
-            </DefaultStyle>
-          </div>
-          <div
-            className={UnitPriceWrapperStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
-            <NumberValue defaultValue={amount}>
-              {({ value, set }) => (
-                <>
-                  <button
-                    className={SyncButtonStyle}
-                    type="button"
-                    onClick={() => set(unitPrice.amount)}
-                  >
-                    SYNC
-                    <Icon icon="SYNC" />
-                  </button>
-                  <Label required>PRICE</Label>
-                  <DefaultPriceStyle currency={currency} width="90px" height="20px">
-                    <NumberInput value={value} onChange={evt => set(evt.target.value)} />
-                  </DefaultPriceStyle>
-                </>
-              )}
-            </NumberValue>
-          </div>
-          <div className={DividerStyle} />
-          Chart Goes Here
-          <div className={TotalPriceWrapperStyle}>
-            <Label>TOTAL</Label>
-            <Display>
-              {amount} {currency}
-            </Display>
-          </div>
-        </div>
+        <ObjectValue
+          defaultValue={{
+            quantity: item.quantity,
+            price: item.price,
+          }}
+          onChange={newValue => onChange(newValue)}
+        >
+          {({ value: { quantity, price }, set, assign }) => (
+            <div className={BodyWrapperStyle}>
+              <div
+                className={QuantityWrapperStyle}
+                onClick={evt => evt.stopPropagation()}
+                role="presentation"
+              >
+                <Label required>QTY</Label>
+                <DefaultStyle type="number" width="90px" height="20px">
+                  <NumberInput
+                    value={quantity}
+                    onChange={evt => set('quantity', evt.target.value)}
+                  />
+                </DefaultStyle>
+              </div>
+              <div
+                className={UnitPriceWrapperStyle}
+                onClick={evt => evt.stopPropagation()}
+                role="presentation"
+              >
+                <BooleanValue>
+                  {({ value: isOpen, toggle }) => (
+                    <>
+                      <ConfirmDialog
+                        isOpen={isOpen}
+                        onRequestClose={toggle}
+                        onCancel={toggle}
+                        onConfirm={() => {
+                          assign({ price: { amount: unitPrice.amount } });
+                          toggle();
+                        }}
+                        message="Currency is not matched. Do you want to sync?"
+                        width={400}
+                      />
+                      <button
+                        className={SyncButtonStyle}
+                        type="button"
+                        onClick={() => {
+                          if (unitPrice.currency === currency) {
+                            assign({ price: { amount: unitPrice.amount } });
+                          } else {
+                            toggle();
+                          }
+                        }}
+                      >
+                        SYNC
+                        <Icon icon="SYNC" />
+                      </button>
+                    </>
+                  )}
+                </BooleanValue>
+                <Label required>PRICE</Label>
+                <DefaultPriceStyle currency={currency} width="90px" height="20px">
+                  <NumberInput
+                    value={price.amount}
+                    onChange={evt => set('price.amount', evt.target.value)}
+                  />
+                </DefaultPriceStyle>
+              </div>
+              <div className={DividerStyle} />
+              Chart Goes Here
+              <div className={TotalPriceWrapperStyle}>
+                <Label>TOTAL</Label>
+                <Display>
+                  <FormattedNumber value={price.amount * quantity} />
+                  {currency}
+                </Display>
+              </div>
+            </div>
+          )}
+        </ObjectValue>
       </div>
     </BaseCard>
   );
