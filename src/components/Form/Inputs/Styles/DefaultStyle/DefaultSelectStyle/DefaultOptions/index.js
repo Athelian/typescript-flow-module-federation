@@ -3,10 +3,19 @@ import React from 'react';
 import { type RenderOptionsProps } from 'components/Form/Inputs/SelectInput/type';
 import { OptionWrapperStyle, OptionStyle } from './style';
 
-type Props = RenderOptionsProps & {
-  items: Array<any>,
-  itemToValue: any => any,
-  itemToString: any => string,
+type OptionalProps = {
+  align: 'left' | 'right' | 'center',
+};
+
+type Props = OptionalProps &
+  RenderOptionsProps & {
+    items: Array<any>,
+    itemToValue: any => any,
+    itemToString: any => string,
+  };
+
+const defaultProps = {
+  align: 'right',
 };
 
 function DefaultOptions({
@@ -16,13 +25,14 @@ function DefaultOptions({
   highlightedIndex,
   selectedItem,
   getItemProps,
+  align,
 }: Props) {
   return (
     <div className={OptionWrapperStyle}>
       {items.map((item, index) => (
         <div
           key={itemToValue(item) || item.id || `option-${index}`}
-          className={OptionStyle(highlightedIndex === index, selectedItem === item)}
+          className={OptionStyle(highlightedIndex === index, selectedItem === item, align)}
           {...getItemProps({ item })}
         >
           {itemToString(item)}
@@ -31,5 +41,7 @@ function DefaultOptions({
     </div>
   );
 }
+
+DefaultOptions.defaultProps = defaultProps;
 
 export default DefaultOptions;

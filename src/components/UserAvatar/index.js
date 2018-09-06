@@ -2,11 +2,20 @@
 import * as React from 'react';
 import { AvatarWrapperStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  width: number,
+  height: number,
+  alt: string,
+};
+
+type Props = OptionalProps & {
   profileUrl: string,
-  width?: number,
-  height?: number,
-  alt?: string,
+};
+
+const defaultProps = {
+  width: 50,
+  height: 50,
+  alt: 'avatar',
 };
 
 const DummyUser = {
@@ -25,10 +34,6 @@ function UserAvatar({ profileUrl, width, height, alt }: Props) {
   );
 }
 
-UserAvatar.defaultProps = {
-  width: 50,
-  height: 50,
-  alt: 'avatar',
-};
+UserAvatar.defaultProps = defaultProps;
 
 export default UserAvatar;

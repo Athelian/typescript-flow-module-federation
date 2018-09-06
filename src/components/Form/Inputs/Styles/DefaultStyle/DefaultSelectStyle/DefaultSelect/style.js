@@ -2,6 +2,11 @@
 import { css } from 'react-emotion';
 import { colors, transitions, fontSizes, presets } from 'styles/common';
 
+export const SelectInputStyle = (align: 'left' | 'right' | 'center') => css`
+  cursor: pointer;
+  text-align: ${align};
+`;
+
 export const ClearButtonStyle = css`
   ${presets.BUTTON};
   height: 100%;
@@ -19,7 +24,15 @@ export const ArrowDownStyle = (isOpen: boolean) => css`
   transform: rotate(${isOpen ? '180' : '0'}deg);
   height: 100%;
   cursor: pointer;
-  color: ${isOpen ? colors.TEAL : colors.GRAY_LIGHT};
+  ${isOpen
+    ? `
+    color: ${colors.TEAL};
+    opacity: 1;
+  `
+    : `
+    color: ${colors.GRAY_LIGHT};
+    opacity: 0;
+  `};
   ${fontSizes.SMALL};
   &:hover,
   :focus {

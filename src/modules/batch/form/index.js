@@ -3,6 +3,7 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import { Tooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import BatchSection from './components/BatchSection';
+import QuantityAdjustmentsSection from './components/QuantityAdjustmentsSection';
 import PackagingSection from './components/PackagingSection';
 import { BatchFormWrapperStyle, StatusStyle } from './style';
 
@@ -38,6 +39,11 @@ const BatchForm = ({ batch, isNew }: Props) => (
         )}
       </SectionHeader>
       <BatchSection isNew={isNew} />
+    </SectionWrapper>
+
+    <SectionWrapper id="quantityAdjustmentsSection">
+      <SectionHeader icon="QUANTITY_ADJUSTMENTS" title="QUANTITY ADJUSTMENTS" />
+      <QuantityAdjustmentsSection isNew={isNew} />
     </SectionWrapper>
 
     <SectionWrapper id="packagingSection">
