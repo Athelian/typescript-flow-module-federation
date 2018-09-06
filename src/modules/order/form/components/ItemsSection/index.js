@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue, ObjectValue } from 'react-values';
+import { BooleanValue, ObjectValue, ArrayValue } from 'react-values';
 import { injectIntl, intlShape } from 'react-intl';
+import { injectUid } from 'utils/id';
 import OrderFormContainer from 'modules/order/form/container';
 import GridColumn from 'components/GridColumn';
 import { SectionNavBar, FilterInput, SortInput, SearchInput } from 'components/NavBar';
@@ -46,11 +47,11 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const { orderItems = [], exporter = {} } = initialValues;
+  const { orderItems, exporter = {} } = initialValues;
 
   const defaultValues = {
     perPage: 12,
-    filterBy: { exporterId: exporter.id },
+    filter: { exporterId: exporter.id },
     sort: { field: 'updatedAt', direction: 'DESC' },
   };
 
@@ -67,6 +68,7 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                   fields={fields}
                   onChange={({ field: { value }, ascending }) =>
                     onChangeFilter({
+                      ...filtersAndSort,
                       sort: {
                         field: value,
                         direction: ascending ? 'ASC' : 'DESC',
@@ -76,7 +78,12 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                 />
                 <FilterInput
                   initialFilter={{}}
-                  onChange={newFilter => onChangeFilter({ ...newFilter })}
+                  onChange={filters =>
+                    onChangeFilter({
+                      ...filtersAndSort,
+                      filter: { ...filtersAndSort.filter, ...filters },
+                    })
+                  }
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
@@ -94,15 +101,25 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                 <SearchInput
                   value={filtersAndSort.query}
                   name="search"
-                  onClear={() => onChangeFilter({ query: '' })}
-                  onChange={newQuery => onChangeFilter({ query: newQuery })}
+                  onClear={() =>
+                    onChangeFilter({
+                      ...filtersAndSort,
+                      filter: { ...filtersAndSort.filter, query: '' },
+                    })
+                  }
+                  onChange={newQuery =>
+                    onChangeFilter({
+                      ...filtersAndSort,
+                      filter: { ...filtersAndSort.filter, query: newQuery },
+                    })
+                  }
                 />
 
                 <ExpandButtons expanded={allItemsExpanded} onClick={toggleExpand} />
 
                 <BooleanValue>
                   {({ value: opened, toggle }) => (
-                    <React.Fragment>
+                    <>
                       <Subscribe to={[OrderFormContainer]}>
                         {({ state }) => (
                           <NewButton
@@ -120,7 +137,17 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                         {opened && (
                           <SelectProducts
                             onSelect={selectedItems => {
-                              onSelectItems(selectedItems);
+                              onSelectItems(
+                                selectedItems.map(productProvider =>
+                                  injectUid({
+                                    productProvider,
+                                    price: {
+                                      amount: 0,
+                                      currency: '',
+                                    },
+                                  })
+                                )
+                              );
                               toggle();
                             }}
                             exporter={exporter && exporter.id}
@@ -128,50 +155,65 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                           />
                         )}
                       </SlideView>
-                    </React.Fragment>
+                    </>
                   )}
                 </BooleanValue>
               </SectionNavBar>
               <div className={ItemsSectionBodyStyle}>
-                {orderItems.length > 0 ? (
-                  <div className={ItemGridStyle}>
-                    {orderItems.map(item => (
-                      <div className={ItemStyle} key={item.id}>
-                        <OrderItemCard item={{ id: item.id, quantity: 100 }} />
-                        {allItemsExpanded && (
-                          // TODO: add this condition item.batchItems.length > 0 && (
-                          <div className={BatchAreaStyle}>
-                            <div className={BatchAreaHeaderStyle}>
-                              <div className={TitleWrapperStyle}>
-                                <div className={IconStyle}>
-                                  <Icon icon="BATCH" />
+                <ArrayValue defaultValue={[]}>
+                  {({ value: selected, push, set }) =>
+                    orderItems.length > 0 ? (
+                      <div className={ItemGridStyle}>
+                        {orderItems.map(item => (
+                          <div className={ItemStyle} key={item.id}>
+                            <OrderItemCard
+                              item={item}
+                              onClick={() => {
+                                if (!selected.includes(item.id)) {
+                                  push(item.id);
+                                } else {
+                                  set(selected.filter(selectedId => selectedId !== item.id));
+                                }
+                              }}
+                            />
+                            {(allItemsExpanded || selected.includes(item.id)) && (
+                              // TODO: add this condition item.batchItems.length > 0 && (
+                              <div className={BatchAreaStyle}>
+                                <div className={BatchAreaHeaderStyle}>
+                                  <div className={TitleWrapperStyle}>
+                                    <div className={IconStyle}>
+                                      <Icon icon="BATCH" />
+                                    </div>
+                                    <div className={TitleStyle}>BATCHES (4)</div>
+                                  </div>
+                                  <Subscribe to={[OrderFormContainer]}>
+                                    {state => (
+                                      <NewButton
+                                        title="NEW BATCH"
+                                        disabled={!(state.exporter && state.exporter.id)}
+                                        onClick={toggleExpand}
+                                      />
+                                    )}
+                                  </Subscribe>
                                 </div>
-                                <div className={TitleStyle}>BATCHES (4)</div>
-                              </div>
-                              <Subscribe to={[OrderFormContainer]}>
-                                {state => (
-                                  <NewButton
-                                    title="NEW BATCH"
-                                    disabled={!(state.exporter && state.exporter.id)}
-                                    onClick={toggleExpand}
-                                  />
-                                )}
-                              </Subscribe>
-                            </div>
 
-                            <div className={BatchGridStyle}>
-                              <div className={BatchStyle}>
-                                <OrderBatchCard batch={{ id: item.id }} />
+                                <div className={BatchGridStyle}>
+                                  <div className={BatchStyle}>
+                                    <OrderBatchCard batch={{ id: item.id }} />
+                                  </div>
+                                </div>
                               </div>
-                            </div>
+                            )}
                           </div>
-                        )}
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className={EmptyMessageStyle}>{intl.formatMessage(messages.noItems)}</div>
-                )}
+                    ) : (
+                      <div className={EmptyMessageStyle}>
+                        {intl.formatMessage(messages.noItems)}
+                      </div>
+                    )
+                  }
+                </ArrayValue>
               </div>
             </div>
           )}

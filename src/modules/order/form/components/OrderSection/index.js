@@ -46,7 +46,6 @@ import {
 
 type Props = {
   isNew: boolean,
-  initialValues: Object,
 };
 
 const filterItems = (query: string, items: Array<any>) => {
@@ -114,10 +113,10 @@ function createSelectInput({ enumType, inputHandlers, name, touched, errors, isN
   );
 }
 
-const OrderSection = ({ isNew, initialValues }: Props) => (
+const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
     <Subscribe to={[OrderFormContainer]}>
-      {({ state, setFieldValue, validationRules }) => {
+      {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {
         const values = { ...initialValues, ...state };
         const totalOrderedQuantity = values.orderItems ? values.orderItems.length : 0;
         const totalBatches = values.orderItems
@@ -425,25 +424,32 @@ const OrderSection = ({ isNew, initialValues }: Props) => (
               </div>
             </div>
             <div className={TagsInputStyle}>
-              <FieldItem
-                vertical
-                label={
-                  <Label>
-                    <FormattedMessage {...messages.tags} />
-                  </Label>
-                }
-                input={
-                  <TagsInput
-                    editable={isNew}
-                    id="tags"
-                    name="tags"
-                    tagType="Order"
-                    values={values.tags}
-                    onChange={setFieldValue}
+              <Subscribe to={[FormContainer]}>
+                {({ state: formState, ...formHelper }) => (
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage {...messages.tags} />
+                      </Label>
+                    }
+                    input={
+                      <TagsInput
+                        editable={isNew}
+                        id="tags"
+                        name="tags"
+                        tagType="Order"
+                        values={values.tags}
+                        onChange={(field, tags) => {
+                          setFieldValue(field, tags);
+                          formHelper.setFieldTouched('tags');
+                          formHelper.onValidation(values, validationRules());
+                        }}
+                      />
+                    }
                   />
-                }
-              />
-
+                )}
+              </Subscribe>
               <div className={DividerStyle}>
                 <Divider color={colors.GRAY_LIGHT} />
               </div>

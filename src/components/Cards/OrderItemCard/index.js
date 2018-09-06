@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { type OrderItem } from 'modules/order/type.js.flow';
-import logger from 'utils/logger';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -28,45 +27,24 @@ import {
 type Props = {
   item: ?OrderItem,
   onClick?: (id: string) => void,
+  onClone: Function,
+  onRemove: Function,
 };
 
-const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
+const OrderItemCard = ({ item, onClick, onRemove, onClone, ...rest }: Props) => {
   if (!item) return '';
 
   const actions = [
-    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+    <CardAction icon="CLONE" onClick={onClone} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
   ];
 
-  const isNew = false;
-  const currency = 'JPY';
-  const dummyProduct = {
-    name: 'Apple',
-    serial: 'FA-064893',
-    supplier: 'Supplier B',
-  };
-  const dummyTag = {
-    id: '1',
-    name: 'Fruit',
-    color: '#7b6dbb',
-    description: '',
-  };
-  const dummyQuantity = {
-    isActive: false,
-    hasError: false,
-    input: {
-      name: 'foo',
-      value: 100,
-    },
-  };
-  const dummyPrice = {
-    isActive: false,
-    hasError: false,
-    input: {
-      name: 'foo',
-      value: 40,
-    },
-  };
+  const {
+    productProvider: { product, supplier },
+    price: { currency, amount },
+  } = item;
+
+  const { name, serial, tags = [] } = product;
 
   return (
     <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" actions={actions} {...rest}>
@@ -75,14 +53,14 @@ const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
           <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
 
           <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameStyle}>{dummyProduct.name}</div>
-            <div className={ProductSerialStyle}>{dummyProduct.serial}</div>
+            <div className={ProductNameStyle}>{name}</div>
+            <div className={ProductSerialStyle}>{serial}</div>
             <div className={ProductSupplierStyle}>
               <Icon icon="SUPPLIER" />
-              {dummyProduct.supplier}
+              {supplier && supplier.name}
             </div>
             <div className={ProductTagsWrapperStyle}>
-              <Tag tag={dummyTag} />
+              {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
           </div>
 
@@ -92,41 +70,37 @@ const OrderItemCard = ({ item, onClick, ...rest }: Props) => {
         </div>
 
         <div className={BodyWrapperStyle}>
-          <div className={QuantityWrapperStyle}>
+          <div
+            className={QuantityWrapperStyle}
+            onClick={evt => evt.stopPropagation()}
+            role="presentation"
+          >
             <Label required>QTY</Label>
-            <DefaultStyle
-              type="number"
-              isFocused={dummyQuantity.isActive}
-              hasError={dummyQuantity.hasError}
-              forceHoverStyle={isNew}
-              width="90px"
-              height="20px"
-            >
-              <NumberInput {...dummyQuantity.input} />
+            <DefaultStyle type="number" width="90px" height="20px">
+              <NumberInput />
             </DefaultStyle>
           </div>
-          <div className={UnitPriceWrapperStyle}>
+          <div
+            className={UnitPriceWrapperStyle}
+            onClick={evt => evt.stopPropagation()}
+            role="presentation"
+          >
             <button className={SyncButtonStyle} type="button">
               SYNC
               <Icon icon="SYNC" />
             </button>
             <Label required>PRICE</Label>
-            <DefaultPriceStyle
-              currency={currency}
-              isFocused={dummyPrice.isActive}
-              hasError={dummyPrice.hasError}
-              forceHoverStyle={isNew}
-              width="90px"
-              height="20px"
-            >
-              <NumberInput {...dummyPrice.input} />
+            <DefaultPriceStyle currency={currency} width="90px" height="20px">
+              <NumberInput value={amount} onChange={() => {}} />
             </DefaultPriceStyle>
           </div>
           <div className={DividerStyle} />
           Chart Goes Here
           <div className={TotalPriceWrapperStyle}>
             <Label>TOTAL</Label>
-            <Display>4,000 {currency}</Display>
+            <Display>
+              {amount} {currency}
+            </Display>
           </div>
         </div>
       </div>

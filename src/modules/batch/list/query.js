@@ -6,7 +6,8 @@ import {
   UserNoNestingFragment,
   GroupNoNestingFragment,
   MetricValueNoNestingFragment,
-} from 'generated/zenport.fragments';
+  ShipmentNoNestingFragment,
+} from 'generated/fragments';
 
 const SizeNoNestingFragment = `fragment SizeNoNesting on Size {
   length {
@@ -37,6 +38,7 @@ export const batchListQuery = gql`
   ${GroupNoNestingFragment}
   ${MetricValueNoNestingFragment}
   ${SizeNoNestingFragment}
+  ${ShipmentNoNestingFragment}
 `;
 
 export default batchListQuery;

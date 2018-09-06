@@ -9,53 +9,57 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
       class="css-13oaurc"
     >
       <div
-        class="css-1kpkulu"
+        class="css-p52le"
       >
-        
-        
-        
         <div
-          class="css-b40ko7"
+          class="css-1n42b97"
+        />
+        <div
+          class="css-1s42hss"
         >
           EMAIL
-           
-          
         </div>
-        <input
-          autocomplete="off"
-          class="css-cfn2p5"
-          data-testid="email"
-          name="email"
-          spellcheck="false"
-          type="email"
-          value=""
-        />
+        <div
+          class="css-14zhnb8"
+        >
+          <input
+            data-testid="email"
+            name="email"
+            placeholder=""
+            spellcheck="false"
+            style="text-align: left;"
+            type="email"
+            value=""
+          />
+        </div>
       </div>
       <div
-        class="css-1kpkulu"
+        class="css-p52le"
       >
-        
-        
-        
         <div
-          class="css-b40ko7"
+          class="css-1n42b97"
+        />
+        <div
+          class="css-1s42hss"
         >
           PASSWORD
-           
-          
         </div>
-        <input
-          autocomplete="off"
-          class="css-cfn2p5"
-          data-testid="password"
-          name="password"
-          spellcheck="false"
-          type="password"
-          value=""
-        />
+        <div
+          class="css-14zhnb8"
+        >
+          <input
+            data-testid="password"
+            name="password"
+            placeholder=""
+            spellcheck="false"
+            style="text-align: left;"
+            type="password"
+            value=""
+          />
+        </div>
       </div>
       <button
-        class="css-oydwx5"
+        class="css-fbwuwo"
         data-testid="submitButton"
         disabled=""
         style="box-shadow: none; margin-top: 20px;"
@@ -176,53 +180,57 @@ exports[`<LoginForm /> should render without crash 1`] = `
       class="css-13oaurc"
     >
       <div
-        class="css-1kpkulu"
+        class="css-p52le"
       >
-        
-        
-        
         <div
-          class="css-b40ko7"
+          class="css-1n42b97"
+        />
+        <div
+          class="css-1s42hss"
         >
           EMAIL
-           
-          
         </div>
-        <input
-          autocomplete="off"
-          class="css-cfn2p5"
-          data-testid="email"
-          name="email"
-          spellcheck="false"
-          type="email"
-          value=""
-        />
+        <div
+          class="css-14zhnb8"
+        >
+          <input
+            data-testid="email"
+            name="email"
+            placeholder=""
+            spellcheck="false"
+            style="text-align: left;"
+            type="email"
+            value=""
+          />
+        </div>
       </div>
       <div
-        class="css-1kpkulu"
+        class="css-p52le"
       >
-        
-        
-        
         <div
-          class="css-b40ko7"
+          class="css-1n42b97"
+        />
+        <div
+          class="css-1s42hss"
         >
           PASSWORD
-           
-          
         </div>
-        <input
-          autocomplete="off"
-          class="css-cfn2p5"
-          data-testid="password"
-          name="password"
-          spellcheck="false"
-          type="password"
-          value=""
-        />
+        <div
+          class="css-14zhnb8"
+        >
+          <input
+            data-testid="password"
+            name="password"
+            placeholder=""
+            spellcheck="false"
+            style="text-align: left;"
+            type="password"
+            value=""
+          />
+        </div>
       </div>
       <button
-        class="css-oydwx5"
+        class="css-fbwuwo"
         data-testid="submitButton"
         disabled=""
         style="box-shadow: none; margin-top: 20px;"

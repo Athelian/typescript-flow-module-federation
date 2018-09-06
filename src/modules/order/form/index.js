@@ -9,34 +9,16 @@ import OrderSection from './components/OrderSection';
 import ItemsSection from './components/ItemsSection';
 import DocumentsSection from './components/DocumentsSection';
 import ShipmentsSection from './components/ShipmentsSection';
-import {
-  OrderFormWrapperStyle,
-  ToggleButtonStyle,
-  StatusStyle,
-} from './style';
+import { OrderFormWrapperStyle, ToggleButtonStyle, StatusStyle } from './style';
 
 type Props = {
   order: Object,
 };
 
-const orderSectionFields = pickByProps([
-  'piNo',
-  'poNo',
-  'exporter',
-  'deliveryPlace',
-  'issuedAt',
-  'currency',
-  'incoterm',
-  'totalPrice',
-  'batchedQuantity',
-  'shippedQuantity',
-  'orderItems',
-]);
 const itemSectionFields = pickByProps(['exporter', 'orderItems']);
 
 export default function OrderForm({ order }: Props) {
   const isNew = Object.keys(order).length === 0;
-  const orderValues = orderSectionFields(order);
 
   return (
     <div className={OrderFormWrapperStyle}>
@@ -61,7 +43,7 @@ export default function OrderForm({ order }: Props) {
             </>
           )}
         </SectionHeader>
-        <OrderSection isNew={isNew} initialValues={{ ...orderValues }} />
+        <OrderSection isNew={isNew} />
       </SectionWrapper>
 
       <SectionWrapper id="itemsSection">
@@ -72,7 +54,9 @@ export default function OrderForm({ order }: Props) {
               <ItemsSection
                 initialValues={{ ...itemSectionFields(values) }}
                 isNew={isNew}
-                onSelectItems={orderItems => setFieldValue('orderItems', orderItems)}
+                onSelectItems={orderItems =>
+                  setFieldValue('orderItems', [...values.orderItems, ...orderItems])
+                }
               />
             </>
           )}

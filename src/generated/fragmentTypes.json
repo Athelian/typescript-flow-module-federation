@@ -8,14 +8,19 @@
           { "name": "Batch" },
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "ContainerGroup" },
           { "name": "Group" },
           { "name": "Order" },
           { "name": "OrderItem" },
           { "name": "Partner" },
           { "name": "Product" },
           { "name": "ProductProvider" },
+          { "name": "Shipment" },
           { "name": "Tag" },
-          { "name": "User" }
+          { "name": "TimelineDate" },
+          { "name": "TimelineDateRevision" },
+          { "name": "User" },
+          { "name": "Voyage" }
         ]
       },
       {
@@ -25,11 +30,16 @@
           { "name": "Batch" },
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "ContainerGroup" },
           { "name": "Order" },
           { "name": "OrderItem" },
           { "name": "Product" },
           { "name": "ProductProvider" },
-          { "name": "Tag" }
+          { "name": "Shipment" },
+          { "name": "Tag" },
+          { "name": "TimelineDate" },
+          { "name": "TimelineDateRevision" },
+          { "name": "Voyage" }
         ]
       },
       {
@@ -43,8 +53,11 @@
         "possibleTypes": [
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "ContainerGroup" },
           { "name": "OrderItem" },
-          { "name": "ProductProvider" }
+          { "name": "ProductProvider" },
+          { "name": "TimelineDateRevision" },
+          { "name": "Voyage" }
         ]
       },
       {
@@ -54,6 +67,7 @@
           { "name": "Batch" },
           { "name": "Order" },
           { "name": "Product" },
+          { "name": "Shipment" },
           { "name": "User" }
         ]
       }
