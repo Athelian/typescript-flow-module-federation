@@ -101,7 +101,7 @@ class BatchFormModule extends React.Component<Props> {
                       </JumpToSection>
                       <Subscribe to={[BatchFormContainer, FormContainer]}>
                         {(formState, form) =>
-                          (isNew || formState.isDirty(formState.state)) && (
+                          (isNew || formState.isDirty()) && (
                             <>
                               <CancelButton disabled={false} onClick={this.onCancel} />
                               <SaveButton

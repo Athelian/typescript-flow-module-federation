@@ -26,8 +26,10 @@ export default class BatchFormContainer extends Container<FormState> {
   };
 
   setFieldArrayValue = (path: string, value: any) => {
-    const newState = set(this.state, path, value);
-    this.setState(newState);
+    this.setState(prevState => {
+      const newState = set(prevState, path, value);
+      return newState;
+    });
   };
 
   removeArrayItem = (path: string) => {
@@ -37,7 +39,7 @@ export default class BatchFormContainer extends Container<FormState> {
     });
   };
 
-  isDirty = (values: any) => !isEquals(values, this.originalValues);
+  isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
     logger.warn('onSuccess');
@@ -45,6 +47,7 @@ export default class BatchFormContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: any) => {
+    logger.warn('onInitDetailValues');
     // $FlowFixMe: missing type define for map's ramda function
     const { packageGrossWeight, packageVolume, packageSize, ...rest } = removeTypename(values);
     const flattenedValues = {
