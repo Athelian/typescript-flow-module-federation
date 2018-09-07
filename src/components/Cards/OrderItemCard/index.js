@@ -5,6 +5,7 @@ import { type OrderItem } from 'modules/order/type.js.flow';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { DefaultStyle, Label, Display, NumberInput, DefaultPriceStyle } from 'components/Form';
@@ -25,6 +26,7 @@ import {
   SyncButtonStyle,
   DividerStyle,
   TotalPriceWrapperStyle,
+  ChartWrapperStyle,
 } from './style';
 
 type Props = {
@@ -35,6 +37,43 @@ type Props = {
   onClone: Function,
   onRemove: Function,
 };
+
+function getQuantitySummary(item: Object) {
+  let orderedQuantity = 0;
+  let batchedQuantity = 0;
+  let shippedQuantity = 0;
+  let activeBatches = 0;
+  let archivedBatches = 0;
+
+  orderedQuantity += item.quantity ? item.quantity : 0;
+
+  if (item.batches) {
+    item.batches.forEach(batch => {
+      batchedQuantity += batch.quantity;
+      if (batch.batchAdjustments) {
+        batch.batchAdjustments.forEach(batchAdjustment => {
+          batchedQuantity -= batchAdjustment.quantity;
+        });
+      }
+      if (batch.shipment) {
+        shippedQuantity += batch.quantity;
+      }
+      if (batch.archived) {
+        archivedBatches += 1;
+      } else {
+        activeBatches += 1;
+      }
+    });
+  }
+
+  return {
+    orderedQuantity,
+    batchedQuantity,
+    shippedQuantity,
+    activeBatches,
+    archivedBatches,
+  };
+}
 
 const OrderItemCard = ({
   item,
@@ -52,6 +91,7 @@ const OrderItemCard = ({
     <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
   ];
 
+  const chartDetail = getQuantitySummary(item);
   const {
     productProvider: { product, supplier, unitPrice },
   } = item;
@@ -151,7 +191,16 @@ const OrderItemCard = ({
                 </DefaultPriceStyle>
               </div>
               <div className={DividerStyle} />
-              Chart Goes Here
+              <div className={ChartWrapperStyle}>
+                <QuantityChart
+                  hasLabel
+                  orderedQuantity={chartDetail.orderedQuantity}
+                  batchedQuantity={chartDetail.batchedQuantity}
+                  shippedQuantity={chartDetail.shippedQuantity}
+                  batched={chartDetail.batchedQuantity}
+                  shipped={chartDetail.shippedQuantity}
+                />
+              </div>
               <div className={TotalPriceWrapperStyle}>
                 <Label>TOTAL</Label>
                 <Display>
