@@ -77,6 +77,10 @@ export const productProvidersQuery = gql`
             description
           }
         }
+        unitPrice {
+          amount
+          currency
+        }
       }
       page
       totalPage
