@@ -4,6 +4,8 @@ import * as React from 'react';
 type OptionalProps = {
   value: any,
   onChange: ?Function,
+  onBlur: ?Function,
+  onFocus: ?Function,
 };
 
 export type RenderSelectProps = {
@@ -30,7 +32,9 @@ export type SelectInputProps = OptionalProps & {
 
 export const defaultSelectInputProps = {
   value: '',
-  onChange: null,
+  onChange: () => {},
+  onBlur: () => {},
+  onFocus: () => {},
 };
 
 export default defaultSelectInputProps;

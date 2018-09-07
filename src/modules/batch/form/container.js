@@ -1,9 +1,10 @@
 // @flow
 import { Container } from 'unstated';
 import * as Yup from 'yup';
-import logger from 'utils/logger';
+import { set, unset } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeTypename, flatten } from 'utils/data';
+import logger from 'utils/logger';
 
 type FormState = {
   batchAdjustments: Array<any>,
@@ -24,6 +25,18 @@ export default class BatchFormContainer extends Container<FormState> {
     });
   };
 
+  setFieldArrayValue = (path: string, value: any) => {
+    const newState = set(this.state, path, value);
+    this.setState(newState);
+  };
+
+  removeArrayItem = (path: string) => {
+    this.setState(prevState => {
+      unset(prevState, path);
+      return prevState;
+    });
+  };
+
   isDirty = (values: any) => !isEquals(values, this.originalValues);
 
   onSuccess = () => {
@@ -36,7 +49,7 @@ export default class BatchFormContainer extends Container<FormState> {
     const { packageGrossWeight, packageVolume, packageSize, ...rest } = removeTypename(values);
     const flattenedValues = {
       ...rest,
-      ...flatten({ packageGrossWeight, packageVolume, packageSize })
+      ...flatten({ packageGrossWeight, packageVolume, packageSize }),
     };
     this.setState(flattenedValues);
     this.originalValues = flattenedValues;

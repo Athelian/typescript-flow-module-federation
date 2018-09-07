@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import BatchFormContainer from 'modules/batch/form/container';
 import FormattedNumber from 'components/FormattedNumber';
 import NewButton from 'components/NavButtons/NewButton';
+import { injectUid } from 'utils/id';
 import Divider from 'components/Divider';
 import { FormContainer } from 'modules/form';
 import { FieldItem, Label } from 'components/Form';
@@ -23,7 +24,7 @@ type Props = {
 const QuantityAdjustmentsSection = ({ isNew }: Props) => (
   <div className={QuantityAdjustmentsSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues, state, setFieldValue, validationRules }) => {
+      {({ originalValues, state, setFieldArrayValue, removeArrayItem, validationRules }) => {
         const values = { ...originalValues, ...state };
 
         const currentQuantity = values.batchAdjustments.reduce(
@@ -39,7 +40,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                   label={<Label>INITIAL QUANTITY</Label>}
                   input={
                     <div className={InitialQuantityStyle}>
-                      <FormattedNumber value={values.quantity} />
+                      <FormattedNumber value={values.quantity || 0} />
                     </div>
                   }
                 />
@@ -49,7 +50,8 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                     index={index}
                     adjustment={adjustment}
                     key={adjustment.id}
-                    setFieldValue={setFieldValue}
+                    setFieldArrayValue={setFieldArrayValue}
+                    removeArrayItem={removeArrayItem}
                     formHelper={formHelper}
                     values={values}
                     validationRules={validationRules}
@@ -57,14 +59,28 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                   />
                 ))}
                 <div className={AddAdjustmentButtonWrapperStyle}>
-                  <NewButton title="NEW ADJUSTMENT" />
+                  <NewButton
+                    title="NEW ADJUSTMENT"
+                    onClick={() => {
+                      setFieldArrayValue(
+                        `batchAdjustments[${values.batchAdjustments.length}]`,
+                        injectUid({
+                          isNew: true,
+                          reason: 'Other',
+                          quantity: 0,
+                          memo: '',
+                          updatedAt: new Date(),
+                        })
+                      );
+                    }}
+                  />
                 </div>
                 <Divider />
                 <FieldItem
                   label={<Label>CURRENT QUANTITY</Label>}
                   input={
                     <div className={CurrentQuantityStyle}>
-                      <FormattedNumber value={currentQuantity} />
+                      <FormattedNumber value={currentQuantity || 0} />
                     </div>
                   }
                 />

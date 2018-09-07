@@ -33,7 +33,11 @@ export const DefaultStyleWrapperStyle = ({
   cursor: text;
   ${transitions.MAIN};
   ${forceHoverStyle || isFocused
-    ? shadows.INPUT
+    ? `${shadows.INPUT};
+      & > button {
+        opacity: 1;
+      }
+    `
     : `&:hover {
       ${shadows.INPUT};
       & > button {

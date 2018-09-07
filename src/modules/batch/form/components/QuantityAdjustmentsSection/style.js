@@ -25,6 +25,7 @@ export const InitialQuantityStyle = css`
 export const AddAdjustmentButtonWrapperStyle = css`
   display: flex;
   justify-content: flex-end;
+  width: 410px;
 `;
 
 export const CurrentQuantityStyle = css`

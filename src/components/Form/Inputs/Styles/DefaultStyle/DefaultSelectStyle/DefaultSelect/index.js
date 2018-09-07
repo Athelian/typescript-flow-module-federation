@@ -44,6 +44,7 @@ function DefaultSelect({
   selectedItem,
   getInputProps,
   itemToString,
+  ...rest
 }: Props) {
   return (
     <div
@@ -52,7 +53,7 @@ function DefaultSelect({
         isFocused: isOpen,
         hasError,
         disabled,
-        forceHoverStyle: forceHoverStyle && !selectedItem,
+        forceHoverStyle,
         width,
         height,
       })}
@@ -76,6 +77,7 @@ function DefaultSelect({
         {...getInputProps({
           value: itemToString(selectedItem),
         })}
+        {...rest}
       />
       {align === 'left' &&
         (!required && selectedItem ? (

@@ -33,7 +33,8 @@ type OptionalProps = {
 type Props = OptionalProps & {
   adjustment: Object,
   index: number,
-  setFieldValue: Function,
+  setFieldArrayValue: Function,
+  removeArrayItem: Function,
   formHelper: any,
   values: any,
   validationRules: any,
@@ -64,7 +65,8 @@ class Adjustment extends React.Component<Props, State> {
       adjustment,
       index,
       isNew,
-      setFieldValue,
+      setFieldArrayValue,
+      removeArrayItem,
       formHelper,
       values,
       validationRules,
@@ -87,7 +89,7 @@ class Adjustment extends React.Component<Props, State> {
           <FormField
             name={`batchAdjustments.${index}.reason`}
             initValue={adjustment.reason}
-            setFieldValue={setFieldValue}
+            setFieldValue={setFieldArrayValue}
             validationOnChange
             onValidate={newValue =>
               formHelper.onValidation({ ...values, ...newValue }, validationRules())
@@ -101,8 +103,15 @@ class Adjustment extends React.Component<Props, State> {
                   if (error) return `Error!: ${error}`;
                   return (
                     <SelectInput
-                      name={name}
                       {...inputHandlers}
+                      onChange={newValue =>
+                        inputHandlers.onChange({
+                          target: {
+                            value: newValue && newValue.name,
+                          },
+                        })
+                      }
+                      name={name}
                       items={data}
                       itemToString={item => (item ? item.name : '')}
                       itemToValue={item => (item ? item.name : '')}
@@ -138,7 +147,7 @@ class Adjustment extends React.Component<Props, State> {
             onValidate={newValue =>
               formHelper.onValidation({ ...values, ...newValue }, validationRules())
             }
-            setFieldValue={setFieldValue}
+            setFieldValue={setFieldArrayValue}
             {...formHelper}
           >
             {({ name, ...inputHandlers }) => (
@@ -152,7 +161,11 @@ class Adjustment extends React.Component<Props, State> {
               </DefaultStyle>
             )}
           </FormField>
-          <button className={RemoveButtonStyle} onClick={() => {}} type="button">
+          <button
+            className={RemoveButtonStyle}
+            onClick={() => removeArrayItem(`batchAdjustments[${index}]`)}
+            type="button"
+          >
             <Icon icon="REMOVE" />
           </button>
         </div>
@@ -175,7 +188,7 @@ class Adjustment extends React.Component<Props, State> {
             onValidate={newValue =>
               formHelper.onValidation({ ...values, ...newValue }, validationRules())
             }
-            setFieldValue={setFieldValue}
+            setFieldValue={setFieldArrayValue}
             {...formHelper}
           >
             {({ name, ...inputHandlers }) => (
