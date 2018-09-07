@@ -46,10 +46,12 @@ steps:
   args: ['push', 'asia.gcr.io/zenport-183806/web-app:latest']
 - name: 'gcr.io/cloud-builders/kubectl'
   args:
-  - set
-  - image
-  - deployment/web-app
-  - web-app=asia.gcr.io/zenport-183806/web-app:$SHORT_SHA
+  - 'set'
+  - 'image'
+  - 'deployment/web-app'
+  - 'web-app=asia.gcr.io/zenport-183806/web-app:$SHORT_SHA'
+  - '-n'
+  - 'staging'
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=asia-northeast1-c'
   - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
