@@ -1,0 +1,55 @@
+# name: 'test NewPR to develop'
+# triggers:
+# - pullRequestBases: ['develop']
+# steps:
+# - name: 'gcr.io/cloud-builders/yarn'
+#   args: ['install']
+# - name: 'gcr.io/cloud-builders/yarn'
+#   args: ['test']
+# ---
+name: 'Deploy Staging'
+triggers:
+- branches: ['develop']
+steps:
+# rebuild base image if 'package.json' & 'yarn.lock' are changed
+- name: 'gcr.io/cloud-builders/docker'
+  args: 
+  - 'build'
+  - '-t'
+  - 'asia.gcr.io/zenport-183806/web-app-base:latest'
+  - '-f'
+  - 'base.Dockerfile'
+  - '--cache-from'
+  - 'asia.gcr.io/zenport-183806/web-app-base:latest'
+  - '.'
+  triggers:
+  - includedFiles: ['package.json', 'yarn.lock']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia.gcr.io/zenport-183806/web-app-base:latest']
+  triggers:
+  - includedFiles: ['package.json', 'yarn.lock']
+
+# build main image
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'build'
+  - '-t'
+  - 'asia.gcr.io/zenport-183806/web-app:$SHORT_SHA'
+  - '-t'
+  - 'asia.gcr.io/zenport-183806/web-app:latest'
+  - '--build-arg'
+  - 'BUILDTYPE=stg'
+  - '.'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia.gcr.io/zenport-183806/web-app:$SHORT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia.gcr.io/zenport-183806/web-app:latest']
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+  - set
+  - image
+  - deployment/web-app
+  - web-app=asia.gcr.io/zenport-183806/web-app:$SHORT_SHA
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=asia-northeast1-c'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
