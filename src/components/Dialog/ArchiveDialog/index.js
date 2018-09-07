@@ -28,7 +28,7 @@ function ArchiveDialog({
           <CustomButton
             label={<FormattedMessage {...messages.archive} />}
             icon={<Icon icon="ARCHIVE" />}
-            color="teal"
+            color="gray"
             onClick={onConfirm}
           />
         </div>

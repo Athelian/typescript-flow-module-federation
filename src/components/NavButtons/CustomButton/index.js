@@ -12,7 +12,7 @@ Use "red" for high alert actions like "Delete"
 type Props = {
   label: string | React.Element<any>,
   icon?: any,
-  color: 'gray' | 'blue' | 'teal' | 'red',
+  color?: 'gray' | 'blue' | 'teal' | 'red',
   disabled?: boolean,
 };
 

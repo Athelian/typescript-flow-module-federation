@@ -13,7 +13,6 @@ type Props = {
 const CancelButton = ({ disabled, ...rest }: Props) => (
   <CustomButton
     label={<FormattedMessage {...messages.cancel} />}
-    color="gray"
     icon={<FontAwesomeIcon icon={faCancel} fixedWidth />}
     disabled={disabled}
     {...rest}

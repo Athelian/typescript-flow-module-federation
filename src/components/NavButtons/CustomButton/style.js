@@ -2,9 +2,12 @@ import { css } from 'react-emotion';
 import { presets, shadows, colors, borderRadiuses, fontSizes } from 'styles/common';
 
 export const CustomButtonStyle = color => {
-  let mainColor = colors.GRAY_LIGHT;
-  let hoverColor = colors.GRAY;
-  if (color === 'blue') {
+  let mainColor = colors.GRAY_VERY_LIGHT;
+  let hoverColor = colors.GRAY_LIGHT;
+  if (color === 'gray') {
+    mainColor = colors.GRAY;
+    hoverColor = colors.GRAY_DARK;
+  } else if (color === 'blue') {
     mainColor = colors.BLUE;
     hoverColor = colors.BLUE_DARK;
   } else if (color === 'teal') {

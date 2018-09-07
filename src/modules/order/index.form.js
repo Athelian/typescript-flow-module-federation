@@ -146,10 +146,10 @@ class OrderFormModule extends React.PureComponent<Props> {
                   {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !orderId ? (
-                    <OrderForm order={{}} />
+                    <OrderForm order={{}} onChangeStatus={() => {}} />
                   ) : (
-                    <Subscribe to={[OrderFormContainer]}>
-                      {({ initDetailValues }) => (
+                    <Subscribe to={[OrderFormContainer, FormContainer]}>
+                      {({ initDetailValues, onSuccess }, form) => (
                         <Query
                           query={query}
                           variables={{ id: decodeId(orderId) }}
@@ -162,7 +162,17 @@ class OrderFormModule extends React.PureComponent<Props> {
                             }
 
                             if (loading) return <LoadingIcon />;
-                            return <OrderForm order={getByPathWithDefault({}, 'order', data)} />;
+                            return (
+                              <OrderForm
+                                order={getByPathWithDefault({}, 'order', data)}
+                                onChangeStatus={value => {
+                                  this.onSave({ archived: value }, saveOrder, () => {
+                                    onSuccess();
+                                    form.onReset();
+                                  });
+                                }}
+                              />
+                            );
                           }}
                         </Query>
                       )}
