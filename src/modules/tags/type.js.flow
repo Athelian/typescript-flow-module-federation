@@ -99,17 +99,6 @@ export type BatchItem = {
         name: string,
       },
     },
-    productExporterSupplier: {
-      id: string,
-      product: {
-        id: string,
-        name: string,
-        serial: string,
-        files: Array<{
-          path: string,
-        }>,
-      },
-    },
   },
 };
 
@@ -141,22 +130,6 @@ export type DetailedBatchItem = {
       currency: string,
       exporter: {
         id: string,
-      },
-    },
-    productExporterSupplier: {
-      id: string,
-      inspectionFee: ?number,
-      weight: ?number,
-      volume: ?number,
-      exporter: {
-        id: string,
-        name: string,
-      },
-      product: {
-        id: string,
-        name: string,
-        serial: string,
-        files: Array<File>,
       },
     },
   },

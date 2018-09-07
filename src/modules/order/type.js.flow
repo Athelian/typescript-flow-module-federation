@@ -1,6 +1,5 @@
 // @flow
 import type { BatchCreate } from 'modules/batch/type.js.flow';
-import type { PES } from 'modules/product/type.js.flow';
 import type { Tag } from 'modules/tags/type.js.flow';
 
 type Batch = {
@@ -61,15 +60,6 @@ export type SelectableOrderItem = {
       id: string,
     },
   },
-  productExporterSupplier: {
-    product: {
-      name: string,
-      serial: string,
-      files: Array<{
-        path: string,
-      }>,
-    },
-  },
   batchItems: Array<{
     no: string,
     quantity: number,
@@ -77,10 +67,10 @@ export type SelectableOrderItem = {
 };
 
 export type OrderItemForm = {
-  productExporterSupplier: PES,
   quantity?: number,
   price?: number,
   batches: Array<BatchCreate>,
+  productProviderId: string,
 };
 
 export type OrderForm = {

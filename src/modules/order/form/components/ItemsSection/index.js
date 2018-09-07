@@ -44,6 +44,7 @@ function generateBatchItem(item, batches) {
   return {
     tags: [],
     quantity: 0,
+    isNew: true,
     batchAdjustments: [],
     id: `${item.id}-batch-id-${batches.length + 1}`,
     no: `batch no ${batches.length + 1}`,
@@ -74,26 +75,31 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                   </Subscribe>
                   <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: '1030px' }}>
                     {opened && (
-                      <SelectProducts
-                        onSelect={selectedItems => {
-                          onSelectItems(
-                            selectedItems.map(productProvider =>
-                              injectUid({
-                                productProvider,
-                                batches: [],
-                                quantity: 0,
-                                price: {
-                                  amount: 0,
-                                  currency: '',
-                                },
-                              })
-                            )
-                          );
-                          toggle();
-                        }}
-                        exporter={exporter && exporter.id}
-                        onCancel={toggle}
-                      />
+                      <Subscribe to={[OrderFormContainer]}>
+                        {({ state: { currency } }) => (
+                          <SelectProducts
+                            onSelect={selectedItems => {
+                              onSelectItems(
+                                selectedItems.map(productProvider =>
+                                  injectUid({
+                                    productProvider,
+                                    isNew: true,
+                                    batches: [],
+                                    quantity: 0,
+                                    price: {
+                                      amount: 0,
+                                      currency,
+                                    },
+                                  })
+                                )
+                              );
+                              toggle();
+                            }}
+                            exporter={exporter && exporter.id}
+                            onCancel={toggle}
+                          />
+                        )}
+                      </Subscribe>
                     )}
                   </SlideView>
                 </>
