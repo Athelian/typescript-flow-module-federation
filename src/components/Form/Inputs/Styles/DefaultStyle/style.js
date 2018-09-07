@@ -76,8 +76,11 @@ export const DefaultStyleWrapperStyle = ({
       `
         resize: none;
         ${scrollbars.SMALL};
-        overflow-x: hidden;
-        overflow-y: auto;
+        overflow: hidden;
+        &:hover {
+          overflow-x: hidden;
+          overflow-y: auto;
+        }
       `};
   }
 `;

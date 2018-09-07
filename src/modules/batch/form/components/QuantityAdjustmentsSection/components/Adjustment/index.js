@@ -82,7 +82,7 @@ class Adjustment extends React.Component<Props, State> {
             onClick={this.toggleMemo}
             type="button"
           >
-            <Icon icon="MEMO" />
+            <Icon icon={hasMemo ? 'MEMO' : 'MEMO_ADD'} />
           </button>
           <FormField
             name={`batchAdjustments.${index}.reason`}
@@ -183,8 +183,8 @@ class Adjustment extends React.Component<Props, State> {
                 type="textarea"
                 isFocused={activeField === name}
                 forceHoverStyle={isNew || !inputHandlers.value}
-                width="368px"
-                height="140px"
+                width="360px"
+                height="150px"
               >
                 <TextAreaInput name={name} align="left" {...inputHandlers} />
               </DefaultStyle>

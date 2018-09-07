@@ -21,7 +21,6 @@ export const ClearButtonStyle = css`
 export const ArrowDownStyle = (isOpen: boolean) => css`
   ${presets.BUTTON};
   ${transitions.EXPAND};
-  transform: rotate(${isOpen ? '180' : '0'}deg);
   height: 100%;
   cursor: pointer;
   ${isOpen

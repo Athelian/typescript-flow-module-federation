@@ -47,6 +47,7 @@ import TOGGLE_ON from '@fortawesome/fontawesome-pro-solid/faToggleOn';
 import TOGGLE_OFF from '@fortawesome/fontawesome-pro-solid/faToggleOff';
 import INFO from '@fortawesome/fontawesome-pro-solid/faInfoCircle';
 import MEMO from '@fortawesome/fontawesome-pro-solid/faCommentAltLines';
+import MEMO_ADD from '@fortawesome/fontawesome-pro-solid/faCommentAltPlus';
 import DOWNLOAD from '@fortawesome/fontawesome-pro-solid/faDownload';
 import CIRCLE from '@fortawesome/fontawesome-pro-solid/faCircle';
 import SYNC from '@fortawesome/fontawesome-pro-solid/faSync';
@@ -122,6 +123,7 @@ export default {
   TOGGLE_OFF,
   INFO,
   MEMO,
+  MEMO_ADD,
   DOWNLOAD,
   CIRCLE,
   SYNC,
