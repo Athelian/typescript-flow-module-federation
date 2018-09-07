@@ -19,7 +19,7 @@ export const createBatchMutation = gql`
   ${violationFragment}
 `;
 
-/* eslint-disable */
+/* eslint-disable camelcase */
 export const prepareCreateBatchInput = ({
   no,
   quantity,
@@ -95,7 +95,7 @@ export const updateBatchMutation = gql`
   ${violationFragment}
 `;
 
-/* eslint-disable */
+/* eslint-disable camelcase */
 export const prepareUpdateBatchInput = ({
   id,
   createdAt,

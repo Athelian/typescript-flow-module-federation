@@ -22,39 +22,6 @@ type Image = {
   type: string,
 };
 
-export type DetailedProductExporterSupplier = {
-  id: string,
-  status: 'Active' | 'Inactive' | '',
-  exporter: {
-    id: string,
-    name: string,
-  },
-  supplier?: {
-    id: string,
-    name: string,
-  },
-  files: Array<File>,
-  origin: ?string,
-  price: ?number,
-  currency: ?string,
-  unit: ?string,
-  size: ?string,
-  volume: ?number,
-  weight: ?number,
-  productionLeadTime: ?number,
-  packageName: ?string,
-  packageGrossWeight: ?number,
-  packageVolume: ?number,
-  packageMaxQuantity: ?number,
-  packageSize: ?string,
-  inspectionFee: ?number,
-  memo: ?string,
-  metadata: ?Array<{
-    key: string,
-    value: ?string,
-  }>,
-};
-
 export type DetailedProduct = {
   id: string,
   status: string,
@@ -65,7 +32,6 @@ export type DetailedProduct = {
   material: ?string,
   tags: Array<Tag>,
   files: Array<Image>,
-  exporterSuppliers: Array<DetailedProductExporterSupplier>,
   metadata: ?any,
   createdAt: string,
   updatedAt: string,
