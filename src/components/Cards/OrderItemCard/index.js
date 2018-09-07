@@ -116,7 +116,8 @@ const OrderItemCard = ({
                         onRequestClose={toggle}
                         onCancel={toggle}
                         onConfirm={() => {
-                          assign({ price: { amount: unitPrice.amount } });
+                          assign({ price: { currency, amount: unitPrice.amount } });
+                          saveOnBlur({ quantity, price: { currency, amount: unitPrice.amount } });
                           toggle();
                         }}
                         message="Currency is not matched. Do you want to sync?"
@@ -127,7 +128,8 @@ const OrderItemCard = ({
                         type="button"
                         onClick={() => {
                           if (unitPrice.currency === currency) {
-                            assign({ price: { amount: unitPrice.amount } });
+                            assign({ price: { currency, amount: unitPrice.amount } });
+                            saveOnBlur({ quantity, price: { currency, amount: unitPrice.amount } });
                           } else {
                             toggle();
                           }
