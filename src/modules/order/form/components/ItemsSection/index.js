@@ -56,10 +56,19 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
 
   return (
     <BooleanValue>
-      {({ value: allItemsExpanded, toggle: toggleExpand }) => (
+      {({ value: allItemsExpanded, set: toggleExpand }) => (
         <div className={ItemsSectionWrapperStyle}>
           <SectionNavBar>
-            <ExpandButtons expanded={allItemsExpanded} onClick={toggleExpand} />
+            <ExpandButtons
+              type="COMPRESS"
+              expanded={!allItemsExpanded}
+              onClick={() => toggleExpand(false)}
+            />
+            <ExpandButtons
+              type="EXPAND"
+              expanded={allItemsExpanded}
+              onClick={() => toggleExpand(true)}
+            />
 
             <BooleanValue>
               {({ value: opened, toggle }) => (
@@ -125,7 +134,6 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                                     setFieldTouched('orderItems');
                                   }}
                                   selected={selected.includes(item.id)}
-                                  selectable
                                   onClick={() => {
                                     if (!selected.includes(item.id)) {
                                       push(item.id);

@@ -193,7 +193,7 @@ const OrderItemCard = ({
               <div className={DividerStyle} />
               <div className={ChartWrapperStyle}>
                 <QuantityChart
-                  hasLabel
+                  hasLabel={false}
                   orderedQuantity={chartDetail.orderedQuantity}
                   batchedQuantity={chartDetail.batchedQuantity}
                   shippedQuantity={chartDetail.shippedQuantity}
