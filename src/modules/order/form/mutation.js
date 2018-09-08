@@ -115,9 +115,21 @@ export const prepareUpdateOrderInput = ({
       ...(isNew ? {} : { id: itemId }),
       productProviderId: productProvider.id,
       batches: batches.map(
-        ({ isNew: isNewBatch, id: batchId, assignments, tags: tagsArr = [], ...batch }) => ({
+        ({
+          isNew: isNewBatch,
+          id: batchId,
+          assignments,
+          tags: tagsArr = [],
+          shipment = {},
+          updatedBy,
+          createdAt: batchCreatedAt,
+          updatedAt: batchUpdateAt,
+          orderItem: batchOrderItem,
+          ...batch
+        }) => ({
           ...batch,
           ...(isNewBatch ? {} : { id: batchId }),
+          shipmentId: shipment && shipment.id,
           tagIds: tagsArr ? tagsArr.map(t => t.id) : null,
         })
       ),
