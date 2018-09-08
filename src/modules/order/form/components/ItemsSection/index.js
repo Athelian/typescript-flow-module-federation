@@ -55,71 +55,78 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
   const { exporter = {} } = initialValues;
 
   return (
-    <BooleanValue>
-      {({ value: allItemsExpanded, set: toggleExpand }) => (
-        <div className={ItemsSectionWrapperStyle}>
-          <SectionNavBar>
-            <ExpandButtons
-              type="COMPRESS"
-              expanded={!allItemsExpanded}
-              onClick={() => toggleExpand(false)}
-            />
-            <ExpandButtons
-              type="EXPAND"
-              expanded={allItemsExpanded}
-              onClick={() => toggleExpand(true)}
-            />
+    <ArrayValue defaultValue={[]}>
+      {({ value: selected, push, set }) => (
+        <BooleanValue>
+          {({ value: allItemsExpanded, set: toggleExpand }) => (
+            <div className={ItemsSectionWrapperStyle}>
+              <SectionNavBar>
+                <ExpandButtons
+                  type="COMPRESS"
+                  expanded={!allItemsExpanded}
+                  onClick={() => {
+                    toggleExpand(false);
+                    set([]);
+                  }}
+                />
+                <ExpandButtons
+                  type="EXPAND"
+                  expanded={allItemsExpanded}
+                  onClick={() => toggleExpand(true)}
+                />
 
-            <BooleanValue>
-              {({ value: opened, toggle }) => (
-                <>
-                  <Subscribe to={[OrderFormContainer]}>
-                    {({ state }) => (
-                      <NewButton
-                        title={intl.formatMessage(messages.newItems)}
-                        disabled={!((state.exporter && state.exporter.id) || !isNew)}
-                        onClick={toggle}
-                      />
-                    )}
-                  </Subscribe>
-                  <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: '1030px' }}>
-                    {opened && (
+                <BooleanValue>
+                  {({ value: opened, toggle }) => (
+                    <>
                       <Subscribe to={[OrderFormContainer]}>
-                        {({ state: { currency } }) => (
-                          <SelectProducts
-                            onSelect={selectedItems => {
-                              onSelectItems(
-                                selectedItems.map(productProvider =>
-                                  injectUid({
-                                    productProvider,
-                                    isNew: true,
-                                    batches: [],
-                                    quantity: 0,
-                                    price: {
-                                      amount: 0,
-                                      currency,
-                                    },
-                                  })
-                                )
-                              );
-                              toggle();
-                            }}
-                            exporter={exporter && exporter.id}
-                            onCancel={toggle}
+                        {({ state }) => (
+                          <NewButton
+                            title={intl.formatMessage(messages.newItems)}
+                            disabled={!((state.exporter && state.exporter.id) || !isNew)}
+                            onClick={toggle}
                           />
                         )}
                       </Subscribe>
-                    )}
-                  </SlideView>
-                </>
-              )}
-            </BooleanValue>
-          </SectionNavBar>
-          <div className={ItemsSectionBodyStyle}>
-            <Subscribe to={[OrderFormContainer]}>
-              {({ state: { currency, orderItems }, setFieldArrayValue }) => (
-                <ArrayValue defaultValue={[]}>
-                  {({ value: selected, push, set }) =>
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={toggle}
+                        options={{ width: '1030px' }}
+                      >
+                        {opened && (
+                          <Subscribe to={[OrderFormContainer]}>
+                            {({ state: { currency } }) => (
+                              <SelectProducts
+                                onSelect={selectedItems => {
+                                  onSelectItems(
+                                    selectedItems.map(productProvider =>
+                                      injectUid({
+                                        productProvider,
+                                        isNew: true,
+                                        batches: [],
+                                        quantity: 0,
+                                        price: {
+                                          amount: 0,
+                                          currency,
+                                        },
+                                      })
+                                    )
+                                  );
+                                  toggle();
+                                }}
+                                exporter={exporter && exporter.id}
+                                onCancel={toggle}
+                              />
+                            )}
+                          </Subscribe>
+                        )}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
+              </SectionNavBar>
+              <div className={ItemsSectionBodyStyle}>
+                <Subscribe to={[OrderFormContainer]}>
+                  {({ state: { currency, orderItems }, setFieldArrayValue }) =>
                     orderItems.length > 0 ? (
                       <div className={ItemGridStyle}>
                         {orderItems.map((item, index) => (
@@ -144,7 +151,8 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                                 />
                               )}
                             </Subscribe>
-                            {(allItemsExpanded || selected.includes(item.id)) &&
+                            {(allItemsExpanded ||
+                              (!allItemsExpanded && selected.includes(item.id))) &&
                               (item.batches && (
                                 <ArrayValue
                                   defaultValue={item.batches}
@@ -203,13 +211,13 @@ function ItemSection({ intl, isNew, initialValues, onSelectItems }: Props) {
                       </div>
                     )
                   }
-                </ArrayValue>
-              )}
-            </Subscribe>
-          </div>
-        </div>
+                </Subscribe>
+              </div>
+            </div>
+          )}
+        </BooleanValue>
       )}
-    </BooleanValue>
+    </ArrayValue>
   );
 }
 

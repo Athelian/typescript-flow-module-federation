@@ -26,7 +26,6 @@ import {
   SyncButtonStyle,
   DividerStyle,
   TotalPriceWrapperStyle,
-  ChartWrapperStyle,
 } from './style';
 
 type Props = {
@@ -191,16 +190,14 @@ const OrderItemCard = ({
                 </DefaultPriceStyle>
               </div>
               <div className={DividerStyle} />
-              <div className={ChartWrapperStyle}>
-                <QuantityChart
-                  hasLabel={false}
-                  orderedQuantity={chartDetail.orderedQuantity}
-                  batchedQuantity={chartDetail.batchedQuantity}
-                  shippedQuantity={chartDetail.shippedQuantity}
-                  batched={chartDetail.batchedQuantity}
-                  shipped={chartDetail.shippedQuantity}
-                />
-              </div>
+              <QuantityChart
+                hasLabel={false}
+                orderedQuantity={chartDetail.orderedQuantity}
+                batchedQuantity={chartDetail.batchedQuantity}
+                shippedQuantity={chartDetail.shippedQuantity}
+                batched={chartDetail.batchedQuantity}
+                shipped={chartDetail.shippedQuantity}
+              />
               <div className={TotalPriceWrapperStyle}>
                 <Label>TOTAL</Label>
                 <Display>
