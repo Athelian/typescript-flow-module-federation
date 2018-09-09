@@ -51,18 +51,18 @@ export default class StatusButton extends React.PureComponent<Props, State> {
     });
   };
 
-  comfirm = (archived: boolean) => {
+  confirm = (archived: boolean) => {
     const { onChangeStatus } = this.props;
     onChangeStatus(archived);
     this.closeDialog();
   };
 
-  comfirmActivate = () => {
-    this.comfirm(false);
+  confirmActivate = () => {
+    this.confirm(false);
   };
 
-  comfirmArchive = () => {
-    this.comfirm(true);
+  confirmArchive = () => {
+    this.confirm(true);
   };
 
   render() {
@@ -73,25 +73,28 @@ export default class StatusButton extends React.PureComponent<Props, State> {
 
     return (
       <SectionHeader icon="ORDER" title="ORDER">
-        <OrderActivateDialog
-          isOpen={isOpen && order.archived}
-          onRequestClose={this.closeDialog}
-          onCancel={this.closeDialog}
-          onConfirm={this.comfirmActivate}
-          totalBatches={totalBatches}
-          unshippedBatches={unshippedBatches}
-          shippedBatches={shippedBatches}
-        />
-        <OrderArchiveDialog
-          isOpen={isOpen && !order.archived}
-          onRequestClose={this.closeDialog}
-          onCancel={this.closeDialog}
-          onConfirm={this.comfirmArchive}
-          totalBatches={totalBatches}
-          unshippedBatches={unshippedBatches}
-          shippedBatches={shippedBatches}
-        />
-
+        {isOpen && (
+          <>
+            <OrderActivateDialog
+              isOpen={isOpen && order.archived}
+              onRequestClose={this.closeDialog}
+              onCancel={this.closeDialog}
+              onConfirm={this.confirmActivate}
+              totalBatches={totalBatches}
+              unshippedBatches={unshippedBatches}
+              shippedBatches={shippedBatches}
+            />
+            <OrderArchiveDialog
+              isOpen={isOpen && !order.archived}
+              onRequestClose={this.closeDialog}
+              onCancel={this.closeDialog}
+              onConfirm={this.confirmArchive}
+              totalBatches={totalBatches}
+              unshippedBatches={unshippedBatches}
+              shippedBatches={shippedBatches}
+            />
+          </>
+        )}
         <LastModified updatedAt={order.updatedAt} />
 
         <div className={StatusStyle(order.archived)}>

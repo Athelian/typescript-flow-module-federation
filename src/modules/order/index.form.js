@@ -17,7 +17,7 @@ import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import OrderForm from './form';
-import OrderFormContainer from './form/container';
+import { OrderItemsContainer, OrderInfoContainer, OrderTagsContainer } from './form/containers';
 import LogsButton from './form/components/LogsButton';
 import query from './form/query';
 import {
@@ -118,9 +118,19 @@ class OrderFormModule extends React.PureComponent<Props> {
                         }
                       </BooleanValue>
 
-                      <Subscribe to={[OrderFormContainer, FormContainer]}>
-                        {(formState, form) =>
-                          (isNew || formState.isDirty(formState.state)) && (
+                      <Subscribe
+                        to={[
+                          OrderItemsContainer,
+                          OrderInfoContainer,
+                          OrderTagsContainer,
+                          FormContainer,
+                        ]}
+                      >
+                        {(orderItemState, orderInfoState, orderTagsState, form) =>
+                          (isNew ||
+                            orderItemState.isDirty() ||
+                            orderInfoState.isDirty() ||
+                            orderTagsState.isDirty()) && (
                             <>
                               <CancelButton disabled={false} onClick={this.onCancel}>
                                 Cancel
@@ -128,10 +138,20 @@ class OrderFormModule extends React.PureComponent<Props> {
                               <SaveButton
                                 disabled={!form.isReady()}
                                 onClick={() =>
-                                  this.onSave(formState.state, saveOrder, () => {
-                                    formState.onSuccess();
-                                    form.onReset();
-                                  })
+                                  this.onSave(
+                                    {
+                                      ...orderItemState.state,
+                                      ...orderInfoState.state,
+                                      ...orderTagsState.state,
+                                    },
+                                    saveOrder,
+                                    () => {
+                                      orderItemState.onSuccess();
+                                      orderInfoState.onSuccess();
+                                      orderTagsState.onSuccess();
+                                      form.onReset();
+                                    }
+                                  )
                                 }
                               >
                                 Save
@@ -146,37 +166,32 @@ class OrderFormModule extends React.PureComponent<Props> {
                   {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !orderId ? (
-                    <OrderForm order={{}} onChangeStatus={() => {}} />
+                    <OrderForm
+                      isNew
+                      onSave={(formData, onSuccess) => this.onSave(formData, saveOrder, onSuccess)}
+                    />
                   ) : (
-                    <Subscribe to={[OrderFormContainer, FormContainer]}>
-                      {({ initDetailValues, onSuccess }, form) => (
-                        <Query
-                          query={query}
-                          variables={{ id: decodeId(orderId) }}
-                          fetchPolicy="network-only"
-                          onCompleted={detail => initDetailValues(detail.order)}
-                        >
-                          {({ loading, data, error }) => {
-                            if (error) {
-                              return error.message;
-                            }
+                    <Query
+                      query={query}
+                      variables={{ id: decodeId(orderId) }}
+                      fetchPolicy="network-only"
+                    >
+                      {({ loading, data, error }) => {
+                        if (error) {
+                          return error.message;
+                        }
 
-                            if (loading) return <LoadingIcon />;
-                            return (
-                              <OrderForm
-                                order={getByPathWithDefault({}, 'order', data)}
-                                onChangeStatus={value => {
-                                  this.onSave({ archived: value }, saveOrder, () => {
-                                    onSuccess();
-                                    form.onReset();
-                                  });
-                                }}
-                              />
-                            );
-                          }}
-                        </Query>
-                      )}
-                    </Subscribe>
+                        if (loading) return <LoadingIcon />;
+                        return (
+                          <OrderForm
+                            order={getByPathWithDefault({}, 'order', data)}
+                            onSave={(formData, onSuccess) =>
+                              this.onSave(formData, saveOrder, onSuccess)
+                            }
+                          />
+                        );
+                      }}
+                    </Query>
                   )}
                 </Layout>
               )}

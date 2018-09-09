@@ -5,7 +5,11 @@ import { BooleanValue, StringValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import matchSorter from 'match-sorter';
 import logger from 'utils/logger';
-import OrderFormContainer from 'modules/order/form/container';
+import {
+  OrderInfoContainer,
+  OrderTagsContainer,
+  OrderItemsContainer,
+} from 'modules/order/form/containers';
 import { FormContainer, FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import FormattedDate from 'components/FormattedDate';
@@ -159,20 +163,10 @@ function getQuantitySummary(orderItems: any) {
 }
 const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
-    <Subscribe to={[OrderFormContainer]}>
+    <Subscribe to={[OrderInfoContainer]}>
       {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {
         const values = { ...initialValues, ...state };
-        const { orderItems, currency } = values;
-
-        const {
-          orderedQuantity,
-          batchedQuantity,
-          shippedQuantity,
-          totalPrice,
-          totalItems,
-          activeBatches,
-          archivedBatches,
-        } = getQuantitySummary(orderItems);
+        const { currency } = values;
 
         return (
           <>
@@ -444,15 +438,15 @@ const OrderSection = ({ isNew }: Props) => (
                         options={{ width: '1030px' }}
                       >
                         {opened && (
-                          <Subscribe to={[FormContainer]}>
-                            {({ onValidation }) => (
+                          <Subscribe to={[FormContainer, OrderItemsContainer]}>
+                            {({ onValidation }, { setFieldValue: resetOrderItems }) => (
                               <SelectExporters
                                 selected={values.exporter}
                                 onCancel={toggle}
                                 onSelect={newValue => {
                                   toggle();
                                   setFieldValue('exporter', newValue);
-                                  setFieldValue('orderItems', []);
+                                  resetOrderItems('orderItems', []);
                                   onValidation(
                                     {
                                       ...values,
@@ -472,8 +466,8 @@ const OrderSection = ({ isNew }: Props) => (
               </div>
             </div>
             <div className={TagsInputStyle}>
-              <Subscribe to={[FormContainer]}>
-                {({ state: formState, ...formHelper }) => (
+              <Subscribe to={[OrderTagsContainer]}>
+                {({ state: { tags }, setFieldValue: changeTags }) => (
                   <FieldItem
                     vertical
                     label={
@@ -487,12 +481,8 @@ const OrderSection = ({ isNew }: Props) => (
                         id="tags"
                         name="tags"
                         tagType="Order"
-                        values={values.tags}
-                        onChange={(field, tags) => {
-                          setFieldValue(field, tags);
-                          formHelper.setFieldTouched('tags');
-                          formHelper.onValidation(values, validationRules());
-                        }}
+                        values={tags}
+                        onChange={changeTags}
                       />
                     }
                   />
@@ -502,18 +492,34 @@ const OrderSection = ({ isNew }: Props) => (
                 <Divider color={colors.GRAY_LIGHT} />
               </div>
             </div>
-            <div className={QuantitySummaryStyle}>
-              <TotalSummary
-                orderedQuantity={orderedQuantity}
-                batchedQuantity={batchedQuantity}
-                shippedQuantity={shippedQuantity}
-                currency={currency}
-                totalPrice={totalPrice}
-                totalItems={totalItems}
-                activeBatches={activeBatches}
-                archivedBatches={archivedBatches}
-              />
-            </div>
+            <Subscribe to={[OrderItemsContainer]}>
+              {({ originalValues: { orderItems }, state: { orderItems: orderItemsState } }) => {
+                const items = [...orderItems, ...orderItemsState];
+                const {
+                  orderedQuantity,
+                  batchedQuantity,
+                  shippedQuantity,
+                  totalPrice,
+                  totalItems,
+                  activeBatches,
+                  archivedBatches,
+                } = getQuantitySummary(items);
+                return (
+                  <div className={QuantitySummaryStyle}>
+                    <TotalSummary
+                      orderedQuantity={orderedQuantity}
+                      batchedQuantity={batchedQuantity}
+                      shippedQuantity={shippedQuantity}
+                      currency={currency}
+                      totalPrice={totalPrice}
+                      totalItems={totalItems}
+                      activeBatches={activeBatches}
+                      archivedBatches={archivedBatches}
+                    />
+                  </div>
+                );
+              }}
+            </Subscribe>
           </>
         );
       }}

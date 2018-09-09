@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { isEquals } from 'utils/fp';
 import { Form } from 'components/Form';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -51,6 +52,14 @@ class FilterInput extends React.Component<Props, State> {
     const { initialFilter } = this.props;
     const isActive = this.hasAnyFilter(initialFilter);
     this.setState({ isActive });
+  }
+
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    const { initialFilter } = this.props;
+    if (!isEquals(initialFilter, nextProps.initialFilter)) return true;
+    if (!isEquals(this.state, nextState)) return true;
+
+    return false;
   }
 
   hasAnyFilter = (values: Object) => Object.values(values).some(value => !!value);

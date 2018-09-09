@@ -34,7 +34,7 @@ export default class FormField extends React.Component<Props, State> {
 
     const { initValue } = props;
     this.state = {
-      value: initValue,
+      value: initValue || '',
     };
   }
 

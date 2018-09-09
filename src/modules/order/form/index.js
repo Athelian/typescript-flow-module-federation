@@ -1,49 +1,56 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { pickByProps } from 'utils/fp';
 import { SectionHeader, SectionWrapper } from 'components/Form';
-import OrderFormContainer from './container';
 import OrderSection from './components/OrderSection';
 import ItemsSection from './components/ItemsSection';
 import DocumentsSection from './components/DocumentsSection';
 import ShipmentsSection from './components/ShipmentsSection';
 import StatusButton from './components/StatusButton';
 import OrderFormWrapperStyle from './style';
+import { OrderItemsContainer } from './containers';
 
-type Props = {
+type OptionalProps = {
+  isNew: boolean,
   order: Object,
-  onChangeStatus: Function,
 };
 
-const itemSectionFields = pickByProps(['exporter', 'orderItems']);
+type Props = OptionalProps & {
+  onSave: (Object, Function) => void,
+};
 
-export default function OrderForm({ order, onChangeStatus }: Props) {
-  const isNew = Object.keys(order).length === 0;
+const defaultProps = {
+  isNew: false,
+  order: {},
+};
 
+export default function OrderForm({ isNew, order, onSave }: Props) {
   return (
     <div className={OrderFormWrapperStyle}>
       <SectionWrapper id="orderSection">
-        {!isNew && <StatusButton order={order} onChangeStatus={onChangeStatus} />}
+        {!isNew && (
+          <StatusButton
+            order={order}
+            onChangeStatus={archived =>
+              onSave({ archived }, () => {
+                window.location.reload();
+              })
+            }
+          />
+        )}
 
         <OrderSection isNew={isNew} />
       </SectionWrapper>
 
       <SectionWrapper id="itemsSection">
-        <Subscribe to={[OrderFormContainer]}>
-          {({ state: values, setFieldValue }) => (
+        <Subscribe to={[OrderItemsContainer]}>
+          {({ state: values }) => (
             <>
               <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
-              <ItemsSection
-                initialValues={{ ...itemSectionFields(values) }}
-                isNew={isNew}
-                onSelectItems={orderItems =>
-                  setFieldValue('orderItems', [...values.orderItems, ...orderItems])
-                }
-              />
             </>
           )}
         </Subscribe>
+        <ItemsSection isNew={isNew} />
       </SectionWrapper>
 
       <SectionWrapper id="documentsSection">
@@ -58,3 +65,5 @@ export default function OrderForm({ order, onChangeStatus }: Props) {
     </div>
   );
 }
+
+OrderForm.defaultProps = defaultProps;
