@@ -11,7 +11,9 @@ type FormState = {
   }>,
 };
 
-const initValues = {};
+const initValues = {
+  tags: [],
+};
 
 export default class OrderTagsContainer extends Container<FormState> {
   state = initValues;
@@ -31,10 +33,9 @@ export default class OrderTagsContainer extends Container<FormState> {
   };
 
   initDetailValues = (tags: Array<Object>) => {
-    const parsedValues: Array<any> = removeTypename(tags);
-    this.setState({
-      tags: parsedValues,
-    });
-    this.originalValues = parsedValues;
+    const parsedValues = removeTypename(tags);
+    // $FlowFixMe: missing type for ramda's map function
+    this.setState({ tags: parsedValues });
+    this.originalValues = { tags: parsedValues };
   };
 }

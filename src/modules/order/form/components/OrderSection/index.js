@@ -439,12 +439,16 @@ const OrderSection = ({ isNew }: Props) => (
                       >
                         {opened && (
                           <Subscribe to={[FormContainer, OrderItemsContainer]}>
-                            {({ onValidation }, { setFieldValue: resetOrderItems }) => (
+                            {(
+                              { onValidation, setFieldTouched },
+                              { setFieldValue: resetOrderItems }
+                            ) => (
                               <SelectExporters
                                 selected={values.exporter}
                                 onCancel={toggle}
                                 onSelect={newValue => {
                                   toggle();
+                                  setFieldTouched('exporter');
                                   setFieldValue('exporter', newValue);
                                   resetOrderItems('orderItems', []);
                                   onValidation(
@@ -466,8 +470,8 @@ const OrderSection = ({ isNew }: Props) => (
               </div>
             </div>
             <div className={TagsInputStyle}>
-              <Subscribe to={[OrderTagsContainer]}>
-                {({ state: { tags }, setFieldValue: changeTags }) => (
+              <Subscribe to={[FormContainer, OrderTagsContainer]}>
+                {({ setFieldTouched }, { state: { tags }, setFieldValue: changeTags }) => (
                   <FieldItem
                     vertical
                     label={
@@ -482,7 +486,10 @@ const OrderSection = ({ isNew }: Props) => (
                         name="tags"
                         tagType="Order"
                         values={tags}
-                        onChange={changeTags}
+                        onChange={(field, value) => {
+                          changeTags(field, value);
+                          setFieldTouched('tags');
+                        }}
                       />
                     }
                   />

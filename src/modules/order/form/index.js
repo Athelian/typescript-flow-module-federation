@@ -45,9 +45,7 @@ export default function OrderForm({ isNew, order, onSave }: Props) {
       <SectionWrapper id="itemsSection">
         <Subscribe to={[OrderItemsContainer]}>
           {({ state: values }) => (
-            <>
-              <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
-            </>
+            <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
           )}
         </Subscribe>
         <ItemsSection isNew={isNew} />

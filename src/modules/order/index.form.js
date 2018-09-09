@@ -171,27 +171,39 @@ class OrderFormModule extends React.PureComponent<Props> {
                       onSave={(formData, onSuccess) => this.onSave(formData, saveOrder, onSuccess)}
                     />
                   ) : (
-                    <Query
-                      query={query}
-                      variables={{ id: decodeId(orderId) }}
-                      fetchPolicy="network-only"
-                    >
-                      {({ loading, data, error }) => {
-                        if (error) {
-                          return error.message;
-                        }
-
-                        if (loading) return <LoadingIcon />;
-                        return (
-                          <OrderForm
-                            order={getByPathWithDefault({}, 'order', data)}
-                            onSave={(formData, onSuccess) =>
-                              this.onSave(formData, saveOrder, onSuccess)
+                    <Subscribe to={[OrderItemsContainer, OrderInfoContainer, OrderTagsContainer]}>
+                      {(orderItemState, orderInfoState, orderTagsState) => (
+                        <Query
+                          query={query}
+                          variables={{ id: decodeId(orderId) }}
+                          fetchPolicy="network-only"
+                          onCompleted={result => {
+                            const {
+                              order: { orderItems, tags, ...info },
+                            } = result;
+                            orderItemState.initDetailValues(orderItems);
+                            orderTagsState.initDetailValues(tags);
+                            orderInfoState.initDetailValues(info);
+                          }}
+                        >
+                          {({ loading, data, error }) => {
+                            if (error) {
+                              return error.message;
                             }
-                          />
-                        );
-                      }}
-                    </Query>
+
+                            if (loading) return <LoadingIcon />;
+                            return (
+                              <OrderForm
+                                order={getByPathWithDefault({}, 'order', data)}
+                                onSave={(formData, onSuccess) =>
+                                  this.onSave(formData, saveOrder, onSuccess)
+                                }
+                              />
+                            );
+                          }}
+                        </Query>
+                      )}
+                    </Subscribe>
                   )}
                 </Layout>
               )}

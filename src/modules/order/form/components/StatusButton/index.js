@@ -73,28 +73,25 @@ export default class StatusButton extends React.PureComponent<Props, State> {
 
     return (
       <SectionHeader icon="ORDER" title="ORDER">
-        {isOpen && (
-          <>
-            <OrderActivateDialog
-              isOpen={isOpen && order.archived}
-              onRequestClose={this.closeDialog}
-              onCancel={this.closeDialog}
-              onConfirm={this.confirmActivate}
-              totalBatches={totalBatches}
-              unshippedBatches={unshippedBatches}
-              shippedBatches={shippedBatches}
-            />
-            <OrderArchiveDialog
-              isOpen={isOpen && !order.archived}
-              onRequestClose={this.closeDialog}
-              onCancel={this.closeDialog}
-              onConfirm={this.confirmArchive}
-              totalBatches={totalBatches}
-              unshippedBatches={unshippedBatches}
-              shippedBatches={shippedBatches}
-            />
-          </>
-        )}
+        <OrderActivateDialog
+          isOpen={isOpen && order.archived}
+          onRequestClose={this.closeDialog}
+          onCancel={this.closeDialog}
+          onConfirm={this.confirmActivate}
+          totalBatches={totalBatches}
+          unshippedBatches={unshippedBatches}
+          shippedBatches={shippedBatches}
+        />
+        <OrderArchiveDialog
+          isOpen={isOpen && !order.archived}
+          onRequestClose={this.closeDialog}
+          onCancel={this.closeDialog}
+          onConfirm={this.confirmArchive}
+          totalBatches={totalBatches}
+          unshippedBatches={unshippedBatches}
+          shippedBatches={shippedBatches}
+        />
+
         <LastModified updatedAt={order.updatedAt} />
 
         <div className={StatusStyle(order.archived)}>
