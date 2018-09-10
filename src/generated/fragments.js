@@ -489,6 +489,16 @@ export const OrderFragment = `fragment Order on Order {
   timeline {
     ...TimelineNoNesting
   }
+  role
+  disabled
+  firstName
+  lastName
+  firstName2
+  lastName2
+  avatar
+  language
+  timezone
+  memo
   id
   createdAt
   updatedAt
@@ -501,9 +511,6 @@ export const OrderFragment = `fragment Order on Order {
   }
   deletedBy {
     ...UserNoNesting
-  }
-  ownedBy {
-    ...GroupNoNesting
   }
 }
 `;
@@ -580,28 +587,38 @@ export const ProductProviderFragment = `fragment ProductProvider on ProductProvi
   product {
     ...ProductNoNesting
   }
+  width {
+    ...MetricValueNoNesting
+  }
+  height {
+    ...MetricValueNoNesting
+  }
+}
+`;
+
+export const ViolationFragment = `fragment Violation on Violation {
+  message
+  error
+  code
+  path
+}
+`;
+
+export const OrderFragment = `fragment Order on Order {
+  archived
   exporter {
     ...GroupNoNesting
   }
-  supplier {
-    ...GroupNoNesting
-  }
-  unitType
-  unitVolume {
-    ...MetricValueNoNesting
-  }
-  unitWeight {
-    ...MetricValueNoNesting
-  }
-  unitPrice {
-    ...PriceNoNesting
-  }
-  inspectionFee {
-    ...PriceNoNesting
-  }
-  origin
-  productionLeadTime
+  poNo
+  currency
+  issuedAt
+  piNo
+  incoterm
+  deliveryPlace
   memo
+  timeline {
+    ...TimelineNoNesting
+  }
   id
   createdAt
   updatedAt
@@ -618,18 +635,6 @@ export const ProductProviderFragment = `fragment ProductProvider on ProductProvi
   ownedBy {
     ...GroupNoNesting
   }
-  sort
-  packageName
-  packageGrossWeight {
-    ...MetricValueNoNesting
-  }
-  packageVolume {
-    ...MetricValueNoNesting
-  }
-  packageSize {
-    ...SizeNoNesting
-  }
-  packageCapacity
 }
 `;
 
@@ -707,6 +712,10 @@ export const GroupFragment = `fragment Group on Group {
   deletedBy {
     ...UserNoNesting
   }
+  ownedBy {
+    ...GroupNoNesting
+  }
+  sort
 }
 `;
 
@@ -1652,6 +1661,16 @@ export const OrderDeepNestingFragment = `fragment OrderDeepNesting on Order {
   timeline {
     ...TimelineDeepNesting
   }
+  role
+  disabled
+  firstName
+  lastName
+  firstName2
+  lastName2
+  avatar
+  language
+  timezone
+  memo
   id
   createdAt
   updatedAt
@@ -1664,9 +1683,6 @@ export const OrderDeepNestingFragment = `fragment OrderDeepNesting on Order {
   }
   deletedBy {
     ...UserDeepNesting
-  }
-  ownedBy {
-    ...GroupDeepNesting
   }
 }
 `;
@@ -1743,28 +1759,38 @@ export const ProductProviderDeepNestingFragment = `fragment ProductProviderDeepN
   product {
     ...ProductDeepNesting
   }
+  width {
+    ...MetricValueDeepNesting
+  }
+  height {
+    ...MetricValueDeepNesting
+  }
+}
+`;
+
+export const ViolationDeepNestingFragment = `fragment ViolationDeepNesting on Violation {
+  message
+  error
+  code
+  path
+}
+`;
+
+export const OrderDeepNestingFragment = `fragment OrderDeepNesting on Order {
+  archived
   exporter {
     ...GroupDeepNesting
   }
-  supplier {
-    ...GroupDeepNesting
-  }
-  unitType
-  unitVolume {
-    ...MetricValueDeepNesting
-  }
-  unitWeight {
-    ...MetricValueDeepNesting
-  }
-  unitPrice {
-    ...PriceDeepNesting
-  }
-  inspectionFee {
-    ...PriceDeepNesting
-  }
-  origin
-  productionLeadTime
+  poNo
+  currency
+  issuedAt
+  piNo
+  incoterm
+  deliveryPlace
   memo
+  timeline {
+    ...TimelineDeepNesting
+  }
   id
   createdAt
   updatedAt
@@ -1781,18 +1807,6 @@ export const ProductProviderDeepNestingFragment = `fragment ProductProviderDeepN
   ownedBy {
     ...GroupDeepNesting
   }
-  sort
-  packageName
-  packageGrossWeight {
-    ...MetricValueDeepNesting
-  }
-  packageVolume {
-    ...MetricValueDeepNesting
-  }
-  packageSize {
-    ...SizeDeepNesting
-  }
-  packageCapacity
 }
 `;
 
@@ -1870,6 +1884,10 @@ export const GroupDeepNestingFragment = `fragment GroupDeepNesting on Group {
   deletedBy {
     ...UserDeepNesting
   }
+  ownedBy {
+    ...GroupDeepNesting
+  }
+  sort
 }
 `;
 

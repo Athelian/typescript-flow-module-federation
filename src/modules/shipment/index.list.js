@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
+import GridColumn from 'components/GridColumn';
 import { UIConsumer } from 'modules/ui';
 import NavBar, {
   EntityIcon,
@@ -10,6 +12,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
+import { NewButton } from 'components/NavButtons';
 import ShipmentList from './list';
 import messages from './messages';
 
@@ -28,7 +31,7 @@ type State = {
   perPage: number,
 };
 
-class ShipmentModule extends React.Component<Props, State> {
+class ShipmentListModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
     query: '',
@@ -88,33 +91,29 @@ class ShipmentModule extends React.Component<Props, State> {
                   width={400}
                 >
                   {({ values, setFieldValue }) => (
-                    <React.Fragment>
+                    <GridColumn>
                       <SearchInput
                         value={values.query}
                         name="query"
                         onClear={() => setFieldValue('query', '')}
                         onChange={newValue => setFieldValue('query', newValue)}
                       />
-                      {/* <PartnerSelectInput
-                        title="Forwarder"
-                        types={['Forwarder']}
-                        value={values.userId}
-                        onChange={v => setFieldValue('userId', v ? v.id : null)}
-                        placeholder="Forwarder"
-                      /> */}
-                    </React.Fragment>
+                    </GridColumn>
                   )}
                 </FilterInput>
                 <SearchInput
-                  value={filters.query}
                   name="query"
+                  value={filters.query}
                   onClear={() => this.onChangeFilter({ query: '' })}
                   onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />
+                <Link to="new">
+                  <NewButton />
+                </Link>
               </NavBar>
             }
           >
-            <ShipmentList sort={sort} viewType={viewType} perPage={perPage} filter={filters} />
+            <ShipmentList viewType={viewType} sort={sort} perPage={perPage} filter={filters} />
           </Layout>
         )}
       </UIConsumer>
@@ -122,4 +121,4 @@ class ShipmentModule extends React.Component<Props, State> {
   }
 }
 
-export default injectIntl(ShipmentModule);
+export default injectIntl(ShipmentListModule);
