@@ -18,18 +18,18 @@ if (!isAppInProduction && process.env.ZENPORT_PROFILER === 1) {
   /* eslint-disable import/no-extraneous-dependencies */
   /* eslint-disable global-require */
   // $FlowFixMe: not have flow typed yet
-  const { whyDidYouUpdate } = require('why-did-you-update');
-  whyDidYouUpdate(React, {
-    exclude: [
-      /^Consumer/,
-      /^Subscribe/,
-      /^FormattedMessage/,
-      /^InjectIntl/,
-      /^DebounceInput/,
-      /^Query/,
-      /^Mutation/,
-    ],
-  });
+  // const { whyDidYouUpdate } = require('why-did-you-update');
+  // whyDidYouUpdate(React, {
+  //   exclude: [
+  //     /^Consumer/,
+  //     /^Subscribe/,
+  //     /^FormattedMessage/,
+  //     /^InjectIntl/,
+  //     /^DebounceInput/,
+  //     /^Query/,
+  //     /^Mutation/,
+  //   ],
+  // });
 }
 
 loadFonts();

@@ -1,16 +1,19 @@
 // @flow
 import * as React from 'react';
 
-type Props = {
+type OptionalProps = {
+  validationOnChange: boolean,
+  validationOnBlur: boolean,
+  onValidate: (value: any) => void,
+};
+
+type Props = OptionalProps & {
   initValue: any,
   name: string,
-  onValidate?: (value: any) => void,
   setFieldTouched: (field: string, isTouched: boolean) => void,
-  setFieldValue: (field: string, value: any) => void,
   setActiveField: (field: string) => void,
+  setFieldValue: (field: string, value: any) => void,
   children: React.Node,
-  validationOnChange?: boolean,
-  validationOnBlur?: boolean,
 };
 
 type State = {
@@ -76,6 +79,7 @@ export default class FormField extends React.Component<Props, State> {
     if (validationOnBlur && onValidate) {
       onValidate({ [name]: value });
     }
+    console.warn('name', name);
     setFieldTouched(name, true);
     setActiveField('');
     setFieldValue(name, value);

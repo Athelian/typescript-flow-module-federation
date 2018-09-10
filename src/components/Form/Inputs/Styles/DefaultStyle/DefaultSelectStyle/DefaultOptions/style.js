@@ -33,11 +33,17 @@ export const OptionWrapperStyle = css`
   ${scrollbars.SMALL};
 `;
 
-export const OptionStyle = (onHover: boolean, selected: boolean) => css`
+export const OptionStyle = (
+  onHover: boolean,
+  selected: boolean,
+  align: 'left' | 'right' | 'center'
+) => css`
   ${ResetOptionStyle};
   background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
   ${presets.BUTTON};
-  justify-content: flex-start;
+  ${align === 'left' && 'justify-content: flex-start'};
+  ${align === 'right' && 'justify-content: flex-end'};
+  ${align === 'center' && 'justify-content: space-around'};
   padding: 5px;
   color: ${selected ? colors.TEAL : colors.BLACK};
   ${fontSizes.MAIN};

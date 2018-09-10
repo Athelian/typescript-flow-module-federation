@@ -100,8 +100,6 @@ function createSelectInput({ enumType, inputHandlers, name, touched, errors, isN
                   if (!item) clear();
                   set(item && item.name);
                 }}
-                onBlur={inputHandlers.onBlur}
-                onFocus={inputHandlers.onFocus}
                 onSearch={set}
               />
             )}

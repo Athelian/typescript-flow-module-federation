@@ -3,9 +3,10 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import { type RenderSelectProps } from 'components/Form/Inputs/SelectInput/type';
 import { DefaultStyleWrapperStyle } from 'components/Form/Inputs/Styles/DefaultStyle/style';
-import { ClearButtonStyle, ArrowDownStyle } from './style';
+import { SelectInputStyle, ClearButtonStyle, ArrowDownStyle } from './style';
 
 type OptionalProps = {
+  required: boolean,
   hasError: boolean,
   disabled: boolean,
   forceHoverStyle: boolean,
@@ -16,15 +17,11 @@ type OptionalProps = {
 
 type Props = OptionalProps &
   RenderSelectProps & {
-    hasError: boolean,
-    disabled: boolean,
-    forceHoverStyle: boolean,
-    width: string,
-    height: string,
     itemToString: any => string,
   };
 
 const defaultProps = {
+  required: false,
   hasError: false,
   disabled: false,
   forceHoverStyle: false,
@@ -34,6 +31,7 @@ const defaultProps = {
 };
 
 function DefaultSelect({
+  required,
   hasError,
   disabled,
   forceHoverStyle,
@@ -46,6 +44,7 @@ function DefaultSelect({
   selectedItem,
   getInputProps,
   itemToString,
+  ...rest
 }: Props) {
   return (
     <div
@@ -54,13 +53,14 @@ function DefaultSelect({
         isFocused: isOpen,
         hasError,
         disabled,
-        forceHoverStyle: forceHoverStyle && !selectedItem,
+        forceHoverStyle,
         width,
         height,
       })}
+      style={{ cursor: 'pointer' }}
     >
       {align === 'right' &&
-        (selectedItem ? (
+        (!required && selectedItem ? (
           <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
             <Icon icon="CLEAR" />
           </button>
@@ -73,12 +73,14 @@ function DefaultSelect({
         readOnly
         spellCheck={false}
         onClick={toggle}
+        className={SelectInputStyle(align)}
         {...getInputProps({
           value: itemToString(selectedItem),
         })}
+        {...rest}
       />
       {align === 'left' &&
-        (selectedItem ? (
+        (!required && selectedItem ? (
           <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
             <Icon icon="CLEAR" />
           </button>

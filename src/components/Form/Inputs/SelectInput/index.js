@@ -36,6 +36,16 @@ class SelectInput extends React.Component<Props, State> {
     if (onChange) onChange(selectedItem);
   };
 
+  handleBlur = (evt: Object) => {
+    const { onBlur } = this.props;
+    if (onBlur) onBlur(evt);
+  };
+
+  handleFocus = (evt: Object) => {
+    const { onFocus } = this.props;
+    if (onFocus) onFocus(evt);
+  };
+
   render() {
     const { itemToString, itemToValue, renderSelect, renderOptions } = this.props;
     const { selectedItem } = this.state;
@@ -52,6 +62,8 @@ class SelectInput extends React.Component<Props, State> {
         }) => (
           <div>
             {renderSelect({
+              onBlur: this.handleBlur,
+              onFocus: this.handleFocus,
               isOpen,
               toggle,
               selectedItem,

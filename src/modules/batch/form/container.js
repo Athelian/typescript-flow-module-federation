@@ -1,9 +1,10 @@
 // @flow
 import { Container } from 'unstated';
 import * as Yup from 'yup';
-import logger from 'utils/logger';
+import { set, unset } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeTypename, flatten } from 'utils/data';
+import logger from 'utils/logger';
 
 type FormState = {
   batchAdjustments: Array<any>,
@@ -24,7 +25,21 @@ export default class BatchFormContainer extends Container<FormState> {
     });
   };
 
-  isDirty = (values: any) => !isEquals(values, this.originalValues);
+  setFieldArrayValue = (path: string, value: any) => {
+    this.setState(prevState => {
+      const newState = set(prevState, path, value);
+      return newState;
+    });
+  };
+
+  removeArrayItem = (path: string) => {
+    this.setState(prevState => {
+      unset(prevState, path);
+      return prevState;
+    });
+  };
+
+  isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
     logger.warn('onSuccess');
@@ -32,11 +47,12 @@ export default class BatchFormContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: any) => {
+    logger.warn('onInitDetailValues');
     // $FlowFixMe: missing type define for map's ramda function
     const { packageGrossWeight, packageVolume, packageSize, ...rest } = removeTypename(values);
     const flattenedValues = {
       ...rest,
-      ...flatten({ packageGrossWeight, packageVolume, packageSize })
+      ...flatten({ packageGrossWeight, packageVolume, packageSize }),
     };
     this.setState(flattenedValues);
     this.originalValues = flattenedValues;

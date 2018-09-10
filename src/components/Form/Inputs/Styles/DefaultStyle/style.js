@@ -1,6 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, colors, transitions, fontSizes, shadows, presets } from 'styles/common';
+import {
+  borderRadiuses,
+  colors,
+  transitions,
+  fontSizes,
+  shadows,
+  presets,
+  scrollbars,
+} from 'styles/common';
 import { type OptionalProps } from './type';
 
 export const DefaultStyleWrapperStyle = ({
@@ -25,12 +33,19 @@ export const DefaultStyleWrapperStyle = ({
   cursor: text;
   ${transitions.MAIN};
   ${forceHoverStyle || isFocused
-    ? shadows.INPUT
+    ? `${shadows.INPUT};
+      & > button {
+        opacity: 1;
+      }
+    `
     : `&:hover {
       ${shadows.INPUT};
+      & > button {
+        opacity: 1;
+      }
     }`};
-
-  & > input {
+  & > input,
+  > textarea {
     border: none;
     padding: 0;
     width: 100%;
@@ -61,6 +76,16 @@ export const DefaultStyleWrapperStyle = ({
           color: ${colors.GRAY_VERY_LIGHT};
         }
     `};
+    ${type === 'textarea' &&
+      `
+        resize: none;
+        ${scrollbars.SMALL};
+        overflow: hidden;
+        &:hover {
+          overflow-x: hidden;
+          overflow-y: auto;
+        }
+      `};
   }
 `;
 

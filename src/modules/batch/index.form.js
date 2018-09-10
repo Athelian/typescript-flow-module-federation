@@ -57,9 +57,9 @@ class BatchFormModule extends React.Component<Props> {
     const isNew = batchId === 'new';
     if (isNew) {
       const {
-        createDeepOrder: { id },
+        createDeepBatch: { id },
       } = result;
-      navigate(`/order/${encodeId(id)}`);
+      navigate(`/batch/${encodeId(id)}`);
     }
   };
 
@@ -90,11 +90,18 @@ class BatchFormModule extends React.Component<Props> {
                         <SectionTabs link="batchSection" label="BATCH" icon="BATCH" />
                       </JumpToSection>
                       <JumpToSection>
+                        <SectionTabs
+                          link="quantityAdjustmentsSection"
+                          label="QUANTITY ADJUSTMENTS"
+                          icon="QUANTITY_ADJUSTMENTS"
+                        />
+                      </JumpToSection>
+                      <JumpToSection>
                         <SectionTabs link="packagingSection" label="PACKAGING" icon="PACKAGING" />
                       </JumpToSection>
                       <Subscribe to={[BatchFormContainer, FormContainer]}>
                         {(formState, form) =>
-                          (isNew || formState.isDirty(formState.state)) && (
+                          (isNew || formState.isDirty()) && (
                             <>
                               <CancelButton disabled={false} onClick={this.onCancel} />
                               <SaveButton
