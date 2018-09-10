@@ -2,6 +2,33 @@
   "__schema": {
     "types": [
       {
+        "kind": "UNION",
+        "name": "Entity",
+        "possibleTypes": [
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Batch" },
+          { "name": "BatchAssignment" },
+          { "name": "BatchAdjustment" },
+          { "name": "Shipment" },
+          { "name": "Voyage" },
+          { "name": "ContainerGroup" },
+          { "name": "Tag" },
+          { "name": "User" },
+          { "name": "Group" },
+          { "name": "Partnership" },
+          { "name": "EventChange" },
+          { "name": "EventComment" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Event",
+        "possibleTypes": [{ "name": "EventChange" }, { "name": "EventComment" }]
+      },
+      {
         "kind": "INTERFACE",
         "name": "Model",
         "possibleTypes": [
@@ -9,10 +36,13 @@
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
           { "name": "ContainerGroup" },
+          { "name": "EventChange" },
+          { "name": "EventComment" },
           { "name": "Group" },
           { "name": "Order" },
           { "name": "OrderItem" },
           { "name": "Partner" },
+          { "name": "Partnership" },
           { "name": "Product" },
           { "name": "ProductProvider" },
           { "name": "Shipment" },
@@ -31,6 +61,8 @@
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
           { "name": "ContainerGroup" },
+          { "name": "EventChange" },
+          { "name": "EventComment" },
           { "name": "Order" },
           { "name": "OrderItem" },
           { "name": "Product" },
