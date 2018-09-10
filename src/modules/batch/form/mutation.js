@@ -77,11 +77,13 @@ export const prepareCreateBatchInput = ({
     quantity,
     orderItemId: orderItem.id,
     ...(shipment ? { shipmentId: shipment.id } : {}),
-    tagIds: tags.map(({ id }) => id),
-    batchAdjustments: batchAdjustments.map(({ isNew, id, updatedAt, ...adjustment }) => ({
-      ...adjustment,
-      ...(isNew ? {} : { id }),
-    })),
+    tagIds: tags.map(({ id: tagId }) => tagId),
+    batchAdjustments: batchAdjustments.map(
+      ({ isNew, id: adjustmentId, updatedAt: adjustmentUpdatedAt, ...adjustment }) => ({
+        ...adjustment,
+        ...(isNew ? {} : { id: adjustmentId }),
+      })
+    ),
   };
 };
 
@@ -159,10 +161,12 @@ export const prepareUpdateBatchInput = ({
     ...unflatten({ ...rest, ...dataCopy }),
     orderItemId: orderItem.id,
     ...(shipment ? { shipmentId: shipment.id } : {}),
-    tagIds: tags.map(({ id }) => id),
-    batchAdjustments: batchAdjustments.map(({ isNew, id, updatedAt, ...adjustment }) => ({
-      ...adjustment,
-      ...(isNew ? {} : { id }),
-    })),
+    tagIds: tags.map(({ id: tagId }) => tagId),
+    batchAdjustments: batchAdjustments.map(
+      ({ isNew, id: adjustmentId, updatedAt: adjustmentUpdatedAt, ...adjustment }) => ({
+        ...adjustment,
+        ...(isNew ? {} : { id: adjustmentId }),
+      })
+    ),
   };
 };
