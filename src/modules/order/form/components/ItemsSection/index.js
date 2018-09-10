@@ -8,7 +8,8 @@ import { SectionNavBar } from 'components/NavBar';
 import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';
 import messages from 'modules/order/messages';
-import { OrderInfoContainer } from 'modules/order/form/containers';
+import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
+import { FormContainer } from 'modules/form';
 import ExpandButtons from './components/ExpandButtons';
 import OrderItems from './components/OrderItems';
 import { ItemsSectionWrapperStyle, ItemsSectionBodyStyle } from './style';
@@ -16,7 +17,6 @@ import SelectProducts from '../SelectProducts';
 
 type Props = {
   intl: intlShape,
-
   isNew: boolean,
 };
 
@@ -30,17 +30,12 @@ function ItemSection({ intl, isNew }: Props) {
               <SectionNavBar>
                 <ExpandButtons
                   type="COMPRESS"
-                  expanded={!allItemsExpanded}
                   onClick={() => {
                     toggleExpand(false);
                     set([]);
                   }}
                 />
-                <ExpandButtons
-                  type="EXPAND"
-                  expanded={allItemsExpanded}
-                  onClick={() => toggleExpand(true)}
-                />
+                <ExpandButtons type="EXPAND" onClick={() => toggleExpand(true)} />
 
                 <Subscribe to={[OrderInfoContainer]}>
                   {({ state: { exporter, currency } }) => (
@@ -59,27 +54,36 @@ function ItemSection({ intl, isNew }: Props) {
                             options={{ width: '1030px' }}
                           >
                             {opened && (
-                              <SelectProducts
-                                onSelect={selectedItems => {
-                                  console.warn(
-                                    selectedItems.map(productProvider =>
-                                      injectUid({
-                                        productProvider,
-                                        isNew: true,
-                                        batches: [],
-                                        quantity: 0,
-                                        price: {
-                                          amount: 0,
-                                          currency,
-                                        },
-                                      })
-                                    )
-                                  );
-                                  toggle();
-                                }}
-                                exporter={exporter && exporter.id}
-                                onCancel={toggle}
-                              />
+                              <Subscribe to={[OrderItemsContainer, FormContainer]}>
+                                {(
+                                  { state: { orderItems }, setFieldValue },
+                                  { setFieldTouched }
+                                ) => (
+                                  <SelectProducts
+                                    onSelect={selectedItems => {
+                                      setFieldValue('orderItems', [
+                                        ...orderItems,
+                                        ...selectedItems.map(productProvider =>
+                                          injectUid({
+                                            productProvider,
+                                            isNew: true,
+                                            batches: [],
+                                            quantity: 0,
+                                            price: {
+                                              amount: 0,
+                                              currency,
+                                            },
+                                          })
+                                        ),
+                                      ]);
+                                      setFieldTouched('orderItems');
+                                      toggle();
+                                    }}
+                                    exporter={exporter && exporter.id}
+                                    onCancel={toggle}
+                                  />
+                                )}
+                              </Subscribe>
                             )}
                           </SlideView>
                         </>
@@ -89,11 +93,42 @@ function ItemSection({ intl, isNew }: Props) {
                 </Subscribe>
               </SectionNavBar>
               <div className={ItemsSectionBodyStyle}>
-                <OrderItems
-                  selected={selected}
-                  arrayHelpers={{ push, set }}
-                  allItemsExpanded={allItemsExpanded}
-                />
+                <Subscribe to={[OrderInfoContainer, OrderItemsContainer, FormContainer]}>
+                  {(
+                    { state: { currency } },
+                    { state: { orderItems }, setFieldValue, setFieldArrayValue },
+                    { setFieldTouched }
+                  ) => (
+                    <OrderItems
+                      selected={selected}
+                      arrayHelpers={{ push, set }}
+                      allItemsExpanded={allItemsExpanded}
+                      currency={currency}
+                      orderItems={orderItems}
+                      onClone={({ id, ...rest }) => {
+                        setFieldValue('orderItems', [
+                          ...orderItems,
+                          injectUid({
+                            ...rest,
+                            isNew: true,
+                          }),
+                        ]);
+                        setFieldTouched(`orderItems.${id}`);
+                      }}
+                      onRemove={({ id }) => {
+                        setFieldValue(
+                          'orderItems',
+                          orderItems.filter(({ id: itemId }) => id !== itemId)
+                        );
+                        setFieldTouched(`orderItems.${id}`);
+                      }}
+                      onSave={(index, newValue) => {
+                        setFieldArrayValue('orderItems', index, newValue);
+                        setFieldTouched(`orderItems.${index}`);
+                      }}
+                    />
+                  )}
+                </Subscribe>
               </div>
             </div>
           )}

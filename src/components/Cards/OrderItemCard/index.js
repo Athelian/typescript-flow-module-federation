@@ -33,8 +33,8 @@ type Props = {
   onClick?: (id: string) => void,
   currency: string,
   saveOnBlur: Function,
-  onClone: Function,
-  onRemove: Function,
+  onClone: (item: OrderItem) => void,
+  onRemove: (item: OrderItem) => void,
 };
 
 function getQuantitySummary(item: Object) {
@@ -86,8 +86,8 @@ const OrderItemCard = ({
   if (!item) return '';
 
   const actions = [
-    <CardAction icon="CLONE" onClick={onClone} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
+    <CardAction icon="CLONE" onClick={() => onClone(item)} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(item)} />,
   ];
 
   const chartDetail = getQuantitySummary(item);

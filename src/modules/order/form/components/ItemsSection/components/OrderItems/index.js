@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react';
-import { Subscribe } from 'unstated';
 import { injectIntl, intlShape } from 'react-intl';
 import { ArrayValue } from 'react-values';
-import FormContainer from 'modules/form/container';
-import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
+import { isEquals } from 'utils/fp';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import Icon from 'components/Icon';
@@ -25,11 +23,16 @@ import messages from 'modules/order/messages';
 type Props = {
   intl: intlShape,
   selected: Array<string>,
+  orderItems: Array<Object>,
+  currency: string,
   allItemsExpanded: boolean,
   arrayHelpers: {
     push: Function,
     set: Function,
   },
+  onClone: Function,
+  onRemove: Function,
+  onSave: Function,
 };
 
 function generateBatchItem(item, batches) {
@@ -43,86 +46,102 @@ function generateBatchItem(item, batches) {
   };
 }
 
-const OrderItems = ({ intl, selected, allItemsExpanded, arrayHelpers: { push, set } }: Props) => (
-  <Subscribe to={[OrderInfoContainer, OrderItemsContainer]}>
-    {({ state: { currency } }, { state: { orderItems } }) =>
-      orderItems.length > 0 ? (
-        <div className={ItemGridStyle}>
-          {orderItems.map(item => (
-            <div className={ItemStyle} key={item.id}>
-              <Subscribe to={[FormContainer]}>
-                {({ setFieldTouched }) => (
-                  <OrderItemCard
-                    item={item}
-                    currency={currency}
-                    saveOnBlur={() => {
-                      // setFieldArrayValue('orderItems', index, newValue);
-                      setFieldTouched('orderItems');
-                    }}
-                    selected={selected.includes(item.id)}
-                    onClick={() => {
-                      if (!selected.includes(item.id)) {
-                        push(item.id);
-                      } else {
-                        set(selected.filter(selectedId => selectedId !== item.id));
-                      }
-                    }}
-                  />
-                )}
-              </Subscribe>
-              {(allItemsExpanded || (!allItemsExpanded && selected.includes(item.id))) &&
-                (item.batches && (
-                  <ArrayValue
-                    defaultValue={item.batches}
-                    // onChange={batches =>
-                    //   setFieldArrayValue('orderItems', index, { batches })
-                    // }
-                  >
-                    {({ value: batches, push: addNewBatch, splice: changeBatch }) => (
-                      <div className={BatchAreaStyle}>
-                        <div className={BatchAreaHeaderStyle}>
-                          <div className={TitleWrapperStyle}>
-                            <div className={IconStyle}>
-                              <Icon icon="BATCH" />
-                            </div>
-                            <div className={TitleStyle}>BATCHES ({batches.length})</div>
-                          </div>
-                          <NewButton
-                            title="NEW BATCH"
-                            onClick={() => addNewBatch(generateBatchItem(item, batches))}
-                          />
-                        </div>
+class OrderItems extends React.Component<Props> {
+  shouldComponentUpdate(nextProps: Props) {
+    const { orderItems, selected, currency, allItemsExpanded } = this.props;
+    if (
+      !isEquals(orderItems, nextProps.orderItems) ||
+      !isEquals(selected, nextProps.selected) ||
+      !isEquals(currency, nextProps.currency) ||
+      !isEquals(allItemsExpanded, nextProps.allItemsExpanded)
+    )
+      return true;
 
-                        <div className={BatchGridStyle}>
-                          {batches.map((batch, position) => (
-                            <div className={BatchStyle} key={batch.id}>
-                              <Subscribe to={[FormContainer]}>
-                                {({ setFieldTouched }) => (
-                                  <OrderBatchCard
-                                    batch={batch}
-                                    currency={currency}
-                                    price={item.price}
-                                    saveOnBlur={updatedBatch => {
-                                      setFieldTouched('batches');
-                                      changeBatch(position, 1, updatedBatch);
-                                    }}
-                                  />
-                                )}
-                              </Subscribe>
-                            </div>
-                          ))}
+    return false;
+  }
+
+  render() {
+    const {
+      intl,
+      selected,
+      allItemsExpanded,
+      orderItems,
+      currency,
+      arrayHelpers: { push, set },
+      onClone,
+      onRemove,
+      onSave,
+    } = this.props;
+
+    return orderItems.length > 0 ? (
+      <div className={ItemGridStyle}>
+        {orderItems.map((item, index) => (
+          <div className={ItemStyle} key={item.id}>
+            <OrderItemCard
+              item={item}
+              currency={currency}
+              saveOnBlur={newValue => onSave(index, newValue)}
+              selected={selected.includes(item.id)}
+              onClick={() => {
+                if (!selected.includes(item.id)) {
+                  push(item.id);
+                } else {
+                  set(selected.filter(selectedId => selectedId !== item.id));
+                }
+              }}
+              onClone={onClone}
+              onRemove={onRemove}
+            />
+
+            {(allItemsExpanded || (!allItemsExpanded && selected.includes(item.id))) &&
+              (item.batches && (
+                <ArrayValue
+                  defaultValue={item.batches}
+                  // onChange={batches =>
+                  //   setFieldArrayValue('orderItems', index, { batches })
+                  // }
+                >
+                  {({ value: batches, push: addNewBatch, splice: changeBatch }) => (
+                    <div className={BatchAreaStyle}>
+                      <div className={BatchAreaHeaderStyle}>
+                        <div className={TitleWrapperStyle}>
+                          <div className={IconStyle}>
+                            <Icon icon="BATCH" />
+                          </div>
+                          <div className={TitleStyle}>BATCHES ({batches.length})</div>
                         </div>
+                        <NewButton
+                          title="NEW BATCH"
+                          onClick={() => addNewBatch(generateBatchItem(item, batches))}
+                        />
                       </div>
-                    )}
-                  </ArrayValue>
-                ))}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className={EmptyMessageStyle}>{intl.formatMessage(messages.noItems)}</div>
-      )
-    }
-  </Subscribe>
-);
+
+                      <div className={BatchGridStyle}>
+                        {batches.map((batch, position) => (
+                          <div className={BatchStyle} key={batch.id}>
+                            <OrderBatchCard
+                              batch={batch}
+                              currency={currency}
+                              price={item.price}
+                              saveOnBlur={updatedBatch => {
+                                // setFieldTouched('batches');
+                                changeBatch(position, 1, updatedBatch);
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </ArrayValue>
+              ))}
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div className={EmptyMessageStyle}>{intl.formatMessage(messages.noItems)}</div>
+    );
+  }
+}
+
 export default injectIntl(OrderItems);
