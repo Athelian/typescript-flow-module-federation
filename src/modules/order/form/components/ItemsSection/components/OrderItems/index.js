@@ -97,9 +97,7 @@ class OrderItems extends React.Component<Props> {
               (item.batches && (
                 <ArrayValue
                   defaultValue={item.batches}
-                  // onChange={batches =>
-                  //   setFieldArrayValue('orderItems', index, { batches })
-                  // }
+                  onChange={batches => onSave(index, { batches })}
                 >
                   {({ value: batches, push: addNewBatch, splice: changeBatch }) => (
                     <div className={BatchAreaStyle}>

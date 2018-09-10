@@ -123,7 +123,7 @@ function ItemSection({ intl, isNew }: Props) {
                         setFieldTouched(`orderItems.${id}`);
                       }}
                       onSave={(index, newValue) => {
-                        setFieldArrayValue('orderItems', index, newValue);
+                        setFieldArrayValue(index, newValue);
                         setFieldTouched(`orderItems.${index}`);
                       }}
                     />

@@ -1,6 +1,7 @@
 // @flow
 import { Container } from 'unstated';
-import { setIn, isEquals } from 'utils/fp';
+import update from 'immutability-helper';
+import { isEquals } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 
 type FormState = {
@@ -28,19 +29,16 @@ export default class OrderItemsContainer extends Container<FormState> {
     });
   };
 
-  setFieldArrayValue = (name: string, index: number, value: any) => {
-    this.setState(prevState => {
-      const values = prevState[name];
-      let existValue = values[index];
-      Object.keys(value).forEach(path => {
-        existValue = setIn(path, value[path], existValue);
-      });
-
-      values.splice(index, 1, existValue);
-      return {
-        [name]: values,
-      };
-    });
+  setFieldArrayValue = (index: number, value: any) => {
+    this.setState(prevState =>
+      update(prevState, {
+        orderItems: {
+          [index]: {
+            $merge: value,
+          },
+        },
+      })
+    );
   };
 
   initDetailValues = (orderItems: Array<Object>) => {
