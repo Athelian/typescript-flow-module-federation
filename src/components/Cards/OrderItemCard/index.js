@@ -205,7 +205,7 @@ const OrderItemCard = ({
                     <FormField name={`${item.id}.price`} initValue={price.amount} {...formHelper}>
                       {inputHandlers => (
                         <DefaultPriceStyle
-                          type="number"
+                          currency={currency}
                           height="20px"
                           width="90px"
                           isFocused={activeField === inputHandlers.name}

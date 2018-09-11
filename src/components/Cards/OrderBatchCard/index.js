@@ -7,6 +7,7 @@ import { ObjectValue } from 'react-values';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
+import FormattedNumber from 'components/FormattedNumber';
 import { DefaultStyle, Label, Display, TextInput, DateInput, NumberInput } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -39,7 +40,12 @@ type Props = {
 
 const calculateVolume = (batch: BatchItem, quantity: number) => {
   if (batch && batch.packageVolume && batch.packageVolume.value) {
-    return `${batch.packageVolume.value * quantity} ${batch.packageVolume.metric}`;
+    return (
+      <>
+        <FormattedNumber value={batch.packageVolume.value * quantity} />
+        {batch.packageVolume.metric}
+      </>
+    );
   }
 
   if (batch && batch.packageSize && batch.packageSize.width) {
@@ -80,7 +86,6 @@ const OrderBatchCard = ({
                   <FormField name={`batch.${batch.id}.no`} initValue={quantity} {...formHelper}>
                     {inputHandlers => (
                       <DefaultStyle
-                        type="number"
                         height="20px"
                         width="165px"
                         isFocused={activeField === inputHandlers.name}
@@ -171,7 +176,8 @@ const OrderBatchCard = ({
             <div className={TotalPriceWrapperStyle}>
               <Label>PRICE</Label>
               <Display>
-                {quantity * (price && price.amount ? price.amount : 0)} {currency}
+                <FormattedNumber value={quantity * (price && price.amount ? price.amount : 0)} />
+                {currency}
               </Display>
             </div>
 
