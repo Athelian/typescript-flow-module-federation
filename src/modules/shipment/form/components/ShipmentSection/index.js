@@ -344,6 +344,13 @@ const ShipmentSection = ({ isNew }: Props) => {
         <GridColumn>
           <FieldItem
             vertical
+            label={<Label>FORWARDER ({dummyData.forwarders.length})</Label>}
+            tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
+            input={renderForwarders(dummyData.forwarders)}
+          />
+
+          <FieldItem
+            vertical
             label={
               <div className={ExporterLabelStyle}>
                 <Label>EXPORTER ({uniqueExporters.length})</Label>
@@ -358,13 +365,6 @@ const ShipmentSection = ({ isNew }: Props) => {
               <Tooltip infoMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment." />
             }
             input={renderExporters(uniqueExporters)}
-          />
-
-          <FieldItem
-            vertical
-            label={<Label>FORWARDER ({dummyData.forwarders.length})</Label>}
-            tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
-            input={renderForwarders(dummyData.forwarders)}
           />
         </GridColumn>
       </div>

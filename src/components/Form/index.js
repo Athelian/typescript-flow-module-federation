@@ -32,6 +32,7 @@ import Display from './Display';
 import DashedPlusButton from './DashedPlusButton';
 import SectionHeader from './SectionHeader';
 import LastModified from './SectionHeader/LastModified';
+import StatusToggle from './SectionHeader/StatusToggle';
 import SectionWrapper from './SectionWrapper';
 
 export const Form = ZenForm;
@@ -66,5 +67,6 @@ export {
   TagsInput,
   SectionHeader,
   LastModified,
+  StatusToggle,
   SectionWrapper,
 };

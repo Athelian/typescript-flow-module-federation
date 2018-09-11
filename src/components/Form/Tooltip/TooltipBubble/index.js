@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import Divider from 'components/Divider';
 import {
   TooltipBubbleWrapperStyle,
   UpperMessageStyle,
@@ -9,6 +8,7 @@ import {
   NewValueStyle,
   ArrowDownStyle,
   InfoMessageStyle,
+  DividerStyle,
 } from './style';
 import { type TooltipBubbleProps, defaultTooltipBubbleProps } from './type';
 
@@ -28,14 +28,16 @@ const TooltipBubble = ({
     {errorMessage && (
       <React.Fragment>
         <div className={UpperMessageStyle}>{errorMessage}</div>
-        {(warningMessage || changedValues.oldValue || infoMessage) && <Divider />}
+        {(warningMessage || changedValues.oldValue || infoMessage) && (
+          <div className={DividerStyle} />
+        )}
       </React.Fragment>
     )}
 
     {warningMessage && (
       <React.Fragment>
         <div className={UpperMessageStyle}>{warningMessage}</div>
-        {(changedValues.oldValue || infoMessage) && <Divider />}
+        {(changedValues.oldValue || infoMessage) && <div className={DividerStyle} />}
       </React.Fragment>
     )}
 
@@ -46,7 +48,7 @@ const TooltipBubble = ({
           <Icon icon="ARROW_DOWN" />
         </div>
         <div className={NewValueStyle}>{changedValues.newValue}</div>
-        {infoMessage && <Divider />}
+        {infoMessage && <div className={DividerStyle} />}
       </React.Fragment>
     )}
 

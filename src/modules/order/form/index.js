@@ -88,3 +88,5 @@ export default class OrderForm extends React.Component<Props> {
     );
   }
 }
+
+export default OrderForm;
