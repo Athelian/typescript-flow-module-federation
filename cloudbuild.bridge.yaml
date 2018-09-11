@@ -55,3 +55,4 @@ steps:
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=asia-northeast1-c'
   - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+timeout: 1200s
