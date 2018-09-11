@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { uniqBy } from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { ShipmentExporterCard } from 'components/Cards';
+import { ShipmentExporterCard, ShipmentForwarderCard } from 'components/Cards';
 import EnumProvider from 'providers/enum';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
@@ -12,9 +12,8 @@ import {
   Label,
   Tooltip,
   DefaultStyle,
-  // DashedPlusButton,
+  DashedPlusButton,
   TextInput,
-  // NumberInput,
   DateInput,
   SelectInput,
   DefaultSelect,
@@ -89,6 +88,16 @@ const dummyData = {
       },
     },
   ],
+  forwarders: [
+    {
+      id: 'a',
+      name: 'Forwarder A',
+    },
+    {
+      id: 'b',
+      name: 'Forwarder B',
+    },
+  ],
 };
 
 const getUniqueExporters = (batches: Array<Object>) => {
@@ -138,6 +147,51 @@ const renderExporters = (exporters: Array<Object>) => {
         <GridRow gap="10px">
           <ShipmentExporterCard exporter={exporters[2]} size="quarter" />
           <ShipmentExporterCard exporter={exporters[3]} size="quarter" />
+        </GridRow>
+      </GridColumn>
+    );
+  }
+  return '';
+};
+
+const renderForwarders = (forwarders: Array<Object>) => {
+  const numOfForwarders = forwarders.length;
+
+  if (numOfForwarders === 0) {
+    return <DashedPlusButton width="200px" height="230px" />;
+  }
+  if (numOfForwarders === 1) {
+    return <ShipmentForwarderCard forwarder={forwarders[0]} />;
+  }
+  if (numOfForwarders === 2) {
+    return (
+      <GridColumn gap="10px">
+        <ShipmentForwarderCard forwarder={forwarders[0]} size="half" />
+        <ShipmentForwarderCard forwarder={forwarders[1]} size="half" />
+      </GridColumn>
+    );
+  }
+  if (numOfForwarders === 3) {
+    return (
+      <GridColumn gap="10px">
+        <ShipmentForwarderCard forwarder={forwarders[0]} size="half" />
+        <GridRow gap="10px">
+          <ShipmentForwarderCard forwarder={forwarders[1]} size="quarter" />
+          <ShipmentForwarderCard forwarder={forwarders[2]} size="quarter" />
+        </GridRow>
+      </GridColumn>
+    );
+  }
+  if (numOfForwarders > 3) {
+    return (
+      <GridColumn gap="10px">
+        <GridRow gap="10px">
+          <ShipmentForwarderCard forwarder={forwarders[0]} size="quarter" />
+          <ShipmentForwarderCard forwarder={forwarders[1]} size="quarter" />
+        </GridRow>
+        <GridRow gap="10px">
+          <ShipmentForwarderCard forwarder={forwarders[2]} size="quarter" />
+          <ShipmentForwarderCard forwarder={forwarders[3]} size="quarter" />
         </GridRow>
       </GridColumn>
     );
@@ -304,6 +358,13 @@ const ShipmentSection = ({ isNew }: Props) => {
               <Tooltip infoMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment." />
             }
             input={renderExporters(uniqueExporters)}
+          />
+
+          <FieldItem
+            vertical
+            label={<Label>FORWARDER ({dummyData.forwarders.length})</Label>}
+            tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
+            input={renderForwarders(dummyData.forwarders)}
           />
         </GridColumn>
       </div>

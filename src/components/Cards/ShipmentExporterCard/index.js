@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
-import { navigate } from '@reach/router';
 import { type Partner } from 'modules/partner/type.js.flow';
-import { encodeId } from 'utils/id';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import BaseCard from '../BaseCard';
 import { ExporterCardStyle, ExporterCardImageStyle, ExporterNameStyle } from './style';
@@ -17,11 +15,11 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  onClick: id => navigate(`/partner/${encodeId(id)}`),
+  onClick: () => {},
   size: 'full',
 };
 
-const PartnerCard = ({ exporter, onClick, size, ...rest }: Props) => {
+const ShipmentExporterCard = ({ exporter, onClick, size, ...rest }: Props) => {
   if (!exporter) return '';
 
   const { name } = exporter;
@@ -36,6 +34,6 @@ const PartnerCard = ({ exporter, onClick, size, ...rest }: Props) => {
   );
 };
 
-PartnerCard.defaultProps = defaultProps;
+ShipmentExporterCard.defaultProps = defaultProps;
 
-export default PartnerCard;
+export default ShipmentExporterCard;

@@ -7,6 +7,7 @@ import PartnerCard from './PartnerCard';
 import ProductCard from './ProductCard';
 import ShipmentCard from './ShipmentCard';
 import ShipmentExporterCard from './ShipmentExporterCard';
+import ShipmentForwarderCard from './ShipmentForwarderCard';
 import StaffCard from './StaffCard';
 import TagCard from './TagCard';
 import WarehouseCard from './WarehouseCard';
@@ -23,6 +24,7 @@ export {
   ProductCard,
   ShipmentCard,
   ShipmentExporterCard,
+  ShipmentForwarderCard,
   StaffCard,
   TagCard,
   WarehouseCard,
