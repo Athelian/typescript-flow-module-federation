@@ -1,5 +1,10 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Sep 05 2018 19:26:25 GMT+0900 (JST)
+# timestamp: Tue Sep 11 2018 14:40:31 GMT+0900 (Japan Standard Time)
+
+"""
+Parsed Json value which can be any type or structure, please be careful
+"""
+scalar Any
 
 type Batch implements Model & Owned & Package & Tagged {
   archived: Boolean!
@@ -114,6 +119,11 @@ input BatchCreateInput {
   batchAdjustments: [BatchAdjustmentCreateInput!]
 }
 
+input BatchFilterInput {
+  query: String
+  tagIds: [ID!]
+}
+
 type BatchMutated {
   batch: Batch
   violations: [Violation!]
@@ -126,6 +136,11 @@ type BatchPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+input BatchSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
 }
 
 input BatchUpdateInput {
@@ -687,6 +702,74 @@ enum Currency {
 
 scalar DateTime
 
+union Entity = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | ContainerGroup | Tag | User | Group | Partnership | EventChange | EventComment
+
+union Event = EventChange | EventComment
+
+type EventChange implements Model & Owned {
+  updates: [EventChangeUpdate!]!
+  adds: [EventChangeAdd!]!
+  removes: [EventChangeRemove!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+type EventChangeAdd {
+  entity: Entity!
+}
+
+type EventChangeRemove {
+  entity: Entity!
+}
+
+type EventChangeUpdate {
+  entity: Entity!
+  field: String!
+  oldValue: Any
+  newValue: Any
+}
+
+type EventComment implements Model & Owned {
+  content: String!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+input EventCommentCreateInput {
+  content: String!
+  timelineId: ID!
+}
+
+type EventCommentMutated {
+  eventComment: EventComment
+  violations: [Violation!]
+}
+
+input EventCommentUpdateInput {
+  content: String
+}
+
+type EventPagination {
+  nodes: [Event!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
 type Group implements Model {
   types: [GroupType!]!
   name: String!
@@ -765,6 +848,9 @@ type Mutation {
   batchUpdate(id: ID!, input: BatchUpdateInput!): BatchMutated!
   tagCreate(input: TagCreateInput!): TagMutated!
   tagUpdate(id: ID!, input: TagUpdateInput!): TagMutated!
+  eventCommentCreate(input: EventCommentCreateInput!): EventCommentMutated!
+  eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): EventCommentMutated!
+  timelineRead(id: ID!): Boolean!
 }
 
 type Order implements Model & Owned & Tagged {
@@ -779,6 +865,7 @@ type Order implements Model & Owned & Tagged {
   memo: String
   orderItems: [OrderItem!]!
   shipments: [Shipment!]!
+  timeline: Timeline!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -801,6 +888,11 @@ input OrderCreateInput {
   memo: String
   tagIds: [ID!]
   orderItems: [OrderItemCreateInput!]
+}
+
+input OrderFilterInput {
+  query: String
+  tagIds: [ID!]
 }
 
 type OrderItem implements Model & Owned & Sortable {
@@ -893,6 +985,24 @@ input OrderItemCreateInput {
   batches: [OrderItemBatchCreateInput!]
 }
 
+input OrderItemFilterInput {
+  query: String
+}
+
+type OrderItemPagination {
+  nodes: [OrderItem!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input OrderItemSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
 input OrderItemUpdateInput {
   id: ID
   productProviderId: ID
@@ -913,6 +1023,11 @@ type OrderPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+input OrderSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
 }
 
 input OrderUpdateInput {
@@ -973,6 +1088,27 @@ type PartnerPagination {
   totalCount: Int!
 }
 
+type Partnership implements Model {
+  confirmed: Boolean!
+  leftGroup: Group!
+  leftTypes: [GroupType!]!
+  leftName: String
+  leftCode: String
+  leftConfirmedAt: DateTime
+  rightGroup: Group!
+  rightTypes: [GroupType!]!
+  rightName: String
+  rightCode: String
+  rightConfirmedAt: DateTime
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+}
+
 input PartnerSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
@@ -1015,6 +1151,11 @@ input ProductCreateInput {
   material: String
   tagIds: [ID!]
   productProviders: [ProductProviderCreateInput!]!
+}
+
+input ProductFilterInput {
+  query: String
+  tagIds: [ID!]
 }
 
 type ProductMutated {
@@ -1113,6 +1254,11 @@ input ProductProviderUpdateInput {
   packageCapacity: Float
 }
 
+input ProductSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
 input ProductUpdateInput {
   archived: Boolean
   name: String
@@ -1128,15 +1274,17 @@ type Query {
   viewer: Viewer!
   authenticated: Boolean!
   product(id: ID!): Product
-  products(page: Int! = 1, perPage: Int! = 10): ProductPagination!
+  products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPagination!
   productProvider(id: ID!): ProductProvider
   productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPagination!
   order(id: ID!): Order
-  orders(page: Int! = 1, perPage: Int! = 10): OrderPagination!
+  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPagination!
+  orderItem(id: ID!): OrderItem
+  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPagination!
   batch(id: ID!): Batch
-  batches(page: Int! = 1, perPage: Int! = 10): BatchPagination!
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
   shipment(id: ID!): Shipment
-  shipments(page: Int! = 1, perPage: Int! = 10): ShipmentPagination!
+  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPagination!
   tag(id: ID!): Tag
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput): TagPagination!
 }
@@ -1156,6 +1304,7 @@ type Shipment implements Model & Owned & Tagged {
   cargoReady: TimelineDate!
   voyages: [Voyage!]!
   containerGroups: [ContainerGroup!]!
+  batches: [Batch!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -1167,6 +1316,11 @@ type Shipment implements Model & Owned & Tagged {
   tags: [Tag!]!
 }
 
+input ShipmentFilterInput {
+  query: String
+  tagIds: [ID!]
+}
+
 type ShipmentPagination {
   nodes: [Shipment!]!
   page: Int!
@@ -1174,6 +1328,11 @@ type ShipmentPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+input ShipmentSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
 }
 
 type Size {
@@ -1254,6 +1413,12 @@ input TagUpdateInput {
   description: String
   color: String
   entityTypes: [TagEntityType!]
+}
+
+type Timeline {
+  id: ID!
+  unreadCount: Int!
+  events(page: Int! = 1, perPage: Int! = 10): EventPagination!
 }
 
 type TimelineDate implements Model & Owned {
