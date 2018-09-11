@@ -138,12 +138,7 @@ const OrderItemCard = ({
                 <Label required>QTY</Label>
                 <Subscribe to={[FormContainer]}>
                   {({ state: { activeField }, ...formHelper }) => (
-                    <FormField
-                      name={`${item.id}.quantity`}
-                      initValue={quantity}
-                      validationOnChange
-                      {...formHelper}
-                    >
+                    <FormField name={`${item.id}.quantity`} initValue={quantity} {...formHelper}>
                       {inputHandlers => (
                         <DefaultStyle
                           type="number"
@@ -207,12 +202,7 @@ const OrderItemCard = ({
                 <Label required>PRICE</Label>
                 <Subscribe to={[FormContainer]}>
                   {({ state: { activeField }, ...formHelper }) => (
-                    <FormField
-                      name={`${item.id}.price`}
-                      initValue={price.amount}
-                      validationOnChange
-                      {...formHelper}
-                    >
+                    <FormField name={`${item.id}.price`} initValue={price.amount} {...formHelper}>
                       {inputHandlers => (
                         <DefaultPriceStyle
                           type="number"

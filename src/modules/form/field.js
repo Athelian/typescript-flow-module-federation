@@ -80,7 +80,6 @@ export default class FormField extends React.Component<Props, State> {
     if (validationOnBlur && onValidate) {
       onValidate({ [name]: value });
     }
-    console.warn('name', name);
     setFieldTouched(name, true);
     setActiveField('');
     setFieldValue(name, value);
