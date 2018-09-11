@@ -1,15 +1,27 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
+import Loadable from 'react-loadable';
 import { SectionHeader, SectionWrapper } from 'components/Form';
+import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
 import OrderSection from './components/OrderSection';
-import ItemsSection from './components/ItemsSection';
-import DocumentsSection from './components/DocumentsSection';
-import ShipmentsSection from './components/ShipmentsSection';
 import StatusButton from './components/StatusButton';
 import OrderFormWrapperStyle from './style';
 import { OrderItemsContainer } from './containers';
+
+const AsyncItemsSection = Loadable({
+  loading: LoadingIcon,
+  loader: () => import('./components/ItemsSection'),
+});
+const AsyncDocumentsSection = Loadable({
+  loading: LoadingIcon,
+  loader: () => import('./components/DocumentsSection'),
+});
+const AsyncShipmentsSection = Loadable({
+  loading: LoadingIcon,
+  loader: () => import('./components/ShipmentsSection'),
+});
 
 type OptionalProps = {
   isNew: boolean,
@@ -60,17 +72,17 @@ export default class OrderForm extends React.Component<Props> {
               <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
             )}
           </Subscribe>
-          <ItemsSection isNew={isNew} />
+          <AsyncItemsSection isNew={isNew} />
         </SectionWrapper>
 
         <SectionWrapper id="documentsSection">
           <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />
-          <DocumentsSection initialValues={{ files: order.files }} />
+          <AsyncDocumentsSection isNew={isNew} initialValues={{ files: order.files }} />
         </SectionWrapper>
 
         <SectionWrapper id="shipmentsSection">
           <SectionHeader icon="SHIPMENT" title={`SHIPMENTS (${20})`} />
-          <ShipmentsSection />
+          <AsyncShipmentsSection isNew={isNew} />
         </SectionWrapper>
       </div>
     );

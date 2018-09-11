@@ -45,8 +45,8 @@ const OrderBatchCard = ({
   if (!batch) return '';
 
   const actions = [
-    <CardAction icon="CLONE" onClick={onClone} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
+    <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(batch)} />,
   ];
 
   const hasShipment = !!batch.shipment;

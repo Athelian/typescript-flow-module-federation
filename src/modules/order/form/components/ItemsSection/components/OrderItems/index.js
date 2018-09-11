@@ -3,6 +3,7 @@ import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import { ArrayValue } from 'react-values';
 import { isEquals } from 'utils/fp';
+import { injectUid } from 'utils/id';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import Icon from 'components/Icon';
@@ -122,8 +123,18 @@ class OrderItems extends React.Component<Props> {
                               currency={currency}
                               price={item.price}
                               saveOnBlur={updatedBatch => {
-                                // setFieldTouched('batches');
                                 changeBatch(position, 1, updatedBatch);
+                              }}
+                              onRemove={() => changeBatch(position, 1)}
+                              onClone={({ id, ...rest }) => {
+                                changeBatch(
+                                  batches.length,
+                                  1,
+                                  injectUid({
+                                    ...rest,
+                                    isNew: true,
+                                  })
+                                );
                               }}
                             />
                           </div>
