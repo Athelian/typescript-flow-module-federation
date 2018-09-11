@@ -26,7 +26,10 @@ type Props = {
   batch: ?BatchItem,
   onClick?: (id: string) => void,
   currency: string,
-  price: number,
+  price: ?{
+    amount: number,
+    currency: string,
+  },
   saveOnBlur: Function,
   onClone: Function,
   onRemove: Function,
@@ -94,7 +97,9 @@ const OrderBatchCard = ({
 
             <div className={TotalPriceWrapperStyle}>
               <Label>PRICE</Label>
-              <Display>4,000 {currency}</Display>
+              <Display>
+                {quantity * (price && price.amount ? price.amount : 0)} {currency}
+              </Display>
             </div>
 
             <div className={VolumeWrapperStyle}>
