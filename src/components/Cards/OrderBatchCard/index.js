@@ -35,6 +35,18 @@ type Props = {
   onRemove: Function,
 };
 
+const calculateVolume = (batch: BatchItem, quantity: number) => {
+  if (batch && batch.packageVolume && batch.packageVolume.value) {
+    return `${batch.packageVolume.value * quantity} ${batch.packageVolume.metric}`;
+  }
+
+  if (batch && batch.packageSize && batch.packageSize.width) {
+    return 'Not implemented yet';
+  }
+
+  return 'N/A';
+};
+
 const OrderBatchCard = ({
   batch,
   onClick,
@@ -104,7 +116,7 @@ const OrderBatchCard = ({
 
             <div className={VolumeWrapperStyle}>
               <Label>VOLUME</Label>
-              <Display>25 m³</Display>
+              <Display>{calculateVolume(batch, quantity)} </Display>
             </div>
 
             <div className={ShipmentWrapperStyle}>

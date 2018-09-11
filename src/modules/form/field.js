@@ -5,6 +5,7 @@ type OptionalProps = {
   validationOnChange: boolean,
   validationOnBlur: boolean,
   onValidate: (value: any) => void,
+  setFieldValue: (field: string, value: any) => void,
 };
 
 type Props = OptionalProps & {
@@ -12,7 +13,6 @@ type Props = OptionalProps & {
   name: string,
   setFieldTouched: (field: string, isTouched: boolean) => void,
   setActiveField: (field: string) => void,
-  setFieldValue: (field: string, value: any) => void,
   children: React.Node,
 };
 
@@ -24,6 +24,7 @@ const defaultProps = {
   validationOnChange: false,
   validationOnBlur: true,
   onValidate: () => {},
+  setFieldValue: () => {},
 };
 
 export default class FormField extends React.Component<Props, State> {

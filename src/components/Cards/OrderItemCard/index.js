@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
+import { Subscribe } from 'unstated';
 import { ObjectValue, BooleanValue } from 'react-values';
 import { type OrderItem } from 'modules/order/type.js.flow';
+import { FormContainer, FormField } from 'modules/form';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -134,13 +136,35 @@ const OrderItemCard = ({
                 role="presentation"
               >
                 <Label required>QTY</Label>
-                <DefaultStyle type="number" width="90px" height="20px">
-                  <NumberInput
-                    value={quantity}
-                    onChange={evt => set('quantity', evt.target.value)}
-                    onBlur={() => saveOnBlur({ quantity, price })}
-                  />
-                </DefaultStyle>
+                <Subscribe to={[FormContainer]}>
+                  {({ state: { activeField }, ...formHelper }) => (
+                    <FormField
+                      name={`${item.id}.quantity`}
+                      initValue={quantity}
+                      validationOnChange
+                      {...formHelper}
+                    >
+                      {inputHandlers => (
+                        <DefaultStyle
+                          type="number"
+                          height="20px"
+                          width="90px"
+                          isFocused={activeField === inputHandlers.name}
+                        >
+                          <NumberInput
+                            {...inputHandlers}
+                            value={quantity}
+                            onChange={evt => set('quantity', evt.target.value)}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              saveOnBlur({ quantity, price });
+                            }}
+                          />
+                        </DefaultStyle>
+                      )}
+                    </FormField>
+                  )}
+                </Subscribe>
               </div>
               <div
                 className={UnitPriceWrapperStyle}
@@ -181,13 +205,37 @@ const OrderItemCard = ({
                   )}
                 </BooleanValue>
                 <Label required>PRICE</Label>
-                <DefaultPriceStyle currency={currency} width="90px" height="20px">
-                  <NumberInput
-                    value={price.amount}
-                    onChange={evt => assign({ price: { amount: evt.target.value, currency } })}
-                    onBlur={() => saveOnBlur({ quantity, price })}
-                  />
-                </DefaultPriceStyle>
+                <Subscribe to={[FormContainer]}>
+                  {({ state: { activeField }, ...formHelper }) => (
+                    <FormField
+                      name={`${item.id}.price`}
+                      initValue={price.amount}
+                      validationOnChange
+                      {...formHelper}
+                    >
+                      {inputHandlers => (
+                        <DefaultPriceStyle
+                          type="number"
+                          height="20px"
+                          width="90px"
+                          isFocused={activeField === inputHandlers.name}
+                        >
+                          <NumberInput
+                            {...inputHandlers}
+                            value={price.amount}
+                            onChange={evt =>
+                              assign({ price: { amount: evt.target.value, currency } })
+                            }
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              saveOnBlur({ quantity, price });
+                            }}
+                          />
+                        </DefaultPriceStyle>
+                      )}
+                    </FormField>
+                  )}
+                </Subscribe>
               </div>
               <div className={DividerStyle} />
               <QuantityChart
