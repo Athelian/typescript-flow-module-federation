@@ -2,7 +2,12 @@
 import { css } from 'react-emotion';
 import { presets, colors, fontSizes } from 'styles/common';
 
-export const IconStyle = (color: string, disabled: boolean, actionsOnHover: boolean) => css`
+export const IconStyle = (
+  color: string,
+  disabled: boolean,
+  readOnly: boolean,
+  actionsOnHover: boolean
+) => css`
   ${presets.BUTTON};
   position: absolute;
   top: 0;
@@ -12,7 +17,7 @@ export const IconStyle = (color: string, disabled: boolean, actionsOnHover: bool
   ${fontSizes.SMALL};
   color: ${disabled ? 'rgba(0, 0, 0, 0.25)' : '#fff'};
   background: ${colors[color]};
-  cursor: ${actionsOnHover ? 'default' : 'pointer'};
+  cursor: ${actionsOnHover || readOnly ? 'default' : 'pointer'};
   ${disabled && 'cursor: not-allowed'};
   z-index: 1;
   box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.15);

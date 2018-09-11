@@ -2,9 +2,9 @@
 import * as React from 'react';
 // import { Subscribe } from 'unstated';
 // import { pickByProps } from 'utils/fp';
-// import { SectionHeader, SectionWrapper } from 'components/Form';
+import { SectionWrapper } from 'components/Form';
 // import OrderFormContainer from './container';
-// import OrderSection from './components/OrderSection';
+import ShipmentSection from './components/ShipmentSection';
 import { ShipmentFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -23,7 +23,13 @@ const defaultProps = {
 const ShipmentForm = ({ shipment, isNew }: Props) => {
   console.log(shipment);
 
-  return <div className={ShipmentFormWrapperStyle}>WIP {isNew}</div>;
+  return (
+    <div className={ShipmentFormWrapperStyle}>
+      <SectionWrapper id="orderSection">
+        <ShipmentSection isNew={isNew} />
+      </SectionWrapper>
+    </div>
+  );
 };
 
 ShipmentForm.defaultProps = defaultProps;

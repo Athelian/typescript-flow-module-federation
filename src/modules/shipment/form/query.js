@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import { batchFragment } from 'modules/batch/form/query';
 
 const timelineDateFragment = gql`
   fragment timelineDateFragment on TimelineDate {
@@ -79,6 +80,9 @@ export const shipmentDetailQuery = gql`
         id
         sort
       }
+      batches {
+        ...batchFragment
+      }
       id
       updatedAt
       updatedBy {
@@ -96,6 +100,7 @@ export const shipmentDetailQuery = gql`
   }
 
   ${timelineDateFragment}
+  ${batchFragment}
 `;
 
 export default shipmentDetailQuery;

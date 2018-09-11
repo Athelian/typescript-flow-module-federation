@@ -2,17 +2,21 @@
 import { css } from 'react-emotion';
 import { colors, presets, transitions, borderRadiuses } from 'styles/common';
 
-export const CardStyle = (disabled: boolean) => css`
+export const CardStyle = (disabled: boolean, readOnly: boolean) => css`
   width: min-content;
   height: min-content;
   ${presets.BOX};
   ${transitions.EXPAND};
   position: relative;
   cursor: pointer;
+  ${readOnly && 'cursor: default'};
   ${disabled && 'cursor: not-allowed'};
-  &:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  }
+  ${!(readOnly || disabled) &&
+    `
+    &:hover {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+  `};
 `;
 
 export const SelectableCardStyle = (selected: boolean) => css`

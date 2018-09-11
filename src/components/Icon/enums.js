@@ -55,6 +55,7 @@ import EXPAND from '@fortawesome/fontawesome-pro-solid/faExpandAlt';
 import COMPRESS from '@fortawesome/fontawesome-pro-solid/faCompressAlt';
 import PACKAGING from '@fortawesome/fontawesome-pro-solid/faTape';
 import QUANTITY_ADJUSTMENTS from '@fortawesome/fontawesome-pro-solid/faBalanceScale';
+import HORIZONTAL_ELLIPSIS from '@fortawesome/fontawesome-pro-solid/faEllipsisH';
 
 // Shipment Timeline
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
@@ -131,6 +132,7 @@ export default {
   COMPRESS,
   PACKAGING,
   QUANTITY_ADJUSTMENTS,
+  HORIZONTAL_ELLIPSIS,
 
   CARGO_READY,
   PORT,

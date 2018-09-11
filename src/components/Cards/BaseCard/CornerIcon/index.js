@@ -3,18 +3,23 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import { IconStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  disabled: boolean,
+  readOnly: boolean,
+  selectable: boolean,
+  selected: boolean,
+  showActionsOnHover: boolean,
+};
+
+type Props = OptionalProps & {
   icon: string,
   color: string,
-  disabled?: boolean,
-  selectable?: boolean,
-  selected?: boolean,
-  showActionsOnHover?: boolean,
   onClick: () => void,
 };
 
 const defaultProps = {
   disabled: false,
+  readOnly: false,
   selectable: false,
   selected: false,
   showActionsOnHover: false,
@@ -31,6 +36,7 @@ function CornerIcon({
   icon,
   color,
   disabled,
+  readOnly,
   selectable,
   selected,
   showActionsOnHover,
@@ -40,7 +46,7 @@ function CornerIcon({
 
   return (
     <div
-      className={IconStyle(color, !!disabled, !!showActionsOnHover)}
+      className={IconStyle(color, disabled, readOnly, showActionsOnHover)}
       role="presentation"
       onClick={() => {
         if (!showActionsOnHover) onClick();
