@@ -500,8 +500,7 @@ const OrderSection = ({ isNew }: Props) => (
               </div>
             </div>
             <Subscribe to={[OrderItemsContainer]}>
-              {({ originalValues: { orderItems }, state: { orderItems: orderItemsState } }) => {
-                const items = [...orderItems, ...orderItemsState];
+              {({ state: { orderItems } }) => {
                 const {
                   orderedQuantity,
                   batchedQuantity,
@@ -510,7 +509,7 @@ const OrderSection = ({ isNew }: Props) => (
                   totalItems,
                   activeBatches,
                   archivedBatches,
-                } = getQuantitySummary(items);
+                } = getQuantitySummary(orderItems);
                 return (
                   <div className={QuantitySummaryStyle}>
                     <TotalSummary
