@@ -51,18 +51,18 @@ export default class StatusButton extends React.PureComponent<Props, State> {
     });
   };
 
-  comfirm = (archived: boolean) => {
+  confirm = (archived: boolean) => {
     const { onChangeStatus } = this.props;
     onChangeStatus(archived);
     this.closeDialog();
   };
 
-  comfirmActivate = () => {
-    this.comfirm(false);
+  confirmActivate = () => {
+    this.confirm(false);
   };
 
-  comfirmArchive = () => {
-    this.comfirm(true);
+  confirmArchive = () => {
+    this.confirm(true);
   };
 
   render() {
@@ -77,7 +77,7 @@ export default class StatusButton extends React.PureComponent<Props, State> {
           isOpen={isOpen && order.archived}
           onRequestClose={this.closeDialog}
           onCancel={this.closeDialog}
-          onConfirm={this.comfirmActivate}
+          onConfirm={this.confirmActivate}
           totalBatches={totalBatches}
           unshippedBatches={unshippedBatches}
           shippedBatches={shippedBatches}
@@ -86,7 +86,7 @@ export default class StatusButton extends React.PureComponent<Props, State> {
           isOpen={isOpen && !order.archived}
           onRequestClose={this.closeDialog}
           onCancel={this.closeDialog}
-          onConfirm={this.comfirmArchive}
+          onConfirm={this.confirmArchive}
           totalBatches={totalBatches}
           unshippedBatches={unshippedBatches}
           shippedBatches={shippedBatches}

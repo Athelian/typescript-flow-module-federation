@@ -4,17 +4,17 @@ import Icon from 'components/Icon';
 import { ExpandButtonsWrapperStyle, IconStyle } from './style';
 
 type Props = {
-  expanded: boolean,
+  type: 'COMPRESS' | 'EXPAND',
   onClick: (expanded: boolean) => void,
 };
 
-const ExpandButtons = ({ expanded, onClick }: Props) => (
+const ExpandButtons = ({ type, onClick }: Props) => (
   <div className={ExpandButtonsWrapperStyle} onClick={onClick} role="presentation">
     <div className={IconStyle}>
       <Icon icon="BATCH" />
     </div>
     <div className={IconStyle}>
-      <Icon icon={expanded ? 'COMPRESS' : 'EXPAND'} />
+      <Icon icon={type} />
     </div>
   </div>
 );

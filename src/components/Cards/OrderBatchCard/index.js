@@ -1,10 +1,13 @@
 // @flow
 import React from 'react';
+import { Subscribe } from 'unstated';
+import { FormContainer, FormField } from 'modules/form';
 import type { BatchQuery as BatchItem } from 'modules/batch/type.js.flow';
 import { ObjectValue } from 'react-values';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
+import FormattedNumber from 'components/FormattedNumber';
 import { DefaultStyle, Label, Display, TextInput, DateInput, NumberInput } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -26,10 +29,30 @@ type Props = {
   batch: ?BatchItem,
   onClick?: (id: string) => void,
   currency: string,
-  price: number,
+  price: ?{
+    amount: number,
+    currency: string,
+  },
   saveOnBlur: Function,
   onClone: Function,
   onRemove: Function,
+};
+
+const calculateVolume = (batch: BatchItem, quantity: number) => {
+  if (batch && batch.packageVolume && batch.packageVolume.value) {
+    return (
+      <>
+        <FormattedNumber value={batch.packageVolume.value * quantity} />
+        {batch.packageVolume.metric}
+      </>
+    );
+  }
+
+  if (batch && batch.packageSize && batch.packageSize.width) {
+    return 'Not implemented yet';
+  }
+
+  return 'N/A';
 };
 
 const OrderBatchCard = ({
@@ -45,8 +68,8 @@ const OrderBatchCard = ({
   if (!batch) return '';
 
   const actions = [
-    <CardAction icon="CLONE" onClick={onClone} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
+    <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(batch)} />,
   ];
 
   const hasShipment = !!batch.shipment;
@@ -58,48 +81,109 @@ const OrderBatchCard = ({
         <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
           <div className={OrderBatchCardWrapperStyle} onClick={onClick} role="presentation">
             <div className={BatchNoWrapperStyle}>
-              <DefaultStyle width="165px" height="20px">
-                <TextInput
-                  align="left"
-                  value={no}
-                  onChange={evt => set('no', evt.target.value)}
-                  onBlur={() => saveOnBlur({ ...batch, no })}
-                />
-              </DefaultStyle>
+              <Subscribe to={[FormContainer]}>
+                {({ state: { activeField }, ...formHelper }) => (
+                  <FormField name={`batch.${batch.id}.no`} initValue={quantity} {...formHelper}>
+                    {inputHandlers => (
+                      <DefaultStyle
+                        height="20px"
+                        width="165px"
+                        isFocused={activeField === inputHandlers.name}
+                      >
+                        <TextInput
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            saveOnBlur({ ...batch, no });
+                          }}
+                          onChange={evt => set('no', evt.target.value)}
+                          align="left"
+                          value={no}
+                        />
+                      </DefaultStyle>
+                    )}
+                  </FormField>
+                )}
+              </Subscribe>
             </div>
 
             <div className={QuantityWrapperStyle}>
               <Label required>QTY</Label>
-              <DefaultStyle type="number" width="90px" height="20px">
-                <NumberInput
-                  value={quantity}
-                  onChange={evt => set('quantity', evt.target.value)}
-                  onBlur={() => saveOnBlur({ ...batch, quantity })}
-                />
-              </DefaultStyle>
+              <Subscribe to={[FormContainer]}>
+                {({ state: { activeField }, ...formHelper }) => (
+                  <FormField
+                    name={`batch.${batch.id}.quantity`}
+                    initValue={quantity}
+                    {...formHelper}
+                  >
+                    {inputHandlers => (
+                      <DefaultStyle
+                        type="number"
+                        height="20px"
+                        width="90px"
+                        isFocused={activeField === inputHandlers.name}
+                      >
+                        <NumberInput
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            saveOnBlur({ ...batch, quantity });
+                          }}
+                          onChange={evt => set('quantity', evt.target.value)}
+                          value={quantity}
+                        />
+                      </DefaultStyle>
+                    )}
+                  </FormField>
+                )}
+              </Subscribe>
             </div>
 
             <div className={DeliveryDateWrapperStyle}>
               <Label>DELIVERY</Label>
-              <DefaultStyle type="date" width="90px" height="20px">
-                <DateInput
-                  value={deliveredAt}
-                  onChange={evt => set('deliveredAt', evt.target.value)}
-                  onBlur={() => saveOnBlur({ ...batch, deliveredAt })}
-                />
-              </DefaultStyle>
+              <Subscribe to={[FormContainer]}>
+                {({ state: { activeField }, ...formHelper }) => (
+                  <FormField
+                    name={`batch.${batch.id}.deliveredAt`}
+                    initValue={deliveredAt}
+                    {...formHelper}
+                  >
+                    {inputHandlers => (
+                      <DefaultStyle
+                        type="date"
+                        height="20px"
+                        width="90px"
+                        isFocused={activeField === inputHandlers.name}
+                      >
+                        <DateInput
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            saveOnBlur({ ...batch, deliveredAt });
+                          }}
+                          onChange={evt => set('deliveredAt', evt.target.value)}
+                          value={deliveredAt}
+                        />
+                      </DefaultStyle>
+                    )}
+                  </FormField>
+                )}
+              </Subscribe>
             </div>
 
             <div className={DividerStyle} />
 
             <div className={TotalPriceWrapperStyle}>
               <Label>PRICE</Label>
-              <Display>4,000 {currency}</Display>
+              <Display>
+                <FormattedNumber value={quantity * (price && price.amount ? price.amount : 0)} />
+                {currency}
+              </Display>
             </div>
 
             <div className={VolumeWrapperStyle}>
               <Label>VOLUME</Label>
-              <Display>25 m³</Display>
+              <Display>{calculateVolume(batch, quantity)} </Display>
             </div>
 
             <div className={ShipmentWrapperStyle}>

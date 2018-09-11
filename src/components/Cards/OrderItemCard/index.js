@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
+import { Subscribe } from 'unstated';
 import { ObjectValue, BooleanValue } from 'react-values';
 import { type OrderItem } from 'modules/order/type.js.flow';
+import { FormContainer, FormField } from 'modules/form';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -26,7 +28,6 @@ import {
   SyncButtonStyle,
   DividerStyle,
   TotalPriceWrapperStyle,
-  ChartWrapperStyle,
 } from './style';
 
 type Props = {
@@ -34,8 +35,8 @@ type Props = {
   onClick?: (id: string) => void,
   currency: string,
   saveOnBlur: Function,
-  onClone: Function,
-  onRemove: Function,
+  onClone: (item: OrderItem) => void,
+  onRemove: (item: OrderItem) => void,
 };
 
 function getQuantitySummary(item: Object) {
@@ -87,8 +88,8 @@ const OrderItemCard = ({
   if (!item) return '';
 
   const actions = [
-    <CardAction icon="CLONE" onClick={onClone} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
+    <CardAction icon="CLONE" onClick={() => onClone(item)} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(item)} />,
   ];
 
   const chartDetail = getQuantitySummary(item);
@@ -135,13 +136,30 @@ const OrderItemCard = ({
                 role="presentation"
               >
                 <Label required>QTY</Label>
-                <DefaultStyle type="number" width="90px" height="20px">
-                  <NumberInput
-                    value={quantity}
-                    onChange={evt => set('quantity', evt.target.value)}
-                    onBlur={() => saveOnBlur({ quantity, price })}
-                  />
-                </DefaultStyle>
+                <Subscribe to={[FormContainer]}>
+                  {({ state: { activeField }, ...formHelper }) => (
+                    <FormField name={`${item.id}.quantity`} initValue={quantity} {...formHelper}>
+                      {inputHandlers => (
+                        <DefaultStyle
+                          type="number"
+                          height="20px"
+                          width="90px"
+                          isFocused={activeField === inputHandlers.name}
+                        >
+                          <NumberInput
+                            {...inputHandlers}
+                            value={quantity}
+                            onChange={evt => set('quantity', evt.target.value)}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              saveOnBlur({ quantity, price });
+                            }}
+                          />
+                        </DefaultStyle>
+                      )}
+                    </FormField>
+                  )}
+                </Subscribe>
               </div>
               <div
                 className={UnitPriceWrapperStyle}
@@ -182,25 +200,42 @@ const OrderItemCard = ({
                   )}
                 </BooleanValue>
                 <Label required>PRICE</Label>
-                <DefaultPriceStyle currency={currency} width="90px" height="20px">
-                  <NumberInput
-                    value={price.amount}
-                    onChange={evt => assign({ price: { amount: evt.target.value, currency } })}
-                    onBlur={() => saveOnBlur({ quantity, price })}
-                  />
-                </DefaultPriceStyle>
+                <Subscribe to={[FormContainer]}>
+                  {({ state: { activeField }, ...formHelper }) => (
+                    <FormField name={`${item.id}.price`} initValue={price.amount} {...formHelper}>
+                      {inputHandlers => (
+                        <DefaultPriceStyle
+                          currency={currency}
+                          height="20px"
+                          width="90px"
+                          isFocused={activeField === inputHandlers.name}
+                        >
+                          <NumberInput
+                            {...inputHandlers}
+                            value={price.amount}
+                            onChange={evt =>
+                              assign({ price: { amount: evt.target.value, currency } })
+                            }
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              saveOnBlur({ quantity, price });
+                            }}
+                          />
+                        </DefaultPriceStyle>
+                      )}
+                    </FormField>
+                  )}
+                </Subscribe>
               </div>
               <div className={DividerStyle} />
-              <div className={ChartWrapperStyle}>
-                <QuantityChart
-                  hasLabel
-                  orderedQuantity={chartDetail.orderedQuantity}
-                  batchedQuantity={chartDetail.batchedQuantity}
-                  shippedQuantity={chartDetail.shippedQuantity}
-                  batched={chartDetail.batchedQuantity}
-                  shipped={chartDetail.shippedQuantity}
-                />
-              </div>
+              <QuantityChart
+                hasLabel={false}
+                orderedQuantity={chartDetail.orderedQuantity}
+                batchedQuantity={chartDetail.batchedQuantity}
+                shippedQuantity={chartDetail.shippedQuantity}
+                batched={chartDetail.batchedQuantity}
+                shipped={chartDetail.shippedQuantity}
+              />
               <div className={TotalPriceWrapperStyle}>
                 <Label>TOTAL</Label>
                 <Display>

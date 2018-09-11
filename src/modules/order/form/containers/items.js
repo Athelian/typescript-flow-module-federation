@@ -1,0 +1,50 @@
+// @flow
+import { Container } from 'unstated';
+import update from 'immutability-helper';
+import { isEquals } from 'utils/fp';
+import { removeTypename } from 'utils/data';
+
+type FormState = {
+  orderItems: Array<Object>,
+};
+
+const initValues = {
+  orderItems: [],
+};
+
+export default class OrderItemsContainer extends Container<FormState> {
+  state = initValues;
+
+  originalValues = initValues;
+
+  isDirty = () => !isEquals(this.state, this.originalValues);
+
+  onSuccess = () => {
+    this.originalValues = { ...this.state };
+  };
+
+  setFieldValue = (name: string, value: mixed) => {
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  setFieldArrayValue = (index: number, value: any) => {
+    this.setState(prevState =>
+      update(prevState, {
+        orderItems: {
+          [index]: {
+            $merge: value,
+          },
+        },
+      })
+    );
+  };
+
+  initDetailValues = (orderItems: Array<Object>) => {
+    const parsedValues = removeTypename(orderItems);
+    // $FlowFixMe: missing type for ramda's map function
+    this.setState({ orderItems: parsedValues });
+    this.originalValues = { orderItems: parsedValues };
+  };
+}

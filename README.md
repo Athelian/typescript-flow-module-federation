@@ -440,6 +440,10 @@ build                                    // auto generated build folder containi
 
   for state management.
 
+- [immutability-helper](https://github.com/kolodny/immutability-helper)
+
+  Immutable data structures for JavaScript which are backwards-compatible with normal JS Arrays and Objects.
+
 * [reach-router](https://github.com/reach/router)
 
   for managing routes.
@@ -459,6 +463,10 @@ build                                    // auto generated build folder containi
 * [ramda](https://github.com/ramda/ramda)
 
   functional js data structure utility library.
+
+* [lodash](https://github.com/lodash/lodash)
+
+  A modern JavaScript utility library delivering modularity, performance, & extras..
 
 * [date-fns](https://github.com/date-fns/date-fns)
 
