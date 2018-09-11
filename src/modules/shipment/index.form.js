@@ -48,6 +48,9 @@ class ShipmentFormModule extends React.Component<Props> {
                   <JumpToSection>
                     <SectionTabs link="shipmentSection" label="SHIPMENT" icon="SHIPMENT" />
                   </JumpToSection>
+                  <JumpToSection>
+                    <SectionTabs link="timelineSection" label="TIMELINE" icon="TIMELINE" />
+                  </JumpToSection>
                 </NavBar>
               }
             >

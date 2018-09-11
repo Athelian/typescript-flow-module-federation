@@ -59,6 +59,7 @@ import HORIZONTAL_ELLIPSIS from '@fortawesome/fontawesome-pro-solid/faEllipsisH'
 import EXCHANGE from '@fortawesome/fontawesome-pro-solid/faExchange';
 
 // Shipment Timeline
+import TIMELINE from '@fortawesome/fontawesome-pro-solid/faRoute';
 import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
 import PORT from '@fortawesome/fontawesome-pro-solid/faAnchor';
 import PLANE from '@fortawesome/fontawesome-pro-solid/faPlane';
@@ -136,6 +137,7 @@ export default {
   HORIZONTAL_ELLIPSIS,
   EXCHANGE,
 
+  TIMELINE,
   CARGO_READY,
   PORT,
   PLANE,

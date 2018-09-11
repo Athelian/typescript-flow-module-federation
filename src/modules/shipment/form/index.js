@@ -5,6 +5,7 @@ import * as React from 'react';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 // import OrderFormContainer from './container';
 import ShipmentSection from './components/ShipmentSection';
+import TimelineSection from './components/TimelineSection';
 import { ShipmentFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -27,6 +28,10 @@ const ShipmentForm = ({ shipment, isNew }: Props) => (
         {!isNew && <LastModified updatedAt={shipment.updatedAt} />}
       </SectionHeader>
       <ShipmentSection isNew={isNew} />
+    </SectionWrapper>
+    <SectionWrapper id="timelineSection">
+      <SectionHeader icon="TIMELINE" title="TIMELINE" />
+      <TimelineSection isNew={isNew} />
     </SectionWrapper>
   </div>
 );
