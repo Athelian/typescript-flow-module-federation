@@ -23,11 +23,11 @@ steps:
   - 'asia.gcr.io/zenport-183806/web-app-base:latest'
   - '.'
   triggers:
-  - includedFiles: ['package.json', 'yarn.lock']
+  - includedFiles: ['package.json', 'yarn.lock', 'base.Dockerfile']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'asia.gcr.io/zenport-183806/web-app-base:latest']
   triggers:
-  - includedFiles: ['package.json', 'yarn.lock']
+  - includedFiles: ['package.json', 'yarn.lock', 'base.Dockerfile']
 
 # build main image
 - name: 'gcr.io/cloud-builders/docker'
