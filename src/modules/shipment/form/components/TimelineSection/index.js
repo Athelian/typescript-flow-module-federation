@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { VerticalTimeline } from './components/Timeline';
 import DateSection from './components/DateSection';
 import { TimelineSectionWrapperStyle, TimelineWrapperStyle, BodyWrapperStyle } from './style';
 
@@ -9,7 +10,9 @@ type Props = {
 
 const TimelineSection = ({ isNew }: Props) => (
   <div className={TimelineSectionWrapperStyle}>
-    <div className={TimelineWrapperStyle}>{isNew}</div>
+    <div className={TimelineWrapperStyle}>
+      <VerticalTimeline />
+    </div>
     <div className={BodyWrapperStyle}>
       <DateSection isNew={isNew} icon="CARGO_READY" title="CARGO READY" />
       <DateSection isNew={isNew} icon="PORT" title="LOAD PORT DEPARTURE" />

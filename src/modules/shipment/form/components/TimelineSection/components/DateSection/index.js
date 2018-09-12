@@ -29,11 +29,13 @@ type Props = {
 
 const dummyAssignedTo = [
   {
+    id: '1',
     firstName: 'Kevin',
     lastName: 'Nguyen',
   },
   {
-    firstName: 'Kevin',
+    id: '2',
+    firstName: 'Bob',
     lastName: 'Nguyen',
   },
 ];
@@ -60,7 +62,7 @@ const DateSection = ({ isNew, icon, title }: Props) => (
           <Label>ASSIGNED TO</Label>
           <div className={AssignmentWrapperStyle}>
             {dummyAssignedTo.map(assigned => (
-              <div className={AssignmentStyle}>
+              <div className={AssignmentStyle} key={assigned.id}>
                 <button className={RemoveAssignmentButtonStyle} type="button">
                   <Icon icon="REMOVE" />
                 </button>
