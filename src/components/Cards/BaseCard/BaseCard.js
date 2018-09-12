@@ -5,17 +5,21 @@ import { CardStyle, SelectableCardStyle } from './style';
 import Actions from './Actions';
 import CornerIcon from './CornerIcon';
 
-type Props = {
+type OptionalProps = {
+  actions: Array<React.Node>,
+  showActionsOnHover: boolean,
+  selectable: boolean,
+  disabled: boolean,
+  readOnly: boolean,
+  selected: boolean,
+  onSelect: Function,
+  wrapperClassName: string,
+};
+
+type Props = OptionalProps & {
   children: React.Node,
   icon: string,
   color: string,
-  actions?: Array<React.Node>,
-  showActionsOnHover?: boolean,
-  selectable?: boolean,
-  disabled?: boolean,
-  selected?: boolean,
-  onSelect?: () => void,
-  wrapperClassName?: string,
 };
 
 type State = {
@@ -30,6 +34,7 @@ export default class BaseCard extends React.Component<Props, State> {
     showActionsOnHover: false,
     selectable: false,
     disabled: false,
+    readOnly: false,
     selected: false,
     onSelect: () => {},
     wrapperClassName: '',
@@ -76,6 +81,7 @@ export default class BaseCard extends React.Component<Props, State> {
       showActionsOnHover,
       selectable,
       disabled,
+      readOnly,
       selected,
       onSelect,
       wrapperClassName = '',
@@ -87,7 +93,7 @@ export default class BaseCard extends React.Component<Props, State> {
 
     return (
       <div
-        className={`${CardStyle(!!disabled)} ${wrapperClassName}`}
+        className={`${CardStyle(disabled, readOnly)} ${wrapperClassName}`}
         onMouseOver={this.onMouseOver}
         onMouseOut={this.onMouseOut}
         onFocus={this.onMouseOver}
@@ -104,6 +110,7 @@ export default class BaseCard extends React.Component<Props, State> {
           icon={icon}
           color={color}
           disabled={disabled}
+          readOnly={readOnly}
           selectable={selectable}
           selected={selected}
           showActionsOnHover={showActionsOnHover}

@@ -49,6 +49,9 @@ const onBottomStyle = css`
 `;
 
 export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
   position: absolute;
   ${shadows.TOOLTIP};
   ${fontSizesWithHeights.MEDIUM};
@@ -57,13 +60,8 @@ export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
   padding: 10px;
   color: #fff;
   ${borderRadiuses.MAIN};
-  display: flex;
-  flex-flow: column wrap;
-  align-items: center;
-
   ${position === 'top' && onTopStyle};
   ${position === 'bottom' && onBottomStyle};
-
   &:after {
     content: '';
     display: block;
@@ -79,12 +77,10 @@ const ValueStyle = css`
   ${presets.ELLIPSIS};
   width: 100%;
   text-align: center;
-  padding: 5px;
 `;
 
 export const UpperMessageStyle = css`
   ${MessageStyle};
-  padding-bottom: 5px;
 `;
 
 export const OldValueStyle = css`
@@ -104,5 +100,11 @@ export const NewValueStyle = css`
 
 export const InfoMessageStyle = css`
   ${MessageStyle};
-  padding-top: 5px;
+`;
+
+export const DividerStyle = css`
+  height: 1px;
+  width: 100%;
+  background-color: ${colors.GRAY_VERY_LIGHT};
+  margin: 5px 0;
 `;

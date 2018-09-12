@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
 import { Router } from '@reach/router';
-import ShipmentListContainer from './index.list';
-import ShipmentFormContainer from './index.form';
+import ShipmentListModule from './index.list';
+import ShipmentFormModule from './index.form';
 
 const ShipmentApp = () => (
   <Router>
-    <ShipmentListContainer path="/" />
-    <ShipmentFormContainer path=":shipmentId" />
+    <ShipmentListModule path="/" />
+    <ShipmentFormModule path=":shipmentId" />
   </Router>
 );
 

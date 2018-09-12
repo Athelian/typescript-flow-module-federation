@@ -7,7 +7,7 @@ export const SectionHeaderWrapperStyle = css`
   grid-template-rows: 40px;
   grid-gap: 40px;
   align-items: center;
-  width: 880px;
+  width: 100%;
 `;
 
 export const TitleWrapperStyle = css`
@@ -22,6 +22,7 @@ export const TitleStyle = css`
   ${presets.ELLIPSIS};
   font-weight: bold;
   letter-spacing: 2px;
+  user-select: none;
 `;
 
 export const IconStyle = css`

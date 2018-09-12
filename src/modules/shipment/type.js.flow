@@ -1,0 +1,48 @@
+// @flow
+
+export type UserNameAndAvatar = {
+  firstName: string,
+  lastName: string,
+  avatar: ?string,
+  id: string,
+};
+
+export type ShipmentCreate = {
+  no: string,
+  quantity: number,
+  shipmentId?: ?string,
+  producedAt?: ?string,
+  deliveredAt?: ?string,
+  expiredAt?: ?string,
+  packageQuantity?: ?number,
+  packageName?: ?string,
+  packageCapacity?: ?number,
+  tagIds?: ?Array<string>,
+  orderItemId: string,
+  batchAdjustments?: ?Array<{
+    reason: 'Inspection' | 'Lost' | 'Other',
+    quantity: number,
+    memo?: ?string,
+  }>,
+};
+
+export type ShipmentUpdate = {
+  archived?: ?boolean,
+  no?: ?string,
+  quantity?: ?number,
+  shipmentId?: ?string,
+  producedAt?: ?string,
+  deliveredAt?: ?string,
+  expiredAt?: ?string,
+  packageQuantity?: ?number,
+  packageName?: ?string,
+  packageCapacity?: ?number,
+  tagIds?: ?Array<string>,
+  orderItemId?: ?string,
+  batchAdjustments?: ?Array<{
+    id?: ?string,
+    reason: 'Inspection' | 'Lost' | 'Other',
+    quantity: number,
+    memo?: ?string,
+  }>,
+};

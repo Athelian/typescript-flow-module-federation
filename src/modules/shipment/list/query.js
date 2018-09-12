@@ -1,9 +1,9 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const batchListQuery = gql`
+export const shipmentListQuery = gql`
   query($page: Int!, $perPage: Int!) {
-    batches(page: $page, perPage: $perPage) {
+    shipments(page: $page, perPage: $perPage) {
       nodes {
         id
       }
@@ -13,4 +13,4 @@ export const batchListQuery = gql`
   }
 `;
 
-export default batchListQuery;
+export default shipmentListQuery;

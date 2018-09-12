@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import ShipmentGridView from './ShipmentGridView';
+import { shipmentListQuery } from './query';
 
 type Props = {
   viewType: string,
@@ -21,8 +22,8 @@ class ShipmentList extends React.Component<Props> {
   loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
     if (!data) return;
-    const nextPage = getByPathWithDefault(1, 'viewer.shipments.page', data) + 1;
-    const totalPage = getByPathWithDefault(1, 'viewer.shipments.totalPage', data);
+    const nextPage = getByPathWithDefault(1, 'shipments.page', data) + 1;
+    const totalPage = getByPathWithDefault(1, 'shipments.totalPage', data);
     if (nextPage > totalPage) return;
 
     const { viewType, ...filtersAndSort } = this.props;
@@ -36,26 +37,23 @@ class ShipmentList extends React.Component<Props> {
         const { filter, sort, perPage } = this.props;
         if (
           !isEquals({ filter, sort, perPage }, filtersAndSort) ||
-          getByPathWithDefault({}, 'viewer.shipments.page', prevResult) + 1 !==
-            getByPathWithDefault({}, 'viewer.shipments.page', fetchMoreResult)
+          getByPathWithDefault({}, 'shipments.page', prevResult) + 1 !==
+            getByPathWithDefault({}, 'shipments.page', fetchMoreResult)
         ) {
           return prevResult;
         }
 
-        if (getByPathWithDefault([], 'viewer.shipments.nodes', fetchMoreResult).length === 0)
+        if (getByPathWithDefault([], 'shipments.nodes', fetchMoreResult).length === 0)
           return prevResult;
 
         return {
-          viewer: {
-            ...prevResult.viewer,
-            shipments: {
-              ...prevResult.viewer.shipments,
-              ...getByPathWithDefault({}, 'viewer.shipments', fetchMoreResult),
-              nodes: [
-                ...prevResult.viewer.shipments.nodes,
-                ...getByPathWithDefault([], 'viewer.shipments.nodes', fetchMoreResult),
-              ],
-            },
+          shipments: {
+            ...prevResult.shipments,
+            ...getByPathWithDefault({}, 'shipments', fetchMoreResult),
+            nodes: [
+              ...prevResult.shipments.nodes,
+              ...getByPathWithDefault([], 'shipments.nodes', fetchMoreResult),
+            ],
           },
         };
       },
@@ -65,19 +63,23 @@ class ShipmentList extends React.Component<Props> {
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
-      <Query query={null} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
+      <Query
+        query={shipmentListQuery}
+        variables={{ page: 1, ...filtersAndSort }}
+        fetchPolicy="network-only"
+      >
         {({ loading, data, fetchMore, error }) => {
           if (error) {
             return error.message;
           }
 
-          const nextPage = getByPathWithDefault(1, 'viewer.shipments.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'viewer.shipments.totalPage', data);
+          const nextPage = getByPathWithDefault(1, 'shipments.page', data) + 1;
+          const totalPage = getByPathWithDefault(1, 'shipments.totalPage', data);
           const hasMore = nextPage <= totalPage;
 
           return (
             <ShipmentGridView
-              items={getByPathWithDefault([], 'viewer.shipments.nodes', data)}
+              items={getByPathWithDefault([], 'shipments.nodes', data)}
               onLoadMore={() => this.loadMore({ fetchMore, data })}
               hasMore={hasMore}
               isLoading={loading}

@@ -168,7 +168,9 @@ class OrderFormModule extends React.PureComponent<Props> {
                   {isNew || !orderId ? (
                     <OrderForm
                       isNew
-                      onSave={(formData, onSuccess) => this.onSave(formData, saveOrder, onSuccess)}
+                      onChangeStatus={(formData, onSuccess) =>
+                        this.onSave(formData, saveOrder, onSuccess)
+                      }
                     />
                   ) : (
                     <Subscribe to={[OrderItemsContainer, OrderInfoContainer, OrderTagsContainer]}>
@@ -195,7 +197,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                             return (
                               <OrderForm
                                 order={getByPathWithDefault({}, 'order', data)}
-                                onSave={(formData, onSuccess) =>
+                                onChangeStatus={(formData, onSuccess) =>
                                   this.onSave(formData, saveOrder, onSuccess)
                                 }
                               />
