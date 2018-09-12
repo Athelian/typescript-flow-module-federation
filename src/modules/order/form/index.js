@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import Loadable from 'react-loadable';
-import { SectionHeader, SectionWrapper } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
+import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'components/Form';
+import OrderActivateDialog from './components/OrderActivateDialog';
+import OrderArchiveDialog from './components/OrderArchiveDialog';
 import OrderSection from './components/OrderSection';
-import StatusButton from './components/StatusButton';
 import OrderFormWrapperStyle from './style';
 import { OrderItemsContainer } from './containers';
 
@@ -29,7 +30,11 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  onSave: (Object, Function) => void,
+  onChangeStatus: Function,
+};
+
+type State = {
+  statusDialogIsOpen: boolean,
 };
 
 const defaultProps = {
@@ -37,32 +42,100 @@ const defaultProps = {
   order: {},
 };
 
-export default class OrderForm extends React.Component<Props> {
+export default class OrderForm extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
-  shouldComponentUpdate(nextProps: Props) {
+  state = {
+    statusDialogIsOpen: false,
+  };
+
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
     const { order } = this.props;
     if (!isEquals(order, nextProps.order)) return true;
+    if (!isEquals(nextState, this.state)) return true;
 
     return false;
   }
 
+  openStatusDialog = () => {
+    this.setState({ statusDialogIsOpen: true });
+  };
+
+  closeStatusDialog = () => {
+    this.setState({ statusDialogIsOpen: false });
+  };
+
+  handleStatusToggle = (archived: boolean) => {
+    const { onChangeStatus } = this.props;
+
+    onChangeStatus(archived);
+    this.closeStatusDialog();
+  };
+
+  getBatchesSummary = () => {
+    const { order } = this.props;
+
+    let totalBatches = 0;
+    let shippedBatches = 0;
+
+    if (order.orderItems) {
+      order.orderItems.forEach(item => {
+        if (item.batches) {
+          totalBatches += item.batches.length;
+          item.batches.forEach(batch => {
+            if (batch.shipment) {
+              shippedBatches += 1;
+            }
+          });
+        }
+      });
+    }
+
+    return { totalBatches, shippedBatches, unshippedBatches: totalBatches - shippedBatches };
+  };
+
   render() {
-    const { isNew, order, onSave } = this.props;
+    const { isNew, order } = this.props;
+    const { statusDialogIsOpen } = this.state;
+
+    const { totalBatches, unshippedBatches, shippedBatches } = this.getBatchesSummary();
+
     return (
       <div className={OrderFormWrapperStyle}>
         <SectionWrapper id="orderSection">
-          {!isNew && (
-            <StatusButton
-              order={order}
-              onChangeStatus={archived =>
-                onSave({ archived }, () => {
-                  window.location.reload();
-                })
-              }
-            />
-          )}
-
+          <SectionHeader icon="ORDER" title="ORDER">
+            {!isNew && (
+              <>
+                <LastModified updatedAt={order.updatedAt} />
+                <StatusToggle
+                  archived={order.archived}
+                  openStatusDialog={this.openStatusDialog}
+                  activateDialog={
+                    <OrderActivateDialog
+                      isOpen={statusDialogIsOpen && !!order.archived}
+                      onRequestClose={this.closeStatusDialog}
+                      onCancel={this.closeStatusDialog}
+                      onConfirm={() => this.handleStatusToggle(false)}
+                      totalBatches={totalBatches}
+                      unshippedBatches={unshippedBatches}
+                      shippedBatches={shippedBatches}
+                    />
+                  }
+                  archiveDialog={
+                    <OrderArchiveDialog
+                      isOpen={statusDialogIsOpen && !order.archived}
+                      onRequestClose={this.closeStatusDialog}
+                      onCancel={this.closeStatusDialog}
+                      onConfirm={() => this.handleStatusToggle(true)}
+                      totalBatches={totalBatches}
+                      unshippedBatches={unshippedBatches}
+                      shippedBatches={shippedBatches}
+                    />
+                  }
+                />
+              </>
+            )}
+          </SectionHeader>
           <OrderSection isNew={isNew} />
         </SectionWrapper>
 
@@ -88,5 +161,3 @@ export default class OrderForm extends React.Component<Props> {
     );
   }
 }
-
-export default OrderForm;
