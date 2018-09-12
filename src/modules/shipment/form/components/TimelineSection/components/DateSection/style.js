@@ -14,7 +14,7 @@ export const AssignmentWrapperStyle = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
   padding: 0 5px;
-  width: 410px;
+  width: 200px;
 `;
 
 export const AssignmentStyle = css`
@@ -61,4 +61,25 @@ export const AddAssignmentButtonStyle = css`
     border-color: ${colors.TEAL};
     background-color: ${colors.GRAY_SUPER_LIGHT};
   }
+`;
+
+export const ApprovalWrapperStyle = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 10px;
+  padding: 0 5px;
+  width: 200px;
+`;
+
+export const ApprovedByWrapperStyle = css`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ApprovedByStyle = css`
+  ${fontSizes.SMALL};
+  min-height: 10px;
+  max-height: 10px;
+  line-height: 10px;
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
 `;
