@@ -54,6 +54,9 @@ export const getByPath = useWith(path, [split('.')]);
 
 export const pickByProps = pick;
 
+/* Checks if the input value is null or undefined. */
+export const isNullOrUndefined = isNil;
+
 /**
  * Return value from object with path, return default value if undefined
  */
