@@ -2,6 +2,9 @@
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import { BooleanValue, ArrayValue } from 'react-values';
+import { Subscribe } from 'unstated';
+import { OrderItemsContainer } from 'modules/order/form/containers';
+import BatchFormContainer from 'modules/batch/form/container';
 import { isEquals } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
@@ -129,11 +132,16 @@ class OrderItems extends React.Component<Props> {
                                     options={{ width: '1030px' }}
                                   >
                                     {opened && (
-                                      <BatchFormWrapper
-                                        orderIndex={index}
-                                        batchIndex={position}
-                                        isNew={!!batch.isNew}
-                                      />
+                                      <Subscribe to={[BatchFormContainer, OrderItemsContainer]}>
+                                        {({ initDetailValues }, { state }) => (
+                                          <BatchFormWrapper
+                                            batch={state.orderItems[index].batches[position]}
+                                            isNew={!!batch.isNew}
+                                            orderItem={item}
+                                            initDetailValues={initDetailValues}
+                                          />
+                                        )}
+                                      </Subscribe>
                                     )}
                                   </SlideView>
                                   <OrderBatchCard

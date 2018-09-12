@@ -1,47 +1,36 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import BatchForm from 'modules/batch/form';
 import BatchFormContainer from 'modules/batch/form/container';
-import { OrderItemsContainer } from 'modules/order/form/containers';
-import LoadingIcon from 'components/LoadingIcon';
+import BatchForm from 'modules/batch/form';
 
 type Props = {
-  orderIndex: number,
-  batchIndex: number,
+  batch: Object,
+  orderItem: Object,
   isNew: boolean,
+  initDetailValues: Function,
 };
 
-type State = {
-  isMounted: boolean,
-};
-
-class BatchFormWrapper extends React.PureComponent<Props, State> {
-  state = {
-    isMounted: false,
-  };
-
+class BatchFormWrapper extends React.Component<Props> {
   componentDidMount() {
-    this.setState({
-      isMounted: true,
+    const { batch, orderItem, initDetailValues } = this.props;
+    initDetailValues({
+      ...batch,
+      orderItem,
     });
   }
 
   render() {
-    const { orderIndex, batchIndex, isNew } = this.props;
-    const { isMounted } = this.state;
+    const { isNew } = this.props;
     return (
-      <Subscribe to={[BatchFormContainer, OrderItemsContainer]}>
-        {({ state, initDetailValues }, { state: { orderItems } }) =>
-          !isMounted ? (
-            (() => {
-              initDetailValues(orderItems[orderIndex].batches[batchIndex]);
-              return <LoadingIcon />;
-            })()
-          ) : (
-            <BatchForm batch={state} isNew={isNew} />
-          )
-        }
+      <Subscribe to={[BatchFormContainer]}>
+        {({ state }) => (
+          <BatchForm
+            key={`${state.id}-${state.no}-${state.quantity}-${state.deliveredAt}`}
+            batch={state}
+            isNew={isNew}
+          />
+        )}
       </Subscribe>
     );
   }

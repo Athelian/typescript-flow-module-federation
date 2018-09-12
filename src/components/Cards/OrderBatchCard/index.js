@@ -88,7 +88,7 @@ const OrderBatchCard = ({
         <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
           <div
             className={OrderBatchCardWrapperStyle}
-            onClick={() => onClick(batch)}
+            onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
             role="presentation"
           >
             <div
