@@ -122,7 +122,12 @@ class OrderItems extends React.Component<Props> {
 
                       <div className={BatchGridStyle}>
                         {batches.map((batch, position) => (
-                          <div className={BatchStyle} key={batch.id}>
+                          <div
+                            className={BatchStyle}
+                            key={`${batch.id}-${currency}-${batch.quantity}-${batch.no}-${
+                              batch.deliveredAt
+                            }-${item.price.amount}`}
+                          >
                             <BooleanValue>
                               {({ value: opened, toggle }) => (
                                 <>
@@ -139,6 +144,11 @@ class OrderItems extends React.Component<Props> {
                                             isNew={!!batch.isNew}
                                             orderItem={item}
                                             initDetailValues={initDetailValues}
+                                            onCancel={toggle}
+                                            onSave={updatedBatch => {
+                                              toggle();
+                                              changeBatch(position, 1, updatedBatch);
+                                            }}
                                           />
                                         )}
                                       </Subscribe>
@@ -153,12 +163,13 @@ class OrderItems extends React.Component<Props> {
                                       changeBatch(position, 1, updatedBatch);
                                     }}
                                     onRemove={() => changeBatch(position, 1)}
-                                    onClone={({ id, ...rest }) => {
+                                    onClone={({ id, no, ...rest }) => {
                                       changeBatch(
                                         batches.length,
                                         1,
                                         injectUid({
                                           ...rest,
+                                          no: `${no}- clone`,
                                           isNew: true,
                                         })
                                       );
