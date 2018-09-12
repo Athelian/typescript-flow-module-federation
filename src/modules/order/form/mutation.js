@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
 import { productProviderListFragment } from 'graphql/productProviderList/fragment';
 import { detailedBatchFragment } from 'graphql/batchDetail/fragment';
+import { prepareUpdateBatchInput, prepareCreateBatchInput } from 'modules/batch/form/mutation';
 import type { OrderForm } from '../type.js.flow';
 
 export const createOrderMutation = gql`
@@ -34,13 +35,7 @@ export const prepareCreateOrderInput = ({
     ({ batches = [], productProvider = {}, isNew, id: itemId, ...orderItem }) => ({
       ...orderItem,
       productProviderId: productProvider.id,
-      batches: batches.map(
-        ({ isNew: isNewBatch, id: batchId, assignments, tags: tagsArr = [], ...batch }) => ({
-          ...batch,
-          ...(isNewBatch ? {} : { id: batchId }),
-          tagIds: tagsArr ? tagsArr.map(t => t.id) : null,
-        })
-      ),
+      batches: batches.map(prepareCreateBatchInput),
     })
   ),
 });
@@ -114,25 +109,7 @@ export const prepareUpdateOrderInput = ({
       ...orderItem,
       ...(isNew ? {} : { id: itemId }),
       productProviderId: productProvider.id,
-      batches: batches.map(
-        ({
-          isNew: isNewBatch,
-          id: batchId,
-          assignments,
-          tags: tagsArr = [],
-          shipment = {},
-          updatedBy,
-          createdAt: batchCreatedAt,
-          updatedAt: batchUpdateAt,
-          orderItem: batchOrderItem,
-          ...batch
-        }) => ({
-          ...batch,
-          ...(isNewBatch ? {} : { id: batchId }),
-          shipmentId: shipment && shipment.id,
-          tagIds: tagsArr ? tagsArr.map(t => t.id) : null,
-        })
-      ),
+      batches: batches.map(prepareUpdateBatchInput),
     })
   ),
 });

@@ -21,10 +21,11 @@ export const createBatchMutation = gql`
 
 /* eslint-disable camelcase */
 export const prepareCreateBatchInput = ({
+  id,
+  isNew,
   no,
   quantity,
-  orderItem,
-  shipment,
+  shipment = {},
   tags = [],
   batchAdjustments = [],
   packageGrossWeight_value,
@@ -75,13 +76,17 @@ export const prepareCreateBatchInput = ({
     ...unflatten({ ...rest, ...dataCopy }),
     no,
     quantity,
-    orderItemId: orderItem.id,
     ...(shipment ? { shipmentId: shipment.id } : {}),
     tagIds: tags.map(({ id: tagId }) => tagId),
     batchAdjustments: batchAdjustments.map(
-      ({ isNew, id: adjustmentId, updatedAt: adjustmentUpdatedAt, ...adjustment }) => ({
+      ({
+        isNew: isNewAdjustment,
+        id: adjustmentId,
+        updatedAt: adjustmentUpdatedAt,
+        ...adjustment
+      }) => ({
         ...adjustment,
-        ...(isNew ? {} : { id: adjustmentId }),
+        ...(isNewAdjustment ? {} : { id: adjustmentId }),
       })
     ),
   };
@@ -105,6 +110,7 @@ export const updateBatchMutation = gql`
 /* eslint-disable camelcase */
 export const prepareUpdateBatchInput = ({
   id,
+  isNew,
   createdAt,
   updatedAt,
   updatedBy,
@@ -117,6 +123,7 @@ export const prepareUpdateBatchInput = ({
   packageSize_length_value,
   packageSize_width_value,
   packageSize_height_value,
+  archived,
   ...rest
 }: Object): BatchUpdate => {
   const dataCopy = {};
@@ -159,13 +166,20 @@ export const prepareUpdateBatchInput = ({
 
   return {
     ...unflatten({ ...rest, ...dataCopy }),
-    orderItemId: orderItem.id,
     ...(shipment ? { shipmentId: shipment.id } : {}),
     tagIds: tags.map(({ id: tagId }) => tagId),
     batchAdjustments: batchAdjustments.map(
-      ({ isNew, id: adjustmentId, updatedAt: adjustmentUpdatedAt, ...adjustment }) => ({
+      ({
+        isNew: isNewAdjustment,
+        id: adjustmentId,
+        createdAt: adjustmentCreatedAt,
+        updatedAt: adjustmentUpdateAt,
+        updatedBy: adjustmentUpdatedBy,
+        sort,
+        ...adjustment
+      }) => ({
         ...adjustment,
-        ...(isNew ? {} : { id: adjustmentId }),
+        ...(isNewAdjustment ? {} : { id: adjustmentId }),
       })
     ),
   };
