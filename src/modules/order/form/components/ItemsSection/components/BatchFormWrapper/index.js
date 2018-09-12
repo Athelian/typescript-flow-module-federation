@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
+import { isDataType } from 'utils/fp';
 import BatchFormContainer from 'modules/batch/form/container';
 import BatchForm from 'modules/batch/form';
 
@@ -14,9 +15,13 @@ type Props = {
 class BatchFormWrapper extends React.Component<Props> {
   componentDidMount() {
     const { batch, orderItem, initDetailValues } = this.props;
+    const { deliveredAt, ...rest } = batch;
     initDetailValues({
-      ...batch,
+      ...rest,
       orderItem,
+      deliveredAt: isDataType(String, deliveredAt)
+        ? deliveredAt
+        : deliveredAt && deliveredAt.toISOString(),
     });
   }
 
