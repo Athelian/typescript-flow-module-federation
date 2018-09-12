@@ -106,7 +106,7 @@ export default class OrderForm extends React.Component<Props, State> {
           <SectionHeader icon="ORDER" title="ORDER">
             {!isNew && (
               <>
-                <LastModified updatedAt={order.updatedAt} />
+                <LastModified updatedAt={order.updatedAt} updatedBy={order.updatedBy} />
                 <StatusToggle
                   archived={order.archived}
                   openStatusDialog={this.openStatusDialog}

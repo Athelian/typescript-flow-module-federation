@@ -180,7 +180,7 @@ class Adjustment extends React.Component<Props, State> {
                 <FormattedDate value={adjustment.updatedAt} />
               </Display>
               <div className={UserIconStyle}>
-                <UserAvatar profileUrl="" />
+                <UserAvatar firstName="TODO" lastName="TODO" width="20px" height="20px" />
               </div>
             </GridRow>
           </div>

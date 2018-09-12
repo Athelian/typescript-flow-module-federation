@@ -21,7 +21,10 @@ export const SettingsWrapperStyle = css`
   height: 50px;
 `;
 
-const ButtonStyle = css`
+export const NotificationButtonStyle = css`
+  background: ${gradients.BLUE_TEAL_DIAGONAL};
+  color: #fff;
+  margin: 0 20px 0 0;
   ${presets.BUTTON};
   position: relative;
   ${fontSizes.HUGE};
@@ -35,17 +38,14 @@ const ButtonStyle = css`
   }
 `;
 
-export const NotificationButtonStyle = css`
-  ${ButtonStyle};
-  background: ${gradients.BLUE_TEAL_DIAGONAL};
-  color: #fff;
-  margin: 0 20px 0 0;
-`;
-
 export const ProfileButtonStyle = css`
-  ${ButtonStyle};
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
+  ${presets.BUTTON};
+  position: relative;
+  ${borderRadiuses.CIRCLE};
+  &:hover,
+  &:focus {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 export const NotificationBadgeStyle = css`

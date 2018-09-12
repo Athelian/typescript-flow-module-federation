@@ -17,6 +17,11 @@ export const orderDetailQuery = gql`
       memo
       createdAt
       updatedAt
+      updatedBy {
+        firstName
+        lastName
+        avatar
+      }
       tags {
         id
         name

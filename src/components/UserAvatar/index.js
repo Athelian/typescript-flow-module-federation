@@ -1,35 +1,42 @@
 // @flow
 import * as React from 'react';
+import FormattedName from 'components/FormattedName';
 import { AvatarWrapperStyle } from './style';
 
 type OptionalProps = {
-  width: number,
-  height: number,
-  alt: string,
+  width: string,
+  height: string,
+  image?: string,
+  showBothInitials: boolean,
 };
 
 type Props = OptionalProps & {
-  profileUrl: string,
+  firstName: string,
+  lastName: string,
 };
 
 const defaultProps = {
-  width: 50,
-  height: 50,
-  alt: 'avatar',
+  width: '30px',
+  height: '30px',
+  showBothInitials: false,
 };
 
-const DummyUser = {
-  initial: 'Z',
-};
+function UserAvatar({ width, height, image, firstName, lastName, showBothInitials }: Props) {
+  if (image) {
+    return (
+      <div className={AvatarWrapperStyle({ width, height })}>
+        <img alt="user_avatar" src={image} width={width} height={height} />
+      </div>
+    );
+  }
 
-function UserAvatar({ profileUrl, width, height, alt }: Props) {
   return (
-    <div className={AvatarWrapperStyle}>
-      {profileUrl ? (
-        <img alt={alt} src={profileUrl} width={width} height={height} />
-      ) : (
-        DummyUser.initial
-      )}
+    <div className={AvatarWrapperStyle({ width, height })}>
+      <FormattedName
+        firstName={firstName.charAt(0)}
+        lastName={lastName.charAt(0)}
+        showOnlyOneName={!showBothInitials}
+      />
     </div>
   );
 }

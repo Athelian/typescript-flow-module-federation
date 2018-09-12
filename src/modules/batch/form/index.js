@@ -27,7 +27,7 @@ const BatchForm = ({ batch, isNew, selectable }: Props) => (
       <SectionHeader icon="BATCH" title="BATCH">
         {!isNew && (
           <>
-            <LastModified updatedAt={batch.updatedAt} />
+            <LastModified updatedAt={batch.updatedAt} updatedBy={batch.updatedBy} />
 
             <div className={StatusStyle(batch.archived)}>
               <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />

@@ -123,6 +123,7 @@
   "components.DateInputTooltip.approved": "{by}が{at}に承認しました。",
 
   "components.FormattedName.name": "{lastName} {firstName}",
+  "components.FormattedName.oneName": "{lastName}",
 
   "components.ActivateDialog.activate": "アクティブ",
   "components.ActivateDialog.cancel": "キャンセル",
