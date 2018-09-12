@@ -64,10 +64,17 @@ export const AddAssignmentButtonStyle = css`
 `;
 
 export const ApprovalWrapperStyle = css`
+  position: relative;
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
   padding: 0 5px;
   width: 200px;
+  &:hover {
+    & > button {
+      opacity: 1;
+      left: 5px;
+    }
+  }
 `;
 
 export const ApprovedByWrapperStyle = css`
@@ -77,9 +84,38 @@ export const ApprovedByWrapperStyle = css`
 
 export const ApprovedByStyle = css`
   ${fontSizes.SMALL};
-  min-height: 10px;
-  max-height: 10px;
-  line-height: 10px;
+  min-height: 12px;
+  max-height: 12px;
+  line-height: 12px;
   color: ${colors.BLACK};
   ${presets.ELLIPSIS};
+`;
+
+export const ApprovedAtStyle = css`
+  ${fontSizes.MAIN};
+  min-height: 18px;
+  max-height: 18px;
+  line-height: 18px;
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  font-weight: bold;
+`;
+
+export const UnapproveButtonStyle = css`
+  position: absolute;
+  left: -25px;
+  top: 0;
+  ${presets.BUTTON};
+  opacity: 0;
+  ${borderRadiuses.CIRCLE};
+  background-color: ${colors.WHITE};
+  color: ${colors.GRAY_LIGHT};
+  height: 30px;
+  width: 30px;
+  flex-shrink: 0;
+  ${shadows.DROPDOWN};
+  &:hover,
+  focus {
+    color: ${colors.RED};
+  }
 `;

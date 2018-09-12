@@ -7,7 +7,7 @@ import UserAvatar from 'components/UserAvatar';
 import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
 import { CustomButton } from 'components/NavButtons';
-import { SectionHeader, Label, Display } from 'components/Form';
+import { SectionHeader, Label } from 'components/Form';
 import {
   DateSectionWrapperStyle,
   AssignmentWrapperStyle,
@@ -17,6 +17,8 @@ import {
   ApprovalWrapperStyle,
   ApprovedByWrapperStyle,
   ApprovedByStyle,
+  ApprovedAtStyle,
+  UnapproveButtonStyle,
 } from './style';
 
 type Props = {
@@ -35,6 +37,9 @@ const dummyAssignedTo = [
     lastName: 'Nguyen',
   },
 ];
+
+// const dummyApprovedBy = null;
+// const dummyApprovedAt = null;
 
 const dummyApprovedBy = {
   firstName: 'Kevin',
@@ -71,10 +76,10 @@ const DateSection = ({ isNew, icon, title }: Props) => (
         </GridColumn>
 
         <GridColumn gap="5px">
-          <Label>APPROVED BY</Label>
+          <Label>APPROVAL</Label>
           <div className={ApprovalWrapperStyle}>
             {dummyApprovedAt ? (
-              <GridRow gap="5px">
+              <>
                 <UserAvatar
                   firstName={dummyApprovedBy.firstName}
                   lastName={dummyApprovedBy.lastName}
@@ -86,11 +91,14 @@ const DateSection = ({ isNew, icon, title }: Props) => (
                       lastName={dummyApprovedBy.lastName}
                     />
                   </div>
-                  <Display>
+                  <div className={ApprovedAtStyle}>
                     <FormattedDate value={dummyApprovedAt} />
-                  </Display>
+                  </div>
                 </div>
-              </GridRow>
+                <button className={UnapproveButtonStyle} type="button">
+                  <Icon icon="CLEAR" />
+                </button>
+              </>
             ) : (
               <CustomButton label="APPROVE" icon={<Icon icon="CHECKED" />} color="blue" />
             )}
