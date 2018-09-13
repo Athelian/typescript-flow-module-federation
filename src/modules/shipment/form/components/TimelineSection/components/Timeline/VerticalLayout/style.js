@@ -8,10 +8,7 @@ export const TimelineWrapperStyle = css`
 `;
 
 export const TimelineLeftWrapperStyle = css`
-  display: flex;
-  flex-direction: column;
   height: 100%;
-  align-items: center;
   padding: 10px;
 `;
 

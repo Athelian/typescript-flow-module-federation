@@ -1,6 +1,5 @@
 // @flow
-import VerticalTimeline from './VerticalTimeline';
+import VerticalLayout from './VerticalLayout';
+import VerticalTimeline from './VerticalLayout/VerticalTimeline';
 
-export { VerticalTimeline };
-
-export default VerticalTimeline;
+export { VerticalLayout, VerticalTimeline };
