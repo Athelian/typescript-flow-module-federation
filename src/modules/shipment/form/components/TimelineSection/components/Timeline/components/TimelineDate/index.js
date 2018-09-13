@@ -12,7 +12,11 @@ import {
   ApprovedIconStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  prefixIcon?: string,
+};
+
+type Props = OptionalProps & {
   timelineDate: {
     date: ?string | Date,
     timelineDateRevisions: Array<{
@@ -22,7 +26,7 @@ type Props = {
   },
 };
 
-const TimelineDate = ({ timelineDate }: Props) => {
+const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
   const { date, timelineDateRevisions, approvedAt } = timelineDate;
 
   const hasMultipleDates = timelineDateRevisions.length > 0;
@@ -44,13 +48,13 @@ const TimelineDate = ({ timelineDate }: Props) => {
 
   return (
     <div className={TimelineDateWrapperStyle}>
-      <div className={PrefixIconStyle}>
-        <Icon icon="DEPARTURE" />
-      </div>
+      <div className={PrefixIconStyle}>{prefixIcon && <Icon icon={prefixIcon} />}</div>
       <div className={DateStyle}>
         <FormattedDate value={shownDate} />
       </div>
-      <div className={DelayStyle(delayAmount)}>{`${delayAmount > 0 ? '+' : ''}${delayAmount}`}</div>
+      <div className={DelayStyle(delayAmount)}>
+        {delayAmount !== 0 && `${delayAmount > 0 ? '+' : ''}${delayAmount}`}
+      </div>
       <div className={ApprovedIconStyle(!!approvedAt)}>
         <Icon icon="CHECKED" />
       </div>

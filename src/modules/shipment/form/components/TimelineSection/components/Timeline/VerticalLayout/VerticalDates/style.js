@@ -9,4 +9,19 @@ export const VerticalDatesWrapperStyle = css`
   width: 150px;
 `;
 
-export default VerticalDatesWrapperStyle;
+export const SingularDateWrapperStyle = css`
+  display: flex;
+  align-items: center;
+  height: 30px;
+`;
+
+export const VoyageDatesWrapperStyle = css`
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+export const BlankGapStyle = css`
+  flex: 1;
+`;

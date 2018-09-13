@@ -19,16 +19,32 @@ const dummyData = {
   },
   voyages: [
     {
-      departurePort: 'Hello',
-      arrivalPort: null,
+      id: '1',
+      departurePort: 'Tokyo',
+      arrivalPort: 'Hong Kong',
       departure: {
         approvedAt: true,
-        date: null,
+        date: '2018-11-01',
         timelineDateRevisions: [],
       },
       arrival: {
         approvedAt: true,
-        date: null,
+        date: '2018-11-01',
+        timelineDateRevisions: [],
+      },
+    },
+    {
+      id: '2',
+      departurePort: 'Hong Kong',
+      arrivalPort: 'China',
+      departure: {
+        approvedAt: true,
+        date: '2018-11-01',
+        timelineDateRevisions: [],
+      },
+      arrival: {
+        approvedAt: false,
+        date: '2018-11-01',
         timelineDateRevisions: [],
       },
     },
@@ -37,7 +53,7 @@ const dummyData = {
     {
       customClearance: {
         approvedAt: false,
-        date: null,
+        date: '2018-11-01',
         timelineDateRevisions: [],
       },
       warehouseArrival: {
@@ -47,7 +63,7 @@ const dummyData = {
       },
       deliveryReady: {
         approvedAt: false,
-        date: null,
+        date: '2018-11-01',
         timelineDateRevisions: [],
       },
     },

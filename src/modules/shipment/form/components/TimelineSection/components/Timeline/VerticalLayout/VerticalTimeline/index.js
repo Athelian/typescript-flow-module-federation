@@ -36,7 +36,7 @@ const VerticalTimeline = ({ shipment }: Props) => {
 
       {voyages.length > 1 &&
         voyages.slice(1).map((voyage, index) => (
-          <>
+          <React.Fragment key={voyage.id}>
             <TimelineIcon icon="TRANSIT" color={coloring[index + 2]} />
 
             <TimelineVoyage>
@@ -44,7 +44,7 @@ const VerticalTimeline = ({ shipment }: Props) => {
               <TimelineLine color={coloring[index + 4]} />
               <TimelineIcon icon="PLANE" color={coloring[index + 3]} />
             </TimelineVoyage>
-          </>
+          </React.Fragment>
         ))}
 
       <TimelineIcon icon="PORT" color={dischargePortArrivalColoring} />

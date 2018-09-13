@@ -23,6 +23,7 @@ export const DateStyle = css`
   ${fontSizes.MAIN};
   ${presets.ELLIPSIS};
   font-weight: bold;
+  width: 70px;
 `;
 
 export const DelayStyle = (delayAmount: number) => css`

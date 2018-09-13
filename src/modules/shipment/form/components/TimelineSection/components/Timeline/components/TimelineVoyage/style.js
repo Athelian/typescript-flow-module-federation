@@ -6,7 +6,7 @@ export const TimelineVoyageWrapperStyle = css`
   flex-direction: column;
   align-items: center;
   position: relative;
-  flex: 1;
+  flex: 2;
 `;
 
 export default TimelineVoyageWrapperStyle;
