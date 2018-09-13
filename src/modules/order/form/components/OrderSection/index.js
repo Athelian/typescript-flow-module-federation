@@ -412,7 +412,7 @@ const OrderSection = ({ isNew }: Props) => (
                 </Label>
                 <BooleanValue>
                   {({ value: opened, toggle }) => (
-                    <React.Fragment>
+                    <>
                       {!values.exporter ? (
                         <DashedPlusButton width="200px" height="230px" onClick={toggle} />
                       ) : (
@@ -464,7 +464,7 @@ const OrderSection = ({ isNew }: Props) => (
                           </Subscribe>
                         )}
                       </SlideView>
-                    </React.Fragment>
+                    </>
                   )}
                 </BooleanValue>
               </div>

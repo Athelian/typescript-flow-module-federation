@@ -1,0 +1,40 @@
+query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: OrderItemSortInput) {
+  orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
+    page
+    totalPage
+    nodes {
+      id
+      price {
+        amount
+        currency
+      }
+      quantity
+      batches {
+        id
+        quantity
+      }
+      productProvider {
+        id
+        exporter {
+          id
+          name
+        }
+        supplier {
+          id
+          name
+        }
+        product {
+          id
+          name
+          serial
+          tags {
+            id
+            name
+            color
+            description
+          }
+        }
+      }
+    }
+  }
+}

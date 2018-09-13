@@ -30,9 +30,14 @@ import {
   TotalPriceWrapperStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  onClick: (id: string) => void,
+  onSelect: (item: OrderItem) => void,
+  selectable: boolean,
+};
+
+type Props = OptionalProps & {
   item: ?OrderItem,
-  onClick?: (id: string) => void,
   currency: string,
   saveOnBlur: Function,
   onClone: (item: OrderItem) => void,
@@ -76,12 +81,19 @@ function getQuantitySummary(item: Object) {
   };
 }
 
+const defaultProps = {
+  onClick: () => {},
+  onSelect: () => {},
+  selectable: false,
+};
+
 const OrderItemCard = ({
   item,
   onClick,
   onRemove,
   onClone,
   saveOnBlur,
+  selectable,
   currency,
   ...rest
 }: Props) => {
@@ -107,8 +119,18 @@ const OrderItemCard = ({
       }}
     >
       {({ value: { quantity, price }, set, assign }) => (
-        <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" actions={actions} {...rest}>
-          <div className={OrderItemCardWrapperStyle} onClick={onClick} role="presentation">
+        <BaseCard
+          icon="ORDER_ITEM"
+          color="ORDER_ITEM"
+          selectable={selectable}
+          actions={actions}
+          {...rest}
+        >
+          <div
+            className={OrderItemCardWrapperStyle}
+            onClick={!selectable ? onClick : () => {}}
+            role="presentation"
+          >
             <div className={ProductWrapperStyle}>
               <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
 
@@ -132,100 +154,116 @@ const OrderItemCard = ({
             <div className={BodyWrapperStyle}>
               <div
                 className={QuantityWrapperStyle}
-                onClick={evt => evt.stopPropagation()}
+                onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
                 role="presentation"
               >
                 <Label required>QTY</Label>
-                <Subscribe to={[FormContainer]}>
-                  {({ state: { activeField }, ...formHelper }) => (
-                    <FormField name={`${item.id}.quantity`} initValue={quantity} {...formHelper}>
-                      {inputHandlers => (
-                        <DefaultStyle
-                          type="number"
-                          height="20px"
-                          width="90px"
-                          isFocused={activeField === inputHandlers.name}
-                        >
-                          <NumberInput
-                            {...inputHandlers}
-                            value={quantity}
-                            onChange={evt => set('quantity', evt.target.value)}
-                            onBlur={evt => {
-                              inputHandlers.onBlur(evt);
-                              saveOnBlur({ quantity, price });
-                            }}
-                          />
-                        </DefaultStyle>
-                      )}
-                    </FormField>
-                  )}
-                </Subscribe>
+                {selectable ? (
+                  <FormattedNumber value={quantity} />
+                ) : (
+                  <Subscribe to={[FormContainer]}>
+                    {({ state: { activeField }, ...formHelper }) => (
+                      <FormField name={`${item.id}.quantity`} initValue={quantity} {...formHelper}>
+                        {inputHandlers => (
+                          <DefaultStyle
+                            type="number"
+                            height="20px"
+                            width="90px"
+                            isFocused={activeField === inputHandlers.name}
+                          >
+                            <NumberInput
+                              {...inputHandlers}
+                              value={quantity}
+                              onChange={evt => set('quantity', evt.target.value)}
+                              onBlur={evt => {
+                                inputHandlers.onBlur(evt);
+                                saveOnBlur({ quantity, price });
+                              }}
+                            />
+                          </DefaultStyle>
+                        )}
+                      </FormField>
+                    )}
+                  </Subscribe>
+                )}
               </div>
               <div
                 className={UnitPriceWrapperStyle}
-                onClick={evt => evt.stopPropagation()}
                 role="presentation"
+                onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
               >
-                <BooleanValue>
-                  {({ value: isOpen, toggle }) => (
-                    <>
-                      <ConfirmDialog
-                        isOpen={isOpen}
-                        onRequestClose={toggle}
-                        onCancel={toggle}
-                        onConfirm={() => {
-                          assign({ price: { currency, amount: unitPrice.amount } });
-                          saveOnBlur({ quantity, price: { currency, amount: unitPrice.amount } });
-                          toggle();
-                        }}
-                        message="Currency is not matched. Do you want to sync?"
-                        width={400}
-                      />
-                      <button
-                        className={SyncButtonStyle}
-                        type="button"
-                        onClick={() => {
-                          if (unitPrice.currency === currency) {
+                {!selectable && (
+                  <BooleanValue>
+                    {({ value: isOpen, toggle }) => (
+                      <>
+                        <ConfirmDialog
+                          isOpen={isOpen}
+                          onRequestClose={toggle}
+                          onCancel={toggle}
+                          onConfirm={() => {
                             assign({ price: { currency, amount: unitPrice.amount } });
                             saveOnBlur({ quantity, price: { currency, amount: unitPrice.amount } });
-                          } else {
                             toggle();
-                          }
-                        }}
-                      >
-                        SYNC
-                        <Icon icon="SYNC" />
-                      </button>
-                    </>
-                  )}
-                </BooleanValue>
-                <Label required>PRICE</Label>
-                <Subscribe to={[FormContainer]}>
-                  {({ state: { activeField }, ...formHelper }) => (
-                    <FormField name={`${item.id}.price`} initValue={price.amount} {...formHelper}>
-                      {inputHandlers => (
-                        <DefaultPriceStyle
-                          currency={currency}
-                          height="20px"
-                          width="90px"
-                          isFocused={activeField === inputHandlers.name}
-                        >
-                          <NumberInput
-                            {...inputHandlers}
-                            value={price.amount}
-                            onChange={evt =>
-                              assign({ price: { amount: evt.target.value, currency } })
+                          }}
+                          message="Currency is not matched. Do you want to sync?"
+                          width={400}
+                        />
+                        <button
+                          className={SyncButtonStyle}
+                          type="button"
+                          onClick={() => {
+                            if (unitPrice.currency === currency) {
+                              assign({ price: { currency, amount: unitPrice.amount } });
+                              saveOnBlur({
+                                quantity,
+                                price: { currency, amount: unitPrice.amount },
+                              });
+                            } else {
+                              toggle();
                             }
-                            onBlur={evt => {
-                              inputHandlers.onBlur(evt);
-                              saveOnBlur({ quantity, price });
-                            }}
-                          />
-                        </DefaultPriceStyle>
-                      )}
-                    </FormField>
-                  )}
-                </Subscribe>
+                          }}
+                        >
+                          SYNC
+                          <Icon icon="SYNC" />
+                        </button>
+                      </>
+                    )}
+                  </BooleanValue>
+                )}
+                <Label required>PRICE</Label>
+                {selectable ? (
+                  <>
+                    <FormattedNumber value={price.amount} />
+                    {price.currency}
+                  </>
+                ) : (
+                  <Subscribe to={[FormContainer]}>
+                    {({ state: { activeField }, ...formHelper }) => (
+                      <FormField name={`${item.id}.price`} initValue={price.amount} {...formHelper}>
+                        {inputHandlers => (
+                          <DefaultPriceStyle
+                            currency={currency || price.currency}
+                            height="20px"
+                            width="90px"
+                            isFocused={activeField === inputHandlers.name}
+                          >
+                            <NumberInput
+                              {...inputHandlers}
+                              value={price.amount}
+                              onChange={evt =>
+                                assign({ price: { amount: evt.target.value, currency } })
+                              }
+                              onBlur={evt => {
+                                inputHandlers.onBlur(evt);
+                                saveOnBlur({ quantity, price });
+                              }}
+                            />
+                          </DefaultPriceStyle>
+                        )}
+                      </FormField>
+                    )}
+                  </Subscribe>
+                )}
               </div>
               <div className={DividerStyle} />
               <QuantityChart
@@ -250,5 +288,7 @@ const OrderItemCard = ({
     </ObjectValue>
   );
 };
+
+OrderItemCard.defaultProps = defaultProps;
 
 export default OrderItemCard;
