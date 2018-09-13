@@ -8,6 +8,7 @@ type TimelineLine = {
 };
 
 export const TimelineLineStyle = ({ vertical, color }: TimelineLine) => css`
+  position: relative;
   background-color: ${colors[color]};
   flex: 1;
   ${vertical

@@ -12,6 +12,7 @@ export const TimelineLeftWrapperStyle = css`
   flex-direction: column;
   height: 100%;
   align-items: center;
+  padding: 10px;
 `;
 
 export const TimelineRightWrapperStyle = css`
