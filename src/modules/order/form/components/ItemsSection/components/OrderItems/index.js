@@ -1,9 +1,13 @@
 // @flow
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
-import { ArrayValue } from 'react-values';
+import { BooleanValue, ArrayValue } from 'react-values';
+import { Subscribe } from 'unstated';
+import { OrderItemsContainer } from 'modules/order/form/containers';
+import BatchFormContainer from 'modules/batch/form/container';
 import { isEquals } from 'utils/fp';
 import { injectUid } from 'utils/id';
+import SlideView from 'components/SlideView';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import Icon from 'components/Icon';
@@ -20,6 +24,7 @@ import {
   EmptyMessageStyle,
 } from 'modules/order/form/components/ItemsSection/style';
 import messages from 'modules/order/messages';
+import BatchFormWrapper from '../BatchFormWrapper';
 
 type Props = {
   intl: intlShape,
@@ -117,26 +122,62 @@ class OrderItems extends React.Component<Props> {
 
                       <div className={BatchGridStyle}>
                         {batches.map((batch, position) => (
-                          <div className={BatchStyle} key={batch.id}>
-                            <OrderBatchCard
-                              batch={batch}
-                              currency={currency}
-                              price={item.price}
-                              saveOnBlur={updatedBatch => {
-                                changeBatch(position, 1, updatedBatch);
-                              }}
-                              onRemove={() => changeBatch(position, 1)}
-                              onClone={({ id, ...rest }) => {
-                                changeBatch(
-                                  batches.length,
-                                  1,
-                                  injectUid({
-                                    ...rest,
-                                    isNew: true,
-                                  })
-                                );
-                              }}
-                            />
+                          <div
+                            className={BatchStyle}
+                            key={`${batch.id}-${currency}-${batch.quantity}-${batch.no}-${
+                              batch.deliveredAt
+                            }-${item.price.amount}`}
+                          >
+                            <BooleanValue>
+                              {({ value: opened, toggle }) => (
+                                <>
+                                  <SlideView
+                                    isOpen={opened}
+                                    onRequestClose={toggle}
+                                    options={{ width: '1030px' }}
+                                  >
+                                    {opened && (
+                                      <Subscribe to={[BatchFormContainer, OrderItemsContainer]}>
+                                        {({ initDetailValues }, { state }) => (
+                                          <BatchFormWrapper
+                                            batch={state.orderItems[index].batches[position]}
+                                            isNew={!!batch.isNew}
+                                            orderItem={item}
+                                            initDetailValues={initDetailValues}
+                                            onCancel={toggle}
+                                            onSave={updatedBatch => {
+                                              toggle();
+                                              changeBatch(position, 1, updatedBatch);
+                                            }}
+                                          />
+                                        )}
+                                      </Subscribe>
+                                    )}
+                                  </SlideView>
+                                  <OrderBatchCard
+                                    batch={batch}
+                                    currency={currency}
+                                    price={item.price}
+                                    onClick={toggle}
+                                    saveOnBlur={updatedBatch => {
+                                      changeBatch(position, 1, updatedBatch);
+                                    }}
+                                    onRemove={() => changeBatch(position, 1)}
+                                    onClone={({ id, no, ...rest }) => {
+                                      changeBatch(
+                                        batches.length,
+                                        1,
+                                        injectUid({
+                                          ...rest,
+                                          no: `${no}- clone`,
+                                          isNew: true,
+                                        })
+                                      );
+                                    }}
+                                  />
+                                </>
+                              )}
+                            </BooleanValue>
                           </div>
                         ))}
                       </div>

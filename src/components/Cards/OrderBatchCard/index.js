@@ -25,17 +25,20 @@ import {
   BatchTagsWrapperStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  onClick: (batch: BatchItem) => void,
+};
+
+type Props = OptionalProps & {
   batch: ?BatchItem,
-  onClick?: (id: string) => void,
   currency: string,
   price: ?{
     amount: number,
     currency: string,
   },
   saveOnBlur: Function,
-  onClone: Function,
-  onRemove: Function,
+  onClone: (batch: BatchItem) => void,
+  onRemove: (batch: BatchItem) => void,
 };
 
 const calculateVolume = (batch: BatchItem, quantity: number) => {
@@ -53,6 +56,10 @@ const calculateVolume = (batch: BatchItem, quantity: number) => {
   }
 
   return 'N/A';
+};
+
+const defaultProps = {
+  onClick: () => {},
 };
 
 const OrderBatchCard = ({
@@ -79,8 +86,16 @@ const OrderBatchCard = ({
     <ObjectValue defaultValue={batch}>
       {({ value: { no, quantity, deliveredAt }, set }) => (
         <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
-          <div className={OrderBatchCardWrapperStyle} onClick={onClick} role="presentation">
-            <div className={BatchNoWrapperStyle}>
+          <div
+            className={OrderBatchCardWrapperStyle}
+            onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
+            role="presentation"
+          >
+            <div
+              className={BatchNoWrapperStyle}
+              onClick={evt => evt.stopPropagation()}
+              role="presentation"
+            >
               <Subscribe to={[FormContainer]}>
                 {({ state: { activeField }, ...formHelper }) => (
                   <FormField name={`batch.${batch.id}.no`} initValue={quantity} {...formHelper}>
@@ -107,7 +122,11 @@ const OrderBatchCard = ({
               </Subscribe>
             </div>
 
-            <div className={QuantityWrapperStyle}>
+            <div
+              className={QuantityWrapperStyle}
+              onClick={evt => evt.stopPropagation()}
+              role="presentation"
+            >
               <Label required>QTY</Label>
               <Subscribe to={[FormContainer]}>
                 {({ state: { activeField }, ...formHelper }) => (
@@ -139,7 +158,11 @@ const OrderBatchCard = ({
               </Subscribe>
             </div>
 
-            <div className={DeliveryDateWrapperStyle}>
+            <div
+              className={DeliveryDateWrapperStyle}
+              onClick={evt => evt.stopPropagation()}
+              role="presentation"
+            >
               <Label>DELIVERY</Label>
               <Subscribe to={[FormContainer]}>
                 {({ state: { activeField }, ...formHelper }) => (
@@ -220,5 +243,7 @@ const OrderBatchCard = ({
     </ObjectValue>
   );
 };
+
+OrderBatchCard.defaultProps = defaultProps;
 
 export default OrderBatchCard;

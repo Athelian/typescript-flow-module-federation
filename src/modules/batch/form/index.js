@@ -9,6 +9,7 @@ import { BatchFormWrapperStyle, StatusStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
+  selectable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -17,9 +18,10 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isNew: false,
+  selectable: true,
 };
 
-const BatchForm = ({ batch, isNew }: Props) => (
+const BatchForm = ({ batch, isNew, selectable }: Props) => (
   <div className={BatchFormWrapperStyle}>
     <SectionWrapper id="batchSection">
       <SectionHeader icon="BATCH" title="BATCH">
@@ -38,7 +40,7 @@ const BatchForm = ({ batch, isNew }: Props) => (
           </>
         )}
       </SectionHeader>
-      <BatchSection isNew={isNew} />
+      <BatchSection isNew={isNew} selectable={selectable} />
     </SectionWrapper>
 
     <SectionWrapper id="quantityAdjustmentsSection">

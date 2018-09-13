@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { isNullOrUndefined } from 'utils/fp';
 
 type OptionalProps = {
   validationOnChange: boolean,
@@ -35,7 +36,7 @@ export default class FormField extends React.Component<Props, State> {
 
     const { initValue } = props;
     this.state = {
-      value: initValue || '',
+      value: isNullOrUndefined(initValue) ? '' : initValue,
     };
   }
 

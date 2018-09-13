@@ -100,7 +100,6 @@ export type BatchCreate = {
   },
   packageCapacity?: ?number,
   tagIds?: ?Array<string>,
-  orderItemId: string,
   batchAdjustments?: ?Array<{
     reason: 'Inspection' | 'Lost' | 'Other',
     quantity: number,

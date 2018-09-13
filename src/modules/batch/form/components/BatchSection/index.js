@@ -31,9 +31,10 @@ import {
 
 type Props = {
   isNew: boolean,
+  selectable: boolean,
 };
 
-const BatchSection = ({ isNew }: Props) => (
+const BatchSection = ({ isNew, selectable }: Props) => (
   <div className={BatchSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
       {({ originalValues, state, setFieldValue, validationRules }) => {
@@ -253,7 +254,10 @@ const BatchSection = ({ isNew }: Props) => (
                       {!values.orderItem ? (
                         <DashedPlusButton width="195px" height="200px" onClick={toggle} />
                       ) : (
-                        <OrderItemCard item={values.orderItem} onClick={toggle} />
+                        <OrderItemCard
+                          item={values.orderItem}
+                          onClick={selectable ? toggle : null}
+                        />
                       )}
 
                       <SlideView
