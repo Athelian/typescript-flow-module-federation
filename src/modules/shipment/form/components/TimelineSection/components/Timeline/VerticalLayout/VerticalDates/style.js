@@ -6,6 +6,7 @@ export const VerticalDatesWrapperStyle = css`
   flex-direction: column;
   height: 100%;
   align-items: center;
+  width: 150px;
 `;
 
 export default VerticalDatesWrapperStyle;

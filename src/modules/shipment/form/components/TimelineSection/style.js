@@ -16,7 +16,7 @@ export const TimelineWrapperStyle = css`
   display: flex;
   flex-direction: column;
   box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  width: 210px;
 `;
 
 export const BodyWrapperStyle = css`

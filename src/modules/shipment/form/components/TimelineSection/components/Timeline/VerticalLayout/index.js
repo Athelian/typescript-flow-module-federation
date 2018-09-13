@@ -7,15 +7,20 @@ import { VerticalLayoutWrapperStyle } from './style';
 const dummyData = {
   cargoReady: {
     approvedAt: false,
-    date: '2018-02-01',
+    date: '2018-11-01',
     timelineDateRevisions: [
       {
         date: '2018-01-02',
+      },
+      {
+        date: '2018-11-12',
       },
     ],
   },
   voyages: [
     {
+      departurePort: 'Hello',
+      arrivalPort: null,
       departure: {
         approvedAt: true,
         date: null,

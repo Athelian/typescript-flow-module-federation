@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { TimelineDate } from '../../components';
+import { TimelineDate, TimelinePortName } from '../../components';
 import { VerticalDatesWrapperStyle } from './style';
 
 type Props = {
@@ -8,11 +8,14 @@ type Props = {
 };
 
 const VerticalDates = ({ shipment }: Props) => {
-  const { cargoReady } = shipment;
+  const { cargoReady, voyages } = shipment;
+
+  const loadPort = voyages[0].departurePort;
 
   return (
     <div className={VerticalDatesWrapperStyle}>
       <TimelineDate timelineDate={cargoReady} />
+      <TimelinePortName port={loadPort} />
     </div>
   );
 };

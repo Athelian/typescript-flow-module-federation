@@ -9,8 +9,13 @@ export const TimelineDateWrapperStyle = css`
 `;
 
 export const PrefixIconStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   ${fontSizes.SMALL};
   color: ${colors.GRAY_LIGHT};
+  width: 18px;
+  height: 18px;
 `;
 
 export const DateStyle = css`
@@ -25,9 +30,16 @@ export const DelayStyle = (delayAmount: number) => css`
   ${fontSizes.MAIN};
   ${presets.ELLIPSIS};
   font-weight: bold;
+  text-align: right;
+  width: 30px;
 `;
 
 export const ApprovedIconStyle = (approved: boolean) => css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   ${fontSizes.MAIN};
   color: ${approved ? colors.BLUE : colors.GRAY_SUPER_LIGHT};
+  width: 18px;
+  height: 18px;
 `;
