@@ -88,15 +88,11 @@ class BatchFormModule extends React.Component<Props> {
                       <EntityIcon icon="BATCH" color="BATCH" />
                       <JumpToSection>
                         <SectionTabs link="batchSection" label="BATCH" icon="BATCH" />
-                      </JumpToSection>
-                      <JumpToSection>
                         <SectionTabs
                           link="quantityAdjustmentsSection"
                           label="QUANTITY ADJUSTMENTS"
                           icon="QUANTITY_ADJUSTMENTS"
                         />
-                      </JumpToSection>
-                      <JumpToSection>
                         <SectionTabs link="packagingSection" label="PACKAGING" icon="PACKAGING" />
                       </JumpToSection>
                       <Subscribe to={[BatchFormContainer, FormContainer]}>

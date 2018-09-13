@@ -9,6 +9,7 @@ type Props = {
   children: any,
 };
 
+// TODO: support pagination
 const PartnerList = ({ types, children }: Props) => (
   <Query query={query} variables={{ page: 1, perPage: 20, filterBy: { types } }}>
     {({ loading, data, error }) =>

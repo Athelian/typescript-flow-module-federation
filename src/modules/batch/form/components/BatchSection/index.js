@@ -28,6 +28,7 @@ import {
   TagsInputStyle,
   DividerStyle,
 } from './style';
+import SelectOrderItem from '../SelectOrderItem';
 
 type Props = {
   isNew: boolean,
@@ -266,7 +267,26 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                         options={{ width: '1030px' }}
                       >
                         {opened && (
-                          <Subscribe to={[FormContainer]}>{() => <div>WIP</div>}</Subscribe>
+                          <Subscribe to={[FormContainer]}>
+                            {({ onValidation, setFieldTouched }) => (
+                              <SelectOrderItem
+                                selected={values.orderItem}
+                                onCancel={toggle}
+                                onSelect={newValue => {
+                                  toggle();
+                                  setFieldTouched('orderItem');
+                                  setFieldValue('orderItem', newValue);
+                                  onValidation(
+                                    {
+                                      ...values,
+                                      orderItem: newValue,
+                                    },
+                                    validationRules()
+                                  );
+                                }}
+                              />
+                            )}
+                          </Subscribe>
                         )}
                       </SlideView>
                     </React.Fragment>

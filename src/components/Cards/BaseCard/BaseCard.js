@@ -116,6 +116,7 @@ export default class BaseCard extends React.Component<Props, State> {
           showActionsOnHover={showActionsOnHover}
           onClick={this.toggleActionVisibility}
         />
+        {children}
         {!disabled &&
           selectable && (
             <div
@@ -124,7 +125,6 @@ export default class BaseCard extends React.Component<Props, State> {
               role="presentation"
             />
           )}
-        {children}
       </div>
     );
   }
