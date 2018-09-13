@@ -1,47 +1,111 @@
 // @flow
 import * as React from 'react';
-import { TimelineIcon, TimelineLine } from '../components';
+import { TimelineIcon, TimelineLine, TimelineVoyage } from '../components';
+import { getTimelineColoring } from '../helpers';
 import { TimelineWrapperStyle, TimelineLeftWrapperStyle, TimelineRightWrapperStyle } from './style';
 
-const VerticalTimeline = () => (
-  <div className={TimelineWrapperStyle}>
-    <div className={TimelineLeftWrapperStyle}>
-      <TimelineIcon icon="CARGO_READY" color="GRAY_LIGHT" />
+const dummyData = {
+  cargoReady: {
+    approvedAt: false,
+  },
+  voyages: [
+    {
+      departure: {
+        approvedAt: true,
+      },
+      arrival: {
+        approvedAt: true,
+      },
+    },
+    {
+      departure: {
+        approvedAt: true,
+      },
+      arrival: {
+        approvedAt: true,
+      },
+    },
+    {
+      departure: {
+        approvedAt: true,
+      },
+      arrival: {
+        approvedAt: true,
+      },
+    },
+  ],
+  containerGroups: [
+    {
+      customClearance: {
+        approvedAt: false,
+      },
+      warehouseArrival: {
+        approvedAt: false,
+      },
+      deliveryReady: {
+        approvedAt: false,
+      },
+    },
+  ],
+};
 
-      <TimelineLine color="GRAY_LIGHT" />
+const VerticalTimeline = () => {
+  const { cargoReady, voyages, containerGroups } = dummyData;
 
-      <TimelineIcon icon="PORT" color="GRAY_LIGHT" />
+  const coloring = getTimelineColoring({ cargoReady, voyages, containerGroups });
 
-      <TimelineLine color="GRAY_LIGHT" />
+  const cargoReadyColoring = coloring[0];
+  const loadPortDepartureColoring = coloring[1];
+  const dischargePortArrivalColoring = coloring[coloring.length - 4];
+  const customClearanceColoring = coloring[coloring.length - 3];
+  const warehouseArrivalColoring = coloring[coloring.length - 2];
+  const deliveryReadyColoring = coloring[coloring.length - 1];
 
-      <TimelineIcon icon="PLANE" color="GRAY_LIGHT" />
+  return (
+    <div className={TimelineWrapperStyle}>
+      <div className={TimelineLeftWrapperStyle}>
+        <TimelineIcon icon="CARGO_READY" color={cargoReadyColoring} />
 
-      <TimelineLine color="GRAY_LIGHT" />
+        <TimelineLine color={loadPortDepartureColoring} />
 
-      <TimelineIcon icon="TRANSIT" color="GRAY_LIGHT" />
+        <TimelineIcon icon="PORT" color={loadPortDepartureColoring} />
 
-      <TimelineLine color="GRAY_LIGHT" />
+        <TimelineVoyage>
+          <TimelineLine color={loadPortDepartureColoring} />
+          <TimelineLine color={coloring[2]} />
+          <TimelineIcon icon="PLANE" color={loadPortDepartureColoring} />
+        </TimelineVoyage>
 
-      <TimelineIcon icon="PLANE" color="GRAY_LIGHT" />
+        {voyages.length > 1 &&
+          voyages.slice(1).map((voyage, index) => (
+            <>
+              <TimelineIcon icon="TRANSIT" color={coloring[index + 2]} />
 
-      <TimelineLine color="GRAY_LIGHT" />
+              <TimelineVoyage>
+                <TimelineLine color={coloring[index + 3]} />
+                <TimelineLine color={coloring[index + 4]} />
+                <TimelineIcon icon="PLANE" color={coloring[index + 3]} />
+              </TimelineVoyage>
+            </>
+          ))}
 
-      <TimelineIcon icon="PORT" color="GRAY_LIGHT" />
+        <TimelineIcon icon="PORT" color={dischargePortArrivalColoring} />
 
-      <TimelineLine color="GRAY_LIGHT" />
+        <TimelineLine color={customClearanceColoring} />
 
-      <TimelineIcon icon="CUSTOMS" color="GRAY_LIGHT" />
+        <TimelineIcon icon="CUSTOMS" color={customClearanceColoring} />
 
-      <TimelineLine color="GRAY_LIGHT" />
+        <TimelineLine color={warehouseArrivalColoring} />
 
-      <TimelineIcon icon="WAREHOUSE" color="GRAY_LIGHT" />
+        <TimelineIcon icon="WAREHOUSE" color={warehouseArrivalColoring} />
 
-      <TimelineLine color="GRAY_LIGHT" />
+        <TimelineLine color={deliveryReadyColoring} />
 
-      <TimelineIcon icon="DELIVERY_READY" color="GRAY_LIGHT" />
+        <TimelineIcon icon="DELIVERY_READY" color={deliveryReadyColoring} />
+      </div>
+      <div className={TimelineRightWrapperStyle}>Hi</div>
     </div>
-    <div className={TimelineRightWrapperStyle}>Hi</div>
-  </div>
-);
+  );
+};
 
 export default VerticalTimeline;

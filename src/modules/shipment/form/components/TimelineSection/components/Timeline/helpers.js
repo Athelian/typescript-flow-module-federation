@@ -2,25 +2,25 @@
 // import * as React from 'react';
 
 export const getTimelineColoring = ({
-  cargoReadyDate,
+  cargoReady,
   voyages,
   containerGroups,
 }: {
-  cargoReadyDate: any,
+  cargoReady: any,
   voyages: any,
   containerGroups: any,
 }): Array<string> => {
-  const { customClearanceDate, warehouseArrivalDate, deliveryReadyDate } = containerGroups[0];
+  const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
 
   // Add all boolean approvals of all the dates to an array in order
-  const arrayOfApprovals = [!!cargoReadyDate.approvedAt];
+  const arrayOfApprovals = [!!cargoReady.approvedAt];
   voyages.forEach(voyage => {
     arrayOfApprovals.push(!!voyage.departure.approvedAt, !!voyage.arrival.approvedAt);
   });
   arrayOfApprovals.push(
-    !!customClearanceDate.approvedAt,
-    !!warehouseArrivalDate.approvedAt,
-    !!deliveryReadyDate.approvedAt
+    !!customClearance.approvedAt,
+    !!warehouseArrival.approvedAt,
+    !!deliveryReady.approvedAt
   );
 
   // Reverse the array in order to traverse it logically
