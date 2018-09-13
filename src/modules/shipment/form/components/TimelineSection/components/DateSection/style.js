@@ -5,9 +5,12 @@ import { layout, presets, borderRadiuses, fontSizes, colors, shadows } from 'sty
 export const DateSectionWrapperStyle = css`
   display: flex;
   flex-direction: column;
-  height: 600px;
   flex-shrink: 0;
   padding: 40px;
+  border-bottom: 1px solid ${colors.GRAY_VERY_LIGHT};
+  &:last-child {
+    border: none;
+  }
 `;
 
 export const AssignmentWrapperStyle = css`

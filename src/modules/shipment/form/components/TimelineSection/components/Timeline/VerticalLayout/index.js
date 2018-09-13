@@ -1,35 +1,30 @@
 // @flow
 import * as React from 'react';
 import VerticalTimeline from './VerticalTimeline';
-import { TimelineWrapperStyle, TimelineLeftWrapperStyle, TimelineRightWrapperStyle } from './style';
+import VerticalDates from './VerticalDates';
+import { VerticalLayoutWrapperStyle } from './style';
 
 const dummyData = {
   cargoReady: {
     approvedAt: false,
+    date: '2018-02-01',
+    timelineDateRevisions: [
+      {
+        date: '2018-01-02',
+      },
+    ],
   },
   voyages: [
     {
       departure: {
         approvedAt: true,
+        date: null,
+        timelineDateRevisions: [],
       },
       arrival: {
         approvedAt: true,
-      },
-    },
-    {
-      departure: {
-        approvedAt: true,
-      },
-      arrival: {
-        approvedAt: true,
-      },
-    },
-    {
-      departure: {
-        approvedAt: true,
-      },
-      arrival: {
-        approvedAt: true,
+        date: null,
+        timelineDateRevisions: [],
       },
     },
   ],
@@ -37,23 +32,27 @@ const dummyData = {
     {
       customClearance: {
         approvedAt: false,
+        date: null,
+        timelineDateRevisions: [],
       },
       warehouseArrival: {
         approvedAt: false,
+        date: null,
+        timelineDateRevisions: [],
       },
       deliveryReady: {
         approvedAt: false,
+        date: null,
+        timelineDateRevisions: [],
       },
     },
   ],
 };
 
 const VerticalLayout = () => (
-  <div className={TimelineWrapperStyle}>
-    <div className={TimelineLeftWrapperStyle}>
-      <VerticalTimeline shipment={dummyData} />
-    </div>
-    <div className={TimelineRightWrapperStyle}>Hi</div>
+  <div className={VerticalLayoutWrapperStyle}>
+    <VerticalTimeline shipment={dummyData} />
+    <VerticalDates shipment={dummyData} />
   </div>
 );
 

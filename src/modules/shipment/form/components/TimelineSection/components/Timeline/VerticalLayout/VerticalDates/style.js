@@ -1,0 +1,11 @@
+// @flow
+import { css } from 'react-emotion';
+
+export const VerticalDatesWrapperStyle = css`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+`;
+
+export default VerticalDatesWrapperStyle;
