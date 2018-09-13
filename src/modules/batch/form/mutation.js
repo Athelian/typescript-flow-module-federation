@@ -26,6 +26,7 @@ export const prepareCreateBatchInput = ({
   no,
   quantity,
   shipment = {},
+  orderItem = {},
   tags = [],
   batchAdjustments = [],
   packageGrossWeight_value,
@@ -77,6 +78,7 @@ export const prepareCreateBatchInput = ({
     no,
     quantity,
     ...(shipment ? { shipmentId: shipment.id } : {}),
+    ...(orderItem ? { orderItemId: orderItem.id } : {}),
     tagIds: tags.map(({ id: tagId }) => tagId),
     batchAdjustments: batchAdjustments.map(
       ({

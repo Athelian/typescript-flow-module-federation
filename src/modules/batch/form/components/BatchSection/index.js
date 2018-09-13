@@ -257,7 +257,8 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       ) : (
                         <OrderItemCard
                           item={values.orderItem}
-                          onClick={selectable ? toggle : null}
+                          onSelect={selectable ? toggle : null}
+                          selectable={selectable}
                         />
                       )}
 
