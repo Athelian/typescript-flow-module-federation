@@ -9,7 +9,7 @@ import FormattedDate from 'components/FormattedDate';
 import { CustomButton } from 'components/NavButtons';
 import { SectionHeader, Label } from 'components/Form';
 import {
-  DateSectionWrapperStyle,
+  TimelineInfoSectionWrapperStyle,
   AssignmentWrapperStyle,
   AssignmentStyle,
   RemoveAssignmentButtonStyle,
@@ -38,6 +38,24 @@ const dummyAssignedTo = [
     firstName: 'Bob',
     lastName: 'Nguyen',
   },
+
+  {
+    id: '3',
+    firstName: 'Bob',
+    lastName: 'Nguyen',
+  },
+
+  {
+    id: '4',
+    firstName: 'Bob',
+    lastName: 'Nguyen',
+  },
+
+  {
+    id: '5',
+    firstName: 'Bob',
+    lastName: 'Nguyen',
+  },
 ];
 
 // const dummyApprovedBy = null;
@@ -50,8 +68,8 @@ const dummyApprovedBy = {
 
 const dummyApprovedAt = '2018-01-01';
 
-const DateSection = ({ isNew, icon, title }: Props) => (
-  <div className={DateSectionWrapperStyle}>
+const TimelineInfoSection = ({ isNew, icon, title }: Props) => (
+  <div className={TimelineInfoSectionWrapperStyle}>
     <GridColumn>
       <SectionHeader icon={icon} title={title} />
 
@@ -115,4 +133,4 @@ const DateSection = ({ isNew, icon, title }: Props) => (
   </div>
 );
 
-export default DateSection;
+export default TimelineInfoSection;

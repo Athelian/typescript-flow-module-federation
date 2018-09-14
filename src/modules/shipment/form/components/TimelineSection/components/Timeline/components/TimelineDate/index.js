@@ -49,12 +49,13 @@ const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
   return (
     <div className={TimelineDateWrapperStyle}>
       <div className={PrefixIconStyle}>{prefixIcon && <Icon icon={prefixIcon} />}</div>
-      <div className={DateStyle}>
-        <FormattedDate value={shownDate} />
+      <div className={DateStyle(!!shownDate)}>
+        {shownDate ? <FormattedDate value={shownDate} /> : 'No date'}
       </div>
       <div className={DelayStyle(delayAmount)}>
         {delayAmount !== 0 && `${delayAmount > 0 ? '+' : ''}${delayAmount}`}
       </div>
+
       <div className={ApprovedIconStyle(!!approvedAt)}>
         <Icon icon="CHECKED" />
       </div>

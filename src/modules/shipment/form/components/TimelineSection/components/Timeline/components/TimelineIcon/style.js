@@ -22,6 +22,7 @@ export const TimelineIconStyle = ({ icon, color }: TimelineIcon) => css`
   width: 30px;
   height: 30px;
   flex-shrink: 0;
+  z-index: 1;
   &:hover,
   :focus {
     ${shadows.INPUT};
@@ -30,6 +31,7 @@ export const TimelineIconStyle = ({ icon, color }: TimelineIcon) => css`
 
 export const TransitIconWrapperStyle = css`
   position: relative;
+  z-index: 1;
 `;
 
 export const TransitIconTopStyle = css`

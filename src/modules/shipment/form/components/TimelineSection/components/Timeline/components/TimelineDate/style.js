@@ -18,8 +18,8 @@ export const PrefixIconStyle = css`
   height: 18px;
 `;
 
-export const DateStyle = css`
-  color: ${colors.BLACK};
+export const DateStyle = (shownDate: boolean) => css`
+  color: ${shownDate ? colors.BLACK : colors.GRAY_LIGHT};
   ${fontSizes.MAIN};
   ${presets.ELLIPSIS};
   font-weight: bold;
@@ -28,10 +28,10 @@ export const DateStyle = css`
 
 export const DelayStyle = (delayAmount: number) => css`
   color: ${delayAmount > 0 ? colors.RED : colors.TEAL};
-  ${fontSizes.MAIN};
+  ${fontSizes.SMALL};
   ${presets.ELLIPSIS};
   font-weight: bold;
-  text-align: right;
+  text-align: center;
   width: 30px;
 `;
 

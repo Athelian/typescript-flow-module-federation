@@ -9,7 +9,11 @@ type Props = {
 };
 
 const VerticalTimeline = ({ shipment }: Props) => {
-  const { cargoReady, voyages, containerGroups } = shipment;
+  const { cargoReady, voyages, containerGroups, transportType } = shipment;
+
+  let transportIcon = 'UNKNOWN';
+  if (transportType === 'Air') transportIcon = 'PLANE';
+  else if (transportType === 'Sea') transportIcon = 'SHIPMENT';
 
   const coloring = getTimelineColoring({ cargoReady, voyages, containerGroups });
 
@@ -31,7 +35,7 @@ const VerticalTimeline = ({ shipment }: Props) => {
       <TimelineVoyage>
         <TimelineLine color={loadPortDepartureColoring} />
         <TimelineLine color={coloring[2]} />
-        <TimelineIcon icon="PLANE" color={loadPortDepartureColoring} />
+        <TimelineIcon icon={transportIcon} color={loadPortDepartureColoring} />
       </TimelineVoyage>
 
       {voyages.length > 1 &&
@@ -42,7 +46,7 @@ const VerticalTimeline = ({ shipment }: Props) => {
             <TimelineVoyage>
               <TimelineLine color={coloring[index * 2 + 3]} />
               <TimelineLine color={coloring[index * 2 + 4]} />
-              <TimelineIcon icon="PLANE" color={coloring[index * 2 + 3]} />
+              <TimelineIcon icon={transportIcon} color={coloring[index * 2 + 3]} />
             </TimelineVoyage>
           </React.Fragment>
         ))}

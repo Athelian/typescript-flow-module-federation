@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout, presets, borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
 
-export const DateSectionWrapperStyle = css`
+export const TimelineInfoSectionWrapperStyle = css`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -75,7 +75,6 @@ export const ApprovalWrapperStyle = css`
   &:hover {
     & > button {
       opacity: 1;
-      left: 5px;
     }
   }
 `;
@@ -106,8 +105,8 @@ export const ApprovedAtStyle = css`
 
 export const UnapproveButtonStyle = css`
   position: absolute;
-  left: -25px;
   top: 0;
+  left: 5px;
   ${presets.BUTTON};
   opacity: 0;
   ${borderRadiuses.CIRCLE};
