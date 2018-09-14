@@ -1,9 +1,9 @@
 // @flow
 import { Container } from 'unstated';
 import * as Yup from 'yup';
-import { set, unset } from 'lodash';
+import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeTypename, flatten } from 'utils/data';
+import { removeTypename, removeNulls, flatten } from 'utils/data';
 import logger from 'utils/logger';
 
 type FormState = {
@@ -27,15 +27,17 @@ export default class BatchFormContainer extends Container<FormState> {
 
   setFieldArrayValue = (path: string, value: any) => {
     this.setState(prevState => {
-      const newState = set(prevState, path, value);
+      const newState = set(cloneDeep(prevState), path, value);
       return newState;
     });
   };
 
   removeArrayItem = (path: string) => {
     this.setState(prevState => {
-      unset(prevState, path);
-      return prevState;
+      const cloneState = cloneDeep(prevState);
+      unset(cloneState, path);
+      // $FlowFixMe: missing type define for map's ramda function
+      return removeNulls(cloneState);
     });
   };
 

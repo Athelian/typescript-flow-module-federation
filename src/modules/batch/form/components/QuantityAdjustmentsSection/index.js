@@ -28,7 +28,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
         const values = { ...originalValues, ...state };
 
         const currentQuantity = values.batchAdjustments.reduce(
-          (total, adjustment) => adjustment.quantity + total,
+          (total, adjustment) => (adjustment ? adjustment.quantity : 0 + total),
           values.quantity
         );
 
@@ -44,20 +44,24 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                     </div>
                   }
                 />
-                {values.batchAdjustments.map((adjustment, index) => (
-                  <Adjustment
-                    isNew={isNew}
-                    index={index}
-                    adjustment={adjustment}
-                    key={adjustment.id}
-                    setFieldArrayValue={setFieldArrayValue}
-                    removeArrayItem={removeArrayItem}
-                    formHelper={formHelper}
-                    values={values}
-                    validationRules={validationRules}
-                    activeField={activeField}
-                  />
-                ))}
+                {values.batchAdjustments &&
+                  values.batchAdjustments.map(
+                    (adjustment, index) =>
+                      adjustment && (
+                        <Adjustment
+                          isNew={isNew}
+                          index={index}
+                          adjustment={adjustment}
+                          key={adjustment.id}
+                          setFieldArrayValue={setFieldArrayValue}
+                          removeArrayItem={removeArrayItem}
+                          formHelper={formHelper}
+                          values={values}
+                          validationRules={validationRules}
+                          activeField={activeField}
+                        />
+                      )
+                  )}
                 <div className={AddAdjustmentButtonWrapperStyle}>
                   <NewButton
                     title="NEW ADJUSTMENT"
@@ -71,6 +75,9 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                           memo: '',
                           updatedAt: new Date(),
                         })
+                      );
+                      formHelper.setFieldTouched(
+                        `batchAdjustments[${values.batchAdjustments.length}]`
                       );
                     }}
                   />

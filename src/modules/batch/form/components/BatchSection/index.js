@@ -296,24 +296,31 @@ const BatchSection = ({ isNew, selectable }: Props) => (
               </div>
             </div>
             <div className={TagsInputStyle}>
-              <FieldItem
-                vertical
-                label={
-                  <Label>
-                    <FormattedMessage {...messages.tags} />
-                  </Label>
-                }
-                input={
-                  <TagsInput
-                    editable={isNew}
-                    id="tags"
-                    name="tags"
-                    tagType="Batch"
-                    values={values.tags}
-                    onChange={setFieldValue}
+              <Subscribe to={[FormContainer]}>
+                {({ setFieldTouched }) => (
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage {...messages.tags} />
+                      </Label>
+                    }
+                    input={
+                      <TagsInput
+                        editable={isNew}
+                        id="tags"
+                        name="tags"
+                        tagType="Batch"
+                        values={values.tags}
+                        onChange={(field, value) => {
+                          setFieldValue(field, value);
+                          setFieldTouched('tags');
+                        }}
+                      />
+                    }
                   />
-                }
-              />
+                )}
+              </Subscribe>
 
               <div className={DividerStyle} />
             </div>

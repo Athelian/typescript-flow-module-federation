@@ -163,7 +163,10 @@ class Adjustment extends React.Component<Props, State> {
           </FormField>
           <button
             className={RemoveButtonStyle}
-            onClick={() => removeArrayItem(`batchAdjustments[${index}]`)}
+            onClick={() => {
+              removeArrayItem(`batchAdjustments[${index}]`);
+              formHelper.setFieldTouched(`batchAdjustments[${index}]`);
+            }}
             type="button"
           >
             <Icon icon="REMOVE" />
