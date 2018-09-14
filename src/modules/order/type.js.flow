@@ -74,18 +74,13 @@ export type OrderItemForm = {
 };
 
 export type OrderForm = {
-  PO?: string,
-  date?: ?Date,
-  PI?: ?string,
-  exporterId?: string,
-  incoterms?: ?string,
+  poNo: string,
+  exporterId: string,
+  currency: string,
+  issuedAt?: ?Date,
+  piNo?: ?string,
+  incoterm?: ?string,
   deliveryPlace?: ?string,
-  currency?: string,
   memo?: ?string,
-  orderItems: Array<OrderItemForm>,
-  files: Array<{
-    path: string,
-    type: string,
-    memo?: string,
-  }>,
+  orderItems?: Array<OrderItemForm>,
 };
