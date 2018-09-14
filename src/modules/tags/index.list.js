@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
+import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import Tabs from 'components/NavBar/components/Tabs';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon, SearchInput } from 'components/NavBar';
+import { NewButton } from 'components/NavButtons';
 import messages from 'modules/tags/messages';
 import { injectUid } from 'utils/id';
 import TagsList from './list';
@@ -62,6 +64,9 @@ class TagsModule extends React.Component<Props, State> {
                   onClear={() => this.onChangeFilter({ query: '' })}
                   onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />
+                <Link to="new">
+                  <NewButton />
+                </Link>
               </NavBar>
             }
           >
