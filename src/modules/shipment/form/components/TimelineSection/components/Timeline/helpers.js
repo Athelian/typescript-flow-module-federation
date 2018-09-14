@@ -43,4 +43,8 @@ export const getTimelineColoring = ({
   return arrayOfColors.reverse();
 };
 
-export default getTimelineColoring;
+export const getTransportIcon = (transportType: ?string) => {
+  if (transportType === 'Air') return 'PLANE';
+  if (transportType === 'Sea') return 'SHIPMENT';
+  return 'UNKNOWN';
+};
