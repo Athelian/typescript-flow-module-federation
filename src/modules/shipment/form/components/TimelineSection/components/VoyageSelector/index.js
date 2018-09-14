@@ -106,10 +106,10 @@ class VoyageSelector extends React.Component<Props, State> {
     }
 
     return (
-      <button className={VoyageSelectorWrapperStyle} onClick={this.openOptions} type="button">
-        <Label># OF VOYAGES</Label>
+      <div className={VoyageSelectorWrapperStyle} onClick={this.openOptions} role="presentation">
+        <Label align="right"># OF VOYAGES</Label>
         {this.renderIcon({ numOfIcons: voyages.length, isActive: true })}
-      </button>
+      </div>
     );
   }
 }

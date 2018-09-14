@@ -26,8 +26,8 @@ const dummyData = {
   voyages: [
     {
       id: '1',
-      departurePort: 'Tokyo',
-      arrivalPort: 'Hong Kong',
+      departurePort: 'ADALV',
+      arrivalPort: 'HNGAC',
       departure: {
         approvedAt: true,
         date: '2018-11-01',
@@ -41,8 +41,8 @@ const dummyData = {
     },
     {
       id: '2',
-      departurePort: 'Hong Kong',
-      arrivalPort: 'China',
+      departurePort: 'HNGAC',
+      arrivalPort: null,
       departure: {
         approvedAt: true,
         date: null,
@@ -56,7 +56,7 @@ const dummyData = {
     },
     // {
     //   id: '3',
-    //   departurePort: 'China',
+    //   departurePort: null,
     //   arrivalPort: null,
     //   departure: {
     //     approvedAt: true,
