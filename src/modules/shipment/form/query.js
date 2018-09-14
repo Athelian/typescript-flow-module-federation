@@ -56,8 +56,14 @@ export const shipmentDetailQuery = gql`
       voyages {
         vesselName
         vesselCode
-        departurePort
-        arrivalPort
+        departurePort {
+          seaport
+          airport
+        }
+        arrivalPort {
+          seaport
+          airport
+        }
         departure {
           ...timelineDateFragment
         }

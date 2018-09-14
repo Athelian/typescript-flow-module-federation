@@ -21,9 +21,19 @@ type Props = {
 
 class OrderList extends React.PureComponent<Props> {
   render() {
-    const { viewType, ...filtersAndSort } = this.props;
+    const { viewType, sort, ...filtersAndSort } = this.props;
     return (
-      <Query query={query} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
+      <Query
+        query={query}
+        variables={{
+          page: 1,
+          sort: {
+            [sort.field]: sort.direction,
+          },
+          ...filtersAndSort,
+        }}
+        fetchPolicy="network-only"
+      >
         {({ loading, data, fetchMore, error }) => {
           if (error) {
             return error.message;

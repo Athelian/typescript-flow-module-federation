@@ -38,7 +38,7 @@ class BatchListModule extends React.Component<Props, State> {
     status: 'Active',
     sort: {
       field: 'updatedAt',
-      direction: 'DESC',
+      direction: 'DESCENDING',
     },
     perPage: 10,
   };
@@ -95,13 +95,13 @@ class BatchListModule extends React.Component<Props, State> {
                 />
                 <SortInput
                   sort={fields.find(item => item.value === sort.field) || fields[0]}
-                  ascending={sort.direction !== 'DESC'}
+                  ascending={sort.direction !== 'DESCENDING'}
                   fields={fields}
                   onChange={({ field: { value }, ascending }) =>
                     this.onChangeFilter({
                       sort: {
                         field: value,
-                        direction: ascending ? 'ASC' : 'DESC',
+                        direction: ascending ? 'ASCENDING' : 'DESCENDING',
                       },
                     })
                   }
