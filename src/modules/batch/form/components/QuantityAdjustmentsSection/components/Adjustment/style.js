@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, layout, colors, fontSizes, transitions, borderRadiuses } from 'styles/common';
+import { presets, layout, colors, fontSizes, transitions } from 'styles/common';
 
 export const AdjustmentWrapperStyle = css`
   display: flex;
@@ -77,17 +77,5 @@ export const LastModifiedWrapperStyle = css`
 `;
 
 export const UserIconStyle = css`
-  display: flex;
-  ${layout.CENTER_CENTER};
-  color: #fff;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  ${borderRadiuses.CIRCLE};
-  background-color: ${colors.GRAY_LIGHT};
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin: 0 5px 0 0;
-  img {
-    object-fit: cover;
-  }
 `;

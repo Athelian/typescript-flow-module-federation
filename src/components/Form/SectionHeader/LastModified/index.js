@@ -15,9 +15,14 @@ const messages = defineMessages({
 
 type Props = {
   updatedAt: string,
+  updatedBy: {
+    firstName: string,
+    lastName: string,
+  },
 };
 
-function SectionHeader({ updatedAt }: Props) {
+function SectionHeader({ updatedAt, updatedBy }: Props) {
+  const { firstName, lastName } = updatedBy;
   return (
     <div className={LastModifiedWrapperStyle}>
       <div className={LastModifiedStyle}>
@@ -29,7 +34,7 @@ function SectionHeader({ updatedAt }: Props) {
         </Display>
       </div>
       <div className={UserIconStyle}>
-        <UserAvatar profileUrl="" />
+        <UserAvatar firstName={firstName} lastName={lastName} width="20px" height="20px" />
       </div>
     </div>
   );

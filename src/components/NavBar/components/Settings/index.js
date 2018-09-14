@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Mutation } from 'react-apollo';
+import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -74,7 +75,10 @@ class Settings extends React.Component<Props, State> {
   render() {
     const { isNotificationOpen, isProfileOpen, logoutDialogOpen } = this.state;
     const DUMMY_BADGE = 3;
-    const DUMMY_USER = 'Z';
+    const DUMMY_USER = {
+      firstName: 'TODO',
+      lastName: 'TODO',
+    };
 
     return (
       <div className={SettingsWrapperStyle}>
@@ -97,7 +101,7 @@ class Settings extends React.Component<Props, State> {
           type="button"
           ref={this.ProfileRef}
         >
-          {DUMMY_USER}
+          <UserAvatar firstName={DUMMY_USER.firstName} lastName={DUMMY_USER.lastName} />
         </button>
 
         {isNotificationOpen && (

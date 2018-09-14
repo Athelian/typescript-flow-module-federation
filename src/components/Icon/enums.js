@@ -67,6 +67,8 @@ import UNKNOWN from '@fortawesome/fontawesome-pro-solid/faQuestion';
 import TRANSIT from '@fortawesome/fontawesome-pro-solid/faLifeRing';
 import CUSTOMS from '@fortawesome/fontawesome-pro-solid/faClipboardList';
 import DELIVERY_READY from '@fortawesome/fontawesome-pro-solid/faTruckLoading';
+import ARRIVAL from '@fortawesome/fontawesome-pro-solid/faArrowToBottom';
+import DEPARTURE from '@fortawesome/fontawesome-pro-solid/faArrowFromTop';
 
 // Staff
 import ID_BADGE from '@fortawesome/fontawesome-pro-solid/faIdBadge';
@@ -145,6 +147,8 @@ export default {
   TRANSIT,
   CUSTOMS,
   DELIVERY_READY,
+  ARRIVAL,
+  DEPARTURE,
 
   ID_BADGE,
 

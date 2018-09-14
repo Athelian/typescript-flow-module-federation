@@ -97,6 +97,10 @@ const dummyData = {
       id: 'b',
       name: 'Forwarder B',
     },
+    {
+      id: 'c',
+      name: 'Forwarder B',
+    },
   ],
 };
 

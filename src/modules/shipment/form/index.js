@@ -25,7 +25,7 @@ const ShipmentForm = ({ shipment, isNew }: Props) => (
   <div className={ShipmentFormWrapperStyle}>
     <SectionWrapper id="shipmentSection">
       <SectionHeader icon="SHIPMENT" title="SHIPMENT">
-        {!isNew && <LastModified updatedAt={shipment.updatedAt} />}
+        {!isNew && <LastModified updatedAt={shipment.updatedAt} updatedBy={shipment.updatedBy} />}
       </SectionHeader>
       <ShipmentSection isNew={isNew} />
     </SectionWrapper>

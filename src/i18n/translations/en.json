@@ -123,6 +123,7 @@
   "components.DateInputTooltip.approved": "Approved at {at} by {by}",
 
   "components.FormattedName.name": "{firstName} {lastName}",
+  "components.FormattedName.oneName": "{firstName}",
 
   "components.ActivateDialog.activate": "ACTIVATE",
   "components.ActivateDialog.cancel": "CANCEL",
