@@ -37,12 +37,12 @@ const VerticalTimeline = ({ shipment }: Props) => {
       {voyages.length > 1 &&
         voyages.slice(1).map((voyage, index) => (
           <React.Fragment key={voyage.id}>
-            <TimelineIcon icon="TRANSIT" color={coloring[index + 2]} />
+            <TimelineIcon icon="TRANSIT" color={coloring[index * 2 + 2]} />
 
             <TimelineVoyage>
-              <TimelineLine color={coloring[index + 3]} />
-              <TimelineLine color={coloring[index + 4]} />
-              <TimelineIcon icon="PLANE" color={coloring[index + 3]} />
+              <TimelineLine color={coloring[index * 2 + 3]} />
+              <TimelineLine color={coloring[index * 2 + 4]} />
+              <TimelineIcon icon="PLANE" color={coloring[index * 2 + 3]} />
             </TimelineVoyage>
           </React.Fragment>
         ))}

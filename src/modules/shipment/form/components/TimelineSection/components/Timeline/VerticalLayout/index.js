@@ -43,7 +43,22 @@ const dummyData = {
         timelineDateRevisions: [],
       },
       arrival: {
-        approvedAt: false,
+        approvedAt: true,
+        date: '2018-11-01',
+        timelineDateRevisions: [],
+      },
+    },
+    {
+      id: '3',
+      departurePort: 'China',
+      arrivalPort: null,
+      departure: {
+        approvedAt: true,
+        date: '2018-11-01',
+        timelineDateRevisions: [],
+      },
+      arrival: {
+        approvedAt: true,
         date: '2018-11-01',
         timelineDateRevisions: [],
       },
