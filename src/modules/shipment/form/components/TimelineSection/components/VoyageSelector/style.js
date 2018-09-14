@@ -13,6 +13,7 @@ export const VoyageSelectorWrapperStyle = css`
   height: 50px;
   flex-shrink: 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 0 0 0 10px;
   &:hover,
   :focus {
     background-color: ${colors.GRAY_SUPER_LIGHT};
