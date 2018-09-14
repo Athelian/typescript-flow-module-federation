@@ -1,13 +1,118 @@
 // @flow
 import * as React from 'react';
-import { VoyageSelectorWrapperStyle } from './style';
+import OutsideClickHandler from 'components/OutsideClickHandler';
+import Icon from 'components/Icon';
+import { Label } from 'components/Form';
+import {
+  VoyageSelectorWrapperStyle,
+  VoyageOptionsWrapperStyle,
+  VoyageIconWrapperStyle,
+  VoyageIconStyle,
+} from './style';
 
 type Props = {
   shipment: any,
 };
 
-const VoyageSelector = ({ shipment }: Props) => (
-  <div className={VoyageSelectorWrapperStyle}>{shipment.voyages.length}</div>
-);
+type State = {
+  isOptionsOpen: boolean,
+};
+
+class VoyageSelector extends React.Component<Props, State> {
+  state = {
+    isOptionsOpen: false,
+  };
+
+  openOptions = () => {
+    this.setState({ isOptionsOpen: true });
+  };
+
+  closeOptions = () => {
+    this.setState({ isOptionsOpen: false });
+  };
+
+  renderIcon = ({ numOfIcons, isActive, onClick }: Object) => {
+    const { shipment } = this.props;
+    const { transportType } = shipment;
+
+    let transportIcon = 'UNKNOWN';
+    if (transportType === 'Air') transportIcon = 'PLANE';
+    else if (transportType === 'Sea') transportIcon = 'SHIPMENT';
+
+    if (numOfIcons === 3) {
+      return (
+        <button className={VoyageIconWrapperStyle(isActive)} onClick={onClick} type="button">
+          <div className={VoyageIconStyle('bottom')}>
+            <Icon icon={transportIcon} />
+          </div>
+          <div className={VoyageIconStyle('top')}>
+            <Icon icon={transportIcon} />
+          </div>
+          <div className={VoyageIconStyle('bottom')}>
+            <Icon icon={transportIcon} />
+          </div>
+        </button>
+      );
+    }
+
+    if (numOfIcons === 2) {
+      return (
+        <button className={VoyageIconWrapperStyle(isActive)} onClick={onClick} type="button">
+          <div className={VoyageIconStyle('bottom')}>
+            <Icon icon={transportIcon} />
+          </div>
+          <div className={VoyageIconStyle('top')}>
+            <Icon icon={transportIcon} />
+          </div>
+        </button>
+      );
+    }
+
+    return (
+      <button className={VoyageIconWrapperStyle(isActive)} onClick={onClick} type="button">
+        <div className={VoyageIconStyle('middle')}>
+          <Icon icon={transportIcon} />
+        </div>
+      </button>
+    );
+  };
+
+  render() {
+    const { shipment } = this.props;
+    const { isOptionsOpen } = this.state;
+    const { voyages } = shipment;
+
+    if (isOptionsOpen) {
+      return (
+        <OutsideClickHandler onOutsideClick={this.closeOptions}>
+          <div className={VoyageOptionsWrapperStyle}>
+            {this.renderIcon({
+              numOfIcons: 1,
+              isActive: voyages.length === 1,
+              onClick: this.closeOptions,
+            })}
+            {this.renderIcon({
+              numOfIcons: 2,
+              isActive: voyages.length === 2,
+              onClick: this.closeOptions,
+            })}
+            {this.renderIcon({
+              numOfIcons: 3,
+              isActive: voyages.length === 3,
+              onClick: this.closeOptions,
+            })}
+          </div>
+        </OutsideClickHandler>
+      );
+    }
+
+    return (
+      <button className={VoyageSelectorWrapperStyle} onClick={this.openOptions} type="button">
+        <Label># OF VOYAGES</Label>
+        {this.renderIcon({ numOfIcons: voyages.length, isActive: true })}
+      </button>
+    );
+  }
+}
 
 export default VoyageSelector;

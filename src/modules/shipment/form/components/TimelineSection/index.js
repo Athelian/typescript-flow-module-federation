@@ -4,6 +4,7 @@ import { VerticalLayout, TimelineInfoSection, VoyageSelector } from './component
 import { TimelineSectionWrapperStyle, TimelineWrapperStyle, BodyWrapperStyle } from './style';
 
 const dummyData = {
+  transportType: 'Air',
   cargoReady: {
     approvedAt: false,
     date: '2018-11-01',
@@ -47,21 +48,21 @@ const dummyData = {
         timelineDateRevisions: [],
       },
     },
-    {
-      id: '3',
-      departurePort: 'China',
-      arrivalPort: null,
-      departure: {
-        approvedAt: true,
-        date: '2018-11-01',
-        timelineDateRevisions: [],
-      },
-      arrival: {
-        approvedAt: true,
-        date: '2018-11-01',
-        timelineDateRevisions: [],
-      },
-    },
+    // {
+    //   id: '3',
+    //   departurePort: 'China',
+    //   arrivalPort: null,
+    //   departure: {
+    //     approvedAt: true,
+    //     date: '2018-11-01',
+    //     timelineDateRevisions: [],
+    //   },
+    //   arrival: {
+    //     approvedAt: true,
+    //     date: '2018-11-01',
+    //     timelineDateRevisions: [],
+    //   },
+    // },
   ],
   containerGroups: [
     {
