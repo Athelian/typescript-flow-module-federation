@@ -1,16 +1,14 @@
 // @flow
 import * as React from 'react';
+import ScrollIntoView from 'components/ScrollIntoView';
 import Icon from 'components/Icon';
-import {
-  TimelineIconStyle,
-  TransitIconWrapperStyle,
-  TransitIconTopStyle,
-  TransitIconBottomStyle,
-} from './style';
+import { TimelineIconStyle } from './style';
 
 type OptionalProps = {
   icon: string,
   color: string,
+  targetId: string,
+  boundaryId: string,
 };
 
 type Props = OptionalProps;
@@ -18,23 +16,22 @@ type Props = OptionalProps;
 const defaultProps = {
   icon: 'UNKNOWN',
   color: 'GRAY_LIGHT',
+  targetId: null,
+  boundaryId: null,
 };
 
-const TimelineIcon = ({ icon, color }: Props) => {
-  if (icon === 'TRANSIT') {
+const TimelineIcon = ({ icon, color, targetId, boundaryId }: Props) => {
+  if (targetId) {
     return (
-      <div className={TransitIconWrapperStyle}>
-        <div className={TransitIconTopStyle} />
-        <div className={TransitIconBottomStyle} />
-        <div className={TimelineIconStyle({ icon, color })}>
+      <ScrollIntoView targetId={targetId} boundaryId={boundaryId}>
+        <div className={TimelineIconStyle({ icon, color })} role="presentation">
           <Icon icon={icon} />
         </div>
-      </div>
+      </ScrollIntoView>
     );
   }
-
   return (
-    <div className={TimelineIconStyle({ icon, color })}>
+    <div className={TimelineIconStyle({ icon, color })} role="presentation">
       <Icon icon={icon} />
     </div>
   );

@@ -101,10 +101,16 @@ const TimelineSection = ({ isNew }: Props) => (
       <VerticalLayout shipment={dummyData} />
       <VoyageSelector shipment={dummyData} />
     </div>
-    <div className={BodyWrapperStyle}>
-      <TimelineInfoSection isNew={isNew} icon="CARGO_READY" title="CARGO READY" />
-      <TimelineInfoSection isNew={isNew} icon="PORT" title="LOAD PORT DEPARTURE" />
+    <div className={BodyWrapperStyle} id="timelineInfoSection">
+      <TimelineInfoSection id="cargoReady" isNew={isNew} icon="CARGO_READY" title="CARGO READY" />
+      <TimelineInfoSection
+        id="loadPortDeparture"
+        isNew={isNew}
+        icon="PORT"
+        title="LOAD PORT DEPARTURE"
+      />
       <VoyageInfoSection
+        id="firstVoyage"
         isNew={isNew}
         icon={getTransportIcon(dummyData.transportType)}
         title={dummyData.voyages.length > 1 ? 'FIRST VOYAGE' : 'VOYAGE'}
@@ -113,6 +119,7 @@ const TimelineSection = ({ isNew }: Props) => (
       {dummyData.voyages.length > 1 && (
         <>
           <TimelineInfoSection
+            id="firstTransitPortArrival"
             isNew={isNew}
             icon="TRANSIT"
             title={
@@ -120,6 +127,7 @@ const TimelineSection = ({ isNew }: Props) => (
             }
           />
           <TimelineInfoSection
+            id="firstTransitPortDeparture"
             isNew={isNew}
             icon="TRANSIT"
             title={
@@ -129,6 +137,7 @@ const TimelineSection = ({ isNew }: Props) => (
             }
           />
           <VoyageInfoSection
+            id="secondVoyage"
             isNew={isNew}
             icon={getTransportIcon(dummyData.transportType)}
             title="SECOND VOYAGE"
@@ -138,9 +147,20 @@ const TimelineSection = ({ isNew }: Props) => (
 
       {dummyData.voyages.length > 2 && (
         <>
-          <TimelineInfoSection isNew={isNew} icon="TRANSIT" title="SECOND TRANSIT PORT ARRIVAL" />
-          <TimelineInfoSection isNew={isNew} icon="TRANSIT" title="SECOND TRANSIT PORT DEPARTURE" />
+          <TimelineInfoSection
+            id="secondTransitPortArrival"
+            isNew={isNew}
+            icon="TRANSIT"
+            title="SECOND TRANSIT PORT ARRIVAL"
+          />
+          <TimelineInfoSection
+            id="secondTransitPortDeparture"
+            isNew={isNew}
+            icon="TRANSIT"
+            title="SECOND TRANSIT PORT DEPARTURE"
+          />
           <VoyageInfoSection
+            id="thirdVoyage"
             isNew={isNew}
             icon={getTransportIcon(dummyData.transportType)}
             title="THIRD VOYAGE"
@@ -148,10 +168,30 @@ const TimelineSection = ({ isNew }: Props) => (
         </>
       )}
 
-      <TimelineInfoSection isNew={isNew} icon="PORT" title="DISCHARGE PORT ARRIVAL" />
-      <TimelineInfoSection isNew={isNew} icon="CUSTOMS" title="CUSTOMS CLEARANCE" />
-      <TimelineInfoSection isNew={isNew} icon="WAREHOUSE" title="WAREHOUSE ARRIVAL" />
-      <TimelineInfoSection isNew={isNew} icon="DELIVERY_READY" title="DELIVERY READY" />
+      <TimelineInfoSection
+        id="dischargePortArrival"
+        isNew={isNew}
+        icon="PORT"
+        title="DISCHARGE PORT ARRIVAL"
+      />
+      <TimelineInfoSection
+        id="customClearance"
+        isNew={isNew}
+        icon="CUSTOMS"
+        title="CUSTOMS CLEARANCE"
+      />
+      <TimelineInfoSection
+        id="warehouseArrival"
+        isNew={isNew}
+        icon="WAREHOUSE"
+        title="WAREHOUSE ARRIVAL"
+      />
+      <TimelineInfoSection
+        id="deliveryReady"
+        isNew={isNew}
+        icon="DELIVERY_READY"
+        title="DELIVERY READY"
+      />
     </div>
   </div>
 );
