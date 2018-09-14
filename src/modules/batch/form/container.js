@@ -54,7 +54,27 @@ export default class BatchFormContainer extends Container<FormState> {
     const { packageGrossWeight, packageVolume, packageSize, ...rest } = removeTypename(values);
     const flattenedValues = {
       ...rest,
-      ...flatten({ packageGrossWeight, packageVolume, packageSize }),
+      ...flatten({
+        packageGrossWeight: packageGrossWeight || { value: 0, metric: 'kg' },
+        packageVolume: packageVolume || {
+          metric: 'cm³',
+          value: 0,
+        },
+        packageSize: packageSize || {
+          width: {
+            metric: 'cm',
+            value: 0,
+          },
+          height: {
+            metric: 'cm',
+            value: 0,
+          },
+          length: {
+            metric: 'cm',
+            value: 0,
+          },
+        },
+      }),
     };
     this.setState(flattenedValues);
     this.originalValues = flattenedValues;
