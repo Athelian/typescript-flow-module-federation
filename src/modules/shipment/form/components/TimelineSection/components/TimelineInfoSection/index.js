@@ -68,8 +68,8 @@ const dummyApprovedBy = {
 
 const dummyApprovedAt = '2018-01-01';
 
-const TimelineInfoSection = ({ isNew, icon, title }: Props) => (
-  <div className={TimelineInfoSectionWrapperStyle}>
+const TimelineInfoSection = ({ isNew, icon, title, ...rest }: Props) => (
+  <div className={TimelineInfoSectionWrapperStyle} {...rest}>
     <GridColumn>
       <SectionHeader icon={icon} title={title} />
 

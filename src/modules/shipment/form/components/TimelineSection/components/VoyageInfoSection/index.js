@@ -10,8 +10,8 @@ type Props = {
   title: string,
 };
 
-const VoyageInfoSection = ({ isNew, icon, title }: Props) => (
-  <div className={VoyageInfoSectionWrapperStyle}>
+const VoyageInfoSection = ({ isNew, icon, title, ...rest }: Props) => (
+  <div className={VoyageInfoSectionWrapperStyle} {...rest}>
     <GridColumn>
       <SectionHeader icon={icon} title={title} />
       <FieldItem
