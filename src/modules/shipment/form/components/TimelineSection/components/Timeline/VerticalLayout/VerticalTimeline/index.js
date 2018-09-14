@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { TimelineIcon, TimelineLine, TimelineVoyage } from '../../components';
-import { getTimelineColoring } from '../../helpers';
+import { getTimelineColoring, getTransportIcon } from '../../helpers';
 import { VerticalTimelineWrapperStyle } from './style';
 
 type Props = {
@@ -11,9 +11,7 @@ type Props = {
 const VerticalTimeline = ({ shipment }: Props) => {
   const { cargoReady, voyages, containerGroups, transportType } = shipment;
 
-  let transportIcon = 'UNKNOWN';
-  if (transportType === 'Air') transportIcon = 'PLANE';
-  else if (transportType === 'Sea') transportIcon = 'SHIPMENT';
+  const transportIcon = getTransportIcon(transportType);
 
   const coloring = getTimelineColoring({ cargoReady, voyages, containerGroups });
 

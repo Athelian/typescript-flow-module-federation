@@ -1,6 +1,12 @@
 // @flow
 import * as React from 'react';
-import { VerticalLayout, TimelineInfoSection, VoyageSelector } from './components';
+import { getTransportIcon } from './components/Timeline/helpers';
+import {
+  VerticalLayout,
+  TimelineInfoSection,
+  VoyageInfoSection,
+  VoyageSelector,
+} from './components';
 import { TimelineSectionWrapperStyle, TimelineWrapperStyle, BodyWrapperStyle } from './style';
 
 const dummyData = {
@@ -98,6 +104,50 @@ const TimelineSection = ({ isNew }: Props) => (
     <div className={BodyWrapperStyle}>
       <TimelineInfoSection isNew={isNew} icon="CARGO_READY" title="CARGO READY" />
       <TimelineInfoSection isNew={isNew} icon="PORT" title="LOAD PORT DEPARTURE" />
+      <VoyageInfoSection
+        isNew={isNew}
+        icon={getTransportIcon(dummyData.transportType)}
+        title={dummyData.voyages.length > 1 ? 'FIRST VOYAGE' : 'VOYAGE'}
+      />
+
+      {dummyData.voyages.length > 1 && (
+        <>
+          <TimelineInfoSection
+            isNew={isNew}
+            icon="TRANSIT"
+            title={
+              dummyData.voyages.length > 2 ? 'FIRST TRANSIT PORT ARRIVAL' : 'TRANSIT PORT ARRIVAL'
+            }
+          />
+          <TimelineInfoSection
+            isNew={isNew}
+            icon="TRANSIT"
+            title={
+              dummyData.voyages.length > 2
+                ? 'FIRST TRANSIT PORT DEPARTURE'
+                : 'TRANSIT PORT DEPARTURE'
+            }
+          />
+          <VoyageInfoSection
+            isNew={isNew}
+            icon={getTransportIcon(dummyData.transportType)}
+            title="SECOND VOYAGE"
+          />
+        </>
+      )}
+
+      {dummyData.voyages.length > 2 && (
+        <>
+          <TimelineInfoSection isNew={isNew} icon="TRANSIT" title="SECOND TRANSIT PORT ARRIVAL" />
+          <TimelineInfoSection isNew={isNew} icon="TRANSIT" title="SECOND TRANSIT PORT DEPARTURE" />
+          <VoyageInfoSection
+            isNew={isNew}
+            icon={getTransportIcon(dummyData.transportType)}
+            title="THIRD VOYAGE"
+          />
+        </>
+      )}
+
       <TimelineInfoSection isNew={isNew} icon="PORT" title="DISCHARGE PORT ARRIVAL" />
       <TimelineInfoSection isNew={isNew} icon="CUSTOMS" title="CUSTOMS CLEARANCE" />
       <TimelineInfoSection isNew={isNew} icon="WAREHOUSE" title="WAREHOUSE ARRIVAL" />

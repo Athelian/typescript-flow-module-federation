@@ -3,6 +3,7 @@ import * as React from 'react';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
+import { getTransportIcon } from '../Timeline/helpers';
 import {
   VoyageSelectorWrapperStyle,
   VoyageOptionsWrapperStyle,
@@ -35,9 +36,7 @@ class VoyageSelector extends React.Component<Props, State> {
     const { shipment } = this.props;
     const { transportType } = shipment;
 
-    let transportIcon = 'UNKNOWN';
-    if (transportType === 'Air') transportIcon = 'PLANE';
-    else if (transportType === 'Sea') transportIcon = 'SHIPMENT';
+    const transportIcon = getTransportIcon(transportType);
 
     if (numOfIcons === 3) {
       return (
