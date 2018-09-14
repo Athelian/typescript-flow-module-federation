@@ -28,7 +28,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
         const values = { ...originalValues, ...state };
 
         const currentQuantity = values.batchAdjustments.reduce(
-          (total, adjustment) => (adjustment ? adjustment.quantity : 0 + total),
+          (total, adjustment) => adjustment.quantity + total,
           values.quantity
         );
 
