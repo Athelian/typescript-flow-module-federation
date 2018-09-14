@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
+import loadMore from 'utils/loadMore';
 import BatchGridView from './BatchGridView';
 import { batchListQuery } from './query';
 
@@ -18,48 +19,7 @@ type Props = {
   perPage: number,
 };
 
-class BatchList extends React.Component<Props> {
-  loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
-    const { data, fetchMore } = clientData;
-    if (!data) return;
-    const nextPage = getByPathWithDefault(1, 'batches.page', data) + 1;
-    const totalPage = getByPathWithDefault(1, 'batches.totalPage', data);
-    if (nextPage > totalPage) return;
-
-    const { viewType, ...filtersAndSort } = this.props;
-
-    fetchMore({
-      variables: {
-        page: nextPage,
-        ...filtersAndSort,
-      },
-      updateQuery: (prevResult, { fetchMoreResult }) => {
-        const { filter, sort, perPage } = this.props;
-        if (
-          !isEquals({ filter, sort, perPage }, filtersAndSort) ||
-          getByPathWithDefault({}, 'batches.page', prevResult) + 1 !==
-            getByPathWithDefault({}, 'batches.page', fetchMoreResult)
-        ) {
-          return prevResult;
-        }
-
-        if (getByPathWithDefault([], 'batches.nodes', fetchMoreResult).length === 0)
-          return prevResult;
-
-        return {
-          batches: {
-            ...prevResult.batches,
-            ...getByPathWithDefault({}, 'batches', fetchMoreResult),
-            nodes: [
-              ...prevResult.batches.nodes,
-              ...getByPathWithDefault([], 'batches.nodes', fetchMoreResult),
-            ],
-          },
-        };
-      },
-    });
-  };
-
+class BatchList extends React.PureComponent<Props> {
   render() {
     const { viewType, ...filtersAndSort } = this.props;
     return (
@@ -80,7 +40,7 @@ class BatchList extends React.Component<Props> {
           return (
             <BatchGridView
               items={getByPathWithDefault([], 'batches.nodes', data)}
-              onLoadMore={() => this.loadMore({ fetchMore, data })}
+              onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
               hasMore={hasMore}
               isLoading={loading}
             />

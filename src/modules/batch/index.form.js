@@ -57,7 +57,9 @@ class BatchFormModule extends React.Component<Props> {
     const isNew = batchId === 'new';
     if (isNew) {
       const {
-        createDeepBatch: { id },
+        batchCreate: {
+          batch: { id },
+        },
       } = result;
       navigate(`/batch/${encodeId(id)}`);
     }

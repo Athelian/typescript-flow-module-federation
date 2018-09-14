@@ -85,6 +85,7 @@ export type BatchQuery = {
 export type BatchCreate = {
   no: string,
   quantity: number,
+  orderItemId?: ?string,
   shipmentId?: ?string,
   producedAt?: ?string,
   deliveredAt?: ?string,
