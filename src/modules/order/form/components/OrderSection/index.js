@@ -471,7 +471,10 @@ const OrderSection = ({ isNew }: Props) => (
             </div>
             <div className={TagsInputStyle}>
               <Subscribe to={[FormContainer, OrderTagsContainer]}>
-                {({ setFieldTouched }, { state: { tags }, setFieldValue: changeTags }) => (
+                {(
+                  { setFieldTouched, onValidation },
+                  { state: { tags }, setFieldValue: changeTags }
+                ) => (
                   <FieldItem
                     vertical
                     label={
@@ -489,6 +492,12 @@ const OrderSection = ({ isNew }: Props) => (
                         onChange={(field, value) => {
                           changeTags(field, value);
                           setFieldTouched('tags');
+                          onValidation(
+                            {
+                              ...values,
+                            },
+                            validationRules()
+                          );
                         }}
                       />
                     }

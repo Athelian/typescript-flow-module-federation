@@ -43,7 +43,6 @@ function onSelectForwarders({
 }
 
 const selectedItems = (selected: ?Array<{ id: string, name: string }>, items: Array<Object>) => {
-  console.warn(selected, items);
   if (selected) {
     const itemIds = selected.map(item => item.id);
     return items.filter(item => itemIds.includes(item.group.id));

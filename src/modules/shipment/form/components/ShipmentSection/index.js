@@ -5,7 +5,11 @@ import { uniqBy } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { FormContainer, FormField } from 'modules/form';
-import { ShipmentInfoContainer, ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import {
+  ShipmentInfoContainer,
+  ShipmentBatchesContainer,
+  ShipmentTagsContainer,
+} from 'modules/shipment/form/containers';
 import { ShipmentExporterCard, ShipmentForwarderCard } from 'components/Cards';
 import EnumProvider from 'providers/enum';
 import SlideView from 'components/SlideView';
@@ -547,15 +551,40 @@ const ShipmentSection = ({ isNew }: Props) => (
             </GridColumn>
           </div>
           <div className={TagsInputStyle}>
-            <FieldItem
-              vertical
-              label={
-                <Label>
-                  <FormattedMessage {...messages.tags} />
-                </Label>
-              }
-              input={<TagsInput editable={isNew} id="tags" name="tags" tagType="Shipment" />}
-            />
+            <Subscribe to={[FormContainer, ShipmentTagsContainer]}>
+              {(
+                { setFieldTouched, onValidation },
+                { state: { tags }, setFieldValue: changeTags }
+              ) => (
+                <FieldItem
+                  vertical
+                  label={
+                    <Label>
+                      <FormattedMessage {...messages.tags} />
+                    </Label>
+                  }
+                  input={
+                    <TagsInput
+                      editable={isNew}
+                      id="tags"
+                      name="tags"
+                      tagType="Shipment"
+                      values={tags}
+                      onChange={(field, value) => {
+                        changeTags(field, value);
+                        setFieldTouched('tags');
+                        onValidation(
+                          {
+                            ...values,
+                          },
+                          validationRules()
+                        );
+                      }}
+                    />
+                  }
+                />
+              )}
+            </Subscribe>
 
             <div className={DividerStyle} />
           </div>
