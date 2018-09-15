@@ -33,6 +33,7 @@
     "logrocket-react": "^3.0.0",
     "match-sorter": "^2.3.0",
     "ramda": "^0.25.0",
+    "randomcolor": "^0.5.3",
     "raven-js": "^3.27.0",
     "react": "^16.5.2",
     "react-apollo": "^2.1.11",

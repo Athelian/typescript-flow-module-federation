@@ -39,7 +39,6 @@ export default class TagContainer extends Container<FormState> {
   validationRules = () =>
     Yup.object().shape({
       name: Yup.string().required(),
-      description: Yup.string().required(),
       color: Yup.string().required(),
     });
 }

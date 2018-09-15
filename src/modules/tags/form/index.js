@@ -10,7 +10,9 @@ import {
   DefaultStyle,
   TextInput,
 } from 'components/Form';
+import Tag from 'components/Tag';
 import { FormContainer, FormField } from 'modules/form';
+import ColorInput from 'components/Form/ColorInput';
 import { TagFormWrapperStyle, TagSectionWrapperStyle } from './style';
 
 import TagContainer from './containers';
@@ -30,18 +32,19 @@ export default function TagForm({ isNew }: Props) {
         <SectionHeader icon="TAGS" title="TAGS" />
         <Subscribe to={[TagContainer]}>
           {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {
-            const values = { ...initialValues, ...state };
+            const value = { ...initialValues, ...state };
             return (
               <div className={TagSectionWrapperStyle}>
+                <Tag tag={value} />
                 <Subscribe to={[FormContainer]}>
                   {({ state: { touched, errors, activeField }, ...formHelper }) => (
                     <>
                       <FormField
                         name="name"
-                        initValue={values.name}
+                        initValue={value.name}
                         validationOnChange
                         onValidate={newValue =>
-                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                          formHelper.onValidation({ ...value, ...newValue }, validationRules())
                         }
                         setFieldValue={setFieldValue}
                         {...formHelper}
@@ -54,7 +57,7 @@ export default function TagForm({ isNew }: Props) {
                                 errorMessage={touched[name] && errors[name]}
                                 changedValues={{
                                   oldValue: initialValues[name],
-                                  newValue: values[name],
+                                  newValue: value[name],
                                 }}
                               />
                             }
@@ -73,23 +76,23 @@ export default function TagForm({ isNew }: Props) {
                       </FormField>
                       <FormField
                         name="description"
-                        initValue={values.description}
+                        initValue={value.description}
                         validationOnChange
                         onValidate={newValue =>
-                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                          formHelper.onValidation({ ...value, ...newValue }, validationRules())
                         }
                         setFieldValue={setFieldValue}
                         {...formHelper}
                       >
                         {({ name, ...inputHandlers }) => (
                           <FieldItem
-                            label={<Label required>DESCRIPTION</Label>}
+                            label={<Label>DESCRIPTION</Label>}
                             tooltip={
                               <Tooltip
                                 errorMessage={touched[name] && errors[name]}
                                 changedValues={{
                                   oldValue: initialValues[name],
-                                  newValue: values[name],
+                                  newValue: value[name],
                                 }}
                               />
                             }
@@ -108,10 +111,10 @@ export default function TagForm({ isNew }: Props) {
                       </FormField>
                       <FormField
                         name="color"
-                        initValue={values.color}
+                        initValue={value.color || '#ffffff'}
                         validationOnChange
                         onValidate={newValue =>
-                          formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                          formHelper.onValidation({ ...value, ...newValue }, validationRules())
                         }
                         setFieldValue={setFieldValue}
                         {...formHelper}
@@ -124,20 +127,11 @@ export default function TagForm({ isNew }: Props) {
                                 errorMessage={touched[name] && errors[name]}
                                 changedValues={{
                                   oldValue: initialValues[name],
-                                  newValue: values[name],
+                                  newValue: value[name],
                                 }}
                               />
                             }
-                            input={
-                              <DefaultStyle
-                                isFocused={activeField === name}
-                                hasError={touched[name] && errors[name]}
-                                width="200px"
-                                forceHoverStyle={isNew}
-                              >
-                                <TextInput name={name} {...inputHandlers} />
-                              </DefaultStyle>
-                            }
+                            input={<ColorInput name={name} {...inputHandlers} />}
                           />
                         )}
                       </FormField>

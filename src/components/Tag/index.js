@@ -10,11 +10,13 @@ type Props = {
 };
 
 export default function Tag({ tag, prefix, suffix }: Props) {
+  const { color = '#ffffff', name = 'TAG', description = '' } = tag;
+
   return (
-    <div className={TagStyle(tag.color)} title={tag.description}>
-      {prefix && <div className={PrefixStyle(tag.color)}>{prefix}</div>}
-      {tag.name}
-      {suffix && <div className={SuffixStyle(tag.color)}>{suffix}</div>}
+    <div className={TagStyle(color)} title={description}>
+      {prefix && <div className={PrefixStyle(color)}>{prefix}</div>}
+      {name}
+      {suffix && <div className={SuffixStyle(color)}>{suffix}</div>}
     </div>
   );
 }
