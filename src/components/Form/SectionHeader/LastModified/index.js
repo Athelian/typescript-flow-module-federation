@@ -13,11 +13,21 @@ const messages = defineMessages({
   },
 });
 
-type Props = {
-  updatedAt: string,
+type OptionalProps = {
   updatedBy: {
     firstName: string,
     lastName: string,
+  },
+};
+
+type Props = OptionalProps & {
+  updatedAt: string,
+};
+
+const defaultProps = {
+  updatedBy: {
+    firstName: '',
+    lastName: '',
   },
 };
 
@@ -39,5 +49,7 @@ function SectionHeader({ updatedAt, updatedBy }: Props) {
     </div>
   );
 }
+
+SectionHeader.defaultProps = defaultProps;
 
 export default SectionHeader;

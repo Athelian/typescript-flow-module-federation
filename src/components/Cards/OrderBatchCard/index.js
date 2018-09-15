@@ -197,7 +197,7 @@ const OrderBatchCard = ({
             <div className={DividerStyle} />
 
             <div className={TotalPriceWrapperStyle}>
-              <Label>PRICE</Label>
+              <Label>TOTAL</Label>
               <Display>
                 <FormattedNumber value={quantity * (price && price.amount ? price.amount : 0)} />
                 {currency}
