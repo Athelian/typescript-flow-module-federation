@@ -2,8 +2,9 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { uniqBy } from 'lodash';
-import { ShipmentInfoContainer, ShipmentItemsContainer } from 'modules/shipment/form/containers';
 import { FormattedMessage } from 'react-intl';
+import { FormContainer, FormField } from 'modules/form';
+import { ShipmentInfoContainer, ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import { ShipmentExporterCard, ShipmentForwarderCard } from 'components/Cards';
 import EnumProvider from 'providers/enum';
 import Icon from 'components/Icon';
@@ -22,7 +23,7 @@ import {
   DefaultOptions,
   TagsInput,
 } from 'components/Form';
-import messages from 'modules/batch/messages';
+import messages from 'modules/shipment/messages';
 import {
   ShipmentSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -138,149 +139,185 @@ const renderForwarders = (forwarders: Array<Object>) => {
 
 const ShipmentSection = ({ isNew }: Props) => (
   <Subscribe to={[ShipmentInfoContainer]}>
-    {({ originalValues: initialValues, state }) => {
+    {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {
       const values = { ...initialValues, ...state };
       const { forwarders = [] } = values;
 
       return (
         <div className={ShipmentSectionWrapperStyle}>
           <div className={MainFieldsWrapperStyle}>
-            <GridColumn>
-              <FieldItem
-                label={<Label required>SHIPMENT ID</Label>}
-                input={
-                  <DefaultStyle forceHoverStyle={isNew} width="200px">
-                    <TextInput />
-                  </DefaultStyle>
-                }
-              />
+            <Subscribe to={[FormContainer]}>
+              {({ state: { touched, errors, activeField }, ...formHelper }) => (
+                <GridColumn>
+                  <FormField
+                    name="no"
+                    initValue={values.no}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label required>
+                            <FormattedMessage {...messages.shipmentId} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
 
-              <FieldItem
-                label={<Label>B/L NO.</Label>}
-                input={
-                  <DefaultStyle forceHoverStyle={isNew} width="200px">
-                    <TextInput />
-                  </DefaultStyle>
-                }
-              />
+                  <FieldItem
+                    label={<Label>B/L NO.</Label>}
+                    input={
+                      <DefaultStyle forceHoverStyle={isNew} width="200px">
+                        <TextInput />
+                      </DefaultStyle>
+                    }
+                  />
 
-              <FieldItem
-                label={<Label>B/L DATE</Label>}
-                input={
-                  <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                    <DateInput />
-                  </DefaultStyle>
-                }
-              />
+                  <FieldItem
+                    label={<Label>B/L DATE</Label>}
+                    input={
+                      <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
+                        <DateInput />
+                      </DefaultStyle>
+                    }
+                  />
 
-              <FieldItem
-                label={<Label>BOOKING NO.</Label>}
-                input={
-                  <DefaultStyle forceHoverStyle={isNew} width="200px">
-                    <TextInput />
-                  </DefaultStyle>
-                }
-              />
+                  <FieldItem
+                    label={<Label>BOOKING NO.</Label>}
+                    input={
+                      <DefaultStyle forceHoverStyle={isNew} width="200px">
+                        <TextInput />
+                      </DefaultStyle>
+                    }
+                  />
 
-              <FieldItem
-                label={<Label>BOOKING DATE</Label>}
-                input={
-                  <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                    <DateInput />
-                  </DefaultStyle>
-                }
-              />
+                  <FieldItem
+                    label={<Label>BOOKING DATE</Label>}
+                    input={
+                      <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
+                        <DateInput />
+                      </DefaultStyle>
+                    }
+                  />
 
-              <FieldItem
-                label={<Label>INVOICE NO.</Label>}
-                input={
-                  <DefaultStyle forceHoverStyle={isNew} width="200px">
-                    <TextInput />
-                  </DefaultStyle>
-                }
-              />
+                  <FieldItem
+                    label={<Label>INVOICE NO.</Label>}
+                    input={
+                      <DefaultStyle forceHoverStyle={isNew} width="200px">
+                        <TextInput />
+                      </DefaultStyle>
+                    }
+                  />
 
-              <FieldItem
-                label={<Label>TRANSPORTATION</Label>}
-                input={
-                  <EnumProvider enumType="TransportTypeReason">
-                    {({ loading, error, data }) => {
-                      if (loading) return null;
-                      if (error) return `Error!: ${error}`;
-                      return (
-                        <SelectInput
-                          items={data}
-                          itemToString={item => (item ? item.name : '')}
-                          itemToValue={item => (item ? item.name : '')}
-                          renderSelect={({ ...rest }) => (
-                            <DefaultSelect
-                              {...rest}
-                              required
-                              forceHoverStyle={isNew}
-                              width="200px"
-                              itemToString={item => (item ? item.name : '')}
-                            />
-                          )}
-                          renderOptions={({ ...rest }) => (
-                            <DefaultOptions
-                              {...rest}
+                  <FieldItem
+                    label={<Label>TRANSPORTATION</Label>}
+                    input={
+                      <EnumProvider enumType="TransportTypeReason">
+                        {({ loading, error, data }) => {
+                          if (loading) return null;
+                          if (error) return `Error!: ${error}`;
+                          return (
+                            <SelectInput
                               items={data}
                               itemToString={item => (item ? item.name : '')}
                               itemToValue={item => (item ? item.name : '')}
+                              renderSelect={({ ...rest }) => (
+                                <DefaultSelect
+                                  {...rest}
+                                  required
+                                  forceHoverStyle={isNew}
+                                  width="200px"
+                                  itemToString={item => (item ? item.name : '')}
+                                />
+                              )}
+                              renderOptions={({ ...rest }) => (
+                                <DefaultOptions
+                                  {...rest}
+                                  items={data}
+                                  itemToString={item => (item ? item.name : '')}
+                                  itemToValue={item => (item ? item.name : '')}
+                                />
+                              )}
                             />
-                          )}
-                        />
-                      );
-                    }}
-                  </EnumProvider>
-                }
-              />
+                          );
+                        }}
+                      </EnumProvider>
+                    }
+                  />
 
-              <FieldItem
-                label={<Label>LOAD TYPE</Label>}
-                input={
-                  <EnumProvider enumType="LoadTypeReason">
-                    {({ loading, error, data }) => {
-                      if (loading) return null;
-                      if (error) return `Error!: ${error}`;
-                      return (
-                        <SelectInput
-                          items={data}
-                          itemToString={item => (item ? item.name : '')}
-                          itemToValue={item => (item ? item.name : '')}
-                          renderSelect={({ ...rest }) => (
-                            <DefaultSelect
-                              {...rest}
-                              required
-                              forceHoverStyle={isNew}
-                              width="200px"
-                              itemToString={item => (item ? item.name : '')}
-                            />
-                          )}
-                          renderOptions={({ ...rest }) => (
-                            <DefaultOptions
-                              {...rest}
+                  <FieldItem
+                    label={<Label>LOAD TYPE</Label>}
+                    input={
+                      <EnumProvider enumType="LoadTypeReason">
+                        {({ loading, error, data }) => {
+                          if (loading) return null;
+                          if (error) return `Error!: ${error}`;
+                          return (
+                            <SelectInput
                               items={data}
                               itemToString={item => (item ? item.name : '')}
                               itemToValue={item => (item ? item.name : '')}
+                              renderSelect={({ ...rest }) => (
+                                <DefaultSelect
+                                  {...rest}
+                                  required
+                                  forceHoverStyle={isNew}
+                                  width="200px"
+                                  itemToString={item => (item ? item.name : '')}
+                                />
+                              )}
+                              renderOptions={({ ...rest }) => (
+                                <DefaultOptions
+                                  {...rest}
+                                  items={data}
+                                  itemToString={item => (item ? item.name : '')}
+                                  itemToValue={item => (item ? item.name : '')}
+                                />
+                              )}
                             />
-                          )}
-                        />
-                      );
-                    }}
-                  </EnumProvider>
-                }
-              />
+                          );
+                        }}
+                      </EnumProvider>
+                    }
+                  />
 
-              <FieldItem
-                label={<Label>CARRIER</Label>}
-                input={
-                  <DefaultStyle forceHoverStyle={isNew} width="200px">
-                    <TextInput />
-                  </DefaultStyle>
-                }
-              />
-            </GridColumn>
+                  <FieldItem
+                    label={<Label>CARRIER</Label>}
+                    input={
+                      <DefaultStyle forceHoverStyle={isNew} width="200px">
+                        <TextInput />
+                      </DefaultStyle>
+                    }
+                  />
+                </GridColumn>
+              )}
+            </Subscribe>
             <GridColumn>
               <FieldItem
                 vertical
@@ -288,7 +325,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                 tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
                 input={renderForwarders(forwarders)}
               />
-              <Subscribe to={[ShipmentItemsContainer]}>
+              <Subscribe to={[ShipmentBatchesContainer]}>
                 {({ state: { batches } }) => {
                   const uniqueExporters = getUniqueExporters(batches);
                   return (

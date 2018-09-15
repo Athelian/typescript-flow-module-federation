@@ -12,7 +12,7 @@ const initValues = {
   batches: [],
 };
 
-export default class ShipmentItemsContainer extends Container<FormState> {
+export default class ShipmentBatchesContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;

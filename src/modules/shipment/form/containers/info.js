@@ -46,8 +46,6 @@ export default class ShipmentInfoContainer extends Container<FormState> {
 
   validationRules = () =>
     Yup.object().shape({
-      poNo: Yup.string().required(),
-      currency: Yup.string().required(),
-      exporter: Yup.string().required(),
+      no: Yup.string().required(),
     });
 }
