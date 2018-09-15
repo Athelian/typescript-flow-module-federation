@@ -2,11 +2,13 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { uniqBy } from 'lodash';
+import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { FormContainer, FormField } from 'modules/form';
 import { ShipmentInfoContainer, ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import { ShipmentExporterCard, ShipmentForwarderCard } from 'components/Cards';
 import EnumProvider from 'providers/enum';
+import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
 import GridRow from 'components/GridRow';
@@ -24,6 +26,7 @@ import {
   TagsInput,
 } from 'components/Form';
 import messages from 'modules/shipment/messages';
+import SelectForwarders from '../SelectForwarders';
 import {
   ShipmentSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -189,52 +192,206 @@ const ShipmentSection = ({ isNew }: Props) => (
                       />
                     )}
                   </FormField>
-
-                  <FieldItem
-                    label={<Label>B/L NO.</Label>}
-                    input={
-                      <DefaultStyle forceHoverStyle={isNew} width="200px">
-                        <TextInput />
-                      </DefaultStyle>
+                  <FormField
+                    name="blNo"
+                    initValue={values.blNo}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
                     }
-                  />
-
-                  <FieldItem
-                    label={<Label>B/L DATE</Label>}
-                    input={
-                      <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                        <DateInput />
-                      </DefaultStyle>
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.blNo} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="blDate"
+                    initValue={values.blDate}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
                     }
-                  />
-
-                  <FieldItem
-                    label={<Label>BOOKING NO.</Label>}
-                    input={
-                      <DefaultStyle forceHoverStyle={isNew} width="200px">
-                        <TextInput />
-                      </DefaultStyle>
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.blDate} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <DateInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="bookingNo"
+                    initValue={values.bookingNo}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
                     }
-                  />
-
-                  <FieldItem
-                    label={<Label>BOOKING DATE</Label>}
-                    input={
-                      <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                        <DateInput />
-                      </DefaultStyle>
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.bookingNo} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="bookingDate"
+                    initValue={values.bookingDate}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
                     }
-                  />
-
-                  <FieldItem
-                    label={<Label>INVOICE NO.</Label>}
-                    input={
-                      <DefaultStyle forceHoverStyle={isNew} width="200px">
-                        <TextInput />
-                      </DefaultStyle>
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.bookingDate} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <DateInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="invoiceNo"
+                    initValue={values.invoiceNo}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
                     }
-                  />
-
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.invoiceNo} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
                   <FieldItem
                     label={<Label>TRANSPORTATION</Label>}
                     input={
@@ -270,7 +427,6 @@ const ShipmentSection = ({ isNew }: Props) => (
                       </EnumProvider>
                     }
                   />
-
                   <FieldItem
                     label={<Label>LOAD TYPE</Label>}
                     input={
@@ -306,7 +462,6 @@ const ShipmentSection = ({ isNew }: Props) => (
                       </EnumProvider>
                     }
                   />
-
                   <FieldItem
                     label={<Label>CARRIER</Label>}
                     input={
@@ -319,12 +474,52 @@ const ShipmentSection = ({ isNew }: Props) => (
               )}
             </Subscribe>
             <GridColumn>
-              <FieldItem
-                vertical
-                label={<Label>FORWARDER ({forwarders.length})</Label>}
-                tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
-                input={renderForwarders(forwarders)}
-              />
+              <BooleanValue>
+                {({ value: opened, toggle }) => (
+                  <>
+                    <div onClick={toggle} role="presentation">
+                      <FieldItem
+                        vertical
+                        label={<Label>FORWARDER ({forwarders.length})</Label>}
+                        tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
+                        input={renderForwarders(forwarders)}
+                      />
+                    </div>
+                    <SlideView
+                      isOpen={opened}
+                      onRequestClose={toggle}
+                      options={{ width: '1030px' }}
+                    >
+                      {opened && (
+                        <Subscribe to={[FormContainer]}>
+                          {({ onValidation, setFieldTouched }) => (
+                            <SelectForwarders
+                              selected={values.forwarders}
+                              onCancel={toggle}
+                              onSelect={newValue => {
+                                const selectedForwarders = newValue.map(item => ({
+                                  id: item.group.id,
+                                  name: item.name || item.group.name,
+                                }));
+                                toggle();
+                                setFieldTouched('forwarders');
+                                setFieldValue('forwarders', selectedForwarders);
+                                onValidation(
+                                  {
+                                    ...values,
+                                    forwarders: selectedForwarders,
+                                  },
+                                  validationRules()
+                                );
+                              }}
+                            />
+                          )}
+                        </Subscribe>
+                      )}
+                    </SlideView>
+                  </>
+                )}
+              </BooleanValue>
               <Subscribe to={[ShipmentBatchesContainer]}>
                 {({ state: { batches } }) => {
                   const uniqueExporters = getUniqueExporters(batches);

@@ -15,10 +15,12 @@ type FormState = {
   transportType?: string,
   incoterm?: string,
   carrier?: string,
-  forwarders?: Array<{ id: string, name: string }>,
+  forwarders: Array<{ id: string, name: string }>,
 };
 
-const initValues = {};
+const initValues = {
+  forwarders: [],
+};
 
 export default class ShipmentInfoContainer extends Container<FormState> {
   state = initValues;
