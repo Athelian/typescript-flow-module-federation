@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import { uniqBy } from 'lodash';
+import { ShipmentInfoContainer, ShipmentItemsContainer } from 'modules/shipment/form/containers';
 import { FormattedMessage } from 'react-intl';
 import { ShipmentExporterCard, ShipmentForwarderCard } from 'components/Cards';
 import EnumProvider from 'providers/enum';
@@ -33,75 +35,6 @@ import {
 
 type Props = {
   isNew: boolean,
-};
-
-const dummyData = {
-  batches: [
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '1',
-            name: 'Exporter 1',
-          },
-        },
-      },
-    },
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '2',
-            name: 'Exporter 2',
-          },
-        },
-      },
-    },
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '3',
-            name: 'Exporter 3',
-          },
-        },
-      },
-    },
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '4',
-            name: 'Exporter 4',
-          },
-        },
-      },
-    },
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '5',
-            name: 'Exporter 5',
-          },
-        },
-      },
-    },
-  ],
-  forwarders: [
-    {
-      id: 'a',
-      name: 'Forwarder A',
-    },
-    {
-      id: 'b',
-      name: 'Forwarder B',
-    },
-    {
-      id: 'c',
-      name: 'Forwarder B',
-    },
-  ],
 };
 
 const getUniqueExporters = (batches: Array<Object>) => {
@@ -203,190 +136,201 @@ const renderForwarders = (forwarders: Array<Object>) => {
   return '';
 };
 
-const ShipmentSection = ({ isNew }: Props) => {
-  const uniqueExporters = getUniqueExporters(dummyData.batches);
+const ShipmentSection = ({ isNew }: Props) => (
+  <Subscribe to={[ShipmentInfoContainer]}>
+    {({ originalValues: initialValues, state }) => {
+      const values = { ...initialValues, ...state };
+      const { forwarders = [] } = values;
 
-  return (
-    <div className={ShipmentSectionWrapperStyle}>
-      <div className={MainFieldsWrapperStyle}>
-        <GridColumn>
-          <FieldItem
-            label={<Label required>SHIPMENT ID</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
+      return (
+        <div className={ShipmentSectionWrapperStyle}>
+          <div className={MainFieldsWrapperStyle}>
+            <GridColumn>
+              <FieldItem
+                label={<Label required>SHIPMENT ID</Label>}
+                input={
+                  <DefaultStyle forceHoverStyle={isNew} width="200px">
+                    <TextInput />
+                  </DefaultStyle>
+                }
+              />
 
-          <FieldItem
-            label={<Label>B/L NO.</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
+              <FieldItem
+                label={<Label>B/L NO.</Label>}
+                input={
+                  <DefaultStyle forceHoverStyle={isNew} width="200px">
+                    <TextInput />
+                  </DefaultStyle>
+                }
+              />
 
-          <FieldItem
-            label={<Label>B/L DATE</Label>}
-            input={
-              <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                <DateInput />
-              </DefaultStyle>
-            }
-          />
+              <FieldItem
+                label={<Label>B/L DATE</Label>}
+                input={
+                  <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
+                    <DateInput />
+                  </DefaultStyle>
+                }
+              />
 
-          <FieldItem
-            label={<Label>BOOKING NO.</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
+              <FieldItem
+                label={<Label>BOOKING NO.</Label>}
+                input={
+                  <DefaultStyle forceHoverStyle={isNew} width="200px">
+                    <TextInput />
+                  </DefaultStyle>
+                }
+              />
 
-          <FieldItem
-            label={<Label>BOOKING DATE</Label>}
-            input={
-              <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                <DateInput />
-              </DefaultStyle>
-            }
-          />
+              <FieldItem
+                label={<Label>BOOKING DATE</Label>}
+                input={
+                  <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
+                    <DateInput />
+                  </DefaultStyle>
+                }
+              />
 
-          <FieldItem
-            label={<Label>INVOICE NO.</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
+              <FieldItem
+                label={<Label>INVOICE NO.</Label>}
+                input={
+                  <DefaultStyle forceHoverStyle={isNew} width="200px">
+                    <TextInput />
+                  </DefaultStyle>
+                }
+              />
 
-          <FieldItem
-            label={<Label>TRANSPORTATION</Label>}
-            input={
-              <EnumProvider enumType="TransportTypeReason">
-                {({ loading, error, data }) => {
-                  if (loading) return null;
-                  if (error) return `Error!: ${error}`;
-                  return (
-                    <SelectInput
-                      items={data}
-                      itemToString={item => (item ? item.name : '')}
-                      itemToValue={item => (item ? item.name : '')}
-                      renderSelect={({ ...rest }) => (
-                        <DefaultSelect
-                          {...rest}
-                          required
-                          forceHoverStyle={isNew}
-                          width="200px"
-                          itemToString={item => (item ? item.name : '')}
-                        />
-                      )}
-                      renderOptions={({ ...rest }) => (
-                        <DefaultOptions
-                          {...rest}
+              <FieldItem
+                label={<Label>TRANSPORTATION</Label>}
+                input={
+                  <EnumProvider enumType="TransportTypeReason">
+                    {({ loading, error, data }) => {
+                      if (loading) return null;
+                      if (error) return `Error!: ${error}`;
+                      return (
+                        <SelectInput
                           items={data}
                           itemToString={item => (item ? item.name : '')}
                           itemToValue={item => (item ? item.name : '')}
+                          renderSelect={({ ...rest }) => (
+                            <DefaultSelect
+                              {...rest}
+                              required
+                              forceHoverStyle={isNew}
+                              width="200px"
+                              itemToString={item => (item ? item.name : '')}
+                            />
+                          )}
+                          renderOptions={({ ...rest }) => (
+                            <DefaultOptions
+                              {...rest}
+                              items={data}
+                              itemToString={item => (item ? item.name : '')}
+                              itemToValue={item => (item ? item.name : '')}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  );
-                }}
-              </EnumProvider>
-            }
-          />
+                      );
+                    }}
+                  </EnumProvider>
+                }
+              />
 
-          <FieldItem
-            label={<Label>LOAD TYPE</Label>}
-            input={
-              <EnumProvider enumType="LoadTypeReason">
-                {({ loading, error, data }) => {
-                  if (loading) return null;
-                  if (error) return `Error!: ${error}`;
-                  return (
-                    <SelectInput
-                      items={data}
-                      itemToString={item => (item ? item.name : '')}
-                      itemToValue={item => (item ? item.name : '')}
-                      renderSelect={({ ...rest }) => (
-                        <DefaultSelect
-                          {...rest}
-                          required
-                          forceHoverStyle={isNew}
-                          width="200px"
-                          itemToString={item => (item ? item.name : '')}
-                        />
-                      )}
-                      renderOptions={({ ...rest }) => (
-                        <DefaultOptions
-                          {...rest}
+              <FieldItem
+                label={<Label>LOAD TYPE</Label>}
+                input={
+                  <EnumProvider enumType="LoadTypeReason">
+                    {({ loading, error, data }) => {
+                      if (loading) return null;
+                      if (error) return `Error!: ${error}`;
+                      return (
+                        <SelectInput
                           items={data}
                           itemToString={item => (item ? item.name : '')}
                           itemToValue={item => (item ? item.name : '')}
+                          renderSelect={({ ...rest }) => (
+                            <DefaultSelect
+                              {...rest}
+                              required
+                              forceHoverStyle={isNew}
+                              width="200px"
+                              itemToString={item => (item ? item.name : '')}
+                            />
+                          )}
+                          renderOptions={({ ...rest }) => (
+                            <DefaultOptions
+                              {...rest}
+                              items={data}
+                              itemToString={item => (item ? item.name : '')}
+                              itemToValue={item => (item ? item.name : '')}
+                            />
+                          )}
                         />
-                      )}
+                      );
+                    }}
+                  </EnumProvider>
+                }
+              />
+
+              <FieldItem
+                label={<Label>CARRIER</Label>}
+                input={
+                  <DefaultStyle forceHoverStyle={isNew} width="200px">
+                    <TextInput />
+                  </DefaultStyle>
+                }
+              />
+            </GridColumn>
+            <GridColumn>
+              <FieldItem
+                vertical
+                label={<Label>FORWARDER ({forwarders.length})</Label>}
+                tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
+                input={renderForwarders(forwarders)}
+              />
+              <Subscribe to={[ShipmentItemsContainer]}>
+                {({ state: { batches } }) => {
+                  const uniqueExporters = getUniqueExporters(batches);
+                  return (
+                    <FieldItem
+                      vertical
+                      label={
+                        <div className={ExporterLabelStyle}>
+                          <Label>EXPORTER ({uniqueExporters.length})</Label>
+                          {uniqueExporters.length > 4 && (
+                            <button className={ExporterSeeMoreButtonStyle} type="button">
+                              <Icon icon="HORIZONTAL_ELLIPSIS" />
+                            </button>
+                          )}
+                        </div>
+                      }
+                      tooltip={
+                        <Tooltip infoMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment." />
+                      }
+                      input={renderExporters(uniqueExporters)}
                     />
                   );
                 }}
-              </EnumProvider>
-            }
-          />
+              </Subscribe>
+            </GridColumn>
+          </div>
+          <div className={TagsInputStyle}>
+            <FieldItem
+              vertical
+              label={
+                <Label>
+                  <FormattedMessage {...messages.tags} />
+                </Label>
+              }
+              input={<TagsInput editable={isNew} id="tags" name="tags" tagType="Shipment" />}
+            />
 
-          <FieldItem
-            label={<Label>CARRIER</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
-        </GridColumn>
-        <GridColumn>
-          <FieldItem
-            vertical
-            label={<Label>FORWARDER ({dummyData.forwarders.length})</Label>}
-            tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
-            input={renderForwarders(dummyData.forwarders)}
-          />
-
-          <FieldItem
-            vertical
-            label={
-              <div className={ExporterLabelStyle}>
-                <Label>EXPORTER ({uniqueExporters.length})</Label>
-                {uniqueExporters.length > 4 && (
-                  <button className={ExporterSeeMoreButtonStyle} type="button">
-                    <Icon icon="HORIZONTAL_ELLIPSIS" />
-                  </button>
-                )}
-              </div>
-            }
-            tooltip={
-              <Tooltip infoMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment." />
-            }
-            input={renderExporters(uniqueExporters)}
-          />
-        </GridColumn>
-      </div>
-      <div className={TagsInputStyle}>
-        <FieldItem
-          vertical
-          label={
-            <Label>
-              <FormattedMessage {...messages.tags} />
-            </Label>
-          }
-          input={<TagsInput editable={isNew} id="tags" name="tags" tagType="Shipment" />}
-        />
-
-        <div className={DividerStyle} />
-      </div>
-    </div>
-  );
-};
+            <div className={DividerStyle} />
+          </div>
+        </div>
+      );
+    }}
+  </Subscribe>
+);
 
 export default ShipmentSection;

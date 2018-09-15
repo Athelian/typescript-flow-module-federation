@@ -5,15 +5,17 @@ import { removeTypename } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
-  archived?: boolean,
-  currency?: string,
-  deliveryPlace?: string,
-  exporter?: { id: string, name: string },
+  no?: string,
+  blNo?: string,
+  blDate?: Date,
+  bookingNo?: string,
+  bookingDate?: Date,
+  invoiceNo?: string,
+  loadType?: string,
+  transportType?: string,
   incoterm?: string,
-  issuedAt?: Date,
-  memo?: string,
-  piNo?: string,
-  poNo?: string,
+  carrier?: string,
+  forwarders?: Array<{ id: string, name: string }>,
 };
 
 const initValues = {};
