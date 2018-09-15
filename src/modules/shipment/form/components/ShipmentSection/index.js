@@ -5,13 +5,13 @@ import { uniqBy } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { FormContainer, FormField } from 'modules/form';
+import { enumSelectInputFactory } from 'modules/form/helpers';
 import {
   ShipmentInfoContainer,
   ShipmentBatchesContainer,
   ShipmentTagsContainer,
 } from 'modules/shipment/form/containers';
 import { ShipmentExporterCard, ShipmentForwarderCard } from 'components/Cards';
-import EnumProvider from 'providers/enum';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
@@ -24,9 +24,6 @@ import {
   DashedPlusButton,
   TextInput,
   DateInput,
-  SelectInput,
-  DefaultSelect,
-  DefaultOptions,
   TagsInput,
 } from 'components/Form';
 import messages from 'modules/shipment/messages';
@@ -396,84 +393,96 @@ const ShipmentSection = ({ isNew }: Props) => (
                       />
                     )}
                   </FormField>
-                  <FieldItem
-                    label={<Label>TRANSPORTATION</Label>}
-                    input={
-                      <EnumProvider enumType="TransportTypeReason">
-                        {({ loading, error, data }) => {
-                          if (loading) return null;
-                          if (error) return `Error!: ${error}`;
-                          return (
-                            <SelectInput
-                              items={data}
-                              itemToString={item => (item ? item.name : '')}
-                              itemToValue={item => (item ? item.name : '')}
-                              renderSelect={({ ...rest }) => (
-                                <DefaultSelect
-                                  {...rest}
-                                  required
-                                  forceHoverStyle={isNew}
-                                  width="200px"
-                                  itemToString={item => (item ? item.name : '')}
-                                />
-                              )}
-                              renderOptions={({ ...rest }) => (
-                                <DefaultOptions
-                                  {...rest}
-                                  items={data}
-                                  itemToString={item => (item ? item.name : '')}
-                                  itemToValue={item => (item ? item.name : '')}
-                                />
-                              )}
-                            />
-                          );
-                        }}
-                      </EnumProvider>
+                  <FormField
+                    name="transportType"
+                    initValue={values.transportType}
+                    setFieldValue={setFieldValue}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
                     }
-                  />
-                  <FieldItem
-                    label={<Label>LOAD TYPE</Label>}
-                    input={
-                      <EnumProvider enumType="LoadTypeReason">
-                        {({ loading, error, data }) => {
-                          if (loading) return null;
-                          if (error) return `Error!: ${error}`;
-                          return (
-                            <SelectInput
-                              items={data}
-                              itemToString={item => (item ? item.name : '')}
-                              itemToValue={item => (item ? item.name : '')}
-                              renderSelect={({ ...rest }) => (
-                                <DefaultSelect
-                                  {...rest}
-                                  required
-                                  forceHoverStyle={isNew}
-                                  width="200px"
-                                  itemToString={item => (item ? item.name : '')}
-                                />
-                              )}
-                              renderOptions={({ ...rest }) => (
-                                <DefaultOptions
-                                  {...rest}
-                                  items={data}
-                                  itemToString={item => (item ? item.name : '')}
-                                  itemToValue={item => (item ? item.name : '')}
-                                />
-                              )}
-                            />
-                          );
-                        }}
-                      </EnumProvider>
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={<Label>TRANSPORTATION</Label>}
+                        input={enumSelectInputFactory({
+                          enumType: 'TransportType',
+                          inputHandlers,
+                          name,
+                          touched,
+                          errors,
+                          isNew,
+                          activeField,
+                        })}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="loadType"
+                    initValue={values.loadType}
+                    setFieldValue={setFieldValue}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
                     }
-                  />
-                  <FieldItem
-                    label={<Label>CARRIER</Label>}
-                    input={
-                      <DefaultStyle forceHoverStyle={isNew} width="200px">
-                        <TextInput />
-                      </DefaultStyle>
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={<Label>LOAD TYPE</Label>}
+                        input={enumSelectInputFactory({
+                          enumType: 'LoadType',
+                          inputHandlers,
+                          name,
+                          touched,
+                          errors,
+                          isNew,
+                          activeField,
+                        })}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="carrier"
+                    initValue={values.carrier}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
                     }
-                  />
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.carrier} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
                 </GridColumn>
               )}
             </Subscribe>

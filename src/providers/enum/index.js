@@ -4,6 +4,10 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import query from './query';
 
+function enumSelector(data: ?Object) {
+  return getByPathWithDefault([], '__type.enumValues', data);
+}
+
 type Props = {
   enumType: string,
   children: React.Node,
@@ -15,7 +19,7 @@ const EnumProvider = ({ enumType, children }: Props) => (
       children({
         loading,
         error,
-        data: !loading && data ? getByPathWithDefault([], '__type.enumValues', data) : [],
+        data: enumSelector(data),
       })
     }
   </Query>
