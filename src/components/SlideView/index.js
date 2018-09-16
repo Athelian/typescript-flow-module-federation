@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
 import { BackdropFadeInStyle, BackdropFadeOutStyle } from 'components/Dialog/style';
 import logger from 'utils/logger';
+import FadeIn from './FadeIn';
 import { SlideInStyle, SlideAwayStyle, SlideViewContentStyle } from './style';
 
 type Props = {
@@ -70,7 +71,9 @@ export default class SlideView extends React.Component<Props> {
               onClick={e => e.stopPropagation()}
               role="presentation"
             >
-              <div className={SlideViewContentStyle}>{children}</div>
+              <div className={SlideViewContentStyle}>
+                <FadeIn in={isOpen}>{children} </FadeIn>
+              </div>
             </div>
           </div>,
           this.slideViewContainer
