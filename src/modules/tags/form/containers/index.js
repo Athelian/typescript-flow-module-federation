@@ -8,6 +8,7 @@ type FormState = {
   name?: string,
   description?: string,
   color?: string,
+  entityTypes?: any,
 };
 
 const initValues = {};

@@ -13,6 +13,7 @@ import {
 import Tag from 'components/Tag';
 import { FormContainer, FormField } from 'modules/form';
 import ColorInput from 'components/Form/ColorInput';
+import EntityTypesInput from './components/EntityTypesInput';
 import { TagFormWrapperStyle, TagSectionWrapperStyle } from './style';
 
 import TagContainer from './containers';
@@ -68,7 +69,7 @@ export default function TagForm({ isNew }: Props) {
                                 width="200px"
                                 forceHoverStyle={isNew}
                               >
-                                <TextInput name={name} {...inputHandlers} />
+                                <TextInput name={name} placeholder="TAG" {...inputHandlers} />
                               </DefaultStyle>
                             }
                           />
@@ -103,7 +104,11 @@ export default function TagForm({ isNew }: Props) {
                                 width="200px"
                                 forceHoverStyle={isNew}
                               >
-                                <TextInput name={name} {...inputHandlers} />
+                                <TextInput
+                                  name={name}
+                                  placeholder="description"
+                                  {...inputHandlers}
+                                />
                               </DefaultStyle>
                             }
                           />
@@ -111,7 +116,7 @@ export default function TagForm({ isNew }: Props) {
                       </FormField>
                       <FormField
                         name="color"
-                        initValue={value.color || '#ffffff'}
+                        initValue={value.color}
                         validationOnChange
                         onValidate={newValue =>
                           formHelper.onValidation({ ...value, ...newValue }, validationRules())
@@ -131,7 +136,57 @@ export default function TagForm({ isNew }: Props) {
                                 }}
                               />
                             }
-                            input={<ColorInput name={name} {...inputHandlers} />}
+                            input={
+                              <DefaultStyle
+                                isFocused={activeField === name}
+                                hasError={touched[name] && errors[name]}
+                                forceHoverStyle={isNew}
+                                height="40px"
+                                width="40px"
+                              >
+                                <ColorInput name={name} {...inputHandlers} />
+                              </DefaultStyle>
+                            }
+                          />
+                        )}
+                      </FormField>
+                      <FormField
+                        name="entityTypes"
+                        initValue={value.entityTypes}
+                        validationOnChange
+                        onValidate={newValue =>
+                          formHelper.onValidation({ ...value, ...newValue }, validationRules())
+                        }
+                        setFieldValue={setFieldValue}
+                        {...formHelper}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <FieldItem
+                            label={<Label required>Entity Types</Label>}
+                            tooltip={
+                              <Tooltip
+                                errorMessage={touched[name] && errors[name]}
+                                changedValues={{
+                                  oldValue: initialValues[name],
+                                  newValue: value[name],
+                                }}
+                              />
+                            }
+                            input={
+                              <DefaultStyle
+                                isFocused={activeField === name}
+                                hasError={touched[name] && errors[name]}
+                                height="200px"
+                                width="200px"
+                                forceHoverStyle={isNew}
+                              >
+                                <EntityTypesInput
+                                  items={['Product', 'Order', 'Batch', 'Shipment', 'User']}
+                                  name={name}
+                                  {...inputHandlers}
+                                />
+                              </DefaultStyle>
+                            }
                           />
                         )}
                       </FormField>

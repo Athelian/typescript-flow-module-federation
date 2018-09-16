@@ -26,7 +26,17 @@ type Props = {
   onBlur?: (string, boolean) => void,
 };
 
+const defaultProps = {
+  disabled: false,
+  readOnly: false,
+  error: false,
+  onChange: () => {},
+  onBlur: () => {},
+};
+
 class ColorInput extends React.Component<Props> {
+  static defaultProps = defaultProps;
+
   handleStateChange = ({ isOpen }: Object) => {
     if (isOpen === false) {
       this.handleBlur();
