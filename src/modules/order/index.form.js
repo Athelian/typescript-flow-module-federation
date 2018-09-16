@@ -5,6 +5,7 @@ import { Query, Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
+import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton } from 'components/NavButtons';
@@ -91,7 +92,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                 <Layout
                   {...uiState}
                   navBar={
-                    <NavBar>
+                    <NavBar setting={<Setting />}>
                       <EntityIcon icon="ORDER" color="ORDER" />
                       <JumpToSection>
                         <SectionTabs link="orderSection" label="ORDER" icon="ORDER" />

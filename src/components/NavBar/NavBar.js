@@ -1,17 +1,26 @@
 // @flow
 import * as React from 'react';
-import Settings from './components/Settings';
 import { NavBarStyle, ChildrenWrapperStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  setting: React.Node,
+};
+
+type Props = OptionalProps & {
   children: React.Node,
 };
 
-const NavBar = ({ children }: Props) => (
+const defaultProps = {
+  setting: null,
+};
+
+const NavBar = ({ children, setting }: Props) => (
   <div className={NavBarStyle}>
     <div className={ChildrenWrapperStyle}>{children}</div>
-    <Settings />
+    {setting}
   </div>
 );
+
+NavBar.defaultProps = defaultProps;
 
 export default NavBar;

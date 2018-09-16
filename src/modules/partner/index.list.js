@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
+import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import PartnerList from './list';
@@ -38,7 +39,7 @@ class PartnerModule extends React.Component<Props, State> {
           <Layout
             {...uiState}
             navBar={
-              <NavBar>
+              <NavBar setting={<Setting />}>
                 <EntityIcon icon="PARTNER" color="BLACK" />
               </NavBar>
             }

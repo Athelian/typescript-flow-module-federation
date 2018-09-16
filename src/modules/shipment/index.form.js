@@ -4,9 +4,10 @@ import { Provider, Subscribe } from 'unstated';
 import { Query, Mutation } from 'react-apollo';
 // import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
-import Layout from 'components/Layout';
+import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
+import Layout from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/NavButtons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
@@ -102,11 +103,12 @@ class ShipmentFormModule extends React.Component<Props> {
                 <Layout
                   {...uiState}
                   navBar={
-                    <NavBar>
+                    <NavBar setting={<Setting />}>
                       <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
                       <JumpToSection>
                         <SectionTabs link="shipmentSection" label="SHIPMENT" icon="SHIPMENT" />
                         <SectionTabs link="timelineSection" label="TIMELINE" icon="TIMELINE" />
+                        <SectionTabs link="cargoSection" label="CARGO" icon="CARGO" />
                       </JumpToSection>
                       <Subscribe
                         to={[

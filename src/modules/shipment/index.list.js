@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
+import Setting from 'modules/setting';
+import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
 import GridColumn from 'components/GridColumn';
-import { UIConsumer } from 'modules/ui';
 import NavBar, {
   EntityIcon,
   FilterInput,
@@ -65,7 +66,7 @@ class ShipmentListModule extends React.Component<Props, State> {
           <Layout
             {...uiState}
             navBar={
-              <NavBar>
+              <NavBar setting={<Setting />}>
                 <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
                 <StatusToggleTabs
                   onChange={index =>

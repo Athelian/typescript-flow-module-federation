@@ -28,7 +28,7 @@ type State = {
   logoutDialogOpen: boolean,
 };
 
-class Settings extends React.Component<Props, State> {
+class Setting extends React.Component<Props, State> {
   constructor() {
     super();
     this.state = {
@@ -182,4 +182,4 @@ class Settings extends React.Component<Props, State> {
   }
 }
 
-export default Settings;
+export default Setting;

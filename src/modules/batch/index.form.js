@@ -5,6 +5,7 @@ import { Query, Mutation } from 'react-apollo';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
+import Setting from 'modules/setting';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/NavButtons';
 import LoadingIcon from 'components/LoadingIcon';
@@ -86,7 +87,7 @@ class BatchFormModule extends React.Component<Props> {
                 <Layout
                   {...uiState}
                   navBar={
-                    <NavBar>
+                    <NavBar setting={<Setting />}>
                       <EntityIcon icon="BATCH" color="BATCH" />
                       <JumpToSection>
                         <SectionTabs link="batchSection" label="BATCH" icon="BATCH" />

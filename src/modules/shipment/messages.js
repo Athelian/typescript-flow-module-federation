@@ -233,6 +233,9 @@ export default defineMessages({
   newShipment: {
     id: 'containers.Shipments.newShipment',
   },
+  newBatch: {
+    id: 'containers.Shipments.newBatch',
+  },
   insurance: {
     id: 'containers.Shipments.insurance',
   },
