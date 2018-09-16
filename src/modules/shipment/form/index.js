@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
 import Loadable from 'react-loadable';
+import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
+import { ShipmentBatchesContainer } from './containers';
 import ShipmentSection from './components/ShipmentSection';
 import { ShipmentFormWrapperStyle } from './style';
 
@@ -22,6 +24,10 @@ const AsyncTimelineSection = Loadable({
   loading: LoadingIcon,
   loader: () => import('./components/TimelineSection'),
 });
+const AsyncCargoSection = Loadable({
+  loading: LoadingIcon,
+  loader: () => import('./components/CargoSection'),
+});
 
 const ShipmentForm = ({ shipment, isNew }: Props) => (
   <div className={ShipmentFormWrapperStyle}>
@@ -34,6 +40,14 @@ const ShipmentForm = ({ shipment, isNew }: Props) => (
     <SectionWrapper id="timelineSection">
       <SectionHeader icon="TIMELINE" title="TIMELINE" />
       <AsyncTimelineSection isNew={isNew} />
+    </SectionWrapper>
+    <SectionWrapper id="cargoSection">
+      <Subscribe to={[ShipmentBatchesContainer]}>
+        {({ state: { batches } }) => (
+          <SectionHeader icon="CARGO" title={`CARGO (${batches.length})`} />
+        )}
+      </Subscribe>
+      <AsyncCargoSection />
     </SectionWrapper>
   </div>
 );
