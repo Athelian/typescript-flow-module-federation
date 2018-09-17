@@ -14,9 +14,12 @@ type FormState = {
   memo?: string,
   piNo?: string,
   poNo?: string,
+  shipments: Array<Object>,
 };
 
-const initValues = {};
+const initValues = {
+  shipments: [],
+};
 
 export default class OrderInfoContainer extends Container<FormState> {
   state = initValues;

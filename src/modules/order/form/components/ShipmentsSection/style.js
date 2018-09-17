@@ -2,10 +2,20 @@
 import { css } from 'react-emotion';
 import { presets } from 'styles/common';
 
-export const WrapperStyle = css`
+export const ItemsSectionWrapperStyle = css`
+  position: relative;
   ${presets.BOX};
   width: 880px;
-  padding: 40px;
+  height: min-content;
 `;
 
-export default WrapperStyle;
+export const ItemGridStyle = css`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 15px 0 15px 10px;
+`;
+
+export const ItemStyle = css`
+  display: flex;
+  margin: 15px 10px;
+`;

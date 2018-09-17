@@ -6,7 +6,7 @@ export const ItemsSectionWrapperStyle = css`
   position: relative;
   ${presets.BOX};
   width: 880px;
-  sheight: min-content;
+  height: min-content;
 `;
 
 export const ItemGridStyle = css`

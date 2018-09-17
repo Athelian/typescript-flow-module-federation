@@ -44,6 +44,9 @@ export const orderDetailQuery = gql`
         id
         name
       }
+      shipments {
+        id
+      }
     }
   }
 
