@@ -1,6 +1,5 @@
 // @flow
 import DefaultAdjustmentStyle from './DefaultStyle/DefaultAdjustmentStyle';
-import DefaultQuantityAdjustmentStyle from './DefaultStyle/DefaultAdjustmentStyle/DefaultQuantityAdjustmentStyle';
 import DefaultStyle from './DefaultStyle';
 import DefaultPriceStyle from './DefaultStyle/DefaultPriceStyle';
 import DefaultWeightStyle from './DefaultStyle/DefaultWeightStyle';
@@ -14,7 +13,6 @@ import {
 
 export {
   DefaultAdjustmentStyle,
-  DefaultQuantityAdjustmentStyle,
   DefaultStyle,
   DefaultPriceStyle,
   DefaultWeightStyle,

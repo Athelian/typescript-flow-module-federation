@@ -24,14 +24,29 @@ import {
   LastModifiedWrapperStyle,
   UserIconStyle,
 } from './style';
-import { type DefaultAdjustmentStyleProps, defaultProps } from './type';
 
-type Props = DefaultAdjustmentStyleProps & {
+type OptionalProps = {
+  isNew: boolean,
+};
+
+type Props = OptionalProps & {
+  adjustment: Object,
+  index: number,
+  setFieldArrayValue: Function,
+  removeArrayItem: Function,
+  formHelper: any,
+  values: any,
+  validationRules: any,
+  activeField: any,
   enumType: string,
   targetName: string,
   typeName: string,
   memoName: string,
   valueInput: React.Node,
+};
+
+export const defaultProps = {
+  isNew: false,
 };
 
 type State = {
