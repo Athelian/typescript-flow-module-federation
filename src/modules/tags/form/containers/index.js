@@ -8,10 +8,12 @@ type FormState = {
   name?: string,
   description?: string,
   color?: string,
-  entityTypes?: any,
+  entityTypes: Array<string>,
 };
 
-const initValues = {};
+const initValues = {
+  entityTypes: [],
+};
 
 export default class TagContainer extends Container<FormState> {
   state = initValues;
@@ -41,5 +43,8 @@ export default class TagContainer extends Container<FormState> {
     Yup.object().shape({
       name: Yup.string().required(),
       color: Yup.string().required(),
+      entityTypes: Yup.array()
+        .of(Yup.string())
+        .required(),
     });
 }

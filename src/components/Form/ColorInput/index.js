@@ -23,7 +23,7 @@ type Props = {
   readOnly?: boolean,
   error?: boolean,
   onChange?: Object => void,
-  onBlur?: (string, boolean) => void,
+  onBlur?: (event: any) => void,
 };
 
 const defaultProps = {
@@ -60,9 +60,9 @@ class ColorInput extends React.Component<Props> {
   };
 
   handleBlur = () => {
-    const { name, onBlur } = this.props;
+    const { onBlur } = this.props;
     if (onBlur) {
-      onBlur(name, true);
+      onBlur({});
     }
   };
 

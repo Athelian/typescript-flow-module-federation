@@ -29,7 +29,7 @@ const defaultProps = {
 export default function TagForm({ isNew }: Props) {
   return (
     <div className={TagFormWrapperStyle}>
-      <SectionWrapper id="tagSecion">
+      <SectionWrapper id="tagSection">
         <SectionHeader icon="TAGS" title="TAGS" />
         <Subscribe to={[TagContainer]}>
           {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {

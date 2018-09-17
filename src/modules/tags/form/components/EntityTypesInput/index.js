@@ -1,27 +1,29 @@
 // @flow
 import * as React from 'react';
 
-type Props = {
+type OptionalProps = {
+  onBlur: (event: any) => void,
+  onFocus: (event: any) => void,
+};
+
+type Props = OptionalProps & {
   name: string,
   items: Array<string>,
   value: Array<string>,
   onChange: Object => void,
-  onBlur?: (string, boolean) => void,
 };
 
 const defaultProps = {
   value: [],
+  onBlur: () => {},
+  onFocus: () => {},
 };
 
 export default class EntityTypesInput extends React.Component<Props> {
   static defaultProps = defaultProps;
 
-  handleClick = (evt: Event) => {
+  handleClick = (evt: SyntheticInputEvent<*>) => {
     const { name, value, onChange } = this.props;
-
-    if (!(evt.target instanceof HTMLInputElement)) {
-      return;
-    }
 
     const { value: currentValue } = evt.target;
     const selectedItems = value instanceof Array ? value : [];
@@ -34,17 +36,18 @@ export default class EntityTypesInput extends React.Component<Props> {
 
     const event = { ...evt, target: { name, value: selectedItems } };
     onChange(event);
+    this.handleBlur();
   };
 
   handleBlur = () => {
-    const { name, onBlur } = this.props;
+    const { onBlur } = this.props;
     if (onBlur) {
-      onBlur(name, true);
+      onBlur({});
     }
   };
 
   render() {
-    const { name, items, value } = this.props;
+    const { name, items, value, onFocus } = this.props;
 
     return (
       <div>
@@ -52,6 +55,7 @@ export default class EntityTypesInput extends React.Component<Props> {
           <div>
             <input
               name={name}
+              onFocus={onFocus}
               type="checkbox"
               checked={value.includes(item)}
               key={item}
