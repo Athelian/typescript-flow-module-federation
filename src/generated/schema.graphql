@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Sep 13 2018 00:43:54 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Sep 17 2018 12:22:49 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -27583,6 +27583,10 @@ enum Currency {
 
 scalar DateTime
 
+interface Documented {
+  files: [File!]!
+}
+
 union Entity = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | ContainerGroup | Tag | User | Group | Partnership | EventChange | EventComment
 
 union Event = EventChange | EventComment
@@ -27649,6 +27653,46 @@ type EventPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+type File implements Model & Owned {
+  name: String!
+  type: FileType!
+  size: Int!
+  mimetype: String!
+  path: String!
+  pathExpiredAt: DateTime!
+  memo: String
+  entity: Entity
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+input FileInput {
+  id: ID!
+  name: String
+  type: FileType
+  memo: String
+}
+
+enum FileType {
+  File
+  Image
+  Document
+  OrderPO
+  ShipmentBL
+  ShipmentImport
+  ShipmentInvoice
+  ShipmentPacking
+  ProductSpec
+  ProductAnalysisCert
+  ProductOriginCert
 }
 
 type Group implements Model {
@@ -27736,7 +27780,7 @@ type Mutation {
   timelineRead(id: ID!): Boolean!
 }
 
-type Order implements Model & Owned & Tagged {
+type Order implements Model & Owned & Tagged & Documented {
   archived: Boolean!
   exporter: Group!
   poNo: String!
@@ -27758,6 +27802,7 @@ type Order implements Model & Owned & Tagged {
   deletedBy: User
   ownedBy: Group!
   tags: [Tag!]!
+  files: [File!]!
 }
 
 input OrderCreateInput {
@@ -27771,6 +27816,7 @@ input OrderCreateInput {
   memo: String
   tagIds: [ID!]
   orderItems: [OrderItemCreateInput!]
+  files: [FileInput!]
 }
 
 input OrderFilterInput {
@@ -27924,6 +27970,7 @@ input OrderUpdateInput {
   memo: String
   tagIds: [ID!]
   orderItems: [OrderItemUpdateInput!]
+  files: [FileInput!]
 }
 
 interface Owned {
@@ -28016,7 +28063,7 @@ input PriceInput {
   currency: Currency!
 }
 
-type Product implements Model & Owned & Tagged {
+type Product implements Model & Owned & Tagged & Documented {
   archived: Boolean!
   name: String!
   serial: String!
@@ -28033,6 +28080,7 @@ type Product implements Model & Owned & Tagged {
   deletedBy: User
   ownedBy: Group!
   tags: [Tag!]!
+  files: [File!]!
 }
 
 input ProductCreateInput {
@@ -28043,6 +28091,7 @@ input ProductCreateInput {
   material: String
   tagIds: [ID!]
   productProviders: [ProductProviderCreateInput!]!
+  files: [FileInput!]
 }
 
 input ProductFilterInput {
@@ -28160,6 +28209,7 @@ input ProductUpdateInput {
   material: String
   tagIds: [ID!]
   productProviders: [ProductProviderUpdateInput!]
+  files: [FileInput!]
 }
 
 type Query {
@@ -33079,7 +33129,7 @@ enum Seaport {
   ZWUTA
 }
 
-type Shipment implements Model & Owned & Tagged {
+type Shipment implements Model & Owned & Tagged & Documented {
   archived: Boolean!
   no: String!
   blNo: String
@@ -33105,6 +33155,7 @@ type Shipment implements Model & Owned & Tagged {
   deletedBy: User
   ownedBy: Group!
   tags: [Tag!]!
+  files: [File!]!
 }
 
 input ShipmentBatchAdjustmentInput {
@@ -33174,6 +33225,7 @@ input ShipmentCreateInput {
   batches: [ShipmentBatchInput!]
   voyages: [ShipmentVoyageCreateInput!]
   containerGroups: [ShipmentContainerGroupCreateInput!]
+  files: [FileInput!]
 }
 
 input ShipmentFilterInput {
@@ -33246,6 +33298,7 @@ input ShipmentUpdateInput {
   batches: [ShipmentBatchInput!]
   voyages: [ShipmentVoyageUpdateInput!]
   containerGroups: [ShipmentContainerGroupUpdateInput!]
+  files: [FileInput!]
 }
 
 input ShipmentVoyageCreateInput {
@@ -33415,7 +33468,7 @@ type User implements Model & Tagged {
   lastName: String!
   firstName2: String
   lastName2: String
-  avatar: String
+  avatar: File
   language: String!
   timezone: String!
   memo: String
