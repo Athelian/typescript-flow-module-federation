@@ -107,6 +107,7 @@ class ShipmentFormModule extends React.Component<Props> {
                         <SectionTabs link="shipmentSection" label="SHIPMENT" icon="SHIPMENT" />
                         <SectionTabs link="timelineSection" label="TIMELINE" icon="TIMELINE" />
                         <SectionTabs link="cargoSection" label="CARGO" icon="CARGO" />
+                        <SectionTabs link="orderSection" label="ORDER" icon="ORDER" />
                       </JumpToSection>
                       <Subscribe
                         to={[
