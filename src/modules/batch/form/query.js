@@ -50,7 +50,6 @@ export const batchFragment = gql`
       updatedBy {
         firstName
         lastName
-        avatar
         id
       }
       sort
@@ -60,7 +59,6 @@ export const batchFragment = gql`
     updatedBy {
       firstName
       lastName
-      avatar
       id
     }
     packageName

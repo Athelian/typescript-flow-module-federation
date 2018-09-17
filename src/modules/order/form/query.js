@@ -20,7 +20,6 @@ export const orderDetailQuery = gql`
       updatedBy {
         firstName
         lastName
-        avatar
       }
       tags {
         id
