@@ -14,7 +14,8 @@ import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import TagForm from './form';
-import TagContainer from './form/containers';
+
+import { TagContainer, EntityTypeContainer } from './form/containers';
 
 import query from './form/query';
 import { createTagMutation, updateTagMutation } from './form/mutation';
@@ -38,13 +39,13 @@ export default class TagFormContainer extends React.PureComponent<Props> {
     const { tagId } = this.props;
     const isNew = tagId === 'new';
 
-    const { state } = formData;
+    const { name, description, color, entityTypes } = formData;
 
     const input = {
-      name: state.name,
-      description: state.description,
-      color: state.color,
-      entityTypes: state.entityTypes,
+      name,
+      description,
+      color,
+      entityTypes,
     };
 
     if (isNew) {
@@ -62,7 +63,7 @@ export default class TagFormContainer extends React.PureComponent<Props> {
     if (isNew) {
       const {
         tagCreate: {
-          tagId: { id },
+          tag: { id },
         },
       } = result;
       navigate(`/tags/${encodeId(id)}`);
@@ -94,17 +95,23 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                   navBar={
                     <NavBar>
                       <EntityIcon icon="TAGS" color="ORDER" />
-                      <Subscribe to={[TagContainer, FormContainer]}>
-                        {(tagState, form) =>
-                          (isNew || tagState.isDirty()) && (
+                      <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
+                        {(tagState, entityTypesState, form) =>
+                          (isNew || tagState.isDirty() || entityTypesState.isDirty()) && (
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
                                 disabled={!form.isReady()}
                                 onClick={() =>
-                                  this.onSave({ ...tagState }, saveTag, () => {
-                                    form.onReset();
-                                  })
+                                  this.onSave(
+                                    { ...tagState.state, ...entityTypesState.state },
+                                    saveTag,
+                                    () => {
+                                      tagState.onSuccess();
+                                      entityTypesState.onSuccess();
+                                      form.onReset();
+                                    }
+                                  )
                                 }
                               />
                             </>
@@ -120,15 +127,18 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                   {isNew || !tagId ? (
                     <TagForm isNew />
                   ) : (
-                    <Subscribe to={[TagContainer]}>
-                      {tagState => (
+                    <Subscribe to={[TagContainer, EntityTypeContainer]}>
+                      {(tagState, entityTypesState) => (
                         <Query
                           query={query}
                           variables={{ id: decodeId(tagId) }}
                           fetchPolicy="network-only"
                           onCompleted={result => {
-                            const { tag } = result;
-                            tagState.initDetailValues(tag);
+                            const {
+                              tag: { name, description, color, entityTypes },
+                            } = result;
+                            tagState.initDetailValues({ name, description, color });
+                            entityTypesState.initDetailValues(entityTypes);
                           }}
                         >
                           {({ loading, data, error }) => {
