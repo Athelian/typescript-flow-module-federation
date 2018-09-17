@@ -7,9 +7,8 @@ import NewButton from 'components/NavButtons/NewButton';
 import { injectUid } from 'utils/id';
 import Divider from 'components/Divider';
 import { FormContainer } from 'modules/form';
-import { FieldItem, Label } from 'components/Form';
+import { FieldItem, Label, DefaultQuantityAdjustmentStyle } from 'components/Form';
 import GridColumn from 'components/GridColumn';
-import Adjustment from './components/Adjustment';
 import {
   QuantityAdjustmentsSectionWrapperStyle,
   InitialQuantityStyle,
@@ -48,7 +47,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                   values.batchAdjustments.map(
                     (adjustment, index) =>
                       adjustment && (
-                        <Adjustment
+                        <DefaultQuantityAdjustmentStyle
                           isNew={isNew}
                           index={index}
                           adjustment={adjustment}

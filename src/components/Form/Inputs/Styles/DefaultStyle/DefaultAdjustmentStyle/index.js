@@ -25,30 +25,16 @@ import {
   LastModifiedWrapperStyle,
   UserIconStyle,
 } from './style';
+import { type DefaultAdjustmentStyleProps, defaultProps } from './type';
 
-type OptionalProps = {
-  isNew: boolean,
-};
-
-type Props = OptionalProps & {
-  adjustment: Object,
-  index: number,
-  setFieldArrayValue: Function,
-  removeArrayItem: Function,
-  formHelper: any,
-  values: any,
-  validationRules: any,
-  activeField: any,
-};
+type Props = DefaultAdjustmentStyleProps;
 
 type State = {
   isMemoOpen: boolean,
 };
 
-class Adjustment extends React.Component<Props, State> {
-  static defaultProps = {
-    isNew: false,
-  };
+class DefaultAdjustmentStyle extends React.Component<Props, State> {
+  static defaultProps = defaultProps;
 
   state = {
     isMemoOpen: false,
@@ -212,4 +198,4 @@ class Adjustment extends React.Component<Props, State> {
   }
 }
 
-export default Adjustment;
+export default DefaultAdjustmentStyle;

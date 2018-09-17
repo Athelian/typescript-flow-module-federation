@@ -8,6 +8,8 @@ import SelectInput from './SelectInput';
 import TextAreaInput from './TextAreaInput';
 import TextInput from './TextInput';
 import {
+  DefaultAdjustmentStyle,
+  DefaultQuantityAdjustmentStyle,
   DefaultStyle,
   DefaultPriceStyle,
   DefaultWeightStyle,
@@ -27,6 +29,8 @@ export {
   SelectInput,
   TextAreaInput,
   TextInput,
+  DefaultAdjustmentStyle,
+  DefaultQuantityAdjustmentStyle,
   DefaultStyle,
   DefaultPriceStyle,
   DefaultWeightStyle,
