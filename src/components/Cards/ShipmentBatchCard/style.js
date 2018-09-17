@@ -1,7 +1,81 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, presets, borderRadiuses } from 'styles/common';
+import {
+  fontSizes,
+  fontSizesWithHeights,
+  layout,
+  colors,
+  presets,
+  borderRadiuses,
+} from 'styles/common';
 
+export const ProductWrapperStyle = css`
+  position: relative;
+  height: 85px;
+  width: 195px;
+`;
+
+export const ProductImageStyle = css`
+  ${borderRadiuses.MAIN};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  width: 100%;
+  height: 85px;
+  object-fit: cover;
+`;
+
+export const ProductInfoWrapperStyle = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  ${borderRadiuses.MAIN};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 85px;
+  width: 195px;
+`;
+
+export const ProductNameStyle = css`
+  ${fontSizesWithHeights.MAIN};
+  color: ${colors.WHITE};
+  font-weight: bold;
+  ${presets.ELLIPSIS};
+  padding: 0 0 0 10px;
+  width: 175px;
+`;
+
+export const ProductSerialStyle = css`
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.WHITE};
+  ${presets.ELLIPSIS};
+  padding: 0 0 0 10px;
+  width: 175px;
+`;
+
+export const ProductSupplierStyle = css`
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.WHITE};
+  ${presets.ELLIPSIS};
+  padding: 0 10px;
+  & > svg {
+    margin: 0 5px 0 0;
+  }
+`;
+
+export const ProductIconLinkStyle = css`
+  ${presets.BUTTON};
+  position: absolute;
+  color: ${colors.WHITE};
+  ${fontSizes.SMALL};
+  right: 0;
+  top: 25px;
+  width: 20px;
+  height: 20px;
+  &:hover {
+    color: ${colors.TEAL};
+  }
+`;
 export const ShipmentBatchCardWrapperStyle = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
@@ -72,24 +146,6 @@ export const ShipmentIconStyle = (hasShipment: boolean) => css`
         background-color: ${colors.TEAL_DARK};
       }
     `};
-`;
-
-export const WarehouseArrivalWrapperStyle = css`
-  display: grid;
-  grid-template-columns: 20px 1fr 1fr;
-  width: 100%;
-  padding: 0 10px;
-  align-items: center;
-`;
-
-export const WarehouseArrivalIconStyle = (warehouseArrivalApproved: boolean) => css`
-  ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
-  width: 20px;
-  height: 20px;
-  border: 1px solid ${warehouseArrivalApproved ? colors.TEAL : colors.GRAY_LIGHT};
-  color: ${warehouseArrivalApproved ? colors.TEAL : colors.GRAY_LIGHT};
-  font-size: 11px;
 `;
 
 export const BatchTagsWrapperStyle = css`

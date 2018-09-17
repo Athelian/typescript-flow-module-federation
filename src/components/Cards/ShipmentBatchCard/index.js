@@ -4,13 +4,20 @@ import { Subscribe } from 'unstated';
 import { FormContainer, FormField } from 'modules/form';
 import type { BatchQuery as BatchItem } from 'modules/batch/type.js.flow';
 import { ObjectValue } from 'react-values';
+import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { DefaultStyle, Label, Display, TextInput, DateInput, NumberInput } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
+  ProductWrapperStyle,
+  ProductImageStyle,
+  ProductInfoWrapperStyle,
+  ProductNameStyle,
+  ProductSerialStyle,
+  ProductSupplierStyle,
+  ProductIconLinkStyle,
   ShipmentBatchCardWrapperStyle,
   BatchNoWrapperStyle,
   QuantityWrapperStyle,
@@ -20,13 +27,14 @@ import {
   VolumeWrapperStyle,
   ShipmentWrapperStyle,
   ShipmentIconStyle,
-  WarehouseArrivalWrapperStyle,
-  WarehouseArrivalIconStyle,
   BatchTagsWrapperStyle,
 } from './style';
 
 type OptionalProps = {
   onClick: (batch: BatchItem) => void,
+  onClone: (batch: BatchItem) => void,
+  onRemove: (batch: BatchItem) => void,
+  selectable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -37,8 +45,6 @@ type Props = OptionalProps & {
     currency: string,
   },
   saveOnBlur: Function,
-  onClone: (batch: BatchItem) => void,
-  onRemove: (batch: BatchItem) => void,
 };
 
 const calculateVolume = (batch: BatchItem, quantity: number) => {
@@ -60,6 +66,9 @@ const calculateVolume = (batch: BatchItem, quantity: number) => {
 
 const defaultProps = {
   onClick: () => {},
+  onClone: () => {},
+  onRemove: () => {},
+  selectable: false,
 };
 
 const ShipmentBatchCard = ({
@@ -70,22 +79,49 @@ const ShipmentBatchCard = ({
   saveOnBlur,
   currency,
   price,
+  selectable,
   ...rest
 }: Props) => {
   if (!batch) return '';
 
-  const actions = [
-    <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(batch)} />,
-  ];
+  const actions = selectable
+    ? []
+    : [
+        <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+        <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(batch)} />,
+      ];
 
-  const hasShipment = !!batch.shipment;
-  const warehouseArrivalApproved = false;
+  const {
+    orderItem: {
+      productProvider: { product, supplier, exporter },
+    },
+  } = batch;
 
+  const { name, serial } = product;
   return (
     <ObjectValue defaultValue={batch}>
       {({ value: { no, quantity, deliveredAt }, set }) => (
-        <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
+        <BaseCard icon="BATCH" color="BATCH" actions={actions} selectable={selectable} {...rest}>
+          <div className={ProductWrapperStyle}>
+            <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
+
+            <div className={ProductInfoWrapperStyle}>
+              <div className={ProductNameStyle}>{name}</div>
+              <div className={ProductSerialStyle}>{serial}</div>
+              <div className={ProductSupplierStyle}>
+                <Icon icon="EXPORTER" />
+                {exporter && exporter.name}
+              </div>
+              <div className={ProductSupplierStyle}>
+                <Icon icon="SUPPLIER" />
+                {supplier && supplier.name}
+              </div>
+            </div>
+
+            <button className={ProductIconLinkStyle} type="button">
+              <Icon icon="PRODUCT" />
+            </button>
+          </div>
           <div
             className={ShipmentBatchCardWrapperStyle}
             onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
@@ -210,27 +246,11 @@ const ShipmentBatchCard = ({
             </div>
 
             <div className={ShipmentWrapperStyle}>
-              <button className={ShipmentIconStyle(hasShipment)} type="button">
-                <Icon icon="SHIPMENT" />
+              <button className={ShipmentIconStyle(true)} type="button">
+                <Icon icon="ORDER" />
               </button>
-              <Display align="left">{batch.shipment && batch.shipment.blNo}</Display>
-            </div>
-
-            <div className={WarehouseArrivalWrapperStyle}>
-              <div className={WarehouseArrivalIconStyle(warehouseArrivalApproved)}>
-                <Icon icon="WAREHOUSE" />
-              </div>
-              <Label>ARRIVAL</Label>
-              <Display>
-                <FormattedDate
-                  value={
-                    batch &&
-                    batch.shipment &&
-                    batch.shipment.containerGroups &&
-                    batch.shipment.containerGroups[0] &&
-                    batch.shipment.containerGroups[0].warehouseArrival.date
-                  }
-                />
+              <Display align="left">
+                {batch.orderItem && batch.orderItem.order && batch.orderItem.order.poNo}
               </Display>
             </div>
 

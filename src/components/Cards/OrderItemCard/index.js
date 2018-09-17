@@ -33,6 +33,8 @@ import {
 type OptionalProps = {
   onClick: (id: string) => void,
   onSelect: (item: OrderItem) => void,
+  onClone: (item: OrderItem) => void,
+  onRemove: (item: OrderItem) => void,
   selectable: boolean,
 };
 
@@ -40,8 +42,6 @@ type Props = OptionalProps & {
   item: ?OrderItem,
   currency: string,
   saveOnBlur: Function,
-  onClone: (item: OrderItem) => void,
-  onRemove: (item: OrderItem) => void,
 };
 
 function getQuantitySummary(item: Object) {
@@ -84,6 +84,8 @@ function getQuantitySummary(item: Object) {
 const defaultProps = {
   onClick: () => {},
   onSelect: () => {},
+  onRemove: () => {},
+  onClone: () => {},
   selectable: false,
 };
 

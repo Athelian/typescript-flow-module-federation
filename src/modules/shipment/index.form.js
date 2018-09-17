@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
 import { Query, Mutation } from 'react-apollo';
-// import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
@@ -11,7 +10,6 @@ import Layout from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/NavButtons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
-// import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
