@@ -1,9 +1,18 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import { uniqBy } from 'lodash';
+import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import { FormContainer, FormField } from 'modules/form';
+import { enumSelectInputFactory } from 'modules/form/helpers';
+import {
+  ShipmentInfoContainer,
+  ShipmentBatchesContainer,
+  ShipmentTagsContainer,
+} from 'modules/shipment/form/containers';
 import { ShipmentExporterCard, ShipmentForwarderCard } from 'components/Cards';
-import EnumProvider from 'providers/enum';
+import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
 import GridRow from 'components/GridRow';
@@ -15,12 +24,10 @@ import {
   DashedPlusButton,
   TextInput,
   DateInput,
-  SelectInput,
-  DefaultSelect,
-  DefaultOptions,
   TagsInput,
 } from 'components/Form';
-import messages from 'modules/batch/messages';
+import messages from 'modules/shipment/messages';
+import SelectForwarders from '../SelectForwarders';
 import {
   ShipmentSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -33,75 +40,6 @@ import {
 
 type Props = {
   isNew: boolean,
-};
-
-const dummyData = {
-  batches: [
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '1',
-            name: 'Exporter 1',
-          },
-        },
-      },
-    },
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '2',
-            name: 'Exporter 2',
-          },
-        },
-      },
-    },
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '3',
-            name: 'Exporter 3',
-          },
-        },
-      },
-    },
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '4',
-            name: 'Exporter 4',
-          },
-        },
-      },
-    },
-    {
-      orderItem: {
-        productProvider: {
-          exporter: {
-            id: '5',
-            name: 'Exporter 5',
-          },
-        },
-      },
-    },
-  ],
-  forwarders: [
-    {
-      id: 'a',
-      name: 'Forwarder A',
-    },
-    {
-      id: 'b',
-      name: 'Forwarder B',
-    },
-    {
-      id: 'c',
-      name: 'Forwarder B',
-    },
-  ],
 };
 
 const getUniqueExporters = (batches: Array<Object>) => {
@@ -203,190 +141,466 @@ const renderForwarders = (forwarders: Array<Object>) => {
   return '';
 };
 
-const ShipmentSection = ({ isNew }: Props) => {
-  const uniqueExporters = getUniqueExporters(dummyData.batches);
+const ShipmentSection = ({ isNew }: Props) => (
+  <Subscribe to={[ShipmentInfoContainer]}>
+    {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {
+      const values = { ...initialValues, ...state };
+      const { forwarders = [] } = values;
 
-  return (
-    <div className={ShipmentSectionWrapperStyle}>
-      <div className={MainFieldsWrapperStyle}>
-        <GridColumn>
-          <FieldItem
-            label={<Label required>SHIPMENT ID</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
-
-          <FieldItem
-            label={<Label>B/L NO.</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
-
-          <FieldItem
-            label={<Label>B/L DATE</Label>}
-            input={
-              <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                <DateInput />
-              </DefaultStyle>
-            }
-          />
-
-          <FieldItem
-            label={<Label>BOOKING NO.</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
-
-          <FieldItem
-            label={<Label>BOOKING DATE</Label>}
-            input={
-              <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                <DateInput />
-              </DefaultStyle>
-            }
-          />
-
-          <FieldItem
-            label={<Label>INVOICE NO.</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
-
-          <FieldItem
-            label={<Label>TRANSPORTATION</Label>}
-            input={
-              <EnumProvider enumType="TransportTypeReason">
-                {({ loading, error, data }) => {
-                  if (loading) return null;
-                  if (error) return `Error!: ${error}`;
-                  return (
-                    <SelectInput
-                      items={data}
-                      itemToString={item => (item ? item.name : '')}
-                      itemToValue={item => (item ? item.name : '')}
-                      renderSelect={({ ...rest }) => (
-                        <DefaultSelect
-                          {...rest}
-                          required
-                          forceHoverStyle={isNew}
-                          width="200px"
-                          itemToString={item => (item ? item.name : '')}
-                        />
+      return (
+        <div className={ShipmentSectionWrapperStyle}>
+          <div className={MainFieldsWrapperStyle}>
+            <Subscribe to={[FormContainer]}>
+              {({ state: { touched, errors, activeField }, ...formHelper }) => (
+                <GridColumn>
+                  <FormField
+                    name="no"
+                    initValue={values.no}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label required>
+                            <FormattedMessage {...messages.shipmentId} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="blNo"
+                    initValue={values.blNo}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.blNo} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="blDate"
+                    initValue={values.blDate}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.blDate} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <DateInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="bookingNo"
+                    initValue={values.bookingNo}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.bookingNo} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="bookingDate"
+                    initValue={values.bookingDate}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.bookingDate} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <DateInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="invoiceNo"
+                    initValue={values.invoiceNo}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.invoiceNo} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="transportType"
+                    initValue={values.transportType}
+                    setFieldValue={setFieldValue}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={<Label>TRANSPORTATION</Label>}
+                        input={enumSelectInputFactory({
+                          enumType: 'TransportType',
+                          inputHandlers,
+                          name,
+                          touched,
+                          errors,
+                          isNew,
+                          activeField,
+                        })}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="loadType"
+                    initValue={values.loadType}
+                    setFieldValue={setFieldValue}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={<Label>LOAD TYPE</Label>}
+                        input={enumSelectInputFactory({
+                          enumType: 'LoadType',
+                          inputHandlers,
+                          name,
+                          touched,
+                          errors,
+                          isNew,
+                          activeField,
+                        })}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="carrier"
+                    initValue={values.carrier}
+                    validationOnChange
+                    onValidate={newValue =>
+                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    }
+                    setFieldValue={setFieldValue}
+                    {...formHelper}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.carrier} />
+                          </Label>
+                        }
+                        tooltip={
+                          <Tooltip
+                            isNew={isNew}
+                            errorMessage={touched[name] && errors[name]}
+                            changedValues={{
+                              oldValue: initialValues[name],
+                              newValue: values[name],
+                            }}
+                          />
+                        }
+                        input={
+                          <DefaultStyle
+                            isFocused={activeField === name}
+                            hasError={touched[name] && errors[name]}
+                            forceHoverStyle={isNew}
+                            width="200px"
+                          >
+                            <TextInput name={name} {...inputHandlers} />
+                          </DefaultStyle>
+                        }
+                      />
+                    )}
+                  </FormField>
+                </GridColumn>
+              )}
+            </Subscribe>
+            <GridColumn>
+              <BooleanValue>
+                {({ value: opened, toggle }) => (
+                  <>
+                    <div onClick={toggle} role="presentation">
+                      <FieldItem
+                        vertical
+                        label={<Label>FORWARDER ({forwarders.length})</Label>}
+                        tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
+                        input={renderForwarders(forwarders)}
+                      />
+                    </div>
+                    <SlideView
+                      isOpen={opened}
+                      onRequestClose={toggle}
+                      options={{ width: '1030px' }}
+                    >
+                      {opened && (
+                        <Subscribe to={[FormContainer]}>
+                          {({ onValidation, setFieldTouched }) => (
+                            <SelectForwarders
+                              selected={values.forwarders}
+                              onCancel={toggle}
+                              onSelect={newValue => {
+                                const selectedForwarders = newValue.map(item => ({
+                                  id: item.group.id,
+                                  name: item.name || item.group.name,
+                                }));
+                                toggle();
+                                setFieldTouched('forwarders');
+                                setFieldValue('forwarders', selectedForwarders);
+                                onValidation(
+                                  {
+                                    ...values,
+                                    forwarders: selectedForwarders,
+                                  },
+                                  validationRules()
+                                );
+                              }}
+                            />
+                          )}
+                        </Subscribe>
                       )}
-                      renderOptions={({ ...rest }) => (
-                        <DefaultOptions
-                          {...rest}
-                          items={data}
-                          itemToString={item => (item ? item.name : '')}
-                          itemToValue={item => (item ? item.name : '')}
-                        />
-                      )}
-                    />
-                  );
-                }}
-              </EnumProvider>
-            }
-          />
-
-          <FieldItem
-            label={<Label>LOAD TYPE</Label>}
-            input={
-              <EnumProvider enumType="LoadTypeReason">
-                {({ loading, error, data }) => {
-                  if (loading) return null;
-                  if (error) return `Error!: ${error}`;
-                  return (
-                    <SelectInput
-                      items={data}
-                      itemToString={item => (item ? item.name : '')}
-                      itemToValue={item => (item ? item.name : '')}
-                      renderSelect={({ ...rest }) => (
-                        <DefaultSelect
-                          {...rest}
-                          required
-                          forceHoverStyle={isNew}
-                          width="200px"
-                          itemToString={item => (item ? item.name : '')}
-                        />
-                      )}
-                      renderOptions={({ ...rest }) => (
-                        <DefaultOptions
-                          {...rest}
-                          items={data}
-                          itemToString={item => (item ? item.name : '')}
-                          itemToValue={item => (item ? item.name : '')}
-                        />
-                      )}
-                    />
-                  );
-                }}
-              </EnumProvider>
-            }
-          />
-
-          <FieldItem
-            label={<Label>CARRIER</Label>}
-            input={
-              <DefaultStyle forceHoverStyle={isNew} width="200px">
-                <TextInput />
-              </DefaultStyle>
-            }
-          />
-        </GridColumn>
-        <GridColumn>
-          <FieldItem
-            vertical
-            label={<Label>FORWARDER ({dummyData.forwarders.length})</Label>}
-            tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
-            input={renderForwarders(dummyData.forwarders)}
-          />
-
-          <FieldItem
-            vertical
-            label={
-              <div className={ExporterLabelStyle}>
-                <Label>EXPORTER ({uniqueExporters.length})</Label>
-                {uniqueExporters.length > 4 && (
-                  <button className={ExporterSeeMoreButtonStyle} type="button">
-                    <Icon icon="HORIZONTAL_ELLIPSIS" />
-                  </button>
+                    </SlideView>
+                  </>
                 )}
-              </div>
-            }
-            tooltip={
-              <Tooltip infoMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment." />
-            }
-            input={renderExporters(uniqueExporters)}
-          />
-        </GridColumn>
-      </div>
-      <div className={TagsInputStyle}>
-        <FieldItem
-          vertical
-          label={
-            <Label>
-              <FormattedMessage {...messages.tags} />
-            </Label>
-          }
-          input={<TagsInput editable={isNew} id="tags" name="tags" tagType="Shipment" />}
-        />
+              </BooleanValue>
+              <Subscribe to={[ShipmentBatchesContainer]}>
+                {({ state: { batches } }) => {
+                  const uniqueExporters = getUniqueExporters(batches);
+                  return (
+                    <FieldItem
+                      vertical
+                      label={
+                        <div className={ExporterLabelStyle}>
+                          <Label>EXPORTER ({uniqueExporters.length})</Label>
+                          {uniqueExporters.length > 4 && (
+                            <button className={ExporterSeeMoreButtonStyle} type="button">
+                              <Icon icon="HORIZONTAL_ELLIPSIS" />
+                            </button>
+                          )}
+                        </div>
+                      }
+                      tooltip={
+                        <Tooltip infoMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment." />
+                      }
+                      input={renderExporters(uniqueExporters)}
+                    />
+                  );
+                }}
+              </Subscribe>
+            </GridColumn>
+          </div>
+          <div className={TagsInputStyle}>
+            <Subscribe to={[FormContainer, ShipmentTagsContainer]}>
+              {(
+                { setFieldTouched, onValidation },
+                { state: { tags }, setFieldValue: changeTags }
+              ) => (
+                <FieldItem
+                  vertical
+                  label={
+                    <Label>
+                      <FormattedMessage {...messages.tags} />
+                    </Label>
+                  }
+                  input={
+                    <TagsInput
+                      editable={isNew}
+                      id="tags"
+                      name="tags"
+                      tagType="Shipment"
+                      values={tags}
+                      onChange={(field, value) => {
+                        changeTags(field, value);
+                        setFieldTouched('tags');
+                        onValidation(
+                          {
+                            ...values,
+                          },
+                          validationRules()
+                        );
+                      }}
+                    />
+                  }
+                />
+              )}
+            </Subscribe>
 
-        <div className={DividerStyle} />
-      </div>
-    </div>
-  );
-};
+            <div className={DividerStyle} />
+          </div>
+        </div>
+      );
+    }}
+  </Subscribe>
+);
 
 export default ShipmentSection;

@@ -297,7 +297,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
             </div>
             <div className={TagsInputStyle}>
               <Subscribe to={[FormContainer]}>
-                {({ setFieldTouched }) => (
+                {({ onValidation, setFieldTouched }) => (
                   <FieldItem
                     vertical
                     label={
@@ -315,6 +315,12 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                         onChange={(field, value) => {
                           setFieldValue(field, value);
                           setFieldTouched('tags');
+                          onValidation(
+                            {
+                              ...values,
+                            },
+                            validationRules()
+                          );
                         }}
                       />
                     }

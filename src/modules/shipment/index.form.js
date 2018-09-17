@@ -17,9 +17,11 @@ import { encodeId, decodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import {
-  ShipmentItemsContainer,
   ShipmentInfoContainer,
   ShipmentTagsContainer,
+  ShipmentBatchesContainer,
+  ShipmentGroupsContainer,
+  ShipmentVoyagesContainer,
 } from './form/containers';
 import ShipmentForm from './form';
 import query from './form/query';
@@ -64,13 +66,17 @@ class ShipmentFormModule extends React.Component<Props> {
   onMutationCompleted = (result: Object) => {
     const { shipmentId } = this.props;
     const isNew = shipmentId === 'new';
+
     if (isNew) {
       const {
-        shipmentCreate: {
-          shipment: { id },
-        },
+        shipmentCreate: { shipment, violations },
       } = result;
-      navigate(`/shipment/${encodeId(id)}`);
+      if (violations && violations.length) {
+        logger.warn(violations);
+        return;
+      }
+
+      navigate(`/shipment/${encodeId(shipment.id)}`);
     }
     logger.warn('result', result);
   };
@@ -104,15 +110,24 @@ class ShipmentFormModule extends React.Component<Props> {
                       </JumpToSection>
                       <Subscribe
                         to={[
-                          ShipmentItemsContainer,
+                          ShipmentBatchesContainer,
                           ShipmentInfoContainer,
                           ShipmentTagsContainer,
+                          ShipmentGroupsContainer,
+                          ShipmentVoyagesContainer,
                           FormContainer,
                         ]}
                       >
-                        {(shipmentItemState, shipmentInfoState, shipmentTagsState, form) =>
+                        {(
+                          shipmentBatchesState,
+                          shipmentInfoState,
+                          shipmentTagsState,
+                          shipmentGroupsState,
+                          shipmentVoyagesState,
+                          form
+                        ) =>
                           (isNew ||
-                            shipmentItemState.isDirty() ||
+                            shipmentBatchesState.isDirty() ||
                             shipmentInfoState.isDirty() ||
                             shipmentTagsState.isDirty()) && (
                             <>
@@ -124,15 +139,19 @@ class ShipmentFormModule extends React.Component<Props> {
                                 onClick={() =>
                                   this.onSave(
                                     {
-                                      ...shipmentItemState.state,
+                                      ...shipmentBatchesState.state,
                                       ...shipmentInfoState.state,
                                       ...shipmentTagsState.state,
+                                      ...shipmentGroupsState.state,
+                                      ...shipmentVoyagesState.state,
                                     },
                                     saveShipment,
                                     () => {
-                                      shipmentItemState.onSuccess();
+                                      shipmentBatchesState.onSuccess();
                                       shipmentInfoState.onSuccess();
                                       shipmentTagsState.onSuccess();
+                                      shipmentGroupsState.onSuccess();
+                                      shipmentVoyagesState.onSuccess();
                                       form.onReset();
                                     }
                                   )
@@ -153,20 +172,34 @@ class ShipmentFormModule extends React.Component<Props> {
                     <ShipmentForm shipment={{}} isNew />
                   ) : (
                     <Subscribe
-                      to={[ShipmentItemsContainer, ShipmentInfoContainer, ShipmentTagsContainer]}
+                      to={[
+                        ShipmentBatchesContainer,
+                        ShipmentInfoContainer,
+                        ShipmentTagsContainer,
+                        ShipmentGroupsContainer,
+                        ShipmentVoyagesContainer,
+                      ]}
                     >
-                      {(shipmentItemState, shipmentInfoState, shipmentTagsState) => (
+                      {(
+                        shipmentBatchesState,
+                        shipmentInfoState,
+                        shipmentTagsState,
+                        shipmentGroupsState,
+                        shipmentVoyagesState
+                      ) => (
                         <Query
                           query={query}
                           variables={{ id: decodeId(shipmentId) }}
                           fetchPolicy="network-only"
                           onCompleted={result => {
                             const {
-                              shipment: { batches, tags, ...info },
+                              shipment: { batches, tags, voyages, containerGroups, ...info },
                             } = result;
-                            shipmentItemState.initDetailValues(batches);
+                            shipmentBatchesState.initDetailValues(batches);
                             shipmentTagsState.initDetailValues(tags);
                             shipmentInfoState.initDetailValues(info);
+                            shipmentGroupsState.initDetailValues(containerGroups);
+                            shipmentVoyagesState.initDetailValues(voyages);
                           }}
                         >
                           {({ loading, data, error }) => {

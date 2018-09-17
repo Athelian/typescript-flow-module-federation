@@ -1,6 +1,14 @@
+import ShipmentBatchesContainer from './batches';
+import ShipmentGroupsContainer from './groups';
+import ShipmentVoyagesContainer from './voyages';
 import ShipmentInfoContainer from './info';
-import ShipmentItemsContainer from './items';
 import ShipmentTagsContainer from './tags';
 
-export { ShipmentInfoContainer, ShipmentItemsContainer, ShipmentTagsContainer };
+export {
+  ShipmentInfoContainer,
+  ShipmentBatchesContainer,
+  ShipmentVoyagesContainer,
+  ShipmentTagsContainer,
+  ShipmentGroupsContainer,
+};
 export default ShipmentInfoContainer;

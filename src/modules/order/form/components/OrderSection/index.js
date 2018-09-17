@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue, StringValue } from 'react-values';
+import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import matchSorter from 'match-sorter';
-import logger from 'utils/logger';
 import {
   OrderInfoContainer,
   OrderTagsContainer,
@@ -21,13 +19,10 @@ import {
   DefaultStyle,
   TextInput,
   DateInput,
-  SearchSelectInput,
-  DefaultSearchSelect,
-  DefaultOptions,
   DashedPlusButton,
   TagsInput,
 } from 'components/Form';
-import EnumProvider from 'providers/enum';
+import { enumSelectInputFactory } from 'modules/form/helpers';
 import Divider from 'components/Divider';
 import BaseCard from 'components/Cards';
 import { colors } from 'styles/common';
@@ -50,69 +45,6 @@ import {
 type Props = {
   isNew: boolean,
 };
-
-const filterItems = (query: string, items: Array<any>) => {
-  if (!query) return items;
-  return matchSorter(items, query, {
-    keys: ['name', 'description'],
-  });
-};
-
-function createSelectInput({ enumType, inputHandlers, name, touched, errors, isNew, activeField }) {
-  return (
-    <EnumProvider enumType={enumType}>
-      {({ loading, error, data }) => {
-        if (loading) return null;
-        if (error) return `Error!: ${error}`;
-        return (
-          <StringValue
-            defaultValue={inputHandlers.value}
-            onChange={newValue =>
-              inputHandlers.onChange({
-                target: {
-                  value: newValue || '',
-                },
-              })
-            }
-          >
-            {({ value: query, set, clear }) => (
-              <SearchSelectInput
-                name={name}
-                {...inputHandlers}
-                items={filterItems(query, data)}
-                itemToString={item => (item ? item.name : '')}
-                itemToValue={item => (item ? item.name : '')}
-                renderSelect={({ ...rest }) => (
-                  <DefaultSearchSelect
-                    {...rest}
-                    hasError={touched[name] && errors[name]}
-                    forceHoverStyle={isNew}
-                    width="200px"
-                    isOpen={activeField === name}
-                  />
-                )}
-                renderOptions={({ ...rest }) => (
-                  <DefaultOptions
-                    {...rest}
-                    items={filterItems(query, data)}
-                    itemToString={item => (item ? item.name : '')}
-                    itemToValue={item => (item ? item.name : '')}
-                  />
-                )}
-                onChange={item => {
-                  logger.warn('SearchSelectInput onChange', item);
-                  if (!item) clear();
-                  set(item && item.name);
-                }}
-                onSearch={set}
-              />
-            )}
-          </StringValue>
-        );
-      }}
-    </EnumProvider>
-  );
-}
 
 function getQuantitySummary(orderItems: any) {
   let orderedQuantity = 0;
@@ -317,7 +249,7 @@ const OrderSection = ({ isNew }: Props) => (
                               }}
                             />
                           }
-                          input={createSelectInput({
+                          input={enumSelectInputFactory({
                             enumType: 'Currency',
                             inputHandlers,
                             name,
@@ -352,7 +284,7 @@ const OrderSection = ({ isNew }: Props) => (
                               }}
                             />
                           }
-                          input={createSelectInput({
+                          input={enumSelectInputFactory({
                             enumType: 'Incoterm',
                             inputHandlers,
                             name,
@@ -471,7 +403,10 @@ const OrderSection = ({ isNew }: Props) => (
             </div>
             <div className={TagsInputStyle}>
               <Subscribe to={[FormContainer, OrderTagsContainer]}>
-                {({ setFieldTouched }, { state: { tags }, setFieldValue: changeTags }) => (
+                {(
+                  { setFieldTouched, onValidation },
+                  { state: { tags }, setFieldValue: changeTags }
+                ) => (
                   <FieldItem
                     vertical
                     label={
@@ -489,6 +424,12 @@ const OrderSection = ({ isNew }: Props) => (
                         onChange={(field, value) => {
                           changeTags(field, value);
                           setFieldTouched('tags');
+                          onValidation(
+                            {
+                              ...values,
+                            },
+                            validationRules()
+                          );
                         }}
                       />
                     }

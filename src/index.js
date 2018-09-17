@@ -13,6 +13,7 @@ import loadFonts from './fonts';
 import { isAppInProduction } from './utils/env';
 import errorReport from './errorReport';
 import './styles/reset.css';
+import * as serviceWorker from './serviceWorker';
 
 loadFonts();
 errorReport();
@@ -51,3 +52,5 @@ if (container.hasChildNodes()) {
 } else {
   renderApp(Routes, render);
 }
+
+serviceWorker.register();

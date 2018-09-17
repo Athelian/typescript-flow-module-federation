@@ -1,11 +1,9 @@
 // @flow
 import * as React from 'react';
-// import { Subscribe } from 'unstated';
-// import { pickByProps } from 'utils/fp';
+import Loadable from 'react-loadable';
+import LoadingIcon from 'components/LoadingIcon';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
-// import OrderFormContainer from './container';
 import ShipmentSection from './components/ShipmentSection';
-import TimelineSection from './components/TimelineSection';
 import { ShipmentFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -14,12 +12,16 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   shipment: Object,
-  // onChangeStatus: Function,
 };
 
 const defaultProps = {
   isNew: false,
 };
+
+const AsyncTimelineSection = Loadable({
+  loading: LoadingIcon,
+  loader: () => import('./components/TimelineSection'),
+});
 
 const ShipmentForm = ({ shipment, isNew }: Props) => (
   <div className={ShipmentFormWrapperStyle}>
@@ -31,7 +33,7 @@ const ShipmentForm = ({ shipment, isNew }: Props) => (
     </SectionWrapper>
     <SectionWrapper id="timelineSection">
       <SectionHeader icon="TIMELINE" title="TIMELINE" />
-      <TimelineSection isNew={isNew} />
+      <AsyncTimelineSection isNew={isNew} />
     </SectionWrapper>
   </div>
 );
