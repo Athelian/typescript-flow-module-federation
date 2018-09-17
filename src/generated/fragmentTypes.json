@@ -2,6 +2,11 @@
   "__schema": {
     "types": [
       {
+        "kind": "INTERFACE",
+        "name": "Documented",
+        "possibleTypes": [{ "name": "Order" }, { "name": "Product" }, { "name": "Shipment" }]
+      },
+      {
         "kind": "UNION",
         "name": "Entity",
         "possibleTypes": [
@@ -38,6 +43,7 @@
           { "name": "ContainerGroup" },
           { "name": "EventChange" },
           { "name": "EventComment" },
+          { "name": "File" },
           { "name": "Group" },
           { "name": "Order" },
           { "name": "OrderItem" },
@@ -63,6 +69,7 @@
           { "name": "ContainerGroup" },
           { "name": "EventChange" },
           { "name": "EventComment" },
+          { "name": "File" },
           { "name": "Order" },
           { "name": "OrderItem" },
           { "name": "Product" },

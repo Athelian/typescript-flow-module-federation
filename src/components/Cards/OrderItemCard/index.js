@@ -99,10 +99,12 @@ const OrderItemCard = ({
 }: Props) => {
   if (!item) return '';
 
-  const actions = [
-    <CardAction icon="CLONE" onClick={() => onClone(item)} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(item)} />,
-  ];
+  const actions = selectable
+    ? []
+    : [
+        <CardAction icon="CLONE" onClick={() => onClone(item)} />,
+        <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(item)} />,
+      ];
 
   const chartDetail = getQuantitySummary(item);
   const {

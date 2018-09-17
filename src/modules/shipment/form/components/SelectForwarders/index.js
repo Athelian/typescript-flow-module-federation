@@ -7,7 +7,7 @@ import Layout from 'components/Layout';
 import { SectionNavBar as NavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/NavButtons';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
-import { PartnerCard } from 'components/Cards';
+import { ShipmentForwarderCard } from 'components/Cards';
 
 type Props = {
   selected?: ?Array<{
@@ -77,8 +77,11 @@ const SelectForwarders = ({ selected, onCancel, onSelect }: Props) => (
               onLoadMore={() => {}}
               items={data.filter(partner => partner.types.includes('Forwarder'))}
               renderItem={item => (
-                <PartnerCard
-                  partner={item}
+                <ShipmentForwarderCard
+                  forwarder={{
+                    id: item.group.id,
+                    name: item.name || item.group.name,
+                  }}
                   onSelect={() => onSelectForwarders({ selected: values, item, push, set })}
                   selectable
                   selected={values.includes(item)}

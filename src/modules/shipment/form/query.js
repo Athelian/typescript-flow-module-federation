@@ -8,13 +8,11 @@ const timelineDateFragment = gql`
     assignedTo {
       firstName
       lastName
-      avatar
       id
     }
     approvedBy {
       firstName
       lastName
-      avatar
       id
     }
     approvedAt
@@ -27,7 +25,6 @@ const timelineDateFragment = gql`
       updatedBy {
         firstName
         lastName
-        avatar
         id
       }
       sort
@@ -94,7 +91,6 @@ export const shipmentDetailQuery = gql`
       updatedBy {
         firstName
         lastName
-        avatar
         id
       }
       tags {
