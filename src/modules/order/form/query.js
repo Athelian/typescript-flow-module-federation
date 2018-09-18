@@ -38,9 +38,9 @@ export const orderDetailFragment = gql`
       batches {
         ...detailedBatchFragment
       }
-      shipments {
-        id
-      }
+    }
+    shipments {
+      id
     }
     files {
       id

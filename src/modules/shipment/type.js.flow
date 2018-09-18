@@ -1,5 +1,16 @@
 // @flow
 
+type CargoReady = {
+  date: Date,
+  assignedToIds: Array<string>,
+  approvedById: string,
+  memo: string,
+  timelineDateRevisions: Array<{
+    date: string,
+    type: string,
+    memo: string,
+  }>,
+};
 export type UserNameAndAvatar = {
   firstName: string,
   lastName: string,
@@ -18,12 +29,12 @@ export type ShipmentCreate = {
   transportType?: string,
   incoterm?: string,
   carrier?: string,
-  cargoReady?: Object,
+  cargoReady?: CargoReady,
   tagIds?: Array<string>,
   forwarderIds?: Array<string>,
   batches?: Array<Object>,
-  voyages?: Array<Object>,
-  containerGroups?: Array<Object>,
+  voyages: Array<Object>,
+  containerGroups: Array<Object>,
 };
 
 export type ShipmentUpdate = {
@@ -37,7 +48,7 @@ export type ShipmentUpdate = {
   transportType?: string,
   incoterm?: string,
   carrier?: string,
-  cargoReady?: Object,
+  cargoReady?: CargoReady,
   tagIds?: Array<string>,
   forwarderIds?: Array<string>,
   batches?: Array<Object>,

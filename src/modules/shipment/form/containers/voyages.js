@@ -9,7 +9,7 @@ type FormState = {
 };
 
 const initValues = {
-  voyages: [],
+  voyages: [{}],
 };
 
 export default class ShipmentVoyagesContainer extends Container<FormState> {
