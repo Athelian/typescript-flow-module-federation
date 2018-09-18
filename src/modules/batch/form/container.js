@@ -3,15 +3,46 @@ import { Container } from 'unstated';
 import * as Yup from 'yup';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeTypename, removeNulls, flatten } from 'utils/data';
+import { removeTypename, removeNulls } from 'utils/data';
 import logger from 'utils/logger';
+
+type Metric = {
+  value: number,
+  metric: string,
+};
 
 type FormState = {
   batchAdjustments: Array<any>,
+  packageGrossWeight: Metric,
+  packageVolume: Metric,
+  packageSize: {
+    width: Metric,
+    height: Metric,
+    length: Metric,
+  },
 };
 
 const initValues = {
   batchAdjustments: [],
+  packageGrossWeight: { value: 0, metric: 'kg' },
+  packageVolume: {
+    metric: 'm³',
+    value: 0,
+  },
+  packageSize: {
+    width: {
+      metric: 'cm',
+      value: 0,
+    },
+    height: {
+      metric: 'cm',
+      value: 0,
+    },
+    length: {
+      metric: 'cm',
+      value: 0,
+    },
+  },
 };
 
 export default class BatchFormContainer extends Container<FormState> {
@@ -50,34 +81,10 @@ export default class BatchFormContainer extends Container<FormState> {
 
   initDetailValues = (values: any) => {
     logger.warn('onInitDetailValues');
+    const parsedValues = removeTypename(values);
     // $FlowFixMe: missing type define for map's ramda function
-    const { packageGrossWeight, packageVolume, packageSize, ...rest } = removeTypename(values);
-    const flattenedValues = {
-      ...rest,
-      ...flatten({
-        packageGrossWeight: packageGrossWeight || { value: 0, metric: 'kg' },
-        packageVolume: packageVolume || {
-          metric: 'cm³',
-          value: 0,
-        },
-        packageSize: packageSize || {
-          width: {
-            metric: 'cm',
-            value: 0,
-          },
-          height: {
-            metric: 'cm',
-            value: 0,
-          },
-          length: {
-            metric: 'cm',
-            value: 0,
-          },
-        },
-      }),
-    };
-    this.setState(flattenedValues);
-    this.originalValues = flattenedValues;
+    this.setState(parsedValues);
+    this.originalValues = parsedValues;
   };
 
   validationRules = () =>

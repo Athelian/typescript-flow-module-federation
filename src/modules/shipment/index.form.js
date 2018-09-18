@@ -130,7 +130,9 @@ class ShipmentFormModule extends React.Component<Props> {
                           (isNew ||
                             shipmentBatchesState.isDirty() ||
                             shipmentInfoState.isDirty() ||
-                            shipmentTagsState.isDirty()) && (
+                            shipmentTagsState.isDirty() ||
+                            shipmentGroupsState.isDirty() ||
+                            shipmentVoyagesState.isDirty()) && (
                             <>
                               <CancelButton disabled={false} onClick={this.onCancel}>
                                 Cancel
