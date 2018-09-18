@@ -47,7 +47,7 @@ class SelectInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { itemToString, itemToValue, renderSelect, renderOptions } = this.props;
+    const { itemToString, itemToValue, renderSelect, renderOptions, items } = this.props;
     const { selectedItem } = this.state;
 
     return (
@@ -69,12 +69,16 @@ class SelectInput extends React.Component<Props, State> {
               selectedItem,
               clearSelection,
               getInputProps,
+              itemToString,
             })}
             {isOpen &&
               renderOptions({
+                items,
                 highlightedIndex,
                 selectedItem,
                 getItemProps,
+                itemToString,
+                itemToValue,
               })}
           </div>
         )}

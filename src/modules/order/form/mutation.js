@@ -1,9 +1,8 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
-import { productProviderListFragment } from 'graphql/productProviderList/fragment';
-import { detailedBatchFragment } from 'graphql/batchDetail/fragment';
 import { prepareUpdateBatchInput, prepareCreateBatchInput } from 'modules/batch/form/mutation';
+import { orderDetailFragment } from 'modules/order/form/query';
 import type { OrderForm } from '../type.js.flow';
 
 export const createOrderMutation = gql`
@@ -22,6 +21,7 @@ export const createOrderMutation = gql`
 
 export const prepareCreateOrderInput = ({
   orderItems = [],
+  files = [],
   exporter = {},
   tags = [],
   issuedAt = '',
@@ -48,46 +48,19 @@ export const prepareCreateOrderInput = ({
       batches: batches.map(prepareCreateBatchInput),
     })
   ),
+  files: files.map(({ id, name, type, memo: fileMemo }) => ({
+    id,
+    name,
+    type,
+    memo: fileMemo,
+  })),
 });
 
 export const updateOrderMutation = gql`
   mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
     orderUpdate(id: $id, input: $input) {
       order {
-        id
-        archived
-        poNo
-        issuedAt
-        piNo
-        incoterm
-        deliveryPlace
-        currency
-        memo
-        createdAt
-        updatedAt
-        tags {
-          id
-          name
-          color
-        }
-        orderItems {
-          id
-          quantity
-          price {
-            amount
-            currency
-          }
-          productProvider {
-            ...productProviderListFragment
-          }
-          batches {
-            ...detailedBatchFragment
-          }
-        }
-        exporter {
-          id
-          name
-        }
+        ...orderDetailFragment
       }
       violations {
         ...violationFragment
@@ -95,14 +68,14 @@ export const updateOrderMutation = gql`
     }
   }
 
-  ${productProviderListFragment}
-  ${detailedBatchFragment}
+  ${orderDetailFragment}
   ${violationFragment}
 `;
 
 export const prepareUpdateOrderInput = ({
   issuedAt = '',
   orderItems = [],
+  files = [],
   tags = [],
   exporter = {},
   poNo,
@@ -129,4 +102,10 @@ export const prepareUpdateOrderInput = ({
       batches: batches.map(prepareUpdateBatchInput),
     })
   ),
+  files: files.map(({ id, name, type, memo: fileMemo }) => ({
+    id,
+    name,
+    type,
+    memo: fileMemo,
+  })),
 });

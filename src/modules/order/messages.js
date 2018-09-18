@@ -269,11 +269,11 @@ export default defineMessages({
   chooseExporter: {
     id: 'containers.Orders.validation.chooseExporter',
   },
-  orderSheet: {
-    id: 'containers.Orders.orderSheet',
+  fileTypeDocument: {
+    id: 'containers.Orders.fileType.document',
   },
-  other: {
-    id: 'containers.Orders.other',
+  fileTypeOrderPO: {
+    id: 'containers.Orders.fileType.orderPO',
   },
   sectionDocuments: {
     id: 'containers.Orders.sectionDocuments',

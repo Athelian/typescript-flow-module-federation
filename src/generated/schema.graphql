@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Sep 17 2018 12:22:49 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Sep 17 2018 15:31:01 GMT+0900 (JST)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -33484,6 +33484,7 @@ type User implements Model & Tagged {
 
 type Viewer {
   user: User!
+  token: String
 }
 
 type Violation {

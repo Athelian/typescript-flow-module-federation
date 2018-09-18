@@ -3,55 +3,70 @@ import gql from 'graphql-tag';
 import { productProviderListFragment } from 'graphql/productProviderList/fragment';
 import { detailedBatchFragment } from 'graphql/batchDetail/fragment';
 
-export const orderDetailQuery = gql`
-  query($id: ID!) {
-    order(id: $id) {
+export const orderDetailFragment = gql`
+  fragment orderDetailFragment on Order {
+    id
+    archived
+    poNo
+    issuedAt
+    piNo
+    incoterm
+    deliveryPlace
+    currency
+    memo
+    createdAt
+    updatedAt
+    updatedBy {
+      firstName
+      lastName
+    }
+    tags {
       id
-      archived
-      poNo
-      issuedAt
-      piNo
-      incoterm
-      deliveryPlace
-      currency
-      memo
-      createdAt
-      updatedAt
-      updatedBy {
-        firstName
-        lastName
+      name
+      color
+    }
+    orderItems {
+      id
+      quantity
+      price {
+        amount
+        currency
       }
-      tags {
-        id
-        name
-        color
+      productProvider {
+        ...productProviderListFragment
       }
-      orderItems {
-        id
-        quantity
-        price {
-          amount
-          currency
-        }
-        productProvider {
-          ...productProviderListFragment
-        }
-        batches {
-          ...detailedBatchFragment
-        }
-      }
-      exporter {
-        id
-        name
+      batches {
+        ...detailedBatchFragment
       }
       shipments {
         id
       }
     }
+    files {
+      id
+      name
+      path
+      type
+      memo
+    }
+    exporter {
+      id
+      name
+    }
   }
 
   ${productProviderListFragment}
   ${detailedBatchFragment}
+`;
+
+export const orderDetailQuery = gql`
+  query($id: ID!) {
+    order(id: $id) {
+      ...orderDetailFragment
+    }
+  }
+
+  ${orderDetailFragment}
 `;
 
 export default orderDetailQuery;

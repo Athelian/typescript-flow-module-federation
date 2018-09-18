@@ -1,10 +1,11 @@
 // @flow
 
 export type Document = {
-  id?: ?string,
+  id: string,
+  name: string,
   path: string,
   type: string,
-  memo: string,
+  memo: string | null,
 };
 
 export type FileType = {

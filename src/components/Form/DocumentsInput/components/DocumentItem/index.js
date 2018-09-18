@@ -1,8 +1,12 @@
 // @flow
 import * as React from 'react';
-import { StringValue } from 'react-values';
-import matchSorter from 'match-sorter';
-import { TextAreaInput, SearchSelectInput, Display } from 'components/Form';
+import {
+  TextAreaInput,
+  SelectInput,
+  DefaultSelect,
+  DefaultOptions,
+  Display,
+} from 'components/Form';
 import Icon from 'components/Icon';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
 import { computeIcon, getFileExtension, getFileName } from './helpers';
@@ -58,8 +62,8 @@ class DocumentItem extends React.Component<Props, State> {
     const { name, value, readOnly, onChange, onBlur, onRemove, types } = this.props;
     const { isExpanded } = this.state;
 
-    const fileExtension = getFileExtension(value.path);
-    const fileName = getFileName(value.path);
+    const fileExtension = getFileExtension(value.name);
+    const fileName = getFileName(value.name);
     const fileIcon = computeIcon(fileExtension);
 
     const type = types.find(t => t.type === value.type);
@@ -75,25 +79,19 @@ class DocumentItem extends React.Component<Props, State> {
           {readOnly ? (
             <Display>{type ? type.label : ''}</Display>
           ) : (
-            <StringValue>
-              {({ value: q, set, clear }) => (
-                <SearchSelectInput
-                  name={`${name}.type`}
-                  value={value.type}
-                  items={matchSorter(types, q, { keys: ['type', 'label'] })}
-                  itemToValue={v => (v ? v.type : null)}
-                  itemToString={v => (v ? v.label : '')}
-                  hideLabel
-                  required
-                  readOnly={readOnly}
-                  onChange={item => {
-                    if (!item) clear();
-                  }}
-                  onBlur={onBlur}
-                  onSearch={set}
-                />
+            <SelectInput
+              name={`${name}.type`}
+              value={value.type}
+              onBlur={onBlur}
+              readOnly={readOnly}
+              items={types}
+              itemToValue={v => (v ? v.type : null)}
+              itemToString={v => (v ? v.label : '')}
+              renderSelect={({ ...rest }) => (
+                <DefaultSelect {...rest} required hideLabel align="left" width="200px" />
               )}
-            </StringValue>
+              renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" />}
+            />
           )}
           <div className={FileExtensionIconStyle(fileIcon.color)}>
             <Icon icon={fileIcon.icon} />
@@ -107,7 +105,7 @@ class DocumentItem extends React.Component<Props, State> {
               type="button"
               className={DownloadButtonStyle}
               onClick={() => {
-                window.open(`${process.env.ZENPORT_FS_URL || ''}/${value.path}`, '_blank');
+                window.open(value.path, '_blank');
               }}
             >
               <Icon icon="DOWNLOAD" />

@@ -1,34 +1,42 @@
 // @flow
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
-import { Form } from 'components/Form';
-import DocumentsInput from 'components/Form/DocumentsInput';
+import { Subscribe } from 'unstated';
+import { DocumentsInput } from 'components/Form';
+import { FormContainer } from 'modules/form';
+import { OrderFilesContainer } from 'modules/order/form/containers';
 import messages from 'modules/order/messages';
 import { DocumentSectionStyle } from './style';
 
 type Props = {
-  initialValues: Object,
   intl: intlShape,
 };
 
-function DocumentsSection({ intl, initialValues }: Props) {
+function DocumentsSection({ intl }: Props) {
   return (
-    <Form initialValues={initialValues}>
-      {({ values, setFieldValue }) => (
-        <div className={DocumentSectionStyle}>
+    <div className={DocumentSectionStyle}>
+      <Subscribe to={[FormContainer, OrderFilesContainer]}>
+        {(
+          { setFieldTouched, onValidation },
+          { state: { files }, setFieldValue: changeFiles, validationRules }
+        ) => (
           <DocumentsInput
+            id="files"
             name="files"
-            folder="order"
-            value={values.files}
-            onChange={setFieldValue}
+            values={files}
+            onChange={(field, value) => {
+              changeFiles(field, value);
+              setFieldTouched(field);
+              onValidation({ files }, validationRules());
+            }}
             types={[
-              { type: 'OrderSheet', label: intl.formatMessage(messages.orderSheet) },
-              { type: 'Other', label: intl.formatMessage(messages.other) },
+              { type: 'Document', label: intl.formatMessage(messages.fileTypeDocument) },
+              { type: 'OrderPO', label: intl.formatMessage(messages.fileTypeOrderPO) },
             ]}
           />
-        </div>
-      )}
-    </Form>
+        )}
+      </Subscribe>
+    </div>
   );
 }
 

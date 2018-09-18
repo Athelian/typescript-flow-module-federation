@@ -61,9 +61,4 @@ export const computeIcon = (fileExtension: string) => {
 
 export const getFileExtension = (filePath: string): string => filePath.split('.').pop();
 
-export const getFileName = (filePath: string): string =>
-  filePath
-    .split('/')
-    .pop()
-    .split('.')
-    .shift();
+export const getFileName = (filePath: string): string => filePath.split('.').shift();

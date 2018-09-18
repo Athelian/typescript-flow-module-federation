@@ -24,6 +24,7 @@ import {
   DefaultSelect,
 } from './Inputs';
 import TagsInput from './TagsInput';
+import DocumentsInput from './DocumentsInput';
 import FieldItem from './FieldItem';
 import Label from './Label';
 import Tooltip from './Tooltip';
@@ -65,6 +66,7 @@ export {
   Display,
   DashedPlusButton,
   TagsInput,
+  DocumentsInput,
   SectionHeader,
   LastModified,
   StatusToggle,

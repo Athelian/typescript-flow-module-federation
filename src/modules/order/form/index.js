@@ -9,7 +9,7 @@ import OrderActivateDialog from './components/OrderActivateDialog';
 import OrderArchiveDialog from './components/OrderArchiveDialog';
 import OrderSection from './components/OrderSection';
 import OrderFormWrapperStyle from './style';
-import { OrderItemsContainer, OrderInfoContainer } from './containers';
+import { OrderItemsContainer, OrderInfoContainer, OrderFilesContainer } from './containers';
 
 const AsyncItemsSection = Loadable({
   loading: LoadingIcon,
@@ -51,10 +51,8 @@ export default class OrderForm extends React.Component<Props, State> {
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
     const { order } = this.props;
-    if (!isEquals(order, nextProps.order)) return true;
-    if (!isEquals(nextState, this.state)) return true;
 
-    return false;
+    return !isEquals(order, nextProps.order) || !isEquals(nextState, this.state);
   }
 
   openStatusDialog = () => {
@@ -149,8 +147,12 @@ export default class OrderForm extends React.Component<Props, State> {
         </SectionWrapper>
 
         <SectionWrapper id="documentsSection">
-          <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${2})`} />
-          <AsyncDocumentsSection isNew={isNew} initialValues={{ files: order.files }} />
+          <Subscribe to={[OrderFilesContainer]}>
+            {({ state: values }) => (
+              <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${values.files.length})`} />
+            )}
+          </Subscribe>
+          <AsyncDocumentsSection />
         </SectionWrapper>
 
         <SectionWrapper id="shipmentsSection">

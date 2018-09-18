@@ -18,7 +18,12 @@ import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import OrderForm from './form';
-import { OrderItemsContainer, OrderInfoContainer, OrderTagsContainer } from './form/containers';
+import {
+  OrderItemsContainer,
+  OrderInfoContainer,
+  OrderTagsContainer,
+  OrderFilesContainer,
+} from './form/containers';
 import LogsButton from './form/components/LogsButton';
 import query from './form/query';
 import {
@@ -124,14 +129,16 @@ class OrderFormModule extends React.PureComponent<Props> {
                           OrderItemsContainer,
                           OrderInfoContainer,
                           OrderTagsContainer,
+                          OrderFilesContainer,
                           FormContainer,
                         ]}
                       >
-                        {(orderItemState, orderInfoState, orderTagsState, form) =>
+                        {(orderItemState, orderInfoState, orderTagsState, orderFilesState, form) =>
                           (isNew ||
                             orderItemState.isDirty() ||
                             orderInfoState.isDirty() ||
-                            orderTagsState.isDirty()) && (
+                            orderTagsState.isDirty() ||
+                            orderFilesState.isDirty()) && (
                             <>
                               <CancelButton disabled={false} onClick={this.onCancel}>
                                 Cancel
@@ -144,12 +151,14 @@ class OrderFormModule extends React.PureComponent<Props> {
                                       ...orderItemState.state,
                                       ...orderInfoState.state,
                                       ...orderTagsState.state,
+                                      ...orderFilesState.state,
                                     },
                                     saveOrder,
                                     () => {
                                       orderItemState.onSuccess();
                                       orderInfoState.onSuccess();
                                       orderTagsState.onSuccess();
+                                      orderFilesState.onSuccess();
                                       form.onReset();
                                     }
                                   )
@@ -174,19 +183,27 @@ class OrderFormModule extends React.PureComponent<Props> {
                       }
                     />
                   ) : (
-                    <Subscribe to={[OrderItemsContainer, OrderInfoContainer, OrderTagsContainer]}>
-                      {(orderItemState, orderInfoState, orderTagsState) => (
+                    <Subscribe
+                      to={[
+                        OrderItemsContainer,
+                        OrderInfoContainer,
+                        OrderTagsContainer,
+                        OrderFilesContainer,
+                      ]}
+                    >
+                      {(orderItemState, orderInfoState, orderTagsState, orderFilesState) => (
                         <Query
                           query={query}
                           variables={{ id: decodeId(orderId) }}
                           fetchPolicy="network-only"
                           onCompleted={result => {
                             const {
-                              order: { orderItems, tags, ...info },
+                              order: { orderItems, tags, files, ...info },
                             } = result;
                             orderItemState.initDetailValues(orderItems);
                             orderTagsState.initDetailValues(tags);
                             orderInfoState.initDetailValues(info);
+                            orderFilesState.initDetailValues(files);
                           }}
                         >
                           {({ loading, data, error }) => {
