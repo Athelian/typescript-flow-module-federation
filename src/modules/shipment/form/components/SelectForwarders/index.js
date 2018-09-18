@@ -4,6 +4,7 @@ import { ArrayValue } from 'react-values';
 import { isEquals } from 'utils/fp';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
+import LoadingIcon from 'components/LoadingIcon';
 import { SectionNavBar as NavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/NavButtons';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
@@ -52,47 +53,53 @@ const selectedItems = (selected: ?Array<{ id: string, name: string }>, items: Ar
 
 const SelectForwarders = ({ selected, onCancel, onSelect }: Props) => (
   <PartnerListProvider types={['Forwarder']}>
-    {({ loading, data }) => (
-      <ArrayValue defaultValue={selectedItems(selected, data)}>
-        {({ value: values, push, set }) => (
-          <Layout
-            navBar={
-              <NavBar>
-                <EntityIcon icon="PARTNER" color="BLACK" />
-                <h3>
-                  {values.length}/{MAX_SELECTIONS}
-                </h3>
-                <CancelButton disabled={false} onClick={onCancel}>
-                  Cancel
-                </CancelButton>
-                <SaveButton disabled={isEquals(values, selected)} onClick={() => onSelect(values)}>
-                  Save
-                </SaveButton>
-              </NavBar>
-            }
-          >
-            <PartnerGridView
-              hasMore={false}
-              isLoading={loading}
-              onLoadMore={() => {}}
-              items={data.filter(partner => partner.types.includes('Forwarder'))}
-              renderItem={item => (
-                <ShipmentForwarderCard
-                  forwarder={{
-                    id: item.group.id,
-                    name: item.name || item.group.name,
-                  }}
-                  onSelect={() => onSelectForwarders({ selected: values, item, push, set })}
-                  selectable
-                  selected={values.includes(item)}
-                  key={item.id}
-                />
-              )}
-            />
-          </Layout>
-        )}
-      </ArrayValue>
-    )}
+    {({ loading, data }) => {
+      if (loading) return <LoadingIcon />;
+      return (
+        <ArrayValue defaultValue={selectedItems(selected, data)}>
+          {({ value: values, push, set }) => (
+            <Layout
+              navBar={
+                <NavBar>
+                  <EntityIcon icon="PARTNER" color="BLACK" />
+                  <h3>
+                    {values.length}/{MAX_SELECTIONS}
+                  </h3>
+                  <CancelButton disabled={false} onClick={onCancel}>
+                    Cancel
+                  </CancelButton>
+                  <SaveButton
+                    disabled={isEquals(values, selected)}
+                    onClick={() => onSelect(values)}
+                  >
+                    Save
+                  </SaveButton>
+                </NavBar>
+              }
+            >
+              <PartnerGridView
+                hasMore={false}
+                isLoading={loading}
+                onLoadMore={() => {}}
+                items={data.filter(partner => partner.types.includes('Forwarder'))}
+                renderItem={item => (
+                  <ShipmentForwarderCard
+                    forwarder={{
+                      id: item.group.id,
+                      name: item.name || item.group.name,
+                    }}
+                    onSelect={() => onSelectForwarders({ selected: values, item, push, set })}
+                    selectable
+                    selected={values.includes(item)}
+                    key={item.id}
+                  />
+                )}
+              />
+            </Layout>
+          )}
+        </ArrayValue>
+      );
+    }}
   </PartnerListProvider>
 );
 
