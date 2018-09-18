@@ -82,9 +82,13 @@ const OrderBatchCard = ({
   const hasShipment = !!batch.shipment;
   const warehouseArrivalApproved = false;
 
+  const totalAdjustment = batch.batchAdjustments
+    ? batch.batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
+    : 0;
+
   return (
     <ObjectValue defaultValue={batch}>
-      {({ value: { no, quantity, deliveredAt }, set }) => (
+      {({ value: { no, quantity, deliveredAt } }) => (
         <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
           <div
             className={OrderBatchCardWrapperStyle}
@@ -98,7 +102,7 @@ const OrderBatchCard = ({
             >
               <Subscribe to={[FormContainer]}>
                 {({ state: { activeField }, ...formHelper }) => (
-                  <FormField name={`batch.${batch.id}.no`} initValue={quantity} {...formHelper}>
+                  <FormField name={`batch.${batch.id}.no`} initValue={no} {...formHelper}>
                     {inputHandlers => (
                       <DefaultStyle
                         height="20px"
@@ -109,11 +113,9 @@ const OrderBatchCard = ({
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            saveOnBlur({ ...batch, no });
+                            saveOnBlur({ ...batch, no: inputHandlers.value });
                           }}
-                          onChange={evt => set('no', evt.target.value)}
                           align="left"
-                          value={no}
                         />
                       </DefaultStyle>
                     )}
@@ -132,7 +134,7 @@ const OrderBatchCard = ({
                 {({ state: { activeField }, ...formHelper }) => (
                   <FormField
                     name={`batch.${batch.id}.quantity`}
-                    initValue={quantity}
+                    initValue={quantity + totalAdjustment}
                     {...formHelper}
                   >
                     {inputHandlers => (
@@ -146,10 +148,11 @@ const OrderBatchCard = ({
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            saveOnBlur({ ...batch, quantity });
+                            saveOnBlur({
+                              ...batch,
+                              quantity: inputHandlers.value - totalAdjustment,
+                            });
                           }}
-                          onChange={evt => set('quantity', evt.target.value)}
-                          value={quantity}
                         />
                       </DefaultStyle>
                     )}
@@ -182,10 +185,8 @@ const OrderBatchCard = ({
                           {...inputHandlers}
                           onBlur={evt => {
                             inputHandlers.onBlur(evt);
-                            saveOnBlur({ ...batch, deliveredAt });
+                            saveOnBlur({ ...batch, deliveredAt: inputHandlers.value });
                           }}
-                          onChange={evt => set('deliveredAt', evt.target.value)}
-                          value={deliveredAt}
                         />
                       </DefaultStyle>
                     )}
@@ -199,14 +200,16 @@ const OrderBatchCard = ({
             <div className={TotalPriceWrapperStyle}>
               <Label>TOTAL</Label>
               <Display>
-                <FormattedNumber value={quantity * (price && price.amount ? price.amount : 0)} />
+                <FormattedNumber
+                  value={(quantity + totalAdjustment) * (price && price.amount ? price.amount : 0)}
+                />
                 {currency}
               </Display>
             </div>
 
             <div className={VolumeWrapperStyle}>
               <Label>VOLUME</Label>
-              <Display>{calculateVolume(batch, quantity)} </Display>
+              <Display>{calculateVolume(batch, quantity + totalAdjustment)} </Display>
             </div>
 
             <div className={ShipmentWrapperStyle}>
