@@ -1,23 +1,23 @@
 // @flow
 import * as React from 'react';
-import { OrderShipmentCard } from 'components/Cards';
+import { ShipmentOrderCard } from 'components/Cards';
 import { EmptyMessageStyle } from 'modules/order/form/components/ItemsSection/style';
 import { ItemsSectionWrapperStyle, ItemGridStyle, ItemStyle } from './style';
 
 type Props = {
-  shipments: Array<Object>,
+  orders: Array<Object>,
 };
 
-function ShipmentsSection({ shipments }: Props) {
+function OrderSection({ orders }: Props) {
   return (
     <div className={ItemsSectionWrapperStyle}>
-      {shipments.length === 0 ? (
-        <div className={EmptyMessageStyle}>No shipments found.</div>
+      {orders.length === 0 ? (
+        <div className={EmptyMessageStyle}>No orders found.</div>
       ) : (
         <div className={ItemGridStyle}>
-          {shipments.map(item => (
+          {orders.map(item => (
             <div className={ItemStyle} key={item.id}>
-              <OrderShipmentCard shipment={item} />
+              <ShipmentOrderCard order={item} />
             </div>
           ))}
         </div>
@@ -26,4 +26,4 @@ function ShipmentsSection({ shipments }: Props) {
   );
 }
 
-export default ShipmentsSection;
+export default OrderSection;

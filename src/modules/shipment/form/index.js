@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Loadable from 'react-loadable';
+import { uniqBy } from 'lodash';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
@@ -28,6 +29,10 @@ const AsyncCargoSection = Loadable({
   loading: LoadingIcon,
   loader: () => import('./components/CargoSection'),
 });
+const AsyncOrderSection = Loadable({
+  loading: LoadingIcon,
+  loader: () => import('./components/OrderSection'),
+});
 
 const ShipmentForm = ({ shipment, isNew }: Props) => (
   <div className={ShipmentFormWrapperStyle}>
@@ -48,6 +53,19 @@ const ShipmentForm = ({ shipment, isNew }: Props) => (
         )}
       </Subscribe>
       <AsyncCargoSection />
+    </SectionWrapper>
+    <SectionWrapper id="orderSection">
+      <Subscribe to={[ShipmentBatchesContainer]}>
+        {({ state: { batches } }) => {
+          const uniqueOrders = uniqBy(batches.map(item => item.orderItem.order), 'id');
+          return (
+            <>
+              <SectionHeader icon="ORDER" title={`ORDER (${uniqueOrders.length})`} />
+              <AsyncOrderSection orders={uniqueOrders} />
+            </>
+          );
+        }}
+      </Subscribe>
     </SectionWrapper>
   </div>
 );

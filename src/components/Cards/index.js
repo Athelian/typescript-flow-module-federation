@@ -1,6 +1,7 @@
 import BaseCard, { CardAction } from './BaseCard';
 import BatchCard from './BatchCard';
 import OrderBatchCard from './OrderBatchCard';
+import OrderShipmentCard from './OrderShipmentCard';
 import OrderCard from './OrderCard';
 import OrderItemCard from './OrderItemCard';
 import PartnerCard from './PartnerCard';
@@ -9,6 +10,7 @@ import ShipmentCard from './ShipmentCard';
 import ShipmentExporterCard from './ShipmentExporterCard';
 import ShipmentForwarderCard from './ShipmentForwarderCard';
 import ShipmentBatchCard from './ShipmentBatchCard';
+import ShipmentOrderCard from './ShipmentOrderCard';
 import StaffCard from './StaffCard';
 import TagCard from './TagCard';
 import WarehouseCard from './WarehouseCard';
@@ -19,6 +21,7 @@ export {
   CardAction,
   BatchCard,
   OrderBatchCard,
+  OrderShipmentCard,
   OrderCard,
   OrderItemCard,
   PartnerCard,
@@ -27,6 +30,7 @@ export {
   ShipmentExporterCard,
   ShipmentForwarderCard,
   ShipmentBatchCard,
+  ShipmentOrderCard,
   StaffCard,
   TagCard,
   WarehouseCard,

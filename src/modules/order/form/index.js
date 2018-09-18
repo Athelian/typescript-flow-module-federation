@@ -9,7 +9,7 @@ import OrderActivateDialog from './components/OrderActivateDialog';
 import OrderArchiveDialog from './components/OrderArchiveDialog';
 import OrderSection from './components/OrderSection';
 import OrderFormWrapperStyle from './style';
-import { OrderItemsContainer } from './containers';
+import { OrderItemsContainer, OrderInfoContainer } from './containers';
 
 const AsyncItemsSection = Loadable({
   loading: LoadingIcon,
@@ -154,8 +154,14 @@ export default class OrderForm extends React.Component<Props, State> {
         </SectionWrapper>
 
         <SectionWrapper id="shipmentsSection">
-          <SectionHeader icon="SHIPMENT" title={`SHIPMENTS (${20})`} />
-          <AsyncShipmentsSection isNew={isNew} />
+          <Subscribe to={[OrderInfoContainer]}>
+            {({ state: { shipments } }) => (
+              <>
+                <SectionHeader icon="SHIPMENT" title={`SHIPMENT (${shipments.length})`} />
+                <AsyncShipmentsSection shipments={shipments} />
+              </>
+            )}
+          </Subscribe>
         </SectionWrapper>
       </div>
     );
