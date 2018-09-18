@@ -1,8 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
-import { productProviderListFragment } from 'graphql/productProviderList/fragment';
-import { detailedBatchFragment } from 'graphql/batchDetail/fragment';
 import type { ShipmentCreate, ShipmentUpdate } from '../type.js.flow';
 
 export const createShipmentMutation = gql`
@@ -19,8 +17,38 @@ export const createShipmentMutation = gql`
   ${violationFragment}
 `;
 
-export const prepareCreateShipmentInput = ({ no }: Object): ShipmentCreate => ({
+export const prepareCreateShipmentInput = ({
   no,
+  blNo,
+  blDate,
+  bookingNo,
+  bookingDate,
+  invoiceNo,
+  loadType,
+  transportType,
+  incoterm,
+  carrier,
+  cargoReady,
+  voyages,
+  containerGroups,
+  tags = [],
+  forwarders = [],
+}: Object): ShipmentCreate => ({
+  no,
+  blNo,
+  blDate,
+  bookingNo,
+  bookingDate,
+  invoiceNo,
+  loadType,
+  transportType,
+  incoterm,
+  carrier,
+  cargoReady,
+  tagIds: tags.map(({ id }) => id),
+  forwarderIds: forwarders.map(({ id }) => id),
+  voyages,
+  containerGroups,
 });
 
 export const updateShipmentMutation = gql`
@@ -34,12 +62,39 @@ export const updateShipmentMutation = gql`
       }
     }
   }
-
-  ${productProviderListFragment}
-  ${detailedBatchFragment}
   ${violationFragment}
 `;
 
-export const prepareUpdateShipmentInput = ({ no }: Object): ShipmentUpdate => ({
+export const prepareUpdateShipmentInput = ({
   no,
+  blNo,
+  blDate,
+  bookingNo,
+  bookingDate,
+  invoiceNo,
+  loadType,
+  transportType,
+  incoterm,
+  carrier,
+  cargoReady,
+  voyages,
+  containerGroups,
+  tags = [],
+  forwarders = [],
+}: Object): ShipmentUpdate => ({
+  no,
+  blNo,
+  blDate,
+  bookingNo,
+  bookingDate,
+  invoiceNo,
+  loadType,
+  transportType,
+  incoterm,
+  carrier,
+  cargoReady,
+  tagIds: tags.map(({ id }) => id),
+  forwarderIds: forwarders.map(({ id }) => id),
+  voyages,
+  containerGroups,
 });

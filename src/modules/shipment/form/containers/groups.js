@@ -9,7 +9,7 @@ type FormState = {
 };
 
 const initValues = {
-  containerGroups: [],
+  containerGroups: [{}],
 };
 
 export default class ShipmentGroupsContainer extends Container<FormState> {
