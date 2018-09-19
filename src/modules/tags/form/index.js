@@ -16,7 +16,7 @@ import Tag from 'components/Tag';
 import { FormContainer, FormField } from 'modules/form';
 import messages from 'modules/tags/messages';
 import ColorInput from 'components/Form/ColorInput';
-import EntityTypesInput from 'components/Form/EntityTypesInput';
+import EntityTypesInput from '../components/EntityTypesInput';
 
 import { TagFormWrapperStyle, TagSectionWrapperStyle } from './style';
 import { TagContainer, EntityTypeContainer } from './containers';
@@ -180,7 +180,10 @@ export default function TagForm({ isNew }: Props) {
             }}
           </Subscribe>
           <Subscribe to={[FormContainer, EntityTypeContainer]}>
-            {({ setFieldTouched }, { state: { entityTypes }, setFieldValue: changeTags }) => (
+            {(
+              { setFieldTouched },
+              { state: { entityTypes }, setFieldValue: changeEntityTypes }
+            ) => (
               <FieldItem
                 label={
                   <Label required>
@@ -189,12 +192,10 @@ export default function TagForm({ isNew }: Props) {
                 }
                 input={
                   <EntityTypesInput
-                    editable={isNew}
                     name="entityTypes"
                     values={entityTypes}
-                    entityTypes={['Product', 'Order', 'Batch', 'Shipment', 'User']}
-                    onChange={(field, val) => {
-                      changeTags(field, val);
+                    onChange={(field, value) => {
+                      changeEntityTypes(field, value);
                       setFieldTouched('entityTypes');
                     }}
                   />

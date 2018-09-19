@@ -1,12 +1,13 @@
 // @flow
 import { Container } from 'unstated';
-import * as Yup from 'yup';
 import { removeTypename } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
   entityTypes?: Array<{
     name: string,
+    icon: string,
+    color: string,
   }>,
 };
 
@@ -37,11 +38,4 @@ export default class TagEntityTypeContainer extends Container<FormState> {
     this.setState({ entityTypes: parsedValues });
     this.originalValues = { entityTypes: parsedValues };
   };
-
-  validationRules = () =>
-    Yup.object().shape({
-      entityTypes: Yup.array()
-        .of(Yup.string())
-        .required(),
-    });
 }
