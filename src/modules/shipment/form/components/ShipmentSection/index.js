@@ -8,6 +8,7 @@ import { FormContainer, FormField } from 'modules/form';
 import { enumSelectInputFactory } from 'modules/form/helpers';
 import {
   ShipmentInfoContainer,
+  ShipmentTransportTypeContainer,
   ShipmentBatchesContainer,
   ShipmentTagsContainer,
 } from 'modules/shipment/form/containers';
@@ -393,31 +394,43 @@ const ShipmentSection = ({ isNew }: Props) => (
                       />
                     )}
                   </FormField>
-                  <FormField
-                    name="transportType"
-                    initValue={values.transportType}
-                    setFieldValue={setFieldValue}
-                    validationOnChange
-                    onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
-                    }
-                    {...formHelper}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <FieldItem
-                        label={<Label>TRANSPORTATION</Label>}
-                        input={enumSelectInputFactory({
-                          enumType: 'TransportType',
-                          inputHandlers,
-                          name,
-                          touched,
-                          errors,
-                          isNew,
-                          activeField,
-                        })}
-                      />
-                    )}
-                  </FormField>
+                  <Subscribe to={[ShipmentTransportTypeContainer]}>
+                    {({
+                      originalValues: initialTransportTypeValues,
+                      state: transportTypeState,
+                      setFieldValue: transportTypeSetFieldValue,
+                    }) => {
+                      const transportTypeValues = {
+                        ...initialTransportTypeValues,
+                        ...transportTypeState,
+                      };
+
+                      return (
+                        <FormField
+                          name="transportType"
+                          initValue={transportTypeValues.transportType}
+                          setFieldValue={transportTypeSetFieldValue}
+                          {...formHelper}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <FieldItem
+                              label={<Label>TRANSPORTATION</Label>}
+                              input={enumSelectInputFactory({
+                                enumType: 'TransportType',
+                                inputHandlers,
+                                name,
+                                touched,
+                                errors,
+                                isNew,
+                                activeField,
+                              })}
+                            />
+                          )}
+                        </FormField>
+                      );
+                    }}
+                  </Subscribe>
+
                   <FormField
                     name="loadType"
                     initValue={values.loadType}

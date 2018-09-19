@@ -18,8 +18,8 @@ import {
   ShipmentInfoContainer,
   ShipmentTagsContainer,
   ShipmentBatchesContainer,
-  ShipmentGroupsContainer,
-  ShipmentVoyagesContainer,
+  ShipmentTimelineContainer,
+  ShipmentTransportTypeContainer,
 } from './form/containers';
 import ShipmentForm from './form';
 import query from './form/query';
@@ -130,8 +130,8 @@ class ShipmentFormModule extends React.Component<Props> {
                           ShipmentBatchesContainer,
                           ShipmentInfoContainer,
                           ShipmentTagsContainer,
-                          ShipmentGroupsContainer,
-                          ShipmentVoyagesContainer,
+                          ShipmentTimelineContainer,
+                          ShipmentTransportTypeContainer,
                           FormContainer,
                         ]}
                       >
@@ -139,16 +139,16 @@ class ShipmentFormModule extends React.Component<Props> {
                           shipmentBatchesState,
                           shipmentInfoState,
                           shipmentTagsState,
-                          shipmentGroupsState,
-                          shipmentVoyagesState,
+                          shipmentTimelineState,
+                          shipmentTransportTypeState,
                           form
                         ) =>
                           (isNew ||
                             shipmentBatchesState.isDirty() ||
                             shipmentInfoState.isDirty() ||
                             shipmentTagsState.isDirty() ||
-                            shipmentGroupsState.isDirty() ||
-                            shipmentVoyagesState.isDirty()) && (
+                            shipmentTimelineState.isDirty() ||
+                            shipmentTransportTypeState.isDirty()) && (
                             <>
                               <CancelButton disabled={false} onClick={this.onCancel}>
                                 Cancel
@@ -161,16 +161,16 @@ class ShipmentFormModule extends React.Component<Props> {
                                       ...shipmentBatchesState.state,
                                       ...shipmentInfoState.state,
                                       ...shipmentTagsState.state,
-                                      ...shipmentGroupsState.state,
-                                      ...shipmentVoyagesState.state,
+                                      ...shipmentTimelineState.state,
+                                      ...shipmentTransportTypeState.state,
                                     },
                                     saveShipment,
                                     () => {
                                       shipmentBatchesState.onSuccess();
                                       shipmentInfoState.onSuccess();
                                       shipmentTagsState.onSuccess();
-                                      shipmentGroupsState.onSuccess();
-                                      shipmentVoyagesState.onSuccess();
+                                      shipmentTimelineState.onSuccess();
+                                      shipmentTransportTypeState.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors
@@ -196,16 +196,16 @@ class ShipmentFormModule extends React.Component<Props> {
                         ShipmentBatchesContainer,
                         ShipmentInfoContainer,
                         ShipmentTagsContainer,
-                        ShipmentGroupsContainer,
-                        ShipmentVoyagesContainer,
+                        ShipmentTimelineContainer,
+                        ShipmentTransportTypeContainer,
                       ]}
                     >
                       {(
                         shipmentBatchesState,
                         shipmentInfoState,
                         shipmentTagsState,
-                        shipmentGroupsState,
-                        shipmentVoyagesState
+                        shipmentTimelineState,
+                        shipmentTransportTypeState
                       ) => (
                         <Query
                           query={query}
@@ -219,11 +219,11 @@ class ShipmentFormModule extends React.Component<Props> {
                               shipmentBatchesState.initDetailValues(batches);
                               shipmentTagsState.initDetailValues(tags);
                               shipmentInfoState.initDetailValues(info);
-                              shipmentGroupsState.initDetailValues(containerGroups);
-                              shipmentVoyagesState.initDetailValues(voyages);
                             } else {
                               navigate('/shipment');
                             }
+                              shipmentGroupsState.initDetailValues(containerGroups);
+                              shipmentVoyagesState.initDetailValues(voyages);
                           }}
                         >
                           {({ loading, data, error }) => {

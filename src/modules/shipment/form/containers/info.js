@@ -12,7 +12,6 @@ type FormState = {
   bookingDate?: Date,
   invoiceNo?: string,
   loadType?: string,
-  transportType?: string,
   incoterm?: string,
   carrier?: string,
   forwarders: Array<{ id: string, name: string }>,
