@@ -24,8 +24,8 @@ const TimelineSection = ({ isNew }: Props) => (
       const {
         originalValues: initialValues,
         state,
-        /* setFieldDeepValue,
-        removeArrayItem, */
+        setFieldDeepValue,
+        removeArrayItem,
       } = shipmentTimelineState;
 
       const {
@@ -39,6 +39,7 @@ const TimelineSection = ({ isNew }: Props) => (
         ...transportTypeInitialValues,
         ...transportTypeState,
       };
+
       const { cargoReady, voyages, containerGroups } = values;
       const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
 
@@ -55,13 +56,19 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="CARGO_READY"
               title="CARGO READY"
               timelineDate={cargoReady}
+              sourceName="cargoReady"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
             />
             <TimelineInfoSection
               id="loadPortDeparture"
               isNew={isNew}
               icon="PORT"
               title="LOAD PORT DEPARTURE"
-              timelineDate={values.voyages[0].departure}
+              timelineDate={voyages[0].departure}
+              sourceName="voyages[0].departure"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
             />
             <VoyageInfoSection
               id="firstVoyage"
@@ -82,6 +89,9 @@ const TimelineSection = ({ isNew }: Props) => (
                       : 'TRANSIT PORT ARRIVAL'
                   }
                   timelineDate={values.voyages[0].arrival}
+                  sourceName="voyages[0].arrival"
+                  setFieldDeepValue={setFieldDeepValue}
+                  removeArrayItem={removeArrayItem}
                 />
                 <TimelineInfoSection
                   id="firstTransitPortDeparture"
@@ -93,6 +103,9 @@ const TimelineSection = ({ isNew }: Props) => (
                       : 'TRANSIT PORT DEPARTURE'
                   }
                   timelineDate={values.voyages[1].departure}
+                  sourceName="voyages[1].departure"
+                  setFieldDeepValue={setFieldDeepValue}
+                  removeArrayItem={removeArrayItem}
                 />
                 <VoyageInfoSection
                   id="secondVoyage"
@@ -111,6 +124,9 @@ const TimelineSection = ({ isNew }: Props) => (
                   icon="TRANSIT"
                   title="SECOND TRANSIT PORT ARRIVAL"
                   timelineDate={values.voyages[1].arrival}
+                  sourceName="voyages[1].arrival"
+                  setFieldDeepValue={setFieldDeepValue}
+                  removeArrayItem={removeArrayItem}
                 />
                 <TimelineInfoSection
                   id="secondTransitPortDeparture"
@@ -118,6 +134,9 @@ const TimelineSection = ({ isNew }: Props) => (
                   icon="TRANSIT"
                   title="SECOND TRANSIT PORT DEPARTURE"
                   timelineDate={values.voyages[2].departure}
+                  sourceName="voyages[2].departure"
+                  setFieldDeepValue={setFieldDeepValue}
+                  removeArrayItem={removeArrayItem}
                 />
                 <VoyageInfoSection
                   id="thirdVoyage"
@@ -134,6 +153,9 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="PORT"
               title="DISCHARGE PORT ARRIVAL"
               timelineDate={values.voyages[voyages.length - 1].arrival}
+              sourceName={`voyages[${voyages.length - 1}].arrival`}
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
             />
             <TimelineInfoSection
               id="customClearance"
@@ -141,6 +163,9 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="CUSTOMS"
               title="CUSTOMS CLEARANCE"
               timelineDate={customClearance}
+              sourceName="containerGroups[0].customClearance"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
             />
             <TimelineInfoSection
               id="warehouseArrival"
@@ -148,6 +173,9 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="WAREHOUSE"
               title="WAREHOUSE ARRIVAL"
               timelineDate={warehouseArrival}
+              sourceName="containerGroups[0].warehouseArrival"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
             />
             <TimelineInfoSection
               id="deliveryReady"
@@ -155,6 +183,9 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="DELIVERY_READY"
               title="DELIVERY READY"
               timelineDate={deliveryReady}
+              sourceName="containerGroups[0].deliveryReady"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
             />
           </div>
         </div>

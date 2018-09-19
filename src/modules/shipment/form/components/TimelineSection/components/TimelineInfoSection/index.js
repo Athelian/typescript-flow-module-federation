@@ -3,6 +3,7 @@ import * as React from 'react';
 import GridColumn from 'components/GridColumn';
 import GridRow from 'components/GridRow';
 import Icon from 'components/Icon';
+import { UserConsumer } from 'modules/user';
 import UserAvatar from 'components/UserAvatar';
 import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
@@ -25,75 +26,128 @@ type Props = {
   isNew: boolean,
   icon: string,
   title: string,
-  timelineDate: any,
+  timelineDate: Object,
+  sourceName: string,
+  setFieldDeepValue: Function,
+  removeArrayItem: Function,
 };
 
-const TimelineInfoSection = ({ isNew, icon, title, timelineDate, ...rest }: Props) => {
-  console.log(timelineDate);
-  return (
-    <div className={TimelineInfoSectionWrapperStyle} {...rest}>
-      <GridColumn>
-        <SectionHeader icon={icon} title={title} />
+class TimelineInfoSection extends React.PureComponent<Props> {
+  handleRemoveAssignedTo = (index: number) => {
+    const { sourceName, removeArrayItem } = this.props;
 
-        {isNew}
+    removeArrayItem(`${sourceName}.assignedTo[${index}]`);
+  };
 
-        <GridRow gap="10px">
-          <GridColumn gap="5px">
-            <Label>ASSIGNED TO</Label>
-            <div className={AssignmentWrapperStyle}>
-              {timelineDate.assignedTo.map(assigned => (
-                <div className={AssignmentStyle} key={assigned.id}>
-                  <button className={RemoveAssignmentButtonStyle} type="button">
-                    <Icon icon="REMOVE" />
-                  </button>
-                  <UserAvatar firstName={assigned.firstName} lastName={assigned.lastName} />
-                </div>
-              ))}
-              {timelineDate.assignedTo.length < 5 && (
-                <button className={AddAssignmentButtonStyle} type="button">
-                  <Icon icon="ADD" />
-                </button>
-              )}
-            </div>
-          </GridColumn>
+  handleUnapprove = () => {
+    const { timelineDate, sourceName, setFieldDeepValue } = this.props;
 
-          <GridColumn gap="5px">
-            <Label>APPROVAL</Label>
-            <div className={ApprovalWrapperStyle}>
-              {timelineDate.approvedAt ? (
-                <>
-                  <UserAvatar
-                    firstName={timelineDate.approvedBy.firstName}
-                    lastName={timelineDate.approvedBy.lastName}
-                  />
-                  <div className={ApprovedByWrapperStyle}>
-                    <div className={ApprovedByStyle}>
-                      <FormattedName
-                        firstName={timelineDate.approvedBy.firstName}
-                        lastName={timelineDate.approvedBy.lastName}
-                      />
-                    </div>
-                    <div className={ApprovedAtStyle}>
-                      <FormattedDate value={timelineDate.approvedAt} />
-                    </div>
+    const newState = { ...timelineDate, approvedAt: null, approvedBy: null };
+
+    setFieldDeepValue(sourceName, newState);
+  };
+
+  handleApprove = (user: Object) => {
+    const { timelineDate, sourceName, setFieldDeepValue } = this.props;
+
+    const newState = { ...timelineDate, approvedAt: new Date(), approvedBy: user };
+
+    setFieldDeepValue(sourceName, newState);
+  };
+
+  render() {
+    const {
+      isNew,
+      icon,
+      title,
+      timelineDate,
+      sourceName,
+      setFieldDeepValue,
+      removeArrayItem,
+      ...rest
+    } = this.props;
+    return (
+      <div className={TimelineInfoSectionWrapperStyle} {...rest}>
+        <GridColumn>
+          <SectionHeader icon={icon} title={title} />
+
+          {isNew}
+
+          <GridRow gap="10px">
+            <GridColumn gap="5px">
+              <Label>ASSIGNED TO</Label>
+              <div className={AssignmentWrapperStyle}>
+                {timelineDate.assignedTo.map((assigned, index) => (
+                  <div className={AssignmentStyle} key={assigned.id}>
+                    <button
+                      className={RemoveAssignmentButtonStyle}
+                      onClick={() => this.handleRemoveAssignedTo(index)}
+                      type="button"
+                    >
+                      <Icon icon="REMOVE" />
+                    </button>
+                    <UserAvatar firstName={assigned.firstName} lastName={assigned.lastName} />
                   </div>
-                  <button className={UnapproveButtonStyle} type="button">
-                    <Icon icon="CLEAR" />
+                ))}
+                {timelineDate.assignedTo.length < 5 && (
+                  <button className={AddAssignmentButtonStyle} type="button">
+                    <Icon icon="ADD" />
                   </button>
-                </>
-              ) : (
-                <CustomButton label="APPROVE" icon={<Icon icon="CHECKED" />} color="blue" />
-              )}
-            </div>
-          </GridColumn>
-        </GridRow>
+                )}
+              </div>
+            </GridColumn>
 
-        <GridColumn gap="10px">
-          <Label>DATES</Label>
+            <GridColumn gap="5px">
+              <Label>APPROVAL</Label>
+              <div className={ApprovalWrapperStyle}>
+                {timelineDate.approvedAt && timelineDate.approvedBy ? (
+                  <>
+                    <UserAvatar
+                      firstName={timelineDate.approvedBy.firstName}
+                      lastName={timelineDate.approvedBy.lastName}
+                    />
+                    <div className={ApprovedByWrapperStyle}>
+                      <div className={ApprovedByStyle}>
+                        <FormattedName
+                          firstName={timelineDate.approvedBy.firstName}
+                          lastName={timelineDate.approvedBy.lastName}
+                        />
+                      </div>
+                      <div className={ApprovedAtStyle}>
+                        <FormattedDate value={timelineDate.approvedAt} />
+                      </div>
+                    </div>
+                    <button
+                      className={UnapproveButtonStyle}
+                      onClick={this.handleUnapprove}
+                      type="button"
+                    >
+                      <Icon icon="CLEAR" />
+                    </button>
+                  </>
+                ) : (
+                  <UserConsumer>
+                    {({ user }) => (
+                      <CustomButton
+                        onClick={() => this.handleApprove(user)}
+                        label="APPROVE"
+                        icon={<Icon icon="CHECKED" />}
+                        color="blue"
+                      />
+                    )}
+                  </UserConsumer>
+                )}
+              </div>
+            </GridColumn>
+          </GridRow>
+
+          <GridColumn gap="10px">
+            <Label>DATES</Label>
+          </GridColumn>
         </GridColumn>
-      </GridColumn>
-    </div>
-  );
-};
+      </div>
+    );
+  }
+}
 
 export default TimelineInfoSection;

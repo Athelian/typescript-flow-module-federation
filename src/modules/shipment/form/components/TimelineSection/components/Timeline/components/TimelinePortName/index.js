@@ -4,25 +4,35 @@ import EnumProvider from 'providers/enum';
 import { TimelinePortNameWrapperStyle } from './style';
 
 type Props = {
-  port: string,
+  port: {
+    seaport: string,
+    airport: string,
+  },
   transportType: ?string,
 };
 
 const TimelinePort = ({ port, transportType }: Props) => {
   let transportTypeEnum = '';
-  if (transportType === 'Sea') transportTypeEnum = 'Seaport';
-  else if (transportType === 'Air') transportTypeEnum = 'Airport';
+  let correctPort = null;
+
+  if (transportType === 'Sea') {
+    transportTypeEnum = 'Seaport';
+    correctPort = port.seaport;
+  } else if (transportType === 'Air') {
+    transportTypeEnum = 'Airport';
+    correctPort = port.airport;
+  }
 
   return (
     <div className={TimelinePortNameWrapperStyle}>
       {transportType &&
-        port && (
+        correctPort && (
           <EnumProvider enumType={transportTypeEnum}>
             {({ loading, error, data }) => {
               if (loading) return null;
               if (error) return `Error!: ${error}`;
 
-              const searchedPort = data.find(portInList => portInList.name === port);
+              const searchedPort = data.find(portInList => portInList.name === correctPort);
 
               if (searchedPort) {
                 return searchedPort.description;
