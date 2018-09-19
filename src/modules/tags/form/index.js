@@ -10,6 +10,7 @@ import {
   SectionWrapper,
   DefaultStyle,
   TextInput,
+  TextAreaInput,
 } from 'components/Form';
 import Tag from 'components/Tag';
 import { FormContainer, FormField } from 'modules/form';
@@ -115,10 +116,12 @@ export default function TagForm({ isNew }: Props) {
                                 <DefaultStyle
                                   isFocused={activeField === name}
                                   hasError={touched[name] && errors[name]}
+                                  type="textarea"
+                                  height="100px"
                                   width="200px"
                                   forceHoverStyle={isNew}
                                 >
-                                  <TextInput
+                                  <TextAreaInput
                                     name={name}
                                     placeholder="description"
                                     {...inputHandlers}
