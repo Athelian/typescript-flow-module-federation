@@ -42,8 +42,9 @@ export const prepareCreateOrderInput = ({
   issuedAt: issuedAt ? new Date(issuedAt) : null,
   tagIds: tags.map(({ id }) => id),
   orderItems: orderItems.map(
-    ({ batches = [], productProvider = {}, isNew, id: itemId, ...orderItem }) => ({
+    ({ batches = [], productProvider = {}, price, isNew, id: itemId, ...orderItem }) => ({
       ...orderItem,
+      price: { ...price, currency },
       productProviderId: productProvider.id,
       batches: batches.map(prepareCreateBatchInput),
     })
@@ -95,10 +96,11 @@ export const prepareUpdateOrderInput = ({
   issuedAt: issuedAt ? new Date(issuedAt) : null,
   tagIds: tags.map(({ id: tagId }) => tagId),
   orderItems: orderItems.map(
-    ({ batches = [], productProvider = {}, isNew, id: itemId, ...orderItem }) => ({
+    ({ batches = [], productProvider = {}, price, isNew, id: itemId, ...orderItem }) => ({
       ...orderItem,
       ...(isNew ? {} : { id: itemId }),
       productProviderId: productProvider.id,
+      price: { ...price, currency },
       batches: batches.map(batch => prepareUpdateBatchInput(batch, false)),
     })
   ),

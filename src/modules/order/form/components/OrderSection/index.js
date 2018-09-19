@@ -59,8 +59,10 @@ function getQuantitySummary(orderItems: any) {
     totalItems = orderItems.length;
 
     orderItems.forEach(item => {
-      orderedQuantity += item.quantity ? item.quantity : 0;
-      totalPrice += item.price ? item.price.amount : 0;
+      const qty = item.quantity ? item.quantity : 0;
+      const price = item.price ? item.price.amount : 0;
+      orderedQuantity += qty;
+      totalPrice += price * qty;
 
       if (item.batches) {
         item.batches.forEach(batch => {
