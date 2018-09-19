@@ -17,7 +17,6 @@ import { FormContainer, FormField } from 'modules/form';
 import messages from 'modules/tags/messages';
 import ColorInput from 'components/Form/ColorInput';
 import EntityTypesInput from '../components/EntityTypesInput';
-
 import { TagFormWrapperStyle, TagSectionWrapperStyle } from './style';
 import { TagContainer, EntityTypeContainer } from './containers';
 
