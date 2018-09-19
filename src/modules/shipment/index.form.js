@@ -214,16 +214,28 @@ class ShipmentFormModule extends React.Component<Props> {
                           onCompleted={result => {
                             if (result.shipment) {
                               const {
-                                shipment: { batches, tags, voyages, containerGroups, ...info },
+                                shipment: {
+                                  batches,
+                                  tags,
+                                  transportType,
+                                  cargoReady,
+                                  voyages,
+                                  containerGroups,
+                                  ...info
+                                },
                               } = result;
                               shipmentBatchesState.initDetailValues(batches);
-                              shipmentTagsState.initDetailValues(tags);
                               shipmentInfoState.initDetailValues(info);
+                              shipmentTagsState.initDetailValues(tags);
+                              shipmentTimelineState.initDetailValues({
+                                cargoReady,
+                                voyages,
+                                containerGroups,
+                              });
+                              shipmentTransportTypeState.initDetailValues(transportType);
                             } else {
                               navigate('/shipment');
                             }
-                              shipmentGroupsState.initDetailValues(containerGroups);
-                              shipmentVoyagesState.initDetailValues(voyages);
                           }}
                         >
                           {({ loading, data, error }) => {
