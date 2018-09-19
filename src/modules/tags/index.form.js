@@ -94,7 +94,7 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                   {...uiState}
                   navBar={
                     <NavBar>
-                      <EntityIcon icon="TAGS" color="ORDER" />
+                      <EntityIcon icon="TAGS" color="TAGS" />
                       <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
                         {(tagState, entityTypesState, form) =>
                           (isNew || tagState.isDirty() || entityTypesState.isDirty()) && (

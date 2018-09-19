@@ -12,6 +12,9 @@ export default defineMessages({
   color: {
     id: 'containers.tags.color',
   },
+  entityTypes: {
+    id: 'containers.tags.entity.types',
+  },
   // Buttons
   newTag: {
     id: 'containers.tags.newTag',

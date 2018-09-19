@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
+import { FormattedMessage } from 'react-intl';
 import {
   FieldItem,
   Label,
@@ -12,10 +13,11 @@ import {
 } from 'components/Form';
 import Tag from 'components/Tag';
 import { FormContainer, FormField } from 'modules/form';
+import messages from 'modules/tags/messages';
 import ColorInput from 'components/Form/ColorInput';
 import EntityTypesInput from 'components/Form/EntityTypesInput';
-import { TagFormWrapperStyle, TagSectionWrapperStyle } from './style';
 
+import { TagFormWrapperStyle, TagSectionWrapperStyle } from './style';
 import { TagContainer, EntityTypeContainer } from './containers';
 
 type Props = {
@@ -54,9 +56,14 @@ export default function TagForm({ isNew }: Props) {
                         >
                           {({ name, ...inputHandlers }) => (
                             <FieldItem
-                              label={<Label required>NAME</Label>}
+                              label={
+                                <Label required>
+                                  <FormattedMessage {...messages.name} />
+                                </Label>
+                              }
                               tooltip={
                                 <Tooltip
+                                  isNew={isNew}
                                   errorMessage={touched[name] && errors[name]}
                                   changedValues={{
                                     oldValue: initialValues[name],
@@ -89,9 +96,14 @@ export default function TagForm({ isNew }: Props) {
                         >
                           {({ name, ...inputHandlers }) => (
                             <FieldItem
-                              label={<Label>DESCRIPTION</Label>}
+                              label={
+                                <Label>
+                                  <FormattedMessage {...messages.description} />
+                                </Label>
+                              }
                               tooltip={
                                 <Tooltip
+                                  isNew={isNew}
                                   errorMessage={touched[name] && errors[name]}
                                   changedValues={{
                                     oldValue: initialValues[name],
@@ -128,9 +140,14 @@ export default function TagForm({ isNew }: Props) {
                         >
                           {({ name, ...inputHandlers }) => (
                             <FieldItem
-                              label={<Label required>COLOR</Label>}
+                              label={
+                                <Label required>
+                                  <FormattedMessage {...messages.color} />
+                                </Label>
+                              }
                               tooltip={
                                 <Tooltip
+                                  isNew={isNew}
                                   errorMessage={touched[name] && errors[name]}
                                   changedValues={{
                                     oldValue: initialValues[name],
@@ -162,7 +179,11 @@ export default function TagForm({ isNew }: Props) {
           <Subscribe to={[FormContainer, EntityTypeContainer]}>
             {({ setFieldTouched }, { state: { entityTypes }, setFieldValue: changeTags }) => (
               <FieldItem
-                label={<Label required>Entity Types</Label>}
+                label={
+                  <Label required>
+                    <FormattedMessage {...messages.entityTypes} />
+                  </Label>
+                }
                 input={
                   <EntityTypesInput
                     editable={isNew}
