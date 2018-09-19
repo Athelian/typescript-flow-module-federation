@@ -19,7 +19,7 @@ import { batchListQuery } from 'modules/batch/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
-import { ItemWrapperStyle } from './style';
+import { ItemWrapperStyle, GridViewWrapperStyle } from './style';
 
 type Props = {
   onCancel: Function,
@@ -144,22 +144,24 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
                   if (loading) return <LoadingIcon />;
 
                   return (
-                    <BatchGridView
-                      onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
-                      hasMore={nextPage <= totalPage}
-                      isLoading={loading}
-                      items={getByPathWithDefault([], 'batches.nodes', data)}
-                      renderItem={item => (
-                        <div key={item.id} className={ItemWrapperStyle}>
-                          <ShipmentBatchCard
-                            batch={item}
-                            selectable
-                            selected={selected.includes(item)}
-                            onSelect={() => onSelectBatch({ selected, item, push, set })}
-                          />
-                        </div>
-                      )}
-                    />
+                    <div className={GridViewWrapperStyle}>
+                      <BatchGridView
+                        onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
+                        hasMore={nextPage <= totalPage}
+                        isLoading={loading}
+                        items={getByPathWithDefault([], 'batches.nodes', data)}
+                        renderItem={item => (
+                          <div key={item.id} className={ItemWrapperStyle}>
+                            <ShipmentBatchCard
+                              batch={item}
+                              selectable
+                              selected={selected.includes(item)}
+                              onSelect={() => onSelectBatch({ selected, item, push, set })}
+                            />
+                          </div>
+                        )}
+                      />
+                    </div>
                   );
                 }}
               </Query>
