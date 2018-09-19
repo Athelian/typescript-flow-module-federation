@@ -63,21 +63,25 @@ export const updateBatchMutation = gql`
   ${violationFragment}
 `;
 
-export const prepareUpdateBatchInput = ({
-  id,
-  isNew,
-  createdAt,
-  updatedAt,
-  updatedBy,
-  orderItem,
-  shipment,
-  tags = [],
-  batchAdjustments = [],
-  archived,
-  ...rest
-}: Object): BatchUpdate => ({
+export const prepareUpdateBatchInput = (
+  {
+    id,
+    isNew,
+    createdAt,
+    updatedAt,
+    updatedBy,
+    orderItem,
+    shipment,
+    tags = [],
+    batchAdjustments = [],
+    archived,
+    ...rest
+  }: Object,
+  inShipmentForm: boolean = false
+): BatchUpdate => ({
   ...rest,
-  ...(shipment ? { shipmentId: shipment.id } : {}),
+  ...(shipment && !inShipmentForm ? { shipmentId: shipment.id } : {}),
+  ...(inShipmentForm ? { orderItemId: orderItem.id } : {}),
   tagIds: tags.map(({ id: tagId }) => tagId),
   batchAdjustments: batchAdjustments.map(
     ({

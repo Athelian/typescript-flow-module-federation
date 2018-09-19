@@ -99,7 +99,7 @@ export const prepareUpdateOrderInput = ({
       ...orderItem,
       ...(isNew ? {} : { id: itemId }),
       productProviderId: productProvider.id,
-      batches: batches.map(prepareUpdateBatchInput),
+      batches: batches.map(batch => prepareUpdateBatchInput(batch, false)),
     })
   ),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({
