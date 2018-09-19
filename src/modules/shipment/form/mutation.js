@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
+import { removeNulls } from 'utils/data';
 import type { ShipmentCreate, ShipmentUpdate } from '../type.js.flow';
 
 export const createShipmentMutation = gql`
@@ -85,21 +86,22 @@ export const prepareUpdateShipmentInput = ({
   tags = [],
   batches = [],
   forwarders = [],
-}: Object): ShipmentUpdate => ({
-  no,
-  blNo,
-  blDate,
-  bookingNo,
-  bookingDate,
-  invoiceNo,
-  loadType,
-  transportType,
-  incoterm,
-  carrier,
-  cargoReady,
-  tagIds: tags.map(({ id }) => id),
-  forwarderIds: forwarders.map(({ id }) => id),
-  batches: batches.map(prepareUpdateBatchInput),
-  voyages,
-  containerGroups,
-});
+}: Object): ShipmentUpdate =>
+  removeNulls({
+    no,
+    blNo,
+    blDate,
+    bookingNo,
+    bookingDate,
+    invoiceNo,
+    loadType,
+    transportType,
+    incoterm,
+    carrier,
+    cargoReady,
+    tagIds: tags.map(({ id }) => id),
+    forwarderIds: forwarders.map(({ id }) => id),
+    batches: batches.map(prepareUpdateBatchInput),
+    voyages,
+    containerGroups,
+  });

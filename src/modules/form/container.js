@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import yupToFormErrors from 'utils/yupToFormErrors';
 import logger from 'utils/logger';
-import { isEquals } from 'utils/fp';
+import { isEquals, setIn } from 'utils/fp';
 
 type FormState = {
   errors: Object,
@@ -39,6 +39,22 @@ export default class FormContainer extends Container<FormState> {
   onReset = () => {
     logger.warn('onReset');
     this.setState(() => initState);
+  };
+
+  onErrors = (
+    errors: Array<{
+      code: string,
+      message: string,
+      path: string,
+    }>
+  ) => {
+    const serverErrors = errors.reduce(
+      (result, { path, message }) => setIn(path, message, result),
+      {}
+    );
+    this.setState({
+      errors: serverErrors,
+    });
   };
 
   isReady = () => {

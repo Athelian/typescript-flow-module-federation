@@ -9,7 +9,7 @@ export const replaceUndefined = when(
   )
 );
 
-export const removeNulls = when(
+export const removeNulls: Function = when(
   either(is(Array), is(Object)),
   pipe(
     reject(isNil),
@@ -17,7 +17,7 @@ export const removeNulls = when(
   )
 );
 
-export const removeEmpty = when(
+export const removeEmpty: Function = when(
   either(is(Array), is(Object)),
   pipe(
     reject(isEmpty),
