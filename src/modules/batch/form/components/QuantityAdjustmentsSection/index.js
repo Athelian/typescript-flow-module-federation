@@ -29,7 +29,7 @@ type Props = {
 const QuantityAdjustmentsSection = ({ isNew }: Props) => (
   <div className={QuantityAdjustmentsSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues, state, setFieldArrayValue, removeArrayItem, validationRules }) => {
+      {({ originalValues, state, setFieldArrayValue, removeArrayItem }) => {
         const values = { ...originalValues, ...state };
 
         const currentQuantity = values.batchAdjustments.reduce(
@@ -61,8 +61,6 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                           setFieldArrayValue={setFieldArrayValue}
                           removeArrayItem={removeArrayItem}
                           formHelper={formHelper}
-                          values={values}
-                          validationRules={validationRules}
                           activeField={activeField}
                           enumType="BatchAdjustmentReason"
                           targetName="batchAdjustments"
@@ -72,13 +70,6 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                             <FormField
                               name={`batchAdjustments.${index}.quantity`}
                               initValue={adjustment.quantity}
-                              validationOnChange
-                              onValidate={newValue =>
-                                formHelper.onValidation(
-                                  { ...values, ...newValue },
-                                  validationRules()
-                                )
-                              }
                               setFieldValue={setFieldArrayValue}
                               {...formHelper}
                             >

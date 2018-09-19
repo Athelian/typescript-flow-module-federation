@@ -31,19 +31,18 @@ const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
 
   const hasMultipleDates = timelineDateRevisions.length > 0;
 
-  let shownDate = '';
+  let shownDate = null;
   if (hasMultipleDates) {
-    shownDate = timelineDateRevisions[timelineDateRevisions.length - 1].date;
+    if (timelineDateRevisions[timelineDateRevisions.length - 1].date) {
+      shownDate = timelineDateRevisions[timelineDateRevisions.length - 1].date;
+    }
   } else if (date) {
     shownDate = date;
   }
 
   let delayAmount = 0;
-  if (date && hasMultipleDates) {
-    delayAmount = differenceInDays(
-      timelineDateRevisions[timelineDateRevisions.length - 1].date,
-      date
-    );
+  if (date && shownDate && hasMultipleDates) {
+    delayAmount = differenceInDays(shownDate, date);
   }
 
   return (

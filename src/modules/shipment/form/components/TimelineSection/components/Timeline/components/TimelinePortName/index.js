@@ -15,12 +15,14 @@ const TimelinePort = ({ port, transportType }: Props) => {
   let transportTypeEnum = '';
   let correctPort = null;
 
-  if (transportType === 'Sea') {
-    transportTypeEnum = 'Seaport';
-    correctPort = port.seaport;
-  } else if (transportType === 'Air') {
-    transportTypeEnum = 'Airport';
-    correctPort = port.airport;
+  if (port) {
+    if (transportType === 'Sea') {
+      transportTypeEnum = 'Seaport';
+      correctPort = port.seaport;
+    } else if (transportType === 'Air') {
+      transportTypeEnum = 'Airport';
+      correctPort = port.airport;
+    }
   }
 
   return (

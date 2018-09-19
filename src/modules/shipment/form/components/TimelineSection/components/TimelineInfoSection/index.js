@@ -1,16 +1,27 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import GridColumn from 'components/GridColumn';
-import GridRow from 'components/GridRow';
 import Icon from 'components/Icon';
+import NewButton from 'components/NavButtons/NewButton';
+import { injectUid } from 'utils/id';
 import { UserConsumer } from 'modules/user';
 import UserAvatar from 'components/UserAvatar';
 import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
 import { CustomButton } from 'components/NavButtons';
-import { SectionHeader, Label } from 'components/Form';
+import { FormContainer, FormField } from 'modules/form';
+import {
+  SectionHeader,
+  Label,
+  DefaultAdjustmentStyle,
+  DefaultStyle,
+  DateInput,
+  FieldItem,
+} from 'components/Form';
 import {
   TimelineInfoSectionWrapperStyle,
+  AssignedAndApprovalWrapperStyle,
   AssignmentWrapperStyle,
   AssignmentStyle,
   RemoveAssignmentButtonStyle,
@@ -20,6 +31,7 @@ import {
   ApprovedByStyle,
   ApprovedAtStyle,
   UnapproveButtonStyle,
+  AddDateButtonWrapperStyle,
 } from './style';
 
 type Props = {
@@ -68,12 +80,9 @@ class TimelineInfoSection extends React.PureComponent<Props> {
     } = this.props;
     return (
       <div className={TimelineInfoSectionWrapperStyle} {...rest}>
-        <GridColumn>
+        <GridColumn gap="10px">
           <SectionHeader icon={icon} title={title} />
-
-          {isNew}
-
-          <GridRow gap="10px">
+          <div className={AssignedAndApprovalWrapperStyle}>
             <GridColumn gap="5px">
               <Label>ASSIGNED TO</Label>
               <div className={AssignmentWrapperStyle}>
@@ -98,14 +107,10 @@ class TimelineInfoSection extends React.PureComponent<Props> {
             </GridColumn>
 
             <GridColumn gap="5px">
-              <Label>APPROVAL</Label>
+              <Label align="right">APPROVAL</Label>
               <div className={ApprovalWrapperStyle}>
                 {timelineDate.approvedAt && timelineDate.approvedBy ? (
                   <>
-                    <UserAvatar
-                      firstName={timelineDate.approvedBy.firstName}
-                      lastName={timelineDate.approvedBy.lastName}
-                    />
                     <div className={ApprovedByWrapperStyle}>
                       <div className={ApprovedByStyle}>
                         <FormattedName
@@ -117,6 +122,10 @@ class TimelineInfoSection extends React.PureComponent<Props> {
                         <FormattedDate value={timelineDate.approvedAt} />
                       </div>
                     </div>
+                    <UserAvatar
+                      firstName={timelineDate.approvedBy.firstName}
+                      lastName={timelineDate.approvedBy.lastName}
+                    />
                     <button
                       className={UnapproveButtonStyle}
                       onClick={this.handleUnapprove}
@@ -139,11 +148,101 @@ class TimelineInfoSection extends React.PureComponent<Props> {
                 )}
               </div>
             </GridColumn>
-          </GridRow>
+          </div>
 
-          <GridColumn gap="10px">
-            <Label>DATES</Label>
-          </GridColumn>
+          <Subscribe to={[FormContainer]}>
+            {({ state: { activeField }, ...formHelper }) => (
+              <GridColumn gap="10px">
+                {/* <Label>DATES</Label> */}
+                <div className={AddDateButtonWrapperStyle}>
+                  <NewButton
+                    title="NEW DATE"
+                    onClick={() => {
+                      setFieldDeepValue(
+                        `${sourceName}.timelineDateRevisions[${
+                          timelineDate.timelineDateRevisions.length
+                        }]`,
+                        injectUid({
+                          isNew: true,
+                          type: 'Other',
+                          date: '',
+                          memo: '',
+                          updatedAt: new Date(),
+                        })
+                      );
+                      formHelper.setFieldTouched(
+                        `${sourceName}.timelineDateRevisions[${
+                          timelineDate.timelineDateRevisions.length
+                        }]`
+                      );
+                    }}
+                  />
+                </div>
+                {timelineDate.timelineDateRevisions &&
+                  timelineDate.timelineDateRevisions.reverse().map(
+                    (adjustment, index) =>
+                      adjustment && (
+                        <DefaultAdjustmentStyle
+                          isNew={isNew}
+                          index={index}
+                          adjustment={adjustment}
+                          key={adjustment.id}
+                          setFieldArrayValue={setFieldDeepValue}
+                          removeArrayItem={removeArrayItem}
+                          formHelper={formHelper}
+                          values={timelineDate}
+                          activeField={activeField}
+                          enumType="TimelineDateRevisionType"
+                          targetName={`${sourceName}.timelineDateRevisions`}
+                          typeName="type"
+                          memoName="memo"
+                          valueInput={
+                            <FormField
+                              name={`${sourceName}.timelineDateRevisions.${index}.date`}
+                              initValue={adjustment.date}
+                              setFieldValue={setFieldDeepValue}
+                              {...formHelper}
+                            >
+                              {({ name, ...inputHandlers }) => (
+                                <DefaultStyle
+                                  type="date"
+                                  isFocused={activeField === name}
+                                  forceHoverStyle={isNew}
+                                  width="200px"
+                                >
+                                  <DateInput name={name} {...inputHandlers} />
+                                </DefaultStyle>
+                              )}
+                            </FormField>
+                          }
+                        />
+                      )
+                  )}
+                <FieldItem
+                  label={<Label>INITIAL DATE</Label>}
+                  input={
+                    <FormField
+                      name={`${sourceName}.date`}
+                      initValue={timelineDate.date}
+                      setFieldValue={setFieldDeepValue}
+                      {...formHelper}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <DefaultStyle
+                          type="date"
+                          isFocused={activeField === name}
+                          forceHoverStyle={isNew}
+                          width="200px"
+                        >
+                          <DateInput name={name} {...inputHandlers} />
+                        </DefaultStyle>
+                      )}
+                    </FormField>
+                  }
+                />
+              </GridColumn>
+            )}
+          </Subscribe>
         </GridColumn>
       </div>
     );

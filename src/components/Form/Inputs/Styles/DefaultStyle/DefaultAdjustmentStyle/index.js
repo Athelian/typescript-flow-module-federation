@@ -35,8 +35,6 @@ type Props = OptionalProps & {
   setFieldArrayValue: Function,
   removeArrayItem: Function,
   formHelper: any,
-  values: any,
-  validationRules: any,
   activeField: any,
   enumType: string,
   targetName: string,
@@ -74,8 +72,6 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
       setFieldArrayValue,
       removeArrayItem,
       formHelper,
-      values,
-      validationRules,
       activeField,
       enumType,
       targetName,
@@ -102,10 +98,6 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             name={`${targetName}.${index}.${typeName}`}
             initValue={adjustment[typeName]}
             setFieldValue={setFieldArrayValue}
-            validationOnChange
-            onValidate={newValue =>
-              formHelper.onValidation({ ...values, ...newValue }, validationRules())
-            }
             {...formHelper}
           >
             {({ name, ...inputHandlers }) => (
@@ -181,10 +173,6 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
           <FormField
             name={`${targetName}.${index}.${memoName}`}
             initValue={adjustment[memoName]}
-            validationOnChange
-            onValidate={newValue =>
-              formHelper.onValidation({ ...values, ...newValue }, validationRules())
-            }
             setFieldValue={setFieldArrayValue}
             {...formHelper}
           >

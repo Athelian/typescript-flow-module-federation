@@ -6,11 +6,19 @@ export const TimelineInfoSectionWrapperStyle = css`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  padding: 40px;
+  padding: 80px 40px;
   border-bottom: 1px solid ${colors.GRAY_VERY_LIGHT};
   &:last-child {
     border: none;
   }
+`;
+
+export const AssignedAndApprovalWrapperStyle = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 10px;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  ${borderRadiuses.MAIN};
+  padding: 5px 0 10px 0;
 `;
 
 export const AssignmentWrapperStyle = css`
@@ -69,6 +77,7 @@ export const AddAssignmentButtonStyle = css`
 export const ApprovalWrapperStyle = css`
   position: relative;
   ${layout.GRID_HORIZONTAL};
+  justify-content: end;
   grid-gap: 10px;
   padding: 0 5px;
   width: 200px;
@@ -91,6 +100,7 @@ export const ApprovedByStyle = css`
   line-height: 12px;
   color: ${colors.BLACK};
   ${presets.ELLIPSIS};
+  text-align: right;
 `;
 
 export const ApprovedAtStyle = css`
@@ -101,12 +111,13 @@ export const ApprovedAtStyle = css`
   color: ${colors.BLACK};
   ${presets.ELLIPSIS};
   font-weight: bold;
+  text-align: right;
 `;
 
 export const UnapproveButtonStyle = css`
   position: absolute;
   top: 0;
-  left: 5px;
+  right: 5px;
   ${presets.BUTTON};
   opacity: 0;
   ${borderRadiuses.CIRCLE};
@@ -117,7 +128,14 @@ export const UnapproveButtonStyle = css`
   flex-shrink: 0;
   ${shadows.DROPDOWN};
   &:hover,
-  focus {
+  :focus {
     color: ${colors.RED};
   }
+`;
+
+export const AddDateButtonWrapperStyle = css`
+  display: flex;
+  width: 410px;
+  justify-content: flex-end;
+  padding: 0 5px;
 `;
