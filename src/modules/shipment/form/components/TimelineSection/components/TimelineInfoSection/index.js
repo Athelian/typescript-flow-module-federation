@@ -25,112 +25,75 @@ type Props = {
   isNew: boolean,
   icon: string,
   title: string,
+  timelineDate: any,
 };
 
-const dummyAssignedTo = [
-  {
-    id: '1',
-    firstName: 'Kevin',
-    lastName: 'Nguyen',
-  },
-  {
-    id: '2',
-    firstName: 'Bob',
-    lastName: 'Nguyen',
-  },
+const TimelineInfoSection = ({ isNew, icon, title, timelineDate, ...rest }: Props) => {
+  console.log(timelineDate);
+  return (
+    <div className={TimelineInfoSectionWrapperStyle} {...rest}>
+      <GridColumn>
+        <SectionHeader icon={icon} title={title} />
 
-  {
-    id: '3',
-    firstName: 'Bob',
-    lastName: 'Nguyen',
-  },
+        {isNew}
 
-  {
-    id: '4',
-    firstName: 'Bob',
-    lastName: 'Nguyen',
-  },
-
-  {
-    id: '5',
-    firstName: 'Bob',
-    lastName: 'Nguyen',
-  },
-];
-
-// const dummyApprovedBy = null;
-// const dummyApprovedAt = null;
-
-const dummyApprovedBy = {
-  firstName: 'Kevin',
-  lastName: 'Nguyen',
-};
-
-const dummyApprovedAt = '2018-01-01';
-
-const TimelineInfoSection = ({ isNew, icon, title, ...rest }: Props) => (
-  <div className={TimelineInfoSectionWrapperStyle} {...rest}>
-    <GridColumn>
-      <SectionHeader icon={icon} title={title} />
-
-      {isNew}
-
-      <GridRow gap="10px">
-        <GridColumn gap="5px">
-          <Label>ASSIGNED TO</Label>
-          <div className={AssignmentWrapperStyle}>
-            {dummyAssignedTo.map(assigned => (
-              <div className={AssignmentStyle} key={assigned.id}>
-                <button className={RemoveAssignmentButtonStyle} type="button">
-                  <Icon icon="REMOVE" />
-                </button>
-                <UserAvatar firstName={assigned.firstName} lastName={assigned.lastName} />
-              </div>
-            ))}
-            {dummyAssignedTo.length < 5 && (
-              <button className={AddAssignmentButtonStyle} type="button">
-                <Icon icon="ADD" />
-              </button>
-            )}
-          </div>
-        </GridColumn>
-
-        <GridColumn gap="5px">
-          <Label>APPROVAL</Label>
-          <div className={ApprovalWrapperStyle}>
-            {dummyApprovedAt ? (
-              <>
-                <UserAvatar
-                  firstName={dummyApprovedBy.firstName}
-                  lastName={dummyApprovedBy.lastName}
-                />
-                <div className={ApprovedByWrapperStyle}>
-                  <div className={ApprovedByStyle}>
-                    <FormattedName
-                      firstName={dummyApprovedBy.firstName}
-                      lastName={dummyApprovedBy.lastName}
-                    />
-                  </div>
-                  <div className={ApprovedAtStyle}>
-                    <FormattedDate value={dummyApprovedAt} />
-                  </div>
+        <GridRow gap="10px">
+          <GridColumn gap="5px">
+            <Label>ASSIGNED TO</Label>
+            <div className={AssignmentWrapperStyle}>
+              {timelineDate.assignedTo.map(assigned => (
+                <div className={AssignmentStyle} key={assigned.id}>
+                  <button className={RemoveAssignmentButtonStyle} type="button">
+                    <Icon icon="REMOVE" />
+                  </button>
+                  <UserAvatar firstName={assigned.firstName} lastName={assigned.lastName} />
                 </div>
-                <button className={UnapproveButtonStyle} type="button">
-                  <Icon icon="CLEAR" />
+              ))}
+              {timelineDate.assignedTo.length < 5 && (
+                <button className={AddAssignmentButtonStyle} type="button">
+                  <Icon icon="ADD" />
                 </button>
-              </>
-            ) : (
-              <CustomButton label="APPROVE" icon={<Icon icon="CHECKED" />} color="blue" />
-            )}
-          </div>
-        </GridColumn>
-      </GridRow>
+              )}
+            </div>
+          </GridColumn>
 
-      <GridColumn gap="10px">
-        <Label>DATES</Label>
+          <GridColumn gap="5px">
+            <Label>APPROVAL</Label>
+            <div className={ApprovalWrapperStyle}>
+              {timelineDate.approvedAt ? (
+                <>
+                  <UserAvatar
+                    firstName={timelineDate.approvedBy.firstName}
+                    lastName={timelineDate.approvedBy.lastName}
+                  />
+                  <div className={ApprovedByWrapperStyle}>
+                    <div className={ApprovedByStyle}>
+                      <FormattedName
+                        firstName={timelineDate.approvedBy.firstName}
+                        lastName={timelineDate.approvedBy.lastName}
+                      />
+                    </div>
+                    <div className={ApprovedAtStyle}>
+                      <FormattedDate value={timelineDate.approvedAt} />
+                    </div>
+                  </div>
+                  <button className={UnapproveButtonStyle} type="button">
+                    <Icon icon="CLEAR" />
+                  </button>
+                </>
+              ) : (
+                <CustomButton label="APPROVE" icon={<Icon icon="CHECKED" />} color="blue" />
+              )}
+            </div>
+          </GridColumn>
+        </GridRow>
+
+        <GridColumn gap="10px">
+          <Label>DATES</Label>
+        </GridColumn>
       </GridColumn>
-    </GridColumn>
-  </div>
-);
+    </div>
+  );
+};
 
 export default TimelineInfoSection;

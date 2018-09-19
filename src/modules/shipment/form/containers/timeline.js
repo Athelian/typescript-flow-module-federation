@@ -11,8 +11,38 @@ type FormState = {
 };
 
 const initValues = {
-  containerGroups: [{}],
-  voyages: [{}],
+  cargoReady: {
+    assignedTo: [],
+    timelineDateRevisions: [],
+  },
+  containerGroups: [
+    {
+      customClearance: {
+        assignedTo: [],
+        timelineDateRevisions: [],
+      },
+      warehouseArrival: {
+        assignedTo: [],
+        timelineDateRevisions: [],
+      },
+      deliveryReady: {
+        assignedTo: [],
+        timelineDateRevisions: [],
+      },
+    },
+  ],
+  voyages: [
+    {
+      departure: {
+        assignedTo: [],
+        timelineDateRevisions: [],
+      },
+      arrival: {
+        assignedTo: [],
+        timelineDateRevisions: [],
+      },
+    },
+  ],
 };
 
 export default class ShipmentTimelineContainer extends Container<FormState> {

@@ -16,6 +16,7 @@ import PROFILE from '@fortawesome/fontawesome-pro-solid/faAddressCard';
 import LOGOUT from '@fortawesome/fontawesome-pro-solid/faSignOutAlt';
 import EXPORTER from '@fortawesome/fontawesome-pro-solid/faIndustryAlt';
 import SUPPLIER from '@fortawesome/fontawesome-pro-regular/faIndustry';
+import CARGO from '@fortawesome/fontawesome-pro-solid/faBoxesAlt';
 
 // Common UI
 import ACTIVE from '@fortawesome/fontawesome-pro-solid/faFolderOpen';
@@ -98,6 +99,7 @@ export default {
   LOGOUT,
   EXPORTER,
   SUPPLIER,
+  CARGO,
 
   ACTIVE,
   ARCHIVE,

@@ -12,6 +12,7 @@ export const TimelineIconStyle = (color: string) => css`
   height: 30px;
   flex-shrink: 0;
   z-index: 1;
+  border: 2px solid ${colors[color]};
   &:hover,
   :focus {
     ${shadows.INPUT};
