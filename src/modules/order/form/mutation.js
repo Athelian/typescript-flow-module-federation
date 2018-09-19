@@ -85,6 +85,7 @@ export const prepareUpdateOrderInput = ({
   piNo,
   memo,
   incoterm,
+  archived,
 }: Object): OrderForm => ({
   poNo,
   currency,
@@ -92,6 +93,7 @@ export const prepareUpdateOrderInput = ({
   piNo,
   memo,
   incoterm,
+  archived,
   exporterId: exporter.id,
   issuedAt: issuedAt ? new Date(issuedAt) : null,
   tagIds: tags.map(({ id: tagId }) => tagId),
