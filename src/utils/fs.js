@@ -27,7 +27,7 @@ export const upload = (
       const xhr = new XMLHttpRequest();
       xhr.open('POST', `${process.env.ZENPORT_FS_URL || ''}/public/upload`, true);
       xhr.upload.onprogress = onProgress;
-      xhr.onload = function() {
+      xhr.onload = function onload() {
         try {
           const response = JSON.parse(this.response);
           onSuccess(response);

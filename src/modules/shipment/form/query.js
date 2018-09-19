@@ -98,6 +98,10 @@ export const shipmentDetailQuery = gql`
         color
         id
       }
+      forwarders {
+        id
+        name
+      }
     }
   }
 
