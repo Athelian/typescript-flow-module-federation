@@ -14,7 +14,6 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
-import logger from 'utils/logger';
 import {
   ShipmentInfoContainer,
   ShipmentTagsContainer,
@@ -46,7 +45,12 @@ class ShipmentFormModule extends React.Component<Props> {
     navigate(`/shipment`);
   };
 
-  onSave = (formData: Object, saveShipment: Function, onSuccess: Function = () => {}) => {
+  onSave = async (
+    formData: Object,
+    saveShipment: Function,
+    onSuccess: Function = () => {},
+    onErrors: Function = () => {}
+  ) => {
     const { shipmentId } = this.props;
 
     const isNew = shipmentId === 'new';
@@ -55,11 +59,26 @@ class ShipmentFormModule extends React.Component<Props> {
       : prepareUpdateShipmentInput(formData);
 
     if (isNew) {
-      saveShipment({ variables: { input } });
+      const { data } = await saveShipment({ variables: { input } });
+      const {
+        shipmentCreate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     } else if (shipmentId) {
-      saveShipment({ variables: { input, id: decodeId(shipmentId) } });
+      const { data } = await saveShipment({ variables: { input, id: decodeId(shipmentId) } });
+      const {
+        shipmentUpdate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     }
-    onSuccess();
   };
 
   onMutationCompleted = (result: Object) => {
@@ -70,14 +89,11 @@ class ShipmentFormModule extends React.Component<Props> {
       const {
         shipmentCreate: { shipment, violations },
       } = result;
-      if (violations && violations.length) {
-        logger.warn(violations);
-        return;
-      }
 
-      navigate(`/shipment/${encodeId(shipment.id)}`);
+      if (!violations) {
+        navigate(`/shipment/${encodeId(shipment.id)}`);
+      }
     }
-    logger.warn('result', result);
   };
 
   render() {
@@ -156,7 +172,8 @@ class ShipmentFormModule extends React.Component<Props> {
                                       shipmentGroupsState.onSuccess();
                                       shipmentVoyagesState.onSuccess();
                                       form.onReset();
-                                    }
+                                    },
+                                    form.onErrors
                                   )
                                 }
                               >
@@ -195,14 +212,18 @@ class ShipmentFormModule extends React.Component<Props> {
                           variables={{ id: decodeId(shipmentId) }}
                           fetchPolicy="network-only"
                           onCompleted={result => {
-                            const {
-                              shipment: { batches, tags, voyages, containerGroups, ...info },
-                            } = result;
-                            shipmentBatchesState.initDetailValues(batches);
-                            shipmentTagsState.initDetailValues(tags);
-                            shipmentInfoState.initDetailValues(info);
-                            shipmentGroupsState.initDetailValues(containerGroups);
-                            shipmentVoyagesState.initDetailValues(voyages);
+                            if (result.shipment) {
+                              const {
+                                shipment: { batches, tags, voyages, containerGroups, ...info },
+                              } = result;
+                              shipmentBatchesState.initDetailValues(batches);
+                              shipmentTagsState.initDetailValues(tags);
+                              shipmentInfoState.initDetailValues(info);
+                              shipmentGroupsState.initDetailValues(containerGroups);
+                              shipmentVoyagesState.initDetailValues(voyages);
+                            } else {
+                              navigate('/shipment');
+                            }
                           }}
                         >
                           {({ loading, data, error }) => {
