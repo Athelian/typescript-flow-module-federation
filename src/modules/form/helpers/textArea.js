@@ -44,6 +44,7 @@ export default function textAreaFactory({
       }
       input={
         <DefaultStyle
+          type="textarea"
           isFocused={inputHandlers.isFocused}
           hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
           forceHoverStyle={isNew}
