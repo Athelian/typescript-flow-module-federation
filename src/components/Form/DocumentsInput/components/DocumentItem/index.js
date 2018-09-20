@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
+import { FormField } from 'modules/form';
 import {
   TextAreaInput,
   SelectInput,
   DefaultSelect,
   DefaultOptions,
   Display,
+  DefaultStyle,
 } from 'components/Form';
 import Icon from 'components/Icon';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
@@ -27,7 +29,7 @@ type Props = {
   name: string,
   value: Document,
   readOnly?: boolean,
-  onChange?: (string, any) => void,
+  onChange: (string, any) => void,
   onBlur?: (string, boolean) => void,
   onRemove?: Function,
   types: Array<FileType>,
@@ -88,7 +90,7 @@ class DocumentItem extends React.Component<Props, State> {
               itemToValue={v => (v ? v.type : null)}
               itemToString={v => (v ? v.label : '')}
               renderSelect={({ ...rest }) => (
-                <DefaultSelect {...rest} required hideLabel align="left" width="200px" />
+                <DefaultSelect {...rest} required align="left" width="200px" />
               )}
               renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" />}
             />
@@ -113,20 +115,18 @@ class DocumentItem extends React.Component<Props, State> {
           </div>
         </div>
         <div className={MemoWrapperStyle(isExpanded)}>
-          <TextAreaInput
-            value={value.memo || ''}
-            name={`${name}.memo`}
-            onChange={e => {
-              if (onChange) {
-                onChange(`${name}.memo`, e.target.value);
-              }
-            }}
-            onBlur={() => {
-              if (onBlur) {
-                onBlur(`${name}.memo`, true);
-              }
-            }}
-          />
+          <FormField name={`${name}.memo`} initValue={value.memo} setFieldValue={onChange}>
+            {inputHandlers => (
+              <DefaultStyle
+                type="textarea"
+                forceHoverStyle={!inputHandlers.value}
+                width="360px"
+                height="150px"
+              >
+                <TextAreaInput align="left" {...inputHandlers} />
+              </DefaultStyle>
+            )}
+          </FormField>
         </div>
         <button
           type="button"
