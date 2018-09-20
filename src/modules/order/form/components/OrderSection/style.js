@@ -52,4 +52,7 @@ export const QuantitySummaryStyle = css`
 
 export const DividerStyle = css`
   margin: 40px 0;
+  width: 100%;
+  height: 1px;
+  background-color: ${colors.GRAY_VERY_LIGHT};
 `;

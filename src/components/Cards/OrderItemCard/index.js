@@ -10,7 +10,7 @@ import Tag from 'components/Tag';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
-import { Label, Display } from 'components/Form';
+import { Label, Display, FieldItem } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderItemCardWrapperStyle,
@@ -27,6 +27,7 @@ import {
   UnitPriceWrapperStyle,
   SyncButtonStyle,
   DividerStyle,
+  ChartWrapperStyle,
   TotalPriceWrapperStyle,
 } from './style';
 
@@ -48,26 +49,23 @@ function getQuantitySummary(item: Object) {
   let orderedQuantity = 0;
   let batchedQuantity = 0;
   let shippedQuantity = 0;
-  let activeBatches = 0;
-  let archivedBatches = 0;
+  let numOfBatched = 0;
+  let numOfShipped = 0;
 
   orderedQuantity += item.quantity ? item.quantity : 0;
 
   if (item.batches) {
     item.batches.forEach(batch => {
       batchedQuantity += batch.quantity;
+      numOfBatched += 1;
       if (batch.batchAdjustments) {
         batch.batchAdjustments.forEach(batchAdjustment => {
-          batchedQuantity -= batchAdjustment.quantity;
+          batchedQuantity += batchAdjustment.quantity;
         });
       }
       if (batch.shipment) {
         shippedQuantity += batch.quantity;
-      }
-      if (batch.archived) {
-        archivedBatches += 1;
-      } else {
-        activeBatches += 1;
+        numOfShipped += 1;
       }
     });
   }
@@ -76,8 +74,8 @@ function getQuantitySummary(item: Object) {
     orderedQuantity,
     batchedQuantity,
     shippedQuantity,
-    activeBatches,
-    archivedBatches,
+    numOfBatched,
+    numOfShipped,
   };
 }
 
@@ -271,20 +269,25 @@ const OrderItemCard = ({
                 )}
               </div>
               <div className={DividerStyle} />
-              <QuantityChart
-                hasLabel={false}
-                orderedQuantity={chartDetail.orderedQuantity}
-                batchedQuantity={chartDetail.batchedQuantity}
-                shippedQuantity={chartDetail.shippedQuantity}
-                batched={chartDetail.batchedQuantity}
-                shipped={chartDetail.shippedQuantity}
-              />
+              <div className={ChartWrapperStyle}>
+                <QuantityChart
+                  hasLabel={false}
+                  orderedQuantity={chartDetail.orderedQuantity}
+                  batchedQuantity={chartDetail.batchedQuantity}
+                  shippedQuantity={chartDetail.shippedQuantity}
+                  batched={chartDetail.numOfBatched}
+                  shipped={chartDetail.numOfShipped}
+                />
+              </div>
               <div className={TotalPriceWrapperStyle}>
-                <Label>TOTAL</Label>
-                <Display>
-                  <FormattedNumber value={price.amount * quantity} />
-                  {currency}
-                </Display>
+                <FieldItem
+                  label={<Label>TOTAL</Label>}
+                  input={
+                    <Display>
+                      <FormattedNumber value={price.amount * quantity} /> {currency}
+                    </Display>
+                  }
+                />
               </div>
             </div>
           </div>

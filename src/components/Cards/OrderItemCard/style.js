@@ -14,7 +14,6 @@ export const OrderItemCardWrapperStyle = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 250px;
 `;
 
 export const ProductWrapperStyle = css`
@@ -144,15 +143,13 @@ export const DividerStyle = css`
   margin: 0 10px;
 `;
 
-export const TotalPriceWrapperStyle = css`
-  display: grid;
-  grid-template-columns: 90px 90px;
-  width: 100%;
-  padding: 0 10px 0 5px;
-  margin-top: 15px;
+export const ChartWrapperStyle = css`
+  width: 195px;
+  padding: 0 10px;
+  margin: 3px 0;
 `;
 
-export const ChartWrapperStyle = css`
-  width: 180px;
-  margin: 0 auto;
+export const TotalPriceWrapperStyle = css`
+  width: 100%;
+  padding: 0 10px;
 `;

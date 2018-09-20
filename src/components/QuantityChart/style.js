@@ -1,25 +1,32 @@
 // @flow
 import { css } from 'react-emotion';
+import { borderRadiuses, fontSizes, colors, layout } from 'styles/common';
 
-import { borderRadiuses, fontSizes, colors } from 'styles/common';
-
-export const IconStyle = css`
-  ${fontSizes.SMALL};
-  height: 20px;
-  width: 20px;
-  ${borderRadiuses.CIRCLE};
-  background-color: rgba(0, 0, 0, 0.4);
-  color: white;
-  display: inline-block;
-  line-height: 20px;
-  text-align: center;
-  vertical-align: bottom;
+export const QuantityChartWrapperStyle = css`
+  position: relative;
+  ${layout.GRID_VERTICAL};
 `;
 
-export const BarStyle = css`
+export const FloatingQuantityWrapperStyle = (positioning: 'top' | 'bottom') => css`
+  position: absolute;
+  ${positioning}: -8px;
+  height: 16px;
+  background-color: ${colors.WHITE};
+  ${borderRadiuses.BUTTON};
+  width: min-content;
+  padding: 0 5px;
+  max-width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+`;
+
+export const BarWrapperStyle = css`
+  position: relative;
   height: 20px;
   ${borderRadiuses.BUTTON};
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: ${colors.GRAY_VERY_LIGHT};
+  width: 100%;
 `;
 
 export const ProgressBarStyle = (color: string, percent: number) => css`
@@ -27,44 +34,39 @@ export const ProgressBarStyle = (color: string, percent: number) => css`
   ${borderRadiuses.BUTTON};
   height: inherit;
   width: ${percent > 1 ? 100 : percent * 100}%;
+  opacity: 0.5;
 `;
 
-export const NumberLineStyle = css`
-  text-align: center;
+export const IconStyle = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 11px;
+  height: 20px;
+  width: 20px;
+  ${borderRadiuses.CIRCLE};
+  background-color: rgba(0, 0, 0, 0.2);
+  color: ${colors.WHITE};
 `;
 
-export const NumberStyle = (color: string) => css`
-  ${fontSizes.SMALL};
-  height: 16px;
-  color: ${colors[color]};
-  margin-left: 6px;
-  margin-right: 6px;
-`;
-
-export const CenterTopNumberStyle = css`
-  background-color: white;
-  position: relative;
-  top: 10px;
-  ${borderRadiuses.BUTTON};
-`;
-
-export const CenterBottomNumberStyle = css`
-  background-color: white;
-  position: relative;
-  top: -10px;
-  ${borderRadiuses.BUTTON};
-`;
-
-export const BadgeStyle = (color: string) => css`
+export const BadgeStyle = (positioning: 'top' | 'bottom') => css`
+  position: absolute;
+  ${positioning}: 0;
+  left: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   ${fontSizes.SMALL};
   height: 12px;
-  width: 12px;
-  ${borderRadiuses.CIRCLE};
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  background-color: ${colors[color]};
-  color: white;
-  display: inline-block;
-  text-align: center;
+  min-width: 12px;
+  ${borderRadiuses.BUTTON};
+  font-weight: bold;
+  background-color: ${positioning === 'bottom' ? colors.BATCH : colors.SHIPMENT};
+  color: ${colors.WHITE};
+  padding: 0 3px;
 `;
 
 export const BatchedBadgeStyle = css`
