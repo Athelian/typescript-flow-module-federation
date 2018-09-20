@@ -48,9 +48,11 @@ export function textInputFactory({
   return (
     <FieldItem
       label={
-        <Label required={required} width={width}>
-          {label}
-        </Label>
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
       }
       tooltip={
         <Tooltip
@@ -99,9 +101,11 @@ export function dateInputFactory({
   return (
     <FieldItem
       label={
-        <Label required={required} width={width}>
-          {label}
-        </Label>
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
       }
       tooltip={
         <Tooltip
@@ -154,7 +158,13 @@ export function numberInputFactory({
 }) {
   return (
     <FieldItem
-      label={label && <Label required={required}>{label}</Label>}
+      label={
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
+      }
       tooltip={
         <Tooltip
           isNew={isNew}
@@ -203,7 +213,13 @@ export function priceInputFactory({
 }) {
   return (
     <FieldItem
-      label={label && <Label required={required}>{label}</Label>}
+      label={
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
+      }
       tooltip={
         <Tooltip
           isNew={isNew}
@@ -252,9 +268,11 @@ export function selectSearchEnumInputFactory({
   return (
     <FieldItem
       label={
-        <Label required={required} width={width}>
-          {label}
-        </Label>
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
       }
       tooltip={
         <Tooltip
