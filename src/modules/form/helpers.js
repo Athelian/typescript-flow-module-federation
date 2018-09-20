@@ -17,7 +17,7 @@ export function textInputFactory() {}
 export function dateInputFactory() {}
 export function numberInputFactory() {}
 
-export function enumSelectInputFactory({
+export function enumSearchSelectInputFactory({
   enumType,
   inputHandlers,
   name,
@@ -55,7 +55,7 @@ export function enumSelectInputFactory({
                 name={name}
                 {...inputHandlers}
                 items={filterItems(query, data)}
-                itemToString={item => (item ? item.name : '')}
+                itemToString={item => (item ? item.description || item.name : '')}
                 itemToValue={item => (item ? item.name : '')}
                 renderSelect={({ ...rest }) => (
                   <DefaultSearchSelect
@@ -70,8 +70,9 @@ export function enumSelectInputFactory({
                   <DefaultOptions
                     {...rest}
                     items={filterItems(query, data)}
-                    itemToString={item => (item ? item.name : '')}
+                    itemToString={item => (item ? item.description || item.name : '')}
                     itemToValue={item => (item ? item.name : '')}
+                    width="200px"
                   />
                 )}
                 onChange={item => {

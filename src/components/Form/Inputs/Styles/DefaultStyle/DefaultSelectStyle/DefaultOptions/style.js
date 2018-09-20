@@ -19,15 +19,16 @@ const ResetOptionStyle = css`
   white-space: nowrap;
 `;
 
-export const OptionWrapperStyle = css`
+export const OptionWrapperStyle = (width: string, height: string) => css`
   ${ResetOptionWrapperStyle};
   display: flex;
   flex-flow: column;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  width: 200px;
+  min-width: ${width};
+  max-width: ${width};
   background: #fff;
   ${borderRadiuses.MAIN};
-  max-height: 200px;
+  max-height: ${height};
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};

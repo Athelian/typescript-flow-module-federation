@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import EnumProvider from 'providers/enum';
+import { getPortName } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import { TimelinePortNameWrapperStyle } from './style';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const TimelinePort = ({ port, transportType }: Props) => {
-  let transportTypeEnum = '';
+  let transportTypeEnum = null;
   let correctPort = null;
 
   if (port) {
@@ -27,23 +27,7 @@ const TimelinePort = ({ port, transportType }: Props) => {
 
   return (
     <div className={TimelinePortNameWrapperStyle}>
-      {transportType &&
-        correctPort && (
-          <EnumProvider enumType={transportTypeEnum}>
-            {({ loading, error, data }) => {
-              if (loading) return null;
-              if (error) return `Error!: ${error}`;
-
-              const searchedPort = data.find(portInList => portInList.name === correctPort);
-
-              if (searchedPort) {
-                return searchedPort.description;
-              }
-
-              return 'Not found';
-            }}
-          </EnumProvider>
-        )}
+      {getPortName(transportTypeEnum, correctPort)}
     </div>
   );
 };

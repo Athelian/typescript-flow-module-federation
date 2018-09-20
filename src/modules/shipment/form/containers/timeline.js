@@ -41,6 +41,8 @@ const initValues = {
         assignedTo: [],
         timelineDateRevisions: [],
       },
+      departurePort: {},
+      arrivalPort: {},
     },
   ],
 };

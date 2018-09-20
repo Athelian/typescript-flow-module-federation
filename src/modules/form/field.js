@@ -40,6 +40,13 @@ export default class FormField extends React.Component<Props, State> {
     };
   }
 
+  // componentWillReceiveProps(nextProps: Props) {
+  //   if(nextProps.initValue)
+  //   this.setState({
+  //     value: nextProps.initValue
+  //   })
+  // }
+
   onFocus = (event: SyntheticFocusEvent<*>) => {
     if (event.persist) {
       event.persist();

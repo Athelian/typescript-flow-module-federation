@@ -117,7 +117,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
                       }
                       name={name}
                       items={data}
-                      itemToString={item => (item ? item.name : '')}
+                      itemToString={item => (item ? item.description || item.name : '')}
                       itemToValue={item => (item ? item.name : '')}
                       renderSelect={({ ...rest }) => (
                         <DefaultSelect
@@ -126,7 +126,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
                           required
                           forceHoverStyle={isNew}
                           width="200px"
-                          itemToString={item => (item ? item.name : '')}
+                          itemToString={item => (item ? item.description || item.name : '')}
                         />
                       )}
                       renderOptions={({ ...rest }) => (
@@ -134,8 +134,9 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
                           {...rest}
                           align="left"
                           items={data}
-                          itemToString={item => (item ? item.name : '')}
+                          itemToString={item => (item ? item.description || item.name : '')}
                           itemToValue={item => (item ? item.name : '')}
+                          width="200px"
                         />
                       )}
                     />

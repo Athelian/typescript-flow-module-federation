@@ -5,7 +5,7 @@ import { uniqBy } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { FormContainer, FormField } from 'modules/form';
-import { enumSelectInputFactory } from 'modules/form/helpers';
+import { enumSearchSelectInputFactory } from 'modules/form/helpers';
 import {
   ShipmentInfoContainer,
   ShipmentTransportTypeContainer,
@@ -415,7 +415,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                           {({ name, ...inputHandlers }) => (
                             <FieldItem
                               label={<Label>TRANSPORTATION</Label>}
-                              input={enumSelectInputFactory({
+                              input={enumSearchSelectInputFactory({
                                 enumType: 'TransportType',
                                 inputHandlers,
                                 name,
@@ -444,7 +444,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     {({ name, ...inputHandlers }) => (
                       <FieldItem
                         label={<Label>LOAD TYPE</Label>}
-                        input={enumSelectInputFactory({
+                        input={enumSearchSelectInputFactory({
                           enumType: 'LoadType',
                           inputHandlers,
                           name,
