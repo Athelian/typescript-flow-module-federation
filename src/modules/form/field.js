@@ -124,9 +124,9 @@ const FormField = (props: {
   children: React.Node,
   setFieldValue?: (field: string, value: any) => void,
   values?: any,
-  validationRules?: Function,
+  validator?: Object,
 }) => {
-  const { values, validationRules, setFieldValue, ...rest } = props;
+  const { values, validator, setFieldValue, ...rest } = props;
   return (
     <Subscribe to={[FormContainer]}>
       {({
@@ -143,9 +143,7 @@ const FormField = (props: {
           setFieldTouched={setFieldTouched}
           setActiveField={setActiveField}
           setFieldValue={setFieldValue}
-          onValidate={newValue =>
-            onValidation({ ...values, ...newValue }, validationRules && validationRules())
-          }
+          onValidate={newValue => onValidation({ ...values, ...newValue }, validator)}
           {...rest}
         />
       )}
@@ -154,7 +152,9 @@ const FormField = (props: {
 };
 
 FormField.defaultProps = {
-  validationRules: () => {},
+  validator: {
+    validate: (value, options) => Promise.resolve({ value, options }),
+  },
   setFieldValue: () => {},
   values: {},
 };

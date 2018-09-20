@@ -16,6 +16,7 @@ import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import BatchForm from './form';
 import BatchFormContainer from './form/container';
+import validator from './form/validator';
 import query from './form/query';
 import {
   createBatchMutation,
@@ -104,7 +105,7 @@ class BatchFormModule extends React.Component<Props> {
                             <>
                               <CancelButton disabled={false} onClick={this.onCancel} />
                               <SaveButton
-                                disabled={!form.isReady()}
+                                disabled={!form.isReady(formState.state, validator)}
                                 onClick={() =>
                                   this.onSave(formState.state, saveBatch, () => {
                                     formState.onSuccess();

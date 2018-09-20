@@ -1,6 +1,5 @@
 // @flow
 import { Container } from 'unstated';
-import * as Yup from 'yup';
 import { removeTypename } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
@@ -44,9 +43,4 @@ export default class ShipmentInfoContainer extends Container<FormState> {
     this.setState(parsedValues);
     this.originalValues = parsedValues;
   };
-
-  validationRules = () =>
-    Yup.object().shape({
-      no: Yup.string().required(),
-    });
 }

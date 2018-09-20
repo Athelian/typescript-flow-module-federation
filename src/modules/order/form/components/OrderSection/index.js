@@ -8,6 +8,7 @@ import {
   OrderTagsContainer,
   OrderItemsContainer,
 } from 'modules/order/form/containers';
+import validator from 'modules/order/form/validator';
 import { FormContainer, FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
@@ -90,7 +91,7 @@ function getQuantitySummary(orderItems: any) {
 const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
     <Subscribe to={[OrderInfoContainer]}>
-      {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {
+      {({ originalValues: initialValues, state, setFieldValue }) => {
         const values = { ...initialValues, ...state };
         const { currency } = values;
 
@@ -102,7 +103,7 @@ const OrderSection = ({ isNew }: Props) => (
                   name="poNo"
                   initValue={values.poNo}
                   values={values}
-                  validationRules={validationRules}
+                  validator={validator}
                   setFieldValue={setFieldValue}
                 >
                   {({ name, ...inputHandlers }) =>
@@ -120,7 +121,7 @@ const OrderSection = ({ isNew }: Props) => (
                   name="piNo"
                   initValue={values.piNo}
                   values={values}
-                  validationRules={validationRules}
+                  validator={validator}
                   setFieldValue={setFieldValue}
                 >
                   {({ name, ...inputHandlers }) =>
@@ -137,7 +138,7 @@ const OrderSection = ({ isNew }: Props) => (
                   name="issuedAt"
                   initValue={values.issuedAt}
                   values={values}
-                  validationRules={validationRules}
+                  validator={validator}
                   setFieldValue={setFieldValue}
                 >
                   {({ name, ...inputHandlers }) =>
@@ -154,7 +155,7 @@ const OrderSection = ({ isNew }: Props) => (
                   name="currency"
                   initValue={values.currency}
                   values={values}
-                  validationRules={validationRules}
+                  validator={validator}
                   setFieldValue={setFieldValue}
                 >
                   {({ name, ...inputHandlers }) =>
@@ -172,7 +173,7 @@ const OrderSection = ({ isNew }: Props) => (
                   name="incoterm"
                   initValue={values.incoterm}
                   values={values}
-                  validationRules={validationRules}
+                  validator={validator}
                   setFieldValue={setFieldValue}
                 >
                   {({ name, ...inputHandlers }) =>
@@ -190,7 +191,7 @@ const OrderSection = ({ isNew }: Props) => (
                   name="deliveryPlace"
                   initValue={values.deliveryPlace}
                   values={values}
-                  validationRules={validationRules}
+                  validator={validator}
                   setFieldValue={setFieldValue}
                 >
                   {({ name, ...inputHandlers }) =>
@@ -255,7 +256,7 @@ const OrderSection = ({ isNew }: Props) => (
                                       ...values,
                                       exporter: newValue,
                                     },
-                                    validationRules()
+                                    validator
                                   );
                                 }}
                               />
@@ -295,7 +296,7 @@ const OrderSection = ({ isNew }: Props) => (
                             {
                               ...values,
                             },
-                            validationRules()
+                            validator
                           );
                         }}
                       />

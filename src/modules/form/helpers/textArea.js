@@ -23,6 +23,7 @@ export default function textAreaFactory({
   inputHandlers: Object,
   initValue: any,
 }) {
+  const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
     <FieldItem
       label={
@@ -35,7 +36,7 @@ export default function textAreaFactory({
       tooltip={
         <Tooltip
           isNew={isNew}
-          errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
+          errorMessage={isTouched && errorMessage}
           changedValues={{
             oldValue: initValue,
             newValue: inputHandlers.value,
@@ -45,13 +46,13 @@ export default function textAreaFactory({
       input={
         <DefaultStyle
           type="textarea"
-          isFocused={inputHandlers.isFocused}
-          hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
+          isFocused={isFocused}
+          hasError={isTouched && errorMessage}
           forceHoverStyle={isNew}
           width={width}
           height={height}
         >
-          <TextAreaInput align={align} name={name} {...inputHandlers} />
+          <TextAreaInput align={align} name={name} {...rest} />
         </DefaultStyle>
       }
     />

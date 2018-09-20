@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import BatchFormContainer from 'modules/batch/form/container';
+import validator from 'modules/batch/form/validator';
 import { FormContainer, FormField } from 'modules/form';
 import GridColumn from 'components/GridColumn';
 import {
@@ -25,7 +26,7 @@ type Props = {
 const PackagingSection = ({ isNew }: Props) => (
   <div className={PackagingSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues, state, setFieldValue, setFieldArrayValue, validationRules }) => {
+      {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
         const values = { ...originalValues, ...state };
 
         return (
@@ -37,7 +38,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   initValue={originalValues.packageName}
                   validationOnChange
                   onValidate={newValue =>
-                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    formHelper.onValidation({ ...values, ...newValue }, validator)
                   }
                   setFieldValue={setFieldValue}
                   {...formHelper}
@@ -72,7 +73,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   initValue={originalValues.packageCapacity}
                   validationOnChange
                   onValidate={newValue =>
-                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    formHelper.onValidation({ ...values, ...newValue }, validator)
                   }
                   setFieldValue={setFieldValue}
                   {...formHelper}
@@ -108,7 +109,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   initValue={originalValues.packageQuantity}
                   validationOnChange
                   onValidate={newValue =>
-                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    formHelper.onValidation({ ...values, ...newValue }, validator)
                   }
                   setFieldValue={setFieldValue}
                   {...formHelper}
@@ -143,7 +144,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name="packageGrossWeight.value"
                   initValue={getByPath('packageGrossWeight.value', originalValues)}
                   onValidate={newValue =>
-                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    formHelper.onValidation({ ...values, ...newValue }, validator)
                   }
                   setFieldValue={(field, value) =>
                     setFieldArrayValue('packageGrossWeight', { value, metric: 'kg' })
@@ -180,7 +181,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name="packageVolume.value"
                   initValue={getByPath('packageVolume.value', originalValues)}
                   onValidate={newValue =>
-                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    formHelper.onValidation({ ...values, ...newValue }, validator)
                   }
                   setFieldValue={(field, value) =>
                     setFieldArrayValue('packageVolume', { value, metric: 'm3' })
@@ -216,7 +217,7 @@ const PackagingSection = ({ isNew }: Props) => (
                 <FormField
                   name="packageSize.length.value"
                   onValidate={newValue =>
-                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    formHelper.onValidation({ ...values, ...newValue }, validator)
                   }
                   initValue={getByPath('packageSize.length.value', originalValues)}
                   setFieldValue={(field, value) =>
@@ -253,7 +254,7 @@ const PackagingSection = ({ isNew }: Props) => (
                 <FormField
                   name="packageSize.width.value"
                   onValidate={newValue =>
-                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    formHelper.onValidation({ ...values, ...newValue }, validator)
                   }
                   initValue={getByPath('packageSize.width.value', originalValues)}
                   setFieldValue={(field, value) =>
@@ -290,7 +291,7 @@ const PackagingSection = ({ isNew }: Props) => (
                 <FormField
                   name="packageSize.height.value"
                   onValidate={newValue =>
-                    formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                    formHelper.onValidation({ ...values, ...newValue }, validator)
                   }
                   initValue={getByPath('packageSize.height.value', originalValues)}
                   setFieldValue={(field, value) =>

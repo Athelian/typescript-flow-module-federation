@@ -24,6 +24,7 @@ export default function dateInputFactory({
   inputHandlers: Object,
   initValue: any,
 }) {
+  const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
     <FieldItem
       label={
@@ -36,7 +37,7 @@ export default function dateInputFactory({
       tooltip={
         <Tooltip
           isNew={isNew}
-          errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
+          errorMessage={isTouched && errorMessage}
           changedValues={{
             oldValue: initValue ? <FormattedDate value={initValue} /> : initValue,
             newValue: inputHandlers.value ? (
@@ -50,13 +51,13 @@ export default function dateInputFactory({
       input={
         <DefaultStyle
           type="date"
-          isFocused={inputHandlers.isFocused}
-          hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
+          isFocused={isFocused}
+          hasError={isTouched && errorMessage}
           forceHoverStyle={isNew}
           width={width}
           height={height}
         >
-          <DateInput align={align} name={name} {...inputHandlers} />
+          <DateInput align={align} name={name} {...rest} />
         </DefaultStyle>
       }
     />

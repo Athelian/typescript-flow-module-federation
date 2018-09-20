@@ -23,6 +23,7 @@ export default function numberInputFactory({
   inputHandlers: Object,
   initValue: any,
 }) {
+  const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
     <FieldItem
       label={
@@ -35,7 +36,7 @@ export default function numberInputFactory({
       tooltip={
         <Tooltip
           isNew={isNew}
-          errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
+          errorMessage={isTouched && errorMessage}
           changedValues={{
             oldValue: initValue,
             newValue: inputHandlers.value,
@@ -45,13 +46,13 @@ export default function numberInputFactory({
       input={
         <DefaultStyle
           type="number"
-          isFocused={inputHandlers.isFocused}
-          hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
+          isFocused={isFocused}
+          hasError={isTouched && errorMessage}
           forceHoverStyle={isNew}
           width={width}
           height={height}
         >
-          <NumberInput align={align} name={name} {...inputHandlers} />
+          <NumberInput align={align} name={name} {...rest} />
         </DefaultStyle>
       }
     />

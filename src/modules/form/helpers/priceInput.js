@@ -25,6 +25,7 @@ export default function priceInputFactory({
   inputHandlers: Object,
   initValue: any,
 }) {
+  const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
     <FieldItem
       label={
@@ -37,7 +38,7 @@ export default function priceInputFactory({
       tooltip={
         <Tooltip
           isNew={isNew}
-          errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
+          errorMessage={isTouched && errorMessage}
           changedValues={{
             oldValue: initValue,
             newValue: inputHandlers.value,
@@ -47,13 +48,13 @@ export default function priceInputFactory({
       input={
         <DefaultPriceStyle
           currency={currency}
-          isFocused={inputHandlers.isFocused}
-          hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
+          isFocused={isFocused}
+          hasError={isTouched && errorMessage}
           forceHoverStyle={isNew}
           width={width}
           height={height}
         >
-          <NumberInput align={align} name={name} {...inputHandlers} />
+          <NumberInput align={align} name={name} {...rest} />
         </DefaultPriceStyle>
       }
     />
