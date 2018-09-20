@@ -2,7 +2,6 @@
 import { Container } from 'unstated';
 import { removeTypename } from 'utils/data';
 import { isEquals } from 'utils/fp';
-import * as Yup from 'yup';
 import { cloneDeep, set } from 'lodash';
 import type { Document } from 'components/Form/DocumentsInput/type.js.flow';
 
@@ -35,6 +34,4 @@ export default class OrderFilesContainer extends Container<FormState> {
     this.setState({ files: parsedValues });
     this.originalValues = { files: parsedValues };
   };
-
-  validationRules = () => Yup.object().shape({});
 }

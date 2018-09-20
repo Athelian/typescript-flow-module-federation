@@ -33,13 +33,10 @@ class DocumentsInput extends React.Component<Props, State> {
     onUpload: () => {},
   };
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      uploading: false,
-      progress: 0,
-    };
-  }
+  state = {
+    uploading: false,
+    progress: 0,
+  };
 
   componentDidUpdate(prevProps: Props, prevState: State): void {
     const { onUpload } = this.props;
@@ -70,7 +67,9 @@ class DocumentsInput extends React.Component<Props, State> {
       return;
     }
 
-    const file = input.files[0];
+    const {
+      files: [file],
+    } = input;
     if (!file) {
       return;
     }
@@ -87,11 +86,12 @@ class DocumentsInput extends React.Component<Props, State> {
           uploading: false,
         });
 
+        const [{ type = 'File' }] = types;
         onUpload({
           id,
           name,
           path,
-          type: types.length > 0 ? types[0].type : 'File',
+          type,
           memo: null,
         });
       },
@@ -114,7 +114,13 @@ class DocumentsInput extends React.Component<Props, State> {
       return values && values.length > 0 ? (
         <div className={DocumentListStyle}>
           {values.map(document => (
-            <DocumentItem name="" key={document.id} value={document} types={types} readOnly />
+            <DocumentItem
+              name={document.id}
+              key={document.id}
+              value={document}
+              types={types}
+              readOnly
+            />
           ))}
         </div>
       ) : (

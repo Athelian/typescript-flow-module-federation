@@ -1,14 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormField } from 'modules/form';
-import {
-  TextAreaInput,
-  SelectInput,
-  DefaultSelect,
-  DefaultOptions,
-  Display,
-  DefaultStyle,
-} from 'components/Form';
+import { SelectInput, DefaultSelect, DefaultOptions, Display } from 'components/Form';
+import { textAreaFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
 import { computeIcon, getFileExtension, getFileName } from './helpers';
@@ -90,9 +84,11 @@ class DocumentItem extends React.Component<Props, State> {
               itemToValue={v => (v ? v.type : null)}
               itemToString={v => (v ? v.label : '')}
               renderSelect={({ ...rest }) => (
-                <DefaultSelect {...rest} required align="left" width="200px" />
+                <DefaultSelect {...rest} required align="left" width="120px" />
               )}
-              renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" />}
+              renderOptions={({ ...rest }) => (
+                <DefaultOptions {...rest} align="left" width="120px" />
+              )}
             />
           )}
           <div className={FileExtensionIconStyle(fileIcon.color)}>
@@ -116,16 +112,17 @@ class DocumentItem extends React.Component<Props, State> {
         </div>
         <div className={MemoWrapperStyle(isExpanded)}>
           <FormField name={`${name}.memo`} initValue={value.memo} setFieldValue={onChange}>
-            {inputHandlers => (
-              <DefaultStyle
-                type="textarea"
-                forceHoverStyle={!inputHandlers.value}
-                width="360px"
-                height="150px"
-              >
-                <TextAreaInput align="left" {...inputHandlers} />
-              </DefaultStyle>
-            )}
+            {({ name: fieldName, ...inputHandlers }) =>
+              textAreaFactory({
+                name: fieldName,
+                isNew: false,
+                initValue: value.memo,
+                inputHandlers,
+                align: 'left',
+                width: '600px',
+                height: '150px',
+              })
+            }
           </FormField>
         </div>
         <button

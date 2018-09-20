@@ -271,9 +271,11 @@ export default defineMessages({
   },
   fileTypeDocument: {
     id: 'containers.Orders.fileType.document',
+    defaultMessage: 'Document',
   },
   fileTypeOrderPO: {
     id: 'containers.Orders.fileType.orderPO',
+    defaultMessage: 'Order PO',
   },
   sectionDocuments: {
     id: 'containers.Orders.sectionDocuments',
