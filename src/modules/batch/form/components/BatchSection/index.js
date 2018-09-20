@@ -253,7 +253,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                   {({ value: opened, toggle }) => (
                     <React.Fragment>
                       {!values.orderItem ? (
-                        <DashedPlusButton width="195px" height="200px" onClick={toggle} />
+                        <DashedPlusButton width="195px" height="222px" onClick={toggle} />
                       ) : (
                         <OrderItemCard
                           item={values.orderItem}

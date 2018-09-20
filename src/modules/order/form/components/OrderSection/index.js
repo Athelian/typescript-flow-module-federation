@@ -17,9 +17,7 @@ import {
   dateInputFactory,
   selectSearchEnumInputFactory,
 } from 'modules/form/helpers';
-import Divider from 'components/Divider';
 import BaseCard from 'components/Cards';
-import { colors } from 'styles/common';
 import messages from 'modules/order/messages';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import SelectExporters from '../SelectExporters';
@@ -305,10 +303,8 @@ const OrderSection = ({ isNew }: Props) => (
                   />
                 )}
               </Subscribe>
-              <div className={DividerStyle}>
-                <Divider color={colors.GRAY_LIGHT} />
-              </div>
             </div>
+            <div className={DividerStyle} />
             <Subscribe to={[OrderItemsContainer]}>
               {({ state: { orderItems } }) => {
                 const {

@@ -2,121 +2,147 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import FormattedNumber from 'components/FormattedNumber';
+import GridRow from 'components/GridRow';
 import Icon from 'components/Icon';
 import { Display, Label, FieldItem } from 'components/Form';
 import {
+  QuantityChartWrapperStyle,
+  FloatingQuantityWrapperStyle,
+  BarWrapperStyle,
   IconStyle,
-  BarStyle,
   ProgressBarStyle,
-  NumberLineStyle,
-  CenterTopNumberStyle,
-  CenterBottomNumberStyle,
-  BatchedBadgeStyle,
-  ShippedBadgeStyle,
+  BadgeStyle,
 } from './style';
-import Number from './Number';
-import Badge from './Badge';
 import messages from './messages';
 
-type Props = {
+type OptionalProps = {
+  hasLabel: boolean,
+  batched: number,
+  shipped: number,
+};
+
+type Props = OptionalProps & {
   orderedQuantity: number,
   batchedQuantity: number,
   shippedQuantity: number,
-  hasLabel: boolean,
-  batched?: number,
-  shipped?: number,
 };
 
-export default function QuantityChart({
+const defaultProps = {
+  hasLabel: false,
+  batched: 0,
+  shipped: 0,
+};
+
+const QuantityChart = ({
   orderedQuantity,
   batchedQuantity,
   shippedQuantity,
   hasLabel,
   batched,
   shipped,
-}: Props) {
-  const batchedQTYTitle = <FormattedMessage {...messages.batchedQuantity} />;
-  const shippedQTYTitle = <FormattedMessage {...messages.shippedQuantity} />;
+}: Props) => (
+  <div className={QuantityChartWrapperStyle}>
+    {hasLabel ? (
+      <FieldItem
+        label={
+          <Label>
+            <FormattedMessage {...messages.batchedQuantity} />
+          </Label>
+        }
+        input={
+          <GridRow gap="0px">
+            <Display color="BATCH">
+              <FormattedNumber value={batchedQuantity} />
+            </Display>
+            <Display color="GRAY_LIGHT">
+              <FormattedNumber value={orderedQuantity - batchedQuantity} />
+            </Display>
+          </GridRow>
+        }
+      />
+    ) : (
+      <div className={FloatingQuantityWrapperStyle('top')}>
+        <GridRow gap="0px">
+          <Display color="BATCH" fontSize="SMALL">
+            <FormattedNumber value={batchedQuantity} />
+          </Display>
+          <Display color="GRAY_LIGHT" fontSize="SMALL">
+            <FormattedNumber value={orderedQuantity - batchedQuantity} />
+          </Display>
+        </GridRow>
+      </div>
+    )}
 
-  return (
-    <div>
-      <div>
-        {hasLabel ? (
-          <FieldItem
-            label={<Label>{batchedQTYTitle}</Label>}
-            input={
-              <Display>
-                <Number color="BATCH" value={batchedQuantity} />
-                <Number color="GRAY" value={orderedQuantity - batchedQuantity} />
-              </Display>
-            }
-          />
-        ) : (
-          <div className={NumberLineStyle}>
-            <span className={CenterTopNumberStyle}>
-              <Number color="BATCH" value={batchedQuantity} />
-              <Number color="GRAY" value={orderedQuantity - batchedQuantity} />
-            </span>
-          </div>
+    <div className={BarWrapperStyle}>
+      <div
+        className={ProgressBarStyle(
+          'BATCH',
+          orderedQuantity === 0 ? 0 : batchedQuantity / orderedQuantity
         )}
-
-        <div className={BarStyle}>
-          <div
-            className={ProgressBarStyle(
-              'BATCH',
-              orderedQuantity === 0 ? 0 : batchedQuantity / orderedQuantity
-            )}
-          >
-            <div className={IconStyle}>
-              <Icon icon="BATCH" />
-            </div>
-
-            {batched && (
-              <div className={BatchedBadgeStyle}>
-                <Badge value={batched} color="BATCH" />
-              </div>
-            )}
-          </div>
-        </div>
+      />
+      <div className={IconStyle}>
+        <Icon icon="BATCH" />
       </div>
-      <div>
-        <div className={BarStyle}>
-          <div
-            className={ProgressBarStyle(
-              'SHIPMENT',
-              orderedQuantity === 0 ? 0 : shippedQuantity / orderedQuantity
-            )}
-          >
-            <div className={IconStyle}>
-              <Icon icon="SHIPMENT" />
-            </div>
 
-            {shipped && (
-              <div className={ShippedBadgeStyle}>
-                <Badge value={shipped} color="SHIPMENT" />
-              </div>
-            )}
-          </div>
-          {hasLabel ? (
-            <FieldItem
-              label={<Label>{shippedQTYTitle}</Label>}
-              input={
-                <Display>
-                  <Number color="SHIPMENT" value={shippedQuantity} />
-                  <Number color="GRAY" value={orderedQuantity - shippedQuantity} />
-                </Display>
-              }
-            />
-          ) : (
-            <div className={NumberLineStyle}>
-              <span className={CenterBottomNumberStyle}>
-                <Number color="SHIPMENT" value={shippedQuantity} />
-                <Number color="GRAY" value={orderedQuantity - shippedQuantity} />
-              </span>
-            </div>
-          )}
+      {!hasLabel && (
+        <div className={BadgeStyle('bottom')}>
+          <FormattedNumber value={batched} />
         </div>
-      </div>
+      )}
     </div>
-  );
-}
+
+    <div className={BarWrapperStyle}>
+      <div
+        className={ProgressBarStyle(
+          'SHIPMENT',
+          orderedQuantity === 0 ? 0 : shippedQuantity / orderedQuantity
+        )}
+      />
+      <div className={IconStyle}>
+        <Icon icon="SHIPMENT" />
+      </div>
+
+      {!hasLabel && (
+        <div className={BadgeStyle('top')}>
+          <FormattedNumber value={shipped} />
+        </div>
+      )}
+    </div>
+
+    {hasLabel ? (
+      <FieldItem
+        label={
+          <Label>
+            <FormattedMessage {...messages.shippedQuantity} />
+          </Label>
+        }
+        input={
+          <GridRow gap="0px">
+            <Display color="SHIPMENT">
+              <FormattedNumber value={shippedQuantity} />
+            </Display>
+            <Display color="GRAY_LIGHT">
+              <FormattedNumber value={orderedQuantity - shippedQuantity} />
+            </Display>
+          </GridRow>
+        }
+      />
+    ) : (
+      <div className={FloatingQuantityWrapperStyle('bottom')}>
+        <GridRow gap="0px">
+          <Display color="SHIPMENT" fontSize="SMALL">
+            <FormattedNumber value={shippedQuantity} />
+          </Display>
+          <Display color="GRAY_LIGHT" fontSize="SMALL">
+            <FormattedNumber value={orderedQuantity - shippedQuantity} />
+          </Display>
+        </GridRow>
+      </div>
+    )}
+  </div>
+);
+
+QuantityChart.defaultProps = defaultProps;
+
+export default QuantityChart;

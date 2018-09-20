@@ -1,12 +1,10 @@
 // @flow
 import * as React from 'react';
-
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 import QuantityChart from 'components/QuantityChart';
 import Icon from 'components/Icon';
-
 import TotalSubItemStyle from './style';
 
 type Props = {
@@ -56,7 +54,7 @@ export default function TotalSummary({
           label={<Label>TOTAL PRICE</Label>}
           input={
             <Display>
-              {currency} <FormattedNumber value={totalPrice} />
+              <FormattedNumber value={totalPrice} /> {currency}
             </Display>
           }
         />

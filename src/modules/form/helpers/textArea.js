@@ -5,7 +5,7 @@ import { FieldItem, Label, Tooltip, DefaultStyle, TextAreaInput } from 'componen
 export default function textAreaFactory({
   required = false,
   width = '200px',
-  height = '30px',
+  height = '300px',
   align = 'left',
   isNew,
   label,
