@@ -9,9 +9,14 @@ import { ShipmentBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';
 import messages from 'modules/shipment/messages';
-import { EmptyMessageStyle } from 'modules/order/form/components/ItemsSection/style';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
-import { ItemsSectionWrapperStyle, ItemsSectionBodyStyle, ItemGridStyle, ItemStyle } from './style';
+import {
+  ItemsSectionWrapperStyle,
+  ItemsSectionBodyStyle,
+  ItemGridStyle,
+  ItemStyle,
+  EmptyMessageStyle,
+} from './style';
 import SelectBatches from '../SelectBatches';
 
 type Props = {
