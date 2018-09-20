@@ -31,7 +31,7 @@ export const BarWrapperStyle = css`
 
 export const ProgressBarStyle = (color: string, percent: number) => css`
   background-color: ${colors[color]};
-  ${borderRadiuses.BUTTON};
+  ${percent < 0.9 ? 'border-radius: 20px 0 0 20px' : 'border-radius: 20px 20px 20px 20px'};
   height: inherit;
   width: ${percent > 1 ? 100 : percent * 100}%;
   opacity: 0.5;

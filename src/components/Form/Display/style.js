@@ -15,6 +15,7 @@ export const DisplayWrapperStyle = (
   text-align: ${align};
   width: 100%;
   max-width: min-content;
+  padding: 0 5px;
 `;
 
 export default DisplayWrapperStyle;

@@ -98,16 +98,12 @@ export const BodyWrapperStyle = css`
 `;
 
 export const QuantityWrapperStyle = css`
-  display: grid;
-  grid-template-columns: 95px 90px;
   width: 100%;
   padding: 0 5px;
 `;
 
 export const UnitPriceWrapperStyle = css`
   position: relative;
-  display: grid;
-  grid-template-columns: 95px 90px;
   width: 100%;
   padding: 0 5px;
   &:hover {
@@ -151,5 +147,5 @@ export const ChartWrapperStyle = css`
 
 export const TotalPriceWrapperStyle = css`
   width: 100%;
-  padding: 0 10px;
+  padding: 0 5px;
 `;

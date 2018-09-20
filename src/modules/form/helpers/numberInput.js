@@ -44,6 +44,7 @@ export default function numberInputFactory({
       }
       input={
         <DefaultStyle
+          type="number"
           isFocused={inputHandlers.isFocused}
           hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
           forceHoverStyle={isNew}

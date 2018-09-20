@@ -51,7 +51,7 @@ const QuantityChart = ({
           </Label>
         }
         input={
-          <GridRow gap="5px">
+          <GridRow gap="0px">
             <Display color="BATCH">
               <FormattedNumber value={batchedQuantity} />
             </Display>
@@ -63,7 +63,7 @@ const QuantityChart = ({
       />
     ) : (
       <div className={FloatingQuantityWrapperStyle('top')}>
-        <GridRow gap="5px">
+        <GridRow gap="0px">
           <Display color="BATCH" fontSize="SMALL">
             <FormattedNumber value={batchedQuantity} />
           </Display>
@@ -118,7 +118,7 @@ const QuantityChart = ({
           </Label>
         }
         input={
-          <GridRow gap="5px">
+          <GridRow gap="0px">
             <Display color="SHIPMENT">
               <FormattedNumber value={shippedQuantity} />
             </Display>
@@ -130,7 +130,7 @@ const QuantityChart = ({
       />
     ) : (
       <div className={FloatingQuantityWrapperStyle('bottom')}>
-        <GridRow gap="5px">
+        <GridRow gap="0px">
           <Display color="SHIPMENT" fontSize="SMALL">
             <FormattedNumber value={shippedQuantity} />
           </Display>

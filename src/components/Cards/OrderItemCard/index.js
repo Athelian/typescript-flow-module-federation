@@ -159,9 +159,15 @@ const OrderItemCard = ({
                 onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
                 role="presentation"
               >
-                <Label required>QTY</Label>
                 {selectable ? (
-                  <FormattedNumber value={quantity} />
+                  <FieldItem
+                    label={<Label required>QTY</Label>}
+                    input={
+                      <Display>
+                        <FormattedNumber value={quantity} />
+                      </Display>
+                    }
+                  />
                 ) : (
                   <FormField
                     name={`${item.id}.quantity`}
@@ -170,6 +176,8 @@ const OrderItemCard = ({
                   >
                     {({ name: fieldName, ...inputHandlers }) =>
                       numberInputFactory({
+                        label: 'QTY',
+                        required: true,
                         width: '90px',
                         height: '20px',
                         inputHandlers: {
@@ -187,11 +195,55 @@ const OrderItemCard = ({
                   </FormField>
                 )}
               </div>
+
               <div
                 className={UnitPriceWrapperStyle}
                 role="presentation"
                 onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
               >
+                {selectable ? (
+                  <FieldItem
+                    label={<Label required>PRICE</Label>}
+                    input={
+                      <Display>
+                        <FormattedNumber value={price.amount} /> {currency || price.currency}
+                      </Display>
+                    }
+                  />
+                ) : (
+                  <FormField
+                    name={`${item.id}.price`}
+                    initValue={price.amount}
+                    setFieldValue={(fieldName, amount) => assign({ price: { amount, currency } })}
+                  >
+                    {({ name: fieldName, ...inputHandlers }) =>
+                      priceInputFactory({
+                        label: 'PRICE',
+                        required: true,
+                        currency,
+                        width: '90px',
+                        height: '20px',
+                        inputHandlers: {
+                          ...inputHandlers,
+                          onBlur: evt => {
+                            inputHandlers.onBlur(evt);
+                            saveOnBlur({
+                              quantity,
+                              price: {
+                                amount: inputHandlers.value,
+                                currency,
+                              },
+                            });
+                          },
+                        },
+                        name: fieldName,
+                        isNew: false,
+                        initValue: price.amount,
+                      })
+                    }
+                  </FormField>
+                )}
+
                 {!selectable && (
                   <BooleanValue>
                     {({ value: isOpen, toggle }) => (
@@ -230,43 +282,6 @@ const OrderItemCard = ({
                     )}
                   </BooleanValue>
                 )}
-                <Label required>PRICE</Label>
-                {selectable ? (
-                  <>
-                    <FormattedNumber value={price.amount} />
-                    {currency || price.currency}
-                  </>
-                ) : (
-                  <FormField
-                    name={`${item.id}.price`}
-                    initValue={price.amount}
-                    setFieldValue={(fieldName, amount) => assign({ price: { amount, currency } })}
-                  >
-                    {({ name: fieldName, ...inputHandlers }) =>
-                      priceInputFactory({
-                        currency,
-                        width: '90px',
-                        height: '20px',
-                        inputHandlers: {
-                          ...inputHandlers,
-                          onBlur: evt => {
-                            inputHandlers.onBlur(evt);
-                            saveOnBlur({
-                              quantity,
-                              price: {
-                                amount: inputHandlers.value,
-                                currency,
-                              },
-                            });
-                          },
-                        },
-                        name: fieldName,
-                        isNew: false,
-                        initValue: price.amount,
-                      })
-                    }
-                  </FormField>
-                )}
               </div>
               <div className={DividerStyle} />
               <div className={ChartWrapperStyle}>
@@ -284,7 +299,8 @@ const OrderItemCard = ({
                   label={<Label>TOTAL</Label>}
                   input={
                     <Display>
-                      <FormattedNumber value={price.amount * quantity} /> {currency}
+                      <FormattedNumber value={price.amount * quantity} />{' '}
+                      {currency || price.currency}
                     </Display>
                   }
                 />
