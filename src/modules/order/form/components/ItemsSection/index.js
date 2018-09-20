@@ -92,7 +92,7 @@ function ItemSection({ intl, isNew }: Props) {
                   )}
                 </Subscribe>
               </SectionNavBar>
-              <div className={ItemsSectionBodyStyle}>
+              <div id="orderItemsSection" className={ItemsSectionBodyStyle}>
                 <Subscribe to={[OrderInfoContainer, OrderItemsContainer, FormContainer]}>
                   {(
                     { state: { currency } },

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import ScrollIntoView from 'components/ScrollIntoView';
+import scrollIntoView from 'utils/scrollIntoView';
 import Icon from 'components/Icon';
 import { TimelineIconStyle } from './style';
 
@@ -23,15 +23,17 @@ const defaultProps = {
 const TimelineIcon = ({ icon, color, targetId, boundaryId }: Props) => {
   if (targetId) {
     return (
-      <ScrollIntoView targetId={targetId} boundaryId={boundaryId}>
-        <div className={TimelineIconStyle({ icon, color })} role="presentation">
-          <Icon icon={icon} />
-        </div>
-      </ScrollIntoView>
+      <button
+        className={TimelineIconStyle({ icon, color })}
+        onClick={() => scrollIntoView({ targetId, boundaryId })}
+        type="button"
+      >
+        <Icon icon={icon} />
+      </button>
     );
   }
   return (
-    <div className={TimelineIconStyle({ icon, color })} role="presentation">
+    <div className={TimelineIconStyle({ icon, color })}>
       <Icon icon={icon} />
     </div>
   );

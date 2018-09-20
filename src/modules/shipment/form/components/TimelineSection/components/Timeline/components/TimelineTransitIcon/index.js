@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import ScrollIntoView from 'components/ScrollIntoView';
+import scrollIntoView from 'utils/scrollIntoView';
 import Icon from 'components/Icon';
 import {
   TimelineIconStyle,
@@ -29,12 +29,16 @@ const TimelineTransitIcon = ({ color, arrivalTargetId, departureTargetId, bounda
   if (arrivalTargetId && departureTargetId) {
     return (
       <div className={TransitIconWrapperStyle}>
-        <ScrollIntoView targetId={arrivalTargetId} boundaryId={boundaryId}>
-          <div className={TransitIconTopStyle} />
-        </ScrollIntoView>
-        <ScrollIntoView targetId={departureTargetId} boundaryId={boundaryId}>
-          <div className={TransitIconBottomStyle} />
-        </ScrollIntoView>
+        <button
+          className={TransitIconTopStyle}
+          onClick={() => scrollIntoView({ targetId: arrivalTargetId, boundaryId })}
+          type="button"
+        />
+        <button
+          className={TransitIconBottomStyle}
+          onClick={() => scrollIntoView({ targetId: departureTargetId, boundaryId })}
+          type="button"
+        />
         <div className={TimelineIconStyle(color)}>
           <Icon icon="TRANSIT" />
         </div>

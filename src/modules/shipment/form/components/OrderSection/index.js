@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
 import { ShipmentOrderCard } from 'components/Cards';
-import { EmptyMessageStyle } from 'modules/order/form/components/ItemsSection/style';
-import { ItemsSectionWrapperStyle, ItemGridStyle, ItemStyle } from './style';
+import { ItemsSectionWrapperStyle, ItemGridStyle, ItemStyle, EmptyMessageStyle } from './style';
 
 type Props = {
   orders: Array<Object>,

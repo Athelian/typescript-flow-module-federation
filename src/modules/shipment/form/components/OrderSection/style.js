@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets } from 'styles/common';
+import { presets, fontSizes, colors } from 'styles/common';
 
 export const ItemsSectionWrapperStyle = css`
   position: relative;
@@ -18,4 +18,12 @@ export const ItemGridStyle = css`
 export const ItemStyle = css`
   display: flex;
   margin: 15px 10px;
+`;
+
+export const EmptyMessageStyle = css`
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  color: ${colors.BLACK};
+  text-align: center;
+  padding: 100px;
 `;
