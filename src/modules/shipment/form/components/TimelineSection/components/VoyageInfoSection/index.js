@@ -77,7 +77,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                       errors,
                       isNew,
                       activeField,
-                      label: <Label>DEPARTURE PORT</Label>,
+                      label: 'DEPARTURE PORT',
                     })
                   }
                 </FormField>
@@ -123,7 +123,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                       errors,
                       isNew,
                       activeField,
-                      label: <Label>ARRIVAL PORT</Label>,
+                      label: 'ARRIVAL PORT',
                     })
                   }
                 </FormField>

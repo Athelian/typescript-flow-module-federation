@@ -19,4 +19,6 @@ export const SelectTransportTypeMessageStyle = css`
   text-align: right;
   width: 200px;
   flex-shrink: 0;
+  height: 30px;
+  line-height: 30px;
 `;

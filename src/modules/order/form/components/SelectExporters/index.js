@@ -4,7 +4,7 @@ import { ObjectValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
-import { SectionNavBar as NavBar, EntityIcon } from 'components/NavBar';
+import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/NavButtons';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import { PartnerCard } from 'components/Cards';
@@ -32,7 +32,7 @@ const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
         {({ value, set }) => (
           <Layout
             navBar={
-              <NavBar>
+              <SlideViewNavBar>
                 <EntityIcon icon="PARTNER" color="BLACK" />
                 <CancelButton disabled={false} onClick={onCancel}>
                   Cancel
@@ -40,7 +40,7 @@ const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
                 <SaveButton disabled={isEquals(value, selected)} onClick={() => onSelect(value)}>
                   Save
                 </SaveButton>
-              </NavBar>
+              </SlideViewNavBar>
             }
           >
             <PartnerGridView

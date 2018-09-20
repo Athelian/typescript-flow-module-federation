@@ -7,8 +7,8 @@ export const BatchCardWrapperStyle = css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 200px;
-  height: 200px;
+  width: 195px;
+  height: 195px;
   ${fontSizes.MAIN};
   font-weight: bold;
   color: ${colors.BLACK};

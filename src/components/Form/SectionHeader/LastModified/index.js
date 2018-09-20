@@ -36,7 +36,7 @@ function SectionHeader({ updatedAt, updatedBy }: Props) {
   return (
     <div className={LastModifiedWrapperStyle}>
       <div className={LastModifiedStyle}>
-        <Label>
+        <Label width="100%" align="right">
           <FormattedMessage {...messages.updatedAt} />
         </Label>
         <Display>
