@@ -3,11 +3,12 @@ import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue } from 'react-values';
+import Layout from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
 import GridColumn from 'components/GridColumn';
 import { ShipmentBatchCard } from 'components/Cards';
 import {
-  SectionNavBar as NavBar,
+  SlideViewNavBar,
   EntityIcon,
   FilterInput,
   SortInput,
@@ -19,7 +20,7 @@ import { batchListQuery } from 'modules/batch/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
-import { ItemWrapperStyle, GridViewWrapperStyle } from './style';
+import { ItemWrapperStyle } from './style';
 
 type Props = {
   onCancel: Function,
@@ -64,67 +65,72 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
       {({ value: filtersAndSort, set: onChange }) => (
         <ArrayValue>
           {({ value: selected, push, set }) => (
-            <div>
-              <NavBar>
-                <EntityIcon icon="BATCH" color="BATCH" />
-                <SortInput
-                  sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
-                  ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
-                  fields={fields}
-                  onChange={({ field: { value }, ascending }) =>
-                    onChange({
-                      ...filtersAndSort,
-                      sort: {
-                        field: value,
-                        direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                      },
-                    })
-                  }
-                />
-                <FilterInput
-                  initialFilter={{}}
-                  onChange={filters =>
-                    onChange({
-                      ...filtersAndSort,
-                      filter: { ...filtersAndSort.filter, ...filters },
-                    })
-                  }
-                  width={400}
-                >
-                  {({ values, setFieldValue }) => (
-                    <GridColumn>
-                      <SearchInput
-                        name="search"
-                        value={values.query}
-                        onClear={() => setFieldValue('query', '')}
-                        onChange={newValue => setFieldValue('query', newValue)}
-                      />
-                    </GridColumn>
-                  )}
-                </FilterInput>
-                <SearchInput
-                  value={filtersAndSort.filter.query}
-                  name="search"
-                  onClear={() =>
-                    onChange({
-                      ...filtersAndSort,
-                      filter: { ...filtersAndSort.filter, query: '' },
-                    })
-                  }
-                  onChange={newQuery =>
-                    onChange({
-                      ...filtersAndSort,
-                      filter: { ...filtersAndSort.filter, query: newQuery },
-                    })
-                  }
-                />
-                <CancelButton disabled={false} onClick={onCancel}>
-                  Cancel
-                </CancelButton>
-                <SaveButton disabled={selected.length === 0} onClick={() => onSelect(selected)}>
-                  Save
-                </SaveButton>
-              </NavBar>
+            <Layout
+              navBar={
+                <SlideViewNavBar>
+                  <EntityIcon icon="BATCH" color="BATCH" />
+                  <SortInput
+                    sort={
+                      fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]
+                    }
+                    ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+                    fields={fields}
+                    onChange={({ field: { value }, ascending }) =>
+                      onChange({
+                        ...filtersAndSort,
+                        sort: {
+                          field: value,
+                          direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                        },
+                      })
+                    }
+                  />
+                  <FilterInput
+                    initialFilter={{}}
+                    onChange={filters =>
+                      onChange({
+                        ...filtersAndSort,
+                        filter: { ...filtersAndSort.filter, ...filters },
+                      })
+                    }
+                    width={400}
+                  >
+                    {({ values, setFieldValue }) => (
+                      <GridColumn>
+                        <SearchInput
+                          name="search"
+                          value={values.query}
+                          onClear={() => setFieldValue('query', '')}
+                          onChange={newValue => setFieldValue('query', newValue)}
+                        />
+                      </GridColumn>
+                    )}
+                  </FilterInput>
+                  <SearchInput
+                    value={filtersAndSort.filter.query}
+                    name="search"
+                    onClear={() =>
+                      onChange({
+                        ...filtersAndSort,
+                        filter: { ...filtersAndSort.filter, query: '' },
+                      })
+                    }
+                    onChange={newQuery =>
+                      onChange({
+                        ...filtersAndSort,
+                        filter: { ...filtersAndSort.filter, query: newQuery },
+                      })
+                    }
+                  />
+                  <CancelButton disabled={false} onClick={onCancel}>
+                    Cancel
+                  </CancelButton>
+                  <SaveButton disabled={selected.length === 0} onClick={() => onSelect(selected)}>
+                    Save
+                  </SaveButton>
+                </SlideViewNavBar>
+              }
+            >
               <Query
                 query={batchListQuery}
                 variables={{
@@ -144,28 +150,26 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
                   if (loading) return <LoadingIcon />;
 
                   return (
-                    <div className={GridViewWrapperStyle}>
-                      <BatchGridView
-                        onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
-                        hasMore={nextPage <= totalPage}
-                        isLoading={loading}
-                        items={getByPathWithDefault([], 'batches.nodes', data)}
-                        renderItem={item => (
-                          <div key={item.id} className={ItemWrapperStyle}>
-                            <ShipmentBatchCard
-                              batch={item}
-                              selectable
-                              selected={selected.includes(item)}
-                              onSelect={() => onSelectBatch({ selected, item, push, set })}
-                            />
-                          </div>
-                        )}
-                      />
-                    </div>
+                    <BatchGridView
+                      onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
+                      hasMore={nextPage <= totalPage}
+                      isLoading={loading}
+                      items={getByPathWithDefault([], 'batches.nodes', data)}
+                      renderItem={item => (
+                        <div key={item.id} className={ItemWrapperStyle}>
+                          <ShipmentBatchCard
+                            batch={item}
+                            selectable
+                            selected={selected.includes(item)}
+                            onSelect={() => onSelectBatch({ selected, item, push, set })}
+                          />
+                        </div>
+                      )}
+                    />
                   );
                 }}
               </Query>
-            </div>
+            </Layout>
           )}
         </ArrayValue>
       )}

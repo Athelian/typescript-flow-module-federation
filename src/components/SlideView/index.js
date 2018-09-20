@@ -2,10 +2,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
-import { BackdropFadeInStyle, BackdropFadeOutStyle } from 'components/Dialog/style';
 import logger from 'utils/logger';
 import FadeIn from './FadeIn';
-import { SlideInStyle, SlideAwayStyle, SlideViewContentStyle } from './style';
+import {
+  SlideInStyle,
+  SlideAwayStyle,
+  SlideViewContentStyle,
+  BackdropFadeInStyle,
+  BackdropFadeOutStyle,
+} from './style';
 
 type Props = {
   isOpen: boolean,

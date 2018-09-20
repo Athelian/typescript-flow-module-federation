@@ -23,7 +23,7 @@ export default function OrderArchiveDialog({
   unshippedBatches,
   shippedBatches,
 }: OrderDialogProps) {
-  const total = spanWithColor(<FormattedNumber value={totalBatches} />, 'GRAY');
+  const total = spanWithColor(<FormattedNumber value={totalBatches} />, 'GRAY_DARK');
   const unshipped = spanWithColor(<FormattedNumber value={unshippedBatches} />, 'BATCH');
   const shipped = spanWithColor(<FormattedNumber value={shippedBatches} />, 'BATCH');
 
@@ -31,7 +31,7 @@ export default function OrderArchiveDialog({
   const batches = spanWithColor(<FormattedMessage {...messages.batches} />, 'BATCH');
   const shipments = spanWithColor(<FormattedMessage {...messages.shipments} />, 'SHIPMENT');
 
-  const warn = spanWithColor(<FormattedMessage {...messages.warnMsg} />, 'GRAY');
+  const warn = spanWithColor(<FormattedMessage {...messages.warnMsg} />, 'GRAY_DARK');
 
   return (
     <ArchiveDialog

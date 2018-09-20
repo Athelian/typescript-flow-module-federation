@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, transitions, colors, layout, fontSizes } from 'styles/common';
+import { presets, colors, layout, fontSizes } from 'styles/common';
 
 export const StatusStyle = (archived: boolean) => css`
   ${layout.GRID_HORIZONTAL};
@@ -11,21 +11,12 @@ export const StatusStyle = (archived: boolean) => css`
   align-items: center;
 `;
 
-export const ToggleButtonStyle = css`
+export const ToggleButtonStyle = (archived: boolean) => css`
   ${presets.BUTTON};
   font-size: 20px;
-  &:hover {
-    & > svg {
-      opacity: 0.8;
-    }
-  }
-  & > svg {
-    ${transitions.MAIN};
-  }
-  & > .fa-toggle-off {
-    color: ${colors.GRAY_DARK};
-  }
-  & > .fa-toggle-on {
-    color: ${colors.TEAL};
+  color: ${archived ? colors.GRAY : colors.TEAL};
+  &:hover,
+  :focus {
+    color: ${archived ? colors.GRAY_DARK : colors.TEAL_DARK};
   }
 `;

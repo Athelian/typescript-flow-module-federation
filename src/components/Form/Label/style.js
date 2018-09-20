@@ -2,8 +2,8 @@
 import { css } from 'react-emotion';
 import { presets, colors, fontSizesWithHeights, fontSizes } from 'styles/common';
 
-export const LabelWrapperStyle = (align: 'left' | 'right' | 'center') => css`
-  width: 100%;
+export const LabelWrapperStyle = (align: 'left' | 'right' | 'center', width: string) => css`
+  width: ${width};
   ${fontSizesWithHeights.MAIN};
   ${fontSizes.SMALL};
   ${presets.ELLIPSIS};

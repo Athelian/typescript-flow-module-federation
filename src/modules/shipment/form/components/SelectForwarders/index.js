@@ -5,7 +5,7 @@ import { isEquals } from 'utils/fp';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
 import LoadingIcon from 'components/LoadingIcon';
-import { SectionNavBar as NavBar, EntityIcon } from 'components/NavBar';
+import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/NavButtons';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import { ShipmentForwarderCard } from 'components/Cards';
@@ -60,7 +60,7 @@ const SelectForwarders = ({ selected, onCancel, onSelect }: Props) => (
           {({ value: values, push, set }) => (
             <Layout
               navBar={
-                <NavBar>
+                <SlideViewNavBar>
                   <EntityIcon icon="PARTNER" color="BLACK" />
                   <h3>
                     {values.length}/{MAX_SELECTIONS}
@@ -74,7 +74,7 @@ const SelectForwarders = ({ selected, onCancel, onSelect }: Props) => (
                   >
                     Save
                   </SaveButton>
-                </NavBar>
+                </SlideViewNavBar>
               }
             >
               <PartnerGridView

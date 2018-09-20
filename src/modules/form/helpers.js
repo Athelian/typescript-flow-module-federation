@@ -47,7 +47,13 @@ export function textInputFactory({
 }) {
   return (
     <FieldItem
-      label={label && <Label required={required}>{label}</Label>}
+      label={
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
+      }
       tooltip={
         <Tooltip
           isNew={isNew}
@@ -94,7 +100,13 @@ export function dateInputFactory({
 }) {
   return (
     <FieldItem
-      label={label && <Label required={required}>{label}</Label>}
+      label={
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
+      }
       tooltip={
         <Tooltip
           isNew={isNew}
@@ -146,7 +158,13 @@ export function numberInputFactory({
 }) {
   return (
     <FieldItem
-      label={label && <Label required={required}>{label}</Label>}
+      label={
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
+      }
       tooltip={
         <Tooltip
           isNew={isNew}
@@ -195,7 +213,13 @@ export function priceInputFactory({
 }) {
   return (
     <FieldItem
-      label={label && <Label required={required}>{label}</Label>}
+      label={
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
+      }
       tooltip={
         <Tooltip
           isNew={isNew}
@@ -243,7 +267,13 @@ export function selectSearchEnumInputFactory({
 }) {
   return (
     <FieldItem
-      label={label && <Label required={required}>{label}</Label>}
+      label={
+        label && (
+          <Label required={required} width={width}>
+            {label}
+          </Label>
+        )
+      }
       tooltip={
         <Tooltip
           isNew={isNew}
@@ -255,65 +285,58 @@ export function selectSearchEnumInputFactory({
         />
       }
       input={
-        <DefaultStyle
-          type="date"
-          isFocused={inputHandlers.isFocused}
-          hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
-          forceHoverStyle={isNew}
-          width={width}
-        >
-          <EnumProvider enumType={enumType}>
-            {({ loading, error, data }) => {
-              if (loading) return null;
-              if (error) return `Error!: ${error}`;
-              return (
-                <StringValue
-                  defaultValue={inputHandlers.value}
-                  onChange={newValue =>
-                    inputHandlers.onChange({
-                      target: {
-                        value: newValue || '',
-                      },
-                    })
-                  }
-                >
-                  {({ value: query, set, clear }) => (
-                    <SearchSelectInput
-                      name={name}
-                      {...inputHandlers}
-                      items={filterItems(query, data)}
-                      itemToString={item => (item ? item.name : '')}
-                      itemToValue={item => (item ? item.name : '')}
-                      renderSelect={({ ...rest }) => (
-                        <DefaultSearchSelect
-                          {...rest}
-                          hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
-                          forceHoverStyle={isNew}
-                          width="200px"
-                          isOpen={inputHandlers.isFocused}
-                        />
-                      )}
-                      renderOptions={({ ...rest }) => (
-                        <DefaultOptions
-                          {...rest}
-                          items={filterItems(query, data)}
-                          itemToString={item => (item ? item.name : '')}
-                          itemToValue={item => (item ? item.name : '')}
-                        />
-                      )}
-                      onChange={item => {
-                        logger.warn('SearchSelectInput onChange', item);
-                        if (!item) clear();
-                        set(item && item.name);
-                      }}
-                      onSearch={set}
-                    />
-                  )}
-                </StringValue>
-              );
-            }}
-          </EnumProvider>
-        </DefaultStyle>
+        <EnumProvider enumType={enumType}>
+          {({ loading, error, data }) => {
+            if (loading) return null;
+            if (error) return `Error!: ${error}`;
+            return (
+              <StringValue
+                defaultValue={inputHandlers.value}
+                onChange={newValue =>
+                  inputHandlers.onChange({
+                    target: {
+                      value: newValue || '',
+                    },
+                  })
+                }
+              >
+                {({ value: query, set, clear }) => (
+                  <SearchSelectInput
+                    name={name}
+                    {...inputHandlers}
+                    items={filterItems(query, data)}
+                    itemToString={item => (item ? item.name : '')}
+                    itemToValue={item => (item ? item.name : '')}
+                    renderSelect={({ ...rest }) => (
+                      <DefaultSearchSelect
+                        {...rest}
+                        hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
+                        forceHoverStyle={isNew}
+                        width={width}
+                        isOpen={inputHandlers.isFocused}
+                      />
+                    )}
+                    renderOptions={({ ...rest }) => (
+                      <DefaultOptions
+                        {...rest}
+                        items={filterItems(query, data)}
+                        itemToString={item => (item ? item.name : '')}
+                        itemToValue={item => (item ? item.name : '')}
+                        width={width}
+                      />
+                    )}
+                    onChange={item => {
+                      logger.warn('SearchSelectInput onChange', item);
+                      if (!item) clear();
+                      set(item && item.name);
+                    }}
+                    onSearch={set}
+                  />
+                )}
+              </StringValue>
+            );
+          }}
+        </EnumProvider>
       }
     />
   );

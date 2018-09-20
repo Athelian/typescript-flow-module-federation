@@ -17,7 +17,12 @@ const StatusToggle = ({ archived, openStatusDialog, activateDialog, archiveDialo
     <div className={StatusStyle(archived)}>
       <Icon icon={archived ? 'ARCHIVE' : 'ACTIVE'} />
       {archived ? 'Archived' : 'Active'}
-      <button type="button" className={ToggleButtonStyle} tabIndex={-1} onClick={openStatusDialog}>
+      <button
+        type="button"
+        className={ToggleButtonStyle(archived)}
+        tabIndex={-1}
+        onClick={openStatusDialog}
+      >
         {archived ? <Icon icon="TOGGLE_OFF" /> : <Icon icon="TOGGLE_ON" />}
       </button>
     </div>
