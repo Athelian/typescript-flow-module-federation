@@ -10,7 +10,6 @@ import {
   Label,
   Display,
   DefaultStyle,
-  NumberInput,
   SelectInput,
   TextAreaInput,
   DefaultSelect,
@@ -36,19 +35,24 @@ type Props = OptionalProps & {
   setFieldArrayValue: Function,
   removeArrayItem: Function,
   formHelper: any,
-  values: any,
-  validationRules: any,
   activeField: any,
+  enumType: string,
+  targetName: string,
+  typeName: string,
+  memoName: string,
+  valueInput: React.Node,
+};
+
+export const defaultProps = {
+  isNew: false,
 };
 
 type State = {
   isMemoOpen: boolean,
 };
 
-class Adjustment extends React.Component<Props, State> {
-  static defaultProps = {
-    isNew: false,
-  };
+class DefaultAdjustmentStyle extends React.Component<Props, State> {
+  static defaultProps = defaultProps;
 
   state = {
     isMemoOpen: false,
@@ -68,13 +72,16 @@ class Adjustment extends React.Component<Props, State> {
       setFieldArrayValue,
       removeArrayItem,
       formHelper,
-      values,
-      validationRules,
       activeField,
+      enumType,
+      targetName,
+      typeName,
+      memoName,
+      valueInput,
     } = this.props;
     const { isMemoOpen } = this.state;
 
-    const hasMemo = !!adjustment.memo;
+    const hasMemo = !!adjustment[memoName];
 
     return (
       <div className={AdjustmentWrapperStyle}>
@@ -86,18 +93,15 @@ class Adjustment extends React.Component<Props, State> {
           >
             <Icon icon={hasMemo ? 'MEMO' : 'MEMO_ADD'} />
           </button>
+
           <FormField
-            name={`batchAdjustments.${index}.reason`}
-            initValue={adjustment.reason}
+            name={`${targetName}.${index}.${typeName}`}
+            initValue={adjustment[typeName]}
             setFieldValue={setFieldArrayValue}
-            validationOnChange
-            onValidate={newValue =>
-              formHelper.onValidation({ ...values, ...newValue }, validationRules())
-            }
             {...formHelper}
           >
             {({ name, ...inputHandlers }) => (
-              <EnumProvider enumType="BatchAdjustmentReason">
+              <EnumProvider enumType={enumType}>
                 {({ loading, error, data }) => {
                   if (loading) return null;
                   if (error) return `Error!: ${error}`;
@@ -113,7 +117,7 @@ class Adjustment extends React.Component<Props, State> {
                       }
                       name={name}
                       items={data}
-                      itemToString={item => (item ? item.name : '')}
+                      itemToString={item => (item ? item.description || item.name : '')}
                       itemToValue={item => (item ? item.name : '')}
                       renderSelect={({ ...rest }) => (
                         <DefaultSelect
@@ -122,7 +126,7 @@ class Adjustment extends React.Component<Props, State> {
                           required
                           forceHoverStyle={isNew}
                           width="200px"
-                          itemToString={item => (item ? item.name : '')}
+                          itemToString={item => (item ? item.description || item.name : '')}
                         />
                       )}
                       renderOptions={({ ...rest }) => (
@@ -130,8 +134,9 @@ class Adjustment extends React.Component<Props, State> {
                           {...rest}
                           align="left"
                           items={data}
-                          itemToString={item => (item ? item.name : '')}
+                          itemToString={item => (item ? item.description || item.name : '')}
                           itemToValue={item => (item ? item.name : '')}
+                          width="200px"
                         />
                       )}
                     />
@@ -140,32 +145,14 @@ class Adjustment extends React.Component<Props, State> {
               </EnumProvider>
             )}
           </FormField>
-          <FormField
-            name={`batchAdjustments.${index}.quantity`}
-            initValue={adjustment.quantity}
-            validationOnChange
-            onValidate={newValue =>
-              formHelper.onValidation({ ...values, ...newValue }, validationRules())
-            }
-            setFieldValue={setFieldArrayValue}
-            {...formHelper}
-          >
-            {({ name, ...inputHandlers }) => (
-              <DefaultStyle
-                type="number"
-                isFocused={activeField === name}
-                forceHoverStyle={isNew}
-                width="200px"
-              >
-                <NumberInput name={name} {...inputHandlers} />
-              </DefaultStyle>
-            )}
-          </FormField>
+
+          {valueInput}
+
           <button
             className={RemoveButtonStyle}
             onClick={() => {
-              removeArrayItem(`batchAdjustments[${index}]`);
-              formHelper.setFieldTouched(`batchAdjustments[${index}]`);
+              removeArrayItem(`${targetName}[${index}]`);
+              formHelper.setFieldTouched(`${targetName}[${index}]`);
             }}
             type="button"
           >
@@ -185,12 +172,8 @@ class Adjustment extends React.Component<Props, State> {
             </GridRow>
           </div>
           <FormField
-            name={`batchAdjustments.${index}.memo`}
-            initValue={adjustment.memo}
-            validationOnChange
-            onValidate={newValue =>
-              formHelper.onValidation({ ...values, ...newValue }, validationRules())
-            }
+            name={`${targetName}.${index}.${memoName}`}
+            initValue={adjustment[memoName]}
             setFieldValue={setFieldArrayValue}
             {...formHelper}
           >
@@ -212,4 +195,4 @@ class Adjustment extends React.Component<Props, State> {
   }
 }
 
-export default Adjustment;
+export default DefaultAdjustmentStyle;

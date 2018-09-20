@@ -1,5 +1,10 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
+import {
+  ShipmentTransportTypeContainer,
+  ShipmentTimelineContainer,
+} from 'modules/shipment/form/containers';
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
   VerticalLayout,
@@ -9,191 +14,196 @@ import {
 } from './components';
 import { TimelineSectionWrapperStyle, TimelineWrapperStyle, BodyWrapperStyle } from './style';
 
-const dummyData = {
-  transportType: 'Air',
-  cargoReady: {
-    approvedAt: false,
-    date: '2018-11-01',
-    timelineDateRevisions: [
-      {
-        date: '2018-01-02',
-      },
-      {
-        date: '2018-11-12',
-      },
-    ],
-  },
-  voyages: [
-    {
-      id: '1',
-      departurePort: 'ADALV',
-      arrivalPort: 'HNGAC',
-      departure: {
-        approvedAt: true,
-        date: '2018-11-01',
-        timelineDateRevisions: [],
-      },
-      arrival: {
-        approvedAt: true,
-        date: '2018-11-01',
-        timelineDateRevisions: [],
-      },
-    },
-    {
-      id: '2',
-      departurePort: 'HNGAC',
-      arrivalPort: null,
-      departure: {
-        approvedAt: true,
-        date: null,
-        timelineDateRevisions: [],
-      },
-      arrival: {
-        approvedAt: true,
-        date: '2018-11-01',
-        timelineDateRevisions: [],
-      },
-    },
-    // {
-    //   id: '3',
-    //   departurePort: null,
-    //   arrivalPort: null,
-    //   departure: {
-    //     approvedAt: true,
-    //     date: '2018-11-01',
-    //     timelineDateRevisions: [],
-    //   },
-    //   arrival: {
-    //     approvedAt: true,
-    //     date: '2018-11-01',
-    //     timelineDateRevisions: [],
-    //   },
-    // },
-  ],
-  containerGroups: [
-    {
-      customClearance: {
-        approvedAt: false,
-        date: '2018-11-01',
-        timelineDateRevisions: [],
-      },
-      warehouseArrival: {
-        approvedAt: false,
-        date: null,
-        timelineDateRevisions: [],
-      },
-      deliveryReady: {
-        approvedAt: false,
-        date: '2018-11-01',
-        timelineDateRevisions: [],
-      },
-    },
-  ],
-};
-
 type Props = {
   isNew: boolean,
 };
 
 const TimelineSection = ({ isNew }: Props) => (
-  <div className={TimelineSectionWrapperStyle}>
-    <div className={TimelineWrapperStyle}>
-      <VerticalLayout shipment={dummyData} />
-      <VoyageSelector shipment={dummyData} />
-    </div>
-    <div className={BodyWrapperStyle} id="timelineInfoSection">
-      <TimelineInfoSection id="cargoReady" isNew={isNew} icon="CARGO_READY" title="CARGO READY" />
-      <TimelineInfoSection
-        id="loadPortDeparture"
-        isNew={isNew}
-        icon="PORT"
-        title="LOAD PORT DEPARTURE"
-      />
-      <VoyageInfoSection
-        id="firstVoyage"
-        isNew={isNew}
-        icon={getTransportIcon(dummyData.transportType)}
-        title={dummyData.voyages.length > 1 ? 'FIRST VOYAGE' : 'VOYAGE'}
-      />
+  <Subscribe to={[ShipmentTimelineContainer, ShipmentTransportTypeContainer]}>
+    {(shipmentTimelineState, shipmentTransportTypeState) => {
+      const {
+        originalValues: initialValues,
+        state,
+        setFieldDeepValue,
+        removeArrayItem,
+      } = shipmentTimelineState;
 
-      {dummyData.voyages.length > 1 && (
-        <>
-          <TimelineInfoSection
-            id="firstTransitPortArrival"
-            isNew={isNew}
-            icon="TRANSIT"
-            title={
-              dummyData.voyages.length > 2 ? 'FIRST TRANSIT PORT ARRIVAL' : 'TRANSIT PORT ARRIVAL'
-            }
-          />
-          <TimelineInfoSection
-            id="firstTransitPortDeparture"
-            isNew={isNew}
-            icon="TRANSIT"
-            title={
-              dummyData.voyages.length > 2
-                ? 'FIRST TRANSIT PORT DEPARTURE'
-                : 'TRANSIT PORT DEPARTURE'
-            }
-          />
-          <VoyageInfoSection
-            id="secondVoyage"
-            isNew={isNew}
-            icon={getTransportIcon(dummyData.transportType)}
-            title="SECOND VOYAGE"
-          />
-        </>
-      )}
+      const {
+        originalValues: transportTypeInitialValues,
+        state: transportTypeState,
+      } = shipmentTransportTypeState;
 
-      {dummyData.voyages.length > 2 && (
-        <>
-          <TimelineInfoSection
-            id="secondTransitPortArrival"
-            isNew={isNew}
-            icon="TRANSIT"
-            title="SECOND TRANSIT PORT ARRIVAL"
-          />
-          <TimelineInfoSection
-            id="secondTransitPortDeparture"
-            isNew={isNew}
-            icon="TRANSIT"
-            title="SECOND TRANSIT PORT DEPARTURE"
-          />
-          <VoyageInfoSection
-            id="thirdVoyage"
-            isNew={isNew}
-            icon={getTransportIcon(dummyData.transportType)}
-            title="THIRD VOYAGE"
-          />
-        </>
-      )}
+      const values = {
+        ...initialValues,
+        ...state,
+        ...transportTypeInitialValues,
+        ...transportTypeState,
+      };
 
-      <TimelineInfoSection
-        id="dischargePortArrival"
-        isNew={isNew}
-        icon="PORT"
-        title="DISCHARGE PORT ARRIVAL"
-      />
-      <TimelineInfoSection
-        id="customClearance"
-        isNew={isNew}
-        icon="CUSTOMS"
-        title="CUSTOMS CLEARANCE"
-      />
-      <TimelineInfoSection
-        id="warehouseArrival"
-        isNew={isNew}
-        icon="WAREHOUSE"
-        title="WAREHOUSE ARRIVAL"
-      />
-      <TimelineInfoSection
-        id="deliveryReady"
-        isNew={isNew}
-        icon="DELIVERY_READY"
-        title="DELIVERY READY"
-      />
-    </div>
-  </div>
+      const { cargoReady, voyages, containerGroups } = values;
+      const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
+
+      return (
+        <div className={TimelineSectionWrapperStyle}>
+          <div className={TimelineWrapperStyle}>
+            <VerticalLayout shipment={values} />
+            <VoyageSelector shipment={values} />
+          </div>
+          <div className={BodyWrapperStyle} id="timelineInfoSection">
+            <TimelineInfoSection
+              id="cargoReady"
+              isNew={isNew}
+              icon="CARGO_READY"
+              title="CARGO READY"
+              timelineDate={cargoReady}
+              sourceName="cargoReady"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
+            />
+            <TimelineInfoSection
+              id="loadPortDeparture"
+              isNew={isNew}
+              icon="PORT"
+              title="LOAD PORT DEPARTURE"
+              timelineDate={voyages[0].departure}
+              sourceName="voyages.0.departure"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
+            />
+            <VoyageInfoSection
+              id="firstVoyage"
+              isNew={isNew}
+              icon={getTransportIcon(values.transportType)}
+              title={values.voyages.length > 1 ? 'FIRST VOYAGE' : 'VOYAGE'}
+              voyage={voyages[0]}
+              initialVoyage={initialValues.voyages[0]}
+              sourceName="voyages.0"
+              setFieldDeepValue={setFieldDeepValue}
+            />
+
+            {values.voyages.length > 1 && (
+              <>
+                <TimelineInfoSection
+                  id="firstTransitPortArrival"
+                  isNew={isNew}
+                  icon="TRANSIT"
+                  title={
+                    values.voyages.length > 2
+                      ? 'FIRST TRANSIT PORT ARRIVAL'
+                      : 'TRANSIT PORT ARRIVAL'
+                  }
+                  timelineDate={values.voyages[0].arrival}
+                  sourceName="voyages.0.arrival"
+                  setFieldDeepValue={setFieldDeepValue}
+                  removeArrayItem={removeArrayItem}
+                />
+                <TimelineInfoSection
+                  id="firstTransitPortDeparture"
+                  isNew={isNew}
+                  icon="TRANSIT"
+                  title={
+                    values.voyages.length > 2
+                      ? 'FIRST TRANSIT PORT DEPARTURE'
+                      : 'TRANSIT PORT DEPARTURE'
+                  }
+                  timelineDate={values.voyages[1].departure}
+                  sourceName="voyages.1.departure"
+                  setFieldDeepValue={setFieldDeepValue}
+                  removeArrayItem={removeArrayItem}
+                />
+                <VoyageInfoSection
+                  id="secondVoyage"
+                  isNew={isNew}
+                  icon={getTransportIcon(values.transportType)}
+                  title="SECOND VOYAGE"
+                  voyage={voyages[1]}
+                  initialVoyage={initialValues.voyages[1]}
+                  sourceName="voyages.1"
+                  setFieldDeepValue={setFieldDeepValue}
+                />
+              </>
+            )}
+
+            {values.voyages.length > 2 && (
+              <>
+                <TimelineInfoSection
+                  id="secondTransitPortArrival"
+                  isNew={isNew}
+                  icon="TRANSIT"
+                  title="SECOND TRANSIT PORT ARRIVAL"
+                  timelineDate={values.voyages[1].arrival}
+                  sourceName="voyages.1.arrival"
+                  setFieldDeepValue={setFieldDeepValue}
+                  removeArrayItem={removeArrayItem}
+                />
+                <TimelineInfoSection
+                  id="secondTransitPortDeparture"
+                  isNew={isNew}
+                  icon="TRANSIT"
+                  title="SECOND TRANSIT PORT DEPARTURE"
+                  timelineDate={values.voyages[2].departure}
+                  sourceName="voyages.2.departure"
+                  setFieldDeepValue={setFieldDeepValue}
+                  removeArrayItem={removeArrayItem}
+                />
+                <VoyageInfoSection
+                  id="thirdVoyage"
+                  isNew={isNew}
+                  icon={getTransportIcon(values.transportType)}
+                  title="THIRD VOYAGE"
+                  voyage={voyages[2]}
+                  initialVoyage={initialValues.voyages[2]}
+                  sourceName="voyages.2"
+                  setFieldDeepValue={setFieldDeepValue}
+                />
+              </>
+            )}
+
+            <TimelineInfoSection
+              id="dischargePortArrival"
+              isNew={isNew}
+              icon="PORT"
+              title="DISCHARGE PORT ARRIVAL"
+              timelineDate={values.voyages[voyages.length - 1].arrival}
+              sourceName={`voyages.${voyages.length - 1}.arrival`}
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
+            />
+            <TimelineInfoSection
+              id="customClearance"
+              isNew={isNew}
+              icon="CUSTOMS"
+              title="CUSTOMS CLEARANCE"
+              timelineDate={customClearance}
+              sourceName="containerGroups.0.customClearance"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
+            />
+            <TimelineInfoSection
+              id="warehouseArrival"
+              isNew={isNew}
+              icon="WAREHOUSE"
+              title="WAREHOUSE ARRIVAL"
+              timelineDate={warehouseArrival}
+              sourceName="containerGroups.0.warehouseArrival"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
+            />
+            <TimelineInfoSection
+              id="deliveryReady"
+              isNew={isNew}
+              icon="DELIVERY_READY"
+              title="DELIVERY READY"
+              timelineDate={deliveryReady}
+              sourceName="containerGroups.0.deliveryReady"
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
+            />
+          </div>
+        </div>
+      );
+    }}
+  </Subscribe>
 );
 
 export default TimelineSection;

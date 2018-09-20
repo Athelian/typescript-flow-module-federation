@@ -22,7 +22,7 @@ import {
   DashedPlusButton,
   TagsInput,
 } from 'components/Form';
-import { enumSelectInputFactory } from 'modules/form/helpers';
+import { enumSearchSelectInputFactory } from 'modules/form/helpers';
 import Divider from 'components/Divider';
 import BaseCard from 'components/Cards';
 import { colors } from 'styles/common';
@@ -249,7 +249,7 @@ const OrderSection = ({ isNew }: Props) => (
                               }}
                             />
                           }
-                          input={enumSelectInputFactory({
+                          input={enumSearchSelectInputFactory({
                             enumType: 'Currency',
                             inputHandlers,
                             name,
@@ -284,7 +284,7 @@ const OrderSection = ({ isNew }: Props) => (
                               }}
                             />
                           }
-                          input={enumSelectInputFactory({
+                          input={enumSearchSelectInputFactory({
                             enumType: 'Incoterm',
                             inputHandlers,
                             name,

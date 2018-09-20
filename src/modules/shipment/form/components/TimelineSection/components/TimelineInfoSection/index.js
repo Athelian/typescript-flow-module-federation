@@ -1,15 +1,27 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import GridColumn from 'components/GridColumn';
-import GridRow from 'components/GridRow';
 import Icon from 'components/Icon';
+import NewButton from 'components/NavButtons/NewButton';
+import { injectUid } from 'utils/id';
+import { UserConsumer } from 'modules/user';
 import UserAvatar from 'components/UserAvatar';
 import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
 import { CustomButton } from 'components/NavButtons';
-import { SectionHeader, Label } from 'components/Form';
+import { FormContainer, FormField } from 'modules/form';
+import {
+  SectionHeader,
+  Label,
+  DefaultAdjustmentStyle,
+  DefaultStyle,
+  DateInput,
+  FieldItem,
+} from 'components/Form';
 import {
   TimelineInfoSectionWrapperStyle,
+  AssignedAndApprovalWrapperStyle,
   AssignmentWrapperStyle,
   AssignmentStyle,
   RemoveAssignmentButtonStyle,
@@ -19,118 +31,222 @@ import {
   ApprovedByStyle,
   ApprovedAtStyle,
   UnapproveButtonStyle,
+  AddDateButtonWrapperStyle,
 } from './style';
 
 type Props = {
   isNew: boolean,
   icon: string,
   title: string,
+  timelineDate: Object,
+  sourceName: string,
+  setFieldDeepValue: Function,
+  removeArrayItem: Function,
 };
 
-const dummyAssignedTo = [
-  {
-    id: '1',
-    firstName: 'Kevin',
-    lastName: 'Nguyen',
-  },
-  {
-    id: '2',
-    firstName: 'Bob',
-    lastName: 'Nguyen',
-  },
+class TimelineInfoSection extends React.PureComponent<Props> {
+  handleRemoveAssignedTo = (index: number) => {
+    const { sourceName, removeArrayItem } = this.props;
 
-  {
-    id: '3',
-    firstName: 'Bob',
-    lastName: 'Nguyen',
-  },
+    removeArrayItem(`${sourceName}.assignedTo[${index}]`);
+  };
 
-  {
-    id: '4',
-    firstName: 'Bob',
-    lastName: 'Nguyen',
-  },
+  handleUnapprove = () => {
+    const { timelineDate, sourceName, setFieldDeepValue } = this.props;
 
-  {
-    id: '5',
-    firstName: 'Bob',
-    lastName: 'Nguyen',
-  },
-];
+    const newState = { ...timelineDate, approvedAt: null, approvedBy: null };
 
-// const dummyApprovedBy = null;
-// const dummyApprovedAt = null;
+    setFieldDeepValue(sourceName, newState);
+  };
 
-const dummyApprovedBy = {
-  firstName: 'Kevin',
-  lastName: 'Nguyen',
-};
+  handleApprove = (user: Object) => {
+    const { timelineDate, sourceName, setFieldDeepValue } = this.props;
 
-const dummyApprovedAt = '2018-01-01';
+    const newState = { ...timelineDate, approvedAt: new Date(), approvedBy: user };
 
-const TimelineInfoSection = ({ isNew, icon, title, ...rest }: Props) => (
-  <div className={TimelineInfoSectionWrapperStyle} {...rest}>
-    <GridColumn>
-      <SectionHeader icon={icon} title={title} />
+    setFieldDeepValue(sourceName, newState);
+  };
 
-      {isNew}
-
-      <GridRow gap="10px">
-        <GridColumn gap="5px">
-          <Label>ASSIGNED TO</Label>
-          <div className={AssignmentWrapperStyle}>
-            {dummyAssignedTo.map(assigned => (
-              <div className={AssignmentStyle} key={assigned.id}>
-                <button className={RemoveAssignmentButtonStyle} type="button">
-                  <Icon icon="REMOVE" />
-                </button>
-                <UserAvatar firstName={assigned.firstName} lastName={assigned.lastName} />
+  render() {
+    const {
+      isNew,
+      icon,
+      title,
+      timelineDate,
+      sourceName,
+      setFieldDeepValue,
+      removeArrayItem,
+      ...rest
+    } = this.props;
+    return (
+      <div className={TimelineInfoSectionWrapperStyle} {...rest}>
+        <GridColumn gap="10px">
+          <SectionHeader icon={icon} title={title} />
+          <div className={AssignedAndApprovalWrapperStyle}>
+            <GridColumn gap="5px">
+              <Label>ASSIGNED TO</Label>
+              <div className={AssignmentWrapperStyle}>
+                {timelineDate.assignedTo.map((assigned, index) => (
+                  <div className={AssignmentStyle} key={assigned.id}>
+                    <button
+                      className={RemoveAssignmentButtonStyle}
+                      onClick={() => this.handleRemoveAssignedTo(index)}
+                      type="button"
+                    >
+                      <Icon icon="REMOVE" />
+                    </button>
+                    <UserAvatar firstName={assigned.firstName} lastName={assigned.lastName} />
+                  </div>
+                ))}
+                {timelineDate.assignedTo.length < 5 && (
+                  <button className={AddAssignmentButtonStyle} type="button">
+                    <Icon icon="ADD" />
+                  </button>
+                )}
               </div>
-            ))}
-            {dummyAssignedTo.length < 5 && (
-              <button className={AddAssignmentButtonStyle} type="button">
-                <Icon icon="ADD" />
-              </button>
-            )}
-          </div>
-        </GridColumn>
+            </GridColumn>
 
-        <GridColumn gap="5px">
-          <Label>APPROVAL</Label>
-          <div className={ApprovalWrapperStyle}>
-            {dummyApprovedAt ? (
-              <>
-                <UserAvatar
-                  firstName={dummyApprovedBy.firstName}
-                  lastName={dummyApprovedBy.lastName}
-                />
-                <div className={ApprovedByWrapperStyle}>
-                  <div className={ApprovedByStyle}>
-                    <FormattedName
-                      firstName={dummyApprovedBy.firstName}
-                      lastName={dummyApprovedBy.lastName}
+            <GridColumn gap="5px">
+              <Label align="right">APPROVAL</Label>
+              <div className={ApprovalWrapperStyle}>
+                {timelineDate.approvedAt && timelineDate.approvedBy ? (
+                  <>
+                    <div className={ApprovedByWrapperStyle}>
+                      <div className={ApprovedByStyle}>
+                        <FormattedName
+                          firstName={timelineDate.approvedBy.firstName}
+                          lastName={timelineDate.approvedBy.lastName}
+                        />
+                      </div>
+                      <div className={ApprovedAtStyle}>
+                        <FormattedDate value={timelineDate.approvedAt} />
+                      </div>
+                    </div>
+                    <UserAvatar
+                      firstName={timelineDate.approvedBy.firstName}
+                      lastName={timelineDate.approvedBy.lastName}
                     />
-                  </div>
-                  <div className={ApprovedAtStyle}>
-                    <FormattedDate value={dummyApprovedAt} />
-                  </div>
-                </div>
-                <button className={UnapproveButtonStyle} type="button">
-                  <Icon icon="CLEAR" />
-                </button>
-              </>
-            ) : (
-              <CustomButton label="APPROVE" icon={<Icon icon="CHECKED" />} color="blue" />
-            )}
+                    <button
+                      className={UnapproveButtonStyle}
+                      onClick={this.handleUnapprove}
+                      type="button"
+                    >
+                      <Icon icon="CLEAR" />
+                    </button>
+                  </>
+                ) : (
+                  <UserConsumer>
+                    {({ user }) => (
+                      <CustomButton
+                        onClick={() => this.handleApprove(user)}
+                        label="APPROVE"
+                        icon={<Icon icon="CHECKED" />}
+                        color="blue"
+                      />
+                    )}
+                  </UserConsumer>
+                )}
+              </div>
+            </GridColumn>
           </div>
-        </GridColumn>
-      </GridRow>
 
-      <GridColumn gap="10px">
-        <Label>DATES</Label>
-      </GridColumn>
-    </GridColumn>
-  </div>
-);
+          <Subscribe to={[FormContainer]}>
+            {({ state: { activeField }, ...formHelper }) => (
+              <GridColumn gap="10px">
+                {/* <Label>DATES</Label> */}
+                <div className={AddDateButtonWrapperStyle}>
+                  <NewButton
+                    title="NEW DATE"
+                    onClick={() => {
+                      setFieldDeepValue(
+                        `${sourceName}.timelineDateRevisions[${
+                          timelineDate.timelineDateRevisions.length
+                        }]`,
+                        injectUid({
+                          isNew: true,
+                          type: 'Other',
+                          date: '',
+                          memo: '',
+                          updatedAt: new Date(),
+                        })
+                      );
+                      formHelper.setFieldTouched(
+                        `${sourceName}.timelineDateRevisions[${
+                          timelineDate.timelineDateRevisions.length
+                        }]`
+                      );
+                    }}
+                  />
+                </div>
+                {timelineDate.timelineDateRevisions &&
+                  timelineDate.timelineDateRevisions.reverse().map(
+                    (adjustment, index) =>
+                      adjustment && (
+                        <DefaultAdjustmentStyle
+                          isNew={isNew}
+                          index={index}
+                          adjustment={adjustment}
+                          key={adjustment.id}
+                          setFieldArrayValue={setFieldDeepValue}
+                          removeArrayItem={removeArrayItem}
+                          formHelper={formHelper}
+                          values={timelineDate}
+                          activeField={activeField}
+                          enumType="TimelineDateRevisionType"
+                          targetName={`${sourceName}.timelineDateRevisions`}
+                          typeName="type"
+                          memoName="memo"
+                          valueInput={
+                            <FormField
+                              name={`${sourceName}.timelineDateRevisions.${index}.date`}
+                              initValue={adjustment.date}
+                              setFieldValue={setFieldDeepValue}
+                              {...formHelper}
+                            >
+                              {({ name, ...inputHandlers }) => (
+                                <DefaultStyle
+                                  type="date"
+                                  isFocused={activeField === name}
+                                  forceHoverStyle={isNew}
+                                  width="200px"
+                                >
+                                  <DateInput name={name} {...inputHandlers} />
+                                </DefaultStyle>
+                              )}
+                            </FormField>
+                          }
+                        />
+                      )
+                  )}
+                <FieldItem
+                  label={<Label>INITIAL DATE</Label>}
+                  input={
+                    <FormField
+                      name={`${sourceName}.date`}
+                      initValue={timelineDate.date}
+                      setFieldValue={setFieldDeepValue}
+                      {...formHelper}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <DefaultStyle
+                          type="date"
+                          isFocused={activeField === name}
+                          forceHoverStyle={isNew}
+                          width="200px"
+                        >
+                          <DateInput name={name} {...inputHandlers} />
+                        </DefaultStyle>
+                      )}
+                    </FormField>
+                  }
+                />
+              </GridColumn>
+            )}
+          </Subscribe>
+        </GridColumn>
+      </div>
+    );
+  }
+}
 
 export default TimelineInfoSection;

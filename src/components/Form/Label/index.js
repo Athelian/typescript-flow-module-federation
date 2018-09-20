@@ -1,19 +1,28 @@
 // @flow
 import * as React from 'react';
-import { type LabelProps, defaultLabelProps } from './type';
 import { LabelWrapperStyle } from './style';
 
-type Props = LabelProps & {
+type OptionalProps = {
+  required: boolean,
+  align: 'left' | 'right' | 'center',
+};
+
+type Props = OptionalProps & {
   children: React.Node,
 };
 
-const Label = ({ required, children }: Props) => (
-  <div className={LabelWrapperStyle}>
+const defaultProps = {
+  required: false,
+  align: 'left',
+};
+
+const Label = ({ required, align, children }: Props) => (
+  <div className={LabelWrapperStyle(align)}>
     {children}
     {required && ' *'}
   </div>
 );
 
-Label.defaultProps = defaultLabelProps;
+Label.defaultProps = defaultProps;
 
 export default Label;

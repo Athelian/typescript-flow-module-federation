@@ -1,14 +1,14 @@
 import ShipmentBatchesContainer from './batches';
-import ShipmentGroupsContainer from './groups';
-import ShipmentVoyagesContainer from './voyages';
 import ShipmentInfoContainer from './info';
 import ShipmentTagsContainer from './tags';
+import ShipmentTimelineContainer from './timeline';
+import ShipmentTransportTypeContainer from './transportType';
 
 export {
-  ShipmentInfoContainer,
   ShipmentBatchesContainer,
-  ShipmentVoyagesContainer,
+  ShipmentInfoContainer,
   ShipmentTagsContainer,
-  ShipmentGroupsContainer,
+  ShipmentTimelineContainer,
+  ShipmentTransportTypeContainer,
 };
 export default ShipmentInfoContainer;

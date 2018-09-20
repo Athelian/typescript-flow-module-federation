@@ -8,11 +8,16 @@ type Props = {
   shipment: any,
 };
 
-const VerticalLayout = ({ shipment }: Props) => (
-  <div className={VerticalLayoutWrapperStyle}>
-    <VerticalTimeline shipment={shipment} />
-    <VerticalDates shipment={shipment} />
-  </div>
-);
+class VerticalLayout extends React.PureComponent<Props> {
+  render() {
+    const { shipment } = this.props;
+    return (
+      <div className={VerticalLayoutWrapperStyle}>
+        <VerticalTimeline shipment={shipment} />
+        <VerticalDates shipment={shipment} />
+      </div>
+    );
+  }
+}
 
 export default VerticalLayout;

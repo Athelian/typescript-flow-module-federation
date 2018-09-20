@@ -5,6 +5,8 @@ import { OptionWrapperStyle, OptionStyle } from './style';
 
 type OptionalProps = {
   align: 'left' | 'right' | 'center',
+  width: string,
+  height: string,
 };
 
 type Props = OptionalProps &
@@ -16,6 +18,8 @@ type Props = OptionalProps &
 
 const defaultProps = {
   align: 'right',
+  width: '100%',
+  height: '200px',
 };
 
 function DefaultOptions({
@@ -26,9 +30,11 @@ function DefaultOptions({
   selectedItem,
   getItemProps,
   align,
+  width,
+  height,
 }: Props) {
   return (
-    <div className={OptionWrapperStyle}>
+    <div className={OptionWrapperStyle(width, height)}>
       {items.map((item, index) => (
         <div
           key={itemToValue(item) || item.id || `option-${index}`}

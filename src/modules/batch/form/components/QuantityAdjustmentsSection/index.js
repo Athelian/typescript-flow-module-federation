@@ -6,10 +6,15 @@ import FormattedNumber from 'components/FormattedNumber';
 import NewButton from 'components/NavButtons/NewButton';
 import { injectUid } from 'utils/id';
 import Divider from 'components/Divider';
-import { FormContainer } from 'modules/form';
-import { FieldItem, Label } from 'components/Form';
+import { FormContainer, FormField } from 'modules/form';
+import {
+  FieldItem,
+  Label,
+  DefaultAdjustmentStyle,
+  DefaultStyle,
+  NumberInput,
+} from 'components/Form';
 import GridColumn from 'components/GridColumn';
-import Adjustment from './components/Adjustment';
 import {
   QuantityAdjustmentsSectionWrapperStyle,
   InitialQuantityStyle,
@@ -24,7 +29,7 @@ type Props = {
 const QuantityAdjustmentsSection = ({ isNew }: Props) => (
   <div className={QuantityAdjustmentsSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues, state, setFieldArrayValue, removeArrayItem, validationRules }) => {
+      {({ originalValues, state, setFieldArrayValue, removeArrayItem }) => {
         const values = { ...originalValues, ...state };
 
         const currentQuantity = values.batchAdjustments.reduce(
@@ -48,7 +53,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                   values.batchAdjustments.map(
                     (adjustment, index) =>
                       adjustment && (
-                        <Adjustment
+                        <DefaultAdjustmentStyle
                           isNew={isNew}
                           index={index}
                           adjustment={adjustment}
@@ -56,9 +61,30 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                           setFieldArrayValue={setFieldArrayValue}
                           removeArrayItem={removeArrayItem}
                           formHelper={formHelper}
-                          values={values}
-                          validationRules={validationRules}
                           activeField={activeField}
+                          enumType="BatchAdjustmentReason"
+                          targetName="batchAdjustments"
+                          typeName="reason"
+                          memoName="memo"
+                          valueInput={
+                            <FormField
+                              name={`batchAdjustments.${index}.quantity`}
+                              initValue={adjustment.quantity}
+                              setFieldValue={setFieldArrayValue}
+                              {...formHelper}
+                            >
+                              {({ name, ...inputHandlers }) => (
+                                <DefaultStyle
+                                  type="number"
+                                  isFocused={activeField === name}
+                                  forceHoverStyle={isNew}
+                                  width="200px"
+                                >
+                                  <NumberInput name={name} {...inputHandlers} />
+                                </DefaultStyle>
+                              )}
+                            </FormField>
+                          }
                         />
                       )
                   )}

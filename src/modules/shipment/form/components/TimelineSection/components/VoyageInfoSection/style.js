@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors } from 'styles/common';
+import { colors, fontSizes, presets } from 'styles/common';
 
 export const VoyageInfoSectionWrapperStyle = css`
   display: flex;
@@ -11,4 +11,12 @@ export const VoyageInfoSectionWrapperStyle = css`
   width: 490px;
 `;
 
-export default VoyageInfoSectionWrapperStyle;
+export const SelectTransportTypeMessageStyle = css`
+  ${presets.ELLIPSIS};
+  color: ${colors.GRAY_DARK};
+  font-weight: bold;
+  ${fontSizes.MAIN};
+  text-align: right;
+  width: 200px;
+  flex-shrink: 0;
+`;
