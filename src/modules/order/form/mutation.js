@@ -42,8 +42,9 @@ export const prepareCreateOrderInput = ({
   issuedAt: issuedAt ? new Date(issuedAt) : null,
   tagIds: tags.map(({ id }) => id),
   orderItems: orderItems.map(
-    ({ batches = [], productProvider = {}, isNew, id: itemId, ...orderItem }) => ({
+    ({ batches = [], productProvider = {}, price, isNew, id: itemId, ...orderItem }) => ({
       ...orderItem,
+      price: { ...price, currency },
       productProviderId: productProvider.id,
       batches: batches.map(prepareCreateBatchInput),
     })
@@ -84,6 +85,7 @@ export const prepareUpdateOrderInput = ({
   piNo,
   memo,
   incoterm,
+  archived,
 }: Object): OrderForm => ({
   poNo,
   currency,
@@ -91,15 +93,17 @@ export const prepareUpdateOrderInput = ({
   piNo,
   memo,
   incoterm,
+  archived,
   exporterId: exporter.id,
   issuedAt: issuedAt ? new Date(issuedAt) : null,
   tagIds: tags.map(({ id: tagId }) => tagId),
   orderItems: orderItems.map(
-    ({ batches = [], productProvider = {}, isNew, id: itemId, ...orderItem }) => ({
+    ({ batches = [], productProvider = {}, price, isNew, id: itemId, ...orderItem }) => ({
       ...orderItem,
       ...(isNew ? {} : { id: itemId }),
       productProviderId: productProvider.id,
-      batches: batches.map(prepareUpdateBatchInput),
+      price: { ...price, currency },
+      batches: batches.map(batch => prepareUpdateBatchInput(batch, false)),
     })
   ),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({

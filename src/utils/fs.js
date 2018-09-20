@@ -19,6 +19,7 @@ export const upload = (
   client
     .query({
       query: tokenQuery,
+      fetchPolicy: 'network-only',
     })
     .then(({ data }) => {
       const form = new FormData();

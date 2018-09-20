@@ -48,18 +48,38 @@ class OrderFormModule extends React.PureComponent<Props> {
     navigate(`/order`);
   };
 
-  onSave = (formData: Object, saveOrder: Function, onSuccess: Function = () => {}) => {
+  onSave = async (
+    formData: Object,
+    saveOrder: Function,
+    onSuccess: Function = () => {},
+    onErrors: Function = () => {}
+  ) => {
     const { orderId } = this.props;
 
     const isNew = orderId === 'new';
     const input = isNew ? prepareCreateOrderInput(formData) : prepareUpdateOrderInput(formData);
 
     if (isNew) {
-      saveOrder({ variables: { input } });
+      const { data } = await saveOrder({ variables: { input } });
+      const {
+        orderCreate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     } else if (orderId) {
-      saveOrder({ variables: { input, id: decodeId(orderId) } });
+      const { data } = await saveOrder({ variables: { input, id: decodeId(orderId) } });
+      const {
+        orderUpdate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     }
-    onSuccess();
   };
 
   onMutationCompleted = (result: Object) => {
@@ -103,7 +123,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                         <SectionTabs link="orderSection" label="ORDER" icon="ORDER" />
                         <SectionTabs link="itemsSection" label="ITEMS" icon="ORDER_ITEM" />
                         <SectionTabs link="documentsSection" label="DOCUMENTS" icon="DOCUMENT" />
-                        <SectionTabs link="shipmentsSection" label="SHIPMENTS" icon="SHIPMENT" />
+                        <SectionTabs link="ordersSection" label="SHIPMENTS" icon="SHIPMENT" />
                       </JumpToSection>
                       <BooleanValue>
                         {({ value: opened, toggle }) =>
@@ -160,7 +180,8 @@ class OrderFormModule extends React.PureComponent<Props> {
                                       orderTagsState.onSuccess();
                                       orderFilesState.onSuccess();
                                       form.onReset();
-                                    }
+                                    },
+                                    form.onErrors
                                   )
                                 }
                               >
@@ -197,13 +218,17 @@ class OrderFormModule extends React.PureComponent<Props> {
                           variables={{ id: decodeId(orderId) }}
                           fetchPolicy="network-only"
                           onCompleted={result => {
-                            const {
-                              order: { orderItems, tags, files, ...info },
-                            } = result;
-                            orderItemState.initDetailValues(orderItems);
-                            orderTagsState.initDetailValues(tags);
-                            orderInfoState.initDetailValues(info);
-                            orderFilesState.initDetailValues(files);
+                            if (result.order) {
+                              const {
+                                order: { orderItems, tags, files, ...info },
+                              } = result;
+                              orderItemState.initDetailValues(orderItems);
+                              orderTagsState.initDetailValues(tags);
+                              orderInfoState.initDetailValues(info);
+                              orderFilesState.initDetailValues(files);
+                            } else {
+                              navigate('/order');
+                            }
                           }}
                         >
                           {({ loading, data, error }) => {

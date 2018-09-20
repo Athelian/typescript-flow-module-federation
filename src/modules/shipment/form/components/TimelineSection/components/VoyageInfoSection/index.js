@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { getPortName } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
+// import { getPortName } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import GridColumn from 'components/GridColumn';
 import { FormContainer, FormField } from 'modules/form';
-import { enumSearchSelectInputFactory } from 'modules/form/helpers';
+import { selectSearchEnumInputFactory } from 'modules/form/helpers';
 import { SectionHeader, Label, FieldItem, TextInput, DefaultStyle, Tooltip } from 'components/Form';
 import { VoyageInfoSectionWrapperStyle, SelectTransportTypeMessageStyle } from './style';
 
@@ -67,29 +67,19 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   }}
                   {...formHelper}
                 >
-                  {({ name, ...inputHandlers }) => (
-                    <FieldItem
-                      label={<Label>DEPARTURE PORT</Label>}
-                      tooltip={
-                        <Tooltip
-                          isNew={isNew}
-                          changedValues={{
-                            oldValue: getPortName(enumType, initialVoyage.departurePort[deepField]),
-                            newValue: getPortName(enumType, inputHandlers.value),
-                          }}
-                        />
-                      }
-                      input={enumSearchSelectInputFactory({
-                        enumType,
-                        inputHandlers,
-                        name,
-                        touched,
-                        errors,
-                        isNew,
-                        activeField,
-                      })}
-                    />
-                  )}
+                  {({ name, ...inputHandlers }) =>
+                    selectSearchEnumInputFactory({
+                      enumType,
+                      initValue: initialVoyage.departurePort[deepField],
+                      inputHandlers,
+                      name,
+                      touched,
+                      errors,
+                      isNew,
+                      activeField,
+                      label: <Label>DEPARTURE PORT</Label>,
+                    })
+                  }
                 </FormField>
               ) : (
                 <FieldItem
@@ -123,29 +113,19 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   }}
                   {...formHelper}
                 >
-                  {({ name, ...inputHandlers }) => (
-                    <FieldItem
-                      label={<Label>ARRIVAL PORT</Label>}
-                      tooltip={
-                        <Tooltip
-                          isNew={isNew}
-                          changedValues={{
-                            oldValue: getPortName(enumType, initialVoyage.arrivalPort[deepField]),
-                            newValue: getPortName(enumType, inputHandlers.value),
-                          }}
-                        />
-                      }
-                      input={enumSearchSelectInputFactory({
-                        enumType,
-                        inputHandlers,
-                        name,
-                        touched,
-                        errors,
-                        isNew,
-                        activeField,
-                      })}
-                    />
-                  )}
+                  {({ name, ...inputHandlers }) =>
+                    selectSearchEnumInputFactory({
+                      enumType,
+                      initValue: initialVoyage.arrivalPort[deepField],
+                      inputHandlers,
+                      name,
+                      touched,
+                      errors,
+                      isNew,
+                      activeField,
+                      label: <Label>ARRIVAL PORT</Label>,
+                    })
+                  }
                 </FormField>
               ) : (
                 <FieldItem

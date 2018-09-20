@@ -1,20 +1,26 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import { isNullOrUndefined } from 'utils/fp';
+import withCache from 'hoc/withCache';
+import FormContainer from './container';
 
 type OptionalProps = {
   validationOnChange: boolean,
   validationOnBlur: boolean,
+  isTouched: boolean,
+  errorMessage: string,
+  activeField: string,
   onValidate: (value: any) => void,
-  setFieldValue: (field: string, value: any) => void,
+  setActiveField: (field: string) => void,
+  setFieldTouched: (field: string, isTouched: boolean) => void,
 };
 
 type Props = OptionalProps & {
   initValue: any,
   name: string,
-  setFieldTouched: (field: string, isTouched: boolean) => void,
-  setActiveField: (field: string) => void,
   children: React.Node,
+  setFieldValue: (field: string, value: any) => void,
 };
 
 type State = {
@@ -22,13 +28,16 @@ type State = {
 };
 
 const defaultProps = {
+  activeField: '',
   validationOnChange: false,
   validationOnBlur: true,
+  isTouched: false,
+  errorMessage: '',
   onValidate: () => {},
-  setFieldValue: () => {},
+  setActiveField: () => {},
+  setFieldTouched: () => {},
 };
-
-export default class FormField extends React.Component<Props, State> {
+class BaseFormField extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
   constructor(props: Props) {
@@ -94,14 +103,65 @@ export default class FormField extends React.Component<Props, State> {
   };
 
   render() {
-    const { children, name } = this.props;
+    const { children, name, activeField, isTouched, errorMessage } = this.props;
     const { value } = this.state;
     return children({
       name,
       value,
+      isTouched,
+      errorMessage,
+      isFocused: name === activeField,
       onChange: this.onChange,
       onFocus: this.onFocus,
       onBlur: this.onBlur,
     });
   }
 }
+
+const CachedField = withCache(BaseFormField, [
+  'activeField',
+  'isTouched',
+  'errorMessage',
+  'initValue',
+]);
+
+const FormField = (props: {
+  initValue: any,
+  name: string,
+  children: React.Node,
+  setFieldValue: (field: string, value: any) => void,
+  values?: any,
+  validationRules?: Function,
+}) => {
+  const { values, validationRules, setFieldValue, ...rest } = props;
+  return (
+    <Subscribe to={[FormContainer]}>
+      {({
+        state: { activeField, touched, errors },
+        setFieldTouched,
+        setActiveField,
+        onValidation,
+      }) => (
+        <CachedField
+          activeField={activeField}
+          isTouched={touched[props.name]}
+          errorMessage={errors[props.name]}
+          setFieldTouched={setFieldTouched}
+          setActiveField={setActiveField}
+          setFieldValue={setFieldValue}
+          onValidate={newValue =>
+            onValidation({ ...values, ...newValue }, validationRules && validationRules())
+          }
+          {...rest}
+        />
+      )}
+    </Subscribe>
+  );
+};
+
+FormField.defaultProps = {
+  validationRules: () => {},
+  values: {},
+};
+
+export default FormField;

@@ -9,3 +9,8 @@ export const NumberBarStyle = css`
   top: 30px;
   z-index: 1;
 `;
+
+export const GridViewWrapperStyle = css`
+  height: calc(100vh - 10px);
+  overflow: auto;
+`;

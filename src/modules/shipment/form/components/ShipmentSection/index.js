@@ -5,7 +5,7 @@ import { uniqBy } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { FormContainer, FormField } from 'modules/form';
-import { enumSearchSelectInputFactory } from 'modules/form/helpers';
+import { selectSearchEnumInputFactory } from 'modules/form/helpers';
 import {
   ShipmentInfoContainer,
   ShipmentTransportTypeContainer,
@@ -408,24 +408,24 @@ const ShipmentSection = ({ isNew }: Props) => (
                       return (
                         <FormField
                           name="transportType"
-                          initValue={transportTypeValues.transportType}
+                          initValue={values.transportType}
                           setFieldValue={transportTypeSetFieldValue}
+                          validationOnChange
+                          onValidate={newValue =>
+                            formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                          }
                           {...formHelper}
                         >
-                          {({ name, ...inputHandlers }) => (
-                            <FieldItem
-                              label={<Label>TRANSPORTATION</Label>}
-                              input={enumSearchSelectInputFactory({
-                                enumType: 'TransportType',
-                                inputHandlers,
-                                name,
-                                touched,
-                                errors,
-                                isNew,
-                                activeField,
-                              })}
-                            />
-                          )}
+                          {({ name, ...inputHandlers }) =>
+                            selectSearchEnumInputFactory({
+                              enumType: 'TransportType',
+                              inputHandlers,
+                              name,
+                              isNew,
+                              label: <Label>TRANSPORTATION</Label>,
+                              initValue: transportTypeValues[name],
+                            })
+                          }
                         </FormField>
                       );
                     }}
@@ -441,20 +441,16 @@ const ShipmentSection = ({ isNew }: Props) => (
                     }
                     {...formHelper}
                   >
-                    {({ name, ...inputHandlers }) => (
-                      <FieldItem
-                        label={<Label>LOAD TYPE</Label>}
-                        input={enumSearchSelectInputFactory({
-                          enumType: 'LoadType',
-                          inputHandlers,
-                          name,
-                          touched,
-                          errors,
-                          isNew,
-                          activeField,
-                        })}
-                      />
-                    )}
+                    {({ name, ...inputHandlers }) =>
+                      selectSearchEnumInputFactory({
+                        enumType: 'LoadType',
+                        inputHandlers,
+                        name,
+                        isNew,
+                        label: <Label>Load Type</Label>,
+                        initValue: initialValues[name],
+                      })
+                    }
                   </FormField>
                   <FormField
                     name="carrier"

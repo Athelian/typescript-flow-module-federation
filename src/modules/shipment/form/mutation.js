@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
-import { removeNulls } from 'utils/data';
+import { removeNulls, removeTypename } from 'utils/data';
 import type { ShipmentCreate, ShipmentUpdate } from '../type.js.flow';
 
 export const createShipmentMutation = gql`
@@ -36,24 +36,28 @@ export const prepareCreateShipmentInput = ({
   tags = [],
   batches = [],
   forwarders = [],
-}: Object): ShipmentCreate => ({
-  no,
-  blNo,
-  blDate,
-  bookingNo,
-  bookingDate,
-  invoiceNo,
-  loadType,
-  transportType,
-  incoterm,
-  carrier,
-  cargoReady,
-  tagIds: tags.map(({ id }) => id),
-  forwarderIds: forwarders.map(({ id }) => id),
-  voyages,
-  batches: batches.map(prepareUpdateBatchInput),
-  containerGroups,
-});
+}: Object): ShipmentCreate =>
+  // $FlowFixMe ignore
+  removeTypename(
+    removeNulls({
+      no,
+      blNo,
+      blDate,
+      bookingNo,
+      bookingDate,
+      invoiceNo,
+      loadType,
+      transportType,
+      incoterm,
+      carrier,
+      cargoReady,
+      tagIds: tags.map(({ id }) => id),
+      forwarderIds: forwarders.map(({ id }) => id),
+      voyages,
+      batches: batches.map(batch => prepareUpdateBatchInput(batch, true)),
+      containerGroups,
+    })
+  );
 
 export const updateShipmentMutation = gql`
   mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
