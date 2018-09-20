@@ -238,7 +238,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                               orderInfoState.initDetailValues(info);
                               orderFilesState.initDetailValues(files);
                             } else {
-                              navigate('/order');
+                              navigate('/404');
                             }
                           }}
                         >
