@@ -1,9 +1,21 @@
 // @flow
 const SALT = 'zenport';
 
-export const encodeId = (id: string) => encodeURIComponent(btoa(`${SALT}${id}`).replace(/=/g, ''));
+export const encodeId = (id: string) => {
+  try {
+    return encodeURIComponent(btoa(`${SALT}${id}`).replace(/=/g, ''));
+  } catch (error) {
+    return '';
+  }
+};
 
-export const decodeId = (id: string) => atob(decodeURIComponent(id)).replace(SALT, '');
+export const decodeId = (id: string) => {
+  try {
+    return atob(decodeURIComponent(id)).replace(SALT, '');
+  } catch (error) {
+    return '';
+  }
+};
 
 function s4() {
   return Math.floor((1 + Math.random()) * 0x10000)
