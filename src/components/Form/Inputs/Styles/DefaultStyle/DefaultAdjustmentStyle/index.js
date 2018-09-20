@@ -1,20 +1,12 @@
 // @flow
 import * as React from 'react';
-import EnumProvider from 'providers/enum';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import GridRow from 'components/GridRow';
 import { FormField } from 'modules/form';
-import {
-  Label,
-  Display,
-  DefaultStyle,
-  SelectInput,
-  TextAreaInput,
-  DefaultSelect,
-  DefaultOptions,
-} from 'components/Form';
+import { textAreaFactory, selectEnumInputFactory } from 'modules/form/helpers';
+import { Label, Display } from 'components/Form';
 import {
   AdjustmentWrapperStyle,
   AdjustmentFieldsWrapperStyle,
@@ -34,8 +26,6 @@ type Props = OptionalProps & {
   index: number,
   setFieldArrayValue: Function,
   removeArrayItem: Function,
-  formHelper: any,
-  activeField: any,
   enumType: string,
   targetName: string,
   typeName: string,
@@ -71,8 +61,6 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
       isNew,
       setFieldArrayValue,
       removeArrayItem,
-      formHelper,
-      activeField,
       enumType,
       targetName,
       typeName,
@@ -98,52 +86,16 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             name={`${targetName}.${index}.${typeName}`}
             initValue={adjustment[typeName]}
             setFieldValue={setFieldArrayValue}
-            {...formHelper}
           >
-            {({ name, ...inputHandlers }) => (
-              <EnumProvider enumType={enumType}>
-                {({ loading, error, data }) => {
-                  if (loading) return null;
-                  if (error) return `Error!: ${error}`;
-                  return (
-                    <SelectInput
-                      {...inputHandlers}
-                      onChange={newValue =>
-                        inputHandlers.onChange({
-                          target: {
-                            value: newValue && newValue.name,
-                          },
-                        })
-                      }
-                      name={name}
-                      items={data}
-                      itemToString={item => (item ? item.description || item.name : '')}
-                      itemToValue={item => (item ? item.name : '')}
-                      renderSelect={({ ...rest }) => (
-                        <DefaultSelect
-                          {...rest}
-                          align="left"
-                          required
-                          forceHoverStyle={isNew}
-                          width="200px"
-                          itemToString={item => (item ? item.description || item.name : '')}
-                        />
-                      )}
-                      renderOptions={({ ...rest }) => (
-                        <DefaultOptions
-                          {...rest}
-                          align="left"
-                          items={data}
-                          itemToString={item => (item ? item.description || item.name : '')}
-                          itemToValue={item => (item ? item.name : '')}
-                          width="200px"
-                        />
-                      )}
-                    />
-                  );
-                }}
-              </EnumProvider>
-            )}
+            {({ name, ...inputHandlers }) =>
+              selectEnumInputFactory({
+                enumType,
+                name,
+                inputHandlers,
+                isNew,
+                initValue: adjustment[typeName],
+              })
+            }
           </FormField>
 
           {valueInput}
@@ -152,7 +104,6 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             className={RemoveButtonStyle}
             onClick={() => {
               removeArrayItem(`${targetName}[${index}]`);
-              formHelper.setFieldTouched(`${targetName}[${index}]`);
             }}
             type="button"
           >
@@ -175,19 +126,17 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             name={`${targetName}.${index}.${memoName}`}
             initValue={adjustment[memoName]}
             setFieldValue={setFieldArrayValue}
-            {...formHelper}
           >
-            {({ name, ...inputHandlers }) => (
-              <DefaultStyle
-                type="textarea"
-                isFocused={activeField === name}
-                forceHoverStyle={isNew || !inputHandlers.value}
-                width="360px"
-                height="150px"
-              >
-                <TextAreaInput name={name} align="left" {...inputHandlers} />
-              </DefaultStyle>
-            )}
+            {({ name, ...inputHandlers }) =>
+              textAreaFactory({
+                inputHandlers,
+                name,
+                isNew,
+                initValue: adjustment[memoName],
+                width: '360px',
+                height: '150px',
+              })
+            }
           </FormField>
         </div>
       </div>

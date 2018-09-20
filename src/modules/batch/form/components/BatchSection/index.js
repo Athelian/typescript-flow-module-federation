@@ -41,6 +41,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                   initValue={values.no}
                   setFieldValue={setFieldValue}
                   validator={validator}
+                  values={values}
                 >
                   {({ name, ...inputHandlers }) =>
                     textInputFactory({
@@ -58,6 +59,8 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                   name="quantity"
                   initValue={values.quantity}
                   setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
                 >
                   {({ name, ...inputHandlers }) =>
                     numberInputFactory({
@@ -75,6 +78,8 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                   name="deliveredAt"
                   initValue={values.deliveredAt}
                   setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
                 >
                   {({ name, ...inputHandlers }) =>
                     dateInputFactory({
@@ -91,6 +96,8 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                   name="expiredAt"
                   initValue={values.expiredAt}
                   setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
                 >
                   {({ name, ...inputHandlers }) =>
                     dateInputFactory({
@@ -107,6 +114,8 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                   name="producedAt"
                   initValue={values.producedAt}
                   setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
                 >
                   {({ name, ...inputHandlers }) =>
                     dateInputFactory({
