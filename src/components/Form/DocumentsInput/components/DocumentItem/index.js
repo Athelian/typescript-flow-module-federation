@@ -84,9 +84,11 @@ class DocumentItem extends React.Component<Props, State> {
               itemToValue={v => (v ? v.type : null)}
               itemToString={v => (v ? v.label : '')}
               renderSelect={({ ...rest }) => (
-                <DefaultSelect {...rest} required align="left" width="200px" />
+                <DefaultSelect {...rest} required align="left" width="120px" />
               )}
-              renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" />}
+              renderOptions={({ ...rest }) => (
+                <DefaultOptions {...rest} align="left" width="120px" />
+              )}
             />
           )}
           <div className={FileExtensionIconStyle(fileIcon.color)}>
@@ -117,7 +119,7 @@ class DocumentItem extends React.Component<Props, State> {
                 initValue: value.memo,
                 inputHandlers,
                 align: 'left',
-                width: '360px',
+                width: '600px',
                 height: '150px',
               })
             }

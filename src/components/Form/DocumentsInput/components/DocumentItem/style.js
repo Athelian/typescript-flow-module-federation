@@ -6,7 +6,6 @@ export const DocumentWrapperStyle = (isExpanded: boolean) => css`
   position: relative;
   display: flex;
   ${isExpanded && 'grid-column: 1 / -1'};
-  background-color: rgba(0, 0, 0, 0.05);
   ${borderRadiuses.MAIN};
 `;
 
