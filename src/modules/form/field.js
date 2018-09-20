@@ -49,13 +49,6 @@ class BaseFormField extends React.Component<Props, State> {
     };
   }
 
-  // componentWillReceiveProps(nextProps: Props) {
-  //   if(nextProps.initValue)
-  //   this.setState({
-  //     value: nextProps.initValue
-  //   })
-  // }
-
   onFocus = (event: SyntheticFocusEvent<*>) => {
     if (event.persist) {
       event.persist();
@@ -129,7 +122,7 @@ const FormField = (props: {
   initValue: any,
   name: string,
   children: React.Node,
-  setFieldValue: (field: string, value: any) => void,
+  setFieldValue?: (field: string, value: any) => void,
   values?: any,
   validationRules?: Function,
 }) => {
@@ -143,6 +136,7 @@ const FormField = (props: {
         onValidation,
       }) => (
         <CachedField
+          key={props.initValue}
           activeField={activeField}
           isTouched={touched[props.name]}
           errorMessage={errors[props.name]}
@@ -161,6 +155,7 @@ const FormField = (props: {
 
 FormField.defaultProps = {
   validationRules: () => {},
+  setFieldValue: () => {},
   values: {},
 };
 

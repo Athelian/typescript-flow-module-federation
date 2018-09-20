@@ -11,13 +11,7 @@ import {
 import { FormContainer, FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
-import {
-  FieldItem,
-  Label,
-  // DateInput,
-  DashedPlusButton,
-  TagsInput,
-} from 'components/Form';
+import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
 import {
   textInputFactory,
   dateInputFactory,

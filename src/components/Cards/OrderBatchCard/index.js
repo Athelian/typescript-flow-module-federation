@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-import { Subscribe } from 'unstated';
-import { FormContainer, FormField } from 'modules/form';
+import { FormField } from 'modules/form';
 import type { BatchQuery as BatchItem } from 'modules/batch/type.js.flow';
 import { ObjectValue } from 'react-values';
+import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
-import { DefaultStyle, Label, Display, TextInput, DateInput, NumberInput } from 'components/Form';
+import { Label, Display } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderBatchCardWrapperStyle,
@@ -100,28 +100,24 @@ const OrderBatchCard = ({
               onClick={evt => evt.stopPropagation()}
               role="presentation"
             >
-              <Subscribe to={[FormContainer]}>
-                {({ state: { activeField }, ...formHelper }) => (
-                  <FormField name={`batch.${batch.id}.no`} initValue={no} {...formHelper}>
-                    {inputHandlers => (
-                      <DefaultStyle
-                        height="20px"
-                        width="165px"
-                        isFocused={activeField === inputHandlers.name}
-                      >
-                        <TextInput
-                          {...inputHandlers}
-                          onBlur={evt => {
-                            inputHandlers.onBlur(evt);
-                            saveOnBlur({ ...batch, no: inputHandlers.value });
-                          }}
-                          align="left"
-                        />
-                      </DefaultStyle>
-                    )}
-                  </FormField>
-                )}
-              </Subscribe>
+              <FormField name={`batch.${batch.id}.no`} initValue={no}>
+                {({ name: fieldName, ...inputHandlers }) =>
+                  textInputFactory({
+                    width: '165px',
+                    height: '20px',
+                    inputHandlers: {
+                      ...inputHandlers,
+                      onBlur: evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({ ...batch, no: inputHandlers.value });
+                      },
+                    },
+                    name: fieldName,
+                    isNew: false,
+                    initValue: no,
+                  })
+                }
+              </FormField>
             </div>
 
             <div
@@ -130,35 +126,27 @@ const OrderBatchCard = ({
               role="presentation"
             >
               <Label required>QTY</Label>
-              <Subscribe to={[FormContainer]}>
-                {({ state: { activeField }, ...formHelper }) => (
-                  <FormField
-                    name={`batch.${batch.id}.quantity`}
-                    initValue={quantity + totalAdjustment}
-                    {...formHelper}
-                  >
-                    {inputHandlers => (
-                      <DefaultStyle
-                        type="number"
-                        height="20px"
-                        width="90px"
-                        isFocused={activeField === inputHandlers.name}
-                      >
-                        <NumberInput
-                          {...inputHandlers}
-                          onBlur={evt => {
-                            inputHandlers.onBlur(evt);
-                            saveOnBlur({
-                              ...batch,
-                              quantity: inputHandlers.value - totalAdjustment,
-                            });
-                          }}
-                        />
-                      </DefaultStyle>
-                    )}
-                  </FormField>
-                )}
-              </Subscribe>
+              <FormField name={`batch.${batch.id}.quantity`} initValue={quantity + totalAdjustment}>
+                {({ name: fieldName, ...inputHandlers }) =>
+                  numberInputFactory({
+                    width: '90px',
+                    height: '20px',
+                    inputHandlers: {
+                      ...inputHandlers,
+                      onBlur: evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({
+                          ...batch,
+                          quantity: inputHandlers.value - totalAdjustment,
+                        });
+                      },
+                    },
+                    name: fieldName,
+                    isNew: false,
+                    initValue: quantity + totalAdjustment,
+                  })
+                }
+              </FormField>
             </div>
 
             <div
@@ -167,32 +155,24 @@ const OrderBatchCard = ({
               role="presentation"
             >
               <Label>DELIVERY</Label>
-              <Subscribe to={[FormContainer]}>
-                {({ state: { activeField }, ...formHelper }) => (
-                  <FormField
-                    name={`batch.${batch.id}.deliveredAt`}
-                    initValue={deliveredAt}
-                    {...formHelper}
-                  >
-                    {inputHandlers => (
-                      <DefaultStyle
-                        type="date"
-                        height="20px"
-                        width="90px"
-                        isFocused={activeField === inputHandlers.name}
-                      >
-                        <DateInput
-                          {...inputHandlers}
-                          onBlur={evt => {
-                            inputHandlers.onBlur(evt);
-                            saveOnBlur({ ...batch, deliveredAt: inputHandlers.value });
-                          }}
-                        />
-                      </DefaultStyle>
-                    )}
-                  </FormField>
-                )}
-              </Subscribe>
+              <FormField name={`batch.${batch.id}.deliveredAt`} initValue={deliveredAt}>
+                {({ name, ...inputHandlers }) =>
+                  dateInputFactory({
+                    width: '90px',
+                    height: '20px',
+                    name,
+                    isNew: false,
+                    initValue: deliveredAt,
+                    inputHandlers: {
+                      ...inputHandlers,
+                      onBlur: evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({ ...batch, deliveredAt: inputHandlers.value });
+                      },
+                    },
+                  })
+                }
+              </FormField>
             </div>
 
             <div className={DividerStyle} />
