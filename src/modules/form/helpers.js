@@ -11,9 +11,11 @@ import {
   DefaultStyle,
   TextInput,
   DateInput,
+  NumberInput,
   SearchSelectInput,
   DefaultSearchSelect,
   DefaultOptions,
+  DefaultPriceStyle,
 } from 'components/Form';
 import logger from 'utils/logger';
 
@@ -27,6 +29,7 @@ const filterItems = (query: string, items: Array<any>) => {
 export function textInputFactory({
   required = false,
   width = '200px',
+  height = '30px',
   isNew,
   label,
   name,
@@ -35,15 +38,16 @@ export function textInputFactory({
 }: {
   required?: boolean,
   width?: string,
+  height?: string,
   isNew: boolean,
-  label: React.Node,
+  label?: React.Node,
   name: string,
   inputHandlers: Object,
   initValue: any,
 }) {
   return (
     <FieldItem
-      label={<Label required={required}>{label}</Label>}
+      label={label && <Label required={required}>{label}</Label>}
       tooltip={
         <Tooltip
           isNew={isNew}
@@ -60,6 +64,7 @@ export function textInputFactory({
           hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
           forceHoverStyle={isNew}
           width={width}
+          height={height}
         >
           <TextInput name={name} {...inputHandlers} />
         </DefaultStyle>
@@ -71,6 +76,7 @@ export function textInputFactory({
 export function dateInputFactory({
   required = false,
   width = '200px',
+  height = '30px',
   isNew,
   label,
   name,
@@ -79,15 +85,16 @@ export function dateInputFactory({
 }: {
   required?: boolean,
   width?: string,
+  height?: string,
   isNew: boolean,
-  label: React.Node,
+  label?: React.Node,
   name: string,
   inputHandlers: Object,
   initValue: any,
 }) {
   return (
     <FieldItem
-      label={<Label required={required}>{label}</Label>}
+      label={label && <Label required={required}>{label}</Label>}
       tooltip={
         <Tooltip
           isNew={isNew}
@@ -109,6 +116,7 @@ export function dateInputFactory({
           hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
           forceHoverStyle={isNew}
           width={width}
+          height={height}
         >
           <DateInput name={name} {...inputHandlers} />
         </DefaultStyle>
@@ -117,7 +125,102 @@ export function dateInputFactory({
   );
 }
 
-export function numberInputFactory() {}
+export function numberInputFactory({
+  required = false,
+  width = '200px',
+  height = '30px',
+  isNew,
+  label,
+  name,
+  inputHandlers,
+  initValue,
+}: {
+  required?: boolean,
+  width?: string,
+  height?: string,
+  isNew: boolean,
+  label?: React.Node,
+  name: string,
+  inputHandlers: Object,
+  initValue: any,
+}) {
+  return (
+    <FieldItem
+      label={label && <Label required={required}>{label}</Label>}
+      tooltip={
+        <Tooltip
+          isNew={isNew}
+          errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
+          changedValues={{
+            oldValue: initValue,
+            newValue: inputHandlers.value,
+          }}
+        />
+      }
+      input={
+        <DefaultStyle
+          isFocused={inputHandlers.isFocused}
+          hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
+          forceHoverStyle={isNew}
+          width={width}
+          height={height}
+        >
+          <NumberInput name={name} {...inputHandlers} />
+        </DefaultStyle>
+      }
+    />
+  );
+}
+
+export function priceInputFactory({
+  required = false,
+  width = '200px',
+  height = '30px',
+  currency,
+  isNew,
+  label,
+  name,
+  inputHandlers,
+  initValue,
+}: {
+  required?: boolean,
+  width?: string,
+  height?: string,
+  currency: string,
+  isNew: boolean,
+  label?: React.Node,
+  name: string,
+  inputHandlers: Object,
+  initValue: any,
+}) {
+  return (
+    <FieldItem
+      label={label && <Label required={required}>{label}</Label>}
+      tooltip={
+        <Tooltip
+          isNew={isNew}
+          errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
+          changedValues={{
+            oldValue: initValue,
+            newValue: inputHandlers.value,
+          }}
+        />
+      }
+      input={
+        <DefaultPriceStyle
+          currency={currency}
+          isFocused={inputHandlers.isFocused}
+          hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
+          forceHoverStyle={isNew}
+          width={width}
+          height={height}
+        >
+          <NumberInput name={name} {...inputHandlers} />
+        </DefaultPriceStyle>
+      }
+    />
+  );
+}
 
 export function selectSearchEnumInputFactory({
   required = false,
@@ -133,14 +236,14 @@ export function selectSearchEnumInputFactory({
   required?: boolean,
   width?: string,
   isNew: boolean,
-  label: React.Node,
+  label?: React.Node,
   name: string,
   inputHandlers: Object,
   initValue: any,
 }) {
   return (
     <FieldItem
-      label={<Label required={required}>{label}</Label>}
+      label={label && <Label required={required}>{label}</Label>}
       tooltip={
         <Tooltip
           isNew={isNew}

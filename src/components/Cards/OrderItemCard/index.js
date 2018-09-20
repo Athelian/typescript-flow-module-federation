@@ -1,16 +1,16 @@
 // @flow
 import React from 'react';
-import { Subscribe } from 'unstated';
 import { ObjectValue, BooleanValue } from 'react-values';
 import { type OrderItem } from 'modules/order/type.js.flow';
-import { FormContainer, FormField } from 'modules/form';
+import { FormField } from 'modules/form';
+import { numberInputFactory, priceInputFactory } from 'modules/form/helpers';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
-import { DefaultStyle, Label, Display, NumberInput, DefaultPriceStyle } from 'components/Form';
+import { Label, Display } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderItemCardWrapperStyle,
@@ -122,7 +122,7 @@ const OrderItemCard = ({
         price: item.price,
       }}
     >
-      {({ value: { quantity, price }, set, assign }) => (
+      {({ value: { quantity, price }, assign, set }) => (
         <BaseCard
           icon="ORDER_ITEM"
           color="ORDER_ITEM"
@@ -165,30 +165,28 @@ const OrderItemCard = ({
                 {selectable ? (
                   <FormattedNumber value={quantity} />
                 ) : (
-                  <Subscribe to={[FormContainer]}>
-                    {({ state: { activeField }, ...formHelper }) => (
-                      <FormField name={`${item.id}.quantity`} initValue={quantity} {...formHelper}>
-                        {inputHandlers => (
-                          <DefaultStyle
-                            type="number"
-                            height="20px"
-                            width="90px"
-                            isFocused={activeField === inputHandlers.name}
-                          >
-                            <NumberInput
-                              {...inputHandlers}
-                              value={quantity}
-                              onChange={evt => set('quantity', evt.target.value)}
-                              onBlur={evt => {
-                                inputHandlers.onBlur(evt);
-                                saveOnBlur({ quantity, price });
-                              }}
-                            />
-                          </DefaultStyle>
-                        )}
-                      </FormField>
-                    )}
-                  </Subscribe>
+                  <FormField
+                    name={`${item.id}.quantity`}
+                    initValue={quantity}
+                    setFieldValue={(fieldName, newValue) => set('quantity', newValue)}
+                  >
+                    {({ name: fieldName, ...inputHandlers }) =>
+                      numberInputFactory({
+                        width: '90px',
+                        height: '20px',
+                        inputHandlers: {
+                          ...inputHandlers,
+                          onBlur: evt => {
+                            inputHandlers.onBlur(evt);
+                            saveOnBlur({ quantity: inputHandlers.value, price });
+                          },
+                        },
+                        name: fieldName,
+                        isNew: false,
+                        initValue: quantity,
+                      })
+                    }
+                  </FormField>
                 )}
               </div>
               <div
@@ -238,35 +236,38 @@ const OrderItemCard = ({
                 {selectable ? (
                   <>
                     <FormattedNumber value={price.amount} />
-                    {price.currency}
+                    {currency || price.currency}
                   </>
                 ) : (
-                  <Subscribe to={[FormContainer]}>
-                    {({ state: { activeField }, ...formHelper }) => (
-                      <FormField name={`${item.id}.price`} initValue={price.amount} {...formHelper}>
-                        {inputHandlers => (
-                          <DefaultPriceStyle
-                            currency={currency || price.currency}
-                            height="20px"
-                            width="90px"
-                            isFocused={activeField === inputHandlers.name}
-                          >
-                            <NumberInput
-                              {...inputHandlers}
-                              value={price.amount}
-                              onChange={evt =>
-                                assign({ price: { amount: evt.target.value, currency } })
-                              }
-                              onBlur={evt => {
-                                inputHandlers.onBlur(evt);
-                                saveOnBlur({ quantity, price });
-                              }}
-                            />
-                          </DefaultPriceStyle>
-                        )}
-                      </FormField>
-                    )}
-                  </Subscribe>
+                  <FormField
+                    name={`${item.id}.price`}
+                    initValue={price.amount}
+                    setFieldValue={(fieldName, amount) => assign({ price: { amount, currency } })}
+                  >
+                    {({ name: fieldName, ...inputHandlers }) =>
+                      priceInputFactory({
+                        currency,
+                        width: '90px',
+                        height: '20px',
+                        inputHandlers: {
+                          ...inputHandlers,
+                          onBlur: evt => {
+                            inputHandlers.onBlur(evt);
+                            saveOnBlur({
+                              quantity,
+                              price: {
+                                amount: inputHandlers.value,
+                                currency,
+                              },
+                            });
+                          },
+                        },
+                        name: fieldName,
+                        isNew: false,
+                        initValue: price.amount,
+                      })
+                    }
+                  </FormField>
                 )}
               </div>
               <div className={DividerStyle} />
