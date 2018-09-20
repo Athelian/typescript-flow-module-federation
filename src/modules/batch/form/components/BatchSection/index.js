@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
 import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
+import validator from 'modules/batch/form/validator';
 import { FormContainer, FormField } from 'modules/form';
 import { OrderItemCard } from 'components/Cards';
 import GridColumn from 'components/GridColumn';
@@ -38,7 +39,7 @@ type Props = {
 const BatchSection = ({ isNew, selectable }: Props) => (
   <div className={BatchSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues, state, setFieldValue, validationRules }) => {
+      {({ originalValues, state, setFieldValue }) => {
         const values = { ...originalValues, ...state };
 
         return (
@@ -52,7 +53,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       initValue={values.no}
                       validationOnChange
                       onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                        formHelper.onValidation({ ...values, ...newValue }, validator)
                       }
                       setFieldValue={setFieldValue}
                       {...formHelper}
@@ -93,7 +94,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       initValue={values.quantity}
                       validationOnChange
                       onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                        formHelper.onValidation({ ...values, ...newValue }, validator)
                       }
                       setFieldValue={setFieldValue}
                       {...formHelper}
@@ -131,7 +132,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       initValue={values.deliveredAt}
                       setFieldValue={setFieldValue}
                       onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                        formHelper.onValidation({ ...values, ...newValue }, validator)
                       }
                       {...formHelper}
                     >
@@ -170,7 +171,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       initValue={values.expiredAt}
                       setFieldValue={setFieldValue}
                       onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                        formHelper.onValidation({ ...values, ...newValue }, validator)
                       }
                       {...formHelper}
                     >
@@ -209,7 +210,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       initValue={values.producedAt}
                       setFieldValue={setFieldValue}
                       onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                        formHelper.onValidation({ ...values, ...newValue }, validator)
                       }
                       {...formHelper}
                     >
@@ -282,7 +283,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                                       ...values,
                                       orderItem: newValue,
                                     },
-                                    validationRules()
+                                    validator
                                   );
                                 }}
                               />
@@ -319,7 +320,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                             {
                               ...values,
                             },
-                            validationRules()
+                            validator
                           );
                         }}
                       />

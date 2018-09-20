@@ -18,6 +18,7 @@ import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import OrderForm from './form';
+import validator from './form/validator';
 import {
   OrderItemsContainer,
   OrderInfoContainer,
@@ -164,7 +165,17 @@ class OrderFormModule extends React.PureComponent<Props> {
                                 Cancel
                               </CancelButton>
                               <SaveButton
-                                disabled={!form.isReady()}
+                                disabled={
+                                  !form.isReady(
+                                    {
+                                      ...orderItemState.state,
+                                      ...orderInfoState.state,
+                                      ...orderTagsState.state,
+                                      ...orderFilesState.state,
+                                    },
+                                    validator
+                                  )
+                                }
                                 onClick={() =>
                                   this.onSave(
                                     {

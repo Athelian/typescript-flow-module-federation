@@ -57,15 +57,13 @@ export default class FormContainer extends Container<FormState> {
     });
   };
 
-  isReady = () => {
-    const { errors, touched } = this.state;
-    return Object.keys(errors).length === 0 && Object.keys(touched).length > 0;
-  };
+  isReady = (formData: Object, schema: any = EmptyValidation) => schema.isValidSync(formData);
 
-  onValidation = (formData: Object, ValidationSchema: any = EmptyValidation) => {
-    logger.warn('validation', formData);
+  onValidation = (formData: Object, schema: any = EmptyValidation) => {
+    logger.warn('validation', formData, schema);
     const { errors } = this.state;
-    ValidationSchema.validate(formData, { abortEarly: false })
+    schema
+      .validate(formData, { abortEarly: false })
       .then(() => {
         if (Object.keys(errors).length) this.setState({ errors: {} });
       })

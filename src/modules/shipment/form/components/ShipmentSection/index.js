@@ -12,6 +12,7 @@ import {
   ShipmentBatchesContainer,
   ShipmentTagsContainer,
 } from 'modules/shipment/form/containers';
+import validator from 'modules/shipment/form/validator';
 import { ShipmentExporterCard, ShipmentForwarderCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
@@ -144,7 +145,7 @@ const renderForwarders = (forwarders: Array<Object>) => {
 
 const ShipmentSection = ({ isNew }: Props) => (
   <Subscribe to={[ShipmentInfoContainer]}>
-    {({ originalValues: initialValues, state, setFieldValue, validationRules }) => {
+    {({ originalValues: initialValues, state, setFieldValue }) => {
       const values = { ...initialValues, ...state };
       const { forwarders = [] } = values;
 
@@ -159,7 +160,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     initValue={values.no}
                     validationOnChange
                     onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      formHelper.onValidation({ ...values, ...newValue }, validator)
                     }
                     setFieldValue={setFieldValue}
                     {...formHelper}
@@ -199,7 +200,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     initValue={values.blNo}
                     validationOnChange
                     onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      formHelper.onValidation({ ...values, ...newValue }, validator)
                     }
                     setFieldValue={setFieldValue}
                     {...formHelper}
@@ -239,7 +240,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     initValue={values.blDate}
                     validationOnChange
                     onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      formHelper.onValidation({ ...values, ...newValue }, validator)
                     }
                     setFieldValue={setFieldValue}
                     {...formHelper}
@@ -279,7 +280,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     initValue={values.bookingNo}
                     validationOnChange
                     onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      formHelper.onValidation({ ...values, ...newValue }, validator)
                     }
                     setFieldValue={setFieldValue}
                     {...formHelper}
@@ -319,7 +320,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     initValue={values.bookingDate}
                     validationOnChange
                     onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      formHelper.onValidation({ ...values, ...newValue }, validator)
                     }
                     setFieldValue={setFieldValue}
                     {...formHelper}
@@ -359,7 +360,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     initValue={values.invoiceNo}
                     validationOnChange
                     onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      formHelper.onValidation({ ...values, ...newValue }, validator)
                     }
                     setFieldValue={setFieldValue}
                     {...formHelper}
@@ -412,7 +413,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                           setFieldValue={transportTypeSetFieldValue}
                           validationOnChange
                           onValidate={newValue =>
-                            formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                            formHelper.onValidation({ ...values, ...newValue }, validator)
                           }
                           {...formHelper}
                         >
@@ -437,7 +438,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     setFieldValue={setFieldValue}
                     validationOnChange
                     onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      formHelper.onValidation({ ...values, ...newValue }, validator)
                     }
                     {...formHelper}
                   >
@@ -457,7 +458,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     initValue={values.carrier}
                     validationOnChange
                     onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validationRules())
+                      formHelper.onValidation({ ...values, ...newValue }, validator)
                     }
                     setFieldValue={setFieldValue}
                     {...formHelper}
@@ -531,7 +532,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                                     ...values,
                                     forwarders: selectedForwarders,
                                   },
-                                  validationRules()
+                                  validator
                                 );
                               }}
                             />
@@ -595,7 +596,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                           {
                             ...values,
                           },
-                          validationRules()
+                          validator
                         );
                       }}
                     />

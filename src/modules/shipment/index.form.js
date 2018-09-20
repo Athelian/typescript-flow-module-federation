@@ -22,6 +22,7 @@ import {
   ShipmentTransportTypeContainer,
 } from './form/containers';
 import ShipmentForm from './form';
+import validator from './form/validator';
 import query from './form/query';
 import {
   createShipmentMutation,
@@ -154,7 +155,18 @@ class ShipmentFormModule extends React.Component<Props> {
                                 Cancel
                               </CancelButton>
                               <SaveButton
-                                disabled={!form.isReady()}
+                                disabled={
+                                  !form.isReady(
+                                    {
+                                      ...shipmentBatchesState.state,
+                                      ...shipmentInfoState.state,
+                                      ...shipmentTagsState.state,
+                                      ...shipmentTimelineState.state,
+                                      ...shipmentTransportTypeState.state,
+                                    },
+                                    validator
+                                  )
+                                }
                                 onClick={() =>
                                   this.onSave(
                                     {

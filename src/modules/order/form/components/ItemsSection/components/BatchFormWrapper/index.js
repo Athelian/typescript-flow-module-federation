@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
 import { isDataType } from 'utils/fp';
 import BatchFormContainer from 'modules/batch/form/container';
+import validator from 'modules/batch/form/validator';
 import BatchForm from 'modules/batch/form';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
@@ -51,7 +52,7 @@ class BatchFormWrapper extends React.Component<Props> {
                     Cancel
                   </CancelButton>
                   <SaveButton
-                    disabled={!isDirty() || !formContainer.isReady()}
+                    disabled={!isDirty() || !formContainer.isReady(state, validator)}
                     onClick={() => onSave(state)}
                   >
                     Save
