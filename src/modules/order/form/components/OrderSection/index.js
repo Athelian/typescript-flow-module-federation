@@ -9,7 +9,7 @@ import {
   OrderItemsContainer,
 } from 'modules/order/form/containers';
 import validator from 'modules/order/form/validator';
-import { FormContainer, FormField } from 'modules/form';
+import { FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
@@ -160,6 +160,7 @@ const OrderSection = ({ isNew }: Props) => (
                 >
                   {({ name, ...inputHandlers }) =>
                     selectSearchEnumInputFactory({
+                      required: true,
                       enumType: 'Currency',
                       name,
                       inputHandlers,
@@ -238,26 +239,15 @@ const OrderSection = ({ isNew }: Props) => (
                         options={{ width: '1030px' }}
                       >
                         {opened && (
-                          <Subscribe to={[FormContainer, OrderItemsContainer]}>
-                            {(
-                              { onValidation, setFieldTouched },
-                              { setFieldValue: resetOrderItems }
-                            ) => (
+                          <Subscribe to={[OrderItemsContainer]}>
+                            {({ setFieldValue: resetOrderItems }) => (
                               <SelectExporters
                                 selected={values.exporter}
                                 onCancel={toggle}
                                 onSelect={newValue => {
                                   toggle();
-                                  setFieldTouched('exporter');
                                   setFieldValue('exporter', newValue);
                                   resetOrderItems('orderItems', []);
-                                  onValidation(
-                                    {
-                                      ...values,
-                                      exporter: newValue,
-                                    },
-                                    validator
-                                  );
                                 }}
                               />
                             )}
@@ -270,11 +260,8 @@ const OrderSection = ({ isNew }: Props) => (
               </div>
             </div>
             <div className={TagsInputStyle}>
-              <Subscribe to={[FormContainer, OrderTagsContainer]}>
-                {(
-                  { setFieldTouched, onValidation },
-                  { state: { tags }, setFieldValue: changeTags }
-                ) => (
+              <Subscribe to={[OrderTagsContainer]}>
+                {({ state: { tags }, setFieldValue: changeTags }) => (
                   <FieldItem
                     vertical
                     label={
@@ -291,13 +278,6 @@ const OrderSection = ({ isNew }: Props) => (
                         values={tags}
                         onChange={(field, value) => {
                           changeTags(field, value);
-                          setFieldTouched('tags');
-                          onValidation(
-                            {
-                              ...values,
-                            },
-                            validator
-                          );
                         }}
                       />
                     }

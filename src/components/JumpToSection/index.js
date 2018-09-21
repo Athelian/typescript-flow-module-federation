@@ -53,24 +53,31 @@ class JumpToSection extends React.Component<Props, State> {
       }
     );
     const { children } = this.props;
-    React.Children.forEach(children, child => {
-      const { link } = child.props;
-      const element = document.querySelector(`#${link}`);
-      if (element) {
-        this.io.observe(element);
-      } else {
-        // wait for the element is rendering on DOM
-        const retryFindElement = () => {
-          const retryElement = document.querySelector(`#${link}`);
-          if (!retryElement) {
-            requestAnimationFrame(retryFindElement);
+    const TIMEOUT = 1000;
+    setTimeout(() => {
+      React.Children.forEach(
+        children,
+        child => {
+          const { link } = child.props;
+          const element = document.querySelector(`#${link}`);
+          if (element) {
+            this.io.observe(element);
           } else {
-            this.io.observe(retryElement);
-          }
-        };
+            // wait for the element is rendering on DOM
+            const retryFindElement = () => {
+              const retryElement = document.querySelector(`#${link}`);
+              if (!retryElement) {
+                requestAnimationFrame(retryFindElement);
+              } else {
+                this.io.observe(retryElement);
+              }
+            };
 
-        requestAnimationFrame(retryFindElement);
-      }
+            requestAnimationFrame(retryFindElement);
+          }
+        },
+        TIMEOUT
+      );
     });
   }
 

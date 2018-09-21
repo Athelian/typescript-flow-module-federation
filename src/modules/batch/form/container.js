@@ -75,7 +75,7 @@ export default class BatchFormContainer extends Container<FormState> {
 
   onSuccess = () => {
     logger.warn('onSuccess');
-    this.originalValues = this.state;
+    this.originalValues = { ...this.state };
   };
 
   initDetailValues = (values: any) => {

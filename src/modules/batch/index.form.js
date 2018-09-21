@@ -33,25 +33,45 @@ const defaultProps = {
   batchId: '',
 };
 
-class BatchFormModule extends React.Component<Props> {
+class BatchFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
   onCancel = () => {
     navigate(`/batch`);
   };
 
-  onSave = (formData: Object, saveBatch: Function, onSuccess: Function = () => {}) => {
+  onSave = async (
+    formData: Object,
+    saveBatch: Function,
+    onSuccess: Function = () => {},
+    onErrors: Function = () => {}
+  ) => {
     const { batchId } = this.props;
 
     const isNew = batchId === 'new';
     const input = isNew ? prepareCreateBatchInput(formData) : prepareUpdateBatchInput(formData);
 
     if (isNew) {
-      saveBatch({ variables: { input } });
+      const { data } = await saveBatch({ variables: { input } });
+      const {
+        batchCreate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     } else if (batchId) {
-      saveBatch({ variables: { input, id: decodeId(batchId) } });
+      const { data } = await saveBatch({ variables: { input, id: decodeId(batchId) } });
+      const {
+        batchUpdate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     }
-    onSuccess();
   };
 
   onMutationCompleted = (result: Object) => {
@@ -107,10 +127,15 @@ class BatchFormModule extends React.Component<Props> {
                               <SaveButton
                                 disabled={!form.isReady(formState.state, validator)}
                                 onClick={() =>
-                                  this.onSave(formState.state, saveBatch, () => {
-                                    formState.onSuccess();
-                                    form.onReset();
-                                  })
+                                  this.onSave(
+                                    formState.state,
+                                    saveBatch,
+                                    () => {
+                                      formState.onSuccess();
+                                      form.onReset();
+                                    },
+                                    form.onErrors
+                                  )
                                 }
                               />
                             </>
@@ -131,7 +156,13 @@ class BatchFormModule extends React.Component<Props> {
                           query={query}
                           variables={{ id: decodeId(batchId) }}
                           fetchPolicy="network-only"
-                          onCompleted={detail => initDetailValues(detail.batch)}
+                          onCompleted={detail => {
+                            if (detail.batch) {
+                              initDetailValues(detail.batch);
+                            } else {
+                              navigate('/404');
+                            }
+                          }}
                         >
                           {({ loading, data, error }) => {
                             if (error) {

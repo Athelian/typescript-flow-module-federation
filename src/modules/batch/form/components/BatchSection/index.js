@@ -3,24 +3,14 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import FormattedDate from 'components/FormattedDate';
 import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
 import validator from 'modules/batch/form/validator';
-import { FormContainer, FormField } from 'modules/form';
+import { FormField } from 'modules/form';
+import { textInputFactory, numberInputFactory, dateInputFactory } from 'modules/form/helpers';
 import { OrderItemCard } from 'components/Cards';
 import GridColumn from 'components/GridColumn';
-import {
-  FieldItem,
-  Label,
-  Tooltip,
-  DefaultStyle,
-  DashedPlusButton,
-  TextInput,
-  NumberInput,
-  DateInput,
-  TagsInput,
-} from 'components/Form';
+import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
 import messages from 'modules/batch/messages';
 import {
   BatchSectionWrapperStyle,
@@ -39,213 +29,105 @@ type Props = {
 const BatchSection = ({ isNew, selectable }: Props) => (
   <div className={BatchSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues, state, setFieldValue }) => {
-        const values = { ...originalValues, ...state };
+      {({ originalValues: initialValues, state, setFieldValue }) => {
+        const values = { ...initialValues, ...state };
 
         return (
           <>
             <div className={MainFieldsWrapperStyle}>
-              <Subscribe to={[FormContainer]}>
-                {({ state: { touched, errors, activeField }, ...formHelper }) => (
-                  <GridColumn>
-                    <FormField
-                      name="no"
-                      initValue={values.no}
-                      validationOnChange
-                      onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validator)
-                      }
-                      setFieldValue={setFieldValue}
-                      {...formHelper}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <FieldItem
-                          label={
-                            <Label required>
-                              <FormattedMessage {...messages.batchNo} />
-                            </Label>
-                          }
-                          tooltip={
-                            <Tooltip
-                              isNew={isNew}
-                              errorMessage={touched[name] && errors[name]}
-                              changedValues={{
-                                oldValue: originalValues[name],
-                                newValue: values[name],
-                              }}
-                            />
-                          }
-                          input={
-                            <DefaultStyle
-                              isFocused={activeField === name}
-                              hasError={touched[name] && errors[name]}
-                              forceHoverStyle={isNew}
-                              width="200px"
-                            >
-                              <TextInput name={name} {...inputHandlers} />
-                            </DefaultStyle>
-                          }
-                        />
-                      )}
-                    </FormField>
+              <GridColumn>
+                <FormField
+                  name="no"
+                  initValue={values.no}
+                  setFieldValue={setFieldValue}
+                  validator={validator}
+                  values={values}
+                >
+                  {({ name, ...inputHandlers }) =>
+                    textInputFactory({
+                      inputHandlers,
+                      name,
+                      isNew,
+                      required: true,
+                      initValue: initialValues[name],
+                      label: <FormattedMessage {...messages.batchNo} />,
+                    })
+                  }
+                </FormField>
 
-                    <FormField
-                      name="quantity"
-                      initValue={values.quantity}
-                      validationOnChange
-                      onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validator)
-                      }
-                      setFieldValue={setFieldValue}
-                      {...formHelper}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <FieldItem
-                          label={<Label required>INITIAL QUANTITY</Label>}
-                          tooltip={
-                            <Tooltip
-                              isNew={isNew}
-                              errorMessage={touched[name] && errors[name]}
-                              changedValues={{
-                                oldValue: originalValues[name],
-                                newValue: values[name],
-                              }}
-                            />
-                          }
-                          input={
-                            <DefaultStyle
-                              type="number"
-                              isFocused={activeField === name}
-                              hasError={touched[name] && errors[name]}
-                              forceHoverStyle={isNew}
-                              width="200px"
-                            >
-                              <NumberInput name={name} {...inputHandlers} />
-                            </DefaultStyle>
-                          }
-                        />
-                      )}
-                    </FormField>
+                <FormField
+                  name="quantity"
+                  initValue={values.quantity}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                >
+                  {({ name, ...inputHandlers }) =>
+                    numberInputFactory({
+                      inputHandlers,
+                      name,
+                      isNew,
+                      required: true,
+                      initValue: initialValues[name],
+                      label: <FormattedMessage {...messages.quantity} />,
+                    })
+                  }
+                </FormField>
 
-                    <FormField
-                      name="deliveredAt"
-                      initValue={values.deliveredAt}
-                      setFieldValue={setFieldValue}
-                      onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validator)
-                      }
-                      {...formHelper}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <FieldItem
-                          label={
-                            <Label>
-                              <FormattedMessage {...messages.deliveredAt} />
-                            </Label>
-                          }
-                          tooltip={
-                            <Tooltip
-                              isNew={isNew}
-                              changedValues={{
-                                oldValue: <FormattedDate value={originalValues[name]} />,
-                                newValue: <FormattedDate value={values[name]} />,
-                              }}
-                            />
-                          }
-                          input={
-                            <DefaultStyle
-                              type="date"
-                              isFocused={activeField === name}
-                              forceHoverStyle={isNew}
-                              width="200px"
-                            >
-                              <DateInput name={name} {...inputHandlers} />
-                            </DefaultStyle>
-                          }
-                        />
-                      )}
-                    </FormField>
+                <FormField
+                  name="deliveredAt"
+                  initValue={values.deliveredAt}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                >
+                  {({ name, ...inputHandlers }) =>
+                    dateInputFactory({
+                      name,
+                      inputHandlers,
+                      isNew,
+                      initValue: initialValues[name],
+                      label: <FormattedMessage {...messages.deliveredAt} />,
+                    })
+                  }
+                </FormField>
 
-                    <FormField
-                      name="expiredAt"
-                      initValue={values.expiredAt}
-                      setFieldValue={setFieldValue}
-                      onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validator)
-                      }
-                      {...formHelper}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <FieldItem
-                          label={
-                            <Label>
-                              <FormattedMessage {...messages.expiredAt} />
-                            </Label>
-                          }
-                          tooltip={
-                            <Tooltip
-                              isNew={isNew}
-                              changedValues={{
-                                oldValue: <FormattedDate value={originalValues[name]} />,
-                                newValue: <FormattedDate value={values[name]} />,
-                              }}
-                            />
-                          }
-                          input={
-                            <DefaultStyle
-                              type="date"
-                              isFocused={activeField === name}
-                              forceHoverStyle={isNew}
-                              width="200px"
-                            >
-                              <DateInput name={name} {...inputHandlers} />
-                            </DefaultStyle>
-                          }
-                        />
-                      )}
-                    </FormField>
+                <FormField
+                  name="expiredAt"
+                  initValue={values.expiredAt}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                >
+                  {({ name, ...inputHandlers }) =>
+                    dateInputFactory({
+                      name,
+                      inputHandlers,
+                      isNew,
+                      initValue: initialValues[name],
+                      label: <FormattedMessage {...messages.expiredAt} />,
+                    })
+                  }
+                </FormField>
 
-                    <FormField
-                      name="producedAt"
-                      initValue={values.producedAt}
-                      setFieldValue={setFieldValue}
-                      onValidate={newValue =>
-                        formHelper.onValidation({ ...values, ...newValue }, validator)
-                      }
-                      {...formHelper}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <FieldItem
-                          label={
-                            <Label>
-                              <FormattedMessage {...messages.producedAt} />
-                            </Label>
-                          }
-                          tooltip={
-                            <Tooltip
-                              isNew={isNew}
-                              changedValues={{
-                                oldValue: <FormattedDate value={originalValues[name]} />,
-                                newValue: <FormattedDate value={values[name]} />,
-                              }}
-                            />
-                          }
-                          input={
-                            <DefaultStyle
-                              type="date"
-                              isFocused={activeField === name}
-                              forceHoverStyle={isNew}
-                              width="200px"
-                            >
-                              <DateInput name={name} {...inputHandlers} />
-                            </DefaultStyle>
-                          }
-                        />
-                      )}
-                    </FormField>
-                  </GridColumn>
-                )}
-              </Subscribe>
+                <FormField
+                  name="producedAt"
+                  initValue={values.producedAt}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                >
+                  {({ name, ...inputHandlers }) =>
+                    dateInputFactory({
+                      name,
+                      inputHandlers,
+                      isNew,
+                      initValue: initialValues[name],
+                      label: <FormattedMessage {...messages.producedAt} />,
+                    })
+                  }
+                </FormField>
+              </GridColumn>
               <div className={ItemSectionStyle}>
                 <Label required>
                   <FormattedMessage {...messages.orderItem} />
@@ -269,26 +151,14 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                         options={{ width: '1030px' }}
                       >
                         {opened && (
-                          <Subscribe to={[FormContainer]}>
-                            {({ onValidation, setFieldTouched }) => (
-                              <SelectOrderItem
-                                selected={values.orderItem}
-                                onCancel={toggle}
-                                onSelect={newValue => {
-                                  toggle();
-                                  setFieldTouched('orderItem');
-                                  setFieldValue('orderItem', newValue);
-                                  onValidation(
-                                    {
-                                      ...values,
-                                      orderItem: newValue,
-                                    },
-                                    validator
-                                  );
-                                }}
-                              />
-                            )}
-                          </Subscribe>
+                          <SelectOrderItem
+                            selected={values.orderItem}
+                            onCancel={toggle}
+                            onSelect={newValue => {
+                              toggle();
+                              setFieldValue('orderItem', newValue);
+                            }}
+                          />
                         )}
                       </SlideView>
                     </React.Fragment>
@@ -297,37 +167,26 @@ const BatchSection = ({ isNew, selectable }: Props) => (
               </div>
             </div>
             <div className={TagsInputStyle}>
-              <Subscribe to={[FormContainer]}>
-                {({ onValidation, setFieldTouched }) => (
-                  <FieldItem
-                    vertical
-                    label={
-                      <Label>
-                        <FormattedMessage {...messages.tags} />
-                      </Label>
-                    }
-                    input={
-                      <TagsInput
-                        editable={isNew}
-                        id="tags"
-                        name="tags"
-                        tagType="Batch"
-                        values={values.tags}
-                        onChange={(field, value) => {
-                          setFieldValue(field, value);
-                          setFieldTouched('tags');
-                          onValidation(
-                            {
-                              ...values,
-                            },
-                            validator
-                          );
-                        }}
-                      />
-                    }
+              <FieldItem
+                vertical
+                label={
+                  <Label>
+                    <FormattedMessage {...messages.tags} />
+                  </Label>
+                }
+                input={
+                  <TagsInput
+                    editable={isNew}
+                    id="tags"
+                    name="tags"
+                    tagType="Batch"
+                    values={values.tags}
+                    onChange={(field, value) => {
+                      setFieldValue(field, value);
+                    }}
                   />
-                )}
-              </Subscribe>
+                }
+              />
 
               <div className={DividerStyle} />
             </div>

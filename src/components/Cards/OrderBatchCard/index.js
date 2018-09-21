@@ -87,7 +87,7 @@ const OrderBatchCard = ({
     : 0;
 
   return (
-    <ObjectValue defaultValue={batch}>
+    <ObjectValue value={batch}>
       {({ value: { no, quantity, deliveredAt } }) => (
         <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
           <div

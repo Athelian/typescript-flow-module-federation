@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FieldItem, Label, Tooltip, DefaultStyle, NumberInput } from 'components/Form';
 
 export default function numberInputFactory({
+  WrapperComponent = DefaultStyle,
   required = false,
   width = '200px',
   height = '30px',
@@ -13,6 +14,7 @@ export default function numberInputFactory({
   inputHandlers,
   initValue,
 }: {
+  WrapperComponent?: React.Node,
   required?: boolean,
   align?: string,
   width?: string,
@@ -44,7 +46,7 @@ export default function numberInputFactory({
         />
       }
       input={
-        <DefaultStyle
+        <WrapperComponent
           type="number"
           isFocused={isFocused}
           hasError={isTouched && errorMessage}
@@ -53,7 +55,7 @@ export default function numberInputFactory({
           height={height}
         >
           <NumberInput align={align} name={name} {...rest} />
-        </DefaultStyle>
+        </WrapperComponent>
       }
     />
   );

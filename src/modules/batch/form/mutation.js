@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
+import { batchFragment } from './query';
 import type { BatchCreate, BatchUpdate } from '../type.js.flow';
 
 export const createBatchMutation = gql`
@@ -18,22 +19,25 @@ export const createBatchMutation = gql`
   ${violationFragment}
 `;
 
-export const prepareCreateBatchInput = ({
-  id,
-  isNew,
-  no,
-  quantity,
-  shipment = {},
-  orderItem = {},
-  tags = [],
-  batchAdjustments = [],
-  ...rest
-}: Object): BatchCreate => ({
+export const prepareCreateBatchInput = (
+  {
+    id,
+    isNew,
+    no,
+    quantity,
+    shipment = {},
+    tags = [],
+    batchAdjustments = [],
+    orderItem = {},
+    ...rest
+  }: Object,
+  inShipmentOrBatchForm: boolean = true
+): BatchCreate => ({
   ...rest,
   no,
   quantity,
   ...(shipment ? { shipmentId: shipment.id } : {}),
-  ...(orderItem ? { orderItemId: orderItem.id } : {}),
+  ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   tagIds: tags.map(({ id: tagId }) => tagId),
   batchAdjustments: batchAdjustments.map(
     ({
@@ -52,7 +56,7 @@ export const updateBatchMutation = gql`
   mutation batchUpdate($id: ID!, $input: BatchUpdateInput!) {
     batchUpdate(id: $id, input: $input) {
       batch {
-        id
+        ...batchFragment
       }
       violations {
         ...violationFragment
@@ -61,6 +65,7 @@ export const updateBatchMutation = gql`
   }
 
   ${violationFragment}
+  ${batchFragment}
 `;
 
 export const prepareUpdateBatchInput = (
@@ -77,11 +82,11 @@ export const prepareUpdateBatchInput = (
     archived,
     ...rest
   }: Object,
-  inShipmentForm: boolean = false
+  inShipmentOrBatchForm: boolean = false
 ): BatchUpdate => ({
   ...rest,
-  ...(shipment && !inShipmentForm ? { shipmentId: shipment.id } : {}),
-  ...(inShipmentForm ? { orderItemId: orderItem.id } : {}),
+  ...(shipment && !inShipmentOrBatchForm ? { shipmentId: shipment.id } : {}),
+  ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   tagIds: tags.map(({ id: tagId }) => tagId),
   batchAdjustments: batchAdjustments.map(
     ({

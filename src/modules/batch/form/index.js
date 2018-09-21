@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
+import { isEquals } from 'utils/fp';
 import { Tooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import BatchSection from './components/BatchSection';
 import QuantityAdjustmentsSection from './components/QuantityAdjustmentsSection';
@@ -21,40 +22,53 @@ const defaultProps = {
   selectable: true,
 };
 
-const BatchForm = ({ batch, isNew, selectable }: Props) => (
-  <div className={BatchFormWrapperStyle}>
-    <SectionWrapper id="batchSection">
-      <SectionHeader icon="BATCH" title="BATCH">
-        {!isNew && (
-          <>
-            <LastModified updatedAt={batch.updatedAt} updatedBy={batch.updatedBy} />
+export default class BatchForm extends React.Component<Props> {
+  static defaultProps = defaultProps;
 
-            <div className={StatusStyle(batch.archived)}>
-              <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
-              {batch.archived ? 'Archived' : 'Active'}
-              <Tooltip
-                infoMessage="The status is controlled by the Order and Shipment this Batch belongs to"
-                position="bottom"
-              />
-            </div>
-          </>
-        )}
-      </SectionHeader>
-      <BatchSection isNew={isNew} selectable={selectable} />
-    </SectionWrapper>
+  shouldComponentUpdate(nextProps: Props) {
+    const { batch, selectable, isNew } = this.props;
 
-    <SectionWrapper id="quantityAdjustmentsSection">
-      <SectionHeader icon="QUANTITY_ADJUSTMENTS" title="QUANTITY ADJUSTMENTS" />
-      <QuantityAdjustmentsSection isNew={isNew} />
-    </SectionWrapper>
+    return (
+      !isEquals(batch, nextProps.batch) ||
+      !isEquals(selectable, nextProps.selectable) ||
+      !isEquals(isNew, nextProps.isNew)
+    );
+  }
 
-    <SectionWrapper id="packagingSection">
-      <SectionHeader icon="PACKAGING" title="PACKAGING" />
-      <PackagingSection isNew={isNew} />
-    </SectionWrapper>
-  </div>
-);
+  render() {
+    const { batch, isNew, selectable } = this.props;
+    return (
+      <div className={BatchFormWrapperStyle}>
+        <SectionWrapper id="batchSection">
+          <SectionHeader icon="BATCH" title="BATCH">
+            {!isNew && (
+              <>
+                <LastModified updatedAt={batch.updatedAt} updatedBy={batch.updatedBy} />
 
-BatchForm.defaultProps = defaultProps;
+                <div className={StatusStyle(batch.archived)}>
+                  <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
+                  {batch.archived ? 'Archived' : 'Active'}
+                  <Tooltip
+                    infoMessage="The status is controlled by the Order and Shipment this Batch belongs to"
+                    position="bottom"
+                  />
+                </div>
+              </>
+            )}
+          </SectionHeader>
+          <BatchSection isNew={isNew} selectable={selectable} />
+        </SectionWrapper>
 
-export default BatchForm;
+        <SectionWrapper id="quantityAdjustmentsSection">
+          <SectionHeader icon="QUANTITY_ADJUSTMENTS" title="QUANTITY ADJUSTMENTS" />
+          <QuantityAdjustmentsSection isNew={isNew} />
+        </SectionWrapper>
+
+        <SectionWrapper id="packagingSection">
+          <SectionHeader icon="PACKAGING" title="PACKAGING" />
+          <PackagingSection isNew={isNew} />
+        </SectionWrapper>
+      </div>
+    );
+  }
+}
