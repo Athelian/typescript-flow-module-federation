@@ -27,6 +27,7 @@ type Props = OptionalProps & {
 };
 
 const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
+  if (!timelineDate) return 'TimelineDate';
   const { date, timelineDateRevisions, approvedAt } = timelineDate;
 
   const hasMultipleDates = timelineDateRevisions.length > 0;

@@ -7,22 +7,36 @@ export const getTimelineColoring = ({
   voyages,
   containerGroups,
 }: {
-  cargoReady: any,
-  voyages: any,
-  containerGroups: any,
+  cargoReady?: Object,
+  voyages?: Array<{
+    departure?: Object,
+    arrival?: Object,
+  }>,
+  containerGroups?: Array<{
+    customClearance?: Object,
+    warehouseArrival?: Object,
+    deliveryReady?: Object,
+  }>,
 }): Array<string> => {
-  const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
-
   // Add all boolean approvals of all the dates to an array in order
-  const arrayOfApprovals = [!!cargoReady.approvedAt];
-  voyages.forEach(voyage => {
-    arrayOfApprovals.push(!!voyage.departure.approvedAt, !!voyage.arrival.approvedAt);
-  });
-  arrayOfApprovals.push(
-    !!customClearance.approvedAt,
-    !!warehouseArrival.approvedAt,
-    !!deliveryReady.approvedAt
-  );
+  const arrayOfApprovals = [cargoReady && !!cargoReady.approvedAt];
+  if (voyages && voyages.length) {
+    voyages.forEach(voyage => {
+      arrayOfApprovals.push(
+        voyage.departure && !!voyage.departure.approvedAt,
+        voyage.arrival && !!voyage.arrival.approvedAt
+      );
+    });
+  }
+
+  if (containerGroups && containerGroups.length) {
+    const [{ customClearance, warehouseArrival, deliveryReady }] = containerGroups;
+    arrayOfApprovals.push(
+      customClearance && !!customClearance.approvedAt,
+      warehouseArrival && !!warehouseArrival.approvedAt,
+      deliveryReady && !!deliveryReady.approvedAt
+    );
+  }
 
   // Reverse the array in order to traverse it logically
   arrayOfApprovals.reverse();

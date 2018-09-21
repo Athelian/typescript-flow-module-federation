@@ -78,6 +78,7 @@ class TimelineInfoSection extends React.PureComponent<Props> {
       removeArrayItem,
       ...rest
     } = this.props;
+    if (!timelineDate) return 'TimelineInfoSection';
     return (
       <div className={TimelineInfoSectionWrapperStyle} {...rest}>
         <GridColumn gap="10px">

@@ -235,6 +235,7 @@ export default defineMessages({
   },
   newBatch: {
     id: 'containers.Shipments.newBatch',
+    defaultMessage: 'NEW BATCH',
   },
   insurance: {
     id: 'containers.Shipments.insurance',
