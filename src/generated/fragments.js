@@ -213,7 +213,7 @@ export const ProductProviderFragment = `fragment ProductProvider on ProductProvi
 }
 `;
 
-export const ProductPaginationFragment = `fragment ProductPagination on ProductPagination {
+export const UserPaginationFragment = `fragment UserPagination on UserPagination {
   page
   perPage
   totalPage
@@ -235,7 +235,7 @@ export const SizeFragment = `fragment Size on Size {
 }
 `;
 
-export const ProductProviderPaginationFragment = `fragment ProductProviderPagination on ProductProviderPagination {
+export const PartnershipPaginationFragment = `fragment PartnershipPagination on PartnershipPagination {
   page
   perPage
   totalPage
@@ -278,7 +278,7 @@ export const OrderFragment = `fragment Order on Order {
 }
 `;
 
-export const OrderPaginationFragment = `fragment OrderPagination on OrderPagination {
+export const ProductPaginationFragment = `fragment ProductPagination on ProductPagination {
   page
   perPage
   totalPage
@@ -332,7 +332,7 @@ export const BatchFragment = `fragment Batch on Batch {
 }
 `;
 
-export const OrderItemPaginationFragment = `fragment OrderItemPagination on OrderItemPagination {
+export const ProductProviderPaginationFragment = `fragment ProductProviderPagination on ProductProviderPagination {
   page
   perPage
   totalPage
@@ -367,7 +367,7 @@ export const TimelineDateFragment = `fragment TimelineDate on TimelineDate {
 }
 `;
 
-export const BatchPaginationFragment = `fragment BatchPagination on BatchPagination {
+export const OrderPaginationFragment = `fragment OrderPagination on OrderPagination {
   page
   perPage
   totalPage
@@ -414,7 +414,7 @@ export const VoyageFragment = `fragment Voyage on Voyage {
 }
 `;
 
-export const ShipmentPaginationFragment = `fragment ShipmentPagination on ShipmentPagination {
+export const OrderItemPaginationFragment = `fragment OrderItemPagination on OrderItemPagination {
   page
   perPage
   totalPage
@@ -432,6 +432,9 @@ export const ContainerGroupFragment = `fragment ContainerGroup on ContainerGroup
   }
   deliveryReady {
     ...TimelineDateNoNesting
+  }
+  warehouse {
+    ...WarehouseNoNesting
   }
   shipment {
     ...ShipmentNoNesting
@@ -456,7 +459,233 @@ export const ContainerGroupFragment = `fragment ContainerGroup on ContainerGroup
 }
 `;
 
+export const BatchPaginationFragment = `fragment BatchPagination on BatchPagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const BatchAssignmentFragment = `fragment BatchAssignment on BatchAssignment {
+  batch {
+    ...BatchNoNesting
+  }
+  user {
+    ...UserNoNesting
+  }
+  quantity
+  memo
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserNoNesting
+  }
+  updatedBy {
+    ...UserNoNesting
+  }
+  deletedBy {
+    ...UserNoNesting
+  }
+  ownedBy {
+    ...GroupNoNesting
+  }
+  sort
+}
+`;
+
+export const ShipmentPaginationFragment = `fragment ShipmentPagination on ShipmentPagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const TimelineFragment = `fragment Timeline on Timeline {
+  id
+  unreadCount
+  events {
+    ...EventPaginationNoNesting
+  }
+}
+`;
+
+export const WarehousePaginationFragment = `fragment WarehousePagination on WarehousePagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const UserFragment = `fragment User on User {
+  email
+  group {
+    ...GroupNoNesting
+  }
+  role
+  disabled
+  firstName
+  lastName
+  firstName2
+  lastName2
+  avatar {
+    ...FileNoNesting
+  }
+  language
+  timezone
+  memo
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserNoNesting
+  }
+  updatedBy {
+    ...UserNoNesting
+  }
+  deletedBy {
+    ...UserNoNesting
+  }
+}
+`;
+
+export const TagPaginationFragment = `fragment TagPagination on TagPagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const PartnerFragment = `fragment Partner on Partner {
+  group {
+    ...GroupNoNesting
+  }
+  name
+  code
+  confirmed
+  approvedAt
+  approvedByPartnerAt
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserNoNesting
+  }
+  updatedBy {
+    ...UserNoNesting
+  }
+  deletedBy {
+    ...UserNoNesting
+  }
+}
+`;
+
+export const TokenMutatedFragment = `fragment TokenMutated on TokenMutated {
+  token {
+    ...TokenNoNesting
+  }
+  violations {
+    ...ViolationNoNesting
+  }
+}
+`;
+
+export const MetricValueFragment = `fragment MetricValue on MetricValue {
+  value
+  metric
+}
+`;
+
+export const TokenFragment = `fragment Token on Token {
+  token
+}
+`;
+
+export const OrderItemFragment = `fragment OrderItem on OrderItem {
+  order {
+    ...OrderNoNesting
+  }
+  productProvider {
+    ...ProductProviderNoNesting
+  }
+  price {
+    ...PriceNoNesting
+  }
+  quantity
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserNoNesting
+  }
+  updatedBy {
+    ...UserNoNesting
+  }
+  deletedBy {
+    ...UserNoNesting
+  }
+  ownedBy {
+    ...GroupNoNesting
+  }
+  sort
+}
+`;
+
+export const ViolationFragment = `fragment Violation on Violation {
+  message
+  error
+  code
+  path
+}
+`;
+
+export const TimelineDateRevisionFragment = `fragment TimelineDateRevision on TimelineDateRevision {
+  date
+  type
+  memo
+  timelineDate {
+    ...TimelineDateNoNesting
+  }
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserNoNesting
+  }
+  updatedBy {
+    ...UserNoNesting
+  }
+  deletedBy {
+    ...UserNoNesting
+  }
+  ownedBy {
+    ...GroupNoNesting
+  }
+  sort
+}
+`;
+
+export const ViolationParameterFragment = `fragment ViolationParameter on ViolationParameter {
+  key
+  value
+}
+`;
+
 export const WarehouseFragment = `fragment Warehouse on Warehouse {
+  archived
   name
   surface {
     ...MetricValueNoNesting
@@ -485,39 +714,13 @@ export const WarehouseFragment = `fragment Warehouse on Warehouse {
 }
 `;
 
-export const BatchAdjustmentFragment = `fragment BatchAdjustment on BatchAdjustment {
-  batch {
-    ...BatchNoNesting
+export const ProductMutatedFragment = `fragment ProductMutated on ProductMutated {
+  product {
+    ...ProductNoNesting
   }
-  reason
-  quantity
-  memo
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserNoNesting
+  violations {
+    ...ViolationNoNesting
   }
-  updatedBy {
-    ...UserNoNesting
-  }
-  deletedBy {
-    ...UserNoNesting
-  }
-  ownedBy {
-    ...GroupNoNesting
-  }
-  sort
-}
-`;
-
-export const WarehousePaginationFragment = `fragment WarehousePagination on WarehousePagination {
-  page
-  perPage
-  totalPage
-  count
-  totalCount
 }
 `;
 
@@ -530,46 +733,9 @@ export const EventPaginationFragment = `fragment EventPagination on EventPaginat
 }
 `;
 
-export const TagPaginationFragment = `fragment TagPagination on TagPagination {
-  page
-  perPage
-  totalPage
-  count
-  totalCount
-}
-`;
-
-export const GroupFragment = `fragment Group on Group {
-  name
-  name2
-  tel
-  address
-  zipCode
-  country
-  disabled
-  dummy
-  partners {
-    ...PartnerPaginationNoNesting
-  }
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserNoNesting
-  }
-  updatedBy {
-    ...UserNoNesting
-  }
-  deletedBy {
-    ...UserNoNesting
-  }
-}
-`;
-
-export const TokenMutatedFragment = `fragment TokenMutated on TokenMutated {
-  token {
-    ...TokenNoNesting
+export const OrderMutatedFragment = `fragment OrderMutated on OrderMutated {
+  order {
+    ...OrderNoNesting
   }
   violations {
     ...ViolationNoNesting
@@ -600,25 +766,6 @@ export const ProductFragment = `fragment Product on Product {
   ownedBy {
     ...GroupNoNesting
   }
-}
-`;
-
-export const TokenFragment = `fragment Token on Token {
-  token
-}
-`;
-
-export const PriceFragment = `fragment Price on Price {
-  amount
-  currency
-}
-`;
-
-export const ViolationFragment = `fragment Violation on Violation {
-  message
-  error
-  code
-  path
 }
 `;
 
@@ -653,103 +800,6 @@ export const ShipmentFragment = `fragment Shipment on Shipment {
   ownedBy {
     ...GroupNoNesting
   }
-}
-`;
-
-export const ViolationParameterFragment = `fragment ViolationParameter on ViolationParameter {
-  key
-  value
-}
-`;
-
-export const PortFragment = `fragment Port on Port {
-  seaport
-  airport
-}
-`;
-
-export const ProductMutatedFragment = `fragment ProductMutated on ProductMutated {
-  product {
-    ...ProductNoNesting
-  }
-  violations {
-    ...ViolationNoNesting
-  }
-}
-`;
-
-export const TimelineFragment = `fragment Timeline on Timeline {
-  id
-  unreadCount
-  events {
-    ...EventPaginationNoNesting
-  }
-}
-`;
-
-export const OrderMutatedFragment = `fragment OrderMutated on OrderMutated {
-  order {
-    ...OrderNoNesting
-  }
-  violations {
-    ...ViolationNoNesting
-  }
-}
-`;
-
-export const PartnerFragment = `fragment Partner on Partner {
-  group {
-    ...GroupNoNesting
-  }
-  name
-  code
-  confirmed
-  approvedAt
-  approvedByPartnerAt
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserNoNesting
-  }
-  updatedBy {
-    ...UserNoNesting
-  }
-  deletedBy {
-    ...UserNoNesting
-  }
-}
-`;
-
-export const OrderItemFragment = `fragment OrderItem on OrderItem {
-  order {
-    ...OrderNoNesting
-  }
-  productProvider {
-    ...ProductProviderNoNesting
-  }
-  price {
-    ...PriceNoNesting
-  }
-  quantity
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserNoNesting
-  }
-  updatedBy {
-    ...UserNoNesting
-  }
-  deletedBy {
-    ...UserNoNesting
-  }
-  ownedBy {
-    ...GroupNoNesting
-  }
-  sort
 }
 `;
 
@@ -793,56 +843,30 @@ export const BatchMutatedFragment = `fragment BatchMutated on BatchMutated {
 }
 `;
 
-export const TimelineDateRevisionFragment = `fragment TimelineDateRevision on TimelineDateRevision {
-  date
-  type
-  memo
-  timelineDate {
-    ...TimelineDateNoNesting
-  }
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserNoNesting
-  }
-  updatedBy {
-    ...UserNoNesting
-  }
-  deletedBy {
-    ...UserNoNesting
-  }
-  ownedBy {
-    ...GroupNoNesting
-  }
-  sort
+export const PortFragment = `fragment Port on Port {
+  seaport
+  airport
 }
 `;
 
-export const MetricValueFragment = `fragment MetricValue on MetricValue {
-  value
-  metric
+export const PriceFragment = `fragment Price on Price {
+  amount
+  currency
 }
 `;
 
-export const UserFragment = `fragment User on User {
-  email
-  group {
-    ...GroupNoNesting
-  }
-  role
+export const GroupFragment = `fragment Group on Group {
+  name
+  name2
+  tel
+  address
+  zipCode
+  country
   disabled
-  firstName
-  lastName
-  firstName2
-  lastName2
-  avatar {
-    ...FileNoNesting
+  dummy
+  partners {
+    ...PartnerPaginationNoNesting
   }
-  language
-  timezone
-  memo
   id
   createdAt
   updatedAt
@@ -859,13 +883,11 @@ export const UserFragment = `fragment User on User {
 }
 `;
 
-export const BatchAssignmentFragment = `fragment BatchAssignment on BatchAssignment {
+export const BatchAdjustmentFragment = `fragment BatchAdjustment on BatchAdjustment {
   batch {
     ...BatchNoNesting
   }
-  user {
-    ...UserNoNesting
-  }
+  reason
   quantity
   memo
   id
@@ -982,7 +1004,7 @@ export const ProductProviderNoNestingFragment = `fragment ProductProviderNoNesti
 }
 `;
 
-export const ProductPaginationNoNestingFragment = `fragment ProductPaginationNoNesting on ProductPagination {
+export const UserPaginationNoNestingFragment = `fragment UserPaginationNoNesting on UserPagination {
   page
   perPage
   totalPage
@@ -991,7 +1013,7 @@ export const ProductPaginationNoNestingFragment = `fragment ProductPaginationNoN
 }
 `;
 
-export const ProductProviderPaginationNoNestingFragment = `fragment ProductProviderPaginationNoNesting on ProductProviderPagination {
+export const PartnershipPaginationNoNestingFragment = `fragment PartnershipPaginationNoNesting on PartnershipPagination {
   page
   perPage
   totalPage
@@ -1016,7 +1038,7 @@ export const OrderNoNestingFragment = `fragment OrderNoNesting on Order {
 }
 `;
 
-export const OrderPaginationNoNestingFragment = `fragment OrderPaginationNoNesting on OrderPagination {
+export const ProductPaginationNoNestingFragment = `fragment ProductPaginationNoNesting on ProductPagination {
   page
   perPage
   totalPage
@@ -1043,7 +1065,7 @@ export const BatchNoNestingFragment = `fragment BatchNoNesting on Batch {
 }
 `;
 
-export const OrderItemPaginationNoNestingFragment = `fragment OrderItemPaginationNoNesting on OrderItemPagination {
+export const ProductProviderPaginationNoNestingFragment = `fragment ProductProviderPaginationNoNesting on ProductProviderPagination {
   page
   perPage
   totalPage
@@ -1063,7 +1085,7 @@ export const TimelineDateNoNestingFragment = `fragment TimelineDateNoNesting on 
 }
 `;
 
-export const BatchPaginationNoNestingFragment = `fragment BatchPaginationNoNesting on BatchPagination {
+export const OrderPaginationNoNestingFragment = `fragment OrderPaginationNoNesting on OrderPagination {
   page
   perPage
   totalPage
@@ -1083,7 +1105,7 @@ export const VoyageNoNestingFragment = `fragment VoyageNoNesting on Voyage {
 }
 `;
 
-export const ShipmentPaginationNoNestingFragment = `fragment ShipmentPaginationNoNesting on ShipmentPagination {
+export const OrderItemPaginationNoNestingFragment = `fragment OrderItemPaginationNoNesting on OrderItemPagination {
   page
   perPage
   totalPage
@@ -1101,7 +1123,139 @@ export const ContainerGroupNoNestingFragment = `fragment ContainerGroupNoNesting
 }
 `;
 
+export const BatchPaginationNoNestingFragment = `fragment BatchPaginationNoNesting on BatchPagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const BatchAssignmentNoNestingFragment = `fragment BatchAssignmentNoNesting on BatchAssignment {
+  quantity
+  memo
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  sort
+}
+`;
+
+export const ShipmentPaginationNoNestingFragment = `fragment ShipmentPaginationNoNesting on ShipmentPagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const TimelineNoNestingFragment = `fragment TimelineNoNesting on Timeline {
+  id
+  unreadCount
+}
+`;
+
+export const WarehousePaginationNoNestingFragment = `fragment WarehousePaginationNoNesting on WarehousePagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const UserNoNestingFragment = `fragment UserNoNesting on User {
+  email
+  role
+  disabled
+  firstName
+  lastName
+  firstName2
+  lastName2
+  language
+  timezone
+  memo
+  id
+  createdAt
+  updatedAt
+  deletedAt
+}
+`;
+
+export const TagPaginationNoNestingFragment = `fragment TagPaginationNoNesting on TagPagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const PartnerNoNestingFragment = `fragment PartnerNoNesting on Partner {
+  name
+  code
+  confirmed
+  approvedAt
+  approvedByPartnerAt
+  id
+  createdAt
+  updatedAt
+  deletedAt
+}
+`;
+
+export const MetricValueNoNestingFragment = `fragment MetricValueNoNesting on MetricValue {
+  value
+  metric
+}
+`;
+
+export const TokenNoNestingFragment = `fragment TokenNoNesting on Token {
+  token
+}
+`;
+
+export const OrderItemNoNestingFragment = `fragment OrderItemNoNesting on OrderItem {
+  quantity
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  sort
+}
+`;
+
+export const ViolationNoNestingFragment = `fragment ViolationNoNesting on Violation {
+  message
+  error
+  code
+  path
+}
+`;
+
+export const TimelineDateRevisionNoNestingFragment = `fragment TimelineDateRevisionNoNesting on TimelineDateRevision {
+  date
+  type
+  memo
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  sort
+}
+`;
+
+export const ViolationParameterNoNestingFragment = `fragment ViolationParameterNoNesting on ViolationParameter {
+  key
+  value
+}
+`;
+
 export const WarehouseNoNestingFragment = `fragment WarehouseNoNesting on Warehouse {
+  archived
   name
   street
   locality
@@ -1115,58 +1269,12 @@ export const WarehouseNoNestingFragment = `fragment WarehouseNoNesting on Wareho
 }
 `;
 
-export const BatchAdjustmentNoNestingFragment = `fragment BatchAdjustmentNoNesting on BatchAdjustment {
-  reason
-  quantity
-  memo
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  sort
-}
-`;
-
-export const WarehousePaginationNoNestingFragment = `fragment WarehousePaginationNoNesting on WarehousePagination {
-  page
-  perPage
-  totalPage
-  count
-  totalCount
-}
-`;
-
 export const EventPaginationNoNestingFragment = `fragment EventPaginationNoNesting on EventPagination {
   page
   perPage
   totalPage
   count
   totalCount
-}
-`;
-
-export const TagPaginationNoNestingFragment = `fragment TagPaginationNoNesting on TagPagination {
-  page
-  perPage
-  totalPage
-  count
-  totalCount
-}
-`;
-
-export const GroupNoNestingFragment = `fragment GroupNoNesting on Group {
-  name
-  name2
-  tel
-  address
-  zipCode
-  country
-  disabled
-  dummy
-  id
-  createdAt
-  updatedAt
-  deletedAt
 }
 `;
 
@@ -1181,25 +1289,6 @@ export const ProductNoNestingFragment = `fragment ProductNoNesting on Product {
   createdAt
   updatedAt
   deletedAt
-}
-`;
-
-export const TokenNoNestingFragment = `fragment TokenNoNesting on Token {
-  token
-}
-`;
-
-export const PriceNoNestingFragment = `fragment PriceNoNesting on Price {
-  amount
-  currency
-}
-`;
-
-export const ViolationNoNestingFragment = `fragment ViolationNoNesting on Violation {
-  message
-  error
-  code
-  path
 }
 `;
 
@@ -1222,76 +1311,27 @@ export const ShipmentNoNestingFragment = `fragment ShipmentNoNesting on Shipment
 }
 `;
 
-export const ViolationParameterNoNestingFragment = `fragment ViolationParameterNoNesting on ViolationParameter {
-  key
-  value
-}
-`;
-
 export const PortNoNestingFragment = `fragment PortNoNesting on Port {
   seaport
   airport
 }
 `;
 
-export const TimelineNoNestingFragment = `fragment TimelineNoNesting on Timeline {
-  id
-  unreadCount
+export const PriceNoNestingFragment = `fragment PriceNoNesting on Price {
+  amount
+  currency
 }
 `;
 
-export const PartnerNoNestingFragment = `fragment PartnerNoNesting on Partner {
+export const GroupNoNestingFragment = `fragment GroupNoNesting on Group {
   name
-  code
-  confirmed
-  approvedAt
-  approvedByPartnerAt
-  id
-  createdAt
-  updatedAt
-  deletedAt
-}
-`;
-
-export const OrderItemNoNestingFragment = `fragment OrderItemNoNesting on OrderItem {
-  quantity
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  sort
-}
-`;
-
-export const TimelineDateRevisionNoNestingFragment = `fragment TimelineDateRevisionNoNesting on TimelineDateRevision {
-  date
-  type
-  memo
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  sort
-}
-`;
-
-export const MetricValueNoNestingFragment = `fragment MetricValueNoNesting on MetricValue {
-  value
-  metric
-}
-`;
-
-export const UserNoNestingFragment = `fragment UserNoNesting on User {
-  email
-  role
+  name2
+  tel
+  address
+  zipCode
+  country
   disabled
-  firstName
-  lastName
-  firstName2
-  lastName2
-  language
-  timezone
-  memo
+  dummy
   id
   createdAt
   updatedAt
@@ -1299,7 +1339,8 @@ export const UserNoNestingFragment = `fragment UserNoNesting on User {
 }
 `;
 
-export const BatchAssignmentNoNestingFragment = `fragment BatchAssignmentNoNesting on BatchAssignment {
+export const BatchAdjustmentNoNestingFragment = `fragment BatchAdjustmentNoNesting on BatchAdjustment {
+  reason
   quantity
   memo
   id
@@ -1522,7 +1563,7 @@ export const ProductProviderDeepNestingFragment = `fragment ProductProviderDeepN
 }
 `;
 
-export const ProductPaginationDeepNestingFragment = `fragment ProductPaginationDeepNesting on ProductPagination {
+export const UserPaginationDeepNestingFragment = `fragment UserPaginationDeepNesting on UserPagination {
   page
   perPage
   totalPage
@@ -1544,7 +1585,7 @@ export const SizeDeepNestingFragment = `fragment SizeDeepNesting on Size {
 }
 `;
 
-export const ProductProviderPaginationDeepNestingFragment = `fragment ProductProviderPaginationDeepNesting on ProductProviderPagination {
+export const PartnershipPaginationDeepNestingFragment = `fragment PartnershipPaginationDeepNesting on PartnershipPagination {
   page
   perPage
   totalPage
@@ -1587,7 +1628,7 @@ export const OrderDeepNestingFragment = `fragment OrderDeepNesting on Order {
 }
 `;
 
-export const OrderPaginationDeepNestingFragment = `fragment OrderPaginationDeepNesting on OrderPagination {
+export const ProductPaginationDeepNestingFragment = `fragment ProductPaginationDeepNesting on ProductPagination {
   page
   perPage
   totalPage
@@ -1641,7 +1682,7 @@ export const BatchDeepNestingFragment = `fragment BatchDeepNesting on Batch {
 }
 `;
 
-export const OrderItemPaginationDeepNestingFragment = `fragment OrderItemPaginationDeepNesting on OrderItemPagination {
+export const ProductProviderPaginationDeepNestingFragment = `fragment ProductProviderPaginationDeepNesting on ProductProviderPagination {
   page
   perPage
   totalPage
@@ -1676,7 +1717,7 @@ export const TimelineDateDeepNestingFragment = `fragment TimelineDateDeepNesting
 }
 `;
 
-export const BatchPaginationDeepNestingFragment = `fragment BatchPaginationDeepNesting on BatchPagination {
+export const OrderPaginationDeepNestingFragment = `fragment OrderPaginationDeepNesting on OrderPagination {
   page
   perPage
   totalPage
@@ -1723,7 +1764,7 @@ export const VoyageDeepNestingFragment = `fragment VoyageDeepNesting on Voyage {
 }
 `;
 
-export const ShipmentPaginationDeepNestingFragment = `fragment ShipmentPaginationDeepNesting on ShipmentPagination {
+export const OrderItemPaginationDeepNestingFragment = `fragment OrderItemPaginationDeepNesting on OrderItemPagination {
   page
   perPage
   totalPage
@@ -1741,6 +1782,9 @@ export const ContainerGroupDeepNestingFragment = `fragment ContainerGroupDeepNes
   }
   deliveryReady {
     ...TimelineDateDeepNesting
+  }
+  warehouse {
+    ...WarehouseDeepNesting
   }
   shipment {
     ...ShipmentDeepNesting
@@ -1765,7 +1809,233 @@ export const ContainerGroupDeepNestingFragment = `fragment ContainerGroupDeepNes
 }
 `;
 
+export const BatchPaginationDeepNestingFragment = `fragment BatchPaginationDeepNesting on BatchPagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const BatchAssignmentDeepNestingFragment = `fragment BatchAssignmentDeepNesting on BatchAssignment {
+  batch {
+    ...BatchDeepNesting
+  }
+  user {
+    ...UserDeepNesting
+  }
+  quantity
+  memo
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserDeepNesting
+  }
+  updatedBy {
+    ...UserDeepNesting
+  }
+  deletedBy {
+    ...UserDeepNesting
+  }
+  ownedBy {
+    ...GroupDeepNesting
+  }
+  sort
+}
+`;
+
+export const ShipmentPaginationDeepNestingFragment = `fragment ShipmentPaginationDeepNesting on ShipmentPagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const TimelineDeepNestingFragment = `fragment TimelineDeepNesting on Timeline {
+  id
+  unreadCount
+  events {
+    ...EventPaginationDeepNesting
+  }
+}
+`;
+
+export const WarehousePaginationDeepNestingFragment = `fragment WarehousePaginationDeepNesting on WarehousePagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const UserDeepNestingFragment = `fragment UserDeepNesting on User {
+  email
+  group {
+    ...GroupDeepNesting
+  }
+  role
+  disabled
+  firstName
+  lastName
+  firstName2
+  lastName2
+  avatar {
+    ...FileDeepNesting
+  }
+  language
+  timezone
+  memo
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserDeepNesting
+  }
+  updatedBy {
+    ...UserDeepNesting
+  }
+  deletedBy {
+    ...UserDeepNesting
+  }
+}
+`;
+
+export const TagPaginationDeepNestingFragment = `fragment TagPaginationDeepNesting on TagPagination {
+  page
+  perPage
+  totalPage
+  count
+  totalCount
+}
+`;
+
+export const PartnerDeepNestingFragment = `fragment PartnerDeepNesting on Partner {
+  group {
+    ...GroupDeepNesting
+  }
+  name
+  code
+  confirmed
+  approvedAt
+  approvedByPartnerAt
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserDeepNesting
+  }
+  updatedBy {
+    ...UserDeepNesting
+  }
+  deletedBy {
+    ...UserDeepNesting
+  }
+}
+`;
+
+export const TokenMutatedDeepNestingFragment = `fragment TokenMutatedDeepNesting on TokenMutated {
+  token {
+    ...TokenDeepNesting
+  }
+  violations {
+    ...ViolationDeepNesting
+  }
+}
+`;
+
+export const MetricValueDeepNestingFragment = `fragment MetricValueDeepNesting on MetricValue {
+  value
+  metric
+}
+`;
+
+export const TokenDeepNestingFragment = `fragment TokenDeepNesting on Token {
+  token
+}
+`;
+
+export const OrderItemDeepNestingFragment = `fragment OrderItemDeepNesting on OrderItem {
+  order {
+    ...OrderDeepNesting
+  }
+  productProvider {
+    ...ProductProviderDeepNesting
+  }
+  price {
+    ...PriceDeepNesting
+  }
+  quantity
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserDeepNesting
+  }
+  updatedBy {
+    ...UserDeepNesting
+  }
+  deletedBy {
+    ...UserDeepNesting
+  }
+  ownedBy {
+    ...GroupDeepNesting
+  }
+  sort
+}
+`;
+
+export const ViolationDeepNestingFragment = `fragment ViolationDeepNesting on Violation {
+  message
+  error
+  code
+  path
+}
+`;
+
+export const TimelineDateRevisionDeepNestingFragment = `fragment TimelineDateRevisionDeepNesting on TimelineDateRevision {
+  date
+  type
+  memo
+  timelineDate {
+    ...TimelineDateDeepNesting
+  }
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserDeepNesting
+  }
+  updatedBy {
+    ...UserDeepNesting
+  }
+  deletedBy {
+    ...UserDeepNesting
+  }
+  ownedBy {
+    ...GroupDeepNesting
+  }
+  sort
+}
+`;
+
+export const ViolationParameterDeepNestingFragment = `fragment ViolationParameterDeepNesting on ViolationParameter {
+  key
+  value
+}
+`;
+
 export const WarehouseDeepNestingFragment = `fragment WarehouseDeepNesting on Warehouse {
+  archived
   name
   surface {
     ...MetricValueDeepNesting
@@ -1794,39 +2064,13 @@ export const WarehouseDeepNestingFragment = `fragment WarehouseDeepNesting on Wa
 }
 `;
 
-export const BatchAdjustmentDeepNestingFragment = `fragment BatchAdjustmentDeepNesting on BatchAdjustment {
-  batch {
-    ...BatchDeepNesting
+export const ProductMutatedDeepNestingFragment = `fragment ProductMutatedDeepNesting on ProductMutated {
+  product {
+    ...ProductDeepNesting
   }
-  reason
-  quantity
-  memo
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserDeepNesting
+  violations {
+    ...ViolationDeepNesting
   }
-  updatedBy {
-    ...UserDeepNesting
-  }
-  deletedBy {
-    ...UserDeepNesting
-  }
-  ownedBy {
-    ...GroupDeepNesting
-  }
-  sort
-}
-`;
-
-export const WarehousePaginationDeepNestingFragment = `fragment WarehousePaginationDeepNesting on WarehousePagination {
-  page
-  perPage
-  totalPage
-  count
-  totalCount
 }
 `;
 
@@ -1839,46 +2083,9 @@ export const EventPaginationDeepNestingFragment = `fragment EventPaginationDeepN
 }
 `;
 
-export const TagPaginationDeepNestingFragment = `fragment TagPaginationDeepNesting on TagPagination {
-  page
-  perPage
-  totalPage
-  count
-  totalCount
-}
-`;
-
-export const GroupDeepNestingFragment = `fragment GroupDeepNesting on Group {
-  name
-  name2
-  tel
-  address
-  zipCode
-  country
-  disabled
-  dummy
-  partners {
-    ...PartnerPaginationDeepNesting
-  }
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserDeepNesting
-  }
-  updatedBy {
-    ...UserDeepNesting
-  }
-  deletedBy {
-    ...UserDeepNesting
-  }
-}
-`;
-
-export const TokenMutatedDeepNestingFragment = `fragment TokenMutatedDeepNesting on TokenMutated {
-  token {
-    ...TokenDeepNesting
+export const OrderMutatedDeepNestingFragment = `fragment OrderMutatedDeepNesting on OrderMutated {
+  order {
+    ...OrderDeepNesting
   }
   violations {
     ...ViolationDeepNesting
@@ -1909,25 +2116,6 @@ export const ProductDeepNestingFragment = `fragment ProductDeepNesting on Produc
   ownedBy {
     ...GroupDeepNesting
   }
-}
-`;
-
-export const TokenDeepNestingFragment = `fragment TokenDeepNesting on Token {
-  token
-}
-`;
-
-export const PriceDeepNestingFragment = `fragment PriceDeepNesting on Price {
-  amount
-  currency
-}
-`;
-
-export const ViolationDeepNestingFragment = `fragment ViolationDeepNesting on Violation {
-  message
-  error
-  code
-  path
 }
 `;
 
@@ -1962,103 +2150,6 @@ export const ShipmentDeepNestingFragment = `fragment ShipmentDeepNesting on Ship
   ownedBy {
     ...GroupDeepNesting
   }
-}
-`;
-
-export const ViolationParameterDeepNestingFragment = `fragment ViolationParameterDeepNesting on ViolationParameter {
-  key
-  value
-}
-`;
-
-export const PortDeepNestingFragment = `fragment PortDeepNesting on Port {
-  seaport
-  airport
-}
-`;
-
-export const ProductMutatedDeepNestingFragment = `fragment ProductMutatedDeepNesting on ProductMutated {
-  product {
-    ...ProductDeepNesting
-  }
-  violations {
-    ...ViolationDeepNesting
-  }
-}
-`;
-
-export const TimelineDeepNestingFragment = `fragment TimelineDeepNesting on Timeline {
-  id
-  unreadCount
-  events {
-    ...EventPaginationDeepNesting
-  }
-}
-`;
-
-export const OrderMutatedDeepNestingFragment = `fragment OrderMutatedDeepNesting on OrderMutated {
-  order {
-    ...OrderDeepNesting
-  }
-  violations {
-    ...ViolationDeepNesting
-  }
-}
-`;
-
-export const PartnerDeepNestingFragment = `fragment PartnerDeepNesting on Partner {
-  group {
-    ...GroupDeepNesting
-  }
-  name
-  code
-  confirmed
-  approvedAt
-  approvedByPartnerAt
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserDeepNesting
-  }
-  updatedBy {
-    ...UserDeepNesting
-  }
-  deletedBy {
-    ...UserDeepNesting
-  }
-}
-`;
-
-export const OrderItemDeepNestingFragment = `fragment OrderItemDeepNesting on OrderItem {
-  order {
-    ...OrderDeepNesting
-  }
-  productProvider {
-    ...ProductProviderDeepNesting
-  }
-  price {
-    ...PriceDeepNesting
-  }
-  quantity
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserDeepNesting
-  }
-  updatedBy {
-    ...UserDeepNesting
-  }
-  deletedBy {
-    ...UserDeepNesting
-  }
-  ownedBy {
-    ...GroupDeepNesting
-  }
-  sort
 }
 `;
 
@@ -2102,56 +2193,30 @@ export const BatchMutatedDeepNestingFragment = `fragment BatchMutatedDeepNesting
 }
 `;
 
-export const TimelineDateRevisionDeepNestingFragment = `fragment TimelineDateRevisionDeepNesting on TimelineDateRevision {
-  date
-  type
-  memo
-  timelineDate {
-    ...TimelineDateDeepNesting
-  }
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserDeepNesting
-  }
-  updatedBy {
-    ...UserDeepNesting
-  }
-  deletedBy {
-    ...UserDeepNesting
-  }
-  ownedBy {
-    ...GroupDeepNesting
-  }
-  sort
+export const PortDeepNestingFragment = `fragment PortDeepNesting on Port {
+  seaport
+  airport
 }
 `;
 
-export const MetricValueDeepNestingFragment = `fragment MetricValueDeepNesting on MetricValue {
-  value
-  metric
+export const PriceDeepNestingFragment = `fragment PriceDeepNesting on Price {
+  amount
+  currency
 }
 `;
 
-export const UserDeepNestingFragment = `fragment UserDeepNesting on User {
-  email
-  group {
-    ...GroupDeepNesting
-  }
-  role
+export const GroupDeepNestingFragment = `fragment GroupDeepNesting on Group {
+  name
+  name2
+  tel
+  address
+  zipCode
+  country
   disabled
-  firstName
-  lastName
-  firstName2
-  lastName2
-  avatar {
-    ...FileDeepNesting
+  dummy
+  partners {
+    ...PartnerPaginationDeepNesting
   }
-  language
-  timezone
-  memo
   id
   createdAt
   updatedAt
@@ -2168,13 +2233,11 @@ export const UserDeepNestingFragment = `fragment UserDeepNesting on User {
 }
 `;
 
-export const BatchAssignmentDeepNestingFragment = `fragment BatchAssignmentDeepNesting on BatchAssignment {
+export const BatchAdjustmentDeepNestingFragment = `fragment BatchAdjustmentDeepNesting on BatchAdjustment {
   batch {
     ...BatchDeepNesting
   }
-  user {
-    ...UserDeepNesting
-  }
+  reason
   quantity
   memo
   id
