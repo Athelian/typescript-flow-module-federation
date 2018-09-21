@@ -38,7 +38,7 @@ export default class FormContainer extends Container<FormState> {
 
   onReset = () => {
     logger.warn('onReset');
-    this.setState(() => initState);
+    this.setState(initState);
   };
 
   onErrors = (

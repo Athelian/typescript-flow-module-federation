@@ -33,7 +33,7 @@ const defaultProps = {
   batchId: '',
 };
 
-class BatchFormModule extends React.Component<Props> {
+class BatchFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
   onCancel = () => {

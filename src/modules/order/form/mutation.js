@@ -46,7 +46,7 @@ export const prepareCreateOrderInput = ({
       ...orderItem,
       price: { ...price, currency },
       productProviderId: productProvider.id,
-      batches: batches.map(prepareCreateBatchInput),
+      batches: batches.map(batch => prepareCreateBatchInput(batch, false)),
     })
   ),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({

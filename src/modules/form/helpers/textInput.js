@@ -4,6 +4,7 @@ import { FieldItem, Label, Tooltip, DefaultStyle, TextInput } from 'components/F
 
 export default function textInputFactory({
   required = false,
+  WrapperComponent = DefaultStyle,
   width = '200px',
   height = '30px',
   isNew,
@@ -12,6 +13,7 @@ export default function textInputFactory({
   inputHandlers,
   initValue,
 }: {
+  WrapperComponent?: React.Node,
   required?: boolean,
   width?: string,
   height?: string,
@@ -42,7 +44,7 @@ export default function textInputFactory({
         />
       }
       input={
-        <DefaultStyle
+        <WrapperComponent
           isFocused={isFocused}
           hasError={isTouched && errorMessage}
           forceHoverStyle={isNew}
@@ -50,7 +52,7 @@ export default function textInputFactory({
           height={height}
         >
           <TextInput name={name} {...rest} />
-        </DefaultStyle>
+        </WrapperComponent>
       }
     />
   );
