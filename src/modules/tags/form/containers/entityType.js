@@ -4,11 +4,7 @@ import { removeTypename } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
-  entityTypes?: Array<{
-    name: string,
-    icon: string,
-    color: string,
-  }>,
+  entityTypes: Array<string>,
 };
 
 const initValues = {
@@ -26,15 +22,16 @@ export default class TagEntityTypeContainer extends Container<FormState> {
     this.originalValues = { ...this.state };
   };
 
-  setFieldValue = (name: string, value: mixed) => {
-    this.setState({
-      [name]: value,
-    });
+  toggleSelectType = (name: string) => {
+    this.setState(({ entityTypes }) => ({
+      entityTypes: entityTypes.includes(name)
+        ? (entityTypes.filter(item => item !== name): Array<string>)
+        : ([...entityTypes, name]: Array<string>),
+    }));
   };
 
-  initDetailValues = (entityTypes: Array<Object>) => {
-    const parsedValues = removeTypename(entityTypes);
-    // $FlowFixMe: missing type for ramda's map function
+  initDetailValues = (entityTypes: Array<string>) => {
+    const parsedValues: Array<any> = removeTypename(entityTypes);
     this.setState({ entityTypes: parsedValues });
     this.originalValues = { entityTypes: parsedValues };
   };

@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
-
 import { Query, Mutation } from 'react-apollo';
 import LoadingIcon from 'components/LoadingIcon';
 import Layout from 'components/Layout';
@@ -14,10 +13,9 @@ import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import TagForm from './form';
-
 import { TagContainer, EntityTypeContainer } from './form/containers';
-
 import query from './form/query';
+import validator from './form/validator';
 import { createTagMutation, updateTagMutation } from './form/mutation';
 
 type Props = {
@@ -35,7 +33,12 @@ export default class TagFormContainer extends React.PureComponent<Props> {
     navigate('/tags');
   };
 
-  onSave = (formData: Object, saveTag: Function, onSuccess: Function = () => {}) => {
+  onSave = async (
+    formData: Object,
+    saveTag: Function,
+    onSuccess: Function = () => {},
+    onErrors: Function = () => {}
+  ) => {
     const { tagId } = this.props;
     const isNew = tagId === 'new';
 
@@ -49,9 +52,25 @@ export default class TagFormContainer extends React.PureComponent<Props> {
     };
 
     if (isNew) {
-      saveTag({ variables: { input } });
+      const { data } = await saveTag({ variables: { input } });
+      const {
+        tagCreate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     } else if (tagId) {
-      saveTag({ variables: { input, id: decodeId(tagId) } });
+      const { data } = await saveTag({ variables: { input, id: decodeId(tagId) } });
+      const {
+        tagUpdate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     }
 
     onSuccess();
@@ -101,7 +120,12 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
-                                disabled={!form.isReady()}
+                                disabled={
+                                  !form.isReady(
+                                    { ...tagState.state, ...entityTypesState.state },
+                                    validator
+                                  )
+                                }
                                 onClick={() =>
                                   this.onSave(
                                     { ...tagState.state, ...entityTypesState.state },

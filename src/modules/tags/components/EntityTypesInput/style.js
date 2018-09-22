@@ -3,22 +3,24 @@ import { css } from 'react-emotion';
 
 import { borderRadiuses, colors } from 'styles/common';
 
-export const LabelStyle = css`
+export const WrapperStyle = css`
+  display: flex;
   text-align: center;
-  padding-top: 10px;
+  justify-content: space-evenly;
+  margin: 10px;
 `;
 
 export const IconStyle = (color: string) => css`
-  text-align: center;
-  padding-top: 10px;
+  text-align: center
   color: ${colors[color]};
 `;
 
-export const SelectedStyle = (color: string) => css`
-  width: 80px;
-  height: 80px;
-  display: inline-block;
-  margin: 10px;
+export const ItemStyle = (color: string) => css`
   border: 4px solid ${colors[color]};
+  width: 90px;
+  height: 75px;
+  border-radius: 5px;
+  padding: 7px;
+  cursor: pointer;
   ${borderRadiuses.MAIN};
 `;
