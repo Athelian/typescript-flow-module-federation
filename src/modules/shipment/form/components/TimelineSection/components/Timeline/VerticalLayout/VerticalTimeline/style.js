@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const VerticalTimelineWrapperStyle = css`
+export const VerticalTimelineWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   height: 100%;

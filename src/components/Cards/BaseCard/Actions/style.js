@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const ActionsWrapperStyle = css`
+export const ActionsWrapperStyle: string = css`
   display: flex;
   position: absolute;
   bottom: calc(100% + 5px);
@@ -14,11 +14,11 @@ export const ActionsWrapperStyle = css`
   }
 `;
 
-export const DefaultStyle = css`
+export const DefaultStyle: string = css`
   display: none;
 `;
 
-export const FadeInStyle = (index: number) => css`
+export const FadeInStyle = (index: number): string => css`
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -39,7 +39,7 @@ export const FadeInStyle = (index: number) => css`
   animation-fill-mode: forwards;
 `;
 
-export const FadeOutStyle = (index: number) => css`
+export const FadeOutStyle = (index: number): string => css`
   margin-left: 5px;
 
   @keyframes fadeOut {

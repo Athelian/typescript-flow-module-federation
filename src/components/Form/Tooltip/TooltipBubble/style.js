@@ -16,7 +16,7 @@ const iconHeight = 20;
 const iconWidth = 20;
 const bubbleBackgroundColor = colors.BLACK;
 
-const arrowForTop = css`
+const arrowForTop: string = css`
   &:after {
     border-right: ${arrowSize}px solid transparent;
     border-left: ${arrowSize}px solid transparent;
@@ -25,14 +25,14 @@ const arrowForTop = css`
   }
 `;
 
-const onTopStyle = css`
+const onTopStyle: string = css`
   left: 0;
   bottom: ${iconHeight + arrowSize}px;
   margin-left: -${bubbleWidth / 2 - iconWidth / 2}px;
   ${arrowForTop};
 `;
 
-const arrowForBottom = css`
+const arrowForBottom: string = css`
   &:after {
     border-right: ${arrowSize}px solid transparent;
     border-left: ${arrowSize}px solid transparent;
@@ -41,14 +41,14 @@ const arrowForBottom = css`
   }
 `;
 
-const onBottomStyle = css`
+const onBottomStyle: string = css`
   left: 0;
   top: ${iconHeight + arrowSize}px;
   margin-left: -${bubbleWidth / 2 - iconWidth / 2}px;
   ${arrowForBottom};
 `;
 
-export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
+export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType): string => css`
   display: flex;
   flex-flow: column wrap;
   align-items: center;
@@ -69,40 +69,40 @@ export const TooltipBubbleWrapperStyle = (position: ?BubblePositionType) => css`
   }
 `;
 
-const MessageStyle = css`
+const MessageStyle: string = css`
   width: 100%;
 `;
 
-const ValueStyle = css`
+const ValueStyle: string = css`
   ${presets.ELLIPSIS};
   width: 100%;
   text-align: center;
 `;
 
-export const UpperMessageStyle = css`
+export const UpperMessageStyle: string = css`
   ${MessageStyle};
 `;
 
-export const OldValueStyle = css`
+export const OldValueStyle: string = css`
   ${ValueStyle};
 `;
 
-export const ArrowDownStyle = css`
+export const ArrowDownStyle: string = css`
   display: flex;
   justify-content: center;
   align-items: center;
   ${fontSizes.SMALL};
 `;
 
-export const NewValueStyle = css`
+export const NewValueStyle: string = css`
   ${ValueStyle};
 `;
 
-export const InfoMessageStyle = css`
+export const InfoMessageStyle: string = css`
   ${MessageStyle};
 `;
 
-export const DividerStyle = css`
+export const DividerStyle: string = css`
   height: 1px;
   width: 100%;
   background-color: ${colors.GRAY_VERY_LIGHT};

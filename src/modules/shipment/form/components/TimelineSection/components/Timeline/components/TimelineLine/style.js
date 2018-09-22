@@ -7,7 +7,7 @@ type TimelineLine = {
   color: string,
 };
 
-export const TimelineLineStyle = ({ vertical, color }: TimelineLine) => css`
+export const TimelineLineStyle = ({ vertical, color }: TimelineLine): string => css`
   position: relative;
   background-color: ${colors[color]};
   flex: 1;

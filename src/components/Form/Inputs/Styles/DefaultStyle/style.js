@@ -19,7 +19,7 @@ export const DefaultStyleWrapperStyle = ({
   forceHoverStyle,
   width,
   height,
-}: OptionalProps) => css`
+}: OptionalProps): string => css`
   position: relative;
   display: flex;
   align-items: center;

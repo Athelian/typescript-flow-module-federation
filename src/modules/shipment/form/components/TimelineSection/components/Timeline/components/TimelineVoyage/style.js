@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const TimelineVoyageWrapperStyle = css`
+export const TimelineVoyageWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;

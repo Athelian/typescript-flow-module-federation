@@ -11,7 +11,7 @@ import {
   borderRadiuses,
 } from 'styles/common';
 
-export const WrapperStyle = (focused: boolean, disabled: boolean, readonly: boolean) => css`
+export const WrapperStyle = (focused: boolean, disabled: boolean, readonly: boolean): string => css`
   ${layout.HORIZONTAL};
   ${transitions.MAIN};
   background: #fff;
@@ -23,7 +23,7 @@ export const WrapperStyle = (focused: boolean, disabled: boolean, readonly: bool
     `};
 `;
 
-export const SelectionWrapperStyle = css`
+export const SelectionWrapperStyle: string = css`
   /* display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -35,13 +35,13 @@ export const SelectionWrapperStyle = css`
   grid-gap: 10px;
 `;
 
-export const RemoveStyle = css`
+export const RemoveStyle: string = css`
   cursor: pointer;
   color: inherit;
   ${fontSizes.MEDIUM};
 `;
 
-export const ExpandButtonStyle = css`
+export const ExpandButtonStyle: string = css`
   ${presets.BUTTON};
   ${fontSizes.MEDIUM};
   color: ${colors.GRAY};
@@ -58,12 +58,12 @@ export const ExpandButtonStyle = css`
   }
 `;
 
-export const ArrowDownStyle = (isOpen: boolean) => css`
+export const ArrowDownStyle = (isOpen: boolean): string => css`
   ${transitions.EXPAND};
   transform: rotate(${isOpen ? '180' : '0'}deg);
 `;
 
-export const InputStyle = (isHover: boolean) => css`
+export const InputStyle = (isHover: boolean): string => css`
   ${layout.HORIZONTAL};
   flex: auto;
   position: relative;
@@ -84,7 +84,7 @@ export const InputStyle = (isHover: boolean) => css`
   }
 `;
 
-export const ListWrapperStyle = css`
+export const ListWrapperStyle: string = css`
   ${layout.VERTICAL};
   ${presets.BOX};
   ${scrollbars.SMALL};
@@ -99,7 +99,7 @@ export const ListWrapperStyle = css`
   min-width: min-content;
 `;
 
-export const ItemStyle = (highlighted: boolean) => css`
+export const ItemStyle = (highlighted: boolean): string => css`
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -113,7 +113,7 @@ export const ItemStyle = (highlighted: boolean) => css`
   flex-shrink: 0;
 `;
 
-export const SelectedWrapperStyle = (highlighted: boolean) => css`
+export const SelectedWrapperStyle = (highlighted: boolean): string => css`
   ${fontSizes.MAIN};
   color: ${highlighted ? '#fff' : colors.GRAY_LIGHT};
   min-width: 20px;

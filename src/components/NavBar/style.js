@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { transitions } from 'styles/common';
 
-export const NavBarStyle = css`
+export const NavBarStyle: string = css`
   display: flex;
   align-items: center;
   position: absolute;
@@ -16,7 +16,7 @@ export const NavBarStyle = css`
   ${transitions.EXPAND};
 `;
 
-export const ChildrenWrapperStyle = css`
+export const ChildrenWrapperStyle: string = css`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: min-content;

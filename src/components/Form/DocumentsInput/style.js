@@ -2,14 +2,14 @@
 import { css } from 'react-emotion';
 import { layout, presets, colors, borderRadiuses, fontSizes } from 'styles/common';
 
-export const DocumentListStyle = css`
+export const DocumentListStyle: string = css`
   display: grid;
   grid-template-columns: repeat(auto-fit, 140px);
   grid-auto-rows: min-content;
   grid-gap: 20px;
 `;
 
-export const AddDocumentStyle = css`
+export const AddDocumentStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
   font-size: 30px;
@@ -26,7 +26,7 @@ export const AddDocumentStyle = css`
   }
 `;
 
-export const ProgressStyle = css`
+export const ProgressStyle: string = css`
   ${presets.BOX};
   ${layout.LAYOUT};
   ${layout.CENTER_CENTER};
@@ -36,7 +36,7 @@ export const ProgressStyle = css`
   font-size: 24px;
 `;
 
-export const NoDocumentsStyle = css`
+export const NoDocumentsStyle: string = css`
   ${fontSizes.MAIN};
   color: ${colors.GRAY_DARK};
   text-align: center;

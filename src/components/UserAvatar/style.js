@@ -7,7 +7,7 @@ type AvatarWrapper = {
   height: string,
 };
 
-export const AvatarWrapperStyle = ({ width, height }: AvatarWrapper) => css`
+export const AvatarWrapperStyle = ({ width, height }: AvatarWrapper): string => css`
   display: flex;
   align-items: center;
   justify-content: center;

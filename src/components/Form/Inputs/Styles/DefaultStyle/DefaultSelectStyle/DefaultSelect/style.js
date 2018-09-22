@@ -2,12 +2,12 @@
 import { css } from 'react-emotion';
 import { colors, transitions, fontSizes, presets } from 'styles/common';
 
-export const SelectInputStyle = (align: 'left' | 'right' | 'center') => css`
+export const SelectInputStyle = (align: 'left' | 'right' | 'center'): string => css`
   cursor: pointer;
   text-align: ${align};
 `;
 
-export const ClearButtonStyle = css`
+export const ClearButtonStyle: string = css`
   ${presets.BUTTON};
   height: 100%;
   color: ${colors.GRAY_LIGHT};
@@ -19,7 +19,7 @@ export const ClearButtonStyle = css`
   }
 `;
 
-export const ArrowDownStyle = (isOpen: boolean) => css`
+export const ArrowDownStyle = (isOpen: boolean): string => css`
   ${presets.BUTTON};
   ${transitions.EXPAND};
   height: 100%;

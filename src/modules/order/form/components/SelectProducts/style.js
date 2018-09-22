@@ -1,10 +1,11 @@
+// @flow
 import { css } from 'react-emotion';
 
-export const ItemWrapperStyle = css`
+export const ItemWrapperStyle: string = css`
   position: relative;
 `;
 
-export const NumberBarStyle = css`
+export const NumberBarStyle: string = css`
   position: absolute;
   top: 30px;
   z-index: 1;

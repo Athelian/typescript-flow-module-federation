@@ -1,7 +1,8 @@
+// @flow
 import { css } from 'react-emotion';
 import { presets, colors } from 'styles/common';
 
-export const ListButtonStyle = isActive => css`
+export const ListButtonStyle = (isActive: boolean): string => css`
   ${presets.BUTTON};
   height: 40px;
   padding: 0 5px;
@@ -20,7 +21,7 @@ export const ListButtonStyle = isActive => css`
   }
 `;
 
-export const ListButtonDisabledStyle = css`
+export const ListButtonDisabledStyle: string = css`
   ${presets.BUTTON};
   cursor: default;
   height: 40px;

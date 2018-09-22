@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, fontSizesWithHeights, presets } from 'styles/common';
 
-export const ExporterCardStyle = (size: 'full' | 'half' | 'quarter') => css`
+export const ExporterCardStyle = (size: 'full' | 'half' | 'quarter'): string => css`
   display: grid;
   align-items: center;
   ${size === 'full' &&
@@ -22,14 +22,14 @@ export const ExporterCardStyle = (size: 'full' | 'half' | 'quarter') => css`
     `};
 `;
 
-export const ExporterCardImageStyle = css`
+export const ExporterCardImageStyle: string = css`
   border-radius: 5px 5px 0 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 `;
 
-export const ExporterNameStyle = css`
+export const ExporterNameStyle: string = css`
   color: ${colors.BLACK};
   font-weight: bold;
   ${fontSizesWithHeights.MAIN};

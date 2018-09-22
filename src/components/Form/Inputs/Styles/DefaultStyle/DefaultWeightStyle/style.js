@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { fontSizes, colors } from 'styles/common';
 
-export const WeightUnitStyle = css`
+export const WeightUnitStyle: string = css`
   ${fontSizes.MAIN};
   color: ${colors.BLACK};
   font-weight: bold;

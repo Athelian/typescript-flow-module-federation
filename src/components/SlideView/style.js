@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-const SlideViewWrapperStyle = css`
+const SlideViewWrapperStyle: string = css`
   position: absolute;
   top: 0;
   right: 0;
@@ -11,7 +11,7 @@ const SlideViewWrapperStyle = css`
   z-index: 10001;
 `;
 
-export const SlideInStyle = (width: string) => css`
+export const SlideInStyle = (width: string): string => css`
   ${SlideViewWrapperStyle};
   width: ${width};
 
@@ -29,7 +29,7 @@ export const SlideInStyle = (width: string) => css`
   animation-fill-mode: forwards;
 `;
 
-export const SlideAwayStyle = (width: number | string) => css`
+export const SlideAwayStyle = (width: number | string): string => css`
   ${SlideViewWrapperStyle};
   width: ${width};
 
@@ -47,11 +47,11 @@ export const SlideAwayStyle = (width: number | string) => css`
   animation-fill-mode: forwards;
 `;
 
-export const SlideViewContentStyle = css`
+export const SlideViewContentStyle: string = css`
   position: relative;
 `;
 
-const BackdropStyle = css`
+const BackdropStyle: string = css`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -65,7 +65,7 @@ const BackdropStyle = css`
   z-index: 10000;
 `;
 
-export const BackdropFadeInStyle = css`
+export const BackdropFadeInStyle: string = css`
   ${BackdropStyle};
 
   @keyframes appear {
@@ -79,7 +79,7 @@ export const BackdropFadeInStyle = css`
   animation-fill-mode: forwards;
 `;
 
-export const BackdropFadeOutStyle = css`
+export const BackdropFadeOutStyle: string = css`
   ${BackdropStyle};
 
   @keyframes dissappear {

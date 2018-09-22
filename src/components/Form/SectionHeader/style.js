@@ -1,7 +1,8 @@
+// @flow
 import { css } from 'react-emotion';
 import { presets, colors, fontSizes, layout } from 'styles/common';
 
-export const SectionHeaderWrapperStyle = css`
+export const SectionHeaderWrapperStyle: string = css`
   grid-template-columns: 1fr;
   ${layout.GRID_HORIZONTAL};
   grid-template-rows: 40px;
@@ -10,7 +11,7 @@ export const SectionHeaderWrapperStyle = css`
   width: 100%;
 `;
 
-export const TitleWrapperStyle = css`
+export const TitleWrapperStyle: string = css`
   position: relative;
   display: flex;
   align-items: center;
@@ -18,14 +19,14 @@ export const TitleWrapperStyle = css`
   color: ${colors.GRAY_DARK};
 `;
 
-export const TitleStyle = css`
+export const TitleStyle: string = css`
   ${presets.ELLIPSIS};
   font-weight: bold;
   letter-spacing: 2px;
   user-select: none;
 `;
 
-export const IconStyle = css`
+export const IconStyle: string = css`
   position: absolute;
   left: -40px;
   width: 40px;

@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const FieldItemWrapperStyle = (vertical: boolean) => css`
+export const FieldItemWrapperStyle = (vertical: boolean): string => css`
   position: relative;
   display: flex;
   ${!vertical && 'align-items: center; justify-content: space-between'};
@@ -9,7 +9,7 @@ export const FieldItemWrapperStyle = (vertical: boolean) => css`
   width: 100%;
 `;
 
-export const TooltipAbsoluteWrapperStyle = css`
+export const TooltipAbsoluteWrapperStyle: string = css`
   position: absolute;
   left: -20px;
 `;

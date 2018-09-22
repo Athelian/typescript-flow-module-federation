@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, presets, transitions, borderRadiuses } from 'styles/common';
 
-export const CardStyle = (disabled: boolean, readOnly: boolean) => css`
+export const CardStyle = (disabled: boolean, readOnly: boolean): string => css`
   width: min-content;
   height: min-content;
   ${presets.BOX};
@@ -19,7 +19,7 @@ export const CardStyle = (disabled: boolean, readOnly: boolean) => css`
   `};
 `;
 
-export const SelectableCardStyle = (selected: boolean) => css`
+export const SelectableCardStyle = (selected: boolean): string => css`
   position: absolute;
   top: 0;
   left: 0;

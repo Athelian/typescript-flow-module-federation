@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, fontSizes } from 'styles/common';
 
-export const StaffCardWrapperStyle = css`
+export const StaffCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;

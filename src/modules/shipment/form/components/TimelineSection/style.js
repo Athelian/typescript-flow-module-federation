@@ -2,14 +2,14 @@
 import { css } from 'react-emotion';
 import { presets, borderRadiuses, scrollbars } from 'styles/common';
 
-export const TimelineSectionWrapperStyle = css`
+export const TimelineSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
   height: 600px;
   display: flex;
 `;
 
-export const TimelineWrapperStyle = css`
+export const TimelineWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -19,7 +19,7 @@ export const TimelineWrapperStyle = css`
   width: 210px;
 `;
 
-export const BodyWrapperStyle = css`
+export const BodyWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;

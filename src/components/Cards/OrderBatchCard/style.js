@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout, colors, presets, borderRadiuses } from 'styles/common';
 
-export const OrderBatchCardWrapperStyle = css`
+export const OrderBatchCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
   padding: 5px 0;
@@ -10,46 +10,46 @@ export const OrderBatchCardWrapperStyle = css`
   height: 211px;
 `;
 
-export const BatchNoWrapperStyle = css`
+export const BatchNoWrapperStyle: string = css`
   padding: 0 5px;
   width: 100%;
 `;
 
-export const QuantityWrapperStyle = css`
+export const QuantityWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 95px 90px;
   width: 100%;
   padding: 0 5px;
 `;
 
-export const DeliveryDateWrapperStyle = css`
+export const DeliveryDateWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 95px 90px;
   width: 100%;
   padding: 0 5px;
 `;
 
-export const DividerStyle = css`
+export const DividerStyle: string = css`
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};
   margin: 0 10px;
 `;
 
-export const TotalPriceWrapperStyle = css`
+export const TotalPriceWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 90px 90px;
   width: 100%;
   padding: 0 10px 0 5px;
 `;
 
-export const VolumeWrapperStyle = css`
+export const VolumeWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 90px 90px;
   width: 100%;
   padding: 0 10px 0 5px;
 `;
 
-export const ShipmentWrapperStyle = css`
+export const ShipmentWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 20px 1fr;
   width: 100%;
@@ -58,7 +58,7 @@ export const ShipmentWrapperStyle = css`
   grid-gap: 5px;
 `;
 
-export const ShipmentIconStyle = (hasShipment: boolean) => css`
+export const ShipmentIconStyle = (hasShipment: boolean): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   width: 20px;
@@ -74,7 +74,7 @@ export const ShipmentIconStyle = (hasShipment: boolean) => css`
     `};
 `;
 
-export const WarehouseArrivalWrapperStyle = css`
+export const WarehouseArrivalWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 20px 1fr 1fr;
   width: 100%;
@@ -82,7 +82,7 @@ export const WarehouseArrivalWrapperStyle = css`
   align-items: center;
 `;
 
-export const WarehouseArrivalIconStyle = (warehouseArrivalApproved: boolean) => css`
+export const WarehouseArrivalIconStyle = (warehouseArrivalApproved: boolean): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   width: 20px;
@@ -92,7 +92,7 @@ export const WarehouseArrivalIconStyle = (warehouseArrivalApproved: boolean) => 
   font-size: 11px;
 `;
 
-export const BatchTagsWrapperStyle = css`
+export const BatchTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   padding: 0 10px;

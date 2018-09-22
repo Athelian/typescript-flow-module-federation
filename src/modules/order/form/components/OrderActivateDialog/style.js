@@ -8,7 +8,7 @@ export function SpanStyle(color: string) {
   `;
 }
 
-export const MessageStyle = css`
+export const MessageStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 10px;
 `;

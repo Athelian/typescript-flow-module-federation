@@ -2,18 +2,18 @@
 import { css } from 'react-emotion';
 import { presets, transitions } from 'styles/common';
 
-export const LogoWrapperStyle = css`
+export const LogoWrapperStyle: string = css`
   display: flex;
   align-items: center;
   height: 80px;
 `;
 
-export const LogoButtonWrapperStyle = css`
+export const LogoButtonWrapperStyle: string = css`
   ${presets.BUTTON};
   height: 100%;
 `;
 
-export const IconStyle = css`
+export const IconStyle: string = css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,7 +25,7 @@ export const IconStyle = css`
   }
 `;
 
-export const LogoStyle = css`
+export const LogoStyle: string = css`
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -35,7 +35,7 @@ export const LogoStyle = css`
     height: 18px;
 `;
 
-export const ToggleButtonStyle = css`
+export const ToggleButtonStyle: string = css`
   ${presets.BUTTON} font-size: 16px;
   margin: 0 10px 0 auto;
   &:hover {

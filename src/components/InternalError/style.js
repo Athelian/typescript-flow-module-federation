@@ -1,7 +1,8 @@
+// @flow
 import { css } from 'react-emotion';
 import { gradients, layout, transitions } from 'styles/common';
 
-export const InternalErrorContainerStyle = css`
+export const InternalErrorContainerStyle: string = css`
   ${layout.FIT};
   ${layout.VERTICAL};
   ${layout.CENTER_CENTER};
@@ -11,24 +12,24 @@ export const InternalErrorContainerStyle = css`
   cursor: pointer;
 `;
 
-export const InternalErrorTitleContainerStyle = css`
+export const InternalErrorTitleContainerStyle: string = css`
   ${layout.VERTICAL};
   ${layout.CENTER_CENTER};
   user-select: none;
   flex: 3;
 `;
 
-export const InternalErrorH1Style = css`
+export const InternalErrorH1Style: string = css`
   font-size: 200px;
   line-height: 250px;
   font-weight: 100;
 `;
 
-export const InternalErrorGifStyle = css`
+export const InternalErrorGifStyle: string = css`
   height: 300px;
 `;
 
-export const InternalErrorH3Style = css`
+export const InternalErrorH3Style: string = css`
   font-size: 20px;
   font-weight: 400;
   line-height: 26px;
@@ -36,11 +37,11 @@ export const InternalErrorH3Style = css`
   text-align: center;
 `;
 
-export const InternalErrorLinkContainerStyle = css`
+export const InternalErrorLinkContainerStyle: string = css`
   flex: 1;
 `;
 
-export const InternalErrorLinkStyle = css`
+export const InternalErrorLinkStyle: string = css`
   ${layout.VERTICAL};
   ${layout.CENTER};
   ${transitions.MAIN};
@@ -56,6 +57,6 @@ export const InternalErrorLinkStyle = css`
   }
 `;
 
-export const InternalErrorLogoStyle = css`
+export const InternalErrorLogoStyle: string = css`
   width: 60px;
 `;

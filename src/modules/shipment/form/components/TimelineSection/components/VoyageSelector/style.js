@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, colors, borderRadiuses, fontSizes } from 'styles/common';
 
-export const VoyageSelectorWrapperStyle = css`
+export const VoyageSelectorWrapperStyle: string = css`
   position: relative;
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
@@ -20,7 +20,7 @@ export const VoyageSelectorWrapperStyle = css`
   }
 `;
 
-export const VoyageOptionsWrapperStyle = css`
+export const VoyageOptionsWrapperStyle: string = css`
   display: flex;
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
@@ -32,7 +32,7 @@ export const VoyageOptionsWrapperStyle = css`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
-export const VoyageIconWrapperStyle = (isActive: boolean) => css`
+export const VoyageIconWrapperStyle = (isActive: boolean): string => css`
   ${presets.BUTTON};
   width: 70px;
   height: 50px;
@@ -56,7 +56,7 @@ export const VoyageIconWrapperStyle = (isActive: boolean) => css`
   }
 `;
 
-export const VoyageIconStyle = (position: 'middle' | 'top' | 'bottom') => css`
+export const VoyageIconStyle = (position: 'middle' | 'top' | 'bottom'): string => css`
   ${fontSizes.MAIN};
   ${position === 'top' && 'padding: 0 0 10px 0'};
   ${position === 'bottom' && 'padding: 10px 0 0 0'};

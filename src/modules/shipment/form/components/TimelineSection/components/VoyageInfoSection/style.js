@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, fontSizes, presets } from 'styles/common';
 
-export const VoyageInfoSectionWrapperStyle = css`
+export const VoyageInfoSectionWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -11,7 +11,7 @@ export const VoyageInfoSectionWrapperStyle = css`
   width: 490px;
 `;
 
-export const SelectTransportTypeMessageStyle = css`
+export const SelectTransportTypeMessageStyle: string = css`
   ${presets.ELLIPSIS};
   color: ${colors.GRAY_DARK};
   font-weight: bold;

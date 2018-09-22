@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, borderRadiuses, presets, fontSizes, scrollbars } from 'styles/common';
 
-const ResetOptionWrapperStyle = css`
+const ResetOptionWrapperStyle: string = css`
   list-style-type: none;
   position: absolute;
   margin: 0;
@@ -13,13 +13,13 @@ const ResetOptionWrapperStyle = css`
   min-width: min-content;
 `;
 
-const ResetOptionStyle = css`
+const ResetOptionStyle: string = css`
   min-width: min-content;
   width: 100%;
   white-space: nowrap;
 `;
 
-export const OptionWrapperStyle = (width: string, height: string) => css`
+export const OptionWrapperStyle = (width: string, height: string): string => css`
   ${ResetOptionWrapperStyle};
   display: flex;
   flex-flow: column;
@@ -38,7 +38,7 @@ export const OptionStyle = (
   onHover: boolean,
   selected: boolean,
   align: 'left' | 'right' | 'center'
-) => css`
+): string => css`
   ${ResetOptionStyle};
   background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
   ${presets.BUTTON};
