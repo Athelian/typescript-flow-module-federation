@@ -4,6 +4,7 @@ import DefaultStyle from './DefaultStyle';
 import DefaultPriceStyle from './DefaultStyle/DefaultPriceStyle';
 import DefaultWeightStyle from './DefaultStyle/DefaultWeightStyle';
 import DefaultVolumeStyle from './DefaultStyle/DefaultVolumeStyle';
+import DefaultSurfaceStyle from './DefaultStyle/DefaultSurfaceStyle';
 import DefaultDimensionStyle from './DefaultStyle/DefaultDimensionStyle';
 import {
   DefaultOptions,
@@ -17,6 +18,7 @@ export {
   DefaultPriceStyle,
   DefaultWeightStyle,
   DefaultVolumeStyle,
+  DefaultSurfaceStyle,
   DefaultDimensionStyle,
   DefaultOptions,
   DefaultSearchSelect,
