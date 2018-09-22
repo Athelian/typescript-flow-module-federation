@@ -631,6 +631,7 @@
   "containers.tags.name": "NAME",
   "containers.tags.description": "DESCRIPTION",
   "containers.tags.color": "COLOR",
+  "containers.tags.entity.types": "Entity Types",
   "containers.tags.newTag": "NEW TAG",
   "containers.tags.editTag": "EDIT TAG",
   "containers.tags.deleteTag": "DELETE TAG",

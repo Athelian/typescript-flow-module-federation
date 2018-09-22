@@ -26,7 +26,7 @@ const TagCard = ({ tag }: Props) => {
     <BaseCard icon="TAGS" color="GRAY_LIGHT" actions={actions}>
       <div
         className={TagCardWrapperStyle}
-        onClick={() => navigate(`/tag/${encodeId(id)}`)}
+        onClick={() => navigate(`/tags/${encodeId(id)}`)}
         role="presentation"
       >
         {id}

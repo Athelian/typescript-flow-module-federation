@@ -631,6 +631,7 @@
   "containers.tags.name": "タグ名",
   "containers.tags.description": "説明",
   "containers.tags.color": "色",
+  "containers.tags.entity.types": "エンティティタイプ",
   "containers.tags.newTag": "新規作成",
   "containers.tags.editTag": "編集",
   "containers.tags.deleteTag": "削除",

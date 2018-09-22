@@ -1,19 +1,18 @@
 // @flow
 import * as React from 'react';
-import type { Tag as TagType } from './type.js.flow';
 import { TagStyle, PrefixStyle, SuffixStyle } from './style';
 
 type Props = {
-  tag: TagType,
+  name: string,
   prefix?: ?string | ?React.Node,
   suffix?: ?string | ?React.Node,
 };
 
-export default function Tag({ tag, prefix, suffix }: Props) {
-  const { color = '#ffffff', name = 'TAG', description = '' } = tag;
+export default function EntityType({ name, prefix, suffix }: Props) {
+  const color = '#bbb';
 
   return (
-    <div className={TagStyle(color)} title={description}>
+    <div className={TagStyle(color)}>
       {prefix && <div className={PrefixStyle(color)}>{prefix}</div>}
       {name}
       {suffix && <div className={SuffixStyle(color)}>{suffix}</div>}
@@ -21,7 +20,7 @@ export default function Tag({ tag, prefix, suffix }: Props) {
   );
 }
 
-Tag.defaultProps = {
+EntityType.defaultProps = {
   prefix: '',
   suffix: '',
 };
