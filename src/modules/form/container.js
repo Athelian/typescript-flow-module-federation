@@ -11,7 +11,8 @@ type FormState = {
 };
 
 const EmptyValidation = {
-  validate: (value, options) => Promise.resolve({ value, options }),
+  validate: (value: mixed, options: Object): Promise<any> => Promise.resolve({ value, options }),
+  isValidSync: () => true,
 };
 
 const initState = {
@@ -57,9 +58,17 @@ export default class FormContainer extends Container<FormState> {
     });
   };
 
-  isReady = (formData: Object, schema: any = EmptyValidation) => schema.isValidSync(formData);
+  isReady = (
+    formData: Object,
+    schema: { isValidSync: any => boolean } = EmptyValidation
+  ): boolean => schema.isValidSync(formData);
 
-  onValidation = (formData: Object, schema: any = EmptyValidation) => {
+  onValidation = (
+    formData: Object,
+    schema: {
+      validate: (any, any) => Promise<any>,
+    } = EmptyValidation
+  ) => {
     logger.warn('validation', formData, schema);
     const { errors } = this.state;
     schema
@@ -67,7 +76,7 @@ export default class FormContainer extends Container<FormState> {
       .then(() => {
         if (Object.keys(errors).length) this.setState({ errors: {} });
       })
-      .catch(yupErrors => {
+      .catch((yupErrors: Object) => {
         const newErrors = yupToFormErrors(yupErrors);
         if (!isEquals(newErrors, errors))
           this.setState({

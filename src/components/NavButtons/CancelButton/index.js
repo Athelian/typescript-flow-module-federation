@@ -7,15 +7,14 @@ import CustomButton from '../CustomButton';
 import messages from '../messages';
 
 type Props = {
-  disabled?: boolean,
+  onClick: Function,
 };
 
-const CancelButton = ({ disabled, ...rest }: Props) => (
+const CancelButton = ({ ...rest }: Props) => (
   <CustomButton
+    {...rest}
     label={<FormattedMessage {...messages.cancel} />}
     icon={<FontAwesomeIcon icon={faCancel} fixedWidth />}
-    disabled={disabled}
-    {...rest}
   />
 );
 

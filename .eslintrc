@@ -5,7 +5,7 @@
     "browser": true,
     "cypress/globals": true
   },
-  "plugins": ["cypress", "import", "json", "flowtype", "prettier", "graphql"],
+  "plugins": ["cypress", "import", "json", "flowtype", "prettier", "graphql", "react"],
   "rules": {
     "graphql/template-strings": [
       "error",
