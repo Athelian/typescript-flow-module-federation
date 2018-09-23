@@ -4,13 +4,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
 import Tabs from 'components/NavBar/components/Tabs';
-import NavBar, {
-  EntityIcon,
-  SortInput,
-  FilterInput,
-  SearchInput,
-  FocusInput,
-} from 'components/NavBar';
+import NavBar, { EntityIcon, SortInput, FilterInput, SearchInput } from 'components/NavBar';
 import GridColumn from 'components/GridColumn';
 import messages from 'modules/relationMap/messages';
 import { injectUid } from 'utils/id';
@@ -34,7 +28,6 @@ const sortInput = [
   { title: 'Updated At', value: 'updatedAt' },
   { title: 'Created At', value: 'createdAt' },
 ];
-const focusInput = [{ title: 'Order', value: 'order' }, { title: 'Shipment', value: 'shipment' }];
 const getInitialState = () => ({
   tabIndex: 0,
   focus: 'orders',
@@ -88,13 +81,6 @@ class RelationMapApp extends React.Component<Props, State> {
           >
             <RelationMapGrid>
               <div className={FuncitonWrapperStyle}>
-                <FocusInput
-                  focus={focusInput.find(item => item.value === sort.field) || focusInput[0]}
-                  fields={focusInput}
-                  onChange={({ field: { value } }) => {
-                    console.log('Focusing changed to: ', value);
-                  }}
-                />
                 <SortInput
                   sort={sortInput.find(item => item.value === sort.field) || sortInput[0]}
                   ascending={sort.direction !== 'DESCENDING'}

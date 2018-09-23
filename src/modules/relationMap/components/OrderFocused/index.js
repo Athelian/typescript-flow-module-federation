@@ -62,7 +62,6 @@ const OrderFocused = ({ page, perPage, filter, sort }: Props) => (
       const hasMore: boolean = nextPage <= totalPage;
       const formattedOrder = formatOrderData(orders);
       const shipmentObj = formatShipmentOrder(orders);
-      console.log('formattedOrder', formattedOrder);
       return (
         <React.Fragment>
           <SummaryBadge icon="ORDER" color="ORDER" label="ORDERS" no={formattedOrder.sumOrders} />
