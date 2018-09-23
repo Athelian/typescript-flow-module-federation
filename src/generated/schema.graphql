@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Sep 19 2018 15:43:27 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Sep 21 2018 14:59:01 GMT+0800 (CST)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -27003,6 +27003,14 @@ input BatchCreateInput {
 
 input BatchFilterInput {
   query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  archived: Boolean
+  exporterId: String
+  supplierId: String
+  producedAt: DateRangeInput
+  deliveredAt: DateRangeInput
+  expiredAt: DateRangeInput
   tagIds: [ID!]
 }
 
@@ -27023,6 +27031,12 @@ type BatchPagination {
 input BatchSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  no: SortOrder
+  poNo: SortOrder
+  product: SortOrder
+  producedAt: SortOrder
+  deliveredAt: SortOrder
+  expiredAt: SortOrder
 }
 
 input BatchUpdateInput {
@@ -27049,6 +27063,7 @@ type ContainerGroup implements Model & Owned & Sortable {
   customClearance: TimelineDate!
   warehouseArrival: TimelineDate!
   deliveryReady: TimelineDate!
+  warehouse: Warehouse
   shipment: Shipment!
   id: ID!
   createdAt: DateTime!
@@ -28333,6 +28348,11 @@ enum Currency {
   ZWL
 }
 
+input DateRangeInput {
+  after: DateTime
+  before: DateTime
+}
+
 scalar DateTime
 
 interface Documented {
@@ -28575,6 +28595,11 @@ input OrderCreateInput {
 
 input OrderFilterInput {
   query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  archived: Boolean
+  exporterId: String
+  supplierId: String
   tagIds: [ID!]
 }
 
@@ -28669,6 +28694,11 @@ input OrderItemCreateInput {
 
 input OrderItemFilterInput {
   query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  archived: Boolean
+  exporterId: String
+  supplierId: String
 }
 
 type OrderItemPagination {
@@ -28710,6 +28740,7 @@ type OrderPagination {
 input OrderSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  poNo: SortOrder
 }
 
 input OrderUpdateInput {
@@ -28758,6 +28789,8 @@ type Partner implements Model {
 
 input PartnerFilterInput {
   query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
   types: [GroupType!]
   confirmed: Boolean
 }
@@ -28790,6 +28823,15 @@ type Partnership implements Model {
   createdBy: User
   updatedBy: User
   deletedBy: User
+}
+
+type PartnershipPagination {
+  nodes: [Partnership!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
 }
 
 input PartnerSortInput {
@@ -28850,6 +28892,11 @@ input ProductCreateInput {
 
 input ProductFilterInput {
   query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  archived: Boolean
+  exporterId: String
+  supplierId: String
   tagIds: [ID!]
 }
 
@@ -28913,6 +28960,9 @@ input ProductProviderCreateInput {
 
 input ProductProviderFilterInput {
   query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  archived: Boolean
   exporterId: String
   supplierId: String
   tagIds: [ID!]
@@ -28954,6 +29004,8 @@ input ProductProviderUpdateInput {
 input ProductSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  name: SortOrder
+  serial: SortOrder
 }
 
 input ProductUpdateInput {
@@ -28971,6 +29023,10 @@ input ProductUpdateInput {
 type Query {
   viewer: Viewer!
   authenticated: Boolean!
+  user(id: ID!): User
+  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPagination!
+  partner(id: ID!): Partnership
+  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPagination!
   product(id: ID!): Product
   products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPagination!
   productProvider(id: ID!): ProductProvider
@@ -33987,6 +34043,9 @@ input ShipmentCreateInput {
 
 input ShipmentFilterInput {
   query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  archived: Boolean
   tagIds: [ID!]
 }
 
@@ -34240,6 +34299,27 @@ type User implements Model & Tagged {
   tags: [Tag!]!
 }
 
+input UserFilterInput {
+  query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  role: String
+}
+
+type UserPagination {
+  nodes: [User!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input UserSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
 type Viewer {
   user: User!
   token: String
@@ -34278,6 +34358,7 @@ type Voyage implements Model & Owned & Sortable {
 }
 
 type Warehouse implements Model & Owned {
+  archived: Boolean!
   name: String!
   surface: MetricValue
   street: String
@@ -34307,6 +34388,9 @@ input WarehouseCreateInput {
 
 input WarehouseFilterInput {
   query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  archived: Boolean
 }
 
 type WarehouseMutated {
