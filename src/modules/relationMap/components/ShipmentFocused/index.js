@@ -5,7 +5,11 @@ import { ObjectValue, BooleanValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import LoadingIcon from 'components/LoadingIcon';
-import { generateShipmentRelation, formatOrderFromShipment } from 'modules/relationMap/util';
+import {
+  generateShipmentRelation,
+  formatOrderFromShipment,
+  formatShipmentData,
+} from 'modules/relationMap/util';
 import query from './query';
 import RelationView from '../RelationView';
 import Item from '../OrderElement';
@@ -56,13 +60,34 @@ const ShipmentFocused = ({ page, perPage, filter, sort }: Props) => (
       const nextPage = getByPathWithDefault(1, `shipments.page`, data) + 1;
       const totalPage = getByPathWithDefault(1, `shipments.totalPage`, data);
       const hasMore: boolean = nextPage <= totalPage;
+      const formattedShipment = formatShipmentData(shipments);
       const orderObj = formatOrderFromShipment(shipments);
       return (
         <React.Fragment>
-          <SummaryBadge icon="ORDER" color="ORDER" label="ORDERS" no={1} />
-          <SummaryBadge icon="ORDER_ITEM" color="ORDER_ITEM" label="ITEMS" no={7} />
-          <SummaryBadge icon="BATCH" color="BATCH" label="BATCHES" no={9} />
-          <SummaryBadge icon="SHIPMENT" color="SHIPMENT" label="SHIPMENTS" no={5} />
+          <SummaryBadge
+            icon="ORDER"
+            color="ORDER"
+            label="ORDERS"
+            no={formattedShipment.sumOrders}
+          />
+          <SummaryBadge
+            icon="ORDER_ITEM"
+            color="ORDER_ITEM"
+            label="ITEMS"
+            no={formattedShipment.sumOrderItems}
+          />
+          <SummaryBadge
+            icon="BATCH"
+            color="BATCH"
+            label="BATCHES"
+            no={formattedShipment.sumBatches}
+          />
+          <SummaryBadge
+            icon="SHIPMENT"
+            color="SHIPMENT"
+            label="SHIPMENTS"
+            no={formattedShipment.sumShipments}
+          />
           <ObjectValue defaultValue={{ selectedItem: '', focusedItem: null }}>
             {({ value: { focusedItem }, set: setItem }) => (
               <React.Fragment>
@@ -74,7 +99,7 @@ const ShipmentFocused = ({ page, perPage, filter, sort }: Props) => (
                       <Item
                         key={orderId}
                         type="ORDER"
-                        data={order.data}
+                        data={formattedShipment.orderObj[orderId]}
                         isFocused={Object.keys(focusedItem || {}).some(focusId =>
                           orderRefs.some(shipmentId => shipmentId === focusId)
                         )}
@@ -99,6 +124,28 @@ const ShipmentFocused = ({ page, perPage, filter, sort }: Props) => (
                         const relations = generateShipmentRelation(item, { isCollapsed });
                         return relations.map((relation, relationIndex) => {
                           const key = `relation-${relationIndex}`;
+                          let itemData;
+                          switch (relation.type) {
+                            case 'ORDER':
+                              itemData = formattedShipment.orderObj[relation.id];
+                              break;
+                            case 'ORDER_ITEM':
+                              itemData = formattedShipment.orderItemObj[relation.id];
+                              break;
+                            case 'BATCH':
+                              itemData = formattedShipment.batchObj[relation.id];
+                              break;
+                            case 'ORDER_ITEM_ALL':
+                            case 'BATCH_ALL':
+                              itemData = formattedShipment.shipmentObj[relation.id];
+                              break;
+                            case 'SHIPMENT':
+                              itemData = formattedShipment.shipmentObj[relation.id].data;
+                              break;
+                            default:
+                              itemData = {};
+                              break;
+                          }
                           return (
                             <Item
                               key={key}
@@ -113,7 +160,7 @@ const ShipmentFocused = ({ page, perPage, filter, sort }: Props) => (
                               onClick={() => {
                                 toggle();
                               }}
-                              data={item}
+                              data={itemData}
                               isCollapsed={isCollapsed}
                             />
                           );

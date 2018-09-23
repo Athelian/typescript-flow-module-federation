@@ -63,12 +63,29 @@ export const shipmentListQuery = gql`
           }
         }
         batches {
+          id
           no
           quantity
           packageQuantity
+          packageVolume {
+            value
+            metric
+          }
           orderItem {
             id
             quantity
+            productProvider {
+              id
+              supplier {
+                id
+                name
+              }
+              product {
+                id
+                name
+                serial
+              }
+            }
             order {
               id
               poNo

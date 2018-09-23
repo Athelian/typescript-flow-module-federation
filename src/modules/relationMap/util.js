@@ -95,9 +95,9 @@ export const generateShipmentRelation = (shipment, option) => {
   const numberOfBatch = shipment.batches.length;
   if (!option.isCollapsed) {
     shipment.batches.forEach((batch, batchIndex) => {
-      relations.push({ type: 'ORDER_ITEM', id: shipment.id });
+      relations.push({ type: 'ORDER_ITEM', id: getByPathWithDefault('', 'orderItem.id', batch) });
       relations.push({ type: 'LINK-0', id: shipment.id });
-      relations.push({ type: 'BATCH', id: shipment.id });
+      relations.push({ type: 'BATCH', id: batch.id });
       relations.push({ type: '', id: shipment.id });
       if (batchIndex > 1) {
         relations.push({ type: '', id: shipment.id });
@@ -170,7 +170,7 @@ export const formatOrderData = orders => {
     orderItems.forEach(orderItem => {
       if (!orderItemObj[orderItem.id]) {
         orderItemObj[orderItem.id] = {
-          orderedQuantity: 0,
+          orderedQuantity: orderItem.quantity,
           batchedQuantity: 0,
           shippedQuantity: 0,
           info: getByPathWithDefault('', 'productProvider.product.name', orderItem),
@@ -179,7 +179,6 @@ export const formatOrderData = orders => {
       sumBatches += orderItem.batches ? orderItem.batches.length : 0;
       orderObj[order.id].totalBatch += orderItem.batches ? orderItem.batches.length : 0;
       orderObj[order.id].orderedQuantity += orderItem.quantity || 0;
-      orderItemObj[orderItem.id].orderedQuantity += orderItem.quantity;
 
       orderItem.batches.forEach(batch => {
         if (!batchObj[batch.id]) {
@@ -206,6 +205,83 @@ export const formatOrderData = orders => {
     orderObj,
     orderItemObj,
     batchObj,
+    sumOrders,
+    sumOrderItems,
+    sumBatches,
+    sumShipments,
+  };
+};
+
+export const formatShipmentData = shipments => {
+  const orderItemObj = {};
+  const batchObj = {};
+  const orderObj = {};
+  const shipmentObj = {};
+  let sumOrders = 0;
+  let sumOrderItems = 0;
+  let sumBatches = 0;
+  const sumShipments = shipments.length;
+  shipments.forEach(shipment => {
+    sumBatches += shipment.batches ? shipment.batches.length : 0;
+    if (!shipmentObj[shipment.id]) {
+      shipmentObj[shipment.id] = {
+        data: shipment,
+        totalBatch: 0,
+        totalItem: 0,
+      };
+    }
+    shipment.batches.forEach(batch => {
+      if (!batchObj[batch.id]) {
+        const volume = getByPathWithDefault('', 'packageVolume.value', batch);
+        const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
+        batchObj[batch.id] = {
+          quantity: batch.quantity,
+          volume: `${volume} ${metric}`,
+          totalItem: batch.length,
+          title: batch.no || '',
+        };
+      }
+      const { orderItem } = batch;
+      if (orderItem && !orderItemObj[orderItem.id]) {
+        orderItemObj[orderItem.id] = {
+          orderedQuantity: orderItem.quantity,
+          batchedQuantity: 0,
+          shippedQuantity: 0,
+          info: getByPathWithDefault('', 'productProvider.product.name', orderItem),
+        };
+      }
+      const { order } = orderItem;
+      if (orderItem.order && !orderObj[order.id]) {
+        orderObj[order.id] = {
+          orderedQuantity: 0,
+          batchedQuantity: 0,
+          shippedQuantity: 0,
+          info: order.poNo,
+        };
+      }
+      orderObj[order.id].orderedQuantity += orderItem.quantity || 0;
+      orderObj[order.id].batchedQuantity += batch.quantity;
+      orderItemObj[orderItem.id].batchedQuantity += batch.quantity;
+
+      if (batch.shipment) {
+        orderObj[order.id].shippedQuantity += batch.quantity;
+        orderItemObj[orderItem.id].shippedQuantity += batch.quantity;
+      }
+      sumOrderItems += batch.orderItem ? 1 : 0;
+      // sumOrders += getByPathWithDefault(false, 'orderItem.order', batch) ? 1 : 0
+
+      shipmentObj[shipment.id].totalItem += batch.orderItem ? 1 : 0;
+      shipmentObj[shipment.id].totalBatch += getByPathWithDefault(false, 'orderItem.order', batch)
+        ? 1
+        : 0;
+    });
+  });
+  sumOrders = Object.keys(orderObj || {}).length;
+  return {
+    orderObj,
+    orderItemObj,
+    batchObj,
+    shipmentObj,
     sumOrders,
     sumOrderItems,
     sumBatches,
