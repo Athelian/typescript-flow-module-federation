@@ -7,11 +7,13 @@ export const colors = {
   TEAL_DARK: '#0bbc94',
   TEAL_VERY_DARK: '#08a380',
   TEAL_LIGHT: '#caeee6',
+  TEAL_QUITE_LIGHT: '#12B791',
 
   GRAY: '#bbb',
   GRAY_DARK: '#aaa',
   GRAY_LIGHT: '#ccc',
   GRAY_VERY_LIGHT: '#ddd',
+  GRAY_QUITE_LIGHT: '#f2f2f2',
   GRAY_SUPER_LIGHT: '#eee',
   ALMOST_WHITE: '#f3f3f3',
   WHITE: '#fff',
@@ -32,6 +34,7 @@ export const colors = {
   ORDER_ITEM: '#FBAA1D',
   BATCH: '#12B937',
   SHIPMENT: '#00529C',
+  RELATION_MAP: '#00529C',
   CONTAINER_GROUP: '#2489CD',
   CONTAINER: '#30A8E4',
   CONTAINER_ITEM: '#8BDDFF',
@@ -57,6 +60,8 @@ export const fontSizes = {
   LARGE: 'font-size: 16px',
   SMALL: 'font-size: 12px',
   MEDIUM: 'font-size: 13px',
+  LITTLE: 'font-size: 10px',
+  TINY: 'font-size: 9px',
 };
 
 export const fontSizesWithHeights = {

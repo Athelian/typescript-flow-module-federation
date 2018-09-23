@@ -8,6 +8,7 @@ import SearchInput from './components/SearchInput';
 import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
 import SectionNavBar from './SectionNavBar';
 import SlideViewNavBar from './SlideViewNavBar';
+import FocusInput from './components/FocusInput';
 
 export default NavBar;
 
@@ -20,4 +21,5 @@ export {
   StatusToggleTabs,
   SectionNavBar,
   SlideViewNavBar,
+  FocusInput,
 };

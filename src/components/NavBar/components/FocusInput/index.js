@@ -1,0 +1,78 @@
+// @flow
+import * as React from 'react';
+import Icon from 'components/Icon';
+import { SelectInput } from 'components/Form/Inputs';
+import {
+  WrapperStyle,
+  InputStyle,
+  ButtonStyle,
+  OptionWrapperStyle,
+  OptionItemStyle,
+} from './style';
+
+type Focus = {
+  title: string,
+  value: string,
+};
+type Props = {
+  focus: Focus,
+  fields: Array<{
+    title: string | React.Node,
+    value: string,
+  }>,
+  onChange: ({ field: Focus }) => void,
+};
+class FocusInput extends React.Component<Props> {
+  onFieldChange = (field: Focus) => {
+    const { onChange } = this.props;
+    onChange({ field });
+  };
+
+  render() {
+    const { focus, fields } = this.props;
+    const itemToString = item => (item ? item.title : '');
+    const itemToValue = item => (item ? item.value : '');
+    return (
+      <SelectInput
+        value={focus.value}
+        items={fields}
+        itemToString={itemToString}
+        itemToValue={itemToValue}
+        onChange={this.onFieldChange}
+        renderSelect={({ toggle, selectedItem, getInputProps }) => (
+          <div className={WrapperStyle}>
+            <input
+              readOnly
+              spellCheck={false}
+              className={InputStyle}
+              onClick={toggle}
+              {...getInputProps({
+                value: itemToString(selectedItem),
+              })}
+            />
+            <button type="button" className={ButtonStyle} onClick={toggle}>
+              <Icon icon="CHEVRON_DOWN" />
+            </button>
+          </div>
+        )}
+        renderOptions={({ highlightedIndex, selectedItem, getItemProps }) => (
+          <div className={OptionWrapperStyle}>
+            {fields.map((item, index) => (
+              <div
+                key={itemToValue(item)}
+                className={OptionItemStyle(
+                  highlightedIndex === index,
+                  itemToValue(selectedItem) === itemToValue(item)
+                )}
+                {...getItemProps({ item })}
+              >
+                {item.title}
+              </div>
+            ))}
+          </div>
+        )}
+      />
+    );
+  }
+}
+export default FocusInput;

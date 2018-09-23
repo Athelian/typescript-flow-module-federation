@@ -80,6 +80,7 @@ import IMAGE from '@fortawesome/fontawesome-pro-solid/faFileImage';
 import PDF from '@fortawesome/fontawesome-pro-solid/faFilePdf';
 import POWER_POINT from '@fortawesome/fontawesome-pro-solid/faFilePowerpoint';
 import WORD from '@fortawesome/fontawesome-pro-solid/faFileWord';
+import RELATION_MAP from '@fortawesome/fontawesome-pro-solid/faMap';
 
 export default {
   ORDER,
@@ -100,7 +101,7 @@ export default {
   EXPORTER,
   SUPPLIER,
   CARGO,
-
+  RELATION_MAP,
   ACTIVE,
   ARCHIVE,
   CARD,
