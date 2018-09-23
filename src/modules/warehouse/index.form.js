@@ -36,7 +36,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     navigate(`/warehouse`);
   };
 
-  onSave = (formData: Object, saveWarehouse: Function, onSuccess: Function = () => {}) => {
+  onSave = async (formData: Object, saveWarehouse: Function, onSuccess: Function = () => {}) => {
     const { warehouseId } = this.props;
 
     const isNew = warehouseId === 'new';
@@ -45,9 +45,9 @@ class OrderFormModule extends React.PureComponent<Props> {
     const input = { archived, name, street, locality, region, postalCode, country, surface };
 
     if (isNew) {
-      saveWarehouse({ variables: { input } });
+      await saveWarehouse({ variables: { input } });
     } else if (warehouseId) {
-      saveWarehouse({ variables: { input, id: decodeId(warehouseId) } });
+      await saveWarehouse({ variables: { input, id: decodeId(warehouseId) } });
     }
 
     onSuccess();
