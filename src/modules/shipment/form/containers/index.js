@@ -11,4 +11,3 @@ export {
   ShipmentTimelineContainer,
   ShipmentTransportTypeContainer,
 };
-export default ShipmentInfoContainer;

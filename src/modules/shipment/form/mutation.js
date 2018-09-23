@@ -5,7 +5,7 @@ import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { removeNulls, removeTypename } from 'utils/data';
 import type { ShipmentCreate, ShipmentUpdate } from '../type.js.flow';
 
-export const createShipmentMutation = gql`
+export const createShipmentMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
     shipmentCreate(input: $input) {
       shipment {
@@ -59,7 +59,7 @@ export const prepareCreateShipmentInput = ({
     })
   );
 
-export const updateShipmentMutation = gql`
+export const updateShipmentMutation: Object = gql`
   mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
     shipmentUpdate(id: $id, input: $input) {
       shipment {

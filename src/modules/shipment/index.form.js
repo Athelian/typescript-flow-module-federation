@@ -39,6 +39,24 @@ const defaultProps = {
   shipmentId: '',
 };
 
+type CreateShipmentResponse = {|
+  shipmentCreate: {
+    violations: ?Array<Object>,
+    shipment: ?{
+      id: string,
+    },
+  },
+|};
+
+type UpdateShipmentResponse = {|
+  shipmentUpdate: {
+    violations: ?Array<Object>,
+    shipment: ?{
+      id: string,
+    },
+  },
+|};
+
 class ShipmentFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -48,9 +66,9 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onSave = async (
     formData: Object,
-    saveShipment: Function,
-    onSuccess: Function = () => {},
-    onErrors: Function = () => {}
+    saveShipment: any => Promise<?{ data?: CreateShipmentResponse | UpdateShipmentResponse }>,
+    onSuccess: () => void,
+    onErrors: (Array<Object>) => void
   ) => {
     const { shipmentId } = this.props;
 
@@ -60,39 +78,53 @@ class ShipmentFormModule extends React.Component<Props> {
       : prepareUpdateShipmentInput(formData);
 
     if (isNew) {
-      const { data } = await saveShipment({ variables: { input } });
-      const {
-        shipmentCreate: { violations },
-      } = data;
-      if (violations && violations.length) {
-        onErrors(violations);
-      } else {
-        onSuccess();
+      const result = await saveShipment({
+        variables: { input },
+      });
+      if (result && result.data) {
+        const { data } = result;
+        if (data.shipmentCreate) {
+          const {
+            shipmentCreate: { violations },
+          } = data;
+          if (violations && violations.length) {
+            onErrors(violations);
+          } else {
+            onSuccess();
+          }
+        }
       }
     } else if (shipmentId) {
-      const { data } = await saveShipment({ variables: { input, id: decodeId(shipmentId) } });
-      const {
-        shipmentUpdate: { violations },
-      } = data;
-      if (violations && violations.length) {
-        onErrors(violations);
-      } else {
-        onSuccess();
+      const result = await saveShipment({ variables: { input, id: decodeId(shipmentId) } });
+      if (result && result.data) {
+        const { data } = result;
+        if (data.shipmentUpdate) {
+          const {
+            shipmentUpdate: { violations },
+          } = data;
+          if (violations && violations.length) {
+            onErrors(violations);
+          } else {
+            onSuccess();
+          }
+        }
       }
     }
   };
 
-  onMutationCompleted = (result: Object) => {
+  onMutationCompleted = (result: CreateShipmentResponse | UpdateShipmentResponse) => {
     const { shipmentId } = this.props;
     const isNew = shipmentId === 'new';
 
-    if (isNew) {
+    if (isNew && result.shipmentCreate) {
       const {
         shipmentCreate: { shipment, violations },
       } = result;
 
       if (!violations) {
-        navigate(`/shipment/${encodeId(shipment.id)}`);
+        if (shipment && shipment.id) {
+          navigate(`/shipment/${encodeId(shipment.id)}`);
+        }
       }
     }
   };

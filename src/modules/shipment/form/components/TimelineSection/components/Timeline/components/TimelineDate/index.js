@@ -13,10 +13,7 @@ import {
 } from './style';
 
 type OptionalProps = {
-  prefixIcon?: string,
-};
-
-type Props = OptionalProps & {
+  prefixIcon: string,
   timelineDate: {
     date: ?string | Date,
     timelineDateRevisions: Array<{
@@ -26,8 +23,16 @@ type Props = OptionalProps & {
   },
 };
 
+type Props = OptionalProps & {};
+
+const defaultProps = {
+  prefixIcon: '',
+  timelineDate: {
+    timelineDateRevisions: [],
+  },
+};
+
 const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
-  if (!timelineDate) return 'TimelineDate';
   const { date, timelineDateRevisions, approvedAt } = timelineDate;
 
   const hasMultipleDates = timelineDateRevisions.length > 0;
@@ -62,5 +67,7 @@ const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
     </div>
   );
 };
+
+TimelineDate.defaultProps = defaultProps;
 
 export default TimelineDate;
