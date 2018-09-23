@@ -79,18 +79,11 @@
     "styleguide": "styleguidist server",
     "build:styleguide": "styleguidist build"
   },
-  "browserslist": {
-    "development": [
-      "last 2 chrome versions",
-      "last 2 firefox versions",
-      "last 2 edge versions"
-    ],
-    "production": [
-      ">0.25%",
-      "not op_mini all",
-      "ie 11"
-    ]
-  },
+  "browserslist": [
+    ">0.25%",
+    "not op_mini all",
+    "ie 11"
+  ],
   "lint-staged": {
     "src/**/*.{js,jsx,json}": [
       "eslint --fix",

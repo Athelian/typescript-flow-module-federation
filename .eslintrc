@@ -1,5 +1,5 @@
 {
-  "extends": ["plugin:flowtype/recommended", "airbnb", "prettier", "prettier/react"],
+  "extends": ["react-app", "plugin:flowtype/recommended", "airbnb", "prettier", "prettier/react"],
   "env": {
     "jest": true,
     "browser": true,

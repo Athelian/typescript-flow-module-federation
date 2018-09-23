@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { BooleanValue } from 'react-values';
+import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
 import Icon from 'components/Icon';
 import NewButton from 'components/NavButtons/NewButton';
@@ -10,14 +12,9 @@ import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
 import { CustomButton } from 'components/NavButtons';
 import { FormField } from 'modules/form';
-import {
-  SectionHeader,
-  Label,
-  DefaultAdjustmentStyle,
-  DefaultStyle,
-  DateInput,
-  FieldItem,
-} from 'components/Form';
+import { dateInputFactory } from 'modules/form/helpers';
+import { SectionHeader, Label, DefaultAdjustmentStyle, FieldItem } from 'components/Form';
+import AssignUsers from '../AssignUsers';
 import {
   TimelineInfoSectionWrapperStyle,
   AssignedAndApprovalWrapperStyle,
@@ -55,7 +52,7 @@ type Props = OptionalProps & {
   icon: string,
   title: string,
   sourceName: string,
-  setFieldDeepValue: Function,
+  setFieldDeepValue: (field: string, value: any) => void,
   removeArrayItem: Function,
 };
 
@@ -122,10 +119,28 @@ class TimelineInfoSection extends React.PureComponent<Props> {
                     </div>
                   ))}
                 {timelineDate &&
+                  timelineDate.assignedTo &&
                   timelineDate.assignedTo.length < 5 && (
-                    <button className={AddAssignmentButtonStyle} type="button">
-                      <Icon icon="ADD" />
-                    </button>
+                    <BooleanValue>
+                      {({ value: isOpen, toggle }) => (
+                        <>
+                          <button
+                            className={AddAssignmentButtonStyle}
+                            type="button"
+                            onClick={toggle}
+                          >
+                            <Icon icon="ADD" />
+                          </button>
+                          <SlideView
+                            isOpen={isOpen}
+                            onRequestClose={toggle}
+                            options={{ width: '1030px' }}
+                          >
+                            {isOpen && <AssignUsers onSelect={console.warn} onCancel={toggle} />}
+                          </SlideView>
+                        </>
+                      )}
+                    </BooleanValue>
                   )}
               </div>
             </GridColumn>
@@ -219,11 +234,14 @@ class TimelineInfoSection extends React.PureComponent<Props> {
                           initValue={adjustment.date}
                           setFieldValue={setFieldDeepValue}
                         >
-                          {({ name, ...inputHandlers }) => (
-                            <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                              <DateInput name={name} {...inputHandlers} />
-                            </DefaultStyle>
-                          )}
+                          {({ name, ...inputHandlers }) =>
+                            dateInputFactory({
+                              name,
+                              inputHandlers,
+                              isNew,
+                              initValue: adjustment.date,
+                            })
+                          }
                         </FormField>
                       }
                     />
@@ -237,11 +255,14 @@ class TimelineInfoSection extends React.PureComponent<Props> {
                   initValue={timelineDate && timelineDate.date}
                   setFieldValue={setFieldDeepValue}
                 >
-                  {({ name, ...inputHandlers }) => (
-                    <DefaultStyle type="date" forceHoverStyle={isNew} width="200px">
-                      <DateInput name={name} {...inputHandlers} />
-                    </DefaultStyle>
-                  )}
+                  {({ name, ...inputHandlers }) =>
+                    dateInputFactory({
+                      name,
+                      inputHandlers,
+                      isNew,
+                      initValue: timelineDate && timelineDate.date,
+                    })
+                  }
                 </FormField>
               }
             />
