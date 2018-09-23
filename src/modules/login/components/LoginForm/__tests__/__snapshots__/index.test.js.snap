@@ -15,7 +15,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
           class="css-1n42b97"
         />
         <div
-          class="css-1s42hss"
+          class="css-1o4txpy"
         >
           EMAIL
         </div>
@@ -40,7 +40,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
           class="css-1n42b97"
         />
         <div
-          class="css-1s42hss"
+          class="css-1o4txpy"
         >
           PASSWORD
         </div>
@@ -186,7 +186,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
           class="css-1n42b97"
         />
         <div
-          class="css-1s42hss"
+          class="css-1o4txpy"
         >
           EMAIL
         </div>
@@ -211,7 +211,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
           class="css-1n42b97"
         />
         <div
-          class="css-1s42hss"
+          class="css-1o4txpy"
         >
           PASSWORD
         </div>

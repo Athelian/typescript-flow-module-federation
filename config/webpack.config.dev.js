@@ -7,12 +7,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
-const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -68,7 +68,7 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
 module.exports = {
   mode: 'development',
   // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
-  // See the discussion in https://github.com/facebook/create-react-app/issues/343.
+  // See the discussion in https://github.com/facebook/create-react-app/issues/343
   devtool: 'cheap-module-source-map',
   // These are the "entry points" to our application.
   // This means they will be the "root" imports that are included in JS bundle.
@@ -114,7 +114,7 @@ module.exports = {
     // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
     splitChunks: {
       chunks: 'all',
-      name: 'vendors',
+      name: false,
     },
     // Keep the runtime chunk seperated to enable long term caching
     // https://twitter.com/wSokra/status/969679223278505985
@@ -135,7 +135,7 @@ module.exports = {
     // https://github.com/facebook/create-react-app/issues/290
     // `web` extension prefixes have been added for better support
     // for React Native Web.
-    extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
+    extensions: ['.web.js', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
       
       // Support React Native Web
@@ -160,23 +160,19 @@ module.exports = {
       // First, run the linter.
       // It's important to do this before Babel processes the JS.
       {
-        test: /\.(js|jsx|mjs)$/,
+        test: /\.(js|jsx)$/,
         enforce: 'pre',
         use: [
           {
             options: {
-              formatter: eslintFormatter,
+              formatter: require.resolve('react-dev-utils/eslintFormatter'),
               eslintPath: require.resolve('eslint'),
-              baseConfig: {
-                extends: [require.resolve('eslint-config-react-app')],
-              },
               
             },
             loader: require.resolve('eslint-loader'),
           },
         ],
-        include: paths.srcPaths,
-        exclude: [/[/\\\\]node_modules[/\\\\]/],
+        include: paths.appSrc,
       },
       {
         // "oneOf" will traverse all following loaders until one will
@@ -197,30 +193,29 @@ module.exports = {
           // Process application JS with Babel.
           // The preset includes JSX, Flow, and some ESnext features.
           {
-            test: /\.(js|jsx|mjs)$/,
-            include: paths.srcPaths,
-            exclude: [/[/\\\\]node_modules[/\\\\]/],
+            test: /\.(js|jsx)$/,
+            include: paths.appSrc,
             use: [
               // This loader parallelizes code compilation, it is optional but
               // improves compile time on larger projects
               {
                 loader: require.resolve('thread-loader'),
                 options: {
-                  poolTimeout: Infinity // keep workers alive for more effective watch mode
+                  poolTimeout: Infinity, // keep workers alive for more effective watch mode
                 },
               },
               {
                 loader: require.resolve('babel-loader'),
                 options: {
                   
-                  presets: [require.resolve('babel-preset-react-app')],
                   plugins: [
                     [
                       require.resolve('babel-plugin-named-asset-import'),
                       {
                         loaderMap: {
                           svg: {
-                            ReactComponent: 'svgr/webpack![path]',
+                            ReactComponent:
+                              '@svgr/webpack?-prettier,-svgo![path]',
                           },
                         },
                       },
@@ -230,6 +225,8 @@ module.exports = {
                   // It enables caching results in ./node_modules/.cache/babel-loader/
                   // directory for faster rebuilds.
                   cacheDirectory: true,
+                  // Don't waste time on Gzipping the cache
+                  cacheCompression: false,
                   highlightCode: true,
                 },
               },
@@ -245,7 +242,7 @@ module.exports = {
               {
                 loader: require.resolve('thread-loader'),
                 options: {
-                  poolTimeout: Infinity // keep workers alive for more effective watch mode
+                  poolTimeout: Infinity, // keep workers alive for more effective watch mode
                 },
               },
               {
@@ -257,6 +254,9 @@ module.exports = {
                     require.resolve('babel-preset-react-app/dependencies'),
                   ],
                   cacheDirectory: true,
+                  // Don't waste time on Gzipping the cache
+                  cacheCompression: false,
+                  
                   highlightCode: true,
                 },
               },
@@ -323,7 +323,7 @@ module.exports = {
             // its runtime that would otherwise be processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+            exclude: [/\.(js|jsx)$/, /\.html$/, /\.json$/],
             loader: require.resolve('file-loader'),
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
@@ -345,7 +345,7 @@ module.exports = {
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In development, this will be an empty string.
-    new InterpolateHtmlPlugin(env.raw),
+    new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
     new webpack.DefinePlugin(env.stringified),

@@ -1,28 +1,14 @@
 {
-  "presets": [
-    "@babel/preset-env",
-    "@babel/preset-react",
-    "@babel/preset-flow"
-  ],
+  "presets": ["@babel/preset-env", "@babel/preset-react", "@babel/preset-flow", "react-app"],
   "plugins": [
-    [
-      "ramda"
-    ],
-    [
-      "@babel/plugin-transform-flow-strip-types"
-    ],
-    [
-      "@babel/plugin-proposal-class-properties"
-    ],
-    [
-      "@babel/plugin-syntax-dynamic-import"
-    ],
+    ["ramda"],
+    ["@babel/plugin-transform-flow-strip-types"],
+    ["@babel/plugin-proposal-class-properties"],
+    ["@babel/plugin-syntax-dynamic-import"],
     [
       "module-resolver",
       {
-        "root": [
-          "./src"
-        ]
+        "root": ["./src"]
       }
     ]
   ],
@@ -38,9 +24,7 @@
         [
           "react-remove-properties",
           {
-            "properties": [
-              "data-testid"
-            ]
+            "properties": ["data-testid"]
           }
         ]
       ]
