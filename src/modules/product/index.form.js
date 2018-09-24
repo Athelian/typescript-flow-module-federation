@@ -146,6 +146,11 @@ class ProductFormModule extends React.Component<Props> {
                       <EntityIcon icon="PRODUCT" color="PRODUCT" />
                       <JumpToSection>
                         <SectionTabs link="productSection" label="PRODUCT" icon="PRODUCT" />
+                        <SectionTabs
+                          link="productProviderSection"
+                          label="PROVIDERS"
+                          icon="PROVIDER"
+                        />
                       </JumpToSection>
                       <Subscribe to={[ProductInfoContainer, FormContainer]}>
                         {(productInfoState, form) =>

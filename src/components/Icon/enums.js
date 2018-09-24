@@ -17,6 +17,7 @@ import LOGOUT from '@fortawesome/fontawesome-pro-solid/faSignOutAlt';
 import EXPORTER from '@fortawesome/fontawesome-pro-solid/faIndustryAlt';
 import SUPPLIER from '@fortawesome/fontawesome-pro-regular/faIndustry';
 import CARGO from '@fortawesome/fontawesome-pro-solid/faBoxesAlt';
+import PROVIDER from '@fortawesome/fontawesome-pro-solid/faDolly';
 
 // Common UI
 import ACTIVE from '@fortawesome/fontawesome-pro-solid/faFolderOpen';
@@ -80,6 +81,7 @@ import IMAGE from '@fortawesome/fontawesome-pro-solid/faFileImage';
 import PDF from '@fortawesome/fontawesome-pro-solid/faFilePdf';
 import POWER_POINT from '@fortawesome/fontawesome-pro-solid/faFilePowerpoint';
 import WORD from '@fortawesome/fontawesome-pro-solid/faFileWord';
+
 import RELATION_MAP from '@fortawesome/fontawesome-pro-solid/faMap';
 
 export default {
@@ -101,7 +103,10 @@ export default {
   EXPORTER,
   SUPPLIER,
   CARGO,
+  PROVIDER,
+
   RELATION_MAP,
+
   ACTIVE,
   ARCHIVE,
   CARD,

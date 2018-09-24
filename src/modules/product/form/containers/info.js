@@ -9,17 +9,11 @@ type FormState = {
   janCode?: ?string,
   hsCode?: ?string,
   material?: ?string,
-  tags?: Array<{
-    id: string,
-    name: string,
-    color: string,
-  }>,
-  productProviders?: Array<Object>,
   files?: Array<Object>,
 };
 
 const initValues = {
-  tags: [],
+  files: [],
 };
 
 export default class ProductInfoContainer extends Container<FormState> {

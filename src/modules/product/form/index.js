@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 import ProductSection from './components/ProductSection';
+import ProductProviderSection from './components/ProductProviderSection';
 import { ProductFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -23,6 +24,11 @@ const ProductForm = ({ product, isNew }: Props) => (
         {!isNew && <LastModified updatedAt={product.updatedAt} updatedBy={product.updatedBy} />}
       </SectionHeader>
       <ProductSection isNew={isNew} />
+    </SectionWrapper>
+
+    <SectionWrapper id="productProviderSection">
+      <SectionHeader icon="PROVIDER" title="PROVIDERS" />
+      <ProductProviderSection isNew={isNew} />
     </SectionWrapper>
   </div>
 );
