@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, borderRadiuses, colors, scrollbars, fontSizes, layout } from 'styles/common';
 
-export const ItemsSectionWrapperStyle = css`
+export const ItemsSectionWrapperStyle: string = css`
   position: relative;
   ${presets.BOX};
   width: 880px;
@@ -10,7 +10,7 @@ export const ItemsSectionWrapperStyle = css`
   height: min-content;
 `;
 
-export const ItemsSectionBodyStyle = css`
+export const ItemsSectionBodyStyle: string = css`
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -21,18 +21,18 @@ export const ItemsSectionBodyStyle = css`
   ${scrollbars.SMALL};
 `;
 
-export const ItemGridStyle = css`
+export const ItemGridStyle: string = css`
   display: flex;
   flex-wrap: wrap;
   padding: 15px 0 15px 10px;
 `;
 
-export const ItemStyle = css`
+export const ItemStyle: string = css`
   display: flex;
   margin: 15px 10px;
 `;
 
-export const BatchAreaStyle = css`
+export const BatchAreaStyle: string = css`
   flex: 1;
   min-width: 640px;
   min-height: min-content;
@@ -43,7 +43,7 @@ export const BatchAreaStyle = css`
   flex-flow: column wrap;
 `;
 
-export const BatchAreaHeaderStyle = css`
+export const BatchAreaHeaderStyle: string = css`
   grid-template-columns: 1fr;
   ${layout.GRID_HORIZONTAL};
   grid-template-rows: 40px;
@@ -52,20 +52,20 @@ export const BatchAreaHeaderStyle = css`
   padding: 0 10px 0 0;
 `;
 
-export const TitleWrapperStyle = css`
+export const TitleWrapperStyle: string = css`
   display: flex;
   align-items: center;
   ${fontSizes.LARGE};
   color: ${colors.GRAY_DARK};
 `;
 
-export const TitleStyle = css`
+export const TitleStyle: string = css`
   ${presets.ELLIPSIS};
   font-weight: bold;
   letter-spacing: 2px;
 `;
 
-export const IconStyle = css`
+export const IconStyle: string = css`
   width: 40px;
   height: 40px;
   display: flex;
@@ -74,18 +74,18 @@ export const IconStyle = css`
   flex-shrink: 0;
 `;
 
-export const BatchGridStyle = css`
+export const BatchGridStyle: string = css`
   display: flex;
   flex-wrap: wrap;
   padding: 10px 0 0 0;
 `;
 
-export const BatchStyle = css`
+export const BatchStyle: string = css`
   display: flex;
   margin: 15px 10px;
 `;
 
-export const EmptyMessageStyle = css`
+export const EmptyMessageStyle: string = css`
   ${fontSizes.MAIN};
   font-weight: bold;
   color: ${colors.BLACK};

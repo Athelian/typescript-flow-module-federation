@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { scrollbars, presets } from 'styles/common';
 
-const BackdropStyle = css`
+const BackdropStyle: string = css`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -18,7 +18,7 @@ const BackdropStyle = css`
   z-index: 10000;
 `;
 
-export const BackdropFadeInStyle = css`
+export const BackdropFadeInStyle: string = css`
   ${BackdropStyle};
 
   @keyframes appear {
@@ -32,7 +32,7 @@ export const BackdropFadeInStyle = css`
   animation-fill-mode: forwards;
 `;
 
-export const BackdropFadeOutStyle = css`
+export const BackdropFadeOutStyle: string = css`
   ${BackdropStyle};
 
   @keyframes dissappear {
@@ -51,7 +51,7 @@ export const BackdropFadeOutStyle = css`
   animation-fill-mode: forwards;
 `;
 
-export const DialogFadeInStyle = (width: number) => css`
+export const DialogFadeInStyle = (width: number): string => css`
   ${presets.BOX};
   width: ${width}px;
   z-index: 10001;
@@ -68,7 +68,7 @@ export const DialogFadeInStyle = (width: number) => css`
   animation-fill-mode: forwards;
 `;
 
-export const DialogFadeOutStyle = (width: number) => css`
+export const DialogFadeOutStyle = (width: number): string => css`
   ${presets.BOX};
   width: ${width}px;
 

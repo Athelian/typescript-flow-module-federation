@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, borderRadiuses, colors, scrollbars } from 'styles/common';
 
-export const ItemsSectionWrapperStyle = css`
+export const ItemsSectionWrapperStyle: string = css`
   position: relative;
   ${presets.BOX};
   width: 880px;
@@ -10,7 +10,7 @@ export const ItemsSectionWrapperStyle = css`
   height: min-content;
 `;
 
-export const ItemsSectionBodyStyle = css`
+export const ItemsSectionBodyStyle: string = css`
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
   border-top-right-radius: 0;

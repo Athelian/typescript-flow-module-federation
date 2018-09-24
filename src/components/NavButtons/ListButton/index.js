@@ -2,10 +2,13 @@
 import * as React from 'react';
 import { ListButtonStyle, ListButtonDisabledStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  disabled: boolean,
+  isActive: boolean,
+};
+
+type Props = OptionalProps & {
   label: string | React.Element<any>,
-  disabled?: boolean,
-  isActive?: boolean,
 };
 
 const ListButton = ({ label, disabled, isActive, ...rest }: Props) => (

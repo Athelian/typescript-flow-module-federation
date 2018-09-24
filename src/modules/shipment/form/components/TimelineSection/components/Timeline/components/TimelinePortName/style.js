@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, presets, fontSizes } from 'styles/common';
 
-export const TimelinePortNameWrapperStyle = css`
+export const TimelinePortNameWrapperStyle: string = css`
   text-align: left;
   border-radius: 0 999px 999px 0;
   height: 30px;

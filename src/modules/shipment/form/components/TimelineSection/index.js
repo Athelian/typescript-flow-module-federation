@@ -20,27 +20,17 @@ type Props = {
 
 const TimelineSection = ({ isNew }: Props) => (
   <Subscribe to={[ShipmentTimelineContainer, ShipmentTransportTypeContainer]}>
-    {(shipmentTimelineState, shipmentTransportTypeState) => {
-      const {
-        originalValues: initialValues,
-        state,
-        setFieldDeepValue,
-        removeArrayItem,
-      } = shipmentTimelineState;
-
-      const {
-        originalValues: transportTypeInitialValues,
-        state: transportTypeState,
-      } = shipmentTransportTypeState;
-
-      const values = {
+    {(
+      { originalValues: initialValues, state, setFieldDeepValue, removeArrayItem },
+      { state: transportTypeState }
+    ) => {
+      const values: Object = {
         ...initialValues,
         ...state,
-        ...transportTypeInitialValues,
         ...transportTypeState,
       };
 
-      const { cargoReady, voyages, containerGroups } = values;
+      const { cargoReady, voyages, containerGroups = [] } = values;
       const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
 
       return (

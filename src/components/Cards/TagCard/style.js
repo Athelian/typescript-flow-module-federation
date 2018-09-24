@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, fontSizes } from 'styles/common';
 
-export const TagCardWrapperStyle = css`
+export const TagCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;

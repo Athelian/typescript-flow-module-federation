@@ -2,11 +2,11 @@
 import { css } from 'react-emotion';
 import { layout, fontSizes, colors } from 'styles/common';
 
-export const ModalStyle = css`
+export const ModalStyle: string = css`
   padding: 20px;
 `;
 
-export const ConfirmMessageStyle = css`
+export const ConfirmMessageStyle: string = css`
   margin: 20px 0;
   text-align: center;
   font-weight: bold;
@@ -14,7 +14,7 @@ export const ConfirmMessageStyle = css`
   color: ${colors.BLACK};
 `;
 
-export const ButtonsStyle = css`
+export const ButtonsStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   padding: 20px 0 0 0;
   justify-content: center;

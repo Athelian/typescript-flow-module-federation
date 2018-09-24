@@ -1,9 +1,10 @@
+// @flow
 import { css } from 'react-emotion';
 import { presets, shadows, colors, borderRadiuses, fontSizes } from 'styles/common';
 
-export const CustomButtonStyle = color => {
-  let mainColor = colors.GRAY_VERY_LIGHT;
-  let hoverColor = colors.GRAY_LIGHT;
+export const CustomButtonStyle = (color: string): string => {
+  let mainColor: string = colors.GRAY_VERY_LIGHT;
+  let hoverColor: string = colors.GRAY_LIGHT;
   if (color === 'gray') {
     mainColor = colors.GRAY;
     hoverColor = colors.GRAY_DARK;
@@ -45,7 +46,7 @@ export const CustomButtonStyle = color => {
   `;
 };
 
-export const DisabledButtonStyle = css`
+export const DisabledButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
   ${shadows.NAV_BUTTON};

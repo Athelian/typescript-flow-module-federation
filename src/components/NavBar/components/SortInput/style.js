@@ -10,7 +10,7 @@ import {
   shadows,
 } from 'styles/common';
 
-export const WrapperStyle = css`
+export const WrapperStyle: string = css`
   ${presets.BUTTON};
   ${layout.HORIZONTAL};
   ${layout.CENTER};
@@ -27,7 +27,7 @@ export const WrapperStyle = css`
   ${fontSizes.MAIN};
 `;
 
-export const InputStyle = css`
+export const InputStyle: string = css`
   ${fontSizes.MAIN};
   font-weight: bold;
   flex: 1;
@@ -41,7 +41,7 @@ export const InputStyle = css`
   cursor: pointer;
 `;
 
-export const ButtonStyle = css`
+export const ButtonStyle: string = css`
   ${presets.BUTTON};
   ${fontSizes.MAIN};
   color: ${colors.GRAY_LIGHT};
@@ -54,14 +54,14 @@ export const ButtonStyle = css`
   }
 `;
 
-export const OptionWrapperStyle = css`
+export const OptionWrapperStyle: string = css`
   ${presets.BOX};
   ${shadows.DROPDOWN};
   position: absolute;
   top: 45px;
 `;
 
-export const OptionItemStyle = (onHover: boolean, selected: boolean) => css`
+export const OptionItemStyle = (onHover: boolean, selected: boolean): string => css`
   background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
   ${presets.BUTTON};
   justify-content: flex-start;

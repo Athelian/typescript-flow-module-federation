@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, borderRadiuses, colors, fontSizes, shadows } from 'styles/common';
 
-export const TimelineIconStyle = (color: string) => css`
+export const TimelineIconStyle = (color: string): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   background-color: ${colors.WHITE};
@@ -19,12 +19,12 @@ export const TimelineIconStyle = (color: string) => css`
   }
 `;
 
-export const TransitIconWrapperStyle = css`
+export const TransitIconWrapperStyle: string = css`
   position: relative;
   z-index: 1;
 `;
 
-export const TransitIconTopStyle = css`
+export const TransitIconTopStyle: string = css`
   position: absolute;
   top: 0;
   left: 0;
@@ -39,7 +39,7 @@ export const TransitIconTopStyle = css`
   }
 `;
 
-export const TransitIconBottomStyle = css`
+export const TransitIconBottomStyle: string = css`
   position: absolute;
   bottom: 0;
   left: 0;

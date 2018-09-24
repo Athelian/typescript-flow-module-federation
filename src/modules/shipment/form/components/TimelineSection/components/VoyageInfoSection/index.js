@@ -1,24 +1,54 @@
 // @flow
 import * as React from 'react';
-import { Subscribe } from 'unstated';
-// import { getPortName } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import GridColumn from 'components/GridColumn';
-import { FormContainer, FormField } from 'modules/form';
-import { selectSearchEnumInputFactory } from 'modules/form/helpers';
-import { SectionHeader, Label, FieldItem, TextInput, DefaultStyle, Tooltip } from 'components/Form';
+import { FormField } from 'modules/form';
+import { selectSearchEnumInputFactory, textInputFactory } from 'modules/form/helpers';
+import { SectionHeader, Label, FieldItem, Tooltip } from 'components/Form';
 import { VoyageInfoSectionWrapperStyle, SelectTransportTypeMessageStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  voyage: {
+    arrivalPort?: {
+      airport: string,
+      seaport: string,
+    },
+    departurePort?: {
+      airport: string,
+      seaport: string,
+    },
+    vesselCode?: string,
+    vesselName?: string,
+  },
+  initialVoyage: {
+    arrivalPort?: {
+      airport: string,
+      seaport: string,
+    },
+    departurePort?: {
+      airport: string,
+      seaport: string,
+    },
+    vesselCode?: string,
+    vesselName?: string,
+  },
+};
+
+type Props = OptionalProps & {
   isNew: boolean,
   icon: string,
   title: string,
-  voyage: Object,
-  initialVoyage: Object,
   sourceName: string,
   setFieldDeepValue: Function,
 };
 
+const defaultProps = {
+  voyage: {},
+  initialVoyage: {},
+};
+
 class VoyageInfoSection extends React.PureComponent<Props> {
+  static defaultProps = defaultProps;
+
   render() {
     const {
       isNew,
@@ -49,166 +79,121 @@ class VoyageInfoSection extends React.PureComponent<Props> {
     }
 
     return (
-      <Subscribe to={[FormContainer]}>
-        {({ state: { touched, errors, activeField }, ...formHelper }) => (
-          <div className={VoyageInfoSectionWrapperStyle} {...rest}>
-            <GridColumn>
-              <SectionHeader icon={icon} title={title} />
+      <div className={VoyageInfoSectionWrapperStyle} {...rest}>
+        <GridColumn>
+          <SectionHeader icon={icon} title={title} />
 
-              {canSelectPorts ? (
-                <FormField
-                  name={`${sourceName}.departurePort.${deepField}`}
-                  initValue={initialVoyage.departurePort[deepField]}
-                  setFieldValue={(name, value) => {
-                    setFieldDeepValue(name, value);
-                    if (prevVoyageSourceName) {
-                      setFieldDeepValue(`${prevVoyageSourceName}.arrivalPort.${deepField}`, value);
-                    }
-                  }}
-                  {...formHelper}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    selectSearchEnumInputFactory({
-                      enumType,
-                      initValue: initialVoyage.departurePort[deepField],
-                      inputHandlers,
-                      name,
-                      touched,
-                      errors,
-                      isNew,
-                      activeField,
-                      label: 'DEPARTURE PORT',
-                    })
-                  }
-                </FormField>
-              ) : (
-                <FieldItem
-                  label={<Label>DEPARTURE PORT</Label>}
-                  tooltip={
-                    <Tooltip
-                      isNew={isNew}
-                      infoMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
-                    />
-                  }
-                  input={
-                    <div className={SelectTransportTypeMessageStyle}>
-                      Please select a transport type
-                    </div>
-                  }
+          {canSelectPorts ? (
+            <FormField
+              name={`${sourceName}.departurePort.${deepField}`}
+              initValue={initialVoyage.departurePort && initialVoyage.departurePort[deepField]}
+              setFieldValue={(name, value) => {
+                setFieldDeepValue(name, value);
+                if (prevVoyageSourceName) {
+                  setFieldDeepValue(`${prevVoyageSourceName}.arrivalPort.${deepField}`, value);
+                }
+              }}
+            >
+              {({ name, ...inputHandlers }) =>
+                selectSearchEnumInputFactory({
+                  enumType,
+                  initValue: initialVoyage.departurePort && initialVoyage.departurePort[deepField],
+                  inputHandlers,
+                  name,
+                  isNew,
+                  label: 'DEPARTURE PORT',
+                })
+              }
+            </FormField>
+          ) : (
+            <FieldItem
+              label={<Label>DEPARTURE PORT</Label>}
+              tooltip={
+                <Tooltip
+                  isNew={isNew}
+                  infoMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
                 />
-              )}
+              }
+              input={
+                <div className={SelectTransportTypeMessageStyle}>
+                  Please select a transport type
+                </div>
+              }
+            />
+          )}
 
-              {canSelectPorts ? (
-                <FormField
-                  name={`${sourceName}.arrivalPort.${deepField}`}
-                  initValue={initialVoyage.arrivalPort[deepField]}
-                  setFieldValue={(name, value) => {
-                    setFieldDeepValue(name, value);
-                    if (nextVoyageSourceName) {
-                      setFieldDeepValue(
-                        `${nextVoyageSourceName}.departurePort.${deepField}`,
-                        value
-                      );
-                    }
-                  }}
-                  {...formHelper}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    selectSearchEnumInputFactory({
-                      enumType,
-                      initValue: initialVoyage.arrivalPort[deepField],
-                      inputHandlers,
-                      name,
-                      touched,
-                      errors,
-                      isNew,
-                      activeField,
-                      label: 'ARRIVAL PORT',
-                    })
-                  }
-                </FormField>
-              ) : (
-                <FieldItem
-                  label={<Label>ARRIVAL PORT</Label>}
-                  tooltip={
-                    <Tooltip
-                      isNew={isNew}
-                      infoMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
-                    />
-                  }
-                  input={
-                    <div className={SelectTransportTypeMessageStyle}>
-                      Please select a transport type
-                    </div>
-                  }
+          {canSelectPorts ? (
+            <FormField
+              name={`${sourceName}.arrivalPort.${deepField}`}
+              initValue={initialVoyage.arrivalPort && initialVoyage.arrivalPort[deepField]}
+              setFieldValue={(name, value) => {
+                setFieldDeepValue(name, value);
+                if (nextVoyageSourceName) {
+                  setFieldDeepValue(`${nextVoyageSourceName}.departurePort.${deepField}`, value);
+                }
+              }}
+            >
+              {({ name, ...inputHandlers }) =>
+                selectSearchEnumInputFactory({
+                  enumType,
+                  initValue: initialVoyage.arrivalPort && initialVoyage.arrivalPort[deepField],
+                  inputHandlers,
+                  name,
+                  isNew,
+                  label: 'ARRIVAL PORT',
+                })
+              }
+            </FormField>
+          ) : (
+            <FieldItem
+              label={<Label>ARRIVAL PORT</Label>}
+              tooltip={
+                <Tooltip
+                  isNew={isNew}
+                  infoMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
                 />
-              )}
+              }
+              input={
+                <div className={SelectTransportTypeMessageStyle}>
+                  Please select a transport type
+                </div>
+              }
+            />
+          )}
 
-              <FormField
-                name={`${sourceName}.vesselName`}
-                initValue={voyage.vesselName}
-                setFieldValue={setFieldDeepValue}
-                {...formHelper}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <FieldItem
-                    label={<Label>VESSEL NAME</Label>}
-                    tooltip={
-                      <Tooltip
-                        isNew={isNew}
-                        changedValues={{
-                          oldValue: initialVoyage[name],
-                          newValue: inputHandlers.value,
-                        }}
-                      />
-                    }
-                    input={
-                      <DefaultStyle
-                        isFocused={activeField === name}
-                        forceHoverStyle={isNew}
-                        width="200px"
-                      >
-                        <TextInput name={name} {...inputHandlers} />
-                      </DefaultStyle>
-                    }
-                  />
-                )}
-              </FormField>
+          <FormField
+            name={`${sourceName}.vesselName`}
+            initValue={voyage.vesselName}
+            setFieldValue={setFieldDeepValue}
+          >
+            {({ name, ...inputHandlers }) =>
+              textInputFactory({
+                initValue: initialVoyage[name],
+                inputHandlers,
+                name,
+                isNew,
+                label: 'VESSEL NAME',
+              })
+            }
+          </FormField>
 
-              <FormField
-                name={`${sourceName}.vesselCode`}
-                initValue={voyage.vesselCode}
-                setFieldValue={setFieldDeepValue}
-                {...formHelper}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <FieldItem
-                    label={<Label>VOYAGE CODE</Label>}
-                    tooltip={
-                      <Tooltip
-                        isNew={isNew}
-                        changedValues={{
-                          oldValue: initialVoyage[name],
-                          newValue: inputHandlers.value,
-                        }}
-                      />
-                    }
-                    input={
-                      <DefaultStyle
-                        isFocused={activeField === name}
-                        forceHoverStyle={isNew}
-                        width="200px"
-                      >
-                        <TextInput name={name} {...inputHandlers} />
-                      </DefaultStyle>
-                    }
-                  />
-                )}
-              </FormField>
-            </GridColumn>
-          </div>
-        )}
-      </Subscribe>
+          <FormField
+            name={`${sourceName}.vesselCode`}
+            initValue={voyage.vesselCode}
+            setFieldValue={setFieldDeepValue}
+          >
+            {({ name, ...inputHandlers }) =>
+              textInputFactory({
+                initValue: initialVoyage[name],
+                inputHandlers,
+                name,
+                isNew,
+                label: 'VESSEL CODE',
+              })
+            }
+          </FormField>
+        </GridColumn>
+      </div>
     );
   }
 }

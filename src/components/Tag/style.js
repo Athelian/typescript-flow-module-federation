@@ -27,7 +27,7 @@ export const computeTextColor = (color: string) => {
   return red * 0.299 + green * 0.587 + blue * 0.114 > 186 ? colors.BLACK : '#ffffff';
 };
 
-export const TagStyle = (color: string) => css`
+export const TagStyle = (color: string): string => css`
   ${borderRadiuses.MAIN};
   ${fontSizesWithHeights.MAIN};
   ${presets.ELLIPSIS};
@@ -42,7 +42,7 @@ export const TagStyle = (color: string) => css`
   user-select: none;
 `;
 
-export const PrefixStyle = (color: string) => css`
+export const PrefixStyle = (color: string): string => css`
   color: ${computeTextColor(color)};
   ${fontSizes.MEDIUM};
   font-weight: bold;
@@ -53,7 +53,7 @@ export const PrefixStyle = (color: string) => css`
   }
 `;
 
-export const SuffixStyle = (color: string) => css`
+export const SuffixStyle = (color: string): string => css`
   color: ${computeTextColor(color)};
   ${fontSizes.MEDIUM};
   font-weight: bold;

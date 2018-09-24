@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { uniqBy } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import { FormContainer, FormField } from 'modules/form';
-import { selectSearchEnumInputFactory } from 'modules/form/helpers';
+import { FormField } from 'modules/form';
+import { textInputFactory, dateInputFactory, selectEnumInputFactory } from 'modules/form/helpers';
 import {
   ShipmentInfoContainer,
   ShipmentTransportTypeContainer,
@@ -13,134 +12,24 @@ import {
   ShipmentTagsContainer,
 } from 'modules/shipment/form/containers';
 import validator from 'modules/shipment/form/validator';
-import { ShipmentExporterCard, ShipmentForwarderCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
-import GridRow from 'components/GridRow';
-import {
-  FieldItem,
-  Label,
-  Tooltip,
-  DefaultStyle,
-  DashedPlusButton,
-  TextInput,
-  DateInput,
-  TagsInput,
-} from 'components/Form';
+import { FieldItem, Label, Tooltip, TagsInput } from 'components/Form';
 import messages from 'modules/shipment/messages';
 import SelectForwarders from '../SelectForwarders';
+import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
 import {
   ShipmentSectionWrapperStyle,
   MainFieldsWrapperStyle,
   TagsInputStyle,
   ExporterLabelStyle,
   ExporterSeeMoreButtonStyle,
-  ExporterEmptyCardStyle,
   DividerStyle,
 } from './style';
 
 type Props = {
   isNew: boolean,
-};
-
-const getUniqueExporters = (batches: Array<Object>) => {
-  const uniqueExporters = uniqBy(
-    batches.map(batch => batch.orderItem.productProvider.exporter),
-    'id'
-  );
-
-  return uniqueExporters;
-};
-
-const renderExporters = (exporters: Array<Object>) => {
-  const numOfExporters = exporters.length;
-
-  if (numOfExporters === 0) {
-    return <div className={ExporterEmptyCardStyle} />;
-  }
-  if (numOfExporters === 1) {
-    return <ShipmentExporterCard exporter={exporters[0]} />;
-  }
-  if (numOfExporters === 2) {
-    return (
-      <GridColumn gap="10px">
-        <ShipmentExporterCard exporter={exporters[0]} size="half" />
-        <ShipmentExporterCard exporter={exporters[1]} size="half" />
-      </GridColumn>
-    );
-  }
-  if (numOfExporters === 3) {
-    return (
-      <GridColumn gap="10px">
-        <ShipmentExporterCard exporter={exporters[0]} size="half" />
-        <GridRow gap="10px">
-          <ShipmentExporterCard exporter={exporters[1]} size="quarter" />
-          <ShipmentExporterCard exporter={exporters[2]} size="quarter" />
-        </GridRow>
-      </GridColumn>
-    );
-  }
-  if (numOfExporters > 3) {
-    return (
-      <GridColumn gap="10px">
-        <GridRow gap="10px">
-          <ShipmentExporterCard exporter={exporters[0]} size="quarter" />
-          <ShipmentExporterCard exporter={exporters[1]} size="quarter" />
-        </GridRow>
-        <GridRow gap="10px">
-          <ShipmentExporterCard exporter={exporters[2]} size="quarter" />
-          <ShipmentExporterCard exporter={exporters[3]} size="quarter" />
-        </GridRow>
-      </GridColumn>
-    );
-  }
-  return '';
-};
-
-const renderForwarders = (forwarders: Array<Object>) => {
-  const numOfForwarders = forwarders.length;
-
-  if (numOfForwarders === 0) {
-    return <DashedPlusButton width="200px" height="230px" />;
-  }
-  if (numOfForwarders === 1) {
-    return <ShipmentForwarderCard forwarder={forwarders[0]} />;
-  }
-  if (numOfForwarders === 2) {
-    return (
-      <GridColumn gap="10px">
-        <ShipmentForwarderCard forwarder={forwarders[0]} size="half" />
-        <ShipmentForwarderCard forwarder={forwarders[1]} size="half" />
-      </GridColumn>
-    );
-  }
-  if (numOfForwarders === 3) {
-    return (
-      <GridColumn gap="10px">
-        <ShipmentForwarderCard forwarder={forwarders[0]} size="half" />
-        <GridRow gap="10px">
-          <ShipmentForwarderCard forwarder={forwarders[1]} size="quarter" />
-          <ShipmentForwarderCard forwarder={forwarders[2]} size="quarter" />
-        </GridRow>
-      </GridColumn>
-    );
-  }
-  if (numOfForwarders > 3) {
-    return (
-      <GridColumn gap="10px">
-        <GridRow gap="10px">
-          <ShipmentForwarderCard forwarder={forwarders[0]} size="quarter" />
-          <ShipmentForwarderCard forwarder={forwarders[1]} size="quarter" />
-        </GridRow>
-        <GridRow gap="10px">
-          <ShipmentForwarderCard forwarder={forwarders[2]} size="quarter" />
-          <ShipmentForwarderCard forwarder={forwarders[3]} size="quarter" />
-        </GridRow>
-      </GridColumn>
-    );
-  }
-  return '';
 };
 
 const ShipmentSection = ({ isNew }: Props) => (
@@ -152,350 +41,181 @@ const ShipmentSection = ({ isNew }: Props) => (
       return (
         <div className={ShipmentSectionWrapperStyle}>
           <div className={MainFieldsWrapperStyle}>
-            <Subscribe to={[FormContainer]}>
-              {({ state: { touched, errors, activeField }, ...formHelper }) => (
-                <GridColumn>
-                  <FormField
-                    name="no"
-                    initValue={values.no}
-                    validationOnChange
-                    onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validator)
-                    }
-                    setFieldValue={setFieldValue}
-                    {...formHelper}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <FieldItem
-                        label={
-                          <Label required>
-                            <FormattedMessage {...messages.shipmentId} />
-                          </Label>
-                        }
-                        tooltip={
-                          <Tooltip
-                            isNew={isNew}
-                            errorMessage={touched[name] && errors[name]}
-                            changedValues={{
-                              oldValue: initialValues[name],
-                              newValue: values[name],
-                            }}
-                          />
-                        }
-                        input={
-                          <DefaultStyle
-                            isFocused={activeField === name}
-                            hasError={touched[name] && errors[name]}
-                            forceHoverStyle={isNew}
-                            width="200px"
-                          >
-                            <TextInput name={name} {...inputHandlers} />
-                          </DefaultStyle>
-                        }
-                      />
-                    )}
-                  </FormField>
-                  <FormField
-                    name="blNo"
-                    initValue={values.blNo}
-                    validationOnChange
-                    onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validator)
-                    }
-                    setFieldValue={setFieldValue}
-                    {...formHelper}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage {...messages.blNo} />
-                          </Label>
-                        }
-                        tooltip={
-                          <Tooltip
-                            isNew={isNew}
-                            errorMessage={touched[name] && errors[name]}
-                            changedValues={{
-                              oldValue: initialValues[name],
-                              newValue: values[name],
-                            }}
-                          />
-                        }
-                        input={
-                          <DefaultStyle
-                            isFocused={activeField === name}
-                            hasError={touched[name] && errors[name]}
-                            forceHoverStyle={isNew}
-                            width="200px"
-                          >
-                            <TextInput name={name} {...inputHandlers} />
-                          </DefaultStyle>
-                        }
-                      />
-                    )}
-                  </FormField>
-                  <FormField
-                    name="blDate"
-                    initValue={values.blDate}
-                    validationOnChange
-                    onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validator)
-                    }
-                    setFieldValue={setFieldValue}
-                    {...formHelper}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage {...messages.blDate} />
-                          </Label>
-                        }
-                        tooltip={
-                          <Tooltip
-                            isNew={isNew}
-                            errorMessage={touched[name] && errors[name]}
-                            changedValues={{
-                              oldValue: initialValues[name],
-                              newValue: values[name],
-                            }}
-                          />
-                        }
-                        input={
-                          <DefaultStyle
-                            isFocused={activeField === name}
-                            hasError={touched[name] && errors[name]}
-                            forceHoverStyle={isNew}
-                            width="200px"
-                          >
-                            <DateInput name={name} {...inputHandlers} />
-                          </DefaultStyle>
-                        }
-                      />
-                    )}
-                  </FormField>
-                  <FormField
-                    name="bookingNo"
-                    initValue={values.bookingNo}
-                    validationOnChange
-                    onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validator)
-                    }
-                    setFieldValue={setFieldValue}
-                    {...formHelper}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage {...messages.bookingNo} />
-                          </Label>
-                        }
-                        tooltip={
-                          <Tooltip
-                            isNew={isNew}
-                            errorMessage={touched[name] && errors[name]}
-                            changedValues={{
-                              oldValue: initialValues[name],
-                              newValue: values[name],
-                            }}
-                          />
-                        }
-                        input={
-                          <DefaultStyle
-                            isFocused={activeField === name}
-                            hasError={touched[name] && errors[name]}
-                            forceHoverStyle={isNew}
-                            width="200px"
-                          >
-                            <TextInput name={name} {...inputHandlers} />
-                          </DefaultStyle>
-                        }
-                      />
-                    )}
-                  </FormField>
-                  <FormField
-                    name="bookingDate"
-                    initValue={values.bookingDate}
-                    validationOnChange
-                    onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validator)
-                    }
-                    setFieldValue={setFieldValue}
-                    {...formHelper}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage {...messages.bookingDate} />
-                          </Label>
-                        }
-                        tooltip={
-                          <Tooltip
-                            isNew={isNew}
-                            errorMessage={touched[name] && errors[name]}
-                            changedValues={{
-                              oldValue: initialValues[name],
-                              newValue: values[name],
-                            }}
-                          />
-                        }
-                        input={
-                          <DefaultStyle
-                            isFocused={activeField === name}
-                            hasError={touched[name] && errors[name]}
-                            forceHoverStyle={isNew}
-                            width="200px"
-                          >
-                            <DateInput name={name} {...inputHandlers} />
-                          </DefaultStyle>
-                        }
-                      />
-                    )}
-                  </FormField>
-                  <FormField
-                    name="invoiceNo"
-                    initValue={values.invoiceNo}
-                    validationOnChange
-                    onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validator)
-                    }
-                    setFieldValue={setFieldValue}
-                    {...formHelper}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage {...messages.invoiceNo} />
-                          </Label>
-                        }
-                        tooltip={
-                          <Tooltip
-                            isNew={isNew}
-                            errorMessage={touched[name] && errors[name]}
-                            changedValues={{
-                              oldValue: initialValues[name],
-                              newValue: values[name],
-                            }}
-                          />
-                        }
-                        input={
-                          <DefaultStyle
-                            isFocused={activeField === name}
-                            hasError={touched[name] && errors[name]}
-                            forceHoverStyle={isNew}
-                            width="200px"
-                          >
-                            <TextInput name={name} {...inputHandlers} />
-                          </DefaultStyle>
-                        }
-                      />
-                    )}
-                  </FormField>
-                  <Subscribe to={[ShipmentTransportTypeContainer]}>
-                    {({
-                      originalValues: initialTransportTypeValues,
-                      state: transportTypeState,
-                      setFieldValue: transportTypeSetFieldValue,
-                    }) => {
-                      const transportTypeValues = {
-                        ...initialTransportTypeValues,
-                        ...transportTypeState,
-                      };
+            <GridColumn>
+              <FormField
+                name="no"
+                initValue={values.no}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
+                {({ name, ...inputHandlers }) =>
+                  textInputFactory({
+                    inputHandlers,
+                    name,
+                    isNew,
+                    required: true,
+                    initValue: initialValues[name],
+                    label: <FormattedMessage {...messages.shipmentId} />,
+                  })
+                }
+              </FormField>
+              <FormField
+                name="blNo"
+                initValue={values.blNo}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
+                {({ name, ...inputHandlers }) =>
+                  textInputFactory({
+                    inputHandlers,
+                    name,
+                    isNew,
+                    initValue: initialValues[name],
+                    label: <FormattedMessage {...messages.blNo} />,
+                  })
+                }
+              </FormField>
+              <FormField
+                name="blDate"
+                initValue={values.blDate}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
+                {({ name, ...inputHandlers }) =>
+                  dateInputFactory({
+                    inputHandlers,
+                    name,
+                    isNew,
+                    initValue: initialValues[name],
+                    label: <FormattedMessage {...messages.blDate} />,
+                  })
+                }
+              </FormField>
+              <FormField
+                name="bookingNo"
+                initValue={values.bookingNo}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
+                {({ name, ...inputHandlers }) =>
+                  textInputFactory({
+                    inputHandlers,
+                    name,
+                    isNew,
+                    initValue: initialValues[name],
+                    label: <FormattedMessage {...messages.bookingNo} />,
+                  })
+                }
+              </FormField>
+              <FormField
+                name="bookingDate"
+                initValue={values.bookingDate}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
+                {({ name, ...inputHandlers }) =>
+                  dateInputFactory({
+                    inputHandlers,
+                    name,
+                    isNew,
+                    initValue: initialValues[name],
+                    label: <FormattedMessage {...messages.bookingDate} />,
+                  })
+                }
+              </FormField>
+              <FormField
+                name="invoiceNo"
+                initValue={values.invoiceNo}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
+                {({ name, ...inputHandlers }) =>
+                  textInputFactory({
+                    inputHandlers,
+                    name,
+                    isNew,
+                    initValue: initialValues[name],
+                    label: <FormattedMessage {...messages.invoiceNo} />,
+                  })
+                }
+              </FormField>
 
-                      return (
-                        <FormField
-                          name="transportType"
-                          initValue={values.transportType}
-                          setFieldValue={transportTypeSetFieldValue}
-                          validationOnChange
-                          onValidate={newValue =>
-                            formHelper.onValidation({ ...values, ...newValue }, validator)
-                          }
-                          {...formHelper}
-                        >
-                          {({ name, ...inputHandlers }) =>
-                            selectSearchEnumInputFactory({
-                              enumType: 'TransportType',
-                              inputHandlers,
-                              name,
-                              isNew,
-                              label: <Label>TRANSPORTATION</Label>,
-                              initValue: transportTypeValues[name],
-                            })
-                          }
-                        </FormField>
-                      );
-                    }}
-                  </Subscribe>
+              <Subscribe to={[ShipmentTransportTypeContainer]}>
+                {({
+                  originalValues: initialTransportTypeValues,
+                  state: transportTypeState,
+                  setFieldValue: transportTypeSetFieldValue,
+                }) => {
+                  const transportTypeValues = {
+                    ...initialTransportTypeValues,
+                    ...transportTypeState,
+                  };
+                  return (
+                    <FormField
+                      name="transportType"
+                      initValue={values.transportType}
+                      setFieldValue={transportTypeSetFieldValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) =>
+                        selectEnumInputFactory({
+                          enumType: 'TransportType',
+                          inputHandlers,
+                          name,
+                          isNew,
+                          label: 'TRANSPORTATION',
+                          initValue: transportTypeValues[name],
+                        })
+                      }
+                    </FormField>
+                  );
+                }}
+              </Subscribe>
 
-                  <FormField
-                    name="loadType"
-                    initValue={values.loadType}
-                    setFieldValue={setFieldValue}
-                    validationOnChange
-                    onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validator)
-                    }
-                    {...formHelper}
-                  >
-                    {({ name, ...inputHandlers }) =>
-                      selectSearchEnumInputFactory({
-                        enumType: 'LoadType',
-                        inputHandlers,
-                        name,
-                        isNew,
-                        label: <Label>Load Type</Label>,
-                        initValue: initialValues[name],
-                      })
-                    }
-                  </FormField>
-                  <FormField
-                    name="carrier"
-                    initValue={values.carrier}
-                    validationOnChange
-                    onValidate={newValue =>
-                      formHelper.onValidation({ ...values, ...newValue }, validator)
-                    }
-                    setFieldValue={setFieldValue}
-                    {...formHelper}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage {...messages.carrier} />
-                          </Label>
-                        }
-                        tooltip={
-                          <Tooltip
-                            isNew={isNew}
-                            errorMessage={touched[name] && errors[name]}
-                            changedValues={{
-                              oldValue: initialValues[name],
-                              newValue: values[name],
-                            }}
-                          />
-                        }
-                        input={
-                          <DefaultStyle
-                            isFocused={activeField === name}
-                            hasError={touched[name] && errors[name]}
-                            forceHoverStyle={isNew}
-                            width="200px"
-                          >
-                            <TextInput name={name} {...inputHandlers} />
-                          </DefaultStyle>
-                        }
-                      />
-                    )}
-                  </FormField>
-                </GridColumn>
-              )}
-            </Subscribe>
+              <FormField
+                name="loadType"
+                initValue={values.loadType}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
+                {({ name, ...inputHandlers }) =>
+                  selectEnumInputFactory({
+                    enumType: 'LoadType',
+                    inputHandlers,
+                    name,
+                    isNew,
+                    label: 'LOAD TYPE',
+                    initValue: initialValues[name],
+                  })
+                }
+              </FormField>
+              <FormField
+                name="carrier"
+                initValue={values.carrier}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
+                {({ name, ...inputHandlers }) =>
+                  textInputFactory({
+                    inputHandlers,
+                    name,
+                    isNew,
+                    initValue: initialValues[name],
+                    label: <FormattedMessage {...messages.carrier} />,
+                  })
+                }
+              </FormField>
+            </GridColumn>
+
             <GridColumn>
               <BooleanValue>
                 {({ value: opened, toggle }) => (
@@ -514,30 +234,18 @@ const ShipmentSection = ({ isNew }: Props) => (
                       options={{ width: '1030px' }}
                     >
                       {opened && (
-                        <Subscribe to={[FormContainer]}>
-                          {({ onValidation, setFieldTouched }) => (
-                            <SelectForwarders
-                              selected={values.forwarders}
-                              onCancel={toggle}
-                              onSelect={newValue => {
-                                const selectedForwarders = newValue.map(item => ({
-                                  id: item.group.id,
-                                  name: item.name || item.group.name,
-                                }));
-                                toggle();
-                                setFieldTouched('forwarders');
-                                setFieldValue('forwarders', selectedForwarders);
-                                onValidation(
-                                  {
-                                    ...values,
-                                    forwarders: selectedForwarders,
-                                  },
-                                  validator
-                                );
-                              }}
-                            />
-                          )}
-                        </Subscribe>
+                        <SelectForwarders
+                          selected={values.forwarders}
+                          onCancel={toggle}
+                          onSelect={newValue => {
+                            const selectedForwarders = newValue.map(item => ({
+                              id: item.group.id,
+                              name: item.name || item.group.name,
+                            }));
+                            toggle();
+                            setFieldValue('forwarders', selectedForwarders);
+                          }}
+                        />
                       )}
                     </SlideView>
                   </>
@@ -570,11 +278,8 @@ const ShipmentSection = ({ isNew }: Props) => (
             </GridColumn>
           </div>
           <div className={TagsInputStyle}>
-            <Subscribe to={[FormContainer, ShipmentTagsContainer]}>
-              {(
-                { setFieldTouched, onValidation },
-                { state: { tags }, setFieldValue: changeTags }
-              ) => (
+            <Subscribe to={[ShipmentTagsContainer]}>
+              {({ state: { tags }, setFieldValue: changeTags }) => (
                 <FieldItem
                   vertical
                   label={
@@ -591,13 +296,6 @@ const ShipmentSection = ({ isNew }: Props) => (
                       values={tags}
                       onChange={(field, value) => {
                         changeTags(field, value);
-                        setFieldTouched('tags');
-                        onValidation(
-                          {
-                            ...values,
-                          },
-                          validator
-                        );
                       }}
                     />
                   }

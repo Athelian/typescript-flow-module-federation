@@ -26,10 +26,11 @@ const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
 const printHostingInstructions = require('react-dev-utils/printHostingInstructions');
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
 const printBuildError = require('react-dev-utils/printBuildError');
-const { printBrowsers } = require('react-dev-utils/browsersHelper');
 
-const measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild;
+const measureFileSizesBeforeBuild =
+  FileSizeReporter.measureFileSizesBeforeBuild;
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
+const useYarn = fs.existsSync(paths.yarnLockFile);
 
 // These sizes are pretty large. We'll warn for bundles exceeding them.
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
@@ -73,7 +74,9 @@ checkBrowsers(paths.appPath)
             ' to learn more about each warning.'
         );
         console.log(
-          'To ignore, add ' + chalk.cyan('// eslint-disable-next-line') + ' to the line before.\n'
+          'To ignore, add ' +
+            chalk.cyan('// eslint-disable-next-line') +
+            ' to the line before.\n'
         );
       } else {
         console.log(chalk.green('Compiled successfully.\n'));
@@ -93,8 +96,13 @@ checkBrowsers(paths.appPath)
       const publicUrl = paths.publicUrl;
       const publicPath = config.output.publicPath;
       const buildFolder = path.relative(process.cwd(), paths.appBuild);
-      printHostingInstructions(appPackage, publicUrl, publicPath, buildFolder, paths.useYarn);
-      printBrowsers(paths.appPath);
+      printHostingInstructions(
+        appPackage,
+        publicUrl,
+        publicPath,
+        buildFolder,
+        useYarn
+      );
     },
     err => {
       console.log(chalk.red('Failed to compile.\n'));
@@ -130,7 +138,8 @@ function build(previousFileSizes) {
       }
       if (
         process.env.CI &&
-        (typeof process.env.CI !== 'string' || process.env.CI.toLowerCase() !== 'false') &&
+        (typeof process.env.CI !== 'string' ||
+          process.env.CI.toLowerCase() !== 'false') &&
         messages.warnings.length
       ) {
         console.log(

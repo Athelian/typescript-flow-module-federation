@@ -2,14 +2,14 @@
 import { css } from 'react-emotion';
 import { presets, colors, shadows, borderRadiuses, fontSizes, transitions } from 'styles/common';
 
-export const DocumentWrapperStyle = (isExpanded: boolean) => css`
+export const DocumentWrapperStyle = (isExpanded: boolean): string => css`
   position: relative;
   display: flex;
   ${isExpanded && 'grid-column: 1 / -1'};
   ${borderRadiuses.MAIN};
 `;
 
-export const DocumentCardStyle = css`
+export const DocumentCardStyle: string = css`
   ${presets.BOX};
   display: grid;
   grid-template-columns: 120px;
@@ -21,19 +21,19 @@ export const DocumentCardStyle = css`
   z-index: 1;
 `;
 
-export const FileExtensionIconStyle = (color: string) => css`
+export const FileExtensionIconStyle = (color: string): string => css`
   font-size: 40px;
   text-align: center;
   color: ${colors[color]};
   margin: 15px 0 5px 0;
 `;
 
-export const BottomWrapperStyle = css`
+export const BottomWrapperStyle: string = css`
   display: flex;
   justify-content: space-between;
 `;
 
-export const FileNameWrapperStyle = css`
+export const FileNameWrapperStyle: string = css`
   display: flex;
   overflow: hidden;
   ${fontSizes.MEDIUM};
@@ -43,11 +43,11 @@ export const FileNameWrapperStyle = css`
   width: 100%;
 `;
 
-export const FileNameStyle = css`
+export const FileNameStyle: string = css`
   ${presets.ELLIPSIS};
 `;
 
-export const DownloadButtonStyle = css`
+export const DownloadButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   background-color: #fff;
@@ -67,7 +67,7 @@ export const DownloadButtonStyle = css`
   }
 `;
 
-export const DeleteButtonStyle = css`
+export const DeleteButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   ${shadows.NAV_BUTTON};
@@ -90,7 +90,7 @@ export const DeleteButtonStyle = css`
   }
 `;
 
-export const MemoWrapperStyle = (isExpanded: boolean) => css`
+export const MemoWrapperStyle = (isExpanded: boolean): string => css`
   position: relative;
   ${presets.BOX};
   width: ${isExpanded ? '100%' : '0px'};
@@ -102,7 +102,7 @@ export const MemoWrapperStyle = (isExpanded: boolean) => css`
   }
 `;
 
-export const OpenMemoButtonStyle = (isExpanded: boolean, hasMemo: boolean) => css`
+export const OpenMemoButtonStyle = (isExpanded: boolean, hasMemo: boolean): string => css`
   position: absolute;
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};

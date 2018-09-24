@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, colors, fontSizes, transitions } from 'styles/common';
 
-export const TabItemStyle = (isActive: boolean) => css`
+export const TabItemStyle = (isActive: boolean): string => css`
   ${presets.BUTTON};
   position: relative;
   color: ${isActive ? colors.TEAL : colors.GRAY_LIGHT};
@@ -37,10 +37,10 @@ export const TabItemStyle = (isActive: boolean) => css`
   }
 `;
 
-export const DisabledStyle = css`
+export const DisabledStyle: string = css`
   ${TabItemStyle(false)};
 `;
 
-export const IconStyle = css`
+export const IconStyle: string = css`
   margin: 0 5px 0 0;
 `;

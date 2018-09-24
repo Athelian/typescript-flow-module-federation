@@ -2,11 +2,15 @@
 import { css } from 'react-emotion';
 import { borderRadiuses, colors, fontSizes, presets, transitions } from 'styles/common';
 
-export const WrapperStyle = css`
+export const WrapperStyle: string = css`
   position: relative;
 `;
 
-export const ColorPreviewStyle = (color: string, disabled: boolean, readOnly: boolean) => css`
+export const ColorPreviewStyle = (
+  color: string,
+  disabled: boolean,
+  readOnly: boolean
+): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   background-color: ${color};
@@ -18,21 +22,21 @@ export const ColorPreviewStyle = (color: string, disabled: boolean, readOnly: bo
   }
 `;
 
-export const DropdownWrapper = css`
+export const DropdownWrapper: string = css`
   ${presets.BOX};
   position: absolute;
   margin-top: 5px;
   z-index: 5;
 `;
 
-export const ColorControlWrapperStyle = css`
+export const ColorControlWrapperStyle: string = css`
   display: inline-grid;
   grid-template-columns: min-content 1fr;
   padding: 10px;
   align-items: center;
 `;
 
-export const ColorPresetsWrapperStyle = css`
+export const ColorPresetsWrapperStyle: string = css`
   display: grid;
   grid-template-rows: repeat(2, auto);
   grid-template-columns: repeat(5, auto);
@@ -40,7 +44,7 @@ export const ColorPresetsWrapperStyle = css`
   padding: 10px;
 `;
 
-export const RandomizeButtonStyle = css`
+export const RandomizeButtonStyle: string = css`
   ${presets.BUTTON};
   color: ${colors.GRAY_LIGHT};
   ${borderRadiuses.CIRCLE};
@@ -53,7 +57,7 @@ export const RandomizeButtonStyle = css`
   }
 `;
 
-export const InputStyle = (hasError: boolean) => css`
+export const InputStyle = (hasError: boolean): string => css`
   ${transitions.MAIN};
   ${fontSizes.MAIN};
   color: ${colors.BLACK};
@@ -70,7 +74,7 @@ export const InputStyle = (hasError: boolean) => css`
   }
 `;
 
-export const PresetStyle = (color: string) => css`
+export const PresetStyle = (color: string): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   background-color: ${color};

@@ -2,12 +2,12 @@
 import { css } from 'react-emotion';
 import { borderRadiuses, fontSizes, colors, layout } from 'styles/common';
 
-export const QuantityChartWrapperStyle = css`
+export const QuantityChartWrapperStyle: string = css`
   position: relative;
   ${layout.GRID_VERTICAL};
 `;
 
-export const FloatingQuantityWrapperStyle = (positioning: 'top' | 'bottom') => css`
+export const FloatingQuantityWrapperStyle = (positioning: 'top' | 'bottom'): string => css`
   position: absolute;
   ${positioning}: -8px;
   height: 16px;
@@ -21,7 +21,7 @@ export const FloatingQuantityWrapperStyle = (positioning: 'top' | 'bottom') => c
   z-index: 1;
 `;
 
-export const BarWrapperStyle = css`
+export const BarWrapperStyle: string = css`
   position: relative;
   height: 20px;
   ${borderRadiuses.BUTTON};
@@ -29,7 +29,7 @@ export const BarWrapperStyle = css`
   width: 100%;
 `;
 
-export const ProgressBarStyle = (color: string, percent: number) => css`
+export const ProgressBarStyle = (color: string, percent: number): string => css`
   background-color: ${colors[color]};
   ${percent < 0.9 ? 'border-radius: 20px 0 0 20px' : 'border-radius: 20px 20px 20px 20px'};
   height: inherit;
@@ -37,7 +37,7 @@ export const ProgressBarStyle = (color: string, percent: number) => css`
   opacity: 0.5;
 `;
 
-export const IconStyle = css`
+export const IconStyle: string = css`
   position: absolute;
   top: 0;
   left: 0;
@@ -52,7 +52,7 @@ export const IconStyle = css`
   color: ${colors.WHITE};
 `;
 
-export const BadgeStyle = (positioning: 'top' | 'bottom') => css`
+export const BadgeStyle = (positioning: 'top' | 'bottom'): string => css`
   position: absolute;
   ${positioning}: 0;
   left: 15px;
@@ -69,14 +69,14 @@ export const BadgeStyle = (positioning: 'top' | 'bottom') => css`
   padding: 0 3px;
 `;
 
-export const BatchedBadgeStyle = css`
+export const BatchedBadgeStyle: string = css`
   display: inline-block;
   position: relative;
   top: 3px;
   left: -6px;
 `;
 
-export const ShippedBadgeStyle = css`
+export const ShippedBadgeStyle: string = css`
   display: inline-block;
   position: relative;
   top: -3px;

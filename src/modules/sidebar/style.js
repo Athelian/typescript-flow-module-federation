@@ -1,7 +1,8 @@
+// @flow
 import { css } from 'react-emotion';
 import { transitions, gradients, scrollbars } from 'styles/common';
 
-export const MenuBody = css`
+export const MenuBody: string = css`
   display: flex;
   flex-direction: column;
   height: calc(100vh - 80px);
@@ -12,7 +13,7 @@ export const MenuBody = css`
   }
 `;
 
-export const zenMenuStyle = isExpanded => css`
+export const zenMenuStyle = (isExpanded: boolean): string => css`
   position: fixed;
   top: 0;
   z-index: 9999;

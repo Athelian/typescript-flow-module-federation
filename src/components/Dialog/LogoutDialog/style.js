@@ -1,11 +1,11 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const DialogStyle = css`
+export const DialogStyle: string = css`
   padding: 24px;
 `;
 
-export const ConfirmMessageStyle = css`
+export const ConfirmMessageStyle: string = css`
   font-weight: bold;
   font-size: 14px;
   color: #555;
@@ -13,7 +13,7 @@ export const ConfirmMessageStyle = css`
   text-align: center;
 `;
 
-export const ButtonsStyle = css`
+export const ButtonsStyle: string = css`
   display: flex;
   justify-content: flex-end;
   button {

@@ -7,7 +7,7 @@ type TimelineIcon = {
   color: string,
 };
 
-export const TimelineIconStyle = ({ icon, color }: TimelineIcon) => css`
+export const TimelineIconStyle = ({ icon, color }: TimelineIcon): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   background-color: ${colors.WHITE};

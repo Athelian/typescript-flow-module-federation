@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const WrapperStyle = css`
+export const WrapperStyle: string = css`
   height: 50px;
   display: grid;
   grid-auto-flow: column;

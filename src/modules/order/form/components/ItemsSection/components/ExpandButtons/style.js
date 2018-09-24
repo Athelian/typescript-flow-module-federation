@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, borderRadiuses, layout, transitions } from 'styles/common';
 
-export const ExpandButtonsWrapperStyle = css`
+export const ExpandButtonsWrapperStyle: string = css`
   display: flex;
   background: ${colors.GRAY_SUPER_LIGHT};
   font-size: 14px;
@@ -20,7 +20,7 @@ export const ExpandButtonsWrapperStyle = css`
   }
 `;
 
-export const IconStyle = css`
+export const IconStyle: string = css`
   width: 25px;
   height: 30px;
   display: flex;

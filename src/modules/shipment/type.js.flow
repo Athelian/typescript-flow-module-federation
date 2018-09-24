@@ -1,6 +1,6 @@
 // @flow
 
-type CargoReady = {
+export type CargoReady = {
   date: Date,
   assignedToIds: Array<string>,
   approvedById: string,

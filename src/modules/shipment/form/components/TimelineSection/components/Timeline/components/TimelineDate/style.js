@@ -2,13 +2,13 @@
 import { css } from 'react-emotion';
 import { layout, colors, fontSizes, presets } from 'styles/common';
 
-export const TimelineDateWrapperStyle = css`
+export const TimelineDateWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   align-items: center;
 `;
 
-export const PrefixIconStyle = css`
+export const PrefixIconStyle: string = css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,7 +18,7 @@ export const PrefixIconStyle = css`
   height: 18px;
 `;
 
-export const DateStyle = (shownDate: boolean) => css`
+export const DateStyle = (shownDate: boolean): string => css`
   color: ${shownDate ? colors.BLACK : colors.GRAY_LIGHT};
   ${fontSizes.MAIN};
   ${presets.ELLIPSIS};
@@ -26,7 +26,7 @@ export const DateStyle = (shownDate: boolean) => css`
   width: 70px;
 `;
 
-export const DelayStyle = (delayAmount: number) => css`
+export const DelayStyle = (delayAmount: number): string => css`
   color: ${delayAmount > 0 ? colors.RED : colors.TEAL};
   ${fontSizes.SMALL};
   ${presets.ELLIPSIS};
@@ -35,7 +35,7 @@ export const DelayStyle = (delayAmount: number) => css`
   width: 30px;
 `;
 
-export const ApprovedIconStyle = (approved: boolean) => css`
+export const ApprovedIconStyle = (approved: boolean): string => css`
   display: flex;
   align-items: center;
   justify-content: center;

@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, colors, fontSizesWithHeights, fontSizes } from 'styles/common';
 
-export const LabelWrapperStyle = (align: 'left' | 'right' | 'center', width: string) => css`
+export const LabelWrapperStyle = (align: 'left' | 'right' | 'center', width: string): string => css`
   width: ${width};
   ${fontSizesWithHeights.MAIN};
   ${fontSizes.SMALL};

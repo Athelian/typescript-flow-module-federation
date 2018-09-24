@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout } from 'styles/common';
 
-export const VerticalLayoutWrapperStyle = css`
+export const VerticalLayoutWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
 
   height: 100%;

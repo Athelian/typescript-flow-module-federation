@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { borderRadiuses, colors, presets } from 'styles/common';
 
-export const DashedPlusButtonWrapperStyle = (width: string, height: string) => css`
+export const DashedPlusButtonWrapperStyle = (width: string, height: string): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
   font-size: 30px;

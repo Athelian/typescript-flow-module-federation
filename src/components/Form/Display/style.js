@@ -6,7 +6,7 @@ export const DisplayWrapperStyle = (
   align: 'left' | 'right' | 'center',
   color: string,
   fontSize: string
-) => css`
+): string => css`
   ${fontSizesWithHeights[fontSize]};
   font-weight: bold;
   color: ${colors[color]};

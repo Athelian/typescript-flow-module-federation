@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, fontSizesWithHeights, presets } from 'styles/common';
 
-export const ForwarderCardStyle = (size: 'full' | 'half' | 'quarter') => css`
+export const ForwarderCardStyle = (size: 'full' | 'half' | 'quarter'): string => css`
   display: grid;
   align-items: center;
   ${size === 'full' &&
@@ -22,14 +22,14 @@ export const ForwarderCardStyle = (size: 'full' | 'half' | 'quarter') => css`
     `};
 `;
 
-export const ForwarderCardImageStyle = css`
+export const ForwarderCardImageStyle: string = css`
   border-radius: 5px 5px 0 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 `;
 
-export const ForwarderNameStyle = css`
+export const ForwarderNameStyle: string = css`
   color: ${colors.BLACK};
   font-weight: bold;
   ${fontSizesWithHeights.MAIN};

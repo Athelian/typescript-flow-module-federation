@@ -2,12 +2,12 @@
 import { css } from 'react-emotion';
 import { transitions, fontSizes } from 'styles/common';
 
-export const SubMenuStyle = css`
+export const SubMenuStyle: string = css`
   overflow: hidden;
   min-height: min-content;
 `;
 
-export const SubMenuItemStyle = (isExpanded: boolean) => css`
+export const SubMenuItemStyle = (isExpanded: boolean): string => css`
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -52,7 +52,7 @@ export const SubMenuItemStyle = (isExpanded: boolean) => css`
   }
 `;
 
-export const SubMenuBodyStyle = (isExpanded: boolean, menuItemCount: number) => css`
+export const SubMenuBodyStyle = (isExpanded: boolean, menuItemCount: number): string => css`
   height: ${isExpanded ? `${menuItemCount * 50}px` : '0px'};
   display: flex;
   flex-direction: column;

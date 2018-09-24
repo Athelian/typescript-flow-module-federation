@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout } from 'styles/common';
 
-export const GridColumnWrapperStyle = (gap: number) => css`
+export const GridColumnWrapperStyle = (gap: number): string => css`
   ${layout.GRID_VERTICAL};
   grid-gap: ${gap};
 `;

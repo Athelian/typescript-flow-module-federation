@@ -44,7 +44,7 @@ class ShipmentListModule extends React.Component<Props, State> {
     perPage: 10,
   };
 
-  onChangeFilter = (newValue: any) => {
+  onChangeFilter = (newValue: Object) => {
     this.setState(prevState => ({ ...prevState, ...newValue }));
   };
 
@@ -52,7 +52,7 @@ class ShipmentListModule extends React.Component<Props, State> {
     const { viewType, sort, perPage, ...filters } = this.state;
     const { intl } = this.props;
 
-    const fields = [
+    const fields: Array<{ title: string, value: string }> = [
       { title: intl.formatMessage(messages.estimatedDeparture), value: 'ETD' },
       { title: intl.formatMessage(messages.estimatedArrival), value: 'ETA' },
       { title: intl.formatMessage(messages.warehouseArrival), value: 'warehouseArrival' },

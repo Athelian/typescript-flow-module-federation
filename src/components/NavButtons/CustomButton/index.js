@@ -9,11 +9,14 @@ Use "teal" for confirmations like "Create" or "Save"
 Use "red" for high alert actions like "Delete"
 */
 
-type Props = {
+type OptionalProps = {
+  disabled: boolean,
+  color: 'gray' | 'blue' | 'teal' | 'red',
+};
+
+type Props = OptionalProps & {
+  icon: any,
   label: string | React.Element<any>,
-  icon?: any,
-  color?: 'gray' | 'blue' | 'teal' | 'red',
-  disabled?: boolean,
 };
 
 const CustomButton = ({ label, icon, color, disabled, ...rest }: Props) => (
@@ -29,8 +32,8 @@ const CustomButton = ({ label, icon, color, disabled, ...rest }: Props) => (
 );
 
 CustomButton.defaultProps = {
-  icon: '',
   disabled: false,
+  color: 'gray',
 };
 
 export default CustomButton;

@@ -1,7 +1,8 @@
+// @flow
 import { css } from 'react-emotion';
 import { layout, shadows, borderRadiuses, gradients, colors } from 'styles/common';
 
-export const LoginContainerStyle = css`
+export const LoginContainerStyle: string = css`
   ${layout.FIT};
   ${layout.VERTICAL};
   ${layout.CENTER};
@@ -10,7 +11,7 @@ export const LoginContainerStyle = css`
   overflow: hidden;
 `;
 
-export const LoginLogoContainerStyle = css`
+export const LoginLogoContainerStyle: string = css`
   ${layout.CENTER};
   ${layout.VERTICAL};
   justify-content: flex-end;
@@ -21,17 +22,17 @@ export const LoginLogoContainerStyle = css`
   }
 `;
 
-export const LoginLogoStyle = css`
+export const LoginLogoStyle: string = css`
   width: 80px;
   padding: 10px 0;
 `;
 
-export const LoginLogoNameStyle = css`
+export const LoginLogoNameStyle: string = css`
   width: 200px;
   padding: 10px 0 40px 0;
 `;
 
-export const LoginBoxStyle = css`
+export const LoginBoxStyle: string = css`
   ${shadows.WATERFALL};
   ${borderRadiuses.MAIN};
   background-color: #fff;
@@ -44,12 +45,12 @@ export const LoginBoxStyle = css`
   grid-gap: 20px;
 `;
 
-export const LoginErrorStyle = css`
+export const LoginErrorStyle: string = css`
   color: ${colors.RED};
   align-self: center;
 `;
 
-export const LoginCopyrightStyle = css`
+export const LoginCopyrightStyle: string = css`
   ${layout.VERTICAL};
   justify-content: flex-end;
   padding: 20px 0;
@@ -58,7 +59,7 @@ export const LoginCopyrightStyle = css`
   flex: 1;
 `;
 
-export const LoggingInStyle = css`
+export const LoggingInStyle: string = css`
   ${layout.FIT};
   ${layout.VERTICAL};
   ${layout.CENTER_CENTER};

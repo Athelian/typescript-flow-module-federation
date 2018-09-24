@@ -11,7 +11,7 @@ import {
   transitions,
 } from 'styles/common';
 
-export const SettingsWrapperStyle = css`
+export const SettingsWrapperStyle: string = css`
   position: relative;
   display: flex;
   padding: 0 20px;
@@ -21,7 +21,7 @@ export const SettingsWrapperStyle = css`
   height: 50px;
 `;
 
-export const NotificationButtonStyle = css`
+export const NotificationButtonStyle: string = css`
   background: ${gradients.BLUE_TEAL_DIAGONAL};
   color: #fff;
   margin: 0 20px 0 0;
@@ -38,7 +38,7 @@ export const NotificationButtonStyle = css`
   }
 `;
 
-export const ProfileButtonStyle = css`
+export const ProfileButtonStyle: string = css`
   ${presets.BUTTON};
   position: relative;
   ${borderRadiuses.CIRCLE};
@@ -48,7 +48,7 @@ export const ProfileButtonStyle = css`
   }
 `;
 
-export const NotificationBadgeStyle = css`
+export const NotificationBadgeStyle: string = css`
   position: absolute;
   border-radius: 8px;
   background-color: ${colors.RED};
@@ -65,31 +65,31 @@ export const NotificationBadgeStyle = css`
   flex-shrink: 0;
 `;
 
-const DropDownStyle = css`
+const DropDownStyle: string = css`
   position: absolute;
   top: 60px;
   min-width: min-content;
   min-height: min-content;
 `;
 
-export const DropDownWrapperStyle = css`
+export const DropDownWrapperStyle: string = css`
   ${DropDownStyle};
   right: 20px;
 `;
 
-export const NotificationDropDownWrapperStyle = css`
+export const NotificationDropDownWrapperStyle: string = css`
   ${DropDownStyle};
   right: 66px;
 `;
 
-export const SubMenuWrapperStyle = css`
+export const SubMenuWrapperStyle: string = css`
   ${layout.VERTICAL};
   ${presets.BOX};
   ${shadows.NAV_BUTTON};
   width: 200px;
 `;
 
-export const SubMenuItemStyle = css`
+export const SubMenuItemStyle: string = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   height: 50px;

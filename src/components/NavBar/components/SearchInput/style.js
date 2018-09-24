@@ -10,7 +10,7 @@ import {
   shadows,
 } from 'styles/common';
 
-export const SearchInputStyle = css`
+export const SearchInputStyle: string = css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   position: relative;
@@ -24,7 +24,7 @@ export const SearchInputStyle = css`
   ${shadows.NAV_BUTTON};
 `;
 
-export const SearchIconStyle = css`
+export const SearchIconStyle: string = css`
   ${fontSizes.MAIN};
   color: ${colors.GRAY_LIGHT};
   height: 30px;
@@ -35,7 +35,7 @@ export const SearchIconStyle = css`
   flex-shrink: 0;
 `;
 
-export const InputStyle = css`
+export const InputStyle: string = css`
   ${fontSizes.MAIN};
   color: ${colors.BLACK};
   background: none;
@@ -46,7 +46,7 @@ export const InputStyle = css`
   height: 30px;
 `;
 
-export const ClearButtonStyle = css`
+export const ClearButtonStyle: string = css`
   ${presets.BUTTON};
   ${fontSizes.MAIN};
   color: ${colors.GRAY_LIGHT};

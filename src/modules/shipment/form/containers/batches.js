@@ -4,7 +4,7 @@ import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 
-type FormState = {
+type BatchFormState = {
   batches: Array<Object>,
 };
 
@@ -12,7 +12,7 @@ const initValues = {
   batches: [],
 };
 
-export default class ShipmentBatchesContainer extends Container<FormState> {
+export default class ShipmentBatchesContainer extends Container<BatchFormState> {
   state = initValues;
 
   originalValues = initValues;
@@ -42,8 +42,7 @@ export default class ShipmentBatchesContainer extends Container<FormState> {
   };
 
   initDetailValues = (batches: Array<Object>) => {
-    const parsedValues = removeTypename(batches);
-    // $FlowFixMe: missing type for ramda's map function
+    const parsedValues: Array<any> = removeTypename(batches);
     this.setState({ batches: parsedValues });
     this.originalValues = { batches: parsedValues };
   };

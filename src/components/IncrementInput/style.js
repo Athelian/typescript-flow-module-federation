@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { shadows, colors, presets, fontSizes, borderRadiuses } from 'styles/common';
 
-export const IncrementInputWrapperStyle = () => css`
+export const IncrementInputWrapperStyle = (): string => css`
   height: 25px;
   width: 100%;
   display: grid;
@@ -10,7 +10,7 @@ export const IncrementInputWrapperStyle = () => css`
   grid-gap: 10px;
 `;
 
-export const IncrementButtonStyle = () => css`
+export const IncrementButtonStyle = (): string => css`
   height: 25px;
   width: 25px;
   ${shadows.TOOLTIP};
@@ -24,7 +24,7 @@ export const IncrementButtonStyle = () => css`
   }
 `;
 
-export const IncrementContentStyle = () => css`
+export const IncrementContentStyle = (): string => css`
   ${shadows.TOOLTIP};
   color: ${colors.BLACK};
   ${fontSizes.MAIN};

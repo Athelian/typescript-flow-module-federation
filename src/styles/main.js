@@ -2,9 +2,9 @@
 import { css } from 'react-emotion';
 import { transitions } from './common';
 
-export const AppWrapperStyle = css``;
+export const AppWrapperStyle: string = css``;
 
-export const DesktopWrapperStyle = (isSideBarExpanded?: boolean) => css`
+export const DesktopWrapperStyle = (isSideBarExpanded?: boolean): string => css`
   ${transitions.MAIN};
   min-height: 100vh;
   height: 100%;

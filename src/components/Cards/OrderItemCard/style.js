@@ -9,20 +9,20 @@ import {
   borderRadiuses,
 } from 'styles/common';
 
-export const OrderItemCardWrapperStyle = css`
+export const OrderItemCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 195px;
 `;
 
-export const ProductWrapperStyle = css`
+export const ProductWrapperStyle: string = css`
   position: relative;
   height: 85px;
   width: 195px;
 `;
 
-export const ProductImageStyle = css`
+export const ProductImageStyle: string = css`
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -31,7 +31,7 @@ export const ProductImageStyle = css`
   object-fit: cover;
 `;
 
-export const ProductInfoWrapperStyle = css`
+export const ProductInfoWrapperStyle: string = css`
   position: absolute;
   top: 0;
   left: 0;
@@ -43,7 +43,7 @@ export const ProductInfoWrapperStyle = css`
   width: 195px;
 `;
 
-export const ProductNameStyle = css`
+export const ProductNameStyle: string = css`
   ${fontSizesWithHeights.MAIN};
   color: ${colors.WHITE};
   font-weight: bold;
@@ -52,7 +52,7 @@ export const ProductNameStyle = css`
   width: 175px;
 `;
 
-export const ProductSerialStyle = css`
+export const ProductSerialStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
@@ -60,7 +60,7 @@ export const ProductSerialStyle = css`
   width: 175px;
 `;
 
-export const ProductSupplierStyle = css`
+export const ProductSupplierStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
@@ -70,14 +70,14 @@ export const ProductSupplierStyle = css`
   }
 `;
 
-export const ProductTagsWrapperStyle = css`
+export const ProductTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   padding: 0 10px;
   overflow: hidden;
 `;
 
-export const ProductIconLinkStyle = css`
+export const ProductIconLinkStyle: string = css`
   ${presets.BUTTON};
   position: absolute;
   color: ${colors.WHITE};
@@ -91,18 +91,18 @@ export const ProductIconLinkStyle = css`
   }
 `;
 
-export const BodyWrapperStyle = css`
+export const BodyWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
   padding: 5px 0;
 `;
 
-export const QuantityWrapperStyle = css`
+export const QuantityWrapperStyle: string = css`
   width: 100%;
   padding: 0 5px;
 `;
 
-export const UnitPriceWrapperStyle = css`
+export const UnitPriceWrapperStyle: string = css`
   position: relative;
   width: 100%;
   padding: 0 5px;
@@ -113,7 +113,7 @@ export const UnitPriceWrapperStyle = css`
   }
 `;
 
-export const SyncButtonStyle = css`
+export const SyncButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
   position: absolute;
@@ -133,19 +133,19 @@ export const SyncButtonStyle = css`
   }
 `;
 
-export const DividerStyle = css`
+export const DividerStyle: string = css`
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};
   margin: 0 10px;
 `;
 
-export const ChartWrapperStyle = css`
+export const ChartWrapperStyle: string = css`
   width: 195px;
   padding: 0 10px;
   margin: 3px 0;
 `;
 
-export const TotalPriceWrapperStyle = css`
+export const TotalPriceWrapperStyle: string = css`
   width: 100%;
   padding: 0 5px;
 `;

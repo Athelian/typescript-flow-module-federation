@@ -1,7 +1,8 @@
+// @flow
 import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
-export const LoadingWrapperStyle = css`
+export const LoadingWrapperStyle: string = css`
   width: 100%;
   height: 100%;
   display: flex;
@@ -9,18 +10,18 @@ export const LoadingWrapperStyle = css`
   align-items: center;
 `;
 
-export const LoadingStyle = css`
+export const LoadingStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;
   transform: rotate(30deg);
 `;
 
-export const RowStyle = css`
+export const RowStyle: string = css`
   display: flex;
 `;
 
-export const TriangleStyle = css`
+export const TriangleStyle: string = css`
   @keyframes blink {
     0% {
       opacity: 0.1;
@@ -43,14 +44,14 @@ export const TriangleStyle = css`
   filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2));
 `;
 
-export const FlipStyle = css`
+export const FlipStyle: string = css`
   transform: rotate(180deg);
 `;
 
-export const InnerStyle = i => css`
+export const InnerStyle = (i: number): string => css`
   animation-delay: ${-(1 / 6) * i}s;
 `;
 
-export const OuterStyle = i => css`
+export const OuterStyle = (i: number): string => css`
   animation-delay: ${-(1 / 18) * i}s;
 `;

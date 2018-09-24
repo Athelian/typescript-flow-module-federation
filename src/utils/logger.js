@@ -1,4 +1,5 @@
-import * as log from 'loglevel';
+// @flow
+import log from 'loglevel';
 import { isAppInProduction } from './env';
 
 if (isAppInProduction) {

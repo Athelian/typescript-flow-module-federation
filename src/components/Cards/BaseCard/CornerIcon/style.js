@@ -7,7 +7,7 @@ export const IconStyle = (
   disabled: boolean,
   readOnly: boolean,
   actionsOnHover: boolean
-) => css`
+): string => css`
   ${presets.BUTTON};
   position: absolute;
   top: 0;

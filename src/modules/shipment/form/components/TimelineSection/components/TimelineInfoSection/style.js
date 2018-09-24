@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { layout, presets, borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
 
-export const TimelineInfoSectionWrapperStyle = css`
+export const TimelineInfoSectionWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -13,7 +13,7 @@ export const TimelineInfoSectionWrapperStyle = css`
   }
 `;
 
-export const AssignedAndApprovalWrapperStyle = css`
+export const AssignedAndApprovalWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
   background-color: ${colors.GRAY_SUPER_LIGHT};
@@ -21,14 +21,14 @@ export const AssignedAndApprovalWrapperStyle = css`
   padding: 5px 0 10px 0;
 `;
 
-export const AssignmentWrapperStyle = css`
+export const AssignmentWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
   padding: 0 5px;
   width: 200px;
 `;
 
-export const AssignmentStyle = css`
+export const AssignmentStyle: string = css`
   position: relative;
   &:hover {
     & > button {
@@ -37,7 +37,7 @@ export const AssignmentStyle = css`
   }
 `;
 
-export const RemoveAssignmentButtonStyle = css`
+export const RemoveAssignmentButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   flex-shrink: 0;
@@ -57,7 +57,7 @@ export const RemoveAssignmentButtonStyle = css`
   }
 `;
 
-export const AddAssignmentButtonStyle = css`
+export const AddAssignmentButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   width: 30px;
@@ -74,7 +74,7 @@ export const AddAssignmentButtonStyle = css`
   }
 `;
 
-export const ApprovalWrapperStyle = css`
+export const ApprovalWrapperStyle: string = css`
   position: relative;
   ${layout.GRID_HORIZONTAL};
   justify-content: end;
@@ -88,12 +88,12 @@ export const ApprovalWrapperStyle = css`
   }
 `;
 
-export const ApprovedByWrapperStyle = css`
+export const ApprovedByWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
 `;
 
-export const ApprovedByStyle = css`
+export const ApprovedByStyle: string = css`
   ${fontSizes.SMALL};
   min-height: 12px;
   max-height: 12px;
@@ -103,7 +103,7 @@ export const ApprovedByStyle = css`
   text-align: right;
 `;
 
-export const ApprovedAtStyle = css`
+export const ApprovedAtStyle: string = css`
   ${fontSizes.MAIN};
   min-height: 18px;
   max-height: 18px;
@@ -114,7 +114,7 @@ export const ApprovedAtStyle = css`
   text-align: right;
 `;
 
-export const UnapproveButtonStyle = css`
+export const UnapproveButtonStyle: string = css`
   position: absolute;
   top: 0;
   right: 5px;
@@ -133,7 +133,7 @@ export const UnapproveButtonStyle = css`
   }
 `;
 
-export const AddDateButtonWrapperStyle = css`
+export const AddDateButtonWrapperStyle: string = css`
   display: flex;
   width: 410px;
   justify-content: flex-end;

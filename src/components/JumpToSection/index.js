@@ -88,10 +88,12 @@ class JumpToSection extends React.Component<Props, State> {
 
   handleClick = (id: string) => () => {
     const node = document.querySelector(`#${id}`);
-    scrollIntoView(node, {
-      behavior: 'smooth',
-      scrollMode: 'if-needed',
-    });
+    if (node) {
+      scrollIntoView(node, {
+        behavior: 'smooth',
+        scrollMode: 'if-needed',
+      });
+    }
   };
 
   io: IntersectionObserver;

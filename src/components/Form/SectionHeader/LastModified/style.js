@@ -2,17 +2,17 @@
 import { css } from 'react-emotion';
 import { colors, borderRadiuses, layout } from 'styles/common';
 
-export const LastModifiedWrapperStyle = css`
+export const LastModifiedWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   align-items: center;
 `;
 
-export const LastModifiedStyle = css`
+export const LastModifiedStyle: string = css`
   display: flex;
 `;
 
-export const UserIconStyle = css`
+export const UserIconStyle: string = css`
   display: flex;
   ${layout.CENTER_CENTER};
   color: #fff;

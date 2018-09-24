@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, layout, colors, fontSizes, transitions } from 'styles/common';
 
-export const AdjustmentWrapperStyle = css`
+export const AdjustmentWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   &:hover {
@@ -14,13 +14,13 @@ export const AdjustmentWrapperStyle = css`
   }
 `;
 
-export const AdjustmentFieldsWrapperStyle = css`
+export const AdjustmentFieldsWrapperStyle: string = css`
   position: relative;
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
 `;
 
-export const MemoButtonStyle = (isMemoOpen: boolean, hasMemo: boolean) => css`
+export const MemoButtonStyle = (isMemoOpen: boolean, hasMemo: boolean): string => css`
   position: absolute;
   width: 30px;
   height: 30px;
@@ -43,7 +43,7 @@ export const MemoButtonStyle = (isMemoOpen: boolean, hasMemo: boolean) => css`
     `};
 `;
 
-export const RemoveButtonStyle = css`
+export const RemoveButtonStyle: string = css`
   position: absolute;
   width: 30px;
   height: 30px;
@@ -58,7 +58,7 @@ export const RemoveButtonStyle = css`
   }
 `;
 
-export const MemoSectionWrapperStyle = (isMemoOpen: boolean) => css`
+export const MemoSectionWrapperStyle = (isMemoOpen: boolean): string => css`
   ${layout.GRID_VERTICAL};
   grid-gap: 10px;
   ${transitions.EXPAND};
@@ -69,13 +69,13 @@ export const MemoSectionWrapperStyle = (isMemoOpen: boolean) => css`
   margin-left: 5px;
 `;
 
-export const LastModifiedWrapperStyle = css`
+export const LastModifiedWrapperStyle: string = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 0 0 0;
 `;
 
-export const UserIconStyle = css`
+export const UserIconStyle: string = css`
   margin: 0 5px 0 0;
 `;
