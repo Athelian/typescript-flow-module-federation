@@ -6,17 +6,49 @@ import { selectSearchEnumInputFactory, textInputFactory } from 'modules/form/hel
 import { SectionHeader, Label, FieldItem, Tooltip } from 'components/Form';
 import { VoyageInfoSectionWrapperStyle, SelectTransportTypeMessageStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  voyage: {
+    arrivalPort?: {
+      airport: string,
+      seaport: string,
+    },
+    departurePort?: {
+      airport: string,
+      seaport: string,
+    },
+    vesselCode?: string,
+    vesselName?: string,
+  },
+  initialVoyage: {
+    arrivalPort?: {
+      airport: string,
+      seaport: string,
+    },
+    departurePort?: {
+      airport: string,
+      seaport: string,
+    },
+    vesselCode?: string,
+    vesselName?: string,
+  },
+};
+
+type Props = OptionalProps & {
   isNew: boolean,
   icon: string,
   title: string,
-  voyage: Object,
-  initialVoyage: Object,
   sourceName: string,
   setFieldDeepValue: Function,
 };
 
+const defaultProps = {
+  voyage: {},
+  initialVoyage: {},
+};
+
 class VoyageInfoSection extends React.PureComponent<Props> {
+  static defaultProps = defaultProps;
+
   render() {
     const {
       isNew,
@@ -54,7 +86,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           {canSelectPorts ? (
             <FormField
               name={`${sourceName}.departurePort.${deepField}`}
-              initValue={initialVoyage.departurePort[deepField]}
+              initValue={initialVoyage.departurePort && initialVoyage.departurePort[deepField]}
               setFieldValue={(name, value) => {
                 setFieldDeepValue(name, value);
                 if (prevVoyageSourceName) {
@@ -65,7 +97,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               {({ name, ...inputHandlers }) =>
                 selectSearchEnumInputFactory({
                   enumType,
-                  initValue: initialVoyage.departurePort[deepField],
+                  initValue: initialVoyage.departurePort && initialVoyage.departurePort[deepField],
                   inputHandlers,
                   name,
                   isNew,
@@ -93,7 +125,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           {canSelectPorts ? (
             <FormField
               name={`${sourceName}.arrivalPort.${deepField}`}
-              initValue={initialVoyage.arrivalPort[deepField]}
+              initValue={initialVoyage.arrivalPort && initialVoyage.arrivalPort[deepField]}
               setFieldValue={(name, value) => {
                 setFieldDeepValue(name, value);
                 if (nextVoyageSourceName) {
@@ -104,7 +136,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               {({ name, ...inputHandlers }) =>
                 selectSearchEnumInputFactory({
                   enumType,
-                  initValue: initialVoyage.arrivalPort[deepField],
+                  initValue: initialVoyage.arrivalPort && initialVoyage.arrivalPort[deepField],
                   inputHandlers,
                   name,
                   isNew,
