@@ -29,22 +29,12 @@ export const OrderListItemStyle = (isFocused: boolean) => css`
 `;
 
 export const CardWrapperStyle = css`
-<<<<<<< HEAD
   width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   -webkit-justify-content: space-around;
   justify-content: space-around;
-=======
-  padding-left: 5px;
-  padding-right: 25px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
->>>>>>> 3d677b7e66f8ae3fc6b88aa778bd2f1c282e2627
 `;
 export const CardTitleStyle = css`
   ${fontSizes.SMALL};

@@ -10,11 +10,11 @@ import {
   formatOrderFromShipment,
   formatShipmentData,
 } from 'modules/relationMap/util';
+import { ScrollWrapperStyle, ShipmentMapWrapperStyle } from 'modules/relationMap/style';
 import query from './query';
 import RelationView from '../RelationView';
 import Item from '../OrderElement';
 import SummaryBadge from '../SummaryBadge';
-import { ScrollWrapperStyle, ShipmentMapWrapperStyle } from '../../style';
 
 type OptionalProps = {
   page: number,
