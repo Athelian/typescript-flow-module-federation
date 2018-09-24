@@ -1,90 +1,51 @@
 // @flow
-// import type { Tag } from './tag';
-// import type { File, Image } from './file';
 
-type Tag = {
-  id: string,
-  name: string,
-  description: ?string,
-  color: string,
+export type MetricValue = {
+  value: number,
+  metric: string,
 };
 
-type File = {
-  id: string,
-  path: string,
-  type: string,
-  memo: ?string,
+export type Price = {
+  amount: number,
+  currency: string,
 };
 
-type Image = {
-  id?: ?string,
-  path: string,
-  type: string,
-};
-
-export type DetailedProduct = {
-  id: string,
-  status: string,
+export type ProductCreate = {
   name: string,
   serial: string,
-  JANCode: ?string,
-  HSCode: ?string,
-  material: ?string,
-  tags: Array<Tag>,
-  files: Array<Image>,
-  metadata: ?any,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type Filter = {
-  exporterId: string,
-  supplierId?: string,
-};
-
-export type PES = {
-  id: string,
-  price: ?number,
-  currency: ?string,
-  unit: ?string,
-  volume: ?number,
-  weight: ?number,
-  packageName: ?string,
-  packageGrossWeight: ?number,
-  packageVolume: ?number,
-  packageMaxQuantity: ?number,
-  packageSize: ?string,
-  product: {
-    name: string,
-    serial: string,
-  },
-  exporter: {
-    name: string,
-  },
-  supplier?: {
-    name: string,
-  },
-};
-
-export type Product = {
-  id: string,
-  name: string,
-  serial: string,
-  exporterSuppliers: Array<{
+  janCode?: ?string,
+  hsCode?: ?string,
+  material?: ?string,
+  tagIds?: Array<string>,
+  productProviders: Array<{
+    exporterId: string,
+    supplierId?: ?string,
+  }>,
+  files?: Array<{
     id: string,
-    exporter: {
-      id: string,
-      name: string,
-    },
-    supplier?: {
-      id: string,
-      name: string,
-    },
+    name?: ?string,
+    type?: ?string,
+    memo?: ?string,
   }>,
-  files: Array<{
-    path: string,
+};
+
+export type ProductUpdate = {
+  archived?: boolean,
+  name?: string,
+  serial?: string,
+  janCode?: ?string,
+  hsCode?: ?string,
+  material?: ?string,
+  tagIds?: Array<string>,
+  productProviders?: Array<{
+    id?: string,
+    exporterId?: string,
+    supplierId?: ?string,
   }>,
-  createdAt: string,
-  updatedAt: string,
-  tags: Array<Tag>,
+  files?: Array<{
+    id: string,
+    name?: ?string,
+    type?: ?string,
+    memo?: ?string,
+  }>,
 };

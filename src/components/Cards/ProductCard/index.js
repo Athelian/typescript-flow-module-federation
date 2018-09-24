@@ -1,24 +1,22 @@
 // @flow
 import React from 'react';
 import { navigate } from '@reach/router';
-import { type Product } from 'modules/product/type.js.flow';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import BaseCard, { CardAction } from '../BaseCard';
 import { ProductCardWrapperStyle } from './style';
 
 type OptionalProps = {
-  onClick?: (id: string) => void,
+  onClick?: ?Function,
   selectable: boolean,
 };
 
 type Props = OptionalProps & {
-  product: ?Product,
+  product: ?Object,
 };
 
 const defaultProps = {
   selectable: false,
-  onClick: id => navigate(`/product/${encodeId(id)}`),
 };
 
 const ProductCard = ({ product, onClick, selectable, ...rest }: Props) => {
@@ -34,9 +32,15 @@ const ProductCard = ({ product, onClick, selectable, ...rest }: Props) => {
         <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
       ];
 
+  const defaultOnClick = () => navigate(`/product/${encodeId(id)}`);
+
   return (
     <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} selectable={selectable} {...rest}>
-      <div className={ProductCardWrapperStyle} onClick={onClick} role="presentation">
+      <div
+        className={ProductCardWrapperStyle}
+        onClick={onClick || defaultOnClick}
+        role="presentation"
+      >
         {id}
       </div>
     </BaseCard>
