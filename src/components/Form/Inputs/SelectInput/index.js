@@ -32,8 +32,9 @@ class SelectInput extends React.Component<Props, State> {
 
   handleChange = (selectedItem: any) => {
     const { onChange } = this.props;
-    this.setState({ selectedItem });
-    if (onChange) onChange(selectedItem);
+    this.setState({ selectedItem }, () => {
+      if (onChange) onChange(selectedItem);
+    });
   };
 
   handleBlur = (evt: Object) => {
