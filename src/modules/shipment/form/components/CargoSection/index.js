@@ -35,12 +35,12 @@ function CargoSection({ intl }: Props) {
               <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: '1030px' }}>
                 {opened && (
                   <Subscribe to={[ShipmentBatchesContainer]}>
-                    {({ setFieldValue }) => (
+                    {({ state: { batches }, setFieldValue }) => (
                       <SelectBatches
                         onCancel={toggle}
                         onSelect={selected => {
                           toggle();
-                          setFieldValue('batches', selected);
+                          setFieldValue('batches', [...batches, ...selected]);
                         }}
                       />
                     )}
