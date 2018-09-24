@@ -25,6 +25,8 @@ import farSettings from '@fortawesome/fontawesome-pro-regular/faCog';
 import fasSettings from '@fortawesome/fontawesome-pro-solid/faCog';
 import farTags from '@fortawesome/fontawesome-pro-regular/faTags';
 import fasTags from '@fortawesome/fontawesome-pro-solid/faTags';
+import farMap from '@fortawesome/fontawesome-pro-regular/faMap';
+import fasMap from '@fortawesome/fontawesome-pro-solid/faMap';
 import messages from './messages';
 
 export type MenuItemType = {|
@@ -91,6 +93,14 @@ const menuConfig: MenuConfig = [
     inactiveIcon: farShip,
     activeIcon: fasShip,
     path: '/shipment',
+  },
+  {
+    type: 'menuitem',
+    id: 2,
+    name: <FormattedMessage {...messages.relationMap} />,
+    inactiveIcon: farMap,
+    activeIcon: fasMap,
+    path: '/relation-map/orders',
   },
   {
     type: 'menuitem',

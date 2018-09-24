@@ -30,6 +30,11 @@
   "components.EntityTimeline.target.ContainerGroup": "商品",
   "components.EntityTimeline.target.BatchGroup": "バッチグループ",
 
+  "containers.RelationMap.ordersTab": "オーダー",
+  "containers.RelationMap.shipmentsTab": "船積",
+  "containers.RelationMap.quantityTitle": "QTY",
+  "containers.RelationMap.volumeTitle": "VOL",
+
   "components.BatchItem.batchNo": "バッチ ID",
   "components.BatchItem.quantity": "数量",
   "components.BatchItem.shortQuantity": "数量",

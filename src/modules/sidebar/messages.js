@@ -26,6 +26,10 @@ export default defineMessages({
   request: {
     id: 'containers.SideBar.request',
   },
+  relationMap: {
+    id: 'containers.SideBar.relationMap',
+    defaultMessage: 'RELATION MAP',
+  },
   network: {
     id: 'containers.SideBar.network',
   },

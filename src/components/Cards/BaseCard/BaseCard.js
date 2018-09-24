@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { injectUid } from 'utils/id';
+import { cx } from 'react-emotion';
 import { CardStyle, SelectableCardStyle } from './style';
 import Actions from './Actions';
 import CornerIcon from './CornerIcon';
@@ -13,7 +14,7 @@ type OptionalProps = {
   readOnly: boolean,
   selected: boolean,
   onSelect: Function,
-  wrapperClassName: string,
+  wrapperClassName: string | Function,
 };
 
 type Props = OptionalProps & {
@@ -90,10 +91,10 @@ export default class BaseCard extends React.Component<Props, State> {
     const { actionsAreShown } = this.state;
 
     const arrayOfAction = actions && actions.map(node => injectUid({ node }));
-
+    const cardStyle = CardStyle(disabled, readOnly);
     return (
       <div
-        className={`${CardStyle(disabled, readOnly)} ${wrapperClassName}`}
+        className={cx(cardStyle, wrapperClassName)}
         onMouseOver={this.onMouseOver}
         onMouseOut={this.onMouseOut}
         onFocus={this.onMouseOver}
@@ -106,16 +107,19 @@ export default class BaseCard extends React.Component<Props, State> {
             onClick={this.toggleActionVisibility}
           />
         )}
-        <CornerIcon
-          icon={icon}
-          color={color}
-          disabled={disabled}
-          readOnly={readOnly}
-          selectable={selectable}
-          selected={selected}
-          showActionsOnHover={showActionsOnHover}
-          onClick={this.toggleActionVisibility}
-        />
+        {icon &&
+          icon.length && (
+            <CornerIcon
+              icon={icon}
+              color={color}
+              disabled={disabled}
+              readOnly={readOnly}
+              selectable={selectable}
+              selected={selected}
+              showActionsOnHover={showActionsOnHover}
+              onClick={this.toggleActionVisibility}
+            />
+          )}
         {children}
         {!disabled &&
           selectable && (

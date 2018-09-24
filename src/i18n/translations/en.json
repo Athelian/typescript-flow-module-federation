@@ -432,6 +432,11 @@
   "containers.Orders.addAdjustment": "ADD ADJUSTMENT",
   "containers.Orders.currencyNotMatch": "Unit price is in {currency}. Please revise",
 
+  "containers.RelationMap.ordersTab": "ORDERS",
+  "containers.RelationMap.shipmentsTab": "SHIPMENTS",
+  "containers.RelationMap.quantityTitle": "QTY",
+  "containers.RelationMap.volumeTitle": "VOL",
+
   "containers.Batches.noShipmentID": "No Shipment ID",
   "containers.Batches.noBatches": "No batches found.",
   "containers.Batches.selectAll": "ALL",
