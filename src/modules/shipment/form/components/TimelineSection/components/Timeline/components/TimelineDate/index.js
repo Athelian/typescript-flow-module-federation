@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { compact } from 'lodash';
 // $FlowFixMe flow not yet configured
 import differenceInDays from 'date-fns/differenceInDays';
 import Icon from 'components/Icon';
@@ -33,14 +34,17 @@ const defaultProps = {
 };
 
 const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
-  const { date, timelineDateRevisions, approvedAt } = timelineDate;
+  const { date, timelineDateRevisions: rawRevisions, approvedAt } = timelineDate;
 
+  const timelineDateRevisions = compact(rawRevisions);
   const hasMultipleDates = timelineDateRevisions && timelineDateRevisions.length > 0;
 
   let shownDate = null;
   if (hasMultipleDates && timelineDateRevisions) {
     if (timelineDateRevisions[timelineDateRevisions.length - 1].date) {
       shownDate = timelineDateRevisions[timelineDateRevisions.length - 1].date;
+    } else {
+      shownDate = date;
     }
   } else if (date) {
     shownDate = date;

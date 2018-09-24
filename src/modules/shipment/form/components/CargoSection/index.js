@@ -30,7 +30,8 @@ function CargoSection({ intl }: Props) {
         <BooleanValue>
           {({ value: opened, toggle }) => (
             <>
-              <NewButton title={intl.formatMessage(messages.newBatch)} onClick={toggle} />
+              <NewButton title={intl.formatMessage(messages.selectBatches)} onClick={toggle} />
+              <NewButton title={intl.formatMessage(messages.newBatch)} onClick={() => {}} />
 
               <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: '1030px' }}>
                 {opened && (

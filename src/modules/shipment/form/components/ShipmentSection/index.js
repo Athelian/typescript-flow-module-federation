@@ -35,7 +35,7 @@ type Props = {
 const ShipmentSection = ({ isNew }: Props) => (
   <Subscribe to={[ShipmentInfoContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
-      const values = { ...initialValues, ...state };
+      const values: Object = { ...initialValues, ...state };
       const { forwarders = [] } = values;
 
       return (
@@ -167,11 +167,12 @@ const ShipmentSection = ({ isNew }: Props) => (
                       {({ name, ...inputHandlers }) =>
                         selectEnumInputFactory({
                           enumType: 'TransportType',
+                          align: 'right',
+                          label: 'TRANSPORTATION',
+                          initValue: transportTypeValues[name],
                           inputHandlers,
                           name,
                           isNew,
-                          label: 'TRANSPORTATION',
-                          initValue: transportTypeValues[name],
                         })
                       }
                     </FormField>
@@ -189,11 +190,12 @@ const ShipmentSection = ({ isNew }: Props) => (
                 {({ name, ...inputHandlers }) =>
                   selectEnumInputFactory({
                     enumType: 'LoadType',
+                    align: 'right',
+                    label: 'LOAD TYPE',
+                    initValue: initialValues[name],
                     inputHandlers,
                     name,
                     isNew,
-                    label: 'LOAD TYPE',
-                    initValue: initialValues[name],
                   })
                 }
               </FormField>

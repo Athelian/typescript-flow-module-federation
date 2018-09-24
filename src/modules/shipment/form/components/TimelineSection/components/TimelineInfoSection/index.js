@@ -53,7 +53,7 @@ type Props = OptionalProps & {
   title: string,
   sourceName: string,
   setFieldDeepValue: (field: string, value: any) => void,
-  removeArrayItem: Function,
+  removeArrayItem: (path: string) => void,
 };
 
 const defaultProps = {
@@ -118,39 +118,36 @@ class TimelineInfoSection extends React.PureComponent<Props> {
                       <UserAvatar firstName={firstName} lastName={lastName} />
                     </div>
                   ))}
-                {timelineDate &&
-                  timelineDate.assignedTo &&
-                  timelineDate.assignedTo.length < 5 && (
-                    <BooleanValue>
-                      {({ value: isOpen, toggle }) => (
-                        <>
-                          <button
-                            className={AddAssignmentButtonStyle}
-                            type="button"
-                            onClick={toggle}
-                          >
-                            <Icon icon="ADD" />
-                          </button>
-                          <SlideView
-                            isOpen={isOpen}
-                            onRequestClose={toggle}
-                            options={{ width: '1030px' }}
-                          >
-                            {isOpen && (
-                              <AssignUsers
-                                selected={timelineDate.assignedTo}
-                                onSelect={selected => {
-                                  toggle();
-                                  setFieldDeepValue(`${sourceName}.assignedTo`, selected);
-                                }}
-                                onCancel={toggle}
-                              />
-                            )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
-                  )}
+                {((timelineDate && !timelineDate.assignedTo) ||
+                  (timelineDate &&
+                    timelineDate.assignedTo &&
+                    timelineDate.assignedTo.length < 5)) && (
+                  <BooleanValue>
+                    {({ value: isOpen, toggle }) => (
+                      <>
+                        <button className={AddAssignmentButtonStyle} type="button" onClick={toggle}>
+                          <Icon icon="ADD" />
+                        </button>
+                        <SlideView
+                          isOpen={isOpen}
+                          onRequestClose={toggle}
+                          options={{ width: '1030px' }}
+                        >
+                          {isOpen && (
+                            <AssignUsers
+                              selected={timelineDate.assignedTo}
+                              onSelect={selected => {
+                                toggle();
+                                setFieldDeepValue(`${sourceName}.assignedTo`, selected);
+                              }}
+                              onCancel={toggle}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                )}
               </div>
             </GridColumn>
 
@@ -199,7 +196,6 @@ class TimelineInfoSection extends React.PureComponent<Props> {
           </div>
 
           <GridColumn gap="10px">
-            {/* <Label>DATES</Label> */}
             <div className={AddDateButtonWrapperStyle}>
               <NewButton
                 title="NEW DATE"
@@ -227,7 +223,7 @@ class TimelineInfoSection extends React.PureComponent<Props> {
                   adjustment && (
                     <DefaultAdjustmentStyle
                       isNew={isNew}
-                      index={index}
+                      index={timelineDate.timelineDateRevisions.length - 1 - index}
                       adjustment={adjustment}
                       key={adjustment.id}
                       setFieldArrayValue={setFieldDeepValue}
@@ -239,7 +235,10 @@ class TimelineInfoSection extends React.PureComponent<Props> {
                       memoName="memo"
                       valueInput={
                         <FormField
-                          name={`${sourceName}.timelineDateRevisions.${index}.date`}
+                          name={`${sourceName}.timelineDateRevisions.${timelineDate
+                            .timelineDateRevisions.length -
+                            1 -
+                            index}.date`}
                           initValue={adjustment.date}
                           setFieldValue={setFieldDeepValue}
                         >
