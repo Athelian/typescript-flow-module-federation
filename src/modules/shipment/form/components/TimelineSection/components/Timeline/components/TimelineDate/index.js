@@ -16,7 +16,7 @@ type OptionalProps = {
   prefixIcon: string,
   timelineDate: {
     date: ?string | Date,
-    timelineDateRevisions: Array<{
+    timelineDateRevisions?: Array<{
       date: ?string | Date,
     }>,
     approvedAt: ?string | Date,
@@ -35,10 +35,10 @@ const defaultProps = {
 const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
   const { date, timelineDateRevisions, approvedAt } = timelineDate;
 
-  const hasMultipleDates = timelineDateRevisions.length > 0;
+  const hasMultipleDates = timelineDateRevisions && timelineDateRevisions.length > 0;
 
   let shownDate = null;
-  if (hasMultipleDates) {
+  if (hasMultipleDates && timelineDateRevisions) {
     if (timelineDateRevisions[timelineDateRevisions.length - 1].date) {
       shownDate = timelineDateRevisions[timelineDateRevisions.length - 1].date;
     }

@@ -136,7 +136,16 @@ class TimelineInfoSection extends React.PureComponent<Props> {
                             onRequestClose={toggle}
                             options={{ width: '1030px' }}
                           >
-                            {isOpen && <AssignUsers onSelect={console.warn} onCancel={toggle} />}
+                            {isOpen && (
+                              <AssignUsers
+                                selected={timelineDate.assignedTo}
+                                onSelect={selected => {
+                                  toggle();
+                                  setFieldDeepValue(`${sourceName}.assignedTo`, selected);
+                                }}
+                                onCancel={toggle}
+                              />
+                            )}
                           </SlideView>
                         </>
                       )}

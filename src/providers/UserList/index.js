@@ -23,7 +23,7 @@ const defaultProps = {
   filterBy: {},
   sortBy: {},
   page: 1,
-  perPage: 10,
+  perPage: 100,
 };
 
 const UserList = ({ filterBy, sortBy, page, perPage, children }: Props) => (
