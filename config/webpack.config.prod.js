@@ -4,6 +4,7 @@ const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -80,6 +81,99 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
   return loaders;
 };
 
+const plugins = [
+  // Generates an `index.html` file with the <script> injected.
+  new HtmlWebpackPlugin({
+    inject: true,
+    template: paths.appHtml,
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeRedundantAttributes: true,
+      useShortDoctype: true,
+      removeEmptyAttributes: true,
+      removeStyleLinkTypeAttributes: true,
+      keepClosingSlash: true,
+      minifyJS: true,
+      minifyCSS: true,
+      minifyURLs: true,
+    },
+  }),
+  // Inlines the webpack runtime script. This script is too small to warrant
+  // a network request.
+  new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+  // Makes some environment variables available in index.html.
+  // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
+  // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+  // In production, it will be an empty string unless you specify "homepage"
+  // in `package.json`, in which case it will be the pathname of that URL.
+  new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
+  // Makes some environment variables available to the JS code, for example:
+  // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
+  // It is absolutely essential that NODE_ENV was set to production here.
+  // Otherwise React will be compiled in the very slow development mode.
+  new webpack.DefinePlugin(env.stringified),
+  new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: 'static/css/[name].[contenthash:8].css',
+    chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+  }),
+  // Generate a manifest file which contains a mapping of all asset filenames
+  // to their corresponding output file so that tools can pick it up without
+  // having to parse `index.html`.
+  new ManifestPlugin({
+    fileName: 'asset-manifest.json',
+    publicPath: publicPath,
+  }),
+  // Generate a service worker script that will precache, and keep up to date,
+  // the HTML & assets that are part of the Webpack build.
+  new SWPrecacheWebpackPlugin({
+    // By default, a cache-busting query parameter is appended to requests
+    // used to populate the caches, to ensure the responses are fresh.
+    // If a URL is already hashed by Webpack, then there is no concern
+    // about it being stale, and the cache-busting can be skipped.
+    dontCacheBustUrlsMatching: /\.\w{8}\./,
+    filename: 'service-worker.js',
+    logger(message) {
+      if (message.indexOf('Total precache size is') === 0) {
+        // This message occurs for every build and is a bit too noisy.
+        return;
+      }
+      if (message.indexOf('Skipping static resource') === 0) {
+        // This message obscures real errors so we ignore it.
+        // https://github.com/facebook/create-react-app/issues/2612
+        return;
+      }
+      console.log(message);
+    },
+    minify: true,
+    // For unknown URLs, fallback to the index page
+    navigateFallback: publicUrl + '/index.html',
+    // Ignores URLs starting from /__ (useful for Firebase):
+    // https://github.com/facebookincubator/create-react-app/issues/2237#issuecomment-302693219
+    navigateFallbackWhitelist: [/^(?!\/__).*/],
+    // Don't precache sourcemaps (they're large) and build asset manifest:
+    staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+    // Disabling skipWaiting ensures better compatibility with web apps that
+    // use deferred or lazy-loading, at the expense of "keeping around" the
+    // previously cached version of your web app until all open instances have
+    // been closed.
+    // See https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle#skip_the_waiting_phase
+    skipWaiting: false,
+  }),
+  // Moment.js is an extremely popular library that bundles large locale files
+  // by default due to how Webpack interprets its code. This is a practical
+  // solution that requires the user to opt into importing specific locales.
+  // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
+  // You can remove this if you don't use Moment.js:
+  new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+];
+
+if (process.env.ANALYZE) {
+  plugins.push(new BundleAnalyzerPlugin());
+}
+
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
@@ -104,9 +198,7 @@ module.exports = {
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
-      path
-        .relative(paths.appSrc, info.absoluteResourcePath)
-        .replace(/\\/g, '/'),
+      path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/'),
   },
   optimization: {
     minimizer: [
@@ -179,7 +271,6 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
-      
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -209,7 +300,6 @@ module.exports = {
             options: {
               formatter: require.resolve('react-dev-utils/eslintFormatter'),
               eslintPath: require.resolve('eslint'),
-              
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -243,15 +333,13 @@ module.exports = {
               {
                 loader: require.resolve('babel-loader'),
                 options: {
-                  
                   plugins: [
                     [
                       require.resolve('babel-plugin-named-asset-import'),
                       {
                         loaderMap: {
                           svg: {
-                            ReactComponent:
-                              '@svgr/webpack?-prettier,-svgo![path]',
+                            ReactComponent: '@svgr/webpack?-prettier,-svgo![path]',
                           },
                         },
                       },
@@ -279,13 +367,11 @@ module.exports = {
                 options: {
                   babelrc: false,
                   compact: false,
-                  presets: [
-                    require.resolve('babel-preset-react-app/dependencies'),
-                  ],
+                  presets: [require.resolve('babel-preset-react-app/dependencies')],
                   cacheDirectory: true,
                   // Save disk space when time isn't as important
                   cacheCompression: true,
-                  
+
                   highlightCode: true,
                 },
               },
@@ -371,94 +457,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    // Generates an `index.html` file with the <script> injected.
-    new HtmlWebpackPlugin({
-      inject: true,
-      template: paths.appHtml,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true,
-      },
-    }),
-    // Inlines the webpack runtime script. This script is too small to warrant
-    // a network request.
-    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
-    // Makes some environment variables available in index.html.
-    // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    // In production, it will be an empty string unless you specify "homepage"
-    // in `package.json`, in which case it will be the pathname of that URL.
-    new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
-    // Makes some environment variables available to the JS code, for example:
-    // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
-    // It is absolutely essential that NODE_ENV was set to production here.
-    // Otherwise React will be compiled in the very slow development mode.
-    new webpack.DefinePlugin(env.stringified),
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
-      filename: 'static/css/[name].[contenthash:8].css',
-      chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-    }),
-    // Generate a manifest file which contains a mapping of all asset filenames
-    // to their corresponding output file so that tools can pick it up without
-    // having to parse `index.html`.
-    new ManifestPlugin({
-      fileName: 'asset-manifest.json',
-      publicPath: publicPath,
-    }),
-    // Generate a service worker script that will precache, and keep up to date,
-    // the HTML & assets that are part of the Webpack build.
-    new SWPrecacheWebpackPlugin({
-      // By default, a cache-busting query parameter is appended to requests
-      // used to populate the caches, to ensure the responses are fresh.
-      // If a URL is already hashed by Webpack, then there is no concern
-      // about it being stale, and the cache-busting can be skipped.
-      dontCacheBustUrlsMatching: /\.\w{8}\./,
-      filename: 'service-worker.js',
-      logger(message) {
-        if (message.indexOf('Total precache size is') === 0) {
-          // This message occurs for every build and is a bit too noisy.
-          return;
-        }
-        if (message.indexOf('Skipping static resource') === 0) {
-          // This message obscures real errors so we ignore it.
-          // https://github.com/facebook/create-react-app/issues/2612
-          return;
-        }
-        console.log(message);
-      },
-      minify: true,
-      // For unknown URLs, fallback to the index page
-      navigateFallback: publicUrl + '/index.html',
-      // Ignores URLs starting from /__ (useful for Firebase):
-      // https://github.com/facebookincubator/create-react-app/issues/2237#issuecomment-302693219
-      navigateFallbackWhitelist: [/^(?!\/__).*/],
-      // Don't precache sourcemaps (they're large) and build asset manifest:
-      staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
-      // Disabling skipWaiting ensures better compatibility with web apps that
-      // use deferred or lazy-loading, at the expense of "keeping around" the
-      // previously cached version of your web app until all open instances have
-      // been closed.
-      // See https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle#skip_the_waiting_phase
-      skipWaiting: false,
-    }),
-    // Moment.js is an extremely popular library that bundles large locale files
-    // by default due to how Webpack interprets its code. This is a practical
-    // solution that requires the user to opt into importing specific locales.
-    // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
-    // You can remove this if you don't use Moment.js:
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-  ],
+  plugins,
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
   node: {
