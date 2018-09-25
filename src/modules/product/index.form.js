@@ -151,7 +151,7 @@ class ProductFormModule extends React.Component<Props> {
                       <JumpToSection>
                         <SectionTabs link="productSection" label="PRODUCT" icon="PRODUCT" />
                         <SectionTabs
-                          link="productProviderSection"
+                          link="productProvidersSection"
                           label="PROVIDERS"
                           icon="PROVIDER"
                         />

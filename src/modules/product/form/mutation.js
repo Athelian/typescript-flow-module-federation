@@ -25,6 +25,7 @@ export const prepareCreateProductInput = ({
   hsCode,
   material,
   tags = [],
+  productProviders = [],
 }: Object): ProductCreate =>
   // $FlowFixMe ignore
   removeTypename(
@@ -35,6 +36,14 @@ export const prepareCreateProductInput = ({
       hsCode,
       material,
       tagIds: tags.map(({ id }) => id),
+      productProviders: productProviders.map(
+        ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
+          ...productProvider,
+          ...(isNew ? {} : { id }),
+          exporterId: exporter.id,
+          supplierId: supplier ? supplier.id : null,
+        })
+      ),
     })
   );
 
@@ -59,6 +68,7 @@ export const prepareUpdateProductInput = ({
   hsCode,
   material,
   tags = [],
+  productProviders = [],
 }: Object): ProductUpdate =>
   removeNulls({
     name,
@@ -67,4 +77,12 @@ export const prepareUpdateProductInput = ({
     hsCode,
     material,
     tagIds: tags.map(({ id }) => id),
+    productProviders: productProviders.map(
+      ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
+        ...productProvider,
+        ...(isNew ? {} : { id }),
+        exporterId: exporter.id,
+        supplierId: supplier ? supplier.id : null,
+      })
+    ),
   });

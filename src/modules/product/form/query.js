@@ -40,6 +40,12 @@ export const productFormQuery = gql`
         productionLeadTime
         memo
         id
+        updatedAt
+        updatedBy {
+          firstName
+          lastName
+          id
+        }
         sort
         packageName
         packageGrossWeight {

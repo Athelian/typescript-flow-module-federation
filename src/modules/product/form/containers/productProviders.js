@@ -16,6 +16,8 @@ type Metric = {
 
 type FormState = {
   productProviders: Array<{
+    exporter: { id: string, name: string },
+    supplier: { id: string, name: string },
     unitVolume: Metric,
     unitWeight: Metric,
     unitPrice: Price,
@@ -34,7 +36,7 @@ const initValues = {
   productProviders: [],
 };
 
-export default class ProductProviderContainer extends Container<FormState> {
+export default class ProductProvidersContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;

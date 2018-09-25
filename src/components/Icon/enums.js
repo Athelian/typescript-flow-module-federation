@@ -17,7 +17,7 @@ import LOGOUT from '@fortawesome/fontawesome-pro-solid/faSignOutAlt';
 import EXPORTER from '@fortawesome/fontawesome-pro-solid/faIndustryAlt';
 import SUPPLIER from '@fortawesome/fontawesome-pro-regular/faIndustry';
 import CARGO from '@fortawesome/fontawesome-pro-solid/faBoxesAlt';
-import PROVIDER from '@fortawesome/fontawesome-pro-solid/faDolly';
+import PROVIDER from '@fortawesome/fontawesome-pro-solid/faIndustry';
 
 // Common UI
 import ACTIVE from '@fortawesome/fontawesome-pro-solid/faFolderOpen';
