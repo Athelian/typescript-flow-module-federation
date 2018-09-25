@@ -10,6 +10,8 @@ import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';
 import messages from 'modules/shipment/messages';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import BatchFormContainer from 'modules/batch/form/container';
 import {
   ItemsSectionWrapperStyle,
   ItemsSectionBodyStyle,
@@ -60,26 +62,59 @@ function CargoSection({ intl }: Props) {
             ) : (
               <div className={ItemGridStyle}>
                 {batches.map((item, position) => (
-                  <div className={ItemStyle} key={item.id}>
-                    <ShipmentBatchCard
-                      batch={item}
-                      saveOnBlur={updateBatch => {
-                        setFieldArrayValue(position, updateBatch);
-                      }}
-                      onRemove={({ id }) => {
-                        setFieldValue('batches', batches.filter(({ id: itemId }) => id !== itemId));
-                      }}
-                      onClone={({ id, ...rest }) => {
-                        setFieldValue('batches', [
-                          ...batches,
-                          injectUid({
-                            ...rest,
-                            isNew: true,
-                          }),
-                        ]);
-                      }}
-                    />
-                  </div>
+                  <BooleanValue key={item.id}>
+                    {({ value: opened, toggle }) => (
+                      <>
+                        <SlideView
+                          isOpen={opened}
+                          onRequestClose={toggle}
+                          options={{ width: '1030px' }}
+                        >
+                          {opened && (
+                            <Subscribe to={[BatchFormContainer]}>
+                              {({ initDetailValues }) => (
+                                <BatchFormWrapper
+                                  initDetailValues={initDetailValues}
+                                  batch={item}
+                                  isNew={!!item.isNew}
+                                  orderItem={item.orderItem}
+                                  onCancel={toggle}
+                                  onSave={updatedBatch => {
+                                    toggle();
+                                    setFieldArrayValue(position, updatedBatch);
+                                  }}
+                                />
+                              )}
+                            </Subscribe>
+                          )}
+                        </SlideView>
+                        <div className={ItemStyle}>
+                          <ShipmentBatchCard
+                            batch={item}
+                            saveOnBlur={updateBatch => {
+                              setFieldArrayValue(position, updateBatch);
+                            }}
+                            onClick={toggle}
+                            onRemove={({ id }) => {
+                              setFieldValue(
+                                'batches',
+                                batches.filter(({ id: itemId }) => id !== itemId)
+                              );
+                            }}
+                            onClone={({ id, ...rest }) => {
+                              setFieldValue('batches', [
+                                ...batches,
+                                injectUid({
+                                  ...rest,
+                                  isNew: true,
+                                }),
+                              ]);
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </BooleanValue>
                 ))}
               </div>
             )
