@@ -58,6 +58,24 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
     });
   };
 
+  cleanDataAfterChangeTransport = () => {
+    this.setState(prevState => ({
+      voyages: prevState.voyages
+        ? prevState.voyages.map(item => ({
+            ...item,
+            arrivalPort: {
+              seaport: '',
+              airport: '',
+            },
+            departurePort: {
+              seaport: '',
+              airport: '',
+            },
+          }))
+        : [{}],
+    }));
+  };
+
   removeArrayItem = (path: string) => {
     this.setState(prevState => {
       const cloneState = cloneDeep(prevState);

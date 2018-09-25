@@ -60,7 +60,18 @@ const voyagesGenerator = (voyages: Array<Object>, total: number) => {
     voyages.splice(total, voyages.length - total + 1);
   } else {
     for (let counter = 0; counter < total - voyages.length + 1; counter += 1) {
-      voyages.push(injectUid({}));
+      voyages.push(
+        injectUid({
+          arrivalPort: {
+            seaport: '',
+            airport: '',
+          },
+          departurePort: {
+            seaport: '',
+            airport: '',
+          },
+        })
+      );
     }
   }
 

@@ -50,6 +50,7 @@ function DefaultSearchSelect({
   getInputProps,
   value,
   handleQueryChange,
+  itemToString,
   ...rest
 }: Props) {
   return (

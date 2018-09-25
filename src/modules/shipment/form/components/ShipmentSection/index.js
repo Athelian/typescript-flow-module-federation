@@ -8,6 +8,7 @@ import { textInputFactory, dateInputFactory, selectEnumInputFactory } from 'modu
 import {
   ShipmentInfoContainer,
   ShipmentTransportTypeContainer,
+  ShipmentTimelineContainer,
   ShipmentBatchesContainer,
   ShipmentTagsContainer,
 } from 'modules/shipment/form/containers';
@@ -146,12 +147,15 @@ const ShipmentSection = ({ isNew }: Props) => (
                 }
               </FormField>
 
-              <Subscribe to={[ShipmentTransportTypeContainer]}>
-                {({
-                  originalValues: initialTransportTypeValues,
-                  state: transportTypeState,
-                  setFieldValue: transportTypeSetFieldValue,
-                }) => {
+              <Subscribe to={[ShipmentTransportTypeContainer, ShipmentTimelineContainer]}>
+                {(
+                  {
+                    originalValues: initialTransportTypeValues,
+                    state: transportTypeState,
+                    setFieldValue: transportTypeSetFieldValue,
+                  },
+                  { cleanDataAfterChangeTransport }
+                ) => {
                   const transportTypeValues = {
                     ...initialTransportTypeValues,
                     ...transportTypeState,
@@ -159,8 +163,12 @@ const ShipmentSection = ({ isNew }: Props) => (
                   return (
                     <FormField
                       name="transportType"
-                      initValue={values.transportType}
-                      setFieldValue={transportTypeSetFieldValue}
+                      initValue={transportTypeValues.transportType}
+                      setFieldValue={(field, newValue) => {
+                        transportTypeSetFieldValue(field, newValue);
+                        if (transportTypeValues.transportType !== newValue)
+                          cleanDataAfterChangeTransport();
+                      }}
                       values={values}
                       validator={validator}
                       saveOnChange
