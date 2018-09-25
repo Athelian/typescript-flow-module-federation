@@ -13,6 +13,10 @@ query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: Ord
         id
         quantity
       }
+      order {
+        id
+        poNo
+      }
       productProvider {
         id
         exporter {

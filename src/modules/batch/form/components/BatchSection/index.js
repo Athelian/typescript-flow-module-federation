@@ -12,6 +12,7 @@ import { OrderItemCard } from 'components/Cards';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
 import messages from 'modules/batch/messages';
+import SelectOrderItem from 'modules/batch/common/SelectOrderItem';
 import {
   BatchSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -19,7 +20,6 @@ import {
   TagsInputStyle,
   DividerStyle,
 } from './style';
-import SelectOrderItem from '../SelectOrderItem';
 
 type Props = {
   isNew: boolean,
