@@ -37,7 +37,11 @@ const TimelineSection = ({ isNew }: Props) => (
         <div className={TimelineSectionWrapperStyle}>
           <div className={TimelineWrapperStyle}>
             <VerticalLayout shipment={values} />
-            <VoyageSelector shipment={values} />
+            <VoyageSelector
+              shipment={values}
+              setFieldDeepValue={setFieldDeepValue}
+              removeArrayItem={removeArrayItem}
+            />
           </div>
           <div className={BodyWrapperStyle} id="timelineInfoSection">
             <TimelineInfoSection

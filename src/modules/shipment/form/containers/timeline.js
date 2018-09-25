@@ -59,7 +59,6 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
   };
 
   removeArrayItem = (path: string) => {
-    console.warn(path);
     this.setState(prevState => {
       const cloneState = cloneDeep(prevState);
       unset(cloneState, path);
