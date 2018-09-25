@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+import { css } from 'react-emotion';
 import { SortInput, FilterInput, SearchInput, FocusInput } from 'components/NavBar';
 import GridColumn from 'components/GridColumn';
+import { layout } from 'styles/common';
 
 type Props = {
   className: string,
@@ -68,28 +70,34 @@ class SortFilterBar extends React.Component<Props, State> {
               });
             }}
           />
-          <FilterInput
-            initialFilter={{}}
-            onChange={newFilter => this.onChangeFilter({ ...newFilter })}
-            width={400}
+          <div
+            className={css`
+              ${layout.HORIZONTAL};
+            `}
           >
-            {({ values, setFieldValue }) => (
-              <GridColumn>
-                <SearchInput
-                  name="filter"
-                  value={values.filter}
-                  onClear={() => setFieldValue('filter', '')}
-                  onChange={newValue => setFieldValue('filter', newValue)}
-                />
-              </GridColumn>
-            )}
-          </FilterInput>
-          <SearchInput
-            name="filter"
-            value={filter}
-            onClear={() => this.onChangeFilter({ filter: '' })}
-            onChange={newQuery => this.onChangeFilter({ filter: newQuery })}
-          />
+            <FilterInput
+              initialFilter={{}}
+              onChange={newFilter => this.onChangeFilter({ ...newFilter })}
+              width={400}
+            >
+              {({ values, setFieldValue }) => (
+                <GridColumn>
+                  <SearchInput
+                    name="filter"
+                    value={values.filter}
+                    onClear={() => setFieldValue('filter', '')}
+                    onChange={newValue => setFieldValue('filter', newValue)}
+                  />
+                </GridColumn>
+              )}
+            </FilterInput>
+            <SearchInput
+              name="filter"
+              value={filter}
+              onClear={() => this.onChangeFilter({ filter: '' })}
+              onChange={newQuery => this.onChangeFilter({ filter: newQuery })}
+            />
+          </div>
         </div>
         {children({ sort, filter, onChangeFilter: this.onChangeFilter })}
       </React.Fragment>
