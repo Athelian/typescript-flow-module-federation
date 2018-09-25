@@ -7,9 +7,9 @@ import { ProductProviderCard } from 'components/Cards';
 import { BooleanValue } from 'react-values';
 import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';
-import ProductProviderFormWrapper from 'modules/productProvider/form';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
+import ProductProviderFormWrapper from './components/ProductProviderFormWrapper';
 import {
   ProductProviderSectionWrapperStyle,
   ProductProviderSectionBodyStyle,
