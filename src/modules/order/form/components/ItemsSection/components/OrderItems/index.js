@@ -13,7 +13,7 @@ import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import Icon from 'components/Icon';
 import messages from 'modules/order/messages';
-import BatchFormWrapper from '../BatchFormWrapper';
+import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import {
   ItemGridStyle,
   ItemStyle,
