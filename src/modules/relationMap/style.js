@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'react-emotion';
-import { colors, presets, layout, fontSizes, shadows } from 'styles/common';
+import { colors, presets, layout, fontSizes } from 'styles/common';
 
 const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
 
@@ -106,7 +106,7 @@ export const FunctionWrapperStyle = css`
   justify-content: space-between;
   background-color: ${colors.WHITE};
   padding: 5px;
-  ${shadows.NAV_BUTTON};
+  ${presets.BOX};
 `;
 
 export const BadgeWrapperStyle = css`
@@ -116,7 +116,7 @@ export const BadgeWrapperStyle = css`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1.5fr;
   background-color: ${colors.WHITE};
-  ${shadows.NAV_BUTTON};
+  ${presets.BOX};
 `;
 export const LoadingWrapperStyle = css`
   grid-column: span 4;
