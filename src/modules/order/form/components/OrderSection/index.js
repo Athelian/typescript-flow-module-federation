@@ -156,7 +156,7 @@ const OrderSection = ({ isNew }: Props) => (
                   initValue={values.currency}
                   values={values}
                   validator={validator}
-                  setFieldValue={setFieldValue}
+                  setFieldValue={(field, { name }) => setFieldValue(field, name)}
                 >
                   {({ name, ...inputHandlers }) =>
                     selectSearchEnumInputFactory({
@@ -175,7 +175,7 @@ const OrderSection = ({ isNew }: Props) => (
                   initValue={values.incoterm}
                   values={values}
                   validator={validator}
-                  setFieldValue={setFieldValue}
+                  setFieldValue={(field, { name }) => setFieldValue(field, name)}
                 >
                   {({ name, ...inputHandlers }) =>
                     selectSearchEnumInputFactory({

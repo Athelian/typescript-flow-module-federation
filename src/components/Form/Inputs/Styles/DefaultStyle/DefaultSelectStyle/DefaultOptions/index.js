@@ -37,7 +37,7 @@ function DefaultOptions({
     <div className={OptionWrapperStyle(width, height)}>
       {items.map((item, index) => (
         <div
-          key={itemToValue(item) || item.id || `option-${index}`}
+          key={`option-${itemToValue(item)}-${itemToString(item)}`}
           className={OptionStyle(highlightedIndex === index, selectedItem === item, align)}
           {...getItemProps({ item })}
         >

@@ -20,6 +20,16 @@ const filterItems = (query: string, items: Array<any>) => {
   });
 };
 
+export const parseEnumValue = (enumValue: ?string | ?{ name: string }) => {
+  if (enumValue && enumValue.name) return enumValue.name;
+  return enumValue;
+};
+
+export const parseEnumDescription = (enumValue: ?string | ?{ description: string }) => {
+  if (enumValue && enumValue.description) return enumValue.description;
+  return enumValue;
+};
+
 export default function selectSearchEnumInputFactory({
   required = false,
   width = '200px',
@@ -103,7 +113,7 @@ export default function selectSearchEnumInputFactory({
                     onChange={item => {
                       logger.warn('SearchSelectInput onChange', item);
                       if (!item) clear();
-                      set(item && item.name);
+                      set(item);
                     }}
                     onSearch={set}
                   />

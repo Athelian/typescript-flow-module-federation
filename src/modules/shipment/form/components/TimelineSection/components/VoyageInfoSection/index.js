@@ -2,7 +2,11 @@
 import * as React from 'react';
 import GridColumn from 'components/GridColumn';
 import { FormField } from 'modules/form';
-import { selectSearchEnumInputFactory, textInputFactory } from 'modules/form/helpers';
+import {
+  parseEnumDescription,
+  selectSearchEnumInputFactory,
+  textInputFactory,
+} from 'modules/form/helpers';
 import { SectionHeader, Label, FieldItem, Tooltip } from 'components/Form';
 import { VoyageInfoSectionWrapperStyle, SelectTransportTypeMessageStyle } from './style';
 
@@ -73,7 +77,9 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           {canSelectPorts ? (
             <FormField
               name={`${sourceName}.departurePort.${deepField}`}
-              initValue={voyage.departurePort && voyage.departurePort[deepField]}
+              initValue={parseEnumDescription(
+                voyage.departurePort && voyage.departurePort[deepField]
+              )}
               setFieldValue={setFieldDeepValue}
             >
               {({ name, ...inputHandlers }) =>
@@ -107,7 +113,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           {canSelectPorts ? (
             <FormField
               name={`${sourceName}.arrivalPort.${deepField}`}
-              initValue={voyage.arrivalPort && voyage.arrivalPort[deepField]}
+              initValue={parseEnumDescription(voyage.arrivalPort && voyage.arrivalPort[deepField])}
               setFieldValue={setFieldDeepValue}
             >
               {({ name, ...inputHandlers }) =>
