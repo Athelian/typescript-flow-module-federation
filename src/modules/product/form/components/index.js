@@ -1,4 +1,4 @@
-import ProductProviderSection from './ProductProviderSection';
+import ProductProvidersSection from './ProductProvidersSection';
 import ProductSection from './ProductSection';
 
-export { ProductProviderSection, ProductSection };
+export { ProductProvidersSection, ProductSection };

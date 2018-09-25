@@ -48,7 +48,7 @@ const ProductProviderCard = ({
 
   return (
     <BaseCard icon="PROVIDER" color="PROVIDER" selectable={selectable} actions={actions} {...rest}>
-      <div className={ProductProviderCardWrapperStyle}>
+      <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ExporterStyle}>
           <Icon icon="EXPORTER" />
           {exporter && exporter.name}

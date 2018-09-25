@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
-import { ProductSection, ProductProviderSection } from './components';
+import { ProductSection, ProductProvidersSection } from './components';
 import { ProductFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -27,7 +27,7 @@ const ProductForm = ({ product, isNew }: Props) => (
 
     <SectionWrapper id="productProvidersSection">
       <SectionHeader icon="PROVIDER" title="PROVIDERS" />
-      <ProductProviderSection isNew={isNew} />
+      <ProductProvidersSection />
     </SectionWrapper>
   </div>
 );
