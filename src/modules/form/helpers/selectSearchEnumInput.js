@@ -63,8 +63,8 @@ export default function selectSearchEnumInputFactory({
           isNew={isNew}
           errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
           changedValues={{
-            oldValue: initValue,
-            newValue: inputHandlers.value,
+            oldValue: parseEnumDescription(initValue),
+            newValue: parseEnumDescription(inputHandlers.value),
           }}
         />
       }
