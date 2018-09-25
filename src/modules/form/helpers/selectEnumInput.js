@@ -13,6 +13,7 @@ import {
 export default function selectEnumInputFactory({
   required = false,
   width = '200px',
+  align = 'left',
   enumType,
   inputHandlers,
   name,
@@ -22,6 +23,7 @@ export default function selectEnumInputFactory({
 }: {
   enumType: string,
   required?: boolean,
+  align?: string,
   width?: string,
   isNew: boolean,
   label?: React.Node,
@@ -71,7 +73,7 @@ export default function selectEnumInputFactory({
                 renderSelect={({ ...rest }) => (
                   <DefaultSelect
                     {...rest}
-                    align="left"
+                    align={align}
                     required
                     forceHoverStyle={isNew}
                     width="200px"
@@ -81,7 +83,7 @@ export default function selectEnumInputFactory({
                 renderOptions={({ ...rest }) => (
                   <DefaultOptions
                     {...rest}
-                    align="left"
+                    align={align}
                     items={data}
                     itemToString={item => (item ? item.description || item.name : '')}
                     itemToValue={item => (item ? item.name : '')}

@@ -20,6 +20,16 @@ const filterItems = (query: string, items: Array<any>) => {
   });
 };
 
+export const parseEnumValue = (enumValue: ?string | ?{ name: string }) => {
+  if (enumValue && enumValue.name) return enumValue.name;
+  return enumValue;
+};
+
+export const parseEnumDescription = (enumValue: ?string | ?{ description: string }) => {
+  if (enumValue && enumValue.description) return enumValue.description;
+  return enumValue;
+};
+
 export default function selectSearchEnumInputFactory({
   required = false,
   width = '200px',
@@ -79,7 +89,7 @@ export default function selectSearchEnumInputFactory({
                     name={name}
                     {...inputHandlers}
                     items={filterItems(query, data)}
-                    itemToString={item => (item ? item.name : '')}
+                    itemToString={item => (item ? item.description || item.name : '')}
                     itemToValue={item => (item ? item.name : '')}
                     renderSelect={({ ...rest }) => (
                       <DefaultSearchSelect
@@ -88,13 +98,14 @@ export default function selectSearchEnumInputFactory({
                         forceHoverStyle={isNew}
                         width={width}
                         isOpen={inputHandlers.isFocused}
+                        itemToString={item => (item ? item.description || item.name : '')}
                       />
                     )}
                     renderOptions={({ ...rest }) => (
                       <DefaultOptions
                         {...rest}
                         items={filterItems(query, data)}
-                        itemToString={item => (item ? item.name : '')}
+                        itemToString={item => (item ? item.description || item.name : '')}
                         itemToValue={item => (item ? item.name : '')}
                         width={width}
                       />
@@ -102,7 +113,7 @@ export default function selectSearchEnumInputFactory({
                     onChange={item => {
                       logger.warn('SearchSelectInput onChange', item);
                       if (!item) clear();
-                      set(item && item.name);
+                      set(item);
                     }}
                     onSearch={set}
                   />

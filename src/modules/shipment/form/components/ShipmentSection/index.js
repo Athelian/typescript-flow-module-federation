@@ -8,6 +8,7 @@ import { textInputFactory, dateInputFactory, selectEnumInputFactory } from 'modu
 import {
   ShipmentInfoContainer,
   ShipmentTransportTypeContainer,
+  ShipmentTimelineContainer,
   ShipmentBatchesContainer,
   ShipmentTagsContainer,
 } from 'modules/shipment/form/containers';
@@ -35,7 +36,7 @@ type Props = {
 const ShipmentSection = ({ isNew }: Props) => (
   <Subscribe to={[ShipmentInfoContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
-      const values = { ...initialValues, ...state };
+      const values: Object = { ...initialValues, ...state };
       const { forwarders = [] } = values;
 
       return (
@@ -146,12 +147,15 @@ const ShipmentSection = ({ isNew }: Props) => (
                 }
               </FormField>
 
-              <Subscribe to={[ShipmentTransportTypeContainer]}>
-                {({
-                  originalValues: initialTransportTypeValues,
-                  state: transportTypeState,
-                  setFieldValue: transportTypeSetFieldValue,
-                }) => {
+              <Subscribe to={[ShipmentTransportTypeContainer, ShipmentTimelineContainer]}>
+                {(
+                  {
+                    originalValues: initialTransportTypeValues,
+                    state: transportTypeState,
+                    setFieldValue: transportTypeSetFieldValue,
+                  },
+                  { cleanDataAfterChangeTransport }
+                ) => {
                   const transportTypeValues = {
                     ...initialTransportTypeValues,
                     ...transportTypeState,
@@ -159,19 +163,25 @@ const ShipmentSection = ({ isNew }: Props) => (
                   return (
                     <FormField
                       name="transportType"
-                      initValue={values.transportType}
-                      setFieldValue={transportTypeSetFieldValue}
+                      initValue={transportTypeValues.transportType}
+                      setFieldValue={(field, newValue) => {
+                        transportTypeSetFieldValue(field, newValue);
+                        if (transportTypeValues.transportType !== newValue)
+                          cleanDataAfterChangeTransport();
+                      }}
                       values={values}
                       validator={validator}
+                      saveOnChange
                     >
                       {({ name, ...inputHandlers }) =>
                         selectEnumInputFactory({
                           enumType: 'TransportType',
+                          align: 'right',
+                          label: 'TRANSPORTATION',
+                          initValue: transportTypeValues[name],
                           inputHandlers,
                           name,
                           isNew,
-                          label: 'TRANSPORTATION',
-                          initValue: transportTypeValues[name],
                         })
                       }
                     </FormField>
@@ -185,15 +195,17 @@ const ShipmentSection = ({ isNew }: Props) => (
                 setFieldValue={setFieldValue}
                 values={values}
                 validator={validator}
+                saveOnChange
               >
                 {({ name, ...inputHandlers }) =>
                   selectEnumInputFactory({
                     enumType: 'LoadType',
+                    align: 'right',
+                    label: 'LOAD TYPE',
+                    initValue: initialValues[name],
                     inputHandlers,
                     name,
                     isNew,
-                    label: 'LOAD TYPE',
-                    initValue: initialValues[name],
                   })
                 }
               </FormField>

@@ -64,7 +64,14 @@ export const getTransportIcon = (transportType: ?string) => {
   return 'UNKNOWN';
 };
 
-export const getPortName = (enumType: ?('Seaport' | 'Airport'), portValue: ?string) => {
+export const getPortName = (
+  enumType: ?('Seaport' | 'Airport'),
+  portValue: ?string | ?{ description: string }
+): React.Node => {
+  if (portValue && portValue.description) {
+    return portValue.description;
+  }
+
   if (enumType && portValue) {
     return (
       <EnumProvider enumType={enumType}>

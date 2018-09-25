@@ -1,3 +1,4 @@
+// @flow
 import ShipmentBatchesContainer from './batches';
 import ShipmentInfoContainer from './info';
 import ShipmentTagsContainer from './tags';

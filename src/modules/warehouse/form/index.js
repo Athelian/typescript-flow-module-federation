@@ -124,7 +124,7 @@ const WarehouseForm = ({ isNew = false }: Props) => (
                   initValue={values.country}
                   values={values}
                   validator={validator}
-                  setFieldValue={setFieldValue}
+                  setFieldValue={(field, { name }) => setFieldValue(field, name)}
                 >
                   {({ name, ...inputHandlers }) =>
                     selectSearchEnumInputFactory({

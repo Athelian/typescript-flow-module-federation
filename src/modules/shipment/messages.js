@@ -387,6 +387,10 @@ export default defineMessages({
   selectAll: {
     id: 'containers.Shipments.selectAll',
   },
+  selectBatches: {
+    id: 'containers.Shipments.selectBatches',
+    defaultMessage: 'SELECT BATCHES',
+  },
   clearSelection: {
     id: 'containers.Shipments.clearSelection',
   },

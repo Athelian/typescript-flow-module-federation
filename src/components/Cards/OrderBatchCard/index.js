@@ -2,7 +2,6 @@
 import React from 'react';
 import { FormField } from 'modules/form';
 import type { BatchQuery as BatchItem } from 'modules/batch/type.js.flow';
-import { ObjectValue } from 'react-values';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -86,144 +85,141 @@ const OrderBatchCard = ({
     ? batch.batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
     : 0;
 
+  const { no, quantity, deliveredAt } = batch;
   return (
-    <ObjectValue value={batch}>
-      {({ value: { no, quantity, deliveredAt } }) => (
-        <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
-          <div
-            className={OrderBatchCardWrapperStyle}
-            onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
-            role="presentation"
-          >
-            <div
-              className={BatchNoWrapperStyle}
-              onClick={evt => evt.stopPropagation()}
-              role="presentation"
-            >
-              <FormField name={`batch.${batch.id}.no`} initValue={no}>
-                {({ name: fieldName, ...inputHandlers }) =>
-                  textInputFactory({
-                    width: '165px',
-                    height: '20px',
-                    inputHandlers: {
-                      ...inputHandlers,
-                      onBlur: evt => {
-                        inputHandlers.onBlur(evt);
-                        saveOnBlur({ ...batch, no: inputHandlers.value });
-                      },
-                    },
-                    name: fieldName,
-                    isNew: false,
-                    initValue: no,
-                  })
-                }
-              </FormField>
-            </div>
+    <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
+      <div
+        className={OrderBatchCardWrapperStyle}
+        onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
+        role="presentation"
+      >
+        <div
+          className={BatchNoWrapperStyle}
+          onClick={evt => evt.stopPropagation()}
+          role="presentation"
+        >
+          <FormField name={`batch.${batch.id}.no`} initValue={no}>
+            {({ name: fieldName, ...inputHandlers }) =>
+              textInputFactory({
+                width: '165px',
+                height: '20px',
+                inputHandlers: {
+                  ...inputHandlers,
+                  onBlur: evt => {
+                    inputHandlers.onBlur(evt);
+                    saveOnBlur({ ...batch, no: inputHandlers.value });
+                  },
+                },
+                name: fieldName,
+                isNew: false,
+                initValue: no,
+              })
+            }
+          </FormField>
+        </div>
 
-            <div
-              className={QuantityWrapperStyle}
-              onClick={evt => evt.stopPropagation()}
-              role="presentation"
-            >
-              <Label required>QTY</Label>
-              <FormField name={`batch.${batch.id}.quantity`} initValue={quantity + totalAdjustment}>
-                {({ name: fieldName, ...inputHandlers }) =>
-                  numberInputFactory({
-                    width: '90px',
-                    height: '20px',
-                    inputHandlers: {
-                      ...inputHandlers,
-                      onBlur: evt => {
-                        inputHandlers.onBlur(evt);
-                        saveOnBlur({
-                          ...batch,
-                          quantity: inputHandlers.value - totalAdjustment,
-                        });
-                      },
-                    },
-                    name: fieldName,
-                    isNew: false,
-                    initValue: quantity + totalAdjustment,
-                  })
-                }
-              </FormField>
-            </div>
+        <div
+          className={QuantityWrapperStyle}
+          onClick={evt => evt.stopPropagation()}
+          role="presentation"
+        >
+          <Label required>QTY</Label>
+          <FormField name={`batch.${batch.id}.quantity`} initValue={quantity + totalAdjustment}>
+            {({ name: fieldName, ...inputHandlers }) =>
+              numberInputFactory({
+                width: '90px',
+                height: '20px',
+                inputHandlers: {
+                  ...inputHandlers,
+                  onBlur: evt => {
+                    inputHandlers.onBlur(evt);
+                    saveOnBlur({
+                      ...batch,
+                      quantity: inputHandlers.value - totalAdjustment,
+                    });
+                  },
+                },
+                name: fieldName,
+                isNew: false,
+                initValue: quantity + totalAdjustment,
+              })
+            }
+          </FormField>
+        </div>
 
-            <div
-              className={DeliveryDateWrapperStyle}
-              onClick={evt => evt.stopPropagation()}
-              role="presentation"
-            >
-              <Label>DELIVERY</Label>
-              <FormField name={`batch.${batch.id}.deliveredAt`} initValue={deliveredAt}>
-                {({ name, ...inputHandlers }) =>
-                  dateInputFactory({
-                    width: '90px',
-                    height: '20px',
-                    name,
-                    isNew: false,
-                    initValue: deliveredAt,
-                    inputHandlers: {
-                      ...inputHandlers,
-                      onBlur: evt => {
-                        inputHandlers.onBlur(evt);
-                        saveOnBlur({ ...batch, deliveredAt: inputHandlers.value });
-                      },
-                    },
-                  })
-                }
-              </FormField>
-            </div>
+        <div
+          className={DeliveryDateWrapperStyle}
+          onClick={evt => evt.stopPropagation()}
+          role="presentation"
+        >
+          <Label>DELIVERY</Label>
+          <FormField name={`batch.${batch.id}.deliveredAt`} initValue={deliveredAt}>
+            {({ name, ...inputHandlers }) =>
+              dateInputFactory({
+                width: '90px',
+                height: '20px',
+                name,
+                isNew: false,
+                initValue: deliveredAt,
+                inputHandlers: {
+                  ...inputHandlers,
+                  onBlur: evt => {
+                    inputHandlers.onBlur(evt);
+                    saveOnBlur({ ...batch, deliveredAt: inputHandlers.value });
+                  },
+                },
+              })
+            }
+          </FormField>
+        </div>
 
-            <div className={DividerStyle} />
+        <div className={DividerStyle} />
 
-            <div className={TotalPriceWrapperStyle}>
-              <Label>TOTAL</Label>
-              <Display>
-                <FormattedNumber
-                  value={(quantity + totalAdjustment) * (price && price.amount ? price.amount : 0)}
-                />
-                {currency}
-              </Display>
-            </div>
+        <div className={TotalPriceWrapperStyle}>
+          <Label>TOTAL</Label>
+          <Display>
+            <FormattedNumber
+              value={(quantity + totalAdjustment) * (price && price.amount ? price.amount : 0)}
+            />
+            {currency}
+          </Display>
+        </div>
 
-            <div className={VolumeWrapperStyle}>
-              <Label>VOLUME</Label>
-              <Display>{calculateVolume(batch, quantity + totalAdjustment)} </Display>
-            </div>
+        <div className={VolumeWrapperStyle}>
+          <Label>VOLUME</Label>
+          <Display>{calculateVolume(batch, quantity + totalAdjustment)} </Display>
+        </div>
 
-            <div className={ShipmentWrapperStyle}>
-              <button className={ShipmentIconStyle(hasShipment)} type="button">
-                <Icon icon="SHIPMENT" />
-              </button>
-              <Display align="left">{batch.shipment && batch.shipment.blNo}</Display>
-            </div>
+        <div className={ShipmentWrapperStyle}>
+          <button className={ShipmentIconStyle(hasShipment)} type="button">
+            <Icon icon="SHIPMENT" />
+          </button>
+          <Display align="left">{batch.shipment && batch.shipment.blNo}</Display>
+        </div>
 
-            <div className={WarehouseArrivalWrapperStyle}>
-              <div className={WarehouseArrivalIconStyle(warehouseArrivalApproved)}>
-                <Icon icon="WAREHOUSE" />
-              </div>
-              <Label>ARRIVAL</Label>
-              <Display>
-                <FormattedDate
-                  value={
-                    batch &&
-                    batch.shipment &&
-                    batch.shipment.containerGroups &&
-                    batch.shipment.containerGroups[0] &&
-                    batch.shipment.containerGroups[0].warehouseArrival.date
-                  }
-                />
-              </Display>
-            </div>
-
-            <div className={BatchTagsWrapperStyle}>
-              {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
-            </div>
+        <div className={WarehouseArrivalWrapperStyle}>
+          <div className={WarehouseArrivalIconStyle(warehouseArrivalApproved)}>
+            <Icon icon="WAREHOUSE" />
           </div>
-        </BaseCard>
-      )}
-    </ObjectValue>
+          <Label>ARRIVAL</Label>
+          <Display>
+            <FormattedDate
+              value={
+                batch &&
+                batch.shipment &&
+                batch.shipment.containerGroups &&
+                batch.shipment.containerGroups[0] &&
+                batch.shipment.containerGroups[0].warehouseArrival.date
+              }
+            />
+          </Display>
+        </div>
+
+        <div className={BatchTagsWrapperStyle}>
+          {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+        </div>
+      </div>
+    </BaseCard>
   );
 };
 

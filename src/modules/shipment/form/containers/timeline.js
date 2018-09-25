@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeTypename, removeNulls } from 'utils/data';
+import { removeTypename } from 'utils/data';
 
 type ActionDetail = {
   approvedAt: ?Date,
@@ -58,12 +58,29 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
     });
   };
 
+  cleanDataAfterChangeTransport = () => {
+    this.setState(prevState => ({
+      voyages: prevState.voyages
+        ? prevState.voyages.map(item => ({
+            ...item,
+            arrivalPort: {
+              seaport: '',
+              airport: '',
+            },
+            departurePort: {
+              seaport: '',
+              airport: '',
+            },
+          }))
+        : [{}],
+    }));
+  };
+
   removeArrayItem = (path: string) => {
     this.setState(prevState => {
       const cloneState = cloneDeep(prevState);
       unset(cloneState, path);
-      // $FlowFixMe: missing type define for map's ramda function
-      return removeNulls(cloneState);
+      return cloneState;
     });
   };
 
