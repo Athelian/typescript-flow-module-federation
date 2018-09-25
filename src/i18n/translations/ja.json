@@ -27,6 +27,7 @@
 
   "containers.RelationMap.ordersTab": "オーダー",
   "containers.RelationMap.shipmentsTab": "船積",
+  "containers.RelationMap.productsTab": "Products",
   "containers.RelationMap.quantityTitle": "QTY",
   "containers.RelationMap.volumeTitle": "VOL",
 

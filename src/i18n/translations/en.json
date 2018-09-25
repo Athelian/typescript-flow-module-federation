@@ -429,6 +429,7 @@
 
   "containers.RelationMap.ordersTab": "ORDERS",
   "containers.RelationMap.shipmentsTab": "SHIPMENTS",
+  "containers.RelationMap.productsTab": "PRODUCTS",
   "containers.RelationMap.quantityTitle": "QTY",
   "containers.RelationMap.volumeTitle": "VOL",
 

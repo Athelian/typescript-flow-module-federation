@@ -100,7 +100,7 @@ export const OrderMapWrapperStyle = css`
   grid-template-rows: repeat(auto-fill, 55px);
   background-color: ${colors.WHITE};
 `;
-export const FuncitonWrapperStyle = css`
+export const FunctionWrapperStyle = css`
   grid-column: span 4;
   display: flex;
   justify-content: space-between;

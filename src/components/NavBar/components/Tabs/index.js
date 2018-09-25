@@ -7,6 +7,7 @@ type Props = {
   tabs: Array<{ id: string, icon: string, label: string | React.Node }>,
   disabled?: boolean,
   onChange: number => void,
+  activeIndex?: number,
 };
 
 type State = {
@@ -18,13 +19,15 @@ class Tabs extends React.Component<Props, State> {
     disabled: false,
   };
 
-  state = {
-    activeIndex: 0,
-  };
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      activeIndex: props.activeIndex || 0,
+    };
+  }
 
   handleChange = (index: number) => {
     this.setState({ activeIndex: index });
-
     const { onChange } = this.props;
     onChange(index);
   };
