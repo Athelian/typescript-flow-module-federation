@@ -3,11 +3,24 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
 import { textInputFactory } from 'modules/form/helpers';
+import Icon from 'components/Icon';
 import { ProductInfoContainer, ProductTagsContainer } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
-import { FieldItem, Label, TagsInput } from 'components/Form';
-import { ProductSectionWrapperStyle, TagsInputStyle, DividerStyle } from './style';
+import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
+import { FieldItem, Label, TagsInput, DashedPlusButton } from 'components/Form';
+import {
+  ProductSectionWrapperStyle,
+  ProductImagesWrapperStyle,
+  ProductImageWrapperStyle,
+  ProductImageStyle,
+  ViewImageButtonStyle,
+  DeleteImageButtonStyle,
+  SwapImageButtonStyle,
+  ScrollFixStyle,
+  TagsInputStyle,
+  DividerStyle,
+} from './style';
 
 type Props = {
   isNew: boolean,
@@ -17,9 +30,37 @@ const ProductSection = ({ isNew }: Props) => (
   <Subscribe to={[ProductInfoContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
       const values = { ...initialValues, ...state };
+      const dummyImages = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
       return (
         <div className={ProductSectionWrapperStyle}>
+          <div className={ProductImagesWrapperStyle(dummyImages.length > 3)}>
+            {dummyImages.map(
+              (image: Object, index: number): React.Node => (
+                <div className={ProductImageWrapperStyle} key={image.id}>
+                  <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
+                  <button className={ViewImageButtonStyle} type="button">
+                    <Icon icon="SEARCH" />
+                  </button>
+                  <button className={DeleteImageButtonStyle} type="button">
+                    <Icon icon="REMOVE" />
+                  </button>
+                  {index !== 0 && (
+                    <button className={SwapImageButtonStyle('left')} type="button">
+                      <Icon icon="CHEVRON_DOUBLE_LEFT" />
+                    </button>
+                  )}
+                  {index !== dummyImages.length - 1 && (
+                    <button className={SwapImageButtonStyle('right')} type="button">
+                      <Icon icon="CHEVRON_DOUBLE_RIGHT" />
+                    </button>
+                  )}
+                </div>
+              )
+            )}
+            <DashedPlusButton width="180px" height="180px" />
+            {dummyImages.length > 3 && <div className={ScrollFixStyle} />}
+          </div>
           <GridColumn>
             <FormField
               name="name"

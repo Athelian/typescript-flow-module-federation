@@ -44,6 +44,8 @@ import ARROW_DOWN from '@fortawesome/fontawesome-pro-solid/faArrowDown';
 import PLACE from '@fortawesome/fontawesome-pro-solid/faMapMarkerAlt';
 import WARNING from '@fortawesome/fontawesome-pro-solid/faExclamationCircle';
 import CHEVRON_DOWN from '@fortawesome/fontawesome-pro-solid/faChevronDown';
+import CHEVRON_DOUBLE_LEFT from '@fortawesome/fontawesome-pro-solid/faChevronDoubleLeft';
+import CHEVRON_DOUBLE_RIGHT from '@fortawesome/fontawesome-pro-solid/faChevronDoubleRight';
 import DOCUMENT from '@fortawesome/fontawesome-pro-solid/faFileAlt';
 import TOGGLE_ON from '@fortawesome/fontawesome-pro-solid/faToggleOn';
 import TOGGLE_OFF from '@fortawesome/fontawesome-pro-solid/faToggleOff';
@@ -131,6 +133,8 @@ export default {
   PLACE,
   WARNING,
   CHEVRON_DOWN,
+  CHEVRON_DOUBLE_LEFT,
+  CHEVRON_DOUBLE_RIGHT,
   DOCUMENT,
   TOGGLE_ON,
   TOGGLE_OFF,
