@@ -4,7 +4,12 @@
       {
         "kind": "INTERFACE",
         "name": "Documented",
-        "possibleTypes": [{ "name": "Order" }, { "name": "Product" }, { "name": "Shipment" }]
+        "possibleTypes": [
+          { "name": "Order" },
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Shipment" }
+        ]
       },
       {
         "kind": "UNION",
