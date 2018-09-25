@@ -8,7 +8,7 @@ import QueryHandler from './components/QueryHandler';
 import SortFilterBar from './components/SortFilterBar';
 import SummaryBadge from './components/SummaryBadge';
 import query from './components/OrderFocused/query';
-import { FunctionWrapperStyle } from './style';
+import { FunctionWrapperStyle, BadgeWrapperStyle } from './style';
 
 type Props = {
   page: number,
@@ -51,25 +51,32 @@ const Order = ({ page, perPage }: Props) => (
                 const shipment = formatShipmentOrder(nodes);
                 return (
                   <React.Fragment>
-                    <SummaryBadge icon="ORDER" color="ORDER" label="ORDERS" no={order.sumOrders} />
-                    <SummaryBadge
-                      icon="ORDER_ITEM"
-                      color="ORDER_ITEM"
-                      label="ITEMS"
-                      no={order.sumOrderItems}
-                    />
-                    <SummaryBadge
-                      icon="BATCH"
-                      color="BATCH"
-                      label="BATCHES"
-                      no={order.sumBatches}
-                    />
-                    <SummaryBadge
-                      icon="SHIPMENT"
-                      color="SHIPMENT"
-                      label="SHIPMENTS"
-                      no={order.sumShipments}
-                    />
+                    <div className={BadgeWrapperStyle}>
+                      <SummaryBadge
+                        icon="ORDER"
+                        color="ORDER"
+                        label="ORDERS"
+                        no={order.sumOrders}
+                      />
+                      <SummaryBadge
+                        icon="ORDER_ITEM"
+                        color="ORDER_ITEM"
+                        label="ITEMS"
+                        no={order.sumOrderItems}
+                      />
+                      <SummaryBadge
+                        icon="BATCH"
+                        color="BATCH"
+                        label="BATCHES"
+                        no={order.sumBatches}
+                      />
+                      <SummaryBadge
+                        icon="SHIPMENT"
+                        color="SHIPMENT"
+                        label="SHIPMENTS"
+                        no={order.sumShipments}
+                      />
+                    </div>
                     <OrderFocused
                       order={order}
                       shipment={shipment}

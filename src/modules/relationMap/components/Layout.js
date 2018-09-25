@@ -33,7 +33,7 @@ const RelationMapLayout = ({ onChangeTab, intl, children }: Props) => {
   const tabs = [
     { icon: 'ORDER', label: intl.formatMessage(messages.ordersTab) },
     { icon: 'SHIPMENT', label: intl.formatMessage(messages.shipmentsTab) },
-    // { icon: 'PRODUCT', label: intl.formatMessage(messages.productsTab) },
+    { icon: 'PRODUCT', label: intl.formatMessage(messages.productsTab) },
   ];
   return (
     <UIConsumer>

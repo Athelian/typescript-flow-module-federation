@@ -10,7 +10,7 @@ export default defineMessages({
     id: 'containers.RelationMap.shipmentsTab',
     defaultMessage: 'SHIPMENTS',
   },
-  productTabs: {
+  productsTab: {
     id: 'containers.RelationMap.productsTab',
     defaultMessage: 'PRODUCTS',
   },
