@@ -4,6 +4,7 @@ import { BooleanValue } from 'react-values';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
+import { injectUid } from 'utils/id';
 import { getTransportIcon } from '../Timeline/helpers';
 import {
   VoyageSelectorWrapperStyle,
@@ -49,7 +50,7 @@ type RenderIconOptions = {
   numOfIcons: number,
   isActive: boolean,
   isOptionsOpen: boolean,
-  toggle: () => void,
+  toggle?: () => void,
 };
 
 const voyagesGenerator = (voyages: Array<Object>, total: number) => {
@@ -59,7 +60,7 @@ const voyagesGenerator = (voyages: Array<Object>, total: number) => {
     voyages.splice(total, voyages.length - total + 1);
   } else {
     for (let counter = 0; counter < total - voyages.length + 1; counter += 1) {
-      voyages.push({});
+      voyages.push(injectUid({}));
     }
   }
 
@@ -124,14 +125,13 @@ class VoyageSelector extends React.Component<Props> {
     );
   };
 
-  onClick = (numOfIcons: number, isOptionsOpen: boolean, toggle: () => void) => () => {
+  onClick = (numOfIcons: number, isOptionsOpen: boolean, toggle?: () => void) => () => {
     const { shipment, setFieldDeepValue } = this.props;
     const { voyages } = shipment;
     if (isOptionsOpen) {
       setFieldDeepValue('voyages', voyagesGenerator(voyages, numOfIcons));
-    } else {
-      toggle();
     }
+    if (toggle) toggle();
   };
 
   render() {
@@ -172,7 +172,6 @@ class VoyageSelector extends React.Component<Props> {
                 numOfIcons: voyages.length,
                 isActive: true,
                 isOptionsOpen,
-                toggle,
               })}
             </div>
           )

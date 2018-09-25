@@ -79,7 +79,7 @@ export default function selectSearchEnumInputFactory({
                     name={name}
                     {...inputHandlers}
                     items={filterItems(query, data)}
-                    itemToString={item => (item ? item.name : '')}
+                    itemToString={item => (item ? item.description || item.name : '')}
                     itemToValue={item => (item ? item.name : '')}
                     renderSelect={({ ...rest }) => (
                       <DefaultSearchSelect
@@ -88,13 +88,14 @@ export default function selectSearchEnumInputFactory({
                         forceHoverStyle={isNew}
                         width={width}
                         isOpen={inputHandlers.isFocused}
+                        itemToString={item => (item ? item.description || item.name : '')}
                       />
                     )}
                     renderOptions={({ ...rest }) => (
                       <DefaultOptions
                         {...rest}
                         items={filterItems(query, data)}
-                        itemToString={item => (item ? item.name : '')}
+                        itemToString={item => (item ? item.description || item.name : '')}
                         itemToValue={item => (item ? item.name : '')}
                         width={width}
                       />
