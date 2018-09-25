@@ -59,6 +59,12 @@ const voyagesGenerator = (voyages: Array<Object>, total: number) => {
   if (voyages.length > total) {
     voyages.splice(total, voyages.length - total + 1);
   } else {
+    const {
+      arrivalPort = {
+        seaport: '',
+        airport: '',
+      },
+    } = voyages[voyages.length - 1] || {};
     for (let counter = 0; counter < total - voyages.length + 1; counter += 1) {
       voyages.push(
         injectUid({
@@ -66,10 +72,12 @@ const voyagesGenerator = (voyages: Array<Object>, total: number) => {
             seaport: '',
             airport: '',
           },
-          departurePort: {
-            seaport: '',
-            airport: '',
-          },
+          departurePort: counter
+            ? {
+                seaport: '',
+                airport: '',
+              }
+            : arrivalPort,
         })
       );
     }

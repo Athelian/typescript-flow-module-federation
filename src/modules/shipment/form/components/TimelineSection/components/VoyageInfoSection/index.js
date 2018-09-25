@@ -65,19 +65,6 @@ class VoyageInfoSection extends React.PureComponent<Props> {
     const enumType = icon === 'SHIPMENT' ? 'Seaport' : 'Airport';
     const deepField = icon === 'SHIPMENT' ? 'seaport' : 'airport';
 
-    let nextVoyageSourceName = null;
-    let prevVoyageSourceName = null;
-    if (title === 'FIRST VOYAGE') {
-      nextVoyageSourceName = 'voyages.1';
-    }
-    if (title === 'SECOND VOYAGE') {
-      prevVoyageSourceName = 'voyages.0';
-      nextVoyageSourceName = 'voyages.2';
-    }
-    if (title === 'THIRD VOYAGE') {
-      prevVoyageSourceName = 'voyages.1';
-    }
-
     return (
       <div className={VoyageInfoSectionWrapperStyle} {...rest}>
         <GridColumn>
@@ -86,13 +73,8 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           {canSelectPorts ? (
             <FormField
               name={`${sourceName}.departurePort.${deepField}`}
-              initValue={initialVoyage.departurePort && initialVoyage.departurePort[deepField]}
-              setFieldValue={(name, value) => {
-                setFieldDeepValue(name, value);
-                if (prevVoyageSourceName) {
-                  setFieldDeepValue(`${prevVoyageSourceName}.arrivalPort.${deepField}`, value);
-                }
-              }}
+              initValue={voyage.departurePort && voyage.departurePort[deepField]}
+              setFieldValue={setFieldDeepValue}
             >
               {({ name, ...inputHandlers }) =>
                 selectSearchEnumInputFactory({
@@ -125,13 +107,8 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           {canSelectPorts ? (
             <FormField
               name={`${sourceName}.arrivalPort.${deepField}`}
-              initValue={initialVoyage.arrivalPort && initialVoyage.arrivalPort[deepField]}
-              setFieldValue={(name, value) => {
-                setFieldDeepValue(name, value);
-                if (nextVoyageSourceName) {
-                  setFieldDeepValue(`${nextVoyageSourceName}.departurePort.${deepField}`, value);
-                }
-              }}
+              initValue={voyage.arrivalPort && voyage.arrivalPort[deepField]}
+              setFieldValue={setFieldDeepValue}
             >
               {({ name, ...inputHandlers }) =>
                 selectSearchEnumInputFactory({

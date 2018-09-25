@@ -60,7 +60,7 @@ const defaultProps = {
   timelineDate: { assignedTo: [], timelineDateRevisions: [] },
 };
 
-class TimelineInfoSection extends React.PureComponent<Props> {
+class TimelineInfoSection extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   handleRemoveAssignedTo = (index: number) => {

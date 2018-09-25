@@ -31,7 +31,7 @@ const TimelineSection = ({ isNew }: Props) => (
       };
 
       const { cargoReady, voyages, containerGroups = [] } = values;
-      const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
+      const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0] || {};
 
       return (
         <div className={TimelineSectionWrapperStyle}>
@@ -72,7 +72,12 @@ const TimelineSection = ({ isNew }: Props) => (
               voyage={voyages[0]}
               initialVoyage={initialValues.voyages[0]}
               sourceName="voyages.0"
-              setFieldDeepValue={setFieldDeepValue}
+              setFieldDeepValue={(field, newValue) => {
+                setFieldDeepValue(field, newValue);
+                if (field.includes('arrivalPort') && values.voyages.length > 1) {
+                  setFieldDeepValue(field.replace('0.arrivalPort', '1.departurePort'), newValue);
+                }
+              }}
             />
 
             {values.voyages.length > 1 && (
@@ -86,8 +91,8 @@ const TimelineSection = ({ isNew }: Props) => (
                       ? 'FIRST TRANSIT PORT ARRIVAL'
                       : 'TRANSIT PORT ARRIVAL'
                   }
-                  timelineDate={values.voyages[0].arrival}
-                  sourceName="voyages.0.arrival"
+                  timelineDate={values.voyages[1].arrival}
+                  sourceName="voyages.1.arrival"
                   setFieldDeepValue={setFieldDeepValue}
                   removeArrayItem={removeArrayItem}
                 />
@@ -113,7 +118,21 @@ const TimelineSection = ({ isNew }: Props) => (
                   voyage={voyages[1]}
                   initialVoyage={initialValues.voyages[1]}
                   sourceName="voyages.1"
-                  setFieldDeepValue={setFieldDeepValue}
+                  setFieldDeepValue={(field, newValue) => {
+                    setFieldDeepValue(field, newValue);
+                    if (field.includes('arrivalPort') && values.voyages.length > 2) {
+                      setFieldDeepValue(
+                        field.replace('1.arrivalPort', '2.departurePort'),
+                        newValue
+                      );
+                    }
+                    if (field.includes('departurePort')) {
+                      setFieldDeepValue(
+                        field.replace('1.departurePort', '0.arrivalPort'),
+                        newValue
+                      );
+                    }
+                  }}
                 />
               </>
             )}
@@ -125,8 +144,8 @@ const TimelineSection = ({ isNew }: Props) => (
                   isNew={isNew}
                   icon="TRANSIT"
                   title="SECOND TRANSIT PORT ARRIVAL"
-                  timelineDate={values.voyages[1].arrival}
-                  sourceName="voyages.1.arrival"
+                  timelineDate={values.voyages[2].arrival}
+                  sourceName="voyages.2.arrival"
                   setFieldDeepValue={setFieldDeepValue}
                   removeArrayItem={removeArrayItem}
                 />
@@ -148,7 +167,15 @@ const TimelineSection = ({ isNew }: Props) => (
                   voyage={voyages[2]}
                   initialVoyage={initialValues.voyages[2]}
                   sourceName="voyages.2"
-                  setFieldDeepValue={setFieldDeepValue}
+                  setFieldDeepValue={(field, newValue) => {
+                    setFieldDeepValue(field, newValue);
+                    if (field.includes('departurePort')) {
+                      setFieldDeepValue(
+                        field.replace('2.departurePort', '1.arrivalPort'),
+                        newValue
+                      );
+                    }
+                  }}
                 />
               </>
             )}
