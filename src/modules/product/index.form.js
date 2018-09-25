@@ -14,7 +14,11 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
-import { ProductInfoContainer } from './form/containers';
+import {
+  ProductInfoContainer,
+  ProductProvidersContainer,
+  ProductTagsContainer,
+} from './form/containers';
 import ProductForm from './form';
 import validator from './form/validator';
 import query from './form/query';
@@ -152,9 +156,19 @@ class ProductFormModule extends React.Component<Props> {
                           icon="PROVIDER"
                         />
                       </JumpToSection>
-                      <Subscribe to={[ProductInfoContainer, FormContainer]}>
-                        {(productInfoState, form) =>
-                          (isNew || productInfoState.isDirty()) && (
+                      <Subscribe
+                        to={[
+                          ProductInfoContainer,
+                          ProductProvidersContainer,
+                          ProductTagsContainer,
+                          FormContainer,
+                        ]}
+                      >
+                        {(productInfoState, productProvidersState, productTagsState, form) =>
+                          (isNew ||
+                            productInfoState.isDirty() ||
+                            productProvidersState.isDirty() ||
+                            productTagsState.isDirty()) && (
                             <>
                               <CancelButton disabled={false} onClick={this.onCancel}>
                                 Cancel
@@ -164,6 +178,8 @@ class ProductFormModule extends React.Component<Props> {
                                   !form.isReady(
                                     {
                                       ...productInfoState.state,
+                                      ...productProvidersState.state,
+                                      ...productTagsState.state,
                                     },
                                     validator
                                   )
@@ -172,10 +188,14 @@ class ProductFormModule extends React.Component<Props> {
                                   this.onSave(
                                     {
                                       ...productInfoState.state,
+                                      ...productProvidersState.state,
+                                      ...productTagsState.state,
                                     },
                                     saveProduct,
                                     () => {
                                       productInfoState.onSuccess();
+                                      productProvidersState.onSuccess();
+                                      productTagsState.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors
@@ -196,8 +216,10 @@ class ProductFormModule extends React.Component<Props> {
                   {isNew || !productId ? (
                     <ProductForm product={{}} isNew />
                   ) : (
-                    <Subscribe to={[ProductInfoContainer]}>
-                      {productInfoState => (
+                    <Subscribe
+                      to={[ProductInfoContainer, ProductProvidersContainer, ProductTagsContainer]}
+                    >
+                      {(productInfoState, productProvidersState, productTagsState) => (
                         <Query
                           query={query}
                           variables={{ id: decodeId(productId) }}
@@ -205,9 +227,11 @@ class ProductFormModule extends React.Component<Props> {
                           onCompleted={result => {
                             if (result.product) {
                               const {
-                                product: { ...info },
+                                product: { tags, productProviders, ...info },
                               } = result;
                               productInfoState.initDetailValues(info);
+                              productProvidersState.initDetailValues(productProviders);
+                              productTagsState.initDetailValues(tags);
                             } else {
                               navigate('/product');
                             }

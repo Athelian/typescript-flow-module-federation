@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
+import { ProductProviderCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
 import {
@@ -78,9 +79,10 @@ function ProductProviderSection({ isNew }: Props) {
               <div className={EmptyMessageStyle}>No providers found.</div>
             ) : (
               <div className={ItemGridStyle}>
-                {productProviders.map((productProvider, index) => (
+                {productProviders.map(productProvider => (
                   <div className={ItemStyle} key={productProvider.id}>
-                    {index} {isNew}
+                    <ProductProviderCard productProvider={productProvider} />
+                    {isNew}
                   </div>
                 ))}
               </div>

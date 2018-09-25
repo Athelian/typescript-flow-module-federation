@@ -15,7 +15,7 @@ const initValues = {
   tags: [],
 };
 
-export default class ShipmentTagsContainer extends Container<FormState> {
+export default class ProductTagsContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;

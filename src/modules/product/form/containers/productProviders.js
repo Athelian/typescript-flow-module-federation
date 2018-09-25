@@ -61,10 +61,9 @@ export default class ProductProviderContainer extends Container<FormState> {
     this.originalValues = { ...this.state };
   };
 
-  initDetailValues = (values: any) => {
-    const parsedValues = removeTypename(values);
-    // $FlowFixMe: missing type define for map's ramda function
-    this.setState(parsedValues);
-    this.originalValues = parsedValues;
+  initDetailValues = (productProviders: Array<Object>) => {
+    const parsedValues: Array<any> = removeTypename(productProviders);
+    this.setState({ productProviders: parsedValues });
+    this.originalValues = { productProviders: parsedValues };
   };
 }

@@ -30,7 +30,7 @@ const ProductSection = ({ isNew }: Props) => (
   <Subscribe to={[ProductInfoContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
       const values = { ...initialValues, ...state };
-      const dummyImages = [{ id: 1 }, { id: 2 }, { id: 3 }];
+      const dummyImages = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
       return (
         <div className={ProductSectionWrapperStyle}>
@@ -40,7 +40,7 @@ const ProductSection = ({ isNew }: Props) => (
                 <div className={ProductImageWrapperStyle} key={image.id}>
                   <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
                   <button className={ViewImageButtonStyle} type="button">
-                    <Icon icon="SEARCH" />
+                    <Icon icon="EXPAND" />
                   </button>
                   <button className={DeleteImageButtonStyle} type="button">
                     <Icon icon="REMOVE" />
