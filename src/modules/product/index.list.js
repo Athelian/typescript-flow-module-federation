@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
-import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import NavBar, {
   EntityIcon,
@@ -65,7 +64,7 @@ class ProductListModule extends React.Component<Props, State> {
           <Layout
             {...uiState}
             navBar={
-              <NavBar setting={<Setting />}>
+              <NavBar>
                 <EntityIcon icon="PRODUCT" color="PRODUCT" />
                 <StatusToggleTabs
                   onChange={index => this.onChangeFilter({ status: index ? 'Inactive' : 'Active' })}

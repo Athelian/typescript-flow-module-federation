@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import { FormField } from 'modules/form';
-import { textInputFactory, numberInputFactory } from 'modules/form/helpers';
+import { textInputFactory, numberInputFactory, priceInputFactory } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
 import { DefaultWeightStyle, DefaultVolumeStyle, DefaultDimensionStyle } from 'components/Form';
 import { getByPath } from 'utils/fp';
@@ -21,97 +21,76 @@ const SpecificationsSection = ({ isNew }: Props) => (
 
         return (
           <GridColumn>
-            <FormField
-              name="packageName"
-              initValue={values.packageName}
-              setFieldValue={setFieldValue}
-            >
+            <FormField name="unitType" initValue={values.unitType} setFieldValue={setFieldValue}>
               {({ name, ...inputHandlers }) =>
                 textInputFactory({
                   name,
                   inputHandlers,
                   isNew,
                   initValue: originalValues[name],
-                  label: 'PACKAGE NAME',
+                  label: 'UNIT TYPE',
                 })
               }
             </FormField>
 
             <FormField
-              name="packageCapacity"
-              initValue={values.packageCapacity}
-              setFieldValue={setFieldValue}
+              name="unitPrice"
+              initValue={values.unitPrice.amount}
+              setFieldValue={(field, amount) =>
+                setFieldValue('unitPrice', { amount, currency: 'JPY' })
+              }
+            >
+              {({ name, ...inputHandlers }) =>
+                priceInputFactory({
+                  name,
+                  isNew,
+                  inputHandlers,
+                  initValue: originalValues[name].amount,
+                  label: 'UNIT PRICE',
+                  currency: 'JPY',
+                })
+              }
+            </FormField>
+
+            <FormField
+              name="unitWeight.value"
+              initValue={getByPath('unitWeight.value', values)}
+              setFieldValue={(field, value) => setFieldValue('unitWeight', { value, metric: 'kg' })}
             >
               {({ name, ...inputHandlers }) =>
                 numberInputFactory({
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: originalValues[name],
-                  label: 'UNITS PER PACKAGE',
-                })
-              }
-            </FormField>
-
-            <FormField
-              name="packageQuantity"
-              initValue={values.packageQuantity}
-              setFieldValue={setFieldValue}
-            >
-              {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
-                  inputHandlers,
-                  isNew,
-                  initValue: originalValues[name],
-                  label: 'PACKAGE QUANTITY',
-                })
-              }
-            </FormField>
-
-            <FormField
-              name="packageGrossWeight.value"
-              initValue={getByPath('packageGrossWeight.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldValue('packageGrossWeight', { value, metric: 'kg' })
-              }
-            >
-              {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
-                  inputHandlers,
-                  isNew,
-                  initValue: getByPath('packageGrossWeight.value', originalValues),
-                  label: 'PKG GROSS WEIGHT',
+                  initValue: getByPath('unitWeight.value', originalValues),
+                  label: 'UNIT WEIGHT',
                   WrapperComponent: DefaultWeightStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="packageVolume.value"
-              initValue={getByPath('packageVolume.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldValue('packageVolume', { value, metric: 'm3' })
-              }
+              name="unitVolume.value"
+              initValue={getByPath('unitVolume.value', values)}
+              setFieldValue={(field, value) => setFieldValue('unitVolume', { value, metric: 'm3' })}
             >
               {({ name, ...inputHandlers }) =>
                 numberInputFactory({
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('packageVolume.value', originalValues),
-                  label: 'PKG VOLUME',
+                  initValue: getByPath('unitVolume.value', originalValues),
+                  label: 'UNIT VOLUME',
                   WrapperComponent: DefaultVolumeStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="packageSize.length.value"
-              initValue={getByPath('packageSize.length.value', values)}
+              name="unitSize.length.value"
+              initValue={getByPath('unitSize.length.value', values)}
               setFieldValue={(field, value) =>
-                setFieldValue('packageSize.length', { value, metric: 'cm' })
+                setFieldValue('unitSize.length', { value, metric: 'cm' })
               }
             >
               {({ name, ...inputHandlers }) =>
@@ -119,18 +98,18 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('packageSize.length.value', originalValues),
-                  label: 'PKG LENGTH',
+                  initValue: getByPath('unitSize.length.value', originalValues),
+                  label: 'UNIT LENGTH',
                   WrapperComponent: DefaultDimensionStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="packageSize.width.value"
-              initValue={getByPath('packageSize.width.value', values)}
+              name="unitSize.width.value"
+              initValue={getByPath('unitSize.width.value', values)}
               setFieldValue={(field, value) =>
-                setFieldValue('packageSize.width', { value, metric: 'cm' })
+                setFieldValue('unitSize.width', { value, metric: 'cm' })
               }
             >
               {({ name, ...inputHandlers }) =>
@@ -138,18 +117,18 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('packageSize.width.value', originalValues),
-                  label: 'PKG WIDTH',
+                  initValue: getByPath('unitSize.width.value', originalValues),
+                  label: 'UNIT WIDTH',
                   WrapperComponent: DefaultDimensionStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="packageSize.height.value"
-              initValue={getByPath('packageSize.height.value', values)}
+              name="unitSize.height.value"
+              initValue={getByPath('unitSize.height.value', values)}
               setFieldValue={(field, value) =>
-                setFieldValue('packageSize.height', { value, metric: 'cm' })
+                setFieldValue('unitSize.height', { value, metric: 'cm' })
               }
             >
               {({ name, ...inputHandlers }) =>
@@ -157,8 +136,8 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('packageSize.height.value', originalValues),
-                  label: 'PKG HEIGHT',
+                  initValue: getByPath('unitSize.height.value', originalValues),
+                  label: 'UNIT HEIGHT',
                   WrapperComponent: DefaultDimensionStyle,
                 })
               }
