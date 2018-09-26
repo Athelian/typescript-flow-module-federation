@@ -1,13 +1,10 @@
 // @flow
 import * as React from 'react';
-import faTimes from '@fortawesome/fontawesome-pro-solid/faTimes';
-import faCheck from '@fortawesome/fontawesome-pro-solid/faCheck';
-import faChevron from '@fortawesome/fontawesome-pro-solid/faChevronDown';
 import Downshift from 'downshift';
 import matchSorter from 'match-sorter';
+import Icon from 'components/Icon';
 import HoverWrapper from 'components/common/HoverWrapper';
 import Editable from 'components/common/Editable';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tag from 'components/Tag';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
 import { HoverStyle } from 'components/common/HoverWrapper/style';
@@ -168,7 +165,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                                       this.handleRemove(tag);
                                     }}
                                   >
-                                    <FontAwesomeIcon icon={faTimes} fixedWidth />
+                                    <Icon icon="CLEAR" />
                                   </button>
                                 )
                               }
@@ -213,11 +210,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                                 className={ExpandButtonStyle}
                                 disabled={disabled}
                               >
-                                <FontAwesomeIcon
-                                  className={ArrowDownStyle(isOpen)}
-                                  icon={faChevron}
-                                  fixedWidth
-                                />
+                                <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
                               </button>
                             )}
                             {isOpen && (
@@ -234,9 +227,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                                       {...getItemProps({ item: tag })}
                                     >
                                       <div className={SelectedWrapperStyle(isActive)}>
-                                        {isSelected && (
-                                          <FontAwesomeIcon icon={faCheck} fixedWidth />
-                                        )}
+                                        {isSelected && <Icon icon="CONFIRM" />}
                                       </div>
                                       <Tag tag={tag} />
                                     </div>

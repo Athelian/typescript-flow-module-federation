@@ -10,7 +10,7 @@ import BatchForm from 'modules/batch/form';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 
 type Props = {
   batch: Object,
@@ -63,15 +63,11 @@ class BatchFormWrapper extends React.Component<Props> {
                     />
                     <SectionTabs link="packagingSection" label="PACKAGING" icon="PACKAGING" />
                   </JumpToSection>
-                  <CancelButton disabled={false} onClick={onCancel}>
-                    Cancel
-                  </CancelButton>
+                  <CancelButton onClick={onCancel} />
                   <SaveButton
                     disabled={!isDirty() || !formContainer.isReady(state, validator)}
                     onClick={() => onSave(state)}
-                  >
-                    Save
-                  </SaveButton>
+                  />
                 </SlideViewNavBar>
               }
             >

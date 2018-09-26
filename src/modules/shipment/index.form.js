@@ -7,7 +7,7 @@ import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import JumpToSection from 'components/JumpToSection';
@@ -183,9 +183,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             shipmentTimelineState.isDirty() ||
                             shipmentTransportTypeState.isDirty()) && (
                             <>
-                              <CancelButton disabled={false} onClick={this.onCancel}>
-                                Cancel
-                              </CancelButton>
+                              <CancelButton onClick={this.onCancel} />
                               <SaveButton
                                 disabled={
                                   !form.isReady(
@@ -220,9 +218,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     form.onErrors
                                   )
                                 }
-                              >
-                                Save
-                              </SaveButton>
+                              />
                             </>
                           )
                         }

@@ -9,7 +9,7 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 
 type Props = {
   productProvider: Object,
@@ -44,20 +44,21 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                   <JumpToSection>
                     <SectionTabs link="productProviderSection" label="PROVIDER" icon="PROVIDER" />
                     <SectionTabs
+                      link="specificationsSection"
+                      label="SPECIFICATIONS"
+                      icon="SPECIFICATIONS"
+                    />
+                    <SectionTabs
                       link="productProviderPackagingSection"
                       label="PACKAGING"
                       icon="PACKAGING"
                     />
                   </JumpToSection>
-                  <CancelButton disabled={false} onClick={onCancel}>
-                    Cancel
-                  </CancelButton>
+                  <CancelButton onClick={onCancel} />
                   <SaveButton
                     disabled={!isDirty() || !formContainer.isReady(state, validator)}
                     onClick={() => onSave(state)}
-                  >
-                    Save
-                  </SaveButton>
+                  />
                 </SlideViewNavBar>
               }
             >

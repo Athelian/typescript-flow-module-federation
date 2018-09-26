@@ -5,7 +5,7 @@ import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import { ProductProviderCard } from 'components/Cards';
 import { BooleanValue } from 'react-values';
-import NewButton from 'components/NavButtons/NewButton';
+import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
@@ -24,7 +24,7 @@ function ProductProvidersSection() {
         <div className={ProductProviderSectionWrapperStyle}>
           <SectionNavBar>
             <NewButton
-              title="NEW PROVIDER"
+              label="NEW PROVIDER"
               onClick={() => {
                 setFieldValue(
                   `productProviders[${productProviders.length}]`,

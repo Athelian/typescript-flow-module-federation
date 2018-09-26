@@ -36,13 +36,11 @@ export const LoginBoxStyle: string = css`
   ${shadows.WATERFALL};
   ${borderRadiuses.MAIN};
   background-color: #fff;
-  max-width: 360px;
-  min-width: 240px;
   padding: 20px;
   flex-shrink: 0;
   display: grid;
   grid-auto-rows: min-content;
-  grid-gap: 20px;
+  grid-gap: 40px;
 `;
 
 export const LoginErrorStyle: string = css`

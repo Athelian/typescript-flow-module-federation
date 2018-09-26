@@ -5,7 +5,7 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import { PartnerCard } from 'components/Cards';
 
@@ -34,12 +34,8 @@ const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
             navBar={
               <SlideViewNavBar>
                 <EntityIcon icon="PARTNER" color="BLACK" />
-                <CancelButton disabled={false} onClick={onCancel}>
-                  Cancel
-                </CancelButton>
-                <SaveButton disabled={isEquals(value, selected)} onClick={() => onSelect(value)}>
-                  Save
-                </SaveButton>
+                <CancelButton onClick={onCancel} />
+                <SaveButton disabled={isEquals(value, selected)} onClick={() => onSelect(value)} />
               </SlideViewNavBar>
             }
           >

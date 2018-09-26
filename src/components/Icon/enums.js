@@ -1,90 +1,94 @@
 // Components or Routes
-import ORDER from '@fortawesome/fontawesome-pro-solid/faFileEdit';
-import BATCH from '@fortawesome/fontawesome-pro-solid/faBox';
-import SHIPMENT from '@fortawesome/fontawesome-pro-solid/faShip';
-import PRODUCT from '@fortawesome/fontawesome-pro-solid/faCube';
-import WAREHOUSE from '@fortawesome/fontawesome-pro-solid/faWarehouseAlt';
-import INVENTORY from '@fortawesome/fontawesome-pro-solid/faInventory';
-import NETWORK from '@fortawesome/fontawesome-pro-solid/faAddressBook';
-import PARTNER from '@fortawesome/fontawesome-pro-solid/faHandshake';
-import STAFF from '@fortawesome/fontawesome-pro-solid/faUsers';
-import SETTINGS from '@fortawesome/fontawesome-pro-solid/faCog';
-import TAGS from '@fortawesome/fontawesome-pro-solid/faTags';
-import ORDER_ITEM from '@fortawesome/fontawesome-pro-solid/faShoppingCart';
-import NOTIFICATION from '@fortawesome/fontawesome-pro-solid/faBell';
-import PROFILE from '@fortawesome/fontawesome-pro-solid/faAddressCard';
-import LOGOUT from '@fortawesome/fontawesome-pro-solid/faSignOutAlt';
-import EXPORTER from '@fortawesome/fontawesome-pro-solid/faIndustryAlt';
-import SUPPLIER from '@fortawesome/fontawesome-pro-regular/faIndustry';
-import CARGO from '@fortawesome/fontawesome-pro-solid/faBoxesAlt';
-import PROVIDER from '@fortawesome/fontawesome-pro-solid/faIndustry';
+import {
+  // Components
+  faFileEdit as ORDER,
+  faBox as BATCH,
+  faShip as SHIPMENT,
+  faCube as PRODUCT,
+  faWarehouseAlt as WAREHOUSE,
+  faInventory as INVENTORY,
+  faAddressBook as NETWORK,
+  faHandshake as PARTNER,
+  faUsers as STAFF,
+  faCog as SETTINGS,
+  faTags as TAGS,
+  faShoppingCart as ORDER_ITEM,
+  faBell as NOTIFICATION,
+  faAddressCard as PROFILE,
+  faSignInAlt as LOGIN,
+  faSignOutAlt as LOGOUT,
+  faIndustryAlt as EXPORTER,
+  faTape as PACKAGING,
+  faBalanceScale as QUANTITY_ADJUSTMENTS,
+  faRoute as TIMELINE,
+  faBoxesAlt as CARGO,
+  faIndustry as PROVIDER,
+  faRulerTriangle as SPECIFICATIONS,
+  faFileAlt as DOCUMENT,
+  faMap as RELATION_MAP,
+  // Common UI
+  faFolderOpen as ACTIVE,
+  faArchive as ARCHIVE,
+  faTh as CARD,
+  faSortAmountDown as SORT_DESC,
+  faSortAmountUp as SORT_ASC,
+  faFilter as FILTER,
+  faSearch as SEARCH,
+  faTimes as CLEAR,
+  faTimesCircle as CANCEL,
+  faToggleOn as TOGGLE_ON,
+  faToggleOff as TOGGLE_OFF,
+  faTrashAlt as REMOVE,
+  faClone as CLONE,
+  faCheckCircle as CHECKED,
+  faBan as DISABLED,
+  faPencil as EDIT,
+  faCheck as CONFIRM,
+  faMinus as MINUS,
+  faPlus as ADD,
+  faSync as SYNC,
+  faExchange as EXCHANGE,
+  faExpand as EXPAND,
+  faCompress as COMPRESS,
+  faArrowDown as ARROW_DOWN,
+  faChevronDown as CHEVRON_DOWN,
+  faChevronDoubleLeft as CHEVRON_DOUBLE_LEFT,
+  faChevronDoubleRight as CHEVRON_DOUBLE_RIGHT,
+  faExclamationCircle as WARNING,
+  faInfoCircle as INFO,
+  faCommentAltLines as MEMO,
+  faCommentAltPlus as MEMO_ADD,
+  faDownload as DOWNLOAD,
+  faCircle as CIRCLE,
+  faEllipsisH as HORIZONTAL_ELLIPSIS,
+  faLanguage as LANGUAGE,
+  // Shipment Timeline
+  faBoxCheck as CARGO_READY,
+  faAnchor as PORT,
+  faPlane as PLANE,
+  faQuestion as UNKNOWN,
+  faLifeRing as TRANSIT,
+  faClipboardList as CUSTOMS,
+  faTruckLoading as DELIVERY_READY,
+  faArrowToBottom as ARRIVAL,
+  faArrowFromTop as DEPARTURE,
+  // Document Types
+  faFileExcel as EXCEL,
+  faFileImage as IMAGE,
+  faFilePdf as PDF,
+  faFilePowerpoint as POWER_POINT,
+  faFileWord as WORD,
+} from '@fortawesome/pro-solid-svg-icons';
 
-// Common UI
-import ACTIVE from '@fortawesome/fontawesome-pro-solid/faFolderOpen';
-import ARCHIVE from '@fortawesome/fontawesome-pro-solid/faArchive';
-import CARD from '@fortawesome/fontawesome-pro-solid/faTh';
-import TABLE from '@fortawesome/fontawesome-pro-regular/faThList';
-import LIST from '@fortawesome/fontawesome-pro-regular/faList';
-import SORT_DESC from '@fortawesome/fontawesome-pro-solid/faSortAmountDown';
-import SORT_ASC from '@fortawesome/fontawesome-pro-solid/faSortAmountUp';
-import FILTER from '@fortawesome/fontawesome-pro-solid/faFilter';
-import SEARCH from '@fortawesome/fontawesome-pro-solid/faSearch';
-import CLEAR from '@fortawesome/fontawesome-pro-solid/faTimes';
-import REMOVE from '@fortawesome/fontawesome-pro-solid/faTrashAlt';
-import CLONE from '@fortawesome/fontawesome-pro-solid/faClone';
-import CHECKED from '@fortawesome/fontawesome-pro-solid/faCheckCircle';
-import UNCHECKED from '@fortawesome/fontawesome-pro-regular/faCheckCircle';
-import DISABLED from '@fortawesome/fontawesome-pro-solid/faBan';
-import EDIT from '@fortawesome/fontawesome-pro-solid/faPencil';
-import CONFIRM from '@fortawesome/fontawesome-pro-solid/faCheck';
-import MINUS from '@fortawesome/fontawesome-pro-solid/faMinus';
-import ADD from '@fortawesome/fontawesome-pro-solid/faPlus';
-import EYE from '@fortawesome/fontawesome-pro-regular/faEye';
-import ARROW_DOWN from '@fortawesome/fontawesome-pro-solid/faArrowDown';
-import PLACE from '@fortawesome/fontawesome-pro-solid/faMapMarkerAlt';
-import WARNING from '@fortawesome/fontawesome-pro-solid/faExclamationCircle';
-import CHEVRON_DOWN from '@fortawesome/fontawesome-pro-solid/faChevronDown';
-import CHEVRON_DOUBLE_LEFT from '@fortawesome/fontawesome-pro-solid/faChevronDoubleLeft';
-import CHEVRON_DOUBLE_RIGHT from '@fortawesome/fontawesome-pro-solid/faChevronDoubleRight';
-import DOCUMENT from '@fortawesome/fontawesome-pro-solid/faFileAlt';
-import TOGGLE_ON from '@fortawesome/fontawesome-pro-solid/faToggleOn';
-import TOGGLE_OFF from '@fortawesome/fontawesome-pro-solid/faToggleOff';
-import INFO from '@fortawesome/fontawesome-pro-solid/faInfoCircle';
-import MEMO from '@fortawesome/fontawesome-pro-solid/faCommentAltLines';
-import MEMO_ADD from '@fortawesome/fontawesome-pro-solid/faCommentAltPlus';
-import DOWNLOAD from '@fortawesome/fontawesome-pro-solid/faDownload';
-import CIRCLE from '@fortawesome/fontawesome-pro-solid/faCircle';
-import SYNC from '@fortawesome/fontawesome-pro-solid/faSync';
-import EXPAND from '@fortawesome/fontawesome-pro-solid/faExpand';
-import COMPRESS from '@fortawesome/fontawesome-pro-solid/faCompress';
-import PACKAGING from '@fortawesome/fontawesome-pro-solid/faTape';
-import QUANTITY_ADJUSTMENTS from '@fortawesome/fontawesome-pro-solid/faBalanceScale';
-import HORIZONTAL_ELLIPSIS from '@fortawesome/fontawesome-pro-solid/faEllipsisH';
-import EXCHANGE from '@fortawesome/fontawesome-pro-solid/faExchange';
-
-// Shipment Timeline
-import TIMELINE from '@fortawesome/fontawesome-pro-solid/faRoute';
-import CARGO_READY from '@fortawesome/fontawesome-pro-solid/faBoxCheck';
-import PORT from '@fortawesome/fontawesome-pro-solid/faAnchor';
-import PLANE from '@fortawesome/fontawesome-pro-solid/faPlane';
-import UNKNOWN from '@fortawesome/fontawesome-pro-solid/faQuestion';
-import TRANSIT from '@fortawesome/fontawesome-pro-solid/faLifeRing';
-import CUSTOMS from '@fortawesome/fontawesome-pro-solid/faClipboardList';
-import DELIVERY_READY from '@fortawesome/fontawesome-pro-solid/faTruckLoading';
-import ARRIVAL from '@fortawesome/fontawesome-pro-solid/faArrowToBottom';
-import DEPARTURE from '@fortawesome/fontawesome-pro-solid/faArrowFromTop';
-
-// Staff
-import ID_BADGE from '@fortawesome/fontawesome-pro-solid/faIdBadge';
-
-// Document Input
-import EXCEL from '@fortawesome/fontawesome-pro-solid/faFileExcel';
-import IMAGE from '@fortawesome/fontawesome-pro-solid/faFileImage';
-import PDF from '@fortawesome/fontawesome-pro-solid/faFilePdf';
-import POWER_POINT from '@fortawesome/fontawesome-pro-solid/faFilePowerpoint';
-import WORD from '@fortawesome/fontawesome-pro-solid/faFileWord';
-
-import RELATION_MAP from '@fortawesome/fontawesome-pro-solid/faMap';
+import {
+  // Components
+  faIndustry as SUPPLIER,
+  // Common UI
+  faThList as TABLE,
+  faList as LIST,
+  faCheckCircle as UNCHECKED,
+  faEye as EYE,
+} from '@fortawesome/pro-regular-svg-icons';
 
 export default {
   ORDER,
@@ -101,11 +105,15 @@ export default {
   ORDER_ITEM,
   NOTIFICATION,
   PROFILE,
+  LOGIN,
   LOGOUT,
   EXPORTER,
   SUPPLIER,
   CARGO,
+  PACKAGING,
+  QUANTITY_ADJUSTMENTS,
   PROVIDER,
+  SPECIFICATIONS,
 
   RELATION_MAP,
 
@@ -119,6 +127,7 @@ export default {
   FILTER,
   SEARCH,
   CLEAR,
+  CANCEL,
   REMOVE,
   CLONE,
   CHECKED,
@@ -130,7 +139,6 @@ export default {
   ADD,
   EYE,
   ARROW_DOWN,
-  PLACE,
   WARNING,
   CHEVRON_DOWN,
   CHEVRON_DOUBLE_LEFT,
@@ -146,10 +154,9 @@ export default {
   SYNC,
   EXPAND,
   COMPRESS,
-  PACKAGING,
-  QUANTITY_ADJUSTMENTS,
   HORIZONTAL_ELLIPSIS,
   EXCHANGE,
+  LANGUAGE,
 
   TIMELINE,
   CARGO_READY,
@@ -161,8 +168,6 @@ export default {
   DELIVERY_READY,
   ARRIVAL,
   DEPARTURE,
-
-  ID_BADGE,
 
   EXCEL,
   IMAGE,

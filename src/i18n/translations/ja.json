@@ -1,9 +1,4 @@
 {
-  "components.NavButtons.cancel": "キャンセル",
-  "components.NavButtons.edit": "編集",
-  "components.NavButtons.save": "保存",
-  "components.NavButtons.delete": "削除",
-
   "components.NavBar.active": "進行中",
   "components.NavBar.archived": "アーカイブ",
 

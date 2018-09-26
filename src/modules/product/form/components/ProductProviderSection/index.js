@@ -4,7 +4,7 @@ import { Subscribe } from 'unstated';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import { ProductProviderCard } from 'components/Cards';
-import NewButton from 'components/NavButtons/NewButton';
+import { NewButton } from 'components/Buttons';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
 import {
   ProductProviderSectionWrapperStyle,
@@ -25,7 +25,7 @@ function ProductProviderSection({ isNew }: Props) {
         <div className={ProductProviderSectionWrapperStyle}>
           <SectionNavBar>
             <NewButton
-              title="NEW PROVIDER"
+              label="NEW PROVIDER"
               onClick={() => {
                 setFieldValue(
                   `productProviders[${productProviders.length}]`,

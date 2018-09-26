@@ -6,7 +6,7 @@ import loadMore from 'utils/loadMore';
 import OrderItemsList from 'providers/OrderItemsList';
 import Layout from 'components/Layout';
 import { SectionNavBar as NavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderItemCard } from 'components/Cards';
 
@@ -48,15 +48,11 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => (
                 navBar={
                   <NavBar>
                     <EntityIcon icon="PRODUCT" color="PRODUCT" />
-                    <CancelButton disabled={false} onClick={onCancel}>
-                      Cancel
-                    </CancelButton>
+                    <CancelButton onClick={onCancel} />
                     <SaveButton
                       disabled={isEquals(value, selected)}
                       onClick={() => onSelect(value)}
-                    >
-                      Save
-                    </SaveButton>
+                    />
                   </NavBar>
                 }
               >

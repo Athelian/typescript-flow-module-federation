@@ -3,8 +3,7 @@ import * as React from 'react';
 import { Location, Redirect } from '@reach/router';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import faLanguage from '@fortawesome/fontawesome-pro-regular/faLanguage';
+import Icon from 'components/Icon';
 import { LanguageConsumer } from 'modules/language';
 import { AuthenticationConsumer } from 'modules/authentication';
 import LoadingIcon from 'components/LoadingIcon';
@@ -68,7 +67,7 @@ const Login = ({ redirectUrl }: Props) => (
             <span>
               © {new Date().getFullYear()} Zenport Inc.{' '}
               <LanguageConsumer>
-                {({ changeLocale }) => <FontAwesomeIcon icon={faLanguage} onClick={changeLocale} />}
+                {({ changeLocale }) => <Icon icon="LANGUAGE" onClick={changeLocale} />}
               </LanguageConsumer>
             </span>
           </footer>

@@ -6,7 +6,7 @@ import Layout from 'components/Layout';
 import Tabs from 'components/NavBar/components/Tabs';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon, SearchInput } from 'components/NavBar';
-import { NewButton } from 'components/NavButtons';
+import { NewButton } from 'components/Buttons';
 import messages from 'modules/tags/messages';
 import { injectUid } from 'utils/id';
 import TagsList from './list';

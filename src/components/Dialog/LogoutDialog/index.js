@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { CancelButton, BaseButton } from 'components/Buttons';
 import Dialog from '../index';
 import messages from './messages';
 import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
@@ -20,12 +21,13 @@ function LogoutDialog({ isOpen, onRequestClose, onCancel, onConfirm }: Props) {
           <FormattedMessage {...messages.confirm} />
         </div>
         <div className={ButtonsStyle}>
-          <button onClick={onCancel} type="button">
-            <FormattedMessage {...messages.cancel} />
-          </button>
-          <button data-testid="logout-confirm-button" onClick={onConfirm} type="button">
-            <FormattedMessage {...messages.logout} />
-          </button>
+          <CancelButton onClick={onCancel} />
+          <BaseButton
+            data-testid="logout-confirm-button"
+            icon="LOGOUT"
+            label={<FormattedMessage {...messages.logout} />}
+            onClick={onConfirm}
+          />
         </div>
       </div>
     </Dialog>

@@ -4,13 +4,12 @@ import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
 import Icon from 'components/Icon';
-import NewButton from 'components/NavButtons/NewButton';
 import { injectUid } from 'utils/id';
 import { UserConsumer } from 'modules/user';
 import UserAvatar from 'components/UserAvatar';
 import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
-import { CustomButton } from 'components/NavButtons';
+import { ApproveButton, NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
 import { dateInputFactory } from 'modules/form/helpers';
 import { SectionHeader, Label, DefaultAdjustmentStyle, FieldItem } from 'components/Form';
@@ -181,14 +180,7 @@ class TimelineInfoSection extends React.Component<Props> {
                   </>
                 ) : (
                   <UserConsumer>
-                    {({ user }) => (
-                      <CustomButton
-                        onClick={() => this.handleApprove(user)}
-                        label="APPROVE"
-                        icon={<Icon icon="CHECKED" />}
-                        color="blue"
-                      />
-                    )}
+                    {({ user }) => <ApproveButton onClick={() => this.handleApprove(user)} />}
                   </UserConsumer>
                 )}
               </div>
@@ -198,7 +190,7 @@ class TimelineInfoSection extends React.Component<Props> {
           <GridColumn gap="10px">
             <div className={AddDateButtonWrapperStyle}>
               <NewButton
-                title="NEW DATE"
+                label="NEW DATE"
                 onClick={() => {
                   setFieldDeepValue(
                     `${sourceName}.timelineDateRevisions[${(timelineDate &&

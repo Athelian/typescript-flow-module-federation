@@ -6,7 +6,7 @@ import UserListProvider from 'providers/UserList';
 import Layout from 'components/Layout';
 import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import StaffGridView from 'modules/staff/list/StaffGridView';
 import { ShipmentUserCard } from 'components/Cards';
 
@@ -89,15 +89,11 @@ const AssignUsers = ({ selected, onCancel, onSelect }: Props) => (
                   <h3>
                     {values.length}/{MAX_SELECTIONS}
                   </h3>
-                  <CancelButton disabled={false} onClick={onCancel}>
-                    Cancel
-                  </CancelButton>
+                  <CancelButton onClick={onCancel} />
                   <SaveButton
                     disabled={isEquals(values, selected)}
                     onClick={() => onSelect(values)}
-                  >
-                    Save
-                  </SaveButton>
+                  />
                 </SlideViewNavBar>
               }
             >

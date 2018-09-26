@@ -6,7 +6,7 @@ import { Query, Mutation } from 'react-apollo';
 import LoadingIcon from 'components/LoadingIcon';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { decodeId, encodeId } from 'utils/id';

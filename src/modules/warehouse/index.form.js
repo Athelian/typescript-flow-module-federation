@@ -7,16 +7,13 @@ import Layout from 'components/Layout';
 import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
-
-import WarehoueInfoForm from './form';
-
+import WarehouseInfoForm from './form';
 import WarehouseInfoContainer from './form/containers/info';
-
 import query from './form/query';
 import { createWarehouseMutation, updateWarehouseMutation } from './form/mutation';
 import validator from './form/validator';
@@ -93,9 +90,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                         {(infoState, form) =>
                           (isNew || infoState.isDirty()) && (
                             <>
-                              <CancelButton disabled={false} onClick={this.onCancel}>
-                                Cancel
-                              </CancelButton>
+                              <CancelButton onClick={this.onCancel} />
                               <SaveButton
                                 disabled={
                                   !form.isReady(
@@ -117,9 +112,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     }
                                   )
                                 }
-                              >
-                                Save
-                              </SaveButton>
+                              />
                             </>
                           )
                         }
@@ -130,7 +123,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                   {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !warehouseId ? (
-                    <WarehoueInfoForm isNew />
+                    <WarehouseInfoForm isNew />
                   ) : (
                     <Subscribe to={[WarehouseInfoContainer]}>
                       {infoState => (
@@ -154,7 +147,7 @@ class OrderFormModule extends React.PureComponent<Props> {
 
                             if (loading) return <LoadingIcon />;
                             return (
-                              <WarehoueInfoForm
+                              <WarehouseInfoForm
                                 warehouse={getByPathWithDefault({}, 'warehouse', data)}
                               />
                             );

@@ -2,18 +2,7 @@
 import { css } from 'react-emotion';
 import { transitions, scrollbars, colors } from 'styles/common';
 
-export const MenuBody: string = css`
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 80px);
-  overflow: hidden;
-  ${scrollbars.SMALL_WHITE};
-  &:hover {
-    overflow-y: overlay;
-  }
-`;
-
-export const ZenMenuStyle = (isExpanded: boolean): string => css`
+export const SideBarWrapperStyle = (isExpanded: boolean): string => css`
   @keyframes gradient {
     0% {
       background-position: 50% 0%;
@@ -34,10 +23,21 @@ export const ZenMenuStyle = (isExpanded: boolean): string => css`
   width: ${isExpanded ? '200px' : '50px'};
   background: linear-gradient(0deg, ${colors.BLUE}, ${colors.TEAL});
   background-size: 400% 400%;
-  animation: gradient 30s ease infinite;
+  animation: gradient 60s ease infinite;
   ${transitions.EXPAND};
   &:hover {
     box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
     width: 200px;
+  }
+`;
+
+export const SideBarBodyStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+  overflow: hidden;
+  ${scrollbars.SMALL_WHITE};
+  &:hover {
+    overflow-y: overlay;
   }
 `;
