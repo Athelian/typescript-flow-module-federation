@@ -4,7 +4,7 @@ import { layout, colors, fontSizes, presets } from 'styles/common';
 
 export const TimelineDateWrapperStyle = css`
   ${layout.GRID_HORIZONTAL};
-  grid-gap: 5px;
+  grid-gap: 1px;
   align-items: center;
 `;
 

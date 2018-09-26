@@ -19,7 +19,8 @@ export const ShipmentElementWrapperStyle = css`
   }
 
   > div:nth-child(2) {
-    padding: 0 30px;
+    padding-left: 17px;
+    padding-right: 25px;
   }
 `;
 

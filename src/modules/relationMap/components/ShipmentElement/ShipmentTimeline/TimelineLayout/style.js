@@ -4,13 +4,13 @@ import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
 export const TimelineLayoutWrapperStyle = css`
-  display: grid;
-  grid-template-rows: 1fr;
+  /* display: grid; */
+  /* grid-template-rows: 1fr; */
 `;
 
 export const LineOdd = (color: string) => css`
   width: initial;
-  height: 80px;
+  margin: 23px 0px;
   display: flex;
   flex-direction: row;
   flex-flow: row wrap;
@@ -25,7 +25,7 @@ export const LineOdd = (color: string) => css`
     right: -5px;
     width: 5px;
     top: calc(50%);
-    bottom: 0;
+    bottom: -23px;
     border-right: 2px solid ${colors[color]};
     border-top: 2px solid ${colors[color]};
     -webkit-border-radius: 0 999px 0 0;
@@ -36,7 +36,8 @@ export const LineOdd = (color: string) => css`
 
 export const LineEven = (color: string) => css`
   width: initial;
-  height: 80px;
+  margin-top: 40px;
+  margin-bottom: 23px;
   display: flex;
   flex-direction: row;
   flex-flow: row-reverse wrap;
@@ -50,7 +51,7 @@ export const LineEven = (color: string) => css`
     position: absolute;
     right: -5px;
     width: 5px;
-    top: 0;
+    top: -20px;
     bottom: calc(50% - 2px);
     border-right: 2px solid ${colors[color]};
     border-bottom: 2px solid ${colors[color]};

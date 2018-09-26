@@ -18,6 +18,11 @@ export const orderListQuery = gql`
         }
         shipments {
           id
+          no
+          tags {
+            id
+            name
+          }
           transportType
           cargoReady {
             approvedAt

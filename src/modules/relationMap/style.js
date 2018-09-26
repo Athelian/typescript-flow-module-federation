@@ -61,11 +61,15 @@ export const ShipmentWrapperStyle = css`
   grid-row-gap: 20px;
 `;
 
+const GridColumn = css`
+  grid-template-columns: 1fr 1fr 1fr 1.8fr;
+`;
+
 export const RelationMapGrid = styled('div')`
   width: 100%;
   padding: 50px 20px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.5fr;
+  ${GridColumn};
 `;
 
 export const EmptyMessageStyle = css`
@@ -86,7 +90,7 @@ export const ShipmentMapWrapperStyle = css`
   overflow-y: auto;
   grid-column: span 3;
   display: grid;
-  grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1.5fr;
+  grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1.8fr;
   grid-template-rows: repeat(auto-fill, 55px);
   background-color: ${colors.WHITE};
 `;
@@ -114,7 +118,7 @@ export const BadgeWrapperStyle = css`
   padding-top: 10px;
   padding-bottom: 5px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.5fr;
+  ${GridColumn};
   background-color: ${colors.WHITE};
   ${presets.BOX};
 `;

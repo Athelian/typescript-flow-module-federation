@@ -12,7 +12,7 @@ type Props = {
 const ShipmentElement = ({ shipment }: Props) => (
   <>
     <div className={ShipmentElementWrapperStyle}>
-      <ShipmentHeader name="SHIPMENT_NAME" vol="100m3" />
+      <ShipmentHeader name={shipment.no} vol="100m3" />
       <ShipmentTimeline shipment={shipment} />
     </div>
   </>
