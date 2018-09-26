@@ -79,6 +79,7 @@ import {
   faFilePdf as PDF,
   faFilePowerpoint as POWER_POINT,
   faFileWord as WORD,
+  faClipboardCheck as ORDER_SELECT,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -93,6 +94,7 @@ import {
 
 export default {
   ORDER,
+  ORDER_SELECT,
   BATCH,
   SHIPMENT,
   PRODUCT,

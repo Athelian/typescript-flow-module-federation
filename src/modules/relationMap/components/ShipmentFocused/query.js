@@ -6,6 +6,11 @@ export const shipmentListQuery = gql`
     shipments(page: $page, perPage: $perPage) {
       nodes {
         id
+        no
+        tags {
+          id
+          name
+        }
         transportType
         cargoReady {
           approvedAt
@@ -89,6 +94,10 @@ export const shipmentListQuery = gql`
             order {
               id
               poNo
+              tags {
+                name
+                id
+              }
             }
           }
         }

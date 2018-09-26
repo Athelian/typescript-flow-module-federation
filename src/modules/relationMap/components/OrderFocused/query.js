@@ -8,12 +8,21 @@ export const orderListQuery = gql`
         id
         poNo
         issuedAt
+        tags {
+          name
+          id
+        }
         exporter {
           id
           name
         }
         shipments {
           id
+          no
+          tags {
+            id
+            name
+          }
           transportType
           cargoReady {
             approvedAt

@@ -61,11 +61,15 @@ export const ShipmentWrapperStyle = css`
   grid-row-gap: 20px;
 `;
 
+const GridColumn = css`
+  grid-template-columns: 1fr 1fr 1fr 1.8fr;
+`;
+
 export const RelationMapGrid = styled('div')`
   width: 100%;
   padding: 50px 20px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.5fr;
+  ${GridColumn};
 `;
 
 export const EmptyMessageStyle = css`
@@ -86,7 +90,7 @@ export const ShipmentMapWrapperStyle = css`
   overflow-y: auto;
   grid-column: span 3;
   display: grid;
-  grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1.5fr;
+  grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1.8fr;
   grid-template-rows: repeat(auto-fill, 55px);
   background-color: ${colors.WHITE};
 `;
@@ -100,14 +104,31 @@ export const OrderMapWrapperStyle = css`
   grid-template-rows: repeat(auto-fill, 55px);
   background-color: ${colors.WHITE};
 `;
-export const FuncitonWrapperStyle = css`
+export const FunctionWrapperStyle = css`
   grid-column: span 4;
   display: flex;
   justify-content: space-between;
+  background-color: ${colors.WHITE};
+  padding: 5px;
+  ${presets.BOX};
 `;
 
+export const BadgeWrapperStyle = css`
+  grid-column: span 4;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  display: grid;
+  ${GridColumn};
+  background-color: ${colors.WHITE};
+  ${presets.BOX};
+`;
 export const LoadingWrapperStyle = css`
   grid-column: span 4;
   display: flex;
   justify-content: center;
+`;
+
+export const TagWrapperStyle = css`
+  grid-column: span 4;
+  justify-content: end;
 `;

@@ -29,7 +29,11 @@ export const generateOrderRelation = (order, option) => {
   const orderRelations = [];
   const { orderItems } = order;
   const numberOfProduct = orderItems.length;
-
+  orderRelations.push({ type: 'ORDER_HEADER', id: order.id });
+  orderRelations.push({ type: '' });
+  orderRelations.push({ type: '' });
+  orderRelations.push({ type: '' });
+  orderRelations.push({ type: '' });
   orderRelations.push({ type: 'ORDER', id: order.id });
   if (numberOfProduct === 0) {
     orderRelations.push({ type: '' });
