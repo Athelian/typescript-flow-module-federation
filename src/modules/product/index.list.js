@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import Setting from 'modules/setting';
@@ -11,6 +12,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
+import { NewButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
 import ProductList from './list';
 import messages from './messages';
@@ -30,7 +32,7 @@ type State = {
   perPage: number,
 };
 
-class ProductModule extends React.Component<Props, State> {
+class ProductListModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
     query: '',
@@ -103,6 +105,9 @@ class ProductModule extends React.Component<Props, State> {
                   onClear={() => this.onChangeFilter({ query: '' })}
                   onChange={newQuery => this.onChangeFilter({ query: newQuery })}
                 />
+                <Link to="new">
+                  <NewButton />
+                </Link>
               </NavBar>
             }
           >
@@ -114,4 +119,4 @@ class ProductModule extends React.Component<Props, State> {
   }
 }
 
-export default injectIntl(ProductModule);
+export default injectIntl(ProductListModule);

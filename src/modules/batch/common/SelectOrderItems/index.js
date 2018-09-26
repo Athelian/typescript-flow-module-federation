@@ -15,7 +15,7 @@ import {
   SortInput,
   SearchInput,
 } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
 import orderItemsQuery from 'providers/OrderItemsList/query.graphql';
 import { getByPathWithDefault } from 'utils/fp';
@@ -142,12 +142,8 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                       })
                     }
                   />
-                  <CancelButton disabled={false} onClick={onCancel}>
-                    Cancel
-                  </CancelButton>
-                  <SaveButton disabled={selected.length === 0} onClick={() => onSelect(selected)}>
-                    Save
-                  </SaveButton>
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton disabled={selected.length === 0} onClick={() => onSelect(selected)} />
                 </SlideViewNavBar>
               }
             >

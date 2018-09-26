@@ -5,7 +5,7 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import { injectIntl, intlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
-import NewButton from 'components/NavButtons/NewButton';
+import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import messages from 'modules/order/messages';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
@@ -43,7 +43,7 @@ function ItemSection({ intl, isNew }: Props) {
                       {({ value: opened, toggle }) => (
                         <>
                           <NewButton
-                            title={intl.formatMessage(messages.newItems)}
+                            label={intl.formatMessage(messages.newItems)}
                             disabled={!((exporter && exporter.id) || !isNew)}
                             onClick={toggle}
                           />

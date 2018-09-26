@@ -7,7 +7,7 @@ import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import Setting from 'modules/setting';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
 import { FormContainer } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
@@ -123,7 +123,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                         {(formState, form) =>
                           (isNew || formState.isDirty()) && (
                             <>
-                              <CancelButton disabled={false} onClick={this.onCancel} />
+                              <CancelButton onClick={this.onCancel} />
                               <SaveButton
                                 disabled={!form.isReady(formState.state, validator)}
                                 onClick={() =>

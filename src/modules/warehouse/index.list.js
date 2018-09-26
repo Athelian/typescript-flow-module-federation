@@ -13,7 +13,7 @@ import NavBar, {
   SearchInput,
   StatusToggleTabs,
 } from 'components/NavBar';
-import { NewButton } from 'components/NavButtons';
+import { NewButton } from 'components/Buttons';
 import WarehouseList from './list';
 
 type Props = {

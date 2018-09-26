@@ -10,7 +10,7 @@ import { isEquals } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
-import NewButton from 'components/NavButtons/NewButton';
+import { NewButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import messages from 'modules/order/messages';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
@@ -118,7 +118,7 @@ class OrderItems extends React.Component<Props> {
                           <div className={TitleStyle}>BATCHES ({batches.length})</div>
                         </div>
                         <NewButton
-                          title="NEW BATCH"
+                          label="NEW BATCH"
                           onClick={() => addNewBatch(generateBatchItem(batches))}
                         />
                       </div>

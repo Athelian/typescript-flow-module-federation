@@ -4,7 +4,7 @@ import { Subscribe } from 'unstated';
 import { numberInputFactory } from 'modules/form/helpers';
 import BatchFormContainer from 'modules/batch/form/container';
 import FormattedNumber from 'components/FormattedNumber';
-import NewButton from 'components/NavButtons/NewButton';
+import { NewButton } from 'components/Buttons';
 import { injectUid } from 'utils/id';
 import Divider from 'components/Divider';
 import { FormField } from 'modules/form';
@@ -78,7 +78,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
               )}
             <div className={AddAdjustmentButtonWrapperStyle}>
               <NewButton
-                title="NEW ADJUSTMENT"
+                label="NEW ADJUSTMENT"
                 onClick={() => {
                   setFieldArrayValue(
                     `batchAdjustments[${values.batchAdjustments.length}]`,
@@ -90,7 +90,6 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                       updatedAt: new Date(),
                     })
                   );
-                  // formHelper.setFieldTouched(`batchAdjustments[${values.batchAdjustments.length}]`);
                 }}
               />
             </div>

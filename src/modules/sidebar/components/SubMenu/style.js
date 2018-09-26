@@ -34,22 +34,12 @@ export const SubMenuItemStyle = (isExpanded: boolean): string => css`
       height: 50px;
     }
   }
-  & > .icon {
-    display: flex;
-    width: 40px;
-    height: 50px;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin: 0 5px 0 0;
-  }
-  & > .fa-angle-right {
-    margin: 0 10px 0 auto;
-    ${transitions.MAIN};
-    &.active {
-      transform: rotate(90deg);
-    }
-  }
+`;
+
+export const ChevronStyle = (isExpanded: boolean): string => css`
+  margin: 0 10px 0 auto;
+  ${transitions.MAIN};
+  ${isExpanded && 'transform: rotate(90deg)'};
 `;
 
 export const SubMenuBodyStyle = (isExpanded: boolean, menuItemCount: number): string => css`

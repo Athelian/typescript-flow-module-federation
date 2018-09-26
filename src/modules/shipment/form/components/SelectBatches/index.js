@@ -14,7 +14,7 @@ import {
   SortInput,
   SearchInput,
 } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
 import { batchListQuery } from 'modules/batch/list/query';
 import { getByPathWithDefault } from 'utils/fp';
@@ -122,12 +122,8 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
                       })
                     }
                   />
-                  <CancelButton disabled={false} onClick={onCancel}>
-                    Cancel
-                  </CancelButton>
-                  <SaveButton disabled={selected.length === 0} onClick={() => onSelect(selected)}>
-                    Save
-                  </SaveButton>
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton disabled={selected.length === 0} onClick={() => onSelect(selected)} />
                 </SlideViewNavBar>
               }
             >

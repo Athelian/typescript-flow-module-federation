@@ -6,7 +6,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import { ShipmentBatchCard } from 'components/Cards';
-import NewButton from 'components/NavButtons/NewButton';
+import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import messages from 'modules/shipment/messages';
 import SelectOrderItems from 'modules/batch/common/SelectOrderItems';
@@ -33,12 +33,12 @@ function CargoSection({ intl }: Props) {
         <BooleanValue>
           {({ value: opened, toggle }) => (
             <>
-              <NewButton title={intl.formatMessage(messages.selectBatches)} onClick={toggle} />
+              <NewButton label={intl.formatMessage(messages.selectBatches)} onClick={toggle} />
               <BooleanValue>
                 {({ value: isOpen, toggle: toggleSlideView }) => (
                   <>
                     <NewButton
-                      title={intl.formatMessage(messages.newBatch)}
+                      label={intl.formatMessage(messages.newBatch)}
                       onClick={toggleSlideView}
                     />
                     <SlideView

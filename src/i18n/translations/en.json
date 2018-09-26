@@ -1,9 +1,4 @@
 {
-  "components.NavButtons.cancel": "CANCEL",
-  "components.NavButtons.edit": "EDIT",
-  "components.NavButtons.save": "SAVE",
-  "components.NavButtons.delete": "DELETE",
-
   "components.NavBar.active": "ACTIVE",
   "components.NavBar.archived": "ARCHIVED",
 

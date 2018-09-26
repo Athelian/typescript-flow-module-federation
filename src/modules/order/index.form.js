@@ -8,7 +8,7 @@ import Layout from 'components/Layout';
 import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
-import { SaveButton, CancelButton } from 'components/NavButtons';
+import { SaveButton, CancelButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import SlideView from 'components/SlideView';
@@ -161,9 +161,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                             orderTagsState.isDirty() ||
                             orderFilesState.isDirty()) && (
                             <>
-                              <CancelButton disabled={false} onClick={this.onCancel}>
-                                Cancel
-                              </CancelButton>
+                              <CancelButton onClick={this.onCancel} />
                               <SaveButton
                                 disabled={
                                   !form.isReady(
@@ -195,9 +193,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     form.onErrors
                                   )
                                 }
-                              >
-                                Save
-                              </SaveButton>
+                              />
                             </>
                           )
                         }
