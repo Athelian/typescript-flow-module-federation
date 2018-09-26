@@ -16,7 +16,7 @@ const DefaultStyle = ({
   width,
   height,
   children,
-}: Props) => (
+}: Props): React.Node => (
   <div
     className={DefaultStyleWrapperStyle({
       type,

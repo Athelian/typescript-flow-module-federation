@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FieldItem, Label, Tooltip, DefaultStyle, NumberInput } from 'components/Form';
 
-export default function numberInputFactory({
+const numberInputFactory = ({
   WrapperComponent = DefaultStyle,
   required = false,
   width = '200px',
@@ -14,17 +14,26 @@ export default function numberInputFactory({
   inputHandlers,
   initValue,
 }: {
-  WrapperComponent?: React.Node,
+  WrapperComponent?: () => React.Node,
   required?: boolean,
   align?: string,
   width?: string,
   height?: string,
-  isNew: boolean,
   label?: React.Node,
+  isNew: boolean,
   name: string,
-  inputHandlers: Object,
-  initValue: any,
-}) {
+  inputHandlers: {
+    name: string,
+    value: string,
+    isTouched: boolean,
+    errorMessage: string,
+    isFocused: boolean,
+    onChange: Function,
+    onFocus: Function,
+    onBlur: Function,
+  },
+  initValue: number,
+}) => {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
     <FieldItem
@@ -59,4 +68,6 @@ export default function numberInputFactory({
       }
     />
   );
-}
+};
+
+export default numberInputFactory;

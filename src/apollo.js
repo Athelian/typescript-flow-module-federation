@@ -1,8 +1,6 @@
 // @flow
 import { navigate } from '@reach/router';
-// $FlowFixMe
 import { getOperationAST } from 'graphql/utilities/getOperationAST';
-// $FlowFixMe
 import { print } from 'graphql/language/printer';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';

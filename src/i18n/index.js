@@ -1,9 +1,7 @@
 // @flow
 import { takeItems } from 'utils/fp';
 import { addLocaleData } from 'react-intl';
-/* $FlowFixMe: load direct from bundle file */
 import enLocaleData from 'react-intl/locale-data/en';
-/* $FlowFixMe: load direct from bundle file */
 import jaLocaleData from 'react-intl/locale-data/ja';
 
 import enTranslationMessages from './translations/en.json';

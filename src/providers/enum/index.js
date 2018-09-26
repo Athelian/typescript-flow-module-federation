@@ -10,7 +10,7 @@ function enumSelector(data: ?Object) {
 
 type Props = {
   enumType: string,
-  children: React.Node,
+  children: ({ loading: boolean, error: any, data: any }) => React.Node,
 };
 
 const EnumProvider = ({ enumType, children }: Props) => (

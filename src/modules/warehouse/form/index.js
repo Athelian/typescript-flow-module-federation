@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-// import { ObjectValue } from 'react-values';
 import validator from 'modules/warehouse/form/validator';
 import { Subscribe } from 'unstated';
 import { SectionHeader, SectionWrapper, DefaultSurfaceStyle } from 'components/Form';
@@ -11,11 +10,10 @@ import {
   selectSearchEnumInputFactory,
   numberInputFactory,
 } from 'modules/form/helpers';
-
-import WarehouseInfoContainer from 'modules/warehouse/form/containers/info';
+import WarehouseContainer from 'modules/warehouse/form/containers';
+import type { FormState } from 'modules/warehouse/form/containers';
 import messages from 'modules/warehouse/messages';
 import { getByPath } from 'utils/fp';
-
 import { FormWrapperStyle, SectionWrapperStyle } from './style';
 
 type Props = {
@@ -27,9 +25,10 @@ const WarehouseForm = ({ isNew = false }: Props) => (
     <SectionWrapper id="tagSection">
       <SectionHeader icon="WAREHOUSE" title="WAREHOUSE" />
       <div className={SectionWrapperStyle}>
-        <Subscribe to={[WarehouseInfoContainer]}>
+        <Subscribe to={[WarehouseContainer]}>
           {({ originalValues: initialValues, state, setFieldValue, setFieldArrayValue }) => {
-            const values = { ...initialValues, ...state };
+            // $FlowFixMe
+            const values: FormState = { ...initialValues, ...state };
 
             return (
               <div>

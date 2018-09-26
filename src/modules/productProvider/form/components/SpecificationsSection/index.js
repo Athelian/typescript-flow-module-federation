@@ -17,6 +17,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
   <div className={SpecificationsSectionWrapperStyle}>
     <Subscribe to={[ProductProviderContainer]}>
       {({ originalValues, state, setFieldValue }) => {
+        // $FlowFixMe
         const values = { ...originalValues, ...state };
 
         return (

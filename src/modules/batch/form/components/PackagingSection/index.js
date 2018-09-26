@@ -17,6 +17,7 @@ const PackagingSection = ({ isNew }: Props) => (
   <div className={PackagingSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
       {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
+        // $FlowFixMe
         const values = { ...originalValues, ...state };
 
         return (

@@ -3,15 +3,9 @@ import * as React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
-import GridColumn from 'components/GridColumn';
+import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
-import NavBar, {
-  EntityIcon,
-  FilterInput,
-  SortInput,
-  SearchInput,
-  StatusToggleTabs,
-} from 'components/NavBar';
+import NavBar from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import WarehouseList from './list';
 
@@ -21,25 +15,30 @@ type Props = {
 
 type State = {
   viewType: string,
-  query: string,
-  status: string,
+  filter: {
+    query: string,
+    status: string,
+  },
   sort: {
     field: string,
     direction: string,
   },
   perPage: number,
+  page: number,
 };
-
 class WarehouseModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
-    query: '',
-    status: 'Active',
+    filter: {
+      query: '',
+      status: 'Active',
+    },
     sort: {
       field: 'updatedAt',
       direction: 'DESCENDING',
     },
     perPage: 10,
+    page: 1,
   };
 
   onChangeFilter = (newValue: any) => {
@@ -47,7 +46,7 @@ class WarehouseModule extends React.Component<Props, State> {
   };
 
   render() {
-    const { viewType, sort, perPage, ...filters } = this.state;
+    const { viewType, sort, perPage, filter } = this.state;
 
     const fields = [
       { title: 'updatedAt', value: 'updatedAt' },
@@ -61,46 +60,11 @@ class WarehouseModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
-                <StatusToggleTabs
-                  onChange={index =>
-                    this.onChangeFilter({ status: index ? 'Completed' : 'Active' })
-                  }
-                />
-                <SortInput
-                  sort={fields.find(item => item.value === sort.field) || fields[0]}
-                  ascending={sort.direction !== 'DESCENDING'}
+                <FilterToolBar
+                  filtersAndSort={this.state}
+                  icon="WAREHOUSE"
                   fields={fields}
-                  onChange={({ field: { value }, ascending }) =>
-                    this.onChangeFilter({
-                      sort: {
-                        field: value,
-                        direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                      },
-                    })
-                  }
-                />
-                <FilterInput
-                  initialFilter={{}}
-                  onChange={newFilter => this.onChangeFilter({ ...newFilter })}
-                  width={400}
-                >
-                  {({ values, setFieldValue }) => (
-                    <GridColumn>
-                      <SearchInput
-                        name="query"
-                        value={values.query}
-                        onClear={() => setFieldValue('query', '')}
-                        onChange={newValue => setFieldValue('query', newValue)}
-                      />
-                    </GridColumn>
-                  )}
-                </FilterInput>
-                <SearchInput
-                  name="query"
-                  value={filters.query}
-                  onClear={() => this.onChangeFilter({ query: '' })}
-                  onChange={newQuery => this.onChangeFilter({ query: newQuery })}
+                  onChange={this.onChangeFilter}
                 />
                 <Link to="new">
                   <NewButton />
@@ -108,7 +72,7 @@ class WarehouseModule extends React.Component<Props, State> {
               </NavBar>
             }
           >
-            <WarehouseList viewType={viewType} sort={sort} perPage={perPage} filter={filters} />
+            <WarehouseList viewType={viewType} sort={sort} perPage={perPage} filter={filter} />
           </Layout>
         )}
       </UIConsumer>

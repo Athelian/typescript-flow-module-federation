@@ -30,7 +30,7 @@ export default class OrderFilesContainer extends Container<FormState> {
 
   initDetailValues = (files: Array<Document>) => {
     const parsedValues = removeTypename(files);
-    // $FlowFixMe: missing type for ramda's map function
+    // $FlowFixMe
     this.setState({ files: parsedValues });
     this.originalValues = { files: parsedValues };
   };

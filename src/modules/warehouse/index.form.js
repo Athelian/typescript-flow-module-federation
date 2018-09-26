@@ -12,7 +12,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { decodeId, encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import WarehouseInfoForm from './form';
-import WarehouseInfoContainer from './form/containers/info';
+import WarehouseContainer from './form/containers';
 import query from './form/query';
 import { createWarehouseMutation, updateWarehouseMutation } from './form/mutation';
 import validator from './form/validator';
@@ -85,7 +85,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                   navBar={
                     <NavBar>
                       <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
-                      <Subscribe to={[WarehouseInfoContainer, FormContainer]}>
+                      <Subscribe to={[WarehouseContainer, FormContainer]}>
                         {(infoState, form) =>
                           (isNew || infoState.isDirty()) && (
                             <>
@@ -124,7 +124,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                   {isNew || !warehouseId ? (
                     <WarehouseInfoForm isNew />
                   ) : (
-                    <Subscribe to={[WarehouseInfoContainer]}>
+                    <Subscribe to={[WarehouseContainer]}>
                       {infoState => (
                         <Query
                           query={query}

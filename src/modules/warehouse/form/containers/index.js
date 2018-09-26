@@ -9,7 +9,7 @@ type Metric = {
   metric: string,
 };
 
-type FormState = {
+export type FormState = {
   name?: string,
   street?: string,
   locality?: string,
@@ -26,7 +26,7 @@ const initValues = {
   },
 };
 
-export default class WarehouseInfoContainer extends Container<FormState> {
+export default class WarehouseContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;

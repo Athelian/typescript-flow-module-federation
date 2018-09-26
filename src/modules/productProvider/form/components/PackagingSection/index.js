@@ -17,6 +17,7 @@ const PackagingSection = ({ isNew }: Props) => (
   <div className={PackagingSectionWrapperStyle}>
     <Subscribe to={[ProductProviderContainer]}>
       {({ originalValues, state, setFieldValue }) => {
+        // $FlowFixMe
         const values = { ...originalValues, ...state };
 
         return (

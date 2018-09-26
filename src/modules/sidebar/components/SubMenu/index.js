@@ -16,7 +16,7 @@ type Props = {
 };
 
 const SubMenu = ({ isExpanded, hasActiveChild, onClick, id, icon, label, children }: Props) => {
-  const menuItemCount = children.length;
+  const menuItemCount = React.Children.count(children);
 
   return (
     <div className={SubMenuStyle}>

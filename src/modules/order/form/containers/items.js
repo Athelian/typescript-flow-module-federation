@@ -43,7 +43,7 @@ export default class OrderItemsContainer extends Container<FormState> {
 
   initDetailValues = (orderItems: Array<Object>) => {
     const parsedValues = removeTypename(orderItems);
-    // $FlowFixMe: missing type for ramda's map function
+    // $FlowFixMe: clean up this later
     this.setState({ orderItems: parsedValues });
     this.originalValues = { orderItems: parsedValues };
   };

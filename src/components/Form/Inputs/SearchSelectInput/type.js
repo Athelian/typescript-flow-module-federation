@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react';
 import { type RenderOptionsProps } from 'components/Form/Inputs/SelectInput/type';
 
 type OptionalProps = {

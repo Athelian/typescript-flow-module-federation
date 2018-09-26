@@ -11,7 +11,7 @@ import {
 } from './style';
 
 type Sort = {
-  title: string,
+  title: string | React.Node,
   value: string,
 };
 

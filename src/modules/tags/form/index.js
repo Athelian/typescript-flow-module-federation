@@ -30,6 +30,7 @@ export default function TagForm({ isNew }: Props) {
         <div className={TagSectionWrapperStyle}>
           <Subscribe to={[TagContainer]}>
             {({ originalValues: initialValues, state, setFieldValue }) => {
+              // $FlowFixMe
               const value = { ...initialValues, ...state };
               return (
                 <>
