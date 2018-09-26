@@ -76,6 +76,6 @@ export const ItemWrapperStyle = (isFocused: boolean) => {
 };
 
 export const ShipmentCardStyle = css`
-  height: 150px;
+  height: 160px;
   grid-row: span 3;
 `;

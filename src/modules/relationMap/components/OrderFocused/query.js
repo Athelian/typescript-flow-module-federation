@@ -8,6 +8,10 @@ export const orderListQuery = gql`
         id
         poNo
         issuedAt
+        tags {
+          name
+          id
+        }
         exporter {
           id
           name

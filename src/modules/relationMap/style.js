@@ -123,3 +123,8 @@ export const LoadingWrapperStyle = css`
   display: flex;
   justify-content: center;
 `;
+
+export const TagWrapperStyle = css`
+  grid-column: span 4;
+  justify-content: end;
+`;

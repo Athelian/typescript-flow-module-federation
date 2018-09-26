@@ -7,8 +7,9 @@ import Layout from './components/Layout';
 import QueryHandler from './components/QueryHandler';
 import SortFilterBar from './components/SortFilterBar';
 import SummaryBadge from './components/SummaryBadge';
+import ToggleTag from './components/ToggleTag';
 import query from './components/ShipmentFocused/query';
-import { FunctionWrapperStyle, BadgeWrapperStyle } from './style';
+import { FunctionWrapperStyle, BadgeWrapperStyle, TagWrapperStyle } from './style';
 
 type Props = {
   page: number,
@@ -22,6 +23,9 @@ const defaultProps = {
 
 const Order = ({ page, perPage }: Props) => (
   <Layout>
+    <div className={TagWrapperStyle}>
+      <ToggleTag />
+    </div>
     <SortFilterBar className={FunctionWrapperStyle}>
       {({ sort, filter }) => (
         <Query

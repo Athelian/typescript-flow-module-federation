@@ -1,12 +1,8 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, presets } from 'styles/common';
+import { presets } from 'styles/common';
 
 export const ShipmentElementWrapperStyle = css`
-  //width: 350px;
-  ${borderRadiuses.MAIN};
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
   display: flex;
   flex-direction: column;
 

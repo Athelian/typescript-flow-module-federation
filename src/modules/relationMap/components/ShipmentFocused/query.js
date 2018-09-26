@@ -89,6 +89,10 @@ export const shipmentListQuery = gql`
             order {
               id
               poNo
+              tags {
+                name
+                id
+              }
             }
           }
         }

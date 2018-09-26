@@ -54,6 +54,9 @@ const ShipmentFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) =
                   const key = `relation-${relationIndex}`;
                   let itemData;
                   switch (relation.type) {
+                    case 'ORDER_HEADER':
+                      itemData = { id: item.id };
+                      break;
                     case 'ORDER':
                       itemData = shipment.orderObj[relation.id];
                       break;

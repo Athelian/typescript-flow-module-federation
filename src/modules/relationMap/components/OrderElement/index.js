@@ -12,6 +12,7 @@ import WrapperCard from './WrapperCard';
 import CheckBox from './CheckBox';
 import Tags from './Tags';
 import ShipmentCard from '../ShipmentElement';
+import { TagValue } from '../ToggleTag';
 
 type OptionalProps = {
   data: Object,
@@ -69,7 +70,9 @@ const Item = (props: Props) => {
               batchedQuantity={data.batchedQuantity}
               shippedQuantity={data.shippedQuantity}
             />
-            <Tags dataSource={templateDS} />
+            <TagValue>
+              {({ value: isToggle }) => (isToggle ? <Tags dataSource={templateDS} /> : null)}
+            </TagValue>
           </WrapperCard>
         </BaseCard>
       );
