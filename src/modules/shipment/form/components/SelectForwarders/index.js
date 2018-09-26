@@ -61,7 +61,7 @@ const SelectForwarders = ({ selected, onCancel, onSelect }: Props) => (
             <Layout
               navBar={
                 <SlideViewNavBar>
-                  <EntityIcon icon="PARTNER" color="BLACK" />
+                  <EntityIcon icon="FORWARDER" color="PARTNER" />
                   <h3>
                     {values.length}/{MAX_SELECTIONS}
                   </h3>

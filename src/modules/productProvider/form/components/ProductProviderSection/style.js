@@ -5,7 +5,7 @@ import { presets, colors } from 'styles/common';
 export const ProductProviderSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
-  padding: 0 0 40px 0;
+  padding: 40px 0;
   display: flex;
   flex-direction: column;
   align-items: center;

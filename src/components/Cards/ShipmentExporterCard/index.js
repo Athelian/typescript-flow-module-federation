@@ -25,7 +25,7 @@ const ShipmentExporterCard = ({ exporter, onClick, size, ...rest }: Props) => {
   const { name } = exporter;
 
   return (
-    <BaseCard {...rest} icon="PARTNER" color="PARTNER" readOnly>
+    <BaseCard {...rest} icon="EXPORTER" color="PARTNER" readOnly>
       <div className={ExporterCardStyle(size)} role="presentation" onClick={onClick}>
         <img className={ExporterCardImageStyle} src={FALLBACK_IMAGE} alt="exporter_image" />
         <div className={ExporterNameStyle}>{name}</div>

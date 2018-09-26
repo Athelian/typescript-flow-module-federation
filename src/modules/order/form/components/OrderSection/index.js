@@ -26,7 +26,6 @@ import TotalSummary from './components/TotalSummary';
 import {
   OrderSectionWrapperStyle,
   MainFieldsWrapperStyle,
-  ExporterSectionStyle,
   ExporterCardStyle,
   ExporterCardImageStyle,
   ExporterNameStyle,
@@ -207,7 +206,7 @@ const OrderSection = ({ isNew }: Props) => (
                 </FormField>
               </GridColumn>
 
-              <div className={ExporterSectionStyle}>
+              <GridColumn gap="10px">
                 <Label required>
                   <FormattedMessage {...messages.exporter} />
                 </Label>
@@ -217,7 +216,7 @@ const OrderSection = ({ isNew }: Props) => (
                       {!values.exporter ? (
                         <DashedPlusButton width="200px" height="230px" onClick={toggle} />
                       ) : (
-                        <BaseCard icon="PARTNER" color="PARTNER">
+                        <BaseCard icon="EXPORTER" color="PARTNER">
                           <div className={ExporterCardStyle} role="presentation" onClick={toggle}>
                             <img
                               className={ExporterCardImageStyle}
@@ -257,8 +256,9 @@ const OrderSection = ({ isNew }: Props) => (
                     </>
                   )}
                 </BooleanValue>
-              </div>
+              </GridColumn>
             </div>
+
             <div className={TagsInputStyle}>
               <Subscribe to={[OrderTagsContainer]}>
                 {({ state: { tags }, setFieldValue: changeTags }) => (

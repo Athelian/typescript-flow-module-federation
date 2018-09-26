@@ -88,7 +88,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
             <Layout
               navBar={
                 <SlideViewNavBar>
-                  <EntityIcon icon="PRODUCT" color="PRODUCT" />
+                  <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
                   <SortInput
                     sort={
                       fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]
