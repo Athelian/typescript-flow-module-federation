@@ -4,10 +4,13 @@ import { SortInput, FilterInput, SearchInput, FocusInput } from 'components/NavB
 import GridColumn from 'components/GridColumn';
 import { GroupFilterStyle } from './style';
 
-type Props = {
-  className: string,
+type OptionalProps = {
   sortInput: Array<Object>,
   focusInput: Array<Object>,
+};
+
+type Props = OptionalProps & {
+  className: string,
   children: Function,
 };
 
