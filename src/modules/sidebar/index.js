@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Location } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
-import { zenMenuStyle, MenuBody } from './style';
+import { ZenMenuStyle, MenuBody } from './style';
 import menuConfig from './menuConfig';
 import Logo from './components/Logo';
 import MenuItem from './components/MenuItem';
@@ -33,7 +33,7 @@ class SideBar extends React.Component<Props, State> {
           location.pathname !== '/login' && (
             <UIConsumer>
               {uiState => (
-                <div className={zenMenuStyle(uiState.isSideBarExpanded)}>
+                <div className={ZenMenuStyle(uiState.isSideBarExpanded)}>
                   <Logo {...uiState} />
                   <div className={MenuBody}>
                     {menuConfig.map(

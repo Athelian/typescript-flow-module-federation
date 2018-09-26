@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { transitions, gradients, scrollbars } from 'styles/common';
+import { transitions, scrollbars, colors } from 'styles/common';
 
 export const MenuBody: string = css`
   display: flex;
@@ -13,7 +13,18 @@ export const MenuBody: string = css`
   }
 `;
 
-export const zenMenuStyle = (isExpanded: boolean): string => css`
+export const ZenMenuStyle = (isExpanded: boolean): string => css`
+  @keyframes gradient {
+    0% {
+      background-position: 50% 0%;
+    }
+    50% {
+      background-position: 50% 100%;
+    }
+    100% {
+      background-position: 50% 0%;
+    }
+  }
   position: fixed;
   top: 0;
   z-index: 9999;
@@ -21,7 +32,9 @@ export const zenMenuStyle = (isExpanded: boolean): string => css`
   overflow: hidden;
   height: 100vh;
   width: ${isExpanded ? '200px' : '50px'};
-  background: ${gradients.BLUE_TEAL_VERTICAL};
+  background: linear-gradient(0deg, ${colors.BLUE}, ${colors.TEAL});
+  background-size: 400% 400%;
+  animation: gradient 30s ease infinite;
   ${transitions.EXPAND};
   &:hover {
     box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
