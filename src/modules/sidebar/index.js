@@ -37,7 +37,7 @@ class SideBar extends React.Component<Props, State> {
                   <Logo {...uiState} />
                   <div className={SideBarBodyStyle}>
                     <MenuItem
-                      path="/relation-map"
+                      path="/relation-map/orders"
                       isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
                       icon="RELATION_MAP"
                       label={<FormattedMessage {...messages.relationMap} />}
