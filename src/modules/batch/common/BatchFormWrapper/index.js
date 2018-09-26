@@ -4,6 +4,8 @@ import { Provider, Subscribe } from 'unstated';
 import { isDataType } from 'utils/fp';
 import BatchFormContainer from 'modules/batch/form/container';
 import validator from 'modules/batch/form/validator';
+import JumpToSection from 'components/JumpToSection';
+import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
@@ -52,6 +54,15 @@ class BatchFormWrapper extends React.Component<Props> {
               navBar={
                 <SlideViewNavBar>
                   <EntityIcon icon="BATCH" color="BATCH" />
+                  <JumpToSection>
+                    <SectionTabs link="batchSection" label="BATCH" icon="BATCH" />
+                    <SectionTabs
+                      link="quantityAdjustmentsSection"
+                      label="QUANTITY ADJUSTMENTS"
+                      icon="QUANTITY_ADJUSTMENTS"
+                    />
+                    <SectionTabs link="packagingSection" label="PACKAGING" icon="PACKAGING" />
+                  </JumpToSection>
                   <CancelButton disabled={false} onClick={onCancel}>
                     Cancel
                   </CancelButton>

@@ -22,8 +22,8 @@ const ProductProviderSection = ({ isNew }: Props) => (
         <div className={ProductProviderSectionWrapperStyle}>
           <GridColumn>
             <FormField
-              name="name"
-              initValue={values.name}
+              name="origin"
+              initValue={values.origin}
               setFieldValue={setFieldValue}
               values={values}
               validator={validator}
@@ -35,7 +35,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   isNew,
                   required: true,
                   initValue: initialValues[name],
-                  label: 'NAME',
+                  label: 'COUNTRY OF ORIGIN',
                 })
               }
             </FormField>

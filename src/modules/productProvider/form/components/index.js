@@ -1,5 +1,4 @@
+import PackagingSection from './PackagingSection';
 import ProductProviderSection from './ProductProviderSection';
 
-export { ProductProviderSection };
-
-export default ProductProviderSection;
+export { PackagingSection, ProductProviderSection };

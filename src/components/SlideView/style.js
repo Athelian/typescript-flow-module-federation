@@ -1,12 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
+import { colors } from 'styles/common';
 
 const SlideViewWrapperStyle: string = css`
   position: absolute;
   top: 0;
   right: 0;
   height: 100vh;
-  background: #fff;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
   box-shadow: -10px 0 20px rgba(0, 0, 0, 0.1);
   z-index: 10001;
 `;
@@ -96,4 +97,9 @@ export const BackdropFadeOutStyle: string = css`
   animation-timing-function: ease-out;
   animation-duration: 0.3s;
   animation-fill-mode: forwards;
+`;
+
+export const LoadingWrapperStyle: string = css`
+  width: 100%;
+  height: 100vh;
 `;

@@ -4,6 +4,8 @@ import { Provider, Subscribe } from 'unstated';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import validator from 'modules/productProvider/form/validator';
 import ProductProviderForm from 'modules/productProvider/form';
+import JumpToSection from 'components/JumpToSection';
+import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -39,6 +41,14 @@ class ProductProviderFormWrapper extends React.Component<Props> {
               navBar={
                 <SlideViewNavBar>
                   <EntityIcon icon="PROVIDER" color="PROVIDER" />
+                  <JumpToSection>
+                    <SectionTabs link="productProviderSection" label="PROVIDER" icon="PROVIDER" />
+                    <SectionTabs
+                      link="productProviderPackagingSection"
+                      label="PACKAGING"
+                      icon="PACKAGING"
+                    />
+                  </JumpToSection>
                   <CancelButton disabled={false} onClick={onCancel}>
                     Cancel
                   </CancelButton>
