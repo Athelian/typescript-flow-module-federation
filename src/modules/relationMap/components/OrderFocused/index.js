@@ -18,7 +18,7 @@ type Props = {
 const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
   <ObjectValue defaultValue={{ selectedItem: '', focusedItem: null }}>
     {({ value: { focusedItem }, set: setItem }) => (
-      <React.Fragment>
+      <>
         <RelationView
           className={OrderMapWrapperStyle}
           items={nodes}
@@ -94,7 +94,7 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
             );
           })}
         </div>
-      </React.Fragment>
+      </>
     )}
   </ObjectValue>
 );

@@ -50,7 +50,7 @@ const Order = ({ page, perPage }: Props) => (
                 const order = formatOrderData(nodes);
                 const shipment = formatShipmentOrder(nodes);
                 return (
-                  <React.Fragment>
+                  <>
                     <div className={BadgeWrapperStyle}>
                       <SummaryBadge
                         icon="ORDER"
@@ -84,7 +84,7 @@ const Order = ({ page, perPage }: Props) => (
                       loadMore={loadMore}
                       nodes={nodes}
                     />
-                  </React.Fragment>
+                  </>
                 );
               }}
             </QueryHandler>

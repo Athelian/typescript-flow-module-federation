@@ -3,7 +3,10 @@ import * as React from 'react';
 import { WrapperStyle } from './style';
 import TabItem from './components/TabItem';
 
-type Props = {
+type OptionalProps = {
+  activeIndex: number,
+};
+type Props = OptionalProps & {
   tabs: Array<{ id: string, icon: string, label: string | React.Node }>,
   disabled?: boolean,
   onChange: number => void,
@@ -17,12 +20,13 @@ type State = {
 class Tabs extends React.Component<Props, State> {
   static defaultProps = {
     disabled: false,
+    activeIndex: 0,
   };
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      activeIndex: props.activeIndex || 0,
+      activeIndex: props.activeIndex,
     };
   }
 

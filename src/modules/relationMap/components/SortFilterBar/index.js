@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
-import { css } from 'react-emotion';
 import { SortInput, FilterInput, SearchInput, FocusInput } from 'components/NavBar';
 import GridColumn from 'components/GridColumn';
-import { layout } from 'styles/common';
+import { GroupFilterStyle } from './style';
 
 type Props = {
   className: string,
@@ -50,7 +49,7 @@ class SortFilterBar extends React.Component<Props, State> {
     const { focusInput, sortInput, className, children } = this.props;
     const { sort, filter } = this.state;
     return (
-      <React.Fragment>
+      <>
         <div className={className}>
           <FocusInput
             focus={focusInput.find(item => item.value === sort.field) || focusInput[0]}
@@ -70,11 +69,7 @@ class SortFilterBar extends React.Component<Props, State> {
               });
             }}
           />
-          <div
-            className={css`
-              ${layout.HORIZONTAL};
-            `}
-          >
+          <div className={GroupFilterStyle}>
             <FilterInput
               initialFilter={{}}
               onChange={newFilter => this.onChangeFilter({ ...newFilter })}
@@ -100,7 +95,7 @@ class SortFilterBar extends React.Component<Props, State> {
           </div>
         </div>
         {children({ sort, filter, onChangeFilter: this.onChangeFilter })}
-      </React.Fragment>
+      </>
     );
   }
 }
