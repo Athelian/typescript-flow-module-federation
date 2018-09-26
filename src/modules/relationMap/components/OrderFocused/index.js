@@ -41,6 +41,9 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                     case 'ORDER':
                       itemData = order.orderObj[relation.id];
                       break;
+                    case 'ORDER_HEADER':
+                      itemData = { id: item.id };
+                      break;
                     case 'ORDER_ITEM':
                       itemData = order.orderItemObj[relation.id];
                       break;

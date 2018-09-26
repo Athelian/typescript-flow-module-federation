@@ -9,7 +9,9 @@ import OrderItemCard from './OrderItemCard';
 import BatchCard from './BatchCard';
 import TotalCard from './TotalCard';
 import WrapperCard from './WrapperCard';
-import ShipmentCard from '../ShipmentElement/ShipmentTimeline/TimelineLayout';
+import CheckBox from './CheckBox';
+import Tags from './Tags';
+import ShipmentCard from '../ShipmentElement';
 
 type OptionalProps = {
   data: Object,
@@ -34,7 +36,25 @@ const Item = (props: Props) => {
   const { type, data, onClick, isFocused, onMouseEnter, onMouseLeave } = props;
   let render = <div />;
   switch (type) {
+    case 'ORDER_HEADER': {
+      render = (
+        <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+          <CheckBox label={`ORDER ${data.id}`} isChecked onToggle={() => {}} />
+        </WrapperCard>
+      );
+      break;
+    }
     case 'ORDER': {
+      const templateDS = [
+        {
+          name: 'July ~ Aug',
+          color: 'ORDER',
+        },
+        {
+          name: 'Urgent',
+          color: 'URGENT',
+        },
+      ];
       render = (
         <BaseCard
           icon={type}
@@ -49,6 +69,7 @@ const Item = (props: Props) => {
               batchedQuantity={data.batchedQuantity}
               shippedQuantity={data.shippedQuantity}
             />
+            <Tags dataSource={templateDS} />
           </WrapperCard>
         </BaseCard>
       );
