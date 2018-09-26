@@ -25,7 +25,7 @@ const ShipmentForwarderCard = ({ forwarder, onClick, size, ...rest }: Props) => 
   const { name } = forwarder;
 
   return (
-    <BaseCard {...rest} icon="PARTNER" color="PARTNER">
+    <BaseCard {...rest} icon="FORWARDER" color="PARTNER">
       <div className={ForwarderCardStyle(size)} role="presentation" onClick={onClick}>
         <img className={ForwarderCardImageStyle} src={FALLBACK_IMAGE} alt="forwarder_image" />
         <div className={ForwarderNameStyle}>{name}</div>

@@ -4,7 +4,6 @@ import { Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import GridColumn from 'components/GridColumn';
-import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import NavBar, {
   EntityIcon,
@@ -65,7 +64,7 @@ class OrderModule extends React.Component<Props, State> {
           <Layout
             {...uiState}
             navBar={
-              <NavBar setting={<Setting />}>
+              <NavBar>
                 <EntityIcon icon="ORDER" color="ORDER" />
                 <StatusToggleTabs
                   onChange={index =>

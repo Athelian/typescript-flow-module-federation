@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
 import { Query, Mutation } from 'react-apollo';
 import { navigate } from '@reach/router';
-import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
@@ -146,7 +145,7 @@ class ProductFormModule extends React.Component<Props> {
                 <Layout
                   {...uiState}
                   navBar={
-                    <NavBar setting={<Setting />}>
+                    <NavBar>
                       <EntityIcon icon="PRODUCT" color="PRODUCT" />
                       <JumpToSection>
                         <SectionTabs link="productSection" label="PRODUCT" icon="PRODUCT" />

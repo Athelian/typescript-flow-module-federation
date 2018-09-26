@@ -13,11 +13,6 @@ export const MainFieldsWrapperStyle: string = css`
   justify-content: space-between;
 `;
 
-export const ExporterSectionStyle: string = css`
-  ${layout.GRID_VERTICAL};
-  grid-gap: 10px;
-`;
-
 export const ExporterCardStyle: string = css`
   width: 200px;
   height: 230px;

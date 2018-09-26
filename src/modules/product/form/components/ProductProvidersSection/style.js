@@ -25,8 +25,9 @@ export const ItemGridStyle: string = css`
   display: grid;
   grid-template-columns: repeat(auto-fit, 195px);
   grid-auto-rows: auto;
-  grid-gap: 20px;
-  padding: 20px;
+  grid-column-gap: 20px;
+  grid-row-gap: 30px;
+  padding: 30px 20px;
 `;
 
 export const BatchAreaStyle: string = css`

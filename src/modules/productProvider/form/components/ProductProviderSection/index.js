@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
-import { textInputFactory } from 'modules/form/helpers';
+import { textInputFactory, priceInputFactory } from 'modules/form/helpers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import validator from 'modules/product/form/validator';
+import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
-// import { FieldItem, Label, TagsInput, DashedPlusButton } from 'components/Form';
+import { Label, DashedPlusButton } from 'components/Form';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
 
 type Props = {
@@ -21,6 +22,18 @@ const ProductProviderSection = ({ isNew }: Props) => (
       return (
         <div className={ProductProviderSectionWrapperStyle}>
           <GridColumn>
+            <GridRow>
+              <GridColumn gap="10px">
+                <Label required>EXPORTER</Label>
+                <DashedPlusButton width="200px" height="230px" />
+              </GridColumn>
+
+              <GridColumn gap="10px">
+                <Label>SUPPLIER</Label>
+                <DashedPlusButton width="200px" height="230px" />
+              </GridColumn>
+            </GridRow>
+
             <FormField
               name="origin"
               initValue={values.origin}
@@ -36,6 +49,42 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   required: true,
                   initValue: initialValues[name],
                   label: 'COUNTRY OF ORIGIN',
+                })
+              }
+            </FormField>
+
+            <FormField
+              name="productionLeadTime"
+              initValue={values.productionLeadTime}
+              setFieldValue={setFieldValue}
+            >
+              {({ name, ...inputHandlers }) =>
+                priceInputFactory({
+                  name,
+                  isNew,
+                  inputHandlers,
+                  initValue: initialValues[name],
+                  label: 'PRODUCTION LEAD TIME',
+                  currency: 'Days',
+                })
+              }
+            </FormField>
+
+            <FormField
+              name="inspectionFee"
+              initValue={values.inspectionFee.amount}
+              setFieldValue={(field, amount) =>
+                setFieldValue('inspectionFee', { amount, currency: 'JPY' })
+              }
+            >
+              {({ name, ...inputHandlers }) =>
+                priceInputFactory({
+                  name,
+                  isNew,
+                  inputHandlers,
+                  initValue: initialValues[name].amount,
+                  label: 'INSPECTION FEE',
+                  currency: 'JPY',
                 })
               }
             </FormField>

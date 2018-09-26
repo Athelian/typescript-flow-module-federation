@@ -5,7 +5,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import GridColumn from 'components/GridColumn';
 import { UIConsumer } from 'modules/ui';
-import Setting from 'modules/setting';
 import NavBar, {
   EntityIcon,
   FilterInput,
@@ -87,7 +86,7 @@ class BatchListModule extends React.Component<Props, State> {
           <Layout
             {...uiState}
             navBar={
-              <NavBar setting={<Setting />}>
+              <NavBar>
                 <EntityIcon icon="BATCH" color="BATCH" />
                 <StatusToggleTabs
                   onChange={index =>

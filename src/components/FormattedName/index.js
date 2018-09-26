@@ -5,15 +5,16 @@ import messages from './messages';
 
 type OptionalProps = {
   showOnlyOneName: boolean,
-};
-
-type Props = OptionalProps & {
   firstName: string,
   lastName: string,
 };
 
+type Props = OptionalProps;
+
 const defaultProps = {
   showOnlyOneName: false,
+  firstName: '',
+  lastName: '',
 };
 
 const FormattedName = ({ firstName, lastName, showOnlyOneName }: Props) => {

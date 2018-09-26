@@ -4,7 +4,6 @@ import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Query, Mutation } from 'react-apollo';
 import Layout from 'components/Layout';
-import Setting from 'modules/setting';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -84,7 +83,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                 <Layout
                   {...uiState}
                   navBar={
-                    <NavBar setting={<Setting />}>
+                    <NavBar>
                       <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
                       <Subscribe to={[WarehouseInfoContainer, FormContainer]}>
                         {(infoState, form) =>

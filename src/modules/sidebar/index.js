@@ -107,10 +107,7 @@ class SideBar extends React.Component<Props, State> {
                     <SubMenu
                       id="settings"
                       isExpanded={expandedSubMenu === 'settings'}
-                      hasActiveChild={
-                        `/${location.pathname.split('/')[1]}` === '/partner' ||
-                        `/${location.pathname.split('/')[1]}` === '/staff'
-                      }
+                      hasActiveChild={`/${location.pathname.split('/')[1]}` === '/tags'}
                       icon="SETTINGS"
                       label={<FormattedMessage {...messages.settings} />}
                       onClick={(id: ?string) => this.setExpandedSubMenu(id)}
