@@ -11,5 +11,16 @@ export const orderListQuery = gql`
     }
   }
 `;
+export const orderItemsQuery = gql`
+  query($page: Int!, $perPage: Int!) {
+    orderItems(page: $page, perPage: $perPage) {
+      nodes {
+        id
+      }
+      page
+      totalPage
+    }
+  }
+`;
 
 export default orderListQuery;

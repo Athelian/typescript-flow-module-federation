@@ -7,7 +7,7 @@ import ProductGridView from 'modules/product/list/ProductGridView';
 import GridColumn from 'components/GridColumn';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
-import { ProductCard } from 'components/Cards';
+import { OrderItemCard } from 'components/Cards';
 import {
   SlideViewNavBar,
   EntityIcon,
@@ -17,7 +17,7 @@ import {
 } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/NavButtons';
 import LoadingIcon from 'components/LoadingIcon';
-import { productProvidersQuery } from 'modules/product/list/query';
+import orderItemsQuery from 'providers/OrderItemsList/query.graphql';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
@@ -25,7 +25,6 @@ import type { OrderItem } from 'modules/order/type.js.flow';
 import { ItemWrapperStyle, NumberBarStyle } from './style';
 
 type Props = {
-  exporter: string,
   onCancel: Function,
   onSelect: Function,
   intl: intlShape,
@@ -67,10 +66,8 @@ function onChangeProductQuantity({
   set(items.concat(selected.filter((orderItem: OrderItem) => orderItem.id !== item.id)));
 }
 
-function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
+function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
   const fields = [
-    { title: intl.formatMessage(messages.nameSort), value: 'name' },
-    { title: intl.formatMessage(messages.serialSort), value: 'serial' },
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
@@ -80,7 +77,6 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
         perPage: 20,
         page: 1,
         filter: {
-          exporterId: exporter,
           query: '',
         },
         sort: { field: 'updatedAt', direction: 'DESCENDING' },
@@ -156,7 +152,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
               }
             >
               <Query
-                query={productProvidersQuery}
+                query={orderItemsQuery}
                 variables={{
                   page: 1,
                   perPage: filtersAndSort.perPage,
@@ -165,8 +161,8 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                 }}
               >
                 {({ loading, data, error, fetchMore }) => {
-                  const nextPage = getByPathWithDefault(1, 'productProviders.page', data) + 1;
-                  const totalPage = getByPathWithDefault(1, 'productProviders.totalPage', data);
+                  const nextPage = getByPathWithDefault(1, 'orderItems.page', data) + 1;
+                  const totalPage = getByPathWithDefault(1, 'orderItems.totalPage', data);
                   if (error) {
                     return error.message;
                   }
@@ -175,12 +171,10 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
 
                   return (
                     <ProductGridView
-                      onLoadMore={() =>
-                        loadMore({ fetchMore, data }, filtersAndSort, 'productProviders')
-                      }
+                      onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orderItems')}
                       hasMore={nextPage <= totalPage}
                       isLoading={loading}
-                      items={getByPathWithDefault([], 'productProviders.nodes', data)}
+                      items={getByPathWithDefault([], 'orderItems.nodes', data)}
                       renderItem={item => (
                         <div key={item.id} className={ItemWrapperStyle}>
                           {selected.includes(item) && (
@@ -197,8 +191,8 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                               </NumberValue>
                             </div>
                           )}
-                          <ProductCard
-                            product={item}
+                          <OrderItemCard
+                            item={item}
                             selectable
                             selected={selected.includes(item)}
                             onSelect={() => onSelectProduct({ selected, item, push, set })}
@@ -217,4 +211,4 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
   );
 }
 
-export default injectIntl(SelectProducts);
+export default injectIntl(SelectOrderItems);

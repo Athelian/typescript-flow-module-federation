@@ -10,10 +10,10 @@ import SlideView from 'components/SlideView';
 import messages from 'modules/order/messages';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
 import { FormContainer } from 'modules/form';
+import SelectProducts from 'modules/order/common/SelectProducts';
 import ExpandButtons from './components/ExpandButtons';
 import OrderItems from './components/OrderItems';
 import { ItemsSectionWrapperStyle, ItemsSectionBodyStyle } from './style';
-import SelectProducts from '../SelectProducts';
 
 type Props = {
   intl: intlShape,

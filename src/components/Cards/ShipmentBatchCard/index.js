@@ -103,7 +103,11 @@ const ShipmentBatchCard = ({
     : 0;
   return (
     <BaseCard icon="BATCH" color="BATCH" actions={actions} selectable={selectable} {...rest}>
-      <div className={ProductWrapperStyle}>
+      <div
+        className={ProductWrapperStyle}
+        onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
+        role="presentation"
+      >
         <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
 
         <div className={ProductInfoWrapperStyle}>

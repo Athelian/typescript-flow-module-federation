@@ -13,7 +13,7 @@ import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import Icon from 'components/Icon';
 import messages from 'modules/order/messages';
-import BatchFormWrapper from '../BatchFormWrapper';
+import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import {
   ItemGridStyle,
   ItemStyle,
@@ -41,7 +41,7 @@ type Props = {
   onSave: Function,
 };
 
-function generateBatchItem(item, batches) {
+export function generateBatchItem(batches: Array<Object>) {
   return injectUid({
     tags: [],
     quantity: 0,
@@ -119,7 +119,7 @@ class OrderItems extends React.Component<Props> {
                         </div>
                         <NewButton
                           title="NEW BATCH"
-                          onClick={() => addNewBatch(generateBatchItem(item, batches))}
+                          onClick={() => addNewBatch(generateBatchItem(batches))}
                         />
                       </div>
 

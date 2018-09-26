@@ -9,7 +9,10 @@ import { ShipmentBatchCard } from 'components/Cards';
 import NewButton from 'components/NavButtons/NewButton';
 import SlideView from 'components/SlideView';
 import messages from 'modules/shipment/messages';
+import SelectOrderItems from 'modules/batch/common/SelectOrderItems';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import BatchFormContainer from 'modules/batch/form/container';
 import {
   ItemsSectionWrapperStyle,
   ItemsSectionBodyStyle,
@@ -31,7 +34,45 @@ function CargoSection({ intl }: Props) {
           {({ value: opened, toggle }) => (
             <>
               <NewButton title={intl.formatMessage(messages.selectBatches)} onClick={toggle} />
-              <NewButton title={intl.formatMessage(messages.newBatch)} onClick={() => {}} />
+              <BooleanValue>
+                {({ value: isOpen, toggle: toggleSlideView }) => (
+                  <>
+                    <NewButton
+                      title={intl.formatMessage(messages.newBatch)}
+                      onClick={toggleSlideView}
+                    />
+                    <SlideView
+                      isOpen={isOpen}
+                      onRequestClose={toggleSlideView}
+                      options={{ width: '1030px' }}
+                    >
+                      {isOpen && (
+                        <Subscribe to={[ShipmentBatchesContainer]}>
+                          {({ state: { batches }, setFieldValue }) => (
+                            <SelectOrderItems
+                              onSelect={selectedBatches => {
+                                const result = selectedBatches.map((orderItem, counter) =>
+                                  injectUid({
+                                    orderItem,
+                                    tags: [],
+                                    quantity: 0,
+                                    isNew: true,
+                                    batchAdjustments: [],
+                                    no: `batch no ${batches.length + counter + 1}`,
+                                  })
+                                );
+                                setFieldValue('batches', [...batches, ...result]);
+                                toggleSlideView();
+                              }}
+                              onCancel={toggleSlideView}
+                            />
+                          )}
+                        </Subscribe>
+                      )}
+                    </SlideView>
+                  </>
+                )}
+              </BooleanValue>
 
               <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: '1030px' }}>
                 {opened && (
@@ -60,26 +101,59 @@ function CargoSection({ intl }: Props) {
             ) : (
               <div className={ItemGridStyle}>
                 {batches.map((item, position) => (
-                  <div className={ItemStyle} key={item.id}>
-                    <ShipmentBatchCard
-                      batch={item}
-                      saveOnBlur={updateBatch => {
-                        setFieldArrayValue(position, updateBatch);
-                      }}
-                      onRemove={({ id }) => {
-                        setFieldValue('batches', batches.filter(({ id: itemId }) => id !== itemId));
-                      }}
-                      onClone={({ id, ...rest }) => {
-                        setFieldValue('batches', [
-                          ...batches,
-                          injectUid({
-                            ...rest,
-                            isNew: true,
-                          }),
-                        ]);
-                      }}
-                    />
-                  </div>
+                  <BooleanValue key={item.id}>
+                    {({ value: opened, toggle }) => (
+                      <>
+                        <SlideView
+                          isOpen={opened}
+                          onRequestClose={toggle}
+                          options={{ width: '1030px' }}
+                        >
+                          {opened && (
+                            <Subscribe to={[BatchFormContainer]}>
+                              {({ initDetailValues }) => (
+                                <BatchFormWrapper
+                                  initDetailValues={initDetailValues}
+                                  batch={item}
+                                  isNew={!!item.isNew}
+                                  orderItem={item.orderItem}
+                                  onCancel={toggle}
+                                  onSave={updatedBatch => {
+                                    toggle();
+                                    setFieldArrayValue(position, updatedBatch);
+                                  }}
+                                />
+                              )}
+                            </Subscribe>
+                          )}
+                        </SlideView>
+                        <div className={ItemStyle}>
+                          <ShipmentBatchCard
+                            batch={item}
+                            saveOnBlur={updateBatch => {
+                              setFieldArrayValue(position, updateBatch);
+                            }}
+                            onClick={toggle}
+                            onRemove={({ id }) => {
+                              setFieldValue(
+                                'batches',
+                                batches.filter(({ id: itemId }) => id !== itemId)
+                              );
+                            }}
+                            onClone={({ id, ...rest }) => {
+                              setFieldValue('batches', [
+                                ...batches,
+                                injectUid({
+                                  ...rest,
+                                  isNew: true,
+                                }),
+                              ]);
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </BooleanValue>
                 ))}
               </div>
             )
