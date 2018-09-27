@@ -18,17 +18,13 @@ import {
   dateInputFactory,
   selectSearchEnumInputFactory,
 } from 'modules/form/helpers';
-import BaseCard from 'components/Cards';
+import { PartnerCard } from 'components/Cards';
 import messages from 'modules/order/messages';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
-import SelectExporters from '../SelectExporters';
+import SelectExporters from 'modules/order/common/SelectExporters';
 import TotalSummary from './components/TotalSummary';
 import {
   OrderSectionWrapperStyle,
   MainFieldsWrapperStyle,
-  ExporterCardStyle,
-  ExporterCardImageStyle,
-  ExporterNameStyle,
   TagsInputStyle,
   QuantitySummaryStyle,
   DividerStyle,
@@ -220,24 +216,7 @@ const OrderSection = ({ isNew }: Props) => (
                           onClick={() => slideToggle(true)}
                         />
                       ) : (
-                        <BaseCard icon="EXPORTER" color="PARTNER">
-                          <div
-                            className={ExporterCardStyle}
-                            role="presentation"
-                            onClick={() => slideToggle(true)}
-                          >
-                            <img
-                              className={ExporterCardImageStyle}
-                              src={FALLBACK_IMAGE}
-                              alt="exporter_image"
-                            />
-                            <div className={ExporterNameStyle}>
-                              {values.exporter && values.exporter.id
-                                ? values.exporter.name
-                                : 'Exporter'}
-                            </div>
-                          </div>
-                        </BaseCard>
+                        <PartnerCard partner={values.exporter} onClick={() => slideToggle(true)} />
                       )}
 
                       <SlideView

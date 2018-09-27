@@ -33,7 +33,7 @@ const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
           <Layout
             navBar={
               <SlideViewNavBar>
-                <EntityIcon icon="EXPORTER" color="PARTNER" />
+                <EntityIcon icon="PARTNER" color="PARTNER" />
                 <CancelButton onClick={onCancel} />
                 <SaveButton disabled={isEquals(value, selected)} onClick={() => onSelect(value)} />
               </SlideViewNavBar>

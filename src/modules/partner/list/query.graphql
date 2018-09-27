@@ -7,11 +7,10 @@ query($page: Int!, $perPage: Int!) {
         partners(page: $page, perPage: $perPage) {
           nodes {
             id
-            name
-            types
             group {
               id
               name
+              types
             }
           }
         }

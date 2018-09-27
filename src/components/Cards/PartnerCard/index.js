@@ -1,40 +1,52 @@
 // @flow
 import React from 'react';
-import { navigate } from '@reach/router';
 import { type Partner } from 'modules/partner/type.js.flow';
-import logger from 'utils/logger';
-import { encodeId } from 'utils/id';
+import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import BaseCard, { CardAction } from '../BaseCard';
-import { PartnerCardWrapperStyle } from './style';
+import { PartnerCardStyle, PartnerCardImageStyle, PartnerNameStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  onClick: Function,
+  size: 'full' | 'half' | 'quarter',
+  selectable: boolean,
+  readOnly: boolean,
+};
+
+type Props = OptionalProps & {
   partner: ?Partner,
-  onClick?: (id: string) => void,
-  selectable?: boolean,
 };
 
 const defaultProps = {
-  onClick: id => navigate(`/partner/${encodeId(id)}`),
+  onClick: () => {},
+  size: 'full',
   selectable: false,
+  readOnly: false,
 };
 
-const PartnerCard = ({ partner, onClick, selectable, ...rest }: Props) => {
+const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: Props) => {
   if (!partner) return '';
 
-  const { id } = partner;
+  const { name } = partner;
 
   const actions = selectable
     ? []
     : [
-        <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-        <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-        <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+        <CardAction icon="CLONE" onClick={() => {}} />,
+        <CardAction icon="ARCHIVE" onClick={() => {}} />,
       ];
 
   return (
-    <BaseCard icon="PARTNER" color="PARTNER" actions={actions} selectable={selectable} {...rest}>
-      <div className={PartnerCardWrapperStyle} onClick={onClick} role="presentation">
-        {id}
+    <BaseCard
+      {...rest}
+      actions={actions}
+      icon="PARTNER"
+      color="PARTNER"
+      selectable={selectable}
+      readOnly={readOnly}
+    >
+      <div className={PartnerCardStyle(size)} role="presentation" onClick={onClick}>
+        <img className={PartnerCardImageStyle} src={FALLBACK_IMAGE} alt="exporter_image" />
+        <div className={PartnerNameStyle}>{name}</div>
       </div>
     </BaseCard>
   );

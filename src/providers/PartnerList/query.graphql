@@ -7,10 +7,10 @@ query($page: Int!, $perPage: Int!, $filterBy: PartnerFilterInput, $sortBy: Partn
         partners(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
           nodes {
             id
-            types
             group {
               id
               name
+              types
             }
           }
         }

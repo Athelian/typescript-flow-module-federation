@@ -8,7 +8,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
-import { ShipmentForwarderCard } from 'components/Cards';
+import { PartnerCard } from 'components/Cards';
 
 type Props = {
   selected?: ?Array<{
@@ -46,7 +46,7 @@ function onSelectForwarders({
 const selectedItems = (selected: ?Array<{ id: string, name: string }>, items: Array<Object>) => {
   if (selected) {
     const itemIds = selected.map(item => item.id);
-    return items.filter(item => itemIds.includes(item.group.id));
+    return items.filter(item => itemIds.includes(item.id));
   }
   return [];
 };
@@ -61,7 +61,7 @@ const SelectForwarders = ({ selected, onCancel, onSelect }: Props) => (
             <Layout
               navBar={
                 <SlideViewNavBar>
-                  <EntityIcon icon="FORWARDER" color="PARTNER" />
+                  <EntityIcon icon="PARTNER" color="PARTNER" />
                   <h3>
                     {values.length}/{MAX_SELECTIONS}
                   </h3>
@@ -79,15 +79,12 @@ const SelectForwarders = ({ selected, onCancel, onSelect }: Props) => (
                 onLoadMore={() => {}}
                 items={data.filter(partner => partner.types.includes('Forwarder'))}
                 renderItem={item => (
-                  <ShipmentForwarderCard
-                    forwarder={{
-                      id: item.group.id,
-                      name: item.name || item.group.name,
-                    }}
+                  <PartnerCard
+                    partner={item}
+                    key={item.id}
                     onSelect={() => onSelectForwarders({ selected: values, item, push, set })}
                     selectable
                     selected={values.includes(item)}
-                    key={item.id}
                   />
                 )}
               />
