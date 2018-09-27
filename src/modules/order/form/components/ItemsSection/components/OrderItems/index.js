@@ -126,11 +126,11 @@ class OrderItems extends React.Component<Props> {
                       <div className={BatchGridStyle}>
                         {batches.map((batch, position) => (
                           <BooleanValue key={batch.id}>
-                            {({ value: opened, toggle }) => (
+                            {({ value: opened, set: slideToggle }) => (
                               <>
                                 <SlideView
                                   isOpen={opened}
-                                  onRequestClose={toggle}
+                                  onRequestClose={() => slideToggle(false)}
                                   options={{ width: '1030px' }}
                                 >
                                   {opened && (
@@ -141,9 +141,9 @@ class OrderItems extends React.Component<Props> {
                                           isNew={!!batch.isNew}
                                           orderItem={item}
                                           initDetailValues={initDetailValues}
-                                          onCancel={toggle}
+                                          onCancel={() => slideToggle(false)}
                                           onSave={updatedBatch => {
-                                            toggle();
+                                            slideToggle(false);
                                             changeBatch(position, 1, updatedBatch);
                                           }}
                                         />
@@ -155,7 +155,7 @@ class OrderItems extends React.Component<Props> {
                                   batch={batch}
                                   currency={currency}
                                   price={item.price}
-                                  onClick={toggle}
+                                  onClick={() => slideToggle(true)}
                                   saveOnBlur={updatedBatch => {
                                     changeBatch(position, 1, updatedBatch);
                                   }}

@@ -40,17 +40,17 @@ function ItemSection({ intl, isNew }: Props) {
                 <Subscribe to={[OrderInfoContainer]}>
                   {({ state: { exporter, currency } }) => (
                     <BooleanValue>
-                      {({ value: opened, toggle }) => (
+                      {({ value: opened, set: slideToggle }) => (
                         <>
                           <NewButton
                             label={intl.formatMessage(messages.newItems)}
                             disabled={!((exporter && exporter.id) || !isNew)}
-                            onClick={toggle}
+                            onClick={() => slideToggle(true)}
                           />
 
                           <SlideView
                             isOpen={opened}
-                            onRequestClose={toggle}
+                            onRequestClose={() => slideToggle(false)}
                             options={{ width: '1030px' }}
                           >
                             {opened && (
@@ -77,10 +77,10 @@ function ItemSection({ intl, isNew }: Props) {
                                         ),
                                       ]);
                                       setFieldTouched('orderItems');
-                                      toggle();
+                                      slideToggle(false);
                                     }}
                                     exporter={exporter && exporter.id}
-                                    onCancel={toggle}
+                                    onCancel={() => slideToggle(false)}
                                   />
                                 )}
                               </Subscribe>

@@ -83,18 +83,18 @@ export default class OrderForm extends React.Component<Props> {
               <>
                 <LastModified updatedAt={order.updatedAt} updatedBy={order.updatedBy} />
                 <BooleanValue>
-                  {({ value: statusDialogIsOpen, toggle }) => (
+                  {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                     <StatusToggle
                       archived={order.archived}
-                      openStatusDialog={toggle}
+                      openStatusDialog={() => dialogToggle(true)}
                       activateDialog={
                         <OrderActivateDialog
                           isOpen={statusDialogIsOpen && !!order.archived}
-                          onRequestClose={toggle}
-                          onCancel={toggle}
+                          onRequestClose={() => dialogToggle(false)}
+                          onCancel={() => dialogToggle(false)}
                           onConfirm={() => {
                             onChangeStatus({ archived: false });
-                            toggle();
+                            dialogToggle(false);
                           }}
                           totalBatches={totalBatches}
                           unshippedBatches={unshippedBatches}
@@ -104,11 +104,11 @@ export default class OrderForm extends React.Component<Props> {
                       archiveDialog={
                         <OrderArchiveDialog
                           isOpen={statusDialogIsOpen && !order.archived}
-                          onRequestClose={toggle}
-                          onCancel={toggle}
+                          onRequestClose={() => dialogToggle(false)}
+                          onCancel={() => dialogToggle(false)}
                           onConfirm={() => {
                             onChangeStatus({ archived: true });
-                            toggle();
+                            dialogToggle(false);
                           }}
                           totalBatches={totalBatches}
                           unshippedBatches={unshippedBatches}

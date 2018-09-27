@@ -230,9 +230,9 @@ const ShipmentSection = ({ isNew }: Props) => (
 
             <GridColumn>
               <BooleanValue>
-                {({ value: opened, toggle }) => (
+                {({ value: opened, set: slideToggle }) => (
                   <>
-                    <div onClick={toggle} role="presentation">
+                    <div onClick={() => slideToggle(true)} role="presentation">
                       <FieldItem
                         vertical
                         label={<Label>FORWARDER ({forwarders.length})</Label>}
@@ -242,19 +242,19 @@ const ShipmentSection = ({ isNew }: Props) => (
                     </div>
                     <SlideView
                       isOpen={opened}
-                      onRequestClose={toggle}
+                      onRequestClose={() => slideToggle(false)}
                       options={{ width: '1030px' }}
                     >
                       {opened && (
                         <SelectForwarders
                           selected={values.forwarders}
-                          onCancel={toggle}
+                          onCancel={() => slideToggle(false)}
                           onSelect={newValue => {
                             const selectedForwarders = newValue.map(item => ({
                               id: item.group.id,
                               name: item.name || item.group.name,
                             }));
-                            toggle();
+                            slideToggle(false);
                             setFieldValue('forwarders', selectedForwarders);
                           }}
                         />

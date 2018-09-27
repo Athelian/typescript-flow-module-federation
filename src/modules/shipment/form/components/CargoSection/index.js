@@ -31,19 +31,41 @@ function CargoSection({ intl }: Props) {
     <div className={ItemsSectionWrapperStyle}>
       <SectionNavBar>
         <BooleanValue>
-          {({ value: opened, toggle }) => (
+          {({ value: opened, set: selectSlideToggle }) => (
             <>
-              <NewButton label={intl.formatMessage(messages.selectBatches)} onClick={toggle} />
+              <NewButton
+                label={intl.formatMessage(messages.selectBatches)}
+                onClick={() => selectSlideToggle(true)}
+              />
+              <SlideView
+                isOpen={opened}
+                onRequestClose={() => selectSlideToggle(false)}
+                options={{ width: '1030px' }}
+              >
+                {opened && (
+                  <Subscribe to={[ShipmentBatchesContainer]}>
+                    {({ state: { batches }, setFieldValue }) => (
+                      <SelectBatches
+                        onCancel={() => selectSlideToggle(false)}
+                        onSelect={selected => {
+                          selectSlideToggle(false);
+                          setFieldValue('batches', [...batches, ...selected]);
+                        }}
+                      />
+                    )}
+                  </Subscribe>
+                )}
+              </SlideView>
               <BooleanValue>
-                {({ value: isOpen, toggle: toggleSlideView }) => (
+                {({ value: isOpen, set: newSlideToggle }) => (
                   <>
                     <NewButton
                       label={intl.formatMessage(messages.newBatch)}
-                      onClick={toggleSlideView}
+                      onClick={() => newSlideToggle(true)}
                     />
                     <SlideView
                       isOpen={isOpen}
-                      onRequestClose={toggleSlideView}
+                      onRequestClose={() => newSlideToggle(false)}
                       options={{ width: '1030px' }}
                     >
                       {isOpen && (
@@ -62,9 +84,9 @@ function CargoSection({ intl }: Props) {
                                   })
                                 );
                                 setFieldValue('batches', [...batches, ...result]);
-                                toggleSlideView();
+                                newSlideToggle(false);
                               }}
-                              onCancel={toggleSlideView}
+                              onCancel={() => newSlideToggle(false)}
                             />
                           )}
                         </Subscribe>
@@ -73,22 +95,6 @@ function CargoSection({ intl }: Props) {
                   </>
                 )}
               </BooleanValue>
-
-              <SlideView isOpen={opened} onRequestClose={toggle} options={{ width: '1030px' }}>
-                {opened && (
-                  <Subscribe to={[ShipmentBatchesContainer]}>
-                    {({ state: { batches }, setFieldValue }) => (
-                      <SelectBatches
-                        onCancel={toggle}
-                        onSelect={selected => {
-                          toggle();
-                          setFieldValue('batches', [...batches, ...selected]);
-                        }}
-                      />
-                    )}
-                  </Subscribe>
-                )}
-              </SlideView>
             </>
           )}
         </BooleanValue>
@@ -102,11 +108,11 @@ function CargoSection({ intl }: Props) {
               <div className={ItemGridStyle}>
                 {batches.map((item, position) => (
                   <BooleanValue key={item.id}>
-                    {({ value: opened, toggle }) => (
+                    {({ value: opened, set: batchSlideToggle }) => (
                       <>
                         <SlideView
                           isOpen={opened}
-                          onRequestClose={toggle}
+                          onRequestClose={() => batchSlideToggle(false)}
                           options={{ width: '1030px' }}
                         >
                           {opened && (
@@ -117,9 +123,9 @@ function CargoSection({ intl }: Props) {
                                   batch={item}
                                   isNew={!!item.isNew}
                                   orderItem={item.orderItem}
-                                  onCancel={toggle}
+                                  onCancel={() => batchSlideToggle(false)}
                                   onSave={updatedBatch => {
-                                    toggle();
+                                    batchSlideToggle(false);
                                     setFieldArrayValue(position, updatedBatch);
                                   }}
                                 />
@@ -133,7 +139,7 @@ function CargoSection({ intl }: Props) {
                             saveOnBlur={updateBatch => {
                               setFieldArrayValue(position, updateBatch);
                             }}
-                            onClick={toggle}
+                            onClick={() => batchSlideToggle(true)}
                             onRemove={({ id }) => {
                               setFieldValue(
                                 'batches',

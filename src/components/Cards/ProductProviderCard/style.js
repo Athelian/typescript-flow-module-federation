@@ -7,7 +7,7 @@ export const ProductProviderCardWrapperStyle: string = css`
   flex-direction: column;
   justify-content: center;
   width: 195px;
-  height: 200px;
+  height: 100px;
 `;
 
 export const ExporterStyle: string = css`

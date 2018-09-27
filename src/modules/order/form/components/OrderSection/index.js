@@ -211,13 +211,21 @@ const OrderSection = ({ isNew }: Props) => (
                   <FormattedMessage {...messages.exporter} />
                 </Label>
                 <BooleanValue>
-                  {({ value: opened, toggle }) => (
+                  {({ value: opened, set: slideToggle }) => (
                     <>
                       {!values.exporter ? (
-                        <DashedPlusButton width="200px" height="230px" onClick={toggle} />
+                        <DashedPlusButton
+                          width="200px"
+                          height="230px"
+                          onClick={() => slideToggle(true)}
+                        />
                       ) : (
                         <BaseCard icon="EXPORTER" color="PARTNER">
-                          <div className={ExporterCardStyle} role="presentation" onClick={toggle}>
+                          <div
+                            className={ExporterCardStyle}
+                            role="presentation"
+                            onClick={() => slideToggle(true)}
+                          >
                             <img
                               className={ExporterCardImageStyle}
                               src={FALLBACK_IMAGE}
@@ -234,7 +242,7 @@ const OrderSection = ({ isNew }: Props) => (
 
                       <SlideView
                         isOpen={opened}
-                        onRequestClose={toggle}
+                        onRequestClose={() => slideToggle(false)}
                         options={{ width: '1030px' }}
                       >
                         {opened && (
@@ -242,9 +250,9 @@ const OrderSection = ({ isNew }: Props) => (
                             {({ setFieldValue: resetOrderItems }) => (
                               <SelectExporters
                                 selected={values.exporter}
-                                onCancel={toggle}
+                                onCancel={() => slideToggle(false)}
                                 onSelect={newValue => {
-                                  toggle();
+                                  slideToggle(false);
                                   setFieldValue('exporter', newValue);
                                   resetOrderItems('orderItems', []);
                                 }}
