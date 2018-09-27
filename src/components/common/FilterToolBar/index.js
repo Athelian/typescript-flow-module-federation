@@ -41,7 +41,9 @@ export default function FilterToolBar({ icon, fields, filtersAndSort, onChange }
     <>
       <EntityIcon icon={icon} color={icon} />
       <StatusToggleTabs
-        onChange={index => onChange({ ...filtersAndSort, status: index ? 'Completed' : 'Active' })}
+        onChange={index =>
+          onChange({ ...filtersAndSort, filter: { ...filtersAndSort.filter, archived: !!index } })
+        }
       />
       <SortInput
         sort={currentSort(fields, filtersAndSort.sort)}
