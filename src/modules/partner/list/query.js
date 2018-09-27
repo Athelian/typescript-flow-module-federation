@@ -11,11 +11,10 @@ export const partnerListQuery = gql`
           partners(page: $page, perPage: $perPage) {
             nodes {
               id
-              name
-              types
               group {
                 id
                 name
+                types
               }
             }
           }
