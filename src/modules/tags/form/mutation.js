@@ -1,7 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
-import { tagDetailFragment } from './query';
 
 export const createTagMutation = gql`
   mutation tagCreate($input: TagCreateInput!) {
@@ -22,13 +21,12 @@ export const updateTagMutation = gql`
   mutation tagUpdate($id: ID!, $input: TagUpdateInput!) {
     tagUpdate(id: $id, input: $input) {
       tag {
-        ...tagDetailFragment
+        id
       }
       violations {
         ...violationFragment
       }
     }
   }
-  ${tagDetailFragment}
   ${violationFragment}
 `;
