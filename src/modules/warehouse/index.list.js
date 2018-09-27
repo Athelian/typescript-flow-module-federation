@@ -17,7 +17,7 @@ type State = {
   viewType: string,
   filter: {
     query: string,
-    status: string,
+    archived: boolean,
   },
   sort: {
     field: string,
@@ -31,7 +31,7 @@ class WarehouseModule extends React.Component<Props, State> {
     viewType: 'grid',
     filter: {
       query: '',
-      status: 'Active',
+      archived: false,
     },
     sort: {
       field: 'updatedAt',
@@ -46,8 +46,6 @@ class WarehouseModule extends React.Component<Props, State> {
   };
 
   render() {
-    const { viewType, sort, perPage, filter } = this.state;
-
     const fields = [
       { title: 'updatedAt', value: 'updatedAt' },
       { title: 'createdAt', value: 'createdAt' },
@@ -72,7 +70,7 @@ class WarehouseModule extends React.Component<Props, State> {
               </NavBar>
             }
           >
-            <WarehouseList viewType={viewType} sort={sort} perPage={perPage} filter={filter} />
+            <WarehouseList {...this.state} />
           </Layout>
         )}
       </UIConsumer>

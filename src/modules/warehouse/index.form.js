@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
-import { Query, Mutation } from 'react-apollo';
+import { Mutation } from 'react-apollo';
+import QueryDetail from 'components/common/QueryDetail';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
@@ -10,7 +11,6 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import { decodeId, encodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
 import WarehouseInfoForm from './form';
 import WarehouseContainer from './form/containers';
 import query from './form/query';
@@ -25,28 +25,46 @@ const defaultProps = {
   warehouseId: '',
 };
 
-class OrderFormModule extends React.PureComponent<Props> {
+class WarehouseFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
   onCancel = () => {
     navigate(`/warehouse`);
   };
 
-  onSave = async (formData: Object, saveWarehouse: Function, onSuccess: Function = () => {}) => {
+  onSave = async (
+    formData: Object,
+    saveWarehouse: Function,
+    onSuccess: Function = () => {},
+    onErrors: Function = () => {}
+  ) => {
     const { warehouseId } = this.props;
 
     const isNew = warehouseId === 'new';
 
     const { archived, name, street, locality, region, postalCode, country, surface } = formData;
     const input = { archived, name, street, locality, region, postalCode, country, surface };
-
     if (isNew) {
-      await saveWarehouse({ variables: { input } });
+      const { data } = await saveWarehouse({ variables: { input } });
+      const {
+        warehouseCreate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     } else if (warehouseId) {
-      await saveWarehouse({ variables: { input, id: decodeId(warehouseId) } });
+      const { data } = await saveWarehouse({ variables: { input, id: decodeId(warehouseId) } });
+      const {
+        warehouseUpdate: { violations },
+      } = data;
+      if (violations && violations.length) {
+        onErrors(violations);
+      } else {
+        onSuccess();
+      }
     }
-
-    onSuccess();
   };
 
   onMutationCompleted = (result: Object) => {
@@ -91,14 +109,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
-                                disabled={
-                                  !form.isReady(
-                                    {
-                                      ...infoState.state,
-                                    },
-                                    validator
-                                  )
-                                }
+                                disabled={!form.isReady(infoState.state, validator)}
                                 onClick={() =>
                                   this.onSave(
                                     {
@@ -108,7 +119,8 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     () => {
                                       infoState.onSuccess();
                                       form.onReset();
-                                    }
+                                    },
+                                    form.onErrors
                                   )
                                 }
                               />
@@ -124,36 +136,23 @@ class OrderFormModule extends React.PureComponent<Props> {
                   {isNew || !warehouseId ? (
                     <WarehouseInfoForm isNew />
                   ) : (
-                    <Subscribe to={[WarehouseContainer]}>
-                      {infoState => (
-                        <Query
-                          query={query}
-                          variables={{ id: decodeId(warehouseId) }}
-                          fetchPolicy="network-only"
-                          onCompleted={result => {
-                            if (result.warehouse) {
-                              const { warehouse } = result;
-                              infoState.initDetailValues(warehouse);
-                            } else {
-                              navigate('/warehouse');
-                            }
-                          }}
-                        >
-                          {({ loading, data, error }) => {
-                            if (error) {
-                              return error.message;
-                            }
-
-                            if (loading) return <LoadingIcon />;
-                            return (
-                              <WarehouseInfoForm
-                                warehouse={getByPathWithDefault({}, 'warehouse', data)}
-                              />
-                            );
-                          }}
-                        </Query>
+                    <QueryDetail
+                      query={query}
+                      detailId={warehouseId}
+                      detailType="warehouse"
+                      render={warehouse => (
+                        <Subscribe to={[WarehouseContainer]}>
+                          {infoState => (
+                            <WarehouseInfoForm
+                              warehouse={warehouse}
+                              onDetailReady={() => {
+                                infoState.initDetailValues(warehouse);
+                              }}
+                            />
+                          )}
+                        </Subscribe>
                       )}
-                    </Subscribe>
+                    />
                   )}
                 </Layout>
               )}
@@ -165,4 +164,4 @@ class OrderFormModule extends React.PureComponent<Props> {
   }
 }
 
-export default OrderFormModule;
+export default WarehouseFormModule;

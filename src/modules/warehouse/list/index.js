@@ -10,7 +10,7 @@ type Props = {
   viewType: string,
   filter: {
     query: string,
-    status: string,
+    archived: boolean,
   },
   sort: {
     field: string,
