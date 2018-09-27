@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
+import { isEquals } from 'utils/fp';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 import { ProductSection, ProductProvidersSection } from './components';
 import { ProductFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
+  onDetailReady: () => void,
 };
 
 type Props = OptionalProps & {
@@ -14,24 +16,42 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isNew: false,
+  onDetailReady: () => {},
 };
+class ProductForm extends React.Component<Props> {
+  static defaultProps = defaultProps;
 
-const ProductForm = ({ product, isNew }: Props) => (
-  <div className={ProductFormWrapperStyle}>
-    <SectionWrapper id="productSection">
-      <SectionHeader icon="PRODUCT" title="PRODUCT">
-        {!isNew && <LastModified updatedAt={product.updatedAt} updatedBy={product.updatedBy} />}
-      </SectionHeader>
-      <ProductSection isNew={isNew} />
-    </SectionWrapper>
+  componentDidMount() {
+    const { onDetailReady } = this.props;
 
-    <SectionWrapper id="productProvidersSection">
-      <SectionHeader icon="PROVIDER" title="PROVIDERS" />
-      <ProductProvidersSection />
-    </SectionWrapper>
-  </div>
-);
+    if (onDetailReady) onDetailReady();
+  }
 
-ProductForm.defaultProps = defaultProps;
+  shouldComponentUpdate(nextProps: Props) {
+    const { product } = this.props;
+
+    return !isEquals(product, nextProps.product);
+  }
+
+  render() {
+    const { product, isNew } = this.props;
+
+    return (
+      <div className={ProductFormWrapperStyle}>
+        <SectionWrapper id="productSection">
+          <SectionHeader icon="PRODUCT" title="PRODUCT">
+            {!isNew && <LastModified updatedAt={product.updatedAt} updatedBy={product.updatedBy} />}
+          </SectionHeader>
+          <ProductSection isNew={isNew} />
+        </SectionWrapper>
+
+        <SectionWrapper id="productProvidersSection">
+          <SectionHeader icon="PROVIDER" title="PROVIDERS" />
+          <ProductProvidersSection />
+        </SectionWrapper>
+      </div>
+    );
+  }
+}
 
 export default ProductForm;

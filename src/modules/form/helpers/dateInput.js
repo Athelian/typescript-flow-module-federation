@@ -21,7 +21,16 @@ export default function dateInputFactory({
   isNew: boolean,
   label?: React.Node,
   name: string,
-  inputHandlers: Object,
+  inputHandlers: {
+    name: string,
+    value: string,
+    isTouched: boolean,
+    errorMessage: string,
+    isFocused: boolean,
+    onChange: Function,
+    onFocus: Function,
+    onBlur: Function,
+  },
   initValue: any,
 }) {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;

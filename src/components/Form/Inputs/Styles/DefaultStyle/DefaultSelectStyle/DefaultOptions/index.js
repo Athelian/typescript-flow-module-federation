@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import VirtualList from 'react-tiny-virtual-list';
 import { type RenderOptionsProps } from 'components/Form/Inputs/SelectInput/type';
 import { OptionWrapperStyle, OptionStyle } from './style';
 
@@ -22,6 +23,11 @@ const defaultProps = {
   height: '200px',
 };
 
+const removePx = (size: string) => {
+  if (size.indexOf('px')) return size.replace('px', '');
+  return size;
+};
+
 function DefaultOptions({
   items,
   itemToValue,
@@ -35,15 +41,29 @@ function DefaultOptions({
 }: Props) {
   return (
     <div className={OptionWrapperStyle(width, height)}>
-      {items.map((item, index) => (
-        <div
-          key={`option-${itemToValue(item)}-${itemToString(item)}`}
-          className={OptionStyle(highlightedIndex === index, selectedItem === item, align)}
-          {...getItemProps({ item })}
-        >
-          {itemToString(item)}
-        </div>
-      ))}
+      {items.length > 0 ? (
+        <VirtualList
+          width={removePx(width)}
+          scrollToIndex={highlightedIndex || 0}
+          scrollToAlignment="auto"
+          height={removePx(height)}
+          itemCount={items.length}
+          itemSize={30}
+          renderItem={({ index, style }) => {
+            const item = items[index];
+            if (!item) return null;
+            return (
+              <div
+                key={`option-${itemToValue(item)}-${itemToString(item)}`}
+                className={OptionStyle(highlightedIndex === index, selectedItem === item, align)}
+                {...getItemProps({ item, style })}
+              >
+                {itemToString(item)}
+              </div>
+            );
+          }}
+        />
+      ) : null}
     </div>
   );
 }

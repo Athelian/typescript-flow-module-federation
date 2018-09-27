@@ -30,6 +30,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
   <div className={BatchSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
       {({ originalValues: initialValues, state, setFieldValue }) => {
+        // $FlowFixMe
         const values = { ...initialValues, ...state };
 
         return (

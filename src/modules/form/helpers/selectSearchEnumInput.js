@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StringValue } from 'react-values';
 import matchSorter from 'match-sorter';
 import EnumProvider from 'providers/enum';
+import LoadingIcon from 'components/LoadingIcon';
 import {
   FieldItem,
   Label,
@@ -46,34 +47,44 @@ export default function selectSearchEnumInputFactory({
   isNew: boolean,
   label?: React.Node,
   name: string,
-  inputHandlers: Object,
+  inputHandlers: {
+    name: string,
+    value: string,
+    isTouched: boolean,
+    errorMessage: string,
+    isFocused: boolean,
+    onChange: Function,
+    onFocus: Function,
+    onBlur: Function,
+  },
   initValue: any,
 }) {
   return (
-    <FieldItem
-      label={
-        label && (
-          <Label required={required} width={width}>
-            {label}
-          </Label>
-        )
-      }
-      tooltip={
-        <Tooltip
-          isNew={isNew}
-          errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
-          changedValues={{
-            oldValue: parseEnumDescription(initValue),
-            newValue: parseEnumDescription(inputHandlers.value),
-          }}
-        />
-      }
-      input={
-        <EnumProvider enumType={enumType}>
-          {({ loading, error, data }) => {
-            if (loading) return null;
-            if (error) return `Error!: ${error}`;
-            return (
+    <EnumProvider enumType={enumType}>
+      {({ loading, error, data }) => {
+        if (loading) return <LoadingIcon />;
+        if (error) return `Error!: ${error}`;
+
+        return (
+          <FieldItem
+            label={
+              label && (
+                <Label required={required} width={width}>
+                  {label}
+                </Label>
+              )
+            }
+            tooltip={
+              <Tooltip
+                isNew={isNew}
+                errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
+                changedValues={{
+                  oldValue: parseEnumDescription(initValue),
+                  newValue: parseEnumDescription(inputHandlers.value),
+                }}
+              />
+            }
+            input={
               <StringValue
                 defaultValue={inputHandlers.value}
                 onChange={newValue =>
@@ -119,10 +130,10 @@ export default function selectSearchEnumInputFactory({
                   />
                 )}
               </StringValue>
-            );
-          }}
-        </EnumProvider>
-      }
-    />
+            }
+          />
+        );
+      }}
+    </EnumProvider>
   );
 }

@@ -20,7 +20,17 @@ type OptionalProps = {
 type Props = OptionalProps & {
   initValue: any,
   name: string,
-  children: React.Node,
+  children: ({
+    name: string,
+    initValue: any,
+    value: any,
+    isTouched: boolean,
+    errorMessage: string,
+    isFocused: boolean,
+    onChange: Function,
+    onFocus: Function,
+    onBlur: Function,
+  }) => React.Node,
   setFieldValue: (field: string, value: any) => void,
 };
 
@@ -101,10 +111,11 @@ class BaseFormField extends React.Component<Props, State> {
   };
 
   render() {
-    const { children, name, activeField, isTouched, errorMessage } = this.props;
+    const { children, name, activeField, isTouched, errorMessage, initValue } = this.props;
     const { value } = this.state;
     return children({
       name,
+      initValue,
       value,
       isTouched,
       errorMessage,
@@ -126,11 +137,10 @@ const CachedField = withCache(BaseFormField, [
 const FormField = (props: {
   initValue: any,
   name: string,
-  children: React.Node,
   setFieldValue?: (field: string, value: any) => void,
   values?: any,
   validator?: Object,
-}) => {
+}): React.Node => {
   const { values, validator, setFieldValue, ...rest } = props;
   return (
     <Subscribe to={[FormContainer]}>

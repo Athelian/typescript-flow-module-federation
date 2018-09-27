@@ -1,7 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
-import { batchFragment } from './query';
 import type { BatchCreate, BatchUpdate } from '../type.js.flow';
 
 export const createBatchMutation = gql`
@@ -56,7 +55,7 @@ export const updateBatchMutation = gql`
   mutation batchUpdate($id: ID!, $input: BatchUpdateInput!) {
     batchUpdate(id: $id, input: $input) {
       batch {
-        ...batchFragment
+        id
       }
       violations {
         ...violationFragment
@@ -65,7 +64,6 @@ export const updateBatchMutation = gql`
   }
 
   ${violationFragment}
-  ${batchFragment}
 `;
 
 export const prepareUpdateBatchInput = (

@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import query from './query.graphql';
+import type { QueryRenderPropFunction } from 'react-apollo';
+import query from './query';
 
 type OptionalProps = {
   filterBy: {
@@ -16,7 +17,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  children: React.Node,
+  children: QueryRenderPropFunction<any, any>,
 };
 
 const defaultProps = {

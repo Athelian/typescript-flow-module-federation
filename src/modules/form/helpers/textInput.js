@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { FieldItem, Label, Tooltip, DefaultStyle, TextInput } from 'components/Form';
 
-export default function textInputFactory({
+const textInputFactory = ({
   required = false,
   WrapperComponent = DefaultStyle,
+  // $FlowFixMe
   InputComponent = TextInput,
   width = '200px',
   height = '30px',
@@ -14,17 +15,26 @@ export default function textInputFactory({
   inputHandlers,
   initValue,
 }: {
-  WrapperComponent?: React.Node,
-  InputComponent?: React.Node,
+  WrapperComponent?: () => React.Node,
+  InputComponent?: TextInput,
   required?: boolean,
   width?: string,
   height?: string,
-  isNew: boolean,
   label?: React.Node,
+  isNew: boolean,
   name: string,
-  inputHandlers: Object,
-  initValue: any,
-}) {
+  inputHandlers: {
+    name: string,
+    value: string,
+    isTouched: boolean,
+    errorMessage: string,
+    isFocused: boolean,
+    onChange: Function,
+    onFocus: Function,
+    onBlur: Function,
+  },
+  initValue: string,
+}): React.Node => {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
     <FieldItem
@@ -58,4 +68,6 @@ export default function textInputFactory({
       }
     />
   );
-}
+};
+
+export default textInputFactory;

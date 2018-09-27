@@ -25,6 +25,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
   <div className={QuantityAdjustmentsSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
       {({ originalValues, state, setFieldArrayValue, removeArrayItem }) => {
+        // $FlowFixMe
         const values = { ...originalValues, ...state };
 
         const currentQuantity = values.batchAdjustments.reduce(

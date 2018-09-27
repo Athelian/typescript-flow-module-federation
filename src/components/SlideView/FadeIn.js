@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-// $FlowFixMe: load direct from node module
 import Transition from 'react-transition-group/Transition';
 import LoadingIcon from 'components/LoadingIcon';
 import { LoadingWrapperStyle } from './style';

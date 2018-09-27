@@ -53,4 +53,9 @@ if (container.hasChildNodes()) {
   renderApp(Routes, render);
 }
 
-serviceWorker.register();
+serviceWorker.register({
+  onUpdate: registration => {
+    alert('New content is available; please refresh.');
+    console.warn(registration);
+  },
+});

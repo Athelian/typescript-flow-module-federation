@@ -69,7 +69,7 @@ export const getPortName = (
   portValue: ?string | ?{ description: string }
 ): React.Node => {
   if (portValue && portValue.description) {
-    return portValue.description;
+    return String(portValue.description);
   }
 
   if (enumType && portValue) {

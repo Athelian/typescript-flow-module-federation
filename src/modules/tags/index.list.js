@@ -5,7 +5,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import Tabs from 'components/NavBar/components/Tabs';
 import { UIConsumer } from 'modules/ui';
-import NavBar, { EntityIcon, SearchInput } from 'components/NavBar';
+import NavBar, { EntityIcon } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import messages from 'modules/tags/messages';
 import { injectUid } from 'utils/id';
@@ -58,12 +58,6 @@ class TagsModule extends React.Component<Props, State> {
               <NavBar>
                 <EntityIcon icon="TAGS" color="GRAY_LIGHT" />
                 <Tabs tabs={tabs.map(injectUid)} onChange={this.onChangeTabs} />
-                <SearchInput
-                  name="query"
-                  value={filters.query}
-                  onClear={() => this.onChangeFilter({ query: '' })}
-                  onChange={newQuery => this.onChangeFilter({ query: newQuery })}
-                />
                 <Link to="new">
                   <NewButton />
                 </Link>

@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Sep 21 2018 18:31:31 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Sep 27 2018 02:07:43 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -26940,8 +26940,13 @@ input BatchAdjustmentCreateInput {
 }
 
 enum BatchAdjustmentReason {
+  """Inspection"""
   Inspection
+
+  """Lost"""
   Lost
+
+  """Other"""
   Other
 }
 
@@ -28454,16 +28459,37 @@ input FileInput {
 }
 
 enum FileType {
+  """File"""
   File
+
+  """Image"""
   Image
+
+  """Document"""
   Document
-  OrderPO
-  ShipmentBL
-  ShipmentImport
+
+  """OrderPo"""
+  OrderPo
+
+  """ShipmentBl"""
+  ShipmentBl
+
+  """ShipmentInvoice"""
   ShipmentInvoice
+
+  """ShipmentPacking"""
   ShipmentPacking
+
+  """ShipmentImport"""
+  ShipmentImport
+
+  """ProductSpec"""
   ProductSpec
+
+  """ProductAnalysisCert"""
   ProductAnalysisCert
+
+  """ProductOriginCert"""
   ProductOriginCert
 }
 
@@ -28488,10 +28514,19 @@ type Group implements Model {
 }
 
 enum GroupType {
-  Exporter
+  """Importer"""
   Importer
+
+  """Exporter"""
+  Exporter
+
+  """Forwarder"""
   Forwarder
+
+  """Supplier"""
   Supplier
+
+  """Warehouse"""
   Warehouse
 }
 
@@ -28552,6 +28587,122 @@ type Mutation {
   eventCommentCreate(input: EventCommentCreateInput!): EventCommentMutated!
   eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): EventCommentMutated!
   timelineRead(id: ID!): Boolean!
+}
+
+type Notification {
+  id: ID!
+  sender: User!
+  receiver: User!
+  type: NotificationType!
+  body: String!
+  entity: Entity!
+  read: Boolean!
+  seen: Boolean!
+  createdAt: DateTime!
+}
+
+type NotificationPagination {
+  nodes: [Notification!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+enum NotificationType {
+  """NewBatchItemInventory"""
+  NewBatchItemInventory
+
+  """AddShipmentBatchItem"""
+  AddShipmentBatchItem
+
+  """RemoveShipmentBatchItem"""
+  RemoveShipmentBatchItem
+
+  """NewBatchItemAssignment"""
+  NewBatchItemAssignment
+
+  """UpdateBatchItemAssignmentQuantity"""
+  UpdateBatchItemAssignmentQuantity
+
+  """DeleteBatchItemAssignment"""
+  DeleteBatchItemAssignment
+
+  """UpdateShipmentContainerGroupWarehouseArrival"""
+  UpdateShipmentContainerGroupWarehouseArrival
+
+  """UpdateShipmentContainerGroupCustomClearance"""
+  UpdateShipmentContainerGroupCustomClearance
+
+  """NewOrder"""
+  NewOrder
+
+  """FinishedOrder"""
+  FinishedOrder
+
+  """NewOrderItem"""
+  NewOrderItem
+
+  """UpdateOrderItemQuantity"""
+  UpdateOrderItemQuantity
+
+  """NewPes"""
+  NewPes
+
+  """NewProduct"""
+  NewProduct
+
+  """EditProduct"""
+  EditProduct
+
+  """DeactivateProduct"""
+  DeactivateProduct
+
+  """NewShipment"""
+  NewShipment
+
+  """FinishedShipment"""
+  FinishedShipment
+
+  """UpdateShipmentCargoReady"""
+  UpdateShipmentCargoReady
+
+  """UpdateShipmentVoyageAtd"""
+  UpdateShipmentVoyageAtd
+
+  """UpdateShipmentVoyageAta"""
+  UpdateShipmentVoyageAta
+
+  """NewWarehouse"""
+  NewWarehouse
+
+  """EditWarehouse"""
+  EditWarehouse
+
+  """DeactivateWarehouse"""
+  DeactivateWarehouse
+
+  """ApproveTimelineDateCargoReady"""
+  ApproveTimelineDateCargoReady
+
+  """ApproveTimelineDateCustomClearance"""
+  ApproveTimelineDateCustomClearance
+
+  """ApproveTimelineDateWarehouseArrival"""
+  ApproveTimelineDateWarehouseArrival
+
+  """ApproveTimelineDateDeliveryReady"""
+  ApproveTimelineDateDeliveryReady
+
+  """ApproveTimelineDateAtd"""
+  ApproveTimelineDateAtd
+
+  """ApproveTimelineDateAta"""
+  ApproveTimelineDateAta
+
+  """NewComment"""
+  NewComment
 }
 
 type Order implements Model & Owned & Tagged & Documented {
@@ -28914,7 +29065,8 @@ type ProductPagination {
   totalCount: Int!
 }
 
-type ProductProvider implements Model & Owned & Sortable & Package {
+type ProductProvider implements Model & Owned & Sortable & Package & Documented {
+  archived: Boolean!
   product: Product!
   exporter: Group!
   supplier: Group
@@ -28922,6 +29074,7 @@ type ProductProvider implements Model & Owned & Sortable & Package {
   unitVolume: MetricValue
   unitWeight: MetricValue
   unitPrice: Price
+  unitSize: Size
   inspectionFee: Price
   origin: Country
   productionLeadTime: Float
@@ -28940,6 +29093,7 @@ type ProductProvider implements Model & Owned & Sortable & Package {
   packageVolume: MetricValue
   packageSize: Size
   packageCapacity: Float
+  files: [File!]!
 }
 
 input ProductProviderCreateInput {
@@ -28949,13 +29103,17 @@ input ProductProviderCreateInput {
   unitVolume: MetricValueInput
   unitWeight: MetricValueInput
   unitPrice: PriceInput
+  unitSize: SizeInput
   inspectionFee: PriceInput
   origin: Country
+  productionLeadTime: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
   packageSize: SizeInput
   packageCapacity: Float
+  files: [FileInput!]
+  memo: String
 }
 
 input ProductProviderFilterInput {
@@ -28986,19 +29144,24 @@ input ProductProviderSortInput {
 
 input ProductProviderUpdateInput {
   id: ID
+  archived: Boolean
   exporterId: ID
   supplierId: ID
   unitType: String
   unitVolume: MetricValueInput
   unitWeight: MetricValueInput
   unitPrice: PriceInput
+  unitSize: SizeInput
   inspectionFee: PriceInput
   origin: Country
+  productionLeadTime: Float
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
   packageSize: SizeInput
   packageCapacity: Float
+  files: [FileInput!]
+  memo: String
 }
 
 input ProductSortInput {
@@ -34158,6 +34321,10 @@ enum SortOrder {
   DESCENDING
 }
 
+type Subscription {
+  notificationNew: Notification!
+}
+
 type Tag implements Model & Owned {
   name: String!
   description: String
@@ -34181,10 +34348,19 @@ input TagCreateInput {
 }
 
 enum TagEntityType {
+  """Product"""
   Product
+
+  """Order"""
   Order
+
+  """Batch"""
   Batch
+
+  """Shipment"""
   Shipment
+
+  """User"""
   User
 }
 
@@ -34257,8 +34433,13 @@ type TimelineDateRevision implements Model & Owned & Sortable {
 }
 
 enum TimelineDateRevisionType {
+  """Delay"""
   Delay
+
+  """Ahead"""
   Ahead
+
+  """Other"""
   Other
 }
 
@@ -34272,7 +34453,10 @@ type TokenMutated {
 }
 
 enum TransportType {
+  """Sea"""
   Sea
+
+  """Air"""
   Air
 }
 
@@ -34322,6 +34506,9 @@ input UserSortInput {
 
 type Viewer {
   user: User!
+  notifications(page: Int! = 1, perPage: Int! = 10): NotificationPagination!
+  notificationUnread: Int!
+  notificationUnseen: Int!
   token: String
 }
 

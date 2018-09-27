@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
-import { Query, Mutation } from 'react-apollo';
+import { Mutation } from 'react-apollo';
+import QueryDetail from 'components/common/QueryDetail';
 import LoadingIcon from 'components/LoadingIcon';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
@@ -10,7 +11,6 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { decodeId, encodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import TagForm from './form';
 import { TagContainer, EntityTypeContainer } from './form/containers';
@@ -151,31 +151,25 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                   {isNew || !tagId ? (
                     <TagForm isNew />
                   ) : (
-                    <Subscribe to={[TagContainer, EntityTypeContainer]}>
-                      {(tagState, entityTypesState) => (
-                        <Query
-                          query={query}
-                          variables={{ id: decodeId(tagId) }}
-                          fetchPolicy="network-only"
-                          onCompleted={result => {
-                            const {
-                              tag: { name, description, color, entityTypes },
-                            } = result;
-                            tagState.initDetailValues({ name, description, color });
-                            entityTypesState.initDetailValues(entityTypes);
-                          }}
-                        >
-                          {({ loading, data, error }) => {
-                            if (error) {
-                              return error.message;
-                            }
-                            if (loading) return <LoadingIcon />;
-
-                            return <TagForm tag={getByPathWithDefault({}, 'tag', data)} />;
-                          }}
-                        </Query>
+                    <QueryDetail
+                      query={query}
+                      detailId={tagId}
+                      detailType="tag"
+                      render={tag => (
+                        <Subscribe to={[TagContainer, EntityTypeContainer]}>
+                          {(tagState, entityTypesState) => (
+                            <TagForm
+                              tag={tag}
+                              onDetailReady={() => {
+                                const { name, description, color, entityTypes } = tag;
+                                tagState.initDetailValues({ name, description, color });
+                                entityTypesState.initDetailValues(entityTypes);
+                              }}
+                            />
+                          )}
+                        </Subscribe>
                       )}
-                    </Subscribe>
+                    />
                   )}
                 </Layout>
               )}

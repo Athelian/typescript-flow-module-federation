@@ -20,6 +20,7 @@ export default class TagEntityTypeContainer extends Container<FormState> {
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   toggleSelectType = (name: string) => {

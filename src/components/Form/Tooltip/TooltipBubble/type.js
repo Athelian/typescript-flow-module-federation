@@ -1,4 +1,6 @@
 // @flow
+import * as React from 'react';
+
 export type BubblePositionType = 'top' | 'bottom';
 
 type OptionalProps = {

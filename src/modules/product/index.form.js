@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
-import { Query, Mutation } from 'react-apollo';
+import { Mutation } from 'react-apollo';
+import QueryDetail from 'components/common/QueryDetail';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
@@ -12,7 +13,6 @@ import LoadingIcon from 'components/LoadingIcon';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
 import {
   ProductInfoContainer,
   ProductProvidersContainer,
@@ -211,40 +211,32 @@ class ProductFormModule extends React.Component<Props> {
                   {isNew || !productId ? (
                     <ProductForm product={{}} isNew />
                   ) : (
-                    <Subscribe
-                      to={[ProductInfoContainer, ProductProvidersContainer, ProductTagsContainer]}
-                    >
-                      {(productInfoState, productProvidersState, productTagsState) => (
-                        <Query
-                          query={query}
-                          variables={{ id: decodeId(productId) }}
-                          fetchPolicy="network-only"
-                          onCompleted={result => {
-                            if (result.product) {
-                              const {
-                                product: { tags, productProviders, ...info },
-                              } = result;
-                              productInfoState.initDetailValues(info);
-                              productProvidersState.initDetailValues(productProviders);
-                              productTagsState.initDetailValues(tags);
-                            } else {
-                              navigate('/product');
-                            }
-                          }}
+                    <QueryDetail
+                      query={query}
+                      detailId={productId}
+                      detailType="product"
+                      render={product => (
+                        <Subscribe
+                          to={[
+                            ProductInfoContainer,
+                            ProductProvidersContainer,
+                            ProductTagsContainer,
+                          ]}
                         >
-                          {({ loading, data, error }) => {
-                            if (error) {
-                              return error.message;
-                            }
-
-                            if (loading) return <LoadingIcon />;
-                            return (
-                              <ProductForm product={getByPathWithDefault({}, 'product', data)} />
-                            );
-                          }}
-                        </Query>
+                          {(productInfoState, productProvidersState, productTagsState) => (
+                            <ProductForm
+                              product={product}
+                              onDetailReady={() => {
+                                const { tags, productProviders, ...info } = product;
+                                productInfoState.initDetailValues(info);
+                                productProvidersState.initDetailValues(productProviders);
+                                productTagsState.initDetailValues(tags);
+                              }}
+                            />
+                          )}
+                        </Subscribe>
                       )}
-                    </Subscribe>
+                    />
                   )}
                 </Layout>
               )}

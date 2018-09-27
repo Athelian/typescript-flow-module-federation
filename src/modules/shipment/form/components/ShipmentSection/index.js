@@ -36,6 +36,7 @@ type Props = {
 const ShipmentSection = ({ isNew }: Props) => (
   <Subscribe to={[ShipmentInfoContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
+      // $FlowFixMe
       const values: Object = { ...initialValues, ...state };
       const { forwarders = [] } = values;
 

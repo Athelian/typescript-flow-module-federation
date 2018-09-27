@@ -14,12 +14,12 @@ type ActionDetail = {
 
 type FormState = {
   cargoReady?: ActionDetail,
-  containerGroups: ?Array<{
+  containerGroups: Array<{
     customClearance?: ActionDetail,
     deliveryReady?: ActionDetail,
     warehouseArrival?: ActionDetail,
   }>,
-  voyages: ?Array<{
+  voyages: Array<{
     arrival?: ActionDetail,
     arrivalPort?: {
       airport: string,
@@ -35,7 +35,7 @@ type FormState = {
   }>,
 };
 
-const initValues = {
+const initValues: FormState = {
   containerGroups: [{}],
   voyages: [{}],
 };
@@ -49,6 +49,7 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   setFieldDeepValue = (path: string, value: any) => {

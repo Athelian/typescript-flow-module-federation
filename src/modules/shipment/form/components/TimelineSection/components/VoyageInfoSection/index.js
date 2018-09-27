@@ -23,7 +23,7 @@ type OptionalProps = {
     vesselCode?: string,
     vesselName?: string,
   },
-  initialVoyage: {
+  initialVoyage: ?{
     arrivalPort?: {
       airport: string,
       seaport: string,
@@ -85,7 +85,10 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               {({ name, ...inputHandlers }) =>
                 selectSearchEnumInputFactory({
                   enumType,
-                  initValue: initialVoyage.departurePort && initialVoyage.departurePort[deepField],
+                  initValue:
+                    initialVoyage &&
+                    initialVoyage.departurePort &&
+                    initialVoyage.departurePort[deepField],
                   inputHandlers,
                   name,
                   isNew,
@@ -119,7 +122,10 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               {({ name, ...inputHandlers }) =>
                 selectSearchEnumInputFactory({
                   enumType,
-                  initValue: initialVoyage.arrivalPort && initialVoyage.arrivalPort[deepField],
+                  initValue:
+                    initialVoyage &&
+                    initialVoyage.arrivalPort &&
+                    initialVoyage.arrivalPort[deepField],
                   inputHandlers,
                   name,
                   isNew,
@@ -151,7 +157,10 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           >
             {({ name, ...inputHandlers }) =>
               textInputFactory({
-                initValue: initialVoyage[name],
+                initValue:
+                  initialVoyage && Object.prototype.hasOwnProperty.call(initialVoyage, name)
+                    ? initialVoyage[name]
+                    : '',
                 inputHandlers,
                 name,
                 isNew,
@@ -167,7 +176,10 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           >
             {({ name, ...inputHandlers }) =>
               textInputFactory({
-                initValue: initialVoyage[name],
+                initValue:
+                  initialVoyage && Object.prototype.hasOwnProperty.call(initialVoyage, name)
+                    ? initialVoyage[name]
+                    : '',
                 inputHandlers,
                 name,
                 isNew,

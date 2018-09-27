@@ -11,6 +11,9 @@ type Metric = {
 };
 
 type FormState = {
+  id?: ?string,
+  no?: ?string,
+  quantity?: ?number,
   batchAdjustments: Array<any>,
   packageGrossWeight: Metric,
   packageVolume: Metric,
@@ -66,7 +69,6 @@ export default class BatchFormContainer extends Container<FormState> {
     this.setState(prevState => {
       const cloneState = cloneDeep(prevState);
       unset(cloneState, path);
-      // $FlowFixMe: missing type define for map's ramda function
       return removeNulls(cloneState);
     });
   };
@@ -74,14 +76,14 @@ export default class BatchFormContainer extends Container<FormState> {
   isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
-    logger.warn('onSuccess');
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   initDetailValues = (values: any) => {
     logger.warn('onInitDetailValues');
     const parsedValues = removeTypename(values);
-    // $FlowFixMe: missing type define for map's ramda function
+    // $FlowFixMe: clean up later
     this.setState(parsedValues);
     this.originalValues = parsedValues;
   };

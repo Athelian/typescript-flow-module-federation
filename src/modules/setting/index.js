@@ -7,7 +7,7 @@ import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { AuthenticationConsumer } from 'modules/authentication';
-import query from './mutation.graphql';
+import logOutMutation from './mutation';
 import {
   SettingsWrapperStyle,
   NotificationButtonStyle,
@@ -159,7 +159,7 @@ class Setting extends React.Component<Props, State> {
         <AuthenticationConsumer>
           {({ setAuthenticated }) => (
             <Mutation
-              mutation={query}
+              mutation={logOutMutation}
               onCompleted={() => {
                 setAuthenticated(false);
               }}

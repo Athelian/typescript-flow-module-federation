@@ -22,6 +22,7 @@ type Props = {
 const ProductProviderSection = ({ isNew }: Props) => (
   <Subscribe to={[ProductProviderContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
+      // $FlowFixMe
       const values = { ...initialValues, ...state };
 
       return (

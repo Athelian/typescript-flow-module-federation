@@ -29,6 +29,7 @@ export default class OrderInfoContainer extends Container<FormState> {
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   setFieldValue = (name: string, value: mixed) => {
@@ -39,7 +40,7 @@ export default class OrderInfoContainer extends Container<FormState> {
 
   initDetailValues = (values: Object) => {
     const parsedValues = removeTypename(values);
-    // $FlowFixMe: missing type for ramda's map function
+    // $FlowFixMe: clean up this later
     this.setState(parsedValues);
     this.originalValues = parsedValues;
   };
