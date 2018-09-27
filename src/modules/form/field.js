@@ -22,6 +22,7 @@ type Props = OptionalProps & {
   name: string,
   children: ({
     name: string,
+    initValue: any,
     value: any,
     isTouched: boolean,
     errorMessage: string,
@@ -110,10 +111,11 @@ class BaseFormField extends React.Component<Props, State> {
   };
 
   render() {
-    const { children, name, activeField, isTouched, errorMessage } = this.props;
+    const { children, name, activeField, isTouched, errorMessage, initValue } = this.props;
     const { value } = this.state;
     return children({
       name,
+      initValue,
       value,
       isTouched,
       errorMessage,

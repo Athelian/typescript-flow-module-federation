@@ -29,6 +29,7 @@ export default class OrderInfoContainer extends Container<FormState> {
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   setFieldValue = (name: string, value: mixed) => {

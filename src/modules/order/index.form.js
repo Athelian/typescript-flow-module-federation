@@ -1,10 +1,11 @@
 // @flow
 import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
-import { Query, Mutation } from 'react-apollo';
+import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
+import QueryDetail from 'components/common/QueryDetail';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -14,7 +15,6 @@ import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import OrderForm from './form';
 import validator from './form/validator';
@@ -93,7 +93,7 @@ class OrderFormModule extends React.PureComponent<Props> {
       } = result;
       navigate(`/order/${encodeId(id)}`);
     }
-    logger.warn('result', result);
+    logger.warn('mutation result', result);
   };
 
   render() {
@@ -210,51 +210,37 @@ class OrderFormModule extends React.PureComponent<Props> {
                       }
                     />
                   ) : (
-                    <Subscribe
-                      to={[
-                        OrderItemsContainer,
-                        OrderInfoContainer,
-                        OrderTagsContainer,
-                        OrderFilesContainer,
-                      ]}
-                    >
-                      {(orderItemState, orderInfoState, orderTagsState, orderFilesState) => (
-                        <Query
-                          query={query}
-                          variables={{ id: decodeId(orderId) }}
-                          fetchPolicy="network-only"
-                          onCompleted={result => {
-                            if (result.order) {
-                              const {
-                                order: { orderItems, tags, files, ...info },
-                              } = result;
-                              orderItemState.initDetailValues(orderItems);
-                              orderTagsState.initDetailValues(tags);
-                              orderInfoState.initDetailValues(info);
-                              orderFilesState.initDetailValues(files);
-                            } else {
-                              navigate('/404');
-                            }
-                          }}
+                    <QueryDetail
+                      query={query}
+                      detailId={orderId}
+                      detailType="order"
+                      render={order => (
+                        <Subscribe
+                          to={[
+                            OrderItemsContainer,
+                            OrderInfoContainer,
+                            OrderTagsContainer,
+                            OrderFilesContainer,
+                          ]}
                         >
-                          {({ loading, data, error }) => {
-                            if (error) {
-                              return error.message;
-                            }
-
-                            if (loading) return <LoadingIcon />;
-                            return (
-                              <OrderForm
-                                order={getByPathWithDefault({}, 'order', data)}
-                                onChangeStatus={(formData, onSuccess) =>
-                                  this.onSave(formData, saveOrder, onSuccess)
-                                }
-                              />
-                            );
-                          }}
-                        </Query>
+                          {(orderItemState, orderInfoState, orderTagsState, orderFilesState) => (
+                            <OrderForm
+                              order={order}
+                              onChangeStatus={(formData, onSuccess) =>
+                                this.onSave(formData, saveOrder, onSuccess)
+                              }
+                              onDetailReady={() => {
+                                const { orderItems, tags, files, ...info } = order;
+                                orderItemState.initDetailValues(orderItems);
+                                orderTagsState.initDetailValues(tags);
+                                orderInfoState.initDetailValues(info);
+                                orderFilesState.initDetailValues(files);
+                              }}
+                            />
+                          )}
+                        </Subscribe>
                       )}
-                    </Subscribe>
+                    />
                   )}
                 </Layout>
               )}

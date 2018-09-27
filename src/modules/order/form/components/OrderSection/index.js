@@ -96,18 +96,18 @@ const OrderSection = ({ isNew }: Props) => (
               <GridColumn>
                 <FormField
                   name="poNo"
-                  initValue={values.poNo}
+                  initValue={initialValues.poNo}
                   values={values}
                   validator={validator}
                   setFieldValue={setFieldValue}
                 >
-                  {({ name, ...inputHandlers }) =>
+                  {({ name, initValue, ...inputHandlers }) =>
                     textInputFactory({
                       inputHandlers,
                       name,
                       isNew,
+                      initValue,
                       required: true,
-                      initValue: initialValues[name],
                       label: <FormattedMessage {...messages.PO} />,
                     })
                   }

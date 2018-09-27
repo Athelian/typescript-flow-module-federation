@@ -21,6 +21,7 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   setFieldValue = (name: string, value: mixed) => {

@@ -22,6 +22,7 @@ export default class OrderFilesContainer extends Container<FormState> {
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   setFieldValue = (path: string, value: mixed) => {

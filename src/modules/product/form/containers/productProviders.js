@@ -61,6 +61,7 @@ export default class ProductProvidersContainer extends Container<FormState> {
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   initDetailValues = (productProviders: Array<Object>) => {

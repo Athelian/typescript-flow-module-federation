@@ -76,8 +76,8 @@ export default class BatchFormContainer extends Container<FormState> {
   isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
-    logger.warn('onSuccess');
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   initDetailValues = (values: any) => {

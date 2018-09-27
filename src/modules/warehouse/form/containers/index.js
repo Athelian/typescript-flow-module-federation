@@ -57,6 +57,7 @@ export default class WarehouseContainer extends Container<FormState> {
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
   };
 
   initDetailValues = (values: Object) => {
