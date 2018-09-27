@@ -12,6 +12,7 @@ import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { PartnerCard } from 'components/Cards';
 import { Label, DashedPlusButton } from 'components/Form';
+import SelectSupplier from '../SelectSupplier';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
 
 type Props = {
@@ -67,8 +68,42 @@ const ProductProviderSection = ({ isNew }: Props) => (
               </GridColumn>
 
               <GridColumn gap="10px">
-                <Label>SUPPLIER</Label>
-                <DashedPlusButton width="200px" height="230px" />
+                <Label required>SUPPLIER</Label>
+                <BooleanValue>
+                  {({ value: opened, set: supplierSlideToggle }) => (
+                    <>
+                      {!values.supplier ? (
+                        <DashedPlusButton
+                          width="200px"
+                          height="230px"
+                          onClick={() => supplierSlideToggle(true)}
+                        />
+                      ) : (
+                        <PartnerCard
+                          partner={values.supplier}
+                          onClick={() => supplierSlideToggle(true)}
+                        />
+                      )}
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={() => supplierSlideToggle(false)}
+                        options={{ width: '980px' }}
+                        rootElementId="slide-view-root2"
+                      >
+                        {opened && (
+                          <SelectSupplier
+                            selected={values.supplier}
+                            onCancel={() => supplierSlideToggle(false)}
+                            onSelect={newValue => {
+                              supplierSlideToggle(false);
+                              setFieldValue('supplier', newValue);
+                            }}
+                          />
+                        )}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
               </GridColumn>
             </GridRow>
 
