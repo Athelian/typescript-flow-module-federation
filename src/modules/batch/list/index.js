@@ -10,7 +10,7 @@ type Props = {
   viewType: string,
   filter: {
     query: string,
-    status: string,
+    archived: boolean,
   },
   sort: {
     field: string,
@@ -21,11 +21,17 @@ type Props = {
 
 class BatchList extends React.PureComponent<Props> {
   render() {
-    const { viewType, ...filtersAndSort } = this.props;
+    const { viewType, sort, ...filtersAndSort } = this.props;
     return (
       <Query
         query={batchListQuery}
-        variables={{ page: 1, ...filtersAndSort }}
+        variables={{
+          page: 1,
+          sort: {
+            [sort.field]: sort.direction,
+          },
+          ...filtersAndSort,
+        }}
         fetchPolicy="network-only"
       >
         {({ loading, data, fetchMore, error }) => {

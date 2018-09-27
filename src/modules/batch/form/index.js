@@ -11,6 +11,7 @@ import { BatchFormWrapperStyle, StatusStyle } from './style';
 type OptionalProps = {
   isNew: boolean,
   selectable: boolean,
+  onDetailReady: () => void,
 };
 
 type Props = OptionalProps & {
@@ -20,10 +21,17 @@ type Props = OptionalProps & {
 const defaultProps = {
   isNew: false,
   selectable: true,
+  onDetailReady: () => {},
 };
 
 export default class BatchForm extends React.Component<Props> {
   static defaultProps = defaultProps;
+
+  componentDidMount() {
+    const { onDetailReady } = this.props;
+
+    if (onDetailReady) onDetailReady();
+  }
 
   shouldComponentUpdate(nextProps: Props) {
     const { batch, selectable, isNew } = this.props;

@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
-import { Query, Mutation } from 'react-apollo';
+import { Mutation } from 'react-apollo';
+import QueryDetail from 'components/common/QueryDetail';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
@@ -12,7 +13,6 @@ import { FormContainer } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
 import BatchForm from './form';
 import BatchFormContainer from './form/container';
 import validator from './form/validator';
@@ -149,31 +149,26 @@ class BatchFormModule extends React.PureComponent<Props> {
                   {isNew || !batchId ? (
                     <BatchForm batch={{}} isNew />
                   ) : (
-                    <Subscribe to={[BatchFormContainer]}>
-                      {({ initDetailValues }) => (
-                        <Query
-                          query={query}
-                          variables={{ id: decodeId(batchId) }}
-                          fetchPolicy="network-only"
-                          onCompleted={detail => {
-                            if (detail.batch) {
-                              initDetailValues(detail.batch);
-                            } else {
-                              navigate('/404');
-                            }
-                          }}
-                        >
-                          {({ loading, data, error }) => {
-                            if (error) {
-                              return error.message;
-                            }
-
-                            if (loading) return <LoadingIcon />;
-                            return <BatchForm batch={getByPathWithDefault({}, 'batch', data)} />;
-                          }}
-                        </Query>
+                    <QueryDetail
+                      query={query}
+                      detailId={batchId}
+                      detailType="batch"
+                      render={batch => (
+                        <Subscribe to={[BatchFormContainer]}>
+                          {({ initDetailValues }) => (
+                            <BatchForm
+                              batch={batch}
+                              onChangeStatus={(formData, onSuccess) =>
+                                this.onSave(formData, saveBatch, onSuccess)
+                              }
+                              onDetailReady={() => {
+                                initDetailValues(batch);
+                              }}
+                            />
+                          )}
+                        </Subscribe>
                       )}
-                    </Subscribe>
+                    />
                   )}
                 </Layout>
               )}
