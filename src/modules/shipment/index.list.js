@@ -18,7 +18,7 @@ type State = {
   viewType: string,
   filter: {
     query: string,
-    status: string,
+    archived: boolean,
   },
   sort: {
     field: string,
@@ -33,7 +33,7 @@ class ShipmentListModule extends React.Component<Props, State> {
     viewType: 'grid',
     filter: {
       query: '',
-      status: 'Active',
+      archived: false,
     },
     sort: {
       field: 'updatedAt',

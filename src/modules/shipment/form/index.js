@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Loadable from 'react-loadable';
 import { uniqBy } from 'lodash';
+import { isEquals } from 'utils/fp';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
@@ -11,6 +12,7 @@ import { ShipmentFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
+  onDetailReady: () => void,
 };
 
 type Props = OptionalProps & {
@@ -19,6 +21,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isNew: false,
+  onDetailReady: () => {},
 };
 
 const AsyncTimelineSection = Loadable({
@@ -34,42 +37,62 @@ const AsyncOrderSection = Loadable({
   loader: () => import('./components/OrderSection'),
 });
 
-const ShipmentForm = ({ shipment, isNew }: Props) => (
-  <div className={ShipmentFormWrapperStyle}>
-    <SectionWrapper id="shipmentSection">
-      <SectionHeader icon="SHIPMENT" title="SHIPMENT">
-        {!isNew && <LastModified updatedAt={shipment.updatedAt} updatedBy={shipment.updatedBy} />}
-      </SectionHeader>
-      <ShipmentSection isNew={isNew} />
-    </SectionWrapper>
-    <SectionWrapper id="timelineSection">
-      <SectionHeader icon="TIMELINE" title="TIMELINE" />
-      <AsyncTimelineSection isNew={isNew} />
-    </SectionWrapper>
-    <SectionWrapper id="cargoSection">
-      <Subscribe to={[ShipmentBatchesContainer]}>
-        {({ state: { batches } }) => (
-          <SectionHeader icon="CARGO" title={`CARGO (${batches.length})`} />
-        )}
-      </Subscribe>
-      <AsyncCargoSection />
-    </SectionWrapper>
-    <SectionWrapper id="orderSection">
-      <Subscribe to={[ShipmentBatchesContainer]}>
-        {({ state: { batches } }) => {
-          const uniqueOrders = uniqBy(batches.map(item => item.orderItem.order), 'id');
-          return (
-            <>
-              <SectionHeader icon="ORDER" title={`ORDER (${uniqueOrders.length})`} />
-              <AsyncOrderSection orders={uniqueOrders} />
-            </>
-          );
-        }}
-      </Subscribe>
-    </SectionWrapper>
-  </div>
-);
+class ShipmentForm extends React.Component<Props> {
+  static defaultProps = defaultProps;
 
-ShipmentForm.defaultProps = defaultProps;
+  componentDidMount() {
+    const { onDetailReady } = this.props;
+
+    if (onDetailReady) onDetailReady();
+  }
+
+  shouldComponentUpdate(nextProps: Props) {
+    const { shipment } = this.props;
+
+    return !isEquals(shipment, nextProps.shipment);
+  }
+
+  render() {
+    const { isNew, shipment } = this.props;
+
+    return (
+      <div className={ShipmentFormWrapperStyle}>
+        <SectionWrapper id="shipmentSection">
+          <SectionHeader icon="SHIPMENT" title="SHIPMENT">
+            {!isNew && (
+              <LastModified updatedAt={shipment.updatedAt} updatedBy={shipment.updatedBy} />
+            )}
+          </SectionHeader>
+          <ShipmentSection isNew={isNew} />
+        </SectionWrapper>
+        <SectionWrapper id="timelineSection">
+          <SectionHeader icon="TIMELINE" title="TIMELINE" />
+          <AsyncTimelineSection isNew={isNew} />
+        </SectionWrapper>
+        <SectionWrapper id="cargoSection">
+          <Subscribe to={[ShipmentBatchesContainer]}>
+            {({ state: { batches } }) => (
+              <SectionHeader icon="CARGO" title={`CARGO (${batches.length})`} />
+            )}
+          </Subscribe>
+          <AsyncCargoSection />
+        </SectionWrapper>
+        <SectionWrapper id="orderSection">
+          <Subscribe to={[ShipmentBatchesContainer]}>
+            {({ state: { batches } }) => {
+              const uniqueOrders = uniqBy(batches.map(item => item.orderItem.order), 'id');
+              return (
+                <>
+                  <SectionHeader icon="ORDER" title={`ORDER (${uniqueOrders.length})`} />
+                  <AsyncOrderSection orders={uniqueOrders} />
+                </>
+              );
+            }}
+          </Subscribe>
+        </SectionWrapper>
+      </div>
+    );
+  }
+}
 
 export default ShipmentForm;

@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
-import { Query, Mutation } from 'react-apollo';
+import { Mutation } from 'react-apollo';
+import QueryDetail from 'components/common/QueryDetail';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
@@ -12,7 +13,6 @@ import LoadingIcon from 'components/LoadingIcon';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
 import {
   ShipmentInfoContainer,
   ShipmentTagsContainer,
@@ -230,30 +230,31 @@ class ShipmentFormModule extends React.Component<Props> {
                   {isNew || !shipmentId ? (
                     <ShipmentForm shipment={{}} isNew />
                   ) : (
-                    <Subscribe
-                      to={[
-                        ShipmentBatchesContainer,
-                        ShipmentInfoContainer,
-                        ShipmentTagsContainer,
-                        ShipmentTimelineContainer,
-                        ShipmentTransportTypeContainer,
-                      ]}
-                    >
-                      {(
-                        shipmentBatchesState,
-                        shipmentInfoState,
-                        shipmentTagsState,
-                        shipmentTimelineState,
-                        shipmentTransportTypeState
-                      ) => (
-                        <Query
-                          query={query}
-                          variables={{ id: decodeId(shipmentId) }}
-                          fetchPolicy="network-only"
-                          onCompleted={result => {
-                            if (result.shipment) {
-                              const {
-                                shipment: {
+                    <QueryDetail
+                      query={query}
+                      detailId={shipmentId}
+                      detailType="shipment"
+                      render={shipment => (
+                        <Subscribe
+                          to={[
+                            ShipmentBatchesContainer,
+                            ShipmentInfoContainer,
+                            ShipmentTagsContainer,
+                            ShipmentTimelineContainer,
+                            ShipmentTransportTypeContainer,
+                          ]}
+                        >
+                          {(
+                            shipmentBatchesState,
+                            shipmentInfoState,
+                            shipmentTagsState,
+                            shipmentTimelineState,
+                            shipmentTransportTypeState
+                          ) => (
+                            <ShipmentForm
+                              shipment={shipment}
+                              onDetailReady={() => {
+                                const {
                                   batches,
                                   tags,
                                   transportType,
@@ -261,35 +262,22 @@ class ShipmentFormModule extends React.Component<Props> {
                                   voyages,
                                   containerGroups,
                                   ...info
-                                },
-                              } = result;
-                              shipmentBatchesState.initDetailValues(batches);
-                              shipmentInfoState.initDetailValues(info);
-                              shipmentTagsState.initDetailValues(tags);
-                              shipmentTimelineState.initDetailValues({
-                                cargoReady,
-                                voyages,
-                                containerGroups,
-                              });
-                              shipmentTransportTypeState.initDetailValues(transportType);
-                            } else {
-                              navigate('/shipment');
-                            }
-                          }}
-                        >
-                          {({ loading, data, error }) => {
-                            if (error) {
-                              return error.message;
-                            }
-
-                            if (loading) return <LoadingIcon />;
-                            return (
-                              <ShipmentForm shipment={getByPathWithDefault({}, 'shipment', data)} />
-                            );
-                          }}
-                        </Query>
+                                } = shipment;
+                                shipmentBatchesState.initDetailValues(batches);
+                                shipmentInfoState.initDetailValues(info);
+                                shipmentTagsState.initDetailValues(tags);
+                                shipmentTimelineState.initDetailValues({
+                                  cargoReady,
+                                  voyages,
+                                  containerGroups,
+                                });
+                                shipmentTransportTypeState.initDetailValues(transportType);
+                              }}
+                            />
+                          )}
+                        </Subscribe>
                       )}
-                    </Subscribe>
+                    />
                   )}
                 </Layout>
               )}
