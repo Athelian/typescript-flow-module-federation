@@ -25,8 +25,8 @@ const defaultProps = {
   },
 };
 
-const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
-  <PartnerListProvider types={['Exporter']}>
+const SelectSupplier = ({ selected, onCancel, onSelect }: Props) => (
+  <PartnerListProvider types={['Supplier']}>
     {({ loading, data }) => (
       <ObjectValue defaultValue={selected}>
         {({ value, set }) => (
@@ -43,7 +43,7 @@ const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
               hasMore={false}
               isLoading={loading}
               onLoadMore={() => {}}
-              items={data.filter(partner => partner.types.includes('Exporter'))}
+              items={data.filter(partner => partner.types.includes('Supplier'))}
               renderItem={item => (
                 <PartnerCard
                   partner={item}
@@ -61,6 +61,6 @@ const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
   </PartnerListProvider>
 );
 
-SelectExporters.defaultProps = defaultProps;
+SelectSupplier.defaultProps = defaultProps;
 
-export default SelectExporters;
+export default SelectSupplier;
