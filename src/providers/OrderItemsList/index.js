@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import type { QueryRenderPropFunction } from 'react-apollo';
-import query from './query.graphql';
+import query from './query';
 
 type OptionalProps = {
   filterBy: {

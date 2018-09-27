@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import PartnerGridView from './PartnerGridView';
-import query from './query.graphql';
+import query from './query';
 
 type Props = {
   viewType: string,

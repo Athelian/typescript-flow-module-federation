@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
-import query from './query.graphql';
+import query from './query';
 
 const AuthenticationContext = React.createContext({
   authenticated: false,

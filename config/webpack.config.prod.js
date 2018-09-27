@@ -1,6 +1,5 @@
 'use strict';
 
-const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -62,8 +61,11 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
         ident: 'postcss',
         plugins: () => [
           require('postcss-flexbugs-fixes'),
-          autoprefixer({
-            flexbox: 'no-2009',
+          require('postcss-preset-env')({
+            autoprefixer: {
+              flexbox: 'no-2009',
+            },
+            stage: 3,
           }),
         ],
         sourceMap: shouldUseSourceMap,
@@ -173,7 +175,6 @@ const plugins = [
 if (process.env.ANALYZE) {
   plugins.push(new BundleAnalyzerPlugin());
 }
-
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
@@ -184,8 +185,8 @@ module.exports = {
   // We generate sourcemaps in production. This is slow but gives good results.
   // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? 'source-map' : false,
-  // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  // In production, we only want to load the app code.
+  entry: [paths.appIndexJs],
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -331,7 +332,10 @@ module.exports = {
               // improves compile time on larger projects
               require.resolve('thread-loader'),
               {
-                loader: require.resolve('babel-loader'),
+                // We need to use our own loader until `babel-loader` supports
+                // customization
+                // https://github.com/babel/babel-loader/pull/687
+                loader: require.resolve('babel-preset-react-app/loader'),
                 options: {
                   plugins: [
                     [
@@ -358,6 +362,7 @@ module.exports = {
           // Unlike the application JS, we only compile the standard ES features.
           {
             test: /\.js$/,
+            exclude: /@babel(?:\/|\\{1,2})runtime/,
             use: [
               // This loader parallelizes code compilation, it is optional but
               // improves compile time on larger projects
@@ -367,12 +372,19 @@ module.exports = {
                 options: {
                   babelrc: false,
                   compact: false,
-                  presets: [require.resolve('babel-preset-react-app/dependencies')],
+                  presets: [
+                    [require.resolve('babel-preset-react-app/dependencies'), { helpers: true }],
+                  ],
                   cacheDirectory: true,
                   // Save disk space when time isn't as important
                   cacheCompression: true,
 
                   highlightCode: true,
+                  // If an error happens in a package, it's possible to be
+                  // because it was compiled. Thus, we don't want the browser
+                  // debugger to show the original code. Instead, the code
+                  // being evaluated would be much more helpful.
+                  sourceMaps: false,
                 },
               },
             ],
@@ -430,11 +442,6 @@ module.exports = {
               },
               'sass-loader'
             ),
-          },
-          // The GraphQL loader preprocesses GraphQL queries in .graphql files.
-          {
-            test: /\.(graphql)$/,
-            loader: 'graphql-tag/loader',
           },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.

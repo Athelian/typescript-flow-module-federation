@@ -17,7 +17,7 @@ import {
 } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
-import orderItemsQuery from 'providers/OrderItemsList/query.graphql';
+import orderItemsQuery from 'providers/OrderItemsList/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';

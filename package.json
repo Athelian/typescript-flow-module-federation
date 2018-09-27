@@ -18,10 +18,10 @@
     "apollo-link-error": "^1.1.1",
     "apollo-link-http": "^1.5.5",
     "date-fns": "^2.0.0-alpha.16",
-    "downshift": "^2.2.2",
+    "downshift": "^2.2.3",
     "emotion": "^9.2.10",
     "fontfaceobserver": "^2.0.13",
-    "graphql": "14.0.2",
+    "graphql": "^14.0.2",
     "graphql-tag": "^2.9.2",
     "immutability-helper": "^2.8.1",
     "lodash": "^4.17.11",
@@ -33,7 +33,7 @@
     "randomcolor": "^0.5.3",
     "raven-js": "^3.27.0",
     "react": "^16.5.2",
-    "react-apollo": "^2.2.0",
+    "react-apollo": "^2.2.1",
     "react-debounce-input": "^3.2.0",
     "react-dom": "^16.5.2",
     "react-emotion": "^9.2.10",
@@ -41,10 +41,10 @@
     "react-hot-loader": "^4.3.11",
     "react-infinite-scroller": "^1.2.1",
     "react-intercom": "^1.0.14",
-    "react-intl": "^2.6.0",
+    "react-intl": "^2.7.0",
     "react-loadable": "^5.5.0",
     "react-tiny-virtual-list": "^2.2.0",
-    "react-transition-group": "^2.4.0",
+    "react-transition-group": "^2.5.0",
     "react-values": "^0.3.0",
     "scroll-into-view-if-needed": "^2.2.16",
     "unstated": "^2.1.1",
@@ -77,11 +77,6 @@
     "styleguide": "styleguidist server",
     "build:styleguide": "styleguidist build"
   },
-  "browserslist": [
-    ">0.25%",
-    "not op_mini all",
-    "ie 11"
-  ],
   "lint-staged": {
     "src/**/*.{js,jsx,json}": [
       "eslint --fix",
@@ -98,19 +93,18 @@
       "src/**/*.{js,jsx}"
     ],
     "setupFiles": [
-      "<rootDir>/config/polyfills.js"
+      "react-app-polyfill/jsdom"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx}",
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx}"
     ],
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^.+\\.(graphql)$": "<rootDir>/config/jest/graphqlTransform.js",
-      "^(?!.*\\.(js|jsx|css|json|graphql)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$",
@@ -152,10 +146,10 @@
     "babel-loader": "8.0.2",
     "babel-plugin-emotion": "^9.2.10",
     "babel-plugin-module-resolver": "^3.1.1",
-    "babel-plugin-named-asset-import": "1.0.0-next.2150693d",
+    "babel-plugin-named-asset-import": "^0.2.0",
     "babel-plugin-ramda": "^1.6.3",
     "babel-plugin-react-remove-properties": "^0.2.5",
-    "babel-preset-react-app": "4.0.0-next.2150693d",
+    "babel-preset-react-app": "^4.0.0",
     "bfj": "6.1.1",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
@@ -168,7 +162,7 @@
     "eslint": "^5.6.0",
     "eslint-config-airbnb": "17.1.0",
     "eslint-config-prettier": "^3.1.0",
-    "eslint-config-react-app": "3.0.0-next.2150693d",
+    "eslint-config-react-app": "^3.0.0",
     "eslint-loader": "2.1.1",
     "eslint-plugin-cypress": "^2.0.1",
     "eslint-plugin-flowtype": "^2.50.1",
@@ -176,7 +170,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-json": "^1.2.1",
     "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-prettier": "^2.7.0",
     "eslint-plugin-react": "^7.11.1",
     "file-loader": "2.0.0",
     "flow-bin": "^0.81.0",
@@ -192,16 +186,15 @@
     "loader-utils": "^1.1.0",
     "mini-css-extract-plugin": "^0.4.3",
     "node-fetch": "^2.2.0",
-    "object-assign": "4.1.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-loader": "3.0.0",
+    "postcss-preset-env": "6.0.7",
     "postcss-safe-parser": "4.0.1",
     "prettier": "^1.14.3",
     "prettier-eslint-cli": "^4.7.1",
-    "promise": "8.0.2",
-    "raf": "3.4.0",
-    "react-dev-utils": "6.0.0-next.2150693d",
+    "react-app-polyfill": "^0.1.0",
+    "react-dev-utils": "^6.0.0",
     "react-snap": "^1.19.0",
     "react-styleguidist": "^7.3.8",
     "react-test-renderer": "^16.5.2",
@@ -219,8 +212,7 @@
     "webpack": "4.19.1",
     "webpack-bundle-analyzer": "^3.0.2",
     "webpack-dev-server": "3.1.9",
-    "webpack-manifest-plugin": "2.0.4",
-    "whatwg-fetch": "3.0.0"
+    "webpack-manifest-plugin": "2.0.4"
   },
   "config": {
     "commitizen": {
@@ -232,5 +224,11 @@
       "commit-msg": "commitlint -e",
       "pre-commit": "npm run flow && lint-staged"
     }
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
