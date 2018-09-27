@@ -229,61 +229,63 @@ const ShipmentSection = ({ isNew }: Props) => (
             </GridColumn>
 
             <GridColumn>
-              <BooleanValue>
-                {({ value: opened, toggle }) => (
-                  <>
-                    <div onClick={toggle} role="presentation">
-                      <FieldItem
-                        vertical
-                        label={<Label>FORWARDER ({forwarders.length})</Label>}
-                        tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
-                        input={renderForwarders(forwarders)}
-                      />
-                    </div>
-                    <SlideView
-                      isOpen={opened}
-                      onRequestClose={toggle}
-                      options={{ width: '1030px' }}
-                    >
-                      {opened && (
-                        <SelectForwarders
-                          selected={values.forwarders}
-                          onCancel={toggle}
-                          onSelect={newValue => {
-                            const selectedForwarders = newValue.map(item => ({
-                              id: item.group.id,
-                              name: item.name || item.group.name,
-                            }));
-                            toggle();
-                            setFieldValue('forwarders', selectedForwarders);
-                          }}
-                        />
-                      )}
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
+              <GridColumn gap="10px">
+                <FieldItem
+                  label={<Label>FORWARDER ({forwarders.length})</Label>}
+                  tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
+                />
+                <BooleanValue>
+                  {({ value: opened, set: slideToggle }) => (
+                    <>
+                      <div onClick={() => slideToggle(true)} role="presentation">
+                        {renderForwarders(forwarders)}
+                      </div>
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={() => slideToggle(false)}
+                        options={{ width: '1030px' }}
+                      >
+                        {opened && (
+                          <SelectForwarders
+                            selected={values.forwarders}
+                            onCancel={() => slideToggle(false)}
+                            onSelect={selected => {
+                              slideToggle(false);
+                              setFieldValue('forwarders', selected);
+                            }}
+                          />
+                        )}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
+              </GridColumn>
               <Subscribe to={[ShipmentBatchesContainer]}>
                 {({ state: { batches } }) => {
                   const uniqueExporters = getUniqueExporters(batches);
                   return (
-                    <FieldItem
-                      vertical
-                      label={
-                        <div className={ExporterLabelStyle}>
-                          <Label>EXPORTER ({uniqueExporters.length})</Label>
-                          {uniqueExporters.length > 4 && (
-                            <button className={ExporterSeeMoreButtonStyle} type="button">
-                              <Icon icon="HORIZONTAL_ELLIPSIS" />
-                            </button>
-                          )}
-                        </div>
-                      }
-                      tooltip={
-                        <Tooltip infoMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment." />
-                      }
-                      input={renderExporters(uniqueExporters)}
-                    />
+                    <GridColumn gap="10px">
+                      <FieldItem
+                        label={
+                          <div className={ExporterLabelStyle}>
+                            <Label>EXPORTER ({uniqueExporters.length})</Label>
+                            {uniqueExporters.length > 4 && (
+                              <button
+                                className={ExporterSeeMoreButtonStyle}
+                                type="button"
+                                onClick={console.log('Show full list of exporters')}
+                              >
+                                <Icon icon="HORIZONTAL_ELLIPSIS" />
+                              </button>
+                            )}
+                          </div>
+                        }
+                        tooltip={
+                          <Tooltip infoMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment." />
+                        }
+                      />
+                      {renderExporters(uniqueExporters)}
+                    </GridColumn>
                   );
                 }}
               </Subscribe>

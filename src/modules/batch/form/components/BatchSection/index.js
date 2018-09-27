@@ -133,29 +133,33 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                   <FormattedMessage {...messages.orderItem} />
                 </Label>
                 <BooleanValue>
-                  {({ value: opened, toggle }) => (
+                  {({ value: opened, set: slideToggle }) => (
                     <React.Fragment>
                       {!values.orderItem ? (
-                        <DashedPlusButton width="195px" height="222px" onClick={toggle} />
+                        <DashedPlusButton
+                          width="195px"
+                          height="222px"
+                          onClick={() => slideToggle(true)}
+                        />
                       ) : (
                         <OrderItemCard
                           item={values.orderItem}
-                          onSelect={selectable ? toggle : null}
+                          onSelect={selectable ? () => slideToggle(true) : null}
                           selectable={selectable}
                         />
                       )}
 
                       <SlideView
                         isOpen={opened}
-                        onRequestClose={toggle}
+                        onRequestClose={() => slideToggle(false)}
                         options={{ width: '1030px' }}
                       >
                         {opened && (
                           <SelectOrderItem
                             selected={values.orderItem}
-                            onCancel={toggle}
+                            onCancel={() => slideToggle(false)}
                             onSelect={newValue => {
-                              toggle();
+                              slideToggle(false);
                               setFieldValue('orderItem', newValue);
                             }}
                           />

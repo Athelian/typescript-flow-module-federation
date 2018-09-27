@@ -160,32 +160,36 @@ class VoyageSelector extends React.Component<Props> {
 
     return (
       <BooleanValue>
-        {({ value: isOptionsOpen, toggle }) =>
+        {({ value: isOptionsOpen, set: selectorToggle }) =>
           isOptionsOpen ? (
-            <OutsideClickHandler onOutsideClick={toggle}>
+            <OutsideClickHandler onOutsideClick={() => selectorToggle(false)}>
               <div className={VoyageOptionsWrapperStyle}>
                 {this.renderIcon({
                   numOfIcons: 1,
                   isActive: voyages.length === 1,
                   isOptionsOpen,
-                  toggle,
+                  toggle: () => selectorToggle(false),
                 })}
                 {this.renderIcon({
                   numOfIcons: 2,
                   isActive: voyages.length === 2,
                   isOptionsOpen,
-                  toggle,
+                  toggle: () => selectorToggle(false),
                 })}
                 {this.renderIcon({
                   numOfIcons: 3,
                   isActive: voyages.length === 3,
                   isOptionsOpen,
-                  toggle,
+                  toggle: () => selectorToggle(false),
                 })}
               </div>
             </OutsideClickHandler>
           ) : (
-            <div className={VoyageSelectorWrapperStyle} onClick={toggle} role="presentation">
+            <div
+              className={VoyageSelectorWrapperStyle}
+              onClick={() => selectorToggle(true)}
+              role="presentation"
+            >
               <Label align="right"># OF VOYAGES</Label>
               {this.renderIcon({
                 numOfIcons: voyages.length,

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, layout, fontSizesWithHeights, colors } from 'styles/common';
+import { presets, layout, colors } from 'styles/common';
 
 export const OrderSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -11,28 +11,6 @@ export const OrderSectionWrapperStyle: string = css`
 export const MainFieldsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   justify-content: space-between;
-`;
-
-export const ExporterCardStyle: string = css`
-  width: 200px;
-  height: 230px;
-`;
-
-export const ExporterCardImageStyle: string = css`
-  border-radius: 5px 5px 0 0;
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-`;
-
-export const ExporterNameStyle: string = css`
-  color: ${colors.BLACK};
-  font-weight: bold;
-  ${fontSizesWithHeights.MAIN};
-  ${presets.ELLIPSIS};
-  text-align: center;
-  width: 200px;
-  padding: 0 10px;
 `;
 
 export const TagsInputStyle: string = css`

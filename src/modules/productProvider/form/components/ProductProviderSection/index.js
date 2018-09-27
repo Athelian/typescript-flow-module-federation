@@ -2,11 +2,15 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
+import { BooleanValue } from 'react-values';
 import { textInputFactory, priceInputFactory } from 'modules/form/helpers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
+import SelectExporters from 'modules/order/common/SelectExporters';
+import SlideView from 'components/SlideView';
 import validator from 'modules/product/form/validator';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
+import { PartnerCard } from 'components/Cards';
 import { Label, DashedPlusButton } from 'components/Form';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
 
@@ -25,7 +29,41 @@ const ProductProviderSection = ({ isNew }: Props) => (
             <GridRow>
               <GridColumn gap="10px">
                 <Label required>EXPORTER</Label>
-                <DashedPlusButton width="200px" height="230px" />
+                <BooleanValue>
+                  {({ value: opened, set: exporterSlideToggle }) => (
+                    <>
+                      {!values.exporter ? (
+                        <DashedPlusButton
+                          width="200px"
+                          height="230px"
+                          onClick={() => exporterSlideToggle(true)}
+                        />
+                      ) : (
+                        <PartnerCard
+                          partner={values.exporter}
+                          onClick={() => exporterSlideToggle(true)}
+                        />
+                      )}
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={() => exporterSlideToggle(false)}
+                        options={{ width: '980px' }}
+                        rootElementId="slide-view-root2"
+                      >
+                        {opened && (
+                          <SelectExporters
+                            selected={values.exporter}
+                            onCancel={() => exporterSlideToggle(false)}
+                            onSelect={newValue => {
+                              exporterSlideToggle(false);
+                              setFieldValue('exporter', newValue);
+                            }}
+                          />
+                        )}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
               </GridColumn>
 
               <GridColumn gap="10px">

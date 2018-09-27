@@ -37,11 +37,11 @@ function ProductProvidersSection() {
                 {productProviders.map(
                   (productProvider, index): React.Node => (
                     <BooleanValue key={productProvider.id}>
-                      {({ value: opened, toggle }) => (
+                      {({ value: opened, set: slideToggle }) => (
                         <>
                           <SlideView
                             isOpen={opened}
-                            onRequestClose={toggle}
+                            onRequestClose={() => slideToggle(false)}
                             options={{ width: '1030px' }}
                           >
                             {opened && (
@@ -51,16 +51,19 @@ function ProductProvidersSection() {
                                     productProvider={productProviders[index]}
                                     isNew={!!productProvider.isNew}
                                     initDetailValues={initDetailValues}
-                                    onCancel={toggle}
+                                    onCancel={() => slideToggle(false)}
                                     onSave={() => {
-                                      toggle();
+                                      slideToggle(false);
                                     }}
                                   />
                                 )}
                               </Subscribe>
                             )}
                           </SlideView>
-                          <ProductProviderCard productProvider={productProvider} onClick={toggle} />
+                          <ProductProviderCard
+                            productProvider={productProvider}
+                            onClick={() => slideToggle(true)}
+                          />
                         </>
                       )}
                     </BooleanValue>

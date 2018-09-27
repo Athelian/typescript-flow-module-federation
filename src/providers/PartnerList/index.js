@@ -16,7 +16,9 @@ const PartnerList = ({ types, children }: Props) => (
       children({
         data:
           !loading && data
-            ? getByPathWithDefault([], 'viewer.user.group.partners.nodes', data)
+            ? getByPathWithDefault([], 'viewer.user.group.partners.nodes', data).map(
+                item => item.group
+              )
             : [],
         loading,
         error,

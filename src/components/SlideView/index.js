@@ -22,7 +22,7 @@ type Props = {
 
 export default class SlideView extends React.Component<Props> {
   static defaultProps = {
-    rootElementId: 'slide-view-root',
+    rootElementId: 'slide-view-root1',
   };
 
   constructor() {

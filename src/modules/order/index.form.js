@@ -126,13 +126,13 @@ class OrderFormModule extends React.PureComponent<Props> {
                         <SectionTabs link="ordersSection" label="SHIPMENTS" icon="SHIPMENT" />
                       </JumpToSection>
                       <BooleanValue>
-                        {({ value: opened, toggle }) =>
+                        {({ value: opened, set: slideToggle }) =>
                           !isNew && (
                             <>
-                              <LogsButton onClick={toggle} />
+                              <LogsButton onClick={() => slideToggle(true)} />
                               <SlideView
                                 isOpen={opened}
-                                onRequestClose={toggle}
+                                onRequestClose={() => slideToggle(false)}
                                 options={{ width: '1030px' }}
                               >
                                 <div style={{ padding: '50px', textAlign: 'center' }}>

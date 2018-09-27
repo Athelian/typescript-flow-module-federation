@@ -246,16 +246,16 @@ const OrderItemCard = ({
 
                 {!selectable && (
                   <BooleanValue>
-                    {({ value: isOpen, toggle }) => (
+                    {({ value: isOpen, set: dialogToggle }) => (
                       <>
                         <ConfirmDialog
                           isOpen={isOpen}
-                          onRequestClose={toggle}
-                          onCancel={toggle}
+                          onRequestClose={() => dialogToggle(false)}
+                          onCancel={() => dialogToggle(false)}
                           onConfirm={() => {
                             assign({ price: { currency, amount: unitPrice.amount } });
                             saveOnBlur({ quantity, price: { currency, amount: unitPrice.amount } });
-                            toggle();
+                            dialogToggle(false);
                           }}
                           message="Currency is not matched. Do you want to sync?"
                           width={400}
@@ -271,7 +271,7 @@ const OrderItemCard = ({
                                 price: { currency, amount: unitPrice.amount },
                               });
                             } else {
-                              toggle();
+                              dialogToggle(true);
                             }
                           }}
                         >

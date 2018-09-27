@@ -122,24 +122,28 @@ class TimelineInfoSection extends React.Component<Props> {
                     timelineDate.assignedTo &&
                     timelineDate.assignedTo.length < 5)) && (
                   <BooleanValue>
-                    {({ value: isOpen, toggle }) => (
+                    {({ value: isOpen, set: slideToggle }) => (
                       <>
-                        <button className={AddAssignmentButtonStyle} type="button" onClick={toggle}>
+                        <button
+                          className={AddAssignmentButtonStyle}
+                          type="button"
+                          onClick={() => slideToggle(true)}
+                        >
                           <Icon icon="ADD" />
                         </button>
                         <SlideView
                           isOpen={isOpen}
-                          onRequestClose={toggle}
+                          onRequestClose={() => slideToggle(false)}
                           options={{ width: '1030px' }}
                         >
                           {isOpen && (
                             <AssignUsers
                               selected={timelineDate.assignedTo}
                               onSelect={selected => {
-                                toggle();
+                                slideToggle(false);
                                 setFieldDeepValue(`${sourceName}.assignedTo`, selected);
                               }}
-                              onCancel={toggle}
+                              onCancel={() => slideToggle(false)}
                             />
                           )}
                         </SlideView>
