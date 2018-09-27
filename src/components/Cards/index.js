@@ -8,8 +8,6 @@ import PartnerCard from './PartnerCard';
 import ProductCard from './ProductCard';
 import ProductProviderCard from './ProductProviderCard';
 import ShipmentCard from './ShipmentCard';
-import ShipmentExporterCard from './ShipmentExporterCard';
-import ShipmentForwarderCard from './ShipmentForwarderCard';
 import ShipmentBatchCard from './ShipmentBatchCard';
 import ShipmentOrderCard from './ShipmentOrderCard';
 import ShipmentUserCard from './ShipmentUserCard';
@@ -30,8 +28,6 @@ export {
   ProductCard,
   ProductProviderCard,
   ShipmentCard,
-  ShipmentExporterCard,
-  ShipmentForwarderCard,
   ShipmentBatchCard,
   ShipmentUserCard,
   ShipmentOrderCard,
