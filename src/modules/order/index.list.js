@@ -48,7 +48,6 @@ class OrderModule extends React.Component<Props, State> {
   };
 
   render() {
-    const { viewType, sort, perPage, filter } = this.state;
     const { intl } = this.props;
 
     const fields = [
@@ -77,7 +76,7 @@ class OrderModule extends React.Component<Props, State> {
               </NavBar>
             }
           >
-            <OrderList viewType={viewType} sort={sort} perPage={perPage} filter={filter} />
+            <OrderList {...this.state} />
           </Layout>
         )}
       </UIConsumer>

@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
+import loadMore from 'utils/loadMore';
 import ProductGridView from './ProductGridView';
 import { productListQuery } from './query';
 
@@ -9,7 +10,7 @@ type Props = {
   viewType: string,
   filter: {
     query: string,
-    status: string,
+    archived: boolean,
   },
   sort: {
     field: string,
@@ -18,77 +19,37 @@ type Props = {
   perPage: number,
 };
 
-class ProductList extends React.Component<Props> {
-  loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
-    const { data, fetchMore } = clientData;
-    if (!data) return;
-    const nextPage = getByPathWithDefault(1, 'products.page', data) + 1;
-    const totalPage = getByPathWithDefault(1, 'products.totalPage', data);
-    if (nextPage > totalPage) return;
-
-    const { viewType, ...filtersAndSort } = this.props;
-
-    fetchMore({
-      variables: {
-        page: nextPage,
-        ...filtersAndSort,
+const ProductList = ({ viewType, sort, ...filtersAndSort }: Props) => (
+  <Query
+    query={productListQuery}
+    variables={{
+      page: 1,
+      sort: {
+        [sort.field]: sort.direction,
       },
-      updateQuery: (prevResult, { fetchMoreResult }) => {
-        const { filter, sort, perPage } = this.props;
-        if (
-          !isEquals({ filter, sort, perPage }, filtersAndSort) ||
-          getByPathWithDefault({}, 'products.page', prevResult) + 1 !==
-            getByPathWithDefault({}, 'products.page', fetchMoreResult)
-        ) {
-          return prevResult;
-        }
+      ...filtersAndSort,
+    }}
+    fetchPolicy="network-only"
+  >
+    {({ loading, data, fetchMore, error }) => {
+      if (error) {
+        return error.message;
+      }
 
-        if (getByPathWithDefault([], 'products.nodes', fetchMoreResult).length === 0)
-          return prevResult;
+      const nextPage = getByPathWithDefault(1, 'products.page', data) + 1;
+      const totalPage = getByPathWithDefault(1, 'products.totalPage', data);
+      const hasMore = nextPage <= totalPage;
 
-        return {
-          products: {
-            ...prevResult.products,
-            ...getByPathWithDefault({}, 'products', fetchMoreResult),
-            nodes: [
-              ...prevResult.products.nodes,
-              ...getByPathWithDefault([], 'products.nodes', fetchMoreResult),
-            ],
-          },
-        };
-      },
-    });
-  };
-
-  render() {
-    const { viewType, ...filtersAndSort } = this.props;
-    return (
-      <Query
-        query={productListQuery}
-        variables={{ page: 1, ...filtersAndSort }}
-        fetchPolicy="network-only"
-      >
-        {({ loading, data, fetchMore, error }) => {
-          if (error) {
-            return error.message;
-          }
-
-          const nextPage = getByPathWithDefault(1, 'products.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'products.totalPage', data);
-          const hasMore = nextPage <= totalPage;
-
-          return (
-            <ProductGridView
-              items={getByPathWithDefault([], 'products.nodes', data)}
-              onLoadMore={() => this.loadMore({ fetchMore, data })}
-              hasMore={hasMore}
-              isLoading={loading}
-            />
-          );
-        }}
-      </Query>
-    );
-  }
-}
+      return (
+        <ProductGridView
+          items={getByPathWithDefault([], 'products.nodes', data)}
+          onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'products')}
+          hasMore={hasMore}
+          isLoading={loading}
+        />
+      );
+    }}
+  </Query>
+);
 
 export default ProductList;

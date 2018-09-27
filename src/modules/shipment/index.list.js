@@ -48,7 +48,6 @@ class ShipmentListModule extends React.Component<Props, State> {
   };
 
   render() {
-    const { viewType, sort, perPage, filter } = this.state;
     const { intl } = this.props;
 
     const fields = [
@@ -78,7 +77,7 @@ class ShipmentListModule extends React.Component<Props, State> {
               </NavBar>
             }
           >
-            <ShipmentList viewType={viewType} sort={sort} perPage={perPage} filter={filter} />
+            <ShipmentList {...this.state} />
           </Layout>
         )}
       </UIConsumer>

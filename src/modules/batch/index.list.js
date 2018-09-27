@@ -48,7 +48,6 @@ class BatchListModule extends React.Component<Props, State> {
   };
 
   render() {
-    const { viewType, sort, perPage, filter } = this.state;
     const { intl } = this.props;
 
     const fields = [
@@ -99,7 +98,7 @@ class BatchListModule extends React.Component<Props, State> {
               </NavBar>
             }
           >
-            <BatchList viewType={viewType} sort={sort} perPage={perPage} filter={filter} />
+            <BatchList {...this.state} />
           </Layout>
         )}
       </UIConsumer>
