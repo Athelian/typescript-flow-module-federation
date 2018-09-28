@@ -1,20 +1,17 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout } from 'styles/common';
 
-type HorizontalDatesWrapperProps = {
-  leftPadding: number,
-  rightPadding: number,
-};
-
-export const HorizontalDatesWrapperStyle = ({
-  leftPadding,
-  rightPadding,
-}: HorizontalDatesWrapperProps): string => css`
-  ${layout.HORIZONTAL};
-  justify-content: space-between;
+export const HorizontalPortsWrapperStyle: string = css`
+  display: flex;
   width: 100%;
-  padding: 0 ${rightPadding}px 0 ${leftPadding}px;
 `;
 
-export default HorizontalDatesWrapperStyle;
+export const PortNameWrapperStyle: string = css`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+`;
+
+export const BlankSpaceStyle = (flex: number): string => css`
+  flex: ${flex};
+`;

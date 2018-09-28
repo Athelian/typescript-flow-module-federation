@@ -22,7 +22,7 @@ const VerticalDates = ({ shipment }: Props) => {
   return (
     <div className={VerticalDatesWrapperStyle}>
       <div className={SingularDateWrapperStyle}>
-        <TimelineDate timelineDate={cargoReady} />
+        <TimelineDate timelineDate={cargoReady} vertical />
       </div>
 
       <div className={BlankGapStyle} />
@@ -30,8 +30,8 @@ const VerticalDates = ({ shipment }: Props) => {
       <TimelinePortName port={loadPort} transportType={transportType} vertical />
 
       <div className={VoyageDatesWrapperStyle}>
-        <TimelineDate timelineDate={voyages[0].departure} prefixIcon="DEPARTURE" />
-        <TimelineDate timelineDate={voyages[0].arrival} prefixIcon="ARRIVAL" />
+        <TimelineDate timelineDate={voyages[0].departure} prefixIcon="DEPARTURE" vertical />
+        <TimelineDate timelineDate={voyages[0].arrival} prefixIcon="ARRIVAL" vertical />
       </div>
 
       {voyages.length > 1 &&
@@ -40,8 +40,8 @@ const VerticalDates = ({ shipment }: Props) => {
             <TimelinePortName port={voyage.departurePort} transportType={transportType} vertical />
 
             <div className={VoyageDatesWrapperStyle}>
-              <TimelineDate timelineDate={voyage.departure} prefixIcon="DEPARTURE" />
-              <TimelineDate timelineDate={voyage.arrival} prefixIcon="ARRIVAL" />
+              <TimelineDate timelineDate={voyage.departure} prefixIcon="DEPARTURE" vertical />
+              <TimelineDate timelineDate={voyage.arrival} prefixIcon="ARRIVAL" vertical />
             </div>
           </React.Fragment>
         ))}
@@ -51,19 +51,19 @@ const VerticalDates = ({ shipment }: Props) => {
       <div className={BlankGapStyle} />
 
       <div className={SingularDateWrapperStyle}>
-        <TimelineDate timelineDate={customClearance} />
+        <TimelineDate timelineDate={customClearance} vertical />
       </div>
 
       <div className={BlankGapStyle} />
 
       <div className={SingularDateWrapperStyle}>
-        <TimelineDate timelineDate={warehouseArrival} />
+        <TimelineDate timelineDate={warehouseArrival} vertical />
       </div>
 
       <div className={BlankGapStyle} />
 
       <div className={SingularDateWrapperStyle}>
-        <TimelineDate timelineDate={deliveryReady} />
+        <TimelineDate timelineDate={deliveryReady} vertical />
       </div>
     </div>
   );

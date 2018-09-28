@@ -8,19 +8,22 @@ export const TimelinePortNameWrapperStyle = (vertical: boolean): string => css`
     text-align: left;
     border-radius: 0 999px 999px 0;
     width: 165px;
+    height: 30px;
+    line-height: 30px;
     padding: 0 10px 0 20px;
     transform: translateX(-15px);
+    ${fontSizes.MAIN};
   `
     : `
     text-align: center;
     ${borderRadiuses.BUTTON};
-    width: 145px;
+    width: 100px;
+    height: 20px;
+    line-height: 20px;
     padding: 0 10px;
+    ${fontSizes.MEDIUM};
   `};
-  height: 30px;
-  line-height: 30px;
   ${presets.ELLIPSIS};
-  ${fontSizes.MAIN};
   background-color: ${colors.GRAY_SUPER_LIGHT};
   color: ${colors.BLACK};
   font-weight: bold;

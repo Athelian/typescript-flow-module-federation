@@ -7,4 +7,6 @@ export const HorizontalTimelineWrapperStyle: string = css`
   align-items: center;
 `;
 
-export default HorizontalTimelineWrapperStyle;
+export const BlankSpaceStyle: string = css`
+  flex: 0.5;
+`;

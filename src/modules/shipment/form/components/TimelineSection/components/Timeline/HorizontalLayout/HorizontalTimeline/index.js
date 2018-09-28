@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { TimelineIcon, TimelineTransitIcon, TimelineLine, TimelineVoyage } from '../../components';
 import { getTimelineColoring, getTransportIcon } from '../../helpers';
-import { HorizontalTimelineWrapperStyle } from './style';
+import { HorizontalTimelineWrapperStyle, BlankSpaceStyle } from './style';
 
 type Props = {
   shipment: any,
@@ -24,6 +24,8 @@ const HorizontalTimeline = ({ shipment }: Props) => {
 
   return (
     <div className={HorizontalTimelineWrapperStyle}>
+      <div className={BlankSpaceStyle} />
+
       <TimelineIcon
         icon="CARGO_READY"
         color={cargoReadyColoring}
@@ -109,6 +111,8 @@ const HorizontalTimeline = ({ shipment }: Props) => {
         targetId="deliveryReady"
         boundaryId="timelineInfoSection"
       />
+
+      <div className={BlankSpaceStyle} />
     </div>
   );
 };

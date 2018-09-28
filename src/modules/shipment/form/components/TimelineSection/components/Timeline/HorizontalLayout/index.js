@@ -2,6 +2,7 @@
 import * as React from 'react';
 import HorizontalPortNames from './HorizontalPortNames';
 import HorizontalTimeline from './HorizontalTimeline';
+import HorizontalDates from './HorizontalDates';
 import { HorizontalLayoutWrapperStyle } from './style';
 
 type Props = {
@@ -15,7 +16,7 @@ class HorizontalLayout extends React.PureComponent<Props> {
       <div className={HorizontalLayoutWrapperStyle}>
         <HorizontalPortNames shipment={shipment} />
         <HorizontalTimeline shipment={shipment} />
-        Dates
+        <HorizontalDates shipment={shipment} />
       </div>
     );
   }

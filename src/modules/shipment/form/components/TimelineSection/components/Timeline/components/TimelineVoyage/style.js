@@ -6,7 +6,7 @@ export const TimelineVoyageWrapperStyle = (vertical: boolean): string => css`
   flex-direction: ${vertical ? 'column' : 'row'};
   align-items: center;
   position: relative;
-  flex: 2;
+  flex: ${vertical ? 2 : 1};
 `;
 
 export default TimelineVoyageWrapperStyle;

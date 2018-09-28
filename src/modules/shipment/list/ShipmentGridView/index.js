@@ -25,7 +25,7 @@ const ShipmentGridView = (props: Props) => {
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="880px"
+      itemWidth="860px"
       isEmpty={items.length === 0}
       emptyMessage="No shipments found"
     >

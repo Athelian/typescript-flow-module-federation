@@ -22,6 +22,7 @@ type OptionalProps = {
     }>,
     approvedAt: ?string | Date,
   },
+  vertical: boolean,
 };
 
 type Props = OptionalProps & {};
@@ -31,9 +32,10 @@ const defaultProps = {
   timelineDate: {
     timelineDateRevisions: [],
   },
+  vertical: false,
 };
 
-const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
+const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
   const { date, timelineDateRevisions: rawRevisions, approvedAt } = timelineDate;
 
   const timelineDateRevisions = compact(rawRevisions);
@@ -56,16 +58,18 @@ const TimelineDate = ({ timelineDate, prefixIcon }: Props) => {
   }
 
   return (
-    <div className={TimelineDateWrapperStyle}>
-      <div className={PrefixIconStyle}>{prefixIcon && <Icon icon={prefixIcon} />}</div>
-      <div className={DateStyle(!!shownDate)}>
+    <div className={TimelineDateWrapperStyle(vertical)}>
+      {vertical && (
+        <div className={PrefixIconStyle}>{prefixIcon && <Icon icon={prefixIcon} />}</div>
+      )}
+      <div className={DateStyle({ shownDate: !!shownDate, vertical })}>
         {shownDate ? <FormattedDate value={shownDate} /> : 'No date'}
       </div>
-      <div className={DelayStyle(delayAmount)}>
+      <div className={DelayStyle({ delayAmount, vertical })}>
         {delayAmount !== 0 && `${delayAmount > 0 ? '+' : ''}${delayAmount}`}
       </div>
 
-      <div className={ApprovedIconStyle(!!approvedAt)}>
+      <div className={ApprovedIconStyle({ approved: !!approvedAt, vertical })}>
         <Icon icon="CHECKED" />
       </div>
     </div>

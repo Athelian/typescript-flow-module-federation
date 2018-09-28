@@ -6,9 +6,7 @@ export const ShipmentCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  align-self: stretch;
-  width: 880px;
+  width: 860px;
   height: 200px;
 `;
 
