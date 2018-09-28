@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { formatShipmentOrder, formatOrderData } from 'modules/relationMap/util';
+
 import OrderFocused from './components/OrderFocused';
 import Layout from './components/Layout';
 import QueryHandler from './components/QueryHandler';

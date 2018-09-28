@@ -1,14 +1,16 @@
 // @flow
 import * as React from 'react';
-import { navigate, Location } from '@reach/router';
+import { navigate, Location, Link } from '@reach/router';
 import { injectIntl, intlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
 import Tabs from 'components/NavBar/components/Tabs';
-import NavBar, { EntityIcon } from 'components/NavBar';
-import { RelationMapGrid } from 'modules/relationMap/style';
+import { EntityIcon, RelationMapNavBar } from 'components/NavBar';
+import { RelationMapGrid, ContentWrapperStyle } from 'modules/relationMap/style';
 import messages from 'modules/relationMap/messages';
+import { NewButton, BaseButton } from 'components/Buttons';
+import { ActionSection1, ActionSection2 } from './ActionsSection';
 
 type Props = {
   onChangeTab: Function,
@@ -41,7 +43,7 @@ const RelationMapLayout = ({ onChangeTab, intl, children }: Props) => {
         <Layout
           {...uiState}
           navBar={
-            <NavBar>
+            <RelationMapNavBar>
               <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
               <Location>
                 {({ location }) => {
@@ -64,10 +66,48 @@ const RelationMapLayout = ({ onChangeTab, intl, children }: Props) => {
                   );
                 }}
               </Location>
-            </NavBar>
+              <Link to="new">
+                <div style={{ float: 'right' }}>
+                  <NewButton label="CREATE NEW" />
+                </div>
+              </Link>
+            </RelationMapNavBar>
           }
         >
-          <RelationMapGrid>{children}</RelationMapGrid>
+          <div className={ContentWrapperStyle}>
+            <ActionSection1 directive="SELECTED" target="BATCHES" targetNo={0}>
+              <BaseButton
+                icon="CLONE"
+                label="CLONE"
+                backgroundColor="TEAL"
+                hoverBackgroundColor="TEAL_DARK"
+                onClick={() => {}}
+              />
+              <BaseButton
+                icon="SPLIT"
+                label="SPLIT"
+                backgroundColor="TEAL"
+                hoverBackgroundColor="TEAL_DARK"
+                onClick={() => {}}
+              />
+              <BaseButton
+                icon="EDIT"
+                label="EDIT"
+                backgroundColor="TEAL"
+                hoverBackgroundColor="TEAL_DARK"
+                onClick={() => {}}
+              />
+              <BaseButton
+                icon="CONNECT"
+                label="CONNECT"
+                backgroundColor="TEAL"
+                hoverBackgroundColor="TEAL_DARK"
+                onClick={() => {}}
+              />
+            </ActionSection1>
+            <ActionSection2 directive="CONNECT TO" />
+            <RelationMapGrid>{children}</RelationMapGrid>
+          </div>
         </Layout>
       )}
     </UIConsumer>

@@ -1,5 +1,6 @@
 // @flow
 import NavBar from './NavBar';
+import RelationMapNavBar from './RelationMapNavBar';
 import EntityIcon from './components/EntityIcon';
 import ViewToggle from './components/ViewToggle';
 import FilterInput from './components/FilterInput';
@@ -22,4 +23,5 @@ export {
   SectionNavBar,
   SlideViewNavBar,
   FocusInput,
+  RelationMapNavBar,
 };

@@ -65,6 +65,10 @@ const GridColumn = css`
   grid-template-columns: 1fr 1fr 1fr 1.8fr;
 `;
 
+export const ContentWrapperStyle = css`
+  width: 100%;
+`;
+
 export const RelationMapGrid = styled('div')`
   width: 100%;
   padding: 50px 20px;
