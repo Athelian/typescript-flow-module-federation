@@ -11,11 +11,14 @@ export const ItemsSectionWrapperStyle: string = css`
 `;
 
 export const ItemsSectionBodyStyle: string = css`
+  display: flex;
+  flex-direction: column;
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   max-height: 80vh;
+  min-height: 282px;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};

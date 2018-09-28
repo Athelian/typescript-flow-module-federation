@@ -1,7 +1,12 @@
 // @flow
 import * as React from 'react';
-import { OrderShipmentCard } from 'components/Cards';
-import { ItemsSectionWrapperStyle, ItemGridStyle, ItemStyle, EmptyMessageStyle } from './style';
+import { ShipmentCard } from 'components/Cards';
+import { SectionNavBar } from 'components/NavBar';
+import {
+  ShipmentsSectionWrapperStyle,
+  ShipmentsSectionBodyStyle,
+  EmptyMessageStyle,
+} from './style';
 
 type Props = {
   shipments: Array<Object>,
@@ -9,18 +14,17 @@ type Props = {
 
 function ShipmentsSection({ shipments }: Props) {
   return (
-    <div className={ItemsSectionWrapperStyle}>
-      {shipments.length === 0 ? (
-        <div className={EmptyMessageStyle}>No shipments found.</div>
-      ) : (
-        <div className={ItemGridStyle}>
-          {shipments.map(item => (
-            <div className={ItemStyle} key={item.id}>
-              <OrderShipmentCard shipment={item} />
-            </div>
-          ))}
-        </div>
-      )}
+    <div className={ShipmentsSectionWrapperStyle}>
+      <SectionNavBar>
+        <div id="sortsandfilterswip" />
+      </SectionNavBar>
+      <div className={ShipmentsSectionBodyStyle}>
+        {shipments.length === 0 ? (
+          <div className={EmptyMessageStyle}>No shipments found.</div>
+        ) : (
+          shipments.map(shipment => <ShipmentCard shipment={shipment} key={shipment.id} />)
+        )}
+      </div>
     </div>
   );
 }
