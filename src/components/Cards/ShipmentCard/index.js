@@ -3,12 +3,11 @@ import React from 'react';
 import { navigate } from '@reach/router';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
-import type { ShipmentListCard } from './type.js.flow';
 import BaseCard, { CardAction } from '../BaseCard';
 import { ShipmentCardWrapperStyle } from './style';
 
 type Props = {
-  shipment: ?ShipmentListCard,
+  shipment: ?Object,
 };
 
 const ShipmentCard = ({ shipment }: Props) => {

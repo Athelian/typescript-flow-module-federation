@@ -4,19 +4,25 @@ import InfiniteScroll from 'react-infinite-scroller';
 import LoadingIcon from 'components/LoadingIcon';
 import { GridViewWrapperStyle, EmptyMessageStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  gap?: string,
+  columnGap: string,
+  rowGap: string,
+};
+
+type Props = OptionalProps & {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
   isEmpty: boolean,
   emptyMessage: any,
-  itemWidth: number,
-  spacing?: number,
+  itemWidth: string,
   children: any,
 };
 
 const defaultProps = {
-  spacing: 30,
+  columnGap: '20px',
+  rowGap: '30px',
 };
 
 function GridView(props: Props) {
@@ -27,7 +33,9 @@ function GridView(props: Props) {
     isEmpty,
     emptyMessage,
     itemWidth,
-    spacing,
+    gap,
+    columnGap,
+    rowGap,
     children,
   } = props;
 
@@ -41,7 +49,11 @@ function GridView(props: Props) {
 
   return (
     <InfiniteScroll
-      className={GridViewWrapperStyle(itemWidth, spacing || 30)}
+      className={GridViewWrapperStyle({
+        itemWidth,
+        columnGap: gap || columnGap,
+        rowGap: gap || rowGap,
+      })}
       loadMore={onLoadMore}
       hasMore={hasMore}
       loader={<LoadingIcon key="loading" />}

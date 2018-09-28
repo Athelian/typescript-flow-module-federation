@@ -7,7 +7,8 @@ export const ShipmentCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 200px;
+  align-self: stretch;
+  width: 880px;
   height: 200px;
   ${fontSizes.MAIN};
   font-weight: bold;
