@@ -42,8 +42,16 @@ class WarehouseFormModule extends React.PureComponent<Props> {
 
     const isNew = warehouseId === 'new';
 
-    const { archived, name, street, locality, region, postalCode, country, surface } = formData;
-    const input = { archived, name, street, locality, region, postalCode, country, surface };
+    const { name, street, locality, region, postalCode, country, surface } = formData;
+    const input = {
+      name,
+      street,
+      country: country && country.length > 0 ? country : null,
+      locality,
+      region,
+      postalCode,
+      surface,
+    };
     if (isNew) {
       const { data } = await saveWarehouse({ variables: { input } });
       const {

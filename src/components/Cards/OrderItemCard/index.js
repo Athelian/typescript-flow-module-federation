@@ -189,7 +189,7 @@ const OrderItemCard = ({
                         },
                         name: fieldName,
                         isNew: false,
-                        initValue: quantity,
+                        originalValue: quantity,
                       })
                     }
                   </FormField>
@@ -238,7 +238,7 @@ const OrderItemCard = ({
                         },
                         name: fieldName,
                         isNew: false,
-                        initValue: price.amount,
+                        originalValue: price.amount,
                       })
                     }
                   </FormField>

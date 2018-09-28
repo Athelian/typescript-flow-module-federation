@@ -5,31 +5,26 @@ import { isEquals } from 'utils/fp';
 import { type SearchSelectInputProps as Props, defaultSearchSelectInputProps } from './type';
 
 type State = {
-  inputValue: string,
-  selectedItem: any,
+  selectedItem: ?Object,
 };
 
 class SearchSelectInput extends React.Component<Props, State> {
   static defaultProps = defaultSearchSelectInputProps;
 
-  constructor(props: Props) {
-    super(props);
-    const { value, items, itemToValue } = props;
-    const selectedItem = value
-      ? (items || []).find(item => isEquals(itemToValue(item), value))
-      : null;
+  state = {
+    selectedItem: null,
+  };
 
-    this.state = {
-      inputValue: value || '',
-      selectedItem,
-    };
-  }
+  static getDerivedStateFromProps(props: Props, state: State) {
+    const { inputValue, value, items, itemToValue } = props;
+    const { selectedItem } = state;
 
-  componentDidUpdate(prevProps: Props) {
-    const { value } = this.props;
-    if (prevProps.value && !value) {
-      this.handleChange(null);
+    if (!selectedItem || (selectedItem && inputValue !== selectedItem.name)) {
+      return {
+        selectedItem: value ? (items || []).find(item => isEquals(itemToValue(item), value)) : null,
+      };
     }
+    return null;
   }
 
   handleChangeQuery = (e: any) => {
@@ -37,17 +32,15 @@ class SearchSelectInput extends React.Component<Props, State> {
     const { value: query } = e.target;
 
     if (!query.trim()) {
-      this.setState({ inputValue: query, selectedItem: null });
-      if (onChange) onChange(null);
-    } else {
-      this.setState({ inputValue: query });
-      if (onSearch) onSearch(query);
-    }
+      this.setState({ selectedItem: null }, () => {
+        if (onChange) onChange(null);
+      });
+    } else if (onSearch) onSearch(query);
   };
 
   handleChange = (selectedItem: any) => {
-    const { onChange, itemToString } = this.props;
-    this.setState({ selectedItem, inputValue: itemToString(selectedItem) });
+    const { onChange } = this.props;
+    this.setState({ selectedItem });
     if (onChange) onChange(selectedItem);
   };
 
@@ -62,9 +55,16 @@ class SearchSelectInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { itemToValue, itemToString, renderSelect, renderOptions } = this.props;
+    const {
+      itemToValue,
+      inputValue,
+      itemToString,
+      renderSelect,
+      renderOptions,
+      afterClearSelection,
+    } = this.props;
 
-    const { inputValue, selectedItem } = this.state;
+    const { selectedItem } = this.state;
 
     return (
       <Downshift
@@ -91,7 +91,7 @@ class SearchSelectInput extends React.Component<Props, State> {
               isOpen,
               toggle,
               selectedItem,
-              clearSelection,
+              clearSelection: () => clearSelection(afterClearSelection),
               getInputProps,
             })}
             {isOpen &&

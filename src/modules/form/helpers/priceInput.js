@@ -12,7 +12,7 @@ export default function priceInputFactory({
   label,
   name,
   inputHandlers,
-  initValue,
+  originalValue,
 }: {
   required?: boolean,
   align?: string,
@@ -32,7 +32,7 @@ export default function priceInputFactory({
     onFocus: Function,
     onBlur: Function,
   },
-  initValue: any,
+  originalValue: any,
 }) {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
@@ -49,7 +49,7 @@ export default function priceInputFactory({
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{
-            oldValue: initValue,
+            oldValue: originalValue,
             newValue: inputHandlers.value,
           }}
         />

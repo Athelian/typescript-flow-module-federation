@@ -243,7 +243,7 @@ class TimelineInfoSection extends React.Component<Props> {
                               name,
                               inputHandlers,
                               isNew,
-                              initValue: adjustment.date,
+                              originalValue: adjustment.date,
                             })
                           }
                         </FormField>
@@ -264,7 +264,7 @@ class TimelineInfoSection extends React.Component<Props> {
                       name,
                       inputHandlers,
                       isNew,
-                      initValue: timelineDate && timelineDate.date,
+                      originalValue: timelineDate && timelineDate.date,
                     })
                   }
                 </FormField>

@@ -62,7 +62,7 @@ class ColorInput extends React.Component<Props> {
   handleBlur = () => {
     const { onBlur } = this.props;
     if (onBlur) {
-      onBlur({});
+      onBlur();
     }
   };
 

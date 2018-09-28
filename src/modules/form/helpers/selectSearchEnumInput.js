@@ -26,9 +26,11 @@ export const parseEnumValue = (enumValue: ?string | ?{ name: string }) => {
   return enumValue;
 };
 
-export const parseEnumDescription = (enumValue: ?string | ?{ description: string }) => {
+export const parseEnumDescriptionOrValue = (
+  enumValue: ?string | ?{ description: string, name: string }
+) => {
   if (enumValue && enumValue.description) return enumValue.description;
-  return enumValue;
+  return parseEnumValue(enumValue);
 };
 
 export default function selectSearchEnumInputFactory({
@@ -39,7 +41,7 @@ export default function selectSearchEnumInputFactory({
   name,
   isNew,
   label,
-  initValue,
+  originalValue,
 }: {
   enumType: string,
   required?: boolean,
@@ -57,7 +59,7 @@ export default function selectSearchEnumInputFactory({
     onFocus: Function,
     onBlur: Function,
   },
-  initValue: any,
+  originalValue: any,
 }) {
   return (
     <EnumProvider enumType={enumType}>
@@ -65,6 +67,7 @@ export default function selectSearchEnumInputFactory({
         if (loading) return <LoadingIcon />;
         if (error) return `Error!: ${error}`;
 
+        const selectedItem = data.find(item => item.name === inputHandlers.value);
         return (
           <FieldItem
             label={
@@ -79,29 +82,23 @@ export default function selectSearchEnumInputFactory({
                 isNew={isNew}
                 errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
                 changedValues={{
-                  oldValue: parseEnumDescription(initValue),
-                  newValue: parseEnumDescription(inputHandlers.value),
+                  oldValue: parseEnumDescriptionOrValue(
+                    data.find(item => item.name === originalValue)
+                  ),
+                  newValue: parseEnumDescriptionOrValue(selectedItem),
                 }}
               />
             }
             input={
-              <StringValue
-                defaultValue={inputHandlers.value}
-                onChange={newValue =>
-                  inputHandlers.onChange({
-                    target: {
-                      value: newValue || '',
-                    },
-                  })
-                }
-              >
-                {({ value: query, set, clear }) => (
+              <StringValue value={parseEnumDescriptionOrValue(selectedItem) || inputHandlers.value}>
+                {({ value: query }) => (
                   <SearchSelectInput
-                    name={name}
                     {...inputHandlers}
+                    name={name}
                     items={filterItems(query, data)}
                     itemToString={item => (item ? item.description || item.name : '')}
                     itemToValue={item => (item ? item.name : '')}
+                    inputValue={query}
                     renderSelect={({ ...rest }) => (
                       <DefaultSearchSelect
                         {...rest}
@@ -121,12 +118,57 @@ export default function selectSearchEnumInputFactory({
                         width={width}
                       />
                     )}
-                    onChange={item => {
-                      logger.warn('SearchSelectInput onChange', item);
-                      if (!item) clear();
-                      set(item);
+                    afterClearSelection={() => {
+                      logger.warn('afterClearSelection');
+                      inputHandlers.onChange({
+                        target: {
+                          value: '',
+                        },
+                      });
+                      setTimeout(() => {
+                        inputHandlers.onBlur();
+                        inputHandlers.onFocus();
+                      }, 0);
                     }}
-                    onSearch={set}
+                    onBlur={() => {
+                      logger.warn('SearchSelectInput onBlur', inputHandlers.value);
+                      if (data.find(item => item.name === inputHandlers.value)) {
+                        inputHandlers.onBlur();
+                      } else {
+                        inputHandlers.onChange({
+                          target: {
+                            value: '',
+                          },
+                        });
+                        setTimeout(() => {
+                          inputHandlers.onBlur();
+                        }, 0);
+                      }
+                    }}
+                    onChange={(item: ?{ name: string }) => {
+                      logger.warn('SearchSelectInput onChange', item);
+                      if (!item) {
+                        inputHandlers.onChange({
+                          target: {
+                            value: '',
+                          },
+                        });
+                      } else {
+                        inputHandlers.onChange({
+                          target: {
+                            value: item && item.name,
+                          },
+                        });
+                      }
+                    }}
+                    onSearch={newQuery => {
+                      logger.warn('onSearch', newQuery);
+                      inputHandlers.onChange({
+                        target: {
+                          value: newQuery,
+                        },
+                      });
+                    }}
                   />
                 )}
               </StringValue>

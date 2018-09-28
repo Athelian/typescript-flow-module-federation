@@ -112,7 +112,7 @@ const OrderBatchCard = ({
                 },
                 name: fieldName,
                 isNew: false,
-                initValue: no,
+                originalValue: no,
               })
             }
           </FormField>
@@ -141,7 +141,7 @@ const OrderBatchCard = ({
                 },
                 name: fieldName,
                 isNew: false,
-                initValue: quantity + totalAdjustment,
+                originalValue: quantity + totalAdjustment,
               })
             }
           </FormField>
@@ -160,7 +160,7 @@ const OrderBatchCard = ({
                 height: '20px',
                 name,
                 isNew: false,
-                initValue: deliveredAt,
+                originalValue: deliveredAt,
                 inputHandlers: {
                   ...inputHandlers,
                   onBlur: evt => {

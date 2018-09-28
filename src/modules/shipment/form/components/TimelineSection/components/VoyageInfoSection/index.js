@@ -3,7 +3,7 @@ import * as React from 'react';
 import GridColumn from 'components/GridColumn';
 import { FormField } from 'modules/form';
 import {
-  parseEnumDescription,
+  parseEnumDescriptionOrValue,
   selectSearchEnumInputFactory,
   textInputFactory,
 } from 'modules/form/helpers';
@@ -77,7 +77,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           {canSelectPorts ? (
             <FormField
               name={`${sourceName}.departurePort.${deepField}`}
-              initValue={parseEnumDescription(
+              initValue={parseEnumDescriptionOrValue(
                 voyage.departurePort && voyage.departurePort[deepField]
               )}
               setFieldValue={setFieldDeepValue}
@@ -85,7 +85,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               {({ name, ...inputHandlers }) =>
                 selectSearchEnumInputFactory({
                   enumType,
-                  initValue:
+                  originalValue:
                     initialVoyage &&
                     initialVoyage.departurePort &&
                     initialVoyage.departurePort[deepField],
@@ -116,13 +116,15 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           {canSelectPorts ? (
             <FormField
               name={`${sourceName}.arrivalPort.${deepField}`}
-              initValue={parseEnumDescription(voyage.arrivalPort && voyage.arrivalPort[deepField])}
+              initValue={parseEnumDescriptionOrValue(
+                voyage.arrivalPort && voyage.arrivalPort[deepField]
+              )}
               setFieldValue={setFieldDeepValue}
             >
               {({ name, ...inputHandlers }) =>
                 selectSearchEnumInputFactory({
                   enumType,
-                  initValue:
+                  originalValue:
                     initialVoyage &&
                     initialVoyage.arrivalPort &&
                     initialVoyage.arrivalPort[deepField],
@@ -157,7 +159,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           >
             {({ name, ...inputHandlers }) =>
               textInputFactory({
-                initValue:
+                originalValue:
                   initialVoyage && Object.prototype.hasOwnProperty.call(initialVoyage, name)
                     ? initialVoyage[name]
                     : '',
@@ -176,7 +178,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           >
             {({ name, ...inputHandlers }) =>
               textInputFactory({
-                initValue:
+                originalValue:
                   initialVoyage && Object.prototype.hasOwnProperty.call(initialVoyage, name)
                     ? initialVoyage[name]
                     : '',

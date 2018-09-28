@@ -12,7 +12,7 @@ export default function dateInputFactory({
   label,
   name,
   inputHandlers,
-  initValue,
+  originalValue,
 }: {
   required?: boolean,
   align?: string,
@@ -31,7 +31,7 @@ export default function dateInputFactory({
     onFocus: Function,
     onBlur: Function,
   },
-  initValue: any,
+  originalValue: any,
 }) {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
@@ -48,7 +48,7 @@ export default function dateInputFactory({
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{
-            oldValue: initValue ? <FormattedDate value={initValue} /> : initValue,
+            oldValue: originalValue ? <FormattedDate value={originalValue} /> : originalValue,
             newValue: inputHandlers.value ? (
               <FormattedDate value={inputHandlers.value} />
             ) : (

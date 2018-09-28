@@ -2,8 +2,8 @@
 import gql from 'graphql-tag';
 
 export const warehousesQuery = gql`
-  query($page: Int!, $perPage: Int!) {
-    warehouses(page: $page, perPage: $perPage) {
+  query($page: Int!, $perPage: Int!, $filter: WarehouseFilterInput, $sort: WarehouseSortInput) {
+    warehouses(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
         id
       }

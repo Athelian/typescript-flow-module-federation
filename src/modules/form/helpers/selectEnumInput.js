@@ -19,7 +19,7 @@ export default function selectEnumInputFactory({
   name,
   isNew,
   label,
-  initValue,
+  originalValue,
 }: {
   enumType: string,
   required?: boolean,
@@ -38,7 +38,7 @@ export default function selectEnumInputFactory({
     onFocus: Function,
     onBlur: Function,
   },
-  initValue: any,
+  originalValue: any,
 }) {
   const { isTouched, errorMessage, isFocused, ...inputHandler } = inputHandlers;
   return (
@@ -55,7 +55,7 @@ export default function selectEnumInputFactory({
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{
-            oldValue: initValue,
+            oldValue: originalValue,
             newValue: inputHandlers.value,
           }}
         />

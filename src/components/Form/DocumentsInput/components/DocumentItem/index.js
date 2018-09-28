@@ -116,7 +116,7 @@ class DocumentItem extends React.Component<Props, State> {
               textAreaFactory({
                 name: fieldName,
                 isNew: false,
-                initValue: value.memo,
+                originalValue: value.memo,
                 inputHandlers,
                 align: 'left',
                 width: '600px',
