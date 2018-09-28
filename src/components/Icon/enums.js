@@ -80,6 +80,8 @@ import {
   faFilePowerpoint as POWER_POINT,
   faFileWord as WORD,
   faClipboardCheck as ORDER_SELECT,
+  faLink as CONNECT,
+  faBezierCurve as SPLIT,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -120,6 +122,8 @@ export default {
   SPECIFICATIONS,
 
   RELATION_MAP,
+  CONNECT,
+  SPLIT,
 
   ACTIVE,
   ARCHIVE,

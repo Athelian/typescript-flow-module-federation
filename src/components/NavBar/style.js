@@ -24,3 +24,13 @@ export const ChildrenWrapperStyle: string = css`
   grid-gap: 20px;
   align-items: center;
 `;
+
+export const RelationMapNavBarChildrenWrapperStyle: string = css`
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: min-content min-content 1fr;
+  width: 100%;
+  grid-template-rows: 50px;
+  grid-gap: 20px;
+  align-items: center;
+`;
