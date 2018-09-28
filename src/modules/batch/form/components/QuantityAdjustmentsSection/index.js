@@ -69,7 +69,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                               inputHandlers,
                               name,
                               isNew,
-                              initValue: adjustment.quantity,
+                              originalValue: adjustment.quantity,
                             })
                           }
                         </FormField>

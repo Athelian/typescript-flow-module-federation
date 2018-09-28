@@ -86,6 +86,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             name={`${targetName}.${index}.${typeName}`}
             initValue={adjustment[typeName]}
             setFieldValue={setFieldArrayValue}
+            saveOnChange
           >
             {({ name, ...inputHandlers }) =>
               selectEnumInputFactory({
@@ -93,7 +94,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
                 name,
                 inputHandlers,
                 isNew,
-                initValue: adjustment[typeName],
+                originalValue: adjustment[typeName],
               })
             }
           </FormField>
@@ -132,7 +133,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
                 inputHandlers,
                 name,
                 isNew,
-                initValue: adjustment[memoName],
+                originalValue: adjustment[memoName],
                 width: '360px',
                 height: '150px',
               })

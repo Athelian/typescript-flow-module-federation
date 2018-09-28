@@ -12,7 +12,7 @@ const numberInputFactory = ({
   label,
   name,
   inputHandlers,
-  initValue,
+  originalValue,
 }: {
   WrapperComponent?: () => React.Node,
   required?: boolean,
@@ -32,7 +32,7 @@ const numberInputFactory = ({
     onFocus: Function,
     onBlur: Function,
   },
-  initValue: number,
+  originalValue: number,
 }) => {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
@@ -49,7 +49,7 @@ const numberInputFactory = ({
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{
-            oldValue: initValue,
+            oldValue: originalValue,
             newValue: inputHandlers.value,
           }}
         />

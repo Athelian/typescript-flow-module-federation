@@ -72,7 +72,7 @@ export default class TagForm extends React.Component<Props> {
                           name,
                           isNew,
                           required: true,
-                          initValue: initialValues[name],
+                          originalValue: initialValues[name],
                           label: <FormattedMessage {...messages.name} />,
                         })
                       }
@@ -91,7 +91,7 @@ export default class TagForm extends React.Component<Props> {
                           isNew,
                           height: '100px',
                           width: '300px',
-                          initValue: initialValues[name],
+                          originalValue: initialValues[name],
                           label: <FormattedMessage {...messages.description} />,
                         })
                       }
@@ -109,7 +109,7 @@ export default class TagForm extends React.Component<Props> {
                           name,
                           isNew,
                           required: true,
-                          initValue: initialValues[name],
+                          originalValue: initialValues[name],
                           label: <FormattedMessage {...messages.color} />,
                           InputComponent: ColorInput,
                         })

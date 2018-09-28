@@ -50,7 +50,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       name,
                       isNew,
                       required: true,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.batchNo} />,
                     })
                   }
@@ -69,7 +69,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       name,
                       isNew,
                       required: true,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.quantity} />,
                     })
                   }
@@ -87,7 +87,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       name,
                       inputHandlers,
                       isNew,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.deliveredAt} />,
                     })
                   }
@@ -105,7 +105,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       name,
                       inputHandlers,
                       isNew,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.expiredAt} />,
                     })
                   }
@@ -123,7 +123,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       name,
                       inputHandlers,
                       isNew,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.producedAt} />,
                     })
                   }

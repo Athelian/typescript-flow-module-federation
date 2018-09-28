@@ -101,12 +101,12 @@ const OrderSection = ({ isNew }: Props) => (
                   validator={validator}
                   setFieldValue={setFieldValue}
                 >
-                  {({ name, initValue, ...inputHandlers }) =>
+                  {({ name, ...inputHandlers }) =>
                     textInputFactory({
                       inputHandlers,
                       name,
                       isNew,
-                      initValue,
+                      originalValue: initialValues[name],
                       required: true,
                       label: <FormattedMessage {...messages.PO} />,
                     })
@@ -124,7 +124,7 @@ const OrderSection = ({ isNew }: Props) => (
                       name,
                       inputHandlers,
                       isNew,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.PI} />,
                     })
                   }
@@ -141,7 +141,7 @@ const OrderSection = ({ isNew }: Props) => (
                       name,
                       inputHandlers,
                       isNew,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.date} />,
                     })
                   }
@@ -151,7 +151,7 @@ const OrderSection = ({ isNew }: Props) => (
                   initValue={values.currency}
                   values={values}
                   validator={validator}
-                  setFieldValue={(field, { name }) => setFieldValue(field, name)}
+                  setFieldValue={setFieldValue}
                 >
                   {({ name, ...inputHandlers }) =>
                     selectSearchEnumInputFactory({
@@ -160,7 +160,7 @@ const OrderSection = ({ isNew }: Props) => (
                       name,
                       inputHandlers,
                       isNew,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.currency} />,
                     })
                   }
@@ -170,7 +170,7 @@ const OrderSection = ({ isNew }: Props) => (
                   initValue={values.incoterm}
                   values={values}
                   validator={validator}
-                  setFieldValue={(field, { name }) => setFieldValue(field, name)}
+                  setFieldValue={setFieldValue}
                 >
                   {({ name, ...inputHandlers }) =>
                     selectSearchEnumInputFactory({
@@ -178,7 +178,7 @@ const OrderSection = ({ isNew }: Props) => (
                       name,
                       inputHandlers,
                       isNew,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.incoterm} />,
                     })
                   }
@@ -195,7 +195,7 @@ const OrderSection = ({ isNew }: Props) => (
                       name,
                       inputHandlers,
                       isNew,
-                      initValue: initialValues[name],
+                      originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.deliveryPlace} />,
                     })
                   }

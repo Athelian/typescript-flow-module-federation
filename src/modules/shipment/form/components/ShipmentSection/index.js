@@ -57,7 +57,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     name,
                     isNew,
                     required: true,
-                    initValue: initialValues[name],
+                    originalValue: initialValues[name],
                     label: <FormattedMessage {...messages.shipmentId} />,
                   })
                 }
@@ -74,7 +74,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     inputHandlers,
                     name,
                     isNew,
-                    initValue: initialValues[name],
+                    originalValue: initialValues[name],
                     label: <FormattedMessage {...messages.blNo} />,
                   })
                 }
@@ -91,7 +91,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     inputHandlers,
                     name,
                     isNew,
-                    initValue: initialValues[name],
+                    originalValue: initialValues[name],
                     label: <FormattedMessage {...messages.blDate} />,
                   })
                 }
@@ -108,7 +108,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     inputHandlers,
                     name,
                     isNew,
-                    initValue: initialValues[name],
+                    originalValue: initialValues[name],
                     label: <FormattedMessage {...messages.bookingNo} />,
                   })
                 }
@@ -125,7 +125,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     inputHandlers,
                     name,
                     isNew,
-                    initValue: initialValues[name],
+                    originalValue: initialValues[name],
                     label: <FormattedMessage {...messages.bookingDate} />,
                   })
                 }
@@ -142,7 +142,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     inputHandlers,
                     name,
                     isNew,
-                    initValue: initialValues[name],
+                    originalValue: initialValues[name],
                     label: <FormattedMessage {...messages.invoiceNo} />,
                   })
                 }
@@ -179,7 +179,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                           enumType: 'TransportType',
                           align: 'right',
                           label: 'TRANSPORTATION',
-                          initValue: transportTypeValues[name],
+                          originalValue: transportTypeValues[name],
                           inputHandlers,
                           name,
                           isNew,
@@ -203,7 +203,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     enumType: 'LoadType',
                     align: 'right',
                     label: 'LOAD TYPE',
-                    initValue: initialValues[name],
+                    originalValue: initialValues[name],
                     inputHandlers,
                     name,
                     isNew,
@@ -222,7 +222,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     inputHandlers,
                     name,
                     isNew,
-                    initValue: initialValues[name],
+                    originalValue: initialValues[name],
                     label: <FormattedMessage {...messages.carrier} />,
                   })
                 }

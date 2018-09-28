@@ -55,9 +55,7 @@ class WarehouseForm extends React.Component<Props> {
           <div className={SectionWrapperStyle}>
             <Subscribe to={[WarehouseContainer]}>
               {({ originalValues: initialValues, state, setFieldValue, setFieldArrayValue }) => {
-                // $FlowFixMe
                 const values: FormState = { ...initialValues, ...state };
-
                 return (
                   <div>
                     <FormField
@@ -73,7 +71,7 @@ class WarehouseForm extends React.Component<Props> {
                           name,
                           isNew,
                           required: true,
-                          initValue: initialValues[name],
+                          originalValue: initialValues[name],
                           label: <FormattedMessage {...messages.name} />,
                         })
                       }
@@ -90,7 +88,7 @@ class WarehouseForm extends React.Component<Props> {
                           inputHandlers,
                           name,
                           isNew,
-                          initValue: initialValues[name],
+                          originalValue: initialValues[name],
                           label: <FormattedMessage {...messages.streetAddress} />,
                         })
                       }
@@ -107,7 +105,7 @@ class WarehouseForm extends React.Component<Props> {
                           inputHandlers,
                           name,
                           isNew,
-                          initValue: initialValues[name],
+                          originalValue: initialValues[name],
                           label: <FormattedMessage {...messages.locality} />,
                         })
                       }
@@ -124,7 +122,7 @@ class WarehouseForm extends React.Component<Props> {
                           inputHandlers,
                           name,
                           isNew,
-                          initValue: initialValues[name],
+                          originalValue: initialValues[name],
                           label: <FormattedMessage {...messages.region} />,
                         })
                       }
@@ -141,7 +139,7 @@ class WarehouseForm extends React.Component<Props> {
                           inputHandlers,
                           name,
                           isNew,
-                          initValue: initialValues[name],
+                          originalValue: initialValues[name],
                           label: <FormattedMessage {...messages.postalCode} />,
                         })
                       }
@@ -151,7 +149,7 @@ class WarehouseForm extends React.Component<Props> {
                       initValue={values.country}
                       values={values}
                       validator={validator}
-                      setFieldValue={(field, { name }) => setFieldValue(field, name)}
+                      setFieldValue={setFieldValue}
                     >
                       {({ name, ...inputHandlers }) =>
                         selectSearchEnumInputFactory({
@@ -159,13 +157,14 @@ class WarehouseForm extends React.Component<Props> {
                           name,
                           inputHandlers,
                           isNew,
-                          initValue: initialValues[name],
+                          originalValue: initialValues[name],
                           label: <FormattedMessage {...messages.country} />,
                         })
                       }
                     </FormField>
                     <FormField
                       name="surface"
+                      values={values}
                       initValue={getByPath('surface.value', values)}
                       validator={validator}
                       setFieldValue={(field, value) =>
@@ -177,7 +176,7 @@ class WarehouseForm extends React.Component<Props> {
                           isNew,
                           name,
                           inputHandlers,
-                          initValue: getByPath('surface.value', initialValues),
+                          originalValue: getByPath('surface.value', initialValues),
                           label: <FormattedMessage {...messages.surface} />,
                           WrapperComponent: DefaultSurfaceStyle,
                         })

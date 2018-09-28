@@ -13,7 +13,7 @@ const textInputFactory = ({
   label,
   name,
   inputHandlers,
-  initValue,
+  originalValue,
 }: {
   WrapperComponent?: () => React.Node,
   InputComponent?: TextInput,
@@ -33,7 +33,7 @@ const textInputFactory = ({
     onFocus: Function,
     onBlur: Function,
   },
-  initValue: string,
+  originalValue: string,
 }): React.Node => {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
@@ -50,7 +50,7 @@ const textInputFactory = ({
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{
-            oldValue: initValue,
+            oldValue: originalValue,
             newValue: inputHandlers.value,
           }}
         />

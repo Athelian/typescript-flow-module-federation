@@ -4,11 +4,13 @@ import { type RenderOptionsProps } from 'components/Form/Inputs/SelectInput/type
 
 type OptionalProps = {
   value: any,
+  inputValue: string,
   name: string,
   onChange: ?Function,
   onBlur: ?Function,
   onFocus: ?Function,
   onSearch: string => void,
+  afterClearSelection: ?() => void,
 };
 
 export type RenderSearchSelectProps = {
@@ -31,9 +33,11 @@ export type SearchSelectInputProps = OptionalProps & {
 
 export const defaultSearchSelectInputProps = {
   value: '',
+  inputValue: '',
   name: '',
   onChange: null,
   onSearch: () => {},
+  afterClearSelection: () => {},
 };
 
 export default defaultSearchSelectInputProps;

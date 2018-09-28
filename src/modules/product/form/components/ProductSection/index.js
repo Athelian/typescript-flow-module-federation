@@ -75,7 +75,7 @@ const ProductSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   required: true,
-                  initValue: initialValues[name],
+                  originalValue: initialValues[name],
                   label: 'NAME',
                 })
               }
@@ -93,7 +93,7 @@ const ProductSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   required: true,
-                  initValue: initialValues[name],
+                  originalValue: initialValues[name],
                   label: 'SERIAL',
                 })
               }
@@ -110,7 +110,7 @@ const ProductSection = ({ isNew }: Props) => (
                   inputHandlers,
                   name,
                   isNew,
-                  initValue: initialValues[name],
+                  originalValue: initialValues[name],
                   label: 'JAN CODE',
                 })
               }
@@ -127,7 +127,7 @@ const ProductSection = ({ isNew }: Props) => (
                   inputHandlers,
                   name,
                   isNew,
-                  initValue: initialValues[name],
+                  originalValue: initialValues[name],
                   label: 'HS CODE',
                 })
               }
@@ -144,7 +144,7 @@ const ProductSection = ({ isNew }: Props) => (
                   inputHandlers,
                   name,
                   isNew,
-                  initValue: initialValues[name],
+                  originalValue: initialValues[name],
                   label: 'MATERIAL',
                 })
               }

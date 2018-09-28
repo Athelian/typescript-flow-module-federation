@@ -28,7 +28,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: originalValues[name],
+                  originalValue: originalValues[name],
                   label: 'UNIT TYPE',
                 })
               }
@@ -46,7 +46,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   inputHandlers,
-                  initValue: originalValues[name].amount,
+                  originalValue: originalValues[name].amount,
                   label: 'UNIT PRICE',
                   currency: 'JPY',
                 })
@@ -63,7 +63,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('unitWeight.value', originalValues),
+                  originalValue: getByPath('unitWeight.value', originalValues),
                   label: 'UNIT WEIGHT',
                   WrapperComponent: DefaultWeightStyle,
                 })
@@ -80,7 +80,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('unitVolume.value', originalValues),
+                  originalValue: getByPath('unitVolume.value', originalValues),
                   label: 'UNIT VOLUME',
                   WrapperComponent: DefaultVolumeStyle,
                 })
@@ -99,7 +99,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('unitSize.length.value', originalValues),
+                  originalValue: getByPath('unitSize.length.value', originalValues),
                   label: 'UNIT LENGTH',
                   WrapperComponent: DefaultDimensionStyle,
                 })
@@ -118,7 +118,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('unitSize.width.value', originalValues),
+                  originalValue: getByPath('unitSize.width.value', originalValues),
                   label: 'UNIT WIDTH',
                   WrapperComponent: DefaultDimensionStyle,
                 })
@@ -137,7 +137,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('unitSize.height.value', originalValues),
+                  originalValue: getByPath('unitSize.height.value', originalValues),
                   label: 'UNIT HEIGHT',
                   WrapperComponent: DefaultDimensionStyle,
                 })

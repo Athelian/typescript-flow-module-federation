@@ -41,6 +41,17 @@ export const removeTypename = when(
   )
 );
 
+export const cleanUpData = pipe(
+  removeTypename,
+  removeNulls,
+  removeEmpty
+);
+
+export const cleanFalsy = pipe(
+  removeNulls,
+  removeEmpty
+);
+
 export const flatten = (object: any) => {
   const DELIMETER = '_';
   const output = {};

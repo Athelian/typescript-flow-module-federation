@@ -121,7 +121,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   required: true,
-                  initValue: initialValues[name],
+                  originalValue: initialValues[name],
                   label: 'COUNTRY OF ORIGIN',
                 })
               }
@@ -137,7 +137,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   inputHandlers,
-                  initValue: initialValues[name],
+                  originalValue: initialValues[name],
                   label: 'PRODUCTION LEAD TIME',
                   currency: 'Days',
                 })
@@ -156,7 +156,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   inputHandlers,
-                  initValue: initialValues[name].amount,
+                  originalValue: initialValues[name].amount,
                   label: 'INSPECTION FEE',
                   currency: 'JPY',
                 })

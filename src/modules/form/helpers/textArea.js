@@ -11,7 +11,7 @@ export default function textAreaFactory({
   label,
   name,
   inputHandlers,
-  initValue,
+  originalValue,
 }: {
   required?: boolean,
   width?: string,
@@ -30,7 +30,7 @@ export default function textAreaFactory({
     onFocus: Function,
     onBlur: Function,
   },
-  initValue: any,
+  originalValue: any,
 }) {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
@@ -47,7 +47,7 @@ export default function textAreaFactory({
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{
-            oldValue: initValue,
+            oldValue: originalValue,
             newValue: inputHandlers.value,
           }}
         />

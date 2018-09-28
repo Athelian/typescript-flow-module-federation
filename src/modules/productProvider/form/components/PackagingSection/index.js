@@ -32,7 +32,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: originalValues[name],
+                  originalValue: originalValues[name],
                   label: 'PACKAGE NAME',
                 })
               }
@@ -48,7 +48,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: originalValues[name],
+                  originalValue: originalValues[name],
                   label: 'UNITS PER PACKAGE',
                 })
               }
@@ -64,7 +64,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: originalValues[name],
+                  originalValue: originalValues[name],
                   label: 'PACKAGE QUANTITY',
                 })
               }
@@ -82,7 +82,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('packageGrossWeight.value', originalValues),
+                  originalValue: getByPath('packageGrossWeight.value', originalValues),
                   label: 'PKG GROSS WEIGHT',
                   WrapperComponent: DefaultWeightStyle,
                 })
@@ -101,7 +101,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('packageVolume.value', originalValues),
+                  originalValue: getByPath('packageVolume.value', originalValues),
                   label: 'PKG VOLUME',
                   WrapperComponent: DefaultVolumeStyle,
                 })
@@ -120,7 +120,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('packageSize.length.value', originalValues),
+                  originalValue: getByPath('packageSize.length.value', originalValues),
                   label: 'PKG LENGTH',
                   WrapperComponent: DefaultDimensionStyle,
                 })
@@ -139,7 +139,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('packageSize.width.value', originalValues),
+                  originalValue: getByPath('packageSize.width.value', originalValues),
                   label: 'PKG WIDTH',
                   WrapperComponent: DefaultDimensionStyle,
                 })
@@ -158,7 +158,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  initValue: getByPath('packageSize.height.value', originalValues),
+                  originalValue: getByPath('packageSize.height.value', originalValues),
                   label: 'PKG HEIGHT',
                   WrapperComponent: DefaultDimensionStyle,
                 })

@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
-import { set, unset, cloneDeep } from 'lodash';
-import { removeTypename, removeNulls } from 'utils/data';
+import { set, cloneDeep } from 'lodash';
+import { cleanFalsy, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type Metric = {
@@ -44,16 +44,7 @@ export default class WarehouseContainer extends Container<FormState> {
     });
   };
 
-  removeArrayItem = (path: string) => {
-    this.setState(prevState => {
-      const cloneState = cloneDeep(prevState);
-      unset(cloneState, path);
-      // $FlowFixMe: missing type define for map's ramda function
-      return removeNulls(cloneState);
-    });
-  };
-
-  isDirty = () => !isEquals(this.state, this.originalValues);
+  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
@@ -61,9 +52,7 @@ export default class WarehouseContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues = removeTypename(values);
-    // $FlowFixMe: missing type for ramda's map function
-    this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    this.setState(cleanUpData(values));
+    this.originalValues = cleanUpData(values);
   };
 }
