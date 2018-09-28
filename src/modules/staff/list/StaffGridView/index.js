@@ -11,7 +11,9 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <StaffCard key={item.id} staff={item} />;
+const defaultRenderItem = (item: Object) => (
+  <StaffCard key={item.id} staff={item} onClick={() => {}} />
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,
