@@ -2,8 +2,9 @@
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
+import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
-import NavBar, { EntityIcon, StatusToggleTabs } from 'components/NavBar';
+import NavBar from 'components/NavBar';
 import StaffList from './list';
 
 type Props = {
@@ -12,17 +13,25 @@ type Props = {
 
 type State = {
   viewType: string,
-  query: string,
-  status: string,
+  filter: {},
+  sort: {
+    field: string,
+    direction: string,
+  },
   perPage: number,
+  page: number,
 };
 
 class StaffModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
-    query: '',
-    status: 'Active',
+    filter: {},
+    sort: {
+      field: 'updatedAt',
+      direction: 'DESCENDING',
+    },
     perPage: 10,
+    page: 1,
   };
 
   onChangeFilter = (newValue: any) => {
@@ -30,7 +39,10 @@ class StaffModule extends React.Component<Props, State> {
   };
 
   render() {
-    const { viewType, perPage, ...filters } = this.state;
+    const fields = [
+      { title: 'UPDATED AT', value: 'updatedAt' },
+      { title: 'CREATED AT', value: 'createdAt' },
+    ];
 
     return (
       <UIConsumer>
@@ -39,14 +51,16 @@ class StaffModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="STAFF" color="STAFF" />
-                <StatusToggleTabs
-                  onChange={index => this.onChangeFilter({ status: index ? 'Inactive' : 'Active' })}
+                <FilterToolBar
+                  filtersAndSort={this.state}
+                  icon="STAFF"
+                  fields={fields}
+                  onChange={this.onChangeFilter}
                 />
               </NavBar>
             }
           >
-            <StaffList viewType={viewType} perPage={perPage} filter={filters} />
+            <StaffList {...this.state} />
           </Layout>
         )}
       </UIConsumer>

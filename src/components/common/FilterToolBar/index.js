@@ -40,11 +40,13 @@ export default function FilterToolBar({ icon, fields, filtersAndSort, onChange }
   return (
     <>
       <EntityIcon icon={icon} color={icon} />
-      <StatusToggleTabs
-        onChange={index =>
-          onChange({ ...filtersAndSort, filter: { ...filtersAndSort.filter, archived: !!index } })
-        }
-      />
+      {Object.prototype.hasOwnProperty.call(filtersAndSort.filter, 'archived') && (
+        <StatusToggleTabs
+          onChange={index =>
+            onChange({ ...filtersAndSort, filter: { ...filtersAndSort.filter, archived: !!index } })
+          }
+        />
+      )}
       <SortInput
         sort={currentSort(fields, filtersAndSort.sort)}
         ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
@@ -59,43 +61,47 @@ export default function FilterToolBar({ icon, fields, filtersAndSort, onChange }
           })
         }
       />
-      <FilterInput
-        initialFilter={{}}
-        onChange={filters =>
-          onChange({
-            ...filtersAndSort,
-            filter: { ...filtersAndSort.filter, ...filters },
-          })
-        }
-        width={400}
-      >
-        {({ values, setFieldValue }) => (
-          <GridColumn>
-            <SearchInput
-              name="search"
-              value={values.query}
-              onClear={() => setFieldValue('query', '')}
-              onChange={newValue => setFieldValue('query', newValue)}
-            />
-          </GridColumn>
-        )}
-      </FilterInput>
-      <SearchInput
-        value={filtersAndSort.filter.query}
-        name="search"
-        onClear={() =>
-          onChange({
-            ...filtersAndSort,
-            filter: { ...filtersAndSort.filter, query: '' },
-          })
-        }
-        onChange={newQuery =>
-          onChange({
-            ...filtersAndSort,
-            filter: { ...filtersAndSort.filter, query: newQuery },
-          })
-        }
-      />
+      {Object.keys(filtersAndSort.filter).length > 0 && (
+        <>
+          <FilterInput
+            initialFilter={{}}
+            onChange={filters =>
+              onChange({
+                ...filtersAndSort,
+                filter: { ...filtersAndSort.filter, ...filters },
+              })
+            }
+            width={400}
+          >
+            {({ values, setFieldValue }) => (
+              <GridColumn>
+                <SearchInput
+                  name="search"
+                  value={values.query}
+                  onClear={() => setFieldValue('query', '')}
+                  onChange={newValue => setFieldValue('query', newValue)}
+                />
+              </GridColumn>
+            )}
+          </FilterInput>
+          <SearchInput
+            value={filtersAndSort.filter.query}
+            name="search"
+            onClear={() =>
+              onChange({
+                ...filtersAndSort,
+                filter: { ...filtersAndSort.filter, query: '' },
+              })
+            }
+            onChange={newQuery =>
+              onChange({
+                ...filtersAndSort,
+                filter: { ...filtersAndSort.filter, query: newQuery },
+              })
+            }
+          />
+        </>
+      )}
     </>
   );
 }
