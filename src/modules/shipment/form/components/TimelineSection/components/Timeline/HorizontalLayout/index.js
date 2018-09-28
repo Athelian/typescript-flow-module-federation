@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import HorizontalPortNames from './HorizontalPortNames';
 import HorizontalTimeline from './HorizontalTimeline';
 import { HorizontalLayoutWrapperStyle } from './style';
 
@@ -12,7 +13,7 @@ class HorizontalLayout extends React.PureComponent<Props> {
     const { shipment } = this.props;
     return (
       <div className={HorizontalLayoutWrapperStyle}>
-        Port Names
+        <HorizontalPortNames shipment={shipment} />
         <HorizontalTimeline shipment={shipment} />
         Dates
       </div>

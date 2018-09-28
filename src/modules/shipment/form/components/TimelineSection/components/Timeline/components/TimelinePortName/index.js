@@ -3,7 +3,11 @@ import * as React from 'react';
 import { getPortName } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import { TimelinePortNameWrapperStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  vertical: boolean,
+};
+
+type Props = OptionalProps & {
   port: {
     seaport: string,
     airport: string,
@@ -11,7 +15,11 @@ type Props = {
   transportType: ?string,
 };
 
-const TimelinePort = ({ port, transportType }: Props) => {
+const defaultProps = {
+  vertical: false,
+};
+
+const TimelinePort = ({ port, transportType, vertical }: Props) => {
   let transportTypeEnum = null;
   let correctPort = null;
 
@@ -26,10 +34,12 @@ const TimelinePort = ({ port, transportType }: Props) => {
   }
 
   return (
-    <div className={TimelinePortNameWrapperStyle}>
+    <div className={TimelinePortNameWrapperStyle(vertical)}>
       {getPortName(transportTypeEnum, correctPort)}
     </div>
   );
 };
+
+TimelinePort.defaultProps = defaultProps;
 
 export default TimelinePort;

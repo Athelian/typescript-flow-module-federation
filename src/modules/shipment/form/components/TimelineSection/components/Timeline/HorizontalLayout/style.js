@@ -6,6 +6,7 @@ export const HorizontalLayoutWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   width: 100%;
   padding: 10px;
+  grid-gap: 5px;
 `;
 
 export default HorizontalLayoutWrapperStyle;

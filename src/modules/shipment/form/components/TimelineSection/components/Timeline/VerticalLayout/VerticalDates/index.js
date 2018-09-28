@@ -27,7 +27,7 @@ const VerticalDates = ({ shipment }: Props) => {
 
       <div className={BlankGapStyle} />
 
-      <TimelinePortName port={loadPort} transportType={transportType} />
+      <TimelinePortName port={loadPort} transportType={transportType} vertical />
 
       <div className={VoyageDatesWrapperStyle}>
         <TimelineDate timelineDate={voyages[0].departure} prefixIcon="DEPARTURE" />
@@ -37,7 +37,7 @@ const VerticalDates = ({ shipment }: Props) => {
       {voyages.length > 1 &&
         voyages.slice(1).map(voyage => (
           <React.Fragment key={voyage.id}>
-            <TimelinePortName port={voyage.departurePort} transportType={transportType} />
+            <TimelinePortName port={voyage.departurePort} transportType={transportType} vertical />
 
             <div className={VoyageDatesWrapperStyle}>
               <TimelineDate timelineDate={voyage.departure} prefixIcon="DEPARTURE" />
@@ -46,7 +46,7 @@ const VerticalDates = ({ shipment }: Props) => {
           </React.Fragment>
         ))}
 
-      <TimelinePortName port={dischargePort} transportType={transportType} />
+      <TimelinePortName port={dischargePort} transportType={transportType} vertical />
 
       <div className={BlankGapStyle} />
 
