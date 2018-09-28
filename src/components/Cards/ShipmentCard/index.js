@@ -3,6 +3,7 @@ import React from 'react';
 import { navigate } from '@reach/router';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
+import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
 import BaseCard, { CardAction } from '../BaseCard';
 import { ShipmentCardWrapperStyle } from './style';
 
@@ -28,7 +29,7 @@ const ShipmentCard = ({ shipment }: Props) => {
         onClick={() => navigate(`/shipment/${encodeId(id)}`)}
         role="presentation"
       >
-        {id}
+        <HorizontalLayout shipment={shipment} />
       </div>
     </BaseCard>
   );

@@ -2,12 +2,22 @@
 import * as React from 'react';
 import { TimelineVoyageWrapperStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  vertical: boolean,
+};
+
+type Props = OptionalProps & {
   children: React.Node,
 };
 
-const TimelineVoyage = ({ children }: Props) => (
-  <div className={TimelineVoyageWrapperStyle}>{children}</div>
+const defaultProps = {
+  vertical: false,
+};
+
+const TimelineVoyage = ({ vertical, children }: Props) => (
+  <div className={TimelineVoyageWrapperStyle(vertical)}>{children}</div>
 );
+
+TimelineVoyage.defaultProps = defaultProps;
 
 export default TimelineVoyage;
