@@ -1,12 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const TimelineVoyageWrapperStyle: string = css`
+export const TimelineVoyageWrapperStyle = (vertical: boolean): string => css`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${vertical ? 'column' : 'row'};
   align-items: center;
   position: relative;
-  flex: 2;
+  flex: ${vertical ? 2 : 1};
 `;
 
 export default TimelineVoyageWrapperStyle;

@@ -25,7 +25,7 @@ const BatchGridView = (props: Props) => {
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth={195}
+      itemWidth="195px"
       isEmpty={items.length === 0}
       emptyMessage="No batches found"
     >

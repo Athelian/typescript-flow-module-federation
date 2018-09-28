@@ -10,7 +10,7 @@ type OptionalProps = {
 type Props = OptionalProps;
 
 const defaultProps = {
-  vertical: true,
+  vertical: false,
   color: 'GRAY_LIGHT',
 };
 

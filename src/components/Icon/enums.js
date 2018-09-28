@@ -73,6 +73,8 @@ import {
   faTruckLoading as DELIVERY_READY,
   faArrowToBottom as ARRIVAL,
   faArrowFromTop as DEPARTURE,
+  faArrowToRight as ARRIVAL_HORIZONTAL,
+  faArrowFromLeft as DEPARTURE_HORIZONTAL,
   // Document Types
   faFileExcel as EXCEL,
   faFileImage as IMAGE,
@@ -172,6 +174,8 @@ export default {
   DELIVERY_READY,
   ARRIVAL,
   DEPARTURE,
+  ARRIVAL_HORIZONTAL,
+  DEPARTURE_HORIZONTAL,
 
   EXCEL,
   IMAGE,

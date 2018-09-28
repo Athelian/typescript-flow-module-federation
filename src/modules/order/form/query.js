@@ -3,6 +3,19 @@ import gql from 'graphql-tag';
 import { productProviderListFragment } from 'graphql/productProviderList/fragment';
 import { detailedBatchFragment } from 'graphql/batchDetail/fragment';
 
+const timelineDateFragment = gql`
+  fragment timelineDateFragment on TimelineDate {
+    date
+    approvedAt
+    timelineDateRevisions {
+      date
+      id
+      sort
+    }
+    id
+  }
+`;
+
 export const orderDetailFragment = gql`
   fragment orderDetailFragment on Order {
     id
@@ -40,7 +53,49 @@ export const orderDetailFragment = gql`
       }
     }
     shipments {
+      no
+      blNo
+      transportType
+      cargoReady {
+        ...timelineDateFragment
+      }
+      voyages {
+        departurePort {
+          seaport
+          airport
+        }
+        arrivalPort {
+          seaport
+          airport
+        }
+        departure {
+          ...timelineDateFragment
+        }
+        arrival {
+          ...timelineDateFragment
+        }
+        id
+        sort
+      }
+      containerGroups {
+        customClearance {
+          ...timelineDateFragment
+        }
+        warehouseArrival {
+          ...timelineDateFragment
+        }
+        deliveryReady {
+          ...timelineDateFragment
+        }
+        id
+        sort
+      }
       id
+      tags {
+        name
+        color
+        id
+      }
     }
     files {
       id
@@ -57,6 +112,7 @@ export const orderDetailFragment = gql`
 
   ${productProviderListFragment}
   ${detailedBatchFragment}
+  ${timelineDateFragment}
 `;
 
 export const orderDetailQuery = gql`

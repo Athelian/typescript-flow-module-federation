@@ -2,13 +2,24 @@
 import { css } from 'react-emotion';
 import { fontSizes, colors } from 'styles/common';
 
-export const GridViewWrapperStyle = (itemWidth: number, spacing: number): string => css`
+type GridViewWrapperProps = {
+  itemWidth: string,
+  columnGap: string,
+  rowGap: string,
+};
+
+export const GridViewWrapperStyle = ({
+  itemWidth,
+  columnGap,
+  rowGap,
+}: GridViewWrapperProps): string => css`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, ${itemWidth}px);
+  grid-template-columns: repeat(auto-fit, ${itemWidth});
   grid-auto-rows: min-content;
-  grid-gap: ${spacing}px;
-  padding: 50px 20px;
+  grid-column-gap: ${columnGap};
+  grid-row-gap: ${rowGap};
+  padding: 50px 0 50px 20px;
 `;
 
 export const EmptyMessageStyle: string = css`

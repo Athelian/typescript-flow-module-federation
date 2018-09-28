@@ -15,6 +15,7 @@ export const TimelineIconStyle = ({ icon, color }: TimelineIcon): string => css`
     ? `
       position: absolute;
       top: calc(50% - 15px);
+      left: calc(50% - 15px);
     `
     : `border: 2px solid ${colors[color]}`};
   color: ${colors[color]};

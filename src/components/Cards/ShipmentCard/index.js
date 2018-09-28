@@ -3,12 +3,22 @@ import React from 'react';
 import { navigate } from '@reach/router';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
-import type { ShipmentListCard } from './type.js.flow';
+import Tag from 'components/Tag';
+import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
 import BaseCard, { CardAction } from '../BaseCard';
-import { ShipmentCardWrapperStyle } from './style';
+import {
+  ShipmentCardWrapperStyle,
+  ShipmentInfoWrapperStyle,
+  ShipmentLeftWrapperStyle,
+  ShipmentNoStyle,
+  ShipmentBLStyle,
+  ShipmentRightWrapperStyle,
+  ShipmentTagsWrapperStyle,
+  DividerStyle,
+} from './style';
 
 type Props = {
-  shipment: ?ShipmentListCard,
+  shipment: ?Object,
 };
 
 const ShipmentCard = ({ shipment }: Props) => {
@@ -29,7 +39,19 @@ const ShipmentCard = ({ shipment }: Props) => {
         onClick={() => navigate(`/shipment/${encodeId(id)}`)}
         role="presentation"
       >
-        {id}
+        <div className={ShipmentInfoWrapperStyle}>
+          <div className={ShipmentLeftWrapperStyle}>
+            <div className={ShipmentNoStyle}>{shipment.no}</div>
+            <div className={ShipmentBLStyle}>{shipment.blNo}</div>
+          </div>
+          <div className={ShipmentRightWrapperStyle}>
+            <div className={ShipmentTagsWrapperStyle}>
+              {shipment.tags.length > 0 && shipment.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+          </div>
+        </div>
+        <div className={DividerStyle} />
+        <HorizontalLayout shipment={shipment} />
       </div>
     </BaseCard>
   );

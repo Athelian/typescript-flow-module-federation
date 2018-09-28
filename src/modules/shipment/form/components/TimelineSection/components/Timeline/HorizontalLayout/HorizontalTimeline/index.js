@@ -2,13 +2,13 @@
 import * as React from 'react';
 import { TimelineIcon, TimelineTransitIcon, TimelineLine, TimelineVoyage } from '../../components';
 import { getTimelineColoring, getTransportIcon } from '../../helpers';
-import { VerticalTimelineWrapperStyle } from './style';
+import { HorizontalTimelineWrapperStyle, BlankSpaceStyle } from './style';
 
 type Props = {
   shipment: any,
 };
 
-const VerticalTimeline = ({ shipment }: Props) => {
+const HorizontalTimeline = ({ shipment }: Props) => {
   const { cargoReady, voyages, containerGroups, transportType } = shipment;
 
   const transportIcon = getTransportIcon(transportType);
@@ -23,7 +23,9 @@ const VerticalTimeline = ({ shipment }: Props) => {
   const deliveryReadyColoring = coloring[coloring.length - 1];
 
   return (
-    <div className={VerticalTimelineWrapperStyle}>
+    <div className={HorizontalTimelineWrapperStyle}>
+      <div className={BlankSpaceStyle} />
+
       <TimelineIcon
         icon="CARGO_READY"
         color={cargoReadyColoring}
@@ -31,7 +33,7 @@ const VerticalTimeline = ({ shipment }: Props) => {
         boundaryId="timelineInfoSection"
       />
 
-      <TimelineLine color={loadPortDepartureColoring} vertical />
+      <TimelineLine color={loadPortDepartureColoring} />
 
       <TimelineIcon
         icon="PORT"
@@ -40,9 +42,9 @@ const VerticalTimeline = ({ shipment }: Props) => {
         boundaryId="timelineInfoSection"
       />
 
-      <TimelineVoyage vertical>
-        <TimelineLine color={loadPortDepartureColoring} vertical />
-        <TimelineLine color={coloring[2]} vertical />
+      <TimelineVoyage>
+        <TimelineLine color={loadPortDepartureColoring} />
+        <TimelineLine color={coloring[2]} />
         <TimelineIcon
           icon={transportIcon}
           color={loadPortDepartureColoring}
@@ -63,9 +65,9 @@ const VerticalTimeline = ({ shipment }: Props) => {
               boundaryId="timelineInfoSection"
             />
 
-            <TimelineVoyage vertical>
-              <TimelineLine color={coloring[index * 2 + 3]} vertical />
-              <TimelineLine color={coloring[index * 2 + 4]} vertical />
+            <TimelineVoyage>
+              <TimelineLine color={coloring[index * 2 + 3]} />
+              <TimelineLine color={coloring[index * 2 + 4]} />
               <TimelineIcon
                 icon={transportIcon}
                 color={coloring[index * 2 + 3]}
@@ -83,7 +85,7 @@ const VerticalTimeline = ({ shipment }: Props) => {
         boundaryId="timelineInfoSection"
       />
 
-      <TimelineLine color={customClearanceColoring} vertical />
+      <TimelineLine color={customClearanceColoring} />
 
       <TimelineIcon
         icon="CUSTOMS"
@@ -92,7 +94,7 @@ const VerticalTimeline = ({ shipment }: Props) => {
         boundaryId="timelineInfoSection"
       />
 
-      <TimelineLine color={warehouseArrivalColoring} vertical />
+      <TimelineLine color={warehouseArrivalColoring} />
 
       <TimelineIcon
         icon="WAREHOUSE"
@@ -101,7 +103,7 @@ const VerticalTimeline = ({ shipment }: Props) => {
         boundaryId="timelineInfoSection"
       />
 
-      <TimelineLine color={deliveryReadyColoring} vertical />
+      <TimelineLine color={deliveryReadyColoring} />
 
       <TimelineIcon
         icon="DELIVERY_READY"
@@ -109,8 +111,10 @@ const VerticalTimeline = ({ shipment }: Props) => {
         targetId="deliveryReady"
         boundaryId="timelineInfoSection"
       />
+
+      <div className={BlankSpaceStyle} />
     </div>
   );
 };
 
-export default VerticalTimeline;
+export default HorizontalTimeline;
