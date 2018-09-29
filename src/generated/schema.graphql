@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Sep 27 2018 02:07:43 GMT+0900 (Japan Standard Time)
+# timestamp: Sat Sep 29 2018 11:36:40 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -28587,6 +28587,9 @@ type Mutation {
   eventCommentCreate(input: EventCommentCreateInput!): EventCommentMutated!
   eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): EventCommentMutated!
   timelineRead(id: ID!): Boolean!
+  notificationRead(id: ID!): Boolean!
+  notificationReadAll: Boolean!
+  notificationSeeAll: Boolean!
 }
 
 type Notification {
