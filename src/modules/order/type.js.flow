@@ -76,7 +76,7 @@ export type OrderItemForm = {
 export type OrderForm = {
   poNo: string,
   exporterId: string,
-  currency: string,
+  currency: ?string,
   issuedAt?: ?Date,
   piNo?: ?string,
   incoterm?: ?string,

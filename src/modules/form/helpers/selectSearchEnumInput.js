@@ -3,7 +3,6 @@ import * as React from 'react';
 import { StringValue } from 'react-values';
 import matchSorter from 'match-sorter';
 import EnumProvider from 'providers/enum';
-import LoadingIcon from 'components/LoadingIcon';
 import {
   FieldItem,
   Label,
@@ -64,7 +63,7 @@ export default function selectSearchEnumInputFactory({
   return (
     <EnumProvider enumType={enumType}>
       {({ loading, error, data }) => {
-        if (loading) return <LoadingIcon />;
+        if (loading) return null;
         if (error) return `Error!: ${error}`;
 
         const selectedItem = data.find(item => item.name === inputHandlers.value);

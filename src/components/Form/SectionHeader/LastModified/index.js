@@ -14,7 +14,7 @@ const messages = defineMessages({
 });
 
 type OptionalProps = {
-  updatedBy: {
+  updatedBy: ?{
     firstName: string,
     lastName: string,
   },
@@ -32,7 +32,10 @@ const defaultProps = {
 };
 
 function SectionHeader({ updatedAt, updatedBy }: Props) {
-  const { firstName, lastName } = updatedBy;
+  const { firstName, lastName } = updatedBy || {
+    firstName: '',
+    lastName: '',
+  };
   return (
     <div className={LastModifiedWrapperStyle}>
       <div className={LastModifiedStyle}>

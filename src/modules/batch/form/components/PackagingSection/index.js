@@ -65,7 +65,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'UNITS PER PACKAGE',
+                  label: 'PACKAGE QUANTITY',
                 })
               }
             </FormField>
