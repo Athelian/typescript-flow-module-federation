@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { removeTypename } from 'utils/data';
+import { cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { cloneDeep, set } from 'lodash';
 import type { Document } from 'components/Form/DocumentsInput/type.js.flow';
@@ -30,8 +30,7 @@ export default class OrderFilesContainer extends Container<FormState> {
   };
 
   initDetailValues = (files: Array<Document>) => {
-    const parsedValues = removeTypename(files);
-    // $FlowFixMe
+    const parsedValues: Array<Document> = cleanUpData(files);
     this.setState({ files: parsedValues });
     this.originalValues = { files: parsedValues };
   };

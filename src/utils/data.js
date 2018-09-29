@@ -43,8 +43,7 @@ export const removeTypename = when(
 
 export const cleanUpData = pipe(
   removeTypename,
-  removeNulls,
-  removeEmpty
+  removeNulls
 );
 
 export const cleanFalsy = pipe(

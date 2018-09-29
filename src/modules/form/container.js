@@ -53,8 +53,14 @@ export default class FormContainer extends Container<FormState> {
       (result, { path, message }) => setIn(path, message, result),
       {}
     );
+    const fieldsTouched = Object.keys(serverErrors).reduce(
+      (result, field) => ({ ...result, [field]: true }),
+      {}
+    );
+
     this.setState({
       errors: serverErrors,
+      touched: fieldsTouched,
     });
   };
 

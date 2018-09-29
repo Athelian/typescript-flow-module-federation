@@ -96,7 +96,7 @@ const OrderSection = ({ isNew }: Props) => (
               <GridColumn>
                 <FormField
                   name="poNo"
-                  initValue={initialValues.poNo}
+                  initValue={values.poNo}
                   values={values}
                   validator={validator}
                   setFieldValue={setFieldValue}

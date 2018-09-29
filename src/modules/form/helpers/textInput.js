@@ -5,6 +5,7 @@ import { FieldItem, Label, Tooltip, DefaultStyle, TextInput } from 'components/F
 const textInputFactory = ({
   required = false,
   WrapperComponent = DefaultStyle,
+  align = 'right',
   // $FlowFixMe
   InputComponent = TextInput,
   width = '200px',
@@ -18,6 +19,7 @@ const textInputFactory = ({
   WrapperComponent?: () => React.Node,
   InputComponent?: TextInput,
   required?: boolean,
+  align?: string,
   width?: string,
   height?: string,
   label?: React.Node,
@@ -63,7 +65,7 @@ const textInputFactory = ({
           width={width}
           height={height}
         >
-          <InputComponent name={name} {...rest} />
+          <InputComponent align={align} name={name} {...rest} />
         </WrapperComponent>
       }
     />

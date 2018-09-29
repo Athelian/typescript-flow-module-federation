@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
-import { removeTypename } from 'utils/data';
+import { cleanUpData } from 'utils/data';
 
 type FormState = {
   orderItems: Array<Object>,
@@ -43,8 +43,7 @@ export default class OrderItemsContainer extends Container<FormState> {
   };
 
   initDetailValues = (orderItems: Array<Object>) => {
-    const parsedValues = removeTypename(orderItems);
-    // $FlowFixMe: clean up this later
+    const parsedValues = cleanUpData(orderItems);
     this.setState({ orderItems: parsedValues });
     this.originalValues = { orderItems: parsedValues };
   };

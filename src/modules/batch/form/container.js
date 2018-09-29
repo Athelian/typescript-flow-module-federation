@@ -2,15 +2,14 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeTypename, removeNulls } from 'utils/data';
-import logger from 'utils/logger';
+import { removeNulls, cleanUpData } from 'utils/data';
 
 type Metric = {
   value: number,
   metric: string,
 };
 
-type FormState = {
+export type BatchFormState = {
   id?: ?string,
   no?: ?string,
   quantity?: ?number,
@@ -22,6 +21,9 @@ type FormState = {
     height: Metric,
     length: Metric,
   },
+  deliveredAt?: ?Date,
+  expiredAt?: ?Date,
+  producedAt?: ?Date,
 };
 
 const initValues = {
@@ -47,7 +49,7 @@ const initValues = {
   },
 };
 
-export default class BatchFormContainer extends Container<FormState> {
+export default class BatchFormContainer extends Container<BatchFormState> {
   state = initValues;
 
   originalValues = initValues;
@@ -81,9 +83,7 @@ export default class BatchFormContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: any) => {
-    logger.warn('onInitDetailValues');
-    const parsedValues = removeTypename(values);
-    // $FlowFixMe: clean up later
+    const parsedValues = cleanUpData(values);
     this.setState(parsedValues);
     this.originalValues = parsedValues;
   };

@@ -9,9 +9,14 @@ import { StaffCardWrapperStyle } from './style';
 
 type Props = {
   staff: ?Staff,
+  onClick?: string => void,
 };
 
-const StaffCard = ({ staff }: Props) => {
+const defaultProps = {
+  onClick: (id: string) => navigate(`/staff/${encodeId(id)}`),
+};
+
+const StaffCard = ({ staff, onClick }: Props) => {
   if (!staff) return '';
 
   const { id } = staff;
@@ -26,7 +31,7 @@ const StaffCard = ({ staff }: Props) => {
     <BaseCard icon="STAFF" color="STAFF" actions={actions}>
       <div
         className={StaffCardWrapperStyle}
-        onClick={() => navigate(`/staff/${encodeId(id)}`)}
+        onClick={() => id && onClick && onClick(id)}
         role="presentation"
       >
         {id}
@@ -34,5 +39,7 @@ const StaffCard = ({ staff }: Props) => {
     </BaseCard>
   );
 };
+
+StaffCard.defaultProps = defaultProps;
 
 export default StaffCard;

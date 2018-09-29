@@ -193,6 +193,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                   )
                                 }
                               />
+                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }
@@ -200,7 +201,6 @@ class OrderFormModule extends React.PureComponent<Props> {
                     </NavBar>
                   }
                 >
-                  {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !orderId ? (
                     <OrderForm
