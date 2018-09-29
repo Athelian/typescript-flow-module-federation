@@ -17,17 +17,19 @@ const scrollIntoView = ({ targetId, boundaryId }: Props) => {
   const node = document.querySelector(`#${targetId}`);
   const boundaryNode = boundaryId ? document.querySelector(`#${boundaryId}`) : null;
 
-  if (boundaryNode) {
-    scroll(node, {
-      behavior: 'smooth',
-      scrollMode: 'if-needed',
-      boundary: boundaryNode,
-    });
-  } else {
-    scroll(node, {
-      behavior: 'smooth',
-      scrollMode: 'if-needed',
-    });
+  if (node) {
+    if (boundaryNode) {
+      scroll(node, {
+        behavior: 'smooth',
+        scrollMode: 'if-needed',
+        boundary: boundaryNode,
+      });
+    } else {
+      scroll(node, {
+        behavior: 'smooth',
+        scrollMode: 'if-needed',
+      });
+    }
   }
 };
 
