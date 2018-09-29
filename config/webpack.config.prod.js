@@ -11,7 +11,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
@@ -128,48 +128,27 @@ const plugins = [
     fileName: 'asset-manifest.json',
     publicPath: publicPath,
   }),
-  // Generate a service worker script that will precache, and keep up to date,
-  // the HTML & assets that are part of the Webpack build.
-  new SWPrecacheWebpackPlugin({
-    // By default, a cache-busting query parameter is appended to requests
-    // used to populate the caches, to ensure the responses are fresh.
-    // If a URL is already hashed by Webpack, then there is no concern
-    // about it being stale, and the cache-busting can be skipped.
-    dontCacheBustUrlsMatching: /\.\w{8}\./,
-    filename: 'service-worker.js',
-    logger(message) {
-      if (message.indexOf('Total precache size is') === 0) {
-        // This message occurs for every build and is a bit too noisy.
-        return;
-      }
-      if (message.indexOf('Skipping static resource') === 0) {
-        // This message obscures real errors so we ignore it.
-        // https://github.com/facebook/create-react-app/issues/2612
-        return;
-      }
-      console.log(message);
-    },
-    minify: true,
-    // For unknown URLs, fallback to the index page
-    navigateFallback: publicUrl + '/index.html',
-    // Ignores URLs starting from /__ (useful for Firebase):
-    // https://github.com/facebookincubator/create-react-app/issues/2237#issuecomment-302693219
-    navigateFallbackWhitelist: [/^(?!\/__).*/],
-    // Don't precache sourcemaps (they're large) and build asset manifest:
-    staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
-    // Disabling skipWaiting ensures better compatibility with web apps that
-    // use deferred or lazy-loading, at the expense of "keeping around" the
-    // previously cached version of your web app until all open instances have
-    // been closed.
-    // See https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle#skip_the_waiting_phase
-    skipWaiting: false,
-  }),
   // Moment.js is an extremely popular library that bundles large locale files
   // by default due to how Webpack interprets its code. This is a practical
   // solution that requires the user to opt into importing specific locales.
   // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
   // You can remove this if you don't use Moment.js:
   new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+  // Generate a service worker script that will precache, and keep up to date,
+  // the HTML & assets that are part of the Webpack build.
+  new WorkboxWebpackPlugin.GenerateSW({
+    clientsClaim: true,
+    exclude: [/\.map$/, /asset-manifest\.json$/],
+    importWorkboxFrom: 'local',
+    navigateFallback: publicUrl + '/index.html',
+    navigateFallbackBlacklist: [
+      // Exclude URLs starting with /_, as they're likely an API call
+      new RegExp('^/_'),
+      // Exclude URLs containing a dot, as they're likely a resource in
+      // public/ and not a SPA route
+      new RegExp('/[^/]+\\.[^/]+$'),
+    ],
+  }),
 ];
 
 if (process.env.ANALYZE) {
@@ -241,7 +220,17 @@ module.exports = {
         sourceMap: shouldUseSourceMap,
       }),
       new OptimizeCSSAssetsPlugin({
-        cssProcessorOptions: { parser: safePostCssParser },
+        cssProcessorOptions: {
+          parser: safePostCssParser,
+          map: {
+            // `inline: false` forces the sourcemap to be output into a
+            // separate file
+            inline: false,
+            // `annotation: true` appends the sourceMappingURL to the end of
+            // the css file, helping the browser find the sourcemap
+            annotation: true,
+          },
+        },
       }),
     ],
     // Automatically split vendor and commons
@@ -308,6 +297,16 @@ module.exports = {
         include: paths.appSrc,
       },
       {
+        // `mjs` support is still in its infancy in the ecosystem, so we don't
+        // support it.
+        // Modules who define their `browser` or `module` key as `mjs` force
+        // the use of this extension, so we need to tell webpack to fall back
+        // to auto mode (ES Module interop, allows ESM to import CommonJS).
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+      },
+      {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall
         // back to the "file" loader at the end of the loader list.
@@ -335,8 +334,10 @@ module.exports = {
                 // We need to use our own loader until `babel-loader` supports
                 // customization
                 // https://github.com/babel/babel-loader/pull/687
-                loader: require.resolve('babel-preset-react-app/loader'),
+                loader: require.resolve('babel-loader'),
                 options: {
+                  customize: require.resolve('babel-preset-react-app/webpack-overrides'),
+
                   plugins: [
                     [
                       require.resolve('babel-plugin-named-asset-import'),
@@ -353,7 +354,6 @@ module.exports = {
                   // Save disk space when time isn't as important
                   cacheCompression: true,
                   compact: true,
-                  highlightCode: true,
                 },
               },
             ],
@@ -371,6 +371,7 @@ module.exports = {
                 loader: require.resolve('babel-loader'),
                 options: {
                   babelrc: false,
+                  configFile: false,
                   compact: false,
                   presets: [
                     [require.resolve('babel-preset-react-app/dependencies'), { helpers: true }],
@@ -379,7 +380,6 @@ module.exports = {
                   // Save disk space when time isn't as important
                   cacheCompression: true,
 
-                  highlightCode: true,
                   // If an error happens in a package, it's possible to be
                   // because it was compiled. Thus, we don't want the browser
                   // debugger to show the original code. Instead, the code
