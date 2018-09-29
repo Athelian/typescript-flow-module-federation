@@ -199,6 +199,7 @@ class ProductFormModule extends React.Component<Props> {
                                   )
                                 }
                               />
+                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }
@@ -206,7 +207,6 @@ class ProductFormModule extends React.Component<Props> {
                     </NavBar>
                   }
                 >
-                  {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !productId ? (
                     <ProductForm product={{}} isNew />

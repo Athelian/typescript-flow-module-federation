@@ -1,7 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
-import { removeNulls, removeTypename } from 'utils/data';
 import type { ProductCreate, ProductUpdate } from '../type.js.flow';
 
 export const createProductMutation: Object = gql`
@@ -26,26 +25,22 @@ export const prepareCreateProductInput = ({
   material,
   tags = [],
   productProviders = [],
-}: Object): ProductCreate =>
-  // $FlowFixMe ignore
-  removeTypename(
-    removeNulls({
-      name,
-      serial,
-      janCode,
-      hsCode,
-      material,
-      tagIds: tags.map(({ id }) => id),
-      productProviders: productProviders.map(
-        ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
-          ...productProvider,
-          ...(isNew ? {} : { id }),
-          exporterId: exporter.id,
-          supplierId: supplier ? supplier.id : null,
-        })
-      ),
+}: Object): ProductCreate => ({
+  name,
+  serial,
+  janCode,
+  hsCode,
+  material,
+  tagIds: tags.map(({ id }) => id),
+  productProviders: productProviders.map(
+    ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
+      ...productProvider,
+      ...(isNew ? {} : { id }),
+      exporterId: exporter.id,
+      supplierId: supplier ? supplier.id : null,
     })
-  );
+  ),
+});
 
 export const updateProductMutation: Object = gql`
   mutation productUpdate($id: ID!, $input: ProductUpdateInput!) {
@@ -69,20 +64,19 @@ export const prepareUpdateProductInput = ({
   material,
   tags = [],
   productProviders = [],
-}: Object): ProductUpdate =>
-  removeNulls({
-    name,
-    serial,
-    janCode,
-    hsCode,
-    material,
-    tagIds: tags.map(({ id }) => id),
-    productProviders: productProviders.map(
-      ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
-        ...productProvider,
-        ...(isNew ? {} : { id }),
-        exporterId: exporter.id,
-        supplierId: supplier ? supplier.id : null,
-      })
-    ),
-  });
+}: Object): ProductUpdate => ({
+  name,
+  serial,
+  janCode,
+  hsCode,
+  material,
+  tagIds: tags.map(({ id }) => id),
+  productProviders: productProviders.map(
+    ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
+      ...productProvider,
+      ...(isNew ? {} : { id }),
+      exporterId: exporter.id,
+      supplierId: supplier ? supplier.id : null,
+    })
+  ),
+});

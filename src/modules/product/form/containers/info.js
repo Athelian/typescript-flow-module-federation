@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { isEquals } from 'utils/fp';
-import { removeTypename } from 'utils/data';
+import { cleanUpData, cleanFalsy } from 'utils/data';
 
 type FormState = {
   name?: string,
@@ -21,7 +21,7 @@ export default class ProductInfoContainer extends Container<FormState> {
 
   originalValues = initValues;
 
-  isDirty = () => !isEquals(this.state, this.originalValues);
+  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
@@ -34,10 +34,9 @@ export default class ProductInfoContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (values: any) => {
-    const parsedValues = removeTypename(values);
-    // $FlowFixMe: missing type define for map's ramda function
+  initDetailValues = (values: Object) => {
+    const parsedValues: Object = cleanUpData(values);
     this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    this.originalValues = Object.assign({}, parsedValues);
   };
 }

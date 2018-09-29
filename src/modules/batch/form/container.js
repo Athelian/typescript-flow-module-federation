@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanUpData } from 'utils/data';
+import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
 
 type Metric = {
   value: number,
@@ -75,16 +75,16 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     });
   };
 
-  isDirty = () => !isEquals(this.state, this.originalValues);
+  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (values: any) => {
-    const parsedValues = cleanUpData(values);
+  initDetailValues = (values: Object) => {
+    const parsedValues: Object = cleanUpData(values);
     this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    this.originalValues = Object.assign({}, parsedValues);
   };
 }

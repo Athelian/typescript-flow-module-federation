@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
-import { textInputFactory, priceInputFactory } from 'modules/form/helpers';
+import { selectSearchEnumInputFactory, priceInputFactory } from 'modules/form/helpers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import SlideView from 'components/SlideView';
@@ -116,9 +116,10 @@ const ProductProviderSection = ({ isNew }: Props) => (
               validator={validator}
             >
               {({ name, ...inputHandlers }) =>
-                textInputFactory({
-                  inputHandlers,
+                selectSearchEnumInputFactory({
+                  enumType: 'Country',
                   name,
+                  inputHandlers,
                   isNew,
                   required: true,
                   originalValue: initialValues[name],

@@ -1,6 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
+import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
 import { removeTypename, removeNulls } from 'utils/data';
 
@@ -48,11 +49,22 @@ export default class ProductProvidersContainer extends Container<FormState> {
     });
   };
 
+  setFieldArrayValue = (index: number, value: any) => {
+    this.setState(prevState =>
+      update(prevState, {
+        productProviders: {
+          [index]: {
+            $merge: value,
+          },
+        },
+      })
+    );
+  };
+
   removeArrayItem = (path: string) => {
     this.setState(prevState => {
       const cloneState = cloneDeep(prevState);
       unset(cloneState, path);
-      // $FlowFixMe: missing type define for map's ramda function
       return removeNulls(cloneState);
     });
   };

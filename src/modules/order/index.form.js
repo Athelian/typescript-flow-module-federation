@@ -123,7 +123,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                         <SectionTabs link="orderSection" label="ORDER" icon="ORDER" />
                         <SectionTabs link="itemsSection" label="ITEMS" icon="ORDER_ITEM" />
                         <SectionTabs link="documentsSection" label="DOCUMENTS" icon="DOCUMENT" />
-                        <SectionTabs link="ordersSection" label="SHIPMENTS" icon="SHIPMENT" />
+                        <SectionTabs link="shipmentsSection" label="SHIPMENTS" icon="SHIPMENT" />
                       </JumpToSection>
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) =>
