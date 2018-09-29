@@ -30,7 +30,7 @@ export default class OrderFilesContainer extends Container<FormState> {
   };
 
   initDetailValues = (files: Array<Document>) => {
-    const parsedValues = cleanUpData(files);
+    const parsedValues: Array<Document> = cleanUpData(files);
     this.setState({ files: parsedValues });
     this.originalValues = { files: parsedValues };
   };
