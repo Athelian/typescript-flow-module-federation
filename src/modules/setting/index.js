@@ -7,6 +7,9 @@ import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { AuthenticationConsumer } from 'modules/authentication';
+
+import Notifications from './notifications';
+
 import logOutMutation from './mutation';
 import {
   SettingsWrapperStyle,
@@ -110,7 +113,9 @@ class Setting extends React.Component<Props, State> {
             ignoreElements={[this.NotificationRef && this.NotificationRef.current]}
           >
             <div className={NotificationDropDownWrapperStyle}>
-              <div className={SubMenuWrapperStyle}>There is nothing to notice you.</div>
+              <div className={SubMenuWrapperStyle}>
+                <Notifications toggleNotification={this.toggleNotification} />
+              </div>
             </div>
           </OutsideClickHandler>
         )}
