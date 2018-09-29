@@ -43,7 +43,7 @@ const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
 
   let shownDate = date;
   if (hasMultipleDates && timelineDateRevisions) {
-    for (let index = timelineDateRevisions.length - 1; index > 0; index -= 1) {
+    for (let index = timelineDateRevisions.length - 1; index >= 0; index -= 1) {
       const { date: lastDate } = timelineDateRevisions[index] || {};
       if (lastDate) {
         shownDate = lastDate;
@@ -54,7 +54,7 @@ const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
 
   let delayAmount = 0;
   if (date && shownDate && hasMultipleDates) {
-    delayAmount = differenceInDays(shownDate, date);
+    delayAmount = differenceInDays(new Date(shownDate), new Date(date));
   }
 
   return (
@@ -63,7 +63,7 @@ const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
         <div className={PrefixIconStyle}>{prefixIcon && <Icon icon={prefixIcon} />}</div>
       )}
       <div className={DateStyle({ shownDate: !!shownDate, vertical })}>
-        {shownDate ? <FormattedDate value={shownDate} /> : 'No date'}
+        {shownDate ? <FormattedDate value={new Date(shownDate)} /> : 'No date'}
       </div>
       <div className={DelayStyle({ delayAmount, vertical })}>
         {delayAmount !== 0 && `${delayAmount > 0 ? '+' : ''}${delayAmount}`}

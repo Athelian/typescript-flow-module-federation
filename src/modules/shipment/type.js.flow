@@ -1,12 +1,12 @@
 // @flow
 
 export type CargoReady = {
-  date: Date,
+  date: ?Date,
   assignedToIds: Array<string>,
   approvedById: string,
   memo: string,
   timelineDateRevisions: Array<{
-    date: string,
+    date: ?Date,
     type: string,
     memo: string,
   }>,

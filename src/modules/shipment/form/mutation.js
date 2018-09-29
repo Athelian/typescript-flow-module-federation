@@ -2,7 +2,25 @@
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
-import type { ShipmentCreate, ShipmentUpdate } from '../type.js.flow';
+import type { CargoReady, ShipmentCreate, ShipmentUpdate } from '../type.js.flow';
+
+const formatCargoReady = (cargoReady: Object): CargoReady => {
+  const { assignedTo = [], memo, approvedBy, date, timelineDateRevisions = [] } = cargoReady;
+
+  return {
+    memo,
+    date: date ? new Date(date) : null,
+    assignedToIds: assignedTo.map(({ id }) => id),
+    timelineDateRevisions: timelineDateRevisions
+      .filter(item => item && (item.date || item.memo))
+      .map(({ date: dateRevision, type, memo: memoRevision }) => ({
+        type,
+        memo: memoRevision,
+        date: dateRevision ? new Date(dateRevision) : null,
+      })),
+    approvedById: approvedBy && approvedBy.id,
+  };
+};
 
 export const createShipmentMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
@@ -46,7 +64,7 @@ export const prepareCreateShipmentInput = ({
   transportType: transportType && transportType.length > 0 ? transportType : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   carrier,
-  cargoReady,
+  cargoReady: formatCargoReady(cargoReady),
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
   voyages,

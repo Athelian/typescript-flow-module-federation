@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeTypename } from 'utils/data';
+import { cleanUpData } from 'utils/data';
 
 type ActionDetail = {
   approvedAt: ?Date,
@@ -86,8 +86,7 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: any) => {
-    const parsedValues = removeTypename(values);
-    // $FlowFixMe: missing type define for map's ramda function
+    const parsedValues = cleanUpData(values);
     this.setState(parsedValues);
     this.originalValues = parsedValues;
   };

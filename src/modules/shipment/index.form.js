@@ -218,6 +218,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   )
                                 }
                               />
+                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }
@@ -225,7 +226,6 @@ class ShipmentFormModule extends React.Component<Props> {
                     </NavBar>
                   }
                 >
-                  {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !shipmentId ? (
                     <ShipmentForm shipment={{}} isNew />
