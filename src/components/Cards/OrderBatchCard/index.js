@@ -165,7 +165,10 @@ const OrderBatchCard = ({
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
-                    saveOnBlur({ ...batch, deliveredAt: inputHandlers.value });
+                    saveOnBlur({
+                      ...batch,
+                      deliveredAt: inputHandlers.value ? new Date(inputHandlers.value) : null,
+                    });
                   },
                 },
               })

@@ -10,7 +10,7 @@ type Metric = {
   metric: string,
 };
 
-type FormState = {
+export type BatchFormState = {
   id?: ?string,
   no?: ?string,
   quantity?: ?number,
@@ -22,6 +22,9 @@ type FormState = {
     height: Metric,
     length: Metric,
   },
+  deliveredAt?: ?Date,
+  expiredAt?: ?Date,
+  producedAt?: ?Date,
 };
 
 const initValues = {
@@ -47,7 +50,7 @@ const initValues = {
   },
 };
 
-export default class BatchFormContainer extends Container<FormState> {
+export default class BatchFormContainer extends Container<BatchFormState> {
   state = initValues;
 
   originalValues = initValues;
