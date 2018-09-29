@@ -2,8 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeTypename, removeNulls } from 'utils/data';
-import logger from 'utils/logger';
+import { removeNulls, cleanUpData } from 'utils/data';
 
 type Metric = {
   value: number,
@@ -84,9 +83,7 @@ export default class BatchFormContainer extends Container<BatchFormState> {
   };
 
   initDetailValues = (values: any) => {
-    logger.warn('onInitDetailValues');
-    const parsedValues = removeTypename(values);
-    // $FlowFixMe: clean up later
+    const parsedValues = cleanUpData(values);
     this.setState(parsedValues);
     this.originalValues = parsedValues;
   };

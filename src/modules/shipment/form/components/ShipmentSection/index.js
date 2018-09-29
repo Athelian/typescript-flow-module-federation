@@ -211,6 +211,26 @@ const ShipmentSection = ({ isNew }: Props) => (
                 }
               </FormField>
               <FormField
+                name="incoterm"
+                initValue={values.incoterm}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+                saveOnChange
+              >
+                {({ name, ...inputHandlers }) =>
+                  selectEnumInputFactory({
+                    enumType: 'Incoterm',
+                    align: 'right',
+                    label: 'INCOTERMS',
+                    originalValue: initialValues[name],
+                    inputHandlers,
+                    name,
+                    isNew,
+                  })
+                }
+              </FormField>
+              <FormField
                 name="carrier"
                 initValue={values.carrier}
                 setFieldValue={setFieldValue}

@@ -50,8 +50,11 @@ const calculateVolume = (batch: BatchItem, quantity: number) => {
     );
   }
 
-  if (batch && batch.packageSize && batch.packageSize.width) {
-    return 'Not implemented yet';
+  if (batch && batch.packageSize && Object.keys(batch.packageSize).length) {
+    const { width, height, length } = batch.packageSize || { width: {}, height: {}, length: {} };
+    return `${width.value}${width.metric}x${height.value}${height.metric}x${length.value}${
+      length.metric
+    }`;
   }
 
   return 'N/A';

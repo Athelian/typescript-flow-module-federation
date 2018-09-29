@@ -137,6 +137,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                                   )
                                 }
                               />
+                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }
@@ -144,7 +145,6 @@ class BatchFormModule extends React.PureComponent<Props> {
                     </NavBar>
                   }
                 >
-                  {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !batchId ? (
                     <BatchForm batch={{}} isNew />

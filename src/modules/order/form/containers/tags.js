@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { removeTypename } from 'utils/data';
+import { cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
@@ -33,8 +33,7 @@ export default class OrderTagsContainer extends Container<FormState> {
   };
 
   initDetailValues = (tags: Array<Object>) => {
-    const parsedValues = removeTypename(tags);
-    // $FlowFixMe: missing type for ramda's map function
+    const parsedValues = cleanUpData(tags);
     this.setState({ tags: parsedValues });
     this.originalValues = { tags: parsedValues };
   };
