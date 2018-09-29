@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
+import { cleanUpData } from 'utils/data';
 import type {
   CargoReady,
   ShipmentVoyage,
@@ -104,7 +105,7 @@ export const prepareCreateShipmentInput = ({
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
   voyages: formatVoyages(voyages),
-  batches: batches.map(batch => prepareUpdateBatchInput(batch, true)),
+  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true)),
   containerGroups: formatContainers(containerGroups),
 });
 
@@ -153,7 +154,7 @@ export const prepareUpdateShipmentInput = ({
   cargoReady: formatTimeline(cargoReady),
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
-  batches: batches.map(prepareUpdateBatchInput),
+  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true)),
   voyages: formatVoyages(voyages),
   containerGroups: formatContainers(containerGroups),
 });
