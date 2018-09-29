@@ -39,22 +39,6 @@ const PackagingSection = ({ isNew }: Props) => (
             </FormField>
 
             <FormField
-              name="packageCapacity"
-              initValue={values.packageCapacity}
-              setFieldValue={setFieldValue}
-            >
-              {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
-                  inputHandlers,
-                  isNew,
-                  originalValue: originalValues[name],
-                  label: 'UNITS PER PACKAGE',
-                })
-              }
-            </FormField>
-
-            <FormField
               name="packageQuantity"
               initValue={values.packageQuantity}
               setFieldValue={setFieldValue}

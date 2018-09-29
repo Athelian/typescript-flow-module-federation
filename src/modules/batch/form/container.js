@@ -2,7 +2,8 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanUpData } from 'utils/data';
+import logger from 'utils/logger';
+import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
 
 type Metric = {
   value: number,
@@ -12,6 +13,9 @@ type Metric = {
 export type BatchFormState = {
   id?: ?string,
   no?: ?string,
+  packageName?: ?string,
+  packageCapacity?: ?number,
+  packageQuantity?: ?number,
   quantity?: ?number,
   batchAdjustments: Array<any>,
   packageGrossWeight: Metric,
@@ -21,12 +25,19 @@ export type BatchFormState = {
     height: Metric,
     length: Metric,
   },
-  deliveredAt?: ?Date,
-  expiredAt?: ?Date,
-  producedAt?: ?Date,
+  deliveredAt?: ?Date | string,
+  expiredAt?: ?Date | string,
+  producedAt?: ?Date | string,
 };
 
 const initValues = {
+  packageName: '',
+  packageCapacity: 0,
+  packageQuantity: 0,
+  quantity: 0,
+  deliveredAt: '',
+  expiredAt: '',
+  producedAt: '',
   batchAdjustments: [],
   packageGrossWeight: { value: 0, metric: 'kg' },
   packageVolume: {
@@ -75,16 +86,18 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     });
   };
 
-  isDirty = () => !isEquals(this.state, this.originalValues);
+  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (values: any) => {
-    const parsedValues = cleanUpData(values);
+  initDetailValues = (values: Object) => {
+    logger.warn('initDetailValues', values);
+    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    logger.warn('parsedValues', parsedValues);
     this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    this.originalValues = Object.assign({}, parsedValues);
   };
 }

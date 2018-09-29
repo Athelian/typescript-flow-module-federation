@@ -34,8 +34,7 @@ export default class ProductTagsContainer extends Container<FormState> {
   };
 
   initDetailValues = (tags: Array<Object>) => {
-    const parsedValues = removeTypename(tags);
-    // $FlowFixMe: missing type for ramda's map function
+    const parsedValues: Array<any> = removeTypename(tags);
     this.setState({ tags: parsedValues });
     this.originalValues = { tags: parsedValues };
   };

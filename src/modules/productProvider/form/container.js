@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeTypename } from 'utils/data';
+import { cleanUpData, cleanFalsy } from 'utils/data';
 
 type Price = {
   amount: number,
@@ -81,7 +81,7 @@ export default class ProductProviderContainer extends Container<FormState> {
     });
   };
 
-  isDirty = () => !isEquals(this.state, this.originalValues);
+  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
@@ -89,9 +89,8 @@ export default class ProductProviderContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues = removeTypename(values);
-    // $FlowFixMe: missing type for ramda's map function
+    const parsedValues: Object = cleanUpData(values);
     this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    this.originalValues = Object.assign({}, parsedValues);
   };
 }
