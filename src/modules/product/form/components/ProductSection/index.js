@@ -30,12 +30,12 @@ const ProductSection = ({ isNew }: Props) => (
   <Subscribe to={[ProductInfoContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
       const values = { ...initialValues, ...state };
-      const dummyImages = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+      const { files } = values;
 
       return (
         <div className={ProductSectionWrapperStyle}>
-          <div className={ProductImagesWrapperStyle(dummyImages.length > 3)}>
-            {dummyImages.map(
+          <div className={ProductImagesWrapperStyle(files.length > 3)}>
+            {files.map(
               (image: Object, index: number): React.Node => (
                 <div className={ProductImageWrapperStyle} key={image.id}>
                   <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
@@ -50,7 +50,7 @@ const ProductSection = ({ isNew }: Props) => (
                       <Icon icon="CHEVRON_DOUBLE_LEFT" />
                     </button>
                   )}
-                  {index !== dummyImages.length - 1 && (
+                  {index !== files.length - 1 && (
                     <button className={SwapImageButtonStyle('right')} type="button">
                       <Icon icon="CHEVRON_DOUBLE_RIGHT" />
                     </button>
@@ -59,7 +59,7 @@ const ProductSection = ({ isNew }: Props) => (
               )
             )}
             <DashedPlusButton width="180px" height="180px" />
-            {dummyImages.length > 3 && <div className={ScrollFixStyle} />}
+            {files.length > 3 && <div className={ScrollFixStyle} />}
           </div>
           <GridColumn>
             <FormField

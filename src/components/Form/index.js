@@ -27,6 +27,7 @@ import {
 } from './Inputs';
 import TagsInput from './TagsInput';
 import DocumentsInput from './DocumentsInput';
+import ImagesUploadInput from './ImagesUploadInput';
 import FieldItem from './FieldItem';
 import Label from './Label';
 import Tooltip from './Tooltip';
@@ -75,4 +76,5 @@ export {
   LastModified,
   StatusToggle,
   SectionWrapper,
+  ImagesUploadInput,
 };
