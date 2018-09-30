@@ -1,14 +1,15 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
+import { BooleanValue, ObjectValue } from 'react-values';
 import { FormField } from 'modules/form';
 import { textInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import { ProductInfoContainer, ProductTagsContainer } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
-import { FieldItem, Label, TagsInput, DashedPlusButton } from 'components/Form';
+import { FieldItem, Label, TagsInput, ImagesUploadInput } from 'components/Form';
+import ImagePreviewDialog from 'components/Dialog/ImagePreviewDialog';
 import {
   ProductSectionWrapperStyle,
   ProductImagesWrapperStyle,
@@ -26,40 +27,90 @@ type Props = {
   isNew: boolean,
 };
 
+const swapItems = (items: Array<Object>, from: number, to: number) => {
+  const fromItem = items[from];
+  const toItem = items[to];
+  items.splice(from, 1, toItem);
+  items.splice(to, 1, fromItem);
+  return items;
+};
+
 const ProductSection = ({ isNew }: Props) => (
   <Subscribe to={[ProductInfoContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
       const values = { ...initialValues, ...state };
-      const dummyImages = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+      const { files } = values;
 
       return (
         <div className={ProductSectionWrapperStyle}>
-          <div className={ProductImagesWrapperStyle(dummyImages.length > 3)}>
-            {dummyImages.map(
-              (image: Object, index: number): React.Node => (
-                <div className={ProductImageWrapperStyle} key={image.id}>
-                  <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
-                  <button className={ViewImageButtonStyle} type="button">
-                    <Icon icon="EXPAND" />
-                  </button>
-                  <button className={DeleteImageButtonStyle} type="button">
-                    <Icon icon="REMOVE" />
-                  </button>
-                  {index !== 0 && (
-                    <button className={SwapImageButtonStyle('left')} type="button">
-                      <Icon icon="CHEVRON_DOUBLE_LEFT" />
-                    </button>
+          <div className={ProductImagesWrapperStyle(files.length > 3)}>
+            <ObjectValue>
+              {({ value: selectedImage, set: changeSelectedImage }) => (
+                <BooleanValue>
+                  {({ value: isOpen, set: dialogToggle }) => (
+                    <>
+                      {files.map(({ path, name, id }, index) => (
+                        <div className={ProductImageWrapperStyle} key={id}>
+                          <img className={ProductImageStyle} src={path} alt={name} />
+                          <button
+                            className={ViewImageButtonStyle}
+                            type="button"
+                            onClick={() => {
+                              changeSelectedImage(files[index]);
+                              dialogToggle(true);
+                            }}
+                          >
+                            <Icon icon="EXPAND" />
+                          </button>
+                          <button
+                            className={DeleteImageButtonStyle}
+                            type="button"
+                            onClick={() => setFieldValue('files', files.splice(index, 1))}
+                          >
+                            <Icon icon="REMOVE" />
+                          </button>
+                          {index !== 0 && (
+                            <button
+                              className={SwapImageButtonStyle('left')}
+                              type="button"
+                              onClick={() =>
+                                setFieldValue('files', swapItems(files, index, index - 1))
+                              }
+                            >
+                              <Icon icon="CHEVRON_DOUBLE_LEFT" />
+                            </button>
+                          )}
+                          {index !== files.length - 1 && (
+                            <button
+                              className={SwapImageButtonStyle('right')}
+                              type="button"
+                              onClick={() =>
+                                setFieldValue('files', swapItems(files, index, index + 1))
+                              }
+                            >
+                              <Icon icon="CHEVRON_DOUBLE_RIGHT" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                      <ImagePreviewDialog
+                        isOpen={isOpen}
+                        onRequestClose={() => dialogToggle(false)}
+                        width={800}
+                        image={selectedImage}
+                      />
+                      <ImagesUploadInput
+                        id="files"
+                        name="files"
+                        values={files}
+                        onChange={setFieldValue}
+                      />
+                      {files.length > 3 && <div className={ScrollFixStyle} />}
+                    </>
                   )}
-                  {index !== dummyImages.length - 1 && (
-                    <button className={SwapImageButtonStyle('right')} type="button">
-                      <Icon icon="CHEVRON_DOUBLE_RIGHT" />
-                    </button>
-                  )}
-                </div>
-              )
-            )}
-            <DashedPlusButton width="180px" height="180px" />
-            {dummyImages.length > 3 && <div className={ScrollFixStyle} />}
+                </BooleanValue>
+              )}
+            </ObjectValue>
           </div>
           <GridColumn>
             <FormField
