@@ -1,16 +1,21 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Mutation } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
+
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
+
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { AuthenticationConsumer } from 'modules/authentication';
 
+import { getByPathWithDefault } from 'utils/fp';
 import Notifications from './notifications';
 
 import logOutMutation from './mutation';
+import query from './query';
+
 import {
   SettingsWrapperStyle,
   NotificationButtonStyle,
@@ -77,35 +82,43 @@ class Setting extends React.Component<Props, State> {
 
   render() {
     const { isNotificationOpen, isProfileOpen, logoutDialogOpen } = this.state;
-    const DUMMY_BADGE = 3;
-    const DUMMY_USER = {
-      firstName: 'TODO',
-      lastName: 'TODO',
-    };
 
     return (
       <div className={SettingsWrapperStyle}>
-        <button
-          className={NotificationButtonStyle}
-          tabIndex={-1}
-          onClick={this.toggleNotification}
-          type="button"
-          ref={this.NotificationRef}
-        >
-          <div className={NotificationBadgeStyle}>{DUMMY_BADGE > 99 ? '99+' : DUMMY_BADGE}</div>
-          <Icon icon="NOTIFICATION" />
-        </button>
+        <Query query={query}>
+          {({ data }) => {
+            const viewer = {
+              firstName: getByPathWithDefault('TODO', 'viewer.user.firstName', data),
+              lastName: getByPathWithDefault('TODO', 'viewer.user.lastName', data),
+            };
+            const unRead = getByPathWithDefault(0, 'viewer.notificationUnread', data);
 
-        <button
-          className={ProfileButtonStyle}
-          data-testid="setting-button"
-          tabIndex={-1}
-          onClick={this.toggleProfile}
-          type="button"
-          ref={this.ProfileRef}
-        >
-          <UserAvatar firstName={DUMMY_USER.firstName} lastName={DUMMY_USER.lastName} />
-        </button>
+            return (
+              <>
+                <button
+                  className={NotificationButtonStyle}
+                  tabIndex={-1}
+                  onClick={this.toggleNotification}
+                  type="button"
+                  ref={this.NotificationRef}
+                >
+                  <div className={NotificationBadgeStyle}>{unRead > 99 ? '99+' : unRead}</div>
+                  <Icon icon="NOTIFICATION" />
+                </button>
+                <button
+                  className={ProfileButtonStyle}
+                  data-testid="setting-button"
+                  tabIndex={-1}
+                  onClick={this.toggleProfile}
+                  type="button"
+                  ref={this.ProfileRef}
+                >
+                  <UserAvatar firstName={viewer.firstName} lastName={viewer.lastName} />
+                </button>
+              </>
+            );
+          }}
+        </Query>
 
         {isNotificationOpen && (
           <OutsideClickHandler
