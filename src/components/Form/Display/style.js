@@ -13,8 +13,8 @@ export const DisplayWrapperStyle = (
   ${presets.ELLIPSIS};
   ${borderRadiuses.MAIN};
   text-align: ${align};
+  min-width: 0;
   width: 100%;
-  max-width: min-content;
   padding: 0 5px;
 `;
 

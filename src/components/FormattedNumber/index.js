@@ -2,11 +2,21 @@
 import * as React from 'react';
 import { FormattedNumber as FormattedNumberIntl } from 'react-intl';
 
-type Props = {
+type OptionalProps = {
+  suffix?: ?string,
+  prefix?: ?string,
+};
+
+type Props = OptionalProps & {
   value: ?number,
 };
 
-const FormattedNumber = ({ value }: Props) =>
-  value !== null && value !== undefined ? <FormattedNumberIntl value={value} /> : '';
+const FormattedNumber = ({ value, suffix, prefix }: Props) => (
+  <>
+    {prefix ? `${prefix} ` : ''}
+    {value !== null && value !== undefined ? <FormattedNumberIntl value={value} /> : ''}
+    {suffix ? ` ${suffix}` : ''}
+  </>
+);
 
 export default FormattedNumber;
