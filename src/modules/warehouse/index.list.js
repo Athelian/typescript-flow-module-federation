@@ -15,10 +15,7 @@ type Props = {
 
 type State = {
   viewType: string,
-  filter: {
-    query: string,
-    archived: boolean,
-  },
+  filter: {},
   sort: {
     field: string,
     direction: string,
@@ -29,10 +26,7 @@ type State = {
 class WarehouseModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
-    filter: {
-      query: '',
-      archived: false,
-    },
+    filter: {},
     sort: {
       field: 'updatedAt',
       direction: 'DESCENDING',
@@ -47,8 +41,8 @@ class WarehouseModule extends React.Component<Props, State> {
 
   render() {
     const fields = [
-      { title: 'updatedAt', value: 'updatedAt' },
-      { title: 'createdAt', value: 'createdAt' },
+      { title: 'UPDATED AT', value: 'updatedAt' },
+      { title: 'CREATED AT', value: 'createdAt' },
     ];
 
     return (

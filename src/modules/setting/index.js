@@ -162,22 +162,6 @@ class Setting extends React.Component<Props, State> {
           >
             <div className={DropDownWrapperStyle}>
               <div className={SubMenuWrapperStyle}>
-                <div className={SubMenuItemStyle}>
-                  <div>
-                    <Icon icon="PROFILE" />
-                  </div>
-                  <div>
-                    <FormattedMessage {...messages.profile} />
-                  </div>
-                </div>
-                <div className={SubMenuItemStyle}>
-                  <div>
-                    <Icon icon="SETTINGS" />
-                  </div>
-                  <div>
-                    <FormattedMessage {...messages.preferences} />
-                  </div>
-                </div>
                 <div
                   className={SubMenuItemStyle}
                   onClick={this.toggleLogoutDialog}

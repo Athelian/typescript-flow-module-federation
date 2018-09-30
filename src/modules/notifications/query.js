@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const staffListQuery = gql`
+export const notificationListQuery = gql`
   query($page: Int!, $perPage: Int!) {
     viewer {
       notifications(page: $page, perPage: $perPage) {
@@ -15,4 +15,4 @@ export const staffListQuery = gql`
   }
 `;
 
-export default staffListQuery;
+export default notificationListQuery;
