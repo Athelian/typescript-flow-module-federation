@@ -22,7 +22,7 @@ const defaultProps = {
   isLoading: false,
 };
 
-const OrderList = (props: Props) => {
+const RelationView = (props: Props) => {
   const { isLoading, isEmpty, emptyMessage, onLoadMore, hasMore, items, render, className } = props;
   if (isLoading) {
     return <LoadingIcon />;
@@ -46,6 +46,6 @@ const OrderList = (props: Props) => {
   );
 };
 
-OrderList.defaultProps = defaultProps;
+RelationView.defaultProps = defaultProps;
 
-export default OrderList;
+export default RelationView;

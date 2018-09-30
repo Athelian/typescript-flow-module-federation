@@ -6,9 +6,8 @@ import ProductFocused from './components/ProductFocused';
 import Layout from './components/Layout';
 import QueryHandler from './components/QueryHandler';
 import SortFilterBar from './components/SortFilterBar';
-import ToggleTag from './components/ToggleTag';
 import query from './components/ProductFocused/query';
-import { FunctionWrapperStyle, TagWrapperStyle } from './style';
+import { FunctionWrapperStyle, ProductWrapper } from './style';
 
 type Props = {
   page: number,
@@ -29,42 +28,41 @@ const formatData = data =>
 
 const Product = ({ page, perPage }: Props) => (
   <Layout>
-    <div className={TagWrapperStyle}>
-      <ToggleTag />
+    <div className={ProductWrapper}>
+      <SortFilterBar className={FunctionWrapperStyle}>
+        {({ sort, filter }) => (
+          <Query
+            query={query}
+            variables={{
+              page,
+              perPage,
+              filterBy: {
+                query: filter,
+              },
+              sortBy: {
+                [sort.field]: sort.direction,
+              },
+            }}
+            fetchPolicy="network-only"
+          >
+            {({ loading, data, fetchMore, error }) => (
+              <QueryHandler
+                model="orderItems"
+                loading={loading}
+                data={data}
+                fetchMore={fetchMore}
+                error={error}
+              >
+                {({ nodes, hasMore, loadMore }) => {
+                  const items = formatData(nodes);
+                  return <ProductFocused hasMore={hasMore} loadMore={loadMore} items={items} />;
+                }}
+              </QueryHandler>
+            )}
+          </Query>
+        )}
+      </SortFilterBar>
     </div>
-    <SortFilterBar className={FunctionWrapperStyle}>
-      {({ sort, filter }) => (
-        <Query
-          query={query}
-          variables={{
-            page,
-            perPage,
-            filterBy: {
-              query: filter,
-            },
-            sortBy: {
-              [sort.field]: sort.direction,
-            },
-          }}
-          fetchPolicy="network-only"
-        >
-          {({ loading, data, fetchMore, error }) => (
-            <QueryHandler
-              model="orderItems"
-              loading={loading}
-              data={data}
-              fetchMore={fetchMore}
-              error={error}
-            >
-              {({ nodes, hasMore, loadMore }) => {
-                const products = formatData(nodes);
-                return <ProductFocused hasMore={hasMore} loadMore={loadMore} nodes={products} />;
-              }}
-            </QueryHandler>
-          )}
-        </Query>
-      )}
-    </SortFilterBar>
   </Layout>
 );
 Product.defaultProps = defaultProps;

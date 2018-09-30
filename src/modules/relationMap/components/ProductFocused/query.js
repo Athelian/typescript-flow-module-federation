@@ -7,6 +7,7 @@ export const productListQuery = gql`
         id
         quantity
         productProvider {
+          id
           product {
             id
             name
@@ -27,11 +28,20 @@ export const productListQuery = gql`
           no
           quantity
           archived
+          orderItem {
+            id
+            order {
+              id
+              poNo
+            }
+          }
           shipment {
             id
             blNo
             containerGroups {
+              id
               warehouseArrival {
+                id
                 date
               }
             }

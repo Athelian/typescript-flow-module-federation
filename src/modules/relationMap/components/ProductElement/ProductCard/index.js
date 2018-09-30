@@ -79,7 +79,7 @@ const ProductCard = ({ item }: Props) => {
             />
           </div>
           <div className={style.ProductTagsWrapperStyle}>
-            {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
           </div>
         </div>
       </div>

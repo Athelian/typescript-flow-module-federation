@@ -67,13 +67,17 @@ const GridColumn = css`
 
 export const ContentWrapperStyle = css`
   width: 100%;
+  padding: 50px 20px;
 `;
 
 export const RelationMapGrid = styled('div')`
-  width: 100%;
-  padding: 50px 20px;
+  /* width: 100%; */
   display: grid;
   ${GridColumn};
+`;
+
+export const ProductWrapper = css`
+  width: 63%;
 `;
 
 export const EmptyMessageStyle = css`

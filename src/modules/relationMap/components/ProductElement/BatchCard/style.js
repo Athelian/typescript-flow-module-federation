@@ -1,10 +1,28 @@
-import styled from 'react-emotion';
+import styled, { css } from 'react-emotion';
 import { borderRadiuses, layout, colors, fontSizes, shadows } from 'styles/common';
+
+const Row = css`
+  padding: 5px;
+`;
 
 export const CardWrapper = styled('div')`
   ${borderRadiuses.MAIN};
-  padding: 5px;
   width: 195px;
+`;
+
+export const BatchRow = styled('div')`
+  ${Row};
+`;
+
+export const QuantityRow = styled('div')`
+  ${Row};
+  ${layout.HORIZONTAL};
+  justify-content: space-between;
+`;
+
+export const OrderRow = styled('div')`
+  ${Row};
+  ${layout.HORIZONTAL};
 `;
 
 export const TagWrapper = styled('div')`
@@ -16,6 +34,7 @@ export const TagWrapper = styled('div')`
 
 export const DetailWrapper = styled('div')`
   ${layout.HORIZONTAL};
+  ${Row};
 `;
 
 export const IconWrapper = styled('div')`
@@ -24,7 +43,8 @@ export const IconWrapper = styled('div')`
   color: ${colors.WHITE};
   ${fontSizes.LITTLE};
   width: min-content;
-  padding: 2px;
+  padding: 3px;
+  margin-right: 5px;
 `;
 
 export const SecondaryIconWrapper = styled('div')`
@@ -34,14 +54,26 @@ export const SecondaryIconWrapper = styled('div')`
   ${fontSizes.LITTLE};
   width: min-content;
   padding: 2px;
+  margin-right: 5px;
 `;
 
 export const QuantityWrapper = styled('div')`
+  ${layout.HORIZONTAL};
+  justify-content: space-between;
+`;
+
+export const SecondaryTitle = styled('div')`
+  color: ${colors.GRAY_VERY_LIGHT};
+`;
+
+export const QuantityInput = styled('div')`
   ${shadows.INPUT};
+  width: 40%;
+  padding: 0 5px;
 `;
 
 export const Divider = styled('div')`
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};
-  margin: 0 10px;
+  margin: 1px 10px;
 `;

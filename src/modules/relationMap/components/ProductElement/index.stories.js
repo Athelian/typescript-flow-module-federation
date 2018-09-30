@@ -5,7 +5,6 @@ import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
 import ProductCard from './ProductCard';
 import BatchCard from './BatchCard';
-import * as style from './style';
 
 storiesOf('RelationMap/ProductFocused', module)
   .add('ProductCard', () => {
@@ -27,6 +26,7 @@ storiesOf('RelationMap/ProductFocused', module)
       ],
       batches: [
         {
+          id: '234324',
           quantity: 300,
         },
       ],
@@ -49,32 +49,7 @@ storiesOf('RelationMap/ProductFocused', module)
     };
     return (
       <IntlProvider locale="en" messages={translationMessages.en}>
-        <BatchCard item={item} />
-      </IntlProvider>
-    );
-  })
-  .add('BatchList', () => {
-    const item = {
-      tags: [
-        {
-          id: '234234',
-          name: 'some tag',
-          color: 'red',
-        },
-      ],
-    };
-    return (
-      <IntlProvider locale="en" messages={translationMessages.en}>
-        <div className={style.BatchListWrapperStyle}>
-          <BatchCard item={item} />
-          <BatchCard item={item} />
-          <BatchCard item={item} />
-          <BatchCard item={item} />
-          <BatchCard item={item} />
-          <BatchCard item={item} />
-          <BatchCard item={item} />
-          <BatchCard item={item} />
-        </div>
+        <BatchCard batch={item} />
       </IntlProvider>
     );
   });

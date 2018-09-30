@@ -3,43 +3,47 @@ import React from 'react';
 import BaseCard from 'components/Cards';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
+import FormattedDate from 'components/FormattedDate';
+import { getByPathWithDefault } from 'utils/fp';
 import * as Style from './style';
 
 type Props = {
-  item: Object,
+  batch: Object,
 };
-const BatchCard = ({ item }: Props) => {
-  const { tags } = item;
+const BatchCard = ({ batch }: Props) => {
+  const { tags } = batch;
   return (
     <BaseCard icon="BATCH" color="BATCH">
       <Style.CardWrapper>
-        <div>CHERRRY_001</div>
-        <div>
-          <span>Quantity</span>
-          <Style.QuantityWrapper>1000</Style.QuantityWrapper>
-          <span>1000</span>
-        </div>
+        <Style.BatchRow>{batch.no}</Style.BatchRow>
+        <Style.QuantityRow>
+          <Style.SecondaryTitle>QUANTITY</Style.SecondaryTitle>
+          <Style.QuantityInput>{batch.quantity}</Style.QuantityInput>
+        </Style.QuantityRow>
         <Style.Divider />
         <Style.DetailWrapper>
           <Style.IconWrapper>
             <Icon icon="ORDER" />
           </Style.IconWrapper>
-          Order no
+          {getByPathWithDefault('', 'orderItem.order.poNo', batch)}
         </Style.DetailWrapper>
         <Style.DetailWrapper>
           <Style.IconWrapper>
             <Icon icon="SHIPMENT" />
           </Style.IconWrapper>
-          Shipment
+          {getByPathWithDefault('', 'shipment.blNo', batch)}
         </Style.DetailWrapper>
         <Style.DetailWrapper>
           <Style.SecondaryIconWrapper>
             <Icon icon="WAREHOUSE" />
           </Style.SecondaryIconWrapper>
-          warehouse
+          <Style.SecondaryTitle>ARRIVAL</Style.SecondaryTitle>
+          <div>
+            <FormattedDate value={getByPathWithDefault('', 'shipment.blDate', batch)} mode="date" />
+          </div>
         </Style.DetailWrapper>
         <Style.TagWrapper>
-          {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
         </Style.TagWrapper>
       </Style.CardWrapper>
     </BaseCard>
