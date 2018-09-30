@@ -7,7 +7,7 @@ import NotificationListView from './NotificationListView';
 import query from '../query';
 
 type Props = {
-  // viewType: string,
+  viewType: string,
   perPage: number,
 };
 
@@ -20,104 +20,10 @@ const NotificationList = ({ ...filtersAndSort }: Props) => (
     }}
     fetchPolicy="network-only"
   >
-    {({
-      loading,
-      // data,
-      fetchMore,
-      error,
-    }) => {
+    {({ loading, data, fetchMore, error }) => {
       if (error) {
         return error.message;
       }
-
-      const data = {
-        viewer: {
-          notifications: {
-            nodes: [
-              {
-                id: 1,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 2,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 3,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 4,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 5,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 6,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 7,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 8,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 9,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 10,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 11,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 12,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-              {
-                id: 13,
-                body: '123',
-                read: true,
-                createdAt: new Date().toString(),
-              },
-            ],
-            page: 1,
-            totalPage: 2,
-          },
-        },
-      };
 
       const nextPage = getByPathWithDefault(1, 'viewer.notifications.page', data) + 1;
       const totalPage = getByPathWithDefault(1, 'viewer.notifications.totalPage', data);

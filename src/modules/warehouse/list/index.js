@@ -8,10 +8,6 @@ import query from './query';
 
 type Props = {
   viewType: string,
-  filter: {
-    query: string,
-    archived: boolean,
-  },
   sort: {
     field: string,
     direction: string,

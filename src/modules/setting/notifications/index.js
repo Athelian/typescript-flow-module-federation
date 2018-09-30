@@ -68,106 +68,17 @@ class NotificationDropDown extends React.Component<Props> {
         query={query}
         variables={{
           page: 1,
-          perPage: 1,
+          perPage: 10,
         }}
         fetchPolicy="network-only"
       >
-        {({
-          loading,
-          // data,
-          error,
-        }) => {
+        {({ loading, data, error }) => {
           if (error) {
             return error.message;
           }
-          const data = {
-            viewer: {
-              notifications: {
-                nodes: [
-                  {
-                    id: 1,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 2,
-                    body: '123',
-                    read: false,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 3,
-                    body: '123',
-                    read: false,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 4,
-                    body: '123',
-                    read: false,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 5,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 6,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 7,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 8,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 9,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 10,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 11,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 12,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                  {
-                    id: 13,
-                    body: '123',
-                    read: true,
-                    createdAt: new Date().toString(),
-                  },
-                ],
-                page: 1,
-                totalPage: 2,
-              },
-            },
-          };
+
+          if (loading) return <LoadingIcon />;
+
           const items = getByPathWithDefault([], 'viewer.notifications.nodes', data);
           return (
             <div className={WrapperStyle}>
@@ -178,13 +89,15 @@ class NotificationDropDown extends React.Component<Props> {
                       <div className={TitleStyle}>
                         <FormattedMessage {...messages.title} />
                       </div>
-                      <button
-                        type="button"
-                        className={ClearAllStyle}
-                        onClick={() => readAllNotification()}
-                      >
-                        <FormattedMessage {...messages.readAll} />
-                      </button>
+                      {items.length > 0 && (
+                        <button
+                          type="button"
+                          className={ClearAllStyle}
+                          onClick={() => readAllNotification()}
+                        >
+                          <FormattedMessage {...messages.readAll} />
+                        </button>
+                      )}
                     </div>
                     {isLoading && <LoadingIcon />}
                     {apiError && apiError.message}
