@@ -20,7 +20,7 @@ import {
 function ProductProvidersSection() {
   return (
     <Subscribe to={[ProductProvidersContainer]}>
-      {({ state: { productProviders }, setFieldValue }) => (
+      {({ state: { productProviders }, setFieldValue, removeArrayItem }) => (
         <div className={ProductProviderSectionWrapperStyle}>
           <SectionNavBar>
             <BooleanValue>
@@ -82,7 +82,6 @@ function ProductProvidersSection() {
                             onCancel={() => slideToggle(false)}
                             onSave={newProvider => {
                               slideToggle(false);
-                              console.warn('new provider', newProvider);
                               setFieldValue(
                                 `productProviders.${productProviders.length}`,
                                 newProvider
@@ -122,8 +121,9 @@ function ProductProvidersSection() {
                                     isNew={!!productProvider.isNew}
                                     initDetailValues={initDetailValues}
                                     onCancel={() => slideToggle(false)}
-                                    onSave={() => {
+                                    onSave={newProvider => {
                                       slideToggle(false);
+                                      setFieldValue(`productProviders.${index}`, newProvider);
                                     }}
                                   />
                                 )}
@@ -133,6 +133,16 @@ function ProductProvidersSection() {
                           <ProductProviderCard
                             productProvider={productProvider}
                             onClick={() => slideToggle(true)}
+                            onRemove={() => removeArrayItem(`productProviders.${index}`)}
+                            onClone={({ id, ...rest }) => {
+                              setFieldValue(
+                                `productProviders.${productProviders.length}`,
+                                injectUid({
+                                  ...rest,
+                                  isNew: true,
+                                })
+                              );
+                            }}
                           />
                         </>
                       )}

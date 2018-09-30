@@ -72,7 +72,7 @@ export const prepareUpdateProductInput = ({
   material,
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
-    ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
+    ({ isNew, id, updatedAt, updatedBy, sort, exporter, supplier, ...productProvider }) => ({
       ...productProvider,
       ...(isNew ? {} : { id }),
       exporterId: exporter ? exporter.id : null,
