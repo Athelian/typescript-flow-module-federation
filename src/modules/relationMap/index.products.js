@@ -7,7 +7,11 @@ import Layout from './components/Layout';
 import QueryHandler from './components/QueryHandler';
 import SortFilterBar from './components/SortFilterBar';
 import query from './components/ProductFocused/query';
+<<<<<<< HEAD
 import { FunctionWrapperStyle, ProductWrapper } from './style';
+=======
+import { FunctionWrapperStyle } from './style';
+>>>>>>> feat(relation-map): add layout for product view
 
 type Props = {
   page: number,
