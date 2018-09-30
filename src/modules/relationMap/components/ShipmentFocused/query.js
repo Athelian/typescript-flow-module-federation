@@ -16,6 +16,7 @@ export const shipmentListQuery = gql`
           approvedAt
           date
           timelineDateRevisions {
+            id
             date
           }
         }

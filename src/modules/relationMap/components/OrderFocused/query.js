@@ -28,6 +28,7 @@ export const orderListQuery = gql`
             approvedAt
             date
             timelineDateRevisions {
+              id
               date
             }
           }
@@ -85,6 +86,18 @@ export const orderListQuery = gql`
         orderItems {
           id
           quantity
+          productProvider {
+            id
+            supplier {
+              id
+              name
+            }
+            product {
+              id
+              name
+              serial
+            }
+          }
           batches {
             id
             no
