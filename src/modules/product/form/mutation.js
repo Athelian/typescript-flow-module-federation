@@ -36,7 +36,7 @@ export const prepareCreateProductInput = ({
     ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
       ...productProvider,
       ...(isNew ? {} : { id }),
-      exporterId: exporter.id,
+      exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
     })
   ),
@@ -75,7 +75,7 @@ export const prepareUpdateProductInput = ({
     ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
       ...productProvider,
       ...(isNew ? {} : { id }),
-      exporterId: exporter.id,
+      exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
     })
   ),
