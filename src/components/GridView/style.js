@@ -19,7 +19,7 @@ export const GridViewWrapperStyle = ({
   grid-auto-rows: min-content;
   grid-column-gap: ${columnGap};
   grid-row-gap: ${rowGap};
-  padding: 50px 0 50px 20px;
+  padding: 50px 20px;
 `;
 
 export const EmptyMessageStyle: string = css`

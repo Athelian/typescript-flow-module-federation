@@ -50,6 +50,7 @@ export const detailedBatchFragment = gql`
       order {
         id
         poNo
+        currency
       }
       productProvider {
         id
@@ -76,6 +77,7 @@ export const detailedBatchFragment = gql`
     shipment {
       id
       blNo
+      no
       containerGroups {
         warehouseArrival {
           date

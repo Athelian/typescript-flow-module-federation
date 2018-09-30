@@ -14,7 +14,7 @@ export const ContentWrapperStyle: string = css`
   width: 100%;
   min-width: min-content;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: overlay;
   ${scrollbars.MAIN};
   margin-top: 50px;
   display: flex;
