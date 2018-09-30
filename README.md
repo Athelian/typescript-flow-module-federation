@@ -1,6 +1,6 @@
 # Zenport Web App
 
-Web application for Zenport with [create-react-app-v2](https://github.com/facebook/create-react-app/issues/3815)
+Web application for Zenport with [create-react-app-v2](https://github.com/facebook/create-react-app/issues/5103)
 
 ## Getting Started
 
@@ -65,6 +65,7 @@ and install all the dependencies.
 
 ```sh
 yarn install
+yarn post:install
 ```
 
 ## Unit tests
@@ -443,6 +444,10 @@ build                                    // auto generated build folder containi
 - [immutability-helper](https://github.com/kolodny/immutability-helper)
 
   Immutable data structures for JavaScript which are backwards-compatible with normal JS Arrays and Objects.
+
+* [react-tiny-virtual-list](https://github.com/clauderic/react-tiny-virtual-list)
+
+  a tiny but mighty list virtualization library
 
 * [reach-router](https://github.com/reach/router)
 
