@@ -30,7 +30,7 @@ function ProductProviderSection({ isNew }: Props) {
                 setFieldValue(
                   `productProviders[${productProviders.length}]`,
                   injectUid({
-                    isNew: true,
+                    isNew,
                     unitVolume: {
                       value: 0,
                       metric: 'm³',
@@ -82,7 +82,6 @@ function ProductProviderSection({ isNew }: Props) {
                 {productProviders.map(productProvider => (
                   <div className={ItemStyle} key={productProvider.id}>
                     <ProductProviderCard productProvider={productProvider} />
-                    {isNew}
                   </div>
                 ))}
               </div>
