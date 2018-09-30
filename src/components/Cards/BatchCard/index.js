@@ -25,6 +25,8 @@ import {
   DividerStyle,
   TotalPriceWrapperStyle,
   VolumeWrapperStyle,
+  OrderWrapperStyle,
+  OrderIconStyle,
   ShipmentWrapperStyle,
   ShipmentIconStyle,
   BatchTagsWrapperStyle,
@@ -144,8 +146,8 @@ const BatchCard = ({ batch }: Props) => {
             </Display>
           </div>
 
-          <div className={ShipmentWrapperStyle}>
-            <button className={ShipmentIconStyle(true)} type="button">
+          <div className={OrderWrapperStyle}>
+            <button className={OrderIconStyle} type="button">
               <Icon icon="ORDER" />
             </button>
             <Display align="left">

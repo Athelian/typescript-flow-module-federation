@@ -86,7 +86,8 @@ export const ProductIconLinkStyle: string = css`
 `;
 
 export const BatchInfoWrapperStyle: string = css`
-  ${layout.GRID_VERTICAL};
+  display: grid;
+  grid-template-columns: 195px;
   grid-gap: 5px;
   padding: 5px 0;
   width: 195px;
@@ -131,11 +132,34 @@ export const VolumeWrapperStyle: string = css`
   padding: 0 5px;
 `;
 
+export const OrderWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 20px 155px;
+  width: 100%;
+  padding: 0 5px 0 10px;
+  align-items: center;
+  grid-gap: 5px;
+`;
+
+export const OrderIconStyle = css`
+  ${presets.BUTTON};
+  ${borderRadiuses.CIRCLE};
+  width: 20px;
+  height: 20px;
+  background-color: ${colors.TEAL};
+  color: ${colors.WHITE};
+  font-size: 11px;
+  &:hover,
+  :focus {
+    background-color: ${colors.TEAL_DARK};
+  }
+`;
+
 export const ShipmentWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 20px 1fr;
+  grid-template-columns: 20px 155px;
   width: 100%;
-  padding: 0 10px;
+  padding: 0 5px 0 10px;
   align-items: center;
   grid-gap: 5px;
 `;

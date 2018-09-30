@@ -23,7 +23,7 @@ const HorizontalPortNames = ({ shipment }: Props) => {
 
       {voyages.length > 1 &&
         voyages.slice(1).map(voyage => (
-          <div className={PortNameWrapperStyle}>
+          <div className={PortNameWrapperStyle} key={voyage.id}>
             <TimelinePortName
               port={voyage.departurePort}
               transportType={transportType}
