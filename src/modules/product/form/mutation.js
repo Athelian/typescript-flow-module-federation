@@ -24,6 +24,7 @@ export const prepareCreateProductInput = ({
   hsCode,
   material,
   tags = [],
+  files = [],
   productProviders = [],
 }: Object): ProductCreate => ({
   name,
@@ -31,6 +32,7 @@ export const prepareCreateProductInput = ({
   janCode,
   hsCode,
   material,
+  files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
     ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
@@ -63,6 +65,7 @@ export const prepareUpdateProductInput = ({
   hsCode,
   material,
   tags = [],
+  files = [],
   productProviders = [],
 }: Object): ProductUpdate => ({
   name,
@@ -70,6 +73,7 @@ export const prepareUpdateProductInput = ({
   janCode,
   hsCode,
   material,
+  files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
     ({ isNew, id, updatedAt, updatedBy, sort, exporter, supplier, ...productProvider }) => ({

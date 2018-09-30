@@ -1,13 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, colors, borderRadiuses, fontSizes } from 'styles/common';
-
-export const ImageListStyle: string = css`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 140px);
-  grid-auto-rows: min-content;
-  grid-gap: 20px;
-`;
+import { layout, presets, colors, borderRadiuses } from 'styles/common';
 
 export const AddImageStyle: string = css`
   ${presets.BUTTON};
@@ -16,8 +9,8 @@ export const AddImageStyle: string = css`
   color: rgba(0, 0, 0, 0.2);
   border: 5px dashed rgba(0, 0, 0, 0.2);
   background: none;
-  width: 140px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   &:hover,
   :focus {
     color: ${colors.TEAL};
@@ -34,10 +27,4 @@ export const ProgressStyle: string = css`
   height: 160px;
   color: ${colors.TEAL};
   font-size: 24px;
-`;
-
-export const NoImagesStyle: string = css`
-  ${fontSizes.MAIN};
-  color: ${colors.GRAY_DARK};
-  text-align: center;
 `;

@@ -1,18 +1,14 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { upload } from 'utils/fs';
 import logger from 'utils/logger';
-import ImageItem from './components/ImageItem';
 import type { Image } from './type.js.flow';
-import { ImageListStyle, AddImageStyle, ProgressStyle, NoImagesStyle } from './style';
-import messages from './messages';
+import { AddImageStyle, ProgressStyle } from './style';
 
 type Props = {
   name: string,
   values: Array<Image>,
-  readOnly: boolean,
   onChange: (string, any) => void,
   onBlur: (string, boolean) => void,
   onUpload?: ({ uploading: boolean, progress: number }) => void,
@@ -26,7 +22,6 @@ type State = {
 class ImagesUploadInput extends React.Component<Props, State> {
   static defaultProps = {
     values: [],
-    readOnly: false,
     onChange: () => {},
     onBlur: () => {},
     onUpload: () => {},
@@ -103,42 +98,11 @@ class ImagesUploadInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, values, readOnly, onChange, onBlur } = this.props;
+    const { name, values, onChange } = this.props;
     const { uploading, progress } = this.state;
 
-    if (readOnly) {
-      return values && values.length > 0 ? (
-        <div className={ImageListStyle}>
-          {values.map(image => (
-            <ImageItem name={image.id} key={image.id} value={image} readOnly />
-          ))}
-        </div>
-      ) : (
-        <div className={NoImagesStyle}>
-          <FormattedMessage {...messages.noImages} />
-        </div>
-      );
-    }
-
     return (
-      <div className={ImageListStyle}>
-        {values &&
-          values.map((image, index) => {
-            const imageName = `${name}[${index}]`;
-
-            return (
-              <ImageItem
-                name={imageName}
-                key={imageName}
-                value={image}
-                onChange={onChange}
-                onBlur={onBlur}
-                onRemove={() => {
-                  onChange(name, values.filter(d => d.id !== image.id));
-                }}
-              />
-            );
-          })}
+      <div>
         {uploading ? (
           <div className={ProgressStyle}>{`${progress}%`}</div>
         ) : (
