@@ -1,7 +1,11 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Mutation, Query } from 'react-apollo';
+import {
+  Mutation,
+  Query,
+  // Subscription
+} from 'react-apollo';
 
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
@@ -15,6 +19,7 @@ import Notifications from './notifications';
 
 import logOutMutation from './mutation';
 import query from './query';
+// import subscription from './subscription';
 
 import {
   SettingsWrapperStyle,
@@ -102,6 +107,23 @@ class Setting extends React.Component<Props, State> {
                   type="button"
                   ref={this.NotificationRef}
                 >
+                  {/* <Subscription subscription={subscription}>
+                    {({ data: subscriptionData, loading, error }) => {
+                      if (loading) return null;
+
+                      if (error) {
+                        return error.message;
+                      }
+
+                      const { notificationNew } = subscriptionData;
+                      const unReadNum = notificationNew.id ? unRead + 1 : unRead;
+                      return (
+                        <div className={NotificationBadgeStyle}>
+                          {unReadNum > 99 ? '99+' : unReadNum}
+                        </div>
+                      );
+                    }}
+                  </Subscription> */}
                   <div className={NotificationBadgeStyle}>{unRead > 99 ? '99+' : unRead}</div>
                   <Icon icon="NOTIFICATION" />
                 </button>
