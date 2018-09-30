@@ -2,7 +2,6 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import logger from 'utils/logger';
 import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
 
 type Metric = {
@@ -94,9 +93,7 @@ export default class BatchFormContainer extends Container<BatchFormState> {
   };
 
   initDetailValues = (values: Object) => {
-    logger.warn('initDetailValues', values);
     const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
-    logger.warn('parsedValues', parsedValues);
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };

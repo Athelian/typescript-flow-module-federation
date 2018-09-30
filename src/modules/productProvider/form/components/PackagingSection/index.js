@@ -39,8 +39,8 @@ const PackagingSection = ({ isNew }: Props) => (
             </FormField>
 
             <FormField
-              name="packageQuantity"
-              initValue={values.packageQuantity}
+              name="packageCapacity"
+              initValue={values.packageCapacity}
               setFieldValue={setFieldValue}
             >
               {({ name, ...inputHandlers }) =>
@@ -49,7 +49,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'PACKAGE QUANTITY',
+                  label: 'PACKAGE CAPACITY',
                 })
               }
             </FormField>

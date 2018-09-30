@@ -15,6 +15,13 @@ type Metric = {
 };
 
 type FormState = {
+  exporter?: ?Object,
+  supplier?: ?Object,
+  origin?: string,
+  packageName?: string,
+  packageCapacity?: number,
+  productionLeadTime?: number,
+  unitType?: string,
   unitVolume: Metric,
   unitWeight: Metric,
   unitPrice: Price,
@@ -29,6 +36,13 @@ type FormState = {
 };
 
 const initValues = {
+  exporter: null,
+  supplier: null,
+  origin: '',
+  packageName: '',
+  packageCapacity: 0,
+  productionLeadTime: 0,
+  unitType: '',
   unitVolume: {
     metric: 'm³',
     value: 0,
@@ -89,7 +103,7 @@ export default class ProductProviderContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = cleanUpData(values);
+    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
