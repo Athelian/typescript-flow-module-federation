@@ -113,7 +113,7 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                   {...uiState}
                   navBar={
                     <NavBar>
-                      <EntityIcon icon="TAGS" color="TAGS" />
+                      <EntityIcon icon="TAGS" color="GRAY_LIGHT" />
                       <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
                         {(tagState, entityTypesState, form) =>
                           (isNew || tagState.isDirty() || entityTypesState.isDirty()) && (
@@ -138,6 +138,7 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                                   )
                                 }
                               />
+                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }
@@ -145,7 +146,6 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                     </NavBar>
                   }
                 >
-                  {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
 
                   {isNew || !tagId ? (

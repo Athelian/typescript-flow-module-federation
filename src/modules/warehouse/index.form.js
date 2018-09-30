@@ -132,6 +132,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                                   )
                                 }
                               />
+                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }
@@ -139,7 +140,6 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                     </NavBar>
                   }
                 >
-                  {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !warehouseId ? (
                     <WarehouseInfoForm isNew />
