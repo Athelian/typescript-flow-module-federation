@@ -18,7 +18,7 @@ export const FloatingQuantityWrapperStyle = (positioning: 'top' | 'bottom'): str
   max-width: 100%;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1;
+  z-index: 0;
 `;
 
 export const BarWrapperStyle: string = css`
@@ -31,9 +31,10 @@ export const BarWrapperStyle: string = css`
 
 export const ProgressBarStyle = (color: string, percent: number): string => css`
   background-color: ${colors[color]};
-  ${percent < 0.9 ? 'border-radius: 20px 0 0 20px' : 'border-radius: 20px 20px 20px 20px'};
+  ${borderRadiuses.BUTTON};
   height: inherit;
   width: ${percent > 1 ? 100 : percent * 100}%;
+  min-width: ${percent > 0 ? '20px' : '0px'};
   opacity: 0.5;
 `;
 

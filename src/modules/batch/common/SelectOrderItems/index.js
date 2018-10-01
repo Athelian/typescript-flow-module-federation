@@ -3,7 +3,7 @@ import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue, NumberValue } from 'react-values';
-import ProductGridView from 'modules/product/list/ProductGridView';
+import GridView from 'components/GridView';
 import GridColumn from 'components/GridColumn';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
@@ -16,13 +16,12 @@ import {
   SearchInput,
 } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import LoadingIcon from 'components/LoadingIcon';
 import orderItemsQuery from 'providers/OrderItemsList/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
-import { ItemWrapperStyle, NumberBarStyle } from './style';
+import { ItemWrapperStyle } from './style';
 
 type Props = {
   onCancel: Function,
@@ -157,35 +156,38 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                 }}
               >
                 {({ loading, data, error, fetchMore }) => {
-                  const nextPage = getByPathWithDefault(1, 'orderItems.page', data) + 1;
-                  const totalPage = getByPathWithDefault(1, 'orderItems.totalPage', data);
                   if (error) {
                     return error.message;
                   }
 
-                  if (loading) return <LoadingIcon />;
+                  const nextPage = getByPathWithDefault(1, 'orderItems.page', data) + 1;
+                  const totalPage = getByPathWithDefault(1, 'orderItems.totalPage', data);
+                  const hasMore = nextPage <= totalPage;
+
+                  const items = getByPathWithDefault([], 'orderItems.nodes', data);
 
                   return (
-                    <ProductGridView
+                    <GridView
                       onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orderItems')}
-                      hasMore={nextPage <= totalPage}
+                      hasMore={hasMore}
                       isLoading={loading}
-                      items={getByPathWithDefault([], 'orderItems.nodes', data)}
-                      renderItem={item => (
+                      itemWidth="195px"
+                      isEmpty={items.length === 0}
+                      emptyMessage="No items found"
+                    >
+                      {items.map(item => (
                         <div key={item.id} className={ItemWrapperStyle}>
                           {selected.includes(item) && (
-                            <div className={NumberBarStyle}>
-                              <NumberValue
-                                defaultValue={1}
-                                onChange={total =>
-                                  onChangeProductQuantity({ total, set, selected, item })
-                                }
-                              >
-                                {({ value: num, set: changeNumber }) => (
-                                  <IncrementInput value={num} onChange={changeNumber} />
-                                )}
-                              </NumberValue>
-                            </div>
+                            <NumberValue
+                              defaultValue={1}
+                              onChange={total =>
+                                onChangeProductQuantity({ total, set, selected, item })
+                              }
+                            >
+                              {({ value: num, set: changeNumber }) => (
+                                <IncrementInput value={num} onChange={changeNumber} />
+                              )}
+                            </NumberValue>
                           )}
                           <OrderItemCard
                             item={item}
@@ -194,8 +196,8 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                             onSelect={() => onSelectProduct({ selected, item, push, set })}
                           />
                         </div>
-                      )}
-                    />
+                      ))}
+                    </GridView>
                   );
                 }}
               </Query>

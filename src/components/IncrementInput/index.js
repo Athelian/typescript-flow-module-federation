@@ -36,12 +36,12 @@ export default class IncrementInput extends React.Component<Props> {
     const { value } = this.props;
 
     return (
-      <div className={IncrementInputWrapperStyle()}>
-        <button className={IncrementButtonStyle()} onClick={this.handleMinus} type="button">
+      <div className={IncrementInputWrapperStyle}>
+        <button className={IncrementButtonStyle} onClick={this.handleMinus} type="button">
           <Icon icon="MINUS" />
         </button>
-        <input className={IncrementContentStyle()} type="number" readOnly min={0} value={value} />
-        <button className={IncrementButtonStyle()} onClick={this.handlePlus} type="button">
+        <input className={IncrementContentStyle} type="number" readOnly min={0} value={value} />
+        <button className={IncrementButtonStyle} onClick={this.handlePlus} type="button">
           <Icon icon="ADD" />
         </button>
       </div>

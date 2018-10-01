@@ -41,107 +41,115 @@ const QuantityChart = ({
   hasLabel,
   batched,
   shipped,
-}: Props) => (
-  <div className={QuantityChartWrapperStyle}>
-    {hasLabel ? (
-      <FieldItem
-        label={
-          <Label>
-            <FormattedMessage {...messages.batchedQuantity} />
-          </Label>
-        }
-        input={
+}: Props) => {
+  let batchProgress = 0;
+  if (orderedQuantity <= 0) {
+    if (batchedQuantity > 0) {
+      batchProgress = 1;
+    } else {
+      batchProgress = 0;
+    }
+  } else {
+    batchProgress = batchedQuantity / orderedQuantity;
+  }
+
+  return (
+    <div className={QuantityChartWrapperStyle}>
+      <div className={BarWrapperStyle}>
+        <div className={ProgressBarStyle('BATCH', batchProgress)} />
+        <div className={IconStyle}>
+          <Icon icon="BATCH" />
+        </div>
+
+        {!hasLabel && (
+          <div className={BadgeStyle('bottom')}>
+            <FormattedNumber value={batched} />
+          </div>
+        )}
+      </div>
+
+      <div className={BarWrapperStyle}>
+        <div
+          className={ProgressBarStyle(
+            'SHIPMENT',
+            orderedQuantity === 0 ? 0 : shippedQuantity / orderedQuantity
+          )}
+        />
+        <div className={IconStyle}>
+          <Icon icon="SHIPMENT" />
+        </div>
+
+        {!hasLabel && (
+          <div className={BadgeStyle('top')}>
+            <FormattedNumber value={shipped} />
+          </div>
+        )}
+      </div>
+
+      {hasLabel ? (
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage {...messages.batchedQuantity} />
+            </Label>
+          }
+          input={
+            <GridRow gap="0px">
+              <Display color="BATCH">
+                <FormattedNumber value={batchedQuantity} />
+              </Display>
+              <Display color="GRAY_LIGHT">
+                <FormattedNumber value={orderedQuantity - batchedQuantity} />
+              </Display>
+            </GridRow>
+          }
+        />
+      ) : (
+        <div className={FloatingQuantityWrapperStyle('top')}>
           <GridRow gap="0px">
-            <Display color="BATCH">
+            <Display color="BATCH" fontSize="SMALL">
               <FormattedNumber value={batchedQuantity} />
             </Display>
-            <Display color="GRAY_LIGHT">
+            <Display color="GRAY_LIGHT" fontSize="SMALL">
               <FormattedNumber value={orderedQuantity - batchedQuantity} />
             </Display>
           </GridRow>
-        }
-      />
-    ) : (
-      <div className={FloatingQuantityWrapperStyle('top')}>
-        <GridRow gap="0px">
-          <Display color="BATCH" fontSize="SMALL">
-            <FormattedNumber value={batchedQuantity} />
-          </Display>
-          <Display color="GRAY_LIGHT" fontSize="SMALL">
-            <FormattedNumber value={orderedQuantity - batchedQuantity} />
-          </Display>
-        </GridRow>
-      </div>
-    )}
-
-    <div className={BarWrapperStyle}>
-      <div
-        className={ProgressBarStyle(
-          'BATCH',
-          orderedQuantity === 0 ? 0 : batchedQuantity / orderedQuantity
-        )}
-      />
-      <div className={IconStyle}>
-        <Icon icon="BATCH" />
-      </div>
-
-      {!hasLabel && (
-        <div className={BadgeStyle('bottom')}>
-          <FormattedNumber value={batched} />
         </div>
       )}
-    </div>
 
-    <div className={BarWrapperStyle}>
-      <div
-        className={ProgressBarStyle(
-          'SHIPMENT',
-          orderedQuantity === 0 ? 0 : shippedQuantity / orderedQuantity
-        )}
-      />
-      <div className={IconStyle}>
-        <Icon icon="SHIPMENT" />
-      </div>
-
-      {!hasLabel && (
-        <div className={BadgeStyle('top')}>
-          <FormattedNumber value={shipped} />
-        </div>
-      )}
-    </div>
-
-    {hasLabel ? (
-      <FieldItem
-        label={
-          <Label>
-            <FormattedMessage {...messages.shippedQuantity} />
-          </Label>
-        }
-        input={
+      {hasLabel ? (
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage {...messages.shippedQuantity} />
+            </Label>
+          }
+          input={
+            <GridRow gap="0px">
+              <Display color="SHIPMENT">
+                <FormattedNumber value={shippedQuantity} />
+              </Display>
+              <Display color="GRAY_LIGHT">
+                <FormattedNumber value={orderedQuantity - shippedQuantity} />
+              </Display>
+            </GridRow>
+          }
+        />
+      ) : (
+        <div className={FloatingQuantityWrapperStyle('bottom')}>
           <GridRow gap="0px">
-            <Display color="SHIPMENT">
+            <Display color="SHIPMENT" fontSize="SMALL">
               <FormattedNumber value={shippedQuantity} />
             </Display>
-            <Display color="GRAY_LIGHT">
+            <Display color="GRAY_LIGHT" fontSize="SMALL">
               <FormattedNumber value={orderedQuantity - shippedQuantity} />
             </Display>
           </GridRow>
-        }
-      />
-    ) : (
-      <div className={FloatingQuantityWrapperStyle('bottom')}>
-        <GridRow gap="0px">
-          <Display color="SHIPMENT" fontSize="SMALL">
-            <FormattedNumber value={shippedQuantity} />
-          </Display>
-          <Display color="GRAY_LIGHT" fontSize="SMALL">
-            <FormattedNumber value={orderedQuantity - shippedQuantity} />
-          </Display>
-        </GridRow>
-      </div>
-    )}
-  </div>
-);
+        </div>
+      )}
+    </div>
+  );
+};
 
 QuantityChart.defaultProps = defaultProps;
 

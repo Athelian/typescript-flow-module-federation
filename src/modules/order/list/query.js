@@ -30,6 +30,9 @@ export const orderListQuery = gql`
               id
               quantity
             }
+            shipment {
+              id
+            }
           }
         }
       }

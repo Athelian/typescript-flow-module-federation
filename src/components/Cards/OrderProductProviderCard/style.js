@@ -1,15 +1,8 @@
 // @flow
 import { css } from 'react-emotion';
-import {
-  fontSizes,
-  fontSizesWithHeights,
-  layout,
-  colors,
-  presets,
-  borderRadiuses,
-} from 'styles/common';
+import { fontSizesWithHeights, layout, colors, presets, borderRadiuses } from 'styles/common';
 
-export const ProductCardWrapperStyle: string = css`
+export const ProductProviderCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -135,18 +128,6 @@ export const ProductSupplierStyle: string = css`
     margin: 0 5px 0 0;
     color: ${colors.GRAY_DARK};
   }
-`;
-
-export const MoreProviderBadge: string = css`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 10px;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  color: ${colors.GRAY_DARK};
-  ${fontSizes.SMALL};
-  padding: 0 5px;
-  ${borderRadiuses.BUTTON};
 `;
 
 export const ProductTagsWrapperStyle: string = css`

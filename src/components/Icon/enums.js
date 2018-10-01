@@ -96,6 +96,12 @@ import {
   faEye as EYE,
 } from '@fortawesome/pro-regular-svg-icons';
 
+import {
+  // Common UI
+  faAngleLeft as ANGLE_LEFT,
+  faAngleRight as ANGLE_RIGHT,
+} from '@fortawesome/pro-light-svg-icons';
+
 export default {
   ORDER,
   ORDER_SELECT,
@@ -151,6 +157,8 @@ export default {
   ARROW_DOWN,
   WARNING,
   CHEVRON_DOWN,
+  ANGLE_LEFT,
+  ANGLE_RIGHT,
   CHEVRON_DOUBLE_LEFT,
   CHEVRON_DOUBLE_RIGHT,
   DOCUMENT,

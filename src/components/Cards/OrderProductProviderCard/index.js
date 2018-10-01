@@ -1,14 +1,11 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
-import { encodeId } from 'utils/id';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import FormattedNumber from 'components/FormattedNumber';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
-  ProductCardWrapperStyle,
+  ProductProviderCardWrapperStyle,
   ProductImageWrapperStyle,
   ProductImageStyle,
   ProductImageChevronButtonStyle,
@@ -20,54 +17,70 @@ import {
   ProductProvidersWrapperStyle,
   ProductExporterStyle,
   ProductSupplierStyle,
-  MoreProviderBadge,
   ProductTagsWrapperStyle,
 } from './style';
 
-type Props = {
-  product: ?Object,
+type OptionalProps = {
+  onClick?: ?Function,
+  selectable: boolean,
+};
+
+type Props = OptionalProps & {
+  productProvider: ?Object,
 };
 
 type State = {
   activeImage: number,
 };
 
-class ProductCard extends React.PureComponent<Props, State> {
+const defaultProps = {
+  selectable: false,
+};
+
+class OrderProductProviderCard extends React.PureComponent<Props, State> {
+  static defaultProps = defaultProps;
+
   state = {
     activeImage: 0,
   };
 
   navigateImages = (direction: 'left' | 'right') => {
-    const { product } = this.props;
+    const { productProvider } = this.props;
     const { activeImage } = this.state;
 
-    if (product) {
+    if (productProvider) {
       if (direction === 'left') {
         if (activeImage > 0) this.setState({ activeImage: activeImage - 1 });
       } else if (direction === 'right') {
-        if (activeImage < product.files.length - 1) this.setState({ activeImage: activeImage + 1 });
+        if (activeImage < productProvider.product.files.length - 1)
+          this.setState({ activeImage: activeImage + 1 });
       }
     }
   };
 
   render() {
-    const { product } = this.props;
+    const { productProvider, onClick, selectable, ...rest } = this.props;
     const { activeImage } = this.state;
 
-    if (!product) return '';
+    if (!productProvider) return '';
 
-    const actions = [
-      <CardAction icon="CLONE" onClick={() => {}} />,
-      <CardAction icon="ARCHIVE" onClick={() => {}} />,
-    ];
+    const actions = [];
 
-    const { id, name, serial, tags, files, productProviders } = product;
+    const {
+      product: { name, serial, tags, files },
+    } = productProvider;
 
     const productImage = files && files.length > 0 ? files[activeImage].path : FALLBACK_IMAGE;
 
     return (
-      <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions}>
-        <Link className={ProductCardWrapperStyle} to={`/product/${encodeId(id)}`}>
+      <BaseCard
+        icon="PROVIDER"
+        color="PROVIDER"
+        actions={actions}
+        selectable={selectable}
+        {...rest}
+      >
+        <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
           <div className={ProductImageWrapperStyle}>
             <img className={ProductImageStyle} src={productImage} alt="product_image" />
             {files &&
@@ -111,28 +124,21 @@ class ProductCard extends React.PureComponent<Props, State> {
             <div className={ProductProvidersWrapperStyle}>
               <div className={ProductExporterStyle}>
                 <Icon icon="EXPORTER" />
-                {productProviders.length > 0 && productProviders[0].exporter.name}
+                {productProvider.exporter.name}
               </div>
               <div className={ProductSupplierStyle}>
                 <Icon icon="SUPPLIER" />
-                {productProviders.length > 0 &&
-                  productProviders[0].supplier &&
-                  productProviders[0].supplier.name}
+                {productProvider.supplier && productProvider.supplier.name}
               </div>
-              {productProviders.length > 1 && (
-                <div className={MoreProviderBadge}>
-                  + <FormattedNumber value={productProviders.length - 1} />
-                </div>
-              )}
             </div>
             <div className={ProductTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
           </div>
-        </Link>
+        </div>
       </BaseCard>
     );
   }
 }
 
-export default ProductCard;
+export default OrderProductProviderCard;

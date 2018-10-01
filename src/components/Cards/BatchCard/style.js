@@ -100,7 +100,7 @@ export const BatchNoWrapperStyle: string = css`
 export const DividerStyle: string = css`
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};
-  margin: 0 10px;
+  margin: 0 5px;
 `;
 
 export const OrderWrapperStyle: string = css`
