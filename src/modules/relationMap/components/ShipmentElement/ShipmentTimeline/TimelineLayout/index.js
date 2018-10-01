@@ -84,7 +84,7 @@ const TimelineLayout = ({ shipment }: Props) => {
       }
 
       if (index === parseInt(voyagesNo, 10) - 1) {
-        evens.unshift(<TimelineLine color={coloring[index * 2 + 2]} />);
+        evens.unshift(<TimelineLine key={voyagesNo} color={coloring[index * 2 + 2]} />);
         turnAroundLineColor = coloring[index * 2 + 2];
       }
     });

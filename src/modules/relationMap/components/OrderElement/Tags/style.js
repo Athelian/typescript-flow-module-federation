@@ -1,11 +1,11 @@
 // @flow
 
 import { css } from 'react-emotion';
-import { colors, fontSizes } from 'styles/common';
+import { fontSizes } from 'styles/common';
 
 export const TagsWrapperStyle = css`
   position: absolute;
-  bottom: -35px;
+  bottom: -28px;
   height: initial;
   display: flex;
   flex-direction: row;
@@ -13,7 +13,7 @@ export const TagsWrapperStyle = css`
 `;
 
 export const TagLabelStyle = (color: string) => css`
-  background-color: ${colors[color]};
+  background-color: ${color};
   color: white;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;

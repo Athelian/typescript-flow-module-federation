@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { ToggleButtonStyle, CheckBoxStyle } from './style';
+import { OrderHeaderCheckBoxButtonStyle, OrderHeaderStyle } from './style';
 
 type Props = {
   isChecked: boolean,
@@ -11,10 +11,10 @@ type Props = {
 
 const OrderHeaderCheckBox = ({ isChecked, onToggle, label }: Props) => (
   <>
-    <div className={CheckBoxStyle(isChecked)}>
+    <div className={OrderHeaderStyle(isChecked)}>
       <button
         type="button"
-        className={ToggleButtonStyle(isChecked)}
+        className={OrderHeaderCheckBoxButtonStyle(isChecked)}
         tabIndex={-1}
         onClick={onToggle}
       >

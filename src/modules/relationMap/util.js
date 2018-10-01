@@ -125,8 +125,14 @@ export const formatShipmentOrder = orders => {
     const { shipments, id: orderId } = order;
     shipments.forEach(shipment => {
       if (!shipmentObj[shipment.id]) {
-        shipmentObj[shipment.id] = { data: shipment, refs: {} };
+        shipmentObj[shipment.id] = {
+          data: shipment,
+          refs: {},
+          numberOfOrder: 0,
+          numberOfBatch: shipment.batches ? shipment.batches.length : 0,
+        };
       }
+      shipmentObj[shipment.id].numberOfOrder += 1;
       shipmentObj[shipment.id].refs[orderId] = true;
     });
   });
@@ -166,6 +172,7 @@ export const formatOrderData = orders => {
         totalItem: orderItems.length,
         totalBatch: 0,
         info: order.poNo,
+        tags: order.tags,
       };
     }
     sumOrderItems += orderItems ? orderItems.length : 0;
@@ -193,6 +200,8 @@ export const formatOrderData = orders => {
             volume: `${volume} ${metric}`,
             totalItem: batch.length,
             title: batch.no || '',
+            tags: batch.tags,
+            deliveredAt: batch.deliveredAt,
           };
         }
         orderObj[order.id].batchedQuantity += batch.quantity;
@@ -243,6 +252,8 @@ export const formatShipmentData = shipments => {
           volume: `${volume} ${metric}`,
           totalItem: batch.length,
           title: batch.no || '',
+          tags: batch.tags,
+          deliveredAt: batch.deliveredAt,
         };
       }
       const { orderItem } = batch;
@@ -261,6 +272,7 @@ export const formatShipmentData = shipments => {
           batchedQuantity: 0,
           shippedQuantity: 0,
           info: order.poNo,
+          tags: order.tags,
         };
       }
       orderObj[order.id].orderedQuantity += orderItem.quantity || 0;

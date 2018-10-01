@@ -12784,6 +12784,13 @@ react-group@^1.0.6:
   dependencies:
     prop-types "^15.6.0"
 
+react-height@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-height/-/react-height-3.0.0.tgz#fae322f9da64d3e9e25536f26b77c73954261524"
+  integrity sha1-+uMi+dpk0+niVTbya3fHOVQmFSQ=
+  dependencies:
+    prop-types "15.5.8"
+
 react-hot-loader@^4.3.11:
   version "4.3.11"
   resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.11.tgz#fe5cf7be7700c249b58293f977c1e6e0900f0d87"
