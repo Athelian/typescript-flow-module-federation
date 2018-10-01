@@ -9,9 +9,17 @@ import {
   borderRadiuses,
 } from 'styles/common';
 
+export const ShipmentBatchCardWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 195px;
+  height: 264px;
+`;
+
 export const ProductWrapperStyle: string = css`
   position: relative;
-  height: 85px;
+  height: 80px;
   width: 195px;
 `;
 
@@ -20,7 +28,7 @@ export const ProductImageStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   width: 100%;
-  height: 85px;
+  height: 80px;
   object-fit: cover;
 `;
 
@@ -32,7 +40,7 @@ export const ProductInfoWrapperStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  height: 85px;
+  height: 80px;
   width: 195px;
 `;
 
@@ -76,12 +84,13 @@ export const ProductIconLinkStyle: string = css`
     color: ${colors.TEAL};
   }
 `;
-export const ShipmentBatchCardWrapperStyle: string = css`
-  ${layout.GRID_VERTICAL};
+
+export const BatchInfoWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 195px;
   grid-gap: 5px;
-  padding: 5px 0;
   width: 195px;
-  height: 211px;
+  padding: 5px 0;
 `;
 
 export const BatchNoWrapperStyle: string = css`
@@ -110,17 +119,13 @@ export const DividerStyle: string = css`
 `;
 
 export const TotalPriceWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 90px 90px;
   width: 100%;
-  padding: 0 10px 0 5px;
+  padding: 0 5px;
 `;
 
 export const VolumeWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 90px 90px;
   width: 100%;
-  padding: 0 10px 0 5px;
+  padding: 0 5px;
 `;
 
 export const ShipmentWrapperStyle: string = css`
@@ -150,7 +155,9 @@ export const ShipmentIconStyle = (hasShipment: boolean): string => css`
 
 export const BatchTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
+  ${borderRadiuses.MAIN};
   grid-gap: 5px;
-  padding: 0 10px;
+  width: 175px;
+  margin: 0 10px;
   overflow: hidden;
 `;

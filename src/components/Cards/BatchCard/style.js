@@ -14,7 +14,7 @@ export const BatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 311px;
+  height: 309px;
 `;
 
 export const ProductWrapperStyle: string = css`
@@ -88,9 +88,8 @@ export const ProductIconLinkStyle: string = css`
 export const BatchInfoWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 185px;
-  padding: 0 5px;
   grid-gap: 5px;
-  padding: 5px 5px 0 5px;
+  padding: 5px;
   width: 195px;
 `;
 

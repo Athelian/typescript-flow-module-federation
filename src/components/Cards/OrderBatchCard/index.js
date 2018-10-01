@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
+import { Link } from '@reach/router';
+import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
-import type { BatchQuery as BatchItem } from 'modules/batch/type.js.flow';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -25,22 +26,22 @@ import {
 } from './style';
 
 type OptionalProps = {
-  onClick: (batch: BatchItem) => void,
+  onClick: (batch: Object) => void,
 };
 
 type Props = OptionalProps & {
-  batch: ?BatchItem,
+  batch: ?Object,
   currency: string,
   price: ?{
     amount: number,
     currency: string,
   },
   saveOnBlur: Function,
-  onClone: (batch: BatchItem) => void,
-  onRemove: (batch: BatchItem) => void,
+  onClone: (batch: Object) => void,
+  onRemove: (batch: Object) => void,
 };
 
-const calculateVolume = (batch: BatchItem, quantity: number) => {
+const calculateVolume = (batch: Object, quantity: number) => {
   if (batch && batch.packageVolume && batch.packageVolume.value) {
     return (
       <>
@@ -81,7 +82,7 @@ const OrderBatchCard = ({
     <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(batch)} />,
   ];
 
-  const hasShipment = !!batch.shipment;
+  const { shipment } = batch;
   const warehouseArrivalApproved = false;
 
   const totalAdjustment = batch.batchAdjustments
@@ -116,6 +117,7 @@ const OrderBatchCard = ({
                 name: fieldName,
                 isNew: false,
                 originalValue: no,
+                align: 'left',
               })
             }
           </FormField>
@@ -186,8 +188,8 @@ const OrderBatchCard = ({
           <Display>
             <FormattedNumber
               value={(quantity + totalAdjustment) * (price && price.amount ? price.amount : 0)}
+              suffix={currency}
             />
-            {currency}
           </Display>
         </div>
 
@@ -197,10 +199,16 @@ const OrderBatchCard = ({
         </div>
 
         <div className={ShipmentWrapperStyle}>
-          <button className={ShipmentIconStyle(hasShipment)} type="button">
+          <Link
+            className={ShipmentIconStyle(!!shipment)}
+            to={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
+            onClick={evt => {
+              evt.stopPropagation();
+            }}
+          >
             <Icon icon="SHIPMENT" />
-          </button>
-          <Display align="left">{batch.shipment && batch.shipment.blNo}</Display>
+          </Link>
+          <Display align="left">{batch.shipment && batch.shipment.no}</Display>
         </div>
 
         <div className={WarehouseArrivalWrapperStyle}>
@@ -208,7 +216,7 @@ const OrderBatchCard = ({
             <Icon icon="WAREHOUSE" />
           </div>
           <Label>ARRIVAL</Label>
-          <Display>
+          <Display align="left">
             <FormattedDate
               value={
                 batch &&

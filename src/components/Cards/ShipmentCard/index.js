@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { navigate } from '@reach/router';
+import { Link } from '@reach/router';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
@@ -29,16 +29,11 @@ const ShipmentCard = ({ shipment }: Props) => {
   const actions = [
     <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
     <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
 
   return (
     <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions}>
-      <div
-        className={ShipmentCardWrapperStyle}
-        onClick={() => navigate(`/shipment/${encodeId(id)}`)}
-        role="presentation"
-      >
+      <Link className={ShipmentCardWrapperStyle} to={`/shipment/${encodeId(id)}`}>
         <div className={ShipmentInfoWrapperStyle}>
           <div className={ShipmentLeftWrapperStyle}>
             <div className={ShipmentNoStyle}>{shipment.no}</div>
@@ -52,7 +47,7 @@ const ShipmentCard = ({ shipment }: Props) => {
         </div>
         <div className={DividerStyle} />
         <HorizontalLayout shipment={shipment} />
-      </div>
+      </Link>
     </BaseCard>
   );
 };

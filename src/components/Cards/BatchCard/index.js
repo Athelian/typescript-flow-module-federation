@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { navigate } from '@reach/router';
+import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
@@ -43,19 +43,18 @@ const BatchCard = ({ batch }: Props) => {
     order,
   } = orderItem;
 
+  const productImage =
+    product.files && product.files.length > 0 ? product.files[0].path : FALLBACK_IMAGE;
+
   const totalAdjustment = batch.batchAdjustments
     ? batch.batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
     : 0;
 
   return (
     <BaseCard icon="BATCH" color="BATCH" actions={actions}>
-      <div
-        className={BatchCardWrapperStyle}
-        onClick={() => navigate(`/batch/${encodeId(id)}`)}
-        role="presentation"
-      >
+      <Link className={BatchCardWrapperStyle} to={`/batch/${encodeId(id)}`}>
         <div className={ProductWrapperStyle}>
-          <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
+          <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
           <div className={ProductInfoWrapperStyle}>
             <div className={ProductNameStyle}>{product.name}</div>
@@ -70,16 +69,15 @@ const BatchCard = ({ batch }: Props) => {
             </div>
           </div>
 
-          <button
+          <Link
             className={ProductIconLinkStyle}
+            to={`/product/${encodeId(product.id)}`}
             onClick={evt => {
               evt.stopPropagation();
-              navigate(`/product/${encodeId(product.id)}`);
             }}
-            type="button"
           >
             <Icon icon="PRODUCT" />
-          </button>
+          </Link>
         </div>
         <div className={BatchInfoWrapperStyle}>
           <div className={BatchNoWrapperStyle}>
@@ -131,50 +129,45 @@ const BatchCard = ({ batch }: Props) => {
           />
 
           <FieldItem
-            label={<Label>TTL VOLUME</Label>}
+            label={<Label>TTL VOL</Label>}
             input={
               <Display>
-                <FormattedNumber
-                  value={
-                    batch.packageVolume && batch.packageVolume.value
-                      ? batch.packageVolume.value * quantity
-                      : 0
-                  }
-                  suffix={batch.packageVolume && batch.packageVolume.metric}
-                />
+                {batch.packageVolume &&
+                  batch.packageVolume.value && (
+                    <FormattedNumber
+                      value={batch.packageVolume.value * quantity}
+                      suffix={batch.packageVolume && batch.packageVolume.metric}
+                    />
+                  )}
               </Display>
             }
           />
 
           <div className={OrderWrapperStyle}>
-            <button
+            <Link
               className={OrderIconStyle}
+              to={`/order/${encodeId(order.id)}`}
               onClick={evt => {
                 evt.stopPropagation();
-                navigate(`/order/${encodeId(order.id)}`);
               }}
-              type="button"
             >
               <Icon icon="ORDER" />
-            </button>
+            </Link>
             <Display align="left">
               {batch.orderItem && batch.orderItem.order && batch.orderItem.order.poNo}
             </Display>
           </div>
 
           <div className={ShipmentWrapperStyle}>
-            <button
+            <Link
               className={ShipmentIconStyle(!!shipment)}
+              to={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
               onClick={evt => {
                 evt.stopPropagation();
-                if (shipment) {
-                  navigate(`/shipment/${encodeId(shipment.id)}`);
-                }
               }}
-              type="button"
             >
               <Icon icon="SHIPMENT" />
-            </button>
+            </Link>
             <Display align="left">{shipment && shipment.no}</Display>
           </div>
 
@@ -182,7 +175,7 @@ const BatchCard = ({ batch }: Props) => {
             {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
           </div>
         </div>
-      </div>
+      </Link>
     </BaseCard>
   );
 };

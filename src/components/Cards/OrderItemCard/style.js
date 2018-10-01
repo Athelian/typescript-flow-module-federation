@@ -14,11 +14,12 @@ export const OrderItemCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
+  height: 217px;
 `;
 
 export const ProductWrapperStyle: string = css`
   position: relative;
-  height: 85px;
+  height: 80px;
   width: 195px;
 `;
 
@@ -27,7 +28,7 @@ export const ProductImageStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   width: 100%;
-  height: 85px;
+  height: 80px;
   object-fit: cover;
 `;
 
@@ -39,7 +40,7 @@ export const ProductInfoWrapperStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  height: 85px;
+  height: 80px;
   width: 195px;
 `;
 

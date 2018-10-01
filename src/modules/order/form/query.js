@@ -1,6 +1,5 @@
 // @flow
 import gql from 'graphql-tag';
-import { productProviderListFragment } from 'graphql/productProviderList/fragment';
 import { detailedBatchFragment } from 'graphql/batchDetail/fragment';
 
 const timelineDateFragment = gql`
@@ -46,7 +45,24 @@ export const orderDetailFragment = gql`
         currency
       }
       productProvider {
-        ...productProviderListFragment
+        id
+        product {
+          id
+          name
+          serial
+          files {
+            id
+            path
+          }
+        }
+        exporter {
+          id
+          name
+        }
+        supplier {
+          id
+          name
+        }
       }
       batches {
         ...detailedBatchFragment
@@ -110,7 +126,6 @@ export const orderDetailFragment = gql`
     }
   }
 
-  ${productProviderListFragment}
   ${detailedBatchFragment}
   ${timelineDateFragment}
 `;
