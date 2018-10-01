@@ -1,15 +1,15 @@
 // @flow
-/* eslint-disable no-underscore-dangle */
 import * as React from 'react';
 import { Link } from '@reach/router';
+import { get } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
-// $FlowFixMe flow not yet configured
 import { isSameDay } from 'date-fns';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
+import logger from 'utils/logger';
 import Icon from 'components/Icon';
-import type { Event } from 'components/EntityTimeline/type.js.flow';
-import messages from 'components/EntityTimeline/messages';
+import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
+import messages from 'modules/history/components/EntityTimeline/messages';
 import {
   UpdateEventWrapperStyle,
   EventStyle,
@@ -25,20 +25,9 @@ import FormatValue from '../../helpers';
 type Props = {
   event: Event,
   entityType: string,
-  translateField: string => any,
-  formatValue: (string, string) => any,
-  targetToIdentifier: Object => string,
-  onTargetClick: Object => void,
 };
 
-const UpdateEvent = ({
-  event,
-  entityType,
-  translateField,
-  formatValue,
-  targetToIdentifier,
-  onTargetClick,
-}: Props) => (
+const UpdateEvent = ({ event, entityType }: Props) => (
   <div className={UpdateEventWrapperStyle}>
     <div className={DateStyle}>
       {isSameDay(new Date(), event.createdAt) ? (
@@ -49,17 +38,20 @@ const UpdateEvent = ({
     </div>
     <div className={EventStyle}>
       <FormattedMessage
-        {...(event.changes[0].oldValue ? messages.updateEvent : messages.updateEventSet)}
+        {...(event.updates[0].oldValue ? messages.updateEvent : messages.updateEventSet)}
         values={{
           user: (
-            <Link to={`/staff/${event.user.id}`} className={NameStyle}>
-              <FormattedName firstName={event.user.firstName} lastName={event.user.lastName} />
+            <Link to={`/staff/${event.createdBy.id}`} className={NameStyle}>
+              <FormattedName
+                firstName={event.createdBy.firstName}
+                lastName={event.createdBy.lastName}
+              />
               <Icon icon="EXTERNAL_LINK" />
             </Link>
           ),
-          field: <span className={FieldStyle}>{translateField(event.changes[0].field)}</span>,
+          field: <span className={FieldStyle}>{event.updates[0].field}</span>,
           target:
-            entityType === event.target.__typename ? (
+            entityType === get('__typename', event.target) ? (
               ''
             ) : (
               <span
@@ -67,28 +59,23 @@ const UpdateEvent = ({
                 tabIndex="0"
                 className={TargetStyle}
                 onClick={() => {
-                  onTargetClick(event.target);
+                  logger.warn(event.target);
                 }}
                 onKeyDown={() => {
-                  onTargetClick(event.target);
+                  logger.warn(event.target);
                 }}
               >
-                <FormattedMessage
-                  {...messages[event.target.__typename]}
-                  values={{
-                    identifier: targetToIdentifier(event.target),
-                  }}
-                />
+                {JSON.stringify(event.target)}
               </span>
             ),
           oldValue: (
             <span className={OldStyle}>
-              <FormatValue value={formatValue(event.changes[0].field, event.changes[0].oldValue)} />
+              <FormatValue value={event.updates[0].oldValue} />
             </span>
           ),
           newValue: (
             <span className={NewStyle}>
-              <FormatValue value={formatValue(event.changes[0].field, event.changes[0].newValue)} />
+              <FormatValue value={event.updates[0].newValue} />
             </span>
           ),
         }}

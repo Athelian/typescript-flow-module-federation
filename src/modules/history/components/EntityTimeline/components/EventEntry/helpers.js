@@ -22,8 +22,13 @@ const FormatValue = ({ value }: Props) => {
 
     return value;
   }
+
   if (isDataType(Number, value)) {
     return <FormattedNumber value={value} />;
+  }
+
+  if (isDataType(Object, value)) {
+    return JSON.stringify(value);
   }
 
   return value;

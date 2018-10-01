@@ -144,7 +144,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                   }
                                 >
                                   {orderId && (
-                                    <OrderEventsList id={decodeId(orderId)} perPage={2} />
+                                    <OrderEventsList id={decodeId(orderId)} perPage={10} />
                                   )}
                                 </Layout>
                               </SlideView>

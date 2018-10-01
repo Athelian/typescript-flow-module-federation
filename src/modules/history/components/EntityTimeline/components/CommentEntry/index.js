@@ -3,9 +3,8 @@ import * as React from 'react';
 import { Link } from '@reach/router';
 import { Form } from 'components/Form';
 import { FormattedMessage } from 'react-intl';
-// $FlowFixMe flow not yet configured
 import { isSameDay } from 'date-fns';
-import type { Comment } from 'components/EntityTimeline/type.js.flow';
+import type { Comment } from 'modules/history/components/EntityTimeline/type.js.flow';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
 import Icon from 'components/Icon';

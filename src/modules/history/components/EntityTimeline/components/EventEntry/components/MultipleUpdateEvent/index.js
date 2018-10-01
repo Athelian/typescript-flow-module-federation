@@ -1,15 +1,14 @@
 // @flow
-/* eslint-disable no-underscore-dangle */
 import * as React from 'react';
-import { Link } from '@reach/router';
+import { get } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
-// $FlowFixMe flow not yet configured
 import { isSameDay } from 'date-fns';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
 import Icon from 'components/Icon';
-import type { Event } from 'components/EntityTimeline/type.js.flow';
-import messages from 'components/EntityTimeline/messages';
+import logger from 'utils/logger';
+import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
+import messages from 'modules/history/components/EntityTimeline/messages';
 import FormatValue from '../../helpers';
 import {
   MultipleUpdateEventWrapperStyle,
@@ -29,10 +28,6 @@ import {
 type Props = {
   event: Event,
   entityType: string,
-  translateField: string => any,
-  formatValue: (string, string) => any,
-  targetToIdentifier: Object => string,
-  onTargetClick: Object => void,
 };
 
 type State = {
@@ -44,7 +39,7 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      isExpanded: props.event.changes.length <= 3,
+      isExpanded: props.event.updates.length <= 3,
     };
   }
 
@@ -53,14 +48,7 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      event,
-      translateField,
-      formatValue,
-      entityType,
-      onTargetClick,
-      targetToIdentifier,
-    } = this.props;
+    const { event, entityType } = this.props;
     const { isExpanded } = this.state;
 
     return (
@@ -78,16 +66,16 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
               {...messages.multipleUpdateEvent}
               values={{
                 user: (
-                  <Link to={`/staff/${event.user.id}`} className={NameStyle}>
+                  <div className={NameStyle}>
                     <FormattedName
-                      firstName={event.user.firstName}
-                      lastName={event.user.lastName}
+                      firstName={event.createdBy.firstName}
+                      lastName={event.createdBy.lastName}
                     />
                     <Icon icon="EXTERNAL_LINK" />
-                  </Link>
+                  </div>
                 ),
                 target:
-                  entityType === event.target.__typename ? (
+                  entityType === get('__typename', event.target) ? (
                     ''
                   ) : (
                     <span
@@ -96,22 +84,17 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
                       className={TargetStyle}
                       onClick={e => {
                         e.stopPropagation();
-                        onTargetClick(event.target);
+                        logger.warn(event.target);
                       }}
                       onKeyDown={e => {
                         e.stopPropagation();
-                        onTargetClick(event.target);
+                        logger.warn(event.target);
                       }}
                     >
-                      <FormattedMessage
-                        {...messages[event.target.__typename]}
-                        values={{
-                          identifier: targetToIdentifier(event.target),
-                        }}
-                      />
+                      {JSON.stringify(event.target)}
                     </span>
                   ),
-                count: event.changes.length,
+                count: event.updates.length,
               }}
             />
           </div>
@@ -121,22 +104,22 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
         </button>
         {isExpanded && (
           <div className={UpdateListStyle}>
-            {event.changes.map(change => (
+            {event.updates.map(change => (
               <div className={ChangeStyle} key={change.field}>
                 <FormattedMessage
                   {...(change.oldValue
                     ? messages.multipleUpdateEventChange
                     : messages.multipleUpdateEventChangeSet)}
                   values={{
-                    field: <span className={FieldStyle}>{translateField(change.field)}</span>,
+                    field: <span className={FieldStyle}>{change.field}</span>,
                     oldValue: (
                       <span className={OldStyle}>
-                        <FormatValue value={formatValue(change.field, change.oldValue)} />
+                        <FormatValue value={change.oldValue} />
                       </span>
                     ),
                     newValue: (
                       <span className={NewStyle}>
-                        <FormatValue value={formatValue(change.field, change.newValue)} />
+                        <FormatValue value={change.newValue} />
                       </span>
                     ),
                   }}

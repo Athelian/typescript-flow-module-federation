@@ -1,14 +1,12 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
-// $FlowFixMe flow not yet configured
 import { isSameDay } from 'date-fns';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
-import type { Event } from 'components/EntityTimeline/type.js.flow';
-import messages from 'components/EntityTimeline/messages';
+import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
+import messages from 'modules/history/components/EntityTimeline/messages';
 import { DefaultEventWrapperStyle, NameStyle, DateStyle, EventStyle } from './style';
 
 type Props = {
@@ -29,10 +27,13 @@ const DefaultEvent = ({ event }: Props) => (
         {...messages.defaultEvent}
         values={{
           user: (
-            <Link to={`/staff/${event.user.id}`} className={NameStyle}>
-              <FormattedName firstName={event.user.firstName} lastName={event.user.lastName} />
+            <div className={NameStyle}>
+              <FormattedName
+                firstName={event.createdBy.firstName}
+                lastName={event.createdBy.lastName}
+              />
               <Icon icon="EXTERNAL_ICON" />
-            </Link>
+            </div>
           ),
         }}
       />

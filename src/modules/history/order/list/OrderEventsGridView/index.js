@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import GridView from 'components/GridView';
-import DefaultEvent from 'modules/history/components/DefaultEvent';
+import EntityTimeline from 'modules/history/components/EntityTimeline';
 
 type Props = {
   items: Array<Object>,
@@ -11,7 +11,9 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <DefaultEvent key={item.id} event={item} />;
+const defaultRenderItem = (item: Object) => (
+  <EntityTimeline entityType="Order" key={item.id} entry={item} />
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,
