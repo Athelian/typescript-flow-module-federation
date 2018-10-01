@@ -60,7 +60,7 @@ class RelationView extends React.Component<Props, State> {
     const { height } = this.state;
     return (
       <ReactHeight style={{ gridColumn: 'span 3' }} onHeightReady={this.detectHeight()}>
-        <div style={{ height, overflow: 'auto' }}>
+        <div style={hasMore ? { height, overflow: 'auto' } : { height }}>
           <InfiniteScroll
             className={className}
             loadMore={onLoadMore}
