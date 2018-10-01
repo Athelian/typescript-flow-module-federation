@@ -5,17 +5,33 @@ export const orderListQuery = gql`
     orders(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
         id
-      }
-      page
-      totalPage
-    }
-  }
-`;
-export const orderItemsQuery = gql`
-  query($page: Int!, $perPage: Int!) {
-    orderItems(page: $page, perPage: $perPage) {
-      nodes {
-        id
+        poNo
+        currency
+        exporter {
+          id
+          name
+        }
+        tags {
+          id
+          name
+          color
+        }
+        orderItems {
+          id
+          quantity
+          price {
+            amount
+            currency
+          }
+          batches {
+            id
+            quantity
+            batchAdjustments {
+              id
+              quantity
+            }
+          }
+        }
       }
       page
       totalPage

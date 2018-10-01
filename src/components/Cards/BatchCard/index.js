@@ -7,7 +7,7 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
-import { Label, Display } from 'components/Form';
+import { FieldItem, Label, Display } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   BatchCardWrapperStyle,
@@ -20,11 +20,9 @@ import {
   ProductIconLinkStyle,
   BatchInfoWrapperStyle,
   BatchNoWrapperStyle,
-  QuantityWrapperStyle,
-  DeliveryDateWrapperStyle,
   DividerStyle,
-  TotalPriceWrapperStyle,
-  VolumeWrapperStyle,
+  OrderWrapperStyle,
+  OrderIconStyle,
   ShipmentWrapperStyle,
   ShipmentIconStyle,
   BatchTagsWrapperStyle,
@@ -72,80 +70,91 @@ const BatchCard = ({ batch }: Props) => {
             </div>
           </div>
 
-          <button className={ProductIconLinkStyle} type="button">
+          <button
+            className={ProductIconLinkStyle}
+            onClick={evt => {
+              evt.stopPropagation();
+              navigate(`/product/${encodeId(product.id)}`);
+            }}
+            type="button"
+          >
             <Icon icon="PRODUCT" />
           </button>
         </div>
         <div className={BatchInfoWrapperStyle}>
-          <div
-            className={BatchNoWrapperStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
+          <div className={BatchNoWrapperStyle}>
             <Display align="left">{no}</Display>
           </div>
 
-          <div
-            className={QuantityWrapperStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
-            <Label required>QTY</Label>
-            <Display>
-              <FormattedNumber value={quantity + totalAdjustment} />
-            </Display>
-          </div>
+          <FieldItem
+            label={<Label>QUANTITY</Label>}
+            input={
+              <Display>
+                <FormattedNumber value={quantity + totalAdjustment} />
+              </Display>
+            }
+          />
 
-          <div
-            className={DeliveryDateWrapperStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
-            <Label>DELIVERY</Label>
-            <Display>
-              <FormattedDate value={deliveredAt} />
-            </Display>
-          </div>
+          <FieldItem
+            label={<Label>DELIVERY</Label>}
+            input={
+              <Display>
+                <FormattedDate value={deliveredAt} />
+              </Display>
+            }
+          />
 
           <div className={DividerStyle} />
 
-          <div className={TotalPriceWrapperStyle}>
-            <Label>UNIT PRICE</Label>
-            <Display>
-              <FormattedNumber
-                value={orderItem.price && orderItem.price.amount ? orderItem.price.amount : 0}
-                suffix={order.currency || (orderItem.price && orderItem.currency)}
-              />
-            </Display>
-          </div>
+          <FieldItem
+            label={<Label>UNIT PRICE</Label>}
+            input={
+              <Display>
+                <FormattedNumber
+                  value={orderItem.price && orderItem.price.amount ? orderItem.price.amount : 0}
+                  suffix={order.currency || (orderItem.price && orderItem.currency)}
+                />
+              </Display>
+            }
+          />
 
-          <div className={TotalPriceWrapperStyle}>
-            <Label>TTL PRICE</Label>
-            <Display>
-              <FormattedNumber
-                value={orderItem.price && orderItem.price.amount ? orderItem.price.amount : 0}
-                suffix={order.currency || (orderItem.price && orderItem.currency)}
-              />
-            </Display>
-          </div>
+          <FieldItem
+            label={<Label>TTL PRICE</Label>}
+            input={
+              <Display>
+                <FormattedNumber
+                  value={orderItem.price && orderItem.price.amount ? orderItem.price.amount : 0}
+                  suffix={order.currency || (orderItem.price && orderItem.currency)}
+                />
+              </Display>
+            }
+          />
 
-          <div className={VolumeWrapperStyle}>
-            <Label>TTL VOLUME</Label>
+          <FieldItem
+            label={<Label>TTL VOLUME</Label>}
+            input={
+              <Display>
+                <FormattedNumber
+                  value={
+                    batch.packageVolume && batch.packageVolume.value
+                      ? batch.packageVolume.value * quantity
+                      : 0
+                  }
+                  suffix={batch.packageVolume && batch.packageVolume.metric}
+                />
+              </Display>
+            }
+          />
 
-            <Display>
-              <FormattedNumber
-                value={
-                  batch.packageVolume && batch.packageVolume.value
-                    ? batch.packageVolume.value * quantity
-                    : 0
-                }
-                suffix={batch.packageVolume && batch.packageVolume.metric}
-              />
-            </Display>
-          </div>
-
-          <div className={ShipmentWrapperStyle}>
-            <button className={ShipmentIconStyle(true)} type="button">
+          <div className={OrderWrapperStyle}>
+            <button
+              className={OrderIconStyle}
+              onClick={evt => {
+                evt.stopPropagation();
+                navigate(`/order/${encodeId(order.id)}`);
+              }}
+              type="button"
+            >
               <Icon icon="ORDER" />
             </button>
             <Display align="left">
@@ -154,7 +163,16 @@ const BatchCard = ({ batch }: Props) => {
           </div>
 
           <div className={ShipmentWrapperStyle}>
-            <button className={ShipmentIconStyle(!!shipment)} type="button">
+            <button
+              className={ShipmentIconStyle(!!shipment)}
+              onClick={evt => {
+                evt.stopPropagation();
+                if (shipment) {
+                  navigate(`/shipment/${encodeId(shipment.id)}`);
+                }
+              }}
+              type="button"
+            >
               <Icon icon="SHIPMENT" />
             </button>
             <Display align="left">{shipment && shipment.no}</Display>

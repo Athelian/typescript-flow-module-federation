@@ -1,17 +1,57 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes } from 'styles/common';
+import { colors, layout, fontSizesWithHeights, presets, borderRadiuses } from 'styles/common';
 
 export const OrderCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 200px;
-  height: 200px;
-  ${fontSizes.MAIN};
-  font-weight: bold;
-  color: ${colors.BLACK};
+  width: 195px;
+  height: 190px;
 `;
 
-export default OrderCardWrapperStyle;
+export const OrderInfoWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 185px;
+  grid-gap: 5px;
+  padding: 5px 5px;
+`;
+
+export const PONoWrapperStyle: string = css`
+  width: 100%;
+  padding: 0 15px 0 0px;
+`;
+
+export const ExporterWrapperStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  & > svg {
+    margin: 0 5px 0 0;
+    color: ${colors.GRAY_DARK};
+  }
+`;
+
+export const DividerStyle: string = css`
+  height: 1px;
+  background-color: ${colors.GRAY_VERY_LIGHT};
+  margin: 0 5px;
+`;
+
+export const ChartWrapperStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
+  margin: 3px 0;
+`;
+
+export const TagsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
+  overflow: hidden;
+  width: 175px;
+  margin: 0 5px;
+  padding: 5px 0 0 0;
+  ${borderRadiuses.MAIN};
+`;
