@@ -5,29 +5,49 @@ import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
+import Icon from 'components/Icon';
+import Tag from 'components/Tag';
 import { Label, Display, FieldItem } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderCardWrapperStyle,
   OrderInfoWrapperStyle,
-  QuantityWrapperStyle,
-  UnitPriceWrapperStyle,
+  POWrapperStyle,
+  ExporterWrapperStyle,
   DividerStyle,
   ChartWrapperStyle,
+  TagsWrapperStyle,
 } from './style';
 
 type Props = {
   order: ?Object,
 };
 
-function getQuantitySummary(items: Array<Object>) {
+const OrderCard = ({ order }: Props) => {
+  if (!order) return '';
+
+  const { id, poNo, orderItems, currency, exporter } = order;
+
+  const actions = [
+    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
+    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+  ];
+
+  const totalItems = orderItems.length;
+
+  let totalPrice = 0;
+  orderItems.forEach(item => {
+    totalPrice += item.price ? item.price.amount : 0;
+  });
+
   let orderedQuantity = 0;
   let batchedQuantity = 0;
   let shippedQuantity = 0;
   let numOfBatched = 0;
   let numOfShipped = 0;
 
-  items.forEach(item => {
+  orderItems.forEach(item => {
     orderedQuantity += item.quantity || 0;
     if (item.batches) {
       item.batches.forEach(batch => {
@@ -46,35 +66,6 @@ function getQuantitySummary(items: Array<Object>) {
     }
   });
 
-  return {
-    orderedQuantity,
-    batchedQuantity,
-    shippedQuantity,
-    numOfBatched,
-    numOfShipped,
-  };
-}
-
-const OrderCard = ({ order }: Props) => {
-  if (!order) return '';
-
-  const { id, orderItems, currency } = order;
-
-  const actions = [
-    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
-  ];
-
-  const chartDetail = getQuantitySummary(orderItems);
-
-  const totalItems = orderItems.length;
-
-  let totalPrice = 0;
-  orderItems.forEach(item => {
-    totalPrice += item.price ? item.price.amount : 0;
-  });
-
   return (
     <BaseCard icon="ORDER" color="ORDER" actions={actions}>
       <div
@@ -83,37 +74,42 @@ const OrderCard = ({ order }: Props) => {
         role="presentation"
       >
         <div className={OrderInfoWrapperStyle}>
-          <div className={QuantityWrapperStyle}>
-            <FieldItem
-              label={<Label required>TTL ITEMS</Label>}
-              input={
-                <Display>
-                  <FormattedNumber value={totalItems} />
-                </Display>
-              }
-            />
+          <div className={POWrapperStyle}>
+            <Display align="left">{poNo}</Display>
           </div>
-
-          <div className={UnitPriceWrapperStyle}>
-            <FieldItem
-              label={<Label required>TTL PRICE</Label>}
-              input={
-                <Display>
-                  <FormattedNumber value={totalPrice} suffix={currency} />
-                </Display>
-              }
-            />
+          <div className={ExporterWrapperStyle}>
+            <Icon icon="EXPORTER" />
+            {exporter.name}
           </div>
+          <FieldItem
+            label={<Label>TTL PRICE</Label>}
+            input={
+              <Display>
+                <FormattedNumber value={totalPrice} suffix={currency} />
+              </Display>
+            }
+          />
+          <FieldItem
+            label={<Label>TTL ITEMS</Label>}
+            input={
+              <Display>
+                <FormattedNumber value={totalItems} />
+              </Display>
+            }
+          />
           <div className={DividerStyle} />
           <div className={ChartWrapperStyle}>
             <QuantityChart
               hasLabel={false}
-              orderedQuantity={chartDetail.orderedQuantity}
-              batchedQuantity={chartDetail.batchedQuantity}
-              shippedQuantity={chartDetail.shippedQuantity}
-              batched={chartDetail.numOfBatched}
-              shipped={chartDetail.numOfShipped}
+              orderedQuantity={orderedQuantity}
+              batchedQuantity={batchedQuantity}
+              shippedQuantity={shippedQuantity}
+              batched={numOfBatched}
+              shipped={numOfShipped}
             />
+          </div>
+          <div className={TagsWrapperStyle}>
+            {order.tags.length > 0 && order.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
           </div>
         </div>
       </div>
