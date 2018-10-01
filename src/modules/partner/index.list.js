@@ -2,9 +2,11 @@
 import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import Layout from 'components/Layout';
+import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import NavBar from 'components/NavBar';
 import PartnerList from './list';
+import messages from './messages';
 
 type Props = {
   intl: intlShape,
@@ -12,16 +14,24 @@ type Props = {
 
 type State = {
   viewType: string,
-  query: string,
-  status: string,
+  filter: Object,
+  sort: {
+    field: string,
+    direction: string,
+  },
+  page: number,
   perPage: number,
 };
 
 class PartnerModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
-    query: '',
-    status: 'Active',
+    filter: {},
+    sort: {
+      field: 'updatedAt',
+      direction: 'DESCENDING',
+    },
+    page: 1,
     perPage: 10,
   };
 
@@ -30,7 +40,12 @@ class PartnerModule extends React.Component<Props, State> {
   };
 
   render() {
-    const { viewType, perPage, ...filters } = this.state;
+    const { intl } = this.props;
+
+    const fields = [
+      { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+      { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    ];
 
     return (
       <UIConsumer>
@@ -39,11 +54,16 @@ class PartnerModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="PARTNER" color="BLACK" />
+                <FilterToolBar
+                  filtersAndSort={this.state}
+                  icon="PARTNER"
+                  fields={fields}
+                  onChange={this.onChangeFilter}
+                />
               </NavBar>
             }
           >
-            <PartnerList viewType={viewType} perPage={perPage} filter={filters} />
+            <PartnerList {...this.state} />
           </Layout>
         )}
       </UIConsumer>

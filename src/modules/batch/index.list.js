@@ -52,7 +52,7 @@ class BatchListModule extends React.Component<Props, State> {
 
     const fields = [
       { title: intl.formatMessage(messages.batchNo), value: 'no' },
-      { title: intl.formatMessage(messages.PO), value: 'PO' },
+      { title: intl.formatMessage(messages.PO), value: 'poNo' },
       {
         title: intl.formatMessage(messages.productName),
         value: 'product',

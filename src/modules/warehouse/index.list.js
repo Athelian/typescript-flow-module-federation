@@ -8,6 +8,7 @@ import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import WarehouseList from './list';
+import messages from './messages';
 
 type Props = {
   intl: intlShape,
@@ -40,9 +41,11 @@ class WarehouseModule extends React.Component<Props, State> {
   };
 
   render() {
+    const { intl } = this.props;
+
     const fields = [
-      { title: 'UPDATED AT', value: 'updatedAt' },
-      { title: 'CREATED AT', value: 'createdAt' },
+      { title: intl.formatMessage(messages.createdAt), value: 'updatedAt' },
+      { title: intl.formatMessage(messages.updatedAt), value: 'createdAt' },
     ];
 
     return (

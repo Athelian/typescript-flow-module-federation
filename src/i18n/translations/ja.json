@@ -590,6 +590,8 @@
   "containers.Partners.type.supplier": "製造者",
   "containers.Partners.tooltip.name": "[名前] {name}",
   "containers.Partners.validation.required": "必須",
+  "containers.Partners.createdAt": "作成日",
+  "containers.Partners.updatedAt": "最終編集日",
 
   "containers.Users.email": "Eメール",
   "containers.Users.role": "役割",
