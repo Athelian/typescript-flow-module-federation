@@ -9,7 +9,7 @@ export const LastModifiedWrapperStyle: string = css`
 `;
 
 export const LastModifiedStyle: string = css`
-  display: flex;
+  ${layout.GRID_HORIZONTAL};
 `;
 
 export const UserIconStyle: string = css`

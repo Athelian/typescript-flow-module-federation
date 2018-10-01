@@ -139,7 +139,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                       {!values.orderItem ? (
                         <DashedPlusButton
                           width="195px"
-                          height="222px"
+                          height="217px"
                           onClick={() => slideToggle(true)}
                         />
                       ) : (

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { navigate } from '@reach/router';
+import { Link } from '@reach/router';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import QuantityChart from 'components/QuantityChart';
@@ -31,7 +31,6 @@ const OrderCard = ({ order }: Props) => {
   const actions = [
     <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
     <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
   ];
 
   const totalItems = orderItems.length;
@@ -68,11 +67,7 @@ const OrderCard = ({ order }: Props) => {
 
   return (
     <BaseCard icon="ORDER" color="ORDER" actions={actions}>
-      <div
-        className={OrderCardWrapperStyle}
-        onClick={() => navigate(`/order/${encodeId(id)}`)}
-        role="presentation"
-      >
+      <Link className={OrderCardWrapperStyle} to={`/order/${encodeId(id)}`}>
         <div className={OrderInfoWrapperStyle}>
           <div className={PONoWrapperStyle}>
             <Display align="left">{poNo}</Display>
@@ -112,7 +107,7 @@ const OrderCard = ({ order }: Props) => {
             {order.tags.length > 0 && order.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
           </div>
         </div>
-      </div>
+      </Link>
     </BaseCard>
   );
 };

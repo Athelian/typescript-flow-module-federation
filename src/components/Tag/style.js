@@ -29,7 +29,7 @@ export const computeTextColor = (color: string) => {
 
 export const TagStyle = (color: string): string => css`
   ${borderRadiuses.MAIN};
-  ${fontSizesWithHeights.MAIN};
+  ${fontSizesWithHeights.SMALL};
   ${presets.ELLIPSIS};
   ${layout.HORIZONTAL};
   ${layout.CENTER};

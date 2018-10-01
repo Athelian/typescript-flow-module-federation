@@ -14,6 +14,32 @@ export const batchFragment = gql`
       order {
         id
         poNo
+        currency
+        exporter {
+          id
+          name
+        }
+        tags {
+          id
+          name
+          color
+        }
+        orderItems {
+          id
+          quantity
+          price {
+            amount
+            currency
+          }
+          batches {
+            id
+            quantity
+            batchAdjustments {
+              id
+              quantity
+            }
+          }
+        }
       }
       productProvider {
         id
@@ -21,6 +47,10 @@ export const batchFragment = gql`
           id
           name
           serial
+          files {
+            id
+            path
+          }
         }
         exporter {
           id

@@ -32,9 +32,9 @@ const AsyncCargoSection = Loadable({
   loading: LoadingIcon,
   loader: () => import('./components/CargoSection'),
 });
-const AsyncOrderSection = Loadable({
+const AsyncOrdersSection = Loadable({
   loading: LoadingIcon,
-  loader: () => import('./components/OrderSection'),
+  loader: () => import('./components/OrdersSection'),
 });
 
 class ShipmentForm extends React.Component<Props> {
@@ -84,7 +84,7 @@ class ShipmentForm extends React.Component<Props> {
               return (
                 <>
                   <SectionHeader icon="ORDER" title={`ORDER (${uniqueOrders.length})`} />
-                  <AsyncOrderSection orders={uniqueOrders} />
+                  <AsyncOrdersSection orders={uniqueOrders} />
                 </>
               );
             }}

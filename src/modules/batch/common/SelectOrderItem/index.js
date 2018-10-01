@@ -5,7 +5,7 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import OrderItemsList from 'providers/OrderItemsList';
 import Layout from 'components/Layout';
-import { SectionNavBar as NavBar, EntityIcon } from 'components/NavBar';
+import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderItemCard } from 'components/Cards';
@@ -46,14 +46,14 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => (
             {({ value, set }) => (
               <Layout
                 navBar={
-                  <NavBar>
-                    <EntityIcon icon="PRODUCT" color="PRODUCT" />
+                  <SlideViewNavBar>
+                    <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
                     <CancelButton onClick={onCancel} />
                     <SaveButton
                       disabled={isEquals(value, selected)}
                       onClick={() => onSelect(value)}
                     />
-                  </NavBar>
+                  </SlideViewNavBar>
                 }
               >
                 <OrderGridView

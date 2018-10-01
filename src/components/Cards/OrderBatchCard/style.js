@@ -51,11 +51,10 @@ export const VolumeWrapperStyle: string = css`
 
 export const ShipmentWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 20px 1fr;
+  grid-template-columns: 20px 155px;
   width: 100%;
   padding: 0 10px;
   align-items: center;
-  grid-gap: 5px;
 `;
 
 export const ShipmentIconStyle = (hasShipment: boolean): string => css`
@@ -76,7 +75,7 @@ export const ShipmentIconStyle = (hasShipment: boolean): string => css`
 
 export const WarehouseArrivalWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 20px 1fr 1fr;
+  grid-template-columns: 20px 75px 80px;
   width: 100%;
   padding: 0 10px;
   align-items: center;

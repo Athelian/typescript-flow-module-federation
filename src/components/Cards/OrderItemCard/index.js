@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
+import { Link } from '@reach/router';
+import { encodeId } from 'utils/id';
 import { ObjectValue, BooleanValue } from 'react-values';
-import { type OrderItem } from 'modules/order/type.js.flow';
 import { FormField } from 'modules/form';
 import { numberInputFactory, priceInputFactory } from 'modules/form/helpers';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
@@ -33,14 +34,14 @@ import {
 
 type OptionalProps = {
   onClick: (id: string) => void,
-  onSelect: (item: OrderItem) => void,
-  onClone: (item: OrderItem) => void,
-  onRemove: (item: OrderItem) => void,
+  onSelect: (item: Object) => void,
+  onClone: (item: Object) => void,
+  onRemove: (item: Object) => void,
   selectable: boolean,
 };
 
 type Props = OptionalProps & {
-  item: ?OrderItem,
+  item: ?Object,
   currency: string,
   saveOnBlur: Function,
 };
@@ -111,7 +112,8 @@ const OrderItemCard = ({
     productProvider: { product, supplier, unitPrice },
   } = item;
 
-  const { name, serial, tags = [] } = product;
+  const productImage =
+    product.files && product.files.length > 0 ? product.files[0].path : FALLBACK_IMAGE;
 
   return (
     <ObjectValue
@@ -134,23 +136,34 @@ const OrderItemCard = ({
             role="presentation"
           >
             <div className={ProductWrapperStyle}>
-              <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
+              <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
               <div className={ProductInfoWrapperStyle}>
-                <div className={ProductNameStyle}>{name}</div>
-                <div className={ProductSerialStyle}>{serial}</div>
+                <div className={ProductNameStyle}>{product.name}</div>
+                <div className={ProductSerialStyle}>{product.serial}</div>
                 <div className={ProductSupplierStyle}>
                   <Icon icon="SUPPLIER" />
                   {supplier && supplier.name}
                 </div>
                 <div className={ProductTagsWrapperStyle}>
-                  {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+                  {product.tags &&
+                    product.tags.length > 0 &&
+                    product.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
                 </div>
               </div>
 
               <button className={ProductIconLinkStyle} type="button">
                 <Icon icon="PRODUCT" />
               </button>
+              <Link
+                className={ProductIconLinkStyle}
+                to={`/product/${encodeId(product.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="PRODUCT" />
+              </Link>
             </div>
 
             <div className={BodyWrapperStyle}>
@@ -299,8 +312,10 @@ const OrderItemCard = ({
                   label={<Label>TOTAL</Label>}
                   input={
                     <Display>
-                      <FormattedNumber value={price.amount * quantity} />{' '}
-                      {currency || price.currency}
+                      <FormattedNumber
+                        value={price.amount * quantity}
+                        suffix={currency || price.currency}
+                      />
                     </Display>
                   }
                 />

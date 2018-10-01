@@ -1,15 +1,17 @@
 // @flow
 import React from 'react';
+import { Link } from '@reach/router';
+import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
-import type { BatchQuery as BatchItem } from 'modules/batch/type.js.flow';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import { Label, Display } from 'components/Form';
+import { FieldItem, Label, Display } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
+  ShipmentBatchCardWrapperStyle,
   ProductWrapperStyle,
   ProductImageStyle,
   ProductInfoWrapperStyle,
@@ -17,7 +19,7 @@ import {
   ProductSerialStyle,
   ProductSupplierStyle,
   ProductIconLinkStyle,
-  ShipmentBatchCardWrapperStyle,
+  BatchInfoWrapperStyle,
   BatchNoWrapperStyle,
   QuantityWrapperStyle,
   DeliveryDateWrapperStyle,
@@ -30,40 +32,20 @@ import {
 } from './style';
 
 type OptionalProps = {
-  onClick: (batch: BatchItem) => void,
-  onClone: (batch: BatchItem) => void,
-  onRemove: (batch: BatchItem) => void,
+  onClick: (batch: Object) => void,
+  onClone: (batch: Object) => void,
+  onRemove: (batch: Object) => void,
   selectable: boolean,
 };
 
 type Props = OptionalProps & {
-  batch: ?BatchItem,
+  batch: ?Object,
   currency: string,
   price: ?{
     amount: number,
     currency: string,
   },
   saveOnBlur: Function,
-};
-
-const calculateVolume = (batch: BatchItem, quantity: number) => {
-  if (batch && batch.packageVolume && batch.packageVolume.value) {
-    return (
-      <>
-        <FormattedNumber value={batch.packageVolume.value * quantity} />
-        {batch.packageVolume.metric}
-      </>
-    );
-  }
-
-  if (batch && batch.packageSize && Object.keys(batch.packageSize).length) {
-    const { width, height, length } = batch.packageSize || { width: {}, height: {}, length: {} };
-    return `${width.value}${width.metric}x${height.value}${height.metric}x${length.value}${
-      length.metric
-    }`;
-  }
-
-  return 'N/A';
 };
 
 const defaultProps = {
@@ -94,156 +76,191 @@ const ShipmentBatchCard = ({
       ];
 
   const {
+    id,
+    no,
+    quantity,
+    deliveredAt,
+    batchAdjustments,
+    packageVolume,
+    orderItem,
+    tags,
     orderItem: {
       productProvider: { product, supplier, exporter },
     },
   } = batch;
 
-  const { name, serial } = product;
-  const { no, quantity, deliveredAt } = batch;
-  const totalAdjustment = batch.batchAdjustments
-    ? batch.batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
+  const totalAdjustment = batchAdjustments
+    ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
     : 0;
+
+  const productImage =
+    product.files && product.files.length > 0 ? product.files[0].path : FALLBACK_IMAGE;
+
   return (
     <BaseCard icon="BATCH" color="BATCH" actions={actions} selectable={selectable} {...rest}>
-      <div
-        className={ProductWrapperStyle}
-        onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
-        role="presentation"
-      >
-        <img className={ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
-
-        <div className={ProductInfoWrapperStyle}>
-          <div className={ProductNameStyle}>{name}</div>
-          <div className={ProductSerialStyle}>{serial}</div>
-          <div className={ProductSupplierStyle}>
-            <Icon icon="EXPORTER" />
-            {exporter && exporter.name}
-          </div>
-          <div className={ProductSupplierStyle}>
-            <Icon icon="SUPPLIER" />
-            {supplier && supplier.name}
-          </div>
-        </div>
-
-        <button className={ProductIconLinkStyle} type="button">
-          <Icon icon="PRODUCT" />
-        </button>
-      </div>
       <div
         className={ShipmentBatchCardWrapperStyle}
         onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
         role="presentation"
       >
         <div
-          className={BatchNoWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
+          className={ProductWrapperStyle}
+          onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
           role="presentation"
         >
-          <FormField name={`batch.${batch.id}.no`} initValue={no}>
-            {({ name: fieldName, ...inputHandlers }) =>
-              textInputFactory({
-                width: '165px',
-                height: '20px',
-                inputHandlers: {
-                  ...inputHandlers,
-                  onBlur: evt => {
-                    inputHandlers.onBlur(evt);
-                    saveOnBlur({ ...batch, no: inputHandlers.value });
+          <img className={ProductImageStyle} src={productImage} alt="product_image" />
+
+          <div className={ProductInfoWrapperStyle}>
+            <div className={ProductNameStyle}>{product.name}</div>
+            <div className={ProductSerialStyle}>{product.serial}</div>
+            <div className={ProductSupplierStyle}>
+              <Icon icon="EXPORTER" />
+              {exporter && exporter.name}
+            </div>
+            <div className={ProductSupplierStyle}>
+              <Icon icon="SUPPLIER" />
+              {supplier && supplier.name}
+            </div>
+          </div>
+
+          <Link
+            className={ProductIconLinkStyle}
+            to={`/product/${encodeId(product.id)}`}
+            onClick={evt => {
+              evt.stopPropagation();
+            }}
+          >
+            <Icon icon="PRODUCT" />
+          </Link>
+        </div>
+        <div className={BatchInfoWrapperStyle}>
+          <div
+            className={BatchNoWrapperStyle}
+            onClick={evt => evt.stopPropagation()}
+            role="presentation"
+          >
+            <FormField name={`batch.${id}.no`} initValue={no}>
+              {({ name: fieldName, ...inputHandlers }) =>
+                textInputFactory({
+                  width: '185px',
+                  height: '20px',
+                  inputHandlers: {
+                    ...inputHandlers,
+                    onBlur: evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({ ...batch, no: inputHandlers.value });
+                    },
                   },
-                },
-                name: fieldName,
-                isNew: false,
-                originalValue: no,
-              })
-            }
-          </FormField>
-        </div>
+                  name: fieldName,
+                  isNew: false,
+                  originalValue: no,
+                  align: 'left',
+                })
+              }
+            </FormField>
+          </div>
 
-        <div
-          className={QuantityWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
-          role="presentation"
-        >
-          <Label required>QTY</Label>
-          <FormField name={`batch.${batch.id}.quantity`} initValue={quantity + totalAdjustment}>
-            {({ name: fieldName, ...inputHandlers }) =>
-              numberInputFactory({
-                width: '90px',
-                height: '20px',
-                inputHandlers: {
-                  ...inputHandlers,
-                  onBlur: evt => {
-                    inputHandlers.onBlur(evt);
-                    saveOnBlur({
-                      ...batch,
-                      quantity: inputHandlers.value - totalAdjustment,
-                    });
+          <div
+            className={QuantityWrapperStyle}
+            onClick={evt => evt.stopPropagation()}
+            role="presentation"
+          >
+            <Label required>QTY</Label>
+            <FormField name={`batch.${id}.quantity`} initValue={quantity + totalAdjustment}>
+              {({ name: fieldName, ...inputHandlers }) =>
+                numberInputFactory({
+                  width: '90px',
+                  height: '20px',
+                  inputHandlers: {
+                    ...inputHandlers,
+                    onBlur: evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({
+                        ...batch,
+                        quantity: inputHandlers.value - totalAdjustment,
+                      });
+                    },
                   },
-                },
-                name: fieldName,
-                isNew: false,
-                originalValue: quantity + totalAdjustment,
-              })
-            }
-          </FormField>
-        </div>
+                  name: fieldName,
+                  isNew: false,
+                  originalValue: quantity + totalAdjustment,
+                })
+              }
+            </FormField>
+          </div>
 
-        <div
-          className={DeliveryDateWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
-          role="presentation"
-        >
-          <Label>DELIVERY</Label>
-          <FormField name={`batch.${batch.id}.deliveredAt`} initValue={deliveredAt}>
-            {({ name: fieldName, ...inputHandlers }) =>
-              dateInputFactory({
-                width: '90px',
-                height: '20px',
-                name: fieldName,
-                isNew: false,
-                originalValue: deliveredAt,
-                inputHandlers: {
-                  ...inputHandlers,
-                  onBlur: evt => {
-                    inputHandlers.onBlur(evt);
-                    saveOnBlur({
-                      ...batch,
-                      deliveredAt: inputHandlers.value ? new Date(inputHandlers.value) : null,
-                    });
+          <div
+            className={DeliveryDateWrapperStyle}
+            onClick={evt => evt.stopPropagation()}
+            role="presentation"
+          >
+            <Label>DELIVERY</Label>
+            <FormField name={`batch.${id}.deliveredAt`} initValue={deliveredAt}>
+              {({ name: fieldName, ...inputHandlers }) =>
+                dateInputFactory({
+                  width: '90px',
+                  height: '20px',
+                  name: fieldName,
+                  isNew: false,
+                  originalValue: deliveredAt,
+                  inputHandlers: {
+                    ...inputHandlers,
+                    onBlur: evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({
+                        ...batch,
+                        deliveredAt: inputHandlers.value ? new Date(inputHandlers.value) : null,
+                      });
+                    },
                   },
-                },
-              })
-            }
-          </FormField>
-        </div>
+                })
+              }
+            </FormField>
+          </div>
 
-        <div className={DividerStyle} />
+          <div className={DividerStyle} />
 
-        <div className={TotalPriceWrapperStyle}>
-          <Label>TOTAL</Label>
-          <Display>
-            <FormattedNumber value={quantity * (price && price.amount ? price.amount : 0)} />
-            {currency}
-          </Display>
-        </div>
+          <div className={TotalPriceWrapperStyle}>
+            <FieldItem
+              label={<Label>TTL PRICE</Label>}
+              input={
+                <Display>
+                  <FormattedNumber
+                    value={quantity * (price && price.amount ? price.amount : 0)}
+                    suffix={currency || (price && price.currency)}
+                  />
+                </Display>
+              }
+            />
+          </div>
 
-        <div className={VolumeWrapperStyle}>
-          <Label>VOLUME</Label>
-          <Display>{calculateVolume(batch, quantity)} </Display>
-        </div>
+          <div className={VolumeWrapperStyle}>
+            <FieldItem
+              label={<Label>TTL VOL</Label>}
+              input={
+                <Display>
+                  {batch.packageVolume &&
+                    batch.packageVolume.value && (
+                      <FormattedNumber
+                        value={packageVolume.value * quantity}
+                        suffix={packageVolume && packageVolume.metric}
+                      />
+                    )}
+                </Display>
+              }
+            />
+          </div>
 
-        <div className={ShipmentWrapperStyle}>
-          <button className={ShipmentIconStyle(true)} type="button">
-            <Icon icon="ORDER" />
-          </button>
-          <Display align="left">
-            {batch.orderItem && batch.orderItem.order && batch.orderItem.order.poNo}
-          </Display>
-        </div>
+          <div className={ShipmentWrapperStyle}>
+            <button className={ShipmentIconStyle(true)} type="button">
+              <Icon icon="ORDER" />
+            </button>
+            <Display align="left">{orderItem && orderItem.order && orderItem.order.poNo}</Display>
+          </div>
 
-        <div className={BatchTagsWrapperStyle}>
-          {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          <div className={BatchTagsWrapperStyle}>
+            {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          </div>
         </div>
       </div>
     </BaseCard>
