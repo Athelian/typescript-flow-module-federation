@@ -4,13 +4,11 @@ import { presets, colors, fontSizes } from 'styles/common';
 
 export const ShipmentActionsWrapperStyle = (archived: boolean) => css`
   min-width: 190px;
-  //max-width: 400px;
   display: grid;
   grid-template-columns: min-content auto auto min-content min-content;
   grid-gap: 5px;
   color: ${archived ? colors.GRAY : colors.TEAL};
   ${fontSizes.MAIN};
-  font-weight: bold;
   margin-bottom: 5px;
   height: 22px;
   line-height: 22px;
@@ -23,7 +21,7 @@ export const ShipmentActionsWrapperStyle = (archived: boolean) => css`
 export const ShipmentActionCheckStyle = (archived: boolean) => css`
   cursor: pointer;
   user-select: none;
-  border: 3px solid ${archived ? colors.GRAY_QUITE_LIGHT : colors.TEAL};
+  border: 3px solid ${archived ? colors.TEAL : 'transparent'};
   -webkit-border-radius: 999px;
   -moz-border-radius: 999px;
   border-radius: 999px;

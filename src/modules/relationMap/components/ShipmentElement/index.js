@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import ShipmentHeader from './ShipmentHeader';
+import ShipmentHeader from './ShipmentLabel';
 import ShipmentTimeline from './ShipmentTimeline/TimelineLayout';
 import { ShipmentElementWrapperStyle } from './style';
 

@@ -10,7 +10,7 @@ import {
   CardWrapperStyle,
 } from 'modules/relationMap/components/OrderElement/style';
 import WrapperCard from 'modules/relationMap/components/OrderElement/WrapperCard';
-import ShipmentActions from 'modules/relationMap/components/ShipmentElement/ShipmentActions';
+import ShipmentActions from 'modules/relationMap/components/ShipmentElement/ShipmentHeader';
 
 import ShipmentTimeLine from './index';
 

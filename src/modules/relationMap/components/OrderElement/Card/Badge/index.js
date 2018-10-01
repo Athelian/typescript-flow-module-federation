@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import FormattedNumber from 'components/FormattedNumber/index';
+import FormattedNumber from 'components/FormattedNumber';
 
 import BadgeStyle from './style';
 

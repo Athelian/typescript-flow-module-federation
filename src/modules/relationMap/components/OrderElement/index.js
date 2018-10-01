@@ -9,7 +9,7 @@ import OrderItemCard from './OrderItemCard';
 import BatchCard from './BatchCard';
 import TotalCard from './TotalCard';
 import WrapperCard from './WrapperCard';
-import CheckBox from './CheckBox';
+import OrderHeader from './OrderHeader';
 import Tags from './Tags';
 import ShipmentCard from '../ShipmentElement';
 import { TagValue } from '../ToggleTag';
@@ -40,7 +40,7 @@ const Item = (props: Props) => {
     case 'ORDER_HEADER': {
       render = (
         <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-          <CheckBox label={`ORDER ${data.id}`} isChecked onToggle={() => {}} />
+          <OrderHeader label={`ORDER ${data.id}`} isChecked onToggle={() => {}} />
         </WrapperCard>
       );
       break;

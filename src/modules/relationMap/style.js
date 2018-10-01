@@ -89,7 +89,7 @@ export const EmptyMessageStyle = css`
 export const ScrollWrapperStyle = css`
   height: calc(100vh - 10px);
   overflow-y: auto;
-  background-color: ${colors.GRAY_VERY_LIGHT};
+  background-color: #f7f7f7;
   padding: 10px;
 `;
 
@@ -109,8 +109,8 @@ export const OrderMapWrapperStyle = css`
   grid-column: span 3;
   display: grid;
   grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1fr;
-  grid-template-rows: repeat(auto-fill, 55px);
-  background-color: ${colors.WHITE};
+  background-color: #ffffff;
+  padding: 10px;
 `;
 export const FunctionWrapperStyle = css`
   grid-column: span 4;

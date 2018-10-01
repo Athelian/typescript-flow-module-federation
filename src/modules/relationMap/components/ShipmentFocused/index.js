@@ -4,6 +4,7 @@ import { ObjectValue, BooleanValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import { generateShipmentRelation } from 'modules/relationMap/util';
 import { ScrollWrapperStyle, ShipmentMapWrapperStyle } from 'modules/relationMap/style';
+import OrderHeader from 'modules/relationMap/components/OrderElement/OrderHeader';
 import RelationView from '../RelationView';
 import Item from '../OrderElement';
 
@@ -24,16 +25,19 @@ const ShipmentFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) =
             const currentOrder = order[orderId];
             const orderRefs = Object.keys(currentOrder.refs);
             return (
-              <Item
-                key={orderId}
-                type="ORDER"
-                data={shipment.orderObj[orderId]}
-                isFocused={Object.keys(focusedItem || {}).some(focusId =>
-                  orderRefs.some(shipmentId => shipmentId === focusId)
-                )}
-                onMouseEnter={() => setItem('focusedItem', currentOrder.refs)}
-                onMouseLeave={() => setItem('focusedItem', null)}
-              />
+              <div>
+                <OrderHeader label={`ORDER ${orderId}`} isChecked onToggle={() => {}} />
+                <Item
+                  key={orderId}
+                  type="ORDER"
+                  data={shipment.orderObj[orderId]}
+                  isFocused={Object.keys(focusedItem || {}).some(focusId =>
+                    orderRefs.some(shipmentId => shipmentId === focusId)
+                  )}
+                  onMouseEnter={() => setItem('focusedItem', currentOrder.refs)}
+                  onMouseLeave={() => setItem('focusedItem', null)}
+                />
+              </div>
             );
           })}
         </div>
