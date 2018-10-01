@@ -38,6 +38,7 @@
     "react-dom": "^16.5.2",
     "react-emotion": "^9.2.10",
     "react-fullstory": "^1.0.3",
+    "react-height": "^3.0.0",
     "react-hot-loader": "^4.3.11",
     "react-infinite-scroller": "^1.2.1",
     "react-intercom": "^1.0.14",

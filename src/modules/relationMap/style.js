@@ -87,15 +87,11 @@ export const EmptyMessageStyle = css`
 `;
 
 export const ScrollWrapperStyle = css`
-  height: calc(100vh - 10px);
-  overflow-y: auto;
   background-color: #f7f7f7;
   padding: 10px;
 `;
 
 export const ShipmentMapWrapperStyle = css`
-  height: calc(100vh - 10px);
-  overflow-y: auto;
   grid-column: span 3;
   display: grid;
   grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1.8fr;
@@ -104,8 +100,6 @@ export const ShipmentMapWrapperStyle = css`
 `;
 
 export const OrderMapWrapperStyle = css`
-  height: calc(100vh - 10px);
-  overflow-y: auto;
   grid-column: span 3;
   display: grid;
   grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1fr;

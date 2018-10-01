@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
-import LoadingIcon from 'components/LoadingIcon';
+import { ReactHeight } from 'react-height';
 import InfiniteScroll from 'react-infinite-scroller';
+import LoadingIcon from 'components/LoadingIcon';
 import { EmptyMessageStyle } from '../style';
 
 type OptionalProps = {
@@ -18,34 +19,61 @@ type Props = OptionalProps & {
   render: (item: Object) => React.Node,
 };
 
+type State = {
+  height: number,
+};
+
 const defaultProps = {
   isLoading: false,
 };
 
-const RelationView = (props: Props) => {
-  const { isLoading, isEmpty, emptyMessage, onLoadMore, hasMore, items, render, className } = props;
-  if (isLoading) {
-    return <LoadingIcon />;
+class RelationView extends React.Component<Props, State> {
+  static defaultProps = defaultProps;
+
+  state = {
+    height: 1000,
+  };
+
+  detectHeight() {
+    return (height: number) => this.setState({ height });
   }
 
-  if (isEmpty) {
-    return <div className={EmptyMessageStyle}>{emptyMessage}</div>;
+  render() {
+    const {
+      isLoading,
+      isEmpty,
+      emptyMessage,
+      onLoadMore,
+      hasMore,
+      items,
+      render,
+      className,
+    } = this.props;
+    if (isLoading) {
+      return <LoadingIcon />;
+    }
+
+    if (isEmpty) {
+      return <div className={EmptyMessageStyle}>{emptyMessage}</div>;
+    }
+
+    const { height } = this.state;
+    return (
+      <ReactHeight style={{ gridColumn: 'span 3' }} onHeightReady={this.detectHeight()}>
+        <div style={{ height, overflow: 'auto' }}>
+          <InfiniteScroll
+            className={className}
+            loadMore={onLoadMore}
+            hasMore={hasMore}
+            loader={<LoadingIcon key="loading" />}
+            useWindow={false}
+          >
+            {items.map((item, index) => render({ item, index }))}
+          </InfiniteScroll>
+        </div>
+      </ReactHeight>
+    );
   }
-
-  return (
-    <InfiniteScroll
-      className={className}
-      loadMore={onLoadMore}
-      hasMore={hasMore}
-      loader={<LoadingIcon key="loading" />}
-      threshold={500}
-      useWindow
-    >
-      {items.map((item, index) => render({ item, index }))}
-    </InfiniteScroll>
-  );
-};
-
-RelationView.defaultProps = defaultProps;
+}
 
 export default RelationView;
