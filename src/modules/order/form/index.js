@@ -102,7 +102,9 @@ export default class OrderForm extends React.Component<Props> {
                           onCancel={() => dialogToggle(false)}
                           onConfirm={() => {
                             dialogToggle(false);
-                            onChangeStatus({ archived: false }, () => window.location.reload());
+                            onChangeStatus({ archived: false }, () => {
+                              window.location.reload();
+                            });
                           }}
                           totalBatches={totalBatches}
                           unshippedBatches={unshippedBatches}
@@ -116,7 +118,9 @@ export default class OrderForm extends React.Component<Props> {
                           onCancel={() => dialogToggle(false)}
                           onConfirm={() => {
                             dialogToggle(false);
-                            onChangeStatus({ archived: false }, () => window.location.reload());
+                            onChangeStatus({ archived: true }, () => {
+                              window.location.reload();
+                            });
                           }}
                           totalBatches={totalBatches}
                           unshippedBatches={unshippedBatches}

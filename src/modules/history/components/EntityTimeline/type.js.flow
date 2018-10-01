@@ -4,15 +4,20 @@ import type { User } from 'modules/staff/type.js.flow';
 export type Event = {
   id: string,
   type: string,
-  target: Object & {
+  target: {
     __typename: string,
   },
-  changes: Array<{
+  removes: Array<{
     field: string,
     oldValue: any,
     newValue: any,
   }>,
-  user: User,
+  updates: Array<{
+    field: string,
+    oldValue: any,
+    newValue: any,
+  }>,
+  createdBy: User,
   createdAt: string,
   updatedAt: string,
 };
@@ -25,6 +30,6 @@ export type Comment = {
   updatedAt: string,
 };
 
-export type Entry = (Comment | Event) & { __typename: string };
+export type Entry = Event & { __typename: string };
 
 export type Timeline = Array<Entry>;

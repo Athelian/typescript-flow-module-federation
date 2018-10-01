@@ -15,16 +15,19 @@ export const orderHistoryListQuery = gql`
               createdAt
               updatedAt
               createdBy {
+                id
                 firstName
                 lastName
               }
               updatedAt
               updatedBy {
+                id
                 firstName
                 lastName
               }
               deletedAt
               deletedBy {
+                id
                 firstName
                 lastName
               }
@@ -41,11 +44,13 @@ export const orderHistoryListQuery = gql`
               createdAt
               updatedAt
               createdBy {
+                id
                 firstName
                 lastName
               }
               updatedAt
               updatedBy {
+                id
                 firstName
                 lastName
               }
