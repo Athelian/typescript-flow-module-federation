@@ -11,6 +11,7 @@ export const orderListQuery = gql`
         tags {
           name
           id
+          color
         }
         exporter {
           id
@@ -19,9 +20,13 @@ export const orderListQuery = gql`
         shipments {
           id
           no
+          batches {
+            id
+          }
           tags {
             id
             name
+            color
           }
           transportType
           cargoReady {
@@ -103,6 +108,12 @@ export const orderListQuery = gql`
             no
             quantity
             archived
+            deliveredAt
+            tags {
+              id
+              name
+              color
+            }
             shipment {
               id
               blNo

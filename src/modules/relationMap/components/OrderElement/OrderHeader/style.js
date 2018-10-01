@@ -8,7 +8,7 @@ export const OrderHeaderStyle = (archived: boolean) => css`
   color: ${archived ? colors.GRAY : colors.TEAL};
   ${fontSizes.MAIN};
   grid-template-columns: 20px 1fr;
-  margin-bottom: 5px;
+  margin: 5px 0;
   ${fontSizes.MAIN};
   height: 22px;
   line-height: 22px;

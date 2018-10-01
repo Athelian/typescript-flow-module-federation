@@ -28,6 +28,11 @@ export const productListQuery = gql`
           no
           quantity
           archived
+          tags {
+            id
+            name
+            color
+          }
           orderItem {
             id
             order {
@@ -38,6 +43,11 @@ export const productListQuery = gql`
           shipment {
             id
             blNo
+            tags {
+              id
+              name
+              color
+            }
             containerGroups {
               id
               warehouseArrival {

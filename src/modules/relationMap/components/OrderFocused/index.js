@@ -88,8 +88,8 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                 <ShipmentHeader
                   label={`SHIPMENT ${currentShipment.data.id}`}
                   isChecked
-                  ordersNo={3}
-                  batchesNo={9}
+                  ordersNo={currentShipment.numberOfOrder}
+                  batchesNo={currentShipment.numberOfBatch}
                   onToggle={() => {}}
                 />
                 <Item

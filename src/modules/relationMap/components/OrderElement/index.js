@@ -37,15 +37,7 @@ const Item = (props: Props) => {
   const { type, data, onClick, isFocused, onMouseEnter, onMouseLeave } = props;
   let render = <div />;
   switch (type) {
-    case 'ORDER_HEADER': {
-      render = (
-        <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-          <OrderHeader label={`ORDER ${data.id}`} isChecked onToggle={() => {}} />
-        </WrapperCard>
-      );
-      break;
-    }
-    case 'ORDER': {
+    case 'TAGS': {
       const templateDS = [
         {
           name: 'July ~ Aug',
@@ -56,6 +48,22 @@ const Item = (props: Props) => {
           color: 'URGENT',
         },
       ];
+      render = (
+        <TagValue>
+          {({ value: isToggle }) => (isToggle ? <Tags dataSource={templateDS} /> : null)}
+        </TagValue>
+      );
+      break;
+    }
+    case 'ORDER_HEADER': {
+      render = (
+        <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+          <OrderHeader label={`ORDER ${data.id}`} isChecked onToggle={() => {}} />
+        </WrapperCard>
+      );
+      break;
+    }
+    case 'ORDER': {
       render = (
         <BaseCard
           icon={type}
@@ -71,7 +79,7 @@ const Item = (props: Props) => {
               shippedQuantity={data.shippedQuantity}
             />
             <TagValue>
-              {({ value: isToggle }) => (isToggle ? <Tags dataSource={templateDS} /> : null)}
+              {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
             </TagValue>
           </WrapperCard>
         </BaseCard>
@@ -107,7 +115,15 @@ const Item = (props: Props) => {
           wrapperClassName={ItemWrapperStyle(isFocused)}
         >
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-            <BatchCard title={data.title} quantity={data.quantity} volume={data.volume} />
+            <BatchCard
+              title={data.title}
+              quantity={data.quantity}
+              volume={data.volume}
+              deliveredAt={data.deliveredAt}
+            />
+            <TagValue>
+              {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
+            </TagValue>
           </WrapperCard>
         </BaseCard>
       );
@@ -142,6 +158,9 @@ const Item = (props: Props) => {
         >
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
             <ShipmentCard shipment={data} />
+            <TagValue>
+              {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
+            </TagValue>
           </WrapperCard>
         </BaseCard>
       );

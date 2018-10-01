@@ -10,6 +10,7 @@ export const shipmentListQuery = gql`
         tags {
           id
           name
+          color
         }
         transportType
         cargoReady {
@@ -72,10 +73,16 @@ export const shipmentListQuery = gql`
           id
           no
           quantity
+          deliveredAt
           packageQuantity
           packageVolume {
             value
             metric
+          }
+          tags {
+            id
+            name
+            color
           }
           orderItem {
             id
@@ -96,8 +103,9 @@ export const shipmentListQuery = gql`
               id
               poNo
               tags {
-                name
                 id
+                name
+                color
               }
             }
           }
