@@ -1,5 +1,5 @@
 // @flow
-import { getByPathWithDefault } from './fp';
+import { get, set, uniq } from 'lodash/fp';
 import logger from './logger';
 
 const loadMore = (
@@ -10,10 +10,10 @@ const loadMore = (
   const { data, fetchMore } = clientData;
   logger.warn('loadMore', data);
   if (!data) return;
-  const nextPage = getByPathWithDefault(1, `${selectedField}.page`, data) + 1;
-  const totalPage = getByPathWithDefault(1, `${selectedField}.totalPage`, data);
+  const nextPage = get(`${selectedField}.page`, data) + 1;
+  const totalPage = get(`${selectedField}.totalPage`, data);
   if (nextPage > totalPage) return;
-  logger.warn('nextPage', nextPage);
+  logger.warn('loadMore nextPage', nextPage);
   fetchMore({
     variables: {
       ...filtersAndSort,
@@ -25,26 +25,24 @@ const loadMore = (
     },
     updateQuery: (prevResult, { fetchMoreResult }) => {
       logger.warn('updateQuery');
-      logger.warn('prevResult', prevResult);
-      logger.warn('fetchMoreResult', fetchMoreResult);
+
       if (
-        getByPathWithDefault({}, `${selectedField}.page`, prevResult) + 1 !==
-        getByPathWithDefault({}, `${selectedField}.page`, fetchMoreResult)
+        get(`${selectedField}.page`, prevResult) + 1 !==
+        get(`${selectedField}.page`, fetchMoreResult)
       ) {
         return prevResult;
       }
-      if (getByPathWithDefault([], `${selectedField}.nodes`, fetchMoreResult).length === 0)
-        return prevResult;
-      return {
-        [selectedField]: {
-          ...prevResult[selectedField],
-          ...getByPathWithDefault({}, selectedField, fetchMoreResult),
-          nodes: [
-            ...prevResult[selectedField].nodes,
-            ...getByPathWithDefault([], `${selectedField}.nodes`, fetchMoreResult),
-          ],
-        },
-      };
+
+      if (get(`${selectedField}.nodes`, fetchMoreResult).length === 0) return prevResult;
+
+      return set(
+        `${selectedField}.nodes`,
+        uniq([
+          ...get(`${selectedField}.nodes`, prevResult),
+          ...get(`${selectedField}.nodes`, fetchMoreResult),
+        ]),
+        fetchMoreResult
+      );
     },
   });
 };

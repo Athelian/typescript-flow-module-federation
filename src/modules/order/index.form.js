@@ -9,7 +9,7 @@ import QueryDetail from 'components/common/QueryDetail';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import NavBar, { EntityIcon, SlideViewNavBar } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
@@ -136,7 +136,17 @@ class OrderFormModule extends React.PureComponent<Props> {
                                 onRequestClose={() => slideToggle(false)}
                                 options={{ width: '1030px' }}
                               >
-                                {orderId && <OrderEventsList id={decodeId(orderId)} perPage={2} />}
+                                <Layout
+                                  navBar={
+                                    <SlideViewNavBar>
+                                      <EntityIcon icon="LOGS" color="LOGS" />
+                                    </SlideViewNavBar>
+                                  }
+                                >
+                                  {orderId && (
+                                    <OrderEventsList id={decodeId(orderId)} perPage={2} />
+                                  )}
+                                </Layout>
                               </SlideView>
                             </>
                           )

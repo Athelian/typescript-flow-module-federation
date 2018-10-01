@@ -71,6 +71,7 @@ export const orderHistoryListQuery = gql`
           }
           page
           perPage
+          totalPage
         }
       }
     }
