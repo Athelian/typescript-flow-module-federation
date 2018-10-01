@@ -51,9 +51,6 @@ class ShipmentListModule extends React.Component<Props, State> {
     const { intl } = this.props;
 
     const fields = [
-      { title: intl.formatMessage(messages.estimatedDeparture), value: 'ETD' },
-      { title: intl.formatMessage(messages.estimatedArrival), value: 'ETA' },
-      { title: intl.formatMessage(messages.warehouseArrival), value: 'warehouseArrival' },
       { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
       { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     ];

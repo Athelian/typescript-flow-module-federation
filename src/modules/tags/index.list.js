@@ -39,8 +39,8 @@ class TagsModule extends React.Component<Props, State> {
   };
 
   render() {
-    const { viewType, perPage, tabIndex, ...filters } = this.state;
     const { intl } = this.props;
+    const { viewType, perPage, tabIndex, ...filters } = this.state;
 
     const tabs = [
       { icon: 'PRODUCT', label: intl.formatMessage(messages.productTags) },

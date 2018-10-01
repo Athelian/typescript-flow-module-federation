@@ -51,8 +51,7 @@ class OrderModule extends React.Component<Props, State> {
     const { intl } = this.props;
 
     const fields = [
-      { title: intl.formatMessage(messages.poSort), value: 'PO' },
-      { title: intl.formatMessage(messages.exporterSort), value: 'exporter' },
+      { title: intl.formatMessage(messages.poSort), value: 'poNo' },
       { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
       { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
     ];

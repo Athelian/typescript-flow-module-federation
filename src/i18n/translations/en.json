@@ -590,6 +590,8 @@
   "containers.Partners.type.supplier": "Supplier",
   "containers.Partners.tooltip.name": "[Name] {name}",
   "containers.Partners.validation.required": "Required",
+  "containers.Partners.createdAt": "CREATED ON",
+  "containers.Partners.updatedAt": "LAST MODIFIED",
 
   "containers.Users.email": "EMAIL",
   "containers.Users.role": "ROLE",

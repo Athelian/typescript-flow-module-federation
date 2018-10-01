@@ -32,4 +32,10 @@ export default defineMessages({
   required: {
     id: 'containers.Partners.validation.required',
   },
+  createdAt: {
+    id: 'containers.Partners.createdAt',
+  },
+  updatedAt: {
+    id: 'containers.Partners.updatedAt',
+  },
 });

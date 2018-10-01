@@ -2,13 +2,16 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
+import loadMore from 'utils/loadMore';
 import PartnerGridView from './PartnerGridView';
 import query from './query';
 
 type Props = {
   viewType: string,
-  filter: {
-    status: string,
+  filter: {},
+  sort: {
+    field: string,
+    direction: string,
   },
   perPage: number,
 };
@@ -69,9 +72,19 @@ class PartnerList extends React.Component<Props> {
   partnerPath: string;
 
   render() {
-    const { viewType, ...filtersAndSort } = this.props;
+    const { viewType, sort, ...filtersAndSort } = this.props;
     return (
-      <Query query={query} variables={{ page: 1, ...filtersAndSort }} fetchPolicy="network-only">
+      <Query
+        query={query}
+        variables={{
+          page: 1,
+          sort: {
+            [sort.field]: sort.direction,
+          },
+          ...filtersAndSort,
+        }}
+        fetchPolicy="network-only"
+      >
         {({ loading, data, fetchMore, error }) => {
           if (error) {
             return error.message;
@@ -87,7 +100,9 @@ class PartnerList extends React.Component<Props> {
           return (
             <PartnerGridView
               items={parsedData}
-              onLoadMore={() => this.loadMore({ fetchMore, data })}
+              onLoadMore={() =>
+                loadMore({ fetchMore, data }, filtersAndSort, `${this.partnerPath}`)
+              }
               hasMore={hasMore}
               isLoading={loading}
             />
