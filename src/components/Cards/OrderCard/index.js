@@ -12,7 +12,7 @@ import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderCardWrapperStyle,
   OrderInfoWrapperStyle,
-  POWrapperStyle,
+  PONoWrapperStyle,
   ExporterWrapperStyle,
   DividerStyle,
   ChartWrapperStyle,
@@ -74,7 +74,7 @@ const OrderCard = ({ order }: Props) => {
         role="presentation"
       >
         <div className={OrderInfoWrapperStyle}>
-          <div className={POWrapperStyle}>
+          <div className={PONoWrapperStyle}>
             <Display align="left">{poNo}</Display>
           </div>
           <div className={ExporterWrapperStyle}>

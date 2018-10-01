@@ -87,29 +87,15 @@ export const ProductIconLinkStyle: string = css`
 
 export const BatchInfoWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 195px;
+  grid-template-columns: 185px;
+  padding: 0 5px;
   grid-gap: 5px;
-  padding: 5px 0;
+  padding: 5px 5px 0 5px;
   width: 195px;
 `;
 
 export const BatchNoWrapperStyle: string = css`
-  padding: 0 5px;
-  width: 195px;
-`;
-
-export const QuantityWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 95px 90px;
   width: 100%;
-  padding: 0 5px;
-`;
-
-export const DeliveryDateWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 95px 90px;
-  width: 100%;
-  padding: 0 5px;
 `;
 
 export const DividerStyle: string = css`
@@ -118,27 +104,12 @@ export const DividerStyle: string = css`
   margin: 0 10px;
 `;
 
-export const TotalPriceWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 95px 90px;
-  width: 100%;
-  padding: 0 5px;
-`;
-
-export const VolumeWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 95px 90px;
-  width: 100%;
-  padding: 0 5px;
-`;
-
 export const OrderWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 20px 155px;
+  grid-template-columns: 20px 160px;
   width: 100%;
-  padding: 0 5px 0 10px;
+  padding: 0 0 0 5px;
   align-items: center;
-  grid-gap: 5px;
 `;
 
 export const OrderIconStyle = css`
@@ -157,11 +128,10 @@ export const OrderIconStyle = css`
 
 export const ShipmentWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 20px 155px;
+  grid-template-columns: 20px 160px;
   width: 100%;
-  padding: 0 5px 0 10px;
+  padding: 0 0 0 5px;
   align-items: center;
-  grid-gap: 5px;
 `;
 
 export const ShipmentIconStyle = (hasShipment: boolean): string => css`
@@ -182,7 +152,9 @@ export const ShipmentIconStyle = (hasShipment: boolean): string => css`
 
 export const BatchTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
+  ${borderRadiuses.MAIN};
   grid-gap: 5px;
-  padding: 0 10px;
+  width: 175px;
+  margin: 0 5px;
   overflow: hidden;
 `;
