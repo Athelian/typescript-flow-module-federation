@@ -84,9 +84,9 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
             const currentShipment = shipment[shipmentId];
             const shipmentRefs = Object.keys(currentShipment.refs);
             return (
-              <div>
+              <div key={shipmentId}>
                 <ShipmentHeader
-                  label={`ORDER ${currentShipment.data.id}`}
+                  label={`SHIPMENT ${currentShipment.data.id}`}
                   isChecked
                   ordersNo={3}
                   batchesNo={9}

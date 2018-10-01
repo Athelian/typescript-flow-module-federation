@@ -53,7 +53,6 @@ class RelationView extends React.Component<Props, State> {
       return <LoadingIcon />;
     }
 
-<<<<<<< HEAD
     if (isEmpty) {
       return <div className={EmptyMessageStyle}>{emptyMessage}</div>;
     }
@@ -76,8 +75,5 @@ class RelationView extends React.Component<Props, State> {
     );
   }
 }
-=======
-RelationView.defaultProps = defaultProps;
->>>>>>> feat(relation-map): add layout for product view
 
 export default RelationView;

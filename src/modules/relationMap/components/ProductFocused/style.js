@@ -1,5 +1,5 @@
 import styled, { css } from 'react-emotion';
-import { layout, scrollbars, borderRadiuses } from 'styles/common';
+import { layout, borderRadiuses } from 'styles/common';
 
 export const Row = styled('div')`
   ${layout.HORIZONTAL};
