@@ -1,9 +1,7 @@
 // @flow
-/* eslint-disable react/default-props-match-prop-types */
 import * as React from 'react';
 import { Form } from 'components/Form';
 import { Mutation } from 'react-apollo';
-// $FlowFixMe flow not yet configured
 import { getDayOfYear, isSameDay } from 'date-fns';
 import type { Entry, Comment } from './type.js.flow';
 import MessageInput from './components/MessageInput';
