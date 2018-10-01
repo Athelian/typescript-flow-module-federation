@@ -20,9 +20,44 @@ export const orderListQuery = gql`
         order {
           id
           poNo
+          currency
+          exporter {
+            id
+            name
+          }
+          tags {
+            id
+            name
+            color
+          }
+          orderItems {
+            id
+            quantity
+            price {
+              amount
+              currency
+            }
+            batches {
+              id
+              quantity
+              batchAdjustments {
+                id
+                quantity
+              }
+            }
+          }
         }
         productProvider {
           id
+          product {
+            id
+            name
+            serial
+            files {
+              id
+              path
+            }
+          }
           exporter {
             id
             name
@@ -30,17 +65,6 @@ export const orderListQuery = gql`
           supplier {
             id
             name
-          }
-          product {
-            id
-            name
-            serial
-            tags {
-              id
-              name
-              color
-              description
-            }
           }
         }
       }

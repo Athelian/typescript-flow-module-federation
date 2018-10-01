@@ -16,6 +16,31 @@ export const batchListQuery = gql`
             id
             poNo
             currency
+            exporter {
+              id
+              name
+            }
+            tags {
+              id
+              name
+              color
+            }
+            orderItems {
+              id
+              quantity
+              price {
+                amount
+                currency
+              }
+              batches {
+                id
+                quantity
+                batchAdjustments {
+                  id
+                  quantity
+                }
+              }
+            }
           }
           productProvider {
             id

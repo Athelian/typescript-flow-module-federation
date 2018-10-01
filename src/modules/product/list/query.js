@@ -3,12 +3,8 @@ import gql from 'graphql-tag';
 
 export const productListFragment = gql`
   fragment productListFragment on Product {
-    id
     name
-    archived
     serial
-    createdAt
-    updatedAt
     productProviders {
       id
       exporter {
@@ -19,17 +15,16 @@ export const productListFragment = gql`
         id
         name
       }
-      product {
-        id
-        name
-        serial
-        tags {
-          id
-          name
-          color
-          description
-        }
-      }
+    }
+    id
+    tags {
+      id
+      name
+      color
+    }
+    files {
+      id
+      path
     }
   }
 `;

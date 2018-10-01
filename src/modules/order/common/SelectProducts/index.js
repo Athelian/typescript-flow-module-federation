@@ -3,20 +3,19 @@ import * as React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue, NumberValue } from 'react-values';
-import ProductGridView from 'modules/product/list/ProductGridView';
+import GridView from 'components/GridView';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
-import { ProductCard } from 'components/Cards';
+import { OrderProductProviderCard } from 'components/Cards';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import LoadingIcon from 'components/LoadingIcon';
 import { productProvidersQuery } from 'modules/product/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
-import { ItemWrapperStyle, NumberBarStyle } from './style';
+import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
   exporter: string,
@@ -94,7 +93,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
               navBar={
                 <SlideViewNavBar>
                   <FilterToolBar
-                    icon="PRODUCT"
+                    icon="PROVIDER"
                     fields={fields}
                     filtersAndSort={filtersAndSort}
                     onChange={onChange}
@@ -114,47 +113,50 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                 }}
               >
                 {({ loading, data, error, fetchMore }) => {
-                  const nextPage = getByPathWithDefault(1, 'productProviders.page', data) + 1;
-                  const totalPage = getByPathWithDefault(1, 'productProviders.totalPage', data);
                   if (error) {
                     return error.message;
                   }
 
-                  if (loading) return <LoadingIcon />;
+                  const nextPage = getByPathWithDefault(1, 'productProviders.page', data) + 1;
+                  const totalPage = getByPathWithDefault(1, 'productProviders.totalPage', data);
+                  const hasMore = nextPage <= totalPage;
+
+                  const items = getByPathWithDefault([], 'productProviders.nodes', data);
 
                   return (
-                    <ProductGridView
+                    <GridView
                       onLoadMore={() =>
                         loadMore({ fetchMore, data }, filtersAndSort, 'productProviders')
                       }
-                      hasMore={nextPage <= totalPage}
+                      hasMore={hasMore}
                       isLoading={loading}
-                      items={getByPathWithDefault([], 'productProviders.nodes', data)}
-                      renderItem={item => (
+                      itemWidth="195px"
+                      isEmpty={items.length === 0}
+                      emptyMessage="No products found"
+                    >
+                      {items.map(item => (
                         <div key={item.id} className={ItemWrapperStyle}>
                           {selected.includes(item) && (
-                            <div className={NumberBarStyle}>
-                              <NumberValue
-                                defaultValue={1}
-                                onChange={total =>
-                                  onChangeProductQuantity({ total, set, selected, item })
-                                }
-                              >
-                                {({ value: num, set: changeNumber }) => (
-                                  <IncrementInput value={num} onChange={changeNumber} />
-                                )}
-                              </NumberValue>
-                            </div>
+                            <NumberValue
+                              defaultValue={1}
+                              onChange={total =>
+                                onChangeProductQuantity({ total, set, selected, item })
+                              }
+                            >
+                              {({ value: num, set: changeNumber }) => (
+                                <IncrementInput value={num} onChange={changeNumber} />
+                              )}
+                            </NumberValue>
                           )}
-                          <ProductCard
-                            product={item}
+                          <OrderProductProviderCard
+                            productProvider={item}
                             selectable
                             selected={selected.includes(item)}
                             onSelect={() => onSelectProduct({ selected, item, push, set })}
                           />
                         </div>
-                      )}
-                    />
+                      ))}
+                    </GridView>
                   );
                 }}
               </Query>

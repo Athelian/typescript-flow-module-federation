@@ -80,7 +80,7 @@ class ShipmentForm extends React.Component<Props> {
         <SectionWrapper id="orderSection">
           <Subscribe to={[ShipmentBatchesContainer]}>
             {({ state: { batches } }) => {
-              const uniqueOrders = uniqBy(batches.map(item => item.orderItem.order), 'id');
+              const uniqueOrders = uniqBy(batches.map(batch => batch.orderItem.order), 'id');
               return (
                 <>
                   <SectionHeader icon="ORDER" title={`ORDER (${uniqueOrders.length})`} />
