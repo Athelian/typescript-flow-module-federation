@@ -29,16 +29,16 @@ type OptionalProps = {
   isNew: boolean,
   order: Object,
   onDetailReady: () => void,
+  onChangeStatus: (Object, Function) => Promise<any>,
 };
 
-type Props = OptionalProps & {
-  onChangeStatus: Function,
-};
+type Props = OptionalProps & {};
 
 const defaultProps = {
   isNew: false,
   order: {},
   onDetailReady: () => {},
+  onChangeStatus: () => Promise.resolve({}),
 };
 
 export default class OrderForm extends React.Component<Props> {
@@ -101,8 +101,8 @@ export default class OrderForm extends React.Component<Props> {
                           onRequestClose={() => dialogToggle(false)}
                           onCancel={() => dialogToggle(false)}
                           onConfirm={() => {
-                            onChangeStatus({ archived: false });
                             dialogToggle(false);
+                            onChangeStatus({ archived: false }, () => window.location.reload());
                           }}
                           totalBatches={totalBatches}
                           unshippedBatches={unshippedBatches}
@@ -115,8 +115,8 @@ export default class OrderForm extends React.Component<Props> {
                           onRequestClose={() => dialogToggle(false)}
                           onCancel={() => dialogToggle(false)}
                           onConfirm={() => {
-                            onChangeStatus({ archived: true });
                             dialogToggle(false);
+                            onChangeStatus({ archived: false }, () => window.location.reload());
                           }}
                           totalBatches={totalBatches}
                           unshippedBatches={unshippedBatches}

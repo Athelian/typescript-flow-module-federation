@@ -9,13 +9,14 @@ import QueryDetail from 'components/common/QueryDetail';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import NavBar, { EntityIcon, SlideViewNavBar } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import logger from 'utils/logger';
+import OrderEventsList from 'modules/history';
 import OrderForm from './form';
 import validator from './form/validator';
 import {
@@ -135,9 +136,17 @@ class OrderFormModule extends React.PureComponent<Props> {
                                 onRequestClose={() => slideToggle(false)}
                                 options={{ width: '1030px' }}
                               >
-                                <div style={{ padding: '50px', textAlign: 'center' }}>
-                                  <h1>Logs</h1>
-                                </div>
+                                <Layout
+                                  navBar={
+                                    <SlideViewNavBar>
+                                      <EntityIcon icon="LOGS" color="LOGS" />
+                                    </SlideViewNavBar>
+                                  }
+                                >
+                                  {orderId && (
+                                    <OrderEventsList id={decodeId(orderId)} perPage={2} />
+                                  )}
+                                </Layout>
                               </SlideView>
                             </>
                           )
@@ -203,12 +212,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                 >
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !orderId ? (
-                    <OrderForm
-                      isNew
-                      onChangeStatus={(formData, onSuccess) =>
-                        this.onSave(formData, saveOrder, onSuccess)
-                      }
-                    />
+                    <OrderForm isNew />
                   ) : (
                     <QueryDetail
                       query={query}
@@ -227,7 +231,17 @@ class OrderFormModule extends React.PureComponent<Props> {
                             <OrderForm
                               order={order}
                               onChangeStatus={(formData, onSuccess) =>
-                                this.onSave(formData, saveOrder, onSuccess)
+                                this.onSave(
+                                  {
+                                    ...orderItemState.state,
+                                    ...orderInfoState.state,
+                                    ...orderTagsState.state,
+                                    ...orderFilesState.state,
+                                    ...formData,
+                                  },
+                                  saveOrder,
+                                  onSuccess
+                                )
                               }
                               onDetailReady={() => {
                                 const { orderItems, tags, files, ...info } = order;

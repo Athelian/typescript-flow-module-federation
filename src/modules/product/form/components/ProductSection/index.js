@@ -28,11 +28,12 @@ type Props = {
 };
 
 const swapItems = (items: Array<Object>, from: number, to: number) => {
-  const fromItem = items[from];
-  const toItem = items[to];
-  items.splice(from, 1, toItem);
-  items.splice(to, 1, fromItem);
-  return items;
+  const cloneItems = items.slice(0);
+  const fromItem = cloneItems[from];
+  const toItem = cloneItems[to];
+  cloneItems.splice(from, 1, toItem);
+  cloneItems.splice(to, 1, fromItem);
+  return cloneItems;
 };
 
 const ProductSection = ({ isNew }: Props) => (
@@ -65,7 +66,9 @@ const ProductSection = ({ isNew }: Props) => (
                           <button
                             className={DeleteImageButtonStyle}
                             type="button"
-                            onClick={() => setFieldValue('files', files.splice(index, 1))}
+                            onClick={() =>
+                              setFieldValue('files', files.filter(item => item.id !== id))
+                            }
                           >
                             <Icon icon="REMOVE" />
                           </button>

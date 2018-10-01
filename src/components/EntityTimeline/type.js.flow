@@ -1,0 +1,30 @@
+// @flow
+import type { User } from 'modules/staff/type.js.flow';
+
+export type Event = {
+  id: string,
+  type: string,
+  target: Object & {
+    __typename: string,
+  },
+  changes: Array<{
+    field: string,
+    oldValue: any,
+    newValue: any,
+  }>,
+  user: User,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type Comment = {
+  id: string,
+  body: string,
+  user: User,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type Entry = (Comment | Event) & { __typename: string };
+
+export type Timeline = Array<Entry>;
