@@ -9,7 +9,7 @@ type Props = {
   label: string,
 };
 
-const ToggleShowTagsButton = ({ isChecked, onToggle, label }: Props) => (
+const OrderHeaderCheckBox = ({ isChecked, onToggle, label }: Props) => (
   <>
     <div className={CheckBoxStyle(isChecked)}>
       <button
@@ -25,4 +25,4 @@ const ToggleShowTagsButton = ({ isChecked, onToggle, label }: Props) => (
   </>
 );
 
-export default ToggleShowTagsButton;
+export default OrderHeaderCheckBox;

@@ -1,8 +1,17 @@
+// @flow
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
+import BaseCard from 'components/Cards';
+import {
+  ItemWrapperStyle,
+  CardWrapperStyle,
+} from 'modules/relationMap/components/OrderElement/style';
+import WrapperCard from 'modules/relationMap/components/OrderElement/WrapperCard';
+import ShipmentActions from 'modules/relationMap/components/ShipmentElement/ShipmentActions';
+
 import ShipmentTimeLine from './index';
 
 storiesOf('RelationMap/ShipmentList', module)
@@ -179,10 +188,31 @@ storiesOf('RelationMap/ShipmentList', module)
       ],
       __typename: 'Shipment',
     };
+
     return (
       <IntlProvider locale="en" messages={translationMessages.en}>
-        <div style={{ height: '160px', width: '390px' }}>
-          <ShipmentTimeLine shipment={data} />
+        <div style={{ display: 'grid', gridRowGap: 10, width: 400, textAlign: 'left' }}>
+          <div className={CardWrapperStyle}>
+            <ShipmentActions
+              label={`ORDER ${data.id}`}
+              isChecked
+              ordersNo={3}
+              batchesNo={9}
+              onToggle={() => {}}
+            />
+          </div>
+          <div className={CardWrapperStyle}>
+            <BaseCard
+              icon="SHIPMENT_ALL"
+              color="SHIPMENT_ALL"
+              actions={[]}
+              wrapperClassName={ItemWrapperStyle(true)}
+            >
+              <WrapperCard onMouseEnter={() => {}} onMouseLeave={() => {}} onClick={() => {}}>
+                <ShipmentTimeLine shipment={data} />
+              </WrapperCard>
+            </BaseCard>
+          </div>
         </div>
       </IntlProvider>
     );

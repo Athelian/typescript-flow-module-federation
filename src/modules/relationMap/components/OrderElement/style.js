@@ -67,7 +67,10 @@ export const ItemWrapperStyle = (isFocused: boolean) => {
     justify-content: center;
     width: auto;
     min-width: 190px;
-    height: 50px;
+    //max-width: 400px;
+    height: auto;
+    min-height: 50px;
+    max-height: 200px;
     margin-bottom: 20px;
     ${fontSizes.MAIN};
     font-weight: bold;
