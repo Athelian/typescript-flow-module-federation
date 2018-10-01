@@ -6,6 +6,7 @@ import { GridViewWrapperStyle, EmptyMessageStyle } from './style';
 
 type OptionalProps = {
   gap?: string,
+  isReverse: boolean,
   columnGap: string,
   rowGap: string,
 };
@@ -23,6 +24,7 @@ type Props = OptionalProps & {
 const defaultProps = {
   columnGap: '20px',
   rowGap: '30px',
+  isReverse: false,
 };
 
 function GridView(props: Props) {
@@ -33,6 +35,7 @@ function GridView(props: Props) {
     isEmpty,
     emptyMessage,
     itemWidth,
+    isReverse,
     gap,
     columnGap,
     rowGap,
@@ -57,6 +60,7 @@ function GridView(props: Props) {
       loadMore={onLoadMore}
       hasMore={hasMore}
       loader={<LoadingIcon key="loading" />}
+      isReverse={isReverse}
       threshold={500}
       useWindow={false}
     >

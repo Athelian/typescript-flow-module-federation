@@ -2,7 +2,7 @@
 import scroll from 'scroll-into-view-if-needed';
 
 type OptionalProps = {
-  boundaryId: string,
+  boundaryId?: string,
 };
 
 type Props = OptionalProps & {

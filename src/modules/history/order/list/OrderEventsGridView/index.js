@@ -25,6 +25,7 @@ const OrderEventsGridView = (props: Props) => {
 
   return (
     <GridView
+      isReverse
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}

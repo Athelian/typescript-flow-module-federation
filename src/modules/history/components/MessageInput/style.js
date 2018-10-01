@@ -11,6 +11,7 @@ export const MessageInputWrapper = css`
 export const InputStyle = (hideBorder: boolean) => css`
   color: ${colors.BLACK};
   border-radius: 5px;
+  z-index: 5;
   border: none;
   border: ${hideBorder ? 'none' : `2px solid ${colors.GRAY_VERY_LIGHT}`};
   ${fontSizes.MAIN};
@@ -21,7 +22,8 @@ export const InputStyle = (hideBorder: boolean) => css`
   resize: none;
   flex: 1;
   height: auto;
-  overflow: hidden;
+  overflow: scroll;
+  max-height: 300px;
   &:focus {
     border-color: ${colors.TEAL};
     outline: none;
