@@ -86,6 +86,11 @@ export const EmptyMessageStyle = css`
   color: ${colors.BLACK};
 `;
 
+export const InfiniteScrollWrapperStyle = (hasMore: boolean, height: number) => css`
+  height: ${height}px;
+  ${hasMore && `overflow: auto;`};
+`;
+
 export const ScrollWrapperStyle = css`
   background-color: #f7f7f7;
   padding: 10px;

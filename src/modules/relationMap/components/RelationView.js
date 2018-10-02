@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ReactHeight } from 'react-height';
 import InfiniteScroll from 'react-infinite-scroller';
 import LoadingIcon from 'components/LoadingIcon';
-import { EmptyMessageStyle } from '../style';
+import { EmptyMessageStyle, InfiniteScrollWrapperStyle } from '../style';
 
 type OptionalProps = {
   isLoading: boolean,
@@ -60,7 +60,7 @@ class RelationView extends React.Component<Props, State> {
     const { height } = this.state;
     return (
       <ReactHeight style={{ gridColumn: 'span 3' }} onHeightReady={this.detectHeight()}>
-        <div style={hasMore ? { height, overflow: 'auto' } : { height }}>
+        <div className={InfiniteScrollWrapperStyle(hasMore, height)}>
           <InfiniteScroll
             className={className}
             loadMore={onLoadMore}

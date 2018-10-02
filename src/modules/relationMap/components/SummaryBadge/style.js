@@ -12,21 +12,15 @@ export const IconStyle = (color: string) => css`
   ${fontSizes.HUGE};
 `;
 
+export const SummaryBadgeLabel = css`
+  color: ${colors.GRAY_LIGHT};
+  letter-spacing: 2px;
+  align-self: center;
+  margin-left: 10px;
+`;
+
 export const SummaryBadgeWrapper = css`
-  display: table;
-
-  > :first-child {
-    margin: 0;
-  }
-
-  > * {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  span {
-    padding-left: 10px;
-  }
+  ${layout.HORIZONTAL};
 `;
 
 export default IconStyle;

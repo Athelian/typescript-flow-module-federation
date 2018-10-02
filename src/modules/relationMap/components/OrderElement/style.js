@@ -28,13 +28,17 @@ export const OrderListItemStyle = (isFocused: boolean) => css`
   color: ${colors.BLACK};
 `;
 
+export const TotalCardWrapperStyle = css`
+  margin-left: 1em;
+`;
+
 export const CardWrapperStyle = css`
-  width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   -webkit-justify-content: space-around;
   justify-content: space-around;
+  margin-right: 20px;
 `;
 export const CardTitleStyle = css`
   ${fontSizes.SMALL};

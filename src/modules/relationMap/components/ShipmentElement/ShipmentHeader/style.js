@@ -12,7 +12,7 @@ export const ShipmentActionsWrapperStyle = (archived: boolean) => css`
   margin-bottom: 5px;
   height: 22px;
   line-height: 22px;
-
+  letter-spacing: 2px;
   > * {
     height: 22px;
   }

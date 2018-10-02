@@ -12,7 +12,7 @@ export const OrderHeaderStyle = (archived: boolean) => css`
   ${fontSizes.MAIN};
   height: 22px;
   line-height: 22px;
-
+  letter-spacing: 2px;
   > * {
     height: 22px;
   }
