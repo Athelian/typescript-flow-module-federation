@@ -5,7 +5,7 @@ import {
   faBox as BATCH,
   faShip as SHIPMENT,
   faCube as PRODUCT,
-  faWarehouseAlt as WAREHOUSE,
+  faWarehouse as WAREHOUSE,
   faInventory as INVENTORY,
   faAddressBook as NETWORK,
   faHandshake as PARTNER,
