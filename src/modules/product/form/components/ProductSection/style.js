@@ -1,6 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, borderRadiuses, scrollbars, fontSizes, layout } from 'styles/common';
+import {
+  presets,
+  colors,
+  borderRadiuses,
+  scrollbars,
+  fontSizes,
+  layout,
+  shadows,
+} from 'styles/common';
 
 export const ProductSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -11,13 +19,19 @@ export const ProductSectionWrapperStyle: string = css`
   align-items: center;
 `;
 
-export const ProductImagesWrapperStyle = (isOverflow: boolean): string => css`
+export const ProductImagesWrapperStyle = (numOfFiles: number): string => css`
   position: relative;
   width: 100%;
   height: 220px;
-  padding: 20px;
   ${layout.GRID_HORIZONTAL};
-  ${!isOverflow && 'justify-content: center'};
+  ${numOfFiles > 0 && numOfFiles < 4
+    ? `
+    padding: 20px 20px 20px 140px
+  `
+    : `
+    padding: 20px
+  `};
+  ${numOfFiles < 4 && 'justify-content: center'};
   grid-gap: 20px;
   margin-bottom: 40px;
   ${borderRadiuses.MAIN};
@@ -64,7 +78,7 @@ export const ViewImageButtonStyle: string = css`
   opacity: 0;
   &:hover,
   :focus {
-    color: ${colors.BLUE};
+    background-color: ${colors.BLUE};
   }
 `;
 
@@ -89,7 +103,7 @@ export const DeleteImageButtonStyle: string = css`
 
 export const SwapImageButtonStyle = (position: 'left' | 'right'): string => css`
   position: absolute;
-  ${position}: -15px;
+  ${position}: -10px;
   top: 50%;
   transform: translateY(-50%);
   ${presets.BUTTON};
@@ -101,6 +115,7 @@ export const SwapImageButtonStyle = (position: 'left' | 'right'): string => css`
   opacity: 0;
   color: ${colors.GRAY_LIGHT};
   background-color: ${colors.WHITE};
+  ${shadows.DROPDOWN};
   &:hover,
   :focus {
     color: ${colors.BLUE};
