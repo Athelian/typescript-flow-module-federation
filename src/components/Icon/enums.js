@@ -64,6 +64,7 @@ import {
   faCircle as CIRCLE,
   faEllipsisH as HORIZONTAL_ELLIPSIS,
   faLanguage as LANGUAGE,
+  faPalette as COLOR,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -177,6 +178,7 @@ export default {
   HORIZONTAL_ELLIPSIS,
   EXCHANGE,
   LANGUAGE,
+  COLOR,
 
   TIMELINE,
   CARGO_READY,

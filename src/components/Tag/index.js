@@ -3,14 +3,28 @@ import * as React from 'react';
 import type { Tag as TagType } from './type.js.flow';
 import { TagStyle, PrefixStyle, SuffixStyle } from './style';
 
-type Props = {
-  tag: TagType,
-  prefix?: ?string | ?React.Node,
-  suffix?: ?string | ?React.Node,
+type OptionalProps = {
+  prefix: React.Node,
+  suffix: React.Node,
 };
 
-export default function Tag({ tag, prefix, suffix }: Props) {
-  const { color = '#ffffff', name = 'TAG', description = '' } = tag;
+type Props = OptionalProps & {
+  tag: TagType,
+};
+
+const defaultProps = {
+  prefix: null,
+  suffix: null,
+};
+
+const Tag = ({ tag, prefix, suffix }: Props) => {
+  const defaultTag = {
+    name: '',
+    color: '#ffffff',
+    description: '',
+  };
+  const mergedTag = { ...defaultTag, ...tag };
+  const { color, name, description } = mergedTag;
 
   return (
     <div className={TagStyle(color)} title={description}>
@@ -19,9 +33,8 @@ export default function Tag({ tag, prefix, suffix }: Props) {
       {suffix && <div className={SuffixStyle(color)}>{suffix}</div>}
     </div>
   );
-}
-
-Tag.defaultProps = {
-  prefix: '',
-  suffix: '',
 };
+
+Tag.defaultProps = defaultProps;
+
+export default Tag;

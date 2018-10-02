@@ -5,11 +5,27 @@ import { TagContainer, EntityTypeContainer } from 'modules/tags/form/containers'
 import validator from 'modules/tags/form/validator';
 import { FormField } from 'modules/form';
 import Tag from 'components/Tag';
-import { ColorInput, FieldItem, Label, Tooltip } from 'components/Form';
-import EntityTypesInput from 'modules/tags/components/EntityTypesInput';
+import Icon from 'components/Icon';
+import {
+  ColorInput,
+  DefaultStyle,
+  TextInput,
+  FieldItem,
+  Label,
+  Tooltip,
+  RadioInput,
+} from 'components/Form';
 import { textInputFactory, textAreaFactory } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
-import { TagSectionWrapperStyle } from './style';
+import {
+  TagSectionWrapperStyle,
+  DescriptionLabelWrapperStyle,
+  ColorInputWrapperStyle,
+  ColorInputButtonStyle,
+  EntityTypesWrapperStyle,
+  EntityTypeStyle,
+  EntityIconStyle,
+} from './style';
 
 type Props = {
   isNew: boolean,
@@ -25,7 +41,7 @@ const TagSection = ({ isNew }: Props) => (
 
           return (
             <>
-              <Tag tag={values} />
+              <FieldItem label={<Label>PREVIEW</Label>} input={<Tag tag={values} />} />
 
               <FormField
                 name="name"
@@ -57,8 +73,9 @@ const TagSection = ({ isNew }: Props) => (
                     isNew,
                     height: '100px',
                     width: '200px',
+                    align: 'right',
                     originalValue: originalValues[name],
-                    label: 'DESCRIPTION',
+                    label: <div className={DescriptionLabelWrapperStyle}>DESCRIPTION</div>,
                   })
                 }
               </FormField>
@@ -69,17 +86,36 @@ const TagSection = ({ isNew }: Props) => (
                 validator={validator}
                 setFieldValue={setFieldValue}
               >
-                {({ name, ...inputHandlers }) =>
-                  textInputFactory({
-                    inputHandlers,
-                    name,
-                    isNew,
-                    required: true,
-                    originalValue: originalValues[name],
-                    label: 'COLOR',
-                    InputComponent: ColorInput,
-                  })
-                }
+                {({ name, isTouched, errorMessage, isFocused, ...inputHandlers }) => (
+                  <FieldItem
+                    label={<Label required>COLOR</Label>}
+                    tooltip={
+                      <Tooltip
+                        isNew={isNew}
+                        errorMessage={isTouched && errorMessage}
+                        changedValues={{
+                          oldValue: originalValues[name],
+                          newValue: inputHandlers.value,
+                        }}
+                      />
+                    }
+                    input={
+                      <div className={ColorInputWrapperStyle}>
+                        <DefaultStyle
+                          isFocused={isFocused}
+                          hasError={isTouched && errorMessage}
+                          forceHoverStyle={isNew}
+                          width="200px"
+                        >
+                          <TextInput name={name} {...inputHandlers} />
+                        </DefaultStyle>
+                        <div className={ColorInputButtonStyle}>
+                          <ColorInput name={name} {...inputHandlers} />
+                        </div>
+                      </div>
+                    }
+                  />
+                )}
               </FormField>
             </>
           );
@@ -96,8 +132,9 @@ const TagSection = ({ isNew }: Props) => (
               initValue={values.entityTypes}
               setFieldValue={(field, newValue) => toggleSelectType(newValue)}
             >
-              {({ name, isTouched, errorMessage, ...inputHandlers }) => (
+              {({ name, isTouched, errorMessage, onChange, ...inputHandlers }) => (
                 <FieldItem
+                  vertical
                   label={<Label required>TYPES</Label>}
                   tooltip={
                     <Tooltip
@@ -110,11 +147,65 @@ const TagSection = ({ isNew }: Props) => (
                     />
                   }
                   input={
-                    <EntityTypesInput
-                      values={inputHandlers.value}
-                      name={name}
-                      onChange={toggleSelectType}
-                    />
+                    <div className={EntityTypesWrapperStyle}>
+                      <RadioInput
+                        selected={values.entityTypes.includes('Order')}
+                        onToggle={() => toggleSelectType('Order')}
+                      >
+                        <div className={EntityTypeStyle}>
+                          <div className={EntityIconStyle('ORDER')}>
+                            <Icon icon="ORDER" />
+                          </div>
+                          <Label>ORDER</Label>
+                        </div>
+                      </RadioInput>
+                      <RadioInput
+                        selected={values.entityTypes.includes('Batch')}
+                        onToggle={() => toggleSelectType('Batch')}
+                      >
+                        <div className={EntityTypeStyle}>
+                          <div className={EntityIconStyle('BATCH')}>
+                            <Icon icon="BATCH" />
+                          </div>
+                          <Label>BATCH</Label>
+                        </div>
+                      </RadioInput>
+
+                      <RadioInput
+                        selected={values.entityTypes.includes('Shipment')}
+                        onToggle={() => toggleSelectType('Shipment')}
+                      >
+                        <div className={EntityTypeStyle}>
+                          <div className={EntityIconStyle('SHIPMENT')}>
+                            <Icon icon="SHIPMENT" />
+                          </div>
+                          <Label>SHIPMENT</Label>
+                        </div>
+                      </RadioInput>
+                      <RadioInput
+                        selected={values.entityTypes.includes('Product')}
+                        onToggle={() => toggleSelectType('Product')}
+                      >
+                        <div className={EntityTypeStyle}>
+                          <div className={EntityIconStyle('PRODUCT')}>
+                            <Icon icon="PRODUCT" />
+                          </div>
+                          <Label>PRODUCT</Label>
+                        </div>
+                      </RadioInput>
+
+                      <RadioInput
+                        selected={values.entityTypes.includes('User')}
+                        onToggle={() => toggleSelectType('User')}
+                      >
+                        <div className={EntityTypeStyle}>
+                          <div className={EntityIconStyle('STAFF')}>
+                            <Icon icon="STAFF" />
+                          </div>
+                          <Label>STAFF</Label>
+                        </div>
+                      </RadioInput>
+                    </div>
                   }
                 />
               )}
