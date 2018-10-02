@@ -2,14 +2,14 @@
 import * as React from 'react';
 import { get } from 'lodash/fp';
 import Icon from 'components/Icon';
-import type { Entry } from 'modules/history/components/EntityTimeline/type.js.flow';
+import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
 import { WrapperStyle, IconStyle } from './style';
 import UpdateEvent from './components/UpdateEvent';
 import MultipleUpdateEvent from './components/MultipleUpdateEvent';
 import DefaultEvent from './components/DefaultEvent';
 
 type Props = {
-  event: Entry,
+  event: Event,
   entityType: string,
 };
 

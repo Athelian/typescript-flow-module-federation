@@ -3,6 +3,7 @@ import * as React from 'react';
 import isSameDay from 'date-fns/isSameDay';
 import GridView from 'components/GridView';
 import EntityTimeline from 'modules/history/components/EntityTimeline';
+import { getByPathWithDefault } from 'utils/fp';
 
 type Props = {
   items: Array<Object>,
@@ -13,7 +14,13 @@ type Props = {
 };
 
 const defaultRenderItem = (item: Object, showDayHeader: boolean) => (
-  <EntityTimeline entityType="Order" key={item.id} entry={item} showDayHeader={showDayHeader} />
+  <EntityTimeline
+    entityType="Order"
+    key={item.id}
+    entry={item}
+    entryType={getByPathWithDefault('EventChange', '__typename', item)}
+    showDayHeader={showDayHeader}
+  />
 );
 
 const defaultProps = {

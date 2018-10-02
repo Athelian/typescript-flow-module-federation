@@ -1,23 +1,44 @@
 // @flow
 import * as React from 'react';
-import type { Entry } from './type.js.flow';
+import CommentEntry from './components/CommentEntry';
 import EventEntry from './components/EventEntry';
 import DateDivider from './components/DateDivider';
 import { WrapperStyle, TimelineStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  commentHandlers: Object,
+};
+
+type Props = OptionalProps & {
   entityType: string,
-  entry: Entry,
+  entryType: string,
+  entry: Object,
   showDayHeader: boolean,
 };
 
-const EntityTimeline = ({ entityType, entry, showDayHeader }: Props) => (
+const defaultProps = {
+  commentHandlers: {},
+};
+
+const EntityTimeline = ({
+  entityType,
+  entry,
+  entryType,
+  commentHandlers,
+  showDayHeader,
+}: Props) => (
   <div className={WrapperStyle}>
     <div className={TimelineStyle}>
       {showDayHeader && <DateDivider date={entry.createdAt} />}
-      <EventEntry event={entry} entityType={entityType} />
+      {entryType === 'EventChange' ? (
+        <EventEntry event={entry} entityType={entityType} />
+      ) : (
+        <CommentEntry comment={entry} {...commentHandlers} />
+      )}
     </div>
   </div>
 );
+
+EntityTimeline.defaultProps = defaultProps;
 
 export default EntityTimeline;
