@@ -30,3 +30,9 @@ export const eventCommentUpdateMutation = gql`
 
   ${violationFragment}
 `;
+
+export const eventCommentDeleteMutation = gql`
+  mutation eventCommentDelete($id: ID!) {
+    eventCommentDelete(id: $id)
+  }
+`;

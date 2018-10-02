@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Oct 02 2018 11:31:54 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Oct 02 2018 16:21:49 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -28586,6 +28586,7 @@ type Mutation {
   tagUpdate(id: ID!, input: TagUpdateInput!): TagMutated!
   eventCommentCreate(input: EventCommentCreateInput!): EventCommentMutated!
   eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): EventCommentMutated!
+  eventCommentDelete(id: ID!): Boolean!
   timelineRead(id: ID!): Boolean!
   notificationRead(id: ID!): Boolean!
   notificationReadAll: Boolean!
@@ -34343,7 +34344,7 @@ interface Supervised {
 type Tag implements Model & Owned {
   name: String!
   description: String
-  color: String
+  color: String!
   entityTypes: [TagEntityType!]!
   id: ID!
   createdAt: DateTime!
