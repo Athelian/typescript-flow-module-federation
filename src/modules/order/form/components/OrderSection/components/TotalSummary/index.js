@@ -37,7 +37,7 @@ export default function TotalSummary({
         <FieldItem
           label={
             <Label>
-              <FormattedMessage id="modules.order.ordered.qty" defaultMessage="ORDERED QTY" />
+              <FormattedMessage id="modules.order.orderedQTY" defaultMessage="ORDERED QTY" />
             </Label>
           }
           input={
@@ -58,7 +58,7 @@ export default function TotalSummary({
         <FieldItem
           label={
             <Label>
-              <FormattedMessage id="modules.order.total.price" defaultMessage="TOTAL PRICE" />
+              <FormattedMessage id="modules.order.totalPrice" defaultMessage="TOTAL PRICE" />
             </Label>
           }
           input={
@@ -70,7 +70,7 @@ export default function TotalSummary({
         <FieldItem
           label={
             <Label>
-              <FormattedMessage id="modules.order.total.items" defaultMessage="TOTAL ITEMS" />
+              <FormattedMessage id="modules.order.totalItems" defaultMessage="TOTAL ITEMS" />
             </Label>
           }
           input={
@@ -82,7 +82,7 @@ export default function TotalSummary({
         <FieldItem
           label={
             <Label>
-              <FormattedMessage id="modules.order.total.batches" defaultMessage="TOTAL BATCHES" />
+              <FormattedMessage id="modules.order.totalBatches" defaultMessage="TOTAL BATCHES" />
             </Label>
           }
           input={
