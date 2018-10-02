@@ -79,6 +79,7 @@ class NotificationDropDown extends React.Component<Props> {
           if (loading) return <LoadingIcon />;
 
           const items = getByPathWithDefault([], 'viewer.notifications.nodes', data);
+          const unSeen = getByPathWithDefault(0, 'viewer.notificationunSeen', data);
           return (
             <div className={WrapperStyle}>
               <Mutation mutation={notificationReadAllMutation}>
@@ -88,7 +89,7 @@ class NotificationDropDown extends React.Component<Props> {
                       <div className={TitleStyle}>
                         <FormattedMessage {...messages.title} />
                       </div>
-                      {items.length > 0 && (
+                      {unSeen > 0 && (
                         <button
                           type="button"
                           className={ClearAllStyle}

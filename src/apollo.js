@@ -25,7 +25,8 @@ class SubscriptionSSE {
           ''}/graphql?query=${query}&operationName=${operationName}&variables=${JSON.stringify(
           variables
         )}`
-      )
+      ),
+      { withCredentials: true }
     );
     this.source.onmessage = msg => {
       handler(JSON.parse(msg.data));
