@@ -1,10 +1,16 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const logoutMutation = gql`
+export const logOutMutation = gql`
   mutation {
     logout
   }
 `;
 
-export default logoutMutation;
+export const notificationSeeAllMutation = gql`
+  mutation {
+    notificationSeeAll
+  }
+`;
+
+export default logOutMutation;

@@ -7,8 +7,4 @@ export const notificationReadAllMutation = gql`
   }
 `;
 
-export const notificationSeeAllMutation = gql`
-  mutation {
-    notificationSeeAll
-  }
-`;
+export default notificationReadAllMutation;

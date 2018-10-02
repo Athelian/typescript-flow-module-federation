@@ -12,14 +12,12 @@ type Props = {
 };
 
 type State = {
-  viewType: string,
   page: number,
   perPage: number,
 };
 
-class NotificaionListModule extends React.Component<Props, State> {
+class NotificationListModule extends React.Component<Props, State> {
   state = {
-    viewType: 'grid',
     page: 1,
     perPage: 10,
   };
@@ -37,4 +35,4 @@ class NotificaionListModule extends React.Component<Props, State> {
   }
 }
 
-export default injectIntl(NotificaionListModule);
+export default injectIntl(NotificationListModule);

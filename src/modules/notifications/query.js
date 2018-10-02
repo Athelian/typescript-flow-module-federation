@@ -7,6 +7,38 @@ export const notificationListQuery = gql`
       notifications(page: $page, perPage: $perPage) {
         nodes {
           id
+          createdAt
+          sender {
+            id
+            firstName
+            lastName
+          }
+          receiver {
+            id
+            firstName
+            lastName
+          }
+          body
+          read
+          seen
+          entity {
+            __typename
+            ... on Product {
+              id
+            }
+            ... on Shipment {
+              id
+            }
+            ... on Order {
+              id
+            }
+            ... on Batch {
+              id
+            }
+            ... on Tag {
+              id
+            }
+          }
         }
         page
         totalPage

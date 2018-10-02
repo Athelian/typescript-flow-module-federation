@@ -4,11 +4,10 @@ import { Query, Mutation } from 'react-apollo';
 import { Link } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
-
 import LoadingIcon from 'components/LoadingIcon';
 import NotificationItem from 'modules/notifications/components/NotificationItem';
 import query from 'modules/notifications/query';
-import { notificationReadAllMutation, notificationSeeAllMutation } from './mutation';
+import { notificationReadAllMutation } from './mutation';
 import {
   WrapperStyle,
   HeaderStyle,
@@ -107,21 +106,9 @@ class NotificationDropDown extends React.Component<Props> {
                   </>
                 )}
               </Mutation>
-              <Mutation mutation={notificationSeeAllMutation}>
-                {(seeAllNotification, { loading: isLoading, error: apiError }) => (
-                  <>
-                    {isLoading && <LoadingIcon />}
-                    {apiError && apiError.message}
-                    <Link
-                      to="/notifications"
-                      onClick={() => this.handleSeeAll(seeAllNotification)}
-                      className={ViewAllStyle}
-                    >
-                      <FormattedMessage {...messages.viewAll} />
-                    </Link>
-                  </>
-                )}
-              </Mutation>
+              <Link to="/notifications" className={ViewAllStyle}>
+                <FormattedMessage {...messages.viewAll} />
+              </Link>
             </div>
           );
         }}

@@ -6,18 +6,14 @@ import {
   Query,
   // Subscription
 } from 'react-apollo';
-
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
-
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { AuthenticationConsumer } from 'modules/authentication';
-
 import { getByPathWithDefault } from 'utils/fp';
 import Notifications from './notifications';
-
-import logOutMutation from './mutation';
+import { logOutMutation, notificationSeeAllMutation } from './mutation';
 import query from './query';
 // import subscription from './subscription';
 
@@ -91,19 +87,25 @@ class Setting extends React.Component<Props, State> {
     return (
       <div className={SettingsWrapperStyle}>
         <Query query={query}>
-          {({ data }) => {
+          {({ data, client }) => {
             const viewer = {
               firstName: getByPathWithDefault('TODO', 'viewer.user.firstName', data),
               lastName: getByPathWithDefault('TODO', 'viewer.user.lastName', data),
             };
-            const unRead = getByPathWithDefault(0, 'viewer.notificationUnread', data);
+            const Unseen = getByPathWithDefault(0, 'viewer.notificationUnseen', data);
 
             return (
               <>
                 <button
                   className={NotificationButtonStyle}
                   tabIndex={-1}
-                  onClick={this.toggleNotification}
+                  onClick={async () => {
+                    this.toggleNotification();
+                    if (Unseen > 0)
+                      await client.mutate({
+                        mutation: notificationSeeAllMutation,
+                      });
+                  }}
                   type="button"
                   ref={this.NotificationRef}
                 >
@@ -124,7 +126,7 @@ class Setting extends React.Component<Props, State> {
                       );
                     }}
                   </Subscription> */}
-                  <div className={NotificationBadgeStyle}>{unRead > 99 ? '99+' : unRead}</div>
+                  <div className={NotificationBadgeStyle}>{Unseen > 99 ? '99+' : Unseen}</div>
                   <Icon icon="NOTIFICATION" />
                 </button>
                 <button
