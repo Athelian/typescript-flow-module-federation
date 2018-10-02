@@ -43,6 +43,7 @@ export const colors = {
   WAREHOUSE: '#9D865A',
   STAFF: '#98A2AC',
   PARTNER: '#474D4D',
+  TAG: '#bbb',
 
   URGENT: '#F12C2C',
 };

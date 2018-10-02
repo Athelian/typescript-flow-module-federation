@@ -10,8 +10,9 @@ import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
+import JumpToSection from 'components/JumpToSection';
+import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
-import logger from 'utils/logger';
 import TagForm from './form';
 import { TagContainer, EntityTypeContainer } from './form/containers';
 import query from './form/query';
@@ -72,8 +73,6 @@ export default class TagFormContainer extends React.PureComponent<Props> {
         onSuccess();
       }
     }
-
-    onSuccess();
   };
 
   onMutationCompleted = (result: Object) => {
@@ -87,13 +86,11 @@ export default class TagFormContainer extends React.PureComponent<Props> {
       } = result;
       navigate(`/tags/${encodeId(id)}`);
     }
-    logger.warn('result', result);
   };
 
   render() {
     const { tagId } = this.props;
     const isNew = tagId === 'new';
-
     let mutationKey = {};
     if (tagId && !isNew) {
       mutationKey = { key: decodeId(tagId) };
@@ -113,7 +110,10 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                   {...uiState}
                   navBar={
                     <NavBar>
-                      <EntityIcon icon="TAGS" color="GRAY_LIGHT" />
+                      <EntityIcon icon="TAG" color="TAG" />
+                      <JumpToSection>
+                        <SectionTabs link="tagSection" label="TAG" icon="TAG" />
+                      </JumpToSection>
                       <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
                         {(tagState, entityTypesState, form) =>
                           (isNew || tagState.isDirty() || entityTypesState.isDirty()) && (
@@ -134,7 +134,8 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                                       tagState.onSuccess();
                                       entityTypesState.onSuccess();
                                       form.onReset();
-                                    }
+                                    },
+                                    form.onErrors
                                   )
                                 }
                               />
@@ -147,9 +148,8 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                   }
                 >
                   {apiError && <p>Error: Please try again.</p>}
-
                   {isNew || !tagId ? (
-                    <TagForm isNew />
+                    <TagForm tag={{}} isNew />
                   ) : (
                     <QueryDetail
                       query={query}

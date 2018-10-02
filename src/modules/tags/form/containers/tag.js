@@ -5,7 +5,7 @@ import { isEquals } from 'utils/fp';
 
 type FormState = {
   name?: string,
-  description?: string,
+  description?: ?string,
   color?: string,
 };
 
