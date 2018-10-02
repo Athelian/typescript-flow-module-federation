@@ -66,6 +66,7 @@ const GridColumn = css`
 `;
 
 export const ContentWrapperStyle = css`
+  overflow-y: hidden;
   width: 100%;
   padding: 50px 20px;
 `;
@@ -86,12 +87,15 @@ export const EmptyMessageStyle = css`
   color: ${colors.BLACK};
 `;
 
-export const InfiniteScrollWrapperStyle = (hasMore: boolean, height: number) => css`
-  height: ${height}px;
-  ${hasMore && `overflow: auto;`};
+export const InfiniteScrollWrapperStyle = css`
+  grid-column: span 3;
+  height: 65vh;
+  overflow: auto;
 `;
 
 export const ScrollWrapperStyle = css`
+  height: 65vh;
+  overflow-y: auto;
   background-color: #f7f7f7;
   padding: 30px 10px;
 `;
@@ -99,6 +103,8 @@ export const ScrollWrapperStyle = css`
 export const LeftScrollWrapperStyle = css`
   background-color: #f7f7f7;
   padding: 0 10px;
+  height: 65vh;
+  overflow-y: auto;
 `;
 
 export const ShipmentMapWrapperStyle = css`
