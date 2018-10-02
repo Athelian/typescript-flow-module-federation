@@ -1,72 +1,72 @@
 import gql from 'graphql-tag';
 
 export const productListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: OrderItemSortInput) {
-    orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
+  query(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: ProductFilterInput
+    $sortBy: ProductSortInput
+    $batchPage: Int!
+    $batchPerPage: Int!
+  ) {
+    products(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         id
-        quantity
-        productProvider {
+        name
+        serial
+        archived
+        productProviders {
           id
-          product {
+          exporter {
             id
             name
-            serial
-            tags {
-              id
-              name
-              color
-            }
           }
           supplier {
             id
             name
           }
         }
-        batches {
-          id
-          no
-          quantity
-          archived
-          tags {
+        batches(page: $batchPage, perPage: $batchPerPage) {
+          nodes {
             id
-            name
-            color
-          }
-          orderItem {
-            id
-            order {
+            no
+            quantity
+            shipment {
               id
-              poNo
+              no
             }
-          }
-          shipment {
-            id
-            blNo
-            tags {
+            batchAdjustments {
               id
-              name
-              color
-            }
-            containerGroups {
-              id
-              warehouseArrival {
+              reason
+              quantity
+              memo
+              updatedAt
+              updatedBy {
+                firstName
+                lastName
                 id
-                date
+              }
+              sort
+            }
+            orderItem {
+              id
+              quantity
+              order {
+                id
+                poNo
               }
             }
           }
-          packageVolume {
-            value
-            metric
-          }
-          batchAdjustments {
-            id
-            quantity
-          }
+          totalCount
+        }
+        tags {
+          id
+          name
+          color
         }
       }
       page
+      perPage
       totalPage
     }
   }

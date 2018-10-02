@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
 import ProductFocused from './components/ProductFocused';
 import Layout from './components/Layout';
 import QueryHandler from './components/QueryHandler';
@@ -18,24 +17,25 @@ const defaultProps = {
   page: 1,
   perPage: 10,
 };
-// temporary func before get real query
-const formatData = data =>
-  data.map(product => {
-    const name = getByPathWithDefault('', 'productProvider.product.name', product);
-    const serial = getByPathWithDefault('', 'productProvider.product.serial', product);
-    return { ...product, name, serial };
-  });
 
+const sortInput = [
+  { title: 'Updated At', value: 'updatedAt' },
+  { title: 'Created At', value: 'createdAt' },
+  { title: 'Name', value: 'name' },
+  { title: 'Serial', value: 'serial' },
+];
 const Product = ({ page, perPage }: Props) => (
   <Layout>
     <div className={ProductWrapper}>
-      <SortFilterBar className={FunctionWrapperStyle}>
+      <SortFilterBar className={FunctionWrapperStyle} sortInput={sortInput}>
         {({ sort, filter }) => (
           <Query
             query={query}
             variables={{
               page,
               perPage,
+              batchPage: 1,
+              batchPerPage: 100,
               filterBy: {
                 query: filter,
               },
@@ -47,16 +47,15 @@ const Product = ({ page, perPage }: Props) => (
           >
             {({ loading, data, fetchMore, error }) => (
               <QueryHandler
-                model="orderItems"
+                model="products"
                 loading={loading}
                 data={data}
                 fetchMore={fetchMore}
                 error={error}
               >
-                {({ nodes, hasMore, loadMore }) => {
-                  const items = formatData(nodes);
-                  return <ProductFocused hasMore={hasMore} loadMore={loadMore} items={items} />;
-                }}
+                {({ nodes, hasMore, loadMore }) => (
+                  <ProductFocused hasMore={hasMore} loadMore={loadMore} items={nodes} />
+                )}
               </QueryHandler>
             )}
           </Query>

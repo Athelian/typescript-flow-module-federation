@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { getByPathWithDefault } from 'utils/fp';
 import RelationView from '../RelationView';
 import ProductCard from '../ProductElement/ProductCard';
 import BatchCard from '../ProductElement/BatchCard';
@@ -24,7 +25,7 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => (
       <Row key={index}>
         <ProductCard item={item} />
         <div className={BatchListWrapperStyle}>
-          {item.batches.map(batch => (
+          {getByPathWithDefault([], 'batches.nodes', item).map(batch => (
             <BatchCard key={batch.id} batch={batch} product={item} />
           ))}
         </div>
