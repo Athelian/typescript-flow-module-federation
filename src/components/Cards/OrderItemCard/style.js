@@ -14,7 +14,10 @@ export const OrderItemCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 217px;
+  height: 183px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
 `;
 
 export const ProductWrapperStyle: string = css`
@@ -45,7 +48,9 @@ export const ProductInfoWrapperStyle: string = css`
 `;
 
 export const ProductNameStyle: string = css`
-  ${fontSizesWithHeights.MAIN};
+  font-size: 14px;
+  line-height: 30px;
+  height: 30px;
   color: ${colors.WHITE};
   font-weight: bold;
   ${presets.ELLIPSIS};
@@ -94,7 +99,7 @@ export const ProductIconLinkStyle: string = css`
 
 export const BodyWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
-  grid-gap: 5px;
+  grid-gap: 10px;
   padding: 5px 0;
 `;
 

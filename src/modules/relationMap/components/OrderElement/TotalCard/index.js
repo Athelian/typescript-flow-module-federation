@@ -1,12 +1,13 @@
 // @flow
 import React from 'react';
+import { CardWrapperStyle } from '../style';
 
 type Props = {
   quantity: number,
   name: string,
 };
 const TotalCard = ({ quantity, name }: Props) => (
-  <div>
+  <div className={CardWrapperStyle}>
     <span>
       Total {quantity} {name}
     </span>

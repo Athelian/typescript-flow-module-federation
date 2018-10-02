@@ -4,7 +4,7 @@ import BaseCard from 'components/Cards';
 import * as style from 'components/Cards/OrderItemCard/style';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import QuantityChart from 'components/QuantityChart';
+import QuantityChart from 'components/ProductFocusedChart';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 
 type Props = {
@@ -67,7 +67,6 @@ const ProductCard = ({ item }: Props) => {
         <div className={style.BodyWrapperStyle}>
           <div className={style.ChartWrapperStyle}>
             <QuantityChart
-              hasLabel={false}
               orderedQuantity={chartDetail.orderedQuantity}
               batchedQuantity={chartDetail.batchedQuantity}
               shippedQuantity={chartDetail.shippedQuantity}

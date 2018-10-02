@@ -2,8 +2,10 @@
 import * as React from 'react';
 import BaseCard from 'components/Cards';
 import { cx } from 'react-emotion';
+import ShipmentHeader from 'modules/relationMap/components/ShipmentElement/ShipmentHeader';
+
 import RelationLine from './RelationLine';
-import { ItemWrapperStyle, ShipmentCardStyle } from './style';
+import { ItemWrapperStyle, ShipmentCardStyle, ShipmentCardTotalStyle } from './style';
 import OrderCard from './OrderCard';
 import OrderItemCard from './OrderItemCard';
 import BatchCard from './BatchCard';
@@ -141,7 +143,7 @@ const Item = (props: Props) => {
     }
     case 'BATCH_ALL':
       render = (
-        <BaseCard actions={[]} wrapperClassName={ItemWrapperStyle(isFocused)}>
+        <BaseCard wrapperClassName={ItemWrapperStyle(isFocused)}>
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
             <TotalCard name="Batches" quantity={data.totalBatch} />
           </WrapperCard>
@@ -153,10 +155,16 @@ const Item = (props: Props) => {
         <BaseCard
           icon={type}
           color={type}
-          actions={[]}
           wrapperClassName={cx(ItemWrapperStyle(isFocused), ShipmentCardStyle)}
         >
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
+            <ShipmentHeader
+              label={`SHIPMENT ${data.id}`}
+              isChecked
+              ordersNo={data.numberOfOrder}
+              batchesNo={data.numberOfBatch}
+              onToggle={() => {}}
+            />
             <ShipmentCard shipment={data} />
             <TagValue>
               {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
@@ -172,8 +180,15 @@ const Item = (props: Props) => {
           icon={type}
           color={type}
           actions={[]}
-          wrapperClassName={ItemWrapperStyle(isFocused)}
+          wrapperClassName={cx(ItemWrapperStyle(isFocused), ShipmentCardTotalStyle)}
         >
+          <ShipmentHeader
+            label={`SHIPMENT ${data.id}`}
+            isChecked
+            ordersNo={data.numberOfOrder}
+            batchesNo={data.numberOfBatch}
+            onToggle={() => {}}
+          />
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
             <TotalCard name="Shipment" quantity={data.quantity} />
           </WrapperCard>
