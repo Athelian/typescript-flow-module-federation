@@ -11,7 +11,7 @@ import {
   faHandshake as PARTNER,
   faUsers as STAFF,
   faCog as SETTINGS,
-  faTags as TAGS,
+  faTag as TAG,
   faShoppingCart as ORDER_ITEM,
   faBell as NOTIFICATION,
   faAddressCard as PROFILE,
@@ -64,6 +64,7 @@ import {
   faCircle as CIRCLE,
   faEllipsisH as HORIZONTAL_ELLIPSIS,
   faLanguage as LANGUAGE,
+  faPalette as COLOR,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -115,7 +116,7 @@ export default {
   PARTNER,
   STAFF,
   SETTINGS,
-  TAGS,
+  TAG,
   ORDER_ITEM,
   NOTIFICATION,
   PROFILE,
@@ -177,6 +178,7 @@ export default {
   HORIZONTAL_ELLIPSIS,
   EXCHANGE,
   LANGUAGE,
+  COLOR,
 
   TIMELINE,
   CARGO_READY,

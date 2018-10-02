@@ -25,6 +25,8 @@ import {
   DefaultSearchSelect,
   DefaultSelect,
 } from './Inputs';
+import ColorInput from './ColorInput';
+import RadioInput from './RadioInput';
 import TagsInput from './TagsInput';
 import DocumentsInput from './DocumentsInput';
 import ImagesUploadInput from './ImagesUploadInput';
@@ -70,6 +72,8 @@ export {
   TooltipBubble,
   Display,
   DashedPlusButton,
+  ColorInput,
+  RadioInput,
   TagsInput,
   DocumentsInput,
   SectionHeader,

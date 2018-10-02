@@ -8,6 +8,12 @@ export const tagDetailFragment = gql`
     color
     entityTypes
     id
+    updatedAt
+    updatedBy {
+      id
+      firstName
+      lastName
+    }
   }
 `;
 export const tagDetailQuery = gql`

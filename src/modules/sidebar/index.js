@@ -115,7 +115,7 @@ class SideBar extends React.Component<Props, State> {
                       <MenuItem
                         path="/tags"
                         isActive={`/${location.pathname.split('/')[1]}` === '/tags'}
-                        icon="TAGS"
+                        icon="TAG"
                         label={<FormattedMessage {...messages.tags} />}
                         onClick={() => this.setExpandedSubMenu(null)}
                       />

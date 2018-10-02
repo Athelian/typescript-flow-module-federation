@@ -2,16 +2,13 @@
 import * as React from 'react';
 import Downshift from 'downshift';
 import randomcolor from 'randomcolor';
-
-import { colorPresets } from 'components/Form/ColorInput/helpers';
+import { colors } from 'styles/common';
 import {
   WrapperStyle,
   ColorPreviewStyle,
   DropdownWrapper,
   RandomizeButtonStyle,
-  ColorControlWrapperStyle,
   ColorPresetsWrapperStyle,
-  InputStyle,
   PresetStyle,
 } from 'components/Form/ColorInput/style';
 import Icon from 'components/Icon';
@@ -34,6 +31,16 @@ const defaultProps = {
   onBlur: () => {},
 };
 
+const COLOR_PRESETS = [
+  colors.TEAL,
+  colors.BLUE,
+  colors.GRAY_DARK,
+  colors.RED,
+  colors.ORANGE,
+  colors.YELLOW,
+  colors.PURPLE,
+];
+
 class ColorInput extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -51,14 +58,6 @@ class ColorInput extends React.Component<Props> {
     }
   };
 
-  handleInputChange = (e: Event) => {
-    if (!(e.target instanceof HTMLInputElement)) {
-      return;
-    }
-
-    this.handleChange(e.target.value || '#');
-  };
-
   handleBlur = () => {
     const { onBlur } = this.props;
     if (onBlur) {
@@ -67,7 +66,7 @@ class ColorInput extends React.Component<Props> {
   };
 
   render() {
-    const { value, disabled, readOnly, error } = this.props;
+    const { value, disabled, readOnly } = this.props;
 
     return (
       <Downshift onStateChange={this.handleStateChange}>
@@ -77,10 +76,12 @@ class ColorInput extends React.Component<Props> {
               type="button"
               className={ColorPreviewStyle(value, disabled || false, readOnly || false)}
               {...getToggleButtonProps()}
-            />
+            >
+              <Icon icon="COLOR" />
+            </button>
             {isOpen && (
               <div className={DropdownWrapper}>
-                <div className={ColorControlWrapperStyle}>
+                <div className={ColorPresetsWrapperStyle}>
                   <button
                     type="button"
                     onClick={() => {
@@ -90,16 +91,7 @@ class ColorInput extends React.Component<Props> {
                   >
                     <Icon icon="SYNC" />
                   </button>
-                  <input
-                    className={InputStyle(!!error)}
-                    value={value}
-                    onChange={this.handleInputChange}
-                    type="text"
-                    spellCheck={false}
-                  />
-                </div>
-                <div className={ColorPresetsWrapperStyle}>
-                  {colorPresets.map(color => (
+                  {COLOR_PRESETS.map(color => (
                     <button
                       type="button"
                       key={color}
