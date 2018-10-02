@@ -19,8 +19,6 @@ type Props = {
 };
 
 const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
-  // <ObjectValue defaultValue={{ selectedItem: '', focusedItem: null }}>
-  //   {({ value: { focusedItem }, set: setItem }) => (
   <>
     <RelationView
       className={OrderMapWrapperStyle}
@@ -114,8 +112,6 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
       })}
     </div>
   </>
-  //   )}
-  // </ObjectValue>
 );
 
 export default OrderFocused;

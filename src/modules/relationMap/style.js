@@ -77,7 +77,7 @@ export const RelationMapGrid = styled('div')`
 `;
 
 export const ProductWrapper = css`
-  width: 85vw;
+  width: 80vw;
 `;
 
 export const EmptyMessageStyle = css`
