@@ -10,7 +10,11 @@ import MessageInput from 'modules/history/components/MessageInput';
 import CommentWrapperStyle from 'modules/history/order/list/style';
 import OrderEventsGridView from './OrderEventsGridView';
 import query from './query';
-import { eventCommentCreateMutation } from './mutation';
+import {
+  eventCommentCreateMutation,
+  eventCommentDeleteMutation,
+  eventCommentUpdateMutation,
+} from './mutation';
 
 type Props = {
   perPage: number,
@@ -36,7 +40,7 @@ class OrderEventsList extends React.PureComponent<Props> {
         }}
         fetchPolicy="network-only"
       >
-        {({ loading, data, fetchMore, error }) => {
+        {({ loading, data, fetchMore, error, refetch, client }) => {
           if (error) {
             return error.message;
           }
@@ -53,12 +57,39 @@ class OrderEventsList extends React.PureComponent<Props> {
                 onLoadMore={() => loadMore({ fetchMore, data }, {}, 'order.timeline.events')}
                 hasMore={hasMore}
                 isLoading={loading}
+                onUpdate={async ({ id: commentId, content }) => {
+                  await client.mutate({
+                    mutation: eventCommentUpdateMutation,
+                    variables: {
+                      id: commentId,
+                      input: {
+                        content,
+                      },
+                    },
+                  });
+                }}
+                onDelete={async commentId => {
+                  await client.mutate({
+                    mutation: eventCommentDeleteMutation,
+                    variables: {
+                      id: commentId,
+                    },
+                  });
+                  refetch();
+                }}
               />
               <div id="topCommentArea" />
               <div className={CommentWrapperStyle}>
                 <StringValue>
                   {({ value, set }) => (
-                    <Mutation mutation={eventCommentCreateMutation} onCompleted={() => set('')}>
+                    <Mutation
+                      mutation={eventCommentCreateMutation}
+                      onCompleted={() => {
+                        scrollIntoView({ targetId: 'topCommentArea' });
+                        set('');
+                        refetch();
+                      }}
+                    >
                       {(addComment, { loading: isLoading }) => (
                         <>
                           {isLoading && <LoadingIcon />}

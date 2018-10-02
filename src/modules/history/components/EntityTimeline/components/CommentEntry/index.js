@@ -25,8 +25,8 @@ import {
 
 type Props = {
   comment: Comment,
-  onDelete: string => void,
-  onUpdate: Object => void,
+  onDelete: string => Promise<any>,
+  onUpdate: Object => Promise<any>,
 };
 
 class CommentEntry extends React.PureComponent<Props> {
@@ -89,6 +89,7 @@ class CommentEntry extends React.PureComponent<Props> {
                                     inputHandlers: {
                                       ...inputHandlers,
                                       onBlur: () => {
+                                        inputHandlers.onBlur();
                                         if (comment.content !== value)
                                           onUpdate({ content: value, id: comment.id });
                                       },

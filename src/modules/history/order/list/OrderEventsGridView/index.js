@@ -10,16 +10,19 @@ type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-  renderItem?: (item: Object, showDayHeader: boolean) => React.Node,
+  renderItem?: (item: Object, showDayHeader: boolean, commentHandlers: Object) => React.Node,
+  onDelete: string => Promise<any>,
+  onUpdate: Object => Promise<any>,
 };
 
-const defaultRenderItem = (item: Object, showDayHeader: boolean) => (
+const defaultRenderItem = (item: Object, showDayHeader: boolean, commentHandlers: Object) => (
   <EntityTimeline
     entityType="Order"
     key={item.id}
     entry={item}
     entryType={getByPathWithDefault('EventChange', '__typename', item)}
     showDayHeader={showDayHeader}
+    commentHandlers={commentHandlers}
   />
 );
 
@@ -28,7 +31,15 @@ const defaultProps = {
 };
 
 const OrderEventsGridView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
+  const {
+    items,
+    onLoadMore,
+    hasMore,
+    isLoading,
+    onUpdate,
+    onDelete,
+    renderItem = defaultRenderItem,
+  } = props;
 
   return (
     <GridView
@@ -43,7 +54,11 @@ const OrderEventsGridView = (props: Props) => {
       {items.map((item, index) =>
         renderItem(
           item,
-          index === 0 || (index > 0 && !isSameDay(item.createdAt, items[index - 1].createdAt))
+          index === 0 || (index > 0 && !isSameDay(item.createdAt, items[index - 1].createdAt)),
+          {
+            onUpdate,
+            onDelete,
+          }
         )
       )}
     </GridView>
