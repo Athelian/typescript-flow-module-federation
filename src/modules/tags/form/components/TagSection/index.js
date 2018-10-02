@@ -1,20 +1,13 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
+import InputMask from 'react-input-mask';
 import { TagContainer, EntityTypeContainer } from 'modules/tags/form/containers';
 import validator from 'modules/tags/form/validator';
 import { FormField } from 'modules/form';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
-import {
-  ColorInput,
-  DefaultStyle,
-  TextInput,
-  FieldItem,
-  Label,
-  Tooltip,
-  RadioInput,
-} from 'components/Form';
+import { ColorInput, DefaultStyle, FieldItem, Label, Tooltip, RadioInput } from 'components/Form';
 import { textInputFactory, textAreaFactory } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
 import {
@@ -47,6 +40,7 @@ const TagSection = ({ isNew }: Props) => (
                 name="name"
                 initValue={values.name}
                 validator={validator}
+                values={values}
                 setFieldValue={setFieldValue}
               >
                 {({ name, ...inputHandlers }) =>
@@ -62,6 +56,8 @@ const TagSection = ({ isNew }: Props) => (
               </FormField>
 
               <FormField
+                validator={validator}
+                values={values}
                 name="description"
                 initValue={values.description}
                 setFieldValue={setFieldValue}
@@ -84,6 +80,7 @@ const TagSection = ({ isNew }: Props) => (
                 name="color"
                 initValue={values.color}
                 validator={validator}
+                values={values}
                 setFieldValue={setFieldValue}
               >
                 {({ name, isTouched, errorMessage, isFocused, ...inputHandlers }) => (
@@ -107,7 +104,7 @@ const TagSection = ({ isNew }: Props) => (
                           forceHoverStyle={isNew}
                           width="200px"
                         >
-                          <TextInput name={name} {...inputHandlers} />
+                          <InputMask name={name} mask="#******" maskChar=" " {...inputHandlers} />
                         </DefaultStyle>
                         <div className={ColorInputButtonStyle}>
                           <ColorInput name={name} {...inputHandlers} />
@@ -139,7 +136,12 @@ const TagSection = ({ isNew }: Props) => (
                   tooltip={
                     <Tooltip
                       isNew={isNew}
-                      errorMessage={isTouched && errorMessage}
+                      errorMessage={
+                        originalValues.entityTypes.sort().join(',') !==
+                          inputHandlers.value.sort().join(',') && values.entityTypes.length === 0
+                          ? 'Type is a required field'
+                          : ''
+                      }
                       changedValues={{
                         oldValue: originalValues.entityTypes.sort().join(','),
                         newValue: inputHandlers.value.sort().join(','),
