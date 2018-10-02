@@ -5,10 +5,10 @@ import { Form } from 'components/Form';
 import { FormattedMessage } from 'react-intl';
 import { isSameDay } from 'date-fns';
 import type { Comment } from 'modules/history/components/EntityTimeline/type.js.flow';
+import MessageInput from 'modules/history/components/MessageInput';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
 import Icon from 'components/Icon';
-import MessageInput from '../MessageInput';
 import {
   WrapperStyle,
   AvatarStyle,

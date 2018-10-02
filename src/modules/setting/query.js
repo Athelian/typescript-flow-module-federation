@@ -10,6 +10,7 @@ export const viewerQuery = gql`
         lastName
       }
       notificationUnread
+      notificationUnseen
     }
   }
 `;

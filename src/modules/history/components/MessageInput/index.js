@@ -9,7 +9,7 @@ type Props = {
   disabled?: boolean,
   readOnly?: boolean,
   onChange: Function,
-  onBlur: Function,
+  onBlur?: Function,
   onSubmit: Function,
   hideBorder?: boolean,
 };

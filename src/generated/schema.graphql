@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Sat Sep 29 2018 11:36:40 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Oct 02 2018 11:31:54 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -28708,7 +28708,7 @@ enum NotificationType {
   NewComment
 }
 
-type Order implements Model & Owned & Tagged & Documented {
+type Order implements Model & Owned & Tagged & Supervised & Documented {
   archived: Boolean!
   exporter: Group!
   poNo: String!
@@ -28730,6 +28730,7 @@ type Order implements Model & Owned & Tagged & Documented {
   deletedBy: User
   ownedBy: Group!
   tags: [Tag!]!
+  inCharges: [User!]!
   files: [File!]!
 }
 
@@ -28743,6 +28744,7 @@ input OrderCreateInput {
   deliveryPlace: String
   memo: String
   tagIds: [ID!]
+  inChargesIds: [ID!]
   orderItems: [OrderItemCreateInput!]
   files: [FileInput!]
 }
@@ -28908,6 +28910,7 @@ input OrderUpdateInput {
   deliveryPlace: String
   memo: String
   tagIds: [ID!]
+  inChargesIds: [ID!]
   orderItems: [OrderItemUpdateInput!]
   files: [FileInput!]
 }
@@ -29021,6 +29024,7 @@ type Product implements Model & Owned & Tagged & Documented {
   janCode: String
   material: String
   productProviders: [ProductProvider!]!
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -29082,6 +29086,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   origin: Country
   productionLeadTime: Float
   memo: String
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -34109,7 +34114,7 @@ enum Seaport {
   ZWUTA
 }
 
-type Shipment implements Model & Owned & Tagged & Documented {
+type Shipment implements Model & Owned & Tagged & Supervised & Documented {
   archived: Boolean!
   no: String!
   blNo: String
@@ -34135,6 +34140,7 @@ type Shipment implements Model & Owned & Tagged & Documented {
   deletedBy: User
   ownedBy: Group!
   tags: [Tag!]!
+  inCharges: [User!]!
   files: [File!]!
 }
 
@@ -34200,6 +34206,7 @@ input ShipmentCreateInput {
   carrier: String
   cargoReady: ShipmentTimelineDateCreateInput
   tagIds: [ID!]
+  inChargesIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
   voyages: [ShipmentVoyageCreateInput!]
@@ -34277,6 +34284,7 @@ input ShipmentUpdateInput {
   carrier: String
   cargoReady: ShipmentTimelineDateUpdateInput
   tagIds: [ID!]
+  inChargesIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
   voyages: [ShipmentVoyageUpdateInput!]
@@ -34326,6 +34334,10 @@ enum SortOrder {
 
 type Subscription {
   notificationNew: Notification!
+}
+
+interface Supervised {
+  inCharges: [User!]!
 }
 
 type Tag implements Model & Owned {

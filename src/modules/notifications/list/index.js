@@ -7,7 +7,6 @@ import NotificationListView from './NotificationListView';
 import query from '../query';
 
 type Props = {
-  viewType: string,
   perPage: number,
 };
 
