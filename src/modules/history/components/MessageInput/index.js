@@ -6,21 +6,12 @@ import { MessageInputWrapper, InputStyle, SendButtonStyle } from './style';
 type Props = {
   name: string,
   value: ?string,
-  disabled?: boolean,
-  readOnly?: boolean,
   onChange: Function,
   onBlur?: Function,
   onSubmit: Function,
-  hideBorder?: boolean,
 };
 
 class MessageInput extends React.Component<Props> {
-  static defaultProps = {
-    hideBorder: false,
-    disabled: false,
-    readOnly: false,
-  };
-
   componentDidMount() {
     if (this.messageRef) {
       this.messageRef.style.height = 'auto';
@@ -52,7 +43,7 @@ class MessageInput extends React.Component<Props> {
   messageRef: ?HTMLTextAreaElement;
 
   render() {
-    const { name, value, disabled, readOnly, onBlur, onSubmit, hideBorder } = this.props;
+    const { name, value, onBlur, onSubmit } = this.props;
 
     return (
       <div className={MessageInputWrapper}>
@@ -63,11 +54,8 @@ class MessageInput extends React.Component<Props> {
           onKeyPress={this.inputBehavior}
           onChange={this.expandInput}
           onBlur={onBlur}
-          disabled={disabled}
-          readOnly={readOnly}
           rows={1}
-          tabIndex={readOnly ? -1 : 0}
-          className={InputStyle(!!hideBorder)}
+          className={InputStyle}
         />
         <button type="button" onClick={onSubmit} className={SendButtonStyle(!!value)}>
           <Icon icon="PAPER_PLANE" />

@@ -28,6 +28,7 @@ import {
   faCameraAlt as PHOTO,
   faFileAlt as DOCUMENT,
   faMap as RELATION_MAP,
+  faBook as LOGS,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -131,6 +132,7 @@ export default {
   PROVIDER,
   SPECIFICATIONS,
   PHOTO,
+  LOGS,
 
   RELATION_MAP,
   CONNECT,

@@ -10,7 +10,7 @@ import QueryDetail from 'components/common/QueryDetail';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import NavBar, { EntityIcon, SlideViewNavBar } from 'components/NavBar';
+import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
@@ -26,7 +26,6 @@ import {
   OrderTagsContainer,
   OrderFilesContainer,
 } from './form/containers';
-import LogsButton from './form/components/LogsButton';
 import query from './form/query';
 import {
   createOrderMutation,

@@ -44,6 +44,7 @@ export const colors = {
   STAFF: '#98A2AC',
   PARTNER: '#474D4D',
   TAG: '#bbbbbb',
+  LOGS: '#bbbbbb',
 
   URGENT: '#F12C2C',
 };
