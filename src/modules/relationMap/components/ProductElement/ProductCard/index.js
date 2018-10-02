@@ -17,13 +17,14 @@ function getQuantitySummary(item: Object) {
   let shippedQuantity = 0;
   let numOfBatched = 0;
   let numOfShipped = 0;
-
-  orderedQuantity += item.quantity ? item.quantity : 0;
-
-  if (item.batches) {
-    item.batches.forEach(batch => {
+  if (item.batches.nodes) {
+    item.batches.nodes.forEach(batch => {
       batchedQuantity += batch.quantity;
       numOfBatched += 1;
+      const { orderItem } = batch;
+      if (orderItem) {
+        orderedQuantity += orderItem.quantity || 0;
+      }
       if (batch.batchAdjustments) {
         batch.batchAdjustments.forEach(batchAdjustment => {
           batchedQuantity += batchAdjustment.quantity;
@@ -46,12 +47,8 @@ function getQuantitySummary(item: Object) {
 }
 
 const ProductCard = ({ item }: Props) => {
-  const {
-    name,
-    serial,
-    productProvider: { supplier },
-    tags,
-  } = item;
+  const { name, serial, productProviders, tags } = item;
+  const { supplier } = productProviders[0];
   const chartDetail = getQuantitySummary(item);
   return (
     <BaseCard icon="PRODUCT" color="PRODUCT">

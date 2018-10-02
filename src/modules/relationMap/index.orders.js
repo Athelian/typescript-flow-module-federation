@@ -22,13 +22,19 @@ const defaultProps = {
   perPage: 10,
 };
 
+const sortInput = [
+  { title: 'Updated At', value: 'updatedAt' },
+  { title: 'Created At', value: 'createdAt' },
+  { title: 'Po No', value: 'poNo' },
+];
+
 const Order = ({ page, perPage }: Props) => (
   <Layout>
     <RelationMapGrid>
       <div className={TagWrapperStyle}>
         <ToggleTag />
       </div>
-      <SortFilterBar className={FunctionWrapperStyle}>
+      <SortFilterBar className={FunctionWrapperStyle} sortInput={sortInput}>
         {({ sort, filter }) => (
           <Query
             query={query}
