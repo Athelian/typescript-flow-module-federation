@@ -10,7 +10,9 @@ import { getByPathWithDefault } from 'utils/fp';
 import query from './query';
 
 const UserContext = React.createContext({
-  user: {},
+  user: {
+    id: -1,
+  },
   permissions: [],
 });
 
