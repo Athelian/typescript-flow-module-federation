@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import Loadable from 'react-loadable';
 import { BooleanValue } from 'react-values';
@@ -86,7 +87,10 @@ export default class OrderForm extends React.Component<Props> {
     return (
       <div className={OrderFormWrapperStyle}>
         <SectionWrapper id="orderSection">
-          <SectionHeader icon="ORDER" title="ORDER">
+          <SectionHeader
+            icon="ORDER"
+            title={<FormattedMessage id="modules.order.order" defaultMessage="ORDER" />}
+          >
             {!isNew && (
               <>
                 <LastModified updatedAt={order.updatedAt} updatedBy={order.updatedBy} />
@@ -139,7 +143,15 @@ export default class OrderForm extends React.Component<Props> {
         <SectionWrapper id="itemsSection">
           <Subscribe to={[OrderItemsContainer]}>
             {({ state: values }) => (
-              <SectionHeader icon="ORDER_ITEM" title={`ITEMS (${values.orderItems.length})`} />
+              <SectionHeader
+                icon="ORDER_ITEM"
+                title={
+                  <>
+                    <FormattedMessage id="modules.order.items" defaultMessage="ITEMS" /> (
+                    {values.orderItems.length})
+                  </>
+                }
+              />
             )}
           </Subscribe>
           <AsyncItemsSection isNew={isNew} />
@@ -148,7 +160,15 @@ export default class OrderForm extends React.Component<Props> {
         <SectionWrapper id="documentsSection">
           <Subscribe to={[OrderFilesContainer]}>
             {({ state: values }) => (
-              <SectionHeader icon="DOCUMENT" title={`DOCUMENTS (${values.files.length})`} />
+              <SectionHeader
+                icon="DOCUMENT"
+                title={
+                  <>
+                    <FormattedMessage id="modules.order.documents" defaultMessage="DOCUMENTS" /> (
+                    {values.files.length})
+                  </>
+                }
+              />
             )}
           </Subscribe>
           <AsyncDocumentsSection />
@@ -158,7 +178,15 @@ export default class OrderForm extends React.Component<Props> {
           <Subscribe to={[OrderInfoContainer]}>
             {({ state: { shipments } }) => (
               <>
-                <SectionHeader icon="SHIPMENT" title={`SHIPMENT (${shipments.length})`} />
+                <SectionHeader
+                  icon="SHIPMENT"
+                  title={
+                    <>
+                      <FormattedMessage id="modules.order.shipments" defaultMessage="SHIPMENTS" /> (
+                      {shipments.length})
+                    </>
+                  }
+                />
                 <AsyncShipmentsSection shipments={shipments} />
               </>
             )}
