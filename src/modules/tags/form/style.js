@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets } from 'styles/common';
+import { layout } from 'styles/common';
 
 export const TagFormWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
@@ -8,8 +8,4 @@ export const TagFormWrapperStyle: string = css`
   padding: 50px 0;
 `;
 
-export const TagSectionWrapperStyle: string = css`
-  ${presets.BOX};
-  width: 880px;
-  padding: 40px;
-`;
+export default TagFormWrapperStyle;

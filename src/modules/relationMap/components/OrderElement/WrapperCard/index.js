@@ -15,7 +15,7 @@ class WrapperCard extends React.PureComponent<Props> {
     return (
       <div
         role="presentation"
-        className={style.CardWrapperStyle}
+        className={style.OuterCardWrapperStyle}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onClick={onClick}

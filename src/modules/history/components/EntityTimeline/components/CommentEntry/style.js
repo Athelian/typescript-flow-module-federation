@@ -49,7 +49,7 @@ export const NameStyle = css`
   color: ${colors.BLACK};
 `;
 
-export const BodyWrapperStyle = (isSameUser: boolean, hideAvatar: boolean) => css`
+export const BodyWrapperStyle = (isSameUser: boolean) => css`
   ${layout.VERTICAL};
   position: relative;
   padding: 20px;
@@ -66,29 +66,6 @@ export const BodyWrapperStyle = (isSameUser: boolean, hideAvatar: boolean) => cs
     background-color: ${colors.GRAY_SUPER_LIGHT};
     margin-right: auto
   `};
-  ${!hideAvatar &&
-    `
-    &:after {
-      content: '';
-      position: absolute;
-      height: 10px;
-      width: 20px;
-      top: 0;
-      ${
-        isSameUser
-          ? `
-        right: -20px;
-        border-radius: 10px 0 0 0;
-        box-shadow: -10px 0 0 0 ${colors.TEAL_LIGHT}
-      `
-          : `
-        left: -20px;
-        border-radius: 0 10px 0 0;
-        box-shadow: 10px 0 0 0 ${colors.GRAY_SUPER_LIGHT}
-      `
-      };
-    }
-    `};
 `;
 
 export const BodyStyle = css`
@@ -97,7 +74,7 @@ export const BodyStyle = css`
   white-space: pre-line;
 `;
 
-export const AvatarStyle = (isSameUser: boolean, hideAvatar: boolean) => css`
+export const AvatarStyle = (isSameUser: boolean) => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   ${fontSizesWithHeights.HUGE};
@@ -110,7 +87,6 @@ export const AvatarStyle = (isSameUser: boolean, hideAvatar: boolean) => css`
   user-select: none;
   font-weight: bold;
   flex-shrink: 0;
-  visibility: ${hideAvatar ? 'hidden' : 'visible'};
   &:hover {
     background-color: ${isSameUser ? colors.TEAL_DARK : colors.GRAY_DARK};
     ${shadows.TOOLTIP};

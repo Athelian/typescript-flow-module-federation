@@ -1,41 +1,29 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, transitions, fontSizes, presets } from 'styles/common';
+import { colors, transitions, fontSizes, presets, scrollbars } from 'styles/common';
 
-export const MessageInputWrapper = css`
+export const MessageInputWrapper: string = css`
   position: relative;
   display: flex;
   flex: 1;
 `;
 
-export const InputStyle = (hideBorder: boolean) => css`
+export const InputStyle: string = css`
   color: ${colors.BLACK};
-  border-radius: 5px;
-  z-index: 5;
   border: none;
-  border: ${hideBorder ? 'none' : `2px solid ${colors.GRAY_VERY_LIGHT}`};
   ${fontSizes.MAIN};
   font-weight: bold;
   padding: 10px 40px 10px 10px;
-  background: #fff;
+  background: ${colors.WHITE};
   ${transitions.MAIN};
   resize: none;
   flex: 1;
+  min-height: 38px;
   height: auto;
-  overflow: scroll;
-  max-height: 300px;
-  &:focus {
-    border-color: ${colors.TEAL};
-    outline: none;
-  }
-  &[disabled] {
-    background: ${colors.GRAY_SUPER_LIGHT};
-  }
-  &[readonly] {
-    &:focus {
-      border-color: ${colors.GRAY_VERY_LIGHT};
-    }
-  }
+  overflow: overlay;
+  max-height: 200px;
+  ${scrollbars.SMALL};
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
 `;
 
 export const SendButtonStyle = (isSendable: boolean) => css`

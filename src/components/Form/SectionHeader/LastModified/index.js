@@ -24,18 +24,7 @@ type Props = OptionalProps & {
   updatedAt: string,
 };
 
-const defaultProps = {
-  updatedBy: {
-    firstName: '',
-    lastName: '',
-  },
-};
-
 function SectionHeader({ updatedAt, updatedBy }: Props) {
-  const { firstName, lastName } = updatedBy || {
-    firstName: '',
-    lastName: '',
-  };
   return (
     <div className={LastModifiedWrapperStyle}>
       <div className={LastModifiedStyle}>
@@ -47,12 +36,15 @@ function SectionHeader({ updatedAt, updatedBy }: Props) {
         </Display>
       </div>
       <div className={UserIconStyle}>
-        <UserAvatar firstName={firstName} lastName={lastName} width="20px" height="20px" />
+        <UserAvatar
+          firstName={updatedBy ? updatedBy.firstName : ''}
+          lastName={updatedBy ? updatedBy.lastName : ''}
+          width="20px"
+          height="20px"
+        />
       </div>
     </div>
   );
 }
-
-SectionHeader.defaultProps = defaultProps;
 
 export default SectionHeader;

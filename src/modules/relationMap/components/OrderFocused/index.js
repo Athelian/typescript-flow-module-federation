@@ -3,7 +3,6 @@ import React from 'react';
 import { BooleanValue, createObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import { generateOrderRelation } from 'modules/relationMap/util';
-import ShipmentHeader from 'modules/relationMap/components/ShipmentElement/ShipmentHeader';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
 
 import RelationView from '../RelationView';
@@ -86,13 +85,6 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
           <FocusedValue key={shipmentId}>
             {({ value: focusedItem, assign, reset }) => (
               <div key={shipmentId}>
-                <ShipmentHeader
-                  label={`SHIPMENT ${currentShipment.data.id}`}
-                  isChecked
-                  ordersNo={currentShipment.numberOfOrder}
-                  batchesNo={currentShipment.numberOfBatch}
-                  onToggle={() => {}}
-                />
                 <Item
                   key={shipmentId}
                   type="SHIPMENT"

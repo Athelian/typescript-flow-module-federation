@@ -1,5 +1,5 @@
 export const colors = {
-  BLACK: '#555',
+  BLACK: '#555555',
 
   BLUE: '#0b6ede',
   BLUE_DARK: '#0756af',
@@ -11,12 +11,13 @@ export const colors = {
 
   GRAY: '#bbb',
   GRAY_DARK: '#aaa',
+  GRAY_DARK_1: '#555555',
   GRAY_LIGHT: '#ccc',
   GRAY_VERY_LIGHT: '#ddd',
   GRAY_QUITE_LIGHT: '#f2f2f2',
-  GRAY_SUPER_LIGHT: '#eee',
+  GRAY_SUPER_LIGHT: '#eeeeee',
   ALMOST_WHITE: '#f3f3f3',
-  WHITE: '#fff',
+  WHITE: '#ffffff',
 
   RED: '#ef4848',
   RED_DARK: '#b11717',
@@ -43,6 +44,8 @@ export const colors = {
   WAREHOUSE: '#9D865A',
   STAFF: '#98A2AC',
   PARTNER: '#474D4D',
+  TAG: '#bbbbbb',
+  LOGS: '#bbbbbb',
 
   URGENT: '#F12C2C',
 };

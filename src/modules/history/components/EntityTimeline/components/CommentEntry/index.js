@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
-import { Form } from 'components/Form';
-import { FormattedMessage } from 'react-intl';
+import { StringValue } from 'react-values';
 import { isSameDay } from 'date-fns';
+import { UserConsumer } from 'modules/user';
+import HoverWrapper from 'components/common/HoverWrapper';
 import type { Comment } from 'modules/history/components/EntityTimeline/type.js.flow';
-import MessageInput from 'modules/history/components/MessageInput';
+import { FormField } from 'modules/form';
+import { textAreaFactory } from 'modules/form/helpers';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
 import Icon from 'components/Icon';
@@ -18,132 +19,108 @@ import {
   NameStyle,
   BodyWrapperStyle,
   BodyStyle,
-  EditButtonStyle,
   MessageInputWrapperStyle,
-  FormButtonsWrapperStyle,
   DeleteButtonStyle,
-  CancelButtonStyle,
 } from './style';
-import messages from '../../messages';
 
 type Props = {
   comment: Comment,
+  onDelete: string => Promise<any>,
   onUpdate: Object => Promise<any>,
-  onDelete: () => void,
-  hideAvatar: boolean,
 };
 
-type State = {
-  isEditing: boolean,
-};
-
-class CommentEntry extends React.Component<Props, State> {
-  constructor() {
-    super();
-
-    this.state = {
-      isEditing: false,
-    };
-  }
-
-  edit = () => {
-    this.setState({ isEditing: true });
-  };
-
-  cancel = () => {
-    this.setState({ isEditing: false });
-  };
-
+class CommentEntry extends React.PureComponent<Props> {
   render() {
-    const { comment, onUpdate, onDelete, hideAvatar } = this.props;
-    const { isEditing } = this.state;
-    const dummyUserId = 1;
-    const isSameUser = comment.user.id === dummyUserId;
+    const { comment, onDelete, onUpdate } = this.props;
 
     return (
-      <div className={WrapperStyle(isSameUser)}>
-        {!isSameUser && (
-          <Link to={`/staff/${comment.user.id}`} className={AvatarStyle(isSameUser, hideAvatar)}>
-            <div>{comment.user.lastName.charAt(0).toUpperCase()}</div>
-          </Link>
-        )}
-        <div className={ContentWrapperStyle(isSameUser)}>
-          <div className={NameDateWrapperStyle(isSameUser)}>
-            {!isSameUser &&
-              !hideAvatar && (
-                <div className={NameStyle}>
-                  <FormattedName
-                    firstName={comment.user.firstName}
-                    lastName={comment.user.lastName}
-                  />
-                </div>
-              )}
-            <div className={DateStyle(isSameUser)}>
-              {isSameDay(new Date(), comment.createdAt) ? (
-                <FormattedDate value={comment.createdAt} mode="time-relative" />
-              ) : (
-                <FormattedDate value={comment.createdAt} mode="time" />
-              )}
-            </div>
-          </div>
-          <div className={BodyWrapperStyle(isSameUser, hideAvatar)}>
-            {isSameUser &&
-              !isEditing && (
-                <button type="button" onClick={this.edit} className={EditButtonStyle}>
-                  <Icon icon="EDIT" />
-                </button>
-              )}
-            {isSameUser &&
-              isEditing && (
-                <button type="button" onClick={onDelete} className={DeleteButtonStyle}>
-                  <Icon icon="DELETE" />
-                </button>
-              )}
-            {isEditing ? (
-              <Form
-                initialValues={{ body: comment.body }}
-                enableReinitialize
-                isInitialValid={false}
-                onSubmit={values => {
-                  onUpdate(values).then(() => {
-                    this.cancel();
-                  });
-                }}
-                validate={values => (!values.body ? { body: true } : {})}
-              >
-                {({ values, handleSubmit, handleChange, handleBlur, isSubmitting, isValid }) => (
-                  <div className={MessageInputWrapperStyle}>
-                    <MessageInput
-                      name="body"
-                      value={values.body}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      onSubmit={event => {
-                        if (!isSubmitting && isValid) {
-                          handleSubmit(event);
-                        }
-                      }}
-                      hideBorder
-                    />
-                    <div className={FormButtonsWrapperStyle}>
-                      <button type="button" onClick={this.cancel} className={CancelButtonStyle}>
-                        <FormattedMessage {...messages.cancel} />
-                      </button>
+      <UserConsumer>
+        {({ user }) => {
+          const isSameUser = comment.createdBy.id === user.id;
+          return (
+            <HoverWrapper>
+              {isHover => (
+                <div className={WrapperStyle(isSameUser)}>
+                  {!isSameUser && (
+                    <div className={AvatarStyle(isSameUser)}>
+                      <div>{comment.createdBy.lastName.charAt(0).toUpperCase()}</div>
+                    </div>
+                  )}
+                  <div className={ContentWrapperStyle(isSameUser)}>
+                    <div className={NameDateWrapperStyle(isSameUser)}>
+                      {!isSameUser && (
+                        <div className={NameStyle}>
+                          <FormattedName
+                            firstName={comment.createdBy.firstName}
+                            lastName={comment.createdBy.lastName}
+                          />
+                        </div>
+                      )}
+                      <div className={DateStyle(isSameUser)}>
+                        {isSameDay(new Date(), comment.createdAt) ? (
+                          <FormattedDate value={comment.createdAt} mode="time-relative" />
+                        ) : (
+                          <FormattedDate value={comment.createdAt} mode="time" />
+                        )}
+                      </div>
+                    </div>
+                    <div className={BodyWrapperStyle(isSameUser)}>
+                      {isSameUser &&
+                        isHover && (
+                          <button
+                            type="button"
+                            onClick={() => onDelete(comment.id)}
+                            className={DeleteButtonStyle}
+                          >
+                            <Icon icon="DELETE" />
+                          </button>
+                        )}
+                      {isSameUser ? (
+                        <div className={MessageInputWrapperStyle}>
+                          <StringValue defaultValue={comment.content}>
+                            {({ value, set: onChange }) => (
+                              <FormField
+                                name={`comment-${comment.id}`}
+                                initValue={value}
+                                setFieldValue={(field, newValue) => onChange(newValue)}
+                              >
+                                {({ name, ...inputHandlers }) =>
+                                  textAreaFactory({
+                                    inputHandlers: {
+                                      ...inputHandlers,
+                                      onBlur: () => {
+                                        inputHandlers.onBlur();
+                                        if (comment.content !== value)
+                                          onUpdate({ content: value, id: comment.id });
+                                      },
+                                    },
+                                    name,
+                                    isNew: false,
+                                    height: '100px',
+                                    width: '600px',
+                                    originalValue: value,
+                                  })
+                                }
+                              </FormField>
+                            )}
+                          </StringValue>
+                        </div>
+                      ) : (
+                        <div className={BodyStyle}>{comment.content}</div>
+                      )}
                     </div>
                   </div>
-                )}
-              </Form>
-            ) : (
-              <div className={BodyStyle}>{comment.body}</div>
-            )}
-          </div>
-        </div>
-        {isSameUser && (
-          <Link to={`/staff/${comment.user.id}`} className={AvatarStyle(isSameUser, hideAvatar)}>
-            <b>{comment.user.lastName.charAt(0).toUpperCase()}</b>
-          </Link>
-        )}
-      </div>
+                  {isSameUser && (
+                    <div className={AvatarStyle(isSameUser)}>
+                      <b>{comment.createdBy.lastName.charAt(0).toUpperCase()}</b>
+                    </div>
+                  )}
+                </div>
+              )}
+            </HoverWrapper>
+          );
+        }}
+      </UserConsumer>
     );
   }
 }

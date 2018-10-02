@@ -6,7 +6,7 @@ export const WrapperStyle: string = css`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: min-content;
-  grid-gap: 10px;
+  grid-gap: 20px;
 `;
 
 export default WrapperStyle;

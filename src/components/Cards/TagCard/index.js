@@ -23,7 +23,7 @@ const TagCard = ({ tag }: Props) => {
   ];
 
   return (
-    <BaseCard icon="TAGS" color="GRAY_LIGHT" actions={actions}>
+    <BaseCard icon="TAG" color="TAG" actions={actions}>
       <div
         className={TagCardWrapperStyle}
         onClick={() => navigate(`/tags/${encodeId(id)}`)}

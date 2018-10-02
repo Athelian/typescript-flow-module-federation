@@ -56,7 +56,7 @@ class TagsModule extends React.Component<Props, State> {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="TAGS" color="GRAY_LIGHT" />
+                <EntityIcon icon="TAG" color="TAG" />
                 <Tabs tabs={tabs.map(injectUid)} onChange={this.onChangeTabs} />
                 <Link to="new">
                   <NewButton />

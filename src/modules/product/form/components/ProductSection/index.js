@@ -44,7 +44,7 @@ const ProductSection = ({ isNew }: Props) => (
 
       return (
         <div className={ProductSectionWrapperStyle}>
-          <div className={ProductImagesWrapperStyle(files.length > 3)}>
+          <div className={ProductImagesWrapperStyle(files.length)}>
             <ObjectValue>
               {({ value: selectedImage, set: changeSelectedImage }) => (
                 <BooleanValue>
@@ -107,6 +107,8 @@ const ProductSection = ({ isNew }: Props) => (
                         name="files"
                         values={files}
                         onChange={setFieldValue}
+                        height="180px"
+                        width={files.length > 0 ? '120px' : '180px'}
                       />
                       {files.length > 3 && <div className={ScrollFixStyle} />}
                     </>

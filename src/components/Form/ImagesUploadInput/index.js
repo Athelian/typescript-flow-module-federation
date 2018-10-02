@@ -6,7 +6,12 @@ import logger from 'utils/logger';
 import type { Image } from './type.js.flow';
 import { AddImageStyle, ProgressStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  width: string,
+  height: string,
+};
+
+type Props = OptionalProps & {
   name: string,
   values: Array<Image>,
   onChange: (string, any) => void,
@@ -25,6 +30,8 @@ class ImagesUploadInput extends React.Component<Props, State> {
     onChange: () => {},
     onBlur: () => {},
     onUpload: () => {},
+    width: '180px',
+    height: '180px',
   };
 
   state = {
@@ -98,7 +105,7 @@ class ImagesUploadInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, values, onChange } = this.props;
+    const { name, values, onChange, width, height } = this.props;
     const { uploading, progress } = this.state;
 
     return (
@@ -106,7 +113,8 @@ class ImagesUploadInput extends React.Component<Props, State> {
         {uploading ? (
           <div className={ProgressStyle}>{`${progress}%`}</div>
         ) : (
-          <label className={AddImageStyle}>
+          <label className={AddImageStyle({ width, height })}>
+            <Icon icon="PHOTO" />
             <Icon icon="ADD" />
             <input
               type="file"

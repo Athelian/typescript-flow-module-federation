@@ -10,6 +10,7 @@ import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
 import SectionNavBar from './SectionNavBar';
 import SlideViewNavBar from './SlideViewNavBar';
 import FocusInput from './components/FocusInput';
+import LogsButton from './components/LogsButton';
 
 export default NavBar;
 
@@ -23,5 +24,6 @@ export {
   SectionNavBar,
   SlideViewNavBar,
   FocusInput,
+  LogsButton,
   RelationMapNavBar,
 };

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
@@ -9,7 +10,7 @@ import QueryDetail from 'components/common/QueryDetail';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import NavBar, { EntityIcon, SlideViewNavBar } from 'components/NavBar';
+import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
@@ -25,7 +26,6 @@ import {
   OrderTagsContainer,
   OrderFilesContainer,
 } from './form/containers';
-import LogsButton from './form/components/LogsButton';
 import query from './form/query';
 import {
   createOrderMutation,
@@ -121,10 +121,40 @@ class OrderFormModule extends React.PureComponent<Props> {
                     <NavBar>
                       <EntityIcon icon="ORDER" color="ORDER" />
                       <JumpToSection>
-                        <SectionTabs link="orderSection" label="ORDER" icon="ORDER" />
-                        <SectionTabs link="itemsSection" label="ITEMS" icon="ORDER_ITEM" />
-                        <SectionTabs link="documentsSection" label="DOCUMENTS" icon="DOCUMENT" />
-                        <SectionTabs link="shipmentsSection" label="SHIPMENTS" icon="SHIPMENT" />
+                        <SectionTabs
+                          link="orderSection"
+                          label={
+                            <FormattedMessage id="modules.order.order" defaultMessage="ORDER" />
+                          }
+                          icon="ORDER"
+                        />
+                        <SectionTabs
+                          link="itemsSection"
+                          label={
+                            <FormattedMessage id="modules.order.items" defaultMessage="ITEMS" />
+                          }
+                          icon="ORDER_ITEM"
+                        />
+                        <SectionTabs
+                          link="documentsSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.order.documents"
+                              defaultMessage="DOCUMENTS"
+                            />
+                          }
+                          icon="DOCUMENT"
+                        />
+                        <SectionTabs
+                          link="shipmentsSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.order.shipments"
+                              defaultMessage="SHIPMENTS"
+                            />
+                          }
+                          icon="SHIPMENT"
+                        />
                       </JumpToSection>
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) =>

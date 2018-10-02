@@ -4,7 +4,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import RelationView from '../RelationView';
 import ProductCard from '../ProductElement/ProductCard';
 import BatchCard from '../ProductElement/BatchCard';
-import { Row, BatchListWrapperStyle } from './style';
+import { Row, BatchListWrapperStyle, ProductFocusContent } from './style';
 
 type Props = {
   items: Array<Object>,
@@ -15,7 +15,7 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => (
   <RelationView
     items={items}
     hasMore={hasMore}
-    className=""
+    className={ProductFocusContent}
     onLoadMore={loadMore}
     itemWidth={200}
     isEmpty={items.length === 0}

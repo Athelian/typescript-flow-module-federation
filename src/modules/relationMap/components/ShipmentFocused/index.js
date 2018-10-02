@@ -3,7 +3,7 @@ import React from 'react';
 import { BooleanValue, createObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import { generateShipmentRelation } from 'modules/relationMap/util';
-import { ScrollWrapperStyle, ShipmentMapWrapperStyle } from 'modules/relationMap/style';
+import { LeftScrollWrapperStyle, ShipmentMapWrapperStyle } from 'modules/relationMap/style';
 import OrderHeader from 'modules/relationMap/components/OrderElement/OrderHeader';
 import RelationView from '../RelationView';
 import Item from '../OrderElement';
@@ -18,10 +18,8 @@ type Props = {
 };
 
 const ShipmentFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
-  // <ObjectValue defaultValue={{ selectedItem: '', focusedItem: null }}>
-  //   {({ value: { focusedItem }, set: setItem }) => (
   <React.Fragment>
-    <div className={ScrollWrapperStyle}>
+    <div className={LeftScrollWrapperStyle}>
       {Object.keys(order).map(orderId => {
         const currentOrder = order[orderId];
         const orderRefs = Object.keys(currentOrder.refs);
@@ -110,8 +108,6 @@ const ShipmentFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) =
       )}
     />
   </React.Fragment>
-  //   )}
-  // </ObjectValue>
 );
 
 export default ShipmentFocused;

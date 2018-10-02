@@ -3,7 +3,6 @@ import gql from 'graphql-tag';
 
 export const warehouseDetailFragment = gql`
   fragment warehouseDetailFragment on Warehouse {
-    id
     archived
     name
     surface {
@@ -15,6 +14,13 @@ export const warehouseDetailFragment = gql`
     region
     postalCode
     country
+    id
+    updatedAt
+    updatedBy {
+      id
+      firstName
+      lastName
+    }
   }
 `;
 

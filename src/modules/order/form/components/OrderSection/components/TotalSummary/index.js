@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
@@ -34,7 +35,11 @@ export default function TotalSummary({
     <>
       <GridColumn>
         <FieldItem
-          label={<Label>ORDERED QTY</Label>}
+          label={
+            <Label>
+              <FormattedMessage id="modules.order.orderedQTY" defaultMessage="ORDERED QTY" />
+            </Label>
+          }
           input={
             <Display>
               <FormattedNumber value={orderedQuantity} />
@@ -51,7 +56,11 @@ export default function TotalSummary({
       </GridColumn>
       <GridColumn>
         <FieldItem
-          label={<Label>TOTAL PRICE</Label>}
+          label={
+            <Label>
+              <FormattedMessage id="modules.order.totalPrice" defaultMessage="TOTAL PRICE" />
+            </Label>
+          }
           input={
             <Display>
               <FormattedNumber value={totalPrice} /> {currency}
@@ -59,7 +68,11 @@ export default function TotalSummary({
           }
         />
         <FieldItem
-          label={<Label>TOTAL ITEMS</Label>}
+          label={
+            <Label>
+              <FormattedMessage id="modules.order.totalItems" defaultMessage="TOTAL ITEMS" />
+            </Label>
+          }
           input={
             <Display>
               <FormattedNumber value={totalItems} />
@@ -67,7 +80,11 @@ export default function TotalSummary({
           }
         />
         <FieldItem
-          label={<Label>TOTAL BATCHES</Label>}
+          label={
+            <Label>
+              <FormattedMessage id="modules.order.totalBatches" defaultMessage="TOTAL BATCHES" />
+            </Label>
+          }
           input={
             <Display>
               <FormattedNumber value={activeBatches + archivedBatches} />

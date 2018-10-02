@@ -1,21 +1,18 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import {
-  Mutation,
-  Query,
-  // Subscription
-} from 'react-apollo';
+import { Mutation, Query, Subscription } from 'react-apollo';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { AuthenticationConsumer } from 'modules/authentication';
 import { getByPathWithDefault } from 'utils/fp';
+import logger from 'utils/logger';
 import Notifications from './notifications';
 import { logOutMutation, notificationSeeAllMutation } from './mutation';
 import query from './query';
-// import subscription from './subscription';
+import subscription from './subscription';
 
 import {
   SettingsWrapperStyle,
@@ -92,7 +89,7 @@ class Setting extends React.Component<Props, State> {
               firstName: getByPathWithDefault('TODO', 'viewer.user.firstName', data),
               lastName: getByPathWithDefault('TODO', 'viewer.user.lastName', data),
             };
-            const Unseen = getByPathWithDefault(0, 'viewer.notificationUnseen', data);
+            const unSeen = getByPathWithDefault(0, 'viewer.notificationunSeen', data);
 
             return (
               <>
@@ -101,7 +98,7 @@ class Setting extends React.Component<Props, State> {
                   tabIndex={-1}
                   onClick={async () => {
                     this.toggleNotification();
-                    if (Unseen > 0)
+                    if (unSeen > 0)
                       await client.mutate({
                         mutation: notificationSeeAllMutation,
                       });
@@ -109,7 +106,7 @@ class Setting extends React.Component<Props, State> {
                   type="button"
                   ref={this.NotificationRef}
                 >
-                  {/* <Subscription subscription={subscription}>
+                  <Subscription subscription={subscription}>
                     {({ data: subscriptionData, loading, error }) => {
                       if (loading) return null;
 
@@ -117,16 +114,11 @@ class Setting extends React.Component<Props, State> {
                         return error.message;
                       }
 
-                      const { notificationNew } = subscriptionData;
-                      const unReadNum = notificationNew.id ? unRead + 1 : unRead;
-                      return (
-                        <div className={NotificationBadgeStyle}>
-                          {unReadNum > 99 ? '99+' : unReadNum}
-                        </div>
-                      );
+                      logger.warn('subscriptionData', subscriptionData);
+                      return null;
                     }}
-                  </Subscription> */}
-                  <div className={NotificationBadgeStyle}>{Unseen > 99 ? '99+' : Unseen}</div>
+                  </Subscription>
+                  <div className={NotificationBadgeStyle}>{unSeen > 99 ? '99+' : unSeen}</div>
                   <Icon icon="NOTIFICATION" />
                 </button>
                 <button
