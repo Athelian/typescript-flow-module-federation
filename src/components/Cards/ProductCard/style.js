@@ -37,13 +37,16 @@ export const ProductImageStyle: string = css`
   object-fit: cover;
 `;
 
-export const ProductImageChevronButtonStyle = (position: 'left' | 'right'): string => css`
+export const ProductImageChevronButtonStyle = (
+  position: 'left' | 'right',
+  disabled: boolean
+): string => css`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   ${position}: 5px;
   ${presets.BUTTON};
-  color: ${colors.WHITE};
+  color: ${disabled ? 'rgba(0, 0, 0, 0.2)' : colors.WHITE};
   font-size: 30px;
   width: 30px;
   height: 30px;
@@ -51,11 +54,14 @@ export const ProductImageChevronButtonStyle = (position: 'left' | 'right'): stri
   background-color: rgba(0, 0, 0, 0.1);
   ${borderRadiuses.MAIN};
   opacity: 0;
-  &:hover,
-  :focus {
-    color: ${colors.TEAL};
-    background-color: rgba(0, 0, 0, 0.2);
-  }
+  ${!disabled &&
+    `
+    &:hover,
+    :focus {
+      color: ${colors.TEAL};
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  `};
 `;
 
 export const ProductImageDotsWrapperStyle: string = css`
@@ -75,7 +81,7 @@ export const ProductImageDotStyle = (isActive: boolean): string => css`
   width: 5px;
   height: 5px;
   flex-shrink: 0;
-  background-color: ${isActive ? colors.TEAL : colors.WHITE};
+  background-color: ${isActive ? colors.WHITE : 'rgba(255, 255, 255, 0.5)'};
   ${borderRadiuses.CIRCLE};
   box-shadow: 0 0 7px 3px rgba(0, 0, 0, 0.2);
 `;

@@ -5,7 +5,7 @@ import {
   faBox as BATCH,
   faShip as SHIPMENT,
   faCube as PRODUCT,
-  faWarehouseAlt as WAREHOUSE,
+  faWarehouse as WAREHOUSE,
   faInventory as INVENTORY,
   faAddressBook as NETWORK,
   faHandshake as PARTNER,
@@ -25,6 +25,7 @@ import {
   faBoxesAlt as CARGO,
   faIndustry as PROVIDER,
   faRulerTriangle as SPECIFICATIONS,
+  faCameraAlt as PHOTO,
   faFileAlt as DOCUMENT,
   faMap as RELATION_MAP,
   // Common UI
@@ -128,6 +129,7 @@ export default {
   QUANTITY_ADJUSTMENTS,
   PROVIDER,
   SPECIFICATIONS,
+  PHOTO,
 
   RELATION_MAP,
   CONNECT,

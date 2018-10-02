@@ -7,11 +7,13 @@ import QueryDetail from 'components/common/QueryDetail';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
+import JumpToSection from 'components/JumpToSection';
+import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import { decodeId, encodeId } from 'utils/id';
-import WarehouseInfoForm from './form';
+import WarehouseForm from './form';
 import WarehouseContainer from './form/containers';
 import query from './form/query';
 import { createWarehouseMutation, updateWarehouseMutation } from './form/mutation';
@@ -111,21 +113,22 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                   navBar={
                     <NavBar>
                       <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
+                      <JumpToSection>
+                        <SectionTabs link="warehouseSection" label="WAREHOUSE" icon="WAREHOUSE" />
+                      </JumpToSection>
                       <Subscribe to={[WarehouseContainer, FormContainer]}>
-                        {(infoState, form) =>
-                          (isNew || infoState.isDirty()) && (
+                        {(formState, form) =>
+                          (isNew || formState.isDirty()) && (
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
-                                disabled={!form.isReady(infoState.state, validator)}
+                                disabled={!form.isReady(formState.state, validator)}
                                 onClick={() =>
                                   this.onSave(
-                                    {
-                                      ...infoState.state,
-                                    },
+                                    formState.state,
                                     saveWarehouse,
                                     () => {
-                                      infoState.onSuccess();
+                                      formState.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors
@@ -142,7 +145,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                 >
                   {apiError && <p>Error: Please try again.</p>}
                   {isNew || !warehouseId ? (
-                    <WarehouseInfoForm isNew />
+                    <WarehouseForm warehouse={{}} isNew />
                   ) : (
                     <QueryDetail
                       query={query}
@@ -150,11 +153,11 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                       detailType="warehouse"
                       render={warehouse => (
                         <Subscribe to={[WarehouseContainer]}>
-                          {infoState => (
-                            <WarehouseInfoForm
+                          {({ initDetailValues }) => (
+                            <WarehouseForm
                               warehouse={warehouse}
                               onDetailReady={() => {
-                                infoState.initDetailValues(warehouse);
+                                initDetailValues(warehouse);
                               }}
                             />
                           )}

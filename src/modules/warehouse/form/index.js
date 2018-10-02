@@ -1,20 +1,9 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Subscribe } from 'unstated';
-import { isEquals, getByPath } from 'utils/fp';
-import validator from 'modules/warehouse/form/validator';
-import { SectionHeader, SectionWrapper, DefaultSurfaceStyle } from 'components/Form';
-import { FormField } from 'modules/form';
-import {
-  textInputFactory,
-  selectSearchEnumInputFactory,
-  numberInputFactory,
-} from 'modules/form/helpers';
-import WarehouseContainer from 'modules/warehouse/form/containers';
-import type { FormState } from 'modules/warehouse/form/containers';
-import messages from 'modules/warehouse/messages';
-import { FormWrapperStyle, SectionWrapperStyle } from './style';
+import { isEquals } from 'utils/fp';
+import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
+import { WarehouseSection } from './components';
+import { WarehouseFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
@@ -46,147 +35,19 @@ class WarehouseForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew } = this.props;
+    const { warehouse, isNew } = this.props;
 
     return (
-      <div className={FormWrapperStyle}>
-        <SectionWrapper id="tagSection">
-          <SectionHeader icon="WAREHOUSE" title="WAREHOUSE" />
-          <div className={SectionWrapperStyle}>
-            <Subscribe to={[WarehouseContainer]}>
-              {({ originalValues: initialValues, state, setFieldValue, setFieldArrayValue }) => {
-                const values: FormState = { ...initialValues, ...state };
-                return (
-                  <div>
-                    <FormField
-                      name="name"
-                      initValue={values.name}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) =>
-                        textInputFactory({
-                          inputHandlers,
-                          name,
-                          isNew,
-                          required: true,
-                          originalValue: initialValues[name],
-                          label: <FormattedMessage {...messages.name} />,
-                        })
-                      }
-                    </FormField>
-                    <FormField
-                      name="street"
-                      initValue={values.street}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) =>
-                        textInputFactory({
-                          inputHandlers,
-                          name,
-                          isNew,
-                          originalValue: initialValues[name],
-                          label: <FormattedMessage {...messages.streetAddress} />,
-                        })
-                      }
-                    </FormField>
-                    <FormField
-                      name="locality"
-                      initValue={values.locality}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) =>
-                        textInputFactory({
-                          inputHandlers,
-                          name,
-                          isNew,
-                          originalValue: initialValues[name],
-                          label: <FormattedMessage {...messages.locality} />,
-                        })
-                      }
-                    </FormField>
-                    <FormField
-                      name="region"
-                      initValue={values.region}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) =>
-                        textInputFactory({
-                          inputHandlers,
-                          name,
-                          isNew,
-                          originalValue: initialValues[name],
-                          label: <FormattedMessage {...messages.region} />,
-                        })
-                      }
-                    </FormField>
-                    <FormField
-                      name="postalCode"
-                      initValue={values.postalCode}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) =>
-                        textInputFactory({
-                          inputHandlers,
-                          name,
-                          isNew,
-                          originalValue: initialValues[name],
-                          label: <FormattedMessage {...messages.postalCode} />,
-                        })
-                      }
-                    </FormField>
-                    <FormField
-                      name="country"
-                      initValue={values.country}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) =>
-                        selectSearchEnumInputFactory({
-                          enumType: 'Country',
-                          name,
-                          inputHandlers,
-                          isNew,
-                          originalValue: initialValues[name],
-                          label: <FormattedMessage {...messages.country} />,
-                        })
-                      }
-                    </FormField>
-                    <FormField
-                      name="surface"
-                      values={values}
-                      initValue={getByPath('surface.value', values)}
-                      validator={validator}
-                      setFieldValue={(field, value) =>
-                        setFieldArrayValue('surface', { value, metric: 'm2' })
-                      }
-                    >
-                      {({ name, ...inputHandlers }) =>
-                        numberInputFactory({
-                          isNew,
-                          name,
-                          inputHandlers,
-                          originalValue: getByPath('surface.value', initialValues),
-                          label: <FormattedMessage {...messages.surface} />,
-                          WrapperComponent: DefaultSurfaceStyle,
-                        })
-                      }
-                    </FormField>
-                  </div>
-                );
-              }}
-            </Subscribe>
-          </div>
+      <div className={WarehouseFormWrapperStyle}>
+        <SectionWrapper id="warehouseSection">
+          <SectionHeader icon="WAREHOUSE" title="WAREHOUSE">
+            {!isNew && (
+              <>
+                <LastModified updatedAt={warehouse.updatedAt} updatedBy={warehouse.updatedBy} />
+              </>
+            )}
+          </SectionHeader>
+          <WarehouseSection isNew={isNew} />
         </SectionWrapper>
       </div>
     );
