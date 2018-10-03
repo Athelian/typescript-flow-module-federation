@@ -173,9 +173,9 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     </SlideViewNavBar>
                                   }
                                 >
-                                  {orderId && (
+                                  {orderId ? (
                                     <OrderEventsList id={decodeId(orderId)} perPage={10} />
-                                  )}
+                                  ) : null}
                                 </Layout>
                               </SlideView>
                             </>

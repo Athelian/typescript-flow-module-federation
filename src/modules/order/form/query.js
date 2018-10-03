@@ -68,6 +68,11 @@ export const orderDetailFragment = gql`
         ...detailedBatchFragment
       }
     }
+    inCharges {
+      id
+      firstName
+      lastName
+    }
     shipments {
       no
       blNo

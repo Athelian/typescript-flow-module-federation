@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue, NumberValue } from 'react-values';
 import GridView from 'components/GridView';
@@ -24,7 +25,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   onCancel: Function,
   onSelect: Function,
-  intl: intlShape,
+  intl: IntlShape,
 };
 
 const defaultProps = {

@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ArrayValue } from 'react-values';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
@@ -16,7 +17,7 @@ import OrderItems from './components/OrderItems';
 import { ItemsSectionWrapperStyle, ItemsSectionBodyStyle } from './style';
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
   isNew: boolean,
 };
 

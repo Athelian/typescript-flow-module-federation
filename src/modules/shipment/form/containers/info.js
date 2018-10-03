@@ -14,10 +14,12 @@ type FormState = {
   incoterm?: string,
   carrier?: string,
   forwarders: Array<{ id: string, name: string }>,
+  inCharges: Array<{ id: string, firstName: string, lastName: string }>,
 };
 
 const initValues = {
   forwarders: [],
+  inCharges: [],
 };
 
 export default class ShipmentInfoContainer extends Container<FormState> {
