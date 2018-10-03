@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
@@ -79,7 +80,11 @@ const OrderCard = ({ order }: Props) => {
             {exporter.name}
           </div>
           <FieldItem
-            label={<Label>TTL PRICE</Label>}
+            label={
+              <Label>
+                <FormattedMessage id="components.cards.ttlPrice" defaultMessage="TTL PRICE" />
+              </Label>
+            }
             input={
               <Display>
                 <FormattedNumber value={totalPrice} suffix={currency} />
@@ -87,7 +92,11 @@ const OrderCard = ({ order }: Props) => {
             }
           />
           <FieldItem
-            label={<Label>TTL ITEMS</Label>}
+            label={
+              <Label>
+                <FormattedMessage id="components.cards.ttlItems" defaultMessage="TTL ITEMS" />
+              </Label>
+            }
             input={
               <Display>
                 <FormattedNumber value={totalItems} />

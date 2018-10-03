@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
@@ -85,7 +86,11 @@ const BatchCard = ({ batch }: Props) => {
           </div>
 
           <FieldItem
-            label={<Label>QUANTITY</Label>}
+            label={
+              <Label>
+                <FormattedMessage id="components.cards.quantity" defaultMessage="QUANTITY" />
+              </Label>
+            }
             input={
               <Display>
                 <FormattedNumber value={quantity + totalAdjustment} />
@@ -94,7 +99,11 @@ const BatchCard = ({ batch }: Props) => {
           />
 
           <FieldItem
-            label={<Label>DELIVERY</Label>}
+            label={
+              <Label>
+                <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
+              </Label>
+            }
             input={
               <Display>
                 <FormattedDate value={deliveredAt} />
@@ -105,7 +114,11 @@ const BatchCard = ({ batch }: Props) => {
           <div className={DividerStyle} />
 
           <FieldItem
-            label={<Label>UNIT PRICE</Label>}
+            label={
+              <Label>
+                <FormattedMessage id="components.cards.unitPrice" defaultMessage="UNIT PRICE" />
+              </Label>
+            }
             input={
               <Display>
                 <FormattedNumber
@@ -117,7 +130,11 @@ const BatchCard = ({ batch }: Props) => {
           />
 
           <FieldItem
-            label={<Label>TTL PRICE</Label>}
+            label={
+              <Label>
+                <FormattedMessage id="components.cards.ttlPrice" defaultMessage="TTL PRICE" />
+              </Label>
+            }
             input={
               <Display>
                 <FormattedNumber
@@ -129,7 +146,11 @@ const BatchCard = ({ batch }: Props) => {
           />
 
           <FieldItem
-            label={<Label>TTL VOL</Label>}
+            label={
+              <Label>
+                <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
+              </Label>
+            }
             input={
               <Display>
                 {batch.packageVolume &&

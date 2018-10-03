@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { ObjectValue, BooleanValue } from 'react-values';
@@ -174,7 +175,11 @@ const OrderItemCard = ({
               >
                 {selectable ? (
                   <FieldItem
-                    label={<Label required>QTY</Label>}
+                    label={
+                      <Label required>
+                        <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
+                      </Label>
+                    }
                     input={
                       <Display>
                         <FormattedNumber value={quantity} />
@@ -189,7 +194,7 @@ const OrderItemCard = ({
                   >
                     {({ name: fieldName, ...inputHandlers }) =>
                       numberInputFactory({
-                        label: 'QTY',
+                        label: <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />,
                         required: true,
                         width: '90px',
                         height: '20px',
@@ -216,7 +221,11 @@ const OrderItemCard = ({
               >
                 {selectable ? (
                   <FieldItem
-                    label={<Label required>PRICE</Label>}
+                    label={
+                      <Label required>
+                        <FormattedMessage id="components.cards.price" defaultMessage="PRICE" />
+                      </Label>
+                    }
                     input={
                       <Display>
                         <FormattedNumber value={price.amount} /> {currency || price.currency}
@@ -231,7 +240,9 @@ const OrderItemCard = ({
                   >
                     {({ name: fieldName, ...inputHandlers }) =>
                       priceInputFactory({
-                        label: 'PRICE',
+                        label: (
+                          <FormattedMessage id="components.cards.price" defaultMessage="PRICE" />
+                        ),
                         required: true,
                         currency,
                         width: '90px',
@@ -270,7 +281,12 @@ const OrderItemCard = ({
                             saveOnBlur({ quantity, price: { currency, amount: unitPrice.amount } });
                             dialogToggle(false);
                           }}
-                          message="Currency is not matched. Do you want to sync?"
+                          message={
+                            <FormattedMessage
+                              id="components.cards.wantSync"
+                              defaultMessage="Currency is not matched. Do you want to sync?"
+                            />
+                          }
                           width={400}
                         />
                         <button
@@ -288,7 +304,7 @@ const OrderItemCard = ({
                             }
                           }}
                         >
-                          SYNC
+                          <FormattedMessage id="components.cards.sync" defaultMessage="SYNC" />
                           <Icon icon="SYNC" />
                         </button>
                       </>
@@ -309,7 +325,11 @@ const OrderItemCard = ({
               </div>
               <div className={TotalPriceWrapperStyle}>
                 <FieldItem
-                  label={<Label>TOTAL</Label>}
+                  label={
+                    <Label>
+                      <FormattedMessage id="components.cards.total" defaultMessage="TOTAL" />
+                    </Label>
+                  }
                   input={
                     <Display>
                       <FormattedNumber
