@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
@@ -165,7 +166,9 @@ const ShipmentBatchCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <Label required>QTY</Label>
+            <Label required>
+              <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
+            </Label>
             <FormField name={`batch.${id}.quantity`} initValue={quantity + totalAdjustment}>
               {({ name: fieldName, ...inputHandlers }) =>
                 numberInputFactory({
@@ -194,7 +197,9 @@ const ShipmentBatchCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <Label>DELIVERY</Label>
+            <Label>
+              <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
+            </Label>
             <FormField name={`batch.${id}.deliveredAt`} initValue={deliveredAt}>
               {({ name: fieldName, ...inputHandlers }) =>
                 dateInputFactory({
@@ -222,7 +227,11 @@ const ShipmentBatchCard = ({
 
           <div className={TotalPriceWrapperStyle}>
             <FieldItem
-              label={<Label>TTL PRICE</Label>}
+              label={
+                <Label>
+                  <FormattedMessage id="components.cards.ttlPrice" defaultMessage="TTL PRICE" />
+                </Label>
+              }
               input={
                 <Display>
                   <FormattedNumber
@@ -236,7 +245,11 @@ const ShipmentBatchCard = ({
 
           <div className={VolumeWrapperStyle}>
             <FieldItem
-              label={<Label>TTL VOL</Label>}
+              label={
+                <Label>
+                  <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
+                </Label>
+              }
               input={
                 <Display>
                   {batch.packageVolume &&

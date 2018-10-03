@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
@@ -58,7 +59,7 @@ const calculateVolume = (batch: Object, quantity: number) => {
     }`;
   }
 
-  return 'N/A';
+  return <FormattedMessage id="components.cards.notApplicable" defaultMessage="N/A" />;
 };
 
 const defaultProps = {
@@ -128,7 +129,9 @@ const OrderBatchCard = ({
           onClick={evt => evt.stopPropagation()}
           role="presentation"
         >
-          <Label required>QTY</Label>
+          <Label required>
+            <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
+          </Label>
           <FormField name={`batch.${batch.id}.quantity`} initValue={quantity + totalAdjustment}>
             {({ name: fieldName, ...inputHandlers }) =>
               numberInputFactory({
@@ -157,7 +160,9 @@ const OrderBatchCard = ({
           onClick={evt => evt.stopPropagation()}
           role="presentation"
         >
-          <Label>DELIVERY</Label>
+          <Label>
+            <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
+          </Label>
           <FormField name={`batch.${batch.id}.deliveredAt`} initValue={deliveredAt}>
             {({ name, ...inputHandlers }) =>
               dateInputFactory({
@@ -184,7 +189,9 @@ const OrderBatchCard = ({
         <div className={DividerStyle} />
 
         <div className={TotalPriceWrapperStyle}>
-          <Label>TOTAL</Label>
+          <Label>
+            <FormattedMessage id="components.cards.total" defaultMessage="TOTAL" />
+          </Label>
           <Display>
             <FormattedNumber
               value={(quantity + totalAdjustment) * (price && price.amount ? price.amount : 0)}
@@ -194,7 +201,9 @@ const OrderBatchCard = ({
         </div>
 
         <div className={VolumeWrapperStyle}>
-          <Label>VOLUME</Label>
+          <Label>
+            <FormattedMessage id="components.cards.volume" defaultMessage="VOLUME" />
+          </Label>
           <Display>{calculateVolume(batch, quantity + totalAdjustment)} </Display>
         </div>
 
@@ -215,7 +224,9 @@ const OrderBatchCard = ({
           <div className={WarehouseArrivalIconStyle(warehouseArrivalApproved)}>
             <Icon icon="WAREHOUSE" />
           </div>
-          <Label>ARRIVAL</Label>
+          <Label>
+            <FormattedMessage id="components.cards.arrival" defaultMessage="ARRIVAL" />
+          </Label>
           <Display align="left">
             <FormattedDate
               value={
