@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import { BooleanValue, ArrayValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
@@ -118,7 +118,12 @@ class OrderItems extends React.Component<Props> {
                           <div className={TitleStyle}>BATCHES ({batches.length})</div>
                         </div>
                         <NewButton
-                          label="NEW BATCH"
+                          label={
+                            <FormattedMessage
+                              id="modules.order.newBatch"
+                              defaultMessage="NEW BATCH"
+                            />
+                          }
                           onClick={() => addNewBatch(generateBatchItem(batches))}
                         />
                       </div>
