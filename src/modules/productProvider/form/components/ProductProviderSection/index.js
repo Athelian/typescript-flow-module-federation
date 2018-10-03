@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
@@ -30,7 +31,12 @@ const ProductProviderSection = ({ isNew }: Props) => (
           <GridColumn>
             <GridRow>
               <GridColumn gap="10px">
-                <Label required>EXPORTER</Label>
+                <Label required>
+                  <FormattedMessage
+                    id="modules.productProvider.exporter"
+                    defaultMessage="EXPORTER"
+                  />
+                </Label>
                 <BooleanValue>
                   {({ value: opened, set: exporterSlideToggle }) => (
                     <>
@@ -123,7 +129,12 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   isNew,
                   required: true,
                   originalValue: initialValues[name],
-                  label: 'COUNTRY OF ORIGIN',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.countryOfOrigin"
+                      defaultMessage="COUNTRY OF ORIGIN"
+                    />
+                  ),
                 })
               }
             </FormField>
@@ -139,7 +150,12 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   isNew,
                   inputHandlers,
                   originalValue: initialValues[name],
-                  label: 'PRODUCTION LEAD TIME',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.productionLeadTime"
+                      defaultMessage="PRODUCTION LEAD TIME"
+                    />
+                  ),
                   currency: 'Days',
                 })
               }
@@ -158,7 +174,12 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   isNew,
                   inputHandlers,
                   originalValue: initialValues[name].amount,
-                  label: 'INSPECTION FEE',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.inspectionFee"
+                      defaultMessage="INSPECTION FEE"
+                    />
+                  ),
                   currency: 'JPY',
                 })
               }
