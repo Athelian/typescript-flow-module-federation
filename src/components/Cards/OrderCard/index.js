@@ -6,6 +6,7 @@ import { encodeId } from 'utils/id';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
+import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import { Label, Display, FieldItem } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
@@ -16,6 +17,7 @@ import {
   ExporterWrapperStyle,
   DividerStyle,
   ChartWrapperStyle,
+  InChargeWrapperStyle,
   TagsWrapperStyle,
 } from './style';
 
@@ -26,7 +28,7 @@ type Props = {
 const OrderCard = ({ order }: Props) => {
   if (!order) return '';
 
-  const { id, poNo, orderItems, currency, exporter } = order;
+  const { id, poNo, orderItems, currency, exporter, inCharges } = order;
 
   const actions = [
     <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
@@ -102,6 +104,16 @@ const OrderCard = ({ order }: Props) => {
               batched={numOfBatched}
               shipped={numOfShipped}
             />
+          </div>
+          <div className={InChargeWrapperStyle}>
+            {inCharges &&
+              inCharges.map(inCharge => (
+                <UserAvatar
+                  firstName={inCharge.firstName}
+                  lastName={inCharge.lastName}
+                  key={inCharge.id}
+                />
+              ))}
           </div>
           <div className={TagsWrapperStyle}>
             {order.tags.length > 0 && order.tags.map(tag => <Tag key={tag.id} tag={tag} />)}

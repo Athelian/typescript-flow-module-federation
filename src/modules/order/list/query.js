@@ -35,6 +35,11 @@ export const orderListQuery = gql`
             }
           }
         }
+        inCharges {
+          id
+          firstName
+          lastName
+        }
       }
       page
       totalPage

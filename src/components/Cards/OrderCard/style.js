@@ -7,7 +7,7 @@ export const OrderCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 188px;
+  height: 228px;
 `;
 
 export const OrderInfoWrapperStyle: string = css`
@@ -44,6 +44,14 @@ export const ChartWrapperStyle: string = css`
   width: 100%;
   padding: 0 5px;
   margin: 3px 0;
+`;
+
+export const InChargeWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 6.25px;
+  padding: 5px 5px 0 5px;
+  width: 185px;
+  height: 30px;
 `;
 
 export const TagsWrapperStyle: string = css`
