@@ -23,6 +23,12 @@
           {
             "properties": ["data-testid"]
           }
+        ],
+        [
+          "react-intl",
+          {
+            "messagesDir": "./build/messages/"
+          }
         ]
       ]
     },
