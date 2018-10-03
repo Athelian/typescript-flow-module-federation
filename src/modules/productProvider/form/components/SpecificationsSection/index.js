@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import { FormField } from 'modules/form';
@@ -29,7 +30,12 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'UNIT TYPE',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.unitType"
+                      defaultMessage="UNIT TYPE"
+                    />
+                  ),
                 })
               }
             </FormField>
@@ -47,7 +53,12 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   isNew,
                   inputHandlers,
                   originalValue: originalValues[name].amount,
-                  label: 'UNIT PRICE',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.unitPrice"
+                      defaultMessage="UNIT PRICE"
+                    />
+                  ),
                   currency: 'JPY',
                 })
               }
@@ -64,7 +75,12 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('unitWeight.value', originalValues),
-                  label: 'UNIT WEIGHT',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.unitWeight"
+                      defaultMessage="UNIT WEIGHT"
+                    />
+                  ),
                   WrapperComponent: DefaultWeightStyle,
                 })
               }
@@ -81,7 +97,12 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('unitVolume.value', originalValues),
-                  label: 'UNIT VOLUME',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.unitVolume"
+                      defaultMessage="UNIT VOLUME"
+                    />
+                  ),
                   WrapperComponent: DefaultVolumeStyle,
                 })
               }
@@ -100,7 +121,12 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('unitSize.length.value', originalValues),
-                  label: 'UNIT LENGTH',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.unitLength"
+                      defaultMessage="UNIT LENGTH"
+                    />
+                  ),
                   WrapperComponent: DefaultDimensionStyle,
                 })
               }
@@ -119,7 +145,12 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('unitSize.width.value', originalValues),
-                  label: 'UNIT WIDTH',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.unitWidth"
+                      defaultMessage="UNIT WIDTH"
+                    />
+                  ),
                   WrapperComponent: DefaultDimensionStyle,
                 })
               }
@@ -138,7 +169,12 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('unitSize.height.value', originalValues),
-                  label: 'UNIT HEIGHT',
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.unitHeight"
+                      defaultMessage="UNIT HEIGHT"
+                    />
+                  ),
                   WrapperComponent: DefaultDimensionStyle,
                 })
               }

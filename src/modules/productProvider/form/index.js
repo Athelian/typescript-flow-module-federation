@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 import { PackagingSection, ProductProviderSection, SpecificationsSection } from './components';
 import { ProductProviderFormWrapperStyle } from './style';
@@ -19,7 +20,10 @@ const defaultProps = {
 const ProductProviderForm = ({ productProvider, isNew }: Props) => (
   <div className={ProductProviderFormWrapperStyle}>
     <SectionWrapper id="productProviderSection">
-      <SectionHeader icon="PROVIDER" title="PROVIDER">
+      <SectionHeader
+        icon="PROVIDER"
+        title={<FormattedMessage id="modules.productProvider.provider" defaultMessage="PROVIDER" />}
+      >
         {!isNew && (
           <LastModified
             updatedAt={productProvider.updatedAt}
@@ -31,12 +35,25 @@ const ProductProviderForm = ({ productProvider, isNew }: Props) => (
     </SectionWrapper>
 
     <SectionWrapper id="specificationsSection">
-      <SectionHeader icon="SPECIFICATIONS" title="SPECIFICATIONS" />
+      <SectionHeader
+        icon="SPECIFICATIONS"
+        title={
+          <FormattedMessage
+            id="modules.productProvider.specifications"
+            defaultMessage="SPECIFICATIONS"
+          />
+        }
+      />
       <SpecificationsSection isNew={isNew} />
     </SectionWrapper>
 
     <SectionWrapper id="productProviderPackagingSection">
-      <SectionHeader icon="PACKAGING" title="PACKAGING" />
+      <SectionHeader
+        icon="PACKAGING"
+        title={
+          <FormattedMessage id="modules.productProvider.packaging" defaultMessage="PACKAGING" />
+        }
+      />
       <PackagingSection isNew={isNew} />
     </SectionWrapper>
   </div>
