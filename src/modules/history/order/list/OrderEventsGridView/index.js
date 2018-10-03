@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import isSameDay from 'date-fns/isSameDay';
 import GridView from 'components/GridView';
 import EntityTimeline from 'modules/history/components/EntityTimeline';
@@ -49,7 +50,9 @@ const OrderEventsGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="1000px"
       isEmpty={items.length === 0}
-      emptyMessage="No event history found"
+      emptyMessage={
+        <FormattedMessage id="modules.history.noItem" defaultMessage="No event history found" />
+      }
     >
       {items.map((item, index) =>
         renderItem(
