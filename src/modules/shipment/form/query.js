@@ -101,6 +101,7 @@ export const shipmentDetailQuery = gql`
       forwarders {
         id
         name
+        types
       }
       inCharges {
         id

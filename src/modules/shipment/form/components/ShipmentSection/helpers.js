@@ -65,7 +65,7 @@ export const renderForwarders = (forwarders: Array<Object>) => {
   const numOfForwarders = forwarders.length;
 
   if (numOfForwarders === 0) {
-    return <DashedPlusButton width="200px" height="230px" />;
+    return <DashedPlusButton width="195px" height="215px" />;
   }
   if (numOfForwarders === 1) {
     return <PartnerCard partner={forwarders[0]} />;

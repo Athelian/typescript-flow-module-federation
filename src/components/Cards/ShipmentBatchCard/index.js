@@ -26,8 +26,8 @@ import {
   DividerStyle,
   TotalPriceWrapperStyle,
   VolumeWrapperStyle,
-  ShipmentWrapperStyle,
-  ShipmentIconStyle,
+  OrderWrapperStyle,
+  OrderIconStyle,
   BatchTagsWrapperStyle,
 } from './style';
 
@@ -251,8 +251,8 @@ const ShipmentBatchCard = ({
             />
           </div>
 
-          <div className={ShipmentWrapperStyle}>
-            <button className={ShipmentIconStyle(true)} type="button">
+          <div className={OrderWrapperStyle}>
+            <button className={OrderIconStyle} type="button">
               <Icon icon="ORDER" />
             </button>
             <Display align="left">{orderItem && orderItem.order && orderItem.order.poNo}</Display>

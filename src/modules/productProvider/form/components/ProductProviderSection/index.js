@@ -42,8 +42,8 @@ const ProductProviderSection = ({ isNew }: Props) => (
                     <>
                       {!values.exporter ? (
                         <DashedPlusButton
-                          width="200px"
-                          height="230px"
+                          width="195px"
+                          height="215px"
                           onClick={() => exporterSlideToggle(true)}
                         />
                       ) : (
@@ -81,8 +81,8 @@ const ProductProviderSection = ({ isNew }: Props) => (
                     <>
                       {!values.supplier ? (
                         <DashedPlusButton
-                          width="200px"
-                          height="230px"
+                          width="195px"
+                          height="215px"
                           onClick={() => supplierSlideToggle(true)}
                         />
                       ) : (
