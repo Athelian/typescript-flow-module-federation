@@ -1,10 +1,15 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import {
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
 } from 'modules/shipment/form/containers';
+import { DashedPlusButton } from 'components/Form';
+import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
+import SlideView from 'components/SlideView';
+import { ShipmentWarehouseCard } from 'components/Cards';
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
   VerticalLayout,
@@ -31,7 +36,8 @@ const TimelineSection = ({ isNew }: Props) => (
       };
 
       const { cargoReady, voyages, containerGroups = [] } = values;
-      const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0] || {};
+      const { customClearance, warehouseArrival, deliveryReady, warehouse } =
+        containerGroups[0] || {};
 
       return (
         <div className={TimelineSectionWrapperStyle}>
@@ -209,6 +215,45 @@ const TimelineSection = ({ isNew }: Props) => (
               sourceName="containerGroups.0.warehouseArrival"
               setFieldDeepValue={setFieldDeepValue}
               removeArrayItem={removeArrayItem}
+              renderBelowHeader={
+                <>
+                  <BooleanValue>
+                    {({ value: opened, set: slideToggle }) => (
+                      <>
+                        {!warehouse ? (
+                          <DashedPlusButton
+                            width="200px"
+                            height="100px"
+                            onClick={() => slideToggle(true)}
+                          />
+                        ) : (
+                          <ShipmentWarehouseCard
+                            warehouse={warehouse}
+                            onClick={() => slideToggle(true)}
+                          />
+                        )}
+
+                        <SlideView
+                          isOpen={opened}
+                          onRequestClose={() => slideToggle(false)}
+                          options={{ width: '1030px' }}
+                        >
+                          {opened && (
+                            <SelectWareHouse
+                              selected={warehouse}
+                              onCancel={() => slideToggle(false)}
+                              onSelect={newValue => {
+                                slideToggle(false);
+                                setFieldDeepValue('containerGroups.0.warehouse', newValue);
+                              }}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                </>
+              }
             />
             <TimelineInfoSection
               id="deliveryReady"

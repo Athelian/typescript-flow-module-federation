@@ -23,19 +23,7 @@ export const notificationListQuery = gql`
           seen
           entity {
             __typename
-            ... on Product {
-              id
-            }
-            ... on Shipment {
-              id
-            }
-            ... on Order {
-              id
-            }
-            ... on Batch {
-              id
-            }
-            ... on Tag {
+            ... on Model {
               id
             }
           }
