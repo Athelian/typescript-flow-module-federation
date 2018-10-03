@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { PartnerCard } from 'components/Cards';
 
@@ -27,7 +28,9 @@ const PartnerGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="200px"
       isEmpty={items.length === 0}
-      emptyMessage="No partners found"
+      emptyMessage={
+        <FormattedMessage id="modules.partner.noPartnersFound" defaultMessage="No partners found" />
+      }
     >
       {items.map(item => renderItem(item))}
     </GridView>
