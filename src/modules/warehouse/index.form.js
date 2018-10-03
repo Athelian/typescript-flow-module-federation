@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
@@ -114,7 +115,16 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                     <NavBar>
                       <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
                       <JumpToSection>
-                        <SectionTabs link="warehouseSection" label="WAREHOUSE" icon="WAREHOUSE" />
+                        <SectionTabs
+                          link="warehouseSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.warehouse.warehouse"
+                              defaultMessage="WAREHOUSE"
+                            />
+                          }
+                          icon="WAREHOUSE"
+                        />
                       </JumpToSection>
                       <Subscribe to={[WarehouseContainer, FormContainer]}>
                         {(formState, form) =>

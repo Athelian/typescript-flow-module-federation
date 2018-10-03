@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { WarehouseCard } from 'components/Cards';
 
@@ -27,7 +28,9 @@ const WarehouseGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="200px"
       isEmpty={items.length === 0}
-      emptyMessage="No warehouses found"
+      emptyMessage={
+        <FormattedMessage id="modules.warehouse.noItem" defaultMessage="No warehouses found" />
+      }
     >
       {items.map(item => renderItem(item))}
     </GridView>
