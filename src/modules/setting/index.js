@@ -118,7 +118,9 @@ class Setting extends React.Component<Props, State> {
                       return null;
                     }}
                   </Subscription>
-                  <div className={NotificationBadgeStyle}>{unSeen > 99 ? '99+' : unSeen}</div>
+                  {unSeen > 0 && (
+                    <div className={NotificationBadgeStyle}>{unSeen > 99 ? '99+' : unSeen}</div>
+                  )}
                   <Icon icon="NOTIFICATION" />
                 </button>
                 <button

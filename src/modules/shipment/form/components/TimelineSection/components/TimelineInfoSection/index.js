@@ -101,8 +101,10 @@ class TimelineInfoSection extends React.Component<Props> {
     return (
       <div className={TimelineInfoSectionWrapperStyle} {...rest}>
         <GridColumn gap="10px">
-          <SectionHeader icon={icon} title={title} />
-          {renderBelowHeader}
+          <SectionHeader icon={icon} title={title}>
+            {renderBelowHeader}
+          </SectionHeader>
+
           <div className={AssignedAndApprovalWrapperStyle}>
             <GridColumn gap="5px">
               <Label>ASSIGNED TO</Label>

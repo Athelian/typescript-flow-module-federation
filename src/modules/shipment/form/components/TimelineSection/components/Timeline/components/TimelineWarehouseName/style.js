@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, presets, fontSizes, borderRadiuses } from 'styles/common';
 
-export const TimelineWareHouseNameWrapperStyle = (vertical: boolean): string => css`
+export const TimelineWarehouseNameWrapperStyle = (vertical: boolean): string => css`
   ${vertical
     ? `
     text-align: left;
@@ -31,4 +31,4 @@ export const TimelineWareHouseNameWrapperStyle = (vertical: boolean): string => 
   z-index: 0;
 `;
 
-export default TimelineWareHouseNameWrapperStyle;
+export default TimelineWarehouseNameWrapperStyle;

@@ -1,8 +1,14 @@
 // @flow
 import React from 'react';
 import { type Warehouse } from 'modules/warehouse/type.js.flow';
+import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import BaseCard from '../BaseCard';
-import { ShipmentWarehouseCardWrapperStyle } from './style';
+import {
+  ShipmentWarehouseCardWrapperStyle,
+  ShipmentWarehouseCardImageStyle,
+  ShipmentWarehouseInfoWrapperStyle,
+  WarehouseNameStyle,
+} from './style';
 
 type Props = {
   warehouse: ?Warehouse,
@@ -12,7 +18,7 @@ type Props = {
 const ShipmentWarehouseCard = ({ warehouse, onClick, ...rest }: Props) => {
   if (!warehouse) return '';
 
-  const { id } = warehouse;
+  const { name } = warehouse;
 
   const actions = [];
 
@@ -23,7 +29,14 @@ const ShipmentWarehouseCard = ({ warehouse, onClick, ...rest }: Props) => {
         onClick={() => onClick(warehouse)}
         role="presentation"
       >
-        {id}
+        <img
+          className={ShipmentWarehouseCardImageStyle}
+          src={FALLBACK_IMAGE}
+          alt="warehouse_image"
+        />
+        <div className={ShipmentWarehouseInfoWrapperStyle}>
+          <div className={WarehouseNameStyle}>{name}</div>
+        </div>
       </div>
     </BaseCard>
   );

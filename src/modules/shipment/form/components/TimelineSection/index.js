@@ -216,43 +216,41 @@ const TimelineSection = ({ isNew }: Props) => (
               setFieldDeepValue={setFieldDeepValue}
               removeArrayItem={removeArrayItem}
               renderBelowHeader={
-                <>
-                  <BooleanValue>
-                    {({ value: opened, set: slideToggle }) => (
-                      <>
-                        {!warehouse ? (
-                          <DashedPlusButton
-                            width="200px"
-                            height="100px"
-                            onClick={() => slideToggle(true)}
-                          />
-                        ) : (
-                          <ShipmentWarehouseCard
-                            warehouse={warehouse}
-                            onClick={() => slideToggle(true)}
+                <BooleanValue>
+                  {({ value: opened, set: slideToggle }) => (
+                    <>
+                      {!warehouse ? (
+                        <DashedPlusButton
+                          width="195px"
+                          height="40px"
+                          onClick={() => slideToggle(true)}
+                        />
+                      ) : (
+                        <ShipmentWarehouseCard
+                          warehouse={warehouse}
+                          onClick={() => slideToggle(true)}
+                        />
+                      )}
+
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={() => slideToggle(false)}
+                        options={{ width: '1030px' }}
+                      >
+                        {opened && (
+                          <SelectWareHouse
+                            selected={warehouse}
+                            onCancel={() => slideToggle(false)}
+                            onSelect={newValue => {
+                              slideToggle(false);
+                              setFieldDeepValue('containerGroups.0.warehouse', newValue);
+                            }}
                           />
                         )}
-
-                        <SlideView
-                          isOpen={opened}
-                          onRequestClose={() => slideToggle(false)}
-                          options={{ width: '1030px' }}
-                        >
-                          {opened && (
-                            <SelectWareHouse
-                              selected={warehouse}
-                              onCancel={() => slideToggle(false)}
-                              onSelect={newValue => {
-                                slideToggle(false);
-                                setFieldDeepValue('containerGroups.0.warehouse', newValue);
-                              }}
-                            />
-                          )}
-                        </SlideView>
-                      </>
-                    )}
-                  </BooleanValue>
-                </>
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
               }
             />
             <TimelineInfoSection
