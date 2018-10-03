@@ -50,7 +50,7 @@ const SelectWareHouse = ({ selected, onCancel, onSelect }: Props) => (
             <Layout
               navBar={
                 <SlideViewNavBar>
-                  <EntityIcon icon="PARTNER" color="PARTNER" />
+                  <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     disabled={isEquals(value, selected)}

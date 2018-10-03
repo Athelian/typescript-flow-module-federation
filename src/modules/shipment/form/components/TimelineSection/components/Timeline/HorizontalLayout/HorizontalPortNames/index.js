@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { TimelinePortName } from '../../components';
+import { TimelinePortName, TimelineWarehouseName } from '../../components';
 import { HorizontalPortsWrapperStyle, PortNameWrapperStyle, BlankSpaceStyle } from './style';
 
 type Props = {
@@ -8,14 +8,15 @@ type Props = {
 };
 
 const HorizontalPortNames = ({ shipment }: Props) => {
-  const { voyages, transportType } = shipment;
+  const { voyages, transportType, containerGroups } = shipment;
 
   const loadPort = voyages[0].departurePort;
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
+  const { warehouse } = containerGroups[0];
 
   return (
     <div className={HorizontalPortsWrapperStyle}>
-      <div className={BlankSpaceStyle(1)} />
+      <div className={BlankSpaceStyle} />
 
       <div className={PortNameWrapperStyle}>
         <TimelinePortName port={loadPort} transportType={transportType} />
@@ -36,7 +37,13 @@ const HorizontalPortNames = ({ shipment }: Props) => {
         <TimelinePortName port={dischargePort} transportType={transportType} />
       </div>
 
-      <div className={BlankSpaceStyle(3)} />
+      <div className={BlankSpaceStyle} />
+
+      <div className={PortNameWrapperStyle}>
+        <TimelineWarehouseName name={warehouse && warehouse.name} />
+      </div>
+
+      <div className={BlankSpaceStyle} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ export const warehousesQuery = gql`
     warehouses(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
         id
+        name
       }
       page
       totalPage

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { TimelineDate, TimelinePortName, TimelineWareHouse } from '../../components';
+import { TimelineDate, TimelinePortName, TimelineWarehouseName } from '../../components';
 import {
   VerticalDatesWrapperStyle,
   SingularDateWrapperStyle,
@@ -57,7 +57,7 @@ const VerticalDates = ({ shipment }: Props) => {
       <div className={BlankGapStyle}>
         <TimelineDate timelineDate={warehouseArrival} vertical />
       </div>
-      <TimelineWareHouse name={warehouse && warehouse.name} vertical />
+      <TimelineWarehouseName name={warehouse && warehouse.name} vertical />
 
       <div className={BlankGapStyle} />
 

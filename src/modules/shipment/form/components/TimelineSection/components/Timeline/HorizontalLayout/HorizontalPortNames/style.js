@@ -12,6 +12,6 @@ export const PortNameWrapperStyle: string = css`
   justify-content: center;
 `;
 
-export const BlankSpaceStyle = (flex: number): string => css`
-  flex: ${flex};
+export const BlankSpaceStyle: string = css`
+  flex: 1;
 `;

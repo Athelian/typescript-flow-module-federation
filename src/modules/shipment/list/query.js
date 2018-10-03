@@ -53,6 +53,10 @@ export const shipmentListQuery = gql`
           deliveryReady {
             ...timelineDateFragment
           }
+          warehouse {
+            id
+            name
+          }
           id
           sort
         }
