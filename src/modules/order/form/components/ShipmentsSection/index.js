@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { ShipmentCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import {
@@ -20,7 +21,12 @@ function ShipmentsSection({ shipments }: Props) {
       </SectionNavBar>
       <div className={ShipmentsSectionBodyStyle}>
         {shipments.length === 0 ? (
-          <div className={EmptyMessageStyle}>No shipments found.</div>
+          <div className={EmptyMessageStyle}>
+            <FormattedMessage
+              id="modules.order.noShipmentFound"
+              defaultMessage="No shipment found"
+            />
+          </div>
         ) : (
           shipments.map(shipment => <ShipmentCard shipment={shipment} key={shipment.id} />)
         )}
