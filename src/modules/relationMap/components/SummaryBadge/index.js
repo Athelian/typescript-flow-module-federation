@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { IconStyle, SummaryBadgeWrapper } from './style';
+import { IconStyle, SummaryBadgeWrapper, SummaryBadgeLabel } from './style';
 
 type Props = {
   icon: string,
@@ -18,7 +18,7 @@ const SummaryBadge = (props: Props) => {
       <div className={IconStyle(color)}>
         <Icon icon={icon} />
       </div>
-      <span>
+      <span className={SummaryBadgeLabel}>
         {label} ({no})
       </span>
     </div>

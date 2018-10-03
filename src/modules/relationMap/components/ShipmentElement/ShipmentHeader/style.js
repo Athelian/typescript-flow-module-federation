@@ -4,15 +4,19 @@ import { presets, colors, fontSizes } from 'styles/common';
 
 export const ShipmentActionsWrapperStyle = (archived: boolean) => css`
   min-width: 190px;
+  width: 100%;
+  position: absolute;
+  top: -30px;
+
   display: grid;
   grid-template-columns: min-content auto auto min-content min-content;
   grid-gap: 5px;
   color: ${archived ? colors.GRAY : colors.TEAL};
   ${fontSizes.MAIN};
-  margin-bottom: 5px;
+
   height: 22px;
   line-height: 22px;
-
+  letter-spacing: 2px;
   > * {
     height: 22px;
   }

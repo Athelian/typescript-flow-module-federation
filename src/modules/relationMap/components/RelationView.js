@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
-import { ReactHeight } from 'react-height';
 import InfiniteScroll from 'react-infinite-scroller';
 import LoadingIcon from 'components/LoadingIcon';
-import { EmptyMessageStyle } from '../style';
+import { EmptyMessageStyle, InfiniteScrollWrapperStyle } from '../style';
 
 type OptionalProps = {
   isLoading: boolean,
@@ -19,24 +18,12 @@ type Props = OptionalProps & {
   render: (item: Object) => React.Node,
 };
 
-type State = {
-  height: number,
-};
-
 const defaultProps = {
   isLoading: false,
 };
 
-class RelationView extends React.Component<Props, State> {
+class RelationView extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
-
-  state = {
-    height: 1000,
-  };
-
-  detectHeight() {
-    return (height: number) => this.setState({ height });
-  }
 
   render() {
     const {
@@ -52,26 +39,21 @@ class RelationView extends React.Component<Props, State> {
     if (isLoading) {
       return <LoadingIcon />;
     }
-
     if (isEmpty) {
       return <div className={EmptyMessageStyle}>{emptyMessage}</div>;
     }
-
-    const { height } = this.state;
     return (
-      <ReactHeight style={{ gridColumn: 'span 3' }} onHeightReady={this.detectHeight()}>
-        <div style={hasMore ? { height, overflow: 'auto' } : { height }}>
-          <InfiniteScroll
-            className={className}
-            loadMore={onLoadMore}
-            hasMore={hasMore}
-            loader={<LoadingIcon key="loading" />}
-            useWindow={false}
-          >
-            {items.map((item, index) => render({ item, index }))}
-          </InfiniteScroll>
-        </div>
-      </ReactHeight>
+      <div className={InfiniteScrollWrapperStyle}>
+        <InfiniteScroll
+          className={className}
+          loadMore={onLoadMore}
+          hasMore={hasMore}
+          loader={<LoadingIcon key="loading" />}
+          useWindow={false}
+        >
+          {items.map((item, index) => render({ item, index }))}
+        </InfiniteScroll>
+      </div>
     );
   }
 }

@@ -4,7 +4,7 @@ import BaseCard from 'components/Cards';
 import * as style from 'components/Cards/OrderItemCard/style';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import QuantityChart from 'components/QuantityChart';
+import QuantityChart from 'components/ProductFocusedChart';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 
 type Props = {
@@ -17,13 +17,14 @@ function getQuantitySummary(item: Object) {
   let shippedQuantity = 0;
   let numOfBatched = 0;
   let numOfShipped = 0;
-
-  orderedQuantity += item.quantity ? item.quantity : 0;
-
-  if (item.batches) {
-    item.batches.forEach(batch => {
+  if (item.batches.nodes) {
+    item.batches.nodes.forEach(batch => {
       batchedQuantity += batch.quantity;
       numOfBatched += 1;
+      const { orderItem } = batch;
+      if (orderItem) {
+        orderedQuantity += orderItem.quantity || 0;
+      }
       if (batch.batchAdjustments) {
         batch.batchAdjustments.forEach(batchAdjustment => {
           batchedQuantity += batchAdjustment.quantity;
@@ -46,12 +47,8 @@ function getQuantitySummary(item: Object) {
 }
 
 const ProductCard = ({ item }: Props) => {
-  const {
-    name,
-    serial,
-    productProvider: { supplier },
-    tags,
-  } = item;
+  const { name, serial, productProviders, tags } = item;
+  const { supplier } = productProviders[0];
   const chartDetail = getQuantitySummary(item);
   return (
     <BaseCard icon="PRODUCT" color="PRODUCT">
@@ -70,7 +67,6 @@ const ProductCard = ({ item }: Props) => {
         <div className={style.BodyWrapperStyle}>
           <div className={style.ChartWrapperStyle}>
             <QuantityChart
-              hasLabel={false}
               orderedQuantity={chartDetail.orderedQuantity}
               batchedQuantity={chartDetail.batchedQuantity}
               shippedQuantity={chartDetail.shippedQuantity}

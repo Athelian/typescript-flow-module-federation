@@ -1,5 +1,10 @@
 import styled, { css } from 'react-emotion';
-import { layout, borderRadiuses } from 'styles/common';
+import { colors, layout, borderRadiuses } from 'styles/common';
+
+export const ProductFocusContent = css`
+  background-color: ${colors.WHITE};
+  padding: 20px 10px;
+`;
 
 export const Row = styled('div')`
   ${layout.HORIZONTAL};
@@ -7,11 +12,12 @@ export const Row = styled('div')`
 `;
 
 export const BatchListWrapperStyle = css`
-  height: min-content;
+  margin-left: 5px;
+  padding: 10px;
   ${layout.GRID_HORIZONTAL};
-  grid-gap: 20px;
+  grid-gap: 5px;
   ${borderRadiuses.MAIN};
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
   overflow-x: auto;
+  align-items: center;
+  background-color: #dddddd;
 `;

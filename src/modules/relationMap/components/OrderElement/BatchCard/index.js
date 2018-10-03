@@ -14,29 +14,31 @@ type Props = {
   deliveredAt: ?string,
 };
 
-export default function BatchCard({ title, quantity, volume, deliveredAt }: Props) {
-  const quantityTitle = <FormattedMessage {...messages.quantityTitle} />;
-  const volumeTitle = <FormattedMessage {...messages.volumeTitle} />;
+const quantityTitle = <FormattedMessage {...messages.quantityTitle} />;
+const volumeTitle = <FormattedMessage {...messages.volumeTitle} />;
+export default class BatchCard extends React.PureComponent<Props> {
+  render() {
+    const { title, quantity, volume, deliveredAt } = this.props;
+    return (
+      <div className={CardWrapperStyle}>
+        <div>
+          <div className={CardTitleStyle}>{title}</div>
+          <div className={CardTitleStyle}>
+            <FormattedDate value={deliveredAt} />
+          </div>
+        </div>
 
-  return (
-    <div className={CardWrapperStyle}>
-      <div>
-        <div className={CardTitleStyle}>{title}</div>
-        <div className={CardTitleStyle}>
-          <FormattedDate value={deliveredAt} />
+        <div className={CardVisualizeStyle}>
+          <div className={BatchInfoStyle}>
+            <div>{quantityTitle}</div>
+            <div>{quantity}</div>
+          </div>
+          <div className={BatchInfoStyle}>
+            <div>{volumeTitle}</div>
+            <div>{volume}</div>
+          </div>
         </div>
       </div>
-
-      <div className={CardVisualizeStyle}>
-        <div className={BatchInfoStyle}>
-          <div>{quantityTitle}</div>
-          <div>{quantity}</div>
-        </div>
-        <div className={BatchInfoStyle}>
-          <div>{volumeTitle}</div>
-          <div>{volume}</div>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  }
 }

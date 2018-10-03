@@ -66,6 +66,7 @@ const GridColumn = css`
 `;
 
 export const ContentWrapperStyle = css`
+  overflow-y: hidden;
   width: 100%;
   padding: 50px 20px;
 `;
@@ -77,7 +78,7 @@ export const RelationMapGrid = styled('div')`
 `;
 
 export const ProductWrapper = css`
-  width: 63%;
+  width: 80vw;
 `;
 
 export const EmptyMessageStyle = css`
@@ -86,16 +87,33 @@ export const EmptyMessageStyle = css`
   color: ${colors.BLACK};
 `;
 
+export const InfiniteScrollWrapperStyle = css`
+  grid-column: span 3;
+  height: 65vh;
+  overflow: auto;
+`;
+
 export const ScrollWrapperStyle = css`
+  height: 65vh;
+  overflow-y: auto;
   background-color: #f7f7f7;
-  padding: 10px;
+  padding: 30px 10px;
+`;
+
+export const LeftScrollWrapperStyle = css`
+  background-color: #f7f7f7;
+  padding: 0 10px;
+  height: 65vh;
+  overflow-y: auto;
 `;
 
 export const ShipmentMapWrapperStyle = css`
+  padding: 35px 10px;
   grid-column: span 3;
   display: grid;
   grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1.8fr;
   grid-template-rows: repeat(auto-fill, 55px);
+  grid-row-gap: 30px;
   background-color: ${colors.WHITE};
 `;
 
@@ -104,7 +122,7 @@ export const OrderMapWrapperStyle = css`
   display: grid;
   grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1fr;
   background-color: #ffffff;
-  padding: 10px;
+  padding: 0 10px;
 `;
 export const FunctionWrapperStyle = css`
   grid-column: span 4;

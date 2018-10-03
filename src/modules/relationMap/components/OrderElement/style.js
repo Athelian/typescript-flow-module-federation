@@ -28,16 +28,24 @@ export const OrderListItemStyle = (isFocused: boolean) => css`
   color: ${colors.BLACK};
 `;
 
+export const TotalCardWrapperStyle = css`
+  margin-left: 1em;
+`;
+
 export const CardWrapperStyle = css`
-  width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  -webkit-justify-content: space-around;
-  justify-content: space-around;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  padding: 0 25px 0 5px;
 `;
 export const CardTitleStyle = css`
   ${fontSizes.SMALL};
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding-right: 2px;
   word-break: break-all;
 `;
@@ -71,7 +79,7 @@ export const ItemWrapperStyle = (isFocused: boolean) => {
     height: auto;
     min-height: 50px;
     max-height: 200px;
-    margin-bottom: 20px;
+    margin-bottom: 35px;
     ${fontSizes.MAIN};
     font-weight: bold;
     color: ${colors.BLACK};
@@ -81,4 +89,9 @@ export const ItemWrapperStyle = (isFocused: boolean) => {
 export const ShipmentCardStyle = css`
   height: 160px;
   grid-row: span 3;
+  margin-bottom: 35px;
+`;
+
+export const ShipmentCardTotalStyle = css`
+  margin-bottom: 35px;
 `;

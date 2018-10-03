@@ -1,12 +1,11 @@
 // @flow
 import * as React from 'react';
-import { SortInput, FilterInput, SearchInput, FocusInput } from 'components/NavBar';
+import { SortInput, FilterInput, SearchInput } from 'components/NavBar';
 import GridColumn from 'components/GridColumn';
 import { GroupFilterStyle } from './style';
 
 type OptionalProps = {
   sortInput: Array<Object>,
-  focusInput: Array<Object>,
 };
 
 type Props = OptionalProps & {
@@ -27,11 +26,6 @@ const defaultProps = {
     { title: 'Updated At', value: 'updatedAt' },
     { title: 'Created At', value: 'createdAt' },
   ],
-  focusInput: [
-    { title: 'Order', value: 'order' },
-    { title: 'Shipment', value: 'shipment' },
-    { title: 'Product', value: 'product' },
-  ],
 };
 class SortFilterBar extends React.Component<Props, State> {
   static defaultProps = defaultProps;
@@ -49,16 +43,11 @@ class SortFilterBar extends React.Component<Props, State> {
   };
 
   render() {
-    const { focusInput, sortInput, className, children } = this.props;
+    const { sortInput, className, children } = this.props;
     const { sort, filter } = this.state;
     return (
       <>
         <div className={className}>
-          <FocusInput
-            focus={focusInput.find(item => item.value === sort.field) || focusInput[0]}
-            fields={focusInput}
-            onChange={() => {}}
-          />
           <SortInput
             sort={sortInput.find(item => item.value === sort.field) || sortInput[0]}
             ascending={sort.direction !== 'DESCENDING'}
