@@ -6,10 +6,12 @@ export const productProviderFragment = gql`
     exporter {
       name
       id
+      types
     }
     supplier {
       name
       id
+      types
     }
     unitType
     unitVolume {

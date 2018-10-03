@@ -277,8 +277,8 @@ const OrderSection = ({ isNew }: Props) => (
                     <>
                       {!values.exporter ? (
                         <DashedPlusButton
-                          width="200px"
-                          height="230px"
+                          width="195px"
+                          height="215px"
                           onClick={() => slideToggle(true)}
                         />
                       ) : (

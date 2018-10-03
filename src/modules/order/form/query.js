@@ -128,6 +128,7 @@ export const orderDetailFragment = gql`
     exporter {
       id
       name
+      types
     }
   }
 

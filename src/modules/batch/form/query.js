@@ -18,6 +18,7 @@ export const batchFragment = gql`
         exporter {
           id
           name
+          types
         }
         tags {
           id
@@ -55,10 +56,12 @@ export const batchFragment = gql`
         exporter {
           id
           name
+          types
         }
         supplier {
           id
           name
+          types
         }
       }
     }

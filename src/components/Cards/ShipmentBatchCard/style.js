@@ -128,29 +128,27 @@ export const VolumeWrapperStyle: string = css`
   padding: 0 5px;
 `;
 
-export const ShipmentWrapperStyle: string = css`
+export const OrderWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 20px 1fr;
+  grid-template-columns: 20px 160px;
   width: 100%;
   padding: 0 10px;
   align-items: center;
   grid-gap: 5px;
 `;
 
-export const ShipmentIconStyle = (hasShipment: boolean): string => css`
+export const OrderIconStyle = css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   width: 20px;
   height: 20px;
-  background-color: ${hasShipment ? colors.TEAL : colors.GRAY_LIGHT};
+  background-color: ${colors.TEAL};
   color: ${colors.WHITE};
   font-size: 11px;
-  ${hasShipment &&
-    `
-      &:hover, :focus {
-        background-color: ${colors.TEAL_DARK};
-      }
-    `};
+  &:hover,
+  :focus {
+    background-color: ${colors.TEAL_DARK};
+  }
 `;
 
 export const BatchTagsWrapperStyle: string = css`

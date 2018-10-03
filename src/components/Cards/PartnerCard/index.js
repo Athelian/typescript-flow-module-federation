@@ -2,8 +2,16 @@
 import React from 'react';
 import { type Partner } from 'modules/partner/type.js.flow';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
+import Icon from 'components/Icon';
 import BaseCard, { CardAction } from '../BaseCard';
-import { PartnerCardStyle, PartnerCardImageStyle, PartnerNameStyle } from './style';
+import {
+  PartnerCardStyle,
+  PartnerCardImageStyle,
+  PartnerInfoWrapperStyle,
+  PartnerNameStyle,
+  PartnerTypesWrapperStyle,
+  PartnerTypeStyle,
+} from './style';
 
 type OptionalProps = {
   onClick: Function,
@@ -26,7 +34,7 @@ const defaultProps = {
 const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: Props) => {
   if (!partner) return '';
 
-  const { name } = partner;
+  const { name, types } = partner;
 
   const actions = selectable
     ? []
@@ -46,7 +54,26 @@ const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: 
     >
       <div className={PartnerCardStyle(size)} role="presentation" onClick={onClick}>
         <img className={PartnerCardImageStyle} src={FALLBACK_IMAGE} alt="exporter_image" />
-        <div className={PartnerNameStyle}>{name}</div>
+        <div className={PartnerInfoWrapperStyle(size)}>
+          <div className={PartnerNameStyle}>{name}</div>
+          <div className={PartnerTypesWrapperStyle(size)}>
+            <div className={PartnerTypeStyle(types && types.includes('Importer'))}>
+              <Icon icon="IMPORTER" />
+            </div>
+            <div className={PartnerTypeStyle(types && types.includes('Exporter'))}>
+              <Icon icon="EXPORTER" />
+            </div>
+            <div className={PartnerTypeStyle(types && types.includes('Supplier'))}>
+              <Icon icon="SUPPLIER" />
+            </div>
+            <div className={PartnerTypeStyle(types && types.includes('Forwarder'))}>
+              <Icon icon="FORWARDER" />
+            </div>
+            <div className={PartnerTypeStyle(types && types.includes('Warehouse'))}>
+              <Icon icon="WAREHOUSING" />
+            </div>
+          </div>
+        </div>
       </div>
     </BaseCard>
   );

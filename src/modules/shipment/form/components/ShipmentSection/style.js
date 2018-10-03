@@ -32,8 +32,8 @@ export const ExporterSeeMoreButtonStyle: string = css`
 export const ExporterEmptyCardStyle: string = css`
   ${borderRadiuses.MAIN};
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  width: 200px;
-  height: 230px;
+  width: 195px;
+  height: 215px;
 `;
 
 export const TagsInputStyle: string = css`

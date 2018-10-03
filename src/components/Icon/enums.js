@@ -94,7 +94,9 @@ import {
 
 import {
   // Components
+  faIndustryAlt as IMPORTER,
   faIndustry as SUPPLIER,
+  faWarehouse as WAREHOUSING,
   // Common UI
   faThList as TABLE,
   faList as LIST,
@@ -126,9 +128,11 @@ export default {
   PROFILE,
   LOGIN,
   LOGOUT,
+  IMPORTER,
   EXPORTER,
   FORWARDER,
   SUPPLIER,
+  WAREHOUSING,
   CARGO,
   PACKAGING,
   QUANTITY_ADJUSTMENTS,
