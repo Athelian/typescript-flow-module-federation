@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import NotificationItem from 'modules/notifications/components/NotificationItem';
 
@@ -27,7 +28,12 @@ const NotificationListView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="860px"
       isEmpty={items.length === 0}
-      emptyMessage="No notification found"
+      emptyMessage={
+        <FormattedMessage
+          id="modules.notifications.noItem"
+          defaultMessage="No notification found"
+        />
+      }
     >
       {items.map(item => renderItem(item))}
     </GridView>
