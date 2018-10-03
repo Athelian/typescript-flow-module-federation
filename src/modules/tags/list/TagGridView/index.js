@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { TagCard } from 'components/Cards';
 
@@ -27,7 +28,7 @@ const TagGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="200px"
       isEmpty={items.length === 0}
-      emptyMessage="No tags found"
+      emptyMessage={<FormattedMessage id="modules.tags.noItem" defaultMessage="No tags found" />}
     >
       {items.map(item => renderItem(item))}
     </GridView>

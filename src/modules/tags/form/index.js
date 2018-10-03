@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
 import { isEquals } from 'utils/fp';
 import { TagSection } from './components';
@@ -40,7 +41,10 @@ export default class TagForm extends React.Component<Props> {
     return (
       <div className={TagFormWrapperStyle}>
         <SectionWrapper id="tagSection">
-          <SectionHeader icon="TAG" title="TAG">
+          <SectionHeader
+            icon="TAG"
+            title={<FormattedMessage id="modules.tags.tag" defaultMessage="TAG" />}
+          >
             {!isNew && (
               <>
                 <LastModified updatedAt={tag.updatedAt} updatedBy={tag.updatedBy} />
