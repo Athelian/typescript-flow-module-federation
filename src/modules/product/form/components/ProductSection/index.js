@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { FormField } from 'modules/form';
@@ -132,7 +133,7 @@ const ProductSection = ({ isNew }: Props) => (
                   isNew,
                   required: true,
                   originalValue: initialValues[name],
-                  label: 'NAME',
+                  label: <FormattedMessage id="modules.product.name" defaultMessage="NAME" />,
                 })
               }
             </FormField>
@@ -150,7 +151,7 @@ const ProductSection = ({ isNew }: Props) => (
                   isNew,
                   required: true,
                   originalValue: initialValues[name],
-                  label: 'SERIAL',
+                  label: <FormattedMessage id="modules.product.serial" defaultMessage="SERIAL" />,
                 })
               }
             </FormField>
@@ -167,7 +168,9 @@ const ProductSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   originalValue: initialValues[name],
-                  label: 'JAN CODE',
+                  label: (
+                    <FormattedMessage id="modules.product.janCode" defaultMessage="JAN CODE" />
+                  ),
                 })
               }
             </FormField>
@@ -184,7 +187,7 @@ const ProductSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   originalValue: initialValues[name],
-                  label: 'HS CODE',
+                  label: <FormattedMessage id="modules.product.hsCode" defaultMessage="HS CODE" />,
                 })
               }
             </FormField>
@@ -201,7 +204,9 @@ const ProductSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   originalValue: initialValues[name],
-                  label: 'MATERIAL',
+                  label: (
+                    <FormattedMessage id="modules.product.material" defaultMessage="MATERIAL" />
+                  ),
                 })
               }
             </FormField>
@@ -210,7 +215,11 @@ const ProductSection = ({ isNew }: Props) => (
                 {({ state: { tags }, setFieldValue: changeTags }) => (
                   <FieldItem
                     vertical
-                    label={<Label>TAGS</Label>}
+                    label={
+                      <Label>
+                        <FormattedMessage id="modules.product.tags" defaultMessage="TAGS" />
+                      </Label>
+                    }
                     input={
                       <TagsInput
                         editable={isNew}

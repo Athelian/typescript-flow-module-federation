@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { SectionNavBar } from 'components/NavBar';
 import { ProductProviderCard } from 'components/Cards';
@@ -26,7 +27,15 @@ function ProductProvidersSection() {
             <BooleanValue>
               {({ value: opened, set: slideToggle }) => (
                 <>
-                  <NewButton label="NEW PROVIDER" onClick={() => slideToggle(true)} />
+                  <NewButton
+                    label={
+                      <FormattedMessage
+                        id="modules.product.newProvider"
+                        defaultMessage="NEW PROVIDER"
+                      />
+                    }
+                    onClick={() => slideToggle(true)}
+                  />
                   <SlideView
                     isOpen={opened}
                     onRequestClose={() => slideToggle(false)}
@@ -99,7 +108,10 @@ function ProductProvidersSection() {
           <div className={ProductProviderSectionBodyStyle}>
             {productProviders.length === 0 ? (
               <div className={EmptyMessageStyle}>
-                No providers found. Please create at least one provider.
+                <FormattedMessage
+                  id="modules.product.noProviderFound"
+                  defaultMessage="No providers found. Please create at least one provider."
+                />
               </div>
             ) : (
               <div className={ItemGridStyle}>
