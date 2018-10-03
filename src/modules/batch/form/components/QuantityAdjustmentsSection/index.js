@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { numberInputFactory } from 'modules/form/helpers';
 import BatchFormContainer from 'modules/batch/form/container';
@@ -36,7 +37,14 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
         return (
           <GridColumn gap="10px">
             <FieldItem
-              label={<Label>INITIAL QUANTITY</Label>}
+              label={
+                <Label>
+                  <FormattedMessage
+                    id="modules.batch.initialQuantity"
+                    defaultMessage="INITIAL QUANTITY"
+                  />
+                </Label>
+              }
               input={
                 <div className={InitialQuantityStyle}>
                   <FormattedNumber value={values.quantity || 0} />
@@ -79,7 +87,12 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
               )}
             <div className={AddAdjustmentButtonWrapperStyle}>
               <NewButton
-                label="NEW ADJUSTMENT"
+                label={
+                  <FormattedMessage
+                    id="modules.batch.newAdjustment"
+                    defaultMessage="NEW ADJUSTMENT"
+                  />
+                }
                 onClick={() => {
                   setFieldArrayValue(
                     `batchAdjustments[${values.batchAdjustments.length}]`,
@@ -96,7 +109,14 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
             </div>
             <Divider />
             <FieldItem
-              label={<Label>CURRENT QUANTITY</Label>}
+              label={
+                <Label>
+                  <FormattedMessage
+                    id="modules.batch.currentQuantity"
+                    defaultMessage="CURRENT QUANTITY"
+                  />
+                </Label>
+              }
               input={
                 <div className={CurrentQuantityStyle}>
                   <FormattedNumber value={currentQuantity || 0} />

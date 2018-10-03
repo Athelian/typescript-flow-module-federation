@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { isEquals } from 'utils/fp';
 import { Tooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
@@ -48,16 +49,28 @@ export default class BatchForm extends React.Component<Props> {
     return (
       <div className={BatchFormWrapperStyle}>
         <SectionWrapper id="batchSection">
-          <SectionHeader icon="BATCH" title="BATCH">
+          <SectionHeader
+            icon="BATCH"
+            title={<FormattedMessage id="modules.batch.batch" defaultMessage="BATCH" />}
+          >
             {!isNew && (
               <>
                 <LastModified updatedAt={batch.updatedAt} updatedBy={batch.updatedBy} />
 
                 <div className={StatusStyle(batch.archived)}>
                   <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
-                  {batch.archived ? 'Archived' : 'Active'}
+                  {batch.archived ? (
+                    <FormattedMessage id="modules.batch.archived" defaultMessage="Archived" />
+                  ) : (
+                    <FormattedMessage id="modules.batch.active" defaultMessage="Active" />
+                  )}
                   <Tooltip
-                    infoMessage="The status is controlled by the Order and Shipment this Batch belongs to"
+                    infoMessage={
+                      <FormattedMessage
+                        id="modules.batch.archived.tooltip.infoMessage"
+                        defaultMessage="The status is controlled by the Order and Shipment this Batch belongs to"
+                      />
+                    }
                     position="bottom"
                   />
                 </div>
@@ -68,12 +81,23 @@ export default class BatchForm extends React.Component<Props> {
         </SectionWrapper>
 
         <SectionWrapper id="quantityAdjustmentsSection">
-          <SectionHeader icon="QUANTITY_ADJUSTMENTS" title="QUANTITY ADJUSTMENTS" />
+          <SectionHeader
+            icon="QUANTITY_ADJUSTMENTS"
+            title={
+              <FormattedMessage
+                id="modules.batch.quantityAdjustments"
+                defaultMessage="QUANTITY ADJUSTMENTS"
+              />
+            }
+          />
           <QuantityAdjustmentsSection isNew={isNew} />
         </SectionWrapper>
 
         <SectionWrapper id="packagingSection">
-          <SectionHeader icon="PACKAGING" title="PACKAGING" />
+          <SectionHeader
+            icon="PACKAGING"
+            title={<FormattedMessage id="modules.batch.packaging" defaultMessage="PACKAGING" />}
+          />
           <PackagingSection isNew={isNew} />
         </SectionWrapper>
       </div>
