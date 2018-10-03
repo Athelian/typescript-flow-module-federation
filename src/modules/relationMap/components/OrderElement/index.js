@@ -21,6 +21,7 @@ type OptionalProps = {
   isCollapsed: boolean,
   isFocused: boolean,
   onClick: Function,
+  onDoubleClick?: Function,
   onMouseEnter: Function,
   onMouseLeave: Function,
 };
@@ -36,7 +37,7 @@ type Props = OptionalProps & {
 };
 
 const Item = (props: Props) => {
-  const { type, data, onClick, isFocused, onMouseEnter, onMouseLeave } = props;
+  const { type, data, onClick, isFocused, onMouseEnter, onMouseLeave, onDoubleClick } = props;
   let render = <div />;
   switch (type) {
     case 'TAGS': {
@@ -73,7 +74,11 @@ const Item = (props: Props) => {
           actions={[]}
           wrapperClassName={ItemWrapperStyle(isFocused)}
         >
-          <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+          <WrapperCard
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onDoubleClick={onDoubleClick}
+          >
             <OrderCard
               info={data.info}
               orderedQuantity={data.orderedQuantity}
