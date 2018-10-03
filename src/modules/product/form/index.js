@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { isEquals, isDataType } from 'utils/fp';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 import { Subscribe } from 'unstated';
@@ -41,14 +42,20 @@ class ProductForm extends React.Component<Props> {
     return (
       <div className={ProductFormWrapperStyle}>
         <SectionWrapper id="productSection">
-          <SectionHeader icon="PRODUCT" title="PRODUCT">
+          <SectionHeader
+            icon="PRODUCT"
+            title={<FormattedMessage id="modules.product.product" defaultMessage="PRODUCT" />}
+          >
             {!isNew && <LastModified updatedAt={product.updatedAt} updatedBy={product.updatedBy} />}
           </SectionHeader>
           <ProductSection isNew={isNew} />
         </SectionWrapper>
 
         <SectionWrapper id="productProvidersSection">
-          <SectionHeader icon="PROVIDER" title="PROVIDERS" />
+          <SectionHeader
+            icon="PROVIDER"
+            title={<FormattedMessage id="modules.product.providers" defaultMessage="PROVIDERS" />}
+          />
           <Subscribe to={[FormContainer]}>
             {({ state: { touched, errors } }) => {
               const errorMessage: ?string | ?Object = errors.productProviders;

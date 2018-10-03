@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import QueryDetail from 'components/common/QueryDetail';
@@ -148,10 +149,24 @@ class ProductFormModule extends React.Component<Props> {
                     <NavBar>
                       <EntityIcon icon="PRODUCT" color="PRODUCT" />
                       <JumpToSection>
-                        <SectionTabs link="productSection" label="PRODUCT" icon="PRODUCT" />
+                        <SectionTabs
+                          link="productSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.product.product"
+                              defaultMessage="PRODUCT"
+                            />
+                          }
+                          icon="PRODUCT"
+                        />
                         <SectionTabs
                           link="productProvidersSection"
-                          label="PROVIDERS"
+                          label={
+                            <FormattedMessage
+                              id="modules.product.providers"
+                              defaultMessage="PROVIDERS"
+                            />
+                          }
                           icon="PROVIDER"
                         />
                       </JumpToSection>

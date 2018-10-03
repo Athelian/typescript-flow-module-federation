@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import validator from 'modules/productProvider/form/validator';
@@ -42,15 +43,31 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                 <SlideViewNavBar>
                   <EntityIcon icon="PROVIDER" color="PROVIDER" />
                   <JumpToSection>
-                    <SectionTabs link="productProviderSection" label="PROVIDER" icon="PROVIDER" />
+                    <SectionTabs
+                      link="productProviderSection"
+                      label={
+                        <FormattedMessage id="modules.product.provider" defaultMessage="PROVIDER" />
+                      }
+                      icon="PROVIDER"
+                    />
                     <SectionTabs
                       link="specificationsSection"
-                      label="SPECIFICATIONS"
+                      label={
+                        <FormattedMessage
+                          id="modules.product.specifications"
+                          defaultMessage="SPECIFICATIONS"
+                        />
+                      }
                       icon="SPECIFICATIONS"
                     />
                     <SectionTabs
                       link="productProviderPackagingSection"
-                      label="PACKAGING"
+                      label={
+                        <FormattedMessage
+                          id="modules.product.packaging"
+                          defaultMessage="PACKAGING"
+                        />
+                      }
                       icon="PACKAGING"
                     />
                   </JumpToSection>
