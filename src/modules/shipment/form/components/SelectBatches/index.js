@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue } from 'react-values';
 import Layout from 'components/Layout';
@@ -25,7 +26,7 @@ import { ItemWrapperStyle } from './style';
 type Props = {
   onCancel: Function,
   onSelect: Function,
-  intl: intlShape,
+  intl: IntlShape,
 };
 
 function onSelectBatch({

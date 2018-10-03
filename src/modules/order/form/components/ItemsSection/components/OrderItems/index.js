@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { BooleanValue, ArrayValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
@@ -27,7 +28,7 @@ import {
 } from './style';
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
   selected: Array<string>,
   orderItems: Array<Object>,
   currency: string,

@@ -12,7 +12,7 @@ import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
-import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
+import { FieldItem, Label, DashedPlusButton, TagsInput, Tooltip } from 'components/Form';
 import {
   textInputFactory,
   dateInputFactory,
@@ -21,6 +21,15 @@ import {
 import { PartnerCard } from 'components/Cards';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
+import Icon from 'components/Icon';
+import UserAvatar from 'components/UserAvatar';
+import AssignUsers from 'modules/shipment/form/components/TimelineSection/components/AssignUsers';
+import {
+  AssignmentWrapperStyle,
+  AssignmentStyle,
+  RemoveAssignmentButtonStyle,
+  AddAssignmentButtonStyle,
+} from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import TotalSummary from './components/TotalSummary';
 import {
   OrderSectionWrapperStyle,
@@ -203,6 +212,63 @@ const OrderSection = ({ isNew }: Props) => (
               </GridColumn>
 
               <GridColumn gap="10px">
+                <FieldItem
+                  label={<Label>IN CHARGE ({values.inCharges.length})</Label>}
+                  tooltip={<Tooltip infoMessage="You can choose up to 5 people in charge." />}
+                />
+                <div className={AssignmentWrapperStyle}>
+                  {values &&
+                    values.inCharges &&
+                    values.inCharges.map(({ id, firstName, lastName }) => (
+                      <div className={AssignmentStyle} key={id}>
+                        <button
+                          className={RemoveAssignmentButtonStyle}
+                          onClick={() =>
+                            setFieldValue(
+                              'inCharges',
+                              values.inCharges.filter(({ id: userId }) => id !== userId)
+                            )
+                          }
+                          type="button"
+                        >
+                          <Icon icon="REMOVE" />
+                        </button>
+                        <UserAvatar firstName={firstName} lastName={lastName} />
+                      </div>
+                    ))}
+                  {((values && !values.inCharges) ||
+                    (values && values.inCharges && values.inCharges.length < 5)) && (
+                    <BooleanValue>
+                      {({ value: isOpen, set: slideToggle }) => (
+                        <>
+                          <button
+                            className={AddAssignmentButtonStyle}
+                            type="button"
+                            onClick={() => slideToggle(true)}
+                          >
+                            <Icon icon="ADD" />
+                          </button>
+                          <SlideView
+                            isOpen={isOpen}
+                            onRequestClose={() => slideToggle(false)}
+                            options={{ width: '1030px' }}
+                          >
+                            {isOpen && (
+                              <AssignUsers
+                                selected={values.inCharges}
+                                onSelect={selected => {
+                                  slideToggle(false);
+                                  setFieldValue('inCharges', selected);
+                                }}
+                                onCancel={() => slideToggle(false)}
+                              />
+                            )}
+                          </SlideView>
+                        </>
+                      )}
+                    </BooleanValue>
+                  )}
+                </div>
                 <Label required>
                   <FormattedMessage {...messages.exporter} />
                 </Label>

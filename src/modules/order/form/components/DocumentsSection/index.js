@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { DocumentsInput } from 'components/Form';
 import { OrderFilesContainer } from 'modules/order/form/containers';
@@ -8,7 +9,7 @@ import messages from 'modules/order/messages';
 import { DocumentSectionStyle } from './style';
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
 };
 
 function DocumentsSection({ intl }: Props) {

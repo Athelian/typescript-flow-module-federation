@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Link } from '@reach/router';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
 import FilterToolBar from 'components/common/FilterToolBar';
 import Layout from 'components/Layout';
@@ -11,7 +12,7 @@ import ShipmentList from './list';
 import messages from './messages';
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
 };
 
 type State = {

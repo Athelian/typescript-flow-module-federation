@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import { ShipmentBatchCard } from 'components/Cards';
@@ -23,7 +24,7 @@ import {
 import SelectBatches from '../SelectBatches';
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
 };
 
 function CargoSection({ intl }: Props) {
