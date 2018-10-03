@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormField } from 'modules/form';
@@ -33,7 +34,12 @@ const PackagingSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'PACKAGE NAME',
+                  label: (
+                    <FormattedMessage
+                      id="modules.batch.packageName"
+                      defaultMessage="PACKAGE NAME"
+                    />
+                  ),
                 })
               }
             </FormField>
@@ -49,7 +55,12 @@ const PackagingSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'PACKAGE QUANTITY',
+                  label: (
+                    <FormattedMessage
+                      id="modules.batch.packageQuantity"
+                      defaultMessage="PACKAGE QUANTITY"
+                    />
+                  ),
                 })
               }
             </FormField>
@@ -67,7 +78,12 @@ const PackagingSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('packageGrossWeight.value', originalValues),
-                  label: 'PKG GROSS WEIGHT',
+                  label: (
+                    <FormattedMessage
+                      id="modules.batch.pkgGrossWeight"
+                      defaultMessage="PKG GROSS WEIGHT"
+                    />
+                  ),
                   WrapperComponent: DefaultWeightStyle,
                 })
               }
@@ -86,7 +102,9 @@ const PackagingSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('packageVolume.value', originalValues),
-                  label: 'PKG VOLUME',
+                  label: (
+                    <FormattedMessage id="modules.batch.pkgVolume" defaultMessage="PKG VOLUME" />
+                  ),
                   WrapperComponent: DefaultVolumeStyle,
                 })
               }
@@ -105,7 +123,9 @@ const PackagingSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('packageSize.length.value', originalValues),
-                  label: 'PKG LENGTH',
+                  label: (
+                    <FormattedMessage id="modules.batch.pkgLength" defaultMessage="PKG LENGTH" />
+                  ),
                   WrapperComponent: DefaultDimensionStyle,
                 })
               }
@@ -124,7 +144,9 @@ const PackagingSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('packageSize.width.value', originalValues),
-                  label: 'PKG WIDTH',
+                  label: (
+                    <FormattedMessage id="modules.batch.pkgWidth" defaultMessage="PKG WIDTH" />
+                  ),
                   WrapperComponent: DefaultDimensionStyle,
                 })
               }
@@ -143,7 +165,9 @@ const PackagingSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('packageSize.height.value', originalValues),
-                  label: 'PKG HEIGHT',
+                  label: (
+                    <FormattedMessage id="modules.batch.pkgHeight" defaultMessage="PKG HEIGHT" />
+                  ),
                   WrapperComponent: DefaultDimensionStyle,
                 })
               }

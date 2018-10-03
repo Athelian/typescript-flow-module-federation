@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import QueryDetail from 'components/common/QueryDetail';
@@ -110,13 +111,33 @@ class BatchFormModule extends React.PureComponent<Props> {
                     <NavBar>
                       <EntityIcon icon="BATCH" color="BATCH" />
                       <JumpToSection>
-                        <SectionTabs link="batchSection" label="BATCH" icon="BATCH" />
+                        <SectionTabs
+                          link="batchSection"
+                          label={
+                            <FormattedMessage id="modules.batch.batch" defaultMessage="BATCH" />
+                          }
+                          icon="BATCH"
+                        />
                         <SectionTabs
                           link="quantityAdjustmentsSection"
-                          label="QUANTITY ADJUSTMENTS"
+                          label={
+                            <FormattedMessage
+                              id="modules.batch.quantityAdjustments"
+                              defaultMessage="QUANTITY ADJUSTMENTS"
+                            />
+                          }
                           icon="QUANTITY_ADJUSTMENTS"
                         />
-                        <SectionTabs link="packagingSection" label="PACKAGING" icon="PACKAGING" />
+                        <SectionTabs
+                          link="packagingSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.batch.packaging"
+                              defaultMessage="PACKAGING"
+                            />
+                          }
+                          icon="PACKAGING"
+                        />
                       </JumpToSection>
                       <Subscribe to={[BatchFormContainer, FormContainer]}>
                         {(formState, form) =>
