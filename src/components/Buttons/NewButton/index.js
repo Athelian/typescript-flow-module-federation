@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 
 type OptionalProps = {
@@ -11,7 +12,7 @@ type OptionalProps = {
 type Props = OptionalProps;
 
 const defaultProps = {
-  label: 'NEW',
+  label: <FormattedMessage id="components.button.new" defaultMessage="NEW" />,
   disabled: false,
   onClick: () => {},
 };

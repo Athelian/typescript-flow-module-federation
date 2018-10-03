@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 
 type OptionalProps = {
@@ -17,7 +18,7 @@ const defaultProps = {
 const ApproveButton = ({ disabled, onClick }: Props): React.Node => (
   <BaseButton
     icon="CHECKED"
-    label="APPROVE"
+    label={<FormattedMessage id="components.button.approve" defaultMessage="APPROVE" />}
     backgroundColor="BLUE"
     hoverBackgroundColor="BLUE_DARK"
     disabled={disabled}

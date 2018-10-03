@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 
 type OptionalProps = {
@@ -17,7 +18,7 @@ const defaultProps = {
 const ArchiveButton = ({ disabled, onClick }: Props): React.Node => (
   <BaseButton
     icon="ARCHIVE"
-    label="ARCHIVE"
+    label={<FormattedMessage id="components.button.archive" defaultMessage="ARCHIVE" />}
     backgroundColor="GRAY"
     hoverBackgroundColor="GRAY_DARK"
     disabled={disabled}
