@@ -23,4 +23,7 @@ export const VoyageDatesWrapperStyle: string = css`
 
 export const BlankGapStyle: string = css`
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 `;

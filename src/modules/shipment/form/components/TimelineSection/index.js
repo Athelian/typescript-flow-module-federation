@@ -24,7 +24,6 @@ const TimelineSection = ({ isNew }: Props) => (
       { originalValues: initialValues, state, setFieldDeepValue, removeArrayItem },
       { state: transportTypeState }
     ) => {
-      // $FlowFixMe
       const values: Object = {
         ...initialValues,
         ...state,
@@ -71,7 +70,6 @@ const TimelineSection = ({ isNew }: Props) => (
               icon={getTransportIcon(values.transportType)}
               title={values.voyages.length > 1 ? 'FIRST VOYAGE' : 'VOYAGE'}
               voyage={voyages[0]}
-              // $FlowFixMe
               initialVoyage={initialValues.voyages[0]}
               sourceName="voyages.0"
               setFieldDeepValue={(field, newValue) => {
@@ -118,7 +116,6 @@ const TimelineSection = ({ isNew }: Props) => (
                   icon={getTransportIcon(values.transportType)}
                   title="SECOND VOYAGE"
                   voyage={voyages[1]}
-                  // $FlowFixMe
                   initialVoyage={initialValues.voyages[1]}
                   sourceName="voyages.1"
                   setFieldDeepValue={(field, newValue) => {
@@ -168,7 +165,6 @@ const TimelineSection = ({ isNew }: Props) => (
                   icon={getTransportIcon(values.transportType)}
                   title="THIRD VOYAGE"
                   voyage={voyages[2]}
-                  // $FlowFixMe
                   initialVoyage={initialValues.voyages[2]}
                   sourceName="voyages.2"
                   setFieldDeepValue={(field, newValue) => {

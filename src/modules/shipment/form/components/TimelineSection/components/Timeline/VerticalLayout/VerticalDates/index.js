@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { TimelineDate, TimelinePortName } from '../../components';
+import { TimelineDate, TimelinePortName, TimelineWareHouse } from '../../components';
 import {
   VerticalDatesWrapperStyle,
   SingularDateWrapperStyle,
@@ -14,7 +14,7 @@ type Props = {
 
 const VerticalDates = ({ shipment }: Props) => {
   const { cargoReady, voyages, containerGroups, transportType } = shipment;
-  const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
+  const { customClearance, warehouseArrival, deliveryReady, warehouse } = containerGroups[0];
 
   const loadPort = voyages[0].departurePort;
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
@@ -54,11 +54,10 @@ const VerticalDates = ({ shipment }: Props) => {
         <TimelineDate timelineDate={customClearance} vertical />
       </div>
 
-      <div className={BlankGapStyle} />
-
-      <div className={SingularDateWrapperStyle}>
+      <div className={BlankGapStyle}>
         <TimelineDate timelineDate={warehouseArrival} vertical />
       </div>
+      <TimelineWareHouse name={warehouse && warehouse.name} vertical />
 
       <div className={BlankGapStyle} />
 
