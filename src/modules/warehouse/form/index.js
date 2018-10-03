@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { isEquals } from 'utils/fp';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
 import { WarehouseSection } from './components';
@@ -40,7 +41,10 @@ class WarehouseForm extends React.Component<Props> {
     return (
       <div className={WarehouseFormWrapperStyle}>
         <SectionWrapper id="warehouseSection">
-          <SectionHeader icon="WAREHOUSE" title="WAREHOUSE">
+          <SectionHeader
+            icon="WAREHOUSE"
+            title={<FormattedMessage id="modules.warehouse.warehouse" defaultMessage="WAREHOUSE" />}
+          >
             {!isNew && (
               <>
                 <LastModified updatedAt={warehouse.updatedAt} updatedBy={warehouse.updatedBy} />

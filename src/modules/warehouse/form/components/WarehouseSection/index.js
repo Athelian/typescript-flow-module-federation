@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import WarehouseContainer from 'modules/warehouse/form/containers';
 import validator from 'modules/warehouse/form/validator';
@@ -40,7 +41,7 @@ const WarehouseSection = ({ isNew }: Props) => (
                   isNew,
                   required: true,
                   originalValue: originalValues[name],
-                  label: 'NAME',
+                  label: <FormattedMessage id="modules.warehouse.name" defaultMessage="NAME" />,
                 })
               }
             </FormField>
@@ -52,7 +53,12 @@ const WarehouseSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'STREET ADDRESS',
+                  label: (
+                    <FormattedMessage
+                      id="modules.warehouse.streetAddress"
+                      defaultMessage="STREET ADDRESS"
+                    />
+                  ),
                 })
               }
             </FormField>
@@ -64,7 +70,9 @@ const WarehouseSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'LOCALITY',
+                  label: (
+                    <FormattedMessage id="modules.warehouse.locality" defaultMessage="LOCALITY" />
+                  ),
                 })
               }
             </FormField>
@@ -76,7 +84,7 @@ const WarehouseSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'REGION',
+                  label: <FormattedMessage id="modules.warehouse.region" defaultMessage="REGION" />,
                 })
               }
             </FormField>
@@ -92,7 +100,12 @@ const WarehouseSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'POSTAL CODE',
+                  label: (
+                    <FormattedMessage
+                      id="modules.warehouse.postalCode"
+                      defaultMessage="POSTAL CODE"
+                    />
+                  ),
                 })
               }
             </FormField>
@@ -105,7 +118,9 @@ const WarehouseSection = ({ isNew }: Props) => (
                   inputHandlers,
                   isNew,
                   originalValue: originalValues[name],
-                  label: 'COUNTRY',
+                  label: (
+                    <FormattedMessage id="modules.warehouse.country" defaultMessage="COUNTRY" />
+                  ),
                 })
               }
             </FormField>
@@ -123,7 +138,12 @@ const WarehouseSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   originalValue: getByPath('surface.value', originalValues),
-                  label: 'SURFACE AREA',
+                  label: (
+                    <FormattedMessage
+                      id="modules.warehouse.surfaceArea"
+                      defaultMessage="SURFACE AREA"
+                    />
+                  ),
                   WrapperComponent: DefaultSurfaceStyle,
                 })
               }
