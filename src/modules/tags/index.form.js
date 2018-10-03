@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
@@ -112,7 +113,11 @@ export default class TagFormContainer extends React.PureComponent<Props> {
                     <NavBar>
                       <EntityIcon icon="TAG" color="TAG" />
                       <JumpToSection>
-                        <SectionTabs link="tagSection" label="TAG" icon="TAG" />
+                        <SectionTabs
+                          link="tagSection"
+                          label={<FormattedMessage id="modules.tags.tag" defaultMessage="TAG" />}
+                          icon="TAG"
+                        />
                       </JumpToSection>
                       <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
                         {(tagState, entityTypesState, form) =>
