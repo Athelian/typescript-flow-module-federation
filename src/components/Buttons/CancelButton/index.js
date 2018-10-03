@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 
 type OptionalProps = {
@@ -16,7 +17,7 @@ const defaultProps = {
 
 const CancelButton = ({ disabled, onClick }: Props): React.Node => (
   <BaseButton
-    label="CANCEL"
+    label={<FormattedMessage id="components.button.cancel" defaultMessage="CANCEL" />}
     textColor="GRAY_DARK"
     hoverTextColor="WHITE"
     backgroundColor="GRAY_SUPER_LIGHT"
