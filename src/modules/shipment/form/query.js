@@ -71,6 +71,10 @@ export const shipmentDetailQuery = gql`
         sort
       }
       containerGroups {
+        warehouse {
+          id
+          name
+        }
         customClearance {
           ...timelineDateFragment
         }

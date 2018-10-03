@@ -44,6 +44,7 @@ type OptionalProps = {
     timelineDateRevisions: Array<Object>,
     date: Date,
   },
+  renderBelowHeader: React.Node,
 };
 
 type Props = OptionalProps & {
@@ -56,6 +57,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
+  renderBelowHeader: null,
   timelineDate: { assignedTo: [], timelineDateRevisions: [] },
 };
 
@@ -93,12 +95,14 @@ class TimelineInfoSection extends React.Component<Props> {
       sourceName,
       setFieldDeepValue,
       removeArrayItem,
+      renderBelowHeader,
       ...rest
     } = this.props;
     return (
       <div className={TimelineInfoSectionWrapperStyle} {...rest}>
         <GridColumn gap="10px">
           <SectionHeader icon={icon} title={title} />
+          {renderBelowHeader}
           <div className={AssignedAndApprovalWrapperStyle}>
             <GridColumn gap="5px">
               <Label>ASSIGNED TO</Label>

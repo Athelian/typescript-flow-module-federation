@@ -7,26 +7,47 @@ import { encodeId } from 'utils/id';
 import BaseCard, { CardAction } from '../BaseCard';
 import { WarehouseCardWrapperStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  onClick: Function,
+  selectable: boolean,
+  readOnly: boolean,
+};
+
+type Props = OptionalProps & {
   warehouse: ?Warehouse,
 };
 
-const WarehouseCard = ({ warehouse }: Props) => {
+const defaultProps = {
+  onClick: ({ id }) => navigate(`/warehouse/${encodeId(id)}`),
+  selectable: false,
+  readOnly: false,
+};
+
+const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, ...rest }: Props) => {
   if (!warehouse) return '';
 
   const { id } = warehouse;
 
-  const actions = [
-    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
-  ];
+  const actions = selectable
+    ? []
+    : [
+        <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
+        <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+        <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
+      ];
 
   return (
-    <BaseCard icon="WAREHOUSE" color="WAREHOUSE" actions={actions}>
+    <BaseCard
+      {...rest}
+      icon="WAREHOUSE"
+      color="WAREHOUSE"
+      actions={actions}
+      selectable={selectable}
+      readOnly={readOnly}
+    >
       <div
         className={WarehouseCardWrapperStyle}
-        onClick={() => navigate(`/warehouse/${encodeId(id)}`)}
+        onClick={() => onClick(warehouse)}
         role="presentation"
       >
         {id}
@@ -34,5 +55,7 @@ const WarehouseCard = ({ warehouse }: Props) => {
     </BaseCard>
   );
 };
+
+WarehouseCard.defaultProps = defaultProps;
 
 export default WarehouseCard;
