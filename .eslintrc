@@ -24,6 +24,9 @@
       "node": {
         "moduleDirectory": ["node_modules", "src/"]
       }
+    },
+    "react": {
+      "flowVersion": "0.82"
     }
   }
 }

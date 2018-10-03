@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import { navigate, Location, Link } from '@reach/router';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
@@ -13,7 +14,7 @@ import { NewButton } from 'components/Buttons';
 
 type Props = {
   onChangeTab: Function,
-  intl: intlShape,
+  intl: IntlShape,
   children: React.Node,
 };
 

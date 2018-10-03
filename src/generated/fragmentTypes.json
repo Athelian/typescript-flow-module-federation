@@ -108,6 +108,11 @@
       },
       {
         "kind": "INTERFACE",
+        "name": "Supervised",
+        "possibleTypes": [{ "name": "Order" }, { "name": "Shipment" }]
+      },
+      {
+        "kind": "INTERFACE",
         "name": "Tagged",
         "possibleTypes": [
           { "name": "Batch" },

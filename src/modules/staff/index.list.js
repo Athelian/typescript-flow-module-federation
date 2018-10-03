@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
@@ -9,7 +10,7 @@ import StaffList from './list';
 import messages from './messages';
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
 };
 
 type State = {
