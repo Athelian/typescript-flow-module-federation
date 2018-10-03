@@ -6,13 +6,22 @@ import Translator from './lib/translator';
 const MESSAGES_PATTERN = './build/messages/**/*.json';
 const LANG_DIR = './src/i18n/translations/';
 
-let defaultMessages = globSync(MESSAGES_PATTERN)
+const japanMessages = {};
+const originalJapanFile = JSON.parse(fs.readFileSync(`${LANG_DIR}ja.json`, 'utf8'));
+
+const englishMessages = globSync(MESSAGES_PATTERN)
   .map(filename => fs.readFileSync(filename, 'utf8'))
   .map(file => JSON.parse(file))
   .reduce((collection, descriptors) => {
     descriptors.forEach(({ id, defaultMessage }) => {
       if (collection.hasOwnProperty(id)) {
         if (defaultMessage === collection[id]) console.warn(`Duplicate message id: ${id}`);
+      }
+
+      if (originalJapanFile[id]) {
+        japanMessages[id] = originalJapanFile[id];
+      } else {
+        japanMessages[id] = defaultMessage;
       }
 
       collection[id] = defaultMessage;
@@ -22,6 +31,6 @@ let defaultMessages = globSync(MESSAGES_PATTERN)
   }, {});
 
 mkdirpSync(LANG_DIR);
-fs.writeFileSync(LANG_DIR + 'en.json', JSON.stringify(defaultMessages, null, 2));
 
-//TODO: Update new change to jp.json
+fs.writeFileSync(LANG_DIR + 'en.json', JSON.stringify(englishMessages, null, 2));
+fs.writeFileSync(LANG_DIR + 'ja.json', JSON.stringify(japanMessages, null, 2));
