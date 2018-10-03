@@ -14,6 +14,7 @@ type Props = OptionalProps & {
   entryType: string,
   entry: Object,
   showDayHeader: boolean,
+  hideAvatar: boolean,
 };
 
 const defaultProps = {
@@ -26,6 +27,7 @@ const EntityTimeline = ({
   entryType,
   commentHandlers,
   showDayHeader,
+  hideAvatar,
 }: Props) => (
   <div className={WrapperStyle}>
     <div className={TimelineStyle}>
@@ -33,7 +35,7 @@ const EntityTimeline = ({
       {entryType === 'EventChange' ? (
         <EventEntry event={entry} entityType={entityType} />
       ) : (
-        <CommentEntry comment={entry} {...commentHandlers} />
+        <CommentEntry comment={entry} hideAvatar={hideAvatar} {...commentHandlers} />
       )}
     </div>
   </div>

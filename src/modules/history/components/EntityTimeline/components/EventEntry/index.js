@@ -3,10 +3,10 @@ import * as React from 'react';
 import { get } from 'lodash/fp';
 import Icon from 'components/Icon';
 import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
-import { WrapperStyle, IconStyle } from './style';
 import UpdateEvent from './components/UpdateEvent';
 import MultipleUpdateEvent from './components/MultipleUpdateEvent';
 import DefaultEvent from './components/DefaultEvent';
+import { EventEntryWrapperStyle, IconStyle } from './style';
 
 type Props = {
   event: Event,
@@ -14,9 +14,9 @@ type Props = {
 };
 
 const EventEntry = ({ event, entityType }: Props) => (
-  <div className={WrapperStyle}>
+  <div className={EventEntryWrapperStyle}>
     <div className={IconStyle}>
-      <Icon icon="EDIT" />
+      <Icon icon="EDITED" />
     </div>
     {(() => {
       switch (get('__typename', event)) {
