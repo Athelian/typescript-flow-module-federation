@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { StaffCard } from 'components/Cards';
 
@@ -29,7 +30,9 @@ const StaffGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="200px"
       isEmpty={items.length === 0}
-      emptyMessage="No staff found"
+      emptyMessage={
+        <FormattedMessage id="modules.staff.noStaffFound" defaultMessage="No staff found" />
+      }
     >
       {items.map(item => renderItem(item))}
     </GridView>
