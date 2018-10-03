@@ -90,6 +90,7 @@ export const prepareCreateShipmentInput = ({
   tags = [],
   batches = [],
   forwarders = [],
+  inCharges = [],
 }: Object): ShipmentCreate => ({
   no,
   blNo,
@@ -104,6 +105,7 @@ export const prepareCreateShipmentInput = ({
   cargoReady: formatTimeline(cargoReady),
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
+  inChargesIds: inCharges.map(({ id }) => id),
   voyages: formatVoyages(voyages),
   batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true)),
   containerGroups: formatContainers(containerGroups),
@@ -140,6 +142,7 @@ export const prepareUpdateShipmentInput = ({
   tags = [],
   batches = [],
   forwarders = [],
+  inCharges = [],
 }: Object): ShipmentUpdate => ({
   no,
   blNo,
@@ -154,6 +157,7 @@ export const prepareUpdateShipmentInput = ({
   cargoReady: formatTimeline(cargoReady),
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
+  inChargesIds: inCharges.map(({ id }) => id),
   batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true)),
   voyages: formatVoyages(voyages),
   containerGroups: formatContainers(containerGroups),

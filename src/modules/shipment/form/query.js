@@ -102,6 +102,11 @@ export const shipmentDetailQuery = gql`
         id
         name
       }
+      inCharges {
+        id
+        firstName
+        lastName
+      }
     }
   }
 

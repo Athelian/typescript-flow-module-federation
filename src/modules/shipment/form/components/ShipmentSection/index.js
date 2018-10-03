@@ -15,9 +15,17 @@ import {
 import validator from 'modules/shipment/form/validator';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
+import UserAvatar from 'components/UserAvatar';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, Tooltip, TagsInput } from 'components/Form';
 import messages from 'modules/shipment/messages';
+import AssignUsers from 'modules/shipment/form/components/TimelineSection/components/AssignUsers';
+import {
+  AssignmentWrapperStyle,
+  AssignmentStyle,
+  RemoveAssignmentButtonStyle,
+  AddAssignmentButtonStyle,
+} from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import SelectForwarders from '../SelectForwarders';
 import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
 import {
@@ -251,6 +259,63 @@ const ShipmentSection = ({ isNew }: Props) => (
 
             <GridColumn>
               <GridColumn gap="10px">
+                <FieldItem
+                  label={<Label>IN CHARGE ({values.inCharges.length})</Label>}
+                  tooltip={<Tooltip infoMessage="You can choose up to 5 people in charge." />}
+                />
+                <div className={AssignmentWrapperStyle}>
+                  {values &&
+                    values.inCharges &&
+                    values.inCharges.map(({ id, firstName, lastName }) => (
+                      <div className={AssignmentStyle} key={id}>
+                        <button
+                          className={RemoveAssignmentButtonStyle}
+                          onClick={() =>
+                            setFieldValue(
+                              'inCharges',
+                              values.inCharges.filter(({ id: userId }) => id !== userId)
+                            )
+                          }
+                          type="button"
+                        >
+                          <Icon icon="REMOVE" />
+                        </button>
+                        <UserAvatar firstName={firstName} lastName={lastName} />
+                      </div>
+                    ))}
+                  {((values && !values.inCharges) ||
+                    (values && values.inCharges && values.inCharges.length < 5)) && (
+                    <BooleanValue>
+                      {({ value: isOpen, set: slideToggle }) => (
+                        <>
+                          <button
+                            className={AddAssignmentButtonStyle}
+                            type="button"
+                            onClick={() => slideToggle(true)}
+                          >
+                            <Icon icon="ADD" />
+                          </button>
+                          <SlideView
+                            isOpen={isOpen}
+                            onRequestClose={() => slideToggle(false)}
+                            options={{ width: '1030px' }}
+                          >
+                            {isOpen && (
+                              <AssignUsers
+                                selected={values.inCharges}
+                                onSelect={selected => {
+                                  slideToggle(false);
+                                  setFieldValue('inCharges', selected);
+                                }}
+                                onCancel={() => slideToggle(false)}
+                              />
+                            )}
+                          </SlideView>
+                        </>
+                      )}
+                    </BooleanValue>
+                  )}
+                </div>
                 <FieldItem
                   label={<Label>FORWARDER ({forwarders.length})</Label>}
                   tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
