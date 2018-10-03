@@ -14,10 +14,12 @@ type FormState = {
   piNo?: string,
   poNo?: string,
   shipments: Array<Object>,
+  inCharges: Array<Object>,
 };
 
 const initValues = {
   shipments: [],
+  inCharges: [],
 };
 
 export default class OrderInfoContainer extends Container<FormState> {
