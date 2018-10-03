@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { BooleanValue, ArrayValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
@@ -13,7 +12,6 @@ import SlideView from 'components/SlideView';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import { NewButton } from 'components/Buttons';
 import Icon from 'components/Icon';
-import messages from 'modules/order/messages';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import {
   ItemGridStyle,
@@ -28,7 +26,6 @@ import {
 } from './style';
 
 type Props = {
-  intl: IntlShape,
   selected: Array<string>,
   orderItems: Array<Object>,
   currency: string,
@@ -68,7 +65,6 @@ class OrderItems extends React.Component<Props> {
 
   render() {
     const {
-      intl,
       selected,
       allItemsExpanded,
       orderItems,
@@ -191,9 +187,14 @@ class OrderItems extends React.Component<Props> {
         ))}
       </div>
     ) : (
-      <div className={EmptyMessageStyle}>{intl.formatMessage(messages.noItems)}</div>
+      <div className={EmptyMessageStyle}>
+        <FormattedMessage
+          id="modules.order.form.noItems"
+          defaultMessage="No Items found / Please choose Exporter first"
+        />
+      </div>
     );
   }
 }
 
-export default injectIntl(OrderItems);
+export default OrderItems;
