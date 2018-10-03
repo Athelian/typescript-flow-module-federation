@@ -30,8 +30,13 @@ export const productListFragment = gql`
 `;
 
 export const productListQuery = gql`
-  query products($page: Int!, $perPage: Int!) {
-    products(page: $page, perPage: $perPage) {
+  query products(
+    $page: Int!
+    $perPage: Int!
+    $filter: ProductFilterInput
+    $sort: ProductSortInput
+  ) {
+    products(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
         ...productListFragment
       }
