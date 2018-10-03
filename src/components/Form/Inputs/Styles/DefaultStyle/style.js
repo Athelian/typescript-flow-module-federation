@@ -9,7 +9,11 @@ import {
   presets,
   scrollbars,
 } from 'styles/common';
-import { type OptionalProps } from './type';
+import { type OptionalProps as CommonOptionalProps } from './type';
+
+type OptionalProps = CommonOptionalProps & {
+  transparent?: boolean,
+};
 
 export const DefaultStyleWrapperStyle = ({
   type,
@@ -19,6 +23,7 @@ export const DefaultStyleWrapperStyle = ({
   forceHoverStyle,
   width,
   height,
+  transparent,
 }: OptionalProps): string => css`
   position: relative;
   display: flex;
@@ -26,24 +31,30 @@ export const DefaultStyleWrapperStyle = ({
   border: 1px solid ${hasError ? colors.RED : 'transparent'};
   ${isFocused && `border-color: ${hasError ? colors.RED : colors.TEAL}`};
   ${borderRadiuses.MAIN};
-  background-color: ${disabled ? colors.GRAY_SUPER_LIGHT : '#fff'};
+  background-color: ${transparent ? colors.TRANSPARENT : colors.WHITE}
+  background-color: ${disabled && colors.GRAY_SUPER_LIGHT};
   height: ${height};
   width: ${width};
   min-width: ${width};
   cursor: text;
   ${transitions.MAIN};
-  ${forceHoverStyle || isFocused
-    ? `${shadows.INPUT};
+  ${
+    forceHoverStyle || isFocused
+      ? `${shadows.INPUT};
       & > button {
         opacity: 1;
       }
     `
-    : `&:hover {
+      : `&:hover {
       ${shadows.INPUT};
       & > button {
         opacity: 1;
       }
-    }`};
+    }`
+  };
+  & > input {
+    ${presets.ELLIPSIS};
+  }
   & > input,
   > textarea {
     border: none;
@@ -52,10 +63,11 @@ export const DefaultStyleWrapperStyle = ({
     height: 100%;
     font-weight: bold;
     ${fontSizes.MAIN};
+    line-height: 20px;
     color: ${colors.BLACK};
     padding: 0 5px;
+    background: none;
     ${borderRadiuses.MAIN};
-    ${presets.ELLIPSIS};
     &:focus {
       outline: none;
     }
@@ -86,6 +98,11 @@ export const DefaultStyleWrapperStyle = ({
           overflow-y: auto;
         }
       `};
+    ${type === 'max-textarea' &&
+      `
+      resize: none;
+      overflow: auto;
+    `};
   }
 `;
 

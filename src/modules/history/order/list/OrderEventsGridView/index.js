@@ -6,17 +6,29 @@ import GridView from 'components/GridView';
 import EntityTimeline from 'modules/history/components/EntityTimeline';
 import { getByPathWithDefault } from 'utils/fp';
 
+type DefaultRenderItemProps = {
+  item: Object,
+  showDayHeader: boolean,
+  hideAvatar: boolean,
+  commentHandlers: Object,
+};
+
 type Props = {
   items: Array<Object>,
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-  renderItem?: (item: Object, showDayHeader: boolean, commentHandlers: Object) => React.Node,
+  renderItem?: DefaultRenderItemProps => React.Node,
   onDelete: string => Promise<any>,
   onUpdate: Object => Promise<any>,
 };
 
-const defaultRenderItem = (item: Object, showDayHeader: boolean, commentHandlers: Object) => (
+const defaultRenderItem = ({
+  item,
+  showDayHeader,
+  hideAvatar,
+  commentHandlers,
+}: DefaultRenderItemProps) => (
   <EntityTimeline
     entityType="Order"
     key={item.id}
@@ -24,6 +36,7 @@ const defaultRenderItem = (item: Object, showDayHeader: boolean, commentHandlers
     entryType={getByPathWithDefault('EventChange', '__typename', item)}
     showDayHeader={showDayHeader}
     commentHandlers={commentHandlers}
+    hideAvatar={hideAvatar}
   />
 );
 
@@ -48,21 +61,28 @@ const OrderEventsGridView = (props: Props) => {
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="1000px"
+      itemWidth="800px"
       isEmpty={items.length === 0}
       emptyMessage={
         <FormattedMessage id="modules.history.noItem" defaultMessage="No event history found" />
       }
     >
-      {items.map((item, index) =>
-        renderItem(
+      {items.reverse().map((item, index) =>
+        renderItem({
           item,
-          index === 0 || (index > 0 && !isSameDay(item.createdAt, items[index - 1].createdAt)),
-          {
+          showDayHeader:
+            index === 0 || (index > 0 && !isSameDay(item.createdAt, items[index - 1].createdAt)),
+          hideAvatar:
+            index > 0 &&
+            // eslint-disable-next-line no-underscore-dangle
+            items[index - 1].__typename === 'EventComment' &&
+            items[index - 1].createdBy.id === item.createdBy.id &&
+            isSameDay(items[index - 1].createdAt, item.createdAt),
+          commentHandlers: {
             onUpdate,
             onDelete,
-          }
-        )
+          },
+        })
       )}
     </GridView>
   );

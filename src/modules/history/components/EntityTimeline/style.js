@@ -5,7 +5,6 @@ import { layout } from 'styles/common';
 export const WrapperStyle = css`
   ${layout.VERTICAL};
   ${layout.CENTER};
-  padding: 20px;
 `;
 
 export const TimelineStyle = css`

@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { MessageInputWrapper, InputStyle, SendButtonStyle } from './style';
+import { TextAreaInput, DefaultStyle } from 'components/Form';
+import { MessageInputWrapper, SendButtonStyle } from './style';
 
 type Props = {
   name: string,
@@ -11,16 +12,17 @@ type Props = {
   onSubmit: Function,
 };
 
-class MessageInput extends React.Component<Props> {
-  componentDidMount() {
-    if (this.messageRef) {
-      this.messageRef.style.height = 'auto';
-      this.messageRef.style.height = `${this.messageRef.scrollHeight}px`;
-    }
-  }
+type State = {
+  isFocused: boolean,
+};
 
-  setMessageRef = (node: ?HTMLTextAreaElement) => {
-    this.messageRef = node;
+class MessageInput extends React.Component<Props, State> {
+  state = {
+    isFocused: false,
+  };
+
+  toggleFocus = (value: boolean) => {
+    this.setState({ isFocused: value });
   };
 
   inputBehavior = (event: Object) => {
@@ -31,32 +33,46 @@ class MessageInput extends React.Component<Props> {
     }
   };
 
-  expandInput = (event: Object) => {
-    const { onChange } = this.props;
-    if (this.messageRef) {
-      this.messageRef.style.height = 'auto';
-      this.messageRef.style.height = `${this.messageRef.scrollHeight}px`;
-    }
-    onChange(event);
+  handleFocus = () => {
+    this.setState({ isFocused: true });
   };
 
-  messageRef: ?HTMLTextAreaElement;
+  handleBlur = () => {
+    const { onBlur } = this.props;
+
+    this.setState({ isFocused: false });
+    if (onBlur) {
+      onBlur();
+    }
+  };
 
   render() {
-    const { name, value, onBlur, onSubmit } = this.props;
+    const { name, value, onChange, onSubmit } = this.props;
+    const { isFocused } = this.state;
 
     return (
       <div className={MessageInputWrapper}>
-        <textarea
+        {/* <textarea
           ref={this.setMessageRef}
-          name={name || ''}
-          value={value || ''}
+          name={name}
+          value={value}
           onKeyPress={this.inputBehavior}
           onChange={this.expandInput}
           onBlur={onBlur}
           rows={1}
           className={InputStyle}
-        />
+        /> */}
+        <DefaultStyle type="textarea" height="90px" isFocused={isFocused} forceHoverStyle>
+          <TextAreaInput
+            name={name}
+            value={value}
+            onKeyPress={this.inputBehavior}
+            onChange={onChange}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
+            align="left"
+          />
+        </DefaultStyle>
         <button type="button" onClick={onSubmit} className={SendButtonStyle(!!value)}>
           <Icon icon="PAPER_PLANE" />
         </button>

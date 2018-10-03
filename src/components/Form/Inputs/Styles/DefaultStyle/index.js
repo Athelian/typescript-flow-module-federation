@@ -1,10 +1,21 @@
 // @flow
 import * as React from 'react';
-import { type OptionalProps, defaultProps } from './type';
+import {
+  type OptionalProps as CommonOptionalProps,
+  defaultProps as commonDefaultProps,
+} from './type';
 import { DefaultStyleWrapperStyle } from './style';
+
+type OptionalProps = CommonOptionalProps & {
+  transparent: boolean,
+};
 
 type Props = OptionalProps & {
   children: React.Node,
+};
+
+const defaultProps = {
+  transparent: false,
 };
 
 const DefaultStyle = ({
@@ -15,6 +26,7 @@ const DefaultStyle = ({
   forceHoverStyle,
   width,
   height,
+  transparent,
   children,
 }: Props): React.Node => (
   <div
@@ -26,12 +38,13 @@ const DefaultStyle = ({
       forceHoverStyle,
       width,
       height,
+      transparent,
     })}
   >
     {children}
   </div>
 );
 
-DefaultStyle.defaultProps = defaultProps;
+DefaultStyle.defaultProps = { ...defaultProps, ...commonDefaultProps };
 
 export default DefaultStyle;

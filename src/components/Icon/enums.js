@@ -66,6 +66,9 @@ import {
   faEllipsisH as HORIZONTAL_ELLIPSIS,
   faLanguage as LANGUAGE,
   faPalette as COLOR,
+  faFeatherAlt as EDITED,
+  faPaperPlane as PAPER_PLANE,
+  faExternalLink as EXTERNAL_LINK,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -181,6 +184,9 @@ export default {
   EXCHANGE,
   LANGUAGE,
   COLOR,
+  EDITED,
+  PAPER_PLANE,
+  EXTERNAL_LINK,
 
   TIMELINE,
   CARGO_READY,

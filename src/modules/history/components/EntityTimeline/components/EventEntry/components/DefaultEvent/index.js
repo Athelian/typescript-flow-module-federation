@@ -32,7 +32,7 @@ const DefaultEvent = ({ event }: Props) => (
                 firstName={event.createdBy.firstName}
                 lastName={event.createdBy.lastName}
               />
-              <Icon icon="EXTERNAL_ICON" />
+              <Icon icon="EXTERNAL_LINK" />
             </div>
           ),
         }}

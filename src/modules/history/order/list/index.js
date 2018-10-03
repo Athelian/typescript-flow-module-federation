@@ -7,7 +7,6 @@ import scrollIntoView from 'utils/scrollIntoView';
 import loadMore from 'utils/loadMore';
 import LoadingIcon from 'components/LoadingIcon';
 import MessageInput from 'modules/history/components/MessageInput';
-import CommentWrapperStyle from 'modules/history/order/list/style';
 import OrderEventsGridView from './OrderEventsGridView';
 import query from './query';
 import {
@@ -15,6 +14,7 @@ import {
   eventCommentDeleteMutation,
   eventCommentUpdateMutation,
 } from './mutation';
+import { LogsBodyWrapperStyle, CommentWrapperStyle } from './style';
 
 type Props = {
   perPage: number,
@@ -24,7 +24,7 @@ type Props = {
 class OrderEventsList extends React.PureComponent<Props> {
   componentDidMount() {
     setTimeout(() => {
-      scrollIntoView({ targetId: 'topCommentArea' });
+      scrollIntoView({ targetId: 'topCommentArea', boundaryId: 'logsBody' });
     }, 500);
   }
 
@@ -52,40 +52,43 @@ class OrderEventsList extends React.PureComponent<Props> {
           const timelineId = getByPathWithDefault(1, 'order.timeline.id', data);
           return (
             <>
-              <OrderEventsGridView
-                items={getByPathWithDefault([], 'order.timeline.events.nodes', data)}
-                onLoadMore={() => loadMore({ fetchMore, data }, {}, 'order.timeline.events')}
-                hasMore={hasMore}
-                isLoading={loading}
-                onUpdate={async ({ id: commentId, content }) => {
-                  await client.mutate({
-                    mutation: eventCommentUpdateMutation,
-                    variables: {
-                      id: commentId,
-                      input: {
-                        content,
+              <div id="logsBody" className={LogsBodyWrapperStyle}>
+                <OrderEventsGridView
+                  items={getByPathWithDefault([], 'order.timeline.events.nodes', data)}
+                  onLoadMore={() => loadMore({ fetchMore, data }, {}, 'order.timeline.events')}
+                  hasMore={hasMore}
+                  isLoading={loading}
+                  onUpdate={async ({ id: commentId, content }) => {
+                    await client.mutate({
+                      mutation: eventCommentUpdateMutation,
+                      variables: {
+                        id: commentId,
+                        input: {
+                          content,
+                        },
                       },
-                    },
-                  });
-                }}
-                onDelete={async commentId => {
-                  await client.mutate({
-                    mutation: eventCommentDeleteMutation,
-                    variables: {
-                      id: commentId,
-                    },
-                  });
-                  refetch();
-                }}
-              />
-              <div id="topCommentArea" />
+                    });
+                  }}
+                  onDelete={async commentId => {
+                    await client.mutate({
+                      mutation: eventCommentDeleteMutation,
+                      variables: {
+                        id: commentId,
+                      },
+                    });
+                    refetch();
+                  }}
+                />
+                <div id="topCommentArea" />
+              </div>
+
               <div className={CommentWrapperStyle}>
                 <StringValue>
                   {({ value, set }) => (
                     <Mutation
                       mutation={eventCommentCreateMutation}
                       onCompleted={() => {
-                        scrollIntoView({ targetId: 'topCommentArea' });
+                        scrollIntoView({ targetId: 'topCommentArea', boundaryId: 'logsBody' });
                         set('');
                         refetch();
                       }}

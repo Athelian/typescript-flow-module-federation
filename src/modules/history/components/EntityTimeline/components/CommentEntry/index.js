@@ -6,12 +6,12 @@ import { UserConsumer } from 'modules/user';
 import HoverWrapper from 'components/common/HoverWrapper';
 import type { Comment } from 'modules/history/components/EntityTimeline/type.js.flow';
 import { FormField } from 'modules/form';
-import { textAreaFactory } from 'modules/form/helpers';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
+import { DefaultStyle, TextAreaInput } from 'components/Form';
 import Icon from 'components/Icon';
 import {
-  WrapperStyle,
+  CommentEntryWrapperStyle,
   AvatarStyle,
   ContentWrapperStyle,
   NameDateWrapperStyle,
@@ -25,13 +25,69 @@ import {
 
 type Props = {
   comment: Comment,
+  hideAvatar: boolean,
   onDelete: string => Promise<any>,
   onUpdate: Object => Promise<any>,
 };
 
-class CommentEntry extends React.PureComponent<Props> {
+type State = {
+  textAreaRows: number,
+};
+
+class CommentEntry extends React.Component<Props, State> {
+  constructor() {
+    super();
+    this.state = {
+      textAreaRows: 1,
+    };
+
+    this.textArea = React.createRef();
+  }
+
+  componentDidMount() {
+    if (this.textArea.current) {
+      this.calculateHeight();
+    }
+  }
+
+  calculateContentHeight = () => {
+    const textArea = this.textArea.current;
+
+    let height = textArea.offsetHeight;
+    const { scrollHeight } = textArea;
+
+    if (height >= scrollHeight) {
+      textArea.style.height = `${height + 20}px`;
+      textArea.style.overflow = 'hidden';
+      if (scrollHeight < textArea.scrollHeight) {
+        while (textArea.offsetHeight >= textArea.scrollHeight) {
+          textArea.style.height = `${(height -= 20)}px`;
+        }
+        while (textArea.offsetHeight < textArea.scrollHeight) {
+          textArea.style.height = `${(height += 1)}px`;
+        }
+        return height;
+      }
+    }
+    return scrollHeight;
+  };
+
+  calculateHeight = () => {
+    const { textAreaRows } = this.state;
+
+    const textAreaHeight = this.calculateContentHeight();
+    const numberOfLines = Math.ceil(textAreaHeight / 20);
+
+    if (textAreaRows !== numberOfLines) {
+      this.setState({ textAreaRows: numberOfLines });
+    }
+  };
+
+  textArea: any;
+
   render() {
-    const { comment, onDelete, onUpdate } = this.props;
+    const { comment, hideAvatar, onDelete, onUpdate } = this.props;
+    const { textAreaRows } = this.state;
 
     return (
       <UserConsumer>
@@ -40,22 +96,23 @@ class CommentEntry extends React.PureComponent<Props> {
           return (
             <HoverWrapper>
               {isHover => (
-                <div className={WrapperStyle(isSameUser)}>
+                <div className={CommentEntryWrapperStyle(isSameUser)}>
                   {!isSameUser && (
-                    <div className={AvatarStyle(isSameUser)}>
+                    <div className={AvatarStyle(isSameUser, hideAvatar)}>
                       <div>{comment.createdBy.lastName.charAt(0).toUpperCase()}</div>
                     </div>
                   )}
                   <div className={ContentWrapperStyle(isSameUser)}>
                     <div className={NameDateWrapperStyle(isSameUser)}>
-                      {!isSameUser && (
-                        <div className={NameStyle}>
-                          <FormattedName
-                            firstName={comment.createdBy.firstName}
-                            lastName={comment.createdBy.lastName}
-                          />
-                        </div>
-                      )}
+                      {!isSameUser &&
+                        !hideAvatar && (
+                          <div className={NameStyle}>
+                            <FormattedName
+                              firstName={comment.createdBy.firstName}
+                              lastName={comment.createdBy.lastName}
+                            />
+                          </div>
+                        )}
                       <div className={DateStyle(isSameUser)}>
                         {isSameDay(new Date(), comment.createdAt) ? (
                           <FormattedDate value={comment.createdAt} mode="time-relative" />
@@ -64,7 +121,7 @@ class CommentEntry extends React.PureComponent<Props> {
                         )}
                       </div>
                     </div>
-                    <div className={BodyWrapperStyle(isSameUser)}>
+                    <div className={BodyWrapperStyle(isSameUser, hideAvatar)}>
                       {isSameUser &&
                         isHover && (
                           <button
@@ -72,35 +129,54 @@ class CommentEntry extends React.PureComponent<Props> {
                             onClick={() => onDelete(comment.id)}
                             className={DeleteButtonStyle}
                           >
-                            <Icon icon="DELETE" />
+                            <Icon icon="REMOVE" />
                           </button>
                         )}
                       {isSameUser ? (
                         <div className={MessageInputWrapperStyle}>
                           <StringValue defaultValue={comment.content}>
-                            {({ value, set: onChange }) => (
+                            {({ value, set }) => (
                               <FormField
                                 name={`comment-${comment.id}`}
                                 initValue={value}
-                                setFieldValue={(field, newValue) => onChange(newValue)}
+                                setFieldValue={(field, newValue) => set(newValue)}
                               >
-                                {({ name, ...inputHandlers }) =>
-                                  textAreaFactory({
-                                    inputHandlers: {
-                                      ...inputHandlers,
-                                      onBlur: () => {
-                                        inputHandlers.onBlur();
+                                {({
+                                  name,
+                                  activeField,
+                                  isTouched,
+                                  errorMessage,
+                                  isFocused,
+                                  onBlur,
+                                  onChange,
+                                  ...inputHandlers
+                                }) => (
+                                  <DefaultStyle
+                                    type="max-textarea"
+                                    height="auto"
+                                    isFocused={isFocused}
+                                    transparent
+                                  >
+                                    <TextAreaInput
+                                      {...inputHandlers}
+                                      ref={this.textArea}
+                                      name={name}
+                                      onChange={(event: SyntheticInputEvent<*>) => {
+                                        this.calculateHeight();
+                                        if (onChange) {
+                                          onChange(event);
+                                        }
+                                      }}
+                                      onBlur={() => {
+                                        onBlur();
                                         if (comment.content !== value)
                                           onUpdate({ content: value, id: comment.id });
-                                      },
-                                    },
-                                    name,
-                                    isNew: false,
-                                    height: '100px',
-                                    width: '600px',
-                                    originalValue: value,
-                                  })
-                                }
+                                      }}
+                                      rows={`${textAreaRows}`}
+                                      align="right"
+                                    />
+                                  </DefaultStyle>
+                                )}
                               </FormField>
                             )}
                           </StringValue>
@@ -111,7 +187,7 @@ class CommentEntry extends React.PureComponent<Props> {
                     </div>
                   </div>
                   {isSameUser && (
-                    <div className={AvatarStyle(isSameUser)}>
+                    <div className={AvatarStyle(isSameUser, hideAvatar)}>
                       <b>{comment.createdBy.lastName.charAt(0).toUpperCase()}</b>
                     </div>
                   )}
