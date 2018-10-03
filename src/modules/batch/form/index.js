@@ -59,9 +59,18 @@ export default class BatchForm extends React.Component<Props> {
 
                 <div className={StatusStyle(batch.archived)}>
                   <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
-                  {batch.archived ? 'Archived' : 'Active'}
+                  {batch.archived ? (
+                    <FormattedMessage id="modules.batch.archived" defaultMessage="Archived" />
+                  ) : (
+                    <FormattedMessage id="modules.batch.active" defaultMessage="Active" />
+                  )}
                   <Tooltip
-                    infoMessage="The status is controlled by the Order and Shipment this Batch belongs to"
+                    infoMessage={
+                      <FormattedMessage
+                        id="modules.batch.archived.tooltip.infoMessage"
+                        defaultMessage="The status is controlled by the Order and Shipment this Batch belongs to"
+                      />
+                    }
                     position="bottom"
                   />
                 </div>
