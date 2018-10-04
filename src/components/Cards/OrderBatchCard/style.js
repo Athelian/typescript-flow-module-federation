@@ -59,10 +59,10 @@ export const ShipmentWrapperStyle: string = css`
 
 export const ShipmentIconStyle = (hasShipment: boolean): string => css`
   ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
+  ${borderRadiuses.MAIN};
   width: 20px;
   height: 20px;
-  background-color: ${hasShipment ? colors.TEAL : colors.GRAY_LIGHT};
+  background-color: ${hasShipment ? colors.TEAL : colors.GRAY_VERY_LIGHT};
   color: ${colors.WHITE};
   font-size: 11px;
   ${hasShipment &&
@@ -83,11 +83,11 @@ export const WarehouseArrivalWrapperStyle: string = css`
 
 export const WarehouseArrivalIconStyle = (warehouseArrivalApproved: boolean): string => css`
   ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
+  ${borderRadiuses.MAIN};
   width: 20px;
   height: 20px;
-  border: 1px solid ${warehouseArrivalApproved ? colors.TEAL : colors.GRAY_LIGHT};
-  color: ${warehouseArrivalApproved ? colors.TEAL : colors.GRAY_LIGHT};
+  border: 1px solid ${warehouseArrivalApproved ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  color: ${warehouseArrivalApproved ? colors.TEAL : colors.GRAY_VERY_LIGHT};
   font-size: 11px;
 `;
 

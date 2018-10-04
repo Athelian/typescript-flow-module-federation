@@ -2,17 +2,25 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import InputMask from 'react-input-mask';
 import { TagContainer, EntityTypeContainer } from 'modules/tags/form/containers';
 import validator from 'modules/tags/form/validator';
 import { FormField } from 'modules/form';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
-import { ColorInput, DefaultStyle, FieldItem, Label, Tooltip, RadioInput } from 'components/Form';
+import {
+  ColorInput,
+  DefaultStyle,
+  FieldItem,
+  Label,
+  Tooltip,
+  RadioInput,
+  TextInput,
+} from 'components/Form';
 import { textInputFactory, textAreaFactory } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
 import {
   TagSectionWrapperStyle,
+  PreviewTagWrapperStyle,
   DescriptionLabelWrapperStyle,
   ColorInputWrapperStyle,
   ColorInputButtonStyle,
@@ -41,7 +49,11 @@ const TagSection = ({ isNew }: Props) => (
                     <FormattedMessage id="modules.tags.preview" defaultMessage="PREVIEW" />
                   </Label>
                 }
-                input={<Tag tag={values} />}
+                input={
+                  <div className={PreviewTagWrapperStyle}>
+                    <Tag tag={values} />
+                  </div>
+                }
               />
 
               <FormField
@@ -119,7 +131,7 @@ const TagSection = ({ isNew }: Props) => (
                           forceHoverStyle={isNew}
                           width="200px"
                         >
-                          <InputMask name={name} mask="#******" maskChar=" " {...inputHandlers} />
+                          <TextInput name={name} {...inputHandlers} />
                         </DefaultStyle>
                         <div className={ColorInputButtonStyle}>
                           <ColorInput name={name} {...inputHandlers} />

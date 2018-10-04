@@ -137,9 +137,9 @@ export const OrderWrapperStyle: string = css`
   grid-gap: 5px;
 `;
 
-export const OrderIconStyle = css`
+export const OrderIconStyle: string = css`
   ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
+  ${borderRadiuses.MAIN};
   width: 20px;
   height: 20px;
   background-color: ${colors.TEAL};

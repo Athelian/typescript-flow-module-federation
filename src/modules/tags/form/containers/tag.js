@@ -9,7 +9,9 @@ type FormState = {
   color?: string,
 };
 
-const initValues = {};
+const initValues = {
+  color: '#cccccc',
+};
 
 export default class TagInfoContainer extends Container<FormState> {
   state = initValues;

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, fontSizes } from 'styles/common';
+import { presets, colors, borderRadiuses, layout } from 'styles/common';
 
 export const TagSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -8,6 +8,10 @@ export const TagSectionWrapperStyle: string = css`
   padding: 40px 0;
   display: flex;
   justify-content: center;
+`;
+
+export const PreviewTagWrapperStyle: string = css`
+  padding: 0 5px;
 `;
 
 export const DescriptionLabelWrapperStyle: string = css`
@@ -34,11 +38,20 @@ export const EntityTypesWrapperStyle: string = css`
 `;
 
 export const EntityTypeStyle: string = css`
-  display: flex;
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
   align-items: center;
 `;
 
 export const EntityIconStyle = (color: string) => css`
-  color: ${colors[color]};
-  ${fontSizes.MAIN};
+  ${borderRadiuses.MAIN};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${colors[color]};
+  color: ${colors.WHITE};
+  height: 20px;
+  width: 20px;
+  flex-shrink: 0;
+  font-size: 11px;
 `;
