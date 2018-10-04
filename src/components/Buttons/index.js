@@ -6,6 +6,7 @@ import BaseButton from './BaseButton';
 import CancelButton from './CancelButton';
 import NewButton from './NewButton';
 import SaveButton from './SaveButton';
+import ExportButton from './ExportButton';
 
 export {
   ActivateButton,
@@ -15,4 +16,5 @@ export {
   CancelButton,
   NewButton,
   SaveButton,
+  ExportButton,
 };

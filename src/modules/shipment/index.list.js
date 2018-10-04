@@ -7,7 +7,7 @@ import { UIConsumer } from 'modules/ui';
 import FilterToolBar from 'components/common/FilterToolBar';
 import Layout from 'components/Layout';
 import NavBar from 'components/NavBar';
-import { NewButton } from 'components/Buttons';
+import { NewButton, ExportButton } from 'components/Buttons';
 import ShipmentList from './list';
 import messages from './messages';
 
@@ -72,6 +72,7 @@ class ShipmentListModule extends React.Component<Props, State> {
                 <Link to="new">
                   <NewButton />
                 </Link>
+                <ExportButton type="data" format="csv" template="ShipmentOrder" />
               </NavBar>
             }
           >
