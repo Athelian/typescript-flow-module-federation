@@ -11,8 +11,8 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   type: string,
-  template: string,
   format: string,
+  template?: string,
   id?: string,
 };
 
