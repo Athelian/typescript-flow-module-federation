@@ -1,17 +1,10 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
 import UserAvatar from 'components/UserAvatar';
 import { Label, Display } from 'components/Form';
 import { LastModifiedWrapperStyle, LastModifiedStyle, UserIconStyle } from './style';
-
-const messages = defineMessages({
-  updatedAt: {
-    id: 'components.Form.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
-  },
-});
 
 type OptionalProps = {
   updatedBy: ?{
@@ -29,7 +22,7 @@ function SectionHeader({ updatedAt, updatedBy }: Props) {
     <div className={LastModifiedWrapperStyle}>
       <div className={LastModifiedStyle}>
         <Label width="100%" align="right">
-          <FormattedMessage {...messages.updatedAt} />
+          <FormattedMessage id="components.Form.updatedAt" defaultMessage="LAST MODIFIED" />
         </Label>
         <Display>
           <FormattedDate value={updatedAt} />

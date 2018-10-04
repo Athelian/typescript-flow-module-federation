@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { ToggleButtonStyle, StatusStyle } from './style';
 
@@ -16,7 +17,11 @@ const StatusToggle = ({ archived, openStatusDialog, activateDialog, archiveDialo
     {archiveDialog}
     <div className={StatusStyle(archived)}>
       <Icon icon={archived ? 'ARCHIVE' : 'ACTIVE'} />
-      {archived ? 'Archived' : 'Active'}
+      {archived ? (
+        <FormattedMessage id="components.form.archived" defaultMessage="Archived" />
+      ) : (
+        <FormattedMessage id="components.form.active" defaultMessage="Active" />
+      )}
       <button
         type="button"
         className={ToggleButtonStyle(archived)}
