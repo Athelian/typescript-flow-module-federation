@@ -176,9 +176,11 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
 
   generate the ja.json language file base on en.json file.
 
-```
-yarn check:quality
-```
+  **Code quality**
+
+  ```
+  yarn check:quality
+  ```
 
 check for duplication on our codebase with [jsinspect](https://github.com/danielstjules/jsinspect)
 
@@ -290,9 +292,9 @@ src/generated
 #1. Generate fragmentTypes.json for apollo client
 yarn apollo-fragments
 #2. Download latest schema from our graphql server
-graphql get-schema
+npx graphql-cli get-schema
 #3. Generate fragments
-graphql generate-fragments
+npx graphql-cli generate-fragments
 ```
 
 ### Configuration
