@@ -25,7 +25,7 @@
   "components.LogoutDialog.logout": "ログアウト",
   "components.LogoutDialog.cancel": "キャンセル",
   "components.Form.DocumentsInput.noDocuments": "未入力",
-  "components.Form.updatedAt": "LAST MODIFIED",
+  "components.form.updatedAt": "LAST MODIFIED",
   "components.FormattedName.name": "{lastName} {firstName}",
   "components.FormattedName.oneName": "{lastName}",
   "components.InternalError.message": "内部エラーが発生しました。管理者に連絡して下さい。",

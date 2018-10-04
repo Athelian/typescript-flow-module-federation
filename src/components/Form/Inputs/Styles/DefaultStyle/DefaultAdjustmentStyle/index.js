@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
@@ -113,7 +114,9 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
         </div>
         <div className={MemoSectionWrapperStyle(isMemoOpen)}>
           <div className={LastModifiedWrapperStyle}>
-            <Label>LAST MODIFIED</Label>
+            <Label>
+              <FormattedMessage id="components.form.lastModified" defaultMessage="LAST MODIFIED" />
+            </Label>
             <GridRow gap="5px">
               <Display>
                 <FormattedDate value={adjustment.updatedAt} />
