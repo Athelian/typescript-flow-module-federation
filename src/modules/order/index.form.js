@@ -9,7 +9,7 @@ import Layout from 'components/Layout';
 import QueryDetail from 'components/common/QueryDetail';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import SlideView from 'components/SlideView';
@@ -192,50 +192,66 @@ class OrderFormModule extends React.PureComponent<Props> {
                           FormContainer,
                         ]}
                       >
-                        {(orderItemState, orderInfoState, orderTagsState, orderFilesState, form) =>
-                          (isNew ||
-                            orderItemState.isDirty() ||
-                            orderInfoState.isDirty() ||
-                            orderTagsState.isDirty() ||
-                            orderFilesState.isDirty()) && (
-                            <>
-                              <CancelButton onClick={this.onCancel} />
-                              <SaveButton
-                                disabled={
-                                  !form.isReady(
-                                    {
-                                      ...orderItemState.state,
-                                      ...orderInfoState.state,
-                                      ...orderTagsState.state,
-                                      ...orderFilesState.state,
-                                    },
-                                    validator
-                                  )
-                                }
-                                onClick={() =>
-                                  this.onSave(
-                                    {
-                                      ...orderItemState.state,
-                                      ...orderInfoState.state,
-                                      ...orderTagsState.state,
-                                      ...orderFilesState.state,
-                                    },
-                                    saveOrder,
-                                    () => {
-                                      orderItemState.onSuccess();
-                                      orderInfoState.onSuccess();
-                                      orderTagsState.onSuccess();
-                                      orderFilesState.onSuccess();
-                                      form.onReset();
-                                    },
-                                    form.onErrors
-                                  )
-                                }
-                              />
-                              {isLoading && <LoadingIcon />}
-                            </>
-                          )
-                        }
+                        {(
+                          orderItemState,
+                          orderInfoState,
+                          orderTagsState,
+                          orderFilesState,
+                          form
+                        ) => (
+                          <>
+                            {(isNew ||
+                              orderItemState.isDirty() ||
+                              orderInfoState.isDirty() ||
+                              orderTagsState.isDirty() ||
+                              orderFilesState.isDirty()) && (
+                              <>
+                                <CancelButton onClick={this.onCancel} />
+                                <SaveButton
+                                  disabled={
+                                    !form.isReady(
+                                      {
+                                        ...orderItemState.state,
+                                        ...orderInfoState.state,
+                                        ...orderTagsState.state,
+                                        ...orderFilesState.state,
+                                      },
+                                      validator
+                                    )
+                                  }
+                                  onClick={() =>
+                                    this.onSave(
+                                      {
+                                        ...orderItemState.state,
+                                        ...orderInfoState.state,
+                                        ...orderTagsState.state,
+                                        ...orderFilesState.state,
+                                      },
+                                      saveOrder,
+                                      () => {
+                                        orderItemState.onSuccess();
+                                        orderInfoState.onSuccess();
+                                        orderTagsState.onSuccess();
+                                        orderFilesState.onSuccess();
+                                        form.onReset();
+                                      },
+                                      form.onErrors
+                                    )
+                                  }
+                                />
+                                {isLoading && <LoadingIcon />}
+                              </>
+                            )}
+                            {orderId &&
+                              !isNew &&
+                              !orderItemState.isDirty() &&
+                              !orderInfoState.isDirty() &&
+                              !orderTagsState.isDirty() &&
+                              !orderFilesState.isDirty() && (
+                                <ExportButton type="PO" format="xlsx" id={decodeId(orderId)} />
+                              )}
+                          </>
+                        )}
                       </Subscribe>
                     </NavBar>
                   }
