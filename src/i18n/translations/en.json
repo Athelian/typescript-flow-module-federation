@@ -25,7 +25,7 @@
   "components.LogoutDialog.logout": "LOGOUT",
   "components.LogoutDialog.cancel": "CANCEL",
   "components.Form.DocumentsInput.noDocuments": "No documents",
-  "components.Form.updatedAt": "LAST MODIFIED",
+  "components.form.updatedAt": "LAST MODIFIED",
   "components.FormattedName.name": "{firstName} {lastName}",
   "components.FormattedName.oneName": "{firstName}",
   "components.InternalError.message": "An internal error has occurred. Please contact an administrator.",

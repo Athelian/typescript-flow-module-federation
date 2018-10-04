@@ -22,7 +22,7 @@ function SectionHeader({ updatedAt, updatedBy }: Props) {
     <div className={LastModifiedWrapperStyle}>
       <div className={LastModifiedStyle}>
         <Label width="100%" align="right">
-          <FormattedMessage id="components.Form.updatedAt" defaultMessage="LAST MODIFIED" />
+          <FormattedMessage id="components.form.updatedAt" defaultMessage="LAST MODIFIED" />
         </Label>
         <Display>
           <FormattedDate value={updatedAt} />
