@@ -192,7 +192,7 @@ class VoyageSelector extends React.Component<Props> {
               role="presentation"
             >
               <Label align="right">
-                # <FormattedMessage id="modules.shipment.ofVoyages" defaultMessage="OF VOYAGES" />
+                <FormattedMessage id="modules.shipment.ofVoyages" defaultMessage="# OF VOYAGES" />
               </Label>
               {this.renderIcon({
                 numOfIcons: voyages.length,
