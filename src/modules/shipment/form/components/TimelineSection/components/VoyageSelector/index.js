@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
@@ -190,7 +191,9 @@ class VoyageSelector extends React.Component<Props> {
               onClick={() => selectorToggle(true)}
               role="presentation"
             >
-              <Label align="right"># OF VOYAGES</Label>
+              <Label align="right">
+                <FormattedMessage id="modules.shipment.ofVoyages" defaultMessage="# OF VOYAGES" />
+              </Label>
               {this.renderIcon({
                 numOfIcons: voyages.length,
                 isActive: true,

@@ -50,7 +50,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   isNew: boolean,
   icon: string,
-  title: string,
+  title: React.Node,
   sourceName: string,
   setFieldDeepValue: (field: string, value: any) => void,
   removeArrayItem: (path: string) => void,

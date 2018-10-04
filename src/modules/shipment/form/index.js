@@ -87,7 +87,7 @@ class ShipmentForm extends React.Component<Props> {
                 icon="CARGO"
                 title={
                   <>
-                    <FormattedMessage id="modules.shipment.shipment" defaultMessage="CARGO" />(
+                    <FormattedMessage id="modules.shipment.cargo" defaultMessage="CARGO " />(
                     {batches.length})
                   </>
                 }

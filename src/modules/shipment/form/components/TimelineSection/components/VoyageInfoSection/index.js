@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import GridColumn from 'components/GridColumn';
 import { FormField } from 'modules/form';
 import {
@@ -40,7 +41,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   isNew: boolean,
   icon: string,
-  title: string,
+  title: React.Node,
   sourceName: string,
   setFieldDeepValue: Function,
 };
@@ -92,22 +93,42 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   inputHandlers,
                   name,
                   isNew,
-                  label: 'DEPARTURE PORT',
+                  label: (
+                    <FormattedMessage
+                      id="modules.shipment.departurePort"
+                      defaultMessage="DEPARTURE PORT"
+                    />
+                  ),
                 })
               }
             </FormField>
           ) : (
             <FieldItem
-              label={<Label>DEPARTURE PORT</Label>}
+              label={
+                <Label>
+                  <FormattedMessage
+                    id="modules.shipment.departurePort"
+                    defaultMessage="DEPARTURE PORT"
+                  />
+                </Label>
+              }
               tooltip={
                 <Tooltip
                   isNew={isNew}
-                  infoMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
+                  infoMessage={
+                    <FormattedMessage
+                      id="modules.shipment.tooltipDeparturePort"
+                      defaultMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
+                    />
+                  }
                 />
               }
               input={
                 <div className={SelectTransportTypeMessageStyle}>
-                  Please select a transport type
+                  <FormattedMessage
+                    id="modules.shipment.selectTransportType"
+                    defaultMessage="Please select a transport type"
+                  />
                 </div>
               }
             />
@@ -131,22 +152,42 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   inputHandlers,
                   name,
                   isNew,
-                  label: 'ARRIVAL PORT',
+                  label: (
+                    <FormattedMessage
+                      id="modules.shipment.arrivalPort"
+                      defaultMessage="ARRIVAL PORT"
+                    />
+                  ),
                 })
               }
             </FormField>
           ) : (
             <FieldItem
-              label={<Label>ARRIVAL PORT</Label>}
+              label={
+                <Label>
+                  <FormattedMessage
+                    id="modules.shipment.arrivalPort"
+                    defaultMessage="ARRIVAL PORT"
+                  />
+                </Label>
+              }
               tooltip={
                 <Tooltip
                   isNew={isNew}
-                  infoMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
+                  infoMessage={
+                    <FormattedMessage
+                      id="modules.shipment.tooltipArrivalPort"
+                      defaultMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
+                    />
+                  }
                 />
               }
               input={
                 <div className={SelectTransportTypeMessageStyle}>
-                  Please select a transport type
+                  <FormattedMessage
+                    id="modules.shipment.selectTransportType"
+                    defaultMessage="Please select a transport type"
+                  />
                 </div>
               }
             />
@@ -166,7 +207,9 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                 inputHandlers,
                 name,
                 isNew,
-                label: 'VESSEL NAME',
+                label: (
+                  <FormattedMessage id="modules.shipment.vesselName" defaultMessage="VESSEL NAME" />
+                ),
               })
             }
           </FormField>
@@ -185,7 +228,9 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                 inputHandlers,
                 name,
                 isNew,
-                label: 'VESSEL CODE',
+                label: (
+                  <FormattedMessage id="modules.shipment.vesselCode" defaultMessage="VESSEL CODE" />
+                ),
               })
             }
           </FormField>
