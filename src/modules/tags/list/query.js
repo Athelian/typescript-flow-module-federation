@@ -8,6 +8,7 @@ export const tagsQuery = gql`
         name
         description
         color
+        entityTypes
       }
       page
       totalPage

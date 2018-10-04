@@ -1,38 +1,31 @@
 // @flow
 import * as React from 'react';
 import { Link } from '@reach/router';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
-import Tabs from 'components/NavBar/components/Tabs';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
-import messages from 'modules/tags/messages';
-import { injectUid } from 'utils/id';
 import TagsList from './list';
 
-type Props = {
-  intl: IntlShape,
-};
+type Props = {};
 
 type State = {
   viewType: string,
-  query: string,
+  filter: {
+    entityTypes: Array<string>,
+  },
   perPage: number,
-  tabIndex: number,
+  page: number,
 };
 
-class TagsModule extends React.Component<Props, State> {
+class TagListModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
-    query: '',
+    filter: {
+      entityTypes: ['Product', 'Order', 'Batch', 'Shipment', 'User'],
+    },
     perPage: 10,
-    tabIndex: 0,
-  };
-
-  onChangeTabs = (tabIndex: number) => {
-    this.setState({ tabIndex });
+    page: 1,
   };
 
   onChangeFilter = (newValue: any) => {
@@ -40,16 +33,6 @@ class TagsModule extends React.Component<Props, State> {
   };
 
   render() {
-    const { intl } = this.props;
-    const { viewType, perPage, tabIndex, ...filters } = this.state;
-
-    const tabs = [
-      { icon: 'PRODUCT', label: intl.formatMessage(messages.productTags) },
-      { icon: 'SHIPMENT', label: intl.formatMessage(messages.shipmentTags) },
-      { icon: 'STAFF', label: intl.formatMessage(messages.userTags) },
-      { icon: 'BATCH', label: intl.formatMessage(messages.batchTags) },
-    ];
-
     return (
       <UIConsumer>
         {uiState => (
@@ -58,19 +41,13 @@ class TagsModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <EntityIcon icon="TAG" color="TAG" />
-                <Tabs tabs={tabs.map(injectUid)} onChange={this.onChangeTabs} />
                 <Link to="new">
                   <NewButton />
                 </Link>
               </NavBar>
             }
           >
-            <TagsList
-              viewType={viewType}
-              tabIndex={tabIndex}
-              query={filters.query}
-              perPage={perPage}
-            />
+            <TagsList {...this.state} />
           </Layout>
         )}
       </UIConsumer>
@@ -78,4 +55,4 @@ class TagsModule extends React.Component<Props, State> {
   }
 }
 
-export default injectIntl(TagsModule);
+export default TagListModule;

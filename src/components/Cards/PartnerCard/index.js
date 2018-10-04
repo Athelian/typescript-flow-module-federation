@@ -39,14 +39,7 @@ const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: 
   const actions = selectable ? [] : [];
 
   return (
-    <BaseCard
-      {...rest}
-      actions={actions}
-      icon="PARTNER"
-      color="PARTNER"
-      selectable={selectable}
-      readOnly={readOnly}
-    >
+    <BaseCard actions={actions} icon="PARTNER" color="PARTNER" selectable={selectable} {...rest}>
       <div className={PartnerCardStyle(size)} role="presentation" onClick={onClick}>
         <img className={PartnerCardImageStyle} src={FALLBACK_IMAGE} alt="exporter_image" />
         <div className={PartnerInfoWrapperStyle(size)}>

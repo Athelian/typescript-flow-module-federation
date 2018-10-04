@@ -111,9 +111,9 @@ export const OrderWrapperStyle: string = css`
   align-items: center;
 `;
 
-export const OrderIconStyle = css`
+export const OrderIconStyle: string = css`
   ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
+  ${borderRadiuses.MAIN};
   width: 20px;
   height: 20px;
   background-color: ${colors.TEAL};
@@ -135,10 +135,10 @@ export const ShipmentWrapperStyle: string = css`
 
 export const ShipmentIconStyle = (hasShipment: boolean): string => css`
   ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
+  ${borderRadiuses.MAIN};
   width: 20px;
   height: 20px;
-  background-color: ${hasShipment ? colors.TEAL : colors.GRAY_LIGHT};
+  background-color: ${hasShipment ? colors.TEAL : colors.GRAY_VERY_LIGHT};
   color: ${colors.WHITE};
   font-size: 11px;
   ${hasShipment &&

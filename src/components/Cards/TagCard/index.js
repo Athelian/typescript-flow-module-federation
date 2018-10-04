@@ -1,38 +1,102 @@
 // @flow
 import React from 'react';
-import { navigate } from '@reach/router';
-import { type Tag } from 'modules/tags/type.js.flow';
-import logger from 'utils/logger';
+import { Link } from '@reach/router';
+import { type Tag as TagType } from 'modules/tags/type.js.flow';
 import { encodeId } from 'utils/id';
-import BaseCard, { CardAction } from '../BaseCard';
-import { TagCardWrapperStyle } from './style';
+import Tag from 'components/Tag';
+import Icon from 'components/Icon';
+import BaseCard from '../BaseCard';
+import {
+  TagCardWrapperStyle,
+  TagWrapperStyle,
+  TagDescriptionWrapperStyle,
+  TagDescriptionFadeStyle,
+  TagTypesWrapperStyle,
+  TagTypeStyle,
+} from './style';
 
-type Props = {
-  tag: ?Tag,
+type OptionalProps = {
+  onClick: Function,
 };
 
-const TagCard = ({ tag }: Props) => {
+type Props = OptionalProps & {
+  tag: ?TagType,
+};
+
+const defaultProps = {
+  onClick: () => {},
+};
+
+const getEntityType = (entityType: ?string) => {
+  if (entityType) {
+    if (entityType === 'Product') return 'PRODUCT';
+    if (entityType === 'Order') return 'ORDER';
+    if (entityType === 'Batch') return 'BATCH';
+    if (entityType === 'Shipment') return 'SHIPMENT';
+    if (entityType === 'User') return 'STAFF';
+  }
+  return 'GRAY_VERY_LIGHT';
+};
+
+const TagCard = ({ tag, onClick, ...rest }: Props) => {
   if (!tag) return '';
 
-  const { id } = tag;
+  const { description, entityTypes } = tag;
 
-  const actions = [
-    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
-  ];
+  const actions = [];
 
   return (
-    <BaseCard icon="TAG" color="TAG" actions={actions}>
-      <div
-        className={TagCardWrapperStyle}
-        onClick={() => navigate(`/tags/${encodeId(id)}`)}
-        role="presentation"
-      >
-        {id}
-      </div>
+    <BaseCard icon="TAG" color="TAG" actions={actions} {...rest}>
+      <Link className={TagCardWrapperStyle} to={`/tags/${encodeId(tag.id)}`} onClick={onClick}>
+        <div className={TagWrapperStyle}>
+          <Tag tag={tag} />
+        </div>
+        <div className={TagDescriptionWrapperStyle}>
+          {description}
+          <div className={TagDescriptionFadeStyle} />
+        </div>
+        <div className={TagTypesWrapperStyle}>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'Product'))
+            )}
+          >
+            <Icon icon="PRODUCT" />
+          </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'Order'))
+            )}
+          >
+            <Icon icon="ORDER" />
+          </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'Batch'))
+            )}
+          >
+            <Icon icon="BATCH" />
+          </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'Shipment'))
+            )}
+          >
+            <Icon icon="SHIPMENT" />
+          </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'User'))
+            )}
+          >
+            <Icon icon="STAFF" />
+          </div>
+        </div>
+      </Link>
     </BaseCard>
   );
 };
+
+TagCard.defaultProps = defaultProps;
 
 export default TagCard;

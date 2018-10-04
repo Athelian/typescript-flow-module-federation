@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
 import { Router } from '@reach/router';
-import TagListContainer from './index.list';
-import TagFormContainer from './index.form';
+import TagListModule from './index.list';
+import TagFormModule from './index.form';
 
 const TagApp = () => (
   <Router>
-    <TagListContainer path="/" />
-    <TagFormContainer path=":tagId" />
+    <TagListModule path="/" />
+    <TagFormModule path=":tagId" />
   </Router>
 );
 
