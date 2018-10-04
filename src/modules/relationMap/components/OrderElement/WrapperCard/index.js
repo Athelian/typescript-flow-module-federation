@@ -4,13 +4,18 @@ import * as style from './style';
 
 type Props = {
   children: React.Node,
-  onMouseEnter: Function,
-  onMouseLeave: Function,
+  onMouseEnter?: Function,
+  onMouseLeave?: Function,
   onClick?: Function,
   onDoubleClick?: Function,
 };
 
 class WrapperCard extends React.PureComponent<Props> {
+  constructor() {
+    super();
+    this.clickTimeout = null;
+  }
+
   clearClickTimeout = () => {
     if (this.clickTimeout) {
       clearTimeout(this.clickTimeout);
@@ -43,9 +48,9 @@ class WrapperCard extends React.PureComponent<Props> {
       <div
         role="presentation"
         className={style.OuterCardWrapperStyle}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
         onClick={this.handleClicks}
+        {...(onMouseEnter ? { onMouseEnter } : {})}
+        {...(onMouseLeave ? { onMouseLeave } : {})}
       >
         <div className={style.InnerCardWrapperStyle}>{children}</div>
       </div>

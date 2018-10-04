@@ -129,13 +129,12 @@ export const formatShipmentOrder = orders => {
           data: {
             ...shipment,
             numberOfOrder: 0,
-            numberOfBatch: 0,
+            numberOfBatch: shipment.batches.length,
           },
           refs: {},
         };
       }
       shipmentObj[shipment.id].data.numberOfOrder += 1;
-      shipmentObj[shipment.id].data.numberOfBatch += shipment.batches.length;
       shipmentObj[shipment.id].refs[orderId] = true;
     });
   });
@@ -244,7 +243,7 @@ export const formatShipmentData = shipments => {
         data: {
           ...shipment,
           numberOfOrder: 0,
-          numberOfBatch: 0,
+          numberOfBatch: shipment.batches.length,
         },
         totalBatch: 0,
         totalItem: 0,
@@ -274,7 +273,7 @@ export const formatShipmentData = shipments => {
       }
       const { order } = orderItem;
       if (orderItem.order && !orderObj[order.id]) {
-        shipmentObj[shipment.id].data.numberOfBatch += 1;
+        shipmentObj[shipment.id].data.numberOfOrder += 1;
         orderObj[order.id] = {
           orderedQuantity: 0,
           batchedQuantity: 0,
@@ -298,7 +297,6 @@ export const formatShipmentData = shipments => {
       shipmentObj[shipment.id].totalBatch += getByPathWithDefault(false, 'orderItem.order', batch)
         ? 1
         : 0;
-      shipmentObj[shipment.id].data.numberOfBatch += shipmentObj[shipment.id].totalBatch;
     });
   });
   sumOrders = Object.keys(orderObj || {}).length;

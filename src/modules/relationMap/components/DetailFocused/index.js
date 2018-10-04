@@ -4,6 +4,7 @@ import SlideView from 'components/SlideView';
 import OrderForm from 'modules/order/index.form';
 import BatchForm from 'modules/batch/index.form';
 import ShipmentForm from 'modules/shipment/index.form';
+import ProductForm from 'modules/product/index.form';
 import { encodeId } from 'utils/id';
 
 export const ToggleSlide = createObjectValue({ id: null, type: null, show: false });
@@ -27,6 +28,10 @@ const DetailFocused = () => (
         }
         case 'SHIPMENT': {
           form = <ShipmentForm shipmentId={encodeId(id)} isSlideView />;
+          break;
+        }
+        case 'PRODUCT': {
+          form = <ProductForm productId={encodeId(id)} isSlideView />;
           break;
         }
       }

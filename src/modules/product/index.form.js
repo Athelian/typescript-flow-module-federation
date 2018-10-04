@@ -29,12 +29,17 @@ import {
   prepareUpdateProductInput,
 } from './form/mutation';
 
-type Props = {
+type OptionalProps = {
+  isSlideView: boolean,
+};
+
+type Props = OptionalProps & {
   productId?: string,
 };
 
 const defaultProps = {
   productId: '',
+  isSlideView: false,
 };
 
 type CreateProductResponse = {|
@@ -126,7 +131,7 @@ class ProductFormModule extends React.Component<Props> {
   };
 
   render() {
-    const { productId } = this.props;
+    const { productId, isSlideView } = this.props;
     const isNew = productId === 'new';
     let mutationKey = {};
     if (productId && !isNew) {
@@ -144,7 +149,7 @@ class ProductFormModule extends React.Component<Props> {
             >
               {(saveProduct, { loading: isLoading, error: apiError }) => (
                 <Layout
-                  {...uiState}
+                  {...(isSlideView ? {} : uiState)}
                   navBar={
                     <NavBar>
                       <EntityIcon icon="PRODUCT" color="PRODUCT" />
