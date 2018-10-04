@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import QueryDetail from 'components/common/QueryDetail';
@@ -152,10 +153,40 @@ class ShipmentFormModule extends React.Component<Props> {
                     <NavBar>
                       <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
                       <JumpToSection>
-                        <SectionTabs link="shipmentSection" label="SHIPMENT" icon="SHIPMENT" />
-                        <SectionTabs link="timelineSection" label="TIMELINE" icon="TIMELINE" />
-                        <SectionTabs link="cargoSection" label="CARGO" icon="CARGO" />
-                        <SectionTabs link="orderSection" label="ORDER" icon="ORDER" />
+                        <SectionTabs
+                          link="shipmentSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.shipment.shipment"
+                              defaultMessage="SHIPMENT"
+                            />
+                          }
+                          icon="SHIPMENT"
+                        />
+                        <SectionTabs
+                          link="timelineSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.shipment.timeline"
+                              defaultMessage="TIMELINE"
+                            />
+                          }
+                          icon="TIMELINE"
+                        />
+                        <SectionTabs
+                          link="cargoSection"
+                          label={
+                            <FormattedMessage id="modules.shipment.cargo" defaultMessage="CARGO" />
+                          }
+                          icon="CARGO"
+                        />
+                        <SectionTabs
+                          link="orderSection"
+                          label={
+                            <FormattedMessage id="modules.shipment.order" defaultMessage="ORDER" />
+                          }
+                          icon="ORDER"
+                        />
                       </JumpToSection>
                       <Subscribe
                         to={[

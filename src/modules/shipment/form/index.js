@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Loadable from 'react-loadable';
 import { uniqBy } from 'lodash';
 import { isEquals } from 'utils/fp';
@@ -58,7 +59,10 @@ class ShipmentForm extends React.Component<Props> {
     return (
       <div className={ShipmentFormWrapperStyle}>
         <SectionWrapper id="shipmentSection">
-          <SectionHeader icon="SHIPMENT" title="SHIPMENT">
+          <SectionHeader
+            icon="SHIPMENT"
+            title={<FormattedMessage id="modules.shipment.shipment" defaultMessage="SHIPMENT" />}
+          >
             {!isNew && (
               <LastModified updatedAt={shipment.updatedAt} updatedBy={shipment.updatedBy} />
             )}
@@ -66,13 +70,24 @@ class ShipmentForm extends React.Component<Props> {
           <ShipmentSection isNew={isNew} />
         </SectionWrapper>
         <SectionWrapper id="timelineSection">
-          <SectionHeader icon="TIMELINE" title="TIMELINE" />
+          <SectionHeader
+            icon="TIMELINE"
+            title={<FormattedMessage id="modules.shipment.timeline" defaultMessage="TIMELINE" />}
+          />
           <AsyncTimelineSection isNew={isNew} />
         </SectionWrapper>
         <SectionWrapper id="cargoSection">
           <Subscribe to={[ShipmentBatchesContainer]}>
             {({ state: { batches } }) => (
-              <SectionHeader icon="CARGO" title={`CARGO (${batches.length})`} />
+              <SectionHeader
+                icon="CARGO"
+                title={
+                  <>
+                    <FormattedMessage id="modules.shipment.shipment" defaultMessage="CARGO " />(
+                    {batches.length})
+                  </>
+                }
+              />
             )}
           </Subscribe>
           <AsyncCargoSection />
@@ -83,7 +98,15 @@ class ShipmentForm extends React.Component<Props> {
               const uniqueOrders = uniqBy(batches.map(batch => batch.orderItem.order), 'id');
               return (
                 <>
-                  <SectionHeader icon="ORDER" title={`ORDER (${uniqueOrders.length})`} />
+                  <SectionHeader
+                    icon="ORDER"
+                    title={
+                      <>
+                        <FormattedMessage id="modules.shipment.order" defaultMessage="ORDER " />(
+                        {uniqueOrders.length})
+                      </>
+                    }
+                  />
                   <AsyncOrdersSection orders={uniqueOrders} />
                 </>
               );
