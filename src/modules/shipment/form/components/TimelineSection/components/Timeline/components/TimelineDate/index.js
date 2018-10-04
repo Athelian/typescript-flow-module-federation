@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { compact } from 'lodash';
 // $FlowFixMe flow not yet configured
 import differenceInDays from 'date-fns/differenceInDays';
@@ -63,7 +64,11 @@ const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
         <div className={PrefixIconStyle}>{prefixIcon && <Icon icon={prefixIcon} />}</div>
       )}
       <div className={DateStyle({ shownDate: !!shownDate, vertical })}>
-        {shownDate ? <FormattedDate value={new Date(shownDate)} /> : 'No date'}
+        {shownDate ? (
+          <FormattedDate value={new Date(shownDate)} />
+        ) : (
+          <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+        )}
       </div>
       <div className={DelayStyle({ delayAmount, vertical })}>
         {delayAmount !== 0 && `${delayAmount > 0 ? '+' : ''}${delayAmount}`}

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import {
@@ -54,7 +55,9 @@ const TimelineSection = ({ isNew }: Props) => (
               id="cargoReady"
               isNew={isNew}
               icon="CARGO_READY"
-              title="CARGO READY"
+              title={
+                <FormattedMessage id="modules.shipment.cargoReady" defaultMessage="CARGO READY" />
+              }
               timelineDate={cargoReady}
               sourceName="cargoReady"
               setFieldDeepValue={setFieldDeepValue}
@@ -64,7 +67,12 @@ const TimelineSection = ({ isNew }: Props) => (
               id="loadPortDeparture"
               isNew={isNew}
               icon="PORT"
-              title="LOAD PORT DEPARTURE"
+              title={
+                <FormattedMessage
+                  id="modules.shipment.loadPortDeparture"
+                  defaultMessage="LOAD PORT DEPARTURE"
+                />
+              }
               timelineDate={voyages[0].departure}
               sourceName="voyages.0.departure"
               setFieldDeepValue={setFieldDeepValue}
@@ -74,7 +82,16 @@ const TimelineSection = ({ isNew }: Props) => (
               id="firstVoyage"
               isNew={isNew}
               icon={getTransportIcon(values.transportType)}
-              title={values.voyages.length > 1 ? 'FIRST VOYAGE' : 'VOYAGE'}
+              title={
+                values.voyages.length > 1 ? (
+                  <FormattedMessage
+                    id="modules.shipment.firstVoyage"
+                    defaultMessage="FIRST VOYAGE"
+                  />
+                ) : (
+                  <FormattedMessage id="modules.shipment.voyage" defaultMessage="VOYAGE" />
+                )
+              }
               voyage={voyages[0]}
               initialVoyage={initialValues.voyages[0]}
               sourceName="voyages.0"
@@ -93,9 +110,17 @@ const TimelineSection = ({ isNew }: Props) => (
                   isNew={isNew}
                   icon="TRANSIT"
                   title={
-                    values.voyages.length > 2
-                      ? 'FIRST TRANSIT PORT ARRIVAL'
-                      : 'TRANSIT PORT ARRIVAL'
+                    values.voyages.length > 2 ? (
+                      <FormattedMessage
+                        id="modules.shipment.firstTransitPortArrival"
+                        defaultMessage="FIRST TRANSIT PORT ARRIVAL"
+                      />
+                    ) : (
+                      <FormattedMessage
+                        id="modules.shipment.transitPortArrival"
+                        defaultMessage="TRANSIT PORT ARRIVAL"
+                      />
+                    )
                   }
                   timelineDate={values.voyages[1].arrival}
                   sourceName="voyages.1.arrival"
@@ -107,9 +132,17 @@ const TimelineSection = ({ isNew }: Props) => (
                   isNew={isNew}
                   icon="TRANSIT"
                   title={
-                    values.voyages.length > 2
-                      ? 'FIRST TRANSIT PORT DEPARTURE'
-                      : 'TRANSIT PORT DEPARTURE'
+                    values.voyages.length > 2 ? (
+                      <FormattedMessage
+                        id="modules.shipment.firstTransitPortDeparture"
+                        defaultMessage="FIRST TRANSIT PORT DEPARTURE"
+                      />
+                    ) : (
+                      <FormattedMessage
+                        id="modules.shipment.transitPortDeparture"
+                        defaultMessage="TRANSIT PORT DEPARTURE"
+                      />
+                    )
                   }
                   timelineDate={values.voyages[1].departure}
                   sourceName="voyages.1.departure"
@@ -120,7 +153,12 @@ const TimelineSection = ({ isNew }: Props) => (
                   id="secondVoyage"
                   isNew={isNew}
                   icon={getTransportIcon(values.transportType)}
-                  title="SECOND VOYAGE"
+                  title={
+                    <FormattedMessage
+                      id="modules.shipment.secondVoyage"
+                      defaultMessage="SECOND VOYAGE"
+                    />
+                  }
                   voyage={voyages[1]}
                   initialVoyage={initialValues.voyages[1]}
                   sourceName="voyages.1"
@@ -149,7 +187,12 @@ const TimelineSection = ({ isNew }: Props) => (
                   id="secondTransitPortArrival"
                   isNew={isNew}
                   icon="TRANSIT"
-                  title="SECOND TRANSIT PORT ARRIVAL"
+                  title={
+                    <FormattedMessage
+                      id="modules.shipment.secondTransitPortArrival"
+                      defaultMessage="SECOND TRANSIT PORT ARRIVAL"
+                    />
+                  }
                   timelineDate={values.voyages[2].arrival}
                   sourceName="voyages.2.arrival"
                   setFieldDeepValue={setFieldDeepValue}
@@ -159,7 +202,12 @@ const TimelineSection = ({ isNew }: Props) => (
                   id="secondTransitPortDeparture"
                   isNew={isNew}
                   icon="TRANSIT"
-                  title="SECOND TRANSIT PORT DEPARTURE"
+                  title={
+                    <FormattedMessage
+                      id="modules.shipment.secondTransitPortDeparture"
+                      defaultMessage="SECOND TRANSIT PORT DEPARTURE"
+                    />
+                  }
                   timelineDate={values.voyages[2].departure}
                   sourceName="voyages.2.departure"
                   setFieldDeepValue={setFieldDeepValue}
@@ -169,7 +217,12 @@ const TimelineSection = ({ isNew }: Props) => (
                   id="thirdVoyage"
                   isNew={isNew}
                   icon={getTransportIcon(values.transportType)}
-                  title="THIRD VOYAGE"
+                  title={
+                    <FormattedMessage
+                      id="modules.shipment.thirdVoyage"
+                      defaultMessage="THIRD VOYAGE"
+                    />
+                  }
                   voyage={voyages[2]}
                   initialVoyage={initialValues.voyages[2]}
                   sourceName="voyages.2"
@@ -190,7 +243,12 @@ const TimelineSection = ({ isNew }: Props) => (
               id="dischargePortArrival"
               isNew={isNew}
               icon="PORT"
-              title="DISCHARGE PORT ARRIVAL"
+              title={
+                <FormattedMessage
+                  id="modules.shipment.dischargePortArrival"
+                  defaultMessage="DISCHARGE PORT ARRIVAL"
+                />
+              }
               timelineDate={values.voyages[voyages.length - 1].arrival}
               sourceName={`voyages.${voyages.length - 1}.arrival`}
               setFieldDeepValue={setFieldDeepValue}
@@ -200,7 +258,12 @@ const TimelineSection = ({ isNew }: Props) => (
               id="customClearance"
               isNew={isNew}
               icon="CUSTOMS"
-              title="CUSTOMS CLEARANCE"
+              title={
+                <FormattedMessage
+                  id="modules.shipment.customsClearance"
+                  defaultMessage="CUSTOMS CLEARANCE"
+                />
+              }
               timelineDate={customClearance}
               sourceName="containerGroups.0.customClearance"
               setFieldDeepValue={setFieldDeepValue}
@@ -210,7 +273,12 @@ const TimelineSection = ({ isNew }: Props) => (
               id="warehouseArrival"
               isNew={isNew}
               icon="WAREHOUSE"
-              title="WAREHOUSE ARRIVAL"
+              title={
+                <FormattedMessage
+                  id="modules.shipment.warehouseArrival"
+                  defaultMessage="WAREHOUSE ARRIVAL"
+                />
+              }
               timelineDate={warehouseArrival}
               sourceName="containerGroups.0.warehouseArrival"
               setFieldDeepValue={setFieldDeepValue}
@@ -257,7 +325,12 @@ const TimelineSection = ({ isNew }: Props) => (
               id="deliveryReady"
               isNew={isNew}
               icon="DELIVERY_READY"
-              title="DELIVERY READY"
+              title={
+                <FormattedMessage
+                  id="modules.shipment.deliveryReady"
+                  defaultMessage="DELIVERY READY"
+                />
+              }
               timelineDate={deliveryReady}
               sourceName="containerGroups.0.deliveryReady"
               setFieldDeepValue={setFieldDeepValue}
