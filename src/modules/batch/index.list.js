@@ -89,7 +89,7 @@ class BatchListModule extends React.Component<Props, State> {
               <NavBar>
                 <FilterToolBar
                   filtersAndSort={this.state}
-                  icon="ORDER"
+                  icon="BATCH"
                   fields={fields}
                   onChange={this.onChangeFilter}
                 />

@@ -12,9 +12,7 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => (
-  <StaffCard key={item.id} staff={item} onClick={() => {}} />
-);
+const defaultRenderItem = (item: Object) => <StaffCard key={item.id} staff={item} />;
 
 const defaultProps = {
   renderItem: defaultRenderItem,
@@ -28,7 +26,7 @@ const StaffGridView = (props: Props) => {
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="200px"
+      itemWidth="195px"
       isEmpty={items.length === 0}
       emptyMessage={
         <FormattedMessage id="modules.staff.noStaffFound" defaultMessage="No staff found" />

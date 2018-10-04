@@ -31,7 +31,7 @@ export const colors = {
   TRANSPARENT: 'rgba(0, 0, 0, 0)',
 
   PRODUCT: '#F12C2C',
-  PROVIDER: '#C5A770',
+  PROVIDER: '#CF0000',
   ORDER: '#ED5724',
   ORDER_ITEM: '#FBAA1D',
   BATCH: '#12B937',

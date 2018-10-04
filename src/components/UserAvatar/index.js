@@ -6,18 +6,20 @@ import { AvatarWrapperStyle } from './style';
 type OptionalProps = {
   width: string,
   height: string,
-  image?: string,
+  firstName: string,
+  lastName: string,
+  image: ?string,
   showBothInitials: boolean,
 };
 
-type Props = OptionalProps & {
-  firstName: string,
-  lastName: string,
-};
+type Props = OptionalProps;
 
 const defaultProps = {
   width: '30px',
   height: '30px',
+  firstName: '',
+  lastName: '',
+  image: null,
   showBothInitials: false,
 };
 
