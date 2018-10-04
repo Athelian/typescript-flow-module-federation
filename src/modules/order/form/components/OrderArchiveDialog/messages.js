@@ -8,12 +8,12 @@ export default defineMessages({
   },
   unshippedMsg: {
     id: 'modules.order.form.archiveDialog.unshippedMsg',
-    defaultMessage: 'This will activate {unshipped}/{total} {batches} as well.',
+    defaultMessage: 'This will make{unshipped}/{total} {batches} archived as well.',
   },
   shippedMsg: {
     id: 'modules.order.form.archiveDialog.shippedMsg',
     defaultMessage:
-      '{shipped}/{total} {batches} are already active because they are in active {shipments}.',
+      '{shipped}/{total} {batches} will stay active because they are in active {shipments}.',
   },
   warnMsg: {
     id: 'modules.order.form.archiveDialog.warnMsg',
