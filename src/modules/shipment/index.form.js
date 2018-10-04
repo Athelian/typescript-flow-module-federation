@@ -20,6 +20,7 @@ import {
   ShipmentBatchesContainer,
   ShipmentTimelineContainer,
   ShipmentTransportTypeContainer,
+  ShipmentFilesContainer,
 } from './form/containers';
 import ShipmentForm from './form';
 import validator from './form/validator';
@@ -181,9 +182,19 @@ class ShipmentFormModule extends React.Component<Props> {
                           icon="CARGO"
                         />
                         <SectionTabs
+                          link="documentsSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.shipment.document"
+                              defaultMessage="DOCUMENTS"
+                            />
+                          }
+                          icon="DOCUMENT"
+                        />
+                        <SectionTabs
                           link="orderSection"
                           label={
-                            <FormattedMessage id="modules.shipment.order" defaultMessage="ORDER" />
+                            <FormattedMessage id="modules.shipment.order" defaultMessage="ORDERS" />
                           }
                           icon="ORDER"
                         />
@@ -195,6 +206,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           ShipmentTagsContainer,
                           ShipmentTimelineContainer,
                           ShipmentTransportTypeContainer,
+                          ShipmentFilesContainer,
                           FormContainer,
                         ]}
                       >
@@ -204,6 +216,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           shipmentTagsState,
                           shipmentTimelineState,
                           shipmentTransportTypeState,
+                          shipmentFileState,
                           form
                         ) =>
                           (isNew ||
@@ -211,7 +224,8 @@ class ShipmentFormModule extends React.Component<Props> {
                             shipmentInfoState.isDirty() ||
                             shipmentTagsState.isDirty() ||
                             shipmentTimelineState.isDirty() ||
-                            shipmentTransportTypeState.isDirty()) && (
+                            shipmentTransportTypeState.isDirty() ||
+                            shipmentFileState.isDirty()) && (
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
@@ -223,6 +237,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                       ...shipmentTagsState.state,
                                       ...shipmentTimelineState.state,
                                       ...shipmentTransportTypeState.state,
+                                      ...shipmentFileState.state,
                                     },
                                     validator
                                   )
@@ -235,6 +250,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                       ...shipmentTagsState.state,
                                       ...shipmentTimelineState.state,
                                       ...shipmentTransportTypeState.state,
+                                      ...shipmentFileState.state,
                                     },
                                     saveShipment,
                                     () => {
@@ -243,6 +259,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                       shipmentTagsState.onSuccess();
                                       shipmentTimelineState.onSuccess();
                                       shipmentTransportTypeState.onSuccess();
+                                      shipmentFileState.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors
@@ -273,6 +290,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             ShipmentTagsContainer,
                             ShipmentTimelineContainer,
                             ShipmentTransportTypeContainer,
+                            ShipmentFilesContainer,
                           ]}
                         >
                           {(
@@ -280,7 +298,8 @@ class ShipmentFormModule extends React.Component<Props> {
                             shipmentInfoState,
                             shipmentTagsState,
                             shipmentTimelineState,
-                            shipmentTransportTypeState
+                            shipmentTransportTypeState,
+                            shipmentFileState
                           ) => (
                             <ShipmentForm
                               shipment={shipment}
@@ -292,6 +311,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   cargoReady,
                                   voyages,
                                   containerGroups,
+                                  files,
                                   ...info
                                 } = shipment;
                                 shipmentBatchesState.initDetailValues(batches);
@@ -303,6 +323,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   containerGroups,
                                 });
                                 shipmentTransportTypeState.initDetailValues(transportType);
+                                shipmentFileState.initDetailValues(files);
                               }}
                             />
                           )}

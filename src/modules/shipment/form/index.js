@@ -37,6 +37,10 @@ const AsyncOrdersSection = Loadable({
   loading: LoadingIcon,
   loader: () => import('./components/OrdersSection'),
 });
+const AsyncDocumentsSection = Loadable({
+  loading: LoadingIcon,
+  loader: () => import('./components/DocumentsSection'),
+});
 
 class ShipmentForm extends React.Component<Props> {
   static defaultProps = defaultProps;
@@ -83,7 +87,7 @@ class ShipmentForm extends React.Component<Props> {
                 icon="CARGO"
                 title={
                   <>
-                    <FormattedMessage id="modules.shipment.shipment" defaultMessage="CARGO " />(
+                    <FormattedMessage id="modules.shipment.shipment" defaultMessage="CARGO" />(
                     {batches.length})
                   </>
                 }
@@ -91,6 +95,13 @@ class ShipmentForm extends React.Component<Props> {
             )}
           </Subscribe>
           <AsyncCargoSection />
+        </SectionWrapper>
+        <SectionWrapper id="documentsSection">
+          <SectionHeader
+            icon="DOCUMENT"
+            title={<FormattedMessage id="modules.shipment.document" defaultMessage="DOCUMENTS" />}
+          />
+          <AsyncDocumentsSection />
         </SectionWrapper>
         <SectionWrapper id="orderSection">
           <Subscribe to={[ShipmentBatchesContainer]}>
@@ -102,7 +113,7 @@ class ShipmentForm extends React.Component<Props> {
                     icon="ORDER"
                     title={
                       <>
-                        <FormattedMessage id="modules.shipment.order" defaultMessage="ORDER " />(
+                        <FormattedMessage id="modules.shipment.order" defaultMessage="ORDERS" />(
                         {uniqueOrders.length})
                       </>
                     }
