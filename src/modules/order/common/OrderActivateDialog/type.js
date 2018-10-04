@@ -1,10 +1,8 @@
 // @flow
 export type OrderDialogProps = {
   isOpen: boolean,
+  orderId: string,
   onRequestClose: () => void,
-  onCancel: () => void,
-  onConfirm: () => void,
-
   totalBatches: number,
   unshippedBatches: number,
   shippedBatches: number,

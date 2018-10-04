@@ -5,7 +5,7 @@ export type ConfirmDialogProps = {
   isOpen: boolean,
   onRequestClose: () => void,
   onCancel: () => void,
-  onConfirm: () => void,
+  onConfirm: () => Promise<any> | void,
   width: number,
   message: React.Node,
 };
