@@ -4,9 +4,13 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { isEquals } from 'utils/fp';
 import { Tooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
-import BatchSection from './components/BatchSection';
-import QuantityAdjustmentsSection from './components/QuantityAdjustmentsSection';
-import PackagingSection from './components/PackagingSection';
+import {
+  BatchSection,
+  OrderSection,
+  QuantityAdjustmentsSection,
+  PackagingSection,
+  ShipmentSection,
+} from './components';
 import { BatchFormWrapperStyle, StatusStyle } from './style';
 
 type OptionalProps = {
@@ -99,6 +103,22 @@ export default class BatchForm extends React.Component<Props> {
             title={<FormattedMessage id="modules.batch.packaging" defaultMessage="PACKAGING" />}
           />
           <PackagingSection isNew={isNew} />
+        </SectionWrapper>
+
+        <SectionWrapper id="shipmentSection">
+          <SectionHeader
+            icon="SHIPMENT"
+            title={<FormattedMessage id="modules.batch.shipment" defaultMessage="SHIPMENT" />}
+          />
+          <ShipmentSection shipment={batch.shipment} />
+        </SectionWrapper>
+
+        <SectionWrapper id="orderSection">
+          <SectionHeader
+            icon="ORDER"
+            title={<FormattedMessage id="modules.batch.order" defaultMessage="ORDER" />}
+          />
+          <OrderSection order={batch.orderItem && batch.orderItem.order} />
         </SectionWrapper>
       </div>
     );

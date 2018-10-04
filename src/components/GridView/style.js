@@ -20,6 +20,7 @@ export const GridViewWrapperStyle = ({
   grid-column-gap: ${columnGap};
   grid-row-gap: ${rowGap};
   padding: 50px 20px;
+  justify-content: center;
 `;
 
 export const EmptyMessageStyle: string = css`
