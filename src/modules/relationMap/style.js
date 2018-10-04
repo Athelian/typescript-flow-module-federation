@@ -133,6 +133,10 @@ export const FunctionWrapperStyle = css`
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+
+  > div:first-child > div:first-child {
+    width: 90%;
+  }
 `;
 
 export const BadgeWrapperStyle = css`
