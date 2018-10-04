@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
-import ShipmentHeader from './ShipmentLabel';
+import ShipmentLabel from './ShipmentLabel';
 import ShipmentTimeline from './ShipmentTimeline/TimelineLayout';
-import { ShipmentElementWrapperStyle } from './style';
+import { ShipmentCardWrapperStyle } from './style';
 
 type Props = {
   shipment: Object,
@@ -11,8 +11,8 @@ class ShipmentElement extends React.PureComponent<Props> {
   render() {
     const { shipment } = this.props;
     return (
-      <div className={ShipmentElementWrapperStyle}>
-        <ShipmentHeader name={shipment.no} vol="" />
+      <div className={ShipmentCardWrapperStyle}>
+        <ShipmentLabel name={shipment.no} vol="" />
         <ShipmentTimeline shipment={shipment} />
       </div>
     );

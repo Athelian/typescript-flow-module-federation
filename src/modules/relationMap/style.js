@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'react-emotion';
-import { colors, presets, layout, fontSizes } from 'styles/common';
+import { colors, presets, layout, fontSizes, borderRadiuses } from 'styles/common';
 
 const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
 
@@ -126,11 +126,13 @@ export const OrderMapWrapperStyle = css`
 `;
 export const FunctionWrapperStyle = css`
   grid-column: span 4;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 3.8fr;
   background-color: ${colors.WHITE};
   padding: 5px;
-  ${presets.BOX};
+  ${borderRadiuses.MAIN};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 `;
 
 export const BadgeWrapperStyle = css`
@@ -138,9 +140,11 @@ export const BadgeWrapperStyle = css`
   padding-top: 10px;
   padding-bottom: 5px;
   display: grid;
-  ${GridColumn};
+  grid-template-columns: 1fr 0.95fr 1.05fr 1.8fr;
   background-color: ${colors.WHITE};
-  ${presets.BOX};
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
 `;
 export const LoadingWrapperStyle = css`
   grid-column: span 4;
@@ -150,5 +154,7 @@ export const LoadingWrapperStyle = css`
 
 export const TagWrapperStyle = css`
   grid-column: span 4;
-  justify-content: end;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
 `;

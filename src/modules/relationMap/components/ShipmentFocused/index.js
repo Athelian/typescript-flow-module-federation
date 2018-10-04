@@ -78,6 +78,7 @@ const ShipmentFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) =
                   itemData = shipment.shipmentObj[relation.id];
                   break;
                 case 'SHIPMENT':
+                case 'SHIPMENT_ALL':
                   itemData = shipment.shipmentObj[relation.id].data;
                   break;
                 default:

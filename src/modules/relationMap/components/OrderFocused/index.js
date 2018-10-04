@@ -84,20 +84,18 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
         return (
           <FocusedValue key={shipmentId}>
             {({ value: focusedItem, assign, reset }) => (
-              <div key={shipmentId}>
-                <Item
-                  key={shipmentId}
-                  type="SHIPMENT"
-                  data={currentShipment.data}
-                  isFocused={Boolean(
-                    Object.keys(focusedItem || {}).some(focusId =>
-                      shipmentRefs.some(orderId => orderId === focusId)
-                    )
-                  )}
-                  onMouseLeave={reset}
-                  onMouseEnter={() => assign(currentShipment.refs)}
-                />
-              </div>
+              <Item
+                key={shipmentId}
+                type="SHIPMENT"
+                data={currentShipment.data}
+                isFocused={Boolean(
+                  Object.keys(focusedItem || {}).some(focusId =>
+                    shipmentRefs.some(orderId => orderId === focusId)
+                  )
+                )}
+                onMouseLeave={reset}
+                onMouseEnter={() => assign(currentShipment.refs)}
+              />
             )}
           </FocusedValue>
         );
