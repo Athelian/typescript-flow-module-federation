@@ -23,7 +23,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
             EMAIL
           </div>
           <div
-            class="css-afp5as"
+            class="css-123i3t7"
           >
             <input
               data-testid="email"
@@ -48,7 +48,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
             PASSWORD
           </div>
           <div
-            class="css-afp5as"
+            class="css-123i3t7"
           >
             <input
               data-testid="password"
@@ -203,7 +203,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
             EMAIL
           </div>
           <div
-            class="css-afp5as"
+            class="css-123i3t7"
           >
             <input
               data-testid="email"
@@ -228,7 +228,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
             PASSWORD
           </div>
           <div
-            class="css-afp5as"
+            class="css-123i3t7"
           >
             <input
               data-testid="password"
