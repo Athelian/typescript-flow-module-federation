@@ -74,7 +74,10 @@ export const productProvidersQuery = gql`
             id
             name
             color
-            description
+          }
+          files {
+            id
+            path
           }
         }
         unitPrice {

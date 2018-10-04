@@ -12,6 +12,11 @@ export const userListQuery = gql`
         lastName
         email
         role
+        tags {
+          id
+          name
+          color
+        }
       }
     }
   }

@@ -1,40 +1,69 @@
 // @flow
 import React from 'react';
-import { navigate } from '@reach/router';
+import { FormattedMessage } from 'react-intl';
 import { type User as Staff } from 'modules/staff/type.js.flow';
-import logger from 'utils/logger';
-import { encodeId } from 'utils/id';
-import BaseCard, { CardAction } from '../BaseCard';
-import { StaffCardWrapperStyle } from './style';
+import Tag from 'components/Tag';
+import Icon from 'components/Icon';
+import FormattedName from 'components/FormattedName';
+import UserAvatar from 'components/UserAvatar';
+import BaseCard from '../BaseCard';
+import {
+  StaffCardWrapperStyle,
+  StaffNameStyle,
+  StaffEmailStyle,
+  StaffRoleStyle,
+  StaffTagsWrapperStyle,
+} from './style';
 
-type Props = {
+type OptionalProps = {
+  onClick: Function,
+};
+
+type Props = OptionalProps & {
   staff: ?Staff,
-  onClick?: string => void,
 };
 
 const defaultProps = {
-  onClick: (id: string) => navigate(`/staff/${encodeId(id)}`),
+  onClick: () => {},
 };
 
-const StaffCard = ({ staff, onClick }: Props) => {
+const StaffCard = ({ staff, onClick, ...rest }: Props) => {
   if (!staff) return '';
 
-  const { id } = staff;
+  const { firstName, lastName, role, email, tags } = staff;
 
-  const actions = [
-    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => logger.warn('delete')} />,
-  ];
+  const actions = [];
+
+  let userRoleIcon = 'USER';
+  if (role === 'manager') {
+    userRoleIcon = 'MANAGER';
+  }
 
   return (
-    <BaseCard icon="STAFF" color="STAFF" actions={actions}>
-      <div
-        className={StaffCardWrapperStyle}
-        onClick={() => id && onClick && onClick(id)}
-        role="presentation"
-      >
-        {id}
+    <BaseCard icon="STAFF" color="STAFF" actions={actions} {...rest}>
+      <div className={StaffCardWrapperStyle} onClick={onClick} role="presentation">
+        <UserAvatar
+          firstName={firstName}
+          lastName={lastName}
+          width="105px"
+          height="105px"
+          showBothInitials
+        />
+        <div className={StaffNameStyle}>
+          <FormattedName firstName={firstName} lastName={lastName} />
+        </div>
+        <div className={StaffEmailStyle}>{email}</div>
+        <div className={StaffRoleStyle}>
+          <Icon icon={userRoleIcon} />
+          {role === 'manager' ? (
+            <FormattedMessage id="components.cards.managerUser" defaultMessage="Manager" />
+          ) : (
+            <FormattedMessage id="components.cards.defaultUser" defaultMessage="User" />
+          )}
+        </div>
+        <div className={StaffTagsWrapperStyle}>
+          {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+        </div>
       </div>
     </BaseCard>
   );

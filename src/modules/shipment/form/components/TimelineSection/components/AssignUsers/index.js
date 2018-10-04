@@ -8,7 +8,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import StaffGridView from 'modules/staff/list/StaffGridView';
-import { ShipmentUserCard } from 'components/Cards';
+import { StaffCard } from 'components/Cards';
 
 type OptionalProps = {
   selected: Array<{
@@ -85,7 +85,7 @@ const AssignUsers = ({ selected, onCancel, onSelect }: Props) => (
             <Layout
               navBar={
                 <SlideViewNavBar>
-                  <EntityIcon icon="STAFF" color="BLACK" />
+                  <EntityIcon icon="STAFF" color="STAFF" />
                   <h3>
                     {values.length}/{MAX_SELECTIONS}
                   </h3>
@@ -103,7 +103,7 @@ const AssignUsers = ({ selected, onCancel, onSelect }: Props) => (
                 onLoadMore={() => {}}
                 items={getByPathWithDefault([], 'users.nodes', data)}
                 renderItem={item => (
-                  <ShipmentUserCard
+                  <StaffCard
                     staff={item}
                     onSelect={() => onAssignUsers({ selected: values, item, push, set })}
                     selectable
