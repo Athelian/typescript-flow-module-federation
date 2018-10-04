@@ -8,7 +8,7 @@ import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import LoadingIcon from 'components/LoadingIcon';
 import JumpToSection from 'components/JumpToSection';
@@ -218,58 +218,74 @@ class ShipmentFormModule extends React.Component<Props> {
                           shipmentTransportTypeState,
                           shipmentFileState,
                           form
-                        ) =>
-                          (isNew ||
-                            shipmentBatchesState.isDirty() ||
-                            shipmentInfoState.isDirty() ||
-                            shipmentTagsState.isDirty() ||
-                            shipmentTimelineState.isDirty() ||
-                            shipmentTransportTypeState.isDirty() ||
-                            shipmentFileState.isDirty()) && (
-                            <>
-                              <CancelButton onClick={this.onCancel} />
-                              <SaveButton
-                                disabled={
-                                  !form.isReady(
-                                    {
-                                      ...shipmentBatchesState.state,
-                                      ...shipmentInfoState.state,
-                                      ...shipmentTagsState.state,
-                                      ...shipmentTimelineState.state,
-                                      ...shipmentTransportTypeState.state,
-                                      ...shipmentFileState.state,
-                                    },
-                                    validator
-                                  )
-                                }
-                                onClick={() =>
-                                  this.onSave(
-                                    {
-                                      ...shipmentBatchesState.state,
-                                      ...shipmentInfoState.state,
-                                      ...shipmentTagsState.state,
-                                      ...shipmentTimelineState.state,
-                                      ...shipmentTransportTypeState.state,
-                                      ...shipmentFileState.state,
-                                    },
-                                    saveShipment,
-                                    () => {
-                                      shipmentBatchesState.onSuccess();
-                                      shipmentInfoState.onSuccess();
-                                      shipmentTagsState.onSuccess();
-                                      shipmentTimelineState.onSuccess();
-                                      shipmentTransportTypeState.onSuccess();
-                                      shipmentFileState.onSuccess();
-                                      form.onReset();
-                                    },
-                                    form.onErrors
-                                  )
-                                }
-                              />
-                              {isLoading && <LoadingIcon />}
-                            </>
-                          )
-                        }
+                        ) => (
+                          <>
+                            {(isNew ||
+                              shipmentBatchesState.isDirty() ||
+                              shipmentInfoState.isDirty() ||
+                              shipmentTagsState.isDirty() ||
+                              shipmentTimelineState.isDirty() ||
+                              shipmentTransportTypeState.isDirty() ||
+                              shipmentFileState.isDirty()) && (
+                              <>
+                                <CancelButton onClick={this.onCancel} />
+                                <SaveButton
+                                  disabled={
+                                    !form.isReady(
+                                      {
+                                        ...shipmentBatchesState.state,
+                                        ...shipmentInfoState.state,
+                                        ...shipmentTagsState.state,
+                                        ...shipmentTimelineState.state,
+                                        ...shipmentTransportTypeState.state,
+                                        ...shipmentFileState.state,
+                                      },
+                                      validator
+                                    )
+                                  }
+                                  onClick={() =>
+                                    this.onSave(
+                                      {
+                                        ...shipmentBatchesState.state,
+                                        ...shipmentInfoState.state,
+                                        ...shipmentTagsState.state,
+                                        ...shipmentTimelineState.state,
+                                        ...shipmentTransportTypeState.state,
+                                        ...shipmentFileState.state,
+                                      },
+                                      saveShipment,
+                                      () => {
+                                        shipmentBatchesState.onSuccess();
+                                        shipmentInfoState.onSuccess();
+                                        shipmentTagsState.onSuccess();
+                                        shipmentTimelineState.onSuccess();
+                                        shipmentTransportTypeState.onSuccess();
+                                        shipmentFileState.onSuccess();
+                                        form.onReset();
+                                      },
+                                      form.onErrors
+                                    )
+                                  }
+                                />
+                                {isLoading && <LoadingIcon />}
+                              </>
+                            )}
+                            {shipmentId &&
+                              !isNew &&
+                              !shipmentBatchesState.isDirty() &&
+                              !shipmentInfoState.isDirty() &&
+                              !shipmentTagsState.isDirty() &&
+                              !shipmentTimelineState.isDirty() &&
+                              !shipmentTransportTypeState.isDirty() && (
+                                <ExportButton
+                                  type="data"
+                                  format="csv"
+                                  template="ShipmentID"
+                                  id={decodeId(shipmentId)}
+                                />
+                              )}
+                          </>
+                        )}
                       </Subscribe>
                     </NavBar>
                   }

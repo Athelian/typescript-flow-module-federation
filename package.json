@@ -55,7 +55,9 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "cross-env NODE_ENV=production node scripts/build.js",
+    "build": "build:prod",
+    "build:prod": "cross-env NODE_ENV=production node scripts/build.js",
+    "build:stg": "cross-env NODE_ENV=staging node scripts/build.js",
     "postbuild": "react-snap",
     "test": "node scripts/test.js",
     "cy:open": "npx cypress open",
@@ -68,7 +70,6 @@
     "format": "prettier-eslint --write 'src/**/*.{js,jsx}'",
     "commit": "npx git-cz",
     "flow-typed": "rimraf flow-typed/npm && npx flow-typed install --ignoreDeps dev bundle peer",
-    "build:stg": "cross-env NODE_ENV=staging node scripts/build.js",
     "analyze": "cross-env NODE_ENV=production ANALYZE=1 node scripts/build.js",
     "apollo-fragments": "node scripts/apolloFragment.js",
     "translate:prepare": "cross-env NODE_ENV=production babel-node --no-babelrc --presets=@babel/preset-env scripts/migrate.js",
