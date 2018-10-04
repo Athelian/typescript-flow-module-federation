@@ -58,7 +58,7 @@ What things you need to install the software and how to install them
 Clone the repository to your projects folder and change the directory to downloaded folder.
 
 ```sh
-git clone git@gitlab.com:zenport.io/web-app.git && cd web-app
+git clone git@github.com:zenportinc/web-app.git && cd web-app
 ```
 
 and install all the dependencies.
@@ -168,23 +168,23 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
 
   **NOTE:** Run this command only after `build:stg` or `build:prod`
 
-- **check:translations**
+- **translate**
 
   ```
-  yarn check:translations
+  yarn translate
   ```
 
-  check for missing translations between all locales
+  generate the ja.json language file base on en.json file.
 
-  **NOTE:** This command only cross checks between translation locale files, not the actual components.
+  **Code quality**
 
   ```
   yarn check:quality
   ```
 
-  check for duplication on our codebase with [jsinspect](https://github.com/danielstjules/jsinspect)
+check for duplication on our codebase with [jsinspect](https://github.com/danielstjules/jsinspect)
 
-* **build:storybook**
+- **build:storybook**
 
   ```
   yarn build:storybook
@@ -192,7 +192,7 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
 
   builds deployment ready storybook.
 
-* **build:styleguide**
+- **build:styleguide**
 
   ```
   yarn build:styleguide
@@ -292,9 +292,9 @@ src/generated
 #1. Generate fragmentTypes.json for apollo client
 yarn apollo-fragments
 #2. Download latest schema from our graphql server
-graphql get-schema
+npx graphql-cli get-schema
 #3. Generate fragments
-graphql generate-fragments
+npx graphql-cli generate-fragments
 ```
 
 ### Configuration
@@ -476,6 +476,18 @@ build                                    // auto generated build folder containi
 * [date-fns](https://github.com/date-fns/date-fns)
 
   modular date utility library.
+
+* [randomcolor](https://github.com/davidmerfield/randomColor)
+
+  for generating attractive colors.
+
+* [react-input-mask](https://github.com/sanniassin/react-input-mask)
+
+  for input masking component.
+
+* [react-debounce-input](https://github.com/nkbt/react-debounce-input)
+
+  for input with debounced onChange.
 
 * [react-intl](https://github.com/yahoo/react-intl)
 
