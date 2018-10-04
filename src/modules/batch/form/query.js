@@ -1,6 +1,19 @@
 // @flow
 import gql from 'graphql-tag';
 
+const timelineDateFragment = gql`
+  fragment timelineDateFragment on TimelineDate {
+    date
+    approvedAt
+    timelineDateRevisions {
+      date
+      id
+      sort
+    }
+    id
+  }
+`;
+
 export const batchFragment = gql`
   fragment batchFragment on Batch {
     archived
@@ -66,7 +79,56 @@ export const batchFragment = gql`
       }
     }
     shipment {
+      no
+      blNo
+      transportType
+      cargoReady {
+        ...timelineDateFragment
+      }
+      voyages {
+        departurePort {
+          seaport
+          airport
+        }
+        arrivalPort {
+          seaport
+          airport
+        }
+        departure {
+          ...timelineDateFragment
+        }
+        arrival {
+          ...timelineDateFragment
+        }
+        id
+        sort
+      }
+      containerGroups {
+        customClearance {
+          ...timelineDateFragment
+        }
+        warehouseArrival {
+          ...timelineDateFragment
+        }
+        deliveryReady {
+          ...timelineDateFragment
+        }
+        warehouse {
+          id
+          name
+        }
+        id
+        sort
+      }
+      batches {
+        id
+      }
       id
+      tags {
+        name
+        color
+        id
+      }
     }
     no
     quantity
@@ -124,6 +186,8 @@ export const batchFragment = gql`
       id
     }
   }
+
+  ${timelineDateFragment}
 `;
 
 export const batchDetailQuery = gql`

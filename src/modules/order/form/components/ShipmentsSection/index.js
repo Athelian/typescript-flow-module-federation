@@ -24,7 +24,7 @@ function ShipmentsSection({ shipments }: Props) {
           <div className={EmptyMessageStyle}>
             <FormattedMessage
               id="modules.order.noShipmentFound"
-              defaultMessage="No shipment found"
+              defaultMessage="No shipments found"
             />
           </div>
         ) : (

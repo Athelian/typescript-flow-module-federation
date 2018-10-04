@@ -138,6 +138,23 @@ class BatchFormModule extends React.PureComponent<Props> {
                           }
                           icon="PACKAGING"
                         />
+                        <SectionTabs
+                          link="shipmentSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.batch.shipment"
+                              defaultMessage="SHIPMENT"
+                            />
+                          }
+                          icon="SHIPMENT"
+                        />
+                        <SectionTabs
+                          link="orderSection"
+                          label={
+                            <FormattedMessage id="modules.batch.order" defaultMessage="ORDER" />
+                          }
+                          icon="ORDER"
+                        />
                       </JumpToSection>
                       <Subscribe to={[BatchFormContainer, FormContainer]}>
                         {(formState, form) =>
