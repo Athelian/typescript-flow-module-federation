@@ -79,6 +79,7 @@ class DocumentItem extends React.Component<Props, State> {
               name={`${name}.type`}
               value={value.type}
               onBlur={onBlur}
+              onChange={({ type: newType }) => onChange(`${name}.type`, newType)}
               readOnly={readOnly}
               items={types}
               itemToValue={v => (v ? v.type : null)}

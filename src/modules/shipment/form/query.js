@@ -112,6 +112,13 @@ export const shipmentDetailQuery = gql`
         firstName
         lastName
       }
+      files {
+        id
+        name
+        type
+        memo
+        path
+      }
     }
   }
 

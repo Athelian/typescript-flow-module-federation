@@ -91,6 +91,7 @@ export const prepareCreateShipmentInput = ({
   batches = [],
   forwarders = [],
   inCharges = [],
+  files = [],
 }: Object): ShipmentCreate => ({
   no,
   blNo,
@@ -109,6 +110,7 @@ export const prepareCreateShipmentInput = ({
   voyages: formatVoyages(voyages),
   batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true)),
   containerGroups: formatContainers(containerGroups),
+  files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
 });
 
 export const updateShipmentMutation: Object = gql`
@@ -143,6 +145,7 @@ export const prepareUpdateShipmentInput = ({
   batches = [],
   forwarders = [],
   inCharges = [],
+  files = [],
 }: Object): ShipmentUpdate => ({
   no,
   blNo,
@@ -161,4 +164,5 @@ export const prepareUpdateShipmentInput = ({
   batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true)),
   voyages: formatVoyages(voyages),
   containerGroups: formatContainers(containerGroups),
+  files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
 });
