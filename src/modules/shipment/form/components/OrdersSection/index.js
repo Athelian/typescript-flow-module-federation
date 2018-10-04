@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { OrdersSectionWrapperStyle, OrdersSectionBodyStyle, EmptyMessageStyle } from './style';
@@ -16,7 +17,12 @@ function OrdersSection({ orders }: Props) {
       </SectionNavBar>
       <div className={OrdersSectionBodyStyle}>
         {orders.length === 0 ? (
-          <div className={EmptyMessageStyle}>No orders found.</div>
+          <div className={EmptyMessageStyle}>
+            <FormattedMessage
+              id="modules.shipment.noOrderFound"
+              defaultMessage="No orders found."
+            />
+          </div>
         ) : (
           orders.map(order => <OrderCard order={order} key={order.id} />)
         )}

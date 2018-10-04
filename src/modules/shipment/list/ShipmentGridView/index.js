@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { ShipmentCard } from 'components/Cards';
 
@@ -27,7 +28,9 @@ const ShipmentGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="860px"
       isEmpty={items.length === 0}
-      emptyMessage="No shipments found"
+      emptyMessage={
+        <FormattedMessage id="modules.shipment.noItem" defaultMessage="No shipments found" />
+      }
     >
       {items.map(item => renderItem(item))}
     </GridView>

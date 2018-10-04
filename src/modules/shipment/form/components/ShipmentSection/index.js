@@ -186,7 +186,12 @@ const ShipmentSection = ({ isNew }: Props) => (
                         selectEnumInputFactory({
                           enumType: 'TransportType',
                           align: 'right',
-                          label: 'TRANSPORTATION',
+                          label: (
+                            <FormattedMessage
+                              id="modules.shipment.transportation"
+                              defaultMessage="TRANSPORTATION"
+                            />
+                          ),
                           originalValue: transportTypeValues[name],
                           inputHandlers,
                           name,
@@ -210,7 +215,9 @@ const ShipmentSection = ({ isNew }: Props) => (
                   selectEnumInputFactory({
                     enumType: 'LoadType',
                     align: 'right',
-                    label: 'LOAD TYPE',
+                    label: (
+                      <FormattedMessage id="modules.shipment.loadType" defaultMessage="LOAD TYPE" />
+                    ),
                     originalValue: initialValues[name],
                     inputHandlers,
                     name,
@@ -230,7 +237,12 @@ const ShipmentSection = ({ isNew }: Props) => (
                   selectEnumInputFactory({
                     enumType: 'Incoterm',
                     align: 'right',
-                    label: 'INCOTERMS',
+                    label: (
+                      <FormattedMessage
+                        id="modules.shipment.incoterms"
+                        defaultMessage="INCOTERMS"
+                      />
+                    ),
                     originalValue: initialValues[name],
                     inputHandlers,
                     name,
@@ -260,8 +272,25 @@ const ShipmentSection = ({ isNew }: Props) => (
             <GridColumn>
               <GridColumn gap="10px">
                 <FieldItem
-                  label={<Label>IN CHARGE ({values.inCharges.length})</Label>}
-                  tooltip={<Tooltip infoMessage="You can choose up to 5 people in charge." />}
+                  label={
+                    <Label>
+                      <FormattedMessage
+                        id="modules.shipment.inCharge"
+                        defaultMessage="IN CHARGE "
+                      />
+                      ({values.inCharges.length})
+                    </Label>
+                  }
+                  tooltip={
+                    <Tooltip
+                      infoMessage={
+                        <FormattedMessage
+                          id="modules.shipment.tooltipInCharge"
+                          defaultMessage="You can choose up to 5 people in charge."
+                        />
+                      }
+                    />
+                  }
                 />
                 <div className={AssignmentWrapperStyle}>
                   {values &&
@@ -317,8 +346,25 @@ const ShipmentSection = ({ isNew }: Props) => (
                   )}
                 </div>
                 <FieldItem
-                  label={<Label>FORWARDER ({forwarders.length})</Label>}
-                  tooltip={<Tooltip infoMessage="You can choose up to 4 Forwarders." />}
+                  label={
+                    <Label>
+                      <FormattedMessage
+                        id="modules.shipment.canChooseUp5People"
+                        defaultMessage="FORWARDER "
+                      />
+                      ({forwarders.length})
+                    </Label>
+                  }
+                  tooltip={
+                    <Tooltip
+                      infoMessage={
+                        <FormattedMessage
+                          id="modules.shipment.tooltipForwarder"
+                          defaultMessage="You can choose up to 4 Forwarders."
+                        />
+                      }
+                    />
+                  }
                 />
                 <BooleanValue>
                   {({ value: opened, set: slideToggle }) => (
@@ -354,7 +400,13 @@ const ShipmentSection = ({ isNew }: Props) => (
                       <FieldItem
                         label={
                           <div className={ExporterLabelStyle}>
-                            <Label>EXPORTER ({uniqueExporters.length})</Label>
+                            <Label>
+                              <FormattedMessage
+                                id="modules.shipment.exporter"
+                                defaultMessage="EXPORTER"
+                              />
+                              ({uniqueExporters.length})
+                            </Label>
                             {uniqueExporters.length > 4 && (
                               <button
                                 className={ExporterSeeMoreButtonStyle}
@@ -367,7 +419,14 @@ const ShipmentSection = ({ isNew }: Props) => (
                           </div>
                         }
                         tooltip={
-                          <Tooltip infoMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment." />
+                          <Tooltip
+                            infoMessage={
+                              <FormattedMessage
+                                id="modules.shipment.tooltipExporter"
+                                defaultMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment."
+                              />
+                            }
+                          />
                         }
                       />
                       {renderExporters(uniqueExporters)}
