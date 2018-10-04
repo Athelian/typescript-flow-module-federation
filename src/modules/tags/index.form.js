@@ -28,7 +28,7 @@ const defaultProps = {
   tagId: '',
 };
 
-export default class TagFormContainer extends React.PureComponent<Props> {
+export default class TagFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
   onCancel = () => {
