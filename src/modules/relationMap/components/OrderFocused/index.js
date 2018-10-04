@@ -4,14 +4,11 @@ import { BooleanValue, createObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import { generateOrderRelation } from 'modules/relationMap/util';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
-import SlideView from 'components/SlideView';
-import { encodeId } from 'utils/id';
 import RelationView from '../RelationView';
 import Item from '../OrderElement';
-import OrderForm from '../DetailFocused/Order';
+import DetailFocused, { ToggleSlide } from '../DetailFocused';
 
 const FocusedValue = createObjectValue(null);
-const ToggleSlide = createObjectValue({ id: null, type: null, show: false });
 type Props = {
   order: Object,
   shipment: Object,
@@ -59,7 +56,7 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
               }
               return (
                 <ToggleSlide key={key}>
-                  {({ value: slide, assign: setSlide }) => (
+                  {({ assign: setSlide }) => (
                     <FocusedValue key={key}>
                       {({ value: focusedItem, set: setItem, reset }) => (
                         <Item
@@ -73,9 +70,9 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                           }}
                           onDoubleClick={() => {
                             setSlide({
-                              show: !slide.show,
+                              show: true,
                               type: relation.type,
-                              id: item.id,
+                              id: relation.id,
                             });
                           }}
                           data={itemData}
@@ -96,38 +93,39 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
         const currentShipment = shipment[shipmentId];
         const shipmentRefs = Object.keys(currentShipment.refs);
         return (
-          <FocusedValue key={shipmentId}>
-            {({ value: focusedItem, assign, reset }) => (
-              <div key={shipmentId}>
-                <Item
-                  key={shipmentId}
-                  type="SHIPMENT"
-                  data={currentShipment.data}
-                  isFocused={Boolean(
-                    Object.keys(focusedItem || {}).some(focusId =>
-                      shipmentRefs.some(orderId => orderId === focusId)
-                    )
-                  )}
-                  onMouseLeave={reset}
-                  onMouseEnter={() => assign(currentShipment.refs)}
-                />
-              </div>
+          <ToggleSlide key={shipmentId}>
+            {({ assign: setSlide }) => (
+              <FocusedValue key={shipmentId}>
+                {({ value: focusedItem, assign, reset }) => (
+                  <div key={shipmentId}>
+                    <Item
+                      key={shipmentId}
+                      type="SHIPMENT"
+                      data={currentShipment.data}
+                      isFocused={Boolean(
+                        Object.keys(focusedItem || {}).some(focusId =>
+                          shipmentRefs.some(orderId => orderId === focusId)
+                        )
+                      )}
+                      onMouseLeave={reset}
+                      onMouseEnter={() => assign(currentShipment.refs)}
+                      onDoubleClick={() => {
+                        setSlide({
+                          show: true,
+                          type: 'SHIPMENT',
+                          id: shipmentId,
+                        });
+                      }}
+                    />
+                  </div>
+                )}
+              </FocusedValue>
             )}
-          </FocusedValue>
+          </ToggleSlide>
         );
       })}
     </div>
-    <ToggleSlide>
-      {({ value: { show, id }, set }) => (
-        <SlideView
-          isOpen={show}
-          onRequestClose={() => set('show', false)}
-          options={{ width: '1030px' }}
-        >
-          <OrderForm orderId={encodeId(id)} />
-        </SlideView>
-      )}
-    </ToggleSlide>
+    <DetailFocused />
   </>
 );
 

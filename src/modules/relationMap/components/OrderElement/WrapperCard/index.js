@@ -11,16 +11,41 @@ type Props = {
 };
 
 class WrapperCard extends React.PureComponent<Props> {
+  clearClickTimeout = () => {
+    if (this.clickTimeout) {
+      clearTimeout(this.clickTimeout);
+      this.clickTimeout = null;
+    }
+  };
+
+  handleClicks = () => {
+    const { onClick, onDoubleClick } = this.props;
+    if (this.clickTimeout !== null) {
+      if (onDoubleClick) {
+        onDoubleClick();
+      }
+      this.clearClickTimeout();
+    } else {
+      this.clickTimeout = setTimeout(() => {
+        if (onClick) {
+          onClick();
+        }
+        this.clearClickTimeout();
+      }, 200);
+    }
+  };
+
+  clickTimeout: ?TimeoutID;
+
   render() {
-    const { onMouseEnter, onMouseLeave, onClick, onDoubleClick, children } = this.props;
+    const { onMouseEnter, onMouseLeave, children } = this.props;
     return (
       <div
         role="presentation"
         className={style.OuterCardWrapperStyle}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        onDoubleClick={onDoubleClick}
-        onClick={onClick}
+        onClick={this.handleClicks}
       >
         <div className={style.InnerCardWrapperStyle}>{children}</div>
       </div>

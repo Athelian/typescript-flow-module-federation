@@ -121,7 +121,11 @@ const Item = (props: Props) => {
           actions={[]}
           wrapperClassName={ItemWrapperStyle(isFocused)}
         >
-          <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+          <WrapperCard
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onDoubleClick={onDoubleClick}
+          >
             <BatchCard
               title={data.title}
               quantity={data.quantity}
@@ -162,7 +166,12 @@ const Item = (props: Props) => {
           color={type}
           wrapperClassName={cx(ItemWrapperStyle(isFocused), ShipmentCardStyle)}
         >
-          <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
+          <WrapperCard
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onDoubleClick={onDoubleClick}
+            onClick={onClick}
+          >
             <ShipmentHeader
               label={`SHIPMENT ${data.id}`}
               isChecked

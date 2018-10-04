@@ -34,12 +34,16 @@ import {
   prepareUpdateOrderInput,
 } from './form/mutation';
 
-type Props = {
+type OptionalProps = {
+  isSlideView: boolean,
+};
+type Props = OptionalProps & {
   orderId?: string,
 };
 
 const defaultProps = {
   orderId: '',
+  isSlideView: false,
 };
 
 class OrderFormModule extends React.PureComponent<Props> {
@@ -98,7 +102,7 @@ class OrderFormModule extends React.PureComponent<Props> {
   };
 
   render() {
-    const { orderId } = this.props;
+    const { orderId, isSlideView } = this.props;
     const isNew = orderId === 'new';
     let mutationKey = {};
     if (orderId && !isNew) {
@@ -116,7 +120,7 @@ class OrderFormModule extends React.PureComponent<Props> {
             >
               {(saveOrder, { loading: isLoading, error: apiError }) => (
                 <Layout
-                  {...uiState}
+                  {...(isSlideView ? {} : uiState)}
                   navBar={
                     <NavBar>
                       <EntityIcon icon="ORDER" color="ORDER" />
