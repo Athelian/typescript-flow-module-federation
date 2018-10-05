@@ -7,6 +7,7 @@ export const orderListQuery = gql`
         id
         poNo
         currency
+        archived
         exporter {
           id
           name

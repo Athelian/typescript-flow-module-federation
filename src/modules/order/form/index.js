@@ -11,7 +11,6 @@ import OrderActivateDialog from 'modules/order/common/OrderActivateDialog';
 import OrderArchiveDialog from 'modules/order/common/OrderArchiveDialog';
 import OrderSection from './components/OrderSection';
 import OrderFormWrapperStyle from './style';
-import { getBatchesSummary } from './helpers';
 import { OrderItemsContainer, OrderInfoContainer, OrderFilesContainer } from './containers';
 
 const AsyncItemsSection = Loadable({
@@ -60,8 +59,6 @@ export default class OrderForm extends React.Component<Props> {
   render() {
     const { isNew, order } = this.props;
 
-    const { totalBatches, unshippedBatches, shippedBatches } = getBatchesSummary(order);
-
     return (
       <div className={OrderFormWrapperStyle}>
         <SectionWrapper id="orderSection">
@@ -79,23 +76,17 @@ export default class OrderForm extends React.Component<Props> {
                       openStatusDialog={() => dialogToggle(true)}
                       activateDialog={
                         <OrderActivateDialog
-                          orderId={order.id}
+                          order={order}
                           isOpen={statusDialogIsOpen && !!order.archived}
                           onRequestClose={() => dialogToggle(false)}
                           onCancel={() => dialogToggle(false)}
-                          totalBatches={totalBatches}
-                          unshippedBatches={unshippedBatches}
-                          shippedBatches={shippedBatches}
                         />
                       }
                       archiveDialog={
                         <OrderArchiveDialog
-                          orderId={order.id}
+                          order={order}
                           isOpen={statusDialogIsOpen && !order.archived}
                           onRequestClose={() => dialogToggle(false)}
-                          totalBatches={totalBatches}
-                          unshippedBatches={unshippedBatches}
-                          shippedBatches={shippedBatches}
                         />
                       }
                     />

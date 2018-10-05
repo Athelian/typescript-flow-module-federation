@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import FormattedNumber from 'components/FormattedNumber';
 import ArchiveDialog from 'components/Dialog/ArchiveDialog';
 import { updateOrderMutation } from 'modules/order/form/mutation';
+import { getBatchesSummary } from 'modules/order/helpers';
 import messages from './messages';
 import type { OrderDialogProps } from '../OrderActivateDialog/type';
 import { SpanStyle, MessageStyle } from '../OrderActivateDialog/style';
@@ -13,19 +14,14 @@ function spanWithColor(value: any, color: string) {
   return <span className={SpanStyle(color)}>{value}</span>;
 }
 
-export default function OrderArchiveDialog({
-  isOpen,
-  orderId,
-  onRequestClose,
-  totalBatches,
-  unshippedBatches,
-  shippedBatches,
-}: OrderDialogProps) {
+export default function OrderArchiveDialog({ isOpen, onRequestClose, order }: OrderDialogProps) {
+  const { totalBatches, unshippedBatches, shippedBatches } = getBatchesSummary(order);
+  const { id: orderId } = order;
   const total = spanWithColor(<FormattedNumber value={totalBatches} />, 'GRAY_DARK');
   const unshipped = spanWithColor(<FormattedNumber value={unshippedBatches} />, 'BATCH');
   const shipped = spanWithColor(<FormattedNumber value={shippedBatches} />, 'BATCH');
 
-  const order = spanWithColor(<FormattedMessage {...messages.order} />, 'RED');
+  const orderMsg = spanWithColor(<FormattedMessage {...messages.order} />, 'RED');
   const batches = spanWithColor(<FormattedMessage {...messages.batches} />, 'BATCH');
   const shipments = spanWithColor(<FormattedMessage {...messages.shipments} />, 'SHIPMENT');
 
@@ -39,7 +35,7 @@ export default function OrderArchiveDialog({
           onRequestClose={onRequestClose}
           onCancel={onRequestClose}
           onConfirm={async () => {
-            await client.mutate({
+            const result = await client.mutate({
               mutation: updateOrderMutation,
               variables: {
                 id: orderId,
@@ -49,12 +45,14 @@ export default function OrderArchiveDialog({
               },
             });
             window.location.reload();
+            onRequestClose();
+            console.warn('result', result);
           }}
           width={360}
           message={
             <div className={MessageStyle}>
               <div>
-                <FormattedMessage {...messages.confirmMsg} values={{ order }} />
+                <FormattedMessage {...messages.confirmMsg} values={{ order: orderMsg }} />
               </div>
               <div>
                 <FormattedMessage
