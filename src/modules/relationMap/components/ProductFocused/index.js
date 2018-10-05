@@ -29,6 +29,7 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => (
           <ToggleSlide>
             {({ assign: setSlide }) => (
               <WrapperCard
+                fit
                 onDoubleClick={() =>
                   setSlide({
                     show: true,
