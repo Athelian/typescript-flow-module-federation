@@ -118,7 +118,11 @@ class FilterInput extends React.Component<Props, State> {
         </button>
         <OutsideClickHandler
           onOutsideClick={this.close}
-          ignoreElements={[this.filterButtonRef && this.filterButtonRef.current]}
+          ignoreElements={
+            this.filterButtonRef && this.filterButtonRef.current
+              ? [this.filterButtonRef.current]
+              : []
+          }
         >
           <div className={ContentStyle(isOpen)}>
             <Form

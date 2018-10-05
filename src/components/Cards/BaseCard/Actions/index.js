@@ -1,32 +1,21 @@
 // @flow
 import * as React from 'react';
-import PreventInitialAnimation from 'components/PreventInitialAnimation';
-import { ActionsWrapperStyle, FadeInStyle, FadeOutStyle } from './style';
-
-type Action = {
-  id: string,
-  node: React.Node,
-};
+import { ActionsWrapperStyle } from './style';
 
 type Props = {
-  actions: ?Array<Action>,
   visible: boolean,
-  onClick: () => void,
+  actions: Array<{
+    id: string,
+    node: React.Node,
+  }>,
 };
 
-function Actions({ actions, onClick, visible }: Props) {
-  return (
-    <PreventInitialAnimation isChildrenVisible={visible}>
-      <div className={ActionsWrapperStyle} onClick={onClick} role="presentation">
-        {actions &&
-          actions.map((action, index) => (
-            <div key={action.id} className={visible ? FadeInStyle(index) : FadeOutStyle(index)}>
-              {action.node}
-            </div>
-          ))}
-      </div>
-    </PreventInitialAnimation>
-  );
-}
+const Actions = ({ visible, actions }: Props) => (
+  <div className={ActionsWrapperStyle(visible)}>
+    {actions.map(action => (
+      <React.Fragment key={action.id}>{action.node}</React.Fragment>
+    ))}
+  </div>
+);
 
 export default Actions;
