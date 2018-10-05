@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import Icon from 'components/Icon';
 import { isEquals } from 'utils/fp';
 import { Tooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import { SyncButton } from 'components/Buttons';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import {
   BatchSection,
   OrderSection,
@@ -103,7 +105,26 @@ export default class BatchForm extends React.Component<Props> {
             icon="PACKAGING"
             title={<FormattedMessage id="modules.batch.packaging" defaultMessage="PACKAGING" />}
           >
-            <SyncButton />
+            <BooleanValue>
+              {({ value: syncDialogIsOpen, set: dialogToggle }) => (
+                <>
+                  <SyncButton onClick={() => dialogToggle(!syncDialogIsOpen)} />
+                  <ConfirmDialog
+                    isOpen={syncDialogIsOpen}
+                    onRequestClose={() => dialogToggle()}
+                    onCancel={() => dialogToggle()}
+                    onConfirm={() => dialogToggle()}
+                    message={
+                      <FormattedMessage
+                        id="modules.batch.syncPackagingMessage"
+                        defaultMessage="Are you sure sync the packaging?"
+                      />
+                    }
+                    width={400}
+                  />
+                </>
+              )}
+            </BooleanValue>
           </SectionHeader>
           <PackagingSection isNew={isNew} />
         </SectionWrapper>
