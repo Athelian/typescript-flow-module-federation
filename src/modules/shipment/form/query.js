@@ -1,37 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { batchFragment } from 'modules/batch/form/query';
-
-const timelineDateFragment = gql`
-  fragment timelineDateFragment on TimelineDate {
-    date
-    assignedTo {
-      firstName
-      lastName
-      id
-    }
-    approvedBy {
-      firstName
-      lastName
-      id
-    }
-    approvedAt
-    timelineDateRevisions {
-      date
-      type
-      memo
-      id
-      updatedAt
-      updatedBy {
-        firstName
-        lastName
-        id
-      }
-      sort
-    }
-    id
-  }
-`;
+import { timelineDateFragment } from 'graphql/timeline/fragment';
 
 export const shipmentDetailQuery = gql`
   query($id: ID!) {
