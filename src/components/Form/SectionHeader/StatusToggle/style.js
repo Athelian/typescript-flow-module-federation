@@ -3,6 +3,7 @@ import { css } from 'react-emotion';
 import { presets, colors, layout, fontSizes } from 'styles/common';
 
 export const StatusStyle = (archived: boolean): string => css`
+  ${presets.ELLIPSIS};
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   color: ${archived ? colors.GRAY : colors.TEAL};

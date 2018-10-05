@@ -7,7 +7,6 @@ import {
   borderRadiuses,
   fontSizes,
   fontSizesWithHeights,
-  shadows,
 } from 'styles/common';
 
 export const CommentEntryWrapperStyle = (isSameUser: boolean) => css`
@@ -114,25 +113,6 @@ export const AvatarStyle = (isSameUser: boolean, hideAvatar: boolean) => css`
   cursor: default;
 `;
 
-export const EditButtonStyle = css`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  ${presets.BUTTON};
-  color: ${colors.GRAY_DARK};
-  flex-shrink: 0;
-  ${fontSizes.SMALL};
-  opacity: 0;
-  z-index: 5;
-  ${borderRadiuses.CIRCLE};
-  width: 20px;
-  height: 20px;
-  &:hover {
-    background-color: #fff;
-    color: ${colors.TEAL};
-  }
-`;
-
 export const MessageInputWrapperStyle = css`
   ${layout.VERTICAL};
   width: 100%;
@@ -146,24 +126,18 @@ export const FormButtonsWrapperStyle = css`
 
 export const DeleteButtonStyle = css`
   ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
-  ${shadows.NAV_BUTTON};
-  ${fontSizes.MAIN};
+  ${fontSizes.SMALL};
   position: absolute;
-  top: -12.5px;
-  left: -12.5px;
-  background-color: #fff;
-  color: ${colors.GRAY_LIGHT};
+  top: 0px;
+  left: 0px;
+  color: rgba(0, 0, 0, 0.2);
   height: 25px;
   width: 25px;
-  z-index: 2;
-  &:hover {
-    ${shadows.NAV_BUTTON_HOVER};
+  opacity: 0;
+  &:hover,
+  :focus {
+    opacity: 1;
     color: ${colors.RED};
-  }
-  &:focus {
-    color: ${colors.RED};
-    border: 1px solid ${colors.RED};
   }
 `;
 

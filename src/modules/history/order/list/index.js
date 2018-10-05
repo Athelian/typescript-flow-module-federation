@@ -5,7 +5,6 @@ import { Query, Mutation } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import loadMore from 'utils/loadMore';
-import LoadingIcon from 'components/LoadingIcon';
 import MessageInput from 'modules/history/components/MessageInput';
 import OrderEventsGridView from './OrderEventsGridView';
 import query from './query';
@@ -94,24 +93,22 @@ class OrderEventsList extends React.PureComponent<Props> {
                       }}
                     >
                       {(addComment, { loading: isLoading }) => (
-                        <>
-                          {isLoading && <LoadingIcon />}
-                          <MessageInput
-                            name="comment"
-                            value={value}
-                            onChange={evt => set(evt.target.value)}
-                            onSubmit={() =>
-                              addComment({
-                                variables: {
-                                  input: {
-                                    content: value,
-                                    timelineId,
-                                  },
+                        <MessageInput
+                          name="comment"
+                          value={value}
+                          isLoading={isLoading}
+                          onChange={evt => set(evt.target.value)}
+                          onSubmit={() =>
+                            addComment({
+                              variables: {
+                                input: {
+                                  content: value,
+                                  timelineId,
                                 },
-                              })
-                            }
-                          />
-                        </>
+                              },
+                            })
+                          }
+                        />
                       )}
                     </Mutation>
                   )}

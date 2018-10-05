@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, borderRadiuses, presets, fontSizes, scrollbars } from 'styles/common';
+import { colors, borderRadiuses, presets, fontSizes, scrollbars, shadows } from 'styles/common';
 
 const ResetOptionWrapperStyle: string = css`
   list-style-type: none;
@@ -23,7 +23,7 @@ export const OptionWrapperStyle = (width: string, height: string): string => css
   ${ResetOptionWrapperStyle};
   display: flex;
   flex-flow: column;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  ${shadows.INPUT};
   min-width: ${width};
   max-width: ${width};
   background: #fff;

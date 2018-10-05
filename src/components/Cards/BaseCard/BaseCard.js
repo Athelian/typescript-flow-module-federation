@@ -117,6 +117,7 @@ export default class BaseCard extends React.Component<Props, State> {
           actions.length > 0 && (
             <OutsideClickHandler
               onOutsideClick={this.closeActions}
+              ignoreClick={!actionsAreShown}
               ignoreElements={
                 this.cornerIcon && this.cornerIcon.current ? [this.cornerIcon.current] : []
               }

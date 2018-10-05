@@ -41,6 +41,7 @@ export const LoginBoxStyle: string = css`
   display: grid;
   grid-auto-rows: min-content;
   grid-gap: 40px;
+  justify-items: center;
 `;
 
 export const LoginErrorStyle: string = css`

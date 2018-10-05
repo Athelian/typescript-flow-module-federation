@@ -22,6 +22,10 @@ export const SettingsWrapperStyle: string = css`
   height: 50px;
 `;
 
+export const NotificationsWrapperStyle: string = css`
+  position: relative;
+`;
+
 export const NotificationsButtonStyle: string = css`
   background: ${gradients.BLUE_TEAL_DIAGONAL};
   color: ${colors.WHITE};
@@ -38,6 +42,24 @@ export const NotificationsButtonStyle: string = css`
   }
 `;
 
+export const NotificationBadgeStyle: string = css`
+  position: absolute;
+  border-radius: 8px;
+  background-color: ${colors.RED};
+  color: ${colors.WHITE};
+  ${fontSizes.SMALL};
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  padding: 0 3px;
+  top: -4px;
+  right: -4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+`;
+
 export const ProfileButtonStyle: string = css`
   ${presets.BUTTON};
   position: relative;
@@ -49,38 +71,16 @@ export const ProfileButtonStyle: string = css`
   }
 `;
 
-export const NotificationBadgeStyle: string = css`
-  position: absolute;
-  border-radius: 8px;
-  background-color: ${colors.RED};
-  color: #fff;
-  ${fontSizes.SMALL};
-  min-width: 16px;
-  height: 16px;
-  padding: 0 3px;
-  top: -4px;
-  right: -4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-`;
-
 const DropDownStyle: string = css`
   position: absolute;
   top: 60px;
+  right: 0;
   min-width: min-content;
   min-height: min-content;
 `;
 
 export const DropDownWrapperStyle: string = css`
   ${DropDownStyle};
-  right: 20px;
-`;
-
-export const NotificationDropDownWrapperStyle: string = css`
-  ${DropDownStyle};
-  right: 66px;
 `;
 
 export const SubMenuWrapperStyle: string = css`

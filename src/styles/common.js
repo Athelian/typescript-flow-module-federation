@@ -85,6 +85,8 @@ export const shadows = {
   NAV_BUTTON: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)',
   TOOLTIP: 'box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)',
   INPUT: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)',
+  HEADER: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1)',
+  HEADER_REVERSE: 'box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1)',
 };
 
 export const borderRadiuses = {

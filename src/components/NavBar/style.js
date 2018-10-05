@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { transitions } from 'styles/common';
+import { transitions, shadows } from 'styles/common';
 
 export const NavBarStyle: string = css`
   display: flex;
@@ -11,7 +11,7 @@ export const NavBarStyle: string = css`
   width: 100%;
   height: 50px;
   background: #fff;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  ${shadows.HEADER};
   z-index: 2;
   ${transitions.EXPAND};
 `;

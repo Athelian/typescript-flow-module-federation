@@ -42,7 +42,7 @@ export const ActiveStyle: string = css`
 export const ContentStyle = (isOpen: boolean): string => css`
   ${presets.BOX};
   ${transitions.MAIN};
-  ${shadows.NAV_BUTTON};
+  ${shadows.INPUT};
   ${!isOpen && `display: none`};
   position: absolute;
   width: 300px;

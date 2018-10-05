@@ -9,17 +9,16 @@ import OutsideClickHandler from 'components/OutsideClickHandler';
 import { AuthenticationConsumer } from 'modules/authentication';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
-import Notifications from './notifications';
+import { NotificationsDropdown } from './components';
 import { logOutMutation, notificationSeeAllMutation } from './mutation';
 import query from './query';
 import subscription from './subscription';
-
 import {
   SettingsWrapperStyle,
+  NotificationsWrapperStyle,
   NotificationsButtonStyle,
-  ProfileButtonStyle,
   NotificationBadgeStyle,
-  NotificationDropDownWrapperStyle,
+  ProfileButtonStyle,
   DropDownWrapperStyle,
   SubMenuWrapperStyle,
   SubMenuItemStyle,
@@ -94,36 +93,54 @@ class Setting extends React.Component<Props, State> {
 
             return (
               <>
-                <button
-                  className={NotificationsButtonStyle}
-                  tabIndex={-1}
-                  onClick={async () => {
-                    this.toggleNotification();
-                    if (unSeen > 0)
-                      await client.mutate({
-                        mutation: notificationSeeAllMutation,
-                      });
-                  }}
-                  type="button"
-                  ref={this.notificationRef}
-                >
-                  <Subscription subscription={subscription}>
-                    {({ data: subscriptionData, loading, error }) => {
-                      if (loading) return null;
-
-                      if (error) {
-                        return error.message;
-                      }
-
-                      logger.warn('subscriptionData', subscriptionData);
-                      return null;
+                <div className={NotificationsWrapperStyle}>
+                  <button
+                    className={NotificationsButtonStyle}
+                    tabIndex={-1}
+                    onClick={async () => {
+                      this.toggleNotification();
+                      if (unSeen > 0)
+                        await client.mutate({
+                          mutation: notificationSeeAllMutation,
+                        });
                     }}
-                  </Subscription>
-                  {unSeen > 0 && (
-                    <div className={NotificationBadgeStyle}>{unSeen > 99 ? '99+' : unSeen}</div>
-                  )}
-                  <Icon icon="NOTIFICATION" />
-                </button>
+                    type="button"
+                    ref={this.notificationRef}
+                  >
+                    <Subscription subscription={subscription}>
+                      {({ data: subscriptionData, loading, error }) => {
+                        if (loading) return null;
+
+                        if (error) {
+                          return error.message;
+                        }
+
+                        logger.warn('subscriptionData', subscriptionData);
+                        return null;
+                      }}
+                    </Subscription>
+                    {unSeen > 0 && (
+                      <div className={NotificationBadgeStyle}>{unSeen > 99 ? '99+' : unSeen}</div>
+                    )}
+                    <Icon icon="NOTIFICATION" />
+                  </button>
+
+                  <OutsideClickHandler
+                    onOutsideClick={this.handleClickOutside}
+                    ignoreClick={!isNotificationOpen}
+                    ignoreElements={
+                      this.notificationRef && this.notificationRef.current
+                        ? [this.notificationRef.current]
+                        : []
+                    }
+                  >
+                    <NotificationsDropdown
+                      isOpen={isNotificationOpen}
+                      toggleNotification={this.toggleNotification}
+                    />
+                  </OutsideClickHandler>
+                </div>
+
                 <button
                   className={ProfileButtonStyle}
                   data-testid="setting-button"
@@ -138,23 +155,6 @@ class Setting extends React.Component<Props, State> {
             );
           }}
         </Query>
-
-        {isNotificationOpen && (
-          <OutsideClickHandler
-            onOutsideClick={this.handleClickOutside}
-            ignoreElements={
-              this.notificationRef && this.notificationRef.current
-                ? [this.notificationRef.current]
-                : []
-            }
-          >
-            <div className={NotificationDropDownWrapperStyle}>
-              <div className={SubMenuWrapperStyle}>
-                <Notifications toggleNotification={this.toggleNotification} />
-              </div>
-            </div>
-          </OutsideClickHandler>
-        )}
 
         {isProfileOpen && (
           <OutsideClickHandler
