@@ -47,14 +47,18 @@ function getQuantitySummary(item: Object) {
 }
 
 const ProductCard = ({ item }: Props) => {
-  const { name, serial, productProviders, tags } = item;
+  const { name, serial, productProviders, tags, files } = item;
   const { supplier } = productProviders[0];
   const chartDetail = getQuantitySummary(item);
   return (
     <BaseCard icon="PRODUCT" color="PRODUCT">
       <div className={style.OrderItemCardWrapperStyle}>
         <div className={style.ProductWrapperStyle}>
-          <img className={style.ProductImageStyle} src={FALLBACK_IMAGE} alt="product_image" />
+          <img
+            className={style.ProductImageStyle}
+            src={(files.length && files[0].path) || FALLBACK_IMAGE}
+            alt="product_image"
+          />
           <div className={style.ProductInfoWrapperStyle}>
             <div className={style.ProductNameStyle}>{name}</div>
             <div className={style.ProductSerialStyle}>{serial}</div>
