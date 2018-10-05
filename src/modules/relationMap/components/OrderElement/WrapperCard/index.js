@@ -2,12 +2,14 @@
 import * as React from 'react';
 import * as style from './style';
 
-type Props = {
-  children: React.Node,
+type OptionalProps = {
   onMouseEnter?: Function,
   onMouseLeave?: Function,
   onClick?: Function,
   onDoubleClick?: Function,
+};
+type Props = OptionalProps & {
+  children: React.Node,
 };
 
 class WrapperCard extends React.PureComponent<Props> {
