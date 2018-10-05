@@ -1,12 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import Loadable from 'react-loadable';
 import { uniqBy } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
-import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
+import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
+import ShipmentActivateDialog from 'modules/shipment/common/ShipmentActivateDialog';
+import ShipmentArchiveDialog from 'modules/shipment/common/ShipmentArchiveDialog';
 import { ShipmentBatchesContainer } from './containers';
 import ShipmentSection from './components/ShipmentSection';
 import { ShipmentFormWrapperStyle } from './style';
@@ -68,7 +71,32 @@ class ShipmentForm extends React.Component<Props> {
             title={<FormattedMessage id="modules.shipment.shipment" defaultMessage="SHIPMENT" />}
           >
             {!isNew && (
-              <LastModified updatedAt={shipment.updatedAt} updatedBy={shipment.updatedBy} />
+              <>
+                <LastModified updatedAt={shipment.updatedAt} updatedBy={shipment.updatedBy} />
+                <BooleanValue>
+                  {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+                    <StatusToggle
+                      archived={shipment.archived}
+                      openStatusDialog={() => dialogToggle(true)}
+                      activateDialog={
+                        <ShipmentActivateDialog
+                          shipment={shipment}
+                          isOpen={statusDialogIsOpen && !!shipment.archived}
+                          onRequestClose={() => dialogToggle(false)}
+                          onCancel={() => dialogToggle(false)}
+                        />
+                      }
+                      archiveDialog={
+                        <ShipmentArchiveDialog
+                          shipment={shipment}
+                          isOpen={statusDialogIsOpen && !shipment.archived}
+                          onRequestClose={() => dialogToggle(false)}
+                        />
+                      }
+                    />
+                  )}
+                </BooleanValue>
+              </>
             )}
           </SectionHeader>
           <ShipmentSection isNew={isNew} />
