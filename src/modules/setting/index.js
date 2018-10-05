@@ -42,8 +42,9 @@ class Setting extends React.Component<Props, State> {
       isProfileOpen: false,
       logoutDialogOpen: false,
     };
-    this.NotificationRef = React.createRef();
-    this.ProfileRef = React.createRef();
+
+    this.notificationRef = React.createRef();
+    this.profileRef = React.createRef();
   }
 
   handleClickOutside = () => {
@@ -74,9 +75,9 @@ class Setting extends React.Component<Props, State> {
     this.setState(prevState => ({ logoutDialogOpen: !prevState.logoutDialogOpen }));
   };
 
-  NotificationRef: any;
+  notificationRef: any;
 
-  ProfileRef: any;
+  profileRef: any;
 
   render() {
     const { isNotificationOpen, isProfileOpen, logoutDialogOpen } = this.state;
@@ -104,7 +105,7 @@ class Setting extends React.Component<Props, State> {
                       });
                   }}
                   type="button"
-                  ref={this.NotificationRef}
+                  ref={this.notificationRef}
                 >
                   <Subscription subscription={subscription}>
                     {({ data: subscriptionData, loading, error }) => {
@@ -129,7 +130,7 @@ class Setting extends React.Component<Props, State> {
                   tabIndex={-1}
                   onClick={this.toggleProfile}
                   type="button"
-                  ref={this.ProfileRef}
+                  ref={this.profileRef}
                 >
                   <UserAvatar firstName={viewer.firstName} lastName={viewer.lastName} />
                 </button>
@@ -141,7 +142,11 @@ class Setting extends React.Component<Props, State> {
         {isNotificationOpen && (
           <OutsideClickHandler
             onOutsideClick={this.handleClickOutside}
-            ignoreElements={[this.NotificationRef && this.NotificationRef.current]}
+            ignoreElements={
+              this.notificationRef && this.notificationRef.current
+                ? [this.notificationRef.current]
+                : []
+            }
           >
             <div className={NotificationDropDownWrapperStyle}>
               <div className={SubMenuWrapperStyle}>
@@ -154,7 +159,9 @@ class Setting extends React.Component<Props, State> {
         {isProfileOpen && (
           <OutsideClickHandler
             onOutsideClick={this.handleClickOutside}
-            ignoreElements={[this.ProfileRef && this.ProfileRef.current]}
+            ignoreElements={
+              this.profileRef && this.profileRef.current ? [this.profileRef.current] : []
+            }
           >
             <div className={DropDownWrapperStyle}>
               <div className={SubMenuWrapperStyle}>

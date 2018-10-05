@@ -8,7 +8,6 @@ type OptionalProps = {
   readOnly: boolean,
   selectable: boolean,
   selected: boolean,
-  showActionsOnHover: boolean,
 };
 
 type Props = OptionalProps & {
@@ -22,7 +21,6 @@ const defaultProps = {
   readOnly: false,
   selectable: false,
   selected: false,
-  showActionsOnHover: false,
 };
 
 const getIcon = (disabled, selectable, selected, icon) => {
@@ -32,30 +30,23 @@ const getIcon = (disabled, selectable, selected, icon) => {
   return icon;
 };
 
-function CornerIcon({
-  icon,
-  color,
-  disabled,
-  readOnly,
-  selectable,
-  selected,
-  showActionsOnHover,
-  onClick,
-}: Props) {
-  const iconToShow = getIcon(disabled, selectable, selected, icon);
+// $FlowFixMe
+const CornerIcon = React.forwardRef(
+  ({ icon, color, disabled, readOnly, selectable, selected, onClick }: Props, ref) => {
+    const iconToShow = getIcon(disabled, selectable, selected, icon);
 
-  return (
-    <div
-      className={IconStyle(color, disabled, readOnly, showActionsOnHover)}
-      role="presentation"
-      onClick={() => {
-        if (!showActionsOnHover) onClick();
-      }}
-    >
-      <Icon icon={iconToShow} />
-    </div>
-  );
-}
+    return (
+      <button
+        className={IconStyle(color, disabled, readOnly)}
+        type="button"
+        onClick={onClick}
+        ref={ref}
+      >
+        <Icon icon={iconToShow} />
+      </button>
+    );
+  }
+);
 
 CornerIcon.defaultProps = defaultProps;
 

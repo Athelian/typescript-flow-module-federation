@@ -1,30 +1,21 @@
 // @flow
 import * as React from 'react';
 
-type Props = {
-  /**
-   * List of element we want to ignore.
-   * `onOutsideClick()` won't call if click on that element.
-   *
-   * @type {Array<Node>}
-   */
-  ignoreElements?: Array<Node>,
-  /**
-   * Render prop
-   *
-   * @type {React.Node}
-   */
+type OptionalProps = {
+  ignoreElements: Array<Node>,
+};
+
+type Props = OptionalProps & {
   children: React.Node,
-  /**
-   * Function will be called when click outside of element
-   *
-   * @type {Function}
-   */
   onOutsideClick: Function,
 };
 
+const defaultProps = {
+  ignoreElements: [],
+};
+
 export default class OutsideClickHandler extends React.Component<Props> {
-  static defaultProps = { className: '', ignoreElements: [] };
+  static defaultProps = defaultProps;
 
   componentDidMount() {
     document.addEventListener('mousedown', this.onOutsideClick);
@@ -38,6 +29,7 @@ export default class OutsideClickHandler extends React.Component<Props> {
     const { ignoreElements, onOutsideClick } = this.props;
     const isOutsideTarget =
       this.wrapperRef && evt.target instanceof Node && !this.wrapperRef.contains(evt.target);
+
     const isIgnore =
       ignoreElements && ignoreElements.length
         ? ignoreElements.find(
