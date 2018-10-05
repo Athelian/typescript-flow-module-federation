@@ -26,6 +26,7 @@ import {
 
 type Props = {
   product: ?Object,
+  onArchive: string => void,
 };
 
 type State = {
@@ -51,18 +52,15 @@ class ProductCard extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { product } = this.props;
+    const { product, onArchive } = this.props;
     const { activeImage } = this.state;
 
     if (!product) return '';
 
+    const { id, archived, name, serial, tags, files, productProviders } = product;
     const actions = [
-      <CardAction icon="CLONE" onClick={() => {}} />,
-      <CardAction icon="ARCHIVE" onClick={() => {}} />,
+      <CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />,
     ];
-
-    const { id, name, serial, tags, files, productProviders } = product;
-
     const productImage = files && files.length > 0 ? files[activeImage].path : FALLBACK_IMAGE;
 
     return (

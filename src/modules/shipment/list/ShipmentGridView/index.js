@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import GridView from 'components/GridView';
 import { ShipmentCard } from 'components/Cards';
+import ShipmentActivateDialog from 'modules/shipment/common/ShipmentActivateDialog';
+import ShipmentArchiveDialog from 'modules/shipment/common/ShipmentArchiveDialog';
 
 type Props = {
   items: Array<Object>,
@@ -12,7 +15,28 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <ShipmentCard key={item.id} shipment={item} />;
+const defaultRenderItem = (item: Object) => (
+  <BooleanValue key={item.id}>
+    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+      <>
+        {item.archived ? (
+          <ShipmentActivateDialog
+            onRequestClose={() => dialogToggle(false)}
+            isOpen={statusDialogIsOpen}
+            shipment={item}
+          />
+        ) : (
+          <ShipmentArchiveDialog
+            onRequestClose={() => dialogToggle(false)}
+            isOpen={statusDialogIsOpen}
+            shipment={item}
+          />
+        )}
+        <ShipmentCard shipment={item} onArchive={() => dialogToggle(true)} />
+      </>
+    )}
+  </BooleanValue>
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,
