@@ -79,7 +79,7 @@ export const ProductSupplierStyle: string = css`
 export const ProductTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
-  padding: 0 10px;
+  margin: 0 10px;
   overflow: hidden;
 `;
 

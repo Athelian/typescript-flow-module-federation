@@ -90,12 +90,12 @@ export const EmptyMessageStyle = css`
 
 export const InfiniteScrollWrapperStyle = css`
   grid-column: span 3;
-  height: 65vh;
+  height: calc(100vh - 250px);
   overflow: auto;
 `;
 
 export const ScrollWrapperStyle = css`
-  height: 65vh;
+  height: calc(100vh - 250px);
   overflow-y: auto;
   background-color: #f7f7f7;
   padding: 30px 10px;
@@ -145,7 +145,7 @@ export const BadgeWrapperStyle = css`
   padding-top: 10px;
   padding-bottom: 5px;
   display: grid;
-  grid-template-columns: 1fr 0.95fr 1.05fr 1.8fr;
+  grid-template-columns: 1fr 1fr 1fr 1.8fr;
   background-color: ${colors.WHITE};
   -webkit-border-radius: 0;
   -moz-border-radius: 0;

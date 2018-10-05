@@ -53,9 +53,10 @@ const Product = ({ page, perPage }: Props) => (
                 fetchMore={fetchMore}
                 error={error}
               >
-                {({ nodes, hasMore, loadMore }) => (
-                  <ProductFocused hasMore={hasMore} loadMore={loadMore} items={nodes} />
-                )}
+                {({ nodes, hasMore, loadMore }) => {
+                  console.log('items', nodes);
+                  return <ProductFocused hasMore={hasMore} loadMore={loadMore} items={nodes} />;
+                }}
               </QueryHandler>
             )}
           </Query>

@@ -70,7 +70,6 @@ export const ItemWrapperStyle = (isFocused: boolean) => {
     align-items: center;
     justify-content: center;
     width: auto;
-    min-width: 215px;
     height: fit-content;
     min-height: 50px;
     max-height: 200px;
@@ -85,6 +84,7 @@ export const ShipmentCardStyle = css`
   height: 160px;
   grid-row: span 3;
   margin-bottom: 35px;
+  min-width: 370px;
 `;
 
 export const ShipmentCardTotalStyle = css`

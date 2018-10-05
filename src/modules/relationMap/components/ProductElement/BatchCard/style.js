@@ -2,7 +2,7 @@ import { css } from 'react-emotion';
 import { borderRadiuses, layout, colors, fontSizes, shadows } from 'styles/common';
 
 const Row = css`
-  padding: 5px 10px;
+  padding: 0 10px 5px 10px;
 `;
 
 const Label = css`
@@ -16,6 +16,7 @@ export const CardWrapper = css`
   color: ${colors.GRAY_DARK_1};
   ${fontSizes.SMALL};
   width: 195px;
+  padding-top: 5px;
 `;
 
 export const BatchRow = css`
@@ -39,6 +40,7 @@ export const TagWrapper = css`
   grid-gap: 5px;
   padding: 0 10px;
   overflow: hidden;
+  ${Row};
 `;
 
 export const DetailWrapper = css`
@@ -88,5 +90,5 @@ export const QuantityInput = css`
 export const Divider = css`
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};
-  margin: 1px 10px;
+  margin: 1px 10px 5px 10px;
 `;

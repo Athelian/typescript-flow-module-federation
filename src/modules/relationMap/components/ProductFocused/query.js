@@ -56,6 +56,11 @@ export const productListQuery = gql`
                 poNo
               }
             }
+            tags {
+              id
+              name
+              color
+            }
           }
           totalCount
         }
@@ -63,6 +68,13 @@ export const productListQuery = gql`
           id
           name
           color
+        }
+        files {
+          name
+          type
+          path
+          memo
+          id
         }
       }
       page
