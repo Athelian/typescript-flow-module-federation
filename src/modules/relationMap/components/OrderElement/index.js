@@ -205,6 +205,9 @@ const Item = (props: Props) => {
           />
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
             <TotalCard name="Shipment" quantity={data.quantity} />
+            <TagValue>
+              {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
+            </TagValue>
           </WrapperCard>
         </BaseCard>
       );

@@ -2,7 +2,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
-import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
@@ -24,16 +23,16 @@ import {
 
 type Props = {
   order: ?Object,
+  onArchive: string => void,
 };
 
-const OrderCard = ({ order }: Props) => {
+const OrderCard = ({ order, onArchive }: Props) => {
   if (!order) return '';
 
-  const { id, poNo, orderItems, currency, exporter, inCharges } = order;
+  const { id, poNo, orderItems, currency, exporter, inCharges, archived } = order;
 
   const actions = [
-    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+    <CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />,
   ];
 
   const totalItems = orderItems.length;
