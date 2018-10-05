@@ -19,6 +19,7 @@ import {
   selectSearchEnumInputFactory,
 } from 'modules/form/helpers';
 import { PartnerCard } from 'components/Cards';
+import { getQuantitySummary } from 'modules/order/helpers';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import Icon from 'components/Icon';
@@ -43,55 +44,6 @@ type Props = {
   isNew: boolean,
 };
 
-function getQuantitySummary(orderItems: any) {
-  let orderedQuantity = 0;
-  let batchedQuantity = 0;
-  let shippedQuantity = 0;
-  let totalPrice = 0;
-  let totalItems = 0;
-  let activeBatches = 0;
-  let archivedBatches = 0;
-
-  if (orderItems) {
-    totalItems = orderItems.length;
-
-    orderItems.forEach(item => {
-      const qty = item.quantity ? item.quantity : 0;
-      const price = item.price ? item.price.amount : 0;
-      orderedQuantity += qty;
-      totalPrice += price * qty;
-
-      if (item.batches) {
-        item.batches.forEach(batch => {
-          batchedQuantity += batch.quantity;
-          if (batch.batchAdjustments) {
-            batch.batchAdjustments.forEach(batchAdjustment => {
-              batchedQuantity -= batchAdjustment.quantity;
-            });
-          }
-          if (batch.shipment) {
-            shippedQuantity += batch.quantity;
-          }
-          if (batch.archived) {
-            archivedBatches += 1;
-          } else {
-            activeBatches += 1;
-          }
-        });
-      }
-    });
-  }
-
-  return {
-    orderedQuantity,
-    batchedQuantity,
-    shippedQuantity,
-    totalPrice,
-    totalItems,
-    activeBatches,
-    archivedBatches,
-  };
-}
 const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
     <Subscribe to={[OrderInfoContainer]}>

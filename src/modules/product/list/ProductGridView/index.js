@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
+import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { ProductCard } from 'components/Cards';
+import ProductActivateDialog from 'modules/product/common/ProductActivateDialog';
+import ProductArchiveDialog from 'modules/product/common/ProductArchiveDialog';
 
 type Props = {
   items: Array<Object>,
@@ -12,7 +15,28 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <ProductCard key={item.id} product={item} />;
+const defaultRenderItem = (item: Object) => (
+  <BooleanValue key={item.id}>
+    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+      <>
+        {item.archived ? (
+          <ProductActivateDialog
+            onRequestClose={() => dialogToggle(false)}
+            isOpen={statusDialogIsOpen}
+            product={item}
+          />
+        ) : (
+          <ProductArchiveDialog
+            onRequestClose={() => dialogToggle(false)}
+            isOpen={statusDialogIsOpen}
+            product={item}
+          />
+        )}
+        <ProductCard product={item} onArchive={() => dialogToggle(true)} />
+      </>
+    )}
+  </BooleanValue>
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,

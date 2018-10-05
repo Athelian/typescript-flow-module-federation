@@ -1,18 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-
-const timelineDateFragment = gql`
-  fragment timelineDateFragment on TimelineDate {
-    date
-    approvedAt
-    timelineDateRevisions {
-      date
-      id
-      sort
-    }
-    id
-  }
-`;
+import { timelineDateFragment } from 'graphql/timeline/fragment';
 
 export const batchFragment = gql`
   fragment batchFragment on Batch {

@@ -4482,10 +4482,10 @@ compression@^1.5.2:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
-compute-scroll-into-view@1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.7.tgz#ad8dbe51093c31d60cf6c2df497b2c077bd9e7d2"
-  integrity sha512-nGckrnlp17cHgh9OOi9s83lfWAlBvCQkj4ycexoIokbAxRicMYnYAxBtZ/zKtvFydrshhy2RBT352QGemT6rfQ==
+compute-scroll-into-view@1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.9.tgz#f9d9ec2a60d0011f2c89a6ecfbe4d5d0106e49d0"
+  integrity sha512-/xQfxid0ymaVqCFBhPpn6YBKsvY7xn5udnFrSyJwxbHyJY1JbLdrUGKOp+HzhXHtiyQ7hTzVM+PcgfgMY02lVw==
 
 compute-scroll-into-view@^1.0.2:
   version "1.0.8"
@@ -5150,10 +5150,10 @@ date-fns@^1.27.2:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.29.0.tgz#12e609cdcb935127311d04d33334e2960a2a54e6"
   integrity sha512-lbTXWZ6M20cWH8N9S6afb0SBm6tMk+uUg6z3MqHPKE9atmsY3kJkTm8vKe93izJ2B2+q5MV990sM2CHgtAZaOw==
 
-date-fns@^2.0.0-alpha.18:
-  version "2.0.0-alpha.20"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.20.tgz#6506acb99869913b2fb7900c14cc76f88e0ba057"
-  integrity sha512-6QqnkCeMBrlnGUXKrNMvYbj0h9Nv+51hNxwg54aa4Z7JWVycssKINjoPbc56tV0qTQ27hWTLz3ixi4Pigpq07Q==
+date-fns@^2.0.0-alpha.21:
+  version "2.0.0-alpha.21"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.21.tgz#d928c3d595d9e607701d2b3682bd70f03f2efec0"
+  integrity sha512-QL6ZzDhQVAGzYElbGcMCCwDhobclw5jIJG9oD9n0kA8+PLNqtP/V76vkzUXvOiXm421aAXjLFgo3o3cq33cdew==
 
 date-now@^0.1.4:
   version "0.1.4"
@@ -5469,7 +5469,7 @@ dom-serializer@0, dom-serializer@~0.1.0:
     domelementtype "~1.1.1"
     entities "~1.1.1"
 
-dom-testing-library@^3.5.0, dom-testing-library@^3.8.0, dom-testing-library@^3.8.1:
+dom-testing-library@^3.8.0, dom-testing-library@^3.8.1:
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/dom-testing-library/-/dom-testing-library-3.8.1.tgz#8607ef2e911f14f594028d14bc9f44fd32446078"
   integrity sha512-dqO90YAkTExPSdnEcOYcIU5gYxiVDrGooh62o4TUqmLlRmFJmu0qSD1ZTUx3WBo9HDQHFhB305lLJxkCY2Dweg==
@@ -8826,14 +8826,13 @@ jest-docblock@^23.2.0:
   dependencies:
     detect-newline "^2.1.0"
 
-jest-dom@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/jest-dom/-/jest-dom-2.0.0.tgz#e0da168a2fb94316ca1e057399353d81ec91b759"
-  integrity sha512-te3grvou8n1wf0u3GEW0K5CekkA5nROypNR6z6kflE2/1p0f7ftp911zTHSbTR9VtFiAwZv42p9g7peyVLI5pw==
+jest-dom@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/jest-dom/-/jest-dom-2.0.2.tgz#14a7def381cf0e3ae235f32b57056124c816d072"
+  integrity sha512-O0RFXOxbreu9yfLLoWyiNaECWhdzEOVobrgxMEGXDLatvFh0U93pgsi2aVjCcSx8u0mNFwCP0Lsgx1AH1yKIDQ==
   dependencies:
     chalk "^2.4.1"
     css "^2.2.3"
-    dom-testing-library "^3.5.0"
     jest-diff "^22.4.3"
     jest-matcher-utils "^22.4.3"
     pretty-format "^23.0.1"
@@ -13971,12 +13970,12 @@ schema-utils@^1.0.0:
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
 
-scroll-into-view-if-needed@^2.2.16:
-  version "2.2.16"
-  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.16.tgz#208232f4d7bb531130177b6c02d760d1e1796cbd"
-  integrity sha512-i28Zt4c4fjk6+bgx8HNlrDoUleHN+lXnvIzFQVaRtT/ulStz86eyo7HmQD+f1jGBNjRs+kXEbu8wnxIwx7KAGQ==
+scroll-into-view-if-needed@^2.2.17:
+  version "2.2.17"
+  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.17.tgz#fe5c8d6f6f0e04f728e947f36fbbab1a8a768332"
+  integrity sha512-g16ldtZm/Pj3H98kfQEHAy1n78F9w+NMqg7nSFWyi+9QImIbTQfkwklrgiirkEEwKPPr1vAbiGlOs3ko97CcFQ==
   dependencies:
-    compute-scroll-into-view "1.0.7"
+    compute-scroll-into-view "1.0.9"
 
 select-hose@^2.0.0:
   version "2.0.0"

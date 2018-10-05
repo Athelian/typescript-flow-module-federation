@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { isEquals, isDataType } from 'utils/fp';
-import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
+import ProductActivateDialog from 'modules/product/common/ProductActivateDialog';
+import ProductArchiveDialog from 'modules/product/common/ProductArchiveDialog';
+import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
 import { Subscribe } from 'unstated';
 import { FormContainer } from 'modules/form';
 import { ProductSection, ProductProvidersSection } from './components';
@@ -46,7 +49,34 @@ class ProductForm extends React.Component<Props> {
             icon="PRODUCT"
             title={<FormattedMessage id="modules.product.product" defaultMessage="PRODUCT" />}
           >
-            {!isNew && <LastModified updatedAt={product.updatedAt} updatedBy={product.updatedBy} />}
+            {!isNew && (
+              <>
+                <LastModified updatedAt={product.updatedAt} updatedBy={product.updatedBy} />
+                <BooleanValue>
+                  {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+                    <StatusToggle
+                      archived={product.archived}
+                      openStatusDialog={() => dialogToggle(true)}
+                      activateDialog={
+                        <ProductActivateDialog
+                          product={product}
+                          isOpen={statusDialogIsOpen && !!product.archived}
+                          onRequestClose={() => dialogToggle(false)}
+                          onCancel={() => dialogToggle(false)}
+                        />
+                      }
+                      archiveDialog={
+                        <ProductArchiveDialog
+                          product={product}
+                          isOpen={statusDialogIsOpen && !product.archived}
+                          onRequestClose={() => dialogToggle(false)}
+                        />
+                      }
+                    />
+                  )}
+                </BooleanValue>
+              </>
+            )}
           </SectionHeader>
           <ProductSection isNew={isNew} />
         </SectionWrapper>
