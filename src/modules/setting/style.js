@@ -13,18 +13,18 @@ import {
 
 export const SettingsWrapperStyle: string = css`
   position: relative;
-  display: flex;
+  ${layout.GRID_HORIZONTAL};
   padding: 0 20px;
+  grid-gap: 10px;
   align-items: center;
   justify-content: flex-end;
   flex: 1;
   height: 50px;
 `;
 
-export const NotificationButtonStyle: string = css`
+export const NotificationsButtonStyle: string = css`
   background: ${gradients.BLUE_TEAL_DIAGONAL};
-  color: #fff;
-  margin: 0 20px 0 0;
+  color: ${colors.WHITE};
   ${presets.BUTTON};
   position: relative;
   ${fontSizes.MAIN};

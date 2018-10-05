@@ -5,7 +5,6 @@ import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import QueryDetail from 'components/common/QueryDetail';
-import LoadingIcon from 'components/LoadingIcon';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -131,6 +130,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                                     validator
                                   )
                                 }
+                                isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
                                     { ...tagState.state, ...entityTypesState.state },
@@ -144,7 +144,6 @@ export default class TagFormModule extends React.PureComponent<Props> {
                                   )
                                 }
                               />
-                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }

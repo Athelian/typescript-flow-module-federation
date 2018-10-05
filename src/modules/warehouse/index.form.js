@@ -12,7 +12,6 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import LoadingIcon from 'components/LoadingIcon';
 import { decodeId, encodeId } from 'utils/id';
 import WarehouseForm from './form';
 import WarehouseContainer from './form/containers';
@@ -133,6 +132,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
                                 disabled={!form.isReady(formState.state, validator)}
+                                isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
                                     formState.state,
@@ -145,7 +145,6 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                                   )
                                 }
                               />
-                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }

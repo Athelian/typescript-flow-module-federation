@@ -10,7 +10,6 @@ import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import LoadingIcon from 'components/LoadingIcon';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
@@ -243,6 +242,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                       validator
                                     )
                                   }
+                                  isLoading={isLoading}
                                   onClick={() =>
                                     this.onSave(
                                       {
@@ -267,7 +267,6 @@ class ShipmentFormModule extends React.Component<Props> {
                                     )
                                   }
                                 />
-                                {isLoading && <LoadingIcon />}
                               </>
                             )}
                             {shipmentId &&

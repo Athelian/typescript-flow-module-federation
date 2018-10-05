@@ -9,7 +9,6 @@ import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import LoadingIcon from 'components/LoadingIcon';
 import { FormContainer } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -163,6 +162,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
                                 disabled={!form.isReady(formState.state, validator)}
+                                isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
                                     formState.state,
@@ -175,7 +175,6 @@ class BatchFormModule extends React.PureComponent<Props> {
                                   )
                                 }
                               />
-                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }
