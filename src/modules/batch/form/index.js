@@ -108,12 +108,12 @@ export default class BatchForm extends React.Component<Props> {
             <BooleanValue>
               {({ value: syncDialogIsOpen, set: dialogToggle }) => (
                 <>
-                  <SyncButton onClick={() => dialogToggle(!syncDialogIsOpen)} />
+                  <SyncButton onClick={() => dialogToggle(true)} />
                   <ConfirmDialog
                     isOpen={syncDialogIsOpen}
-                    onRequestClose={() => dialogToggle()}
-                    onCancel={() => dialogToggle()}
-                    onConfirm={() => dialogToggle()}
+                    onRequestClose={() => dialogToggle(false)}
+                    onCancel={() => dialogToggle(false)}
+                    onConfirm={() => dialogToggle(false)}
                     message={
                       <FormattedMessage
                         id="modules.batch.syncPackagingMessage"
