@@ -4,9 +4,9 @@ import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
 import { BooleanValue } from 'react-values';
-import OrderActivateDialog from './index';
+import ProductArchiveDialog from './index';
 
-storiesOf('Order Activate Modal', module)
+storiesOf('Product Archive Modal', module)
   .add('default', () => (
     <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
       <BooleanValue>
@@ -16,7 +16,7 @@ storiesOf('Order Activate Modal', module)
               open Dialog
             </button>
             <div id="dialog-root" />
-            <OrderActivateDialog isOpen={isOpen} onRequestClose={toggle} />
+            <ProductArchiveDialog isOpen={isOpen} onRequestClose={toggle} />
           </React.Fragment>
         )}
       </BooleanValue>
@@ -31,7 +31,7 @@ storiesOf('Order Activate Modal', module)
               open Dialog
             </button>
             <div id="dialog-root" />
-            <OrderActivateDialog isOpen={isOpen} onRequestClose={toggle} />
+            <ProductArchiveDialog isOpen={isOpen} onRequestClose={toggle} />
           </React.Fragment>
         )}
       </BooleanValue>
