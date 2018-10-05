@@ -16,7 +16,7 @@ import subscription from './subscription';
 
 import {
   SettingsWrapperStyle,
-  NotificationButtonStyle,
+  NotificationsButtonStyle,
   ProfileButtonStyle,
   NotificationBadgeStyle,
   NotificationDropDownWrapperStyle,
@@ -90,12 +90,12 @@ class Setting extends React.Component<Props, State> {
               firstName: getByPathWithDefault('TODO', 'viewer.user.firstName', data),
               lastName: getByPathWithDefault('TODO', 'viewer.user.lastName', data),
             };
-            const unSeen = getByPathWithDefault(0, 'viewer.notificationunSeen', data);
+            const unSeen = getByPathWithDefault(0, 'viewer.notificationUnseen', data);
 
             return (
               <>
                 <button
-                  className={NotificationButtonStyle}
+                  className={NotificationsButtonStyle}
                   tabIndex={-1}
                   onClick={async () => {
                     this.toggleNotification();

@@ -10,7 +10,7 @@ export const LoadingWrapperStyle: string = css`
   align-items: center;
 `;
 
-export const LoadingIconStyle: string = css`
+export const LoadingIconStyle = (size: number) => css`
   @keyframes spin {
     0% {
       transform: rotate(0deg);
@@ -22,16 +22,16 @@ export const LoadingIconStyle: string = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: ${size * 2}px;
+  height: ${size * 2}px;
   &:after {
     content: ' ';
     display: block;
-    width: 20px;
-    height: 20px;
+    width: ${size}px;
+    height: ${size}px;
     margin: 1px;
     border-radius: 50%;
-    border: 3px solid ${colors.WHITE};
+    border: ${size / 6}px solid ${colors.WHITE};
     border-color: rgba(0, 0, 0, 0.1) transparent rgba(0, 0, 0, 0.1) transparent;
     animation: spin 1.2s linear infinite;
   }

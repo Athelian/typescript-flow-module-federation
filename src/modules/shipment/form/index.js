@@ -29,19 +29,19 @@ const defaultProps = {
 };
 
 const AsyncTimelineSection = Loadable({
-  loading: LoadingIcon,
+  loading: () => <LoadingIcon />,
   loader: () => import('./components/TimelineSection'),
 });
 const AsyncCargoSection = Loadable({
-  loading: LoadingIcon,
+  loading: () => <LoadingIcon />,
   loader: () => import('./components/CargoSection'),
 });
 const AsyncOrdersSection = Loadable({
-  loading: LoadingIcon,
+  loading: () => <LoadingIcon />,
   loader: () => import('./components/OrdersSection'),
 });
 const AsyncDocumentsSection = Loadable({
-  loading: LoadingIcon,
+  loading: () => <LoadingIcon />,
   loader: () => import('./components/DocumentsSection'),
 });
 

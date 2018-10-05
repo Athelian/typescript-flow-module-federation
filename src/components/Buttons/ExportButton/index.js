@@ -60,9 +60,10 @@ class ExportButton extends React.Component<Props, State> {
       <BaseButton
         icon="DOWNLOAD"
         label={label}
-        backgroundColor="TEAL"
-        hoverBackgroundColor="TEAL_DARK"
-        disabled={disabled || isLoading}
+        backgroundColor="BLUE"
+        hoverBackgroundColor="BLUE_DARK"
+        isLoading={isLoading}
+        disabled={disabled}
         onClick={this.onClick}
       />
     );

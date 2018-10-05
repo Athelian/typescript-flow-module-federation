@@ -10,7 +10,6 @@ import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import LoadingIcon from 'components/LoadingIcon';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
@@ -201,6 +200,7 @@ class ProductFormModule extends React.Component<Props> {
                                     validator
                                   )
                                 }
+                                isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
                                     {
@@ -219,7 +219,6 @@ class ProductFormModule extends React.Component<Props> {
                                   )
                                 }
                               />
-                              {isLoading && <LoadingIcon />}
                             </>
                           )
                         }

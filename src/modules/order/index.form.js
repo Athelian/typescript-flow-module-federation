@@ -11,7 +11,6 @@ import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
-import LoadingIcon from 'components/LoadingIcon';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -223,6 +222,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                       validator
                                     )
                                   }
+                                  isLoading={isLoading}
                                   onClick={() =>
                                     this.onSave(
                                       {
@@ -243,7 +243,6 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     )
                                   }
                                 />
-                                {isLoading && <LoadingIcon />}
                               </>
                             )}
                             {orderId &&

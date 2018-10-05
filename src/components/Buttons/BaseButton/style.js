@@ -21,6 +21,7 @@ export const ButtonWrapperStyle = ({
   ${borderRadiuses.BUTTON};
   height: 30px;
   padding: 0 10px;
+  width: min-content;
   &:hover,
   :focus {
     color: ${colors[hoverTextColor]};
@@ -36,12 +37,22 @@ export const DisabledButtonWrapperStyle: string = css`
   height: 30px;
   padding: 0 10px;
   cursor: default;
+  width: min-content;
 `;
 
 export const ButtonLabelStyle: string = css`
   ${presets.ELLIPSIS};
   letter-spacing: 2px;
   ${fontSizes.SMALL};
+`;
+
+export const ButtonLoadingWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 30px;
+  flex-shrink: 0;
 `;
 
 export const ButtonIconStyle: string = css`

@@ -14,15 +14,15 @@ import OrderFormWrapperStyle from './style';
 import { OrderItemsContainer, OrderInfoContainer, OrderFilesContainer } from './containers';
 
 const AsyncItemsSection = Loadable({
-  loading: LoadingIcon,
+  loading: () => <LoadingIcon />,
   loader: () => import('./components/ItemsSection'),
 });
 const AsyncDocumentsSection = Loadable({
-  loading: LoadingIcon,
+  loading: () => <LoadingIcon />,
   loader: () => import('./components/DocumentsSection'),
 });
 const AsyncShipmentsSection = Loadable({
-  loading: LoadingIcon,
+  loading: () => <LoadingIcon />,
   loader: () => import('./components/ShipmentsSection'),
 });
 
