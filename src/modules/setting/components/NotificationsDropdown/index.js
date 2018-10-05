@@ -63,8 +63,6 @@ class NotificationsDropdown extends React.Component<Props> {
           const items = getByPathWithDefault([], 'viewer.notifications.nodes', data);
           const unRead = getByPathWithDefault(0, 'viewer.notificationUnread', data);
 
-          console.log(unRead);
-
           return (
             <div className={NotificationsDropDownWrapperStyle(isOpen)}>
               <div className={NotificationsBodyWrapperStyle}>
@@ -104,8 +102,10 @@ class NotificationsDropdown extends React.Component<Props> {
                                 defaultMessage="MARK ALL AS READ"
                               />
                             }
-                            backgroundColor="TEAL"
-                            hoverBackgroundColor="TEAL_DARK"
+                            textColor="BLUE"
+                            hoverTextColor="WHITE"
+                            backgroundColor="WHITE"
+                            hoverBackgroundColor="BLUE"
                           />
                         </>
                       )}
@@ -118,11 +118,13 @@ class NotificationsDropdown extends React.Component<Props> {
                       label={
                         <FormattedMessage
                           id="components.Header.notification.viewAll"
-                          defaultMessage="VIEW ALL NOTIFICATIONS"
+                          defaultMessage="VIEW ALL"
                         />
                       }
-                      backgroundColor="TEAL"
-                      hoverBackgroundColor="TEAL_DARK"
+                      textColor="TEAL"
+                      hoverTextColor="WHITE"
+                      backgroundColor="WHITE"
+                      hoverBackgroundColor="TEAL"
                     />
                   </Link>
                 </div>

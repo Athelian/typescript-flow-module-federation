@@ -31,6 +31,8 @@ export const notificationListQuery = gql`
         page
         totalPage
       }
+      notificationUnread
+      notificationUnseen
     }
   }
 `;
