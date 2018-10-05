@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { ShipmentLabelStyle } from './style';
 
 type Props = {
   name: string,
@@ -8,7 +9,7 @@ type Props = {
 
 export default function ShipmentLabel({ name = '', vol = '' }: Props) {
   return (
-    <div>
+    <div className={ShipmentLabelStyle}>
       <span>{name}</span>
       <span>{vol}</span>
     </div>

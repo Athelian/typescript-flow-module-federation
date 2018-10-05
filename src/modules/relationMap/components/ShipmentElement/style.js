@@ -1,22 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets } from 'styles/common';
 
-export const ShipmentElementWrapperStyle = css`
+export const ShipmentCardWrapperStyle = css`
   display: flex;
   flex-direction: column;
-
-  > div:first-child {
-    height: 24px;
-    line-height: 24px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding-right: 30px;
-    padding-left: 5px;
-    ${presets.BOX};
-    box-shadow: 0 10px 15px 0 rgba(0, 0, 0, 0.1);
-  }
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 
   > div:nth-child(2) {
     padding-left: 17px;
@@ -24,4 +14,4 @@ export const ShipmentElementWrapperStyle = css`
   }
 `;
 
-export default ShipmentElementWrapperStyle;
+export default ShipmentCardWrapperStyle;

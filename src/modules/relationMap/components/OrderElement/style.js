@@ -33,16 +33,12 @@ export const TotalCardWrapperStyle = css`
 `;
 
 export const CardWrapperStyle = css`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 90px;
   padding: 0 25px 0 5px;
 `;
 export const CardTitleStyle = css`
   ${fontSizes.SMALL};
-  max-width: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -74,12 +70,11 @@ export const ItemWrapperStyle = (isFocused: boolean) => {
     align-items: center;
     justify-content: center;
     width: auto;
-    min-width: 190px;
-    //max-width: 400px;
-    height: auto;
+    min-width: 215px;
+    height: fit-content;
     min-height: 50px;
     max-height: 200px;
-    margin-bottom: 35px;
+    margin-bottom: 15px;
     ${fontSizes.MAIN};
     font-weight: bold;
     color: ${colors.BLACK};
