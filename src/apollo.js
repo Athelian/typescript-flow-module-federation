@@ -29,7 +29,16 @@ class SubscriptionSSE {
       { withCredentials: true }
     );
     this.source.onmessage = msg => {
-      handler(JSON.parse(msg.data));
+      try {
+        // heartbeat
+        if (msg.data === '') {
+          return;
+        }
+
+        handler(JSON.parse(msg.data));
+      } catch (e) {
+        logger.error(e);
+      }
     };
     this.source.onerror = msg => {
       logger.error(msg.message);
