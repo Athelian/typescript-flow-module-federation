@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { Link } from '@reach/router';
-import logger from 'utils/logger';
 import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
@@ -19,16 +18,16 @@ import {
 
 type Props = {
   shipment: ?Object,
+  onArchive: string => void,
 };
 
-const ShipmentCard = ({ shipment }: Props) => {
+const ShipmentCard = ({ shipment, onArchive }: Props) => {
   if (!shipment) return '';
 
-  const { id } = shipment;
+  const { id, archived } = shipment;
 
   const actions = [
-    <CardAction icon="CLONE" onClick={() => logger.warn('clone')} />,
-    <CardAction icon="ARCHIVE" onClick={() => logger.warn('complete')} />,
+    <CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />,
   ];
 
   return (
