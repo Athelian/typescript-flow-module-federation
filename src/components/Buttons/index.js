@@ -7,6 +7,7 @@ import CancelButton from './CancelButton';
 import NewButton from './NewButton';
 import SaveButton from './SaveButton';
 import ExportButton from './ExportButton';
+import SyncButton from './SyncButton';
 
 export {
   ActivateButton,
@@ -17,4 +18,5 @@ export {
   NewButton,
   SaveButton,
   ExportButton,
+  SyncButton,
 };

@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { isEquals } from 'utils/fp';
 import { Tooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
+import { SyncButton } from 'components/Buttons';
 import {
   BatchSection,
   OrderSection,
@@ -101,7 +102,9 @@ export default class BatchForm extends React.Component<Props> {
           <SectionHeader
             icon="PACKAGING"
             title={<FormattedMessage id="modules.batch.packaging" defaultMessage="PACKAGING" />}
-          />
+          >
+            <SyncButton />
+          </SectionHeader>
           <PackagingSection isNew={isNew} />
         </SectionWrapper>
 
