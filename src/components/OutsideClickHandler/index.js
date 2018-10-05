@@ -3,6 +3,7 @@ import * as React from 'react';
 
 type OptionalProps = {
   ignoreElements: Array<Node>,
+  ignoreClick: boolean,
 };
 
 type Props = OptionalProps & {
@@ -12,6 +13,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   ignoreElements: [],
+  ignoreClick: true,
 };
 
 export default class OutsideClickHandler extends React.Component<Props> {
@@ -26,7 +28,10 @@ export default class OutsideClickHandler extends React.Component<Props> {
   }
 
   onOutsideClick = (evt: MouseEvent) => {
-    const { ignoreElements, onOutsideClick } = this.props;
+    const { ignoreElements, ignoreClick, onOutsideClick } = this.props;
+
+    if (ignoreClick) return;
+
     const isOutsideTarget =
       this.wrapperRef && evt.target instanceof Node && !this.wrapperRef.contains(evt.target);
 

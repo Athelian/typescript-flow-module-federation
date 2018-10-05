@@ -422,7 +422,7 @@
   "containers.RelationMap.productsTab": "PRODUCTS",
   "components.Header.notification.title": "NOTIFICATIONS",
   "components.Header.notification.readAll": "MARK ALL AS READ",
-  "components.Header.notification.viewAll": "VIEW ALL NOTIFICATIONS",
+  "components.Header.notification.viewAll": "VIEW ALL",
   "components.Header.notification.noNotifications": "No notifications",
   "components.Header.profile.profile": "PROFILE",
   "components.Header.profile.preferences": "PREFERENCES",

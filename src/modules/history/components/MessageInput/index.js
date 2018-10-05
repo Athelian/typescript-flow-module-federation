@@ -1,12 +1,14 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
+import LoadingIcon from 'components/LoadingIcon';
 import { TextAreaInput, DefaultStyle } from 'components/Form';
 import { MessageInputWrapper, SendButtonStyle } from './style';
 
 type Props = {
   name: string,
   value: ?string,
+  isLoading: boolean,
   onChange: Function,
   onBlur?: Function,
   onSubmit: Function,
@@ -26,8 +28,8 @@ class MessageInput extends React.Component<Props, State> {
   };
 
   inputBehavior = (event: Object) => {
-    const { onSubmit } = this.props;
-    if (event.which === 13 && !event.shiftKey) {
+    const { onSubmit, isLoading } = this.props;
+    if (event.which === 13 && !event.shiftKey && !isLoading) {
       event.preventDefault();
       onSubmit(event);
     }
@@ -47,21 +49,11 @@ class MessageInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, value, onChange, onSubmit } = this.props;
+    const { name, value, isLoading, onChange, onSubmit } = this.props;
     const { isFocused } = this.state;
 
     return (
       <div className={MessageInputWrapper}>
-        {/* <textarea
-          ref={this.setMessageRef}
-          name={name}
-          value={value}
-          onKeyPress={this.inputBehavior}
-          onChange={this.expandInput}
-          onBlur={onBlur}
-          rows={1}
-          className={InputStyle}
-        /> */}
         <DefaultStyle type="textarea" height="90px" isFocused={isFocused} forceHoverStyle>
           <TextAreaInput
             name={name}
@@ -73,8 +65,14 @@ class MessageInput extends React.Component<Props, State> {
             align="left"
           />
         </DefaultStyle>
-        <button type="button" onClick={onSubmit} className={SendButtonStyle(!!value)}>
-          <Icon icon="PAPER_PLANE" />
+
+        <button
+          type="button"
+          onClick={onSubmit}
+          disabled={isLoading}
+          className={SendButtonStyle(!!value)}
+        >
+          {isLoading ? <LoadingIcon size={20} /> : <Icon icon="PAPER_PLANE" />}
         </button>
       </div>
     );
