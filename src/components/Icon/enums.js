@@ -30,6 +30,7 @@ import {
   faFileAlt as DOCUMENT,
   faMap as RELATION_MAP,
   faBook as LOGS,
+  faCalculator as CALCULATOR,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -144,6 +145,7 @@ export default {
   SPECIFICATIONS,
   PHOTO,
   LOGS,
+  CALCULATOR,
 
   RELATION_MAP,
   CONNECT,

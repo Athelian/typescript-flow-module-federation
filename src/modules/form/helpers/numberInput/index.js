@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FieldItem, Label, Tooltip, DefaultStyle, NumberInput } from 'components/Form';
+import Icon from 'components/Icon';
+import { CalculatorButtonWrapperStyle, CalculatorButtonStyle } from './style';
 
 const numberInputFactory = ({
   WrapperComponent = DefaultStyle,
@@ -8,6 +10,7 @@ const numberInputFactory = ({
   width = '200px',
   height = '30px',
   align = 'right',
+  calculate,
   isNew,
   label,
   name,
@@ -20,6 +23,7 @@ const numberInputFactory = ({
   width?: string,
   height?: string,
   label?: React.Node,
+  calculate?: Function,
   isNew: boolean,
   name: string,
   inputHandlers: {
@@ -55,16 +59,25 @@ const numberInputFactory = ({
         />
       }
       input={
-        <WrapperComponent
-          type="number"
-          isFocused={isFocused}
-          hasError={isTouched && errorMessage}
-          forceHoverStyle={isNew}
-          width={width}
-          height={height}
-        >
-          <NumberInput align={align} name={name} {...rest} />
-        </WrapperComponent>
+        <div>
+          <WrapperComponent
+            type="number"
+            isFocused={isFocused}
+            hasError={isTouched && errorMessage}
+            forceHoverStyle={isNew}
+            width={width}
+            height={height}
+          >
+            <NumberInput align={align} name={name} {...rest} />
+          </WrapperComponent>
+          {calculate && (
+            <div className={CalculatorButtonWrapperStyle}>
+              <button className={CalculatorButtonStyle} type="button" onClick={() => calculate()}>
+                <Icon icon="CALCULATOR" />
+              </button>
+            </div>
+          )}
+        </div>
       }
     />
   );

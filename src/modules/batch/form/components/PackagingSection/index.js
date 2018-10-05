@@ -61,6 +61,7 @@ const PackagingSection = ({ isNew }: Props) => (
                       defaultMessage="PACKAGE QUANTITY"
                     />
                   ),
+                  calculate: () => console.log('calculate packageQuantity '),
                 })
               }
             </FormField>
@@ -106,6 +107,7 @@ const PackagingSection = ({ isNew }: Props) => (
                     <FormattedMessage id="modules.batch.pkgVolume" defaultMessage="PKG VOLUME" />
                   ),
                   WrapperComponent: DefaultVolumeStyle,
+                  calculate: () => console.log('calculate package volume '),
                 })
               }
             </FormField>
