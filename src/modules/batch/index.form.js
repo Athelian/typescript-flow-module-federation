@@ -25,12 +25,16 @@ import {
   prepareUpdateBatchInput,
 } from './form/mutation';
 
-type Props = {
+type OptionalProps = {
+  isSlideView: boolean,
+};
+type Props = OptionalProps & {
   batchId?: string,
 };
 
 const defaultProps = {
   batchId: '',
+  isSlideView: false,
 };
 
 class BatchFormModule extends React.PureComponent<Props> {
@@ -88,7 +92,7 @@ class BatchFormModule extends React.PureComponent<Props> {
   };
 
   render() {
-    const { batchId } = this.props;
+    const { batchId, isSlideView } = this.props;
     const isNew = batchId === 'new';
     let mutationKey = {};
     if (batchId && !isNew) {
@@ -106,7 +110,7 @@ class BatchFormModule extends React.PureComponent<Props> {
             >
               {(saveBatch, { loading: isLoading, error: apiError }) => (
                 <Layout
-                  {...uiState}
+                  {...(isSlideView ? {} : uiState)}
                   navBar={
                     <NavBar>
                       <EntityIcon icon="BATCH" color="BATCH" />

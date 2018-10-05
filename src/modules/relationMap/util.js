@@ -126,13 +126,15 @@ export const formatShipmentOrder = orders => {
     shipments.forEach(shipment => {
       if (!shipmentObj[shipment.id]) {
         shipmentObj[shipment.id] = {
-          data: shipment,
+          data: {
+            ...shipment,
+            numberOfOrder: 0,
+            numberOfBatch: shipment.batches.length,
+          },
           refs: {},
-          numberOfOrder: 0,
-          numberOfBatch: shipment.batches ? shipment.batches.length : 0,
         };
       }
-      shipmentObj[shipment.id].numberOfOrder += 1;
+      shipmentObj[shipment.id].data.numberOfOrder += 1;
       shipmentObj[shipment.id].refs[orderId] = true;
     });
   });
@@ -238,7 +240,11 @@ export const formatShipmentData = shipments => {
     sumBatches += shipment.batches ? shipment.batches.length : 0;
     if (!shipmentObj[shipment.id]) {
       shipmentObj[shipment.id] = {
-        data: shipment,
+        data: {
+          ...shipment,
+          numberOfOrder: 0,
+          numberOfBatch: shipment.batches.length,
+        },
         totalBatch: 0,
         totalItem: 0,
       };
@@ -267,6 +273,7 @@ export const formatShipmentData = shipments => {
       }
       const { order } = orderItem;
       if (orderItem.order && !orderObj[order.id]) {
+        shipmentObj[shipment.id].data.numberOfOrder += 1;
         orderObj[order.id] = {
           orderedQuantity: 0,
           batchedQuantity: 0,

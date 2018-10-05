@@ -14,6 +14,7 @@ export const shipmentListQuery = gql`
         }
         transportType
         cargoReady {
+          id
           approvedAt
           date
           timelineDateRevisions {
@@ -32,6 +33,7 @@ export const shipmentListQuery = gql`
             airport
           }
           departure {
+            id
             approvedAt
             date
             timelineDateRevisions {
@@ -39,6 +41,7 @@ export const shipmentListQuery = gql`
             }
           }
           arrival {
+            id
             approvedAt
             date
             timelineDateRevisions {
@@ -48,6 +51,7 @@ export const shipmentListQuery = gql`
         }
         containerGroups {
           customClearance {
+            id
             approvedAt
             date
             timelineDateRevisions {
@@ -55,6 +59,7 @@ export const shipmentListQuery = gql`
             }
           }
           warehouseArrival {
+            id
             approvedAt
             date
             timelineDateRevisions {
@@ -62,6 +67,7 @@ export const shipmentListQuery = gql`
             }
           }
           deliveryReady {
+            id
             approvedAt
             date
             timelineDateRevisions {

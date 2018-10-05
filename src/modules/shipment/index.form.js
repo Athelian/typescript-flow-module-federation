@@ -32,12 +32,16 @@ import {
   prepareUpdateShipmentInput,
 } from './form/mutation';
 
-type Props = {
+type OptionalProps = {
+  isSlideView: boolean,
+};
+type Props = OptionalProps & {
   shipmentId?: string,
 };
 
 const defaultProps = {
   shipmentId: '',
+  isSlideView: false,
 };
 
 type CreateShipmentResponse = {|
@@ -131,7 +135,7 @@ class ShipmentFormModule extends React.Component<Props> {
   };
 
   render() {
-    const { shipmentId } = this.props;
+    const { shipmentId, isSlideView } = this.props;
     const isNew = shipmentId === 'new';
     let mutationKey = {};
     if (shipmentId && !isNew) {
@@ -149,7 +153,7 @@ class ShipmentFormModule extends React.Component<Props> {
             >
               {(saveShipment, { loading: isLoading, error: apiError }) => (
                 <Layout
-                  {...uiState}
+                  {...(isSlideView ? {} : uiState)}
                   navBar={
                     <NavBar>
                       <EntityIcon icon="SHIPMENT" color="SHIPMENT" />

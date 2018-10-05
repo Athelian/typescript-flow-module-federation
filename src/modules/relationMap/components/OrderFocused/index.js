@@ -4,9 +4,9 @@ import { BooleanValue, createObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import { generateOrderRelation } from 'modules/relationMap/util';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
-
 import RelationView from '../RelationView';
 import Item from '../OrderElement';
+import DetailFocused, { ToggleSlide } from '../DetailFocused';
 
 const FocusedValue = createObjectValue(null);
 type Props = {
@@ -55,22 +55,33 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                   break;
               }
               return (
-                <FocusedValue key={key}>
-                  {({ value: focusedItem, set: setItem, reset }) => (
-                    <Item
-                      key={key}
-                      type={relation.type}
-                      isFocused={getByPathWithDefault(false, item.id, focusedItem)}
-                      onMouseLeave={reset}
-                      onMouseEnter={() => setItem(item.id, true)}
-                      onClick={() => {
-                        toggle();
-                      }}
-                      data={itemData}
-                      isCollapsed={isCollapsed}
-                    />
+                <ToggleSlide key={key}>
+                  {({ assign: setSlide }) => (
+                    <FocusedValue key={key}>
+                      {({ value: focusedItem, set: setItem, reset }) => (
+                        <Item
+                          key={key}
+                          type={relation.type}
+                          isFocused={getByPathWithDefault(false, item.id, focusedItem)}
+                          onMouseLeave={reset}
+                          onMouseEnter={() => setItem(item.id, true)}
+                          onClick={() => {
+                            toggle();
+                          }}
+                          onDoubleClick={() => {
+                            setSlide({
+                              show: true,
+                              type: relation.type,
+                              id: relation.id,
+                            });
+                          }}
+                          data={itemData}
+                          isCollapsed={isCollapsed}
+                        />
+                      )}
+                    </FocusedValue>
                   )}
-                </FocusedValue>
+                </ToggleSlide>
               );
             });
           }}
@@ -82,25 +93,39 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
         const currentShipment = shipment[shipmentId];
         const shipmentRefs = Object.keys(currentShipment.refs);
         return (
-          <FocusedValue key={shipmentId}>
-            {({ value: focusedItem, assign, reset }) => (
-              <Item
-                key={shipmentId}
-                type="SHIPMENT"
-                data={currentShipment.data}
-                isFocused={Boolean(
-                  Object.keys(focusedItem || {}).some(focusId =>
-                    shipmentRefs.some(orderId => orderId === focusId)
-                  )
+          <ToggleSlide key={shipmentId}>
+            {({ assign: setSlide }) => (
+              <FocusedValue key={shipmentId}>
+                {({ value: focusedItem, assign, reset }) => (
+                  <div key={shipmentId}>
+                    <Item
+                      key={shipmentId}
+                      type="SHIPMENT"
+                      data={currentShipment.data}
+                      isFocused={Boolean(
+                        Object.keys(focusedItem || {}).some(focusId =>
+                          shipmentRefs.some(orderId => orderId === focusId)
+                        )
+                      )}
+                      onMouseLeave={reset}
+                      onMouseEnter={() => assign(currentShipment.refs)}
+                      onDoubleClick={() => {
+                        setSlide({
+                          show: true,
+                          type: 'SHIPMENT',
+                          id: shipmentId,
+                        });
+                      }}
+                    />
+                  </div>
                 )}
-                onMouseLeave={reset}
-                onMouseEnter={() => assign(currentShipment.refs)}
-              />
+              </FocusedValue>
             )}
-          </FocusedValue>
+          </ToggleSlide>
         );
       })}
     </div>
+    <DetailFocused />
   </>
 );
 
