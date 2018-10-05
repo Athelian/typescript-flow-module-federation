@@ -9,6 +9,7 @@ import CornerIcon from './CornerIcon';
 
 type OptionalProps = {
   actions: Array<React.Node>,
+  showActionsOnHover: boolean,
   selectable: boolean,
   disabled: boolean,
   readOnly: boolean,
@@ -18,9 +19,9 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  children: React.Node,
   icon: string,
   color: string,
+  children: React.Node,
 };
 
 type State = {
@@ -29,6 +30,7 @@ type State = {
 
 const defaultProps = {
   actions: [],
+  showActionsOnHover: false,
   selectable: false,
   disabled: false,
   readOnly: false,
@@ -56,6 +58,10 @@ export default class BaseCard extends React.Component<Props, State> {
     this.setState({ actionsAreShown: !actionsAreShown });
   };
 
+  openActions = () => {
+    this.setState({ actionsAreShown: true });
+  };
+
   closeActions = () => {
     this.setState({ actionsAreShown: false });
   };
@@ -66,16 +72,17 @@ export default class BaseCard extends React.Component<Props, State> {
 
   render() {
     const {
-      children,
       icon,
       color,
       actions,
+      showActionsOnHover,
       selectable,
       disabled,
       readOnly,
       selected,
       onSelect,
       wrapperClassName,
+      children,
     } = this.props;
 
     const { actionsAreShown } = this.state;
@@ -83,7 +90,29 @@ export default class BaseCard extends React.Component<Props, State> {
     const cardStyle = CardStyle(disabled, readOnly);
 
     return (
-      <div className={cx(cardStyle, wrapperClassName)}>
+      <div
+        className={cx(cardStyle, wrapperClassName)}
+        onMouseOver={() => {
+          if (showActionsOnHover) {
+            this.openActions();
+          }
+        }}
+        onFocus={() => {
+          if (showActionsOnHover) {
+            this.openActions();
+          }
+        }}
+        onMouseOut={() => {
+          if (showActionsOnHover) {
+            this.closeActions();
+          }
+        }}
+        onBlur={() => {
+          if (showActionsOnHover) {
+            this.closeActions();
+          }
+        }}
+      >
         {!disabled &&
           actions.length > 0 && (
             <OutsideClickHandler
