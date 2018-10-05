@@ -7,8 +7,8 @@ import { BooleanValue } from 'react-values';
 import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
 import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'components/Form';
-import OrderActivateDialog from './components/OrderActivateDialog';
-import OrderArchiveDialog from './components/OrderArchiveDialog';
+import OrderActivateDialog from 'modules/order/common/OrderActivateDialog';
+import OrderArchiveDialog from 'modules/order/common/OrderArchiveDialog';
 import OrderSection from './components/OrderSection';
 import OrderFormWrapperStyle from './style';
 import { OrderItemsContainer, OrderInfoContainer, OrderFilesContainer } from './containers';
@@ -30,7 +30,6 @@ type OptionalProps = {
   isNew: boolean,
   order: Object,
   onDetailReady: () => void,
-  onChangeStatus: (Object, Function) => Promise<any>,
 };
 
 type Props = OptionalProps & {};
@@ -57,32 +56,8 @@ export default class OrderForm extends React.Component<Props> {
     return !isEquals(order, nextProps.order);
   }
 
-  getBatchesSummary = () => {
-    const { order } = this.props;
-
-    let totalBatches = 0;
-    let shippedBatches = 0;
-
-    if (order.orderItems) {
-      order.orderItems.forEach(item => {
-        if (item.batches) {
-          totalBatches += item.batches.length;
-          item.batches.forEach(batch => {
-            if (batch.shipment) {
-              shippedBatches += 1;
-            }
-          });
-        }
-      });
-    }
-
-    return { totalBatches, shippedBatches, unshippedBatches: totalBatches - shippedBatches };
-  };
-
   render() {
-    const { isNew, order, onChangeStatus } = this.props;
-
-    const { totalBatches, unshippedBatches, shippedBatches } = this.getBatchesSummary();
+    const { isNew, order } = this.props;
 
     return (
       <div className={OrderFormWrapperStyle}>
@@ -101,34 +76,17 @@ export default class OrderForm extends React.Component<Props> {
                       openStatusDialog={() => dialogToggle(true)}
                       activateDialog={
                         <OrderActivateDialog
+                          order={order}
                           isOpen={statusDialogIsOpen && !!order.archived}
                           onRequestClose={() => dialogToggle(false)}
                           onCancel={() => dialogToggle(false)}
-                          onConfirm={() => {
-                            dialogToggle(false);
-                            onChangeStatus({ archived: false }, () => {
-                              window.location.reload();
-                            });
-                          }}
-                          totalBatches={totalBatches}
-                          unshippedBatches={unshippedBatches}
-                          shippedBatches={shippedBatches}
                         />
                       }
                       archiveDialog={
                         <OrderArchiveDialog
+                          order={order}
                           isOpen={statusDialogIsOpen && !order.archived}
                           onRequestClose={() => dialogToggle(false)}
-                          onCancel={() => dialogToggle(false)}
-                          onConfirm={() => {
-                            dialogToggle(false);
-                            onChangeStatus({ archived: true }, () => {
-                              window.location.reload();
-                            });
-                          }}
-                          totalBatches={totalBatches}
-                          unshippedBatches={unshippedBatches}
-                          shippedBatches={shippedBatches}
                         />
                       }
                     />

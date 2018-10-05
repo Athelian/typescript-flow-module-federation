@@ -276,19 +276,6 @@ class OrderFormModule extends React.PureComponent<Props> {
                           {(orderItemState, orderInfoState, orderTagsState, orderFilesState) => (
                             <OrderForm
                               order={order}
-                              onChangeStatus={(formData, onSuccess) =>
-                                this.onSave(
-                                  {
-                                    ...orderItemState.state,
-                                    ...orderInfoState.state,
-                                    ...orderTagsState.state,
-                                    ...orderFilesState.state,
-                                    ...formData,
-                                  },
-                                  saveOrder,
-                                  onSuccess
-                                )
-                              }
                               onDetailReady={() => {
                                 const { orderItems, tags, files, ...info } = order;
                                 orderItemState.initDetailValues(orderItems);

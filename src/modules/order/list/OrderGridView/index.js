@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import GridView from 'components/GridView';
 import { OrderCard } from 'components/Cards';
+import OrderActivateDialog from 'modules/order/common/OrderActivateDialog';
+import OrderArchiveDialog from 'modules/order/common/OrderArchiveDialog';
 
 type Props = {
   items: Array<Object>,
@@ -12,7 +15,28 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <OrderCard key={item.id} order={item} />;
+const defaultRenderItem = (item: Object) => (
+  <BooleanValue key={item.id}>
+    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+      <>
+        {item.archived ? (
+          <OrderActivateDialog
+            onRequestClose={() => dialogToggle(false)}
+            isOpen={statusDialogIsOpen}
+            order={item}
+          />
+        ) : (
+          <OrderArchiveDialog
+            onRequestClose={() => dialogToggle(false)}
+            isOpen={statusDialogIsOpen}
+            order={item}
+          />
+        )}
+        <OrderCard order={item} onArchive={() => dialogToggle(true)} />
+      </>
+    )}
+  </BooleanValue>
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,

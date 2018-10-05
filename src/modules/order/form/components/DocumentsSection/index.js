@@ -24,9 +24,6 @@ function DocumentsSection({ intl }: Props) {
             onChange={(field, value) => {
               changeFiles(field, value);
             }}
-            onBlur={evt => {
-              console.warn('evt', evt);
-            }}
             types={[
               { type: 'Document', label: intl.formatMessage(messages.fileTypeDocument) },
               { type: 'OrderPo', label: intl.formatMessage(messages.fileTypeOrderPO) },
