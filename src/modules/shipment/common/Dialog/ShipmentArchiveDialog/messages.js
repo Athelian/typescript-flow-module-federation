@@ -31,8 +31,4 @@ export default defineMessages({
     id: 'global.batches',
     defaultMessage: 'batches',
   },
-  shipments: {
-    id: 'global.shipments',
-    defaultMessage: 'shipments',
-  },
 });

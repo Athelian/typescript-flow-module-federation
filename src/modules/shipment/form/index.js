@@ -8,8 +8,7 @@ import { isEquals } from 'utils/fp';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
-import ShipmentActivateDialog from 'modules/shipment/common/ShipmentActivateDialog';
-import ShipmentArchiveDialog from 'modules/shipment/common/ShipmentArchiveDialog';
+import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 import { ShipmentBatchesContainer } from './containers';
 import ShipmentSection from './components/ShipmentSection';
 import { ShipmentFormWrapperStyle } from './style';
@@ -62,6 +61,7 @@ class ShipmentForm extends React.Component<Props> {
 
   render() {
     const { isNew, shipment } = this.props;
+    const { updatedAt, updatedBy, archived } = shipment;
 
     return (
       <div className={ShipmentFormWrapperStyle}>
@@ -72,25 +72,26 @@ class ShipmentForm extends React.Component<Props> {
           >
             {!isNew && (
               <>
-                <LastModified updatedAt={shipment.updatedAt} updatedBy={shipment.updatedBy} />
+                <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
                 <BooleanValue>
                   {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                     <StatusToggle
-                      archived={shipment.archived}
+                      archived={archived}
                       openStatusDialog={() => dialogToggle(true)}
                       activateDialog={
                         <ShipmentActivateDialog
                           shipment={shipment}
-                          isOpen={statusDialogIsOpen && !!shipment.archived}
+                          isOpen={statusDialogIsOpen && !!archived}
                           onRequestClose={() => dialogToggle(false)}
-                          onCancel={() => dialogToggle(false)}
+                          onConfirm={() => window.location.reload()}
                         />
                       }
                       archiveDialog={
                         <ShipmentArchiveDialog
                           shipment={shipment}
-                          isOpen={statusDialogIsOpen && !shipment.archived}
+                          isOpen={statusDialogIsOpen && !archived}
                           onRequestClose={() => dialogToggle(false)}
+                          onConfirm={() => window.location.reload()}
                         />
                       }
                     />

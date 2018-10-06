@@ -15,10 +15,6 @@ export default defineMessages({
     defaultMessage:
       '{shipped}/{total} {batches} are already active because they are in active {orders}.',
   },
-  order: {
-    id: 'global.order',
-    defaultMessage: 'order',
-  },
   orders: {
     id: 'global.orders',
     defaultMessage: 'orders',
@@ -28,7 +24,7 @@ export default defineMessages({
     defaultMessage: 'batches',
   },
   shipment: {
-    id: 'global.shipments',
+    id: 'global.shipment',
     defaultMessage: 'shipment',
   },
   shipments: {

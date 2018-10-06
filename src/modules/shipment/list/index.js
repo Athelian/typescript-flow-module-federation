@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
+import emitter from 'utils/emitter';
 import ShipmentGridView from './ShipmentGridView';
 import { shipmentListQuery } from './query';
 
@@ -34,7 +35,7 @@ class ShipmentList extends React.PureComponent<Props> {
         }}
         fetchPolicy="network-only"
       >
-        {({ loading, data, fetchMore, error }) => {
+        {({ loading, data, fetchMore, refetch, variables, error }) => {
           if (error) {
             return error.message;
           }
@@ -42,6 +43,14 @@ class ShipmentList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'shipments.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'shipments.totalPage', data);
           const hasMore = nextPage <= totalPage;
+
+          emitter.once('CHANGE_SHIPMENT_STATUS', () => {
+            refetch({
+              ...variables,
+              page: 1,
+              perPage: getByPathWithDefault([], 'shipments.nodes', data).length,
+            });
+          });
 
           return (
             <ShipmentGridView
