@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
+import emitter from 'utils/emitter';
 import ShipmentGridView from './ShipmentGridView';
 import { shipmentListQuery } from './query';
 
@@ -42,6 +43,11 @@ class ShipmentList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'shipments.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'shipments.totalPage', data);
           const hasMore = nextPage <= totalPage;
+
+          emitter.once('CHANGE_SHIPMENT_STATUS', () => {
+            // TODO: after the mutation, it's not ready on data yet
+            window.location.reload();
+          });
 
           return (
             <ShipmentGridView

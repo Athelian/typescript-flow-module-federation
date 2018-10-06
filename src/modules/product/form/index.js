@@ -3,8 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { isEquals, isDataType } from 'utils/fp';
-import ProductActivateDialog from 'modules/product/common/ProductActivateDialog';
-import ProductArchiveDialog from 'modules/product/common/ProductArchiveDialog';
+import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
 import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
 import { Subscribe } from 'unstated';
 import { FormContainer } from 'modules/form';
@@ -41,6 +40,7 @@ class ProductForm extends React.Component<Props> {
 
   render() {
     const { product, isNew } = this.props;
+    const { updatedAt, updatedBy, archived } = product;
 
     return (
       <div className={ProductFormWrapperStyle}>
@@ -51,25 +51,26 @@ class ProductForm extends React.Component<Props> {
           >
             {!isNew && (
               <>
-                <LastModified updatedAt={product.updatedAt} updatedBy={product.updatedBy} />
+                <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
                 <BooleanValue>
                   {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                     <StatusToggle
-                      archived={product.archived}
+                      archived={archived}
                       openStatusDialog={() => dialogToggle(true)}
                       activateDialog={
                         <ProductActivateDialog
                           product={product}
-                          isOpen={statusDialogIsOpen && !!product.archived}
+                          isOpen={statusDialogIsOpen && !!archived}
                           onRequestClose={() => dialogToggle(false)}
-                          onCancel={() => dialogToggle(false)}
+                          onConfirm={() => window.location.reload()}
                         />
                       }
                       archiveDialog={
                         <ProductArchiveDialog
                           product={product}
-                          isOpen={statusDialogIsOpen && !product.archived}
+                          isOpen={statusDialogIsOpen && !archived}
                           onRequestClose={() => dialogToggle(false)}
+                          onConfirm={() => window.location.reload()}
                         />
                       }
                     />

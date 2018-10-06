@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
+import emitter from 'utils/emitter';
 import ProductGridView from './ProductGridView';
 import { productListQuery } from './query';
 
@@ -31,7 +32,7 @@ const ProductList = ({ viewType, sort, ...filtersAndSort }: Props) => (
     }}
     fetchPolicy="network-only"
   >
-    {({ loading, data, fetchMore, error }) => {
+    {({ loading, data, fetchMore, refetch, variables, error }) => {
       if (error) {
         return error.message;
       }
@@ -39,7 +40,13 @@ const ProductList = ({ viewType, sort, ...filtersAndSort }: Props) => (
       const nextPage = getByPathWithDefault(1, 'products.page', data) + 1;
       const totalPage = getByPathWithDefault(1, 'products.totalPage', data);
       const hasMore = nextPage <= totalPage;
-
+      emitter.once('CHANGE_PRODUCT_STATUS', () => {
+        refetch({
+          ...variables,
+          page: 1,
+          perPage: getByPathWithDefault([], 'products.nodes', data).length,
+        });
+      });
       return (
         <ProductGridView
           items={getByPathWithDefault([], 'products.nodes', data)}

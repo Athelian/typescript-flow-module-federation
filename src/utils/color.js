@@ -1,4 +1,6 @@
 // @flow
+import * as React from 'react';
+import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
 export const computeTextColor = (color: string) => {
@@ -18,5 +20,15 @@ export const computeTextColor = (color: string) => {
 
   return red * 0.299 + green * 0.587 + blue * 0.114 > 186 ? colors.BLACK : '#ffffff';
 };
+
+export function SpanStyle(color: string) {
+  return css`
+    color: ${colors[color]};
+  `;
+}
+
+export function spanWithColor(value: any, color: string) {
+  return <span className={SpanStyle(color)}> {value} </span>;
+}
 
 export default computeTextColor;

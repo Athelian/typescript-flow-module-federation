@@ -7,6 +7,7 @@ const MESSAGES_PATTERN = './build/messages/**/*.json';
 const LANG_DIR = './src/i18n/translations/';
 
 const japanMessages = {};
+const mixMessages = {};
 const originalJapanFile = JSON.parse(fs.readFileSync(`${LANG_DIR}ja.json`, 'utf8'));
 
 const englishMessages = globSync(MESSAGES_PATTERN)
@@ -19,9 +20,13 @@ const englishMessages = globSync(MESSAGES_PATTERN)
       }
 
       if (originalJapanFile[id]) {
+        // For double check the translation is good
+        mixMessages[`${id}-english`] = defaultMessage;
+        mixMessages[id] = originalJapanFile[id];
         japanMessages[id] = originalJapanFile[id];
       } else {
         japanMessages[id] = defaultMessage;
+        mixMessages[id] = defaultMessage;
       }
 
       collection[id] = defaultMessage;
@@ -33,4 +38,5 @@ const englishMessages = globSync(MESSAGES_PATTERN)
 mkdirpSync(LANG_DIR);
 
 fs.writeFileSync(LANG_DIR + 'en.json', JSON.stringify(englishMessages, null, 2));
+fs.writeFileSync(LANG_DIR + 'en-ja.json', JSON.stringify(mixMessages, null, 2));
 fs.writeFileSync(LANG_DIR + 'ja.json', JSON.stringify(japanMessages, null, 2));

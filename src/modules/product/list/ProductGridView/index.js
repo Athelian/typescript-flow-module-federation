@@ -4,8 +4,7 @@ import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { ProductCard } from 'components/Cards';
-import ProductActivateDialog from 'modules/product/common/ProductActivateDialog';
-import ProductArchiveDialog from 'modules/product/common/ProductArchiveDialog';
+import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
 
 type Props = {
   items: Array<Object>,

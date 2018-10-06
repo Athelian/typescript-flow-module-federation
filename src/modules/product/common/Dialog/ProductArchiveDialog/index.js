@@ -4,22 +4,20 @@ import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import ArchiveDialog from 'components/Dialog/ArchiveDialog';
 import { updateProductMutation } from 'modules/product/form/mutation';
+import { spanWithColor } from 'utils/color';
+import emitter from 'utils/emitter';
 import messages from './messages';
-import type { ProductDialogProps } from '../ProductActivateDialog/type';
-import { SpanStyle, MessageStyle } from '../ProductActivateDialog/style';
+import { type ProductDialogProps, defaultProps } from '../type';
+import { MessageStyle } from '../style';
 
-function spanWithColor(value: any, color: string) {
-  return <span className={SpanStyle(color)}>{value}</span>;
-}
-
-export default function ProductArchiveDialog({
+const ProductArchiveDialog = ({
   isOpen,
   onRequestClose,
+  onConfirm,
   product,
-}: ProductDialogProps) {
-  const { id: productId } = product;
+}: ProductDialogProps) => {
+  const { id: productId, productProviders } = product;
   const productMsg = spanWithColor(<FormattedMessage {...messages.product} />, 'RED');
-  const warn = spanWithColor(<FormattedMessage {...messages.warnMsg} />, 'GRAY_DARK');
 
   return (
     <ApolloConsumer>
@@ -29,7 +27,7 @@ export default function ProductArchiveDialog({
           onRequestClose={onRequestClose}
           onCancel={onRequestClose}
           onConfirm={async () => {
-            const result = await client.mutate({
+            await client.mutate({
               mutation: updateProductMutation,
               variables: {
                 id: productId,
@@ -38,9 +36,9 @@ export default function ProductArchiveDialog({
                 },
               },
             });
-            window.location.reload();
+            emitter.emit('CHANGE_PRODUCT_STATUS', productId);
             onRequestClose();
-            console.warn('result', result);
+            onConfirm();
           }}
           width={360}
           message={
@@ -48,11 +46,28 @@ export default function ProductArchiveDialog({
               <div>
                 <FormattedMessage {...messages.confirmMsg} values={{ product: productMsg }} />
               </div>
-              <div>{warn}</div>
+              {productProviders.length > 0 && (
+                <div>
+                  <FormattedMessage
+                    {...messages.warnMsg}
+                    values={{
+                      total: productProviders.length,
+                      providers: spanWithColor(
+                        <FormattedMessage {...messages.providers} />,
+                        'PRODUCT'
+                      ),
+                    }}
+                  />
+                </div>
+              )}
             </div>
           }
         />
       )}
     </ApolloConsumer>
   );
-}
+};
+
+ProductArchiveDialog.defaultProps = defaultProps;
+
+export default ProductArchiveDialog;

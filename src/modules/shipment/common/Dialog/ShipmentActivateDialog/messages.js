@@ -13,18 +13,22 @@ export default defineMessages({
   shippedMsg: {
     id: 'modules.shipment.form.activateDialog.shippedMsg',
     defaultMessage:
-      '{shipped}/{total} {batches} are already active because they are in active {shipments}.',
+      '{shipped}/{total} {batches} are already active because they are in active {orders}.',
   },
-  shipment: {
-    id: 'modules.shipment.form.dialog.shipment',
-    defaultMessage: 'shipment',
+  orders: {
+    id: 'global.orders',
+    defaultMessage: 'orders',
   },
   batches: {
-    id: 'modules.shipment.form.dialog.batches',
+    id: 'global.batches',
     defaultMessage: 'batches',
   },
+  shipment: {
+    id: 'global.shipment',
+    defaultMessage: 'shipment',
+  },
   shipments: {
-    id: 'modules.shipment.form.dialog.shipments',
+    id: 'global.shipments',
     defaultMessage: 'shipments',
   },
 });

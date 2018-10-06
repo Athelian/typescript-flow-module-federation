@@ -4,8 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import GridView from 'components/GridView';
 import { ShipmentCard } from 'components/Cards';
-import ShipmentActivateDialog from 'modules/shipment/common/ShipmentActivateDialog';
-import ShipmentArchiveDialog from 'modules/shipment/common/ShipmentArchiveDialog';
+import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 
 type Props = {
   items: Array<Object>,

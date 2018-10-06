@@ -72,7 +72,7 @@ const numberInputFactory = ({
           </WrapperComponent>
           {calculate && (
             <div className={CalculatorButtonWrapperStyle}>
-              <button className={CalculatorButtonStyle} type="button" onClick={() => calculate()}>
+              <button className={CalculatorButtonStyle} type="button" onClick={calculate}>
                 <Icon icon="CALCULATOR" />
               </button>
             </div>

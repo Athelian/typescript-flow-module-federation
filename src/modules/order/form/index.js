@@ -7,8 +7,7 @@ import { BooleanValue } from 'react-values';
 import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
 import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'components/Form';
-import OrderActivateDialog from 'modules/order/common/OrderActivateDialog';
-import OrderArchiveDialog from 'modules/order/common/OrderArchiveDialog';
+import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 import OrderSection from './components/OrderSection';
 import OrderFormWrapperStyle from './style';
 import { OrderItemsContainer, OrderInfoContainer, OrderFilesContainer } from './containers';
@@ -58,7 +57,7 @@ export default class OrderForm extends React.Component<Props> {
 
   render() {
     const { isNew, order } = this.props;
-
+    const { updatedAt, updatedBy, archived } = order;
     return (
       <div className={OrderFormWrapperStyle}>
         <SectionWrapper id="orderSection">
@@ -68,25 +67,26 @@ export default class OrderForm extends React.Component<Props> {
           >
             {!isNew && (
               <>
-                <LastModified updatedAt={order.updatedAt} updatedBy={order.updatedBy} />
+                <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
                 <BooleanValue>
-                  {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+                  {({ value: isDialogOpen, set: dialogToggle }) => (
                     <StatusToggle
-                      archived={order.archived}
+                      archived={archived}
                       openStatusDialog={() => dialogToggle(true)}
                       activateDialog={
                         <OrderActivateDialog
                           order={order}
-                          isOpen={statusDialogIsOpen && !!order.archived}
+                          isOpen={isDialogOpen && !!archived}
                           onRequestClose={() => dialogToggle(false)}
-                          onCancel={() => dialogToggle(false)}
+                          onConfirm={() => window.location.reload()}
                         />
                       }
                       archiveDialog={
                         <OrderArchiveDialog
                           order={order}
-                          isOpen={statusDialogIsOpen && !order.archived}
+                          isOpen={isDialogOpen && !archived}
                           onRequestClose={() => dialogToggle(false)}
+                          onConfirm={() => window.location.reload()}
                         />
                       }
                     />
@@ -95,6 +95,7 @@ export default class OrderForm extends React.Component<Props> {
               </>
             )}
           </SectionHeader>
+
           <OrderSection isNew={isNew} />
         </SectionWrapper>
 

@@ -4,8 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import GridView from 'components/GridView';
 import { OrderCard } from 'components/Cards';
-import OrderActivateDialog from 'modules/order/common/OrderActivateDialog';
-import OrderArchiveDialog from 'modules/order/common/OrderArchiveDialog';
+import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 
 type Props = {
   items: Array<Object>,
@@ -42,25 +41,27 @@ const defaultProps = {
   renderItem: defaultRenderItem,
 };
 
-const OrderGridView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
+class OrderGridView extends React.PureComponent<Props> {
+  static defaultProps = defaultProps;
 
-  return (
-    <GridView
-      onLoadMore={onLoadMore}
-      hasMore={hasMore}
-      isLoading={isLoading}
-      itemWidth="195px"
-      isEmpty={items.length === 0}
-      emptyMessage={
-        <FormattedMessage id="modules.order.noOrderFound" defaultMessage="No orders found" />
-      }
-    >
-      {items.map(item => renderItem(item))}
-    </GridView>
-  );
-};
+  render() {
+    const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = this.props;
 
-OrderGridView.defaultProps = defaultProps;
+    return (
+      <GridView
+        onLoadMore={onLoadMore}
+        hasMore={hasMore}
+        isLoading={isLoading}
+        itemWidth="195px"
+        isEmpty={items.length === 0}
+        emptyMessage={
+          <FormattedMessage id="modules.order.noOrderFound" defaultMessage="No orders found" />
+        }
+      >
+        {items.map(item => renderItem(item))}
+      </GridView>
+    );
+  }
+}
 
 export default OrderGridView;

@@ -8,10 +8,14 @@ export default defineMessages({
   },
   warnMsg: {
     id: 'modules.product.form.archiveDialog.warnMsg',
-    defaultMessage: 'You need to archive those shipments in product to archive these batches.',
+    defaultMessage: 'This will make all {total} {providers} archived as well.',
   },
   product: {
-    id: 'modules.product.form.dialog.product',
+    id: 'global.product',
     defaultMessage: 'product',
+  },
+  providers: {
+    id: 'global.providers',
+    defaultMessage: 'providers',
   },
 });
