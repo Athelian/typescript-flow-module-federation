@@ -5,6 +5,7 @@ import { print } from 'graphql/language/printer';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { ApolloLink, Observable, type Operation } from 'apollo-link';
+import { persistCache } from 'apollo-cache-persist';
 import { createHttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import Raven from 'raven-js';
@@ -106,13 +107,20 @@ const httpLink = createHttpLink({
   credentials: 'include',
 });
 
+const cache = new InMemoryCache({
+  fragmentMatcher: new IntrospectionFragmentMatcher({
+    introspectionQueryResultData,
+  }),
+});
+
+persistCache({
+  cache,
+  storage: window.localStorage,
+});
+
 const client = new ApolloClient({
   link: ApolloLink.from([errorLink, SSELink, httpLink]),
-  cache: new InMemoryCache({
-    fragmentMatcher: new IntrospectionFragmentMatcher({
-      introspectionQueryResultData,
-    }),
-  }),
+  cache,
 });
 
 export default client;
