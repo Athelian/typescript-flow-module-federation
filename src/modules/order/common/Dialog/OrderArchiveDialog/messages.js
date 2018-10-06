@@ -8,7 +8,7 @@ export default defineMessages({
   },
   unshippedMsg: {
     id: 'modules.order.form.archiveDialog.unshippedMsg',
-    defaultMessage: 'This will make{unshipped}/{total} {batches} archived as well.',
+    defaultMessage: 'This will make {unshipped}/{total} {batches} archived as well.',
   },
   shippedMsg: {
     id: 'modules.order.form.archiveDialog.shippedMsg',
@@ -20,15 +20,15 @@ export default defineMessages({
     defaultMessage: 'You need to archive those shipments in order to archive these batches.',
   },
   order: {
-    id: 'modules.order.form.dialog.order',
+    id: 'global.order',
     defaultMessage: 'order',
   },
   batches: {
-    id: 'modules.order.form.dialog.batches',
+    id: 'global.batches',
     defaultMessage: 'batches',
   },
   shipments: {
-    id: 'modules.order.form.dialog.shipments',
+    id: 'global.shipments',
     defaultMessage: 'shipments',
   },
 });

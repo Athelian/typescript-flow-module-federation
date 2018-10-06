@@ -16,6 +16,7 @@ export const batchFragment = gql`
         id
         poNo
         currency
+        archived
         exporter {
           id
           name

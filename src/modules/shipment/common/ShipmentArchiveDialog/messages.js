@@ -8,27 +8,31 @@ export default defineMessages({
   },
   unshippedMsg: {
     id: 'modules.shipment.form.archiveDialog.unshippedMsg',
-    defaultMessage: 'This will make{unshipped}/{total} {batches} archived as well.',
+    defaultMessage: 'This will make {unshipped}/{total} {batches} archived as well.',
   },
   shippedMsg: {
     id: 'modules.shipment.form.archiveDialog.shippedMsg',
     defaultMessage:
-      '{shipped}/{total} {batches} will stay active because they are in active {shipments}.',
+      '{shipped}/{total} {batches} will stay active because they are in active {orders}.',
   },
   warnMsg: {
     id: 'modules.shipment.form.archiveDialog.warnMsg',
-    defaultMessage: 'You need to archive those shipments in shipment to archive these batches.',
+    defaultMessage: 'You need to archive those orders in order to archive these batches.',
   },
   shipment: {
-    id: 'modules.shipment.form.dialog.shipment',
+    id: 'global.shipment',
     defaultMessage: 'shipment',
   },
+  orders: {
+    id: 'global.orders',
+    defaultMessage: 'orders',
+  },
   batches: {
-    id: 'modules.shipment.form.dialog.batches',
+    id: 'global.batches',
     defaultMessage: 'batches',
   },
   shipments: {
-    id: 'modules.shipment.form.dialog.shipments',
+    id: 'global.shipments',
     defaultMessage: 'shipments',
   },
 });

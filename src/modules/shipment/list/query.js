@@ -10,6 +10,7 @@ export const shipmentListQuery = gql`
         no
         blNo
         transportType
+        archived
         cargoReady {
           ...timelineDateFragment
         }
