@@ -7,7 +7,7 @@ export default defineMessages({
     defaultMessage: 'Are you sure you want to activate this {product}?',
   },
   product: {
-    id: 'modules.product.form.dialog.product',
+    id: 'global.product',
     defaultMessage: 'product',
   },
 });

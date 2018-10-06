@@ -4,19 +4,18 @@ import { FormattedMessage } from 'react-intl';
 import { ApolloConsumer } from 'react-apollo';
 import ActivateDialog from 'components/Dialog/ActivateDialog';
 import { updateProductMutation } from 'modules/product/form/mutation';
-import type { ProductDialogProps } from './type';
+import { spanWithColor } from 'utils/color';
+import emitter from 'utils/emitter';
 import messages from './messages';
-import { SpanStyle, MessageStyle } from './style';
+import { type ProductDialogProps, defaultProps } from '../type';
+import { MessageStyle } from '../style';
 
-function spanWithColor(value: any, color: string) {
-  return <span className={SpanStyle(color)}>{value}</span>;
-}
-
-export default function ProductActivateDialog({
+const ProductActivateDialog = ({
   isOpen,
   onRequestClose,
+  onConfirm,
   product,
-}: ProductDialogProps) {
+}: ProductDialogProps) => {
   const { id: productId } = product;
   const productMsg = spanWithColor(<FormattedMessage {...messages.product} />, 'RED');
 
@@ -37,8 +36,9 @@ export default function ProductActivateDialog({
                 },
               },
             });
-            window.location.reload();
+            emitter.emit('CHANGE_PRODUCT_STATUS', productId);
             onRequestClose();
+            onConfirm();
           }}
           width={360}
           message={
@@ -52,4 +52,8 @@ export default function ProductActivateDialog({
       )}
     </ApolloConsumer>
   );
-}
+};
+
+ProductActivateDialog.defaultProps = defaultProps;
+
+export default ProductActivateDialog;

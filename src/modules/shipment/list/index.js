@@ -35,7 +35,7 @@ class ShipmentList extends React.PureComponent<Props> {
         }}
         fetchPolicy="network-only"
       >
-        {({ loading, data, fetchMore, refetch, variables, error }) => {
+        {({ loading, data, fetchMore, error }) => {
           if (error) {
             return error.message;
           }
@@ -45,11 +45,8 @@ class ShipmentList extends React.PureComponent<Props> {
           const hasMore = nextPage <= totalPage;
 
           emitter.once('CHANGE_SHIPMENT_STATUS', () => {
-            refetch({
-              ...variables,
-              page: 1,
-              perPage: getByPathWithDefault([], 'shipments.nodes', data).length,
-            });
+            // TODO: after the mutation, it's not ready on data yet
+            window.location.reload();
           });
 
           return (

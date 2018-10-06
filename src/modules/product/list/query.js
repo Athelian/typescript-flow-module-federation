@@ -5,6 +5,7 @@ export const productListFragment = gql`
   fragment productListFragment on Product {
     name
     serial
+    archived
     productProviders {
       id
       exporter {
