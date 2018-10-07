@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { formatShipmentOrder, formatOrderData } from 'modules/relationMap/util';
+import { formatShipmentFromOrder, formatOrderData } from 'modules/relationMap/util';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
 import Layout from './common/Layout';
@@ -59,7 +59,7 @@ const Order = ({ page, perPage }: Props) => (
               >
                 {({ nodes, hasMore, loadMore }) => {
                   const order = formatOrderData(nodes);
-                  const shipment = formatShipmentOrder(nodes);
+                  const shipment = formatShipmentFromOrder(nodes);
                   return (
                     <>
                       <div className={BadgeWrapperStyle}>

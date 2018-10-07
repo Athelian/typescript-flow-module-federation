@@ -8,7 +8,7 @@ import RelationView from '../common/RelationView';
 import DetailFocused, { ToggleSlide } from '../common/SlideForm';
 import Item from '../common/RelationItem';
 
-const FocusedValue = createObjectValue(null);
+const FocusedValue = createObjectValue({ focusedItem: {}, shipmentId: '' });
 type Props = {
   order: Object,
   shipment: Object,
@@ -58,13 +58,15 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                 <ToggleSlide key={key}>
                   {({ assign: setSlide }) => (
                     <FocusedValue key={key}>
-                      {({ value: focusedItem, set: setItem, reset }) => (
+                      {({ value: { focusedItem }, assign: setItem, reset }) => (
                         <Item
                           key={key}
                           type={relation.type}
                           isFocused={getByPathWithDefault(false, item.id, focusedItem)}
                           onMouseLeave={reset}
-                          onMouseEnter={() => setItem(item.id, true)}
+                          onMouseEnter={() =>
+                            setItem({ focusedItem: { [item.id]: true }, shipmentId: '' })
+                          }
                           onClick={() => {
                             toggle();
                           }}
@@ -95,31 +97,44 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
         return (
           <ToggleSlide key={shipmentId}>
             {({ assign: setSlide }) => (
-              <FocusedValue key={shipmentId}>
-                {({ value: focusedItem, assign, reset }) => (
-                  <div key={shipmentId}>
-                    <Item
-                      key={shipmentId}
-                      type="SHIPMENT"
-                      data={currentShipment.data}
-                      isFocused={Boolean(
-                        Object.keys(focusedItem || {}).some(focusId =>
-                          shipmentRefs.some(orderId => orderId === focusId)
-                        )
-                      )}
-                      onMouseLeave={reset}
-                      onMouseEnter={() => assign(currentShipment.refs)}
-                      onDoubleClick={() => {
-                        setSlide({
-                          show: true,
-                          type: 'SHIPMENT',
-                          id: shipmentId,
-                        });
-                      }}
-                    />
-                  </div>
+              <BooleanValue defaultValue>
+                {({ value: isCollapsed, toggle }) => (
+                  <FocusedValue key={shipmentId}>
+                    {({
+                      value: { focusedItem, shipmentId: selectedShipmentId },
+                      assign,
+                      reset,
+                    }) => (
+                      <Item
+                        key={shipmentId}
+                        type={isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT'}
+                        data={currentShipment.data}
+                        isFocused={
+                          selectedShipmentId
+                            ? selectedShipmentId === shipmentId
+                            : Boolean(
+                                Object.keys(focusedItem || {}).some(focusId =>
+                                  shipmentRefs.some(orderId => orderId === focusId)
+                                )
+                              )
+                        }
+                        onMouseLeave={reset}
+                        onMouseEnter={() =>
+                          assign({ focusedItem: currentShipment.refs, shipmentId })
+                        }
+                        onClick={toggle}
+                        onDoubleClick={() => {
+                          setSlide({
+                            show: true,
+                            type: 'SHIPMENT',
+                            id: shipmentId,
+                          });
+                        }}
+                      />
+                    )}
+                  </FocusedValue>
                 )}
-              </FocusedValue>
+              </BooleanValue>
             )}
           </ToggleSlide>
         );

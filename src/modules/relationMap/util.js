@@ -119,7 +119,7 @@ export const generateShipmentRelation = (shipment, option) => {
   return relations;
 };
 
-export const formatShipmentOrder = orders => {
+export const formatShipmentFromOrder = orders => {
   const shipmentObj = {};
   orders.forEach(order => {
     const { shipments, id: orderId } = order;
