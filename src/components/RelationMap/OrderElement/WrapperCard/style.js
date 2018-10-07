@@ -1,7 +1,7 @@
 import { css } from 'react-emotion';
 
-export const OuterCardWrapperStyle = css`
-  width: 100%;
+export const OuterCardWrapperStyle = fit => css`
+  width: ${fit ? 'auto' : '100%'};
   height: fit-content;
   position: relative;
   cursor: pointer;

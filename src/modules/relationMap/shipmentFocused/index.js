@@ -4,10 +4,10 @@ import { BooleanValue, createObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import { generateShipmentRelation } from 'modules/relationMap/util';
 import { LeftScrollWrapperStyle, ShipmentMapWrapperStyle } from 'modules/relationMap/style';
-import OrderHeader from 'modules/relationMap/components/OrderElement/OrderHeader';
-import RelationView from '../RelationView';
-import Item from '../OrderElement';
-import DetailFocused, { ToggleSlide } from '../DetailFocused';
+import OrderHeader from 'components/RelationMap/OrderElement/OrderHeader';
+import RelationView from '../common/RelationView';
+import DetailFocused, { ToggleSlide } from '../common/SlideForm';
+import Item from '../common/RelationItem';
 
 const FocusedValue = createObjectValue(null);
 type Props = {

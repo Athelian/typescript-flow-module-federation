@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import ProductFocused from './components/ProductFocused';
-import Layout from './components/Layout';
-import QueryHandler from './components/QueryHandler';
-import SortFilterBar from './components/SortFilterBar';
-import query from './components/ProductFocused/query';
+import ProductFocused from './productFocused';
+import query from './productFocused/query';
+import Layout from './common/Layout';
+import QueryHandler from './common/QueryHandler';
+import SortFilterBar from './common/SortFilterBar';
 import { FunctionWrapperStyle, ProductWrapper } from './style';
 
 type Props = {
@@ -53,10 +53,9 @@ const Product = ({ page, perPage }: Props) => (
                 fetchMore={fetchMore}
                 error={error}
               >
-                {({ nodes, hasMore, loadMore }) => {
-                  console.log('items', nodes);
-                  return <ProductFocused hasMore={hasMore} loadMore={loadMore} items={nodes} />;
-                }}
+                {({ nodes, hasMore, loadMore }) => (
+                  <ProductFocused hasMore={hasMore} loadMore={loadMore} items={nodes} />
+                )}
               </QueryHandler>
             )}
           </Query>

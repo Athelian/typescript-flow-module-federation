@@ -4,9 +4,9 @@ import { BooleanValue, createObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import { generateOrderRelation } from 'modules/relationMap/util';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
-import RelationView from '../RelationView';
-import Item from '../OrderElement';
-import DetailFocused, { ToggleSlide } from '../DetailFocused';
+import RelationView from '../common/RelationView';
+import DetailFocused, { ToggleSlide } from '../common/SlideForm';
+import Item from '../common/RelationItem';
 
 const FocusedValue = createObjectValue(null);
 type Props = {

@@ -7,12 +7,17 @@ type OptionalProps = {
   onMouseLeave?: Function,
   onClick?: Function,
   onDoubleClick?: Function,
+  fit: boolean,
 };
 type Props = OptionalProps & {
   children: React.Node,
 };
 
 class WrapperCard extends React.PureComponent<Props> {
+  static defaultProps = {
+    fit: false,
+  };
+
   constructor() {
     super();
     this.clickTimeout = null;
@@ -45,11 +50,11 @@ class WrapperCard extends React.PureComponent<Props> {
   clickTimeout: ?TimeoutID;
 
   render() {
-    const { onMouseEnter, onMouseLeave, children } = this.props;
+    const { onMouseEnter, onMouseLeave, children, fit } = this.props;
     return (
       <div
         role="presentation"
-        className={style.OuterCardWrapperStyle}
+        className={style.OuterCardWrapperStyle(fit)}
         onClick={this.handleClicks}
         {...(onMouseEnter ? { onMouseEnter } : {})}
         {...(onMouseLeave ? { onMouseLeave } : {})}
