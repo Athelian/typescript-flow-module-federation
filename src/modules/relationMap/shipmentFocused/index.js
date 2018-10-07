@@ -9,7 +9,7 @@ import RelationView from '../common/RelationView';
 import DetailFocused, { ToggleSlide } from '../common/SlideForm';
 import Item from '../common/RelationItem';
 
-const FocusedValue = createObjectValue(null);
+const FocusedValue = createObjectValue({ focusedItem: {}, orderId: '' });
 type Props = {
   order: Object,
   shipment: Object,
@@ -28,17 +28,21 @@ const ShipmentFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) =
           <ToggleSlide key={orderId}>
             {({ assign: setSlide }) => (
               <FocusedValue key={orderId}>
-                {({ value: focusedItem, assign, reset }) => (
+                {({ value: { focusedItem, orderId: focusedOrderId }, assign, reset }) => (
                   <div>
                     <OrderHeader label={`ORDER ${orderId}`} isChecked onToggle={() => {}} />
                     <Item
                       key={orderId}
                       type="ORDER"
                       data={shipment.orderObj[orderId]}
-                      isFocused={Object.keys(focusedItem || {}).some(focusId =>
-                        orderRefs.some(shipmentId => shipmentId === focusId)
-                      )}
-                      onMouseEnter={() => assign(currentOrder.refs)}
+                      isFocused={
+                        focusedOrderId
+                          ? focusedOrderId === orderId
+                          : Object.keys(focusedItem || {}).some(focusId =>
+                              orderRefs.some(shipmentId => shipmentId === focusId)
+                            )
+                      }
+                      onMouseEnter={() => assign({ focusedItem: currentOrder.refs, orderId })}
                       onMouseLeave={reset}
                       onDoubleClick={() => {
                         setSlide({
@@ -101,12 +105,14 @@ const ShipmentFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) =
                 <ToggleSlide key={key}>
                   {({ assign: setSlide }) => (
                     <FocusedValue key={key}>
-                      {({ value: focusedItem, set: setItem, reset }) => (
+                      {({ value: { focusedItem }, assign: setItem, reset }) => (
                         <Item
                           key={key}
                           type={relation.type}
                           isFocused={getByPathWithDefault(false, item.id, focusedItem)}
-                          onMouseEnter={() => setItem(item.id, true)}
+                          onMouseEnter={() =>
+                            setItem({ focusedItem: { [item.id]: true }, orderId: '' })
+                          }
                           onMouseLeave={reset}
                           onClick={() => {
                             toggle();

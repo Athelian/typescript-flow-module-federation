@@ -12,6 +12,7 @@ import OrderHeader from 'components/RelationMap/OrderElement/OrderHeader';
 import Tags from 'components/RelationMap/OrderElement/Tags';
 import ShipmentCard from 'components/RelationMap/ShipmentElement';
 import ShipmentHeader from 'components/RelationMap/ShipmentElement/ShipmentHeader';
+import ShipmentCollapsed from 'components/RelationMap/ShipmentElement/ShipmentCollapsed';
 import { ItemWrapperStyle, ShipmentCardStyle, ShipmentCardTotalStyle } from './style';
 import { TagValue } from '../ToggleTag';
 
@@ -203,7 +204,7 @@ const Item = (props: Props) => {
             onToggle={() => {}}
           />
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
-            <TotalCard name="Shipment" quantity={data.quantity} />
+            <ShipmentCollapsed name={data.no} />
             <TagValue>
               {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
             </TagValue>
