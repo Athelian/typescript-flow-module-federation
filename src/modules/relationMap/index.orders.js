@@ -2,14 +2,13 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { formatShipmentOrder, formatOrderData } from 'modules/relationMap/util';
-
-import OrderFocused from './components/OrderFocused';
-import Layout from './components/Layout';
-import QueryHandler from './components/QueryHandler';
-import SortFilterBar from './components/SortFilterBar';
-import SummaryBadge from './components/SummaryBadge';
-import ToggleTag from './components/ToggleTag';
-import query from './components/OrderFocused/query';
+import OrderFocused from './orderFocused';
+import query from './orderFocused/query';
+import Layout from './common/Layout';
+import QueryHandler from './common/QueryHandler';
+import SortFilterBar from './common/SortFilterBar';
+import SummaryBadge from './common/SummaryBadge';
+import ToggleTag from './common/ToggleTag';
 import { FunctionWrapperStyle, BadgeWrapperStyle, TagWrapperStyle, RelationMapGrid } from './style';
 
 type Props = {

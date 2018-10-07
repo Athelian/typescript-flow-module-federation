@@ -5,12 +5,9 @@ import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
 import BaseCard from 'components/Cards';
-import {
-  ItemWrapperStyle,
-  CardWrapperStyle,
-} from 'modules/relationMap/components/OrderElement/style';
-import WrapperCard from 'modules/relationMap/components/OrderElement/WrapperCard';
-import ShipmentActions from 'modules/relationMap/components/ShipmentElement/ShipmentHeader';
+import { ItemWrapperStyle, CardWrapperStyle } from '../OrderElement/style';
+import WrapperCard from '../OrderElement/WrapperCard';
+import ShipmentActions from './ShipmentHeader';
 
 import ShipmentTimeLine from './index';
 

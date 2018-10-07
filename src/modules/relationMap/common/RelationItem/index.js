@@ -2,18 +2,17 @@
 import * as React from 'react';
 import BaseCard from 'components/Cards';
 import { cx } from 'react-emotion';
-import ShipmentHeader from 'modules/relationMap/components/ShipmentElement/ShipmentHeader';
-
-import RelationLine from './RelationLine';
+import RelationLine from 'components/RelationMap/OrderElement/RelationLine';
+import OrderCard from 'components/RelationMap/OrderElement/OrderCard';
+import OrderItemCard from 'components/RelationMap/OrderElement/OrderItemCard';
+import BatchCard from 'components/RelationMap/OrderElement/BatchCard';
+import TotalCard from 'components/RelationMap/OrderElement/TotalCard';
+import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
+import OrderHeader from 'components/RelationMap/OrderElement/OrderHeader';
+import Tags from 'components/RelationMap/OrderElement/Tags';
+import ShipmentCard from 'components/RelationMap/ShipmentElement';
+import ShipmentHeader from 'components/RelationMap/ShipmentElement/ShipmentHeader';
 import { ItemWrapperStyle, ShipmentCardStyle, ShipmentCardTotalStyle } from './style';
-import OrderCard from './OrderCard';
-import OrderItemCard from './OrderItemCard';
-import BatchCard from './BatchCard';
-import TotalCard from './TotalCard';
-import WrapperCard from './WrapperCard';
-import OrderHeader from './OrderHeader';
-import Tags from './Tags';
-import ShipmentCard from '../ShipmentElement';
 import { TagValue } from '../ToggleTag';
 
 type OptionalProps = {

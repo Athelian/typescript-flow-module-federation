@@ -1,11 +1,12 @@
 // @flow
 import React from 'react';
 import { getByPathWithDefault } from 'utils/fp';
-import DetailFocused, { ToggleSlide } from '../DetailFocused';
-import RelationView from '../RelationView';
-import ProductCard from '../ProductElement/ProductCard';
-import BatchCard from '../ProductElement/BatchCard';
-import WrapperCard from '../OrderElement/WrapperCard';
+import ProductCard from 'components/RelationMap/ProductElement/ProductCard';
+import BatchCard from 'components/RelationMap/ProductElement/BatchCard';
+import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
+import DetailFocused, { ToggleSlide } from '../common/SlideForm';
+import RelationView from '../common/RelationView';
+
 import { Row, BatchListWrapperStyle, ProductFocusContent } from './style';
 
 type Props = {
