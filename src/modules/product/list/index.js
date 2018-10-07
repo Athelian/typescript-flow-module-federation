@@ -32,7 +32,7 @@ const ProductList = ({ viewType, sort, ...filtersAndSort }: Props) => (
     }}
     fetchPolicy="network-only"
   >
-    {({ loading, data, fetchMore, refetch, variables, error }) => {
+    {({ loading, data, fetchMore, error }) => {
       if (error) {
         return error.message;
       }
@@ -41,11 +41,8 @@ const ProductList = ({ viewType, sort, ...filtersAndSort }: Props) => (
       const totalPage = getByPathWithDefault(1, 'products.totalPage', data);
       const hasMore = nextPage <= totalPage;
       emitter.once('CHANGE_PRODUCT_STATUS', () => {
-        refetch({
-          ...variables,
-          page: 1,
-          perPage: getByPathWithDefault([], 'products.nodes', data).length,
-        });
+        // TODO: after the mutation, it's not ready on data yet
+        window.location.reload();
       });
       return (
         <ProductGridView
