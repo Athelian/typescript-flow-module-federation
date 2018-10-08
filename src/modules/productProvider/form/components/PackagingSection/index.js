@@ -93,7 +93,7 @@ const PackagingSection = ({ isNew }: Props) => (
               name="packageVolume.value"
               initValue={getByPath('packageVolume.value', values)}
               setFieldValue={(field, value) =>
-                setFieldValue('packageVolume', { value, metric: 'm³' })
+                setFieldValue('packageVolume', { value, metric: 'm3' })
               }
             >
               {({ name, ...inputHandlers }) =>

@@ -17,7 +17,14 @@ type Props = {
 const PackagingSection = ({ isNew }: Props) => (
   <div className={PackagingSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
+      {({
+        originalValues,
+        state,
+        setFieldValue,
+        setFieldArrayValue,
+        calculatePackageVolume,
+        calculatePackageQuantity,
+      }) => {
         const values = { ...originalValues, ...state };
 
         return (
@@ -81,7 +88,7 @@ const PackagingSection = ({ isNew }: Props) => (
                       defaultMessage="PACKAGE QUANTITY"
                     />
                   ),
-                  calculate: () => console.log('calculate packageQuantity '),
+                  calculate: calculatePackageQuantity,
                 })
               }
             </FormField>
@@ -114,7 +121,7 @@ const PackagingSection = ({ isNew }: Props) => (
               name="packageVolume.value"
               initValue={getByPath('packageVolume.value', values)}
               setFieldValue={(field, value) =>
-                setFieldArrayValue('packageVolume', { value, metric: 'm³' })
+                setFieldArrayValue('packageVolume', { value, metric: 'm3' })
               }
             >
               {({ name, ...inputHandlers }) =>
@@ -127,7 +134,7 @@ const PackagingSection = ({ isNew }: Props) => (
                     <FormattedMessage id="modules.batch.pkgVolume" defaultMessage="PKG VOLUME" />
                   ),
                   WrapperComponent: DefaultVolumeStyle,
-                  calculate: () => console.log('calculate package volume '),
+                  calculate: calculatePackageVolume,
                 })
               }
             </FormField>

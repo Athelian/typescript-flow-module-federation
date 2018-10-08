@@ -89,7 +89,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
             <FormField
               name="unitVolume.value"
               initValue={getByPath('unitVolume.value', values)}
-              setFieldValue={(field, value) => setFieldValue('unitVolume', { value, metric: 'm³' })}
+              setFieldValue={(field, value) => setFieldValue('unitVolume', { value, metric: 'm3' })}
             >
               {({ name, ...inputHandlers }) =>
                 numberInputFactory({

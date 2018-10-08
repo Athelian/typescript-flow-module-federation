@@ -44,7 +44,7 @@ const initValues = {
   productionLeadTime: 0,
   unitType: '',
   unitVolume: {
-    metric: 'm³',
+    metric: 'm3',
     value: 0,
   },
   unitWeight: {
@@ -64,7 +64,7 @@ const initValues = {
     value: 0,
   },
   packageVolume: {
-    metric: 'm³',
+    metric: 'm3',
     value: 0,
   },
   packageSize: {
