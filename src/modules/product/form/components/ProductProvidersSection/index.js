@@ -49,7 +49,7 @@ function ProductProvidersSection() {
                               isNew: true,
                               unitVolume: {
                                 value: 0,
-                                metric: 'm³',
+                                metric: 'm3',
                               },
                               unitWeight: {
                                 value: 0,
@@ -69,7 +69,7 @@ function ProductProvidersSection() {
                               },
                               packageVolume: {
                                 value: 0,
-                                metric: 'm³',
+                                metric: 'm3',
                               },
                               packageSize: {
                                 width: {

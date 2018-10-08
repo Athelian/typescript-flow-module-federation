@@ -18,7 +18,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  unit: 'cm³',
+  unit: 'cm3',
   isFocused: false,
   hasError: false,
   disabled: false,

@@ -13,9 +13,9 @@ export type BatchFormState = {
   id?: ?string,
   no?: ?string,
   packageName?: ?string,
-  packageCapacity?: ?number,
-  packageQuantity?: ?number,
-  quantity?: ?number,
+  packageCapacity: number,
+  packageQuantity: number,
+  quantity: number,
   batchAdjustments: Array<any>,
   packageGrossWeight: Metric,
   packageVolume: Metric,
@@ -41,7 +41,7 @@ const initValues = {
   batchAdjustments: [],
   packageGrossWeight: { value: 0, metric: 'kg' },
   packageVolume: {
-    metric: 'm³',
+    metric: 'm3',
     value: 0,
   },
   packageSize: {
@@ -107,6 +107,36 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       packageGrossWeight,
       packageName,
       packageVolume,
+    });
+  };
+
+  calculatePackageQuantity = () => {
+    this.setState(prevState => ({
+      packageQuantity:
+        prevState.packageCapacity > 0 &&
+        prevState.batchAdjustments.reduce(
+          (total, adjustment) => adjustment.quantity + total,
+          prevState.quantity
+        ) > 0
+          ? prevState.batchAdjustments.reduce(
+              (total, adjustment) => adjustment.quantity + total,
+              prevState.quantity
+            ) / prevState.packageCapacity
+          : 0,
+    }));
+  };
+
+  calculatePackageVolume = () => {
+    // TODO: use https://github.com/ben-ng/convert-units for converting unit
+    this.setState(prevState => {
+      const newState = set(
+        cloneDeep(prevState),
+        'packageVolume.value',
+        prevState.packageSize.height.value *
+          prevState.packageSize.width.value *
+          prevState.packageSize.length.value
+      );
+      return newState;
     });
   };
 }

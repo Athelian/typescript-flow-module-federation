@@ -70,13 +70,14 @@ const numberInputFactory = ({
           >
             <NumberInput align={align} name={name} {...rest} />
           </WrapperComponent>
-          {calculate && (
-            <div className={CalculatorButtonWrapperStyle}>
-              <button className={CalculatorButtonStyle} type="button" onClick={calculate}>
-                <Icon icon="CALCULATOR" />
-              </button>
-            </div>
-          )}
+          {calculate &&
+            !isFocused && (
+              <div className={CalculatorButtonWrapperStyle}>
+                <button className={CalculatorButtonStyle} type="button" onClick={calculate}>
+                  <Icon icon="CALCULATOR" />
+                </button>
+              </div>
+            )}
         </div>
       }
     />
