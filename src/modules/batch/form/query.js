@@ -46,6 +46,57 @@ export const batchFragment = gql`
       }
       productProvider {
         id
+        packageName
+        packageGrossWeight {
+          value
+          metric
+        }
+        packageVolume {
+          value
+          metric
+        }
+        packageSize {
+          length {
+            value
+            metric
+          }
+          width {
+            value
+            metric
+          }
+          height {
+            value
+            metric
+          }
+        }
+        packageCapacity
+        unitType
+        unitVolume {
+          value
+          metric
+        }
+        unitWeight {
+          value
+          metric
+        }
+        unitPrice {
+          amount
+          currency
+        }
+        unitSize {
+          length {
+            value
+            metric
+          }
+          width {
+            value
+            metric
+          }
+          height {
+            value
+            metric
+          }
+        }
         product {
           id
           name

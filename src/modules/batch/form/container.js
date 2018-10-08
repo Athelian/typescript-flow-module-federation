@@ -27,6 +27,7 @@ export type BatchFormState = {
   deliveredAt?: ?Date | string,
   expiredAt?: ?Date | string,
   producedAt?: ?Date | string,
+  orderItem?: Object,
 };
 
 const initValues = {
@@ -96,5 +97,16 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
+  };
+
+  syncProductProvider = (productProvider: Object) => {
+    const { packageCapacity, packageGrossWeight, packageName, packageVolume } = productProvider;
+
+    this.setState({
+      packageCapacity,
+      packageGrossWeight,
+      packageName,
+      packageVolume,
+    });
   };
 }

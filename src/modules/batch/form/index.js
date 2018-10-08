@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Subscribe } from 'unstated';
+import BatchFormContainer from 'modules/batch/form/container';
 import { BooleanValue } from 'react-values';
 import Icon from 'components/Icon';
 import { isEquals } from 'utils/fp';
@@ -109,19 +111,32 @@ export default class BatchForm extends React.Component<Props> {
               {({ value: syncDialogIsOpen, set: dialogToggle }) => (
                 <>
                   <SyncButton onClick={() => dialogToggle(true)} />
-                  <ConfirmDialog
-                    isOpen={syncDialogIsOpen}
-                    onRequestClose={() => dialogToggle(false)}
-                    onCancel={() => dialogToggle(false)}
-                    onConfirm={() => dialogToggle(false)}
-                    message={
-                      <FormattedMessage
-                        id="modules.batch.syncPackagingMessage"
-                        defaultMessage="Are you sure sync the packaging?"
-                      />
-                    }
-                    width={400}
-                  />
+                  <Subscribe to={[BatchFormContainer]}>
+                    {({ state, syncProductProvider }) => (
+                      <>
+                        <ConfirmDialog
+                          isOpen={syncDialogIsOpen}
+                          onRequestClose={() => dialogToggle(false)}
+                          onCancel={() => dialogToggle(false)}
+                          onConfirm={() => {
+                            if (state.orderItem && state.orderItem.productProvider) {
+                              syncProductProvider(
+                                state.orderItem && state.orderItem.productProvider
+                              );
+                            }
+                            dialogToggle(false);
+                          }}
+                          message={
+                            <FormattedMessage
+                              id="modules.batch.syncPackagingMessage"
+                              defaultMessage="Are you sure sync the packaging?"
+                            />
+                          }
+                          width={400}
+                        />
+                      </>
+                    )}
+                  </Subscribe>
                 </>
               )}
             </BooleanValue>

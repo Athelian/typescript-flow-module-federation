@@ -57,7 +57,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   label: (
                     <FormattedMessage
                       id="modules.batch.packageCapacity"
-                      defaultMessage="Package Capacity"
+                      defaultMessage="PACKAGE CAPACITY"
                     />
                   ),
                 })
