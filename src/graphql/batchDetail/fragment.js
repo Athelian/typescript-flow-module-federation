@@ -80,6 +80,7 @@ export const detailedBatchFragment = gql`
       no
       containerGroups {
         warehouseArrival {
+          id
           date
         }
       }
