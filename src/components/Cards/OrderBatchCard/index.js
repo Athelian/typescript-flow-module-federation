@@ -98,13 +98,13 @@ const OrderBatchCard = ({
               <div>
                 <div>
                   <FormattedMessage
-                    id="components.cards.deleteBatch"
+                    id="components.cards.deleteBatchItem"
                     defaultMessage="Are you sure you want to delete this Batch?"
                   />
                 </div>
                 <div>
                   <FormattedMessage
-                    id="components.cards.deleteBatchShipment"
+                    id="components.cards.deleteBatchItemShipment"
                     defaultMessage=" It is being used in a Shipment"
                   />
                 </div>

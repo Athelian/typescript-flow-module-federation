@@ -121,13 +121,13 @@ const OrderItemCard = ({
                   <div>
                     <div>
                       <FormattedMessage
-                        id="components.cards.deleteOrder"
+                        id="components.cards.deleteOrderItem"
                         defaultMessage="Are you sure you want to delete this Item?"
                       />
                     </div>
                     <div>
                       <FormattedMessage
-                        id="components.cards.deleteOrderBatches"
+                        id="components.cards.deleteOrderItemBatches"
                         defaultMessage="This will delete all {batches} of its Batches as well."
                         values={{ batches: item.batches.length }}
                       />
@@ -135,7 +135,7 @@ const OrderItemCard = ({
                     {item.batches.filter(batch => batch.shipment).length > 0 && (
                       <div>
                         <FormattedMessage
-                          id="components.cards.deleteOrderShipments"
+                          id="components.cards.deleteOrderItemShipments"
                           defaultMessage="Warning: {shipment} of the Batches are in a Shipment."
                           values={{
                             shipment: item.batches.filter(batch => batch.shipment).length,
