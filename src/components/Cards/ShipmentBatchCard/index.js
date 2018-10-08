@@ -35,7 +35,7 @@ import {
 type OptionalProps = {
   onClick: (batch: Object) => void,
   onClone: (batch: Object) => void,
-  onRemove: (batch: Object) => void,
+  onClear: (batch: Object) => void,
   selectable: boolean,
 };
 
@@ -52,14 +52,14 @@ type Props = OptionalProps & {
 const defaultProps = {
   onClick: () => {},
   onClone: () => {},
-  onRemove: () => {},
+  onClear: () => {},
   selectable: false,
 };
 
 const ShipmentBatchCard = ({
   batch,
   onClick,
-  onRemove,
+  onClear,
   onClone,
   saveOnBlur,
   currency,
@@ -73,7 +73,7 @@ const ShipmentBatchCard = ({
     ? []
     : [
         <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-        <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(batch)} />,
+        <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />,
       ];
 
   const {
@@ -98,7 +98,14 @@ const ShipmentBatchCard = ({
     product.files && product.files.length > 0 ? product.files[0].path : FALLBACK_IMAGE;
 
   return (
-    <BaseCard icon="BATCH" color="BATCH" actions={actions} selectable={selectable} {...rest}>
+    <BaseCard
+      icon="BATCH"
+      color="BATCH"
+      showActionsOnHover
+      actions={actions}
+      selectable={selectable}
+      {...rest}
+    >
       <div
         className={ShipmentBatchCardWrapperStyle}
         onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}

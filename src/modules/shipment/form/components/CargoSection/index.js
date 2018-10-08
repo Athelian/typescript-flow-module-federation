@@ -141,7 +141,7 @@ function CargoSection({ intl }: Props) {
                               setFieldArrayValue(position, updateBatch);
                             }}
                             onClick={() => batchSlideToggle(true)}
-                            onRemove={({ id }) => {
+                            onClear={({ id }) => {
                               setFieldValue(
                                 'batches',
                                 batches.filter(({ id: itemId }) => id !== itemId)
