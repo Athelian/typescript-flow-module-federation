@@ -105,7 +105,62 @@ const OrderItemCard = ({
     ? []
     : [
         <CardAction icon="CLONE" onClick={() => onClone(item)} />,
-        <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(item)} />,
+        <BooleanValue>
+          {({ value: isOpen, set: dialogToggle }) => (
+            <>
+              <ConfirmDialog
+                isOpen={isOpen}
+                onRequestClose={() => dialogToggle(false)}
+                onCancel={() => dialogToggle(false)}
+                onConfirm={() => {
+                  // TODO:
+                  onRemove(item);
+                  dialogToggle(false);
+                }}
+                width={400}
+                message={
+                  <div>
+                    <div>
+                      <FormattedMessage
+                        id="components.cards.deleteOrder"
+                        defaultMessage="Are you sure you want to delete this Item?"
+                      />
+                    </div>
+                    <div>
+                      <FormattedMessage
+                        id="components.cards.deleteOrderBatches"
+                        defaultMessage="This will delete all {batches} of its Batches as well."
+                        values={{ batches: item.batches.length }}
+                      />
+                    </div>
+                    {item.batches.filter(batch => batch.shipment).length > 0 && (
+                      <div>
+                        <FormattedMessage
+                          id="components.cards.deleteOrderShipments"
+                          defaultMessage="Warning: {shipment} of the Batches are in a Shipment."
+                          values={{
+                            shipment: item.batches.filter(batch => batch.shipment).length,
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                }
+              />
+              <CardAction
+                icon="REMOVE"
+                hoverColor="RED"
+                onClick={() => {
+                  if (item.batches.length > 0) {
+                    dialogToggle(true);
+                  } else {
+                    onRemove(item);
+                  }
+                }}
+              />
+            </>
+          )}
+        </BooleanValue>,
       ];
 
   const chartDetail = getQuantitySummary(item);
@@ -128,6 +183,7 @@ const OrderItemCard = ({
           icon="ORDER_ITEM"
           color="ORDER_ITEM"
           selectable={selectable}
+          showActionsOnHover
           actions={actions}
           {...rest}
         >
