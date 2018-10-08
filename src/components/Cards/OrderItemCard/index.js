@@ -113,7 +113,6 @@ const OrderItemCard = ({
                 onRequestClose={() => dialogToggle(false)}
                 onCancel={() => dialogToggle(false)}
                 onConfirm={() => {
-                  // TODO:
                   onRemove(item);
                   dialogToggle(false);
                 }}
