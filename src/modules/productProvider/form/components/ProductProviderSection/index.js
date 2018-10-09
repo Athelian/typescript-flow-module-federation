@@ -4,7 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
-import { selectSearchEnumInputFactory, priceInputFactory } from 'modules/form/helpers';
+import {
+  selectSearchEnumInputFactory,
+  priceInputFactory,
+  numberInputFactory,
+} from 'modules/form/helpers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import SlideView from 'components/SlideView';
@@ -162,25 +166,44 @@ const ProductProviderSection = ({ isNew }: Props) => (
             </FormField>
 
             <FormField
-              name="inspectionFee"
+              name="inspectionFee.amount"
               initValue={values.inspectionFee.amount}
-              setFieldValue={(field, amount) =>
-                setFieldValue('inspectionFee', { amount, currency: 'JPY' })
-              }
+              setFieldValue={setFieldValue}
             >
               {({ name, ...inputHandlers }) =>
-                priceInputFactory({
+                numberInputFactory({
                   name,
                   isNew,
                   inputHandlers,
-                  originalValue: initialValues[name].amount,
+                  originalValue: initialValues.inspectionFee.amount,
                   label: (
                     <FormattedMessage
                       id="modules.productProvider.inspectionFee"
                       defaultMessage="INSPECTION FEE"
                     />
                   ),
-                  currency: 'JPY',
+                })
+              }
+            </FormField>
+
+            <FormField
+              name="inspectionFee.currency"
+              initValue={values.inspectionFee.currency}
+              setFieldValue={setFieldValue}
+            >
+              {({ name, ...inputHandlers }) =>
+                selectSearchEnumInputFactory({
+                  enumType: 'Currency',
+                  name,
+                  inputHandlers,
+                  isNew,
+                  originalValue: initialValues.inspectionFee.currency,
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.inspectionFeeCurrency"
+                      defaultMessage="INSPECTION FEE CURRENCY"
+                    />
+                  ),
                 })
               }
             </FormField>

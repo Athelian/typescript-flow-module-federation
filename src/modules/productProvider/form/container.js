@@ -25,6 +25,11 @@ type FormState = {
   unitVolume: Metric,
   unitWeight: Metric,
   unitPrice: Price,
+  unitSize: {
+    width: Metric,
+    height: Metric,
+    length: Metric,
+  },
   inspectionFee: Price,
   packageGrossWeight: Metric,
   packageVolume: Metric,
@@ -44,8 +49,22 @@ const initValues = {
   productionLeadTime: 0,
   unitType: '',
   unitVolume: {
-    metric: 'm3',
+    metric: 'cm³',
     value: 0,
+  },
+  unitSize: {
+    width: {
+      metric: 'cm',
+      value: 0,
+    },
+    height: {
+      metric: 'cm',
+      value: 0,
+    },
+    length: {
+      metric: 'cm',
+      value: 0,
+    },
   },
   unitWeight: {
     metric: 'kg',
@@ -64,7 +83,7 @@ const initValues = {
     value: 0,
   },
   packageVolume: {
-    metric: 'm3',
+    metric: 'cm³',
     value: 0,
   },
   packageSize: {

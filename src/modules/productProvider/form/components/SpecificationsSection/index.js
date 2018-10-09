@@ -4,7 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import { FormField } from 'modules/form';
-import { textInputFactory, numberInputFactory, priceInputFactory } from 'modules/form/helpers';
+import {
+  textInputFactory,
+  numberInputFactory,
+  selectSearchEnumInputFactory,
+} from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
 import { DefaultWeightStyle, DefaultVolumeStyle, DefaultDimensionStyle } from 'components/Form';
 import { getByPath } from 'utils/fp';
@@ -41,25 +45,44 @@ const SpecificationsSection = ({ isNew }: Props) => (
             </FormField>
 
             <FormField
-              name="unitPrice"
+              name="unitPrice.amount"
               initValue={values.unitPrice.amount}
-              setFieldValue={(field, amount) =>
-                setFieldValue('unitPrice', { amount, currency: 'JPY' })
-              }
+              setFieldValue={setFieldValue}
             >
               {({ name, ...inputHandlers }) =>
-                priceInputFactory({
+                numberInputFactory({
                   name,
                   isNew,
                   inputHandlers,
-                  originalValue: originalValues[name].amount,
+                  originalValue: originalValues.unitPrice.amount,
                   label: (
                     <FormattedMessage
                       id="modules.productProvider.unitPrice"
                       defaultMessage="UNIT PRICE"
                     />
                   ),
-                  currency: 'JPY',
+                })
+              }
+            </FormField>
+
+            <FormField
+              name="unitPrice.currency"
+              initValue={values.unitPrice.currency}
+              setFieldValue={setFieldValue}
+            >
+              {({ name, ...inputHandlers }) =>
+                selectSearchEnumInputFactory({
+                  enumType: 'Currency',
+                  name,
+                  inputHandlers,
+                  isNew,
+                  originalValue: originalValues.unitPrice.currency,
+                  label: (
+                    <FormattedMessage
+                      id="modules.productProvider.unitPriceCurrency"
+                      defaultMessage="UNIT PRICE CURRENCY"
+                    />
+                  ),
                 })
               }
             </FormField>
@@ -89,7 +112,9 @@ const SpecificationsSection = ({ isNew }: Props) => (
             <FormField
               name="unitVolume.value"
               initValue={getByPath('unitVolume.value', values)}
-              setFieldValue={(field, value) => setFieldValue('unitVolume', { value, metric: 'm3' })}
+              setFieldValue={(field, value) =>
+                setFieldValue('unitVolume', { value, metric: 'cm³' })
+              }
             >
               {({ name, ...inputHandlers }) =>
                 numberInputFactory({

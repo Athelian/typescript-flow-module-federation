@@ -41,7 +41,7 @@ const initValues = {
   batchAdjustments: [],
   packageGrossWeight: { value: 0, metric: 'kg' },
   packageVolume: {
-    metric: 'm3',
+    metric: 'cm³',
     value: 0,
   },
   packageSize: {
