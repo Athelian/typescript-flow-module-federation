@@ -51,7 +51,7 @@ class ProductListModule extends React.Component<Props, State> {
   render() {
     const { intl } = this.props;
 
-    const fields = [
+    const sortFields = [
       { title: intl.formatMessage(messages.name), value: 'name' },
       { title: intl.formatMessage(messages.serial), value: 'serial' },
       { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
@@ -66,9 +66,9 @@ class ProductListModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <FilterToolBar
-                  filtersAndSort={this.state}
                   icon="PRODUCT"
-                  fields={fields}
+                  sortFields={sortFields}
+                  filtersAndSort={this.state}
                   onChange={this.onChangeFilter}
                 />
                 <Link to="new">

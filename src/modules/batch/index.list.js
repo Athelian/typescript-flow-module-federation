@@ -51,7 +51,7 @@ class BatchListModule extends React.Component<Props, State> {
   render() {
     const { intl } = this.props;
 
-    const fields = [
+    const sortFields = [
       { title: intl.formatMessage(messages.batchNo), value: 'no' },
       { title: intl.formatMessage(messages.PO), value: 'poNo' },
       {
@@ -88,9 +88,9 @@ class BatchListModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <FilterToolBar
-                  filtersAndSort={this.state}
                   icon="BATCH"
-                  fields={fields}
+                  sortFields={sortFields}
+                  filtersAndSort={this.state}
                   onChange={this.onChangeFilter}
                 />
                 <Link to="new">

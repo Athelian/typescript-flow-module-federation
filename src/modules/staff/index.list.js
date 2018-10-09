@@ -43,7 +43,7 @@ class StaffModule extends React.Component<Props, State> {
   render() {
     const { intl } = this.props;
 
-    const fields = [
+    const sortFields = [
       { title: intl.formatMessage(messages.createdAt), value: 'updatedAt' },
       { title: intl.formatMessage(messages.updatedAt), value: 'createdAt' },
     ];
@@ -56,9 +56,9 @@ class StaffModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <FilterToolBar
-                  filtersAndSort={this.state}
                   icon="STAFF"
-                  fields={fields}
+                  sortFields={sortFields}
+                  filtersAndSort={this.state}
                   onChange={this.onChangeFilter}
                 />
               </NavBar>
