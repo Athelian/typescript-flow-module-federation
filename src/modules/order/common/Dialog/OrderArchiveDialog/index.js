@@ -45,7 +45,9 @@ const OrderArchiveDialog = ({ isOpen, onRequestClose, order, onConfirm }: OrderD
               <div>
                 <FormattedMessage
                   {...messages.confirmMsg}
-                  values={{ order: spanWithColor(<FormattedMessage {...messages.order} />, 'RED') }}
+                  values={{
+                    order: spanWithColor(<FormattedMessage {...messages.order} />, 'ORDER'),
+                  }}
                 />
               </div>
               {unshippedBatches > 0 && (

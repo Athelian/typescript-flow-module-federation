@@ -45,7 +45,9 @@ const OrderActivateDialog = ({ isOpen, onRequestClose, order, onConfirm }: Order
               <div>
                 <FormattedMessage
                   {...messages.confirmMsg}
-                  values={{ order: spanWithColor(<FormattedMessage {...messages.order} />, 'RED') }}
+                  values={{
+                    order: spanWithColor(<FormattedMessage {...messages.order} />, 'ORDER'),
+                  }}
                 />
               </div>
               {totalBatches > 0 && (

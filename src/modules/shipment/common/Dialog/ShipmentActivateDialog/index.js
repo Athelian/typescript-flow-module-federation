@@ -51,7 +51,10 @@ const ShipmentActivateDialog = ({
                 <FormattedMessage
                   {...messages.confirmMsg}
                   values={{
-                    shipment: spanWithColor(<FormattedMessage {...messages.shipment} />, 'RED'),
+                    shipment: spanWithColor(
+                      <FormattedMessage {...messages.shipment} />,
+                      'SHIPMENT'
+                    ),
                   }}
                 />
               </div>
