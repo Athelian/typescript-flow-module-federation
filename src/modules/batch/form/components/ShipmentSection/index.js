@@ -17,7 +17,7 @@ function ShipmentSection({ shipment }: Props) {
       </SectionNavBar>
       <div className={ShipmentSectionBodyStyle}>
         {shipment ? (
-          <ShipmentCard shipment={shipment} />
+          <ShipmentCard shipment={shipment} readOnly />
         ) : (
           <div className={EmptyMessageStyle}>
             <FormattedMessage

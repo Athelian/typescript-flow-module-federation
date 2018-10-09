@@ -16,19 +16,27 @@ import {
   DividerStyle,
 } from './style';
 
-type Props = {
+type optionalProps = {
+  readOnly: boolean,
+};
+
+type Props = optionalProps & {
   shipment: ?Object,
   onArchive: string => void,
 };
 
-const ShipmentCard = ({ shipment, onArchive }: Props) => {
+const defaultProps = {
+  readOnly: false,
+};
+
+const ShipmentCard = ({ shipment, onArchive, readOnly }: Props) => {
   if (!shipment) return '';
 
   const { id, archived } = shipment;
 
-  const actions = [
-    <CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />,
-  ];
+  const actions = readOnly
+    ? []
+    : [<CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />];
 
   return (
     <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions}>
@@ -50,5 +58,7 @@ const ShipmentCard = ({ shipment, onArchive }: Props) => {
     </BaseCard>
   );
 };
+
+ShipmentCard.defaultProps = defaultProps;
 
 export default ShipmentCard;
