@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import FormattedName from 'components/FormattedName';
+import Icon from 'components/Icon';
 import { AvatarWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -28,6 +29,14 @@ function UserAvatar({ width, height, image, firstName, lastName, showBothInitial
     return (
       <div className={AvatarWrapperStyle({ width, height })}>
         <img alt="user_avatar" src={image} width={width} height={height} />
+      </div>
+    );
+  }
+
+  if (firstName === '' || lastName === '') {
+    return (
+      <div className={AvatarWrapperStyle({ width, height })}>
+        <Icon icon="USER" />
       </div>
     );
   }
