@@ -571,7 +571,7 @@
   "containers.Shipments.updatedAt": "LAST MODIFIED",
   "containers.Shipments.user": "STAFF",
   "containers.Shipments.newShipment": "NEW",
-  "containers.Shipments.newBatch": "NEW BATCH",
+  "containers.Shipments.newBatch": "CREATE BATCHES",
   "containers.Shipments.insurance": "INSURANCE",
   "containers.Shipments.active": "ACTIVE",
   "containers.Shipments.completed": "COMPLETED",
