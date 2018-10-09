@@ -12,6 +12,7 @@ import Tag from 'components/Tag';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
+import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { Label, Display, FieldItem } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -39,6 +40,7 @@ type OptionalProps = {
   onClone: (item: Object) => void,
   onRemove: (item: Object) => void,
   selectable: boolean,
+  readOnly: boolean,
 };
 
 type Props = OptionalProps & {
@@ -87,6 +89,7 @@ const defaultProps = {
   onRemove: () => {},
   onClone: () => {},
   selectable: false,
+  readOnly: false,
 };
 
 const OrderItemCard = ({
@@ -96,17 +99,79 @@ const OrderItemCard = ({
   onClone,
   saveOnBlur,
   selectable,
+  readOnly,
   currency,
   ...rest
 }: Props) => {
   if (!item) return '';
 
-  const actions = selectable
-    ? []
-    : [
-        <CardAction icon="CLONE" onClick={() => onClone(item)} />,
-        <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(item)} />,
-      ];
+  const actions =
+    selectable || readOnly
+      ? []
+      : [
+          <CardAction icon="CLONE" onClick={() => onClone(item)} />,
+          <BooleanValue>
+            {({ value: isOpen, set: dialogToggle }) =>
+              item.batches && item.batches.length ? (
+                <>
+                  <RemoveDialog
+                    isOpen={isOpen}
+                    onRequestClose={() => dialogToggle(false)}
+                    onCancel={() => dialogToggle(false)}
+                    onRemove={() => {
+                      onRemove(item);
+                      dialogToggle(false);
+                    }}
+                    width={400}
+                    message={
+                      <div>
+                        <div>
+                          <FormattedMessage
+                            id="components.cards.deleteOrderItem"
+                            defaultMessage="Are you sure you want to delete this Item?"
+                          />
+                        </div>
+                        <div>
+                          <FormattedMessage
+                            id="components.cards.deleteOrderItemBatches"
+                            defaultMessage="This will delete all {batches} of its Batches as well."
+                            values={{ batches: item.batches.length }}
+                          />
+                        </div>
+                        {item.batches.filter(batch => batch.shipment).length > 0 && (
+                          <div>
+                            <FormattedMessage
+                              id="components.cards.deleteOrderItemShipments"
+                              defaultMessage="Warning: {shipment} of the Batches are in a Shipment."
+                              values={{
+                                shipment: item.batches.filter(batch => batch.shipment).length,
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    }
+                  />
+                  <CardAction
+                    icon="REMOVE"
+                    hoverColor="RED"
+                    onClick={() => {
+                      dialogToggle(true);
+                    }}
+                  />
+                </>
+              ) : (
+                <CardAction
+                  icon="REMOVE"
+                  hoverColor="RED"
+                  onClick={() => {
+                    onRemove(item);
+                  }}
+                />
+              )
+            }
+          </BooleanValue>,
+        ];
 
   const chartDetail = getQuantitySummary(item);
   const {
@@ -128,6 +193,7 @@ const OrderItemCard = ({
           icon="ORDER_ITEM"
           color="ORDER_ITEM"
           selectable={selectable}
+          showActionsOnHover
           actions={actions}
           {...rest}
         >
@@ -173,7 +239,7 @@ const OrderItemCard = ({
                 onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
                 role="presentation"
               >
-                {selectable ? (
+                {selectable || readOnly ? (
                   <FieldItem
                     label={
                       <Label required>
@@ -219,7 +285,7 @@ const OrderItemCard = ({
                 role="presentation"
                 onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
               >
-                {selectable ? (
+                {selectable || readOnly ? (
                   <FieldItem
                     label={
                       <Label required>
@@ -268,49 +334,53 @@ const OrderItemCard = ({
                   </FormField>
                 )}
 
-                {!selectable && (
-                  <BooleanValue>
-                    {({ value: isOpen, set: dialogToggle }) => (
-                      <>
-                        <ConfirmDialog
-                          isOpen={isOpen}
-                          onRequestClose={() => dialogToggle(false)}
-                          onCancel={() => dialogToggle(false)}
-                          onConfirm={() => {
-                            assign({ price: { currency, amount: unitPrice.amount } });
-                            saveOnBlur({ quantity, price: { currency, amount: unitPrice.amount } });
-                            dialogToggle(false);
-                          }}
-                          message={
-                            <FormattedMessage
-                              id="components.cards.wantSync"
-                              defaultMessage="Currency is not matched. Do you want to sync?"
-                            />
-                          }
-                          width={400}
-                        />
-                        <button
-                          className={SyncButtonStyle}
-                          type="button"
-                          onClick={() => {
-                            if (unitPrice.currency === currency) {
+                {!selectable &&
+                  !readOnly && (
+                    <BooleanValue>
+                      {({ value: isOpen, set: dialogToggle }) => (
+                        <>
+                          <ConfirmDialog
+                            isOpen={isOpen}
+                            onRequestClose={() => dialogToggle(false)}
+                            onCancel={() => dialogToggle(false)}
+                            onConfirm={() => {
                               assign({ price: { currency, amount: unitPrice.amount } });
                               saveOnBlur({
                                 quantity,
                                 price: { currency, amount: unitPrice.amount },
                               });
-                            } else {
-                              dialogToggle(true);
+                              dialogToggle(false);
+                            }}
+                            message={
+                              <FormattedMessage
+                                id="components.cards.wantSync"
+                                defaultMessage="Currency is not matched. Do you want to sync?"
+                              />
                             }
-                          }}
-                        >
-                          <FormattedMessage id="components.cards.sync" defaultMessage="SYNC" />
-                          <Icon icon="SYNC" />
-                        </button>
-                      </>
-                    )}
-                  </BooleanValue>
-                )}
+                            width={400}
+                          />
+                          <button
+                            className={SyncButtonStyle}
+                            type="button"
+                            onClick={() => {
+                              if (unitPrice.currency === currency) {
+                                assign({ price: { currency, amount: unitPrice.amount } });
+                                saveOnBlur({
+                                  quantity,
+                                  price: { currency, amount: unitPrice.amount },
+                                });
+                              } else {
+                                dialogToggle(true);
+                              }
+                            }}
+                          >
+                            <FormattedMessage id="components.cards.sync" defaultMessage="SYNC" />
+                            <Icon icon="SYNC" />
+                          </button>
+                        </>
+                      )}
+                    </BooleanValue>
+                  )}
               </div>
               <div className={DividerStyle} />
               <div className={ChartWrapperStyle}>

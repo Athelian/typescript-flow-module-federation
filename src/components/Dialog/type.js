@@ -9,3 +9,12 @@ export type ConfirmDialogProps = {
   width: number,
   message: React.Node,
 };
+
+export type RemoveDialogProps = {
+  isOpen: boolean,
+  onRequestClose: () => void,
+  onCancel: () => void,
+  onRemove: () => Promise<any> | void,
+  width: number,
+  message: React.Node,
+};

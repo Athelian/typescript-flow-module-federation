@@ -24,7 +24,7 @@ function OrdersSection({ orders }: Props) {
             />
           </div>
         ) : (
-          orders.map(order => <OrderCard order={order} key={order.id} />)
+          orders.map(order => <OrderCard order={order} key={order.id} readOnly />)
         )}
       </div>
     </div>

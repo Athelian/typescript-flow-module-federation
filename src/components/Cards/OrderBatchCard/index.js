@@ -2,9 +2,11 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
+import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
+import RemoveDialog from 'components/Dialog/RemoveDialog';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
@@ -80,7 +82,49 @@ const OrderBatchCard = ({
 
   const actions = [
     <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(batch)} />,
+    <BooleanValue>
+      {({ value: isOpen, set: dialogToggle }) => (
+        <>
+          <RemoveDialog
+            isOpen={isOpen}
+            onRequestClose={() => dialogToggle(false)}
+            onCancel={() => dialogToggle(false)}
+            onRemove={() => {
+              onRemove(batch);
+              dialogToggle(false);
+            }}
+            width={400}
+            message={
+              <div>
+                <div>
+                  <FormattedMessage
+                    id="components.cards.deleteBatchItem"
+                    defaultMessage="Are you sure you want to delete this Batch?"
+                  />
+                </div>
+                <div>
+                  <FormattedMessage
+                    id="components.cards.deleteBatchItemShipment"
+                    defaultMessage="It is being used in a Shipment"
+                  />
+                </div>
+              </div>
+            }
+          />
+          <CardAction
+            icon="REMOVE"
+            hoverColor="RED"
+            onClick={() => {
+              if (batch.shipment) {
+                dialogToggle(true);
+              } else {
+                onRemove(batch);
+              }
+            }}
+          />
+        </>
+      )}
+    </BooleanValue>,
   ];
 
   const { shipment } = batch;
@@ -92,7 +136,7 @@ const OrderBatchCard = ({
 
   const { no, quantity, deliveredAt } = batch;
   return (
-    <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
+    <BaseCard icon="BATCH" color="BATCH" showActionsOnHover actions={actions} {...rest}>
       <div
         className={OrderBatchCardWrapperStyle}
         onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
