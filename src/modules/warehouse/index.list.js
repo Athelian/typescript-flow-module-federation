@@ -44,7 +44,7 @@ class WarehouseModule extends React.Component<Props, State> {
   render() {
     const { intl } = this.props;
 
-    const fields = [
+    const sortFields = [
       { title: intl.formatMessage(messages.createdAt), value: 'updatedAt' },
       { title: intl.formatMessage(messages.updatedAt), value: 'createdAt' },
     ];
@@ -57,9 +57,9 @@ class WarehouseModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <FilterToolBar
-                  filtersAndSort={this.state}
                   icon="WAREHOUSE"
-                  fields={fields}
+                  sortFields={sortFields}
+                  filtersAndSort={this.state}
                   onChange={this.onChangeFilter}
                 />
                 <Link to="new">

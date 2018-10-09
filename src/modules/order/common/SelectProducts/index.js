@@ -69,7 +69,7 @@ function onChangeProductQuantity({
 }
 
 function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
-  const fields = [
+  const sortFields = [
     { title: intl.formatMessage(messages.nameSort), value: 'name' },
     { title: intl.formatMessage(messages.serialSort), value: 'serial' },
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
@@ -95,7 +95,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                 <SlideViewNavBar>
                   <FilterToolBar
                     icon="PROVIDER"
-                    fields={fields}
+                    sortFields={sortFields}
                     filtersAndSort={filtersAndSort}
                     onChange={onChange}
                   />

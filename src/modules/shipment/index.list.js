@@ -51,7 +51,7 @@ class ShipmentListModule extends React.Component<Props, State> {
   render() {
     const { intl } = this.props;
 
-    const fields = [
+    const sortFields = [
       { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
       { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     ];
@@ -64,10 +64,10 @@ class ShipmentListModule extends React.Component<Props, State> {
             navBar={
               <NavBar>
                 <FilterToolBar
-                  filtersAndSort={this.state}
                   icon="SHIPMENT"
+                  sortFields={sortFields}
+                  filtersAndSort={this.state}
                   onChange={this.onChangeFilter}
-                  fields={fields}
                 />
                 <Link to="new">
                   <NewButton />
