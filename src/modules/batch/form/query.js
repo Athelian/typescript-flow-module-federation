@@ -11,6 +11,8 @@ import {
   filesFragment,
   partnerNameFragment,
   shipmentCardFragment,
+  timelineDateMinimalFragment,
+  portFragment,
 } from 'graphql';
 
 export const batchFormQuery = gql`
@@ -30,6 +32,8 @@ export const batchFormQuery = gql`
   ${filesFragment}
   ${partnerNameFragment}
   ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
 `;
 
 export default batchFormQuery;
