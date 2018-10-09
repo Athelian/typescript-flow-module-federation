@@ -21,19 +21,27 @@ import {
   TagsWrapperStyle,
 } from './style';
 
-type Props = {
+type optionalProps = {
+  readOnly: boolean,
+};
+
+type Props = optionalProps & {
   order: ?Object,
   onArchive: string => void,
 };
 
-const OrderCard = ({ order, onArchive }: Props) => {
+const defaultProps = {
+  readOnly: false,
+};
+
+const OrderCard = ({ order, onArchive, readOnly }: Props) => {
   if (!order) return '';
 
   const { id, poNo, orderItems, currency, exporter, inCharges, archived } = order;
 
-  const actions = [
-    <CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />,
-  ];
+  const actions = readOnly
+    ? []
+    : [<CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />];
 
   const totalItems = orderItems.length;
 
@@ -131,5 +139,7 @@ const OrderCard = ({ order, onArchive }: Props) => {
     </BaseCard>
   );
 };
+
+OrderCard.defaultProps = defaultProps;
 
 export default OrderCard;

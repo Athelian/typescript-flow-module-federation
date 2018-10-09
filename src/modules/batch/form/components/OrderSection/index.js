@@ -17,7 +17,7 @@ function OrderSection({ order }: Props) {
       </SectionNavBar>
       <div className={OrderSectionBodyStyle}>
         {order ? (
-          <OrderCard order={order} />
+          <OrderCard order={order} readOnly />
         ) : (
           <div className={EmptyMessageStyle}>
             <FormattedMessage id="modules.batch.noOrderFound" defaultMessage="No order found" />
