@@ -146,7 +146,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                         <OrderItemCard
                           item={values.orderItem}
                           onSelect={selectable ? () => slideToggle(true) : null}
-                          selectable={selectable}
+                          readOnly
                         />
                       )}
 
