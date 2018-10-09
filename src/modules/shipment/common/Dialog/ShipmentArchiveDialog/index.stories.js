@@ -6,7 +6,7 @@ import { translationMessages } from 'i18n';
 import { BooleanValue } from 'react-values';
 import OrderArchiveDialog from './index';
 
-storiesOf('Order Archive Modal', module)
+storiesOf('Shipment Archive Modal', module)
   .add('default', () => (
     <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
       <BooleanValue>
