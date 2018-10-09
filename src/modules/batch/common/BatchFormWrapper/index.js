@@ -82,7 +82,7 @@ class BatchFormWrapper extends React.Component<Props> {
                 </SlideViewNavBar>
               }
             >
-              <BatchForm batch={state} isNew={isNew} selectable={false} />
+              <BatchForm batch={state} isNew={isNew} />
             </Layout>
           )}
         </Subscribe>
