@@ -6,7 +6,7 @@ import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
-import ConfirmDialog from 'components/Dialog/ConfirmDialog';
+import RemoveDialog from 'components/Dialog/RemoveDialog';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
@@ -85,11 +85,11 @@ const OrderBatchCard = ({
     <BooleanValue>
       {({ value: isOpen, set: dialogToggle }) => (
         <>
-          <ConfirmDialog
+          <RemoveDialog
             isOpen={isOpen}
             onRequestClose={() => dialogToggle(false)}
             onCancel={() => dialogToggle(false)}
-            onConfirm={() => {
+            onRemove={() => {
               onRemove(batch);
               dialogToggle(false);
             }}
@@ -105,7 +105,7 @@ const OrderBatchCard = ({
                 <div>
                   <FormattedMessage
                     id="components.cards.deleteBatchItemShipment"
-                    defaultMessage=" It is being used in a Shipment"
+                    defaultMessage="It is being used in a Shipment"
                   />
                 </div>
               </div>

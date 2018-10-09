@@ -16,11 +16,11 @@ import {
   DividerStyle,
 } from './style';
 
-type optionalProps = {
+type OptionalProps = {
   readOnly: boolean,
 };
 
-type Props = optionalProps & {
+type Props = OptionalProps & {
   shipment: ?Object,
   onArchive: string => void,
 };

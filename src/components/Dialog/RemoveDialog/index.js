@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import type { RemoveDialogProps } from 'components/Dialog/type';
-
 import Dialog from '../index';
 import messages from './messages';
 import { DialogStyle, RemoveMessageStyle, ButtonsStyle } from './style';

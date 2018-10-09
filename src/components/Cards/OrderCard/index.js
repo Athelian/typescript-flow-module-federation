@@ -21,11 +21,11 @@ import {
   TagsWrapperStyle,
 } from './style';
 
-type optionalProps = {
+type OptionalProps = {
   readOnly: boolean,
 };
 
-type Props = optionalProps & {
+type Props = OptionalProps & {
   order: ?Object,
   onArchive: string => void,
 };

@@ -12,6 +12,7 @@ import Tag from 'components/Tag';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
+import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { Label, Display, FieldItem } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -113,11 +114,11 @@ const OrderItemCard = ({
             {({ value: isOpen, set: dialogToggle }) =>
               item.batches && item.batches.length ? (
                 <>
-                  <ConfirmDialog
+                  <RemoveDialog
                     isOpen={isOpen}
                     onRequestClose={() => dialogToggle(false)}
                     onCancel={() => dialogToggle(false)}
-                    onConfirm={() => {
+                    onRemove={() => {
                       onRemove(item);
                       dialogToggle(false);
                     }}
