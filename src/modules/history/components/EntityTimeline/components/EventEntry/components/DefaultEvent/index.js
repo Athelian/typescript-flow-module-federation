@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import Icon from 'components/Icon';
 import { isSameDay } from 'date-fns';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
@@ -27,13 +26,12 @@ const DefaultEvent = ({ event }: Props) => (
         {...messages.defaultEvent}
         values={{
           user: (
-            <div className={NameStyle}>
+            <span className={NameStyle}>
               <FormattedName
                 firstName={event.createdBy.firstName}
                 lastName={event.createdBy.lastName}
               />
-              <Icon icon="EXTERNAL_LINK" />
-            </div>
+            </span>
           ),
         }}
       />

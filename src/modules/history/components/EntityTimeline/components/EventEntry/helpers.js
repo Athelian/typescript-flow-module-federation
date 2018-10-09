@@ -8,30 +8,31 @@ type Props = {
   value: any,
 };
 
-const dateReg = /^\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)$/;
+const dateReg = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})[+-](\d{2}):(\d{2})/;
 const numberReg = /^\d+$/;
 
 const FormatValue = ({ value }: Props) => {
-  if (isDataType(String, value)) {
-    if (dateReg.test(value)) {
-      return <FormattedDate value={value} />;
+  if (value) {
+    if (isDataType(String, value)) {
+      if (dateReg.test(value)) {
+        return <FormattedDate value={value} />;
+      }
+      if (numberReg.test(value)) {
+        return <FormattedNumber value={value} />;
+      }
+
+      return value;
     }
-    if (numberReg.test(value)) {
+
+    if (isDataType(Number, value)) {
       return <FormattedNumber value={value} />;
     }
 
-    return value;
+    if (isDataType(Object, value)) {
+      return JSON.stringify(value);
+    }
   }
-
-  if (isDataType(Number, value)) {
-    return <FormattedNumber value={value} />;
-  }
-
-  if (isDataType(Object, value)) {
-    return JSON.stringify(value);
-  }
-
-  return value;
+  return ' ';
 };
 
 export default FormatValue;

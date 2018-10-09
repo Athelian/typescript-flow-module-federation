@@ -66,13 +66,12 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
               {...messages.multipleUpdateEvent}
               values={{
                 user: (
-                  <div className={NameStyle}>
+                  <span className={NameStyle}>
                     <FormattedName
                       firstName={event.createdBy.firstName}
                       lastName={event.createdBy.lastName}
                     />
-                    <Icon icon="EXTERNAL_LINK" />
-                  </div>
+                  </span>
                 ),
                 target:
                   entityType === get('__typename', event.target) ? (
