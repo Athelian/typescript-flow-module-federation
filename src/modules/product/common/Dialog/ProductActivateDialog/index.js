@@ -16,8 +16,8 @@ const ProductActivateDialog = ({
   onConfirm,
   product,
 }: ProductDialogProps) => {
-  const { id: productId } = product;
-  const productMsg = spanWithColor(<FormattedMessage {...messages.product} />, 'RED');
+  const { id: productId, productProviders } = product;
+  const productMsg = spanWithColor(<FormattedMessage {...messages.product} />, 'PRODUCT');
 
   return (
     <ApolloConsumer>
@@ -45,6 +45,18 @@ const ProductActivateDialog = ({
             <div className={MessageStyle}>
               <div>
                 <FormattedMessage {...messages.confirmMsg} values={{ product: productMsg }} />
+              </div>
+              <div>
+                <FormattedMessage
+                  {...messages.warnMsg}
+                  values={{
+                    total: productProviders.length,
+                    providers: spanWithColor(
+                      <FormattedMessage {...messages.providers} />,
+                      'PROVIDER'
+                    ),
+                  }}
+                />
               </div>
             </div>
           }

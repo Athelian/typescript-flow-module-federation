@@ -17,7 +17,7 @@ const ProductArchiveDialog = ({
   product,
 }: ProductDialogProps) => {
   const { id: productId, productProviders } = product;
-  const productMsg = spanWithColor(<FormattedMessage {...messages.product} />, 'RED');
+  const productMsg = spanWithColor(<FormattedMessage {...messages.product} />, 'PRODUCT');
 
   return (
     <ApolloConsumer>
@@ -46,20 +46,18 @@ const ProductArchiveDialog = ({
               <div>
                 <FormattedMessage {...messages.confirmMsg} values={{ product: productMsg }} />
               </div>
-              {productProviders.length > 0 && (
-                <div>
-                  <FormattedMessage
-                    {...messages.warnMsg}
-                    values={{
-                      total: productProviders.length,
-                      providers: spanWithColor(
-                        <FormattedMessage {...messages.providers} />,
-                        'PRODUCT'
-                      ),
-                    }}
-                  />
-                </div>
-              )}
+              <div>
+                <FormattedMessage
+                  {...messages.warnMsg}
+                  values={{
+                    total: productProviders.length,
+                    providers: spanWithColor(
+                      <FormattedMessage {...messages.providers} />,
+                      'PROVIDER'
+                    ),
+                  }}
+                />
+              </div>
             </div>
           }
         />
