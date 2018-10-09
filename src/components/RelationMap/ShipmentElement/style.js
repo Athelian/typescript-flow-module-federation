@@ -14,4 +14,8 @@ export const ShipmentCardWrapperStyle = css`
   }
 `;
 
+export const ShipmentBlankContent = css`
+  height: 1em;
+`;
+
 export default ShipmentCardWrapperStyle;
