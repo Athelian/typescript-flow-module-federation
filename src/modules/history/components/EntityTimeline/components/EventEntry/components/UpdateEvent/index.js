@@ -1,13 +1,11 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
 import { get } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import { isSameDay } from 'date-fns';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
 import logger from 'utils/logger';
-import Icon from 'components/Icon';
 import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
 import messages from 'modules/history/components/EntityTimeline/messages';
 import {
@@ -41,13 +39,12 @@ const UpdateEvent = ({ event, entityType }: Props) => (
         {...(event.updates[0].oldValue ? messages.updateEvent : messages.updateEventSet)}
         values={{
           user: (
-            <Link to={`/staff/${event.createdBy.id}`} className={NameStyle}>
+            <span className={NameStyle}>
               <FormattedName
                 firstName={event.createdBy.firstName}
                 lastName={event.createdBy.lastName}
               />
-              <Icon icon="EXTERNAL_LINK" />
-            </Link>
+            </span>
           ),
           field: <span className={FieldStyle}>{event.updates[0].field}</span>,
           target:
