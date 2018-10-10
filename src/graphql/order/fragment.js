@@ -36,6 +36,10 @@ export const orderFormFragment = gql`
       }
       productProvider {
         id
+        unitPrice {
+          currency
+          amount
+        }
         product {
           id
           name
