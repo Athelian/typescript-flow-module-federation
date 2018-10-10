@@ -27,7 +27,6 @@ type Props = {
 const ProductProviderSection = ({ isNew }: Props) => (
   <Subscribe to={[ProductProviderContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
-      // $FlowFixMe
       const values = { ...initialValues, ...state };
 
       return (
@@ -79,7 +78,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
               </GridColumn>
 
               <GridColumn gap="10px">
-                <Label required>SUPPLIER</Label>
+                <Label>SUPPLIER</Label>
                 <BooleanValue>
                   {({ value: opened, set: supplierSlideToggle }) => (
                     <>
@@ -131,7 +130,6 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   name,
                   inputHandlers,
                   isNew,
-                  required: true,
                   originalValue: initialValues[name],
                   label: (
                     <FormattedMessage

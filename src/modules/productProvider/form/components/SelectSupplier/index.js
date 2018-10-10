@@ -47,7 +47,13 @@ const SelectSupplier = ({ selected, onCancel, onSelect }: Props) => (
               renderItem={item => (
                 <PartnerCard
                   partner={item}
-                  onSelect={() => set(item)}
+                  onSelect={() => {
+                    if (value && item.id === value.id) {
+                      set(null);
+                    } else {
+                      set(item);
+                    }
+                  }}
                   selectable
                   selected={value && item.id === value.id}
                   key={item.id}
