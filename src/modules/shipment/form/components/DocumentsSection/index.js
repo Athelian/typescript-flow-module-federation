@@ -10,7 +10,7 @@ import { DocumentSectionStyle } from './style';
 const messages = defineMessages({
   bl: {
     id: 'global.upload.types.shipment.bl',
-    defaultMessage: 'B/l',
+    defaultMessage: 'B/L',
   },
   invoice: {
     id: 'global.upload.types.shipment.invoice',
@@ -18,11 +18,19 @@ const messages = defineMessages({
   },
   packing: {
     id: 'global.upload.types.shipment.packing',
-    defaultMessage: 'Packing',
+    defaultMessage: 'Packing List',
   },
   import: {
     id: 'global.upload.types.shipment.import',
-    defaultMessage: 'Import',
+    defaultMessage: 'Import Declaration',
+  },
+  inspection: {
+    id: 'global.upload.types.shipment.inspection',
+    defaultMessage: 'Inspection Application',
+  },
+  document: {
+    id: 'global.upload.types.shipment.document',
+    defaultMessage: 'Document',
   },
 });
 
@@ -52,12 +60,20 @@ function DocumentsSection({ intl }: Props) {
                 label: intl.formatMessage(messages.invoice),
               },
               {
-                type: 'ShipmentPacking',
+                type: 'ShipmentPackingList',
                 label: intl.formatMessage(messages.packing),
               },
               {
-                type: 'ShipmentImport',
+                type: 'ShipmentImportDeclaration',
                 label: intl.formatMessage(messages.import),
+              },
+              {
+                type: 'ShipmentInspectionApplication',
+                label: intl.formatMessage(messages.inspection),
+              },
+              {
+                type: 'Document',
+                label: intl.formatMessage(messages.document),
               },
             ]}
           />

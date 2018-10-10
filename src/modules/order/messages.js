@@ -366,6 +366,10 @@ export default defineMessages({
     id: 'containers.Orders.fileType.orderPO',
     defaultMessage: 'Order PO',
   },
+  fileTypeOrderPI: {
+    id: 'containers.Orders.fileType.orderPI',
+    defaultMessage: 'Order PI',
+  },
   sectionDocuments: {
     id: 'containers.Orders.sectionDocuments',
     defaultMessage: 'DOCUMENTS',
