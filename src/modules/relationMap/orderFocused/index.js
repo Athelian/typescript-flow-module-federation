@@ -93,6 +93,9 @@ const OrderFocused = ({
                                   focusedItem: getByPathWithDefault({}, 'relation', itemData),
                                   relationItem: relation,
                                 });
+                                if (relation.type === 'ORDER') {
+                                  toggle();
+                                }
                               }}
                             />,
                             <CardAction icon="BRANCH" onClick={() => {}} />,
