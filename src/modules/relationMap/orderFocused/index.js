@@ -73,7 +73,11 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                             <CardAction
                               icon="SQUARE"
                               onClick={() => {
-                                setItem({ focusedItem: {}, focusedId: relation.id, mode: 'ORDER' });
+                                setItem({
+                                  focusedItem: { [item.id]: true },
+                                  focusedId: '',
+                                  mode: 'ORDER',
+                                });
                               }}
                             />,
                             <CardAction
@@ -138,7 +142,11 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                           <CardAction
                             icon="SQUARE"
                             onClick={() => {
-                              assign({ focusedItem: {}, focusedId: shipmentId, mode: 'SHIPMENT' });
+                              assign({
+                                focusedItem: currentShipment.refs,
+                                focusedId: shipmentId,
+                                mode: 'SHIPMENT',
+                              });
                             }}
                           />,
                           <CardAction
