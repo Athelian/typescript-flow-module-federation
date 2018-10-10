@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FieldItem, Label, Tooltip, DefaultStyle, NumberInput } from 'components/Form';
 import Icon from 'components/Icon';
-import { CalculatorButtonWrapperStyle, CalculatorButtonStyle } from './style';
+import { CalculatorButtonStyle } from './style';
 
 const numberInputFactory = ({
   WrapperComponent = DefaultStyle,
@@ -59,7 +59,7 @@ const numberInputFactory = ({
         />
       }
       input={
-        <div>
+        <>
           <WrapperComponent
             type="number"
             isFocused={isFocused}
@@ -72,13 +72,11 @@ const numberInputFactory = ({
           </WrapperComponent>
           {calculate &&
             !isFocused && (
-              <div className={CalculatorButtonWrapperStyle}>
-                <button className={CalculatorButtonStyle} type="button" onClick={calculate}>
-                  <Icon icon="CALCULATOR" />
-                </button>
-              </div>
+              <button className={CalculatorButtonStyle} type="button" onClick={calculate}>
+                <Icon icon="CALCULATOR" />
+              </button>
             )}
-        </div>
+        </>
       }
     />
   );

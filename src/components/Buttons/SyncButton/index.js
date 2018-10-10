@@ -23,8 +23,8 @@ const SyncButton = ({ label, disabled, onClick }: Props): React.Node => (
     label={label}
     textColor="TEAL"
     backgroundColor="GRAY_VERY_LIGHT"
-    hoverTextColor="TEAL_VERY_DARK"
-    hoverBackgroundColor="GRAY"
+    hoverTextColor="TEAL_DARK"
+    hoverBackgroundColor="GRAY_LIGHT"
     disabled={disabled}
     onClick={onClick}
   />

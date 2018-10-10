@@ -17,7 +17,7 @@ type Props = {
 const PackagingSection = ({ isNew }: Props) => (
   <div className={PackagingSectionWrapperStyle}>
     <Subscribe to={[ProductProviderContainer]}>
-      {({ originalValues, state, setFieldValue }) => {
+      {({ originalValues, state, setFieldValue, calculatePackageVolume }) => {
         // $FlowFixMe
         const values = { ...originalValues, ...state };
 
@@ -109,6 +109,7 @@ const PackagingSection = ({ isNew }: Props) => (
                     />
                   ),
                   WrapperComponent: DefaultVolumeStyle,
+                  calculate: calculatePackageVolume,
                 })
               }
             </FormField>
