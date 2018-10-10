@@ -14,6 +14,8 @@ type State = {
 };
 
 class JumpToSection extends React.Component<Props, State> {
+  isMountedOnDOM = false;
+
   static defaultProps = {
     rootViewPort: null,
     threshold: [0, 1],
@@ -24,6 +26,7 @@ class JumpToSection extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    this.isMountedOnDOM = true;
     logger.warn('create IntersectionObserver');
     const { rootViewPort, threshold } = this.props;
     this.io = new IntersectionObserver(
@@ -43,7 +46,7 @@ class JumpToSection extends React.Component<Props, State> {
             target: { id: activeNode },
           } = activeSection;
           const ratio = intersectionRatio * 100;
-          if (ratio > 50) this.setState(() => ({ activeNode }));
+          if (ratio > 50 && this.isMountedOnDOM) this.setState(() => ({ activeNode }));
         }
       },
       {
@@ -83,6 +86,7 @@ class JumpToSection extends React.Component<Props, State> {
 
   componentWillUnmount() {
     logger.warn('remove IntersectionObserver');
+    this.isMountedOnDOM = false;
     this.io.disconnect();
   }
 
