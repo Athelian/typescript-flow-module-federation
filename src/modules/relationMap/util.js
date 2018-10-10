@@ -160,6 +160,7 @@ export const formatOrderData = orders => {
   const orderObj = {};
   const orderItemObj = {};
   const batchObj = {};
+  const shipmentObj = {};
   const sumOrders = orders.length;
   let sumOrderItems = 0;
   let sumBatches = 0;
@@ -175,18 +176,48 @@ export const formatOrderData = orders => {
         totalBatch: 0,
         info: order.poNo,
         tags: order.tags,
+        relation: {
+          orderItem: {},
+          batch: {},
+          shipment: {},
+        },
       };
     }
     sumOrderItems += orderItems ? orderItems.length : 0;
     sumShipments += shipments ? shipments.length : 0;
 
+    shipments.forEach(shipment => {
+      if (!shipmentObj[shipment.id]) {
+        shipmentObj[shipment.id] = {
+          data: {
+            ...shipment,
+            numberOfOrder: 0,
+            numberOfBatch: shipment.batches.length,
+          },
+          relation: {
+            order: {},
+            orderItem: {},
+            batch: {},
+          },
+        };
+      }
+      shipmentObj[shipment.id].data.numberOfOrder += 1;
+      shipmentObj[shipment.id].relation.order[order.id] = true;
+    });
+
     orderItems.forEach(orderItem => {
       if (!orderItemObj[orderItem.id]) {
+        orderObj[order.id].relation.orderItem[orderItem.id] = true;
         orderItemObj[orderItem.id] = {
           orderedQuantity: orderItem.quantity,
           batchedQuantity: 0,
           shippedQuantity: 0,
           info: getByPathWithDefault('', 'productProvider.product.name', orderItem),
+          relation: {
+            order: { [order.id]: true },
+            batch: {},
+            shipment: {},
+          },
         };
       }
       sumBatches += orderItem.batches ? orderItem.batches.length : 0;
@@ -194,7 +225,31 @@ export const formatOrderData = orders => {
       orderObj[order.id].orderedQuantity += orderItem.quantity || 0;
 
       orderItem.batches.forEach(batch => {
+        const { shipment } = batch;
         if (!batchObj[batch.id]) {
+          orderObj[order.id].relation.batch[batch.id] = true;
+          orderItemObj[orderItem.id].relation.batch[batch.id] = true;
+          if (shipment) {
+            orderObj[order.id].relation.shipment[shipment.id] = true;
+            orderItemObj[orderItem.id].relation.shipment[shipment.id] = true;
+            if (!shipmentObj[shipment.id]) {
+              shipmentObj[shipment.id] = {
+                data: {
+                  ...shipment,
+                  numberOfOrder: 0,
+                  numberOfBatch: 0,
+                },
+                relation: {
+                  order: {},
+                  orderItem: {},
+                  batch: {},
+                },
+              };
+            }
+            shipmentObj[shipment.id].relation.order[order.id] = true;
+            shipmentObj[shipment.id].relation.orderItem[orderItem.id] = true;
+            shipmentObj[shipment.id].relation.batch[batch.id] = true;
+          }
           const volume = getByPathWithDefault('', 'packageVolume.value', batch);
           const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
           batchObj[batch.id] = {
@@ -204,6 +259,11 @@ export const formatOrderData = orders => {
             title: batch.no || '',
             tags: batch.tags,
             deliveredAt: batch.deliveredAt,
+            relation: {
+              order: { [order.id]: true },
+              orderItem: { [orderItem.id]: true },
+              shipment: shipment ? { [shipment.id]: true } : {},
+            },
           };
         }
         orderObj[order.id].batchedQuantity += batch.quantity;
@@ -220,6 +280,7 @@ export const formatOrderData = orders => {
     orderObj,
     orderItemObj,
     batchObj,
+    shipmentObj,
     sumOrders,
     sumOrderItems,
     sumBatches,

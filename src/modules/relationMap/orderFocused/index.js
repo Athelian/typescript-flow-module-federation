@@ -9,17 +9,21 @@ import RelationView from '../common/RelationView';
 import DetailFocused, { ToggleSlide } from '../common/SlideForm';
 import Item from '../common/RelationItem';
 
-export const FocusedValue = createObjectValue({ focusedItem: {}, focusedId: '', mode: '' });
+export const FocusedValue = createObjectValue({ focusedItem: {}, relationItem: {} });
 
 type Props = {
   order: Object,
-  shipment: Object,
   hasMore: boolean,
   loadMore: Function,
   nodes: Array<Object>,
 };
 
-const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
+const OrderFocused = ({
+  order: { orderObj: order, orderItemObj: orderItem, batchObj: batch, shipmentObj: shipment },
+  nodes,
+  hasMore,
+  loadMore,
+}: Props) => (
   <>
     <RelationView
       className={OrderMapWrapperStyle}
@@ -37,20 +41,28 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
             return relations.map((relation, relationIndex) => {
               const key = `relation-${relationIndex}`;
               let itemData;
+              let itemType;
               switch (relation.type) {
                 case 'ORDER_ITEM_ALL':
+                  itemData = order[item.id];
+                  break;
                 case 'BATCH_ALL':
+                  itemData = order[item.id];
+                  break;
                 case 'ORDER':
-                  itemData = order.orderObj[relation.id];
+                  itemType = 'order';
+                  itemData = order[relation.id];
                   break;
                 case 'ORDER_HEADER':
                   itemData = { id: item.id };
                   break;
                 case 'ORDER_ITEM':
-                  itemData = order.orderItemObj[relation.id];
+                  itemType = 'orderItem';
+                  itemData = orderItem[relation.id];
                   break;
                 case 'BATCH':
-                  itemData = order.batchObj[relation.id];
+                  itemType = 'batch';
+                  itemData = batch[relation.id];
                   break;
                 default:
                   itemData = {};
@@ -60,36 +72,30 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                 <ToggleSlide key={key}>
                   {({ assign: setSlide }) => (
                     <FocusedValue key={key}>
-                      {({ value: { focusedItem, focusedId, mode }, assign: setItem, reset }) => (
+                      {({ value: { focusedItem, relationItem }, assign: setItem, reset }) => (
                         <Item
                           key={key}
                           type={relation.type}
                           isFocused={
-                            focusedId && mode === 'ORDER'
-                              ? focusedId === relation.id
-                              : getByPathWithDefault(false, item.id, focusedItem)
+                            relationItem.type === relation.type
+                              ? relationItem.id === relation.id
+                              : getByPathWithDefault(
+                                  false,
+                                  `${itemType}.${relation.id}` || '',
+                                  focusedItem
+                                )
                           }
                           actions={[
                             <CardAction
                               icon="SQUARE"
                               onClick={() => {
                                 setItem({
-                                  focusedItem: { [item.id]: true },
-                                  focusedId: '',
-                                  mode: 'ORDER',
+                                  focusedItem: getByPathWithDefault({}, 'relation', itemData),
+                                  relationItem: relation,
                                 });
                               }}
                             />,
-                            <CardAction
-                              icon="BRANCH"
-                              onClick={() => {
-                                setItem({
-                                  focusedItem: { [item.id]: true },
-                                  focusedId: '',
-                                  mode: 'ORDER',
-                                });
-                              }}
-                            />,
+                            <CardAction icon="BRANCH" onClick={() => {}} />,
                             <CardAction icon="CLEAR" onClick={reset} />,
                             <CardAction icon="REMOVE" onClick={() => {}} />,
                           ]}
@@ -117,48 +123,36 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
     <div className={ScrollWrapperStyle}>
       {Object.keys(shipment).map(shipmentId => {
         const currentShipment = shipment[shipmentId];
-        const shipmentRefs = Object.keys(currentShipment.refs);
         return (
           <ToggleSlide key={shipmentId}>
             {({ assign: setSlide }) => (
               <BooleanValue defaultValue>
                 {({ value: isCollapsed, toggle }) => (
                   <FocusedValue key={shipmentId}>
-                    {({ value: { focusedItem, focusedId }, assign, reset }) => (
+                    {({ value: { focusedItem, relationItem }, assign, reset }) => (
                       <Item
                         key={shipmentId}
                         type={isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT'}
                         data={currentShipment.data}
                         isFocused={
-                          focusedId
-                            ? focusedId === shipmentId
-                            : Boolean(
-                                Object.keys(focusedItem || {}).some(focusId =>
-                                  shipmentRefs.some(orderId => orderId === focusId)
-                                )
-                              )
+                          relationItem.type === 'SHIPMENT'
+                            ? relationItem.id === shipmentId
+                            : getByPathWithDefault(false, `shipment.${shipmentId}`, focusedItem)
                         }
                         actions={[
                           <CardAction
                             icon="SQUARE"
                             onClick={() => {
                               assign({
-                                focusedItem: currentShipment.refs,
-                                focusedId: shipmentId,
-                                mode: 'SHIPMENT',
+                                focusedItem: currentShipment.relation,
+                                relationItem: {
+                                  id: shipmentId,
+                                  type: 'SHIPMENT',
+                                },
                               });
                             }}
                           />,
-                          <CardAction
-                            icon="BRANCH"
-                            onClick={() => {
-                              assign({
-                                focusedItem: currentShipment.refs,
-                                focusedId: shipmentId,
-                                mode: 'SHIPMENT',
-                              });
-                            }}
-                          />,
+                          <CardAction icon="BRANCH" onClick={() => {}} />,
                           <CardAction icon="CLEAR" onClick={reset} />,
                           <CardAction icon="REMOVE" onClick={() => {}} />,
                         ]}
