@@ -28,7 +28,7 @@ const AsyncShipmentsSection = Loadable({
 type OptionalProps = {
   isNew: boolean,
   order: Object,
-  onDetailReady: () => void,
+  onFormReady: () => void,
 };
 
 type Props = OptionalProps & {};
@@ -36,7 +36,7 @@ type Props = OptionalProps & {};
 const defaultProps = {
   isNew: false,
   order: {},
-  onDetailReady: () => {},
+  onFormReady: () => {},
   onChangeStatus: () => Promise.resolve({}),
 };
 
@@ -44,9 +44,9 @@ export default class OrderForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   componentDidMount() {
-    const { onDetailReady } = this.props;
+    const { onFormReady } = this.props;
 
-    if (onDetailReady) onDetailReady();
+    if (onFormReady) onFormReady();
   }
 
   shouldComponentUpdate(nextProps: Props) {

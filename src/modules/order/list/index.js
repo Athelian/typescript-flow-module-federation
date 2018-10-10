@@ -5,7 +5,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import emitter from 'utils/emitter';
 import OrderGridView from './OrderGridView';
-import query from './query';
+import { orderListQuery } from './query';
 
 type Props = {
   viewType: string,
@@ -26,7 +26,7 @@ class OrderList extends React.PureComponent<Props> {
 
     return (
       <Query
-        query={query}
+        query={orderListQuery}
         variables={{
           page: 1,
           sort: {

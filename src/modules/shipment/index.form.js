@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
-import QueryDetail from 'components/common/QueryDetail';
+import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
@@ -23,7 +23,7 @@ import {
 } from './form/containers';
 import ShipmentForm from './form';
 import validator from './form/validator';
-import query from './form/query';
+import { shipmentFormQuery } from './form/query';
 import {
   createShipmentMutation,
   prepareCreateShipmentInput,
@@ -297,10 +297,10 @@ class ShipmentFormModule extends React.Component<Props> {
                   {isNew || !shipmentId ? (
                     <ShipmentForm shipment={{}} isNew />
                   ) : (
-                    <QueryDetail
-                      query={query}
-                      detailId={shipmentId}
-                      detailType="shipment"
+                    <QueryForm
+                      query={shipmentFormQuery}
+                      entityId={shipmentId}
+                      entityType="shipment"
                       render={shipment => (
                         <Subscribe
                           to={[
@@ -322,7 +322,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           ) => (
                             <ShipmentForm
                               shipment={shipment}
-                              onDetailReady={() => {
+                              onFormReady={() => {
                                 const {
                                   batches,
                                   tags,

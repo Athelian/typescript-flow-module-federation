@@ -7,7 +7,7 @@ import scrollIntoView from 'utils/scrollIntoView';
 import loadMore from 'utils/loadMore';
 import MessageInput from 'modules/history/components/MessageInput';
 import OrderEventsGridView from './OrderEventsGridView';
-import query from './query';
+import { orderLogsListQuery } from './query';
 import {
   eventCommentCreateMutation,
   eventCommentDeleteMutation,
@@ -31,7 +31,7 @@ class OrderEventsList extends React.PureComponent<Props> {
     const { perPage, id } = this.props;
     return (
       <Query
-        query={query}
+        query={orderLogsListQuery}
         variables={{
           id,
           perPage,

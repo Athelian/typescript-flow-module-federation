@@ -46,7 +46,10 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                     <SectionTabs
                       link="productProviderSection"
                       label={
-                        <FormattedMessage id="modules.product.provider" defaultMessage="PROVIDER" />
+                        <FormattedMessage
+                          id="modules.product.provider"
+                          defaultMessage="END PRODUCT"
+                        />
                       }
                       icon="PROVIDER"
                     />

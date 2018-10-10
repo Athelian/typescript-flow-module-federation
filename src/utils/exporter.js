@@ -25,9 +25,9 @@ export const getExport = (request: Object, onSuccess: () => void, onFailure: () 
         if (xhr.status === 200) {
           const blob = xhr.response;
           const content = xhr.getResponseHeader('Content-Disposition');
-          if (content !== null) {
+          if (content) {
             const matches = content.match(/\sfilename="([^"]+)"(\s|$)/);
-            if (matches !== null && matches.length > 1) {
+            if (matches && matches.length > 1) {
               const fileName = matches[1];
 
               const a = document.createElement('a');

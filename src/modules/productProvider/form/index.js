@@ -22,7 +22,9 @@ const ProductProviderForm = ({ productProvider, isNew }: Props) => (
     <SectionWrapper id="productProviderSection">
       <SectionHeader
         icon="PROVIDER"
-        title={<FormattedMessage id="modules.productProvider.provider" defaultMessage="PROVIDER" />}
+        title={
+          <FormattedMessage id="modules.productProvider.provider" defaultMessage="END PRODUCT" />
+        }
       >
         {!isNew && (
           <LastModified

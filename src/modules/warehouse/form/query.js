@@ -1,36 +1,17 @@
 // @flow
 import gql from 'graphql-tag';
+import { warehouseFormFragment, userAvatarFragment, metricFragment } from 'graphql';
 
-export const warehouseDetailFragment = gql`
-  fragment warehouseDetailFragment on Warehouse {
-    archived
-    name
-    surface {
-      value
-      metric
-    }
-    street
-    locality
-    region
-    postalCode
-    country
-    id
-    updatedAt
-    updatedBy {
-      id
-      firstName
-      lastName
-    }
-  }
-`;
-
-export const warehouseDetailQuery = gql`
+export const warehouseFormQuery = gql`
   query($id: ID!) {
     warehouse(id: $id) {
-      ...warehouseDetailFragment
+      ...warehouseFormFragment
     }
   }
-  ${warehouseDetailFragment}
+
+  ${warehouseFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
 `;
 
-export default warehouseDetailQuery;
+export default warehouseFormQuery;

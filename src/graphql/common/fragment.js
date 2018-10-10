@@ -8,11 +8,6 @@ export const metricFragment = gql`
   }
 `;
 
-/*
-import { metricFragment } from 'graphql';
-
-${metricFragment}
-*/
 export const sizeFragment = gql`
   fragment sizeFragment on Size {
     length {
@@ -42,10 +37,20 @@ export const tagFragment = gql`
   }
 `;
 
-export const filesFragment = gql`
-  fragment filesFragment on File {
+export const imageFragment = gql`
+  fragment imageFragment on File {
     id
     path
+  }
+`;
+
+export const documentFragment = gql`
+  fragment documentFragment on File {
+    id
+    name
+    path
+    type
+    memo
   }
 `;
 
@@ -64,11 +69,6 @@ export const partnerNameFragment = gql`
   }
 `;
 
-/*
-import { userAvatarFragment } from 'graphql';
-
-${userAvatarFragment}
-*/
 export const timelineDateFullFragment = gql`
   fragment timelineDateFullFragment on TimelineDate {
     id

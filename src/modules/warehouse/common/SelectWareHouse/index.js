@@ -9,7 +9,7 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import WarehouseGridView from 'modules/warehouse/list/WarehouseGridView';
 import { WarehouseCard } from 'components/Cards';
-import query from 'modules/warehouse/list/query';
+import { warehouseListQuery } from 'modules/warehouse/list/query';
 
 type Props = {
   selected?: ?{
@@ -29,7 +29,7 @@ const defaultProps = {
 
 const SelectWareHouse = ({ selected, onCancel, onSelect }: Props) => (
   <Query
-    query={query}
+    query={warehouseListQuery}
     variables={{
       page: 1,
       perPage: 10,

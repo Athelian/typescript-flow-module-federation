@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
-import QueryDetail from 'components/common/QueryDetail';
+import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -15,7 +15,7 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import TagForm from './form';
 import { TagContainer, EntityTypeContainer } from './form/containers';
-import query from './form/query';
+import { tagFormQuery } from './form/query';
 import validator from './form/validator';
 import { createTagMutation, updateTagMutation } from './form/mutation';
 
@@ -155,16 +155,16 @@ export default class TagFormModule extends React.PureComponent<Props> {
                   {isNew || !tagId ? (
                     <TagForm tag={{}} isNew />
                   ) : (
-                    <QueryDetail
-                      query={query}
-                      detailId={tagId}
-                      detailType="tag"
+                    <QueryForm
+                      query={tagFormQuery}
+                      entityId={tagId}
+                      entityType="tag"
                       render={tag => (
                         <Subscribe to={[TagContainer, EntityTypeContainer]}>
                           {(tagState, entityTypesState) => (
                             <TagForm
                               tag={tag}
-                              onDetailReady={() => {
+                              onFormReady={() => {
                                 const { name, description, color, entityTypes } = tag;
                                 tagState.initDetailValues({ name, description, color });
                                 entityTypesState.initDetailValues(entityTypes);

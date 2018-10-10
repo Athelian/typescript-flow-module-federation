@@ -9,7 +9,7 @@ import { TagFormWrapperStyle } from './style';
 type OptionalProps = {
   isNew: boolean,
   tag: Object,
-  onDetailReady: () => void,
+  onFormReady: () => void,
 };
 
 type Props = OptionalProps & {};
@@ -17,16 +17,16 @@ type Props = OptionalProps & {};
 const defaultProps = {
   isNew: false,
   tag: {},
-  onDetailReady: () => {},
+  onFormReady: () => {},
 };
 
 export default class TagForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   componentDidMount() {
-    const { onDetailReady } = this.props;
+    const { onFormReady } = this.props;
 
-    if (onDetailReady) onDetailReady();
+    if (onFormReady) onFormReady();
   }
 
   shouldComponentUpdate(nextProps: Props) {

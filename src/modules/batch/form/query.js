@@ -8,11 +8,12 @@ import {
   tagFragment,
   priceFragment,
   orderCardFragment,
-  filesFragment,
+  imageFragment,
   partnerNameFragment,
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
+  partnerCardFragment,
 } from 'graphql';
 
 export const batchFormQuery = gql`
@@ -29,11 +30,12 @@ export const batchFormQuery = gql`
   ${tagFragment}
   ${priceFragment}
   ${orderCardFragment}
-  ${filesFragment}
+  ${imageFragment}
   ${partnerNameFragment}
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
+  ${partnerCardFragment}
 `;
 
 export default batchFormQuery;

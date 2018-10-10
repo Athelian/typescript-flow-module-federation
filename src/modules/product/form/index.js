@@ -12,7 +12,7 @@ import { ProductFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
-  onDetailReady: () => void,
+  onFormReady: () => void,
 };
 
 type Props = OptionalProps & {
@@ -21,15 +21,15 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isNew: false,
-  onDetailReady: () => {},
+  onFormReady: () => {},
 };
 class ProductForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   componentDidMount() {
-    const { onDetailReady } = this.props;
+    const { onFormReady } = this.props;
 
-    if (onDetailReady) onDetailReady();
+    if (onFormReady) onFormReady();
   }
 
   shouldComponentUpdate(nextProps: Props) {
@@ -85,7 +85,9 @@ class ProductForm extends React.Component<Props> {
         <SectionWrapper id="productProvidersSection">
           <SectionHeader
             icon="PROVIDER"
-            title={<FormattedMessage id="modules.product.providers" defaultMessage="PROVIDERS" />}
+            title={
+              <FormattedMessage id="modules.product.providers" defaultMessage="END PRODUCTS" />
+            }
           />
           <Subscribe to={[FormContainer]}>
             {({ state: { touched, errors } }) => {

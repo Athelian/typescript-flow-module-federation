@@ -31,7 +31,7 @@ function ProductProvidersSection() {
                     label={
                       <FormattedMessage
                         id="modules.product.newProvider"
-                        defaultMessage="NEW PROVIDER"
+                        defaultMessage="NEW END PRODUCT"
                       />
                     }
                     onClick={() => slideToggle(true)}
@@ -124,7 +124,7 @@ function ProductProvidersSection() {
               <div className={EmptyMessageStyle}>
                 <FormattedMessage
                   id="modules.product.noProviderFound"
-                  defaultMessage="No providers found. Please create at least one provider."
+                  defaultMessage="No end products found. Please create at least one end product."
                 />
               </div>
             ) : (
