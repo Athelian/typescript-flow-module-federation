@@ -12,6 +12,7 @@ import {
   imageFragment,
   partnerNameFragment,
   shipmentCardFragment,
+  partnerCardFragment,
 } from 'graphql';
 
 ${userAvatarFragment}
@@ -23,6 +24,7 @@ ${orderCardFragment}
 ${imageFragment}
 ${partnerNameFragment}
 ${shipmentCardFragment}
+${partnerCardFragment}
 */
 export const batchFormFragment = gql`
   fragment batchFormFragment on Batch {
@@ -93,7 +95,7 @@ export const batchFormFragment = gql`
           }
         }
         exporter {
-          ...partnerNameFragment
+          ...partnerCardFragment
         }
         supplier {
           ...partnerNameFragment

@@ -1,9 +1,94 @@
 // @flow
 import gql from 'graphql-tag';
 
+/*
+import {
+  userAvatarFragment,
+  tagFragment,
+  documentFragment,
+  partnerCardFragment,
+  batchFormFragment,
+  timelineDateFullFragment,
+  portFragment,
+} from 'graphql';
+
+${userAvatarFragment}
+${tagFragment}
+${documentFragment}
+${partnerCardFragment}
+${batchFormFragment}
+${timelineDateFullFragment}
+${portFragment}
+*/
 export const shipmentFormFragment = gql`
   fragment shipmentFormFragment on Shipment {
     id
+    archived
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    no
+    blNo
+    blDate
+    bookingNo
+    bookingDate
+    invoiceNo
+    incoterm
+    loadType
+    transportType
+    carrier
+    forwarders {
+      ...partnerCardFragment
+    }
+    inCharges {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    files {
+      ...documentFragment
+    }
+    cargoReady {
+      ...timelineDateFullFragment
+    }
+    voyages {
+      id
+      vesselName
+      vesselCode
+      departurePort {
+        ...portFragment
+      }
+      arrivalPort {
+        ...portFragment
+      }
+      departure {
+        ...timelineDateFullFragment
+      }
+      arrival {
+        ...timelineDateFullFragment
+      }
+    }
+    containerGroups {
+      id
+      warehouse {
+        id
+        name
+      }
+      customClearance {
+        ...timelineDateFullFragment
+      }
+      warehouseArrival {
+        ...timelineDateFullFragment
+      }
+      deliveryReady {
+        ...timelineDateFullFragment
+      }
+    }
+    batches {
+      ...batchFormFragment
+    }
   }
 `;
 
