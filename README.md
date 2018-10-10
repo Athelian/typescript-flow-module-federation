@@ -169,8 +169,11 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
   **NOTE:** Run this command only after `build:stg` or `build:prod`
 
 - **translate**
+  We need to clear the babel cache and running build bundle for generate latest i18n message.
 
   ```
+  rm -rf node_modules/.cache/
+  yarn build:stg
   yarn translate
   ```
 
