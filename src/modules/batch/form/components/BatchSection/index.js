@@ -7,7 +7,12 @@ import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
 import validator from 'modules/batch/form/validator';
 import { FormField } from 'modules/form';
-import { textInputFactory, numberInputFactory, dateInputFactory } from 'modules/form/helpers';
+import {
+  textInputFactory,
+  numberInputFactory,
+  dateInputFactory,
+  textAreaFactory,
+} from 'modules/form/helpers';
 import { OrderItemCard } from 'components/Cards';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
@@ -17,7 +22,6 @@ import {
   BatchSectionWrapperStyle,
   MainFieldsWrapperStyle,
   ItemSectionStyle,
-  TagsInputStyle,
   DividerStyle,
 } from './style';
 
@@ -171,30 +175,49 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                 </BooleanValue>
               </div>
             </div>
-            <div className={TagsInputStyle}>
-              <FieldItem
-                vertical
-                label={
-                  <Label>
-                    <FormattedMessage {...messages.tags} />
-                  </Label>
-                }
-                input={
-                  <TagsInput
-                    editable={isNew}
-                    id="tags"
-                    name="tags"
-                    tagType="Batch"
-                    values={values.tags}
-                    onChange={(field, value) => {
-                      setFieldValue(field, value);
-                    }}
-                  />
-                }
-              />
+            <FieldItem
+              vertical
+              label={
+                <Label>
+                  <FormattedMessage {...messages.tags} />
+                </Label>
+              }
+              input={
+                <TagsInput
+                  editable={isNew}
+                  id="tags"
+                  name="tags"
+                  tagType="Batch"
+                  values={values.tags}
+                  onChange={(field, value) => {
+                    setFieldValue(field, value);
+                  }}
+                />
+              }
+            />
 
-              <div className={DividerStyle} />
-            </div>
+            <FormField
+              name="memo"
+              initValue={values.memo}
+              values={values}
+              validator={validator}
+              setFieldValue={setFieldValue}
+            >
+              {({ name, ...inputHandlers }) =>
+                textAreaFactory({
+                  name,
+                  inputHandlers,
+                  isNew,
+                  originalValue: initialValues[name],
+                  label: <FormattedMessage {...messages.memo} />,
+                  vertical: true,
+                  width: '680px',
+                  height: '65px',
+                })
+              }
+            </FormField>
+
+            <div className={DividerStyle} />
           </>
         );
       }}

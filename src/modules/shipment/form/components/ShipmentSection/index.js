@@ -4,7 +4,12 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { FormField } from 'modules/form';
-import { textInputFactory, dateInputFactory, selectEnumInputFactory } from 'modules/form/helpers';
+import {
+  textInputFactory,
+  dateInputFactory,
+  selectEnumInputFactory,
+  textAreaFactory,
+} from 'modules/form/helpers';
 import {
   ShipmentInfoContainer,
   ShipmentTransportTypeContainer,
@@ -31,7 +36,6 @@ import { getUniqueExporters, renderExporters, renderForwarders } from './helpers
 import {
   ShipmentSectionWrapperStyle,
   MainFieldsWrapperStyle,
-  TagsInputStyle,
   ExporterLabelStyle,
   ExporterSeeMoreButtonStyle,
   DividerStyle,
@@ -435,34 +439,53 @@ const ShipmentSection = ({ isNew }: Props) => (
               </Subscribe>
             </GridColumn>
           </div>
-          <div className={TagsInputStyle}>
-            <Subscribe to={[ShipmentTagsContainer]}>
-              {({ state: { tags }, setFieldValue: changeTags }) => (
-                <FieldItem
-                  vertical
-                  label={
-                    <Label>
-                      <FormattedMessage {...messages.tags} />
-                    </Label>
-                  }
-                  input={
-                    <TagsInput
-                      editable={isNew}
-                      id="tags"
-                      name="tags"
-                      tagType="Shipment"
-                      values={tags}
-                      onChange={(field, value) => {
-                        changeTags(field, value);
-                      }}
-                    />
-                  }
-                />
-              )}
-            </Subscribe>
+          <Subscribe to={[ShipmentTagsContainer]}>
+            {({ state: { tags }, setFieldValue: changeTags }) => (
+              <FieldItem
+                vertical
+                label={
+                  <Label>
+                    <FormattedMessage {...messages.tags} />
+                  </Label>
+                }
+                input={
+                  <TagsInput
+                    editable={isNew}
+                    id="tags"
+                    name="tags"
+                    tagType="Shipment"
+                    values={tags}
+                    onChange={(field, value) => {
+                      changeTags(field, value);
+                    }}
+                  />
+                }
+              />
+            )}
+          </Subscribe>
 
-            <div className={DividerStyle} />
-          </div>
+          <FormField
+            name="memo"
+            initValue={values.memo}
+            values={values}
+            validator={validator}
+            setFieldValue={setFieldValue}
+          >
+            {({ name, ...inputHandlers }) =>
+              textAreaFactory({
+                name,
+                inputHandlers,
+                isNew,
+                originalValue: initialValues[name],
+                label: <FormattedMessage {...messages.memo} />,
+                vertical: true,
+                width: '680px',
+                height: '65px',
+              })
+            }
+          </FormField>
+
+          <div className={DividerStyle} />
         </div>
       );
     }}

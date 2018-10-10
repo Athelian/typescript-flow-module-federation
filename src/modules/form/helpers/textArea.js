@@ -12,6 +12,7 @@ export default function textAreaFactory({
   name,
   inputHandlers,
   originalValue,
+  vertical = false,
 }: {
   required?: boolean,
   width?: string,
@@ -31,10 +32,12 @@ export default function textAreaFactory({
     onBlur: Function,
   },
   originalValue: any,
+  vertical?: boolean,
 }) {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
     <FieldItem
+      vertical={vertical}
       label={
         label && (
           <Label required={required} width={width}>
