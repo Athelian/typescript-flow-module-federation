@@ -16,6 +16,6 @@ export default defineMessages({
   },
   providers: {
     id: 'global.providers',
-    defaultMessage: 'providers',
+    defaultMessage: 'end products',
   },
 });
