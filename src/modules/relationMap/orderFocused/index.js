@@ -44,9 +44,11 @@ const OrderFocused = ({
               let itemType;
               switch (relation.type) {
                 case 'ORDER_ITEM_ALL':
+                  itemType = 'order';
                   itemData = order[item.id];
                   break;
                 case 'BATCH_ALL':
+                  itemType = 'order';
                   itemData = order[item.id];
                   break;
                 case 'ORDER':
@@ -93,9 +95,6 @@ const OrderFocused = ({
                                   focusedItem: getByPathWithDefault({}, 'relation', itemData),
                                   relationItem: relation,
                                 });
-                                if (relation.type === 'ORDER') {
-                                  toggle();
-                                }
                               }}
                             />,
                             <CardAction icon="BRANCH" onClick={() => {}} />,
