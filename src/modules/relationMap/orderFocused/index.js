@@ -9,7 +9,7 @@ import RelationView from '../common/RelationView';
 import DetailFocused, { ToggleSlide } from '../common/SlideForm';
 import Item from '../common/RelationItem';
 
-export const FocusedValue = createObjectValue({ focusedItem: {}, focusedId: '' });
+export const FocusedValue = createObjectValue({ focusedItem: {}, focusedId: '', mode: '' });
 
 type Props = {
   order: Object,
@@ -60,12 +60,12 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                 <ToggleSlide key={key}>
                   {({ assign: setSlide }) => (
                     <FocusedValue key={key}>
-                      {({ value: { focusedItem, focusedId }, assign: setItem, reset }) => (
+                      {({ value: { focusedItem, focusedId, mode }, assign: setItem, reset }) => (
                         <Item
                           key={key}
                           type={relation.type}
                           isFocused={
-                            focusedId
+                            focusedId && mode === 'ORDER'
                               ? focusedId === relation.id
                               : getByPathWithDefault(false, item.id, focusedItem)
                           }
@@ -73,13 +73,17 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                             <CardAction
                               icon="SQUARE"
                               onClick={() => {
-                                setItem({ focusedItem: {}, focusedId: relation.id });
+                                setItem({ focusedItem: {}, focusedId: relation.id, mode: 'ORDER' });
                               }}
                             />,
                             <CardAction
                               icon="BRANCH"
                               onClick={() => {
-                                setItem({ focusedItem: { [item.id]: true }, focusedId: '' });
+                                setItem({
+                                  focusedItem: { [item.id]: true },
+                                  focusedId: '',
+                                  mode: 'ORDER',
+                                });
                               }}
                             />,
                             <CardAction icon="CLEAR" onClick={reset} />,
@@ -134,13 +138,17 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                           <CardAction
                             icon="SQUARE"
                             onClick={() => {
-                              assign({ focusedItem: {}, focusedId: shipmentId });
+                              assign({ focusedItem: {}, focusedId: shipmentId, mode: 'SHIPMENT' });
                             }}
                           />,
                           <CardAction
                             icon="BRANCH"
                             onClick={() => {
-                              assign({ focusedItem: currentShipment.refs, focusedId: shipmentId });
+                              assign({
+                                focusedItem: currentShipment.refs,
+                                focusedId: shipmentId,
+                                mode: 'SHIPMENT',
+                              });
                             }}
                           />,
                           <CardAction icon="CLEAR" onClick={reset} />,
