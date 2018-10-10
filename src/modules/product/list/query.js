@@ -1,34 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-
-export const productListFragment = gql`
-  fragment productListFragment on Product {
-    name
-    serial
-    archived
-    productProviders {
-      id
-      exporter {
-        id
-        name
-      }
-      supplier {
-        id
-        name
-      }
-    }
-    id
-    tags {
-      id
-      name
-      color
-    }
-    files {
-      id
-      path
-    }
-  }
-`;
+import { productCardFragment, partnerNameFragment, tagFragment, imageFragment } from 'graphql';
 
 export const productListQuery = gql`
   query products(
@@ -39,14 +11,17 @@ export const productListQuery = gql`
   ) {
     products(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
-        ...productListFragment
+        ...productCardFragment
       }
       page
       totalPage
     }
   }
 
-  ${productListFragment}
+  ${productCardFragment}
+  ${partnerNameFragment}
+  ${tagFragment}
+  ${imageFragment}
 `;
 
 export const productProvidersQuery = gql`

@@ -8,11 +8,6 @@ export const metricFragment = gql`
   }
 `;
 
-/*
-import { metricFragment } from 'graphql';
-
-${metricFragment}
-*/
 export const sizeFragment = gql`
   fragment sizeFragment on Size {
     length {
@@ -74,11 +69,6 @@ export const partnerNameFragment = gql`
   }
 `;
 
-/*
-import { userAvatarFragment } from 'graphql';
-
-${userAvatarFragment}
-*/
 export const timelineDateFullFragment = gql`
   fragment timelineDateFullFragment on TimelineDate {
     id

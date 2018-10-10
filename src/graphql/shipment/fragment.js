@@ -1,25 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 
-/*
-import {
-  userAvatarFragment,
-  tagFragment,
-  documentFragment,
-  partnerCardFragment,
-  batchFormFragment,
-  timelineDateFullFragment,
-  portFragment,
-} from 'graphql';
-
-${userAvatarFragment}
-${tagFragment}
-${documentFragment}
-${partnerCardFragment}
-${batchFormFragment}
-${timelineDateFullFragment}
-${portFragment}
-*/
 export const shipmentFormFragment = gql`
   fragment shipmentFormFragment on Shipment {
     id
@@ -92,13 +73,6 @@ export const shipmentFormFragment = gql`
   }
 `;
 
-/*
-import { timelineDateMinimalFragment, tagFragment, portFragment } from 'graphql';
-
-${timelineDateMinimalFragment}
-${tagFragment}
-${portFragment}
-*/
 export const shipmentCardFragment = gql`
   fragment shipmentCardFragment on Shipment {
     id

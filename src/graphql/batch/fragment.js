@@ -1,31 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 
-/*
-import {
-  userAvatarFragment,
-  metricFragment,
-  sizeFragment,
-  tagFragment,
-  priceFragment,
-  orderCardFragment,
-  imageFragment,
-  partnerNameFragment,
-  shipmentCardFragment,
-  partnerCardFragment,
-} from 'graphql';
-
-${userAvatarFragment}
-${metricFragment}
-${sizeFragment}
-${tagFragment}
-${priceFragment}
-${orderCardFragment}
-${imageFragment}
-${partnerNameFragment}
-${shipmentCardFragment}
-${partnerCardFragment}
-*/
 export const batchFormFragment = gql`
   fragment batchFormFragment on Batch {
     id
@@ -108,21 +83,6 @@ export const batchFormFragment = gql`
   }
 `;
 
-/*
-import {
-  metricFragment,
-  tagFragment,
-  priceFragment,
-  imageFragment,
-  partnerNameFragment,
-} from 'graphql';
-
-${metricFragment}
-${tagFragment}
-${priceFragment}
-${imageFragment}
-${partnerNameFragment}
-*/
 export const batchCardFragment = gql`
   fragment batchCardFragment on Batch {
     id

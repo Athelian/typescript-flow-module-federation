@@ -1,29 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 
-/*
-import {
-  userAvatarFragment,
-  tagFragment,
-  partnerCardFragment,
-  documentFragment,
-  shipmentCardFragment,
-  priceFragment,
-  imageFragment,
-  partnerNameFragment,
-  batchFormFragment,
-} from 'graphql';
-
-${userAvatarFragment}
-${tagFragment}
-${partnerCardFragment}
-${documentFragment}
-${shipmentCardFragment}
-${priceFragment}
-${imageFragment}
-${partnerNameFragment}
-${batchFormFragment}
-*/
 export const orderFormFragment = gql`
   fragment orderFormFragment on Order {
     id
@@ -83,14 +60,6 @@ export const orderFormFragment = gql`
   }
 `;
 
-/*
-import { partnerNameFragment, tagFragment, priceFragment, userAvatarFragment } from 'graphql';
-
-${partnerNameFragment}
-${tagFragment}
-${priceFragment}
-${userAvatarFragment}
-*/
 export const orderCardFragment = gql`
   fragment orderCardFragment on Order {
     id
