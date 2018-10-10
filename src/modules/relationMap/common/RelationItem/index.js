@@ -2,6 +2,18 @@
 import * as React from 'react';
 import BaseCard from 'components/Cards';
 import { cx } from 'react-emotion';
+// @TODO need to find other solution to manage tag
+import { TagValue } from 'modules/relationMap/common/ToggleTag';
+import {
+  ORDER,
+  ORDER_HEADER,
+  ORDER_ITEM,
+  ORDER_ITEM_ALL,
+  BATCH,
+  BATCH_ALL,
+  SHIPMENT,
+  SHIPMENT_ALL,
+} from 'modules/relationMap/messages';
 import RelationLine from 'components/RelationMap/OrderElement/RelationLine';
 import OrderCard from 'components/RelationMap/OrderElement/OrderCard';
 import OrderItemCard from 'components/RelationMap/OrderElement/OrderItemCard';
@@ -13,8 +25,8 @@ import Tags from 'components/RelationMap/OrderElement/Tags';
 import ShipmentCard from 'components/RelationMap/ShipmentElement';
 import ShipmentHeader from 'components/RelationMap/ShipmentElement/ShipmentHeader';
 import ShipmentCollapsed from 'components/RelationMap/ShipmentElement/ShipmentCollapsed';
+
 import { ItemWrapperStyle, ShipmentCardStyle, ShipmentCardTotalStyle } from './style';
-import { TagValue } from '../ToggleTag';
 
 type OptionalProps = {
   data: Object,
@@ -22,14 +34,14 @@ type OptionalProps = {
   isFocused: boolean,
   onClick: Function,
   onDoubleClick?: Function,
-  onMouseEnter: Function,
-  onMouseLeave: Function,
+  actions: Array<React.Node>,
 };
 
 const defaultProps = {
   data: {},
   isCollapsed: false,
   onClick: () => {},
+  actions: [],
 };
 
 type Props = OptionalProps & {
@@ -37,48 +49,25 @@ type Props = OptionalProps & {
 };
 
 const Item = (props: Props) => {
-  const { type, data, onClick, isFocused, onMouseEnter, onMouseLeave, onDoubleClick } = props;
-  let render = <div />;
+  const { type, data, onClick, isFocused, onDoubleClick, actions } = props;
+  if (typeof type === 'string' && /LINK-[0-4]/.test(type)) {
+    const [, linkType] = type.split('-') || [];
+    return <RelationLine type={Number(linkType)} isFocus={isFocused} />;
+  }
   switch (type) {
-    case 'TAGS': {
-      const templateDS = [
-        {
-          name: 'July ~ Aug',
-          color: 'ORDER',
-        },
-        {
-          name: 'Urgent',
-          color: 'URGENT',
-        },
-      ];
-      render = (
-        <TagValue>
-          {({ value: isToggle }) => (isToggle ? <Tags dataSource={templateDS} /> : null)}
-        </TagValue>
-      );
-      break;
+    case ORDER_HEADER: {
+      return <OrderHeader label={`ORDER ${data.id}`} isChecked />;
     }
-    case 'ORDER_HEADER': {
-      render = (
-        <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-          <OrderHeader label={`ORDER ${data.id}`} isChecked onToggle={() => {}} />
-        </WrapperCard>
-      );
-      break;
-    }
-    case 'ORDER': {
-      render = (
+    case ORDER: {
+      return (
         <BaseCard
+          showActionsOnHover
           icon={type}
           color={type}
-          actions={[]}
+          actions={actions}
           wrapperClassName={ItemWrapperStyle(isFocused)}
         >
-          <WrapperCard
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            onDoubleClick={onDoubleClick}
-          >
+          <WrapperCard onDoubleClick={onDoubleClick}>
             <OrderCard
               info={data.info}
               orderedQuantity={data.orderedQuantity}
@@ -91,41 +80,35 @@ const Item = (props: Props) => {
           </WrapperCard>
         </BaseCard>
       );
-      break;
     }
-    case 'ORDER_ITEM': {
-      render = (
+    case ORDER_ITEM: {
+      return (
         <BaseCard
+          showActionsOnHover
           icon={type}
           color={type}
-          actions={[]}
+          actions={actions}
           wrapperClassName={ItemWrapperStyle(isFocused)}
         >
-          <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-            <OrderItemCard
-              info={data.info}
-              orderedQuantity={data.orderedQuantity}
-              batchedQuantity={data.batchedQuantity}
-              shippedQuantity={data.shippedQuantity}
-            />
-          </WrapperCard>
+          <OrderItemCard
+            info={data.info}
+            orderedQuantity={data.orderedQuantity}
+            batchedQuantity={data.batchedQuantity}
+            shippedQuantity={data.shippedQuantity}
+          />
         </BaseCard>
       );
-      break;
     }
-    case 'BATCH': {
-      render = (
+    case BATCH: {
+      return (
         <BaseCard
+          showActionsOnHover
           icon={type}
           color={type}
-          actions={[]}
+          actions={actions}
           wrapperClassName={ItemWrapperStyle(isFocused)}
         >
-          <WrapperCard
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            onDoubleClick={onDoubleClick}
-          >
+          <WrapperCard onDoubleClick={onDoubleClick}>
             <BatchCard
               title={data.title}
               quantity={data.quantity}
@@ -138,64 +121,27 @@ const Item = (props: Props) => {
           </WrapperCard>
         </BaseCard>
       );
-      break;
     }
-    case 'ORDER_ITEM_ALL': {
-      render = (
+    case ORDER_ITEM_ALL: {
+      return (
         <BaseCard actions={[]} wrapperClassName={ItemWrapperStyle(isFocused)}>
-          <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
+          <WrapperCard onClick={onClick}>
             <TotalCard name="Items" quantity={data.totalItem} />
           </WrapperCard>
         </BaseCard>
       );
-      break;
     }
-    case 'BATCH_ALL':
-      render = (
+    case BATCH_ALL:
+      return (
         <BaseCard wrapperClassName={ItemWrapperStyle(isFocused)}>
-          <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
+          <WrapperCard onClick={onClick}>
             <TotalCard name="Batches" quantity={data.totalBatch} />
           </WrapperCard>
         </BaseCard>
       );
-      break;
-    case 'SHIPMENT': {
-      render = (
-        <BaseCard
-          icon={type}
-          color={type}
-          wrapperClassName={cx(ItemWrapperStyle(isFocused), ShipmentCardStyle)}
-        >
-          <WrapperCard
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            onDoubleClick={onDoubleClick}
-            onClick={onClick}
-          >
-            <ShipmentHeader
-              label={`SHIPMENT ${data.id}`}
-              isChecked
-              ordersNo={data.numberOfOrder}
-              batchesNo={data.numberOfBatch}
-              onToggle={() => {}}
-            />
-            <ShipmentCard shipment={data} />
-            <TagValue>
-              {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
-            </TagValue>
-          </WrapperCard>
-        </BaseCard>
-      );
-      break;
-    }
-    case 'SHIPMENT_ALL': {
-      render = (
-        <BaseCard
-          icon="SHIPMENT"
-          color="SHIPMENT"
-          actions={[]}
-          wrapperClassName={cx(ItemWrapperStyle(isFocused), ShipmentCardTotalStyle)}
-        >
+    case SHIPMENT: {
+      return (
+        <>
           <ShipmentHeader
             label={`SHIPMENT ${data.id}`}
             isChecked
@@ -203,24 +149,53 @@ const Item = (props: Props) => {
             batchesNo={data.numberOfBatch}
             onToggle={() => {}}
           />
-          <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
-            <ShipmentCollapsed shipment={data} />
-            <TagValue>
-              {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
-            </TagValue>
-          </WrapperCard>
-        </BaseCard>
+          <BaseCard
+            icon={type}
+            color={type}
+            actions={actions}
+            wrapperClassName={cx(ItemWrapperStyle(isFocused), ShipmentCardStyle)}
+          >
+            <WrapperCard onDoubleClick={onDoubleClick} onClick={onClick}>
+              <ShipmentCard shipment={data} />
+              <TagValue>
+                {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
+              </TagValue>
+            </WrapperCard>
+          </BaseCard>
+        </>
       );
-      break;
     }
-    default:
-      if (typeof type === 'string' && /LINK-[0-4]/.test(type)) {
-        const [, linkType] = type.split('-') || [];
-        render = <RelationLine type={Number(linkType)} isFocus={isFocused} />;
-      }
-      break;
+    case SHIPMENT_ALL: {
+      return (
+        <>
+          <ShipmentHeader
+            label={`SHIPMENT ${data.id}`}
+            isChecked
+            ordersNo={data.numberOfOrder}
+            batchesNo={data.numberOfBatch}
+            onToggle={() => {}}
+          />
+          <BaseCard
+            showActionsOnHover
+            icon="SHIPMENT"
+            color="SHIPMENT"
+            actions={actions}
+            wrapperClassName={cx(ItemWrapperStyle(isFocused), ShipmentCardTotalStyle)}
+          >
+            <WrapperCard onClick={onClick}>
+              <ShipmentCollapsed shipment={data} />
+              <TagValue>
+                {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
+              </TagValue>
+            </WrapperCard>
+          </BaseCard>
+        </>
+      );
+    }
+    default: {
+      return <div />;
+    }
   }
-  return render;
 };
 
 Item.defaultProps = defaultProps;

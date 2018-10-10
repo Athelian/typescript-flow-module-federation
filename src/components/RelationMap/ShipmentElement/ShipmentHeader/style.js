@@ -5,9 +5,6 @@ import { presets, colors, fontSizes } from 'styles/common';
 export const ShipmentActionsWrapperStyle = (archived: boolean) => css`
   min-width: 190px;
   width: 100%;
-  position: absolute;
-  top: -30px;
-
   display: grid;
   grid-template-columns: min-content auto auto min-content min-content;
   grid-gap: 5px;
