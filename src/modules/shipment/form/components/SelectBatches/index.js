@@ -57,6 +57,7 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
         page: 1,
         filter: {
           query: '',
+          hasShipment: false,
         },
         sort: { field: 'updatedAt', direction: 'DESCENDING' },
       }}
