@@ -5580,10 +5580,10 @@ dotenv-webpack@^1.5.5:
   dependencies:
     dotenv "^5.0.1"
 
-dotenv@6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.0.0.tgz#24e37c041741c5f4b25324958ebbc34bca965935"
-  integrity sha512-FlWbnhgjtwD+uNLUGHbMykMOYQaTivdHEmYwAKFjn6GKe/CqY0fNae93ZHTd20snh9ZLr8mTzIL9m0APQ1pjQg==
+dotenv@6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.1.0.tgz#9853b6ca98292acb7dec67a95018fa40bccff42c"
+  integrity sha512-/veDn2ztgRlB7gKmE3i9f6CmDIyXAy6d5nBq+whO9SLX+Zs1sXEgFLPi+aSuWqUuusMfbi84fT8j34fs1HaYUw==
 
 dotenv@^5.0.1:
   version "5.0.1"
@@ -8821,10 +8821,10 @@ jest-docblock@^23.2.0:
   dependencies:
     detect-newline "^2.1.0"
 
-jest-dom@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/jest-dom/-/jest-dom-2.0.3.tgz#311acc0e6d1ca5f6311f4296471e450ac19b55ee"
-  integrity sha512-tf0xIbWn9goegk6CAdmtE+z7V+n1VwKAuNBbby+RGeCOOA6wBXqem4xtBaRqdXciM+VSTdcQ4tb0ZNVqA1B+gQ==
+jest-dom@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/jest-dom/-/jest-dom-2.0.4.tgz#3dbc7635b9bda844ff6d2a7f4c440efafbce8464"
+  integrity sha512-N9zrlw1pO8ftponU44qRjphg6vDQZHGhZeckWEmO6xe4cwuMSJ7igOMSAF4acWIWObuUBREeM0MoVQY7VAsdeg==
   dependencies:
     chalk "^2.4.1"
     css "^2.2.3"
@@ -10256,10 +10256,10 @@ min-document@^2.19.0:
   dependencies:
     dom-walk "^0.1.0"
 
-mini-css-extract-plugin@^0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.4.3.tgz#98d60fcc5d228c3e36a9bd15a1d6816d6580beb8"
-  integrity sha512-Mxs0nxzF1kxPv4TRi2NimewgXlJqh0rGE30vviCU2WHrpbta6wklnUV9dr9FUtoAHmB3p3LeXEC+ZjgHvB0Dzg==
+mini-css-extract-plugin@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.4.4.tgz#c10410a004951bd3cedac1da69053940fccb625d"
+  integrity sha512-o+Jm+ocb0asEngdM6FsZWtZsRzA8koFUudIDwYUfl94M3PejPHG7Vopw5hN9V8WsMkSFpm3tZP3Fesz89EyrfQ==
   dependencies:
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
@@ -12903,10 +12903,10 @@ react-icons@^2.2.7:
   dependencies:
     react-icon-base "2.1.0"
 
-react-infinite-scroller@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/react-infinite-scroller/-/react-infinite-scroller-1.2.1.tgz#1a8c39a4f752799cdc989635018dd9e341242b5e"
-  integrity sha512-AZ8huYD8uHeDpgRilHmn8OE5qrXssH+L9ZlHWyCrPbEnY1k+kEYQHnsjtss7Whs4t/xBMh5/LcVOCzAR/loHkw==
+react-infinite-scroller@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroller/-/react-infinite-scroller-1.2.2.tgz#1d13b8167476dfe64c401983293dabc6a8a8ecf3"
+  integrity sha512-YshEvalWsC/vTWwA2t5rc+ku8JSXTIe/gzNuyA7rkdJZfs+7LfOz/HpOI3g/VqPCZIxikXBJDlSWltVZN4KyVQ==
   dependencies:
     prop-types "^15.5.8"
 
@@ -13004,10 +13004,10 @@ react-style-proptype@^3.0.0:
   dependencies:
     prop-types "^15.5.4"
 
-react-styleguidist@^7.3.9:
-  version "7.3.9"
-  resolved "https://registry.yarnpkg.com/react-styleguidist/-/react-styleguidist-7.3.9.tgz#31c7148e7ebafb006af5a02f81bd050c182e71d3"
-  integrity sha512-PVtSl4FGEbbgXLSn7b1B7/IPejt2aQlK4lLaOtsc62OnMYXxIpGBmIYI4QrtSvqoAJsf4uH27lCOhWo+hHz0uQ==
+react-styleguidist@^7.3.10:
+  version "7.3.10"
+  resolved "https://registry.yarnpkg.com/react-styleguidist/-/react-styleguidist-7.3.10.tgz#fa062fe7b994d7da6c5fce014fbc3189586f1c04"
+  integrity sha512-UcyTfPEdvqH9x3ICQrDmgRVIce+zcedTUw+mVWdO4LpTFdDKwz4TMNgXnWNYGH1m1l4zPD5hJaKOgjRHTXbwbA==
   dependencies:
     "@vxna/mini-html-webpack-template" "^0.1.7"
     acorn "^5.7.1"
@@ -14699,13 +14699,13 @@ strip-json-comments@2.0.1, strip-json-comments@^2.0.1, strip-json-comments@~2.0.
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
 
-style-loader@0.23.0:
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.23.0.tgz#8377fefab68416a2e05f1cabd8c3a3acfcce74f1"
-  integrity sha512-uCcN7XWHkqwGVt7skpInW6IGO1tG6ReyFQ1Cseh0VcN6VdcFQi62aG/2F3Y9ueA8x4IVlfaSUxpmQXQD9QrEuQ==
+style-loader@0.23.1:
+  version "0.23.1"
+  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.23.1.tgz#cb9154606f3e771ab6c4ab637026a1049174d925"
+  integrity sha512-XK+uv9kWwhZMZ1y7mysB+zoihsEj4wneFWAS5qoiLwzW0WzSqMrrsIy+a3zkQJq0ipFtBpX5W3MqyRIBF/WFGg==
   dependencies:
     loader-utils "^1.1.0"
-    schema-utils "^0.4.5"
+    schema-utils "^1.0.0"
 
 style-loader@^0.20.3:
   version "0.20.3"
@@ -15466,10 +15466,10 @@ urix@^0.1.0:
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
   integrity sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
 
-url-loader@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/url-loader/-/url-loader-1.1.1.tgz#4d1f3b4f90dde89f02c008e662d604d7511167c1"
-  integrity sha512-vugEeXjyYFBCUOpX+ZuaunbK3QXMKaQ3zUnRfIpRBlGkY7QizCnzyyn2ASfcxsvyU3ef+CJppVywnl3Kgf13Gg==
+url-loader@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/url-loader/-/url-loader-1.1.2.tgz#b971d191b83af693c5e3fea4064be9e1f2d7f8d8"
+  integrity sha512-dXHkKmw8FhPqu8asTc1puBfe3TehOCo2+RmOOev5suNCIYBcT626kxiWg1NBVkwc4rO8BGa7gP70W7VXuqHrjg==
   dependencies:
     loader-utils "^1.1.0"
     mime "^2.0.3"

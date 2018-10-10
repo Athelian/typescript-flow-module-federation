@@ -25,9 +25,13 @@
           { "name": "Shipment" },
           { "name": "Voyage" },
           { "name": "ContainerGroup" },
+          { "name": "TimelineDate" },
+          { "name": "TimelineDateRevision" },
+          { "name": "Warehouse" },
           { "name": "Tag" },
           { "name": "User" },
           { "name": "Group" },
+          { "name": "File" },
           { "name": "Partnership" },
           { "name": "EventChange" },
           { "name": "EventComment" }
