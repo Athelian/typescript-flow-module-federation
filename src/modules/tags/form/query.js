@@ -1,29 +1,16 @@
 // @flow
 import gql from 'graphql-tag';
-
-export const tagDetailFragment = gql`
-  fragment tagDetailFragment on Tag {
-    name
-    description
-    color
-    entityTypes
-    id
-    updatedAt
-    updatedBy {
-      id
-      firstName
-      lastName
-    }
-  }
-`;
+import { tagFormFragment, userAvatarFragment } from 'graphql';
 
 export const tagFormQuery = gql`
   query($id: ID!) {
     tag(id: $id) {
-      ...tagDetailFragment
+      ...tagFormFragment
     }
   }
-  ${tagDetailFragment}
+
+  ${tagFormFragment}
+  ${userAvatarFragment}
 `;
 
 export default tagFormQuery;

@@ -9,6 +9,7 @@ import {
   priceFragment,
   metricFragment,
   sizeFragment,
+  productProviderFormFragment,
 } from 'graphql';
 
 export const productFormQuery = gql`
@@ -26,6 +27,7 @@ export const productFormQuery = gql`
   ${priceFragment}
   ${metricFragment}
   ${sizeFragment}
+  ${productProviderFormFragment}
 `;
 
 export default productFormQuery;

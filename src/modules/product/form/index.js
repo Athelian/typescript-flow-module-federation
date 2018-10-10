@@ -85,7 +85,9 @@ class ProductForm extends React.Component<Props> {
         <SectionWrapper id="productProvidersSection">
           <SectionHeader
             icon="PROVIDER"
-            title={<FormattedMessage id="modules.product.providers" defaultMessage="PROVIDERS" />}
+            title={
+              <FormattedMessage id="modules.product.providers" defaultMessage="END PRODUCTS" />
+            }
           />
           <Subscribe to={[FormContainer]}>
             {({ state: { touched, errors } }) => {

@@ -168,7 +168,7 @@ class ProductFormModule extends React.Component<Props> {
                           label={
                             <FormattedMessage
                               id="modules.product.providers"
-                              defaultMessage="PROVIDERS"
+                              defaultMessage="END PRODUCTS"
                             />
                           }
                           icon="PROVIDER"

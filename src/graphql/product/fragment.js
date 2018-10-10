@@ -21,47 +21,7 @@ export const productFormFragment = gql`
       ...imageFragment
     }
     productProviders {
-      id
-      archived
-      updatedAt
-      updatedBy {
-        ...userAvatarFragment
-      }
-      origin
-      productionLeadTime
-      exporter {
-        ...partnerCardFragment
-      }
-      supplier {
-        ...partnerCardFragment
-      }
-      inspectionFee {
-        ...priceFragment
-      }
-      unitType
-      unitPrice {
-        ...priceFragment
-      }
-      unitWeight {
-        ...metricFragment
-      }
-      unitVolume {
-        ...metricFragment
-      }
-      unitSize {
-        ...sizeFragment
-      }
-      packageName
-      packageCapacity
-      packageGrossWeight {
-        ...metricFragment
-      }
-      packageVolume {
-        ...metricFragment
-      }
-      packageSize {
-        ...sizeFragment
-      }
+      ...productProviderFormFragment
     }
   }
 `;
