@@ -14,6 +14,7 @@ class TotalCard extends React.PureComponent<Props> {
         <span>
           Total {quantity} {name}
         </span>
+        <span>ALL</span>
       </div>
     );
   }

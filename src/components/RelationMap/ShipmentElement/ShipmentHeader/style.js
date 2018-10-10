@@ -2,11 +2,11 @@
 import { css } from 'react-emotion';
 import { presets, colors, fontSizes } from 'styles/common';
 
-export const ShipmentActionsWrapperStyle = (archived: boolean) => css`
+export const ShipmentActionsWrapperStyle = (archived: boolean, enableActionCheck: boolean) => css`
   min-width: 190px;
   width: 100%;
   display: grid;
-  grid-template-columns: min-content auto auto min-content min-content;
+  grid-template-columns: ${enableActionCheck && 'min-content'} auto auto min-content min-content;
   grid-gap: 5px;
   color: ${archived ? colors.GRAY : colors.TEAL};
   ${fontSizes.MAIN};

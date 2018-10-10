@@ -127,8 +127,8 @@ export const OrderMapWrapperStyle = css`
 `;
 export const FunctionWrapperStyle = css`
   grid-column: span 4;
-  display: grid;
-  grid-template-columns: 1fr 3.8fr;
+  display: flex;
+  //grid-template-columns: 1fr 3.8fr;
   background-color: ${colors.WHITE};
   padding: 10px 10px;
   ${borderRadiuses.MAIN};
@@ -136,17 +136,13 @@ export const FunctionWrapperStyle = css`
   border-bottom-right-radius: 0;
   box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
   z-index: 2;
-
-  > div:first-child > div:first-child {
-    width: 90%;
-  }
 `;
 
 export const BadgeWrapperStyle = css`
   grid-column: span 4;
   padding: 10px 0;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.8fr;
+  grid-template-columns: 0.97fr 0.95fr 1.05fr 1.8fr;
   background-color: ${colors.WHITE};
   -webkit-border-radius: 0;
   -moz-border-radius: 0;

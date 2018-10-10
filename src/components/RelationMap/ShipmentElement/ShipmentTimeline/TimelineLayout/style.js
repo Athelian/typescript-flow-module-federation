@@ -69,6 +69,7 @@ export const TimelineIconName = css`
   position: absolute;
   top: -20px;
   left: calc(-50% - 20px);
+  background-color: #eeeeee;
 `;
 
 export const TimelineIconDate = css`

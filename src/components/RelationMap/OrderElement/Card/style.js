@@ -26,15 +26,15 @@ export const ProgressIconStyle = css`
 
 export const BarStyle = css`
   height: 15px;
-  width: 90px;
+  width: 100%;
   ${borderRadiuses.BUTTON};
   background-color: rgba(0, 0, 0, 0.2);
 `;
 
 export const NumberLineStyle = css`
   text-align: center;
+  width: 100%;
   position: absolute;
-  width: inherit;
   height: inherit;
 `;
 
@@ -95,5 +95,6 @@ export const BatchInfoStyle = css`
 
   > div:first-child {
     color: #aaaaaa;
+    font-weight: 500;
   }
 `;

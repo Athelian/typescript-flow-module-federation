@@ -3,7 +3,11 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import * as style from './style';
 
-type Props = {
+type OptionalProps = {
+  isCollapsed: boolean,
+};
+
+type Props = OptionalProps & {
   isChecked: boolean,
   onToggle: Function,
   label: string,
@@ -11,17 +15,32 @@ type Props = {
   batchesNo: number,
 };
 
-const ShipmentHeader = ({ isChecked, onToggle, label, ordersNo, batchesNo }: Props) => (
+const defaultProps = {
+  isCollapsed: false,
+};
+
+const ENABLE_ACTION_CHECK = false;
+
+const ShipmentHeader = ({
+  isChecked,
+  isCollapsed,
+  onToggle,
+  label,
+  ordersNo,
+  batchesNo,
+}: Props) => (
   <>
-    <div className={style.ShipmentActionsWrapperStyle(isChecked)}>
-      <button
-        type="button"
-        className={style.ShipmentActionCheckStyle(isChecked)}
-        tabIndex={-1}
-        onClick={onToggle}
-      >
-        <Icon icon="ORDER_SELECT" />
-      </button>
+    <div className={style.ShipmentActionsWrapperStyle(isChecked, ENABLE_ACTION_CHECK)}>
+      {ENABLE_ACTION_CHECK && (
+        <button
+          type="button"
+          className={style.ShipmentActionCheckStyle(isChecked)}
+          tabIndex={-1}
+          onClick={onToggle}
+        >
+          <Icon icon="ORDER_SELECT" />
+        </button>
+      )}
       <div className={style.ShipmentActionLabelStyle}>{label}</div>
       <div />
       <button
@@ -30,7 +49,7 @@ const ShipmentHeader = ({ isChecked, onToggle, label, ordersNo, batchesNo }: Pro
         tabIndex={-1}
         onClick={onToggle}
       >
-        {isChecked ? 'HIDE' : 'ALL'}
+        {isCollapsed ? 'ALL' : 'HIDE'}
       </button>
       <div className={style.ShipmentActionSummaryStyle}>
         <Icon icon="ORDER" />
@@ -41,5 +60,7 @@ const ShipmentHeader = ({ isChecked, onToggle, label, ordersNo, batchesNo }: Pro
     </div>
   </>
 );
+
+ShipmentHeader.defaultProps = defaultProps;
 
 export default ShipmentHeader;

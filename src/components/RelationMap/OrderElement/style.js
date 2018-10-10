@@ -29,13 +29,25 @@ export const OrderListItemStyle = (isFocused: boolean) => css`
 `;
 
 export const TotalCardWrapperStyle = css`
-  margin-left: 1em;
+  margin: auto 10px;
+
+  display: flex;
+  justify-content: space-between;
+
+  > span:nth-child(1) {
+    color: #555555;
+  }
+
+  > span:nth-child(2) {
+    color: #aaaaaa;
+    font-weight: 500;
+  }
 `;
 
 export const CardWrapperStyle = css`
   display: grid;
-  grid-template-columns: auto 90px;
-  padding: 0 25px 0 5px;
+  grid-template-columns: 1fr 1fr;
+  padding: 0 25px 0 10px;
 `;
 export const CardTitleStyle = css`
   ${fontSizes.SMALL};
@@ -46,7 +58,8 @@ export const CardTitleStyle = css`
   word-break: break-all;
 `;
 export const CardVisualizeStyle = css`
-  width: 90px;
+  width: 100%;
+  position: relative;
   height: 30px;
 `;
 

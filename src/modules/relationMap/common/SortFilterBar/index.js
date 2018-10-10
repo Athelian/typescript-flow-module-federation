@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { SortInput, FilterInput, SearchInput } from 'components/NavBar';
 import GridColumn from 'components/GridColumn';
-import { GroupFilterStyle } from './style';
+import { GroupFilterStyle, SortWrapperStyle, GroupFilterWrapperStyle } from './style';
 
 type OptionalProps = {
   sortInput: Array<Object>,
@@ -48,42 +48,46 @@ class SortFilterBar extends React.Component<Props, State> {
     return (
       <>
         <div className={className}>
-          <SortInput
-            sort={sortInput.find(item => item.value === sort.field) || sortInput[0]}
-            ascending={sort.direction !== 'DESCENDING'}
-            fields={sortInput}
-            onChange={({ field: { value }, ascending }) => {
-              this.onChangeFilter({
-                sort: {
-                  field: value,
-                  direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                },
-              });
-            }}
-          />
-          <div className={GroupFilterStyle}>
-            <FilterInput
-              initialFilter={{}}
-              onChange={newFilter => this.onChangeFilter({ ...newFilter })}
-              width={400}
-            >
-              {({ values, setFieldValue }) => (
-                <GridColumn>
-                  <SearchInput
-                    name="filter"
-                    value={values.filter}
-                    onClear={() => setFieldValue('filter', '')}
-                    onChange={newValue => setFieldValue('filter', newValue)}
-                  />
-                </GridColumn>
-              )}
-            </FilterInput>
-            <SearchInput
-              name="filter"
-              value={filter}
-              onClear={() => this.onChangeFilter({ filter: '' })}
-              onChange={newQuery => this.onChangeFilter({ filter: newQuery })}
+          <div className={SortWrapperStyle}>
+            <SortInput
+              sort={sortInput.find(item => item.value === sort.field) || sortInput[0]}
+              ascending={sort.direction !== 'DESCENDING'}
+              fields={sortInput}
+              onChange={({ field: { value }, ascending }) => {
+                this.onChangeFilter({
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                  },
+                });
+              }}
             />
+          </div>
+          <div className={GroupFilterWrapperStyle}>
+            <div className={GroupFilterStyle}>
+              <FilterInput
+                initialFilter={{}}
+                onChange={newFilter => this.onChangeFilter({ ...newFilter })}
+                width={400}
+              >
+                {({ values, setFieldValue }) => (
+                  <GridColumn>
+                    <SearchInput
+                      name="filter"
+                      value={values.filter}
+                      onClear={() => setFieldValue('filter', '')}
+                      onChange={newValue => setFieldValue('filter', newValue)}
+                    />
+                  </GridColumn>
+                )}
+              </FilterInput>
+              <SearchInput
+                name="filter"
+                value={filter}
+                onClear={() => this.onChangeFilter({ filter: '' })}
+                onChange={newQuery => this.onChangeFilter({ filter: newQuery })}
+              />
+            </div>
           </div>
         </div>
         {children({ sort, filter, onChangeFilter: this.onChangeFilter })}

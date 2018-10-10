@@ -196,12 +196,13 @@ storiesOf('RelationMap/ShipmentList', module)
               ordersNo={3}
               batchesNo={9}
               onToggle={() => {}}
+              isCollapsed
             />
           </div>
           <div className={CardWrapperStyle}>
             <BaseCard
-              icon="SHIPMENT_ALL"
-              color="SHIPMENT_ALL"
+              icon="SHIPMENT"
+              color="SHIPMENT"
               actions={[]}
               wrapperClassName={ItemWrapperStyle(true)}
             >

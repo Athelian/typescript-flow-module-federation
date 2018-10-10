@@ -49,11 +49,12 @@ type Props = OptionalProps & {
 };
 
 const Item = (props: Props) => {
-  const { type, data, onClick, isFocused, onDoubleClick, actions } = props;
+  const { type, data, onClick, isFocused, isCollapsed, onDoubleClick, actions } = props;
   if (typeof type === 'string' && /LINK-[0-4]/.test(type)) {
     const [, linkType] = type.split('-') || [];
     return <RelationLine type={Number(linkType)} isFocus={isFocused} />;
   }
+
   switch (type) {
     case ORDER_HEADER: {
       return <OrderHeader label={`ORDER ${data.id}`} isChecked />;
@@ -147,7 +148,8 @@ const Item = (props: Props) => {
             isChecked
             ordersNo={data.numberOfOrder}
             batchesNo={data.numberOfBatch}
-            onToggle={() => {}}
+            onToggle={onClick}
+            isCollapsed={isCollapsed}
           />
           <BaseCard
             icon={type}
@@ -173,7 +175,8 @@ const Item = (props: Props) => {
             isChecked
             ordersNo={data.numberOfOrder}
             batchesNo={data.numberOfBatch}
-            onToggle={() => {}}
+            onToggle={onClick}
+            isCollapsed={isCollapsed}
           />
           <BaseCard
             showActionsOnHover

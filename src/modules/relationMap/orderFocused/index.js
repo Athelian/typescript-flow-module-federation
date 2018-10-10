@@ -141,6 +141,11 @@ const OrderFocused = ({
                             ? relationItem.id === shipmentId
                             : getByPathWithDefault(false, `shipment.${shipmentId}`, focusedItem)
                         }
+                        isCollapsed={isCollapsed}
+                        onMouseLeave={reset}
+                        onMouseEnter={() =>
+                          assign({ focusedItem: currentShipment.refs, shipmentId })
+                        }
                         actions={[
                           <CardAction
                             icon="SQUARE"
