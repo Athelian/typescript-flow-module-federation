@@ -16,6 +16,7 @@ export const CardWrapper = css`
   color: ${colors.GRAY_DARK_1};
   ${fontSizes.SMALL};
   width: 195px;
+  height: 163px;
   padding-top: 5px;
 `;
 

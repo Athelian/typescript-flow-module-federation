@@ -7,7 +7,7 @@ export const StatusStyle = (isToggle: boolean) => css`
   grid-gap: 5px;
   color: ${isToggle ? colors.TEAL : colors.GRAY};
   ${fontSizes.MAIN};
-  font-weight: bold;
+  font-weight: 500;
   align-items: center;
 `;
 

@@ -1,6 +1,5 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets } from 'styles/common';
 
 export const ShipmentLabelStyle = css`
   height: 24px;
@@ -10,8 +9,8 @@ export const ShipmentLabelStyle = css`
   justify-content: space-between;
   padding-right: 30px;
   padding-left: 5px;
-  ${presets.BOX};
-  box-shadow: 0 10px 15px 0 rgba(0, 0, 0, 0.1);
+  // box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.1);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-top-left-radius: 5px;

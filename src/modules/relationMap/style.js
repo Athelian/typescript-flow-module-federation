@@ -130,10 +130,12 @@ export const FunctionWrapperStyle = css`
   display: grid;
   grid-template-columns: 1fr 3.8fr;
   background-color: ${colors.WHITE};
-  padding: 5px;
+  padding: 10px 10px;
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
+  z-index: 2;
 
   > div:first-child > div:first-child {
     width: 90%;
@@ -142,14 +144,15 @@ export const FunctionWrapperStyle = css`
 
 export const BadgeWrapperStyle = css`
   grid-column: span 4;
-  padding-top: 10px;
-  padding-bottom: 5px;
+  padding: 10px 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1.8fr;
   background-color: ${colors.WHITE};
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
+  box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
+  z-index: 1;
 `;
 export const LoadingWrapperStyle = css`
   grid-column: span 4;

@@ -125,16 +125,19 @@ export default class BaseCard extends React.Component<Props, State> {
               <Actions visible={actionsAreShown} actions={this.parsedActions} />
             </OutsideClickHandler>
           )}
-        <CornerIcon
-          ref={this.cornerIcon}
-          icon={icon}
-          color={color}
-          disabled={disabled}
-          readOnly={readOnly}
-          selectable={selectable}
-          selected={selected}
-          onClick={this.toggleActions}
-        />
+        {icon &&
+          icon.length && (
+            <CornerIcon
+              ref={this.cornerIcon}
+              icon={icon}
+              color={color}
+              disabled={disabled}
+              readOnly={readOnly}
+              selectable={selectable}
+              selected={selected}
+              onClick={this.toggleActions}
+            />
+          )}
         {children}
         {!disabled &&
           selectable && (

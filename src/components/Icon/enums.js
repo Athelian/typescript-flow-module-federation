@@ -41,8 +41,6 @@ import {
   faSearch as SEARCH,
   faTimes as CLEAR,
   faTimesCircle as CANCEL,
-  faToggleOn as TOGGLE_ON,
-  faToggleOff as TOGGLE_OFF,
   faTrashAlt as REMOVE,
   faClone as CLONE,
   faCheckCircle as CHECKED,
@@ -111,6 +109,8 @@ import {
   // Common UI
   faAngleLeft as ANGLE_LEFT,
   faAngleRight as ANGLE_RIGHT,
+  faToggleOn as TOGGLE_ON,
+  faToggleOff as TOGGLE_OFF,
 } from '@fortawesome/pro-light-svg-icons';
 
 export default {

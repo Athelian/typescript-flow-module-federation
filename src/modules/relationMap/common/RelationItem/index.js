@@ -191,8 +191,8 @@ const Item = (props: Props) => {
     case 'SHIPMENT_ALL': {
       render = (
         <BaseCard
-          icon={type}
-          color={type}
+          icon="SHIPMENT"
+          color="SHIPMENT"
           actions={[]}
           wrapperClassName={cx(ItemWrapperStyle(isFocused), ShipmentCardTotalStyle)}
         >
@@ -204,7 +204,7 @@ const Item = (props: Props) => {
             onToggle={() => {}}
           />
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
-            <ShipmentCollapsed name={data.no} />
+            <ShipmentCollapsed shipment={data} />
             <TagValue>
               {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
             </TagValue>
