@@ -9,6 +9,7 @@ export const shipmentFormFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    memo
     no
     blNo
     blDate

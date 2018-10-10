@@ -10,6 +10,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import LoginForm from './components/LoginForm';
 import {
   LoginContainerStyle,
+  LoginFormWrapperStyle,
   LoginLogoStyle,
   LoginErrorStyle,
   LoginLogoNameStyle,
@@ -52,16 +53,20 @@ const Login = ({ redirectUrl }: Props) => (
                       <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
                       <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
                     </div>
-                    <LoginForm onLogin={variables => login({ variables: { input: variables } })} />
-                    {(error ||
-                      (data &&
-                        data.login &&
-                        data.login.violations &&
-                        data.login.violations.length > 0)) && (
-                      <div id="errorMsg" className={LoginErrorStyle}>
-                        <FormattedMessage {...messages.error} />{' '}
-                      </div>
-                    )}
+                    <div className={LoginFormWrapperStyle}>
+                      <LoginForm
+                        onLogin={variables => login({ variables: { input: variables } })}
+                      />
+                      {(error ||
+                        (data &&
+                          data.login &&
+                          data.login.violations &&
+                          data.login.violations.length > 0)) && (
+                        <div id="errorMsg" className={LoginErrorStyle}>
+                          <FormattedMessage {...messages.error} />{' '}
+                        </div>
+                      )}
+                    </div>
                   </React.Fragment>
                 )}
               </React.Fragment>

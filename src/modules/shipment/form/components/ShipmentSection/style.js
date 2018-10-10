@@ -6,6 +6,8 @@ export const ShipmentSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
   padding: 40px 100px;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 20px;
 `;
 
 export const MainFieldsWrapperStyle: string = css`
@@ -36,17 +38,13 @@ export const ExporterEmptyCardStyle: string = css`
   height: 215px;
 `;
 
-export const TagsInputStyle: string = css`
-  margin-top: 20px;
-`;
-
 export const QuantitySummaryStyle: string = css`
   display: flex;
   justify-content: space-between;
 `;
 
 export const DividerStyle: string = css`
-  margin: 40px 0;
+  margin: 20px 0;
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};
   width: 100%;

@@ -111,7 +111,7 @@ class ImagesUploadInput extends React.Component<Props, State> {
     return (
       <div>
         {uploading ? (
-          <div className={ProgressStyle}>{`${progress}%`}</div>
+          <div className={ProgressStyle({ width, height })}>{`${progress}%`}</div>
         ) : (
           <label className={AddImageStyle({ width, height })}>
             <Icon icon="PHOTO" />

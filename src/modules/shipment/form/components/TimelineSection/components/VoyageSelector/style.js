@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, borderRadiuses, fontSizes } from 'styles/common';
+import { presets, colors, borderRadiuses, fontSizes, shadows } from 'styles/common';
 
 export const VoyageSelectorWrapperStyle: string = css`
   position: relative;
@@ -12,7 +12,7 @@ export const VoyageSelectorWrapperStyle: string = css`
   width: 100%;
   height: 50px;
   flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  ${shadows.FAINT};
   padding: 0 0 0 10px;
   &:hover,
   :focus {
@@ -29,7 +29,7 @@ export const VoyageOptionsWrapperStyle: string = css`
   width: 100%;
   height: 50px;
   flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  ${shadows.FAINT};
 `;
 
 export const VoyageIconWrapperStyle = (isActive: boolean): string => css`

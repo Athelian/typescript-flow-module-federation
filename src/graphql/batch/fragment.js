@@ -9,6 +9,7 @@ export const batchFormFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    memo
     no
     quantity
     producedAt

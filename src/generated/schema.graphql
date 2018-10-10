@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Oct 02 2018 16:21:49 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Oct 10 2018 18:56:31 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -26883,9 +26883,7 @@ enum Airport {
   ZWWKI
 }
 
-"""
-Parsed Json value which can be any type or structure, please be careful
-"""
+"""Any scalar"""
 scalar Any
 
 type Batch implements Model & Owned & Package & Tagged {
@@ -27016,6 +27014,8 @@ input BatchFilterInput {
   producedAt: DateRangeInput
   deliveredAt: DateRangeInput
   expiredAt: DateRangeInput
+  hasShipment: Boolean
+  hasShipmentExcludeId: ID
   tagIds: [ID!]
 }
 
@@ -28364,7 +28364,7 @@ interface Documented {
   files: [File!]!
 }
 
-union Entity = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | ContainerGroup | Tag | User | Group | Partnership | EventChange | EventComment
+union Entity = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | File | Partnership | EventChange | EventComment
 
 union Event = EventChange | EventComment
 
@@ -28471,17 +28471,23 @@ enum FileType {
   """OrderPo"""
   OrderPo
 
+  """OrderPi"""
+  OrderPi
+
   """ShipmentBl"""
   ShipmentBl
 
   """ShipmentInvoice"""
   ShipmentInvoice
 
-  """ShipmentPacking"""
-  ShipmentPacking
+  """ShipmentPackingList"""
+  ShipmentPackingList
 
-  """ShipmentImport"""
-  ShipmentImport
+  """ShipmentImportDeclaration"""
+  ShipmentImportDeclaration
+
+  """ShipmentInspectionApplication"""
+  ShipmentInspectionApplication
 
   """ProductSpec"""
   ProductSpec
@@ -28501,6 +28507,7 @@ type Group implements Model {
   address: String
   zipCode: String
   country: String
+  avatar: File
   disabled: Boolean!
   dummy: Boolean!
   partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPagination!
@@ -28511,6 +28518,11 @@ type Group implements Model {
   createdBy: User
   updatedBy: User
   deletedBy: User
+}
+
+type GroupMutated {
+  group: Group
+  violations: [Violation!]
 }
 
 enum GroupType {
@@ -28530,6 +28542,19 @@ enum GroupType {
   Warehouse
 }
 
+input GroupUpdateInput {
+  name: String
+  name2: String
+  types: [GroupType!]
+  disabled: Boolean
+  tel: String
+  address: String
+  zipCode: String
+  country: Country
+  avatar: FileInput
+  dummy: Boolean
+}
+
 enum Incoterm {
   FAS
   FOB
@@ -28544,9 +28569,576 @@ enum Incoterm {
   DDP
 }
 
+enum Language {
+  """Afar"""
+  aa
+
+  """Abkhazian"""
+  ab
+
+  """Avestan"""
+  ae
+
+  """Afrikaans"""
+  af
+
+  """Akan"""
+  ak
+
+  """Amharic"""
+  am
+
+  """Aragonese"""
+  an
+
+  """Arabic"""
+  ar
+
+  """Assamese"""
+  as
+
+  """Avaric"""
+  av
+
+  """Aymara"""
+  ay
+
+  """Azerbaijani"""
+  az
+
+  """Bashkir"""
+  ba
+
+  """Belarusian"""
+  be
+
+  """Bulgarian"""
+  bg
+
+  """Bihari"""
+  bh
+
+  """Bislama"""
+  bi
+
+  """Bambara"""
+  bm
+
+  """Bengali"""
+  bn
+
+  """Tibetan"""
+  bo
+
+  """Breton"""
+  br
+
+  """Bosnian"""
+  bs
+
+  """Catalan"""
+  ca
+
+  """Chechen"""
+  ce
+
+  """Chamorro"""
+  ch
+
+  """Corsican"""
+  co
+
+  """Cree"""
+  cr
+
+  """Czech"""
+  cs
+
+  """Church Slavic"""
+  cu
+
+  """Chuvash"""
+  cv
+
+  """Welsh"""
+  cy
+
+  """Danish"""
+  da
+
+  """German"""
+  de
+
+  """Divehi"""
+  dv
+
+  """Dzongkha"""
+  dz
+
+  """Ewe"""
+  ee
+
+  """Greek"""
+  el
+
+  """English"""
+  en
+
+  """Esperanto"""
+  eo
+
+  """Spanish"""
+  es
+
+  """Estonian"""
+  et
+
+  """Basque"""
+  eu
+
+  """Persian"""
+  fa
+
+  """Fulah"""
+  ff
+
+  """Finnish"""
+  fi
+
+  """Fijian"""
+  fj
+
+  """Faroese"""
+  fo
+
+  """French"""
+  fr
+
+  """Frisian"""
+  fy
+
+  """Irish"""
+  ga
+
+  """Scottish Gaelic"""
+  gd
+
+  """Gallegan"""
+  gl
+
+  """Guarani"""
+  gn
+
+  """Gujarati"""
+  gu
+
+  """Manx"""
+  gv
+
+  """Hausa"""
+  ha
+
+  """Hebrew"""
+  iw
+
+  """Hindi"""
+  hi
+
+  """Hiri Motu"""
+  ho
+
+  """Croatian"""
+  hr
+
+  """Haitian"""
+  ht
+
+  """Hungarian"""
+  hu
+
+  """Armenian"""
+  hy
+
+  """Herero"""
+  hz
+
+  """Interlingua"""
+  ia
+
+  """Indonesian"""
+  in
+
+  """Interlingue"""
+  ie
+
+  """Igbo"""
+  ig
+
+  """Sichuan Yi"""
+  ii
+
+  """Inupiaq"""
+  ik
+
+  """Ido"""
+  io
+
+  """Icelandic"""
+  is
+
+  """Italian"""
+  it
+
+  """Inuktitut"""
+  iu
+
+  """Japanese"""
+  ja
+
+  """Yiddish"""
+  ji
+
+  """Javanese"""
+  jv
+
+  """Georgian"""
+  ka
+
+  """Kongo"""
+  kg
+
+  """Kikuyu"""
+  ki
+
+  """Kwanyama"""
+  kj
+
+  """Kazakh"""
+  kk
+
+  """Greenlandic"""
+  kl
+
+  """Khmer"""
+  km
+
+  """Kannada"""
+  kn
+
+  """Korean"""
+  ko
+
+  """Kanuri"""
+  kr
+
+  """Kashmiri"""
+  ks
+
+  """Kurdish"""
+  ku
+
+  """Komi"""
+  kv
+
+  """Cornish"""
+  kw
+
+  """Kirghiz"""
+  ky
+
+  """Latin"""
+  la
+
+  """Luxembourgish"""
+  lb
+
+  """Ganda"""
+  lg
+
+  """Limburgish"""
+  li
+
+  """Lingala"""
+  ln
+
+  """Lao"""
+  lo
+
+  """Lithuanian"""
+  lt
+
+  """Luba-Katanga"""
+  lu
+
+  """Latvian"""
+  lv
+
+  """Malagasy"""
+  mg
+
+  """Marshallese"""
+  mh
+
+  """Maori"""
+  mi
+
+  """Macedonian"""
+  mk
+
+  """Malayalam"""
+  ml
+
+  """Mongolian"""
+  mn
+
+  """Moldavian"""
+  mo
+
+  """Marathi"""
+  mr
+
+  """Malay"""
+  ms
+
+  """Maltese"""
+  mt
+
+  """Burmese"""
+  my
+
+  """Nauru"""
+  na
+
+  """Norwegian Bokmål"""
+  nb
+
+  """North Ndebele"""
+  nd
+
+  """Nepali"""
+  ne
+
+  """Ndonga"""
+  ng
+
+  """Dutch"""
+  nl
+
+  """Norwegian Nynorsk"""
+  nn
+
+  """Norwegian"""
+  no
+
+  """South Ndebele"""
+  nr
+
+  """Navajo"""
+  nv
+
+  """Nyanja"""
+  ny
+
+  """Occitan"""
+  oc
+
+  """Ojibwa"""
+  oj
+
+  """Oromo"""
+  om
+
+  """Oriya"""
+  or
+
+  """Ossetian"""
+  os
+
+  """Panjabi"""
+  pa
+
+  """Pali"""
+  pi
+
+  """Polish"""
+  pl
+
+  """Pushto"""
+  ps
+
+  """Portuguese"""
+  pt
+
+  """Quechua"""
+  qu
+
+  """Raeto-Romance"""
+  rm
+
+  """Rundi"""
+  rn
+
+  """Romanian"""
+  ro
+
+  """Russian"""
+  ru
+
+  """Kinyarwanda"""
+  rw
+
+  """Sanskrit"""
+  sa
+
+  """Sardinian"""
+  sc
+
+  """Sindhi"""
+  sd
+
+  """Northern Sami"""
+  se
+
+  """Sango"""
+  sg
+
+  """Sinhalese"""
+  si
+
+  """Slovak"""
+  sk
+
+  """Slovenian"""
+  sl
+
+  """Samoan"""
+  sm
+
+  """Shona"""
+  sn
+
+  """Somali"""
+  so
+
+  """Albanian"""
+  sq
+
+  """Serbian"""
+  sr
+
+  """Swati"""
+  ss
+
+  """Southern Sotho"""
+  st
+
+  """Sundanese"""
+  su
+
+  """Swedish"""
+  sv
+
+  """Swahili"""
+  sw
+
+  """Tamil"""
+  ta
+
+  """Telugu"""
+  te
+
+  """Tajik"""
+  tg
+
+  """Thai"""
+  th
+
+  """Tigrinya"""
+  ti
+
+  """Turkmen"""
+  tk
+
+  """Tagalog"""
+  tl
+
+  """Tswana"""
+  tn
+
+  """Tonga"""
+  to
+
+  """Turkish"""
+  tr
+
+  """Tsonga"""
+  ts
+
+  """Tatar"""
+  tt
+
+  """Twi"""
+  tw
+
+  """Tahitian"""
+  ty
+
+  """Uighur"""
+  ug
+
+  """Ukrainian"""
+  uk
+
+  """Urdu"""
+  ur
+
+  """Uzbek"""
+  uz
+
+  """Venda"""
+  ve
+
+  """Vietnamese"""
+  vi
+
+  """Volapük"""
+  vo
+
+  """Walloon"""
+  wa
+
+  """Wolof"""
+  wo
+
+  """Xhosa"""
+  xh
+
+  """Yoruba"""
+  yo
+
+  """Zhuang"""
+  za
+
+  """Chinese"""
+  zh
+
+  """Zulu"""
+  zu
+}
+
 enum LoadType {
   FCL
   LCL
+}
+
+type Metadata {
+  field: String!
+  value: String!
+}
+
+input MetadataInput {
+  field: String!
+  value: String!
 }
 
 type MetricValue {
@@ -28572,6 +29164,8 @@ interface Model {
 type Mutation {
   login(input: CredentialsInput!): TokenMutated!
   logout: Boolean!
+  userUpdate(id: ID!, input: UserUpdateInput!): UserMutated!
+  groupUpdate(id: ID!, input: GroupUpdateInput!): GroupMutated!
   productCreate(input: ProductCreateInput!): ProductMutated!
   productUpdate(id: ID!, input: ProductUpdateInput!): ProductMutated!
   orderCreate(input: OrderCreateInput!): OrderMutated!
@@ -28718,10 +29312,11 @@ type Order implements Model & Owned & Tagged & Supervised & Documented {
   piNo: String
   incoterm: Incoterm
   deliveryPlace: String
-  memo: String
   orderItems: [OrderItem!]!
-  shipments: [Shipment!]!
   timeline: Timeline!
+  memo: String
+  metadata: [Metadata!]!
+  shipments: [Shipment!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -28743,11 +29338,12 @@ input OrderCreateInput {
   currency: Currency!
   incoterm: Incoterm
   deliveryPlace: String
-  memo: String
   tagIds: [ID!]
-  inChargesIds: [ID!]
+  inChargeIds: [ID!]
   orderItems: [OrderItemCreateInput!]
   files: [FileInput!]
+  memo: String
+  metadata: [MetadataInput!]
 }
 
 input OrderFilterInput {
@@ -28909,11 +29505,12 @@ input OrderUpdateInput {
   currency: Currency
   incoterm: Incoterm
   deliveryPlace: String
-  memo: String
   tagIds: [ID!]
-  inChargesIds: [ID!]
+  inChargeIds: [ID!]
   orderItems: [OrderItemUpdateInput!]
   files: [FileInput!]
+  memo: String
+  metadata: [MetadataInput!]
 }
 
 interface Owned {
@@ -29025,6 +29622,8 @@ type Product implements Model & Owned & Tagged & Documented {
   janCode: String
   material: String
   productProviders: [ProductProvider!]!
+  metadata: [Metadata!]!
+  timeline: Timeline!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
   id: ID!
   createdAt: DateTime!
@@ -29047,6 +29646,7 @@ input ProductCreateInput {
   tagIds: [ID!]
   productProviders: [ProductProviderCreateInput!]!
   files: [FileInput!]
+  metadata: [MetadataInput!]
 }
 
 input ProductFilterInput {
@@ -29087,6 +29687,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   origin: Country
   productionLeadTime: Float
   memo: String
+  metadata: [Metadata!]!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
   id: ID!
   createdAt: DateTime!
@@ -29123,6 +29724,7 @@ input ProductProviderCreateInput {
   packageCapacity: Float
   files: [FileInput!]
   memo: String
+  metadata: [MetadataInput!]
 }
 
 input ProductProviderFilterInput {
@@ -29171,6 +29773,7 @@ input ProductProviderUpdateInput {
   packageCapacity: Float
   files: [FileInput!]
   memo: String
+  metadata: [MetadataInput!]
 }
 
 input ProductSortInput {
@@ -29190,6 +29793,7 @@ input ProductUpdateInput {
   tagIds: [ID!]
   productProviders: [ProductProviderUpdateInput!]
   files: [FileInput!]
+  metadata: [MetadataInput!]
 }
 
 type Query {
@@ -34131,6 +34735,9 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented {
   voyages: [Voyage!]!
   containerGroups: [ContainerGroup!]!
   forwarders: [Group!]!
+  memo: String
+  metadata: [Metadata!]!
+  timeline: Timeline!
   batches: [Batch!]!
   id: ID!
   createdAt: DateTime!
@@ -34207,12 +34814,14 @@ input ShipmentCreateInput {
   carrier: String
   cargoReady: ShipmentTimelineDateCreateInput
   tagIds: [ID!]
-  inChargesIds: [ID!]
+  inChargeIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
   voyages: [ShipmentVoyageCreateInput!]
   containerGroups: [ShipmentContainerGroupCreateInput!]
   files: [FileInput!]
+  memo: String
+  metadata: [MetadataInput!]
 }
 
 input ShipmentFilterInput {
@@ -34285,12 +34894,14 @@ input ShipmentUpdateInput {
   carrier: String
   cargoReady: ShipmentTimelineDateUpdateInput
   tagIds: [ID!]
-  inChargesIds: [ID!]
+  inChargeIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
   voyages: [ShipmentVoyageUpdateInput!]
   containerGroups: [ShipmentContainerGroupUpdateInput!]
   files: [FileInput!]
+  memo: String
+  metadata: [MetadataInput!]
 }
 
 input ShipmentVoyageCreateInput {
@@ -34506,6 +35117,11 @@ input UserFilterInput {
   role: String
 }
 
+type UserMutated {
+  user: User
+  violations: [Violation!]
+}
+
 type UserPagination {
   nodes: [User!]!
   page: Int!
@@ -34518,6 +35134,23 @@ type UserPagination {
 input UserSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+}
+
+input UserUpdateInput {
+  firstName: String
+  lastName: String
+  firstName2: String
+  lastName2: String
+  email: String
+  password: String
+  role: String
+  disabled: Boolean
+  language: Language
+  timezone: String
+  avatar: FileInput
+  groupId: ID
+  memo: String
+  tagIds: [ID!]
 }
 
 type Viewer {

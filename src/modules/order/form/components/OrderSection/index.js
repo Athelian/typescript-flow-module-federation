@@ -15,6 +15,7 @@ import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, DashedPlusButton, TagsInput, Tooltip } from 'components/Form';
 import {
   textInputFactory,
+  textAreaFactory,
   dateInputFactory,
   selectSearchEnumInputFactory,
 } from 'modules/form/helpers';
@@ -35,7 +36,6 @@ import TotalSummary from './components/TotalSummary';
 import {
   OrderSectionWrapperStyle,
   MainFieldsWrapperStyle,
-  TagsInputStyle,
   QuantitySummaryStyle,
   DividerStyle,
 } from './style';
@@ -264,32 +264,52 @@ const OrderSection = ({ isNew }: Props) => (
               </GridColumn>
             </div>
 
-            <div className={TagsInputStyle}>
-              <Subscribe to={[OrderTagsContainer]}>
-                {({ state: { tags }, setFieldValue: changeTags }) => (
-                  <FieldItem
-                    vertical
-                    label={
-                      <Label>
-                        <FormattedMessage {...messages.tags} />
-                      </Label>
-                    }
-                    input={
-                      <TagsInput
-                        editable={isNew}
-                        id="tags"
-                        name="tags"
-                        tagType="Order"
-                        values={tags}
-                        onChange={(field, value) => {
-                          changeTags(field, value);
-                        }}
-                      />
-                    }
-                  />
-                )}
-              </Subscribe>
-            </div>
+            <Subscribe to={[OrderTagsContainer]}>
+              {({ state: { tags }, setFieldValue: changeTags }) => (
+                <FieldItem
+                  vertical
+                  label={
+                    <Label>
+                      <FormattedMessage {...messages.tags} />
+                    </Label>
+                  }
+                  input={
+                    <TagsInput
+                      editable={isNew}
+                      id="tags"
+                      name="tags"
+                      tagType="Order"
+                      values={tags}
+                      onChange={(field, value) => {
+                        changeTags(field, value);
+                      }}
+                    />
+                  }
+                />
+              )}
+            </Subscribe>
+
+            <FormField
+              name="memo"
+              initValue={values.memo}
+              values={values}
+              validator={validator}
+              setFieldValue={setFieldValue}
+            >
+              {({ name, ...inputHandlers }) =>
+                textAreaFactory({
+                  name,
+                  inputHandlers,
+                  isNew,
+                  originalValue: initialValues[name],
+                  label: <FormattedMessage {...messages.memo} />,
+                  vertical: true,
+                  width: '680px',
+                  height: '65px',
+                })
+              }
+            </FormField>
+
             <div className={DividerStyle} />
             <Subscribe to={[OrderItemsContainer]}>
               {({ state: { orderItems } }) => {

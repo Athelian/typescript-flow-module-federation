@@ -87,6 +87,7 @@ export const shadows = {
   INPUT: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)',
   HEADER: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1)',
   HEADER_REVERSE: 'box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1)',
+  FAINT: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)',
 };
 
 export const borderRadiuses = {

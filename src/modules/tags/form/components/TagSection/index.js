@@ -111,7 +111,11 @@ const TagSection = ({ isNew }: Props) => (
               >
                 {({ name, isTouched, errorMessage, isFocused, ...inputHandlers }) => (
                   <FieldItem
-                    label={<Label required>COLOR</Label>}
+                    label={
+                      <Label required>
+                        <FormattedMessage id="modules.tags.color" defaultMessage="COLOR" />
+                      </Label>
+                    }
                     tooltip={
                       <Tooltip
                         isNew={isNew}
@@ -158,7 +162,11 @@ const TagSection = ({ isNew }: Props) => (
               {({ name, isTouched, errorMessage, onChange, ...inputHandlers }) => (
                 <FieldItem
                   vertical
-                  label={<Label required>TYPES</Label>}
+                  label={
+                    <Label required>
+                      <FormattedMessage id="modules.tags.types" defaultMessage="APPLY TO" />
+                    </Label>
+                  }
                   tooltip={
                     <Tooltip
                       isNew={isNew}
