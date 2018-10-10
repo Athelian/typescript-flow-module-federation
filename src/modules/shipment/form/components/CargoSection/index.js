@@ -32,70 +32,70 @@ function CargoSection({ intl }: Props) {
     <div className={ItemsSectionWrapperStyle}>
       <SectionNavBar>
         <BooleanValue>
-          {({ value: opened, set: selectSlideToggle }) => (
+          {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
             <>
               <NewButton
                 label={intl.formatMessage(messages.selectBatches)}
-                onClick={() => selectSlideToggle(true)}
+                onClick={() => selectBatchesSlideToggle(true)}
               />
               <SlideView
-                isOpen={opened}
-                onRequestClose={() => selectSlideToggle(false)}
+                isOpen={selectBatchesIsOpen}
+                onRequestClose={() => selectBatchesSlideToggle(false)}
                 options={{ width: '1030px' }}
               >
-                {opened && (
+                {selectBatchesIsOpen && (
                   <Subscribe to={[ShipmentBatchesContainer]}>
                     {({ state: { batches }, setFieldValue }) => (
                       <SelectBatches
-                        onCancel={() => selectSlideToggle(false)}
                         onSelect={selected => {
-                          selectSlideToggle(false);
                           setFieldValue('batches', [...batches, ...selected]);
+                          selectBatchesSlideToggle(false);
                         }}
+                        onCancel={() => selectBatchesSlideToggle(false)}
                       />
                     )}
                   </Subscribe>
                 )}
               </SlideView>
-              <BooleanValue>
-                {({ value: isOpen, set: newSlideToggle }) => (
-                  <>
-                    <NewButton
-                      label={intl.formatMessage(messages.newBatch)}
-                      onClick={() => newSlideToggle(true)}
-                    />
-                    <SlideView
-                      isOpen={isOpen}
-                      onRequestClose={() => newSlideToggle(false)}
-                      options={{ width: '1030px' }}
-                    >
-                      {isOpen && (
-                        <Subscribe to={[ShipmentBatchesContainer]}>
-                          {({ state: { batches }, setFieldValue }) => (
-                            <SelectOrderItems
-                              onSelect={selectedBatches => {
-                                const result = selectedBatches.map((orderItem, counter) =>
-                                  injectUid({
-                                    orderItem,
-                                    tags: [],
-                                    quantity: 0,
-                                    isNew: true,
-                                    batchAdjustments: [],
-                                    no: `batch no ${batches.length + counter + 1}`,
-                                  })
-                                );
-                                setFieldValue('batches', [...batches, ...result]);
-                                newSlideToggle(false);
-                              }}
-                              onCancel={() => newSlideToggle(false)}
-                            />
-                          )}
-                        </Subscribe>
-                      )}
-                    </SlideView>
-                  </>
+            </>
+          )}
+        </BooleanValue>
+        <BooleanValue>
+          {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
+            <>
+              <NewButton
+                label={intl.formatMessage(messages.newBatch)}
+                onClick={() => createBatchesSlideToggle(true)}
+              />
+              <SlideView
+                isOpen={createBatchesIsOpen}
+                onRequestClose={() => createBatchesSlideToggle(false)}
+                options={{ width: '1030px' }}
+              >
+                {createBatchesIsOpen && (
+                  <Subscribe to={[ShipmentBatchesContainer]}>
+                    {({ state: { batches }, setFieldValue }) => (
+                      <SelectOrderItems
+                        onSelect={selectedBatches => {
+                          const result = selectedBatches.map((orderItem, counter) =>
+                            injectUid({
+                              orderItem,
+                              tags: [],
+                              quantity: 0,
+                              isNew: true,
+                              batchAdjustments: [],
+                              no: `batch no ${batches.length + counter + 1}`,
+                            })
+                          );
+                          setFieldValue('batches', [...batches, ...result]);
+                          createBatchesSlideToggle(false);
+                        }}
+                        onCancel={() => createBatchesSlideToggle(false)}
+                      />
+                    )}
+                  </Subscribe>
                 )}
-              </BooleanValue>
+              </SlideView>
             </>
           )}
         </BooleanValue>

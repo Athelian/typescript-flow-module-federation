@@ -16,12 +16,10 @@ import {
   SearchInput,
 } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import LoadingIcon from 'components/LoadingIcon';
+import { batchListQuery } from 'modules/batch/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
-import { selectBatchListQuery } from './query';
-import { ItemWrapperStyle } from './style';
 
 type Props = {
   onCancel: Function,
@@ -59,6 +57,7 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
         page: 1,
         filter: {
           query: '',
+          hasShipment: false,
         },
         sort: { field: 'updatedAt', direction: 'DESCENDING' },
       }}
@@ -129,7 +128,7 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
               }
             >
               <Query
-                query={selectBatchListQuery}
+                query={batchListQuery}
                 variables={{
                   page: 1,
                   perPage: filtersAndSort.perPage,
@@ -138,29 +137,28 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
                 }}
               >
                 {({ loading, data, error, fetchMore }) => {
-                  const nextPage = getByPathWithDefault(1, 'batches.page', data) + 1;
-                  const totalPage = getByPathWithDefault(1, 'batches.totalPage', data);
                   if (error) {
                     return error.message;
                   }
 
-                  if (loading) return <LoadingIcon />;
+                  const nextPage = getByPathWithDefault(1, 'batches.page', data) + 1;
+                  const totalPage = getByPathWithDefault(1, 'batches.totalPage', data);
+                  const hasMore = nextPage <= totalPage;
 
                   return (
                     <BatchGridView
-                      onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
-                      hasMore={nextPage <= totalPage}
-                      isLoading={loading}
                       items={getByPathWithDefault([], 'batches.nodes', data)}
+                      onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
+                      hasMore={hasMore}
+                      isLoading={loading}
                       renderItem={item => (
-                        <div key={item.id} className={ItemWrapperStyle}>
-                          <ShipmentBatchCard
-                            batch={item}
-                            selectable
-                            selected={selected.includes(item)}
-                            onSelect={() => onSelectBatch({ selected, item, push, set })}
-                          />
-                        </div>
+                        <ShipmentBatchCard
+                          batch={item}
+                          selectable
+                          selected={selected.includes(item)}
+                          onSelect={() => onSelectBatch({ selected, item, push, set })}
+                          key={item.id}
+                        />
                       )}
                     />
                   );

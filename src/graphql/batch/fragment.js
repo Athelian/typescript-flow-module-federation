@@ -111,9 +111,7 @@ export const batchCardFragment = gql`
         ...priceFragment
       }
       order {
-        id
-        poNo
-        currency
+        ...orderCardFragment
       }
       productProvider {
         id
