@@ -134,6 +134,7 @@ const CachedField = withCache(BaseFormField, [
   'isTouched',
   'errorMessage',
   'initValue',
+  'values',
 ]);
 
 const FormField = (props: {
@@ -154,6 +155,7 @@ const FormField = (props: {
       }) => (
         <CachedField
           key={props.initValue}
+          values={values}
           activeField={activeField}
           isTouched={touched[props.name]}
           errorMessage={errors[props.name]}

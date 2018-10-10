@@ -1851,14 +1851,14 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apollo-cache-inmemory@^1.2.10:
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.2.10.tgz#362d6c36cfd815a309b966f71e5d2b6c770c7989"
-  integrity sha512-eBusPFVtYIuo+PIfJdAwUCQ4cs7AJ4mB7sTdXxNQCXToYw8mzE6EfHnV37kdVfBXSaa82BzE2rb/YUq/duuamw==
+apollo-cache-inmemory@^1.3.5:
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.3.5.tgz#7628ee598271cfffa611e15a7ce67652a84b07b0"
+  integrity sha512-CD4Dl9vcCp7N05KUqR3rNDj2WJ1DQNNfeyBUIo5T6XTiUhfBQp5x+CL7S+ezy5mPp+xo4TnwFzLFh/vy2LdDog==
   dependencies:
     apollo-cache "^1.1.17"
     apollo-utilities "^1.0.21"
-    graphql-anywhere "^4.1.19"
+    optimism "^0.6.6"
 
 apollo-cache-persist@^0.1.1:
   version "0.1.1"
@@ -4487,15 +4487,10 @@ compression@^1.5.2:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
-compute-scroll-into-view@1.0.11:
+compute-scroll-into-view@1.0.11, compute-scroll-into-view@^1.0.9:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.11.tgz#7ff0a57f9aeda6314132d8994cce7aeca794fecf"
   integrity sha512-uUnglJowSe0IPmWOdDtrlHXof5CTIJitfJEyITHBW6zDVOGu9Pjk5puaLM73SLcwak0L4hEjO7Td88/a6P5i7A==
-
-compute-scroll-into-view@^1.0.2:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.8.tgz#ad0acd869dc6dc1069201532c025783a30ea177d"
-  integrity sha512-iAUjocygqXSGQb3zUHvAHwcf3BiMihlnphNSKCAqS6v9wNHlFe7260zNqoFjS/YBKJjbbvrXwY6/Wdg5mJ91Lw==
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -5595,12 +5590,12 @@ dotenv@^5.0.1:
   resolved "http://registry.npmjs.org/dotenv/-/dotenv-5.0.1.tgz#a5317459bd3d79ab88cff6e44057a6a3fbb1fcef"
   integrity sha512-4As8uPrjfwb7VXC+WnLCbXK7y+Ueb2B3zgNCePYfhxS1PYeaO1YTeplffTEcbfLhvFNGLAz90VvJs9yomG7bow==
 
-downshift@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/downshift/-/downshift-2.2.3.tgz#85187568455134e72025fbddd40bb9cf96c55eed"
-  integrity sha512-SXFgGq5QYT9mxbaSsYdp4Ng0tP87F5z33PD+tZ2kyK0qIBYd1rcPe90+ykCOYqsWHsb/gcrjaAav2Jpa6qNbQg==
+downshift@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-3.0.0.tgz#a18b5654a2fa65831b7db3a7f0a4260a06c650b8"
+  integrity sha512-IsHnOgrdy6gXq/oegkdM8w6MA2hVSTydMkjGdf+LplCzwCvB883FFUR+g5lgg696Stdt4HQB/+tw2sgaVX6u3Q==
   dependencies:
-    compute-scroll-into-view "^1.0.2"
+    compute-scroll-into-view "^1.0.9"
     prop-types "^15.6.0"
 
 duplexer@^0.1.1, duplexer@~0.1.1:
@@ -7349,13 +7344,6 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.3, graceful-fs@^4.1.6,
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
   integrity sha1-Dovf5NHduIVNZOBOp8AOKgJuVlg=
 
-graphql-anywhere@^4.1.19:
-  version "4.1.19"
-  resolved "https://registry.yarnpkg.com/graphql-anywhere/-/graphql-anywhere-4.1.19.tgz#5f6ca3b58218e5449f4798e3c6d942fcd2fef082"
-  integrity sha512-mQlvbECzYPBcgBC9JsdM4v+DSvNmcIP+8Vwr+ij3gktbaLSE0Iza30mztuz40Jlf7ooMs+0emBZucNjLzqz7tA==
-  dependencies:
-    apollo-utilities "^1.0.21"
-
 graphql-config@^2.0.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-2.2.1.tgz#5fd0ec77ac7428ca5fb2026cf131be10151a0cb2"
@@ -7985,6 +7973,11 @@ immutability-helper@^2.8.1:
   integrity sha512-8AVB5EUpRBUdXqfe4cFsFECsOIZ9hX/Arl8B8S9/tmwpYv3UWvOsXUPOjkuZIMaVxfSWkxCzkng1rjmEoSWrxQ==
   dependencies:
     invariant "^2.2.0"
+
+immutable-tuple@^0.4.4:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/immutable-tuple/-/immutable-tuple-0.4.8.tgz#f60b65b863d34be39d307d1bbf4a450e1ac3048a"
+  integrity sha512-1m29EVSrF+LJJAyVo1v12NsIalVKjyi4HNQVQDBx+LNCIuRXnfeMCHuLao5CyN1m3Sn0T63U5JEkmPArPCipQA==
 
 immutable@^3.8.1:
   version "3.8.2"
@@ -10910,6 +10903,13 @@ opn@5.4.0, opn@^5.1.0:
   integrity sha512-YF9MNdVy/0qvJvDtunAOzFw9iasOQHpVthTCvGzxt61Il64AYSGdK+rYwld7NAfk9qJ7dt+hymBNSc9LNYS+Sw==
   dependencies:
     is-wsl "^1.1.0"
+
+optimism@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.6.6.tgz#5415b2d6a2f8b3745aedb9f97fdf4e52467ecd84"
+  integrity sha512-1Y6LY7pYbXP5y6yeXYfXhxJi9hsxYAZWpt7bBp4seAwfcYtaN7tq9wot/pdrhyI809/K4gDm3BcZcEkmwGevjg==
+  dependencies:
+    immutable-tuple "^0.4.4"
 
 optimist@^0.6.1:
   version "0.6.1"

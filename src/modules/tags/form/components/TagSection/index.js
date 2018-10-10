@@ -38,7 +38,6 @@ const TagSection = ({ isNew }: Props) => (
     <GridColumn>
       <Subscribe to={[TagContainer]}>
         {({ originalValues, state, setFieldValue }) => {
-          // $FlowFixMe
           const values = { ...originalValues, ...state };
 
           return (

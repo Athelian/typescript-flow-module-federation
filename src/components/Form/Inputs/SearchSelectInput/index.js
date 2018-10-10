@@ -68,8 +68,8 @@ class SearchSelectInput extends React.Component<Props, State> {
 
     return (
       <Downshift
-        defaultInputValue={inputValue}
-        defaultSelectedItem={selectedItem}
+        initialInputValue={inputValue}
+        initialSelectedItem={selectedItem}
         onChange={this.handleChange}
         itemToString={itemToString}
         itemToValue={itemToValue}

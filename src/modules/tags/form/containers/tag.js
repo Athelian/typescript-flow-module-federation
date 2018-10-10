@@ -4,6 +4,7 @@ import { cleanFalsy, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
+  id?: string,
   name?: string,
   description?: ?string,
   color?: string,
