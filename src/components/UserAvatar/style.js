@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, fontSizes, colors } from 'styles/common';
+import { borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
 
 type AvatarWrapper = {
   width: string,
@@ -18,7 +18,7 @@ export const AvatarWrapperStyle = ({ width, height }: AvatarWrapper): string => 
   ${borderRadiuses.CIRCLE};
   ${fontSizes.MAIN};
   background-color: ${colors.GRAY_LIGHT};
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  ${shadows.FAINT};
   user-select: none;
 `;
 

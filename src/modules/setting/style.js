@@ -34,7 +34,7 @@ export const NotificationsButtonStyle: string = css`
   ${fontSizes.MAIN};
   width: 30px;
   height: 30px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  ${shadows.FAINT};
   ${borderRadiuses.CIRCLE};
   &:hover,
   &:focus {
@@ -64,7 +64,7 @@ export const ProfileButtonStyle: string = css`
   ${presets.BUTTON};
   position: relative;
   ${borderRadiuses.CIRCLE};
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  ${shadows.FAINT};
   &:hover,
   &:focus {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);

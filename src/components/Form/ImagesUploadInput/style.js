@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, colors, borderRadiuses } from 'styles/common';
+import { layout, presets, colors, borderRadiuses, fontSizes } from 'styles/common';
 
 type AddImageProps = {
   width: string,
@@ -23,12 +23,14 @@ export const AddImageStyle = ({ width, height }: AddImageProps): string => css`
   }
 `;
 
-export const ProgressStyle: string = css`
+export const ProgressStyle = ({ width, height }: AddImageProps): string => css`
   ${presets.BOX};
   ${layout.LAYOUT};
   ${layout.CENTER_CENTER};
-  width: 140px;
-  height: 160px;
+  width: ${width};
+  height: ${height};
   color: ${colors.TEAL};
-  font-size: 24px;
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  ${presets.ELLIPSIS};
 `;

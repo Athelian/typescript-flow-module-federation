@@ -9,6 +9,7 @@ export const orderFormFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    memo
     poNo
     currency
     issuedAt

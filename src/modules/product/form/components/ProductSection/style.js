@@ -49,6 +49,8 @@ export const ProductImageWrapperStyle: string = css`
   position: relative;
   height: 180px;
   width: 180px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  ${borderRadiuses.MAIN};
   &:hover {
     & > button {
       opacity: 1;
