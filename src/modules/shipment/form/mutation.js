@@ -108,7 +108,7 @@ export const prepareCreateShipmentInput = ({
   forwarderIds: forwarders.map(({ id }) => id),
   inChargeIds: inCharges.map(({ id }) => id),
   voyages: formatVoyages(voyages),
-  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true)),
+  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
   containerGroups: formatContainers(containerGroups),
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
 });
@@ -161,7 +161,7 @@ export const prepareUpdateShipmentInput = ({
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
   inChargeIds: inCharges.map(({ id }) => id),
-  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true)),
+  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
   voyages: formatVoyages(voyages),
   containerGroups: formatContainers(containerGroups),
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),

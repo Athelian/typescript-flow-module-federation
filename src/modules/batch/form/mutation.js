@@ -89,11 +89,13 @@ export const prepareUpdateBatchInput = (
     archived,
     ...rest
   }: Object,
-  inShipmentOrBatchForm: boolean = false
+  inShipmentOrBatchForm: boolean = false,
+  inBatchForm: boolean = true
 ): BatchUpdate => ({
   ...rest,
   ...(shipment && !inShipmentOrBatchForm ? { shipmentId: shipment.id } : {}),
   ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
+  ...(!inBatchForm && !isNew ? { id } : {}),
   deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
   expiredAt: expiredAt ? new Date(expiredAt) : null,
   producedAt: producedAt ? new Date(producedAt) : null,
