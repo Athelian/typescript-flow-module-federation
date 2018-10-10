@@ -69,7 +69,7 @@ export const ContentWrapperStyle = css`
   /* overflow-y: hidden; */
   height: calc(100vh - 50px);
   width: 100%;
-  padding: 50px 20px;
+  padding: 30px 20px;
 `;
 
 export const RelationMapGrid = styled('div')`

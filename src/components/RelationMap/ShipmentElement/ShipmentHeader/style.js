@@ -42,7 +42,9 @@ export const ShipmentActionCheckStyle = (archived: boolean) => css`
   }
 `;
 
-export const ShipmentActionLabelStyle = css``;
+export const ShipmentActionLabelStyle = css`
+  font-weight: 500;
+`;
 export const ShipmentActionToggleButtonStyle = css`
   ${presets.BUTTON};
   background-color: transparent;

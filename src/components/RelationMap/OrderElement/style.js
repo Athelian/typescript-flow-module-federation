@@ -45,8 +45,8 @@ export const TotalCardWrapperStyle = css`
 `;
 
 export const CardWrapperStyle = css`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  //grid-template-columns: 1fr 1fr;
   padding: 0 25px 0 10px;
 `;
 export const CardTitleStyle = css`
@@ -56,11 +56,19 @@ export const CardTitleStyle = css`
   white-space: nowrap;
   padding-right: 2px;
   word-break: break-all;
+  flex: 1;
 `;
 export const CardVisualizeStyle = css`
   width: 100%;
   position: relative;
   height: 30px;
+  flex: 1;
+`;
+export const BatchCardVisualizeStyle = css`
+  width: 100%;
+  position: relative;
+  height: 30px;
+  flex: 0.5;
 `;
 
 export const ResetBaseCardStyle = css`
