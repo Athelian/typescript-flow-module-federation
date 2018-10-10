@@ -17,10 +17,10 @@ import {
 } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
-import { batchListQuery } from 'modules/batch/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
+import { selectBatchListQuery } from './query';
 import { ItemWrapperStyle } from './style';
 
 type Props = {
@@ -129,7 +129,7 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
               }
             >
               <Query
-                query={batchListQuery}
+                query={selectBatchListQuery}
                 variables={{
                   page: 1,
                   perPage: filtersAndSort.perPage,
