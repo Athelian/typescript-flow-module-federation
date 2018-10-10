@@ -25,8 +25,9 @@ function DocumentsSection({ intl }: Props) {
               changeFiles(field, value);
             }}
             types={[
-              { type: 'Document', label: intl.formatMessage(messages.fileTypeDocument) },
               { type: 'OrderPo', label: intl.formatMessage(messages.fileTypeOrderPO) },
+              { type: 'OrderPi', label: intl.formatMessage(messages.fileTypeOrderPI) },
+              { type: 'Document', label: intl.formatMessage(messages.fileTypeDocument) },
             ]}
           />
         )}
