@@ -1,9 +1,22 @@
 // @flow
 import gql from 'graphql-tag';
-import { batchFragment } from 'modules/batch/form/query';
-import { timelineDateFragment } from 'graphql/timeline/fragment';
+import {
+  timelineDateFullFragment,
+  batchFormFragment,
+  userAvatarFragment,
+  metricFragment,
+  sizeFragment,
+  tagFragment,
+  priceFragment,
+  orderCardFragment,
+  filesFragment,
+  partnerNameFragment,
+  shipmentCardFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+} from 'graphql';
 
-export const shipmentDetailQuery = gql`
+export const shipmentFormQuery = gql`
   query($id: ID!) {
     shipment(id: $id) {
       archived
@@ -18,7 +31,7 @@ export const shipmentDetailQuery = gql`
       transportType
       carrier
       cargoReady {
-        ...timelineDateFragment
+        ...timelineDateFullFragment
       }
       voyages {
         vesselName
@@ -32,10 +45,10 @@ export const shipmentDetailQuery = gql`
           airport
         }
         departure {
-          ...timelineDateFragment
+          ...timelineDateFullFragment
         }
         arrival {
-          ...timelineDateFragment
+          ...timelineDateFullFragment
         }
         id
         sort
@@ -46,19 +59,19 @@ export const shipmentDetailQuery = gql`
           name
         }
         customClearance {
-          ...timelineDateFragment
+          ...timelineDateFullFragment
         }
         warehouseArrival {
-          ...timelineDateFragment
+          ...timelineDateFullFragment
         }
         deliveryReady {
-          ...timelineDateFragment
+          ...timelineDateFullFragment
         }
         id
         sort
       }
       batches {
-        ...batchFragment
+        ...batchFormFragment
       }
       id
       updatedAt
@@ -92,8 +105,19 @@ export const shipmentDetailQuery = gql`
     }
   }
 
-  ${timelineDateFragment}
-  ${batchFragment}
+  ${timelineDateFullFragment}
+  ${batchFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${filesFragment}
+  ${partnerNameFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
 `;
 
-export default shipmentDetailQuery;
+export default shipmentFormQuery;

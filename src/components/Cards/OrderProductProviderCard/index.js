@@ -112,8 +112,8 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
             <div className={ProductImageDotsWrapperStyle}>
               {files &&
                 files.length > 1 &&
-                files.map((dot, index) => (
-                  <div className={ProductImageDotStyle(activeImage === index)} />
+                files.map((file, index) => (
+                  <div className={ProductImageDotStyle(activeImage === index)} key={file.id} />
                 ))}
             </div>
           </div>

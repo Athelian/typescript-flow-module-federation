@@ -1,243 +1,39 @@
 // @flow
 import gql from 'graphql-tag';
-import { timelineDateFragment } from 'graphql/timeline/fragment';
+import {
+  batchFormFragment,
+  userAvatarFragment,
+  metricFragment,
+  sizeFragment,
+  tagFragment,
+  priceFragment,
+  orderCardFragment,
+  filesFragment,
+  partnerNameFragment,
+  shipmentCardFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+} from 'graphql';
 
-export const batchFragment = gql`
-  fragment batchFragment on Batch {
-    archived
-    orderItem {
-      id
-      quantity
-      price {
-        amount
-        currency
-      }
-      order {
-        id
-        poNo
-        currency
-        archived
-        exporter {
-          id
-          name
-          types
-        }
-        tags {
-          id
-          name
-          color
-        }
-        orderItems {
-          id
-          quantity
-          price {
-            amount
-            currency
-          }
-          batches {
-            id
-            quantity
-            batchAdjustments {
-              id
-              quantity
-            }
-          }
-        }
-      }
-      productProvider {
-        id
-        packageName
-        packageGrossWeight {
-          value
-          metric
-        }
-        packageVolume {
-          value
-          metric
-        }
-        packageSize {
-          length {
-            value
-            metric
-          }
-          width {
-            value
-            metric
-          }
-          height {
-            value
-            metric
-          }
-        }
-        packageCapacity
-        unitType
-        unitVolume {
-          value
-          metric
-        }
-        unitWeight {
-          value
-          metric
-        }
-        unitPrice {
-          amount
-          currency
-        }
-        unitSize {
-          length {
-            value
-            metric
-          }
-          width {
-            value
-            metric
-          }
-          height {
-            value
-            metric
-          }
-        }
-        product {
-          id
-          name
-          serial
-          files {
-            id
-            path
-          }
-        }
-        exporter {
-          id
-          name
-          types
-        }
-        supplier {
-          id
-          name
-          types
-        }
-      }
-    }
-    shipment {
-      no
-      blNo
-      transportType
-      cargoReady {
-        ...timelineDateFragment
-      }
-      voyages {
-        departurePort {
-          seaport
-          airport
-        }
-        arrivalPort {
-          seaport
-          airport
-        }
-        departure {
-          ...timelineDateFragment
-        }
-        arrival {
-          ...timelineDateFragment
-        }
-        id
-        sort
-      }
-      containerGroups {
-        customClearance {
-          ...timelineDateFragment
-        }
-        warehouseArrival {
-          ...timelineDateFragment
-        }
-        deliveryReady {
-          ...timelineDateFragment
-        }
-        warehouse {
-          id
-          name
-        }
-        id
-        sort
-      }
-      batches {
-        id
-      }
-      id
-      tags {
-        name
-        color
-        id
-      }
-    }
-    no
-    quantity
-    packageQuantity
-    producedAt
-    deliveredAt
-    expiredAt
-    batchAdjustments {
-      reason
-      quantity
-      memo
-      id
-      updatedAt
-      updatedBy {
-        firstName
-        lastName
-        id
-      }
-      sort
-    }
-    id
-    updatedAt
-    updatedBy {
-      firstName
-      lastName
-      id
-    }
-    packageName
-    packageGrossWeight {
-      value
-      metric
-    }
-    packageVolume {
-      value
-      metric
-    }
-    packageSize {
-      length {
-        value
-        metric
-      }
-      width {
-        value
-        metric
-      }
-      height {
-        value
-        metric
-      }
-    }
-    packageCapacity
-    tags {
-      name
-      color
-      id
-    }
-  }
-
-  ${timelineDateFragment}
-`;
-
-export const batchDetailQuery = gql`
+export const batchFormQuery = gql`
   query($id: ID!) {
     batch(id: $id) {
-      ...batchFragment
+      ...batchFormFragment
     }
   }
 
-  ${batchFragment}
+  ${batchFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${filesFragment}
+  ${partnerNameFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
 `;
 
-export default batchDetailQuery;
+export default batchFormQuery;
