@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { cx } from 'react-emotion';
-import { injectUid } from 'utils/id';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { CardStyle, SelectableCardStyle } from './style';
 import Actions from './Actions';
@@ -49,7 +48,6 @@ export default class BaseCard extends React.Component<Props, State> {
     };
 
     this.cornerIcon = React.createRef();
-    this.parsedActions = props.actions.map(node => injectUid({ node }));
   }
 
   toggleActions = () => {
@@ -67,8 +65,6 @@ export default class BaseCard extends React.Component<Props, State> {
   };
 
   cornerIcon: { current: ?HTMLButtonElement };
-
-  parsedActions: Array<{ id: string, node: React.Node }>;
 
   render() {
     const {
@@ -122,7 +118,9 @@ export default class BaseCard extends React.Component<Props, State> {
                 this.cornerIcon && this.cornerIcon.current ? [this.cornerIcon.current] : []
               }
             >
-              <Actions visible={actionsAreShown} actions={this.parsedActions} />
+              <Actions visible={actionsAreShown}>
+                {React.Children.map(actions, action => action)}
+              </Actions>
             </OutsideClickHandler>
           )}
         {icon &&
