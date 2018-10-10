@@ -9,23 +9,23 @@ import { getByPathWithDefault, getByPath } from 'utils/fp';
 
 type Props = {
   query: DocumentNode,
-  detailId: string,
+  entityId: string,
+  entityType: string,
   render: Object => React.Node,
-  detailType: string,
 };
 
-export default function QueryDetail({ query, detailId, detailType, render }: Props) {
+export default function QueryForm({ query, entityId, entityType, render }: Props) {
   return (
-    <Query query={query} variables={{ id: decodeId(detailId) }} fetchPolicy="network-only">
+    <Query query={query} variables={{ id: decodeId(entityId) }} fetchPolicy="network-only">
       {({ loading, data, error }) => {
         if (error) {
           return error.message;
         }
 
         if (loading) return <LoadingIcon />;
-        if (getByPath(detailType, data)) return render(getByPathWithDefault({}, detailType, data));
+        if (getByPath(entityType, data)) return render(getByPathWithDefault({}, entityType, data));
 
-        navigate(`/${detailType}`);
+        navigate(`/${entityType}`);
         return <LoadingIcon />;
       }}
     </Query>

@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const warehousesQuery = gql`
+export const warehouseListQuery = gql`
   query($page: Int!, $perPage: Int!, $filter: WarehouseFilterInput, $sort: WarehouseSortInput) {
     warehouses(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
@@ -14,4 +14,4 @@ export const warehousesQuery = gql`
   }
 `;
 
-export default warehousesQuery;
+export default warehouseListQuery;

@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import WarehouseGridView from './WarehouseGridView';
-import query from './query';
+import { warehouseListQuery } from './query';
 
 type Props = {
   viewType: string,
@@ -20,7 +20,7 @@ class WarehouseList extends React.Component<Props> {
     const { viewType, sort, ...filtersAndSort } = this.props;
     return (
       <Query
-        query={query}
+        query={warehouseListQuery}
         variables={{
           page: 1,
           sort: {

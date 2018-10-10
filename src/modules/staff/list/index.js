@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import StaffGridView from './StaffGridView';
-import query from './query';
+import { staffListQuery } from './query';
 
 type Props = {
   viewType: string,
@@ -18,7 +18,7 @@ type Props = {
 
 const StaffList = ({ viewType, sort, ...filtersAndSort }: Props) => (
   <Query
-    query={query}
+    query={staffListQuery}
     variables={{
       page: 1,
       sort: {

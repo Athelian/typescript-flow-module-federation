@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const orderHistoryListQuery = gql`
+export const orderLogsListQuery = gql`
   query($id: ID!, $page: Int!, $perPage: Int!) {
     order(id: $id) {
       id
@@ -83,4 +83,4 @@ export const orderHistoryListQuery = gql`
   }
 `;
 
-export default orderHistoryListQuery;
+export default orderLogsListQuery;

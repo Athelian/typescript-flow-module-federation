@@ -9,7 +9,7 @@ import { WarehouseFormWrapperStyle } from './style';
 type OptionalProps = {
   isNew: boolean,
   warehouse: Object,
-  onDetailReady: () => void,
+  onFormReady: () => void,
 };
 
 type Props = OptionalProps & {};
@@ -17,16 +17,16 @@ type Props = OptionalProps & {};
 const defaultProps = {
   isNew: false,
   warehouse: {},
-  onDetailReady: () => {},
+  onFormReady: () => {},
 };
 
 class WarehouseForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   componentDidMount() {
-    const { onDetailReady } = this.props;
+    const { onFormReady } = this.props;
 
-    if (onDetailReady) onDetailReady();
+    if (onFormReady) onFormReady();
   }
 
   shouldComponentUpdate(nextProps: Props) {

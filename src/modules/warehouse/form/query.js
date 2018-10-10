@@ -24,7 +24,7 @@ export const warehouseDetailFragment = gql`
   }
 `;
 
-export const warehouseDetailQuery = gql`
+export const warehouseFormQuery = gql`
   query($id: ID!) {
     warehouse(id: $id) {
       ...warehouseDetailFragment
@@ -33,4 +33,4 @@ export const warehouseDetailQuery = gql`
   ${warehouseDetailFragment}
 `;
 
-export default warehouseDetailQuery;
+export default warehouseFormQuery;

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
-import QueryDetail from 'components/common/QueryDetail';
+import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
@@ -15,7 +15,7 @@ import NavBar, { EntityIcon } from 'components/NavBar';
 import { decodeId, encodeId } from 'utils/id';
 import WarehouseForm from './form';
 import WarehouseContainer from './form/containers';
-import query from './form/query';
+import { warehouseFormQuery } from './form/query';
 import { createWarehouseMutation, updateWarehouseMutation } from './form/mutation';
 import validator from './form/validator';
 
@@ -156,16 +156,16 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                   {isNew || !warehouseId ? (
                     <WarehouseForm warehouse={{}} isNew />
                   ) : (
-                    <QueryDetail
-                      query={query}
-                      detailId={warehouseId}
-                      detailType="warehouse"
+                    <QueryForm
+                      query={warehouseFormQuery}
+                      entityId={warehouseId}
+                      entityType="warehouse"
                       render={warehouse => (
                         <Subscribe to={[WarehouseContainer]}>
                           {({ initDetailValues }) => (
                             <WarehouseForm
                               warehouse={warehouse}
-                              onDetailReady={() => {
+                              onFormReady={() => {
                                 initDetailValues(warehouse);
                               }}
                             />

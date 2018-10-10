@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import NotificationListView from './NotificationListView';
-import query from '../query';
+import { notificationListQuery } from '../query';
 
 type Props = {
   perPage: number,
@@ -12,7 +12,7 @@ type Props = {
 
 const NotificationList = ({ ...filtersAndSort }: Props) => (
   <Query
-    query={query}
+    query={notificationListQuery}
     variables={{
       page: 1,
       ...filtersAndSort,

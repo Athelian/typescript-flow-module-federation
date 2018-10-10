@@ -6,7 +6,7 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
-import QueryDetail from 'components/common/QueryDetail';
+import { QueryForm } from 'components/common';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
@@ -25,7 +25,7 @@ import {
   OrderTagsContainer,
   OrderFilesContainer,
 } from './form/containers';
-import query from './form/query';
+import { orderFormQuery } from './form/query';
 import {
   createOrderMutation,
   prepareCreateOrderInput,
@@ -263,10 +263,10 @@ class OrderFormModule extends React.PureComponent<Props> {
                   {isNew || !orderId ? (
                     <OrderForm isNew />
                   ) : (
-                    <QueryDetail
-                      query={query}
-                      detailId={orderId}
-                      detailType="order"
+                    <QueryForm
+                      query={orderFormQuery}
+                      entityId={orderId}
+                      entityType="order"
                       render={order => (
                         <Subscribe
                           to={[
@@ -279,7 +279,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                           {(orderItemState, orderInfoState, orderTagsState, orderFilesState) => (
                             <OrderForm
                               order={order}
-                              onDetailReady={() => {
+                              onFormReady={() => {
                                 const { orderItems, tags, files, ...info } = order;
                                 orderItemState.initDetailValues(orderItems);
                                 orderTagsState.initDetailValues(tags);

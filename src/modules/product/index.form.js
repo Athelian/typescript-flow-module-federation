@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
-import QueryDetail from 'components/common/QueryDetail';
+import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
@@ -20,7 +20,7 @@ import {
 } from './form/containers';
 import ProductForm from './form';
 import validator from './form/validator';
-import query from './form/query';
+import { productFormQuery } from './form/query';
 import {
   createProductMutation,
   prepareCreateProductInput,
@@ -230,10 +230,10 @@ class ProductFormModule extends React.Component<Props> {
                   {isNew || !productId ? (
                     <ProductForm product={{}} isNew />
                   ) : (
-                    <QueryDetail
-                      query={query}
-                      detailId={productId}
-                      detailType="product"
+                    <QueryForm
+                      query={productFormQuery}
+                      entityId={productId}
+                      entityType="product"
                       render={product => (
                         <Subscribe
                           to={[
@@ -245,7 +245,7 @@ class ProductFormModule extends React.Component<Props> {
                           {(productInfoState, productProvidersState, productTagsState) => (
                             <ProductForm
                               product={product}
-                              onDetailReady={() => {
+                              onFormReady={() => {
                                 const { tags, productProviders, ...info } = product;
                                 productInfoState.initDetailValues(info);
                                 productProvidersState.initDetailValues(productProviders);

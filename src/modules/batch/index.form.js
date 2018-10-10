@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
-import QueryDetail from 'components/common/QueryDetail';
+import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
@@ -16,7 +16,7 @@ import { decodeId, encodeId } from 'utils/id';
 import BatchForm from './form';
 import BatchFormContainer from './form/container';
 import validator from './form/validator';
-import query from './form/query';
+import { batchFormQuery } from './form/query';
 import {
   createBatchMutation,
   prepareCreateBatchInput,
@@ -190,10 +190,10 @@ class BatchFormModule extends React.PureComponent<Props> {
                   {isNew || !batchId ? (
                     <BatchForm batch={{}} isNew />
                   ) : (
-                    <QueryDetail
-                      query={query}
-                      detailId={batchId}
-                      detailType="batch"
+                    <QueryForm
+                      query={batchFormQuery}
+                      entityId={batchId}
+                      entityType="batch"
                       render={batch => (
                         <Subscribe to={[BatchFormContainer]}>
                           {({ initDetailValues }) => (
@@ -202,7 +202,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                               onChangeStatus={(formData, onSuccess) =>
                                 this.onSave(formData, saveBatch, onSuccess)
                               }
-                              onDetailReady={() => {
+                              onFormReady={() => {
                                 initDetailValues(batch);
                               }}
                             />

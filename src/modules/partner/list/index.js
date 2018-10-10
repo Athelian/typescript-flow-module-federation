@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import PartnerGridView from './PartnerGridView';
-import query from './query';
+import { partnerListQuery } from './query';
 
 type Props = {
   viewType: string,
@@ -75,7 +75,7 @@ class PartnerList extends React.Component<Props> {
     const { viewType, sort, ...filtersAndSort } = this.props;
     return (
       <Query
-        query={query}
+        query={partnerListQuery}
         variables={{
           page: 1,
           sort: {

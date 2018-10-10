@@ -16,7 +16,8 @@ export const tagDetailFragment = gql`
     }
   }
 `;
-export const tagDetailQuery = gql`
+
+export const tagFormQuery = gql`
   query($id: ID!) {
     tag(id: $id) {
       ...tagDetailFragment
@@ -25,4 +26,4 @@ export const tagDetailQuery = gql`
   ${tagDetailFragment}
 `;
 
-export default tagDetailQuery;
+export default tagFormQuery;
