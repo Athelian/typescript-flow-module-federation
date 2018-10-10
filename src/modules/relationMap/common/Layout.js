@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { navigate, Location, Link } from '@reach/router';
+import { navigate, Location } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
@@ -10,7 +10,6 @@ import Tabs from 'components/NavBar/components/Tabs';
 import { EntityIcon, RelationMapNavBar } from 'components/NavBar';
 import { ContentWrapperStyle } from 'modules/relationMap/style';
 import messages from 'modules/relationMap/messages';
-import { NewButton } from 'components/Buttons';
 
 type Props = {
   onChangeTab: Function,
@@ -72,11 +71,6 @@ const RelationMapLayout = ({ onChangeTab, intl, children }: Props) => {
                   );
                 }}
               </Location>
-              <Link to="new">
-                <div style={{ float: 'right' }}>
-                  <NewButton label="CREATE NEW" />
-                </div>
-              </Link>
             </RelationMapNavBar>
           }
         >
