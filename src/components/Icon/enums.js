@@ -105,6 +105,8 @@ import {
   faList as LIST,
   faCheckCircle as UNCHECKED,
   faEye as EYE,
+  faCodeBranch as BRANCH,
+  faSquare as SQUARE,
 } from '@fortawesome/pro-regular-svg-icons';
 
 import {
@@ -151,6 +153,7 @@ export default {
   CONNECT,
   SPLIT,
 
+  BRANCH,
   ACTIVE,
   ARCHIVE,
   CARD,
@@ -216,4 +219,5 @@ export default {
   PDF,
   POWER_POINT,
   WORD,
+  SQUARE,
 };

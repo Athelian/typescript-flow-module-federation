@@ -43,10 +43,10 @@ export const generateOrderRelation = (order, option) => {
     return orderRelations;
   }
 
-  orderRelations.push({ type: option.isCollapsed ? 'LINK-0' : 'LINK-1', id: order.id });
-  orderRelations.push({ type: 'ORDER_ITEM_ALL', id: order.id });
-  orderRelations.push({ type: 'LINK-0', id: order.id });
-  orderRelations.push({ type: 'BATCH_ALL', id: order.id });
+  orderRelations.push({ type: option.isCollapsed ? 'LINK-0' : 'LINK-1', id: '' }); // order.id
+  orderRelations.push({ type: 'ORDER_ITEM_ALL', id: '' }); // order.id
+  orderRelations.push({ type: 'LINK-0', id: '' }); // order.id
+  orderRelations.push({ type: 'BATCH_ALL', id: '' }); // order.id
   if (!option.isCollapsed) {
     orderItems.forEach((product, index) => {
       const productNo = index + 1;
@@ -67,7 +67,7 @@ export const generateOrderRelation = (order, option) => {
         if (batchNo > 1) {
           orderRelations.push({ type: '' });
           const productLink =
-            productNo === numberOfProduct ? { type: '' } : { type: 'LINK-2', id: order.id };
+            productNo === numberOfProduct ? { type: '' } : { type: 'LINK-2', id: '' }; // order.id
           orderRelations.push(productLink);
           orderRelations.push({ type: '' });
         }

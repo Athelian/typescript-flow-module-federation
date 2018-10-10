@@ -88,7 +88,6 @@ export default class BaseCard extends React.Component<Props, State> {
     const { actionsAreShown } = this.state;
 
     const cardStyle = CardStyle(disabled, readOnly);
-
     return (
       <div
         className={cx(cardStyle, wrapperClassName)}

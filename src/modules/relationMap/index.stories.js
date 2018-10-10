@@ -4,15 +4,15 @@ import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
 import { cx } from 'react-emotion';
 import BaseCard from 'components/Cards';
+import OrderCard from 'components/RelationMap/OrderElement/OrderCard';
+import OrderItemCard from 'components/RelationMap/OrderElement/OrderItemCard';
+import RelationLine from 'components/RelationMap/OrderElement/RelationLine';
+import BatchCard from 'components/RelationMap/OrderElement/BatchCard';
+import ShipmentCard from 'components/RelationMap/ShipmentElement/ShipmentTimeline/TimelineLayout';
+import * as ItemStyle from 'components/RelationMap/OrderElement/style';
 import { translationMessages } from 'i18n';
 import * as Style from './style';
-import SummaryBadge from './components/SummaryBadge';
-import OrderCard from './components/OrderElement/OrderCard';
-import OrderItemCard from './components/OrderElement/OrderItemCard';
-import RelationLine from './components/OrderElement/RelationLine';
-import BatchCard from './components/OrderElement/BatchCard';
-import ShipmentCard from './components/ShipmentElement/ShipmentTimeline/TimelineLayout';
-import * as ItemStyle from './components/OrderElement/style';
+import SummaryBadge from './common/SummaryBadge';
 
 storiesOf('RelationMap/Layout', module)
   .add('SummaryBadge', () => (

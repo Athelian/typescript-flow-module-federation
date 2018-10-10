@@ -4,11 +4,13 @@ import { BooleanValue, createObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import { generateOrderRelation } from 'modules/relationMap/util';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
+import { CardAction } from 'components/Cards/BaseCard';
 import RelationView from '../common/RelationView';
 import DetailFocused, { ToggleSlide } from '../common/SlideForm';
 import Item from '../common/RelationItem';
 
-const FocusedValue = createObjectValue({ focusedItem: {}, shipmentId: '' });
+export const FocusedValue = createObjectValue({ focusedItem: {}, focusedId: '' });
+
 type Props = {
   order: Object,
   shipment: Object,
@@ -58,18 +60,32 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
                 <ToggleSlide key={key}>
                   {({ assign: setSlide }) => (
                     <FocusedValue key={key}>
-                      {({ value: { focusedItem }, assign: setItem, reset }) => (
+                      {({ value: { focusedItem, focusedId }, assign: setItem, reset }) => (
                         <Item
                           key={key}
                           type={relation.type}
-                          isFocused={getByPathWithDefault(false, item.id, focusedItem)}
-                          onMouseLeave={reset}
-                          onMouseEnter={() =>
-                            setItem({ focusedItem: { [item.id]: true }, shipmentId: '' })
+                          isFocused={
+                            focusedId
+                              ? focusedId === relation.id
+                              : getByPathWithDefault(false, item.id, focusedItem)
                           }
-                          onClick={() => {
-                            toggle();
-                          }}
+                          actions={[
+                            <CardAction
+                              icon="SQUARE"
+                              onClick={() => {
+                                setItem({ focusedItem: {}, focusedId: relation.id });
+                              }}
+                            />,
+                            <CardAction
+                              icon="BRANCH"
+                              onClick={() => {
+                                setItem({ focusedItem: { [item.id]: true }, focusedId: '' });
+                              }}
+                            />,
+                            <CardAction icon="CLEAR" onClick={reset} />,
+                            <CardAction icon="REMOVE" onClick={() => {}} />,
+                          ]}
+                          onClick={toggle}
                           onDoubleClick={() => {
                             setSlide({
                               show: true,
@@ -100,28 +116,36 @@ const OrderFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) => (
               <BooleanValue defaultValue>
                 {({ value: isCollapsed, toggle }) => (
                   <FocusedValue key={shipmentId}>
-                    {({
-                      value: { focusedItem, shipmentId: selectedShipmentId },
-                      assign,
-                      reset,
-                    }) => (
+                    {({ value: { focusedItem, focusedId }, assign, reset }) => (
                       <Item
                         key={shipmentId}
                         type={isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT'}
                         data={currentShipment.data}
                         isFocused={
-                          selectedShipmentId
-                            ? selectedShipmentId === shipmentId
+                          focusedId
+                            ? focusedId === shipmentId
                             : Boolean(
                                 Object.keys(focusedItem || {}).some(focusId =>
                                   shipmentRefs.some(orderId => orderId === focusId)
                                 )
                               )
                         }
-                        onMouseLeave={reset}
-                        onMouseEnter={() =>
-                          assign({ focusedItem: currentShipment.refs, shipmentId })
-                        }
+                        actions={[
+                          <CardAction
+                            icon="SQUARE"
+                            onClick={() => {
+                              assign({ focusedItem: {}, focusedId: shipmentId });
+                            }}
+                          />,
+                          <CardAction
+                            icon="BRANCH"
+                            onClick={() => {
+                              assign({ focusedItem: currentShipment.refs, focusedId: shipmentId });
+                            }}
+                          />,
+                          <CardAction icon="CLEAR" onClick={reset} />,
+                          <CardAction icon="REMOVE" onClick={() => {}} />,
+                        ]}
                         onClick={toggle}
                         onDoubleClick={() => {
                           setSlide({
