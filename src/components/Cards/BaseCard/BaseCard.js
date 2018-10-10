@@ -118,7 +118,9 @@ export default class BaseCard extends React.Component<Props, State> {
                 this.cornerIcon && this.cornerIcon.current ? [this.cornerIcon.current] : []
               }
             >
-              <Actions visible={actionsAreShown}>{actions}</Actions>
+              <Actions visible={actionsAreShown}>
+                {React.Children.map(actions, action => action)}
+              </Actions>
             </OutsideClickHandler>
           )}
         {icon &&
