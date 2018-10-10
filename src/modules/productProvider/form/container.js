@@ -126,4 +126,32 @@ export default class ProductProviderContainer extends Container<FormState> {
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
+
+  calculateUnitVolume = () => {
+    // TODO: use https://github.com/ben-ng/convert-units for converting unit
+    this.setState(prevState => {
+      const newState = set(
+        cloneDeep(prevState),
+        'unitVolume.value',
+        prevState.unitSize.height.value *
+          prevState.unitSize.width.value *
+          prevState.unitSize.length.value
+      );
+      return newState;
+    });
+  };
+
+  calculatePackageVolume = () => {
+    // TODO: use https://github.com/ben-ng/convert-units for converting unit
+    this.setState(prevState => {
+      const newState = set(
+        cloneDeep(prevState),
+        'packageVolume.value',
+        prevState.packageSize.height.value *
+          prevState.packageSize.width.value *
+          prevState.packageSize.length.value
+      );
+      return newState;
+    });
+  };
 }

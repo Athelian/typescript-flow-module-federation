@@ -18,7 +18,9 @@ const ShipmentArchiveDialog = ({
   onConfirm,
   shipment,
 }: ShipmentDialogProps) => {
-  const { totalBatches, unshippedBatches, shippedBatches } = getShipmentSummary(shipment);
+  const { totalBatches, batchesOfActiveOrder, batchesOfArchivedOrder } = getShipmentSummary(
+    shipment
+  );
   const { id: shipmentId } = shipment;
   const total = spanWithColor(<FormattedNumber value={totalBatches} />, 'GRAY_DARK');
   const batches = spanWithColor(<FormattedMessage {...messages.batches} />, 'BATCH');
@@ -58,30 +60,33 @@ const ShipmentArchiveDialog = ({
                   }}
                 />
               </div>
-              {unshippedBatches > 0 && (
+              {batchesOfArchivedOrder > 0 && (
                 <div>
                   <FormattedMessage
-                    {...messages.unshippedMsg}
+                    {...messages.batchesOfArchivedOrderMsg}
                     values={{
                       total,
                       batches,
-                      unshipped: spanWithColor(
-                        <FormattedNumber value={unshippedBatches} />,
+                      batchesOfArchivedOrder: spanWithColor(
+                        <FormattedNumber value={batchesOfArchivedOrder} />,
                         'BATCH'
                       ),
                     }}
                   />
                 </div>
               )}
-              {shippedBatches > 0 && (
+              {batchesOfActiveOrder > 0 && (
                 <>
                   <div>
                     <FormattedMessage
-                      {...messages.shippedMsg}
+                      {...messages.batchesOfActiveOrderMsg}
                       values={{
                         total,
                         batches,
-                        shipped: spanWithColor(<FormattedNumber value={shippedBatches} />, 'BATCH'),
+                        batchesOfActiveOrder: spanWithColor(
+                          <FormattedNumber value={batchesOfActiveOrder} />,
+                          'BATCH'
+                        ),
                         orders: spanWithColor(<FormattedMessage {...messages.orders} />, 'ORDER'),
                       }}
                     />

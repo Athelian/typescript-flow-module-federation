@@ -6,14 +6,14 @@ export default defineMessages({
     id: 'modules.shipment.form.archiveDialog.confirmMsg',
     defaultMessage: 'Are you sure you want to archive this {shipment}?',
   },
-  unshippedMsg: {
-    id: 'modules.shipment.form.archiveDialog.unshippedMsg',
-    defaultMessage: 'This will make {unshipped}/{total} {batches} archived as well.',
+  batchesOfArchivedOrderMsg: {
+    id: 'modules.shipment.form.archiveDialog.batchesOfArchivedOrderMsg',
+    defaultMessage: 'This will make {batchesOfArchivedOrder}/{total} {batches} archived as well.',
   },
-  shippedMsg: {
-    id: 'modules.shipment.form.archiveDialog.shippedMsg',
+  batchesOfActiveOrderMsg: {
+    id: 'modules.shipment.form.archiveDialog.batchesOfActiveOrderMsg',
     defaultMessage:
-      '{shipped}/{total} {batches} will stay active because they are in active {orders}.',
+      '{batchesOfActiveOrder}/{total} {batches} will stay active because they are in active {orders}.',
   },
   warnMsg: {
     id: 'modules.shipment.form.archiveDialog.warnMsg',

@@ -6,14 +6,14 @@ export default defineMessages({
     id: 'modules.shipment.form.activateDialog.confirmMsg',
     defaultMessage: 'Are you sure you want to activate this {shipment}?',
   },
-  unshippedMsg: {
-    id: 'modules.shipment.form.activateDialog.unshippedMsg',
-    defaultMessage: 'This will activate {unshipped}/{total} {batches} as well.',
+  batchesOfArchivedOrderMsg: {
+    id: 'modules.shipment.form.activateDialog.batchesOfArchivedOrderMsg',
+    defaultMessage: 'This will activate {batchesOfArchivedOrder}/{total} {batches} as well.',
   },
-  shippedMsg: {
-    id: 'modules.shipment.form.activateDialog.shippedMsg',
+  batchesOfActiveOrderMsg: {
+    id: 'modules.shipment.form.activateDialog.batchesOfActiveOrderMsg',
     defaultMessage:
-      '{shipped}/{total} {batches} are already active because they are in active {orders}.',
+      '{batchesOfActiveOrder}/{total} {batches} are already active because they are in active {orders}.',
   },
   orders: {
     id: 'global.orders',
