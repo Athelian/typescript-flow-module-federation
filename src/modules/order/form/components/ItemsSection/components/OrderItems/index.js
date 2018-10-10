@@ -102,7 +102,7 @@ class OrderItems extends React.Component<Props> {
                   defaultValue={item.batches}
                   onChange={batches => onSave(index, { batches })}
                 >
-                  {({ value: batches, push: addNewBatch, splice: changeBatch }) => (
+                  {({ value: batches, push: addNewBatch, splice: changeBatch, filter }) => (
                     <div className={BatchAreaStyle}>
                       <div className={BatchAreaHeaderStyle}>
                         <div className={TitleWrapperStyle}>
@@ -158,7 +158,7 @@ class OrderItems extends React.Component<Props> {
                                   saveOnBlur={updatedBatch => {
                                     changeBatch(position, 1, updatedBatch);
                                   }}
-                                  onRemove={() => changeBatch(position, 1)}
+                                  onRemove={() => filter(({ id }) => id !== batch.id)}
                                   onClone={({ id, no, ...rest }) => {
                                     changeBatch(
                                       batches.length,
