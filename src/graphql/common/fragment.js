@@ -42,10 +42,20 @@ export const tagFragment = gql`
   }
 `;
 
-export const filesFragment = gql`
-  fragment filesFragment on File {
+export const imageFragment = gql`
+  fragment imageFragment on File {
     id
     path
+  }
+`;
+
+export const documentFragment = gql`
+  fragment documentFragment on File {
+    id
+    name
+    path
+    type
+    memo
   }
 `;
 

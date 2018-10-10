@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import { partnerCardFragment } from 'graphql';
 
 export const partnerListQuery = gql`
   query($page: Int!, $perPage: Int!, $filter: PartnerFilterInput, $sort: PartnerSortInput) {
@@ -12,9 +13,7 @@ export const partnerListQuery = gql`
             nodes {
               id
               group {
-                id
-                name
-                types
+                ...partnerCardFragment
               }
             }
           }
@@ -22,6 +21,8 @@ export const partnerListQuery = gql`
       }
     }
   }
+
+  ${partnerCardFragment}
 `;
 
 export default partnerListQuery;

@@ -45,6 +45,8 @@ import {
   faClone as CLONE,
   faCheckCircle as CHECKED,
   faBan as DISABLED,
+  faToggleOn as TOGGLE_ON,
+  faToggleOff as TOGGLE_OFF,
   faPencil as EDIT,
   faCheck as CONFIRM,
   faMinus as MINUS,
@@ -109,8 +111,6 @@ import {
   // Common UI
   faAngleLeft as ANGLE_LEFT,
   faAngleRight as ANGLE_RIGHT,
-  faToggleOn as TOGGLE_ON,
-  faToggleOff as TOGGLE_OFF,
 } from '@fortawesome/pro-light-svg-icons';
 
 export default {

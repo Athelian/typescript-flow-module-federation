@@ -1,12 +1,14 @@
 import { batchFormFragment, batchCardFragment } from './batch/fragment';
 import { orderFormFragment, orderCardFragment } from './order/fragment';
+import { partnerFormFragment, partnerCardFragment } from './partner/fragment';
 import { shipmentFormFragment, shipmentCardFragment } from './shipment/fragment';
 import {
   metricFragment,
   sizeFragment,
   priceFragment,
   tagFragment,
-  filesFragment,
+  imageFragment,
+  documentFragment,
   userAvatarFragment,
   partnerNameFragment,
   timelineDateFullFragment,
@@ -19,13 +21,16 @@ export {
   batchCardFragment,
   orderFormFragment,
   orderCardFragment,
+  partnerFormFragment,
+  partnerCardFragment,
   shipmentFormFragment,
   shipmentCardFragment,
   metricFragment,
   sizeFragment,
   priceFragment,
   tagFragment,
-  filesFragment,
+  imageFragment,
+  documentFragment,
   userAvatarFragment,
   partnerNameFragment,
   timelineDateFullFragment,

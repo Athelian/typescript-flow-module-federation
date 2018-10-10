@@ -9,7 +9,7 @@ import {
   tagFragment,
   priceFragment,
   orderCardFragment,
-  filesFragment,
+  imageFragment,
   partnerNameFragment,
   shipmentCardFragment,
 } from 'graphql';
@@ -20,7 +20,7 @@ ${sizeFragment}
 ${tagFragment}
 ${priceFragment}
 ${orderCardFragment}
-${filesFragment}
+${imageFragment}
 ${partnerNameFragment}
 ${shipmentCardFragment}
 */
@@ -89,7 +89,7 @@ export const batchFormFragment = gql`
           name
           serial
           files {
-            ...filesFragment
+            ...imageFragment
           }
         }
         exporter {
@@ -107,12 +107,18 @@ export const batchFormFragment = gql`
 `;
 
 /*
-import { metricFragment, tagFragment, priceFragment, filesFragment, partnerNameFragment } from 'graphql';
+import {
+  metricFragment,
+  tagFragment,
+  priceFragment,
+  imageFragment,
+  partnerNameFragment,
+} from 'graphql';
 
 ${metricFragment}
 ${tagFragment}
 ${priceFragment}
-${filesFragment}
+${imageFragment}
 ${partnerNameFragment}
 */
 export const batchCardFragment = gql`
@@ -153,7 +159,7 @@ export const batchCardFragment = gql`
           name
           serial
           files {
-            ...filesFragment
+            ...imageFragment
           }
         }
         exporter {

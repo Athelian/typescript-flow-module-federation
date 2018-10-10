@@ -9,7 +9,7 @@ import {
   tagFragment,
   priceFragment,
   orderCardFragment,
-  filesFragment,
+  imageFragment,
   partnerNameFragment,
   shipmentCardFragment,
   timelineDateMinimalFragment,
@@ -113,7 +113,7 @@ export const shipmentFormQuery = gql`
   ${tagFragment}
   ${priceFragment}
   ${orderCardFragment}
-  ${filesFragment}
+  ${imageFragment}
   ${partnerNameFragment}
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}

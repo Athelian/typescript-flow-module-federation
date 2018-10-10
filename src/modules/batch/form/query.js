@@ -8,7 +8,7 @@ import {
   tagFragment,
   priceFragment,
   orderCardFragment,
-  filesFragment,
+  imageFragment,
   partnerNameFragment,
   shipmentCardFragment,
   timelineDateMinimalFragment,
@@ -29,7 +29,7 @@ export const batchFormQuery = gql`
   ${tagFragment}
   ${priceFragment}
   ${orderCardFragment}
-  ${filesFragment}
+  ${imageFragment}
   ${partnerNameFragment}
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
