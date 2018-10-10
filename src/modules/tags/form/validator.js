@@ -11,7 +11,7 @@ const validator = Yup.object().shape({
         : currentValue;
     })
     .trim()
-    .min(6)
+    .min(3)
     .max(6),
   entityTypes: Yup.array()
     .of(Yup.string().min(1))
