@@ -29,7 +29,6 @@ type Props = {
   selected: Array<string>,
   orderItems: Array<Object>,
   currency: string,
-  allItemsExpanded: boolean,
   arrayHelpers: {
     push: Function,
     set: Function,
@@ -51,12 +50,11 @@ export function generateBatchItem(batches: Array<Object>) {
 
 class OrderItems extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
-    const { orderItems, selected, currency, allItemsExpanded } = this.props;
+    const { orderItems, selected, currency } = this.props;
     if (
       !isEquals(orderItems, nextProps.orderItems) ||
       !isEquals(selected, nextProps.selected) ||
-      !isEquals(currency, nextProps.currency) ||
-      !isEquals(allItemsExpanded, nextProps.allItemsExpanded)
+      !isEquals(currency, nextProps.currency)
     )
       return true;
 
@@ -66,7 +64,6 @@ class OrderItems extends React.Component<Props> {
   render() {
     const {
       selected,
-      allItemsExpanded,
       orderItems,
       currency,
       arrayHelpers: { push, set },
@@ -99,7 +96,7 @@ class OrderItems extends React.Component<Props> {
               onRemove={onRemove}
             />
 
-            {(allItemsExpanded || (!allItemsExpanded && selected.includes(item.id))) &&
+            {selected.includes(item.id) &&
               (item.batches && (
                 <ArrayValue
                   defaultValue={item.batches}

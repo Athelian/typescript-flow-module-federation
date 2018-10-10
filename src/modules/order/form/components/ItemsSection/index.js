@@ -36,7 +36,17 @@ function ItemSection({ intl, isNew }: Props) {
                     set([]);
                   }}
                 />
-                <ExpandButtons type="EXPAND" onClick={() => toggleExpand(true)} />
+                <Subscribe to={[OrderItemsContainer]}>
+                  {({ state: { orderItems } }) => (
+                    <ExpandButtons
+                      type="EXPAND"
+                      onClick={() => {
+                        toggleExpand(true);
+                        set(orderItems.map(({ id }) => id));
+                      }}
+                    />
+                  )}
+                </Subscribe>
 
                 <Subscribe to={[OrderInfoContainer]}>
                   {({ state: { exporter, currency } }) => (
