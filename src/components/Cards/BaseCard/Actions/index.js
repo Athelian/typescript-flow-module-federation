@@ -4,18 +4,11 @@ import { ActionsWrapperStyle } from './style';
 
 type Props = {
   visible: boolean,
-  actions: Array<{
-    id: string,
-    node: React.Node,
-  }>,
+  children: React.Node,
 };
 
-const Actions = ({ visible, actions }: Props) => (
-  <div className={ActionsWrapperStyle(visible)}>
-    {actions.map(action => (
-      <React.Fragment key={action.id}>{action.node}</React.Fragment>
-    ))}
-  </div>
+const Actions = ({ visible, children }: Props) => (
+  <div className={ActionsWrapperStyle(visible)}>{children}</div>
 );
 
 export default Actions;
