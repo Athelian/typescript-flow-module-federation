@@ -28,6 +28,8 @@ export type BatchFormState = {
   expiredAt?: ?Date | string,
   producedAt?: ?Date | string,
   orderItem?: Object,
+  tags?: Array<Object>,
+  memo?: string,
 };
 
 const initValues = {

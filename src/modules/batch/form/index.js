@@ -157,7 +157,9 @@ export default class BatchForm extends React.Component<Props> {
             icon="ORDER"
             title={<FormattedMessage id="modules.batch.order" defaultMessage="ORDER" />}
           />
-          <OrderSection order={batch.orderItem && batch.orderItem.order} />
+          <Subscribe to={[BatchFormContainer]}>
+            {({ state: { orderItem } }) => <OrderSection order={orderItem && orderItem.order} />}
+          </Subscribe>
         </SectionWrapper>
       </div>
     );
