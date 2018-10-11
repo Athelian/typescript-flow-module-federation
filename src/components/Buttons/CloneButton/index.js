@@ -1,23 +1,16 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { CardActionStyle } from 'components/Cards/BaseCard/Actions/CardAction/style';
+import { CloneButtonWrapperStyle } from './style';
 
 type Props = {
-  hoverColor: string,
   onClick: () => void,
 };
 
-const defaultProps = {
-  hoverColor: 'BLUE',
-};
-
-const CloneButton = ({ onClick, hoverColor }: Props) => (
-  <button className={CardActionStyle(hoverColor)} onClick={onClick} type="button">
+const CloneButton = ({ onClick }: Props) => (
+  <button className={CloneButtonWrapperStyle} onClick={onClick} type="button">
     <Icon icon="CLONE" />
   </button>
 );
-
-CloneButton.defaultProps = defaultProps;
 
 export default CloneButton;

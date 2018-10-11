@@ -3,6 +3,7 @@ import { css } from 'react-emotion';
 import { presets, colors, fontSizes, layout } from 'styles/common';
 
 export const SectionHeaderWrapperStyle: string = css`
+  position: relative;
   grid-template-columns: 1fr;
   ${layout.GRID_HORIZONTAL};
   grid-template-rows: 40px;
