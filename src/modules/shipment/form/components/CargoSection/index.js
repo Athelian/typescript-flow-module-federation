@@ -107,7 +107,7 @@ function CargoSection({ intl }: Props) {
               <div className={EmptyMessageStyle}>
                 <FormattedMessage
                   id="modules.shipment.noBatches"
-                  defaultMessage="No batches found."
+                  defaultMessage="No batches found"
                 />
               </div>
             ) : (

@@ -187,7 +187,7 @@ class OrderItems extends React.Component<Props> {
       <div className={EmptyMessageStyle}>
         <FormattedMessage
           id="modules.order.form.noItems"
-          defaultMessage="No Items found / Please choose Exporter first"
+          defaultMessage="No items found (needs Exporter to be chosen first as well)"
         />
       </div>
     );
