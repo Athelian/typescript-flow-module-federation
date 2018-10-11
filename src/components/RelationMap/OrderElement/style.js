@@ -46,7 +46,7 @@ export const TotalCardWrapperStyle = css`
 
 export const CardWrapperStyle = css`
   display: flex;
-  //grid-template-columns: 1fr 1fr;
+  width: 100%;
   padding: 0 25px 0 10px;
 `;
 export const CardTitleStyle = css`
