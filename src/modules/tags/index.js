@@ -8,7 +8,7 @@ const TagApp = () => (
   <Router>
     <TagListModule path="/" />
     <TagFormModule path="new" />
-    <TagFormModule path="new/:tagId" />
+    <TagFormModule path="clone/:tagId" />
     <TagFormModule path=":tagId" />
   </Router>
 );

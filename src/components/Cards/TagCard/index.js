@@ -41,7 +41,7 @@ const getEntityType = (entityType: ?string) => {
 };
 
 function onClone(tagId: string) {
-  navigate(`/tags/new/${encodeId(tagId)}`);
+  navigate(`/tags/clone/${encodeId(tagId)}`);
 }
 
 const TagCard = ({ tag, onClick, readOnly, ...rest }: Props) => {

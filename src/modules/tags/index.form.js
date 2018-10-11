@@ -42,8 +42,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
-    const { path, tagId } = this.props;
-    const isNew = path === 'new' || path === 'new/:tagId';
+    const { tagId } = this.props;
 
     const { name, description, color, entityTypes } = formData;
 
@@ -54,7 +53,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
       entityTypes,
     };
 
-    if (isNew) {
+    if (this.isNew()) {
       const { data } = await saveTag({ variables: { input } });
       const {
         tagCreate: { violations },
@@ -78,10 +77,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    const { path } = this.props;
-    const isNew = path === 'new' || path === 'new/:tagId';
-
-    if (isNew) {
+    if (this.isNew()) {
       const {
         tagCreate: {
           tag: { id },
@@ -91,9 +87,14 @@ export default class TagFormModule extends React.PureComponent<Props> {
     }
   };
 
+  isNew = () => {
+    const { path } = this.props;
+    return path === 'new' || path === 'clone/:tagId';
+  };
+
   render() {
-    const { path, tagId } = this.props;
-    const isNew = path === 'new' || path === 'new/:tagId';
+    const { tagId } = this.props;
+    const isNew = this.isNew();
     let mutationKey = {};
     if (tagId && !isNew) {
       mutationKey = { key: decodeId(tagId) };
