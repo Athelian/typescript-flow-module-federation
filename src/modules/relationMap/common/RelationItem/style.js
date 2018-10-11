@@ -88,5 +88,5 @@ export const ShipmentCardStyle = css`
 `;
 
 export const ShipmentCardTotalStyle = css`
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 `;
