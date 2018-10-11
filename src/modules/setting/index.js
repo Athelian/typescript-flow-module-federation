@@ -1,16 +1,13 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Mutation, Query, Subscription } from 'react-apollo';
+import { Query, Subscription } from 'react-apollo';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
-import LogoutDialog from 'components/Dialog/LogoutDialog';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { AuthenticationConsumer } from 'modules/authentication';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
-import { NotificationsDropdown } from './components';
-import { logOutMutation, notificationSeeAllMutation } from './mutation';
+import { NotificationsDropdown, UserMenuDropdown } from './components';
+import { notificationSeeAllMutation } from './mutation';
 import query from './query';
 import subscription from './subscription';
 import {
@@ -18,19 +15,15 @@ import {
   NotificationsWrapperStyle,
   NotificationsButtonStyle,
   NotificationBadgeStyle,
-  ProfileButtonStyle,
-  DropDownWrapperStyle,
-  SubMenuWrapperStyle,
-  SubMenuItemStyle,
+  UserMenuWrapperStyle,
+  UserMenuButtonStyle,
 } from './style';
-import messages from './messages';
 
 type Props = {};
 
 type State = {
   isNotificationOpen: boolean,
-  isProfileOpen: boolean,
-  logoutDialogOpen: boolean,
+  isUserMenuOpen: boolean,
 };
 
 class Setting extends React.Component<Props, State> {
@@ -38,48 +31,43 @@ class Setting extends React.Component<Props, State> {
     super();
     this.state = {
       isNotificationOpen: false,
-      isProfileOpen: false,
-      logoutDialogOpen: false,
+      isUserMenuOpen: false,
     };
 
     this.notificationRef = React.createRef();
-    this.profileRef = React.createRef();
+    this.userMenuRef = React.createRef();
   }
 
   handleClickOutside = () => {
-    const { isNotificationOpen, isProfileOpen } = this.state;
+    const { isNotificationOpen, isUserMenuOpen } = this.state;
 
     if (isNotificationOpen) {
       this.toggleNotification();
-    } else if (isProfileOpen) {
-      this.toggleProfile();
+    } else if (isUserMenuOpen) {
+      this.toggleUserMenu();
     }
   };
 
   toggleNotification = () => {
     this.setState(prevState => ({
       isNotificationOpen: !prevState.isNotificationOpen,
-      isProfileOpen: false,
+      isUserMenuOpen: false,
     }));
   };
 
-  toggleProfile = () => {
+  toggleUserMenu = () => {
     this.setState(prevState => ({
-      isProfileOpen: !prevState.isProfileOpen,
+      isUserMenuOpen: !prevState.isUserMenuOpen,
       isNotificationOpen: false,
     }));
   };
 
-  toggleLogoutDialog = () => {
-    this.setState(prevState => ({ logoutDialogOpen: !prevState.logoutDialogOpen }));
-  };
-
   notificationRef: any;
 
-  profileRef: any;
+  userMenuRef: any;
 
   render() {
-    const { isNotificationOpen, isProfileOpen, logoutDialogOpen } = this.state;
+    const { isNotificationOpen, isUserMenuOpen } = this.state;
 
     return (
       <div className={SettingsWrapperStyle}>
@@ -96,7 +84,6 @@ class Setting extends React.Component<Props, State> {
                 <div className={NotificationsWrapperStyle}>
                   <button
                     className={NotificationsButtonStyle}
-                    tabIndex={-1}
                     onClick={async () => {
                       this.toggleNotification();
                       if (unSeen > 0)
@@ -141,69 +128,33 @@ class Setting extends React.Component<Props, State> {
                   </OutsideClickHandler>
                 </div>
 
-                <button
-                  className={ProfileButtonStyle}
-                  data-testid="setting-button"
-                  tabIndex={-1}
-                  onClick={this.toggleProfile}
-                  type="button"
-                  ref={this.profileRef}
-                >
-                  <UserAvatar firstName={viewer.firstName} lastName={viewer.lastName} />
-                </button>
+                <div className={UserMenuWrapperStyle}>
+                  <button
+                    className={UserMenuButtonStyle}
+                    onClick={this.toggleUserMenu}
+                    type="button"
+                    ref={this.userMenuRef}
+                  >
+                    <UserAvatar firstName={viewer.firstName} lastName={viewer.lastName} />
+                  </button>
+
+                  <OutsideClickHandler
+                    onOutsideClick={this.handleClickOutside}
+                    ignoreClick={!isUserMenuOpen}
+                    ignoreElements={
+                      this.userMenuRef && this.userMenuRef.current ? [this.userMenuRef.current] : []
+                    }
+                  >
+                    <UserMenuDropdown
+                      isOpen={isUserMenuOpen}
+                      toggleUserMenu={this.toggleUserMenu}
+                    />
+                  </OutsideClickHandler>
+                </div>
               </>
             );
           }}
         </Query>
-
-        {isProfileOpen && (
-          <OutsideClickHandler
-            onOutsideClick={this.handleClickOutside}
-            ignoreElements={
-              this.profileRef && this.profileRef.current ? [this.profileRef.current] : []
-            }
-          >
-            <div className={DropDownWrapperStyle}>
-              <div className={SubMenuWrapperStyle}>
-                <div
-                  className={SubMenuItemStyle}
-                  onClick={this.toggleLogoutDialog}
-                  data-testid="logout-button"
-                  role="presentation"
-                >
-                  <div>
-                    <Icon icon="LOGOUT" />
-                  </div>
-                  <div>
-                    <FormattedMessage {...messages.logout} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </OutsideClickHandler>
-        )}
-
-        <AuthenticationConsumer>
-          {({ setAuthenticated }) => (
-            <Mutation
-              mutation={logOutMutation}
-              onCompleted={() => {
-                setAuthenticated(false);
-              }}
-            >
-              {logout => (
-                <LogoutDialog
-                  isOpen={logoutDialogOpen}
-                  onRequestClose={this.toggleLogoutDialog}
-                  onCancel={this.toggleLogoutDialog}
-                  onConfirm={() => {
-                    logout({});
-                  }}
-                />
-              )}
-            </Mutation>
-          )}
-        </AuthenticationConsumer>
       </div>
     );
   }

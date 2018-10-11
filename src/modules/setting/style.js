@@ -60,7 +60,11 @@ export const NotificationBadgeStyle: string = css`
   flex-shrink: 0;
 `;
 
-export const ProfileButtonStyle: string = css`
+export const UserMenuWrapperStyle: string = css`
+  position: relative;
+`;
+
+export const UserMenuButtonStyle: string = css`
   ${presets.BUTTON};
   position: relative;
   ${borderRadiuses.CIRCLE};
