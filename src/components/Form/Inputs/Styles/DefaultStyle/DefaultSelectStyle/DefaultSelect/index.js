@@ -6,6 +6,7 @@ import { DefaultStyleWrapperStyle } from 'components/Form/Inputs/Styles/DefaultS
 import { SelectInputStyle, ClearButtonStyle, ArrowDownStyle } from './style';
 
 type OptionalProps = {
+  type: 'standard' | 'label',
   required: boolean,
   hasError: boolean,
   disabled: boolean,
@@ -21,6 +22,7 @@ type Props = OptionalProps &
   };
 
 const defaultProps = {
+  type: 'standard',
   required: false,
   hasError: false,
   disabled: false,
@@ -31,6 +33,7 @@ const defaultProps = {
 };
 
 function DefaultSelect({
+  type,
   required,
   hasError,
   disabled,
@@ -49,7 +52,7 @@ function DefaultSelect({
   return (
     <div
       className={DefaultStyleWrapperStyle({
-        type: 'standard',
+        type,
         isFocused: isOpen,
         hasError,
         disabled,

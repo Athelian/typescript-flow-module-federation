@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FieldItem, Label, Tooltip, DefaultStyle, TextInput } from 'components/Form';
 
 const textInputFactory = ({
+  type = 'standard',
   required = false,
   WrapperComponent = DefaultStyle,
   align = 'right',
@@ -16,6 +17,7 @@ const textInputFactory = ({
   inputHandlers,
   originalValue,
 }: {
+  type?: 'standard' | 'label',
   WrapperComponent?: () => React.Node,
   InputComponent?: TextInput,
   required?: boolean,
@@ -59,6 +61,7 @@ const textInputFactory = ({
       }
       input={
         <WrapperComponent
+          type={type}
           isFocused={isFocused}
           hasError={isTouched && errorMessage}
           forceHoverStyle={isNew}

@@ -91,6 +91,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
           >
             {({ name, ...inputHandlers }) =>
               selectEnumInputFactory({
+                type: 'label',
                 enumType,
                 name,
                 inputHandlers,

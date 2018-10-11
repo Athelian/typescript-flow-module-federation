@@ -5,6 +5,7 @@ import { type RenderOptionsProps } from 'components/Form/Inputs/SelectInput/type
 import { OptionWrapperStyle, OptionStyle } from './style';
 
 type OptionalProps = {
+  type: 'standard' | 'label',
   align: 'left' | 'right' | 'center',
   width: string,
   height: string,
@@ -18,6 +19,7 @@ type Props = OptionalProps &
   };
 
 const defaultProps = {
+  type: 'standard',
   align: 'right',
   width: '100%',
   height: '200px',
@@ -29,6 +31,7 @@ const removePx = (size: string) => {
 };
 
 function DefaultOptions({
+  type,
   items,
   itemToValue,
   itemToString,
@@ -55,7 +58,12 @@ function DefaultOptions({
             return (
               <div
                 key={`option-${itemToValue(item)}-${itemToString(item)}`}
-                className={OptionStyle(highlightedIndex === index, selectedItem === item, align)}
+                className={OptionStyle({
+                  onHover: highlightedIndex === index,
+                  selected: selectedItem === item,
+                  align,
+                  type,
+                })}
                 {...getItemProps({ item, style })}
               >
                 {itemToString(item)}

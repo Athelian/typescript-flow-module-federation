@@ -61,13 +61,24 @@ export const DefaultStyleWrapperStyle = ({
     padding: 0;
     width: 100%;
     height: 100%;
-    font-weight: bold;
-    ${fontSizes.MAIN};
     line-height: 20px;
-    color: ${colors.BLACK};
     padding: 0 5px;
     background: none;
     ${borderRadiuses.MAIN};
+    ${
+      type === 'label'
+        ? `
+      color: ${colors.GRAY_DARK};
+      ${fontSizes.SMALL};
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    `
+        : `
+      color: ${colors.BLACK};
+      ${fontSizes.MAIN};
+      font-weight: bold;
+    `
+    };
     &:focus {
       outline: none;
     }

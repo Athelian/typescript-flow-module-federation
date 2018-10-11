@@ -111,3 +111,10 @@ export const portFragment = gql`
     airport
   }
 `;
+
+export const metadataFragment = gql`
+  fragment metadataFragment on Metadata {
+    field
+    value
+  }
+`;
