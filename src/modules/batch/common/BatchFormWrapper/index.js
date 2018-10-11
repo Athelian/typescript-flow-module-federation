@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { isDataType } from 'utils/fp';
 import BatchFormContainer from 'modules/batch/form/container';
@@ -66,13 +67,40 @@ class BatchFormWrapper extends React.Component<Props> {
                 <SlideViewNavBar>
                   <EntityIcon icon="BATCH" color="BATCH" />
                   <JumpToSection>
-                    <SectionTabs link="batchSection" label="BATCH" icon="BATCH" />
+                    <SectionTabs
+                      link="batchSection"
+                      label={<FormattedMessage id="modules.batch.batch" defaultMessage="BATCH" />}
+                      icon="BATCH"
+                    />
                     <SectionTabs
                       link="quantityAdjustmentsSection"
-                      label="QUANTITY ADJUSTMENTS"
+                      label={
+                        <FormattedMessage
+                          id="modules.batch.quantityAdjustments"
+                          defaultMessage="QUANTITY ADJUSTMENTS"
+                        />
+                      }
                       icon="QUANTITY_ADJUSTMENTS"
                     />
-                    <SectionTabs link="packagingSection" label="PACKAGING" icon="PACKAGING" />
+                    <SectionTabs
+                      link="packagingSection"
+                      label={
+                        <FormattedMessage id="modules.batch.packaging" defaultMessage="PACKAGING" />
+                      }
+                      icon="PACKAGING"
+                    />
+                    <SectionTabs
+                      link="shipmentSection"
+                      label={
+                        <FormattedMessage id="modules.batch.shipment" defaultMessage="SHIPMENT" />
+                      }
+                      icon="SHIPMENT"
+                    />
+                    <SectionTabs
+                      link="orderSection"
+                      label={<FormattedMessage id="modules.batch.order" defaultMessage="ORDER" />}
+                      icon="ORDER"
+                    />
                   </JumpToSection>
                   <CancelButton onClick={onCancel} />
                   <SaveButton

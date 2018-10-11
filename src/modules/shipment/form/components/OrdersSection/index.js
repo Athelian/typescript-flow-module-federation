@@ -18,10 +18,7 @@ function OrdersSection({ orders }: Props) {
       <div className={OrdersSectionBodyStyle}>
         {orders.length === 0 ? (
           <div className={EmptyMessageStyle}>
-            <FormattedMessage
-              id="modules.shipment.noOrderFound"
-              defaultMessage="No orders found."
-            />
+            <FormattedMessage id="modules.shipment.noOrderFound" defaultMessage="No orders found" />
           </div>
         ) : (
           orders.map(order => <OrderCard order={order} key={order.id} readOnly />)

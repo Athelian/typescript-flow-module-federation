@@ -31,7 +31,7 @@ const NotificationListView = (props: Props) => {
       emptyMessage={
         <FormattedMessage
           id="modules.notifications.noItem"
-          defaultMessage="No notification found"
+          defaultMessage="No notifications found"
         />
       }
     >

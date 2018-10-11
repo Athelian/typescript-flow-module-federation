@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { BatchCard } from 'components/Cards';
 
@@ -27,7 +28,9 @@ const BatchGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="195px"
       isEmpty={items.length === 0}
-      emptyMessage="No batches found"
+      emptyMessage={
+        <FormattedMessage id="modules.batch.noBatchesFound" defaultMessage="No batches found" />
+      }
     >
       {items.map(item => renderItem(item))}
     </GridView>

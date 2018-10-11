@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { LogsButtonWrapperStyle, BadgeStyle } from './style';
@@ -15,7 +16,8 @@ const defaultProps = {
 
 const LogsButton = ({ onClick, badge }: Props) => (
   <button type="button" onClick={onClick} className={LogsButtonWrapperStyle}>
-    <Icon icon="LOGS" /> LOGS
+    <Icon icon="LOGS" />{' '}
+    <FormattedMessage id="components.navBar.logsButton.logs" defaultMessage="LOGS" />
     {!!badge &&
       badge > 0 && (
         <div className={BadgeStyle}>

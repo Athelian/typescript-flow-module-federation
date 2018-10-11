@@ -63,9 +63,7 @@ const OrderEventsGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="800px"
       isEmpty={items.length === 0}
-      emptyMessage={
-        <FormattedMessage id="modules.history.noItem" defaultMessage="No event history found" />
-      }
+      emptyMessage={<FormattedMessage id="modules.history.noItem" defaultMessage="No logs found" />}
     >
       {items.reverse().map((item, index) =>
         renderItem({

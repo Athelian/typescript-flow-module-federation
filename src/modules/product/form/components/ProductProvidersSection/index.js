@@ -124,7 +124,7 @@ function ProductProvidersSection() {
               <div className={EmptyMessageStyle}>
                 <FormattedMessage
                   id="modules.product.noProviderFound"
-                  defaultMessage="No end products found. Please create at least one end product."
+                  defaultMessage="Please create at least one end product"
                 />
               </div>
             ) : (

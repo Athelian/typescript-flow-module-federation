@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
@@ -104,7 +104,12 @@ function CargoSection({ intl }: Props) {
         <Subscribe to={[ShipmentBatchesContainer]}>
           {({ state: { batches }, setFieldValue, setFieldArrayValue }) =>
             batches.length === 0 ? (
-              <div className={EmptyMessageStyle}>No batches found.</div>
+              <div className={EmptyMessageStyle}>
+                <FormattedMessage
+                  id="modules.shipment.noBatches"
+                  defaultMessage="No batches found"
+                />
+              </div>
             ) : (
               <div className={ItemGridStyle}>
                 {batches.map((item, position) => (

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue, NumberValue } from 'react-values';
@@ -133,7 +133,12 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                       isLoading={loading}
                       itemWidth="195px"
                       isEmpty={items.length === 0}
-                      emptyMessage="No products found"
+                      emptyMessage={
+                        <FormattedMessage
+                          id="modules.order.noProductProvidersFound"
+                          defaultMessage="No end products found"
+                        />
+                      }
                     >
                       {items.map(item => (
                         <div key={item.id} className={ItemWrapperStyle}>

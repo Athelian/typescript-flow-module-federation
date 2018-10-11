@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue, NumberValue } from 'react-values';
@@ -174,7 +174,12 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                       isLoading={loading}
                       itemWidth="195px"
                       isEmpty={items.length === 0}
-                      emptyMessage="No items found"
+                      emptyMessage={
+                        <FormattedMessage
+                          id="modules.batch.noOrderItemsFound"
+                          defaultMessage="No items found"
+                        />
+                      }
                     >
                       {items.map(item => (
                         <div key={item.id} className={ItemWrapperStyle}>
