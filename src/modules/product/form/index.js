@@ -1,11 +1,14 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
-import { isEquals, isDataType } from 'utils/fp';
+import { Subscribe } from 'unstated';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
 import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
-import { Subscribe } from 'unstated';
+import { CloneButton } from 'components/Buttons';
+import { encodeId } from 'utils/id';
+import { isEquals, isDataType } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import { ProductSection, ProductProvidersSection } from './components';
 import { ProductFormWrapperStyle } from './style';
@@ -23,6 +26,7 @@ const defaultProps = {
   isNew: false,
   onFormReady: () => {},
 };
+
 class ProductForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -37,6 +41,11 @@ class ProductForm extends React.Component<Props> {
 
     return !isEquals(product, nextProps.product);
   }
+
+  onClone = () => {
+    const { product } = this.props;
+    navigate(`/product/clone/${encodeId(product.id)}`);
+  };
 
   render() {
     const { product, isNew } = this.props;
@@ -76,6 +85,7 @@ class ProductForm extends React.Component<Props> {
                     />
                   )}
                 </BooleanValue>
+                <CloneButton onClick={this.onClone} />
               </>
             )}
           </SectionHeader>

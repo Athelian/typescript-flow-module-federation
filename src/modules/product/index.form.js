@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { omit, set, lensProp } from 'ramda';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
@@ -33,10 +34,12 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  path: string,
   productId?: string,
 };
 
 const defaultProps = {
+  path: '',
   productId: '',
   isSlideView: false,
 };
@@ -59,6 +62,21 @@ type UpdateProductResponse = {|
   },
 |};
 
+// TODO:
+// const prepareCloneProductInput = () => {
+//   const cleanUpProduct = product => omit(['archived', 'files', 'productProviders'], product);
+//   const cleanUpProductProviders = productProviders =>
+//     omit(['id', 'archived', 'updatedAt'], productProviders);
+//   const fillUpProductProviders = (productProviders, product) =>
+//     set(lensProp('productProviders'), productProviders, product);
+
+//   return pipe(
+//     cleanUpProduct,
+//     cleanUpProductProviders,
+//     fillUpProductProviders
+//   );
+// };
+
 class ProductFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -74,7 +92,7 @@ class ProductFormModule extends React.Component<Props> {
   ) => {
     const { productId } = this.props;
 
-    const isNew = productId === 'new';
+    const isNew = this.isNew();
     const input = isNew ? prepareCreateProductInput(formData) : prepareUpdateProductInput(formData);
 
     if (isNew) {
@@ -113,10 +131,7 @@ class ProductFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: CreateProductResponse | UpdateProductResponse) => {
-    const { productId } = this.props;
-    const isNew = productId === 'new';
-
-    if (isNew && result.productCreate) {
+    if (this.isNew() && result.productCreate) {
       const {
         productCreate: { product, violations },
       } = result;
@@ -129,9 +144,19 @@ class ProductFormModule extends React.Component<Props> {
     }
   };
 
+  isNew = () => {
+    const { path } = this.props;
+    return path.startsWith('new') || path.startsWith('clone');
+  };
+
+  isClone = () => {
+    const { path } = this.props;
+    return path.startsWith('clone');
+  };
+
   render() {
     const { productId, isSlideView } = this.props;
-    const isNew = productId === 'new';
+    const isNew = this.isNew();
     let mutationKey = {};
     if (productId && !isNew) {
       mutationKey = { key: decodeId(productId) };
@@ -227,34 +252,44 @@ class ProductFormModule extends React.Component<Props> {
                   }
                 >
                   {apiError && <p>Error: Please try again.</p>}
-                  {isNew || !productId ? (
+                  {!productId ? (
                     <ProductForm product={{}} isNew />
                   ) : (
                     <QueryForm
                       query={productFormQuery}
                       entityId={productId}
                       entityType="product"
-                      render={product => (
-                        <Subscribe
-                          to={[
-                            ProductInfoContainer,
-                            ProductProvidersContainer,
-                            ProductTagsContainer,
-                          ]}
-                        >
-                          {(productInfoState, productProvidersState, productTagsState) => (
-                            <ProductForm
-                              product={product}
-                              onFormReady={() => {
-                                const { tags, productProviders, ...info } = product;
-                                productInfoState.initDetailValues(info);
-                                productProvidersState.initDetailValues(productProviders);
-                                productTagsState.initDetailValues(tags);
-                              }}
-                            />
-                          )}
-                        </Subscribe>
-                      )}
+                      render={originalProduct => {
+                        // TODO: I will use pipe to finish this logic.
+                        const tmpProduct = this.isClone()
+                          ? omit(['archived', 'files', 'productProviders'], originalProduct)
+                          : originalProduct;
+                        // TODO: incorrect
+                        const product = set(lensProp('productProviders'), [], tmpProduct);
+
+                        return (
+                          <Subscribe
+                            to={[
+                              ProductInfoContainer,
+                              ProductProvidersContainer,
+                              ProductTagsContainer,
+                            ]}
+                          >
+                            {(productInfoState, productProvidersState, productTagsState) => (
+                              <ProductForm
+                                isNew={isNew}
+                                product={product}
+                                onFormReady={() => {
+                                  const { tags, productProviders, ...info } = product;
+                                  productInfoState.initDetailValues(info);
+                                  productProvidersState.initDetailValues(productProviders);
+                                  productTagsState.initDetailValues(tags);
+                                }}
+                              />
+                            )}
+                          </Subscribe>
+                        );
+                      }}
                     />
                   )}
                 </Layout>

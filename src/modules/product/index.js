@@ -7,6 +7,8 @@ import ProductFormModule from './index.form';
 const ProductApp = () => (
   <Router>
     <ProductListModule path="/" />
+    <ProductFormModule path="new" />
+    <ProductFormModule path="clone/:productId" />
     <ProductFormModule path=":productId" />
   </Router>
 );
