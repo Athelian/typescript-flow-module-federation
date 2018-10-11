@@ -3,10 +3,8 @@ import * as React from 'react';
 import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
-import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
-import Logo from './components/Logo';
-import MenuItem from './components/MenuItem';
-import SubMenu from './components/SubMenu';
+import { Logo, MenuItem, SubMenu } from './components';
+import { SideBarWrapperStyle, SideBarBodyStyle, BetaTagWrapperStyle, BetaTagStyle } from './style';
 import messages from './messages';
 
 type Props = {};
@@ -36,13 +34,16 @@ class SideBar extends React.Component<Props, State> {
                 <div className={SideBarWrapperStyle(uiState.isSideBarExpanded)}>
                   <Logo {...uiState} />
                   <div className={SideBarBodyStyle}>
-                    <MenuItem
-                      path="/relation-map/orders"
-                      isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
-                      icon="RELATION_MAP"
-                      label={<FormattedMessage {...messages.relationMap} />}
-                      onClick={() => this.setExpandedSubMenu(null)}
-                    />
+                    <div className={BetaTagWrapperStyle}>
+                      <MenuItem
+                        path="/relation-map/orders"
+                        isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
+                        icon="RELATION_MAP"
+                        label={<FormattedMessage {...messages.relationMap} />}
+                        onClick={() => this.setExpandedSubMenu(null)}
+                      />
+                      <div className={BetaTagStyle}>BETA</div>
+                    </div>
                     <MenuItem
                       path="/order"
                       isActive={`/${location.pathname.split('/')[1]}` === '/order'}

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { transitions, scrollbars, colors } from 'styles/common';
+import { transitions, scrollbars, colors, fontSizes, borderRadiuses } from 'styles/common';
 
 export const SideBarWrapperStyle = (isExpanded: boolean): string => css`
   @keyframes gradient {
@@ -40,4 +40,23 @@ export const SideBarBodyStyle: string = css`
   &:hover {
     overflow-y: overlay;
   }
+`;
+
+export const BetaTagWrapperStyle: string = css`
+  position: relative;
+  overflow: hidden;
+  width: 200px;
+`;
+
+export const BetaTagStyle: string = css`
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: ${colors.WHITE};
+  ${fontSizes.SMALL};
+  ${borderRadiuses.BUTTON};
+  padding: 0 2px 0 4px;
+  letter-spacing: 2px;
+  opacity: 0.75;
 `;
