@@ -7,6 +7,8 @@ import TagFormModule from './index.form';
 const TagApp = () => (
   <Router>
     <TagListModule path="/" />
+    <TagFormModule path="new" />
+    <TagFormModule path="new/:tagId" />
     <TagFormModule path=":tagId" />
   </Router>
 );

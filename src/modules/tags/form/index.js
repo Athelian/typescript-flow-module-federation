@@ -1,10 +1,14 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
+import Icon from 'components/Icon';
 import { isEquals } from 'utils/fp';
+import { encodeId } from 'utils/id';
 import { TagSection } from './components';
-import { TagFormWrapperStyle } from './style';
+
+import { TagFormWrapperStyle, CloneButtonStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
@@ -35,6 +39,11 @@ export default class TagForm extends React.Component<Props> {
     return !isEquals(tag, nextProps.tag);
   }
 
+  onClone = () => {
+    const { tag } = this.props;
+    navigate(`/tags/new/${encodeId(tag.id)}`);
+  };
+
   render() {
     const { tag, isNew } = this.props;
 
@@ -48,6 +57,10 @@ export default class TagForm extends React.Component<Props> {
             {!isNew && (
               <>
                 <LastModified updatedAt={tag.updatedAt} updatedBy={tag.updatedBy} />
+
+                <button type="button" className={CloneButtonStyle} onClick={this.onClone}>
+                  <Icon icon="CLONE" />
+                </button>
               </>
             )}
           </SectionHeader>
