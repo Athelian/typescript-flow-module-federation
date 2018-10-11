@@ -4,7 +4,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
 import { BatchInfoStyle } from '../Card/style';
-import { CardWrapperStyle, CardVisualizeStyle, CardTitleStyle } from '../style';
+import { CardWrapperStyle, BatchCardVisualizeStyle, CardTitleStyle } from '../style';
 import messages from './messages';
 
 type Props = {
@@ -21,14 +21,14 @@ export default class BatchCard extends React.PureComponent<Props> {
     const { title, quantity, volume, deliveredAt } = this.props;
     return (
       <div className={CardWrapperStyle}>
-        <div>
-          <div className={CardTitleStyle}>{title}</div>
-          <div className={CardTitleStyle}>
+        <div className={CardTitleStyle}>
+          <di>{title}</di>
+          <div>
             <FormattedDate value={deliveredAt} />
           </div>
         </div>
 
-        <div className={CardVisualizeStyle}>
+        <div className={BatchCardVisualizeStyle}>
           <div className={BatchInfoStyle}>
             <div>{quantityTitle}</div>
             <div>{quantity}</div>

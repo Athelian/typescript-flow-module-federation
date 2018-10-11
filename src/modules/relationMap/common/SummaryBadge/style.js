@@ -20,6 +20,7 @@ export const SummaryBadgeLabel = css`
 `;
 
 export const SummaryBadgeWrapper = css`
+  padding-left: 10px;
   ${layout.HORIZONTAL};
 `;
 
