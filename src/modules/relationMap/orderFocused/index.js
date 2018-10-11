@@ -44,9 +44,11 @@ const OrderFocused = ({
               let itemType;
               switch (relation.type) {
                 case 'ORDER_ITEM_ALL':
+                  itemType = 'order';
                   itemData = order[item.id];
                   break;
                 case 'BATCH_ALL':
+                  itemType = 'order';
                   itemData = order[item.id];
                   break;
                 case 'ORDER':
