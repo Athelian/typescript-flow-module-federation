@@ -12,7 +12,9 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <BatchCard key={item.id} batch={item} />;
+const defaultRenderItem = (item: Object) => (
+  <BatchCard key={item.id} batch={item} showActionsOnHover />
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,

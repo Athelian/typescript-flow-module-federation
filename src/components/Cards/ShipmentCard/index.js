@@ -1,10 +1,10 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
   ShipmentCardWrapperStyle,
   ShipmentInfoWrapperStyle,
@@ -17,29 +17,24 @@ import {
 } from './style';
 
 type OptionalProps = {
-  readOnly: boolean,
+  actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
   shipment: ?Object,
-  onArchive: string => void,
 };
 
 const defaultProps = {
-  readOnly: false,
+  actions: [],
 };
 
-const ShipmentCard = ({ shipment, onArchive, readOnly }: Props) => {
+const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
   if (!shipment) return '';
 
-  const { id, archived } = shipment;
-
-  const actions = readOnly
-    ? []
-    : [<CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />];
+  const { id } = shipment;
 
   return (
-    <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions}>
+    <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions} {...rest}>
       <Link className={ShipmentCardWrapperStyle} to={`/shipment/${encodeId(id)}`}>
         <div className={ShipmentInfoWrapperStyle}>
           <div className={ShipmentLeftWrapperStyle}>

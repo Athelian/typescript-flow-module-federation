@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import GridView from 'components/GridView';
-import { OrderCard } from 'components/Cards';
+import { OrderCard, CardAction } from 'components/Cards';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 
 type Props = {
@@ -31,7 +31,16 @@ const defaultRenderItem = (item: Object) => (
             order={item}
           />
         )}
-        <OrderCard order={item} onArchive={() => dialogToggle(true)} />
+        <OrderCard
+          order={item}
+          actions={[
+            <CardAction
+              icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
+              onClick={() => dialogToggle(true)}
+            />,
+          ]}
+          showActionsOnHover
+        />
       </>
     )}
   </BooleanValue>

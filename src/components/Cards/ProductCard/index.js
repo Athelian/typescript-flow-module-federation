@@ -6,7 +6,7 @@ import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
   ProductCardWrapperStyle,
   ProductImageWrapperStyle,
@@ -24,16 +24,25 @@ import {
   ProductTagsWrapperStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  actions: Array<React.Node>,
+};
+
+type Props = OptionalProps & {
   product: ?Object,
-  onArchive: string => void,
 };
 
 type State = {
   activeImage: number,
 };
 
+const defaultProps = {
+  actions: [],
+};
+
 class ProductCard extends React.PureComponent<Props, State> {
+  static defaultProps = defaultProps;
+
   state = {
     activeImage: 0,
   };
@@ -52,19 +61,17 @@ class ProductCard extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { product, onArchive } = this.props;
+    const { product, actions, ...rest } = this.props;
     const { activeImage } = this.state;
 
     if (!product) return '';
 
-    const { id, archived, name, serial, tags, files, productProviders } = product;
-    const actions = [
-      <CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />,
-    ];
+    const { id, name, serial, tags, files, productProviders } = product;
+
     const productImage = files && files.length > 0 ? files[activeImage].path : FALLBACK_IMAGE;
 
     return (
-      <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions}>
+      <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} {...rest}>
         <Link className={ProductCardWrapperStyle} to={`/product/${encodeId(id)}`}>
           <div className={ProductImageWrapperStyle}>
             <img className={ProductImageStyle} src={productImage} alt="product_image" />
