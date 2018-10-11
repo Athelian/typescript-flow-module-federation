@@ -20,10 +20,12 @@ import validator from './form/validator';
 import { createTagMutation, updateTagMutation } from './form/mutation';
 
 type Props = {
+  path?: string,
   tagId?: string,
 };
 
 const defaultProps = {
+  path: '',
   tagId: '',
 };
 
@@ -41,7 +43,6 @@ export default class TagFormModule extends React.PureComponent<Props> {
     onErrors: Function = () => {}
   ) => {
     const { tagId } = this.props;
-    const isNew = tagId === 'new';
 
     const { name, description, color, entityTypes } = formData;
 
@@ -52,7 +53,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
       entityTypes,
     };
 
-    if (isNew) {
+    if (this.isNew()) {
       const { data } = await saveTag({ variables: { input } });
       const {
         tagCreate: { violations },
@@ -76,9 +77,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    const { tagId } = this.props;
-    const isNew = tagId === 'new';
-    if (isNew) {
+    if (this.isNew()) {
       const {
         tagCreate: {
           tag: { id },
@@ -88,9 +87,14 @@ export default class TagFormModule extends React.PureComponent<Props> {
     }
   };
 
+  isNew = () => {
+    const { path } = this.props;
+    return path === 'new' || path === 'clone/:tagId';
+  };
+
   render() {
     const { tagId } = this.props;
-    const isNew = tagId === 'new';
+    const isNew = this.isNew();
     let mutationKey = {};
     if (tagId && !isNew) {
       mutationKey = { key: decodeId(tagId) };
@@ -152,7 +156,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                   }
                 >
                   {apiError && <p>Error: Please try again.</p>}
-                  {isNew || !tagId ? (
+                  {!tagId ? (
                     <TagForm tag={{}} isNew />
                   ) : (
                     <QueryForm
@@ -163,6 +167,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                         <Subscribe to={[TagContainer, EntityTypeContainer]}>
                           {(tagState, entityTypesState) => (
                             <TagForm
+                              isNew={isNew}
                               tag={tag}
                               onFormReady={() => {
                                 const { name, description, color, entityTypes } = tag;

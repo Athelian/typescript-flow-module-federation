@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
+import { CloneButton } from 'components/Buttons';
 import { isEquals } from 'utils/fp';
+import { encodeId } from 'utils/id';
 import { TagSection } from './components';
 import { TagFormWrapperStyle } from './style';
 
@@ -35,6 +38,11 @@ export default class TagForm extends React.Component<Props> {
     return !isEquals(tag, nextProps.tag);
   }
 
+  onClone = () => {
+    const { tag } = this.props;
+    navigate(`/tags/clone/${encodeId(tag.id)}`);
+  };
+
   render() {
     const { tag, isNew } = this.props;
 
@@ -48,6 +56,7 @@ export default class TagForm extends React.Component<Props> {
             {!isNew && (
               <>
                 <LastModified updatedAt={tag.updatedAt} updatedBy={tag.updatedBy} />
+                <CloneButton onClick={this.onClone} />
               </>
             )}
           </SectionHeader>
