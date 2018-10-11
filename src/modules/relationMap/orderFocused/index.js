@@ -97,9 +97,7 @@ const OrderFocused = ({
                                 });
                               }}
                             />,
-                            <CardAction icon="BRANCH" onClick={() => {}} />,
                             <CardAction icon="CLEAR" onClick={reset} />,
-                            <CardAction icon="REMOVE" onClick={() => {}} />,
                           ]}
                           onClick={toggle}
                           onDoubleClick={() => {
@@ -159,9 +157,7 @@ const OrderFocused = ({
                               });
                             }}
                           />,
-                          <CardAction icon="BRANCH" onClick={() => {}} />,
                           <CardAction icon="CLEAR" onClick={reset} />,
-                          <CardAction icon="REMOVE" onClick={() => {}} />,
                         ]}
                         onClick={toggle}
                         onDoubleClick={() => {

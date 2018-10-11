@@ -152,6 +152,7 @@ const Item = (props: Props) => {
             isCollapsed={isCollapsed}
           />
           <BaseCard
+            showActionsOnHover
             icon={type}
             color={type}
             actions={actions}

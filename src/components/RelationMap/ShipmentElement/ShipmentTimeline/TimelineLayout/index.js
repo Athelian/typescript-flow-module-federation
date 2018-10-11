@@ -61,7 +61,8 @@ const TimelineLayout = ({ shipment }: Props) => {
               boundaryId="timelineInfoSection"
             />
             <div className={TimelineIconDate}>
-              <TimelineDate timelineDate={voyages[index].departure} />
+              <TimelineDate timelineDate={voyage.arrival} />
+              <TimelineDate timelineDate={voyage.departure} />
             </div>
           </div>
 

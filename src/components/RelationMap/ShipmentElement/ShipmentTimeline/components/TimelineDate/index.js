@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
-// $FlowFixMe flow not yet configured
-// import differenceInDays from 'date-fns/differenceInDays';
+import differenceInDays from 'date-fns/differenceInDays';
+import { compact } from 'lodash';
 import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';
-import { TimelineDateWrapperStyle, DateStyle, ApprovedIconStyle } from './style';
+import { TimelineDateWrapperStyle, DateStyle, DelayStyle, ApprovedIconStyle } from './style';
 
 type OptionalProps = {};
 
@@ -19,29 +19,34 @@ type Props = OptionalProps & {
 };
 
 const TimelineDate = ({ timelineDate }: Props) => {
-  const { date, timelineDateRevisions, approvedAt } = timelineDate;
+  const { date, timelineDateRevisions: rawRevisions, approvedAt } = timelineDate;
 
-  const hasMultipleDates = timelineDateRevisions.length > 0;
+  const timelineDateRevisions = compact(rawRevisions);
+  const hasMultipleDates = timelineDateRevisions && timelineDateRevisions.length > 0;
 
-  let shownDate = '';
-  if (hasMultipleDates) {
-    shownDate = timelineDateRevisions[timelineDateRevisions.length - 1].date;
-  } else if (date) {
-    shownDate = date;
+  let shownDate = date;
+  if (hasMultipleDates && timelineDateRevisions) {
+    for (let index = timelineDateRevisions.length - 1; index >= 0; index -= 1) {
+      const { date: lastDate } = timelineDateRevisions[index] || {};
+      if (lastDate) {
+        shownDate = lastDate;
+        break;
+      }
+    }
   }
 
-  // let delayAmount = 0;
-  // if (date && hasMultipleDates) {
-  //   delayAmount = differenceInDays(
-  //     timelineDateRevisions[timelineDateRevisions.length - 1].date,
-  //     date
-  //   );
-  // }
+  let delayAmount = 0;
+  if (date && shownDate && hasMultipleDates) {
+    delayAmount = differenceInDays(new Date(shownDate), new Date(date));
+  }
 
   return (
     <div className={TimelineDateWrapperStyle}>
       <div className={DateStyle(!!shownDate)}>
         <FormattedDate value={shownDate} mode="date" />
+      </div>
+      <div className={DelayStyle(delayAmount)}>
+        {delayAmount !== 0 && `${delayAmount > 0 ? '+' : ''}${delayAmount}`}
       </div>
       {approvedAt && (
         <div className={ApprovedIconStyle(!!approvedAt)}>
