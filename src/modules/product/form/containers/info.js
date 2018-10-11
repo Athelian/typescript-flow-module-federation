@@ -10,10 +10,12 @@ type FormState = {
   hsCode?: ?string,
   material?: ?string,
   files?: Array<Object>,
+  metadata?: Array<Object>,
 };
 
 const initValues = {
   files: [],
+  metadata: [],
 };
 
 export default class ProductInfoContainer extends Container<FormState> {

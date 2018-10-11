@@ -8,6 +8,7 @@ import { textInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import { ProductInfoContainer, ProductTagsContainer } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
+import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, TagsInput, ImagesUploadInput } from 'components/Form';
 import ImagePreviewDialog from 'components/Dialog/ImagePreviewDialog';
@@ -210,6 +211,48 @@ const ProductSection = ({ isNew }: Props) => (
                 })
               }
             </FormField>
+
+            {values.metadata.map((data, index) => (
+              <GridRow>
+                <FormField
+                  name={`metadata.${index}.field`}
+                  initValue={values.metadata[index].field}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                  key={data.field}
+                >
+                  {({ name, ...inputHandlers }) =>
+                    textInputFactory({
+                      type: 'label',
+                      align: 'left',
+                      inputHandlers,
+                      name,
+                      isNew,
+                      originalValue: initialValues[name],
+                    })
+                  }
+                </FormField>
+                <FormField
+                  name={`metadata.${index}.value`}
+                  initValue={values.metadata[index].value}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                  key={data.value}
+                >
+                  {({ name, ...inputHandlers }) =>
+                    textInputFactory({
+                      inputHandlers,
+                      name,
+                      isNew,
+                      originalValue: initialValues[name],
+                    })
+                  }
+                </FormField>
+              </GridRow>
+            ))}
+
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>
                 {({ state: { tags }, setFieldValue: changeTags }) => (

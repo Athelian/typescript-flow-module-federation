@@ -19,6 +19,7 @@ import {
   timelineDateFullFragment,
   timelineDateMinimalFragment,
   portFragment,
+  metadataFragment,
 } from './common/fragment';
 
 export {
@@ -50,4 +51,5 @@ export {
   timelineDateFullFragment,
   timelineDateMinimalFragment,
   portFragment,
+  metadataFragment,
 };
