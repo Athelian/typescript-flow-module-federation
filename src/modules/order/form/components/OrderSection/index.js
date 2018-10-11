@@ -165,8 +165,25 @@ const OrderSection = ({ isNew }: Props) => (
 
               <GridColumn gap="10px">
                 <FieldItem
-                  label={<Label>IN CHARGE ({values.inCharges.length})</Label>}
-                  tooltip={<Tooltip infoMessage="You can choose up to 5 people in charge." />}
+                  label={
+                    <Label>
+                      <FormattedMessage
+                        id="containers.Orders.inCharge"
+                        defaultMessage="IN CHARGE"
+                      />{' '}
+                      ({values.inCharges.length})
+                    </Label>
+                  }
+                  tooltip={
+                    <Tooltip
+                      infoMessage={
+                        <FormattedMessage
+                          id="containers.Orders.inCharge"
+                          defaultMessage="You can choose up to 5 people in charge."
+                        />
+                      }
+                    />
+                  }
                 />
                 <div className={AssignmentWrapperStyle}>
                   {values &&

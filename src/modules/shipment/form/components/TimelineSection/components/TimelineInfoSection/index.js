@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
@@ -107,7 +108,9 @@ class TimelineInfoSection extends React.Component<Props> {
 
           <div className={AssignedAndApprovalWrapperStyle}>
             <GridColumn gap="5px">
-              <Label>ASSIGNED TO</Label>
+              <Label>
+                <FormattedMessage id="modules.shipment.assignedTo" defaultMessage="ASSIGNED TO" />
+              </Label>
               <div className={AssignmentWrapperStyle}>
                 {timelineDate &&
                   timelineDate.assignedTo &&
@@ -161,7 +164,9 @@ class TimelineInfoSection extends React.Component<Props> {
             </GridColumn>
 
             <GridColumn gap="5px">
-              <Label align="right">APPROVAL</Label>
+              <Label align="right">
+                <FormattedMessage id="modules.shipment.approval" defaultMessage="APPROVAL" />
+              </Label>
               <div className={ApprovalWrapperStyle}>
                 {timelineDate && timelineDate.approvedAt && timelineDate.approvedBy ? (
                   <>
@@ -258,7 +263,14 @@ class TimelineInfoSection extends React.Component<Props> {
                   )
               )}
             <FieldItem
-              label={<Label>INITIAL DATE</Label>}
+              label={
+                <Label>
+                  <FormattedMessage
+                    id="modules.shipment.initialDate"
+                    defaultMessage="INITIAL DATE"
+                  />
+                </Label>
+              }
               input={
                 <FormField
                   name={`${sourceName}.date`}
