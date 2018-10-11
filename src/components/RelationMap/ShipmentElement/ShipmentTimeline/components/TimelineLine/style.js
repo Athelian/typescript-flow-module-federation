@@ -10,8 +10,8 @@ export const TimelineLineStyle = ({ color }: TimelineLine) => css`
   position: relative;
   flex: 1;
   width: 100%;
-  min-width: 35px;
-  max-width: 120px;
+  min-width: 2.5vw;
+  max-width: 9vw;
   height: 20px;
 
   &:after {
