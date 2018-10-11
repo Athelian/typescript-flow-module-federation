@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
@@ -9,7 +9,7 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import { Label, Display, FieldItem } from 'components/Form';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
   OrderCardWrapperStyle,
   OrderInfoWrapperStyle,
@@ -22,26 +22,21 @@ import {
 } from './style';
 
 type OptionalProps = {
-  readOnly: boolean,
+  actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
   order: ?Object,
-  onArchive: string => void,
 };
 
 const defaultProps = {
-  readOnly: false,
+  actions: [],
 };
 
-const OrderCard = ({ order, onArchive, readOnly }: Props) => {
+const OrderCard = ({ order, actions, ...rest }: Props) => {
   if (!order) return '';
 
-  const { id, poNo, orderItems, currency, exporter, inCharges, archived } = order;
-
-  const actions = readOnly
-    ? []
-    : [<CardAction icon={archived ? 'ACTIVE' : 'ARCHIVE'} onClick={() => onArchive(!archived)} />];
+  const { id, poNo, orderItems, currency, exporter, inCharges } = order;
 
   const totalItems = orderItems.length;
 
@@ -76,7 +71,7 @@ const OrderCard = ({ order, onArchive, readOnly }: Props) => {
   });
 
   return (
-    <BaseCard icon="ORDER" color="ORDER" actions={actions}>
+    <BaseCard icon="ORDER" color="ORDER" actions={actions} {...rest}>
       <Link className={OrderCardWrapperStyle} to={`/order/${encodeId(id)}`}>
         <div className={OrderInfoWrapperStyle}>
           <div className={PONoWrapperStyle}>

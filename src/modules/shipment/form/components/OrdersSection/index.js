@@ -21,7 +21,7 @@ function OrdersSection({ orders }: Props) {
             <FormattedMessage id="modules.shipment.noOrderFound" defaultMessage="No orders found" />
           </div>
         ) : (
-          orders.map(order => <OrderCard order={order} key={order.id} readOnly />)
+          orders.map(order => <OrderCard order={order} key={order.id} />)
         )}
       </div>
     </div>

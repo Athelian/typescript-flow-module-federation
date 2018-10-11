@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import GridView from 'components/GridView';
-import { ShipmentCard } from 'components/Cards';
+import { ShipmentCard, CardAction } from 'components/Cards';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 
 type Props = {
@@ -31,7 +31,16 @@ const defaultRenderItem = (item: Object) => (
             shipment={item}
           />
         )}
-        <ShipmentCard shipment={item} onArchive={() => dialogToggle(true)} />
+        <ShipmentCard
+          shipment={item}
+          actions={[
+            <CardAction
+              icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
+              onClick={() => dialogToggle(true)}
+            />,
+          ]}
+          showActionsOnHover
+        />
       </>
     )}
   </BooleanValue>

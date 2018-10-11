@@ -3,7 +3,7 @@ import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
-import { ProductCard } from 'components/Cards';
+import { ProductCard, CardAction } from 'components/Cards';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
 
 type Props = {
@@ -31,7 +31,16 @@ const defaultRenderItem = (item: Object) => (
             product={item}
           />
         )}
-        <ProductCard product={item} onArchive={() => dialogToggle(true)} />
+        <ProductCard
+          product={item}
+          actions={[
+            <CardAction
+              icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
+              onClick={() => dialogToggle(true)}
+            />,
+          ]}
+          showActionsOnHover
+        />
       </>
     )}
   </BooleanValue>

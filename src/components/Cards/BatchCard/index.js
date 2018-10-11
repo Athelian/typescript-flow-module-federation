@@ -9,7 +9,7 @@ import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { FieldItem, Label, Display } from 'components/Form';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
   BatchCardWrapperStyle,
   ProductWrapperStyle,
@@ -29,14 +29,20 @@ import {
   BatchTagsWrapperStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  actions: Array<React.Node>,
+};
+
+type Props = OptionalProps & {
   batch: ?Object,
 };
 
-const BatchCard = ({ batch }: Props) => {
-  if (!batch) return '';
+const defaultProps = {
+  actions: [],
+};
 
-  const actions = [<CardAction icon="CLONE" onClick={() => {}} />];
+const BatchCard = ({ batch, actions, ...rest }: Props) => {
+  if (!batch) return '';
 
   const { id, no, quantity, deliveredAt, orderItem, shipment } = batch;
   const {
@@ -52,7 +58,7 @@ const BatchCard = ({ batch }: Props) => {
     : 0;
 
   return (
-    <BaseCard icon="BATCH" color="BATCH" actions={actions}>
+    <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
       <Link className={BatchCardWrapperStyle} to={`/batch/${encodeId(id)}`}>
         <div className={ProductWrapperStyle}>
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
@@ -200,5 +206,7 @@ const BatchCard = ({ batch }: Props) => {
     </BaseCard>
   );
 };
+
+BatchCard.defaultProps = defaultProps;
 
 export default BatchCard;
