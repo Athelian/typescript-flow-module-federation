@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
-import { Query } from 'react-apollo';
 import Raven from 'raven-js';
+import { Query } from 'react-apollo';
+import { LanguageConsumer } from 'modules/language';
 import { FullStoryAPI } from 'react-fullstory';
 import Intercom from 'react-intercom';
 import LoadingIcon from 'components/LoadingIcon';
@@ -21,40 +22,49 @@ type Props = {
 };
 
 const UserProvider = ({ children }: Props) => (
-  <Query query={query}>
-    {({ loading, data, error }) => {
-      if (error) {
-        return error.message;
-      }
+  <LanguageConsumer>
+    {({ setLocale }) => (
+      <Query query={query}>
+        {({ loading, data, error }) => {
+          if (error) {
+            return error.message;
+          }
 
-      if (loading) return <LoadingIcon />;
-      const { user, permissions } = getByPathWithDefault({}, 'viewer', data);
+          if (loading) return <LoadingIcon />;
+          const { user, permissions } = getByPathWithDefault({}, 'viewer', data);
 
-      const { email, id, firstName, lastName } = user;
-      const userProfile = {
-        id,
-        email,
-        name: `${lastName} ${firstName}`,
-      };
-      Raven.setUserContext({ email, id });
-      if (isAppInProduction) {
-        FullStoryAPI('identify', id, {
-          name: `${lastName} ${firstName}`,
-          email,
-        });
-      }
-      // TODO: set locale
+          const { email, id, firstName, lastName, language } = user;
+          const userProfile = {
+            id,
+            email,
+            name: `${lastName} ${firstName}`,
+          };
+          Raven.setUserContext({ email, id });
+          if (isAppInProduction) {
+            FullStoryAPI('identify', id, {
+              name: `${lastName} ${firstName}`,
+              email,
+            });
+          }
 
-      return (
-        <UserContext.Provider value={{ user, permissions }}>
-          {children}
-          {isAppInProduction && (
-            <Intercom appID={process.env.ZENPORT_INTERCOM_ID} {...userProfile} />
-          )}
-        </UserContext.Provider>
-      );
-    }}
-  </Query>
+          if (language === 'jp') {
+            setLocale('ja');
+          } else {
+            setLocale('en');
+          }
+
+          return (
+            <UserContext.Provider value={{ user, permissions }}>
+              {children}
+              {isAppInProduction && (
+                <Intercom appID={process.env.ZENPORT_INTERCOM_ID} {...userProfile} />
+              )}
+            </UserContext.Provider>
+          );
+        }}
+      </Query>
+    )}
+  </LanguageConsumer>
 );
 
 export const UserConsumer = UserContext.Consumer;
