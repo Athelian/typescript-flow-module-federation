@@ -55,7 +55,7 @@ class NotificationsDropdown extends React.Component<Props> {
         }}
         fetchPolicy="network-only"
       >
-        {({ loading, data, error }) => {
+        {({ loading, data, error, refetch }) => {
           if (error) {
             return error.message;
           }
@@ -94,7 +94,13 @@ class NotificationsDropdown extends React.Component<Props> {
                         <>
                           {apiError && apiError.message}
                           <BaseButton
-                            onClick={() => readAllNotification()}
+                            onClick={async () => {
+                              await readAllNotification();
+                              refetch({
+                                page: 1,
+                                perPage: 10,
+                              });
+                            }}
                             isLoading={isLoading}
                             label={
                               <FormattedMessage
