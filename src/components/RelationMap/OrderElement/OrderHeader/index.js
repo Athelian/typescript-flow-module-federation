@@ -12,16 +12,20 @@ type Props = OptionalProps & {
   label: string,
 };
 
+const ENABLE_ACTION_CHECK = false;
+
 const OrderHeader = ({ isChecked, onToggle, label }: Props) => (
   <div className={OrderHeaderStyle(isChecked)}>
-    <button
-      type="button"
-      className={OrderHeaderCheckBoxButtonStyle(isChecked)}
-      tabIndex={-1}
-      onClick={onToggle}
-    >
-      <Icon icon="ORDER_SELECT" />
-    </button>
+    {ENABLE_ACTION_CHECK && (
+      <button
+        type="button"
+        className={OrderHeaderCheckBoxButtonStyle(isChecked)}
+        tabIndex={-1}
+        onClick={onToggle}
+      >
+        <Icon icon="ORDER_SELECT" />
+      </button>
+    )}
     <span>{label}</span>
   </div>
 );

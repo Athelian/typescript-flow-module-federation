@@ -30,7 +30,7 @@ const OrderFocused = ({
       items={nodes}
       itemWidth={200}
       isEmpty={nodes.length === 0}
-      spacing={0}
+      spacing={70}
       emptyMessage="No orders found"
       hasMore={hasMore}
       onLoadMore={loadMore}

@@ -8,7 +8,7 @@ export const ProductFocusContent = css`
 
 export const Row = styled('div')`
   ${layout.HORIZONTAL};
-  margin: 20px 0;
+  margin: 0 0 20px 0;
 `;
 
 export const BatchListWrapperStyle = css`

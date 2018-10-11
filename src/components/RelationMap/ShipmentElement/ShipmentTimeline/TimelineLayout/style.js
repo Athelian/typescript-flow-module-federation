@@ -10,7 +10,7 @@ export const TimelineLayoutWrapperStyle = css`
 
 export const LineOdd = (color: string) => css`
   width: initial;
-  margin: 23px 0px;
+  margin: 25px 0;
   display: flex;
   flex-direction: row;
   flex-flow: row wrap;
@@ -37,7 +37,7 @@ export const LineOdd = (color: string) => css`
 export const LineEven = (color: string) => css`
   width: initial;
   margin-top: 40px;
-  margin-bottom: 23px;
+  margin-bottom: 25px;
   display: flex;
   flex-direction: row;
   flex-flow: row-reverse wrap;
@@ -67,9 +67,8 @@ export const TimelineIconWrapperStyle = css`
 
 export const TimelineIconName = css`
   position: absolute;
-  top: -20px;
+  top: -17px;
   left: calc(-50% - 20px);
-  background-color: #eeeeee;
 `;
 
 export const TimelineIconDate = css`

@@ -68,8 +68,8 @@ const GridColumn = css`
 export const ContentWrapperStyle = css`
   /* overflow-y: hidden; */
   height: calc(100vh - 50px);
-  width: 100%;
   padding: 30px 0;
+  width: calc(100vw - 200px);
 `;
 
 export const RelationMapGrid = styled('div')`
@@ -78,9 +78,7 @@ export const RelationMapGrid = styled('div')`
   ${GridColumn};
 `;
 
-export const ProductWrapper = css`
-  width: 80vw;
-`;
+export const ProductWrapper = css``;
 
 export const EmptyMessageStyle = css`
   ${fontSizes.MAIN};
@@ -88,17 +86,17 @@ export const EmptyMessageStyle = css`
   color: ${colors.BLACK};
 `;
 
-export const InfiniteScrollWrapperStyle = css`
+export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`
   grid-column: span 3;
-  height: calc(100vh - 250px);
   overflow: auto;
+  height: calc(100vh - 150px - ${spacing}px);
 `;
 
 export const ScrollWrapperStyle = css`
-  height: calc(100vh - 250px);
+  height: calc(100vh - 220px);
   overflow-y: auto;
   background-color: #f7f7f7;
-  padding: 30px 10px;
+  padding: 10px 10px;
 `;
 
 export const LeftScrollWrapperStyle = css`
@@ -136,6 +134,7 @@ export const FunctionWrapperStyle = css`
   border-bottom-right-radius: 0;
   box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
   z-index: 2;
+  position: relative;
 `;
 
 export const BadgeWrapperStyle = css`

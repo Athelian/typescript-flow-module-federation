@@ -8,17 +8,18 @@ type TimelinePortName = {
 
 export const TimelinePortNameWrapperStyle = ({ color }: TimelinePortName) => css`
   border-radius: 999px;
-  border: 1px solid ${colors[color]};
+  // border: 1px solid ${colors[color]};
   height: 13px;
   line-height: 13px;
   width: 80px;
   text-align: center;
   ${presets.ELLIPSIS};
   ${fontSizes.TINY};
-  color: ${colors[color]};
+  color: ${colors.BLACK};
   font-weight: bold;
   user-select: none;
   z-index: 0;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
 export default TimelinePortNameWrapperStyle;
