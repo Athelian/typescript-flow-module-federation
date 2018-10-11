@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Match } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
@@ -34,7 +35,6 @@ const BatchSection = ({ isNew, selectable }: Props) => (
   <div className={BatchSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
       {({ originalValues: initialValues, state, setFieldValue }) => {
-        // $FlowFixMe
         const values = { ...initialValues, ...state };
 
         return (
@@ -147,11 +147,16 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                           onClick={() => slideToggle(true)}
                         />
                       ) : (
-                        <OrderItemCard
-                          item={values.orderItem}
-                          onSelect={selectable ? () => slideToggle(true) : null}
-                          readOnly
-                        />
+                        <Match path="/batch/:batchId">
+                          {({ match }) => (
+                            <OrderItemCard
+                              selectable={!!match}
+                              item={values.orderItem}
+                              onSelect={selectable ? () => slideToggle(true) : null}
+                              readOnly
+                            />
+                          )}
+                        </Match>
                       )}
 
                       <SlideView
