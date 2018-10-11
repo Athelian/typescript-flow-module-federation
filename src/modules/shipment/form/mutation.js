@@ -22,7 +22,8 @@ const formatTimeline = (timeline: Object): ?CargoReady => {
     assignedToIds: assignedTo.map(({ id }) => id),
     timelineDateRevisions: timelineDateRevisions
       .filter(item => item && (item.date || item.memo))
-      .map(({ date: dateRevision, type, memo: memoRevision }) => ({
+      .map(({ id, date: dateRevision, type, memo: memoRevision }) => ({
+        id,
         type,
         memo: memoRevision,
         date: dateRevision ? new Date(dateRevision) : null,
@@ -32,7 +33,8 @@ const formatTimeline = (timeline: Object): ?CargoReady => {
 };
 
 const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
-  voyages.map(({ departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
+  voyages.map(({ id, departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
+    id,
     vesselCode,
     vesselName,
     departurePort: !departurePort
@@ -52,7 +54,8 @@ const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
   }));
 
 const formatContainers = (voyages: Array<Object>): Array<ShipmentGroups> =>
-  voyages.map(({ warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
+  voyages.map(({ id, warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
+    id,
     warehouseId: warehouse && warehouse.id,
     customClearance: !customClearance ? null : formatTimeline(customClearance),
     warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),
