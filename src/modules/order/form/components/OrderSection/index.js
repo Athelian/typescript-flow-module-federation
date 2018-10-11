@@ -178,7 +178,7 @@ const OrderSection = ({ isNew }: Props) => (
                     <Tooltip
                       infoMessage={
                         <FormattedMessage
-                          id="containers.Orders.inCharge"
+                          id="modules.order.tooltipInCharge"
                           defaultMessage="You can choose up to 5 people in charge."
                         />
                       }
