@@ -20,7 +20,7 @@ import validator from './form/validator';
 import { createTagMutation, updateTagMutation } from './form/mutation';
 
 type Props = {
-  path?: string,
+  path: string,
   tagId?: string,
 };
 
@@ -89,7 +89,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
 
   isNew = () => {
     const { path } = this.props;
-    return path === 'new' || path === 'clone/:tagId';
+    return path.startsWith('new') || path.startsWith('clone');
   };
 
   render() {

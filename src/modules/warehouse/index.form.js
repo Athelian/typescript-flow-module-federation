@@ -20,10 +20,12 @@ import { createWarehouseMutation, updateWarehouseMutation } from './form/mutatio
 import validator from './form/validator';
 
 type Props = {
+  path: string,
   warehouseId?: string,
 };
 
 const defaultProps = {
+  path: '',
   warehouseId: '',
 };
 
@@ -42,8 +44,6 @@ class WarehouseFormModule extends React.PureComponent<Props> {
   ) => {
     const { warehouseId } = this.props;
 
-    const isNew = warehouseId === 'new';
-
     const { name, street, locality, region, postalCode, country, surface } = formData;
     const input = {
       name,
@@ -54,7 +54,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
       postalCode,
       surface,
     };
-    if (isNew) {
+    if (this.isNew()) {
       const { data } = await saveWarehouse({ variables: { input } });
       const {
         warehouseCreate: { violations },
@@ -78,9 +78,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    const { warehouseId } = this.props;
-    const isNew = warehouseId === 'new';
-    if (isNew) {
+    if (this.isNew()) {
       const {
         warehouseCreate: {
           warehouse: { id },
@@ -90,9 +88,19 @@ class WarehouseFormModule extends React.PureComponent<Props> {
     }
   };
 
+  isNew = () => {
+    const { path } = this.props;
+    return path.startsWith('new') || path.startsWith('clone');
+  };
+
+  isClone = () => {
+    const { path } = this.props;
+    return path.startsWith('clone');
+  };
+
   render() {
     const { warehouseId } = this.props;
-    const isNew = warehouseId === 'new';
+    const isNew = this.isNew();
     let mutationKey = {};
     if (warehouseId && !isNew) {
       mutationKey = { key: decodeId(warehouseId) };
@@ -153,25 +161,31 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                   }
                 >
                   {apiError && <p>Error: Please try again.</p>}
-                  {isNew || !warehouseId ? (
+                  {!warehouseId ? (
                     <WarehouseForm warehouse={{}} isNew />
                   ) : (
                     <QueryForm
                       query={warehouseFormQuery}
                       entityId={warehouseId}
                       entityType="warehouse"
-                      render={warehouse => (
-                        <Subscribe to={[WarehouseContainer]}>
-                          {({ initDetailValues }) => (
-                            <WarehouseForm
-                              warehouse={warehouse}
-                              onFormReady={() => {
-                                initDetailValues(warehouse);
-                              }}
-                            />
-                          )}
-                        </Subscribe>
-                      )}
+                      render={originalWarehouse => {
+                        const warehouse = this.isClone()
+                          ? { name: originalWarehouse.name }
+                          : originalWarehouse;
+                        return (
+                          <Subscribe to={[WarehouseContainer]}>
+                            {({ initDetailValues }) => (
+                              <WarehouseForm
+                                isNew={isNew}
+                                warehouse={warehouse}
+                                onFormReady={() => {
+                                  initDetailValues(warehouse);
+                                }}
+                              />
+                            )}
+                          </Subscribe>
+                        );
+                      }}
                     />
                   )}
                 </Layout>

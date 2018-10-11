@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
 import { isEquals } from 'utils/fp';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
+import { CloneButton } from 'components/Buttons';
+import { encodeId } from 'utils/id';
 import { WarehouseSection } from './components';
 import { WarehouseFormWrapperStyle } from './style';
 
@@ -35,6 +38,11 @@ class WarehouseForm extends React.Component<Props> {
     return !isEquals(warehouse, nextProps.warehouse);
   }
 
+  onClone = () => {
+    const { warehouse } = this.props;
+    navigate(`/warehouse/clone/${encodeId(warehouse.id)}`);
+  };
+
   render() {
     const { warehouse, isNew } = this.props;
 
@@ -48,6 +56,7 @@ class WarehouseForm extends React.Component<Props> {
             {!isNew && (
               <>
                 <LastModified updatedAt={warehouse.updatedAt} updatedBy={warehouse.updatedBy} />
+                <CloneButton onClick={this.onClone} />
               </>
             )}
           </SectionHeader>
