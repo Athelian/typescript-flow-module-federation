@@ -22,7 +22,8 @@ const formatTimeline = (timeline: Object): ?CargoReady => {
     assignedToIds: assignedTo.map(({ id }) => id),
     timelineDateRevisions: timelineDateRevisions
       .filter(item => item && (item.date || item.memo))
-      .map(({ date: dateRevision, type, memo: memoRevision }) => ({
+      .map(({ id, date: dateRevision, type, memo: memoRevision }) => ({
+        id,
         type,
         memo: memoRevision,
         date: dateRevision ? new Date(dateRevision) : null,
@@ -32,7 +33,8 @@ const formatTimeline = (timeline: Object): ?CargoReady => {
 };
 
 const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
-  voyages.map(({ departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
+  voyages.map(({ id, departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
+    id,
     vesselCode,
     vesselName,
     departurePort: !departurePort
@@ -51,8 +53,9 @@ const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
     arrival: !arrival ? null : formatTimeline(arrival),
   }));
 
-const formatContainers = (voyages: Array<Object>): Array<ShipmentGroups> =>
-  voyages.map(({ warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
+const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGroups> =>
+  voyages.map(({ id, warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
+    id,
     warehouseId: warehouse && warehouse.id,
     customClearance: !customClearance ? null : formatTimeline(customClearance),
     warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),
@@ -109,7 +112,7 @@ export const prepareCreateShipmentInput = ({
   inChargeIds: inCharges.map(({ id }) => id),
   voyages: formatVoyages(voyages),
   batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
-  containerGroups: formatContainers(containerGroups),
+  containerGroups: formatContainerGroups(containerGroups),
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
 });
 
@@ -163,6 +166,6 @@ export const prepareUpdateShipmentInput = ({
   inChargeIds: inCharges.map(({ id }) => id),
   batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
   voyages: formatVoyages(voyages),
-  containerGroups: formatContainers(containerGroups),
+  containerGroups: formatContainerGroups(containerGroups),
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
 });
