@@ -11,6 +11,7 @@ import {
 } from 'components/Form';
 
 export default function selectEnumInputFactory({
+  type,
   required = false,
   width = '200px',
   align = 'left',
@@ -21,6 +22,7 @@ export default function selectEnumInputFactory({
   label,
   originalValue,
 }: {
+  type?: 'standard' | 'label',
   enumType: string,
   required?: boolean,
   align?: string,
@@ -82,6 +84,7 @@ export default function selectEnumInputFactory({
                 renderSelect={({ ...rest }) => (
                   <DefaultSelect
                     {...rest}
+                    type={type}
                     align={align}
                     required
                     forceHoverStyle={isNew}
@@ -92,6 +95,7 @@ export default function selectEnumInputFactory({
                 renderOptions={({ ...rest }) => (
                   <DefaultOptions
                     {...rest}
+                    type={type}
                     align={align}
                     items={data}
                     itemToString={item => (item ? item.description || item.name : '')}

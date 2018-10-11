@@ -34,11 +34,14 @@ export const OptionWrapperStyle = (width: string, height: string): string => css
   ${scrollbars.SMALL};
 `;
 
-export const OptionStyle = (
+type OptionProps = {
   onHover: boolean,
   selected: boolean,
-  align: 'left' | 'right' | 'center'
-): string => css`
+  align: 'left' | 'right' | 'center',
+  type: 'standard' | 'label',
+};
+
+export const OptionStyle = ({ onHover, selected, align, type }: OptionProps): string => css`
   ${ResetOptionStyle};
   background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
   ${presets.BUTTON};
@@ -46,10 +49,19 @@ export const OptionStyle = (
   ${align === 'right' && 'justify-content: flex-end'};
   ${align === 'center' && 'justify-content: space-around'};
   padding: 5px;
-  color: ${selected ? colors.TEAL : colors.BLACK};
-  ${fontSizes.MAIN};
-  font-weight: bold;
   flex: 1;
   ${presets.ELLIPSIS};
   flex-shrink: 0;
+  ${type === 'label'
+    ? `
+    color: ${selected ? colors.TEAL : colors.GRAY_DARK};
+    ${fontSizes.SMALL};
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  `
+    : `
+    color: ${selected ? colors.TEAL : colors.BLACK};
+    ${fontSizes.MAIN};
+    font-weight: bold;
+  `};
 `;
