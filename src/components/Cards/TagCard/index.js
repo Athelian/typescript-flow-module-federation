@@ -1,11 +1,11 @@
 // @flow
-import React from 'react';
-import { Link, navigate } from '@reach/router';
+import * as React from 'react';
+import { Link } from '@reach/router';
 import { type Tag as TagType } from 'modules/tags/type.js.flow';
 import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
   TagCardWrapperStyle,
   TagWrapperStyle,
@@ -16,8 +16,7 @@ import {
 } from './style';
 
 type OptionalProps = {
-  readOnly: boolean,
-  onClick: Function,
+  actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
@@ -25,8 +24,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  readOnly: true,
-  onClick: () => {},
+  actions: [],
 };
 
 const getEntityType = (entityType: ?string) => {
@@ -40,22 +38,14 @@ const getEntityType = (entityType: ?string) => {
   return 'GRAY_VERY_LIGHT';
 };
 
-function onClone(tagId: string) {
-  navigate(`/tags/clone/${encodeId(tagId)}`);
-}
-
-const TagCard = ({ tag, onClick, readOnly, ...rest }: Props) => {
+const TagCard = ({ tag, actions, ...rest }: Props) => {
   if (!tag) return '';
 
   const { description, entityTypes } = tag;
 
-  const actions = readOnly
-    ? [<CardAction icon="CLONE" hoverColor="BLUE" onClick={() => onClone(tag.id)} />]
-    : [];
-
   return (
     <BaseCard icon="TAG" color="TAG" actions={actions} {...rest}>
-      <Link className={TagCardWrapperStyle} to={`/tags/${encodeId(tag.id)}`} onClick={onClick}>
+      <Link className={TagCardWrapperStyle} to={`/tags/${encodeId(tag.id)}`}>
         <div className={TagWrapperStyle}>
           <Tag tag={tag} />
         </div>

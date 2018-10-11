@@ -1,5 +1,4 @@
 import NotificationsDropdown from './NotificationsDropdown';
+import UserMenuDropdown from './UserMenuDropdown';
 
-export { NotificationsDropdown };
-
-export default NotificationsDropdown;
+export { NotificationsDropdown, UserMenuDropdown };

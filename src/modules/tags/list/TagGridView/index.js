@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
+import { encodeId } from 'utils/id';
 import GridView from 'components/GridView';
-import { TagCard } from 'components/Cards';
+import { TagCard, CardAction } from 'components/Cards';
 
 type Props = {
   items: Array<Object>,
@@ -12,7 +14,18 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <TagCard key={item.id} tag={item} />;
+function onClone(tagId: string) {
+  navigate(`/tags/clone/${encodeId(tagId)}`);
+}
+
+const defaultRenderItem = (item: Object) => (
+  <TagCard
+    key={item.id}
+    tag={item}
+    actions={[<CardAction icon="CLONE" hoverColor="BLUE" onClick={() => onClone(item.id)} />]}
+    showActionsOnHover
+  />
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,

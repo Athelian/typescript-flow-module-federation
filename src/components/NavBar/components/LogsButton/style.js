@@ -12,6 +12,8 @@ export const LogsButtonWrapperStyle: string = css`
   padding: 0 10px;
   ${fontSizes.SMALL};
   letter-spacing: 2px;
+  width: min-content;
+  ${presets.ELLIPSIS};
   & > svg {
     margin-right: 5px;
   }
