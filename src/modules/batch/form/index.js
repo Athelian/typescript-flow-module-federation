@@ -1,13 +1,15 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import BatchFormContainer from 'modules/batch/form/container';
 import { BooleanValue } from 'react-values';
+import BatchFormContainer from 'modules/batch/form/container';
 import Icon from 'components/Icon';
 import { isEquals } from 'utils/fp';
+import { encodeId } from 'utils/id';
 import { Tooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
-import { SyncButton } from 'components/Buttons';
+import { SyncButton, CloneButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import {
   BatchSection,
@@ -20,6 +22,7 @@ import { BatchFormWrapperStyle, StatusStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
+  isClone: boolean,
   selectable: boolean,
   onFormReady: () => void,
 };
@@ -30,6 +33,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isNew: false,
+  isClone: false,
   selectable: true,
   onFormReady: () => {},
 };
@@ -53,8 +57,13 @@ export default class BatchForm extends React.Component<Props> {
     );
   }
 
+  onClone = () => {
+    const { batch } = this.props;
+    navigate(`/batch/clone/${encodeId(batch.id)}`);
+  };
+
   render() {
-    const { batch, isNew, selectable } = this.props;
+    const { batch, isNew, isClone, selectable } = this.props;
     return (
       <div className={BatchFormWrapperStyle}>
         <SectionWrapper id="batchSection">
@@ -65,7 +74,7 @@ export default class BatchForm extends React.Component<Props> {
             {!isNew && (
               <>
                 <LastModified updatedAt={batch.updatedAt} updatedBy={batch.updatedBy} />
-
+                {!isClone && <CloneButton onClick={this.onClone} />}
                 <div className={StatusStyle(batch.archived)}>
                   <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
                   {batch.archived ? (
