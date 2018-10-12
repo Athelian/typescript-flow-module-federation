@@ -159,12 +159,20 @@ class OrderItems extends React.Component<Props> {
                                     changeBatch(position, 1, updatedBatch);
                                   }}
                                   onRemove={() => filter(({ id }) => id !== batch.id)}
-                                  onClone={({ id, no, ...rest }) => {
+                                  onClone={({
+                                    id,
+                                    deliveredAt,
+                                    expiredAt,
+                                    producedAt,
+                                    no,
+                                    ...rest
+                                  }) => {
                                     changeBatch(
                                       batches.length,
                                       1,
                                       injectUid({
                                         ...rest,
+                                        batchAdjustments: [],
                                         no: `${no}- clone`,
                                         isNew: true,
                                       })

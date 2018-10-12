@@ -122,6 +122,7 @@ function ItemSection({ intl, isNew }: Props) {
                           injectUid({
                             ...rest,
                             isNew: true,
+                            batches: [],
                           }),
                         ]);
                         setFieldTouched(`orderItems.${id}`);
