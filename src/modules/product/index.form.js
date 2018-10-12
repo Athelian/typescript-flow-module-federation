@@ -33,10 +33,12 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  path: string,
   productId?: string,
 };
 
 const defaultProps = {
+  path: '',
   productId: '',
   isSlideView: false,
 };
@@ -59,6 +61,26 @@ type UpdateProductResponse = {|
   },
 |};
 
+const cleanUpCloneProductInput = (originalProduct: any) => {
+  const product = { ...originalProduct };
+  const { productProviders: originalProductProviders } = product;
+  const productProviders = originalProductProviders.map(item => {
+    const productProvider = { ...item };
+    delete productProvider.id;
+    delete productProvider.archived;
+    delete productProvider.updatedBy;
+    return productProvider;
+  });
+
+  delete product.archived;
+  delete product.files;
+  delete product.productProviders;
+
+  product.productProviders = [...productProviders];
+
+  return product;
+};
+
 class ProductFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -74,10 +96,12 @@ class ProductFormModule extends React.Component<Props> {
   ) => {
     const { productId } = this.props;
 
-    const isNew = productId === 'new';
-    const input = isNew ? prepareCreateProductInput(formData) : prepareUpdateProductInput(formData);
+    const isNewOrClone = this.isNewOrClone();
+    const input = isNewOrClone
+      ? prepareCreateProductInput(formData)
+      : prepareUpdateProductInput(formData);
 
-    if (isNew) {
+    if (isNewOrClone) {
       const result = await saveProduct({
         variables: { input },
       });
@@ -113,10 +137,7 @@ class ProductFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: CreateProductResponse | UpdateProductResponse) => {
-    const { productId } = this.props;
-    const isNew = productId === 'new';
-
-    if (isNew && result.productCreate) {
+    if (this.isNewOrClone() && result.productCreate) {
       const {
         productCreate: { product, violations },
       } = result;
@@ -129,11 +150,23 @@ class ProductFormModule extends React.Component<Props> {
     }
   };
 
+  isNew = () => {
+    const { path } = this.props;
+    return path.startsWith('new');
+  };
+
+  isClone = () => {
+    const { path } = this.props;
+    return path.startsWith('clone');
+  };
+
+  isNewOrClone = () => this.isNew() || this.isClone();
+
   render() {
     const { productId, isSlideView } = this.props;
-    const isNew = productId === 'new';
+    const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
-    if (productId && !isNew) {
+    if (productId && !isNewOrClone) {
       mutationKey = { key: decodeId(productId) };
     }
 
@@ -142,7 +175,7 @@ class ProductFormModule extends React.Component<Props> {
         <UIConsumer>
           {uiState => (
             <Mutation
-              mutation={isNew ? createProductMutation : updateProductMutation}
+              mutation={isNewOrClone ? createProductMutation : updateProductMutation}
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
@@ -183,7 +216,7 @@ class ProductFormModule extends React.Component<Props> {
                         ]}
                       >
                         {(productInfoState, productProvidersState, productTagsState, form) =>
-                          (isNew ||
+                          (isNewOrClone ||
                             productInfoState.isDirty() ||
                             productProvidersState.isDirty() ||
                             productTagsState.isDirty()) && (
@@ -227,34 +260,39 @@ class ProductFormModule extends React.Component<Props> {
                   }
                 >
                   {apiError && <p>Error: Please try again.</p>}
-                  {isNew || !productId ? (
+                  {!productId ? (
                     <ProductForm product={{}} isNew />
                   ) : (
                     <QueryForm
                       query={productFormQuery}
                       entityId={productId}
                       entityType="product"
-                      render={product => (
-                        <Subscribe
-                          to={[
-                            ProductInfoContainer,
-                            ProductProvidersContainer,
-                            ProductTagsContainer,
-                          ]}
-                        >
-                          {(productInfoState, productProvidersState, productTagsState) => (
-                            <ProductForm
-                              product={product}
-                              onFormReady={() => {
-                                const { tags, productProviders, ...info } = product;
-                                productInfoState.initDetailValues(info);
-                                productProvidersState.initDetailValues(productProviders);
-                                productTagsState.initDetailValues(tags);
-                              }}
-                            />
-                          )}
-                        </Subscribe>
-                      )}
+                      render={originalProduct => {
+                        const product = cleanUpCloneProductInput(originalProduct);
+
+                        return (
+                          <Subscribe
+                            to={[
+                              ProductInfoContainer,
+                              ProductProvidersContainer,
+                              ProductTagsContainer,
+                            ]}
+                          >
+                            {(productInfoState, productProvidersState, productTagsState) => (
+                              <ProductForm
+                                isNew={isNewOrClone}
+                                product={product}
+                                onFormReady={() => {
+                                  const { tags, productProviders, ...info } = product;
+                                  productInfoState.initDetailValues(info);
+                                  productProvidersState.initDetailValues(productProviders);
+                                  productTagsState.initDetailValues(tags);
+                                }}
+                              />
+                            )}
+                          </Subscribe>
+                        );
+                      }}
                     />
                   )}
                 </Layout>

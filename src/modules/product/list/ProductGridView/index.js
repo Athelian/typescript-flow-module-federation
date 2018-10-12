@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { ProductCard, CardAction } from 'components/Cards';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
+import { encodeId } from 'utils/id';
 
 type Props = {
   items: Array<Object>,
@@ -13,6 +15,10 @@ type Props = {
   isLoading: boolean,
   renderItem?: (item: Object) => React.Node,
 };
+
+function onClone(productId: string) {
+  navigate(`/product/clone/${encodeId(productId)}`);
+}
 
 const defaultRenderItem = (item: Object) => (
   <BooleanValue key={item.id}>
@@ -34,6 +40,7 @@ const defaultRenderItem = (item: Object) => (
         <ProductCard
           product={item}
           actions={[
+            <CardAction icon="CLONE" onClick={() => onClone(item.id)} />,
             <CardAction
               icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
               onClick={() => dialogToggle(true)}
