@@ -14,7 +14,7 @@ import { ProductSection, ProductProvidersSection } from './components';
 import { ProductFormWrapperStyle } from './style';
 
 type OptionalProps = {
-  isNew: boolean,
+  isNewOrClone: boolean,
   onFormReady: () => void,
 };
 
@@ -23,7 +23,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  isNew: false,
+  isNewOrClone: false,
   onFormReady: () => {},
 };
 
@@ -48,7 +48,7 @@ class ProductForm extends React.Component<Props> {
   };
 
   render() {
-    const { product, isNew } = this.props;
+    const { product, isNewOrClone } = this.props;
     const { updatedAt, updatedBy, archived } = product;
 
     return (
@@ -58,7 +58,7 @@ class ProductForm extends React.Component<Props> {
             icon="PRODUCT"
             title={<FormattedMessage id="modules.product.product" defaultMessage="PRODUCT" />}
           >
-            {!isNew && (
+            {!isNewOrClone && (
               <>
                 <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
                 <BooleanValue>
@@ -89,7 +89,7 @@ class ProductForm extends React.Component<Props> {
               </>
             )}
           </SectionHeader>
-          <ProductSection isNew={isNew} />
+          <ProductSection isNew={isNewOrClone} />
         </SectionWrapper>
 
         <SectionWrapper id="productProvidersSection">

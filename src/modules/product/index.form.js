@@ -261,7 +261,7 @@ class ProductFormModule extends React.Component<Props> {
                 >
                   {apiError && <p>Error: Please try again.</p>}
                   {!productId ? (
-                    <ProductForm product={{}} isNew />
+                    <ProductForm product={{}} isNewOrClone />
                   ) : (
                     <QueryForm
                       query={productFormQuery}
@@ -280,7 +280,7 @@ class ProductFormModule extends React.Component<Props> {
                           >
                             {(productInfoState, productProvidersState, productTagsState) => (
                               <ProductForm
-                                isNew={isNewOrClone}
+                                isNewOrClone={isNewOrClone}
                                 product={product}
                                 onFormReady={() => {
                                   const { tags, productProviders, ...info } = product;
