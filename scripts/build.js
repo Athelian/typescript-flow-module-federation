@@ -26,14 +26,17 @@ const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
 const printHostingInstructions = require('react-dev-utils/printHostingInstructions');
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
 const printBuildError = require('react-dev-utils/printBuildError');
-const { printBrowsers } = require('react-dev-utils/browsersHelper');
 
-const measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild;
+const measureFileSizesBeforeBuild =
+  FileSizeReporter.measureFileSizesBeforeBuild;
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
+const useYarn = fs.existsSync(paths.yarnLockFile);
 
 // These sizes are pretty large. We'll warn for bundles exceeding them.
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
+
+const isInteractive = process.stdout.isTTY;
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -47,7 +50,7 @@ const writeStatsJson = argv.indexOf('--stats') !== -1;
 // We require that you explictly set browsers and do not fall back to
 // browserslist defaults.
 const { checkBrowsers } = require('react-dev-utils/browsersHelper');
-checkBrowsers(paths.appPath)
+checkBrowsers(paths.appPath, isInteractive)
   .then(() => {
     // First, read the current file sizes in build directory.
     // This lets us display how much they changed later.
@@ -73,7 +76,9 @@ checkBrowsers(paths.appPath)
             ' to learn more about each warning.'
         );
         console.log(
-          'To ignore, add ' + chalk.cyan('// eslint-disable-next-line') + ' to the line before.\n'
+          'To ignore, add ' +
+            chalk.cyan('// eslint-disable-next-line') +
+            ' to the line before.\n'
         );
       } else {
         console.log(chalk.green('Compiled successfully.\n'));
@@ -93,8 +98,13 @@ checkBrowsers(paths.appPath)
       const publicUrl = paths.publicUrl;
       const publicPath = config.output.publicPath;
       const buildFolder = path.relative(process.cwd(), paths.appBuild);
-      printHostingInstructions(appPackage, publicUrl, publicPath, buildFolder, paths.useYarn);
-      printBrowsers(paths.appPath);
+      printHostingInstructions(
+        appPackage,
+        publicUrl,
+        publicPath,
+        buildFolder,
+        useYarn
+      );
     },
     err => {
       console.log(chalk.red('Failed to compile.\n'));
@@ -116,10 +126,20 @@ function build(previousFileSizes) {
   let compiler = webpack(config);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
+      let messages;
       if (err) {
-        return reject(err);
+        if (!err.message) {
+          return reject(err);
+        }
+        messages = formatWebpackMessages({
+          errors: [err.message],
+          warnings: [],
+        });
+      } else {
+        messages = formatWebpackMessages(
+          stats.toJson({ all: false, warnings: true, errors: true })
+        );
       }
-      const messages = formatWebpackMessages(stats.toJson({}, true));
       if (messages.errors.length) {
         // Only keep the first error. Others are often indicative
         // of the same problem, but confuse the reader with noise.
@@ -130,7 +150,8 @@ function build(previousFileSizes) {
       }
       if (
         process.env.CI &&
-        (typeof process.env.CI !== 'string' || process.env.CI.toLowerCase() !== 'false') &&
+        (typeof process.env.CI !== 'string' ||
+          process.env.CI.toLowerCase() !== 'false') &&
         messages.warnings.length
       ) {
         console.log(

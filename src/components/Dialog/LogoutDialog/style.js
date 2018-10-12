@@ -1,11 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
+import { layout } from 'styles/common';
 
-export const DialogStyle = css`
+export const DialogStyle: string = css`
   padding: 24px;
 `;
 
-export const ConfirmMessageStyle = css`
+export const ConfirmMessageStyle: string = css`
   font-weight: bold;
   font-size: 14px;
   color: #555;
@@ -13,21 +14,9 @@ export const ConfirmMessageStyle = css`
   text-align: center;
 `;
 
-export const ButtonsStyle = css`
-  display: flex;
-  justify-content: flex-end;
-  button {
-    font-size: 12px;
-    color: #aaa;
-    margin-left: 16px;
-    padding: 8px 16px;
-    border: none;
-    outline; none;
-    cursor: pointer;
-    border-radius: 4px;
-    &:hover {
-      color: #555;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-  }
+export const ButtonsStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  padding: 20px 0 0 0;
+  justify-content: center;
+  grid-gap: 10px;
 `;

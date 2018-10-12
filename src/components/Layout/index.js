@@ -3,24 +3,25 @@ import * as React from 'react';
 import Raven from 'raven-js';
 import { isDevEnvironment } from 'utils/env';
 import InternalError from 'components/InternalError';
-import SideBar from 'modules/sidebar';
 import { DesktopWrapperStyle } from 'styles/main';
-import { WrapperStyle, ContentStyle, ContentWrapperStyle } from './style';
+import { LayoutWrapperStyle, ContentWrapperStyle } from './style';
 
 type Props = {
+  isSideBarExpanded?: boolean,
+  navBar: React.Node,
   children: React.Node,
-  isSideBarExpanded: boolean,
-  navBar?: React.Node,
 };
 
 type State = {
   hasError: boolean,
 };
 
-export default class Layout extends React.PureComponent<Props, State> {
-  static defaultProps = {
-    navBar: '',
-  };
+const defaultProps = {
+  navBar: '',
+};
+
+export default class Layout extends React.Component<Props, State> {
+  static defaultProps = defaultProps;
 
   state: State = { hasError: false };
 
@@ -38,7 +39,7 @@ export default class Layout extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { children, navBar, isSideBarExpanded } = this.props;
+    const { isSideBarExpanded, navBar, children } = this.props;
     const { hasError } = this.state;
 
     if (hasError) {
@@ -46,15 +47,10 @@ export default class Layout extends React.PureComponent<Props, State> {
     }
 
     return (
-      <div>
-        <SideBar />
-        <div className={DesktopWrapperStyle(isSideBarExpanded)}>
-          <div className={WrapperStyle}>
-            {navBar}
-            <div className={ContentWrapperStyle}>
-              <div className={ContentStyle}>{children} </div>
-            </div>
-          </div>
+      <div className={DesktopWrapperStyle(isSideBarExpanded)}>
+        <div className={LayoutWrapperStyle}>
+          {navBar}
+          <div className={ContentWrapperStyle}>{children}</div>
         </div>
       </div>
     );

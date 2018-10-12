@@ -1,46 +1,46 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors } from 'styles/common';
+import { presets, colors, fontSizes, transitions } from 'styles/common';
 
-const TabStyle = css`
+export const TabItemStyle = (isActive: boolean): string => css`
   ${presets.BUTTON};
-  height: 40px;
-  padding: 0 5px;
-  white-space: nowrap;
-  font-size: 12px;
-  letter-spacing: 2px;
-  outline: none;
-  & > span {
-    margin-right: 5px;
-  }
-`;
-
-export const TabItemStyle = (isActive: boolean) => css`
-  ${TabStyle};
+  position: relative;
   color: ${isActive ? colors.TEAL : colors.GRAY_LIGHT};
-  border-bottom: 4px solid ${isActive ? colors.TEAL : `${colors.TRANSPARENT}`};
-  transition: 0.2s;
-  &:hover {
-    color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
-    border-color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
+  ${transitions.MAIN};
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+  width: 100%;
+  height: 50px;
+  ${fontSizes.MEDIUM};
+  letter-spacing: 2px;
+  & > span {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 4px;
+    width: ${isActive ? '100%' : '0px'};
+    background-color: ${isActive ? colors.TEAL : colors.TRANSPARENT};
+    ${transitions.MAIN};
   }
+  &:hover,
   &:focus {
-    color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
-    border-color: ${isActive && colors.TEAL};
+    color: ${isActive ? colors.TEAL_DARK : colors.GRAY_DARK};
+    & > span {
+      width: 100%;
+      background-color: ${isActive ? colors.TEAL_DARK : colors.GRAY_LIGHT};
+    }
   }
 `;
 
-export const DisabledStyle = css`
-  ${presets.BUTTON};
-  cursor: default;
-  height: 40px;
-  padding: 0 5px;
-  white-space: nowrap;
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: ${colors.GRAY};
-  border-bottom: 4px solid ${colors.TRANSPARENT};
-  & > svg {
-    margin: 0 0 0 5px;
-  }
+export const DisabledStyle: string = css`
+  ${TabItemStyle(false)};
+`;
+
+export const IconStyle: string = css`
+  margin: 0 5px 0 0;
 `;

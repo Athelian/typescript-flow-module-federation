@@ -1,0 +1,216 @@
+// @flow
+import * as React from 'react';
+
+export type DefaultHTMLProps = {
+  /**
+   *
+   *
+   * @type {string}
+   */
+  id?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  className?: string,
+  /**
+   *
+   * Style object following React convention
+   * @type {Object}
+   */
+  style?: Object,
+};
+
+export type DefaultInputProps = {
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  required?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  autofocus?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  disabled?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  readOnly?: boolean,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  name?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  type?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  value?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  placeholder?: string,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  onChange?: Function,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  onBlur?: Function,
+};
+
+export type DefaultSelectProps = {
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  required?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  autofocus?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  disabled?: boolean,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  name?: string,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  placeholder?: string,
+  /**
+   *
+   *
+   * @type {number}
+   */
+  size?: number,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  multiple?: boolean,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  onChange?: Function,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  onBlur?: Function,
+};
+
+export type ZenInputProps = {
+  /**
+   *
+   *
+   * @type {string}
+   */
+  label?: string | React.Node,
+  /**
+   *
+   * @type {boolean}
+   */
+  vertical?: boolean,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  errorMessage?: string | React.Node,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  warningMessage?: string | React.Node,
+  /**
+   *
+   *
+   * @type {string}
+   */
+  infoMessage?: string | React.Node,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  isRead?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  isWrite?: boolean,
+  /**
+   *
+   *
+   * @type {boolean}
+   */
+  editable?: boolean,
+  /**
+   *
+   *
+   * @type {Function}
+   */
+  formatter?: Function,
+  /**
+   *
+   * text-align
+   * @type {string}
+   */
+  align?: 'left' | 'right' | 'center',
+  /**
+   *
+   * input width px
+   * @type {string}
+   */
+  width?: string,
+  /**
+   *
+   * @type {boolean}
+   */
+  forceHoverStyle?: boolean,
+};

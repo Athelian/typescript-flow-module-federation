@@ -1,68 +1,45 @@
 // @flow
 
 import * as React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import fasDropdown from '@fortawesome/fontawesome-pro-solid/faAngleRight';
-import MenuItem from '../MenuItem';
-import { SubMenuStyle, SubMenuItemStyle, SubMenuBodyStyle } from './style';
+import Icon from 'components/Icon';
+import { SubMenuStyle, SubMenuItemStyle, ChevronStyle, SubMenuBodyStyle } from './style';
 import { IconStyle } from '../MenuItem/style';
 
-const SubMenu = ({
-  id,
-  name,
-  inactiveIcon,
-  activeIcon,
-  isExpanded,
-  setExpandedSubMenuId,
-  activeLink,
-  menuItems,
-}: {
-  id: number,
-  name: React.Element<*>,
-  inactiveIcon: any,
-  activeIcon: any,
+type Props = {
   isExpanded: boolean,
-  setExpandedSubMenuId: Function,
-  activeLink: string,
-  menuItems: Array<{|
-    name: React.Element<*>,
-    activeIcon: any,
-    inactiveIcon: any,
-    path: string,
-  |}>,
-}) => {
-  const menuItemCount = menuItems.length;
-  const isActive = menuItems.some(item => activeLink.startsWith(item.path));
-  const toggleExpansion = () => setExpandedSubMenuId(isExpanded ? null : id);
+  hasActiveChild: boolean,
+  onClick: (?string) => void,
+  id: string,
+  icon: string,
+  label: React.Node,
+  children: React.Node,
+};
+
+const SubMenu = ({ isExpanded, hasActiveChild, onClick, id, icon, label, children }: Props) => {
+  const menuItemCount = React.Children.count(children);
 
   return (
     <div className={SubMenuStyle}>
       <button
         type="button"
         tabIndex={-1}
-        onClick={toggleExpansion}
-        className={SubMenuItemStyle(isExpanded || isActive)}
+        onClick={() => onClick(isExpanded && !hasActiveChild ? null : id)}
+        className={SubMenuItemStyle(isExpanded || hasActiveChild)}
       >
         <span />
         <div className={IconStyle}>
-          <FontAwesomeIcon icon={isExpanded || isActive ? activeIcon : inactiveIcon} fixedWidth />
+          <Icon icon={icon} />
         </div>
-        {name}
-        <FontAwesomeIcon
-          icon={fasDropdown}
-          className={isExpanded || isActive ? 'active' : ''}
-          fixedWidth
-        />
+
+        {label}
+
+        <div className={ChevronStyle(isExpanded || hasActiveChild)}>
+          <Icon icon="CHEVRON_DOWN" />
+        </div>
       </button>
-      <div className={SubMenuBodyStyle(isExpanded || isActive, menuItemCount)}>
-        {menuItems.map(menuItem => (
-          <MenuItem
-            key={menuItem.path}
-            {...menuItem}
-            isActive={activeLink.startsWith(menuItem.path)}
-            setExpandedSubMenuId={() => setExpandedSubMenuId(id)}
-          />
-        ))}
+
+      <div className={SubMenuBodyStyle(isExpanded || hasActiveChild, menuItemCount)}>
+        {children}
       </div>
     </div>
   );

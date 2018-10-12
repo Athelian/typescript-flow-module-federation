@@ -1,37 +1,25 @@
 // @flow
 import * as React from 'react';
 import { Link } from '@reach/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Icon from 'components/Icon';
 import { MenuItemStyle, IconStyle } from './style';
 
 type Props = {
   isActive: boolean,
-  setExpandedSubMenuId?: Function,
-  name: React.Element<*>,
+  onClick: () => void,
   path: string,
-  activeIcon: any,
-  inactiveIcon: any,
+  icon: string,
+  label: React.Node,
 };
 
-const MenuItem = ({
-  isActive,
-  setExpandedSubMenuId = () => {},
-  path,
-  name,
-  activeIcon,
-  inactiveIcon,
-}: Props): React.Element<*> => (
-  <Link tabIndex={-1} to={path} onClick={setExpandedSubMenuId} className={MenuItemStyle(isActive)}>
+const MenuItem = ({ isActive, onClick, path, icon, label }: Props): React.Node => (
+  <Link tabIndex={-1} to={path} onClick={onClick} className={MenuItemStyle(isActive)}>
     <span />
     <div className={IconStyle}>
-      <FontAwesomeIcon icon={isActive ? activeIcon : inactiveIcon} fixedWidth />
+      <Icon icon={icon} />
     </div>
-    {name}
+    {label}
   </Link>
 );
-
-MenuItem.defaultProps = {
-  setExpandedSubMenuId: () => {},
-};
 
 export default MenuItem;

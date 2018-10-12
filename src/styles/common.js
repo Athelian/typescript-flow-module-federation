@@ -1,18 +1,24 @@
 export const colors = {
+  BLACK: '#555555',
+
   BLUE: '#0b6ede',
   BLUE_DARK: '#0756af',
-  LIGHT_TEAL: 'rgba(13, 218, 172, 0.2)',
   TEAL: '#11d1a6',
   TEAL_DARK: '#0bbc94',
   TEAL_VERY_DARK: '#08a380',
   TEAL_LIGHT: '#caeee6',
-  BLACK: '#555',
+  TEAL_QUITE_LIGHT: '#12B791',
+
   GRAY: '#bbb',
   GRAY_DARK: '#aaa',
+  GRAY_DARK_1: '#555555',
   GRAY_LIGHT: '#ccc',
   GRAY_VERY_LIGHT: '#ddd',
-  GRAY_SUPER_LIGHT: '#eee',
+  GRAY_QUITE_LIGHT: '#f2f2f2',
+  GRAY_SUPER_LIGHT: '#eeeeee',
   ALMOST_WHITE: '#f3f3f3',
+  WHITE: '#ffffff',
+
   RED: '#ef4848',
   RED_DARK: '#b11717',
   YELLOW: '#ffd400',
@@ -21,7 +27,27 @@ export const colors = {
   ORANGE_DARK: '#fc9719',
   PURPLE: '#a34fff',
   PURPLE_DARK: '#802fd9',
+
   TRANSPARENT: 'rgba(0, 0, 0, 0)',
+
+  PRODUCT: '#F12C2C',
+  PROVIDER: '#CF0000',
+  ORDER: '#ED5724',
+  ORDER_ITEM: '#FBAA1D',
+  BATCH: '#12B937',
+  SHIPMENT: '#0756AF',
+  RELATION_MAP: '#04447E',
+  CONTAINER_GROUP: '#2489CD',
+  CONTAINER: '#30A8E4',
+  CONTAINER_ITEM: '#8BDDFF',
+  TASK: '#A34FFF',
+  WAREHOUSE: '#9D865A',
+  STAFF: '#98A2AC',
+  PARTNER: '#474D4D',
+  TAG: '#bbbbbb',
+  LOGS: '#bbbbbb',
+
+  URGENT: '#F12C2C',
 };
 
 export const gradients = {
@@ -40,6 +66,8 @@ export const fontSizes = {
   LARGE: 'font-size: 16px',
   SMALL: 'font-size: 12px',
   MEDIUM: 'font-size: 13px',
+  LITTLE: 'font-size: 10px',
+  TINY: 'font-size: 9px',
 };
 
 export const fontSizesWithHeights = {
@@ -53,10 +81,13 @@ export const fontSizesWithHeights = {
 
 export const shadows = {
   WATERFALL: 'box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.1)',
-  MEDIUM: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)',
-  NAV_BUTTON: 'box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2)',
-  NAV_BUTTON_HOVER: 'box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3)',
-  TOOLTIP: 'box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2)',
+  DROPDOWN: 'box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2)',
+  NAV_BUTTON: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)',
+  TOOLTIP: 'box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)',
+  INPUT: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)',
+  HEADER: 'box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1)',
+  HEADER_REVERSE: 'box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1)',
+  FAINT: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)',
 };
 
 export const borderRadiuses = {
@@ -116,7 +147,7 @@ export const scrollbars = {
     &::-webkit-scrollbar-thumb {
       border-radius: 10px;
       background-color: ${colors.GRAY_LIGHT};
-      border: 6px solid transparent;
+      border: 7px solid transparent;
       background-clip: content-box;
       &:hover {
         background-color: ${colors.GRAY};
@@ -198,6 +229,16 @@ layout.GRID_FORM = `
   grid-auto-rows: auto;
   min-width: min-content;
 `;
+layout.GRID_VERTICAL = `
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+`;
+layout.GRID_HORIZONTAL = `
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+`;
 
 export const presets = {
   BUTTON: `
@@ -207,56 +248,9 @@ export const presets = {
     cursor: pointer;
     user-select: none;
     border: 0;
-    ${transitions.MAIN}
-    &:focus {
-      outline: 0;
-    }
-  `,
-  DASHED_BUTTON: `
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
     ${transitions.MAIN};
-    ${borderRadiuses.MAIN};
-    color: ${colors.GRAY_LIGHT};
-    border: 4px dashed ${colors.GRAY_LIGHT};
-    &:hover {
-      border-color: ${colors.TEAL};
-      color: ${colors.TEAL};
-      background-color: rgba(0,0,0,0.05);
-    }
     &:focus {
       outline: 0;
-      border-color: ${colors.TEAL};
-    }
-    &:active {
-      color: ${colors.TEAL};
-      background-color: rgba(0,0,0,0.05);
-    }
-  `,
-  DELETE_BUTTON: `
-    ${borderRadiuses.CIRCLE};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    ${transitions.MAIN}
-    color: ${colors.GRAY_LIGHT};
-    font-size: 24px;
-    width: min-content;
-    flex-shrink: 0;
-    border: 2px solid #fff;
-    background-color: #fff;
-    ${shadows.NAV_BUTTON};
-    &:hover {
-      color: ${colors.RED};
-      ${shadows.NAV_BUTTON_HOVER};
-    }
-    &:focus {
-      border-color: ${colors.RED};
     }
   `,
   ELLIPSIS: `

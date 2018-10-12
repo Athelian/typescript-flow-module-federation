@@ -26,10 +26,10 @@ module.exports = {
       ],
     },
   },
+  components: 'src/components/*(Cards|Dialog|Form|)/[A-Z]*/index.js',
   ignore: [
-    '**/components/NavButtons/index.js',
-    '**/components/Tooltips/index.js',
     '**/__tests__/*',
+    '**/Styles/*',
     '**/style.js',
     '**/context.js',
     '**/enums.js',

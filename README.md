@@ -1,6 +1,6 @@
 # Zenport Web App
 
-Web application for Zenport with [create-react-app-v2](https://github.com/facebook/create-react-app/issues/3815)
+Web application for Zenport with [create-react-app-v2](https://github.com/facebook/create-react-app/issues/5103)
 
 ## Getting Started
 
@@ -58,13 +58,14 @@ What things you need to install the software and how to install them
 Clone the repository to your projects folder and change the directory to downloaded folder.
 
 ```sh
-git clone git@gitlab.com:zenport.io/web-app.git && cd web-app
+git clone git@github.com:zenportinc/web-app.git && cd web-app
 ```
 
 and install all the dependencies.
 
 ```sh
 yarn install
+yarn post:install
 ```
 
 ## Unit tests
@@ -167,23 +168,26 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
 
   **NOTE:** Run this command only after `build:stg` or `build:prod`
 
-- **check:translations**
+- **translate**
+  We need to clear the babel cache and running build bundle for generate latest i18n message.
 
   ```
-  yarn check:translations
+  rm -rf node_modules/.cache/
+  yarn build:stg
+  yarn translate
   ```
 
-  check for missing translations between all locales
+  generate the ja.json language file base on en.json file.
 
-  **NOTE:** This command only cross checks between translation locale files, not the actual components.
+  **Code quality**
 
   ```
   yarn check:quality
   ```
 
-  check for duplication on our codebase with [jsinspect](https://github.com/danielstjules/jsinspect)
+check for duplication on our codebase with [jsinspect](https://github.com/danielstjules/jsinspect)
 
-* **build:storybook**
+- **build:storybook**
 
   ```
   yarn build:storybook
@@ -191,7 +195,7 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
 
   builds deployment ready storybook.
 
-* **build:styleguide**
+- **build:styleguide**
 
   ```
   yarn build:styleguide
@@ -275,6 +279,26 @@ This section describes various build and development tools used in this project 
   code --install-extension msjsdiag.debugger-for-chrome &&
   code --install-extension wix.vscode-import-cost
   ```
+
+### Graphql
+
+We generated graphql things from our server and output on `src/generated` by [graphql-cli](https://github.com/graphql-cli/graphql-cli) and [graphql-cli-generate-fragments](https://github.com/develomark/graphql-cli-generate-fragments)
+
+```
+src/generated
+├── fragmentTypes.json
+├── schema.graphql
+└── zenport.fragments.graphql
+```
+
+```sh
+#1. Generate fragmentTypes.json for apollo client
+yarn apollo-fragments
+#2. Download latest schema from our graphql server
+npx graphql-cli get-schema
+#3. Generate fragments
+npx graphql-cli generate-fragments
+```
 
 ### Configuration
 
@@ -416,6 +440,18 @@ build                                    // auto generated build folder containi
 
   for querying graphql.
 
+- [unstated](https://github.com/jamiebuilds/unstated)
+
+  for state management.
+
+- [immutability-helper](https://github.com/kolodny/immutability-helper)
+
+  Immutable data structures for JavaScript which are backwards-compatible with normal JS Arrays and Objects.
+
+* [react-tiny-virtual-list](https://github.com/clauderic/react-tiny-virtual-list)
+
+  a tiny but mighty list virtualization library
+
 * [reach-router](https://github.com/reach/router)
 
   for managing routes.
@@ -436,9 +472,25 @@ build                                    // auto generated build folder containi
 
   functional js data structure utility library.
 
+* [lodash](https://github.com/lodash/lodash)
+
+  A modern JavaScript utility library delivering modularity, performance, & extras..
+
 * [date-fns](https://github.com/date-fns/date-fns)
 
   modular date utility library.
+
+* [randomcolor](https://github.com/davidmerfield/randomColor)
+
+  for generating attractive colors.
+
+* [react-input-mask](https://github.com/sanniassin/react-input-mask)
+
+  for input masking component.
+
+* [react-debounce-input](https://github.com/nkbt/react-debounce-input)
+
+  for input with debounced onChange.
 
 * [react-intl](https://github.com/yahoo/react-intl)
 
@@ -453,15 +505,16 @@ build                                    // auto generated build folder containi
   for JavaScript object schema validator and object parser.
 
 * [react-snap](https://github.com/stereobooster/react-snap)
+
   for static prerendering for SPAs
 
 * [zenform](https://github.com/shrynx/zenform)
 
-for react form management.
+  for react form management.
 
-- [react-virtualized](https://github.com/bvaughn/react-virtualized)
+- [react-infinite-scroller](https://github.com/CassetteRocks/react-infinite-scroller)
 
-React components for efficiently rendering large lists and tabular data.
+  simple wrapper to infinitely fetch data on scroll
 
 ## Versioning
 

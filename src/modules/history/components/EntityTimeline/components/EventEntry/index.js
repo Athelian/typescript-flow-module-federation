@@ -1,0 +1,38 @@
+// @flow
+import * as React from 'react';
+import { get } from 'lodash/fp';
+import Icon from 'components/Icon';
+import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
+import UpdateEvent from './components/UpdateEvent';
+import MultipleUpdateEvent from './components/MultipleUpdateEvent';
+import DefaultEvent from './components/DefaultEvent';
+import { EventEntryWrapperStyle, IconStyle } from './style';
+
+type Props = {
+  event: Event,
+  entityType: string,
+};
+
+const EventEntry = ({ event, entityType }: Props) => (
+  <div className={EventEntryWrapperStyle}>
+    <div className={IconStyle}>
+      <Icon icon="EDITED" />
+    </div>
+    {(() => {
+      switch (get('__typename', event)) {
+        case 'EventChange':
+          if (event.updates.length === 0) {
+            return <DefaultEvent event={event} />;
+          }
+          if (event.updates.length === 1) {
+            return <UpdateEvent event={event} entityType={entityType} />;
+          }
+          return <MultipleUpdateEvent event={event} entityType={entityType} />;
+        default:
+          return <DefaultEvent event={event} />;
+      }
+    })()}
+  </div>
+);
+
+export default EventEntry;

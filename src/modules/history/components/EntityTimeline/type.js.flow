@@ -1,0 +1,31 @@
+// @flow
+import type { User } from 'modules/staff/type.js.flow';
+
+export type Event = {|
+  id: string,
+  type: string,
+  target: {
+    __typename: string,
+  },
+  removes: Array<{
+    field: string,
+    oldValue: any,
+    newValue: any,
+  }>,
+  updates: Array<{
+    field: string,
+    oldValue: any,
+    newValue: any,
+  }>,
+  createdBy: User,
+  createdAt: string,
+  updatedAt: string,
+|};
+
+export type Comment = {|
+  id: string,
+  content: string,
+  createdBy: User,
+  createdAt: string,
+  updatedAt: string,
+|};

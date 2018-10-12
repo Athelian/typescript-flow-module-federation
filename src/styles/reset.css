@@ -34,15 +34,17 @@ button:focus {
   outline: none;
 }
 
-select {
-  border-radius: 0;
-  -webkit-appearance: none;
-  background: url('../media/angle-down.svg') no-repeat calc(100% - 10px) 50%;
-  background-size: 16px 16px;
-}
-
 a {
   text-decoration: none;
+}
+
+input {
+  border: none;
+  padding: 0;
+}
+
+input:focus {
+  outline: none;
 }
 
 * {

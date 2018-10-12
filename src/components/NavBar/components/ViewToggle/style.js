@@ -2,12 +2,12 @@
 import { css } from 'react-emotion';
 import { presets, colors, transitions } from 'styles/common';
 
-export const ViewToggleWrapperStyle = css`
+export const ViewToggleWrapperStyle: string = css`
   display: flex;
   height: min-content;
 `;
 
-export const ViewButtonStyle = (isActive: boolean) => css`
+export const ViewButtonStyle = (isActive: boolean): string => css`
   ${presets.BUTTON};
   color: ${isActive ? colors.TEAL : colors.GRAY_LIGHT};
   font-size: 20px;

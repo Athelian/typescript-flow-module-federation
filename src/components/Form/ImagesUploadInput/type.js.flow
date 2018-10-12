@@ -1,0 +1,9 @@
+// @flow
+
+export type Image = {
+  id: string,
+  name: string,
+  path: string,
+  type: string,
+  memo: string | null,
+};

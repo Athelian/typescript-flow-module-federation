@@ -1,14 +1,14 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { TabItemStyle, DisabledStyle } from './style';
+import { TabItemStyle, DisabledStyle, IconStyle } from './style';
 
 type Props = {
   icon?: string,
   label: string | React.Node,
   disabled?: boolean,
   active: boolean,
-  onActive: number => void,
+  onClick: number => void,
 };
 
 const defaultProps = {
@@ -16,16 +16,17 @@ const defaultProps = {
   icon: null,
 };
 
-const TabItem = ({ icon = '', label, disabled, active, onActive }: Props) => (
+const TabItem = ({ icon = '', label, disabled, active, onClick }: Props) => (
   <button
     type="button"
-    onClick={onActive}
+    onClick={onClick}
     className={disabled ? DisabledStyle : TabItemStyle(active)}
   >
-    <span>
+    <div className={IconStyle}>
       <Icon icon={icon} />
-    </span>
+    </div>
     {label}
+    <span />
   </button>
 );
 

@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import StyleLessSearchInput from 'components/base/SearchInput';
-import { SearchInputStyle } from './style';
+import { SearchInput as StylelessSearchInput } from 'components/base';
+import { SearchInputStyle, SearchIconStyle, InputStyle, ClearButtonStyle } from './style';
 
 type Props = {
   onChange: Function,
@@ -14,12 +14,17 @@ type Props = {
 
 function SearchInput(props: Props) {
   return (
-    <StyleLessSearchInput
-      style={SearchInputStyle}
-      searchIcon={<Icon icon="faSearch" />}
+    <StylelessSearchInput
+      className={SearchInputStyle}
+      inputClassName={InputStyle}
+      searchIcon={
+        <div className={SearchIconStyle}>
+          <Icon icon="SEARCH" />
+        </div>
+      }
       clearButton={({ clearQuery }) => (
-        <button type="button" onClick={clearQuery}>
-          <Icon icon="faClear" />
+        <button className={ClearButtonStyle} type="button" onClick={clearQuery}>
+          <Icon icon="CLEAR" />
         </button>
       )}
       {...props}

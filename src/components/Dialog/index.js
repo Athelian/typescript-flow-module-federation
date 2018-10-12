@@ -12,7 +12,7 @@ import {
 
 type Props = {
   isOpen: boolean,
-  onRequestClose: () => void,
+  onRequestClose: (evt: Event) => void,
   children: React.Node,
   options: { width: number },
   rootElementId?: string,
@@ -46,7 +46,9 @@ export default class Dialog extends React.Component<Props> {
     }
 
     if (prevProps.isOpen && !isOpen) {
-      setTimeout(() => dialogRoot.removeChild(this.dialogContainer), ANIMATION_FINISHED);
+      if (dialogRoot.contains(this.dialogContainer)) {
+        setTimeout(() => dialogRoot.removeChild(this.dialogContainer), ANIMATION_FINISHED);
+      }
     }
   }
 

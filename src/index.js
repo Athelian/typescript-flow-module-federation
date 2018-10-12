@@ -2,7 +2,9 @@
 import * as React from 'react';
 import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
+import UNSTATED from 'unstated-debug';
 import FullStory from 'react-fullstory';
+import AuthenticationProvider from './modules/authentication';
 import LanguageProvider from './modules/language';
 import UIProvider from './modules/ui';
 import apolloClient from './apollo';
@@ -11,11 +13,12 @@ import loadFonts from './fonts';
 import { isAppInProduction } from './utils/env';
 import errorReport from './errorReport';
 import './styles/reset.css';
-/* $FlowFixMe: load css from node module */
-import 'react-virtualized/styles.css';
+import * as serviceWorker from './serviceWorker';
 
 loadFonts();
 errorReport();
+
+UNSTATED.isEnabled = !isAppInProduction;
 
 const container = document.querySelector('#root');
 
@@ -25,19 +28,21 @@ if (!container) {
 
 const renderApp = (Component, renderFn) => {
   renderFn(
-    <React.Fragment>
+    <div>
       {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
       <ApolloProvider client={apolloClient}>
-        <LanguageProvider>
-          <UIProvider>
-            {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
-            <React.StrictMode>
-              <Component />
-            </React.StrictMode>
-          </UIProvider>
-        </LanguageProvider>
+        <AuthenticationProvider>
+          <LanguageProvider>
+            <UIProvider>
+              {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
+              <React.StrictMode>
+                <Component />
+              </React.StrictMode>
+            </UIProvider>
+          </LanguageProvider>
+        </AuthenticationProvider>
       </ApolloProvider>
-    </React.Fragment>,
+    </div>,
     container
   );
 };
@@ -47,3 +52,5 @@ if (container.hasChildNodes()) {
 } else {
   renderApp(Routes, render);
 }
+
+serviceWorker.unregister();

@@ -1,16 +1,16 @@
 // @flow
 import * as React from 'react';
-import Layout from 'components/Layout';
-import { UIConsumer } from 'modules/ui';
+import { Router } from '@reach/router';
+import ProductListModule from './index.list';
+import ProductFormModule from './index.form';
 
-const Product = () => (
-  <UIConsumer>
-    {uiState => (
-      <Layout {...uiState}>
-        <div> Product </div>
-      </Layout>
-    )}
-  </UIConsumer>
+const ProductApp = () => (
+  <Router>
+    <ProductListModule path="/" />
+    <ProductFormModule path="new" />
+    <ProductFormModule path="clone/:productId" />
+    <ProductFormModule path=":productId" />
+  </Router>
 );
 
-export default Product;
+export default ProductApp;

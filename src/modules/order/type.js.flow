@@ -1,22 +1,38 @@
 // @flow
+import type { BatchCreate } from 'modules/batch/type.js.flow';
+import type { Tag } from 'modules/tags/type.js.flow';
+
+type Batch = {
+  id: string,
+};
+
+type ProductProvider = {
+  id: string,
+  product: {
+    id: string,
+    name: string,
+    serial: string,
+    tags?: Array<Tag>,
+  },
+  unitPrice: {
+    amount: number,
+    currency: string,
+  },
+  supplier: {
+    name: string,
+  },
+};
 
 export type OrderItem = {
   id: string,
+  sort: number,
   quantity: number,
-  batchedQuantity: number,
-  shippedQuantity: number,
-  productExporterSupplier: {
-    supplier: ?{
-      name: string,
-    },
-    product: {
-      name: string,
-      serial: string,
-      files: Array<{
-        path: string,
-      }>,
-    },
+  price: {
+    amount: number,
+    currency: string,
   },
+  batches: Batch,
+  productProvider: ProductProvider,
 };
 
 export type Order = {
@@ -30,5 +46,41 @@ export type Order = {
   shippedQuantity: number,
   updatedAt: string | Date,
   createdAt: string | Date,
-  items: Array<OrderItem>,
+  orderItems: Array<OrderItem>,
+};
+
+export type SelectableOrderItem = {
+  id: string,
+  quantity: number,
+  price: number,
+  order: {
+    PO: string,
+    currency: string,
+    exporter: {
+      id: string,
+    },
+  },
+  batchItems: Array<{
+    no: string,
+    quantity: number,
+  }>,
+};
+
+export type OrderItemForm = {
+  quantity?: number,
+  price?: number,
+  batches: Array<BatchCreate>,
+  productProviderId: string,
+};
+
+export type OrderForm = {
+  poNo: string,
+  exporterId: string,
+  currency: ?string,
+  issuedAt?: ?Date,
+  piNo?: ?string,
+  incoterm?: ?string,
+  deliveryPlace?: ?string,
+  memo?: ?string,
+  orderItems?: Array<OrderItemForm>,
 };

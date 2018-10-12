@@ -2,12 +2,12 @@
 import { css } from 'react-emotion';
 import { transitions, fontSizes } from 'styles/common';
 
-export const SubMenuStyle = css`
+export const SubMenuStyle: string = css`
   overflow: hidden;
   min-height: min-content;
 `;
 
-export const SubMenuItemStyle = (isExpanded: boolean) => css`
+export const SubMenuItemStyle = (isExpanded: boolean): string => css`
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -34,25 +34,15 @@ export const SubMenuItemStyle = (isExpanded: boolean) => css`
       height: 50px;
     }
   }
-  & > .icon {
-    display: flex;
-    width: 40px;
-    height: 50px;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin: 0 5px 0 0;
-  }
-  & > .fa-angle-right {
-    margin: 0 10px 0 auto;
-    ${transitions.MAIN};
-    &.active {
-      transform: rotate(90deg);
-    }
-  }
 `;
 
-export const SubMenuBodyStyle = (isExpanded: boolean, menuItemCount: number) => css`
+export const ChevronStyle = (isExpanded: boolean): string => css`
+  margin: 0 10px 0 auto;
+  ${transitions.MAIN};
+  ${isExpanded && 'transform: rotate(90deg)'};
+`;
+
+export const SubMenuBodyStyle = (isExpanded: boolean, menuItemCount: number): string => css`
   height: ${isExpanded ? `${menuItemCount * 50}px` : '0px'};
   display: flex;
   flex-direction: column;

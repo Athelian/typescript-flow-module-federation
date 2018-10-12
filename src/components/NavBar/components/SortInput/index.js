@@ -1,17 +1,17 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import StyleLessSelectInput from 'components/base/SelectInput';
+import { SelectInput } from 'components/Form/Inputs';
 import {
   WrapperStyle,
+  InputStyle,
   ButtonStyle,
   OptionWrapperStyle,
-  SelectStyle,
   OptionItemStyle,
 } from './style';
 
 type Sort = {
-  title: string,
+  title: string | React.Node,
   value: string,
 };
 
@@ -37,37 +37,50 @@ class SortInput extends React.Component<Props> {
     onChange({ field: sort, ascending: !ascending });
   };
 
-  optionItem = ({
-    value,
-    onHover,
-    selected,
-  }: {
-    // type is used for args
-    /* eslint-disable react/no-unused-prop-types */
-    value: Sort,
-    onHover: boolean,
-    selected: boolean,
-  }) => <div className={OptionItemStyle(onHover, selected)}>{value.title}</div>;
-
   render() {
     const { sort, ascending, fields } = this.props;
+    const itemToString = item => (item ? item.title : '');
+    const itemToValue = item => (item ? item.value : '');
 
     return (
-      <StyleLessSelectInput
+      <SelectInput
+        value={sort.value}
         items={fields}
-        itemToString={item => (item ? item.value : '')}
-        itemToValue={item => (item ? item.value : '')}
-        renderSelect={() => (
+        itemToString={itemToString}
+        itemToValue={itemToValue}
+        onChange={this.onFieldChange}
+        renderSelect={({ toggle, selectedItem, getInputProps }) => (
           <div className={WrapperStyle}>
-            <div className={SelectStyle}>{sort.title}</div>
+            <input
+              readOnly
+              spellCheck={false}
+              className={InputStyle}
+              onClick={toggle}
+              {...getInputProps({
+                value: itemToString(selectedItem),
+              })}
+            />
             <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
-              <Icon icon={ascending ? 'faSortAsc' : 'faSortDesc'} />
+              <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
             </button>
           </div>
         )}
-        renderOption={this.optionItem}
-        onChange={this.onFieldChange}
-        styles={{ select: '', options: OptionWrapperStyle }}
+        renderOptions={({ highlightedIndex, selectedItem, getItemProps }) => (
+          <div className={OptionWrapperStyle}>
+            {fields.map((item, index) => (
+              <div
+                key={itemToValue(item)}
+                className={OptionItemStyle(
+                  highlightedIndex === index,
+                  itemToValue(selectedItem) === itemToValue(item)
+                )}
+                {...getItemProps({ item })}
+              >
+                {item.title}
+              </div>
+            ))}
+          </div>
+        )}
       />
     );
   }

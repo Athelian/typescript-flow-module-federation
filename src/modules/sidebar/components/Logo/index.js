@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Link } from '@reach/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import faToggleOn from '@fortawesome/fontawesome-pro-regular/faToggleOn';
-import faToggleOff from '@fortawesome/fontawesome-pro-regular/faToggleOff';
+import Icon from 'components/Icon';
 import {
   LogoWrapperStyle,
   LogoButtonWrapperStyle,
@@ -32,11 +30,7 @@ const Logo = ({ isSideBarExpanded, toggleSideBarExpansion }: Props) => (
       tabIndex={-1}
       onClick={toggleSideBarExpansion}
     >
-      {isSideBarExpanded ? (
-        <FontAwesomeIcon icon={faToggleOn} fixedWidth />
-      ) : (
-        <FontAwesomeIcon icon={faToggleOff} fixedWidth />
-      )}
+      <Icon icon={isSideBarExpanded ? 'TOGGLE_ON' : 'TOGGLE_OFF'} />
     </button>
   </div>
 );

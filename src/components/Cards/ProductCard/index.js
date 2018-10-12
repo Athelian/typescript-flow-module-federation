@@ -1,0 +1,145 @@
+// @flow
+import * as React from 'react';
+import { Link } from '@reach/router';
+import { encodeId } from 'utils/id';
+import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
+import Icon from 'components/Icon';
+import Tag from 'components/Tag';
+import FormattedNumber from 'components/FormattedNumber';
+import BaseCard from '../BaseCard';
+import {
+  ProductCardWrapperStyle,
+  ProductImageWrapperStyle,
+  ProductImageStyle,
+  ProductImageChevronButtonStyle,
+  ProductImageDotsWrapperStyle,
+  ProductImageDotStyle,
+  ProductInfoWrapperStyle,
+  ProductNameStyle,
+  ProductSerialStyle,
+  ProductProvidersWrapperStyle,
+  ProductExporterStyle,
+  ProductSupplierStyle,
+  MoreProviderBadge,
+  ProductTagsWrapperStyle,
+} from './style';
+
+type OptionalProps = {
+  actions: Array<React.Node>,
+};
+
+type Props = OptionalProps & {
+  product: ?Object,
+};
+
+type State = {
+  activeImage: number,
+};
+
+const defaultProps = {
+  actions: [],
+};
+
+class ProductCard extends React.PureComponent<Props, State> {
+  static defaultProps = defaultProps;
+
+  state = {
+    activeImage: 0,
+  };
+
+  navigateImages = (direction: 'left' | 'right') => {
+    const { product } = this.props;
+    const { activeImage } = this.state;
+
+    if (product) {
+      if (direction === 'left') {
+        if (activeImage > 0) this.setState({ activeImage: activeImage - 1 });
+      } else if (direction === 'right') {
+        if (activeImage < product.files.length - 1) this.setState({ activeImage: activeImage + 1 });
+      }
+    }
+  };
+
+  render() {
+    const { product, actions, ...rest } = this.props;
+    const { activeImage } = this.state;
+
+    if (!product) return '';
+
+    const { id, name, serial, tags, files, productProviders } = product;
+
+    const productImage = files && files.length > 0 ? files[activeImage].path : FALLBACK_IMAGE;
+
+    return (
+      <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} {...rest}>
+        <Link className={ProductCardWrapperStyle} to={`/product/${encodeId(id)}`}>
+          <div className={ProductImageWrapperStyle}>
+            <img className={ProductImageStyle} src={productImage} alt="product_image" />
+            {files &&
+              files.length > 1 && (
+                <>
+                  <button
+                    className={ProductImageChevronButtonStyle('left', activeImage === 0)}
+                    onClick={evt => {
+                      evt.preventDefault();
+                      this.navigateImages('left');
+                    }}
+                    type="button"
+                  >
+                    <Icon icon="ANGLE_LEFT" />
+                  </button>
+                  <button
+                    className={ProductImageChevronButtonStyle(
+                      'right',
+                      activeImage === files.length - 1
+                    )}
+                    onClick={evt => {
+                      evt.preventDefault();
+                      this.navigateImages('right');
+                    }}
+                    type="button"
+                  >
+                    <Icon icon="ANGLE_RIGHT" />
+                  </button>
+                </>
+              )}
+            <div className={ProductImageDotsWrapperStyle}>
+              {files &&
+                files.length > 1 &&
+                files.map((file, index) => (
+                  <div className={ProductImageDotStyle(activeImage === index)} key={file.id} />
+                ))}
+            </div>
+          </div>
+
+          <div className={ProductInfoWrapperStyle}>
+            <div className={ProductNameStyle}>{name}</div>
+            <div className={ProductSerialStyle}>{serial}</div>
+            <div className={ProductProvidersWrapperStyle}>
+              <div className={ProductExporterStyle}>
+                <Icon icon="EXPORTER" />
+                {productProviders.length > 0 && productProviders[0].exporter.name}
+              </div>
+              <div className={ProductSupplierStyle}>
+                <Icon icon="SUPPLIER" />
+                {productProviders.length > 0 &&
+                  productProviders[0].supplier &&
+                  productProviders[0].supplier.name}
+              </div>
+              {productProviders.length > 1 && (
+                <div className={MoreProviderBadge}>
+                  + <FormattedNumber value={productProviders.length - 1} />
+                </div>
+              )}
+            </div>
+            <div className={ProductTagsWrapperStyle}>
+              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+          </div>
+        </Link>
+      </BaseCard>
+    );
+  }
+}
+
+export default ProductCard;

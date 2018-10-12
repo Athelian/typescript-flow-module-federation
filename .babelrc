@@ -1,28 +1,11 @@
 {
-  "presets": [
-    "@babel/preset-env",
-    "@babel/preset-react",
-    "@babel/preset-flow"
-  ],
+  "presets": ["react-app"],
   "plugins": [
-    [
-      "ramda"
-    ],
-    [
-      "@babel/plugin-transform-flow-strip-types"
-    ],
-    [
-      "@babel/plugin-proposal-class-properties"
-    ],
-    [
-      "@babel/plugin-syntax-dynamic-import"
-    ],
+    ["ramda"],
     [
       "module-resolver",
       {
-        "root": [
-          "./src"
-        ]
+        "root": ["./src"]
       }
     ]
   ],
@@ -35,13 +18,16 @@
             "hoist": true
           }
         ],
-        "graphql-tag",
         [
           "react-remove-properties",
           {
-            "properties": [
-              "data-testid"
-            ]
+            "properties": ["data-testid"]
+          }
+        ],
+        [
+          "react-intl",
+          {
+            "messagesDir": "./build/messages/"
           }
         ]
       ]

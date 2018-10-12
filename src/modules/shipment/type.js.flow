@@ -1,0 +1,89 @@
+// @flow
+
+export type CargoReady = ?{
+  date: ?Date,
+  assignedToIds?: Array<string>,
+  approvedById?: string,
+  memo?: string,
+  timelineDateRevisions?: Array<{
+    date: ?Date,
+    type: string,
+    memo: string,
+  }>,
+};
+
+type ShipmentTimeline = ?{
+  date: ?Date,
+  assignedToIds?: Array<string>,
+  approvedById?: string,
+  memo?: string,
+  timelineDateRevisions?: Array<{
+    date: ?Date,
+    type: string,
+    memo: string,
+  }>,
+};
+
+type ShipmentPort = ?{
+  seaport: ?string,
+  airport: ?string,
+};
+
+export type ShipmentGroups = ?{
+  warehouseId?: string,
+  customClearance?: ShipmentTimeline,
+  warehouseArrival?: ShipmentTimeline,
+  deliveryReady?: ShipmentTimeline,
+};
+
+export type ShipmentVoyage = ?{
+  vesselName?: string,
+  vesselCode?: string,
+  departure?: ?ShipmentTimeline,
+  departurePort?: ?ShipmentPort,
+  arrival?: ?ShipmentTimeline,
+  arrivalPort?: ?ShipmentPort,
+};
+
+export type UserNameAndAvatar = {
+  firstName: string,
+  lastName: string,
+  avatar: ?string,
+  id: string,
+};
+
+export type ShipmentCreate = {
+  no: string,
+  blNo?: string,
+  blDate?: ?Date,
+  bookingNo?: string,
+  bookingDate?: ?Date,
+  invoiceNo?: string,
+  loadType?: ?string,
+  transportType?: ?string,
+  carrier?: string,
+  cargoReady?: ?CargoReady,
+  tagIds?: Array<string>,
+  forwarderIds?: Array<string>,
+  batches?: Array<Object>,
+  voyages: Array<ShipmentVoyage>,
+  containerGroups: Array<ShipmentGroups>,
+};
+
+export type ShipmentUpdate = {
+  no?: string,
+  blNo?: string,
+  blDate?: ?Date,
+  bookingNo?: string,
+  bookingDate?: ?Date,
+  invoiceNo?: string,
+  loadType?: ?string,
+  transportType?: ?string,
+  carrier?: string,
+  cargoReady?: ?CargoReady,
+  tagIds?: Array<string>,
+  forwarderIds?: Array<string>,
+  batches?: Array<Object>,
+  voyages?: Array<ShipmentVoyage>,
+  containerGroups?: Array<ShipmentGroups>,
+};

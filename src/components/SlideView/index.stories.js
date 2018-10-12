@@ -42,8 +42,13 @@ class SlideViewControler extends React.Component {
         <button type="button" onClick={this.open}>
           open SlideView
         </button>
-
-        <SlideView isOpen={isSlideViewOpen} onRequestClose={this.close} options={{ width: 400 }}>
+        <div id="dialog-root" />
+        <SlideView
+          rootElementId="root"
+          isOpen={isSlideViewOpen}
+          onRequestClose={this.close}
+          options={{ width: 400 }}
+        >
           <div style={{ padding: '50px', textAlign: 'center' }}>
             <button onClick={this.close} type="button">
               close SlideView

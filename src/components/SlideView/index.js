@@ -2,22 +2,27 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
-import { BackdropFadeInStyle, BackdropFadeOutStyle } from 'components/Dialog/style';
-import { SlideInStyle, SlideAwayStyle } from './style';
+import logger from 'utils/logger';
+import FadeIn from './FadeIn';
+import {
+  SlideInStyle,
+  SlideAwayStyle,
+  SlideViewContentStyle,
+  BackdropFadeInStyle,
+  BackdropFadeOutStyle,
+} from './style';
 
 type Props = {
   isOpen: boolean,
   onRequestClose: () => void,
-  children: ({ openSlideView: (options: Object) => void }) => React.Node,
-  options: { width: number },
+  children: React.Node,
+  options: { width: string },
   rootElementId?: string,
 };
 
-const ANIMATION_FINISHED = 500;
-
 export default class SlideView extends React.Component<Props> {
   static defaultProps = {
-    rootElementId: 'slide-view-root',
+    rootElementId: 'slide-view-root1',
   };
 
   constructor() {
@@ -26,19 +31,25 @@ export default class SlideView extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { rootElementId } = this.props;
-    const slideViewRoot = document.getElementById(rootElementId || 'root');
+    const { rootElementId = 'slide-view-root' } = this.props;
+    const slideViewRoot = document.getElementById(rootElementId);
 
-    if (!slideViewRoot) return;
+    if (!slideViewRoot) {
+      logger.warn('Not found the rootElementId', rootElementId);
+      return;
+    }
 
     const { isOpen } = this.props;
 
     if (!prevProps.isOpen && isOpen) {
       slideViewRoot.appendChild(this.slideViewContainer);
     }
+  }
 
-    if (prevProps.isOpen && !isOpen) {
-      setTimeout(() => slideViewRoot.removeChild(this.slideViewContainer), ANIMATION_FINISHED);
+  componentWillUnmount() {
+    const container = this.slideViewContainer;
+    if (container.parentNode) {
+      container.parentNode.removeChild(container);
     }
   }
 
@@ -65,7 +76,9 @@ export default class SlideView extends React.Component<Props> {
               onClick={e => e.stopPropagation()}
               role="presentation"
             >
-              {children}
+              <div className={SlideViewContentStyle}>
+                <FadeIn in={isOpen}>{children} </FadeIn>
+              </div>
             </div>
           </div>,
           this.slideViewContainer

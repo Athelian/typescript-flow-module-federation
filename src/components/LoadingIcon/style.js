@@ -1,7 +1,8 @@
+// @flow
 import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
-export const LoadingWrapperStyle = css`
+export const LoadingWrapperStyle: string = css`
   width: 100%;
   height: 100%;
   display: flex;
@@ -9,48 +10,29 @@ export const LoadingWrapperStyle = css`
   align-items: center;
 `;
 
-export const LoadingStyle = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transform: rotate(30deg);
-`;
-
-export const RowStyle = css`
-  display: flex;
-`;
-
-export const TriangleStyle = css`
-  @keyframes blink {
+export const LoadingIconStyle = (size: number) => css`
+  @keyframes spin {
     0% {
-      opacity: 0.1;
-    }
-    30% {
-      opacity: 1;
+      transform: rotate(0deg);
     }
     100% {
-      opacity: 0.1;
-      border-bottom: 21.6px solid ${colors.TEAL};
+      transform: rotate(360deg);
     }
   }
-  width: 0;
-  height: 0;
-  margin: 0 -6px;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-bottom: 21.6px solid ${colors.BLUE};
-  animation: blink 1s infinite;
-  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2));
-`;
-
-export const FlipStyle = css`
-  transform: rotate(180deg);
-`;
-
-export const InnerStyle = i => css`
-  animation-delay: ${-(1 / 6) * i}s;
-`;
-
-export const OuterStyle = i => css`
-  animation-delay: ${-(1 / 18) * i}s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${size * 2}px;
+  height: ${size * 2}px;
+  &:after {
+    content: ' ';
+    display: block;
+    width: ${size}px;
+    height: ${size}px;
+    margin: 1px;
+    border-radius: 50%;
+    border: ${size / 6}px solid ${colors.WHITE};
+    border-color: rgba(0, 0, 0, 0.1) transparent rgba(0, 0, 0, 0.1) transparent;
+    animation: spin 1.2s linear infinite;
+  }
 `;

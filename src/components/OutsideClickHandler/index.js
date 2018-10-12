@@ -1,36 +1,23 @@
 // @flow
 import * as React from 'react';
 
-type Props = {
-  /**
-   * classname
-   *
-   * @type {string}
-   */
-  className?: string,
-  /**
-   * List of element we want to ignore.
-   * `onOutsideClick()` won't call if click on that element.
-   *
-   * @type {Array<Node>}
-   */
-  ignoreElements?: Array<Node>,
-  /**
-   * Render prop
-   *
-   * @type {React.Node}
-   */
+type OptionalProps = {
+  ignoreElements: Array<Node>,
+  ignoreClick: boolean,
+};
+
+type Props = OptionalProps & {
   children: React.Node,
-  /**
-   * Function will be called when click outside of element
-   *
-   * @type {Function}
-   */
   onOutsideClick: Function,
 };
 
-export default class OutsideClickHandler extends React.PureComponent<Props> {
-  static defaultProps = { className: '', ignoreElements: [] };
+const defaultProps = {
+  ignoreElements: [],
+  ignoreClick: true,
+};
+
+export default class OutsideClickHandler extends React.Component<Props> {
+  static defaultProps = defaultProps;
 
   componentDidMount() {
     document.addEventListener('mousedown', this.onOutsideClick);
@@ -41,9 +28,13 @@ export default class OutsideClickHandler extends React.PureComponent<Props> {
   }
 
   onOutsideClick = (evt: MouseEvent) => {
-    const { ignoreElements, onOutsideClick } = this.props;
+    const { ignoreElements, ignoreClick, onOutsideClick } = this.props;
+
+    if (ignoreClick) return;
+
     const isOutsideTarget =
       this.wrapperRef && evt.target instanceof Node && !this.wrapperRef.contains(evt.target);
+
     const isIgnore =
       ignoreElements && ignoreElements.length
         ? ignoreElements.find(
@@ -65,11 +56,7 @@ export default class OutsideClickHandler extends React.PureComponent<Props> {
   wrapperRef: HTMLDivElement;
 
   render() {
-    const { className, children } = this.props;
-    return (
-      <div className={className} ref={this.setChildNodeRef}>
-        {children}
-      </div>
-    );
+    const { children } = this.props;
+    return <div ref={this.setChildNodeRef}>{children}</div>;
   }
 }

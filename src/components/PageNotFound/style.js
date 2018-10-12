@@ -1,7 +1,8 @@
+// @flow
 import { css } from 'react-emotion';
 import { layout, gradients, transitions, presets } from 'styles/common';
 
-export const PageNotFoundContainerStyle = css`
+export const PageNotFoundContainerStyle: string = css`
   ${layout.FIT};
   ${layout.VERTICAL};
   ${layout.CENTER_CENTER};
@@ -10,24 +11,24 @@ export const PageNotFoundContainerStyle = css`
   color: #fff;
 `;
 
-export const PageNotFoundTitleContainerStyle = css`
+export const PageNotFoundTitleContainerStyle: string = css`
   ${layout.VERTICAL};
   ${layout.CENTER_CENTER};
   user-select: none;
   flex: 3;
 `;
 
-export const PageNotFoundH1Style = css`
+export const PageNotFoundH1Style: string = css`
   font-size: 200px;
   line-height: 250px;
   font-weight: 100;
 `;
 
-export const PageNotFoundTravoltaStyle = css`
+export const PageNotFoundTravoltaStyle: string = css`
   height: 300px;
 `;
 
-export const PageNotFoundH3Style = css`
+export const PageNotFoundH3Style: string = css`
   font-size: 20px;
   font-weight: 400;
   line-height: 26px;
@@ -35,11 +36,11 @@ export const PageNotFoundH3Style = css`
   text-align: center;
 `;
 
-export const PageNotFoundLinkContainerStyle = css`
+export const PageNotFoundLinkContainerStyle: string = css`
   flex: 1;
 `;
 
-export const PageNotFoundButtonStyle = css`
+export const PageNotFoundButtonStyle: string = css`
   ${layout.VERTICAL};
   ${layout.CENTER};
   ${transitions.MAIN};
@@ -56,6 +57,6 @@ export const PageNotFoundButtonStyle = css`
   }
 `;
 
-export const PageNotFoundLogoStyle = css`
+export const PageNotFoundLogoStyle: string = css`
   width: 60px;
 `;

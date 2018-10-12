@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { isEquals } from 'utils/fp';
 import { Form } from 'components/Form';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -37,15 +38,28 @@ type State = {
 };
 
 class FilterInput extends React.Component<Props, State> {
-  state = {
-    isOpen: false,
-    isActive: false,
-  };
+  constructor() {
+    super();
+    this.state = {
+      isOpen: false,
+      isActive: false,
+    };
+
+    this.filterButtonRef = React.createRef();
+  }
 
   componentDidMount() {
     const { initialFilter } = this.props;
     const isActive = this.hasAnyFilter(initialFilter);
     this.setState({ isActive });
+  }
+
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    const { initialFilter } = this.props;
+    if (!isEquals(initialFilter, nextProps.initialFilter)) return true;
+    if (!isEquals(this.state, nextState)) return true;
+
+    return false;
   }
 
   hasAnyFilter = (values: Object) => Object.values(values).some(value => !!value);
@@ -76,6 +90,7 @@ class FilterInput extends React.Component<Props, State> {
     this.setState({ isActive: false });
 
     const resetFilter = {};
+
     Object.keys(values).forEach(key => {
       resetFilter[key] = null;
     });
@@ -84,17 +99,31 @@ class FilterInput extends React.Component<Props, State> {
     this.close();
   };
 
+  filterButtonRef: any;
+
   render() {
     const { initialFilter, children } = this.props;
     const { isOpen, isActive } = this.state;
 
     return (
       <div className={WrapperStyle}>
-        <button type="button" className={ButtonStyle} onClick={this.toggle}>
+        <button
+          type="button"
+          className={ButtonStyle}
+          onClick={this.toggle}
+          ref={this.filterButtonRef}
+        >
           {(isActive || this.hasAnyFilter(initialFilter)) && <span className={ActiveStyle} />}
-          <Icon icon="faFilter" />
+          <Icon icon="FILTER" />
         </button>
-        <OutsideClickHandler onOutsideClick={this.close}>
+        <OutsideClickHandler
+          onOutsideClick={this.close}
+          ignoreElements={
+            this.filterButtonRef && this.filterButtonRef.current
+              ? [this.filterButtonRef.current]
+              : []
+          }
+        >
           <div className={ContentStyle(isOpen)}>
             <Form
               initialValues={initialFilter}
@@ -111,6 +140,7 @@ class FilterInput extends React.Component<Props, State> {
                 setFieldValue,
                 setFieldTouched,
                 isSubmitting,
+                resetForm,
               }) => (
                 <form className={FormStyle} onSubmit={handleSubmit} onReset={handleReset}>
                   <div className={InputWrapperStyle}>
@@ -125,7 +155,14 @@ class FilterInput extends React.Component<Props, State> {
                     })}
                   </div>
                   <div className={ButtonsWrapper}>
-                    <button className={ResetButtonStyle} type="button" onClick={this.reset}>
+                    <button
+                      className={ResetButtonStyle}
+                      type="button"
+                      onClick={() => {
+                        resetForm();
+                        this.reset(values);
+                      }}
+                    >
                       <FormattedMessage {...messages.reset} />
                     </button>
                     <button className={SubmitButtonStyle} type="submit" disabled={isSubmitting}>

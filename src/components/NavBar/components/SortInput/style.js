@@ -1,64 +1,76 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, borderRadiuses, fontSizes, transitions, presets } from 'styles/common';
+import {
+  layout,
+  colors,
+  borderRadiuses,
+  fontSizes,
+  transitions,
+  presets,
+  shadows,
+} from 'styles/common';
 
-export const WrapperStyle = css`
+export const WrapperStyle: string = css`
+  ${presets.BUTTON};
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   ${borderRadiuses.MAIN};
   position: relative;
   background: #fff;
   overflow: hidden;
-  color: ${colors.GRAY_LIGHT};
   width: 150px;
   height: 30px;
+  align-items: center;
+  padding: 0 0 0 5px;
   ${transitions.MAIN};
+  ${shadows.NAV_BUTTON};
   ${fontSizes.MAIN};
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
 `;
 
-export const SelectStyle = css`
-  color: ${colors.BLACK};
+export const InputStyle: string = css`
   ${fontSizes.MAIN};
   font-weight: bold;
-  padding: 0 10px;
   flex: 1;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  height: 20px;
+  border: none;
+  outline: none;
+  border-right: 1px solid ${colors.GRAY_VERY_LIGHT};
+  padding: 0 5px 0 0;
+  ${presets.ELLIPSIS};
+  color: ${colors.BLACK};
+  cursor: pointer;
 `;
 
-export const ButtonStyle = css`
+export const ButtonStyle: string = css`
   ${presets.BUTTON};
   ${fontSizes.MAIN};
-  color: ${colors.GRAY};
-  padding: 0 10px 0 5px;
-  height: 100%;
-  outline: none;
-  &:hover {
-    background-color: ${colors.GRAY_SUPER_LIGHT};
-  }
+  color: ${colors.GRAY_LIGHT};
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  &:hover,
   &:focus {
-    background-color: ${colors.TEAL};
-    color: #fff;
-    border: none;
+    color: ${colors.TEAL};
   }
 `;
 
-export const OptionWrapperStyle = css`
-  background: #fff;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+export const OptionWrapperStyle: string = css`
+  ${presets.BOX};
+  ${shadows.DROPDOWN};
+  position: absolute;
+  top: 45px;
 `;
 
-export const OptionItemStyle = (active: boolean, selected: boolean) => css`
-  background: ${active ? '#eee' : '#fff'};
-  background: ${selected && '#aaa'};
-  height: 100%;
+export const OptionItemStyle = (onHover: boolean, selected: boolean): string => css`
+  background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
+  ${presets.BUTTON};
+  justify-content: flex-start;
+  padding: 0 5px;
+  color: ${selected ? colors.TEAL : colors.BLACK};
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  flex: 1;
+  height: 30px;
   width: 150px;
-  color: ${selected ? '#fff' : '#555'};
-  padding: 8px;
-  cursor: pointer;
+  ${presets.ELLIPSIS};
 `;

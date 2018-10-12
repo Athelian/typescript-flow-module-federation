@@ -1,0 +1,51 @@
+// @flow
+
+export type MetricValue = {
+  value: number,
+  metric: string,
+};
+
+export type Price = {
+  amount: number,
+  currency: string,
+};
+
+export type ProductCreate = {
+  name: string,
+  serial: string,
+  janCode?: ?string,
+  hsCode?: ?string,
+  material?: ?string,
+  tagIds?: Array<string>,
+  productProviders: Array<{
+    exporterId: string,
+    supplierId?: ?string,
+  }>,
+  files?: Array<{
+    id: string,
+    name?: ?string,
+    type?: ?string,
+    memo?: ?string,
+  }>,
+};
+
+export type ProductUpdate = {
+  archived?: boolean,
+  name?: string,
+  serial?: string,
+  janCode?: ?string,
+  hsCode?: ?string,
+  material?: ?string,
+  tagIds?: Array<string>,
+  productProviders?: Array<{
+    id?: string,
+    exporterId?: string,
+    supplierId?: ?string,
+  }>,
+  files?: Array<{
+    id: string,
+    name?: ?string,
+    type?: ?string,
+    memo?: ?string,
+  }>,
+};

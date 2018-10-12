@@ -1,0 +1,44 @@
+// @flow
+import type { Tag } from 'components/Tag/type.js.flow';
+
+export type SignUpUser = {
+  email: string,
+  role: string,
+  firstName: ?string,
+  lastName: ?string,
+  tags: Array<Tag>,
+};
+
+export type DetailedUser = {
+  id: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  role: string,
+  timezone: string,
+  language: string,
+  tags: Array<Tag>,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type User = {
+  id: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  role: string,
+  tags: Array<Tag>,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type EditUser = {
+  firstName: string,
+  lastName: string,
+  email: string,
+  role: string,
+  timezone: string,
+  language: string,
+  tags: Array<Tag>,
+};

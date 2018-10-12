@@ -10,11 +10,11 @@ import {
   transitions,
 } from 'styles/common';
 
-export const WrapperStyle = css`
+export const WrapperStyle: string = css`
   position: relative;
 `;
 
-export const ButtonStyle = css`
+export const ButtonStyle: string = css`
   ${presets.BUTTON};
   ${transitions.MAIN};
   ${fontSizes.MAIN};
@@ -27,7 +27,7 @@ export const ButtonStyle = css`
   }
 `;
 
-export const ActiveStyle = css`
+export const ActiveStyle: string = css`
   position: absolute;
   border-radius: 50%;
   background-color: ${colors.RED};
@@ -39,15 +39,15 @@ export const ActiveStyle = css`
   right: 3px;
 `;
 
-export const ContentStyle = (isOpen: boolean) => css`
+export const ContentStyle = (isOpen: boolean): string => css`
   ${presets.BOX};
   ${transitions.MAIN};
-  ${shadows.NAV_BUTTON};
+  ${shadows.INPUT};
   ${!isOpen && `display: none`};
   position: absolute;
   width: 300px;
   top: -10px;
-  left: 30px;
+  left: 40px;
   position: absolute;
   width: min-content;
   z-index: 1000;
@@ -67,22 +67,22 @@ export const ContentStyle = (isOpen: boolean) => css`
   animation-timing-function: ease-in;
 `;
 
-export const FormStyle = css`
+export const FormStyle: string = css`
   ${layout.VERTICAL};
 `;
 
-export const InputWrapperStyle = css`
+export const InputWrapperStyle: string = css`
   display: flex;
   flex-flow: column wrap;
 `;
 
-export const ButtonsWrapper = css`
+export const ButtonsWrapper: string = css`
   ${layout.HORIZONTAL};
   margin-top: 20px;
   justify-content: flex-end;
 `;
 
-export const ResetButtonStyle = css`
+export const ResetButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
   color: ${colors.GRAY};
@@ -96,7 +96,7 @@ export const ResetButtonStyle = css`
   }
 `;
 
-export const SubmitButtonStyle = css`
+export const SubmitButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
   color: #fff;

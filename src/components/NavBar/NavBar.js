@@ -1,24 +1,17 @@
 // @flow
 import * as React from 'react';
-import { UIConsumer } from 'modules/ui';
-import Settings from './components/Settings';
-import { NavBarStyle, ChildrenStyle } from './style';
+import Setting from 'modules/setting';
+import { NavBarStyle, ChildrenWrapperStyle } from './style';
 
 type Props = {
   children: React.Node,
 };
 
-function NavBar({ children }: Props) {
-  return (
-    <UIConsumer>
-      {({ isSideBarExpanded }) => (
-        <div className={NavBarStyle(isSideBarExpanded)}>
-          <div className={ChildrenStyle}>{children}</div>
-          <Settings />
-        </div>
-      )}
-    </UIConsumer>
-  );
-}
+const NavBar = ({ children }: Props) => (
+  <div className={NavBarStyle}>
+    <div className={ChildrenWrapperStyle}>{children}</div>
+    <Setting />
+  </div>
+);
 
 export default NavBar;

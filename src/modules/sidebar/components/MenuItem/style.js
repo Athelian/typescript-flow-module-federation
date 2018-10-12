@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { transitions, fontSizes } from 'styles/common';
 
-export const MenuItemStyle = (isActive: boolean) => css`
+export const MenuItemStyle = (isActive: boolean): string => css`
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -29,7 +29,7 @@ export const MenuItemStyle = (isActive: boolean) => css`
   }
 `;
 
-export const IconStyle = css`
+export const IconStyle: string = css`
   display: flex;
   width: 40px;
   height: 50px;
