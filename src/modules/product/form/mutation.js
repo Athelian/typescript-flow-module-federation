@@ -35,9 +35,10 @@ export const prepareCreateProductInput = ({
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
-    ({ isNew, id, updatedAt, exporter, supplier, ...productProvider }) => ({
+    ({ isNew, id, updatedAt, exporter, supplier, origin, ...productProvider }) => ({
       ...productProvider,
       ...(isNew ? {} : { id }),
+      origin: origin && origin.length > 0 ? origin : null,
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
     })
@@ -76,9 +77,20 @@ export const prepareUpdateProductInput = ({
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
-    ({ isNew, id, updatedAt, updatedBy, sort, exporter, supplier, ...productProvider }) => ({
+    ({
+      isNew,
+      id,
+      origin,
+      updatedAt,
+      updatedBy,
+      sort,
+      exporter,
+      supplier,
+      ...productProvider
+    }) => ({
       ...productProvider,
       ...(isNew ? {} : { id }),
+      origin: origin && origin.length > 0 ? origin : null,
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
     })
