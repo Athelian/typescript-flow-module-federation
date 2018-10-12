@@ -87,7 +87,7 @@ steps:
   - '-t'
   - 'asia.gcr.io/zenport-183806/web-app:release'
   - '--build-arg'
-  - 'BUILDTYPE=stg'
+  - 'BUILDTYPE=prod'
   - '.'
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'asia.gcr.io/zenport-183806/web-app:$SHORT_SHA']
