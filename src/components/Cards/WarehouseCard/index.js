@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Link, navigate } from '@reach/router';
+import { Link } from '@reach/router';
 import { type Warehouse } from 'modules/warehouse/type.js.flow';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import { encodeId } from 'utils/id';
@@ -30,18 +30,12 @@ const defaultProps = {
   onClone: () => {},
 };
 
-function onClone(warehouseId: string) {
-  navigate(`/warehouse/clone/${encodeId(warehouseId)}`);
-}
-
-const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, ...rest }: Props) => {
+const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, onClone, ...rest }: Props) => {
   if (!warehouse) return '';
 
   const { name } = warehouse;
 
-  const actions = selectable
-    ? []
-    : [<CardAction icon="CLONE" onClick={() => onClone(warehouse.id)} />];
+  const actions = selectable ? [] : [<CardAction icon="CLONE" onClick={onClone} />];
 
   return (
     <BaseCard
