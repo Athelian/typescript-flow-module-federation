@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { WarehouseCard } from 'components/Cards';
+import { encodeId } from 'utils/id';
 
 type Props = {
   items: Array<Object>,
@@ -12,7 +14,13 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <WarehouseCard key={item.id} warehouse={item} />;
+function onClone(warehouseId: string) {
+  navigate(`/warehouse/clone/${encodeId(warehouseId)}`);
+}
+
+const defaultRenderItem = (item: Object) => (
+  <WarehouseCard key={item.id} warehouse={item} onClone={() => onClone(item.id)} />
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,

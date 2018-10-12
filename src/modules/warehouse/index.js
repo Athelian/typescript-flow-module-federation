@@ -7,6 +7,8 @@ import WarehouseFormContainer from './index.form';
 const WarehouseApp = () => (
   <Router>
     <WarehouseListContainer path="/" />
+    <WarehouseFormContainer path="new" />
+    <WarehouseFormContainer path="clone/:warehouseId" />
     <WarehouseFormContainer path=":warehouseId" />
   </Router>
 );
