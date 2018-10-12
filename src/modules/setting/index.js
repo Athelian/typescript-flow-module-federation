@@ -72,7 +72,7 @@ class Setting extends React.Component<Props, State> {
     return (
       <div className={SettingsWrapperStyle}>
         <Query query={query}>
-          {({ data, client }) => {
+          {({ data, client, refetch }) => {
             const viewer = {
               firstName: getByPathWithDefault('TODO', 'viewer.user.firstName', data),
               lastName: getByPathWithDefault('TODO', 'viewer.user.lastName', data),
@@ -86,10 +86,12 @@ class Setting extends React.Component<Props, State> {
                     className={NotificationsButtonStyle}
                     onClick={async () => {
                       this.toggleNotification();
-                      if (unSeen > 0)
+                      if (unSeen > 0) {
                         await client.mutate({
                           mutation: notificationSeeAllMutation,
                         });
+                        refetch();
+                      }
                     }}
                     type="button"
                     ref={this.notificationRef}
