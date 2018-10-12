@@ -35,6 +35,7 @@ type OptionalProps = {
   isSlideView: boolean,
 };
 type Props = OptionalProps & {
+  path: string,
   shipmentId?: string,
 };
 
@@ -64,6 +65,16 @@ type UpdateShipmentResponse = {|
 class ShipmentFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
+  isNew = () => {
+    const { path } = this.props;
+    return path.startsWith('new');
+  };
+
+  isClone = () => {
+    const { path } = this.props;
+    return path.startsWith('clone');
+  };
+
   onCancel = () => {
     navigate(`/shipment`);
   };
@@ -76,12 +87,12 @@ class ShipmentFormModule extends React.Component<Props> {
   ) => {
     const { shipmentId } = this.props;
 
-    const isNew = shipmentId === 'new';
-    const input = isNew
+    const isNewOrClone = this.isClone() || this.isNew();
+    const input = isNewOrClone
       ? prepareCreateShipmentInput(formData)
       : prepareUpdateShipmentInput(formData);
 
-    if (isNew) {
+    if (isNewOrClone) {
       const result = await saveShipment({
         variables: { input },
       });
@@ -117,10 +128,9 @@ class ShipmentFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: CreateShipmentResponse | UpdateShipmentResponse) => {
-    const { shipmentId } = this.props;
-    const isNew = shipmentId === 'new';
+    const isNewOrClone = this.isNew() || this.isClone();
 
-    if (isNew && result.shipmentCreate) {
+    if (isNewOrClone && result.shipmentCreate) {
       const {
         shipmentCreate: { shipment, violations },
       } = result;
@@ -135,9 +145,9 @@ class ShipmentFormModule extends React.Component<Props> {
 
   render() {
     const { shipmentId, isSlideView } = this.props;
-    const isNew = shipmentId === 'new';
+    const isNewOrClone = this.isNew() || this.isClone();
     let mutationKey = {};
-    if (shipmentId && !isNew) {
+    if (shipmentId && !isNewOrClone) {
       mutationKey = { key: decodeId(shipmentId) };
     }
 
@@ -146,7 +156,7 @@ class ShipmentFormModule extends React.Component<Props> {
         <UIConsumer>
           {uiState => (
             <Mutation
-              mutation={isNew ? createShipmentMutation : updateShipmentMutation}
+              mutation={isNewOrClone ? createShipmentMutation : updateShipmentMutation}
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
@@ -223,7 +233,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           form
                         ) => (
                           <>
-                            {(isNew ||
+                            {(isNewOrClone ||
                               shipmentBatchesState.isDirty() ||
                               shipmentInfoState.isDirty() ||
                               shipmentTagsState.isDirty() ||
@@ -274,7 +284,7 @@ class ShipmentFormModule extends React.Component<Props> {
                               </>
                             )}
                             {shipmentId &&
-                              !isNew &&
+                              !isNewOrClone &&
                               !shipmentBatchesState.isDirty() &&
                               !shipmentInfoState.isDirty() &&
                               !shipmentTagsState.isDirty() &&
@@ -294,7 +304,7 @@ class ShipmentFormModule extends React.Component<Props> {
                   }
                 >
                   {apiError && <p>Error: Please try again.</p>}
-                  {isNew || !shipmentId ? (
+                  {this.isNew() || !shipmentId ? (
                     <ShipmentForm shipment={{}} isNew />
                   ) : (
                     <QueryForm
@@ -321,6 +331,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             shipmentFileState
                           ) => (
                             <ShipmentForm
+                              isClone={this.isClone()}
                               shipment={shipment}
                               onFormReady={() => {
                                 const {
@@ -333,14 +344,19 @@ class ShipmentFormModule extends React.Component<Props> {
                                   files,
                                   ...info
                                 } = shipment;
-                                shipmentBatchesState.initDetailValues(batches);
-                                shipmentInfoState.initDetailValues(info);
+                                if (this.isClone()) {
+                                  const { bookingDate, blDate, ...cloneInfo } = info;
+                                  shipmentInfoState.initDetailValues(cloneInfo);
+                                } else {
+                                  shipmentInfoState.initDetailValues(info);
+                                  shipmentBatchesState.initDetailValues(batches);
+                                  shipmentTimelineState.initDetailValues({
+                                    cargoReady,
+                                    voyages,
+                                    containerGroups,
+                                  });
+                                }
                                 shipmentTagsState.initDetailValues(tags);
-                                shipmentTimelineState.initDetailValues({
-                                  cargoReady,
-                                  voyages,
-                                  containerGroups,
-                                });
                                 shipmentTransportTypeState.initDetailValues(transportType);
                                 shipmentFileState.initDetailValues(files);
                               }}

@@ -152,12 +152,14 @@ function CargoSection({ intl }: Props) {
                                 batches.filter(({ id: itemId }) => id !== itemId)
                               );
                             }}
-                            onClone={({ id, ...rest }) => {
+                            onClone={({ id, deliveredAt, expiredAt, producedAt, no, ...rest }) => {
                               setFieldValue('batches', [
                                 ...batches,
                                 injectUid({
                                   ...rest,
                                   isNew: true,
+                                  batchAdjustments: [],
+                                  no: `${no}- clone`,
                                 }),
                               ]);
                             }}

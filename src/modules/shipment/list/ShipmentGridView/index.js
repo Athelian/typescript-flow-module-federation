@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import { encodeId } from 'utils/id';
 import GridView from 'components/GridView';
 import { ShipmentCard, CardAction } from 'components/Cards';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
@@ -34,6 +36,10 @@ const defaultRenderItem = (item: Object) => (
         <ShipmentCard
           shipment={item}
           actions={[
+            <CardAction
+              icon="CLONE"
+              onClick={() => navigate(`/shipment/clone/${encodeId(item.id)}`)}
+            />,
             <CardAction
               icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
               onClick={() => dialogToggle(true)}
