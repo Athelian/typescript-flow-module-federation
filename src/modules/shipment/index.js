@@ -7,6 +7,8 @@ import ShipmentFormModule from './index.form';
 const ShipmentApp = () => (
   <Router>
     <ShipmentListModule path="/" />
+    <ShipmentFormModule path="new" />
+    <ShipmentFormModule path="clone/:shipmentId" />
     <ShipmentFormModule path=":shipmentId" />
   </Router>
 );

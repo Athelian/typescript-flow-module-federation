@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import Loadable from 'react-loadable';
@@ -7,6 +8,8 @@ import { uniqBy } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
+import { CloneButton } from 'components/Buttons';
+import { encodeId } from 'utils/id';
 import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 import { ShipmentBatchesContainer } from './containers';
@@ -15,6 +18,7 @@ import { ShipmentFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
+  isClone: boolean,
   onFormReady: () => void,
 };
 
@@ -24,6 +28,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isNew: false,
+  isClone: false,
   onFormReady: () => {},
 };
 
@@ -59,8 +64,13 @@ class ShipmentForm extends React.Component<Props> {
     return !isEquals(shipment, nextProps.shipment);
   }
 
+  onClone = () => {
+    const { shipment } = this.props;
+    navigate(`/shipment/clone/${encodeId(shipment.id)}`);
+  };
+
   render() {
-    const { isNew, shipment } = this.props;
+    const { isNew, isClone, shipment } = this.props;
     const { updatedAt, updatedBy, archived } = shipment;
 
     return (
@@ -73,6 +83,7 @@ class ShipmentForm extends React.Component<Props> {
             {!isNew && (
               <>
                 <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
+                {!isClone && <CloneButton onClick={this.onClone} />}
                 <BooleanValue>
                   {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                     <StatusToggle

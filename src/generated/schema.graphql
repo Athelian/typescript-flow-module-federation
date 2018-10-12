@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Oct 10 2018 18:56:31 GMT+0900 (Tokyo Standard Time)
+# timestamp: Fri Oct 12 2018 14:20:25 GMT+0700 (Indochina Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -29193,6 +29193,7 @@ type Notification {
   receiver: User!
   type: NotificationType!
   body: String!
+  metadata: [Metadata!]!
   entity: Entity!
   read: Boolean!
   seen: Boolean!
