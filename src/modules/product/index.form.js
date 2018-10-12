@@ -62,20 +62,14 @@ type UpdateProductResponse = {|
   },
 |};
 
-// TODO:
-// const prepareCloneProductInput = () => {
-//   const cleanUpProduct = product => omit(['archived', 'files', 'productProviders'], product);
-//   const cleanUpProductProviders = productProviders =>
-//     omit(['id', 'archived', 'updatedAt'], productProviders);
-//   const fillUpProductProviders = (productProviders, product) =>
-//     set(lensProp('productProviders'), productProviders, product);
-
-//   return pipe(
-//     cleanUpProduct,
-//     cleanUpProductProviders,
-//     fillUpProductProviders
-//   );
-// };
+const cleanUpCloneProductInput = (originalProduct: any) => {
+  const { productProviders: originalProductProviders } = originalProduct;
+  const productProviders = originalProductProviders.map(item =>
+    omit(['id', 'archived', 'updatedBy'], item)
+  );
+  const product = omit(['archived', 'files', 'productProviders'], originalProduct);
+  return set(lensProp('productProviders'), productProviders, product);
+};
 
 class ProductFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
@@ -260,12 +254,7 @@ class ProductFormModule extends React.Component<Props> {
                       entityId={productId}
                       entityType="product"
                       render={originalProduct => {
-                        // TODO: I will use pipe to finish this logic.
-                        const tmpProduct = this.isClone()
-                          ? omit(['archived', 'files', 'productProviders'], originalProduct)
-                          : originalProduct;
-                        // TODO: incorrect
-                        const product = set(lensProp('productProviders'), [], tmpProduct);
+                        const product = cleanUpCloneProductInput(originalProduct);
 
                         return (
                           <Subscribe
