@@ -15,7 +15,6 @@ import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
-import logger from 'utils/logger';
 import OrderEventsList from 'modules/history';
 import OrderForm from './form';
 import validator from './form/validator';
@@ -37,6 +36,7 @@ type OptionalProps = {
   isSlideView: boolean,
 };
 type Props = OptionalProps & {
+  path: string,
   orderId?: string,
 };
 
@@ -47,6 +47,16 @@ const defaultProps = {
 
 class OrderFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
+
+  isNew = () => {
+    const { path } = this.props;
+    return path.startsWith('new');
+  };
+
+  isClone = () => {
+    const { path } = this.props;
+    return path.startsWith('clone');
+  };
 
   onCancel = () => {
     navigate(`/order`);
@@ -60,10 +70,12 @@ class OrderFormModule extends React.PureComponent<Props> {
   ) => {
     const { orderId } = this.props;
 
-    const isNew = orderId === 'new';
-    const input = isNew ? prepareCreateOrderInput(formData) : prepareUpdateOrderInput(formData);
+    const isNewOrClone = this.isClone() || this.isNew();
+    const input = isNewOrClone
+      ? prepareCreateOrderInput(formData)
+      : prepareUpdateOrderInput(formData);
 
-    if (isNew) {
+    if (isNewOrClone) {
       const { data } = await saveOrder({ variables: { input } });
       const {
         orderCreate: { violations },
@@ -87,9 +99,7 @@ class OrderFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    const { orderId } = this.props;
-    const isNew = orderId === 'new';
-    if (isNew) {
+    if (this.isNew() || this.isClone()) {
       const {
         orderCreate: {
           order: { id },
@@ -97,14 +107,13 @@ class OrderFormModule extends React.PureComponent<Props> {
       } = result;
       navigate(`/order/${encodeId(id)}`);
     }
-    logger.warn('mutation result', result);
   };
 
   render() {
     const { orderId, isSlideView } = this.props;
-    const isNew = orderId === 'new';
+    const isNewOrClone = this.isNew() || this.isClone();
     let mutationKey = {};
-    if (orderId && !isNew) {
+    if (orderId && !isNewOrClone) {
       mutationKey = { key: decodeId(orderId) };
     }
 
@@ -113,7 +122,7 @@ class OrderFormModule extends React.PureComponent<Props> {
         <UIConsumer>
           {uiState => (
             <Mutation
-              mutation={isNew ? createOrderMutation : updateOrderMutation}
+              mutation={isNewOrClone ? createOrderMutation : updateOrderMutation}
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
@@ -161,7 +170,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                       </JumpToSection>
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) =>
-                          !isNew && (
+                          !isNewOrClone && (
                             <>
                               <LogsButton onClick={() => slideToggle(true)} />
                               <SlideView
@@ -203,7 +212,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                           form
                         ) => (
                           <>
-                            {(isNew ||
+                            {(isNewOrClone ||
                               orderItemState.isDirty() ||
                               orderInfoState.isDirty() ||
                               orderTagsState.isDirty() ||
@@ -246,7 +255,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                               </>
                             )}
                             {orderId &&
-                              !isNew &&
+                              !isNewOrClone &&
                               !orderItemState.isDirty() &&
                               !orderInfoState.isDirty() &&
                               !orderTagsState.isDirty() &&
@@ -260,7 +269,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                   }
                 >
                   {apiError && <p>Error: Please try again.</p>}
-                  {isNew || !orderId ? (
+                  {this.isNew() || !orderId ? (
                     <OrderForm isNew />
                   ) : (
                     <QueryForm
@@ -279,12 +288,21 @@ class OrderFormModule extends React.PureComponent<Props> {
                           {(orderItemState, orderInfoState, orderTagsState, orderFilesState) => (
                             <OrderForm
                               order={order}
+                              isClone={this.isClone()}
                               onFormReady={() => {
                                 const { orderItems, tags, files, ...info } = order;
-                                orderItemState.initDetailValues(orderItems);
-                                orderTagsState.initDetailValues(tags);
-                                orderInfoState.initDetailValues(info);
+                                if (this.isClone()) {
+                                  const { issuedAt, ...cloneInfo } = info;
+                                  orderInfoState.initDetailValues(cloneInfo);
+                                  orderItemState.initDetailValues(
+                                    orderItems.map(item => ({ ...item, batches: [] }))
+                                  );
+                                } else {
+                                  orderItemState.initDetailValues(orderItems);
+                                  orderInfoState.initDetailValues(info);
+                                }
                                 orderFilesState.initDetailValues(files);
+                                orderTagsState.initDetailValues(tags);
                               }}
                             />
                           )}

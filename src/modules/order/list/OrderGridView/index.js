@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import { encodeId } from 'utils/id';
 import GridView from 'components/GridView';
 import { OrderCard, CardAction } from 'components/Cards';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
@@ -34,6 +36,10 @@ const defaultRenderItem = (item: Object) => (
         <OrderCard
           order={item}
           actions={[
+            <CardAction
+              icon="CLONE"
+              onClick={() => navigate(`/order/clone/${encodeId(item.id)}`)}
+            />,
             <CardAction
               icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
               onClick={() => dialogToggle(true)}
