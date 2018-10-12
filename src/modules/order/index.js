@@ -7,6 +7,8 @@ import OrderFormModule from './index.form';
 const OrderApp = () => (
   <Router>
     <OrderListModule path="/" />
+    <OrderFormModule path="new" />
+    <OrderFormModule path="clone/:orderId" />
     <OrderFormModule path=":orderId" />
   </Router>
 );

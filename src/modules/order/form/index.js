@@ -2,10 +2,13 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { navigate } from '@reach/router';
 import Loadable from 'react-loadable';
 import { BooleanValue } from 'react-values';
+import { CloneButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
+import { encodeId } from 'utils/id';
 import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'components/Form';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 import OrderSection from './components/OrderSection';
@@ -27,6 +30,7 @@ const AsyncShipmentsSection = Loadable({
 
 type OptionalProps = {
   isNew: boolean,
+  isClone: boolean,
   order: Object,
   onFormReady: () => void,
 };
@@ -35,6 +39,7 @@ type Props = OptionalProps & {};
 
 const defaultProps = {
   isNew: false,
+  isClone: false,
   order: {},
   onFormReady: () => {},
   onChangeStatus: () => Promise.resolve({}),
@@ -55,8 +60,13 @@ export default class OrderForm extends React.Component<Props> {
     return !isEquals(order, nextProps.order);
   }
 
+  onClone = () => {
+    const { order } = this.props;
+    navigate(`/order/clone/${encodeId(order.id)}`);
+  };
+
   render() {
-    const { isNew, order } = this.props;
+    const { isNew, isClone, order } = this.props;
     const { updatedAt, updatedBy, archived } = order;
     return (
       <div className={OrderFormWrapperStyle}>
@@ -68,6 +78,7 @@ export default class OrderForm extends React.Component<Props> {
             {!isNew && (
               <>
                 <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
+                {!isClone && <CloneButton onClick={this.onClone} />}
                 <BooleanValue>
                   {({ value: isDialogOpen, set: dialogToggle }) => (
                     <StatusToggle
