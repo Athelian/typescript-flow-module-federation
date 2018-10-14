@@ -12,15 +12,59 @@ export const SHIPMENT_ALL = 'SHIPMENT_ALL';
 
 export default defineMessages({
   ordersTab: {
-    id: 'containers.RelationMap.ordersTab',
+    id: 'modules.relationMap.tab.orders',
     defaultMessage: 'ORDERS',
   },
   shipmentsTab: {
-    id: 'containers.RelationMap.shipmentsTab',
+    id: 'modules.relationMap.tab.shipments',
     defaultMessage: 'SHIPMENTS',
   },
   productsTab: {
-    id: 'containers.RelationMap.productsTab',
+    id: 'modules.relationMap.tab.products',
     defaultMessage: 'PRODUCTS',
+  },
+  ordersLabel: {
+    id: 'modules.relationMap.label.orders',
+    defaultMessage: 'ORDERS',
+  },
+  shipmentsLabel: {
+    id: 'modules.relationMap.label.shipments',
+    defaultMessage: 'SHIPMENTS',
+  },
+  batchesLabel: {
+    id: 'modules.relationMap.label.batches',
+    defaultMessage: 'BATCHES',
+  },
+  itemsLabel: {
+    id: 'modules.relationMap.label.items',
+    defaultMessage: 'ITEMS',
+  },
+  poSort: {
+    id: 'modules.relationMap.sort.po',
+    defaultMessage: 'PO No',
+  },
+  updatedAtSort: {
+    id: 'modules.relationMap.sort.updatedAt',
+    defaultMessage: 'Updated At',
+  },
+  createdAtSort: {
+    id: 'modules.relationMap.sort.createdAt',
+    defaultMessage: 'Created At',
+  },
+  nameSort: {
+    id: 'modules.relationMap.sort.name',
+    defaultMessage: 'NAME',
+  },
+  serialSort: {
+    id: 'modules.relationMap.sort.serial',
+    defaultMessage: 'SERIAL',
+  },
+  all: {
+    id: 'modules.relationMap.label.all',
+    defaultMessage: 'ALL',
+  },
+  total: {
+    id: 'modules.relationMap.label.total',
+    defaultMessage: 'Total {number} {name}',
   },
 });
