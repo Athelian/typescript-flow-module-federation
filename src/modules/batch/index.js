@@ -7,6 +7,8 @@ import BatchFormModule from './index.form';
 const BatchApp = () => (
   <Router>
     <BatchListModule path="/" />
+    <BatchFormModule path="new" />
+    <BatchFormModule path="clone/:batchId" />
     <BatchFormModule path=":batchId" />
   </Router>
 );

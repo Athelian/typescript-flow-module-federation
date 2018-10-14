@@ -29,6 +29,7 @@ type OptionalProps = {
 };
 type Props = OptionalProps & {
   batchId?: string,
+  path: string,
 };
 
 const defaultProps = {
@@ -38,6 +39,16 @@ const defaultProps = {
 
 class BatchFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
+
+  isNew = () => {
+    const { path } = this.props;
+    return path.startsWith('new');
+  };
+
+  isClone = () => {
+    const { path } = this.props;
+    return path.startsWith('clone');
+  };
 
   onCancel = () => {
     navigate(`/batch`);
@@ -51,10 +62,12 @@ class BatchFormModule extends React.PureComponent<Props> {
   ) => {
     const { batchId } = this.props;
 
-    const isNew = batchId === 'new';
-    const input = isNew ? prepareCreateBatchInput(formData) : prepareUpdateBatchInput(formData);
+    const isNewOrClone = this.isClone() || this.isNew();
+    const input = isNewOrClone
+      ? prepareCreateBatchInput(formData)
+      : prepareUpdateBatchInput(formData);
 
-    if (isNew) {
+    if (isNewOrClone) {
       const { data } = await saveBatch({ variables: { input } });
       const {
         batchCreate: { violations },
@@ -78,9 +91,8 @@ class BatchFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    const { batchId } = this.props;
-    const isNew = batchId === 'new';
-    if (isNew) {
+    const isNewOrClone = this.isClone() || this.isNew();
+    if (isNewOrClone) {
       const {
         batchCreate: {
           batch: { id },
@@ -92,9 +104,9 @@ class BatchFormModule extends React.PureComponent<Props> {
 
   render() {
     const { batchId, isSlideView } = this.props;
-    const isNew = batchId === 'new';
+    const isNewOrClone = this.isClone() || this.isNew();
     let mutationKey = {};
-    if (batchId && !isNew) {
+    if (batchId && !isNewOrClone) {
       mutationKey = { key: decodeId(batchId) };
     }
 
@@ -103,7 +115,7 @@ class BatchFormModule extends React.PureComponent<Props> {
         <UIConsumer>
           {uiState => (
             <Mutation
-              mutation={isNew ? createBatchMutation : updateBatchMutation}
+              mutation={isNewOrClone ? createBatchMutation : updateBatchMutation}
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
@@ -161,7 +173,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                       </JumpToSection>
                       <Subscribe to={[BatchFormContainer, FormContainer]}>
                         {(formState, form) =>
-                          (isNew || formState.isDirty()) && (
+                          (isNewOrClone || formState.isDirty()) && (
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
@@ -187,7 +199,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                   }
                 >
                   {apiError && <p>Error: Please try again.</p>}
-                  {isNew || !batchId ? (
+                  {this.isNew() || !batchId ? (
                     <BatchForm batch={{}} isNew />
                   ) : (
                     <QueryForm
@@ -198,12 +210,31 @@ class BatchFormModule extends React.PureComponent<Props> {
                         <Subscribe to={[BatchFormContainer]}>
                           {({ initDetailValues }) => (
                             <BatchForm
+                              isClone={this.isClone()}
                               batch={batch}
                               onChangeStatus={(formData, onSuccess) =>
                                 this.onSave(formData, saveBatch, onSuccess)
                               }
                               onFormReady={() => {
-                                initDetailValues(batch);
+                                if (this.isClone()) {
+                                  const {
+                                    archived,
+                                    updatedBy,
+                                    updatedAt,
+                                    deliveredAt,
+                                    expiredAt,
+                                    producedAt,
+                                    no,
+                                    ...batchClone
+                                  } = batch;
+                                  initDetailValues({
+                                    ...batchClone,
+                                    no: `${no}- clone`,
+                                    batchAdjustments: [],
+                                  });
+                                } else {
+                                  initDetailValues(batch);
+                                }
                               }}
                             />
                           )}
