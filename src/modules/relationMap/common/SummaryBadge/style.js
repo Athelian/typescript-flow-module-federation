@@ -17,6 +17,7 @@ export const SummaryBadgeLabel = css`
   letter-spacing: 2px;
   align-self: center;
   margin-left: 10px;
+  text-transform: uppercase;
 `;
 
 export const SummaryBadgeWrapper = css`

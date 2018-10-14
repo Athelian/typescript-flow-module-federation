@@ -12,31 +12,31 @@ export const SHIPMENT_ALL = 'SHIPMENT_ALL';
 
 export default defineMessages({
   ordersTab: {
-    id: 'modules.relationMap.tab.orders',
+    id: 'global.orders',
     defaultMessage: 'ORDERS',
   },
   shipmentsTab: {
-    id: 'modules.relationMap.tab.shipments',
+    id: 'global.shipments',
     defaultMessage: 'SHIPMENTS',
   },
   productsTab: {
-    id: 'modules.relationMap.tab.products',
+    id: 'global.products',
     defaultMessage: 'PRODUCTS',
   },
   ordersLabel: {
-    id: 'modules.relationMap.label.orders',
+    id: 'global.orders',
     defaultMessage: 'ORDERS',
   },
   shipmentsLabel: {
-    id: 'modules.relationMap.label.shipments',
+    id: 'global.shipments',
     defaultMessage: 'SHIPMENTS',
   },
   batchesLabel: {
-    id: 'modules.relationMap.label.batches',
+    id: 'global.batches',
     defaultMessage: 'BATCHES',
   },
   itemsLabel: {
-    id: 'modules.relationMap.label.items',
+    id: 'global.items',
     defaultMessage: 'ITEMS',
   },
   poSort: {
