@@ -19,7 +19,12 @@ function onClone(warehouseId: string) {
 }
 
 const defaultRenderItem = (item: Object) => (
-  <WarehouseCard key={item.id} warehouse={item} onClone={() => onClone(item.id)} />
+  <WarehouseCard
+    key={item.id}
+    warehouse={item}
+    onClone={() => onClone(item.id)}
+    showActionsOnHover
+  />
 );
 
 const defaultProps = {
