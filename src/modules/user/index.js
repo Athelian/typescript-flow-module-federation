@@ -24,7 +24,7 @@ type Props = {
 const UserProvider = ({ children }: Props) => (
   <LanguageConsumer>
     {({ setLocale }) => (
-      <Query query={query}>
+      <Query query={query} fetchPolicy="network-only">
         {({ loading, data, error }) => {
           if (error) {
             return error.message;

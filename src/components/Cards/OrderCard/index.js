@@ -42,7 +42,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
 
   let totalPrice = 0;
   orderItems.forEach(item => {
-    totalPrice += item.price ? item.price.amount : 0;
+    totalPrice += item.price ? item.price.amount * item.quantity : 0;
   });
 
   let orderedQuantity = 0;
