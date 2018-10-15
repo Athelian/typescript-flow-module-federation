@@ -229,7 +229,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                                   } = batch;
                                   initDetailValues({
                                     ...batchClone,
-                                    no: `${no}- clone`,
+                                    no: `[cloned] ${no}`,
                                     batchAdjustments: [],
                                   });
                                 } else {

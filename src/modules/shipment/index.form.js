@@ -345,8 +345,11 @@ class ShipmentFormModule extends React.Component<Props> {
                                   ...info
                                 } = shipment;
                                 if (this.isClone()) {
-                                  const { bookingDate, blDate, ...cloneInfo } = info;
-                                  shipmentInfoState.initDetailValues(cloneInfo);
+                                  const { bookingDate, blDate, no, ...cloneInfo } = info;
+                                  shipmentInfoState.initDetailValues({
+                                    ...cloneInfo,
+                                    no: `[cloned] ${no}`,
+                                  });
                                 } else {
                                   shipmentInfoState.initDetailValues(info);
                                   shipmentBatchesState.initDetailValues(batches);
