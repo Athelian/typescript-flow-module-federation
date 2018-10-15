@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Oct 12 2018 14:20:25 GMT+0700 (Indochina Time)
+# timestamp: Mon Oct 15 2018 17:10:18 GMT+0700 (Indochina Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -27004,6 +27004,16 @@ input BatchCreateInput {
   batchAdjustments: [BatchAdjustmentCreateInput!]
 }
 
+input BatchEqualSplitInput {
+  divideBy: Int!
+  precision: Int!
+}
+
+type BatchesMutated {
+  batches: [Batch!]
+  violations: [Violation!]
+}
+
 input BatchFilterInput {
   query: String
   createdAt: DateRangeInput
@@ -27031,6 +27041,10 @@ type BatchPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+input BatchSimpleSplitInput {
+  quantity: Float!
 }
 
 input BatchSortInput {
@@ -29172,6 +29186,9 @@ type Mutation {
   orderUpdate(id: ID!, input: OrderUpdateInput!): OrderMutated!
   batchCreate(input: BatchCreateInput!): BatchMutated!
   batchUpdate(id: ID!, input: BatchUpdateInput!): BatchMutated!
+  batchSimpleSplit(id: ID!, input: BatchSimpleSplitInput!): BatchesMutated!
+  batchEqualSplit(id: ID!, input: BatchEqualSplitInput!): BatchesMutated!
+  batchBalanceSplit(orderItemId: ID!): BatchesMutated!
   shipmentCreate(input: ShipmentCreateInput!): ShipmentMutated!
   shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentMutated!
   warehouseCreate(input: WarehouseCreateInput!): WarehouseMutated!

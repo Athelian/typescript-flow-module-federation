@@ -6,15 +6,8 @@ import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue } from 'react-values';
 import Layout from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
-import GridColumn from 'components/GridColumn';
 import { ShipmentBatchCard } from 'components/Cards';
-import {
-  SlideViewNavBar,
-  EntityIcon,
-  FilterInput,
-  SortInput,
-  SearchInput,
-} from 'components/NavBar';
+import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { batchListQuery } from 'modules/batch/list/query';
 import { getByPathWithDefault } from 'utils/fp';
@@ -85,27 +78,6 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
                       })
                     }
                   />
-                  <FilterInput
-                    initialFilter={{}}
-                    onChange={filters =>
-                      onChange({
-                        ...filtersAndSort,
-                        filter: { ...filtersAndSort.filter, ...filters },
-                      })
-                    }
-                    width={400}
-                  >
-                    {({ values, setFieldValue }) => (
-                      <GridColumn>
-                        <SearchInput
-                          name="search"
-                          value={values.query}
-                          onClear={() => setFieldValue('query', '')}
-                          onChange={newValue => setFieldValue('query', newValue)}
-                        />
-                      </GridColumn>
-                    )}
-                  </FilterInput>
                   <SearchInput
                     value={filtersAndSort.filter.query}
                     name="search"

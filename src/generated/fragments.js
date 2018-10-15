@@ -797,6 +797,16 @@ export const ProductFragment = `fragment Product on Product {
 }
 `;
 
+export const BatchMutatedFragment = `fragment BatchMutated on BatchMutated {
+  batch {
+    ...BatchNoNesting
+  }
+  violations {
+    ...ViolationNoNesting
+  }
+}
+`;
+
 export const OrderItemFragment = `fragment OrderItem on OrderItem {
   order {
     ...OrderNoNesting
@@ -825,6 +835,27 @@ export const OrderItemFragment = `fragment OrderItem on OrderItem {
     ...GroupNoNesting
   }
   sort
+}
+`;
+
+export const EventCommentFragment = `fragment EventComment on EventComment {
+  content
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserNoNesting
+  }
+  updatedBy {
+    ...UserNoNesting
+  }
+  deletedBy {
+    ...UserNoNesting
+  }
+  ownedBy {
+    ...GroupNoNesting
+  }
 }
 `;
 
@@ -858,13 +889,51 @@ export const ShipmentMutatedFragment = `fragment ShipmentMutated on ShipmentMuta
 }
 `;
 
-export const BatchMutatedFragment = `fragment BatchMutated on BatchMutated {
-  batch {
+export const BatchesMutatedFragment = `fragment BatchesMutated on BatchesMutated {
+  batches {
     ...BatchNoNesting
   }
   violations {
     ...ViolationNoNesting
   }
+}
+`;
+
+export const VoyageFragment = `fragment Voyage on Voyage {
+  vesselName
+  vesselCode
+  departurePort {
+    ...PortNoNesting
+  }
+  departure {
+    ...TimelineDateNoNesting
+  }
+  arrivalPort {
+    ...PortNoNesting
+  }
+  arrival {
+    ...TimelineDateNoNesting
+  }
+  shipment {
+    ...ShipmentNoNesting
+  }
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserNoNesting
+  }
+  updatedBy {
+    ...UserNoNesting
+  }
+  deletedBy {
+    ...UserNoNesting
+  }
+  ownedBy {
+    ...GroupNoNesting
+  }
+  sort
 }
 `;
 
@@ -923,65 +992,6 @@ export const UserFragment = `fragment User on User {
   }
   deletedBy {
     ...UserNoNesting
-  }
-}
-`;
-
-export const VoyageFragment = `fragment Voyage on Voyage {
-  vesselName
-  vesselCode
-  departurePort {
-    ...PortNoNesting
-  }
-  departure {
-    ...TimelineDateNoNesting
-  }
-  arrivalPort {
-    ...PortNoNesting
-  }
-  arrival {
-    ...TimelineDateNoNesting
-  }
-  shipment {
-    ...ShipmentNoNesting
-  }
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserNoNesting
-  }
-  updatedBy {
-    ...UserNoNesting
-  }
-  deletedBy {
-    ...UserNoNesting
-  }
-  ownedBy {
-    ...GroupNoNesting
-  }
-  sort
-}
-`;
-
-export const EventCommentFragment = `fragment EventComment on EventComment {
-  content
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserNoNesting
-  }
-  updatedBy {
-    ...UserNoNesting
-  }
-  deletedBy {
-    ...UserNoNesting
-  }
-  ownedBy {
-    ...GroupNoNesting
   }
 }
 `;
@@ -1404,6 +1414,26 @@ export const OrderItemNoNestingFragment = `fragment OrderItemNoNesting on OrderI
 }
 `;
 
+export const EventCommentNoNestingFragment = `fragment EventCommentNoNesting on EventComment {
+  content
+  id
+  createdAt
+  updatedAt
+  deletedAt
+}
+`;
+
+export const VoyageNoNestingFragment = `fragment VoyageNoNesting on Voyage {
+  vesselName
+  vesselCode
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  sort
+}
+`;
+
 export const EventChangeNoNestingFragment = `fragment EventChangeNoNesting on EventChange {
   id
   createdAt
@@ -1429,26 +1459,6 @@ export const UserNoNestingFragment = `fragment UserNoNesting on User {
   language
   timezone
   memo
-  id
-  createdAt
-  updatedAt
-  deletedAt
-}
-`;
-
-export const VoyageNoNestingFragment = `fragment VoyageNoNesting on Voyage {
-  vesselName
-  vesselCode
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  sort
-}
-`;
-
-export const EventCommentNoNestingFragment = `fragment EventCommentNoNesting on EventComment {
-  content
   id
   createdAt
   updatedAt
@@ -2252,6 +2262,16 @@ export const ProductDeepNestingFragment = `fragment ProductDeepNesting on Produc
 }
 `;
 
+export const BatchMutatedDeepNestingFragment = `fragment BatchMutatedDeepNesting on BatchMutated {
+  batch {
+    ...BatchDeepNesting
+  }
+  violations {
+    ...ViolationDeepNesting
+  }
+}
+`;
+
 export const OrderItemDeepNestingFragment = `fragment OrderItemDeepNesting on OrderItem {
   order {
     ...OrderDeepNesting
@@ -2280,6 +2300,27 @@ export const OrderItemDeepNestingFragment = `fragment OrderItemDeepNesting on Or
     ...GroupDeepNesting
   }
   sort
+}
+`;
+
+export const EventCommentDeepNestingFragment = `fragment EventCommentDeepNesting on EventComment {
+  content
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserDeepNesting
+  }
+  updatedBy {
+    ...UserDeepNesting
+  }
+  deletedBy {
+    ...UserDeepNesting
+  }
+  ownedBy {
+    ...GroupDeepNesting
+  }
 }
 `;
 
@@ -2313,13 +2354,51 @@ export const ShipmentMutatedDeepNestingFragment = `fragment ShipmentMutatedDeepN
 }
 `;
 
-export const BatchMutatedDeepNestingFragment = `fragment BatchMutatedDeepNesting on BatchMutated {
-  batch {
+export const BatchesMutatedDeepNestingFragment = `fragment BatchesMutatedDeepNesting on BatchesMutated {
+  batches {
     ...BatchDeepNesting
   }
   violations {
     ...ViolationDeepNesting
   }
+}
+`;
+
+export const VoyageDeepNestingFragment = `fragment VoyageDeepNesting on Voyage {
+  vesselName
+  vesselCode
+  departurePort {
+    ...PortDeepNesting
+  }
+  departure {
+    ...TimelineDateDeepNesting
+  }
+  arrivalPort {
+    ...PortDeepNesting
+  }
+  arrival {
+    ...TimelineDateDeepNesting
+  }
+  shipment {
+    ...ShipmentDeepNesting
+  }
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  createdBy {
+    ...UserDeepNesting
+  }
+  updatedBy {
+    ...UserDeepNesting
+  }
+  deletedBy {
+    ...UserDeepNesting
+  }
+  ownedBy {
+    ...GroupDeepNesting
+  }
+  sort
 }
 `;
 
@@ -2378,65 +2457,6 @@ export const UserDeepNestingFragment = `fragment UserDeepNesting on User {
   }
   deletedBy {
     ...UserDeepNesting
-  }
-}
-`;
-
-export const VoyageDeepNestingFragment = `fragment VoyageDeepNesting on Voyage {
-  vesselName
-  vesselCode
-  departurePort {
-    ...PortDeepNesting
-  }
-  departure {
-    ...TimelineDateDeepNesting
-  }
-  arrivalPort {
-    ...PortDeepNesting
-  }
-  arrival {
-    ...TimelineDateDeepNesting
-  }
-  shipment {
-    ...ShipmentDeepNesting
-  }
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserDeepNesting
-  }
-  updatedBy {
-    ...UserDeepNesting
-  }
-  deletedBy {
-    ...UserDeepNesting
-  }
-  ownedBy {
-    ...GroupDeepNesting
-  }
-  sort
-}
-`;
-
-export const EventCommentDeepNestingFragment = `fragment EventCommentDeepNesting on EventComment {
-  content
-  id
-  createdAt
-  updatedAt
-  deletedAt
-  createdBy {
-    ...UserDeepNesting
-  }
-  updatedBy {
-    ...UserDeepNesting
-  }
-  deletedBy {
-    ...UserDeepNesting
-  }
-  ownedBy {
-    ...GroupDeepNesting
   }
 }
 `;
