@@ -4,6 +4,7 @@ import { hot } from 'react-hot-loader';
 import { Router } from '@reach/router';
 import Loadable from 'react-loadable';
 import PageNotFound from './components/PageNotFound';
+import NoPermission from './components/NoPermission';
 import DashBoard from './modules/dashboard';
 import Order from './modules/order';
 import Login from './modules/login';
@@ -45,6 +46,7 @@ const Routes = () => (
         <PageNotFound default />
       </Authorized>
       <Login path="/login" redirectUrl="/order" />
+      <NoPermission path="/403" />
       <PageNotFound default />
     </Router>
   </div>
