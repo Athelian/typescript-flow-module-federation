@@ -6,7 +6,7 @@ import { Mutation } from 'react-apollo';
 import Icon from 'components/Icon';
 import { AuthenticationConsumer } from 'modules/authentication';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
-import { logOutMutation } from '../../mutation';
+import { logOutMutation } from 'modules/setting/mutation';
 import {
   UserMenuDropDownWrapperStyle,
   UserMenuItemWrapperStyle,
@@ -38,6 +38,7 @@ class UserMenuDropdown extends React.Component<Props> {
               <button
                 className={UserMenuItemWrapperStyle}
                 onClick={() => this.handleLogout(logoutDialogToggle)}
+                data-testid="logout-button"
                 type="button"
               >
                 <div className={UserMenuItemStyle}>

@@ -135,6 +135,7 @@ class Setting extends React.Component<Props, State> {
                     className={UserMenuButtonStyle}
                     onClick={this.toggleUserMenu}
                     type="button"
+                    data-testid="setting-button"
                     ref={this.userMenuRef}
                   >
                     <UserAvatar firstName={viewer.firstName} lastName={viewer.lastName} />

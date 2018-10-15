@@ -23,14 +23,3 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-
-Cypress.Commands.add('login', () => {
-  const username = 'importer@zenport.io';
-  const password = 'password';
-  return cy
-    .visit('/login')
-    .get('input[data-testid="email"]')
-    .type(username)
-    .get('input[data-testid="password"]')
-    .type(`${password}{enter}`);
-});
