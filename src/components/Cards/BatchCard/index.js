@@ -144,7 +144,11 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             input={
               <Display>
                 <FormattedNumber
-                  value={orderItem.price && orderItem.price.amount ? orderItem.price.amount : 0}
+                  value={
+                    orderItem.price && orderItem.price.amount
+                      ? orderItem.price.amount * quantity
+                      : 0
+                  }
                   suffix={order.currency || (orderItem.price && orderItem.currency)}
                 />
               </Display>
