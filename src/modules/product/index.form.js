@@ -17,6 +17,7 @@ import {
   ProductInfoContainer,
   ProductProvidersContainer,
   ProductTagsContainer,
+  ProductFilesContainer,
 } from './form/containers';
 import ProductForm from './form';
 import validator from './form/validator';
@@ -61,25 +62,15 @@ type UpdateProductResponse = {|
   },
 |};
 
-const cleanUpCloneProductInput = (originalProduct: any) => {
-  const product = { ...originalProduct };
-  const { productProviders: originalProductProviders } = product;
-  const productProviders = originalProductProviders.map(item => {
-    const productProvider = { ...item };
-    delete productProvider.id;
-    delete productProvider.archived;
-    delete productProvider.updatedBy;
-    return productProvider;
-  });
-
-  delete product.archived;
-  delete product.files;
-  delete product.productProviders;
-
-  product.productProviders = [...productProviders];
-
-  return product;
-};
+const cleanUpCloneProductInput = (product: Object) => ({
+  ...product,
+  files: [],
+  productProviders: product.productProviders.map(
+    ({ id, updatedBy, archived, ...productProvider }) => ({
+      ...productProvider,
+    })
+  ),
+});
 
 class ProductFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
@@ -212,14 +203,22 @@ class ProductFormModule extends React.Component<Props> {
                           ProductInfoContainer,
                           ProductProvidersContainer,
                           ProductTagsContainer,
+                          ProductFilesContainer,
                           FormContainer,
                         ]}
                       >
-                        {(productInfoState, productProvidersState, productTagsState, form) =>
+                        {(
+                          productInfoState,
+                          productProvidersState,
+                          productTagsState,
+                          productFilesState,
+                          form
+                        ) =>
                           (isNewOrClone ||
                             productInfoState.isDirty() ||
                             productProvidersState.isDirty() ||
-                            productTagsState.isDirty()) && (
+                            productTagsState.isDirty() ||
+                            productFilesState.isDirty()) && (
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
@@ -229,6 +228,7 @@ class ProductFormModule extends React.Component<Props> {
                                       ...productInfoState.state,
                                       ...productProvidersState.state,
                                       ...productTagsState.state,
+                                      ...productFilesState.state,
                                     },
                                     validator
                                   )
@@ -240,12 +240,14 @@ class ProductFormModule extends React.Component<Props> {
                                       ...productInfoState.state,
                                       ...productProvidersState.state,
                                       ...productTagsState.state,
+                                      ...productFilesState.state,
                                     },
                                     saveProduct,
                                     () => {
                                       productInfoState.onSuccess();
                                       productProvidersState.onSuccess();
                                       productTagsState.onSuccess();
+                                      productFilesState.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors
@@ -267,32 +269,37 @@ class ProductFormModule extends React.Component<Props> {
                       query={productFormQuery}
                       entityId={productId}
                       entityType="product"
-                      render={originalProduct => {
-                        const product = cleanUpCloneProductInput(originalProduct);
-
-                        return (
-                          <Subscribe
-                            to={[
-                              ProductInfoContainer,
-                              ProductProvidersContainer,
-                              ProductTagsContainer,
-                            ]}
-                          >
-                            {(productInfoState, productProvidersState, productTagsState) => (
-                              <ProductForm
-                                isNewOrClone={isNewOrClone}
-                                product={product}
-                                onFormReady={() => {
-                                  const { tags, productProviders, ...info } = product;
-                                  productInfoState.initDetailValues(info);
-                                  productProvidersState.initDetailValues(productProviders);
-                                  productTagsState.initDetailValues(tags);
-                                }}
-                              />
-                            )}
-                          </Subscribe>
-                        );
-                      }}
+                      render={product => (
+                        <Subscribe
+                          to={[
+                            ProductInfoContainer,
+                            ProductProvidersContainer,
+                            ProductTagsContainer,
+                            ProductFilesContainer,
+                          ]}
+                        >
+                          {(
+                            productInfoState,
+                            productProvidersState,
+                            productTagsState,
+                            productFilesState
+                          ) => (
+                            <ProductForm
+                              isNewOrClone={isNewOrClone}
+                              product={product}
+                              onFormReady={() => {
+                                const { tags, productProviders, files, ...info } = this.isClone()
+                                  ? cleanUpCloneProductInput(product)
+                                  : product;
+                                productInfoState.initDetailValues(info);
+                                productProvidersState.initDetailValues(productProviders);
+                                productTagsState.initDetailValues(tags);
+                                productFilesState.initDetailValues(files);
+                              }}
+                            />
+                          )}
+                        </Subscribe>
+                      )}
                     />
                   )}
                 </Layout>

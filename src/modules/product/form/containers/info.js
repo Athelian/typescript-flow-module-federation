@@ -9,12 +9,10 @@ type FormState = {
   janCode?: ?string,
   hsCode?: ?string,
   material?: ?string,
-  files?: Array<Object>,
   metadata?: Array<Object>,
 };
 
 const initValues = {
-  files: [],
   metadata: [],
 };
 
