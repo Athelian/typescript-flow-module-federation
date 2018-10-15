@@ -4,7 +4,7 @@ import { colors, layout, fontSizes } from 'styles/common';
 
 export const IconStyle = (color: string) => css`
   background: ${colors[color]};
-  color: #fff;
+  color: ${colors.WHITE};
   display: flex;
   ${layout.CENTER_CENTER};
   width: 30px;

@@ -54,13 +54,6 @@ export const FunctionGroupWrapperStyle = css`
   ${layout.HORIZONTAL};
 `;
 
-export const ShipmentWrapperStyle = css`
-  background-color: #f7f7f7;
-  padding: 10px;
-  display: grid;
-  grid-row-gap: 20px;
-`;
-
 const GridColumn = css`
   grid-template-columns: 1fr 1fr 1fr 1.8fr;
 `;
@@ -95,12 +88,12 @@ export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`
 export const ScrollWrapperStyle = css`
   height: calc(100vh - 220px);
   overflow-y: auto;
-  background-color: #f7f7f7;
+  background-color: ${colors.ALMOST_WHITE};
   padding: 10px 10px;
 `;
 
 export const LeftScrollWrapperStyle = css`
-  background-color: #f7f7f7;
+  background-color: ${colors.ALMOST_WHITE};
   padding: 0 10px;
   height: 65vh;
   overflow-y: auto;
@@ -120,7 +113,7 @@ export const OrderMapWrapperStyle = css`
   grid-column: span 3;
   display: grid;
   grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1fr;
-  background-color: #ffffff;
+  background-color: ${colors.WHITE};
   padding: 0 10px;
 `;
 export const FunctionWrapperStyle = css`

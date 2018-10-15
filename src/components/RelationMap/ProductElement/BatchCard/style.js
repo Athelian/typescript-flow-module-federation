@@ -8,7 +8,7 @@ const Row = css`
 const Label = css`
   font-style: normal;
   letter-spacing: 2px;
-  color: #aaaaaa;
+  color: ${colors.GRAY_DARK};
 `;
 
 export const CardWrapper = css`

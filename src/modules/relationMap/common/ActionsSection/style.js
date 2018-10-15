@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { transitions, fontSizes } from 'styles/common';
+import { colors, transitions, fontSizes } from 'styles/common';
 
 export const ActionSection1WrapperStyle: string = css`
   display: flex;
@@ -35,7 +35,7 @@ export const ActionsSelectedStyle: string = css`
   }
 
   > div:first-child {
-    color: #aaaaaa;
+    color: ${colors.GRAY_DARK};
   }
 `;
 

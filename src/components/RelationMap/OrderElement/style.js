@@ -35,11 +35,11 @@ export const TotalCardWrapperStyle = css`
   justify-content: space-between;
 
   > span:nth-child(1) {
-    color: #555555;
+    color: ${colors.BLACK};
   }
 
   > span:nth-child(2) {
-    color: #aaaaaa;
+    color: ${colors.GRAY_DARK};
     font-weight: 500;
   }
 `;
