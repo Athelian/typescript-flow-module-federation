@@ -58,6 +58,6 @@ export const ShipmentActionSummaryStyle = css`
   -webkit-border-radius: 999px;
   -moz-border-radius: 999px;
   border-radius: 999px;
-  background-color: #eeeeee;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
   padding: 0 10px;
 `;
