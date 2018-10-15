@@ -292,8 +292,12 @@ class OrderFormModule extends React.PureComponent<Props> {
                               onFormReady={() => {
                                 const { orderItems, tags, files, ...info } = order;
                                 if (this.isClone()) {
-                                  const { issuedAt, ...cloneInfo } = info;
-                                  orderInfoState.initDetailValues(cloneInfo);
+                                  const { issuedAt, poNo, ...cloneInfo } = info;
+                                  orderInfoState.initDetailValues({
+                                    ...cloneInfo,
+                                    shipments: [],
+                                    poNo: `[cloned] ${poNo}`,
+                                  });
                                   orderItemState.initDetailValues(
                                     orderItems.map(item => ({ ...item, batches: [] }))
                                   );

@@ -19,6 +19,10 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
     <Query query={query} variables={{ id: decodeId(entityId) }} fetchPolicy="network-only">
       {({ loading, data, error }) => {
         if (error) {
+          if (error.message && error.message.includes('403')) {
+            navigate('/403');
+          }
+
           return error.message;
         }
 

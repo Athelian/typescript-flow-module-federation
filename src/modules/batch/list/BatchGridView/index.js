@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
 import GridView from 'components/GridView';
-import { BatchCard } from 'components/Cards';
+import { encodeId } from 'utils/id';
+import { BatchCard, CardAction } from 'components/Cards';
 
 type Props = {
   items: Array<Object>,
@@ -13,7 +15,14 @@ type Props = {
 };
 
 const defaultRenderItem = (item: Object) => (
-  <BatchCard key={item.id} batch={item} showActionsOnHover />
+  <BatchCard
+    actions={[
+      <CardAction icon="CLONE" onClick={() => navigate(`/batch/clone/${encodeId(item.id)}`)} />,
+    ]}
+    key={item.id}
+    batch={item}
+    showActionsOnHover
+  />
 );
 
 const defaultProps = {

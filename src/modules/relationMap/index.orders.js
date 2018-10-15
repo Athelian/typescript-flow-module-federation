@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { formatOrderData } from 'modules/relationMap/util';
-import messages from 'modules/order/messages';
+import messages from 'modules/relationMap/messages';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
 import Layout from './common/Layout';
@@ -69,25 +69,25 @@ const Order = ({ page, perPage, intl }: Props) => {
                           <SummaryBadge
                             icon="ORDER"
                             color="ORDER"
-                            label="ORDERS"
+                            label={intl.formatMessage(messages.ordersLabel)}
                             no={order.sumOrders}
                           />
                           <SummaryBadge
                             icon="ORDER_ITEM"
                             color="ORDER_ITEM"
-                            label="ITEMS"
+                            label={intl.formatMessage(messages.itemsLabel)}
                             no={order.sumOrderItems}
                           />
                           <SummaryBadge
                             icon="BATCH"
                             color="BATCH"
-                            label="BATCHES"
+                            label={intl.formatMessage(messages.batchesLabel)}
                             no={order.sumBatches}
                           />
                           <SummaryBadge
                             icon="SHIPMENT"
                             color="SHIPMENT"
-                            label="SHIPMENTS"
+                            label={intl.formatMessage(messages.shipmentsLabel)}
                             no={order.sumShipments}
                           />
                         </div>

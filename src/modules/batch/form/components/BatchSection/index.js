@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Match } from '@reach/router';
+import { Location } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
@@ -147,16 +147,18 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                           onClick={() => slideToggle(true)}
                         />
                       ) : (
-                        <Match path="/batch/:batchId">
-                          {({ match }) => (
-                            <OrderItemCard
-                              selectable={!!match}
-                              item={values.orderItem}
-                              onSelect={selectable ? () => slideToggle(true) : null}
-                              readOnly
-                            />
+                        <Location>
+                          {({ location }) => (
+                            <>
+                              <OrderItemCard
+                                selectable={location.pathname.includes('/batch')}
+                                item={values.orderItem}
+                                onSelect={selectable ? () => slideToggle(true) : null}
+                                readOnly
+                              />
+                            </>
                           )}
-                        </Match>
+                        </Location>
                       )}
 
                       <SlideView

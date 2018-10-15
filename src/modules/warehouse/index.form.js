@@ -170,7 +170,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                       entityType="warehouse"
                       render={originalWarehouse => {
                         const warehouse = this.isClone()
-                          ? { name: originalWarehouse.name }
+                          ? { name: `[cloned] ${originalWarehouse.name}` }
                           : originalWarehouse;
                         return (
                           <Subscribe to={[WarehouseContainer]}>

@@ -4,6 +4,9 @@ import BaseCard from 'components/Cards';
 import { cx } from 'react-emotion';
 // @TODO need to find other solution to manage tag
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
+import messages from 'modules/relationMap/messages';
 import { ItemWrapperStyle, ShipmentCardStyle, ShipmentCardTotalStyle } from './style';
 import RelationLine from './RelationLine';
 import OrderCard from './OrderCard';
@@ -34,6 +37,7 @@ const defaultProps = {
 
 type Props = OptionalProps & {
   type: string,
+  intl: IntlShape,
 };
 
 const Item = (props: Props) => {
@@ -46,6 +50,7 @@ const Item = (props: Props) => {
     onMouseEnter,
     onMouseLeave,
     onDoubleClick,
+    intl,
   } = props;
   let render = <div />;
   switch (type) {
@@ -153,7 +158,7 @@ const Item = (props: Props) => {
       render = (
         <BaseCard actions={[]} wrapperClassName={ItemWrapperStyle(isFocused)}>
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
-            <TotalCard name="Items" quantity={data.totalItem} />
+            <TotalCard name={intl.formatMessage(messages.itemsLabel)} quantity={data.totalItem} />
           </WrapperCard>
         </BaseCard>
       );
@@ -163,7 +168,10 @@ const Item = (props: Props) => {
       render = (
         <BaseCard wrapperClassName={ItemWrapperStyle(isFocused)}>
           <WrapperCard onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
-            <TotalCard name="Batches" quantity={data.totalBatch} />
+            <TotalCard
+              name={intl.formatMessage(messages.batchesLabel)}
+              quantity={data.totalBatch}
+            />
           </WrapperCard>
         </BaseCard>
       );
@@ -236,4 +244,4 @@ const Item = (props: Props) => {
 
 Item.defaultProps = defaultProps;
 
-export default Item;
+export default injectIntl(Item);
