@@ -64,12 +64,10 @@ export default class FormContainer extends Container<FormState> {
     });
   };
 
-  noErrors = () => isEquals(this.state.errors, {});
-
   isReady = (
     formData: Object,
     schema: { isValidSync: any => boolean } = EmptyValidation
-  ): boolean => schema.isValidSync(formData) && this.noErrors();
+  ): boolean => schema.isValidSync(formData);
 
   onValidation = (
     formData: Object,
