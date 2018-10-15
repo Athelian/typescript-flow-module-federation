@@ -12,7 +12,7 @@ class ShipmentElement extends React.PureComponent<Props> {
     const { shipment } = this.props;
     return (
       <div className={ShipmentCardWrapperStyle}>
-        <ShipmentLabel name={shipment.no} vol="" />
+        <ShipmentLabel name={shipment.no} vol="123" />
         <ShipmentTimeline shipment={shipment} />
       </div>
     );
