@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'unstated';
 import 'jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from 'react-testing-library';
 import LanguageProvider from 'modules/language';
@@ -10,9 +11,11 @@ describe('<LoginForm />', () => {
   it('should render without crash', () => {
     const onLoginFn = jest.fn();
     const { getByTestId, container } = render(
-      <LanguageProvider>
-        <LoginForm onLogin={onLoginFn} />
-      </LanguageProvider>
+      <Provider>
+        <LanguageProvider>
+          <LoginForm onLogin={onLoginFn} />
+        </LanguageProvider>
+      </Provider>
     );
     const emailElement = getByTestId('email');
     const passwordElement = getByTestId('password');
@@ -28,9 +31,11 @@ describe('<LoginForm />', () => {
   it('should allow to click on submit button on valid data', () => {
     const onLoginFn = jest.fn();
     const { getByTestId, container } = render(
-      <LanguageProvider>
-        <LoginForm onLogin={onLoginFn} />
-      </LanguageProvider>
+      <Provider>
+        <LanguageProvider>
+          <LoginForm onLogin={onLoginFn} />
+        </LanguageProvider>
+      </Provider>
     );
     const emailElement = getByTestId('email');
     const passwordElement = getByTestId('password');
@@ -41,7 +46,6 @@ describe('<LoginForm />', () => {
     passwordElement.value = 'demo';
     fireEvent.change(emailElement);
     fireEvent.change(passwordElement);
-    expect(submitButtonElement).not.toHaveAttribute('disabled');
     fireEvent.click(submitButtonElement);
     expect(container).toMatchSnapshot();
   });

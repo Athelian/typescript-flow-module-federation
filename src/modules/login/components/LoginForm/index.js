@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
-import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
+import { Subscribe } from 'unstated';
+import { FormContainer, FormField } from 'modules/form';
+import LoginFormContainer from 'modules/login/container';
 import messages from 'modules/login/messages';
+import validator from 'modules/login/validator';
 import GridColumn from 'components/GridColumn';
 import { LoginBoxStyle } from 'modules/login/style';
 import {
@@ -12,47 +15,28 @@ import {
   Tooltip,
   EmailInput,
   PasswordInput,
-  Form,
-  Field,
 } from 'components/Form';
 import { BaseButton } from 'components/Buttons';
-import yupToFormErrors from 'utils/yupToFormErrors';
 
 type Props = {
   onLogin: Function,
 };
 
-const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .required(<FormattedMessage {...messages.required} />)
-    .email(<FormattedMessage {...messages.emailError} />),
-  password: Yup.string().required(<FormattedMessage {...messages.required} />),
-});
-
-const onValidate = (values: Object) =>
-  new Promise((resolve, reject) => {
-    LoginSchema.validate(values, { abortEarly: false })
-      .then(() => resolve({}))
-      .catch(error => reject(yupToFormErrors(error)));
-  });
-
 function LoginForm({ onLogin }: Props) {
   return (
-    <Form
-      initialValues={{
-        email: '',
-        password: '',
-      }}
-      validateOnChange
-      validations={onValidate}
-      onSubmit={onLogin}
-      render={({ errors, touched, handleSubmit, isInvalid, isDirty }) => (
-        <form data-testid="loginForm" onSubmit={handleSubmit}>
+    <Subscribe to={[LoginFormContainer]}>
+      {loginFormState => (
+        <form data-testid="loginForm">
           <div className={LoginBoxStyle}>
             <GridColumn>
-              <Field
+              <FormField
                 name="email"
-                render={({ input, meta }) => (
+                initValue=""
+                setFieldValue={loginFormState.setFieldValue}
+                validator={validator}
+                values={loginFormState.state}
+              >
+                {({ name: fieldName, isTouched, errorMessage, isFocused, ...inputHandlers }) => (
                   <FieldItem
                     vertical
                     label={
@@ -60,23 +44,33 @@ function LoginForm({ onLogin }: Props) {
                         <FormattedMessage {...messages.email} />
                       </Label>
                     }
-                    tooltip={<Tooltip isNew errorMessage={touched.email && errors.email} />}
+                    tooltip={<Tooltip isNew errorMessage={isTouched && errorMessage} />}
                     input={
                       <DefaultStyle
-                        isFocused={meta.isActive}
-                        hasError={touched.email && errors.email}
+                        isFocused={isFocused}
+                        hasError={isTouched && errorMessage}
                         forceHoverStyle
                         width="200px"
                       >
-                        <EmailInput data-testid="email" align="left" name {...input} />
+                        <EmailInput
+                          data-testid="email"
+                          align="left"
+                          name={fieldName}
+                          {...inputHandlers}
+                        />
                       </DefaultStyle>
                     }
                   />
                 )}
-              />
-              <Field
+              </FormField>
+              <FormField
                 name="password"
-                render={({ input, meta }) => (
+                initValue=""
+                validator={validator}
+                values={loginFormState.state}
+                setFieldValue={loginFormState.setFieldValue}
+              >
+                {({ name: fieldName, isTouched, errorMessage, isFocused, ...inputHandlers }) => (
                   <FieldItem
                     vertical
                     label={
@@ -84,34 +78,44 @@ function LoginForm({ onLogin }: Props) {
                         <FormattedMessage {...messages.password} />
                       </Label>
                     }
-                    tooltip={<Tooltip isNew errorMessage={touched.password && errors.password} />}
+                    tooltip={<Tooltip isNew errorMessage={isTouched && errorMessage} />}
                     input={
                       <DefaultStyle
-                        isFocused={meta.isActive}
-                        hasError={touched.password && errors.password}
+                        isFocused={isFocused}
+                        hasError={isTouched && errorMessage}
                         forceHoverStyle
                         width="200px"
                       >
-                        <PasswordInput data-testid="password" align="left" name {...input} />
+                        <PasswordInput
+                          data-testid="password"
+                          align="left"
+                          name={fieldName}
+                          {...inputHandlers}
+                        />
                       </DefaultStyle>
                     }
                   />
                 )}
-              />
+              </FormField>
             </GridColumn>
-            <BaseButton
-              data-testid="submitButton"
-              icon="LOGIN"
-              label={<FormattedMessage {...messages.login} />}
-              backgroundColor="TEAL"
-              hoverBackgroundColor="TEAL_DARK"
-              disabled={isInvalid || !isDirty}
-              type="submit"
-            />
+            <Subscribe to={[FormContainer]}>
+              {form => (
+                <BaseButton
+                  data-testid="submitButton"
+                  icon="LOGIN"
+                  label={<FormattedMessage {...messages.login} />}
+                  backgroundColor="TEAL"
+                  hoverBackgroundColor="TEAL_DARK"
+                  disabled={!form.isReady(loginFormState.state, validator)}
+                  type="submit"
+                  onClick={() => onLogin(loginFormState.state)}
+                />
+              )}
+            </Subscribe>
           </div>
         </form>
       )}
-    />
+    </Subscribe>
   );
 }
 

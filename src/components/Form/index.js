@@ -1,11 +1,4 @@
 import {
-  Form as ZenForm,
-  Field as ZenField,
-  FieldObserver as ZenFieldObserver,
-  FormObserver as ZenFormObserver,
-  FieldArray as ZenFieldArray,
-} from 'zenform';
-import {
   DateInput,
   EmailInput,
   NumberInput,
@@ -40,12 +33,6 @@ import SectionHeader from './SectionHeader';
 import LastModified from './SectionHeader/LastModified';
 import StatusToggle from './SectionHeader/StatusToggle';
 import SectionWrapper from './SectionWrapper';
-
-export const Form = ZenForm;
-export const Field = ZenField;
-export const FieldObserver = ZenFieldObserver;
-export const FormObserver = ZenFormObserver;
-export const FieldArray = ZenFieldArray;
 
 export {
   DateInput,

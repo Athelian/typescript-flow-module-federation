@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
-import { SortInput, FilterInput, SearchInput } from 'components/NavBar';
-import GridColumn from 'components/GridColumn';
+import { SortInput, SearchInput } from 'components/NavBar';
 import { GroupFilterStyle, SortWrapperStyle, GroupFilterWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -65,22 +64,6 @@ class SortFilterBar extends React.Component<Props, State> {
           </div>
           <div className={GroupFilterWrapperStyle}>
             <div className={GroupFilterStyle}>
-              <FilterInput
-                initialFilter={{}}
-                onChange={newFilter => this.onChangeFilter({ ...newFilter })}
-                width={400}
-              >
-                {({ values, setFieldValue }) => (
-                  <GridColumn>
-                    <SearchInput
-                      name="filter"
-                      value={values.filter}
-                      onClear={() => setFieldValue('filter', '')}
-                      onChange={newValue => setFieldValue('filter', newValue)}
-                    />
-                  </GridColumn>
-                )}
-              </FilterInput>
               <SearchInput
                 name="filter"
                 value={filter}
