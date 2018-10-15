@@ -295,6 +295,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                   const { issuedAt, poNo, ...cloneInfo } = info;
                                   orderInfoState.initDetailValues({
                                     ...cloneInfo,
+                                    shipments: [],
                                     poNo: `[cloned] ${poNo}`,
                                   });
                                   orderItemState.initDetailValues(
