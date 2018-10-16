@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { isEquals } from 'utils/fp';
-import { Form } from 'components/Form';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 
@@ -24,10 +22,6 @@ type Props = {
   onChange: (filters: Object) => void,
   children: ({
     values: Object,
-    errors: Object,
-    touched: Object,
-    handleChange: Function,
-    handleBlur: Function,
     setFieldValue: Function,
   }) => React.Node,
 };
@@ -52,14 +46,6 @@ class FilterInput extends React.Component<Props, State> {
     const { initialFilter } = this.props;
     const isActive = this.hasAnyFilter(initialFilter);
     this.setState({ isActive });
-  }
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    const { initialFilter } = this.props;
-    if (!isEquals(initialFilter, nextProps.initialFilter)) return true;
-    if (!isEquals(this.state, nextState)) return true;
-
-    return false;
   }
 
   hasAnyFilter = (values: Object) => Object.values(values).some(value => !!value);
@@ -102,7 +88,7 @@ class FilterInput extends React.Component<Props, State> {
   filterButtonRef: any;
 
   render() {
-    const { initialFilter, children } = this.props;
+    const { initialFilter, children, onChange } = this.props;
     const { isOpen, isActive } = this.state;
 
     return (
@@ -125,53 +111,28 @@ class FilterInput extends React.Component<Props, State> {
           }
         >
           <div className={ContentStyle(isOpen)}>
-            <Form
-              initialValues={initialFilter}
-              enableReinitialize
-              onSubmit={this.submit}
-              render={({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                handleReset,
-                setFieldValue,
-                setFieldTouched,
-                isSubmitting,
-                resetForm,
-              }) => (
-                <form className={FormStyle} onSubmit={handleSubmit} onReset={handleReset}>
-                  <div className={InputWrapperStyle}>
-                    {children({
-                      values,
-                      errors,
-                      touched,
-                      handleChange,
-                      handleBlur,
-                      setFieldValue,
-                      setFieldTouched,
-                    })}
-                  </div>
-                  <div className={ButtonsWrapper}>
-                    <button
-                      className={ResetButtonStyle}
-                      type="button"
-                      onClick={() => {
-                        resetForm();
-                        this.reset(values);
-                      }}
-                    >
-                      <FormattedMessage {...messages.reset} />
-                    </button>
-                    <button className={SubmitButtonStyle} type="submit" disabled={isSubmitting}>
-                      <FormattedMessage {...messages.apply} />
-                    </button>
-                  </div>
-                </form>
-              )}
-            />
+            <form className={FormStyle}>
+              <div className={InputWrapperStyle}>
+                {children({
+                  values: initialFilter,
+                  setFieldValue: onChange,
+                })}
+              </div>
+              <div className={ButtonsWrapper}>
+                <button
+                  className={ResetButtonStyle}
+                  type="button"
+                  onClick={() => {
+                    this.reset({});
+                  }}
+                >
+                  <FormattedMessage {...messages.reset} />
+                </button>
+                <button className={SubmitButtonStyle} type="submit">
+                  <FormattedMessage {...messages.apply} />
+                </button>
+              </div>
+            </form>
           </div>
         </OutsideClickHandler>
       </div>

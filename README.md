@@ -508,10 +508,6 @@ build                                    // auto generated build folder containi
 
   for static prerendering for SPAs
 
-* [zenform](https://github.com/shrynx/zenform)
-
-  for react form management.
-
 - [react-infinite-scroller](https://github.com/CassetteRocks/react-infinite-scroller)
 
   simple wrapper to infinitely fetch data on scroll

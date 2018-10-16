@@ -7,7 +7,9 @@ describe('Login', () => {
       .should('have.value', username);
     cy.get('input[data-testid="password"]')
       .type('wrong{enter}')
-      .should('have.value', 'wrong');
+      .should('have.value', 'wrong')
+      .blur();
+    cy.get('button[data-testid="submitButton"]').click();
     cy.wait(500);
     cy.contains('#errorMsg', 'Invalid username/password');
   });
@@ -21,8 +23,10 @@ describe('Login', () => {
       .should('have.value', username);
     cy.get('input[data-testid="password"]')
       .type(`${password}{enter}`)
-      .should('have.value', password);
+      .should('have.value', password)
+      .blur();
+    cy.get('button[data-testid="submitButton"]').click();
     cy.wait(500);
-    cy.getCookie('token').should('exist');
+    cy.url().should('include', '/order');
   });
 });

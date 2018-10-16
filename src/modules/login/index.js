@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Location, Redirect } from '@reach/router';
+import { Provider } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
@@ -44,11 +45,11 @@ const Login = ({ redirectUrl }: Props) => (
             }}
           >
             {(login, { loading, data, error }) => (
-              <React.Fragment>
+              <>
                 {loading ? (
                   <LoadingIcon />
                 ) : (
-                  <React.Fragment>
+                  <Provider>
                     <div className={LoginLogoContainerStyle}>
                       <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
                       <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
@@ -67,9 +68,9 @@ const Login = ({ redirectUrl }: Props) => (
                         </div>
                       )}
                     </div>
-                  </React.Fragment>
+                  </Provider>
                 )}
-              </React.Fragment>
+              </>
             )}
           </Mutation>
           <footer className={LoginCopyrightStyle}>
