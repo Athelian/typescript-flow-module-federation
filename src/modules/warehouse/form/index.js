@@ -56,7 +56,7 @@ class WarehouseForm extends React.Component<Props> {
             {!isNew && (
               <>
                 <LastModified updatedAt={warehouse.updatedAt} updatedBy={warehouse.updatedBy} />
-                <CloneButton onClick={this.onClone} />
+                <CloneButton onClick={this.onClone} data-testid="cloneButton" />
               </>
             )}
           </SectionHeader>
