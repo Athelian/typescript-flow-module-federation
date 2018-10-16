@@ -17,7 +17,7 @@ const defaultProps = {
   onClick: () => {},
 };
 
-const NewButton = ({ label, disabled, onClick }: Props): React.Node => (
+const NewButton = ({ label, disabled, onClick, ...rest }: Props): React.Node => (
   <BaseButton
     icon="ADD"
     label={label}
@@ -25,6 +25,7 @@ const NewButton = ({ label, disabled, onClick }: Props): React.Node => (
     hoverBackgroundColor="TEAL_DARK"
     disabled={disabled}
     onClick={onClick}
+    {...rest}
   />
 );
 
