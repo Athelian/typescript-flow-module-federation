@@ -1,6 +1,6 @@
 {
   "name": "zenport-web-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-pro": "^5.4.1",
@@ -51,7 +51,7 @@
     "react-values": "^0.3.0",
     "scroll-into-view-if-needed": "^2.2.20",
     "unstated": "^2.1.1",
-    "unstated-debug": "^0.3.1",
+    "unstated-debug": "^0.3.2",
     "yup": "^0.26.6"
   },
   "scripts": {
