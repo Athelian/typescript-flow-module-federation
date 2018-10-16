@@ -9,6 +9,7 @@ const WAREHOUSE = {
   country: 'China',
   surface: '200',
 };
+
 describe('Warehouse', () => {
   before(() => {
     cy.login();
@@ -50,7 +51,19 @@ describe('Warehouse', () => {
       .click()
       .wait(100)
       .should('not.exist');
+
+    cy.get('input[name="name"]')
+      .should('have.value', WAREHOUSE.name)
+      .get('input[name="street"]')
+      .should('have.value', WAREHOUSE.street)
+      .get('input[name="locality"]')
+      .should('have.value', WAREHOUSE.locality)
+      .get('input[name="region"]')
+      .should('have.value', WAREHOUSE.region)
+      .get('input[name="postalCode"]')
+      .should('have.value', WAREHOUSE.postalCode);
   });
+
   it('update a warehouse', () => {
     cy.get('input[name="name"]')
       .clear()
