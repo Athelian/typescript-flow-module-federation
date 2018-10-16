@@ -10,7 +10,32 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
+const user = {
+  username: 'importer@zenport.io',
+  password: 'password',
+};
+Cypress.Commands.add('login', () => {
+  cy.visit('/login');
+  const { username, password } = user;
+  cy.get('input[data-testid="email"]')
+    .type(username)
+    .should('have.value', username);
+  cy.get('input[data-testid="password"]')
+    .type(`${password}{enter}`)
+    .should('have.value', password)
+    .blur();
+  cy.get('button[data-testid="submitButton"]').click();
+  cy.wait(500);
+});
+Cypress.Commands.add('logout', () => {
+  cy.visit('/order')
+    .getByTestId('setting-button')
+    .click()
+    .getByTestId('logout-button')
+    .click()
+    .getByTestId('logout-confirm-button')
+    .click();
+});
 //
 //
 // -- This is a child command --

@@ -17,7 +17,7 @@ const defaultProps = {
   onClick: () => {},
 };
 
-const SaveButton = ({ disabled, isLoading, onClick }: Props): React.Node => (
+const SaveButton = ({ disabled, isLoading, onClick, ...rest }: Props): React.Node => (
   <BaseButton
     icon="CHECKED"
     label={<FormattedMessage id="components.button.save" defaultMessage="SAVE" />}
@@ -26,6 +26,7 @@ const SaveButton = ({ disabled, isLoading, onClick }: Props): React.Node => (
     disabled={disabled}
     onClick={onClick}
     isLoading={isLoading}
+    {...rest}
   />
 );
 
