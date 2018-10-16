@@ -10,11 +10,11 @@ type Props = {
 
 export default class RadioInput extends React.PureComponent<Props> {
   render() {
-    const { selected, onToggle, children } = this.props;
+    const { selected, onToggle, children, ...rest } = this.props;
 
     return (
       <div className={RadioButtonWrapperStyle(selected)} onClick={onToggle} role="presentation">
-        <button className={RadioButtonStyle(selected)} type="button" />
+        <button className={RadioButtonStyle(selected)} type="button" {...rest} />
         {children}
       </div>
     );

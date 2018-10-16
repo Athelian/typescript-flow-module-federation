@@ -42,7 +42,7 @@ class TagListModule extends React.Component<Props, State> {
               <NavBar>
                 <EntityIcon icon="TAG" color="TAG" />
                 <Link to="new">
-                  <NewButton />
+                  <NewButton data-testid="newButton" />
                 </Link>
               </NavBar>
             }
