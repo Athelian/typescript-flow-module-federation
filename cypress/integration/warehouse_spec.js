@@ -1,7 +1,7 @@
 const WAREHOUSE = {
   name: 'test name',
   updatedName: '[updated] test name',
-  clonedName: '[cloned] [updated] test name',
+  clonedName: '[cloned] test name',
   street: 'test street',
   locality: 'test locality',
   region: 'test region',
@@ -87,7 +87,10 @@ describe('Warehouse', () => {
     cy.getByTestId('cloneButton').click();
     cy.url().should('include', 'clone');
     cy.wait(500);
-    cy.get('input[name="name"]').should('have.value', WAREHOUSE.clonedName);
+    cy.get('input[name="name"]')
+      .clear()
+      .type(WAREHOUSE.clonedName)
+      .blur();
 
     cy.getByTestId('saveButton')
       .click()

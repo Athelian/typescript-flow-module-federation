@@ -128,6 +128,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
+                                data-testid="saveButton"
                                 disabled={
                                   !form.isReady(
                                     { ...tagState.state, ...entityTypesState.state },

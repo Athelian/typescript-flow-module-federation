@@ -7,8 +7,13 @@ type Props = {
   onClick: () => void,
 };
 
-const CloneButton = ({ onClick, ...rest }: Props) => (
-  <button className={CloneButtonWrapperStyle} onClick={onClick} type="button" {...rest}>
+const CloneButton = ({ onClick }: Props) => (
+  <button
+    className={CloneButtonWrapperStyle}
+    onClick={onClick}
+    type="button"
+    data-testid="cloneButton"
+  >
     <Icon icon="CLONE" />
   </button>
 );

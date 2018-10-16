@@ -191,6 +191,7 @@ const TagSection = ({ isNew }: Props) => (
                   input={
                     <div className={EntityTypesWrapperStyle}>
                       <RadioInput
+                        data-testid="orderRadio"
                         selected={values.entityTypes.includes('Order')}
                         onToggle={() => toggleSelectType('Order')}
                       >
