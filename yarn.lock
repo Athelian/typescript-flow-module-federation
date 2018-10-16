@@ -15438,10 +15438,10 @@ unset-value@^1.0.0:
     has-value "^0.3.1"
     isobject "^3.0.0"
 
-unstated-debug@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/unstated-debug/-/unstated-debug-0.3.1.tgz#c3c2d9d1dcec0808f585fd501bd2bc6f8c6f8926"
-  integrity sha512-yScAyT8inYq0V/pfX5coZxW8jVzZ+8MpggdCsCPW8vy1rMjVrjklyHtedz57tmjTmZAG3UnAkoQx1DXuXQDM4w==
+unstated-debug@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/unstated-debug/-/unstated-debug-0.3.2.tgz#8753fb159c82ebec0a5fc0715c03ea5086cb3677"
+  integrity sha512-wwUj1hcw6+PGLUZNVEyEmEJnViVBMOwh0M7gtJyFpLpRyr4gKJ9jobWeq3Ysu5A5elvWLRihtNVf/LQpJEWYwA==
   dependencies:
     deep-object-diff "^1.1.0"
 
