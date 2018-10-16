@@ -139,6 +139,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
+                                data-testid="saveButton"
                                 disabled={!form.isReady(formState.state, validator)}
                                 isLoading={isLoading}
                                 onClick={() =>
