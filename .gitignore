@@ -35,3 +35,7 @@ styleguide
 
 # deploy
 .netlify
+
+# e2e
+cypress/videos
+cypress/screenshots
