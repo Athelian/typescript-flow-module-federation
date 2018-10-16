@@ -15,6 +15,11 @@ export const ShipmentLabelStyle = css`
   border-bottom-right-radius: 0;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+
+  > span:nth-child(2) {
+    vertical-align: bottom;
+    display: flex;
+  }
 `;
 
 export default ShipmentLabelStyle;

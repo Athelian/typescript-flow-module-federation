@@ -19,5 +19,5 @@ export const BatchListWrapperStyle = css`
   ${borderRadiuses.MAIN};
   overflow-x: auto;
   align-items: center;
-  background-color: #dddddd;
+  background-color: ${colors.GRAY_VERY_LIGHT};
 `;

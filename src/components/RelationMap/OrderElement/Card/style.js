@@ -16,7 +16,7 @@ export const ProgressIconStyle = css`
   width: 15px;
   ${borderRadiuses.CIRCLE};
   background-color: rgba(0, 0, 0, 0.4);
-  color: white;
+  color: ${colors.WHITE};
   display: inline-block;
   line-height: 15px;
   text-align: center;
@@ -47,14 +47,14 @@ export const NumberStyle = (color: string) => css`
 `;
 
 export const CenterTopNumberStyle = css`
-  background-color: white;
+  background-color: ${colors.WHITE};
   ${borderRadiuses.BUTTON};
   position: relative;
   top: 5px;
 `;
 
 export const CenterBottomNumberStyle = css`
-  background-color: white;
+  background-color: ${colors.WHITE};
   position: relative;
   top: -10px;
   ${borderRadiuses.BUTTON};
@@ -67,7 +67,7 @@ export const BadgeStyle = (color: string) => css`
   ${borderRadiuses.CIRCLE};
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
   background-color: ${colors[color]};
-  color: white;
+  color: ${colors.WHITE};
   display: inline-block;
   text-align: center;
 `;
@@ -94,7 +94,7 @@ export const BatchInfoStyle = css`
   line-height: 15px;
 
   > div:first-child {
-    color: #aaaaaa;
+    color: ${colors.GRAY_DARK};
     font-weight: 500;
   }
 `;
