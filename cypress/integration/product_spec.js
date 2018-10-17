@@ -1,7 +1,9 @@
 const PRODUCT = {
   name: 'e2e-test',
-  serial: parseInt(Math.random() * 1e8, 10), // TODO: random
-  janCode: parseInt(Math.random() * 1e13, 10), // TODO: random
+  updatedName: '[updated] e2e-test',
+  clonedName: '[cloned] e2e-test',
+  serial: parseInt(Math.random() * 1e8, 10),
+  janCode: parseInt(Math.random() * 1e13, 10),
   hsCode: parseInt(Math.random() * 1e10, 10),
   material: 'e2e-material',
   tags: [],
@@ -44,6 +46,29 @@ describe('Product', () => {
 
     cy.get('input[name="name"]')
       .should('have.value', PRODUCT.name)
+      .get('input[name="serial"]')
+      .should('have.value', `${PRODUCT.serial}`)
+      .get('input[name="janCode"]')
+      .should('have.value', `${PRODUCT.janCode}`)
+      .get('input[name="hsCode"]')
+      .should('have.value', `${PRODUCT.hsCode}`)
+      .get('input[name="material"]')
+      .should('have.value', PRODUCT.material);
+  });
+
+  it('update a product', () => {
+    cy.get('input[name="name"]')
+      .clear()
+      .blur();
+    cy.getByTestId('saveButton').should('be.disabled');
+
+    cy.get('input[name="name"]')
+      .type(PRODUCT.updatedName)
+      .blur();
+    cy.getByTestId('saveButton').click();
+
+    cy.get('input[name="name"]')
+      .should('have.value', PRODUCT.updatedName)
       .get('input[name="serial"]')
       .should('have.value', `${PRODUCT.serial}`)
       .get('input[name="janCode"]')

@@ -31,5 +31,7 @@ describe('Login', () => {
     cy.get('button[data-testid="submitButton"]').click();
     cy.wait(500);
     cy.url().should('include', '/order');
+
+    cy.logout();
   });
 });
