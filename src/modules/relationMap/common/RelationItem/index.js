@@ -32,6 +32,7 @@ type OptionalProps = {
   data: Object,
   isCollapsed: boolean,
   isFocused: boolean,
+  hasRelation?: boolean,
   onClick: Function,
   onDoubleClick?: Function,
   actions: Array<React.Node>,
@@ -49,10 +50,25 @@ type Props = OptionalProps & {
 };
 
 const Item = (props: Props) => {
-  const { type, data, onClick, isFocused, isCollapsed, onDoubleClick, actions } = props;
+  const {
+    type,
+    data,
+    onClick,
+    isFocused,
+    hasRelation,
+    isCollapsed,
+    onDoubleClick,
+    actions,
+  } = props;
   if (typeof type === 'string' && /LINK-[0-4]/.test(type)) {
     const [, linkType] = type.split('-') || [];
-    return <RelationLine type={Number(linkType)} isFocus={isFocused} />;
+    return (
+      <RelationLine
+        type={Number(linkType)}
+        isFocus={isFocused}
+        hasRelation={hasRelation || false}
+      />
+    );
   }
 
   switch (type) {
@@ -69,12 +85,7 @@ const Item = (props: Props) => {
           wrapperClassName={ItemWrapperStyle(isFocused)}
         >
           <WrapperCard onDoubleClick={onDoubleClick}>
-            <OrderCard
-              info={data.info}
-              orderedQuantity={data.orderedQuantity}
-              batchedQuantity={data.batchedQuantity}
-              shippedQuantity={data.shippedQuantity}
-            />
+            <OrderCard order={data} />
             <TagValue>
               {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
             </TagValue>
@@ -91,12 +102,7 @@ const Item = (props: Props) => {
           actions={actions}
           wrapperClassName={ItemWrapperStyle(isFocused)}
         >
-          <OrderItemCard
-            info={data.info}
-            orderedQuantity={data.orderedQuantity}
-            batchedQuantity={data.batchedQuantity}
-            shippedQuantity={data.shippedQuantity}
-          />
+          <OrderItemCard orderItem={data} />
         </BaseCard>
       );
     }
@@ -110,12 +116,7 @@ const Item = (props: Props) => {
           wrapperClassName={ItemWrapperStyle(isFocused)}
         >
           <WrapperCard onDoubleClick={onDoubleClick}>
-            <BatchCard
-              title={data.title}
-              quantity={data.quantity}
-              volume={data.volume}
-              deliveredAt={data.deliveredAt}
-            />
+            <BatchCard batch={data} />
             <TagValue>
               {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
             </TagValue>
@@ -146,8 +147,8 @@ const Item = (props: Props) => {
           <ShipmentHeader
             label={`SHIPMENT ${data.id}`}
             isChecked
-            ordersNo={data.numberOfOrder}
-            batchesNo={data.numberOfBatch}
+            ordersNo={data.totalOrder}
+            batchesNo={data.totalBatch}
             onToggle={onClick}
             isCollapsed={isCollapsed}
           />
@@ -174,8 +175,8 @@ const Item = (props: Props) => {
           <ShipmentHeader
             label={`SHIPMENT ${data.id}`}
             isChecked
-            ordersNo={data.numberOfOrder}
-            batchesNo={data.numberOfBatch}
+            ordersNo={data.totalOrder}
+            batchesNo={data.totalBatch}
             onToggle={onClick}
             isCollapsed={isCollapsed}
           />
