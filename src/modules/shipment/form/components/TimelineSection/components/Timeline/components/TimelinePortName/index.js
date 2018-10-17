@@ -5,6 +5,7 @@ import { TimelinePortNameWrapperStyle } from './style';
 
 type OptionalProps = {
   vertical: boolean,
+  size: string,
 };
 
 type Props = OptionalProps & {
@@ -17,9 +18,10 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   vertical: false,
+  size: 'MAIN',
 };
 
-const TimelinePort = ({ port, transportType, vertical }: Props) => {
+const TimelinePortName = ({ port, transportType, vertical, size }: Props) => {
   let transportTypeEnum = null;
   let correctPort = null;
 
@@ -34,12 +36,12 @@ const TimelinePort = ({ port, transportType, vertical }: Props) => {
   }
 
   return (
-    <div className={TimelinePortNameWrapperStyle(vertical)}>
+    <div className={TimelinePortNameWrapperStyle({ vertical, size })}>
       {getPortName(transportTypeEnum, correctPort)}
     </div>
   );
 };
 
-TimelinePort.defaultProps = defaultProps;
+TimelinePortName.defaultProps = defaultProps;
 
-export default TimelinePort;
+export default TimelinePortName;

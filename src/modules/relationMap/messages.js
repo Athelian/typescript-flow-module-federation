@@ -67,4 +67,8 @@ export default defineMessages({
     id: 'modules.relationMap.label.total',
     defaultMessage: 'Total {number} {name}',
   },
+  quantity: {
+    id: 'global.quantity',
+    defaultMessage: 'Quantity',
+  },
 });

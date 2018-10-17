@@ -11,10 +11,10 @@ const ShipmentCollapsed = ({ shipment }: Props) => {
   const { batches = [] } = shipment;
 
   const totalPackageGrossWeight = batches
-    ? batches.reduce(
-        (accumulator, currentValue) => accumulator + currentValue.packageVolume.value,
-        0
-      )
+    ? batches.reduce((accumulator, { packageVolume }) => {
+        const currentValue = (packageVolume && packageVolume.value) || 0;
+        return accumulator + currentValue;
+      }, 0)
     : 0;
 
   return (

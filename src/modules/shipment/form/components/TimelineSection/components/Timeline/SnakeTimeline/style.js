@@ -24,7 +24,7 @@ export const LineOdd = (color: string) => css`
     position: absolute;
     right: -5px;
     width: 5px;
-    top: calc(50%);
+    top: calc(50% - 1px);
     bottom: -23px;
     border-right: 2px solid ${colors[color]};
     border-top: 2px solid ${colors[color]};
@@ -52,7 +52,7 @@ export const LineEven = (color: string) => css`
     right: -5px;
     width: 5px;
     top: -20px;
-    bottom: calc(50% - 2px);
+    bottom: calc(50% - 1px);
     border-right: 2px solid ${colors[color]};
     border-bottom: 2px solid ${colors[color]};
     -webkit-border-radius: 0 0 999px 0;

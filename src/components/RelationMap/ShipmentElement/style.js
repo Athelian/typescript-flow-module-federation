@@ -8,7 +8,7 @@ export const ShipmentCardWrapperStyle = css`
   -moz-border-radius: 5px;
   border-radius: 5px;
 
-  > div:nth-child(2) {
+  > div {
     padding-left: 17px;
     padding-right: 25px;
   }
