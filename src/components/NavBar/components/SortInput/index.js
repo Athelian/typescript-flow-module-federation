@@ -44,6 +44,7 @@ class SortInput extends React.Component<Props> {
 
     return (
       <SelectInput
+        name="sort"
         value={sort.value}
         items={fields}
         itemToString={itemToString}

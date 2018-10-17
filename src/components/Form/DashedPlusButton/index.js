@@ -19,6 +19,7 @@ const DashedPlusButton = ({ width, height, onClick, ...rest }: Props) => (
     className={DashedPlusButtonWrapperStyle(width, height)}
     onClick={onClick}
     type="button"
+    data-testid="dashedButton"
     {...rest}
   >
     <Icon icon="ADD" />

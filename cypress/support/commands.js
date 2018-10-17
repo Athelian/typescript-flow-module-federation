@@ -37,6 +37,8 @@ Cypress.Commands.add('login', () => {
       },
     };
     cy.request(options);
+    cy.visit('/login');
+    cy.url().should('include', '/order');
   });
 });
 Cypress.Commands.add('logout', () => {
@@ -53,6 +55,8 @@ Cypress.Commands.add('logout', () => {
     },
   };
   cy.request(options);
+  cy.visit('/order');
+  cy.url().should('include', '/login');
 });
 //
 //

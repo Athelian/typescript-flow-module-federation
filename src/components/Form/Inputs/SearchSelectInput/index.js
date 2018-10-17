@@ -56,6 +56,7 @@ class SearchSelectInput extends React.Component<Props, State> {
 
   render() {
     const {
+      name,
       itemToValue,
       inputValue,
       itemToString,
@@ -73,6 +74,7 @@ class SearchSelectInput extends React.Component<Props, State> {
         onChange={this.handleChange}
         itemToString={itemToString}
         itemToValue={itemToValue}
+        labelId={`${name}SearchSelectInput`}
       >
         {({
           getInputProps,
