@@ -10,31 +10,49 @@
 //
 //
 // -- This is a parent command --
-const user = {
-  username: 'importer@zenport.io',
-  password: 'password',
-};
 Cypress.Commands.add('login', () => {
-  cy.visit('/login');
-  const { username, password } = user;
-  cy.get('input[data-testid="email"]')
-    .type(username)
-    .should('have.value', username);
-  cy.get('input[data-testid="password"]')
-    .type(`${password}`)
-    .should('have.value', password)
-    .blur();
-  cy.get('button[data-testid="submitButton"]').click();
-  cy.wait(500);
+  Cypress.log({
+    name: 'login',
+  });
+
+  cy.fixture('user').then(({ username, password }) => {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      url: Cypress.env('graphql'),
+      body: {
+        query: `mutation ($input: CredentialsInput!) {
+          login(input: $input) {
+            token {
+              token
+            }
+          }
+        }`,
+        variables: {
+          input: {
+            email: username,
+            password,
+          },
+        },
+      },
+    };
+    cy.request(options);
+  });
 });
 Cypress.Commands.add('logout', () => {
-  cy.visit('/order')
-    .getByTestId('setting-button')
-    .click()
-    .getByTestId('logout-button')
-    .click()
-    .getByTestId('logout-confirm-button')
-    .click();
+  Cypress.log({
+    name: 'logout',
+  });
+
+  const options = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    url: Cypress.env('graphql'),
+    body: {
+      query: 'mutation {  logout }',
+    },
+  };
+  cy.request(options);
 });
 //
 //

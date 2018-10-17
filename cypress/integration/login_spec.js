@@ -1,7 +1,11 @@
 describe('Login', () => {
-  it('Show error message when login failed', () => {
+  beforeEach(() => {
+    cy.fixture('user').as('userJSON');
+  });
+
+  it('Show error message when login failed', function loginFailed() {
+    const { username } = this.userJSON;
     cy.visit('/login');
-    const username = 'importer@zenport.io';
     cy.get('input[data-testid="email"]')
       .type(username)
       .should('have.value', username);
@@ -14,10 +18,9 @@ describe('Login', () => {
     cy.contains('#errorMsg', 'Invalid username/password');
   });
 
-  it('Redirect to home page after successful login', () => {
+  it('Redirect to home page after successful login', function loginSuccess() {
+    const { username, password } = this.userJSON;
     cy.visit('/login');
-    const username = 'importer@zenport.io';
-    const password = 'password';
     cy.get('input[data-testid="email"]')
       .type(username)
       .should('have.value', username);
