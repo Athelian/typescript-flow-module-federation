@@ -25,14 +25,16 @@ import {
 } from './form/mutation';
 
 type OptionalProps = {
+  path: string,
   isSlideView: boolean,
 };
+
 type Props = OptionalProps & {
   batchId?: string,
-  path: string,
 };
 
 const defaultProps = {
+  path: '',
   batchId: '',
   isSlideView: false,
 };
