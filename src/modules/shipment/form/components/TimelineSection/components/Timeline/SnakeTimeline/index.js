@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { getTimelineColoring, getTransportIcon } from '../helpers';
 import {
   TimelineIcon,
   TimelinePortName,
@@ -7,7 +8,6 @@ import {
   TimelineVoyage,
   TimelineDate,
 } from '../components';
-import { getTimelineColoring, getTransportIcon } from '../helpers';
 import {
   TimelineLayoutWrapperStyle,
   LineOdd,
@@ -53,9 +53,12 @@ const TimelineLayout = ({ shipment }: Props) => {
               <TimelinePortName
                 port={voyage.departurePort[(transportType || '').toLowerCase()] || ''}
                 color={coloring[index * 2 + 2]}
+                transportType={transportType}
+                size="LITTLE"
               />
             </div>
             <TimelineIcon
+              size="LITTLE"
               icon="TRANSIT"
               color={coloring[index * 2 + 2]}
               boundaryId="timelineInfoSection"
@@ -70,6 +73,7 @@ const TimelineLayout = ({ shipment }: Props) => {
             <TimelineLine color={coloring[index * 2 + 3]} />
             <TimelineLine color={coloring[index * 2 + 4]} />
             <TimelineIcon
+              size="LITTLE"
               icon={transportIcon}
               color={coloring[index * 2 + 3]}
               targetId={index === 0 ? 'secondVoyage' : 'thirdVoyage'}
@@ -95,6 +99,7 @@ const TimelineLayout = ({ shipment }: Props) => {
       <div className={LineOdd(turnAroundLineColor)}>
         <div className={TimelineIconWrapperStyle}>
           <TimelineIcon
+            size="LITTLE"
             icon="CARGO_READY"
             color={cargoReadyColoring}
             targetId="cargoReady"
@@ -112,9 +117,12 @@ const TimelineLayout = ({ shipment }: Props) => {
             <TimelinePortName
               port={loadPort.departurePort[transportType]}
               color={loadPortDepartureColoring}
+              transportType={transportType}
+              size="LITTLE"
             />
           </div>
           <TimelineIcon
+            size="LITTLE"
             icon="PORT"
             color={loadPortDepartureColoring}
             targetId="loadPortDeparture"
@@ -128,6 +136,7 @@ const TimelineLayout = ({ shipment }: Props) => {
         <TimelineVoyage>
           <TimelineLine color={loadPortDepartureColoring} />
           <TimelineIcon
+            size="LITTLE"
             icon={transportIcon}
             color={loadPortDepartureColoring}
             targetId="firstVoyage"
@@ -144,6 +153,7 @@ const TimelineLayout = ({ shipment }: Props) => {
 
         <div className={TimelineIconWrapperStyle}>
           <TimelineIcon
+            size="LITTLE"
             icon="PORT"
             color={dischargePortArrivalColoring}
             targetId="dischargePortArrival"
@@ -158,6 +168,7 @@ const TimelineLayout = ({ shipment }: Props) => {
 
         <div className={TimelineIconWrapperStyle}>
           <TimelineIcon
+            size="LITTLE"
             icon="CUSTOMS"
             color={customClearanceColoring}
             targetId="customClearance"
@@ -172,6 +183,7 @@ const TimelineLayout = ({ shipment }: Props) => {
 
         <div className={TimelineIconWrapperStyle}>
           <TimelineIcon
+            size="LITTLE"
             icon="WAREHOUSE"
             color={warehouseArrivalColoring}
             targetId="warehouseArrival"
@@ -186,6 +198,7 @@ const TimelineLayout = ({ shipment }: Props) => {
 
         <div className={TimelineIconWrapperStyle}>
           <TimelineIcon
+            size="LITTLE"
             icon="DELIVERY_READY"
             color={deliveryReadyColoring}
             targetId="deliveryReady"

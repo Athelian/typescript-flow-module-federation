@@ -81,6 +81,7 @@ export const ItemWrapperStyle = (isFocused: boolean) => {
 };
 
 export const ShipmentCardStyle = css`
+  width: 100%;
   height: 160px;
   grid-row: span 3;
   margin-bottom: 35px;

@@ -5,6 +5,9 @@ import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
 import BaseCard from 'components/Cards';
+import { cx, css } from 'react-emotion';
+import { ShipmentCardStyle } from 'modules/relationMap/common/RelationItem/style';
+
 import { ItemWrapperStyle, CardWrapperStyle } from '../OrderElement/style';
 import WrapperCard from '../OrderElement/WrapperCard';
 import ShipmentActions from './ShipmentHeader';
@@ -186,9 +189,16 @@ storiesOf('RelationMap/ShipmentList', module)
       __typename: 'Shipment',
     };
 
+    const StoryWrapper = css`
+      display: grid;
+      grid-row-gap: 10px;
+      with: 37.5%;
+      text-align: left;
+    `;
+
     return (
       <IntlProvider locale="en" messages={translationMessages.en}>
-        <div style={{ display: 'grid', gridRowGap: 10, width: 400, textAlign: 'left' }}>
+        <div className={StoryWrapper}>
           <div className={CardWrapperStyle}>
             <ShipmentActions
               label={`ORDER ${data.id}`}
@@ -204,7 +214,7 @@ storiesOf('RelationMap/ShipmentList', module)
               icon="SHIPMENT"
               color="SHIPMENT"
               actions={[]}
-              wrapperClassName={ItemWrapperStyle(true)}
+              wrapperClassName={cx(ItemWrapperStyle(true), ShipmentCardStyle)}
             >
               <WrapperCard onMouseEnter={() => {}} onMouseLeave={() => {}} onClick={() => {}}>
                 <ShipmentTimeLine shipment={data} />
