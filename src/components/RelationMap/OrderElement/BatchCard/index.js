@@ -8,21 +8,25 @@ import { CardWrapperStyle, BatchCardVisualizeStyle, CardTitleStyle } from '../st
 import messages from './messages';
 
 type Props = {
-  title: string | React.Node,
-  quantity: number,
-  volume: number,
-  deliveredAt: ?string,
+  batch: {
+    no: string | React.Node,
+    quantity: number,
+    volumeLabel: number,
+    deliveredAt: ?string,
+  },
 };
 
 const quantityTitle = <FormattedMessage {...messages.quantityTitle} />;
 const volumeTitle = <FormattedMessage {...messages.volumeTitle} />;
 export default class BatchCard extends React.PureComponent<Props> {
   render() {
-    const { title, quantity, volume, deliveredAt } = this.props;
+    const {
+      batch: { no, quantity, volumeLabel, deliveredAt },
+    } = this.props;
     return (
       <div className={CardWrapperStyle}>
         <div className={CardTitleStyle}>
-          <di>{title}</di>
+          <di>{no}</di>
           <div>
             <FormattedDate value={deliveredAt} />
           </div>
@@ -35,7 +39,7 @@ export default class BatchCard extends React.PureComponent<Props> {
           </div>
           <div className={BatchInfoStyle}>
             <div>{volumeTitle}</div>
-            <div>{volume}</div>
+            <div>{volumeLabel}</div>
           </div>
         </div>
       </div>

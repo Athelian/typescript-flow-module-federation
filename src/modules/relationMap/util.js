@@ -1,28 +1,36 @@
 import { getByPathWithDefault } from 'utils/fp';
 
 const getLinkType = (itemNo, numberOfItem) => {
-  let linkType = { type: 'LINK-4' };
+  let linkType = 'LINK-4';
   if (numberOfItem > 1) {
-    linkType = { type: 'LINK-3' };
+    linkType = 'LINK-4';
     if (itemNo === numberOfItem) {
-      linkType = { type: 'LINK-4' };
+      linkType = 'LINK-4';
     }
   }
   return linkType;
 };
 
 const getBatchLinkType = (itemNo, numberOfItem) => {
-  let linkType = { type: 'LINK-0' };
+  let linkType = 'LINK-0';
   if (numberOfItem > 1) {
     if (itemNo === 1) {
-      linkType = { type: 'LINK-1' };
+      linkType = 'LINK-1';
     } else if (itemNo === numberOfItem) {
-      linkType = { type: 'LINK-4' };
+      linkType = 'LINK-4';
     } else {
-      linkType = { type: 'LINK-3' };
+      linkType = 'LINK-4';
     }
   }
   return linkType;
+};
+// @TODO add cache (memorized) data
+const getRelatedIds = (items, currentIndex) => {
+  const ids = [];
+  for (let index = items.length - 1; index >= currentIndex; index -= 1) {
+    ids.push(items[index].id);
+  }
+  return ids;
 };
 
 export const generateOrderRelation = (order, option) => {
@@ -43,19 +51,29 @@ export const generateOrderRelation = (order, option) => {
     return orderRelations;
   }
 
-  orderRelations.push({ type: option.isCollapsed ? 'LINK-0' : 'LINK-1', id: order.id }); // order.id
-  orderRelations.push({ type: 'ORDER_ITEM_ALL', id: order.id }); // order.id
-  orderRelations.push({ type: 'LINK-0', id: order.id }); // order.id
-  orderRelations.push({ type: 'BATCH_ALL', id: order.id }); // order.id
+  orderRelations.push({
+    type: option.isCollapsed ? 'LINK-0' : 'LINK-1',
+    id: order.id,
+    relatedIds: [order.id],
+    itemType: 'order',
+  });
+  orderRelations.push({ type: 'ORDER_ITEM_ALL', id: order.id });
+  orderRelations.push({ type: 'LINK-0', id: order.id, relatedIds: [order.id], itemType: 'order' });
+  orderRelations.push({ type: 'BATCH_ALL', id: order.id });
   if (!option.isCollapsed) {
     orderItems.forEach((product, index) => {
+      const relatedProductIds = getRelatedIds(orderItems, index);
       const productNo = index + 1;
       const { batches } = product;
       const numberOfBatch = batches.length;
-      const linkType = getLinkType(productNo, numberOfProduct);
 
       orderRelations.push({ type: '' });
-      orderRelations.push(linkType);
+      orderRelations.push({
+        id: product.id,
+        itemType: 'orderItem',
+        type: getLinkType(productNo, numberOfProduct),
+        relatedIds: relatedProductIds,
+      });
       orderRelations.push({ type: 'ORDER_ITEM', id: product.id });
       if (numberOfBatch === 0) {
         orderRelations.push({ type: '' });
@@ -63,15 +81,26 @@ export const generateOrderRelation = (order, option) => {
       }
       batches.forEach((batch, batchIndex) => {
         const batchNo = batchIndex + 1;
-        const linkType2 = getBatchLinkType(batchNo, numberOfBatch);
         if (batchNo > 1) {
           orderRelations.push({ type: '' });
           const productLink =
-            productNo === numberOfProduct ? { type: '' } : { type: 'LINK-2', id: '' }; // order.id
+            productNo === numberOfProduct
+              ? { type: '' }
+              : {
+                  type: 'LINK-2',
+                  id: product.id,
+                  itemType: 'orderItem',
+                  relatedIds: relatedProductIds.filter(id => id !== product.id),
+                };
           orderRelations.push(productLink);
           orderRelations.push({ type: '' });
         }
-        orderRelations.push(linkType2);
+        orderRelations.push({
+          id: batch.id,
+          itemType: 'batch',
+          type: getBatchLinkType(batchNo, numberOfBatch),
+          relatedIds: getRelatedIds(batches, batchIndex),
+        });
         orderRelations.push({ type: 'BATCH', id: batch.id });
       });
     });
@@ -128,13 +157,13 @@ export const formatShipmentFromOrder = orders => {
         shipmentObj[shipment.id] = {
           data: {
             ...shipment,
-            numberOfOrder: 0,
-            numberOfBatch: shipment.batches.length,
+            totalOrder: 0,
+            totalBatch: shipment.batches.length,
           },
           refs: {},
         };
       }
-      shipmentObj[shipment.id].data.numberOfOrder += 1;
+      shipmentObj[shipment.id].data.totalOrder += 1;
       shipmentObj[shipment.id].refs[orderId] = true;
     });
   });
@@ -156,6 +185,73 @@ export const formatOrderFromShipment = shipments => {
   return orderObj;
 };
 
+const initOrderObj = order => {
+  const { orderItems, id: orderId } = order;
+  return {
+    data: {
+      ...order,
+      orderedQuantity: 0,
+      batchedQuantity: 0,
+      shippedQuantity: 0,
+      totalItem: orderItems.length || 0,
+      totalBatch: 0,
+    },
+    relation: {
+      order: { [orderId]: true },
+      orderItem: {},
+      batch: {},
+      shipment: {},
+    },
+  };
+};
+
+const initShipmentObj = shipment => ({
+  data: {
+    ...shipment,
+    totalOrder: 0,
+    totalBatch: shipment.batches.length,
+  },
+  relation: {
+    order: {},
+    orderItem: {},
+    batch: {},
+    shipment: { [shipment.id]: true },
+  },
+});
+
+const initOrderItemObj = (orderItem, orderId) => ({
+  data: {
+    ...orderItem,
+    name: getByPathWithDefault('', 'productProvider.product.name', orderItem),
+    orderedQuantity: orderItem.quantity,
+    batchedQuantity: 0,
+    shippedQuantity: 0,
+  },
+  relation: {
+    order: { [orderId]: true },
+    orderItem: { [orderItem.id]: true },
+    batch: {},
+    shipment: {},
+  },
+});
+
+const initBatchObj = (batch, orderId, orderItemId) => {
+  const volume = getByPathWithDefault('', 'packageVolume.value', batch);
+  const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
+  return {
+    data: {
+      ...batch,
+      volumeLabel: `${volume} ${metric}`,
+    },
+    relation: {
+      order: { [orderId]: true },
+      orderItem: { [orderItemId]: true },
+      batch: { [batch.id]: true },
+      shipment: batch.shipment ? { [batch.shipment.id]: true } : {},
+    },
+  };
+};
+
 export const formatOrderData = orders => {
   const orderObj = {};
   const orderItemObj = {};
@@ -165,113 +261,59 @@ export const formatOrderData = orders => {
   let sumOrderItems = 0;
   let sumBatches = 0;
   let sumShipments = 0;
+
   orders.forEach(order => {
-    const { orderItems, shipments } = order;
-    if (!orderObj[order.id]) {
-      orderObj[order.id] = {
-        orderedQuantity: 0,
-        batchedQuantity: 0,
-        shippedQuantity: 0,
-        totalItem: orderItems.length,
-        totalBatch: 0,
-        info: order.poNo,
-        tags: order.tags,
-        relation: {
-          order: { [order.id]: true },
-          orderItem: {},
-          batch: {},
-          shipment: {},
-        },
-      };
+    const { orderItems, shipments, id: orderId } = order;
+    if (!orderObj[orderId]) {
+      orderObj[orderId] = initOrderObj(order);
     }
+    const { relation: orderRelation, data: orderData } = orderObj[orderId];
     sumOrderItems += orderItems ? orderItems.length : 0;
     sumShipments += shipments ? shipments.length : 0;
 
     shipments.forEach(shipment => {
       if (!shipmentObj[shipment.id]) {
-        shipmentObj[shipment.id] = {
-          data: {
-            ...shipment,
-            numberOfOrder: 0,
-            numberOfBatch: shipment.batches.length,
-          },
-          relation: {
-            order: {},
-            orderItem: {},
-            batch: {},
-          },
-        };
+        shipmentObj[shipment.id] = initShipmentObj(shipment);
       }
-      shipmentObj[shipment.id].data.numberOfOrder += 1;
-      shipmentObj[shipment.id].relation.order[order.id] = true;
+      shipmentObj[shipment.id].data.totalOrder += 1;
+      shipmentObj[shipment.id].relation.order[orderId] = true;
     });
 
     orderItems.forEach(orderItem => {
+      const { batches } = orderItem;
       if (!orderItemObj[orderItem.id]) {
-        orderObj[order.id].relation.orderItem[orderItem.id] = true;
-        orderItemObj[orderItem.id] = {
-          orderedQuantity: orderItem.quantity,
-          batchedQuantity: 0,
-          shippedQuantity: 0,
-          info: getByPathWithDefault('', 'productProvider.product.name', orderItem),
-          relation: {
-            order: { [order.id]: true },
-            batch: {},
-            shipment: {},
-          },
-        };
+        orderRelation.orderItem[orderItem.id] = true;
+        orderItemObj[orderItem.id] = initOrderItemObj(orderItem, orderId);
       }
-      sumBatches += orderItem.batches ? orderItem.batches.length : 0;
-      orderObj[order.id].totalBatch += orderItem.batches ? orderItem.batches.length : 0;
-      orderObj[order.id].orderedQuantity += orderItem.quantity || 0;
+      const { relation: orderItemRelation, data: orderItemData } = orderItemObj[orderItem.id];
+      sumBatches += batches ? batches.length : 0;
+      orderData.totalBatch += batches ? batches.length : 0;
+      orderData.orderedQuantity += orderItem.quantity || 0;
 
-      orderItem.batches.forEach(batch => {
+      batches.forEach(batch => {
         const { shipment } = batch;
         if (!batchObj[batch.id]) {
-          orderObj[order.id].relation.batch[batch.id] = true;
-          orderItemObj[orderItem.id].relation.batch[batch.id] = true;
+          orderRelation.batch[batch.id] = true;
+          orderItemRelation.batch[batch.id] = true;
+          batchObj[batch.id] = initBatchObj(batch, order.id, orderItem.id);
+
           if (shipment) {
-            orderObj[order.id].relation.shipment[shipment.id] = true;
-            orderItemObj[orderItem.id].relation.shipment[shipment.id] = true;
+            orderRelation.shipment[shipment.id] = true;
+            orderItemRelation.shipment[shipment.id] = true;
             if (!shipmentObj[shipment.id]) {
-              shipmentObj[shipment.id] = {
-                data: {
-                  ...shipment,
-                  numberOfOrder: 0,
-                  numberOfBatch: 0,
-                },
-                relation: {
-                  order: {},
-                  orderItem: {},
-                  batch: {},
-                },
-              };
+              shipmentObj[shipment.id] = initShipmentObj(shipment);
             }
-            shipmentObj[shipment.id].relation.order[order.id] = true;
-            shipmentObj[shipment.id].relation.orderItem[orderItem.id] = true;
-            shipmentObj[shipment.id].relation.batch[batch.id] = true;
+            const { relation: shipmentRelation } = shipmentObj[shipment.id];
+            shipmentRelation.order[order.id] = true;
+            shipmentRelation.orderItem[orderItem.id] = true;
+            shipmentRelation.batch[batch.id] = true;
           }
-          const volume = getByPathWithDefault('', 'packageVolume.value', batch);
-          const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
-          batchObj[batch.id] = {
-            quantity: batch.quantity,
-            volume: `${volume} ${metric}`,
-            totalItem: batch.length,
-            title: batch.no || '',
-            tags: batch.tags,
-            deliveredAt: batch.deliveredAt,
-            relation: {
-              order: { [order.id]: true },
-              orderItem: { [orderItem.id]: true },
-              shipment: shipment ? { [shipment.id]: true } : {},
-            },
-          };
         }
-        orderObj[order.id].batchedQuantity += batch.quantity;
-        orderItemObj[orderItem.id].batchedQuantity += batch.quantity;
+        orderData.batchedQuantity += batch.quantity;
+        orderItemData.batchedQuantity += batch.quantity;
         if (batch.shipment) {
-          orderObj[order.id].shippedQuantity += batch.quantity;
-          orderItemObj[orderItem.id].shippedQuantity += batch.quantity;
+          orderData.shippedQuantity += batch.quantity;
+          orderItemData.shippedQuantity += batch.quantity;
         }
       });
     });

@@ -17,27 +17,24 @@ import Badge from '../Card/Badge';
 // import messages from './messages';
 
 type Props = {
-  info: string | React.Node,
-  orderedQuantity: number,
-  batchedQuantity: number,
-  shippedQuantity: number,
-  batched?: number,
-  shipped?: number,
+  orderItem: {
+    name: string | React.Node,
+    orderedQuantity: number,
+    batchedQuantity: number,
+    shippedQuantity: number,
+    batched?: number,
+    shipped?: number,
+  },
 };
 
 export default class OrderItemCard extends React.PureComponent<Props> {
   render() {
     const {
-      info,
-      orderedQuantity,
-      batchedQuantity,
-      shippedQuantity,
-      batched,
-      shipped,
+      orderItem: { name, orderedQuantity, batchedQuantity, shippedQuantity, batched, shipped },
     } = this.props;
     return (
       <div className={CardWrapperStyle}>
-        <div className={CardTitleStyle}>{info}</div>
+        <div className={CardTitleStyle}>{name}</div>
         <div className={CardVisualizeStyle}>
           {/* number in middle */}
           <div className={NumberLineStyle}>

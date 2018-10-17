@@ -19,6 +19,55 @@ type Props = {
   nodes: Array<Object>,
 };
 
+const getItemData = ({ order, orderItem, batch }, relation) => {
+  let itemData;
+  switch (relation.type) {
+    case 'ORDER_ITEM_ALL':
+      itemData = order[relation.id];
+      break;
+    case 'BATCH_ALL':
+      itemData = order[relation.id];
+      break;
+    case 'ORDER':
+      itemData = order[relation.id];
+      break;
+    case 'ORDER_HEADER':
+      itemData = { id: relation.id };
+      break;
+    case 'ORDER_ITEM':
+      itemData = orderItem[relation.id];
+      break;
+    case 'BATCH':
+      itemData = batch[relation.id];
+      break;
+    default:
+      itemData = {};
+      break;
+  }
+  return itemData;
+};
+
+const getItemType = type => {
+  switch (type) {
+    case 'ORDER_ITEM_ALL':
+    case 'BATCH_ALL':
+    case 'ORDER':
+      return 'order';
+    case 'ORDER_HEADER':
+    case 'ORDER_ITEM':
+      return 'orderItem';
+    case 'BATCH':
+      return 'batch';
+    default:
+      return '';
+  }
+};
+
+const getFocusedLink = (focusedItem, relatedIds) =>
+  Object.keys(focusedItem || {}).some(focusId =>
+    relatedIds.some(relatedId => relatedId === focusId)
+  );
+
 const OrderFocused = ({
   order: { orderObj: order, orderItemObj: orderItem, batchObj: batch, shipmentObj: shipment },
   nodes,
@@ -41,53 +90,35 @@ const OrderFocused = ({
             const relations = generateOrderRelation(item, { isCollapsed });
             return relations.map((relation, relationIndex) => {
               const key = `relation-${relationIndex}`;
-              let itemData;
-              let itemType;
-              switch (relation.type) {
-                case 'ORDER_ITEM_ALL':
-                  itemType = 'order';
-                  itemData = order[item.id];
-                  break;
-                case 'BATCH_ALL':
-                  itemType = 'order';
-                  itemData = order[item.id];
-                  break;
-                case 'ORDER':
-                  itemType = 'order';
-                  itemData = order[relation.id];
-                  break;
-                case 'ORDER_HEADER':
-                  itemData = { id: item.id };
-                  break;
-                case 'ORDER_ITEM':
-                  itemType = 'orderItem';
-                  itemData = orderItem[relation.id];
-                  break;
-                case 'BATCH':
-                  itemType = 'batch';
-                  itemData = batch[relation.id];
-                  break;
-                default:
-                  itemData = {};
-                  break;
-              }
+              const itemData = getItemData({ order, orderItem, batch }, relation);
+              const itemType = getItemType(relation.type);
+              const isLink = /LINK-[0-4]/.test(relation.type);
               return (
                 <ToggleSlide key={key}>
                   {({ assign: setSlide }) => (
                     <FocusedValue key={key}>
-                      {({ value: { focusedItem, relationItem }, assign: setItem, reset }) => (
+                      {({ value: { focusedItem }, assign: setItem, reset }) => (
                         <Item
                           key={key}
                           type={relation.type}
                           isFocused={
-                            relationItem.type === relation.type
-                              ? relationItem.id === relation.id
+                            isLink
+                              ? getFocusedLink(focusedItem[relation.itemType], relation.relatedIds)
                               : getByPathWithDefault(
                                   false,
                                   `${itemType}.${relation.id}` || '',
                                   focusedItem
                                 )
                           }
+                          {...(isLink
+                            ? {
+                                hasRelation: getByPathWithDefault(
+                                  false,
+                                  `${relation.itemType}.${relation.id}`,
+                                  focusedItem
+                                ),
+                              }
+                            : {})}
                           actions={[
                             <CardAction
                               icon="SQUARE"
@@ -108,7 +139,7 @@ const OrderFocused = ({
                               id: relation.id,
                             });
                           }}
-                          data={itemData}
+                          data={itemData.data || {}}
                           isCollapsed={isCollapsed}
                         />
                       )}
@@ -141,10 +172,6 @@ const OrderFocused = ({
                             : getByPathWithDefault(false, `shipment.${shipmentId}`, focusedItem)
                         }
                         isCollapsed={isCollapsed}
-                        onMouseLeave={reset}
-                        onMouseEnter={() =>
-                          assign({ focusedItem: currentShipment.refs, shipmentId })
-                        }
                         actions={[
                           <CardAction
                             icon="SQUARE"
