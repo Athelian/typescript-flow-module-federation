@@ -41,9 +41,6 @@ const Login = ({ redirectUrl }: Props) => (
             onCompleted={({ login }) => {
               if (login.violations === null) {
                 setAuthenticated(true);
-                if (!authenticated) {
-                  window.location.href = redirectUrl;
-                }
               }
             }}
           >

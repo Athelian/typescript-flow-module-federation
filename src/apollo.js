@@ -5,7 +5,6 @@ import { print } from 'graphql/language/printer';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { ApolloLink, Observable, type Operation } from 'apollo-link';
-import { persistCache } from 'apollo-cache-persist';
 import { createHttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import Raven from 'raven-js';
@@ -113,14 +112,24 @@ const cache = new InMemoryCache({
   }),
 });
 
-persistCache({
-  cache,
-  storage: window.localStorage,
-});
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all',
+  },
+  query: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all',
+  },
+  mutate: {
+    errorPolicy: 'all',
+  },
+};
 
 const client = new ApolloClient({
   link: ApolloLink.from([errorLink, SSELink, httpLink]),
   cache,
+  defaultOptions,
 });
 
 export default client;
