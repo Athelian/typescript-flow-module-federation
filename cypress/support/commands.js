@@ -21,7 +21,7 @@ Cypress.Commands.add('login', () => {
     .type(username)
     .should('have.value', username);
   cy.get('input[data-testid="password"]')
-    .type(`${password}{enter}`)
+    .type(`${password}`)
     .should('have.value', password)
     .blur();
   cy.get('button[data-testid="submitButton"]').click();

@@ -48,6 +48,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
                           width="195px"
                           height="215px"
                           onClick={() => exporterSlideToggle(true)}
+                          data-testid="selectExportersButton"
                         />
                       ) : (
                         <PartnerCard
@@ -78,7 +79,12 @@ const ProductProviderSection = ({ isNew }: Props) => (
               </GridColumn>
 
               <GridColumn gap="10px">
-                <Label>SUPPLIER</Label>
+                <Label>
+                  <FormattedMessage
+                    id="modules.productProvider.supplier"
+                    defaultMessage="SUPPLIER"
+                  />
+                </Label>
                 <BooleanValue>
                   {({ value: opened, set: supplierSlideToggle }) => (
                     <>

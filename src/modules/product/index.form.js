@@ -253,6 +253,7 @@ class ProductFormModule extends React.Component<Props> {
                                     form.onErrors
                                   )
                                 }
+                                data-testid="saveButton"
                               />
                             </>
                           )

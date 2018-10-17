@@ -35,7 +35,11 @@ const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
               <SlideViewNavBar>
                 <EntityIcon icon="PARTNER" color="PARTNER" />
                 <CancelButton onClick={onCancel} />
-                <SaveButton disabled={isEquals(value, selected)} onClick={() => onSelect(value)} />
+                <SaveButton
+                  disabled={isEquals(value, selected)}
+                  onClick={() => onSelect(value)}
+                  data-testid="saveButtonOnSelectExporters"
+                />
               </SlideViewNavBar>
             }
           >
@@ -51,6 +55,7 @@ const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
                   selectable
                   selected={value && item.id === value.id}
                   key={item.id}
+                  data-testid="partnerCard"
                 />
               )}
             />

@@ -57,7 +57,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
       postalCode,
       surface,
     };
-    if (this.isNew()) {
+    if (this.isNewOrClone()) {
       const { data } = await saveWarehouse({ variables: { input } });
       const {
         warehouseCreate: { violations },
@@ -81,7 +81,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    if (this.isNew()) {
+    if (this.isNewOrClone()) {
       const {
         warehouseCreate: {
           warehouse: { id },
@@ -101,9 +101,11 @@ class WarehouseFormModule extends React.PureComponent<Props> {
     return path.startsWith('clone');
   };
 
+  isNewOrClone = () => this.isNew() || this.isClone();
+
   render() {
     const { warehouseId } = this.props;
-    const isNewOrClone = this.isNew() || this.isClone();
+    const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (warehouseId && !isNewOrClone) {
       mutationKey = { key: decodeId(warehouseId) };

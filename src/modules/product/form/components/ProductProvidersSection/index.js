@@ -35,6 +35,7 @@ function ProductProvidersSection() {
                       />
                     }
                     onClick={() => slideToggle(true)}
+                    data-testid="newProviderButton"
                   />
                   <SlideView
                     isOpen={opened}
