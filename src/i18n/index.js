@@ -34,7 +34,7 @@ export const translationMessages = {
 export const getInitialLocale = (): string => {
   const browserLocale = navigator.languages ? navigator.languages[0] : navigator.language;
 
-  const formattedLocale = takeItems(2, browserLocale);
+  const formattedLocale = takeItems(2, browserLocale || 'en');
 
   return appLocales.includes(formattedLocale) ? formattedLocale : 'ja';
 };
