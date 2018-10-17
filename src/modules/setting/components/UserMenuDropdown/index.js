@@ -58,16 +58,13 @@ class UserMenuDropdown extends React.Component<Props> {
                       setAuthenticated(false);
                     }}
                   >
-                    {(logout, { client }) => (
+                    {logout => (
                       <LogoutDialog
                         isOpen={isLogoutDialogOpen}
                         onRequestClose={() => logoutDialogToggle(false)}
                         onCancel={() => logoutDialogToggle(false)}
                         onConfirm={async () => {
                           await logout({});
-                          // Refer https://github.com/apollographql/apollo-client/pull/3885
-                          // $FlowFixMe: This public method is available but flow-typed is not configuration yet!
-                          client.clearStore();
                           navigate('/login');
                         }}
                       />
