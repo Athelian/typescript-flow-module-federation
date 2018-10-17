@@ -9,6 +9,7 @@ type OptionalProps = {
   color: string,
   targetId: string,
   boundaryId: string,
+  size: string,
 };
 
 type Props = OptionalProps;
@@ -16,15 +17,16 @@ type Props = OptionalProps;
 const defaultProps = {
   icon: 'UNKNOWN',
   color: 'GRAY_LIGHT',
-  targetId: null,
-  boundaryId: null,
+  targetId: '',
+  boundaryId: '',
+  size: 'MAIN',
 };
 
-const TimelineIcon = ({ icon, color, targetId, boundaryId }: Props) => {
+const TimelineIcon = ({ icon, color, targetId, boundaryId, size }: Props) => {
   if (targetId) {
     return (
       <button
-        className={TimelineIconStyle({ icon, color })}
+        className={TimelineIconStyle({ icon, color, size })}
         onClick={() => scrollIntoView({ targetId, boundaryId })}
         type="button"
       >
@@ -33,7 +35,7 @@ const TimelineIcon = ({ icon, color, targetId, boundaryId }: Props) => {
     );
   }
   return (
-    <div className={TimelineIconStyle({ icon, color })}>
+    <div className={TimelineIconStyle({ icon, color, size })}>
       <Icon icon={icon} />
     </div>
   );
