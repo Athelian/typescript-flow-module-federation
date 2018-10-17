@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { Mutation } from 'react-apollo';
@@ -57,13 +58,17 @@ class UserMenuDropdown extends React.Component<Props> {
                       setAuthenticated(false);
                     }}
                   >
-                    {logout => (
+                    {(logout, { client }) => (
                       <LogoutDialog
                         isOpen={isLogoutDialogOpen}
                         onRequestClose={() => logoutDialogToggle(false)}
                         onCancel={() => logoutDialogToggle(false)}
-                        onConfirm={() => {
-                          logout({});
+                        onConfirm={async () => {
+                          await logout({});
+                          // Refer https://github.com/apollographql/apollo-client/pull/3885
+                          // $FlowFixMe: This public method is available but flow-typed is not configuration yet!
+                          client.clearStore();
+                          navigate('/login');
                         }}
                       />
                     )}
