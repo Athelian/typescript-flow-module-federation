@@ -19,8 +19,11 @@ import { tagFormQuery } from './form/query';
 import validator from './form/validator';
 import { createTagMutation, updateTagMutation } from './form/mutation';
 
-type Props = {
+type OptionalProps = {
   path: string,
+};
+
+type Props = OptionalProps & {
   tagId?: string,
 };
 
@@ -89,14 +92,19 @@ export default class TagFormModule extends React.PureComponent<Props> {
 
   isNew = () => {
     const { path } = this.props;
-    return path.startsWith('new') || path.startsWith('clone');
+    return path.startsWith('new');
+  };
+
+  isClone = () => {
+    const { path } = this.props;
+    return path.startsWith('clone');
   };
 
   render() {
     const { tagId } = this.props;
-    const isNew = this.isNew();
+    const isNewOrClone = this.isNew() || this.isClone();
     let mutationKey = {};
-    if (tagId && !isNew) {
+    if (tagId && !isNewOrClone) {
       mutationKey = { key: decodeId(tagId) };
     }
 
@@ -105,7 +113,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
         <UIConsumer>
           {uiState => (
             <Mutation
-              mutation={isNew ? createTagMutation : updateTagMutation}
+              mutation={isNewOrClone ? createTagMutation : updateTagMutation}
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
@@ -124,7 +132,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                       </JumpToSection>
                       <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
                         {(tagState, entityTypesState, form) =>
-                          (isNew || tagState.isDirty() || entityTypesState.isDirty()) && (
+                          (isNewOrClone || tagState.isDirty() || entityTypesState.isDirty()) && (
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
@@ -168,7 +176,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                         <Subscribe to={[TagContainer, EntityTypeContainer]}>
                           {(tagState, entityTypesState) => (
                             <TagForm
-                              isNew={isNew}
+                              isNew={isNewOrClone}
                               tag={tag}
                               onFormReady={() => {
                                 const { name, description, color, entityTypes } = tag;

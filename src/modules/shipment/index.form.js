@@ -32,14 +32,16 @@ import {
 } from './form/mutation';
 
 type OptionalProps = {
+  path: string,
   isSlideView: boolean,
 };
+
 type Props = OptionalProps & {
-  path: string,
   shipmentId?: string,
 };
 
 const defaultProps = {
+  path: '',
   shipmentId: '',
   isSlideView: false,
 };

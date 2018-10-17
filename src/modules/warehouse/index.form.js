@@ -19,8 +19,11 @@ import { warehouseFormQuery } from './form/query';
 import { createWarehouseMutation, updateWarehouseMutation } from './form/mutation';
 import validator from './form/validator';
 
-type Props = {
+type OptionalProps = {
   path: string,
+};
+
+type Props = OptionalProps & {
   warehouseId?: string,
 };
 
@@ -90,7 +93,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
 
   isNew = () => {
     const { path } = this.props;
-    return path.startsWith('new') || path.startsWith('clone');
+    return path.startsWith('new');
   };
 
   isClone = () => {
@@ -100,9 +103,9 @@ class WarehouseFormModule extends React.PureComponent<Props> {
 
   render() {
     const { warehouseId } = this.props;
-    const isNew = this.isNew();
+    const isNewOrClone = this.isNew() || this.isClone();
     let mutationKey = {};
-    if (warehouseId && !isNew) {
+    if (warehouseId && !isNewOrClone) {
       mutationKey = { key: decodeId(warehouseId) };
     }
 
@@ -111,7 +114,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
         <UIConsumer>
           {uiState => (
             <Mutation
-              mutation={isNew ? createWarehouseMutation : updateWarehouseMutation}
+              mutation={isNewOrClone ? createWarehouseMutation : updateWarehouseMutation}
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
@@ -135,7 +138,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                       </JumpToSection>
                       <Subscribe to={[WarehouseContainer, FormContainer]}>
                         {(formState, form) =>
-                          (isNew || formState.isDirty()) && (
+                          (isNewOrClone || formState.isDirty()) && (
                             <>
                               <CancelButton onClick={this.onCancel} />
                               <SaveButton
@@ -177,7 +180,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                           <Subscribe to={[WarehouseContainer]}>
                             {({ initDetailValues }) => (
                               <WarehouseForm
-                                isNew={isNew}
+                                isNew={isNewOrClone}
                                 warehouse={warehouse}
                                 onFormReady={() => {
                                   initDetailValues(warehouse);
