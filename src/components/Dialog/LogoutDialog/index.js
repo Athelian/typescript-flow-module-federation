@@ -10,7 +10,7 @@ type Props = {
   isOpen: boolean,
   onRequestClose: () => void,
   onCancel: () => void,
-  onConfirm: () => void,
+  onConfirm: () => Promise<any>,
 };
 
 function LogoutDialog({ isOpen, onRequestClose, onCancel, onConfirm }: Props) {
