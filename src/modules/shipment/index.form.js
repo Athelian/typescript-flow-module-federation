@@ -77,6 +77,8 @@ class ShipmentFormModule extends React.Component<Props> {
     return path.startsWith('clone');
   };
 
+  isNewOrClone = () => this.isNew() || this.isClone();
+
   onCancel = () => {
     navigate(`/shipment`);
   };
@@ -89,7 +91,7 @@ class ShipmentFormModule extends React.Component<Props> {
   ) => {
     const { shipmentId } = this.props;
 
-    const isNewOrClone = this.isClone() || this.isNew();
+    const isNewOrClone = this.isNewOrClone();
     const input = isNewOrClone
       ? prepareCreateShipmentInput(formData)
       : prepareUpdateShipmentInput(formData);
@@ -130,7 +132,7 @@ class ShipmentFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: CreateShipmentResponse | UpdateShipmentResponse) => {
-    const isNewOrClone = this.isNew() || this.isClone();
+    const isNewOrClone = this.isNewOrClone();
 
     if (isNewOrClone && result.shipmentCreate) {
       const {
@@ -147,7 +149,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   render() {
     const { shipmentId, isSlideView } = this.props;
-    const isNewOrClone = this.isNew() || this.isClone();
+    const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (shipmentId && !isNewOrClone) {
       mutationKey = { key: decodeId(shipmentId) };

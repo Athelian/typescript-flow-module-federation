@@ -78,6 +78,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                   <SaveButton
                     disabled={!isDirty() || !formContainer.isReady(state, validator)}
                     onClick={() => onSave(state)}
+                    data-testid="saveProviderButton"
                   />
                 </SlideViewNavBar>
               }

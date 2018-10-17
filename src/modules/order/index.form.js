@@ -60,6 +60,8 @@ class OrderFormModule extends React.PureComponent<Props> {
     return path.startsWith('clone');
   };
 
+  isNewOrClone = () => this.isNew() || this.isClone();
+
   onCancel = () => {
     navigate(`/order`);
   };
@@ -72,7 +74,7 @@ class OrderFormModule extends React.PureComponent<Props> {
   ) => {
     const { orderId } = this.props;
 
-    const isNewOrClone = this.isClone() || this.isNew();
+    const isNewOrClone = this.isNewOrClone();
     const input = isNewOrClone
       ? prepareCreateOrderInput(formData)
       : prepareUpdateOrderInput(formData);
@@ -101,7 +103,7 @@ class OrderFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    if (this.isNew() || this.isClone()) {
+    if (this.isNewOrClone()) {
       const {
         orderCreate: {
           order: { id },
@@ -113,7 +115,7 @@ class OrderFormModule extends React.PureComponent<Props> {
 
   render() {
     const { orderId, isSlideView } = this.props;
-    const isNewOrClone = this.isNew() || this.isClone();
+    const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (orderId && !isNewOrClone) {
       mutationKey = { key: decodeId(orderId) };

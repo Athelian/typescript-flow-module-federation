@@ -6,7 +6,7 @@ describe('Login', () => {
       .type(username)
       .should('have.value', username);
     cy.get('input[data-testid="password"]')
-      .type('wrong{enter}')
+      .type('wrong')
       .should('have.value', 'wrong')
       .blur();
     cy.get('button[data-testid="submitButton"]').click();
@@ -22,7 +22,7 @@ describe('Login', () => {
       .type(username)
       .should('have.value', username);
     cy.get('input[data-testid="password"]')
-      .type(`${password}{enter}`)
+      .type(`${password}`)
       .should('have.value', password)
       .blur();
     cy.get('button[data-testid="submitButton"]').click();

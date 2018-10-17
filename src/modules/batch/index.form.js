@@ -52,6 +52,8 @@ class BatchFormModule extends React.PureComponent<Props> {
     return path.startsWith('clone');
   };
 
+  isNewOrClone = () => this.isNew() || this.isClone();
+
   onCancel = () => {
     navigate(`/batch`);
   };
@@ -64,7 +66,7 @@ class BatchFormModule extends React.PureComponent<Props> {
   ) => {
     const { batchId } = this.props;
 
-    const isNewOrClone = this.isClone() || this.isNew();
+    const isNewOrClone = this.isNewOrClone();
     const input = isNewOrClone
       ? prepareCreateBatchInput(formData)
       : prepareUpdateBatchInput(formData);
@@ -93,7 +95,7 @@ class BatchFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    const isNewOrClone = this.isClone() || this.isNew();
+    const isNewOrClone = this.isNewOrClone();
     if (isNewOrClone) {
       const {
         batchCreate: {
@@ -106,7 +108,7 @@ class BatchFormModule extends React.PureComponent<Props> {
 
   render() {
     const { batchId, isSlideView } = this.props;
-    const isNewOrClone = this.isClone() || this.isNew();
+    const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (batchId && !isNewOrClone) {
       mutationKey = { key: decodeId(batchId) };

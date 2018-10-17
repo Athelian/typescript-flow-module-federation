@@ -72,7 +72,7 @@ class ProductListModule extends React.Component<Props, State> {
                   onChange={this.onChangeFilter}
                 />
                 <Link to="new">
-                  <NewButton />
+                  <NewButton data-testid="newButton" />
                 </Link>
                 <ExportButton type="data" format="csv" template="Product" />
               </NavBar>

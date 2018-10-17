@@ -14,8 +14,13 @@ const defaultProps = {
   height: '100px',
 };
 
-const DashedPlusButton = ({ width, height, onClick }: Props) => (
-  <button className={DashedPlusButtonWrapperStyle(width, height)} onClick={onClick} type="button">
+const DashedPlusButton = ({ width, height, onClick, ...rest }: Props) => (
+  <button
+    className={DashedPlusButtonWrapperStyle(width, height)}
+    onClick={onClick}
+    type="button"
+    {...rest}
+  >
     <Icon icon="ADD" />
   </button>
 );

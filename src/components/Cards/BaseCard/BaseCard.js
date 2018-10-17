@@ -79,6 +79,7 @@ export default class BaseCard extends React.Component<Props, State> {
       onSelect,
       wrapperClassName,
       children,
+      ...rest
     } = this.props;
 
     const { actionsAreShown } = this.state;
@@ -107,6 +108,7 @@ export default class BaseCard extends React.Component<Props, State> {
             this.closeActions();
           }
         }}
+        {...rest}
       >
         {!disabled &&
           actions.length > 0 && (
