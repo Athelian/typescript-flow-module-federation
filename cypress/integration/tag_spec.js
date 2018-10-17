@@ -1,7 +1,7 @@
 const TAG = {
   name: 'test name',
   updatedName: '[updated] test name',
-  clonedName: '[clone] test name',
+  clonedName: '[cloned] test name',
   description: 'test description',
   color: '#d4f492',
 };
@@ -52,7 +52,7 @@ describe('Tag', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(100)
+      .wait(500)
       .should('not.exist');
   });
 
