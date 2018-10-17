@@ -25,6 +25,7 @@ const NewButton = ({ label, disabled, onClick, ...rest }: Props): React.Node => 
     hoverBackgroundColor="TEAL_DARK"
     disabled={disabled}
     onClick={onClick}
+    data-testid="newButton"
     {...rest}
   />
 );

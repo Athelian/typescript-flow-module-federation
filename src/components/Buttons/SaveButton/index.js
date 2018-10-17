@@ -26,6 +26,7 @@ const SaveButton = ({ disabled, isLoading, onClick, ...rest }: Props): React.Nod
     disabled={disabled}
     onClick={onClick}
     isLoading={isLoading}
+    data-testid="saveButton"
     {...rest}
   />
 );

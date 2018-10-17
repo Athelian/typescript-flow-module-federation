@@ -35,6 +35,7 @@ class FocusInput extends React.Component<Props> {
     return (
       <SelectInput
         value={focus.value}
+        name="focus"
         items={fields}
         itemToString={itemToString}
         itemToValue={itemToValue}

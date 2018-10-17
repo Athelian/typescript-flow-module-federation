@@ -23,6 +23,7 @@ export type RenderOptionsProps = {
 };
 
 export type SelectInputProps = OptionalProps & {
+  name: string,
   items: Array<any>,
   itemToString: any => string,
   itemToValue: any => any,

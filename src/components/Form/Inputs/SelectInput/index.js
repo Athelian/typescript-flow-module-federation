@@ -48,11 +48,16 @@ class SelectInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { itemToString, itemToValue, renderSelect, renderOptions, items } = this.props;
+    const { itemToString, itemToValue, renderSelect, renderOptions, items, name } = this.props;
     const { selectedItem } = this.state;
 
     return (
-      <Downshift onChange={this.handleChange} itemToString={itemToString} itemToValue={itemToValue}>
+      <Downshift
+        labelId={`${name}SelectInput`}
+        onChange={this.handleChange}
+        itemToString={itemToString}
+        itemToValue={itemToValue}
+      >
         {({
           getItemProps,
           isOpen,
