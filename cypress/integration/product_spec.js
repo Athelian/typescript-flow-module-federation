@@ -1,18 +1,3 @@
-import Chance from 'chance';
-
-const chance = new Chance();
-
-const PRODUCT = {
-  name: 'e2e-test',
-  updatedName: '[updated] e2e-test',
-  clonedName: '[cloned] e2e-test',
-  serial: chance.string({ length: 8 }),
-  janCode: chance.string({ length: 13 }),
-  hsCode: chance.string({ length: 10 }),
-  material: 'e2e-material',
-  tags: [],
-};
-
 describe('Product', () => {
   before(() => {
     cy.login();
@@ -21,7 +6,13 @@ describe('Product', () => {
     cy.logout();
   });
 
-  it('new a product', () => {
+  beforeEach(() => {
+    cy.fixture('product').as('productData');
+  });
+
+  it('new a product', function newProduct() {
+    const { name, serial, janCode, hsCode, material } = this.productData;
+
     cy.visit('/product')
       .getByTestId('newButton')
       .click()
@@ -29,17 +20,16 @@ describe('Product', () => {
       .should('include', 'new');
 
     cy.get('input[name="name"]')
-      .type(PRODUCT.name)
+      .type(name)
       .get('input[name="serial"]')
-      .type(PRODUCT.serial)
+      .type(serial)
       .get('input[name="janCode"]')
-      .type(PRODUCT.janCode)
+      .type(janCode)
       .get('input[name="hsCode"]')
-      .type(PRODUCT.hsCode)
+      .type(hsCode)
       .get('input[name="material"]')
-      .type(PRODUCT.material);
+      .type(material);
 
-    // cy.get('input[name="tag"]').type(PRODUCT.tags)
     cy.getByTestId('newProviderButton').click();
     cy.getByTestId('selectExportersButton').click();
 
@@ -51,46 +41,46 @@ describe('Product', () => {
       .wait(500);
 
     cy.get('input[name="name"]')
-      .should('have.value', PRODUCT.name)
+      .should('have.value', name)
       .get('input[name="serial"]')
-      .should('have.value', `${PRODUCT.serial}`)
+      .should('have.value', serial)
       .get('input[name="janCode"]')
-      .should('have.value', `${PRODUCT.janCode}`)
+      .should('have.value', janCode)
       .get('input[name="hsCode"]')
-      .should('have.value', `${PRODUCT.hsCode}`)
+      .should('have.value', hsCode)
       .get('input[name="material"]')
-      .should('have.value', PRODUCT.material);
+      .should('have.value', material);
   });
 
   it('update a product', () => {
+    const { updatedName, serial, janCode, hsCode, material } = this.productData;
+
     cy.get('input[name="name"]')
       .clear()
       .blur();
     cy.getByTestId('saveButton').should('be.disabled');
 
     cy.get('input[name="name"]')
-      .type(PRODUCT.updatedName)
+      .type(updatedName)
       .blur();
     cy.getByTestId('saveButton')
       .click()
       .wait(500);
 
     cy.get('input[name="name"]')
-      .should('have.value', PRODUCT.updatedName)
+      .should('have.value', updatedName)
       .get('input[name="serial"]')
-      .should('have.value', `${PRODUCT.serial}`)
+      .should('have.value', serial)
       .get('input[name="janCode"]')
-      .should('have.value', `${PRODUCT.janCode}`)
+      .should('have.value', janCode)
       .get('input[name="hsCode"]')
-      .should('have.value', `${PRODUCT.hsCode}`)
+      .should('have.value', hsCode)
       .get('input[name="material"]')
-      .should('have.value', PRODUCT.material);
+      .should('have.value', material);
   });
 
   it('clone a product', () => {
-    const serial = chance.string({ length: 8 });
-    const janCode = chance.string({ length: 13 });
-    const hsCode = chance.string({ length: 10 });
+    const { clonedName, clonedSerial, clonedJanCode, clonedHsCode, material } = this.productData;
 
     cy.getByTestId('cloneButton')
       .click()
@@ -99,16 +89,16 @@ describe('Product', () => {
 
     cy.get('input[name="name"]')
       .clear()
-      .type(PRODUCT.clonedName)
+      .type(clonedName)
       .get('input[name="serial"]')
       .clear()
-      .type(serial)
+      .type(clonedSerial)
       .get('input[name="janCode"]')
       .clear()
-      .type(janCode)
+      .type(clonedJanCode)
       .get('input[name="hsCode"]')
       .clear()
-      .type(hsCode)
+      .type(clonedHsCode)
       .blur();
 
     cy.getByTestId('saveButton')
@@ -116,15 +106,15 @@ describe('Product', () => {
       .wait(500);
 
     cy.get('input[name="name"]')
-      .should('have.value', PRODUCT.clonedName)
+      .should('have.value', clonedName)
       .get('input[name="serial"]')
-      .should('have.value', `${serial}`)
+      .should('have.value', clonedSerial)
       .get('input[name="janCode"]')
-      .should('have.value', `${janCode}`)
+      .should('have.value', clonedJanCode)
       .get('input[name="hsCode"]')
-      .should('have.value', `${hsCode}`)
+      .should('have.value', clonedHsCode)
       .get('input[name="material"]')
-      .should('have.value', PRODUCT.material);
+      .should('have.value', material);
   });
 
   it('archive a product', () => {
