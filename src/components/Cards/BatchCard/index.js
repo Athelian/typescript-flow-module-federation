@@ -44,17 +44,27 @@ const defaultProps = {
 const BatchCard = ({ batch, actions, ...rest }: Props) => {
   if (!batch) return '';
 
-  const { id, no, quantity, deliveredAt, orderItem, shipment } = batch;
+  const {
+    id,
+    no,
+    quantity,
+    deliveredAt,
+    packageVolume,
+    orderItem,
+    shipment,
+    batchAdjustments,
+  } = batch;
   const {
     productProvider: { product, supplier, exporter },
     order,
+    price,
   } = orderItem;
 
   const productImage =
     product.files && product.files.length > 0 ? product.files[0].path : FALLBACK_IMAGE;
 
-  const totalAdjustment = batch.batchAdjustments
-    ? batch.batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
+  const totalAdjustment = batchAdjustments
+    ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
     : 0;
 
   return (
@@ -144,11 +154,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             input={
               <Display>
                 <FormattedNumber
-                  value={
-                    orderItem.price && orderItem.price.amount
-                      ? orderItem.price.amount * quantity
-                      : 0
-                  }
+                  value={(price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)}
                   suffix={order.currency || (orderItem.price && orderItem.currency)}
                 />
               </Display>
@@ -163,13 +169,12 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             }
             input={
               <Display>
-                {batch.packageVolume &&
-                  batch.packageVolume.value && (
-                    <FormattedNumber
-                      value={batch.packageVolume.value * quantity}
-                      suffix={batch.packageVolume && batch.packageVolume.metric}
-                    />
-                  )}
+                {packageVolume && (
+                  <FormattedNumber
+                    value={packageVolume.value * (quantity + totalAdjustment)}
+                    suffix={packageVolume.metric}
+                  />
+                )}
               </Display>
             }
           />

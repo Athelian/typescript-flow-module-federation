@@ -242,7 +242,9 @@ const ShipmentBatchCard = ({
               input={
                 <Display>
                   <FormattedNumber
-                    value={quantity * (price && price.amount ? price.amount : 0)}
+                    value={
+                      (price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)
+                    }
                     suffix={currency || (price && price.currency)}
                   />
                 </Display>
@@ -259,13 +261,12 @@ const ShipmentBatchCard = ({
               }
               input={
                 <Display>
-                  {batch.packageVolume &&
-                    batch.packageVolume.value && (
-                      <FormattedNumber
-                        value={packageVolume.value * quantity}
-                        suffix={packageVolume && packageVolume.metric}
-                      />
-                    )}
+                  {packageVolume && (
+                    <FormattedNumber
+                      value={packageVolume.value * (quantity + totalAdjustment)}
+                      suffix={packageVolume.metric}
+                    />
+                  )}
                 </Display>
               }
             />
