@@ -121,7 +121,7 @@ const PackagingSection = ({ isNew }: Props) => (
               name="packageVolume.value"
               initValue={getByPath('packageVolume.value', values)}
               setFieldValue={(field, value) =>
-                setFieldArrayValue('packageVolume', { value, metric: 'cm³' })
+                setFieldArrayValue('packageVolume', { value, metric: 'm³' })
               }
             >
               {({ name, ...inputHandlers }) =>
@@ -143,7 +143,7 @@ const PackagingSection = ({ isNew }: Props) => (
               name="packageSize.length.value"
               initValue={getByPath('packageSize.length.value', values)}
               setFieldValue={(field, value) =>
-                setFieldArrayValue('packageSize.length', { value, metric: 'cm' })
+                setFieldArrayValue('packageSize.length', { value, metric: 'm' })
               }
             >
               {({ name, ...inputHandlers }) =>
@@ -164,7 +164,7 @@ const PackagingSection = ({ isNew }: Props) => (
               name="packageSize.width.value"
               initValue={getByPath('packageSize.width.value', values)}
               setFieldValue={(field, value) =>
-                setFieldArrayValue('packageSize.width', { value, metric: 'cm' })
+                setFieldArrayValue('packageSize.width', { value, metric: 'm' })
               }
             >
               {({ name, ...inputHandlers }) =>
@@ -185,7 +185,7 @@ const PackagingSection = ({ isNew }: Props) => (
               name="packageSize.height.value"
               initValue={getByPath('packageSize.height.value', values)}
               setFieldValue={(field, value) =>
-                setFieldArrayValue('packageSize.height', { value, metric: 'cm' })
+                setFieldArrayValue('packageSize.height', { value, metric: 'm' })
               }
             >
               {({ name, ...inputHandlers }) =>

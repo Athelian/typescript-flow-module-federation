@@ -49,20 +49,20 @@ const initValues = {
   productionLeadTime: 0,
   unitType: '',
   unitVolume: {
-    metric: 'cm³',
+    metric: 'm³',
     value: 0,
   },
   unitSize: {
     width: {
-      metric: 'cm',
+      metric: 'm',
       value: 0,
     },
     height: {
-      metric: 'cm',
+      metric: 'm',
       value: 0,
     },
     length: {
-      metric: 'cm',
+      metric: 'm',
       value: 0,
     },
   },
@@ -83,20 +83,20 @@ const initValues = {
     value: 0,
   },
   packageVolume: {
-    metric: 'cm³',
+    metric: 'm³',
     value: 0,
   },
   packageSize: {
     width: {
-      metric: 'cm',
+      metric: 'm',
       value: 0,
     },
     height: {
-      metric: 'cm',
+      metric: 'm',
       value: 0,
     },
     length: {
-      metric: 'cm',
+      metric: 'm',
       value: 0,
     },
   },

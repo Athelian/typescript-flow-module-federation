@@ -18,7 +18,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  unit: 'cm',
+  unit: 'm',
   isFocused: false,
   hasError: false,
   disabled: false,
