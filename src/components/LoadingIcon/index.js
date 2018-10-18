@@ -11,7 +11,7 @@ const defaultProps = {
 };
 
 const LoadingIcon = ({ size }: Props) => (
-  <div className={LoadingWrapperStyle}>
+  <div className={LoadingWrapperStyle} id="loadingIcon">
     <div className={LoadingIconStyle(size)} />
   </div>
 );

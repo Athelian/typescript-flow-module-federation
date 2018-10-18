@@ -6,7 +6,7 @@ describe('Order', () => {
     cy.logout();
   });
 
-  it('should create new a order', () => {
+  it('should create new an order', () => {
     cy.task('fixture', 'order').then(({ poNo, piNo, currency }) => {
       // Open order detail
       cy.visit('/order')
@@ -51,9 +51,5 @@ describe('Order', () => {
         .get('input[aria-labelledby="currencySearchSelectInput"]')
         .should('have.value', currency);
     });
-  });
-
-  it('should change the order po number', () => {
-    cy.visit('/order').wait(1000);
   });
 });
