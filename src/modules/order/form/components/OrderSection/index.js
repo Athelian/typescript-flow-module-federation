@@ -211,6 +211,7 @@ const OrderSection = ({ isNew }: Props) => (
                       {({ value: isOpen, set: slideToggle }) => (
                         <>
                           <button
+                            data-testid="addAssignerButton"
                             className={AddAssignmentButtonStyle}
                             type="button"
                             onClick={() => slideToggle(true)}
