@@ -42,7 +42,7 @@ const ProductActivateDialog = ({
           }}
           width={360}
           message={
-            <div className={MessageStyle}>
+            <div data-testid="productActivateDialog" className={MessageStyle}>
               <div>
                 <FormattedMessage {...messages.confirmMsg} values={{ product: productMsg }} />
               </div>

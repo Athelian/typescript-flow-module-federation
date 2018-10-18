@@ -78,4 +78,42 @@ describe('Product', () => {
       .get('input[name="material"]')
       .should('have.value', PRODUCT.material);
   });
+
+  it('clone a product', () => {
+    const serial = parseInt(Math.random() * 1e8, 10);
+    const janCode = parseInt(Math.random() * 1e13, 10);
+    const hsCode = parseInt(Math.random() * 1e10, 10);
+
+    cy.getByTestId('cloneButton')
+      .click()
+      .wait(500);
+    cy.url().should('include', 'clone');
+
+    cy.get('input[name="name"]')
+      .clear()
+      .type(PRODUCT.clonedName)
+      .get('input[name="serial"]')
+      .clear()
+      .type(serial)
+      .get('input[name="janCode"]')
+      .clear()
+      .type(janCode)
+      .get('input[name="hsCode"]')
+      .clear()
+      .type(hsCode)
+      .blur();
+
+    cy.getByTestId('saveButton').click();
+
+    cy.get('input[name="name"]')
+      .should('have.value', PRODUCT.clonedName)
+      .get('input[name="serial"]')
+      .should('have.value', `${serial}`)
+      .get('input[name="janCode"]')
+      .should('have.value', `${janCode}`)
+      .get('input[name="hsCode"]')
+      .should('have.value', `${hsCode}`)
+      .get('input[name="material"]')
+      .should('have.value', PRODUCT.material);
+  });
 });
