@@ -23,6 +23,7 @@ const ActivateButton = ({ disabled, onClick }: Props): React.Node => (
     hoverBackgroundColor="TEAL_DARK"
     disabled={disabled}
     onClick={onClick}
+    data-testid="activeButton"
   />
 );
 

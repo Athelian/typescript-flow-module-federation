@@ -1,10 +1,14 @@
+import Chance from 'chance';
+
+const chance = new Chance();
+
 const PRODUCT = {
   name: 'e2e-test',
   updatedName: '[updated] e2e-test',
   clonedName: '[cloned] e2e-test',
-  serial: parseInt(Math.random() * 1e8, 10),
-  janCode: parseInt(Math.random() * 1e13, 10),
-  hsCode: parseInt(Math.random() * 1e10, 10),
+  serial: chance.string({ length: 8 }),
+  janCode: chance.string({ length: 13 }),
+  hsCode: chance.string({ length: 10 }),
   material: 'e2e-material',
   tags: [],
 };
@@ -42,7 +46,9 @@ describe('Product', () => {
     cy.getByTestId('partnerCard').click();
     cy.getByTestId('saveButtonOnSelectExporters').click();
     cy.getByTestId('saveProviderButton').click();
-    cy.getByTestId('saveButton').click();
+    cy.getByTestId('saveButton')
+      .click()
+      .wait(500);
 
     cy.get('input[name="name"]')
       .should('have.value', PRODUCT.name)
@@ -65,7 +71,9 @@ describe('Product', () => {
     cy.get('input[name="name"]')
       .type(PRODUCT.updatedName)
       .blur();
-    cy.getByTestId('saveButton').click();
+    cy.getByTestId('saveButton')
+      .click()
+      .wait(500);
 
     cy.get('input[name="name"]')
       .should('have.value', PRODUCT.updatedName)
@@ -80,9 +88,9 @@ describe('Product', () => {
   });
 
   it('clone a product', () => {
-    const serial = parseInt(Math.random() * 1e8, 10);
-    const janCode = parseInt(Math.random() * 1e13, 10);
-    const hsCode = parseInt(Math.random() * 1e10, 10);
+    const serial = chance.string({ length: 8 });
+    const janCode = chance.string({ length: 13 });
+    const hsCode = chance.string({ length: 10 });
 
     cy.getByTestId('cloneButton')
       .click()
@@ -103,7 +111,9 @@ describe('Product', () => {
       .type(hsCode)
       .blur();
 
-    cy.getByTestId('saveButton').click();
+    cy.getByTestId('saveButton')
+      .click()
+      .wait(500);
 
     cy.get('input[name="name"]')
       .should('have.value', PRODUCT.clonedName)
@@ -115,5 +125,27 @@ describe('Product', () => {
       .should('have.value', `${hsCode}`)
       .get('input[name="material"]')
       .should('have.value', PRODUCT.material);
+  });
+
+  it('archive a product', () => {
+    cy.getByTestId('archivedStatusToggle').click();
+    cy.get('#dialog-root')
+      .children()
+      .should('have.length', 1);
+    cy.getByTestId('archiveButton')
+      .click()
+      .wait(500);
+    cy.get('svg[data-icon="toggle-off"]').should('be.exist');
+  });
+
+  it('activate a product', () => {
+    cy.getByTestId('archivedStatusToggle').click();
+    cy.get('#dialog-root')
+      .children()
+      .should('have.length', 1);
+    cy.getByTestId('activeButton')
+      .click()
+      .wait(500);
+    cy.get('svg[data-icon="toggle-on"]').should('be.exist');
   });
 });

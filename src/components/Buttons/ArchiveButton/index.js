@@ -23,6 +23,7 @@ const ArchiveButton = ({ disabled, onClick }: Props): React.Node => (
     hoverBackgroundColor="GRAY_DARK"
     disabled={disabled}
     onClick={onClick}
+    data-testid="archiveButton"
   />
 );
 
