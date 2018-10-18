@@ -12,7 +12,6 @@ import {
   ProductTagsContainer,
 } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
-// import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, TagsInput, ImagesUploadInput } from 'components/Form';
 import ImagePreviewDialog from 'components/Dialog/ImagePreviewDialog';
@@ -112,7 +111,7 @@ const ProductSection = ({ isNew }: Props) => (
                             id="files"
                             name="files"
                             values={files}
-                            onChange={setFieldValue}
+                            onChange={changeFiles}
                             height="180px"
                             width={files.length > 0 ? '120px' : '180px'}
                           />
@@ -217,48 +216,6 @@ const ProductSection = ({ isNew }: Props) => (
                 })
               }
             </FormField>
-
-            {/* NOTE: comment out because this iS WIP, not tested yet
-            {values.metadata.map((data, index) => (
-              <GridRow>
-                <FormField
-                  name={`metadata.${index}.field`}
-                  initValue={values.metadata[index].field}
-                  setFieldValue={setFieldValue}
-                  values={values}
-                  validator={validator}
-                  key={data.field}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    textInputFactory({
-                      type: 'label',
-                      align: 'left',
-                      inputHandlers,
-                      name,
-                      isNew,
-                      originalValue: initialValues[name],
-                    })
-                  }
-                </FormField>
-                <FormField
-                  name={`metadata.${index}.value`}
-                  initValue={values.metadata[index].value}
-                  setFieldValue={setFieldValue}
-                  values={values}
-                  validator={validator}
-                  key={data.value}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    textInputFactory({
-                      inputHandlers,
-                      name,
-                      isNew,
-                      originalValue: initialValues[name],
-                    })
-                  }
-                </FormField>
-              </GridRow>
-            ))} */}
 
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>
