@@ -176,6 +176,7 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-react": "^7.11.1",
+    "faker": "^4.1.0",
     "file-loader": "2.0.0",
     "flow-bin": "^0.83.0",
     "flow-coverage-report": "^0.6.0",
