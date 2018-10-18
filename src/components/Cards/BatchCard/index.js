@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
@@ -69,7 +69,11 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
 
   return (
     <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
-      <Link className={BatchCardWrapperStyle} to={`/batch/${encodeId(id)}`}>
+      <div
+        className={BatchCardWrapperStyle}
+        onClick={() => navigate(`/batch/${encodeId(id)}`)}
+        role="presentation"
+      >
         <div className={ProductWrapperStyle}>
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
@@ -211,7 +215,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
           </div>
         </div>
-      </Link>
+      </div>
     </BaseCard>
   );
 };
