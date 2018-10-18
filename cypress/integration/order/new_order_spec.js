@@ -31,10 +31,10 @@ describe('Order', () => {
         .get('button[data-testid="dashedButton"]')
         .click()
         .wait(1000)
-        .get('div[data-testid="partnerCard"]')
-        .each($el => {
-          cy.wrap($el).click();
-        })
+        .get('.InfiniteScroll')
+        .children()
+        .first()
+        .click()
         .get('button[data-testid="saveButtonOnSelectExporters"]')
         .click()
         .wait(1000)

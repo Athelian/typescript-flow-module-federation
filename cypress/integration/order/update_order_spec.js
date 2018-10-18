@@ -6,7 +6,7 @@ describe('Order', () => {
     cy.logout();
   });
 
-  it('should change the order po number', () => {
+  it('should change the order info section', () => {
     // go to detail
     cy.visit('/order')
       .wait(1000)
