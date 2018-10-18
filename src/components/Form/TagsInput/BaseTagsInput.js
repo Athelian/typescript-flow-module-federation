@@ -115,7 +115,17 @@ export default class BaseTagsInput extends React.Component<Props, State> {
   isReadOnly = (isWrite?: boolean, isEditable: boolean) => !isWrite || !isEditable;
 
   render() {
-    const { isRead, isWrite, editable, disabled, readOnly, values, tags, multiSelect } = this.props;
+    const {
+      isRead,
+      isWrite,
+      editable,
+      disabled,
+      readOnly,
+      values,
+      tags,
+      multiSelect,
+      name,
+    } = this.props;
     const { focused } = this.state;
     if (!isRead) return null;
 
@@ -132,6 +142,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                   onChange={this.handleDownshiftChange}
                   onStateChange={this.handleStateChange}
                   stateReducer={this.stateReducer}
+                  labelId={`${name}TagInputs`}
                 >
                   {({
                     getInputProps,

@@ -29,6 +29,7 @@ describe('Order', () => {
       .type(currency)
       .should('have.value', currency)
       .wait(400)
+      .get('input[aria-labelledby="tagsTagInputs"]')
       .type('{downarrow}{enter}')
       .get('button[data-testid="dashedButton"]')
       .click()
