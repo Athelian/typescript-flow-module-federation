@@ -112,9 +112,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
             <FormField
               name="unitVolume.value"
               initValue={getByPath('unitVolume.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldValue('unitVolume', { value, metric: 'cm³' })
-              }
+              setFieldValue={(field, value) => setFieldValue('unitVolume', { value, metric: 'm³' })}
             >
               {({ name, ...inputHandlers }) =>
                 numberInputFactory({
@@ -138,7 +136,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
               name="unitSize.length.value"
               initValue={getByPath('unitSize.length.value', values)}
               setFieldValue={(field, value) =>
-                setFieldValue('unitSize.length', { value, metric: 'cm' })
+                setFieldValue('unitSize.length', { value, metric: 'm' })
               }
             >
               {({ name, ...inputHandlers }) =>
@@ -162,7 +160,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
               name="unitSize.width.value"
               initValue={getByPath('unitSize.width.value', values)}
               setFieldValue={(field, value) =>
-                setFieldValue('unitSize.width', { value, metric: 'cm' })
+                setFieldValue('unitSize.width', { value, metric: 'm' })
               }
             >
               {({ name, ...inputHandlers }) =>
@@ -186,7 +184,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
               name="unitSize.height.value"
               initValue={getByPath('unitSize.height.value', values)}
               setFieldValue={(field, value) =>
-                setFieldValue('unitSize.height', { value, metric: 'cm' })
+                setFieldValue('unitSize.height', { value, metric: 'm' })
               }
             >
               {({ name, ...inputHandlers }) =>
