@@ -21,7 +21,11 @@ module.exports = on => {
         return {
           poNo: faker.name.findName(),
           piNo: faker.name.findName(),
-          currency: 'JPY',
+          issueAt: faker.date.future(),
+          deliveryPlace: faker.address.city(),
+          memo: faker.lorem.paragraph(),
+          currency: 'ALL',
+          incoterm: 'FAS',
         };
 
       return null;

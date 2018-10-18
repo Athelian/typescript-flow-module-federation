@@ -52,11 +52,11 @@ function GridView(props: Props) {
 
   return (
     <InfiniteScroll
-      className={GridViewWrapperStyle({
+      className={`${GridViewWrapperStyle({
         itemWidth,
         columnGap: gap || columnGap,
         rowGap: gap || rowGap,
-      })}
+      })} InfiniteScroll`}
       loadMore={onLoadMore}
       hasMore={hasMore}
       loader={<LoadingIcon key="loading" />}
