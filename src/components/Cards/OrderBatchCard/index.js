@@ -44,26 +44,6 @@ type Props = OptionalProps & {
   onRemove: (batch: Object) => void,
 };
 
-const calculateVolume = (batch: Object, quantity: number) => {
-  if (batch && batch.packageVolume && batch.packageVolume.value) {
-    return (
-      <>
-        <FormattedNumber value={batch.packageVolume.value * quantity} />
-        {batch.packageVolume.metric}
-      </>
-    );
-  }
-
-  if (batch && batch.packageSize && Object.keys(batch.packageSize).length) {
-    const { width, height, length } = batch.packageSize || { width: {}, height: {}, length: {} };
-    return `${width.value}${width.metric}x${height.value}${height.metric}x${length.value}${
-      length.metric
-    }`;
-  }
-
-  return <FormattedMessage id="components.cards.notApplicable" defaultMessage="N/A" />;
-};
-
 const defaultProps = {
   onClick: () => {},
 };
@@ -127,14 +107,13 @@ const OrderBatchCard = ({
     </BooleanValue>,
   ];
 
-  const { shipment } = batch;
+  const { no, quantity, deliveredAt, packageVolume, batchAdjustments, shipment } = batch;
   const warehouseArrivalApproved = false;
 
-  const totalAdjustment = batch.batchAdjustments
-    ? batch.batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
+  const totalAdjustment = batchAdjustments
+    ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
     : 0;
 
-  const { no, quantity, deliveredAt } = batch;
   return (
     <BaseCard icon="BATCH" color="BATCH" showActionsOnHover actions={actions} {...rest}>
       <div
@@ -234,11 +213,11 @@ const OrderBatchCard = ({
 
         <div className={TotalPriceWrapperStyle}>
           <Label>
-            <FormattedMessage id="components.cards.total" defaultMessage="TOTAL" />
+            <FormattedMessage id="components.cards.total" defaultMessage="TTL PRICE" />
           </Label>
           <Display>
             <FormattedNumber
-              value={(quantity + totalAdjustment) * (price && price.amount ? price.amount : 0)}
+              value={(price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)}
               suffix={currency}
             />
           </Display>
@@ -246,9 +225,16 @@ const OrderBatchCard = ({
 
         <div className={VolumeWrapperStyle}>
           <Label>
-            <FormattedMessage id="components.cards.volume" defaultMessage="VOLUME" />
+            <FormattedMessage id="components.cards.volume" defaultMessage="TTL VOL" />
           </Label>
-          <Display>{calculateVolume(batch, quantity + totalAdjustment)} </Display>
+          <Display>
+            {packageVolume && (
+              <FormattedNumber
+                value={packageVolume.value * (quantity + totalAdjustment)}
+                suffix={packageVolume.metric}
+              />
+            )}
+          </Display>
         </div>
 
         <div className={ShipmentWrapperStyle}>
