@@ -21,7 +21,7 @@
   "components.cards.volume": "CBM",
   "components.cards.arrival": "到着日",
   "validation.no.required": "No is required field",
-  "validation.quantity.required": "Quantity is must be a number",
+  "validation.quantity.number": "Quantity must be a number",
   "components.cards.ttlItems": "商品数",
   "components.cards.deleteOrderItem": "本当にこの商品を削除しますか?",
   "components.cards.deleteOrderItemBatches": "このオーダーに付属するバッチを全て削除します.",
