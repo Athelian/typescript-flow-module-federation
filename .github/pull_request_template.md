@@ -31,6 +31,7 @@
 
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 
+- [ ] I18n
 - [ ] Eslint
 - [ ] Prettier
 - [ ] Flow
