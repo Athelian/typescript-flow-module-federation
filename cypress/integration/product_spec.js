@@ -6,115 +6,104 @@ describe('Product', () => {
     cy.logout();
   });
 
-  beforeEach(() => {
-    cy.fixture('product').as('productData');
-  });
+  it('new a product', () => {
+    cy.task('fixture', 'product').then(({ name, serial, janCode, hsCode, material }) => {
+      cy.visit('/product')
+        .getByTestId('newButton')
+        .click()
+        .url()
+        .should('include', 'new');
 
-  it('new a product', function newProduct() {
-    const { name, serial, janCode, hsCode, material } = this.productData;
+      cy.get('input[name="name"]')
+        .type(name)
+        .get('input[name="serial"]')
+        .type(serial)
+        .get('input[name="janCode"]')
+        .type(janCode)
+        .get('input[name="hsCode"]')
+        .type(hsCode)
+        .get('input[name="material"]')
+        .type(material);
 
-    cy.visit('/product')
-      .getByTestId('newButton')
-      .click()
-      .url()
-      .should('include', 'new');
+      cy.getByTestId('newProviderButton').click();
+      cy.getByTestId('selectExportersButton').click();
+      cy.getByTestId('partnerCard').click();
+      cy.getByTestId('saveButtonOnSelectExporters').click();
+      cy.getByTestId('saveProviderButton').click();
 
-    cy.get('input[name="name"]')
-      .type(name)
-      .get('input[name="serial"]')
-      .type(serial)
-      .get('input[name="janCode"]')
-      .type(janCode)
-      .get('input[name="hsCode"]')
-      .type(hsCode)
-      .get('input[name="material"]')
-      .type(material);
+      cy.getByTestId('saveButton')
+        .click()
+        .wait(500);
 
-    cy.getByTestId('newProviderButton').click();
-    cy.getByTestId('selectExportersButton').click();
-
-    cy.getByTestId('partnerCard').click();
-    cy.getByTestId('saveButtonOnSelectExporters').click();
-    cy.getByTestId('saveProviderButton').click();
-    cy.getByTestId('saveButton')
-      .click()
-      .wait(500);
-
-    cy.get('input[name="name"]')
-      .should('have.value', name)
-      .get('input[name="serial"]')
-      .should('have.value', serial)
-      .get('input[name="janCode"]')
-      .should('have.value', janCode)
-      .get('input[name="hsCode"]')
-      .should('have.value', hsCode)
-      .get('input[name="material"]')
-      .should('have.value', material);
+      cy.get('input[name="name"]')
+        .should('have.value', name)
+        .get('input[name="serial"]')
+        .should('have.value', serial)
+        .get('input[name="janCode"]')
+        .should('have.value', janCode)
+        .get('input[name="hsCode"]')
+        .should('have.value', hsCode)
+        .get('input[name="material"]')
+        .should('have.value', material);
+    });
   });
 
   it('update a product', () => {
-    const { updatedName, serial, janCode, hsCode, material } = this.productData;
+    cy.task('fixture', 'product').then(({ updatedName }) => {
+      cy.get('input[name="name"]')
+        .clear()
+        .blur();
+      cy.getByTestId('saveButton').should('be.disabled');
 
-    cy.get('input[name="name"]')
-      .clear()
-      .blur();
-    cy.getByTestId('saveButton').should('be.disabled');
+      cy.get('input[name="name"]')
+        .type(updatedName)
+        .blur();
+      cy.getByTestId('saveButton')
+        .click()
+        .wait(500);
 
-    cy.get('input[name="name"]')
-      .type(updatedName)
-      .blur();
-    cy.getByTestId('saveButton')
-      .click()
-      .wait(500);
-
-    cy.get('input[name="name"]')
-      .should('have.value', updatedName)
-      .get('input[name="serial"]')
-      .should('have.value', serial)
-      .get('input[name="janCode"]')
-      .should('have.value', janCode)
-      .get('input[name="hsCode"]')
-      .should('have.value', hsCode)
-      .get('input[name="material"]')
-      .should('have.value', material);
+      cy.get('input[name="name"]').should('have.value', updatedName);
+    });
   });
 
   it('clone a product', () => {
-    const { clonedName, clonedSerial, clonedJanCode, clonedHsCode, material } = this.productData;
+    cy.task('fixture', 'product').then(
+      ({ clonedName, clonedSerial, clonedJanCode, clonedHsCode, material }) => {
+        cy.getByTestId('cloneButton')
+          .click()
+          .wait(500);
+        cy.url().should('include', 'clone');
 
-    cy.getByTestId('cloneButton')
-      .click()
-      .wait(500);
-    cy.url().should('include', 'clone');
+        cy.get('input[name="name"]')
+          .clear()
+          .type(clonedName)
+          .get('input[name="serial"]')
+          .clear()
+          .type(clonedSerial)
+          .get('input[name="janCode"]')
+          .clear()
+          .type(clonedJanCode)
+          .get('input[name="hsCode"]')
+          .clear()
+          .type(clonedHsCode)
+          .blur();
 
-    cy.get('input[name="name"]')
-      .clear()
-      .type(clonedName)
-      .get('input[name="serial"]')
-      .clear()
-      .type(clonedSerial)
-      .get('input[name="janCode"]')
-      .clear()
-      .type(clonedJanCode)
-      .get('input[name="hsCode"]')
-      .clear()
-      .type(clonedHsCode)
-      .blur();
+        cy.getByTestId('saveButton')
+          .click()
+          .wait(500);
 
-    cy.getByTestId('saveButton')
-      .click()
-      .wait(500);
-
-    cy.get('input[name="name"]')
-      .should('have.value', clonedName)
-      .get('input[name="serial"]')
-      .should('have.value', clonedSerial)
-      .get('input[name="janCode"]')
-      .should('have.value', clonedJanCode)
-      .get('input[name="hsCode"]')
-      .should('have.value', clonedHsCode)
-      .get('input[name="material"]')
-      .should('have.value', material);
+        cy.get('input[name="name"]')
+          .should('have.value', clonedName)
+          .get('input[name="serial"]')
+          .should('have.value', clonedSerial)
+          .get('input[name="janCode"]')
+          .should('have.value', clonedJanCode)
+          .get('input[name="hsCode"]')
+          .should('have.value', clonedHsCode)
+          .get('input[name="material"]')
+          .should('have.value', material);
+      }
+    );
   });
 
   it('archive a product', () => {
