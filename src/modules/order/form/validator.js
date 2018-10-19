@@ -5,6 +5,16 @@ const validator = Yup.object().shape({
   poNo: Yup.string().required(),
   currency: Yup.string().required(),
   exporter: Yup.string().required(),
+  orderItems: Yup.array().of(
+    Yup.object().shape({
+      batches: Yup.array().of(
+        Yup.object().shape({
+          no: Yup.string().required(),
+          quantity: Yup.number(),
+        })
+      ),
+    })
+  ),
 });
 
 export default validator;
