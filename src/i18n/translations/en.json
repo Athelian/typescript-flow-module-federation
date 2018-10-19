@@ -21,7 +21,7 @@
   "components.cards.volume": "TTL VOL",
   "components.cards.arrival": "ARRIVAL",
   "validation.no.required": "No is required field",
-  "validation.quantity.required": "Quantity is must be a number",
+  "validation.quantity.number": "Quantity must be a number",
   "components.cards.ttlItems": "TTL ITEMS",
   "components.cards.deleteOrderItem": "Are you sure you want to delete this Item?",
   "components.cards.deleteOrderItemBatches": "This will delete all {batches} of its Batches as well.",

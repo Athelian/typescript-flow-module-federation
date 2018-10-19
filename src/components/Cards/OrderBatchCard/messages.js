@@ -7,7 +7,7 @@ export default defineMessages({
     defaultMessage: 'No is required field',
   },
   quantity: {
-    id: 'validation.quantity.required',
-    defaultMessage: 'Quantity is must be a number',
+    id: 'validation.quantity.number',
+    defaultMessage: 'Quantity must be a number',
   },
 });
