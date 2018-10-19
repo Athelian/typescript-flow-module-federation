@@ -12,6 +12,7 @@ import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display } from 'components/Form';
+import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderBatchCardWrapperStyle,
@@ -114,6 +115,14 @@ const OrderBatchCard = ({
     ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
     : 0;
 
+  const validation = validator({
+    no: `batch.${batch.id}.no`,
+    quantity: `batch.${batch.id}.quantity`,
+  });
+  const values = {
+    [`batch.${batch.id}.no`]: no,
+    [`batch.${batch.id}.quantity`]: quantity + totalAdjustment,
+  };
   return (
     <BaseCard icon="BATCH" color="BATCH" showActionsOnHover actions={actions} {...rest}>
       <div
@@ -126,7 +135,12 @@ const OrderBatchCard = ({
           onClick={evt => evt.stopPropagation()}
           role="presentation"
         >
-          <FormField name={`batch.${batch.id}.no`} initValue={no}>
+          <FormField
+            name={`batch.${batch.id}.no`}
+            initValue={no}
+            validator={validation}
+            values={values}
+          >
             {({ name: fieldName, ...inputHandlers }) =>
               textInputFactory({
                 width: '165px',
@@ -155,7 +169,12 @@ const OrderBatchCard = ({
           <Label required>
             <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
           </Label>
-          <FormField name={`batch.${batch.id}.quantity`} initValue={quantity + totalAdjustment}>
+          <FormField
+            name={`batch.${batch.id}.quantity`}
+            initValue={quantity + totalAdjustment}
+            validator={validation}
+            values={values}
+          >
             {({ name: fieldName, ...inputHandlers }) =>
               numberInputFactory({
                 width: '90px',
