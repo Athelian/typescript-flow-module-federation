@@ -205,7 +205,7 @@ class TimelineInfoSection extends React.Component<Props> {
           <GridColumn gap="10px">
             <div className={AddDateButtonWrapperStyle}>
               <NewButton
-                label="NEW DATE"
+                label={<FormattedMessage id="modules.shipment.newDate" defaultMessage="NEW DATE" />}
                 onClick={() => {
                   setFieldDeepValue(
                     `${sourceName}.timelineDateRevisions[${(timelineDate &&
