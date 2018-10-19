@@ -92,6 +92,7 @@ import {
   faClipboardCheck as ORDER_SELECT,
   faLink as CONNECT,
   faBezierCurve as SPLIT,
+  faBezierCurve as ENTITY,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -107,6 +108,7 @@ import {
   faEye as EYE,
   faCodeBranch as BRANCH,
   faSquare as SQUARE,
+  faAngleRight as TARGET,
 } from '@fortawesome/pro-regular-svg-icons';
 
 import {
@@ -220,4 +222,6 @@ export default {
   POWER_POINT,
   WORD,
   SQUARE,
+  TARGET,
+  ENTITY,
 };

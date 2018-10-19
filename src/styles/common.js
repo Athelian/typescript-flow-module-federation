@@ -46,6 +46,8 @@ export const colors = {
   PARTNER: '#474D4D',
   TAG: '#bbbbbb',
   LOGS: '#bbbbbb',
+  TARGET: '#555555',
+  ENTITY: '#0B6EDE',
 
   URGENT: '#F12C2C',
 };
