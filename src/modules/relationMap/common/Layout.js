@@ -10,6 +10,7 @@ import Tabs from 'components/NavBar/components/Tabs';
 import { EntityIcon, RelationMapNavBar } from 'components/NavBar';
 import { ContentWrapperStyle } from 'modules/relationMap/style';
 import messages from 'modules/relationMap/messages';
+import FloatMenu from 'components/RelationMap/FloatMenu';
 
 type Props = {
   intl: IntlShape,
@@ -65,6 +66,7 @@ const RelationMapLayout = ({ intl, children }: Props) => {
           }
         >
           <div className={ContentWrapperStyle}>{children}</div>
+          <FloatMenu />
         </Layout>
       )}
     </UIConsumer>
