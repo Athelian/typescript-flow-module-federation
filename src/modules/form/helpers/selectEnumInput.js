@@ -86,7 +86,6 @@ export default function selectEnumInputFactory({
                     {...rest}
                     type={type}
                     align={align}
-                    required
                     forceHoverStyle={isNew}
                     width="200px"
                     itemToString={item => (item ? item.description || item.name : '')}

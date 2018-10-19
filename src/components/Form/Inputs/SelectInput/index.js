@@ -37,6 +37,11 @@ class SelectInput extends React.Component<Props, State> {
     });
   };
 
+  handleClear = (clearSelection: Function) => {
+    clearSelection();
+    this.handleChange(null);
+  };
+
   handleBlur = (evt: Object) => {
     const { onBlur } = this.props;
     if (onBlur) onBlur(evt);
@@ -73,7 +78,7 @@ class SelectInput extends React.Component<Props, State> {
               isOpen,
               toggle,
               selectedItem,
-              clearSelection,
+              clearSelection: () => this.handleClear(clearSelection),
               getInputProps,
               itemToString,
             })}
