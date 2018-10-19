@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { NoButton, YesButton } from 'components/Buttons';
 import type { ConfirmDialogProps } from 'components/Dialog/type';
-
 import Dialog from '../index';
-import messages from './messages';
 import { DialogStyle, ConfirmMessageStyle, ButtonsStyle } from './style';
 
 function ConfirmDialog({
@@ -20,12 +18,8 @@ function ConfirmDialog({
       <div className={DialogStyle}>
         <div className={ConfirmMessageStyle}>{message}</div>
         <div className={ButtonsStyle}>
-          <button onClick={onCancel} type="button">
-            <FormattedMessage {...messages.cancel} />
-          </button>
-          <button onClick={onConfirm} type="button">
-            <FormattedMessage {...messages.confirm} />
-          </button>
+          <NoButton onClick={onCancel} />
+          <YesButton onClick={onConfirm} />
         </div>
       </div>
     </Dialog>
