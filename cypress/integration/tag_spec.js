@@ -30,7 +30,7 @@ describe('Tag', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(100)
+      .wait(500)
       .should('not.exist');
 
     cy.get('input[name="name"]')
@@ -67,7 +67,7 @@ describe('Tag', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(100)
+      .wait(500)
       .should('not.exist');
   });
 });

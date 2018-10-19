@@ -49,7 +49,7 @@ describe('Warehouse', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(100)
+      .wait(500)
       .should('not.exist');
 
     cy.get('input[name="name"]')
@@ -79,7 +79,7 @@ describe('Warehouse', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(100)
+      .wait(500)
       .should('not.exist');
   });
 
@@ -94,7 +94,7 @@ describe('Warehouse', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(100)
+      .wait(500)
       .should('not.exist');
   });
 });
