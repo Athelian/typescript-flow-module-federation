@@ -10,6 +10,7 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { FieldItem, Label, Display } from 'components/Form';
+import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   ShipmentBatchCardWrapperStyle,
@@ -97,6 +98,14 @@ const ShipmentBatchCard = ({
   const productImage =
     product.files && product.files.length > 0 ? product.files[0].path : FALLBACK_IMAGE;
 
+  const validation = validator({
+    no: `batch.${id}.no`,
+    quantity: `batch.${id}.quantity`,
+  });
+  const values = {
+    [`batch.${id}.no`]: no,
+    [`batch.${id}.quantity`]: quantity + totalAdjustment,
+  };
   return (
     <BaseCard
       icon="BATCH"
@@ -147,7 +156,12 @@ const ShipmentBatchCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <FormField name={`batch.${id}.no`} initValue={no}>
+            <FormField
+              name={`batch.${id}.no`}
+              initValue={no}
+              validator={validation}
+              values={values}
+            >
               {({ name: fieldName, ...inputHandlers }) =>
                 textInputFactory({
                   width: '185px',
@@ -176,7 +190,12 @@ const ShipmentBatchCard = ({
             <Label required>
               <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
             </Label>
-            <FormField name={`batch.${id}.quantity`} initValue={quantity + totalAdjustment}>
+            <FormField
+              name={`batch.${id}.quantity`}
+              initValue={quantity + totalAdjustment}
+              validator={validation}
+              values={values}
+            >
               {({ name: fieldName, ...inputHandlers }) =>
                 numberInputFactory({
                   width: '90px',

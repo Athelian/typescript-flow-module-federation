@@ -83,15 +83,34 @@ export default class FormContainer extends Container<FormState> {
     schema
       .validate(formData, { abortEarly: false })
       .then(() => {
-        if (Object.keys(errors).length) this.setState({ errors: {}, hasServerError: false });
+        if (isEquals(Object.keys(formData), Object.keys(errors)) && Object.keys(errors).length) {
+          this.setState({ errors: {}, hasServerError: false });
+        } else {
+          const remainErrors: Object = {};
+          Object.keys(errors).forEach(field => {
+            if (!formData[field]) {
+              remainErrors[field] = errors[field];
+            }
+          });
+          this.setState({
+            errors: remainErrors,
+            hasServerError: false,
+          });
+        }
       })
       .catch((yupErrors: Object) => {
         const newErrors = yupToFormErrors(yupErrors);
-        if (!isEquals(newErrors, errors))
+        if (!isEquals(Object.keys(formData), Object.keys(errors))) {
+          this.setState({
+            errors: { ...errors, ...newErrors },
+            hasServerError: false,
+          });
+        } else if (!isEquals(newErrors, errors)) {
           this.setState({
             errors: newErrors,
             hasServerError: false,
           });
+        }
       });
   };
 }
