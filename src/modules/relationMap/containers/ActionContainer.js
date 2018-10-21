@@ -36,7 +36,7 @@ const formatResult = (responses, idPath, ids) => {
     const id = getByPathWithDefault(null, idPath, data);
     if (id) {
       return update(result, {
-        itemId: { $set: { [id]: true } },
+        itemId: { $merge: { [id]: true } },
         refId: { [refId]: { $merge: { [id]: true } } },
       });
     }
