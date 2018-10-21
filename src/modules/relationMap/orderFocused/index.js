@@ -1,33 +1,31 @@
 // @flow
 import React from 'react';
 import { BooleanValue, createObjectValue } from 'react-values';
+import update from 'immutability-helper';
 import { getByPathWithDefault } from 'utils/fp';
-import { generateOrderRelation } from 'modules/relationMap/util';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
 import { CardAction } from 'components/Cards/BaseCard';
 
 import RelationView from '../common/RelationView';
 import DetailFocused, { ToggleSlide } from '../common/SlideForm';
 import Item from '../common/RelationItem';
+import generateRelation from './relation';
 
-export const FocusedValue = createObjectValue({ focusedItem: {}, relationItem: {} });
+export const FocusedValue = createObjectValue({ focusedItem: {}, focusMode: '' });
 
 type Props = {
   order: Object,
   hasMore: boolean,
   loadMore: Function,
   nodes: Array<Object>,
+  result: Object,
 };
 
 const getItemData = ({ order, orderItem, batch }, relation) => {
   let itemData;
   switch (relation.type) {
     case 'ORDER_ITEM_ALL':
-      itemData = order[relation.id];
-      break;
     case 'BATCH_ALL':
-      itemData = order[relation.id];
-      break;
     case 'ORDER':
       itemData = order[relation.id];
       break;
@@ -68,11 +66,19 @@ const getFocusedLink = (focusedItem, relatedIds) =>
     relatedIds.some(relatedId => relatedId === focusId)
   );
 
+const getHighlight = ({ focusedItem, focusMode, relation, itemType, isLink }) => {
+  if (isLink && focusMode === 'HIGHLIGHT') {
+    return getFocusedLink(focusedItem[relation.itemType], relation.relatedIds);
+  }
+  return getByPathWithDefault(false, `${itemType}.${relation.id}` || '', focusedItem);
+};
+
 const OrderFocused = ({
   order: { orderObj: order, orderItemObj: orderItem, batchObj: batch, shipmentObj: shipment },
   nodes,
   hasMore,
   loadMore,
+  result,
 }: Props) => (
   <>
     <RelationView
@@ -87,45 +93,64 @@ const OrderFocused = ({
       render={({ item }) => (
         <BooleanValue defaultValue key={item.id}>
           {({ value: isCollapsed, toggle }) => {
-            const relations = generateOrderRelation(item, { isCollapsed });
+            const relations = generateRelation(item, { isCollapsed, result });
             return relations.map((relation, relationIndex) => {
               const key = `relation-${relationIndex}`;
               const itemData = getItemData({ order, orderItem, batch }, relation);
               const itemType = getItemType(relation.type);
-              const isLink = /LINK-[0-4]/.test(relation.type);
+              const isLink = /LINK-[0-4]-(\w+)/.test(relation.type);
               return (
                 <ToggleSlide key={key}>
                   {({ assign: setSlide }) => (
                     <FocusedValue key={key}>
-                      {({ value: { focusedItem }, assign: setItem, reset }) => (
+                      {({ value: { focusedItem, focusMode }, assign: setItem, reset }) => (
                         <Item
                           key={key}
                           type={relation.type}
-                          isFocused={
-                            isLink
-                              ? getFocusedLink(focusedItem[relation.itemType], relation.relatedIds)
-                              : getByPathWithDefault(
-                                  false,
-                                  `${itemType}.${relation.id}` || '',
-                                  focusedItem
-                                )
-                          }
-                          {...(isLink
-                            ? {
-                                hasRelation: getByPathWithDefault(
-                                  false,
-                                  `${relation.itemType}.${relation.id}`,
-                                  focusedItem
-                                ),
-                              }
-                            : {})}
+                          isFocused={getHighlight({
+                            isLink,
+                            focusedItem,
+                            focusMode,
+                            itemType,
+                            relation,
+                          })}
+                          {...focusMode && { focusMode }}
+                          {...isLink && {
+                            hasRelation: getByPathWithDefault(
+                              false,
+                              `${relation.itemType}.${relation.id}`,
+                              focusedItem
+                            ),
+                          }}
                           actions={[
                             <CardAction
                               icon="SQUARE"
                               onClick={() => {
                                 setItem({
                                   focusedItem: getByPathWithDefault({}, 'relation', itemData),
-                                  relationItem: relation,
+                                  focusMode: 'HIGHLIGHT',
+                                });
+                              }}
+                            />,
+                            <CardAction
+                              icon="BRANCH"
+                              onClick={() => {
+                                const data = getByPathWithDefault({}, 'data', itemData);
+                                setItem({
+                                  focusedItem: update(
+                                    focusMode === 'TARGET'
+                                      ? focusedItem
+                                      : {
+                                          order: {},
+                                          orderItem: {},
+                                          batch: {},
+                                          shipment: {},
+                                        },
+                                    {
+                                      [itemType]: { $merge: { [data.id]: data } },
+                                    }
+                                  ),
+                                  focusMode: 'TARGET',
                                 });
                               }}
                             />,
@@ -161,16 +186,16 @@ const OrderFocused = ({
               <BooleanValue defaultValue>
                 {({ value: isCollapsed, toggle }) => (
                   <FocusedValue key={shipmentId}>
-                    {({ value: { focusedItem, relationItem }, assign, reset }) => (
+                    {({ value: { focusedItem }, assign, reset }) => (
                       <Item
                         key={shipmentId}
                         type={isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT'}
                         data={currentShipment.data}
-                        isFocused={
-                          relationItem.type === 'SHIPMENT'
-                            ? relationItem.id === shipmentId
-                            : getByPathWithDefault(false, `shipment.${shipmentId}`, focusedItem)
-                        }
+                        isFocused={getByPathWithDefault(
+                          false,
+                          `shipment.${shipmentId}`,
+                          focusedItem
+                        )}
                         isCollapsed={isCollapsed}
                         actions={[
                           <CardAction

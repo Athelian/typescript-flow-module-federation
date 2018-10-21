@@ -124,6 +124,9 @@ export const orderListQuery = gql`
             quantity
             archived
             deliveredAt
+            orderItem {
+              id
+            }
             tags {
               id
               name

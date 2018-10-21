@@ -26,7 +26,7 @@ export default class BatchCard extends React.PureComponent<Props> {
     return (
       <div className={CardWrapperStyle}>
         <div className={CardTitleStyle}>
-          <di>{no}</di>
+          <div>{no}</div>
           <div>
             <FormattedDate value={deliveredAt} />
           </div>

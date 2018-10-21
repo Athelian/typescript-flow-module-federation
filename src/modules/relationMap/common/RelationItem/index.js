@@ -33,6 +33,7 @@ type OptionalProps = {
   isCollapsed: boolean,
   isFocused: boolean,
   hasRelation?: boolean,
+  focusMode?: string,
   onClick: Function,
   onDoubleClick?: Function,
   actions: Array<React.Node>,
@@ -58,6 +59,7 @@ const Item = (props: Props) => {
     hasRelation,
     isCollapsed,
     onDoubleClick,
+    focusMode,
     actions,
   } = props;
   if (typeof type === 'string' && /LINK-[0-4]/.test(type)) {
@@ -82,7 +84,7 @@ const Item = (props: Props) => {
           icon={type}
           color={type}
           actions={actions}
-          wrapperClassName={ItemWrapperStyle(isFocused)}
+          wrapperClassName={ItemWrapperStyle(isFocused, focusMode)}
         >
           <WrapperCard onDoubleClick={onDoubleClick}>
             <OrderCard order={data} />
@@ -100,7 +102,7 @@ const Item = (props: Props) => {
           icon={type}
           color={type}
           actions={actions}
-          wrapperClassName={ItemWrapperStyle(isFocused)}
+          wrapperClassName={ItemWrapperStyle(isFocused, focusMode)}
         >
           <OrderItemCard orderItem={data} />
         </BaseCard>
@@ -113,7 +115,7 @@ const Item = (props: Props) => {
           icon={type}
           color={type}
           actions={actions}
-          wrapperClassName={ItemWrapperStyle(isFocused)}
+          wrapperClassName={ItemWrapperStyle(isFocused, focusMode)}
         >
           <WrapperCard onDoubleClick={onDoubleClick}>
             <BatchCard batch={data} />
@@ -126,7 +128,7 @@ const Item = (props: Props) => {
     }
     case ORDER_ITEM_ALL: {
       return (
-        <BaseCard actions={[]} wrapperClassName={ItemWrapperStyle(isFocused)}>
+        <BaseCard actions={[]} wrapperClassName={ItemWrapperStyle(isFocused, focusMode)}>
           <WrapperCard onClick={onClick}>
             <TotalCard name="Items" quantity={data.totalItem} />
           </WrapperCard>
@@ -135,7 +137,7 @@ const Item = (props: Props) => {
     }
     case BATCH_ALL:
       return (
-        <BaseCard wrapperClassName={ItemWrapperStyle(isFocused)}>
+        <BaseCard wrapperClassName={ItemWrapperStyle(isFocused, focusMode)}>
           <WrapperCard onClick={onClick}>
             <TotalCard name="Batches" quantity={data.totalBatch} />
           </WrapperCard>

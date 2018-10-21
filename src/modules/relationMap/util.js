@@ -1,20 +1,11 @@
-import { getByPathWithDefault } from 'utils/fp';
+import * as fp from 'utils/fp';
 
-const getLinkType = (itemNo, numberOfItem) => {
-  let linkType = 'LINK-4';
-  if (numberOfItem > 1) {
-    linkType = 'LINK-4';
-    if (itemNo === numberOfItem) {
-      linkType = 'LINK-4';
-    }
-  }
-  return linkType;
-};
+const { getByPathWithDefault } = fp;
 
-const getBatchLinkType = (itemNo, numberOfItem) => {
+const getBatchLinkType = (itemNo, numberOfItem, haveNewItem) => {
   let linkType = 'LINK-0';
   if (numberOfItem > 1) {
-    if (itemNo === 1) {
+    if (itemNo === 1 && !haveNewItem) {
       linkType = 'LINK-1';
     } else if (itemNo === numberOfItem) {
       linkType = 'LINK-4';
@@ -25,15 +16,19 @@ const getBatchLinkType = (itemNo, numberOfItem) => {
   return linkType;
 };
 // @TODO add cache (memorized) data
-const getRelatedIds = (items, currentIndex) => {
+const getRelatedIds = (items, currentIndex, resultIds) => {
   const ids = [];
   for (let index = items.length - 1; index >= currentIndex; index -= 1) {
-    ids.push(items[index].id);
+    const { id } = items[index];
+    if (!(resultIds && resultIds.some(resultId => resultId === id))) {
+      ids.push(id);
+    }
   }
   return ids;
 };
 
 export const generateOrderRelation = (order, option) => {
+  const { isCollapsed, result, resultId } = option;
   const orderRelations = [];
   const { orderItems } = order;
   const numberOfProduct = orderItems.length;
@@ -52,7 +47,7 @@ export const generateOrderRelation = (order, option) => {
   }
 
   orderRelations.push({
-    type: option.isCollapsed ? 'LINK-0' : 'LINK-1',
+    type: isCollapsed ? 'LINK-0' : 'LINK-1',
     id: order.id,
     relatedIds: [order.id],
     itemType: 'order',
@@ -60,9 +55,10 @@ export const generateOrderRelation = (order, option) => {
   orderRelations.push({ type: 'ORDER_ITEM_ALL', id: order.id });
   orderRelations.push({ type: 'LINK-0', id: order.id, relatedIds: [order.id], itemType: 'order' });
   orderRelations.push({ type: 'BATCH_ALL', id: order.id });
-  if (!option.isCollapsed) {
+  if (!isCollapsed) {
     orderItems.forEach((product, index) => {
       const relatedProductIds = getRelatedIds(orderItems, index);
+
       const productNo = index + 1;
       const { batches } = product;
       const numberOfBatch = batches.length;
@@ -71,7 +67,7 @@ export const generateOrderRelation = (order, option) => {
       orderRelations.push({
         id: product.id,
         itemType: 'orderItem',
-        type: getLinkType(productNo, numberOfProduct),
+        type: 'LINK-4',
         relatedIds: relatedProductIds,
       });
       orderRelations.push({ type: 'ORDER_ITEM', id: product.id });
@@ -81,6 +77,34 @@ export const generateOrderRelation = (order, option) => {
       }
       batches.forEach((batch, batchIndex) => {
         const batchNo = batchIndex + 1;
+        // if (resultId.batchIds.some(bId => bId === batch.id)) {
+        //   return;
+        // }
+        const relatedBatchIds = getRelatedIds(batches, batchIndex, resultId.batchIds);
+
+        if (result.batch[batch.id]) {
+          const newBatches = result.batch[batch.id];
+          newBatches.forEach(newBatchId => {
+            // const newBatchNo = newBatchIndex + 1;
+            if (batchNo > 1) {
+              orderRelations.push({ type: '' });
+              orderRelations.push({
+                type: 'LINK-2',
+                id: product.id,
+                itemType: 'orderItem',
+                relatedIds: relatedProductIds.filter(id => id !== product.id),
+              });
+              orderRelations.push({ type: '' });
+            }
+            orderRelations.push({
+              type: batchNo === 1 ? 'LINK-1' : 'LINK-4',
+              id: newBatchId,
+              itemType: 'batch',
+              relatedIds: [...relatedBatchIds, newBatchId],
+            });
+            orderRelations.push({ type: 'BATCH', id: newBatchId });
+          });
+        }
         if (batchNo > 1) {
           orderRelations.push({ type: '' });
           const productLink =
@@ -94,12 +118,21 @@ export const generateOrderRelation = (order, option) => {
                 };
           orderRelations.push(productLink);
           orderRelations.push({ type: '' });
+        } else if (batchNo === 1 && result.batch[batch.id]) {
+          orderRelations.push({ type: '' });
+          orderRelations.push({
+            type: 'LINK-2',
+            id: product.id,
+            itemType: 'orderItem',
+            relatedIds: relatedProductIds.filter(id => id !== product.id),
+          });
+          orderRelations.push({ type: '' });
         }
         orderRelations.push({
           id: batch.id,
           itemType: 'batch',
-          type: getBatchLinkType(batchNo, numberOfBatch),
-          relatedIds: getRelatedIds(batches, batchIndex),
+          type: getBatchLinkType(batchNo, numberOfBatch, !!result.batch[batch.id]),
+          relatedIds: relatedBatchIds,
         });
         orderRelations.push({ type: 'BATCH', id: batch.id });
       });
@@ -209,7 +242,7 @@ const initShipmentObj = shipment => ({
   data: {
     ...shipment,
     totalOrder: 0,
-    totalBatch: shipment.batches.length,
+    totalBatch: getByPathWithDefault(0, 'batches.length', shipment),
   },
   relation: {
     order: {},

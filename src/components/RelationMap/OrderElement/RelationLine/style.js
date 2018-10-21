@@ -4,7 +4,7 @@ import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
 const getBorderColor = (isFocus: boolean) =>
-  isFocus ? colors.TEAL_QUITE_LIGHT : colors.GRAY_QUITE_LIGHT;
+  isFocus ? 'rgba(17,209,166, 0.2)' : colors.GRAY_QUITE_LIGHT;
 
 const getRelatedBorderColor = (isFocus: boolean, hasRelation: boolean) =>
   hasRelation ? getBorderColor(isFocus) : colors.GRAY_QUITE_LIGHT;
