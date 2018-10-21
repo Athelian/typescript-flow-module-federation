@@ -84,14 +84,20 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         const { focusedItem, focusMode } = value;
         if (isRelationLine(type)) {
           const [, linkType, relationType] = relation.type.split('-') || [];
-          const isFocused = isFocusedLink(focusedItem[getItemType(relationType)], relatedIds);
-          return <RelationLine type={linkType} focusMode={focusMode} isFocused={isFocused} />;
+          const lineItemType = getItemType(relationType);
+          const isFocused = isFocusedLink(focusedItem[lineItemType], relatedIds);
+          const hasRelation = getByPathWithDefault(false, `${lineItemType}.${id}`, focusedItem);
+          return (
+            <RelationLine
+              type={linkType}
+              focusMode={focusMode}
+              isFocused={isFocused}
+              hasRelation={hasRelation}
+            />
+          );
         }
         const onClickHighlight = mode => () =>
-          setItem({
-            focusedItem: itemRelation || {},
-            focusMode: mode,
-          });
+          setItem({ focusedItem: itemRelation || {}, focusMode: mode });
         const onClickTarget = () => {
           const item = focusMode === 'TARGET' ? focusedItem : initFocusObj();
           const targetItem = Object.assign(item, {
@@ -100,12 +106,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
               [data.id]: data,
             },
           });
-          console.time('onClickTarget');
-          setItem({
-            focusedItem: targetItem,
-            focusMode: 'TARGET',
-          });
-          console.timeEnd('onClickTarget');
+          setItem({ focusedItem: targetItem, focusMode: 'TARGET' });
         };
         const isFocused = getByPathWithDefault(false, `${itemType}.${id}` || '', focusedItem);
         const cardWrapperClass = ItemWrapperStyle(isFocused, focusMode);

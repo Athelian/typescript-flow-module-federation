@@ -3,12 +3,6 @@
 import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
-// const getBorderColor = (isFocus: boolean) =>
-//   isFocus ? 'rgba(17,209,166, 0.2)' : colors.GRAY_QUITE_LIGHT;
-
-// const getRelatedBorderColor = (isFocus: boolean, hasRelation: boolean) =>
-//   hasRelation ? getBorderColor(isFocus) : colors.GRAY_QUITE_LIGHT;
-
 const getBorderBackground = (isFocus: boolean, focusMode: string) => {
   if (!isFocus) {
     return colors.GRAY_QUITE_LIGHT;
@@ -21,6 +15,9 @@ const getBorderBackground = (isFocus: boolean, focusMode: string) => {
   }
   return colors.GRAY_QUITE_LIGHT;
 };
+
+const getRelatedBackground = (isFocus: boolean, focusMode: string, hasRelation: boolean) =>
+  hasRelation ? getBorderBackground(isFocus, focusMode) : colors.GRAY_QUITE_LIGHT;
 
 export const RelationLine0Style = (isFocus: boolean, focusMode: string) => css`
   position: relative;
@@ -37,7 +34,11 @@ export const RelationLine0Style = (isFocus: boolean, focusMode: string) => css`
   }
 `;
 
-export const RelationLine1Style = (isFocus: boolean, focusMode: string) => css`
+export const RelationLine1Style = (
+  isFocus: boolean,
+  focusMode: string,
+  hasRelation: boolean
+) => css`
   position: relative;
   width: calc(100%);
   height: 40px;
@@ -56,7 +57,7 @@ export const RelationLine1Style = (isFocus: boolean, focusMode: string) => css`
     left: calc(50% + 3px);
     right: 0;
     top: calc(50% + 3px);
-    border-top: 2px solid ${getBorderBackground(isFocus, focusMode)};
+    border-top: 2px solid ${getRelatedBackground(isFocus, focusMode, hasRelation)};
   }
 `;
 
@@ -92,7 +93,11 @@ export const RelationLine3Style = (isFocus: boolean, focusMode: string) => css`
   }
 `;
 
-export const RelationLine4Style = (isFocus: boolean, focusMode: string) => css`
+export const RelationLine4Style = (
+  isFocus: boolean,
+  focusMode: string,
+  hasRelation: boolean
+) => css`
   position: relative;
   width: calc(100%);
   height: 40px;
@@ -112,6 +117,6 @@ export const RelationLine4Style = (isFocus: boolean, focusMode: string) => css`
     left: calc(50% + 2px);
     right: 0;
     top: calc(50% + 3px);
-    border-top: 2px solid ${getBorderBackground(isFocus, focusMode)};
+    border-top: 2px solid ${getRelatedBackground(isFocus, focusMode, hasRelation)};
   }
 `;

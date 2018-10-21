@@ -6,14 +6,16 @@ import * as style from './style';
 type Props = {
   type: number,
   isFocused: boolean,
+  hasRelation?: boolean,
   focusMode: string,
 };
 
 const RelationLine = (props: Props) => {
-  const { type, isFocused, focusMode } = props;
+  const { type, isFocused, focusMode, hasRelation } = props;
   const className = getByPathWithDefault('', `RelationLine${type}Style`, style)(
     isFocused,
-    focusMode
+    focusMode,
+    hasRelation
   );
   return <div className={className} />;
 };

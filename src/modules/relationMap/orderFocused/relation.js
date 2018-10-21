@@ -1,4 +1,5 @@
 import { getByPathWithDefault } from 'utils/fp';
+import { difference } from 'lodash';
 
 export const ORDER_HEADER = 'ORDER_HEADER';
 export const ORDER_ITEM_ALL = 'ORDER_ITEM_ALL';
@@ -8,11 +9,9 @@ export const SHIPMENT_ALL = 'SHIPMENT_ALL';
 export const ORDER = 'ORDER';
 export const ORDER_ITEM = 'ORDER_ITEM';
 export const BATCH = 'BATCH';
-// export const LINK0 = 'LINK-0';
 export const LINK1 = 'LINK-1';
 export const LINK2 = 'LINK-2';
-// const LINK3 = 'LINK-3';
-const LINK4 = 'LINK-4';
+export const LINK4 = 'LINK-4';
 
 const getRelatedIds = (items, currentIndex) => {
   const ids = [];
@@ -103,7 +102,6 @@ const generateRelation = (order, option) => {
     return relations;
   }
   const { orderItems } = order;
-  // const numberOfProduct = orderItems.length;
   orderItems.forEach((orderItem, orderItemIndex) => {
     const relatedProductIds = getRelatedIds(orderItems, orderItemIndex);
     const { batches } = orderItem;
@@ -125,8 +123,10 @@ const generateRelation = (order, option) => {
       orderItemIndex,
       relatedOrderItem: relatedProductIds.filter(id => id !== orderItem.id),
     });
+    const batchExcludeIds = [];
     batches.forEach((batch, batchIndex) => {
       const itemId = getByPathWithDefault({}, 'batch.itemId', result);
+
       const refId = getByPathWithDefault({}, 'batch.refId', result);
       const relatedBatchIds = getRelatedIds(batches, batchIndex);
       if (itemId[batch.id]) {
@@ -135,12 +135,18 @@ const generateRelation = (order, option) => {
       const newBatch = refId[batch.id];
       if (newBatch) {
         Object.keys(newBatch).forEach(newBatchId => {
-          const relatedIds = [...relatedBatchIds, newBatchId];
-          batchRelation.generateBatchRelation(newBatchId, relatedIds, batchIndex);
+          batchExcludeIds.push(newBatchId);
+          batchRelation.generateBatchRelation(
+            newBatchId,
+            [...relatedBatchIds, newBatchId],
+            batchIndex
+          );
+          const relatedIds = difference(relatedBatchIds, batchExcludeIds);
           batchRelation.generateOtherBatch(batch.id, relatedIds);
         });
       } else {
-        batchRelation.generateBatchRelation(batch.id, relatedBatchIds, batchIndex);
+        const relatedIds = difference(relatedBatchIds, batchExcludeIds);
+        batchRelation.generateBatchRelation(batch.id, relatedIds, batchIndex);
       }
     });
   });
