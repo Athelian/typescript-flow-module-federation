@@ -1,17 +1,11 @@
 // @flow
 import React from 'react';
-import { BooleanValue, createObjectValue } from 'react-values';
-import update from 'immutability-helper';
-import { getByPathWithDefault } from 'utils/fp';
+import { BooleanValue } from 'react-values';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
-import { CardAction } from 'components/Cards/BaseCard';
-
 import RelationView from '../common/RelationView';
-import DetailFocused, { ToggleSlide } from '../common/SlideForm';
-import Item from '../common/RelationItem';
+import DetailFocused from '../common/SlideForm';
 import generateRelation from './relation';
-
-export const FocusedValue = createObjectValue({ focusedItem: {}, focusMode: '' });
+import Item from './Item';
 
 type Props = {
   order: Object,
@@ -30,7 +24,7 @@ const getItemData = ({ order, orderItem, batch }, relation) => {
       itemData = order[relation.id];
       break;
     case 'ORDER_HEADER':
-      itemData = { id: relation.id };
+      itemData = { data: { id: relation.id } };
       break;
     case 'ORDER_ITEM':
       itemData = orderItem[relation.id];
@@ -61,18 +55,6 @@ const getItemType = type => {
   }
 };
 
-const getFocusedLink = (focusedItem, relatedIds) =>
-  Object.keys(focusedItem || {}).some(focusId =>
-    relatedIds.some(relatedId => relatedId === focusId)
-  );
-
-const getHighlight = ({ focusedItem, focusMode, relation, itemType, isLink }) => {
-  if (isLink && focusMode === 'HIGHLIGHT') {
-    return getFocusedLink(focusedItem[relation.itemType], relation.relatedIds);
-  }
-  return getByPathWithDefault(false, `${itemType}.${relation.id}` || '', focusedItem);
-};
-
 const OrderFocused = ({
   order: { orderObj: order, orderItemObj: orderItem, batchObj: batch, shipmentObj: shipment },
   nodes,
@@ -98,79 +80,15 @@ const OrderFocused = ({
               const key = `relation-${relationIndex}`;
               const itemData = getItemData({ order, orderItem, batch }, relation);
               const itemType = getItemType(relation.type);
-              const isLink = /LINK-[0-4]-(\w+)/.test(relation.type);
               return (
-                <ToggleSlide key={key}>
-                  {({ assign: setSlide }) => (
-                    <FocusedValue key={key}>
-                      {({ value: { focusedItem, focusMode }, assign: setItem, reset }) => (
-                        <Item
-                          key={key}
-                          type={relation.type}
-                          isFocused={getHighlight({
-                            isLink,
-                            focusedItem,
-                            focusMode,
-                            itemType,
-                            relation,
-                          })}
-                          {...focusMode && { focusMode }}
-                          {...isLink && {
-                            hasRelation: getByPathWithDefault(
-                              false,
-                              `${relation.itemType}.${relation.id}`,
-                              focusedItem
-                            ),
-                          }}
-                          actions={[
-                            <CardAction
-                              icon="SQUARE"
-                              onClick={() => {
-                                setItem({
-                                  focusedItem: getByPathWithDefault({}, 'relation', itemData),
-                                  focusMode: 'HIGHLIGHT',
-                                });
-                              }}
-                            />,
-                            <CardAction
-                              icon="BRANCH"
-                              onClick={() => {
-                                const data = getByPathWithDefault({}, 'data', itemData);
-                                setItem({
-                                  focusedItem: update(
-                                    focusMode === 'TARGET'
-                                      ? focusedItem
-                                      : {
-                                          order: {},
-                                          orderItem: {},
-                                          batch: {},
-                                          shipment: {},
-                                        },
-                                    {
-                                      [itemType]: { $merge: { [data.id]: data } },
-                                    }
-                                  ),
-                                  focusMode: 'TARGET',
-                                });
-                              }}
-                            />,
-                            <CardAction icon="CLEAR" onClick={reset} />,
-                          ]}
-                          onClick={toggle}
-                          onDoubleClick={() => {
-                            setSlide({
-                              show: true,
-                              type: relation.type,
-                              id: relation.id,
-                            });
-                          }}
-                          data={itemData.data || {}}
-                          isCollapsed={isCollapsed}
-                        />
-                      )}
-                    </FocusedValue>
-                  )}
-                </ToggleSlide>
+                <Item
+                  key={key}
+                  onToggle={toggle}
+                  isCollapsed={isCollapsed}
+                  relation={relation}
+                  itemData={itemData}
+                  itemType={itemType}
+                />
               );
             });
           }}
@@ -181,52 +99,21 @@ const OrderFocused = ({
       {Object.keys(shipment).map(shipmentId => {
         const currentShipment = shipment[shipmentId];
         return (
-          <ToggleSlide key={shipmentId}>
-            {({ assign: setSlide }) => (
-              <BooleanValue defaultValue>
-                {({ value: isCollapsed, toggle }) => (
-                  <FocusedValue key={shipmentId}>
-                    {({ value: { focusedItem }, assign, reset }) => (
-                      <Item
-                        key={shipmentId}
-                        type={isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT'}
-                        data={currentShipment.data}
-                        isFocused={getByPathWithDefault(
-                          false,
-                          `shipment.${shipmentId}`,
-                          focusedItem
-                        )}
-                        isCollapsed={isCollapsed}
-                        actions={[
-                          <CardAction
-                            icon="SQUARE"
-                            onClick={() => {
-                              assign({
-                                focusedItem: currentShipment.relation,
-                                relationItem: {
-                                  id: shipmentId,
-                                  type: 'SHIPMENT',
-                                },
-                              });
-                            }}
-                          />,
-                          <CardAction icon="CLEAR" onClick={reset} />,
-                        ]}
-                        onClick={toggle}
-                        onDoubleClick={() => {
-                          setSlide({
-                            show: true,
-                            type: 'SHIPMENT',
-                            id: shipmentId,
-                          });
-                        }}
-                      />
-                    )}
-                  </FocusedValue>
-                )}
-              </BooleanValue>
+          <BooleanValue defaultValue key={shipmentId}>
+            {({ value: isCollapsed, toggle }) => (
+              <Item
+                key={shipmentId}
+                onToggle={toggle}
+                isCollapsed={isCollapsed}
+                relation={{
+                  type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
+                  id: shipmentId,
+                }}
+                itemData={currentShipment}
+                itemType="shipment"
+              />
             )}
-          </ToggleSlide>
+          </BooleanValue>
         );
       })}
     </div>

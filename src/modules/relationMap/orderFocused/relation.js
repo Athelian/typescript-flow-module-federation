@@ -1,14 +1,16 @@
 import { getByPathWithDefault } from 'utils/fp';
 
-const ORDER_HEADER = 'ORDER_HEADER';
-const ORDER_ITEM_ALL = 'ORDER_ITEM_ALL';
-const BATCH_ALL = 'BATCH_ALL';
-const ORDER = 'ORDER';
-const ORDER_ITEM = 'ORDER_ITEM';
-const BATCH = 'BATCH';
-const LINK0 = 'LINK-0';
-const LINK1 = 'LINK-1';
-const LINK2 = 'LINK-2';
+export const ORDER_HEADER = 'ORDER_HEADER';
+export const ORDER_ITEM_ALL = 'ORDER_ITEM_ALL';
+export const BATCH_ALL = 'BATCH_ALL';
+export const SHIPMENT = 'SHIPMENT';
+export const SHIPMENT_ALL = 'SHIPMENT_ALL';
+export const ORDER = 'ORDER';
+export const ORDER_ITEM = 'ORDER_ITEM';
+export const BATCH = 'BATCH';
+// export const LINK0 = 'LINK-0';
+export const LINK1 = 'LINK-1';
+export const LINK2 = 'LINK-2';
 // const LINK3 = 'LINK-3';
 const LINK4 = 'LINK-4';
 
@@ -26,7 +28,7 @@ const createBatchRelation = (relations, data) => {
   const generateFirstBatch = (id, relatedIds) => {
     relations.push({
       id,
-      type: `${LINK0}-${BATCH}`,
+      type: `${LINK1}-${BATCH}`,
       relatedIds,
     });
     relations.push({ type: BATCH, id });
@@ -84,12 +86,12 @@ const generateCollapsedRelation = (order, option) => {
 
   const relatedOrderIds = [order.id];
   relations.push({
-    type: isCollapsed ? `${LINK0}-${ORDER}` : `${LINK1}-${ORDER}`,
+    type: isCollapsed ? `${LINK1}-${ORDER}` : `${LINK1}-${ORDER}`,
     id: order.id,
     relatedIds: relatedOrderIds,
   });
   relations.push({ type: ORDER_ITEM_ALL, id: order.id });
-  relations.push({ type: `${LINK0}-${ORDER}`, id: order.id, relatedIds: relatedOrderIds });
+  relations.push({ type: `${LINK1}-${ORDER}`, id: order.id, relatedIds: relatedOrderIds });
   relations.push({ type: BATCH_ALL, id: order.id });
   return relations;
 };
