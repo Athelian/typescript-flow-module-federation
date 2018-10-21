@@ -32,7 +32,7 @@ type OptionalProps = {
   data: Object,
   isCollapsed: boolean,
   isFocused: boolean,
-  hasRelation?: boolean,
+  // hasRelation?: boolean,
   focusMode?: string,
   onClick: Function,
   onDoubleClick?: Function,
@@ -42,6 +42,8 @@ type OptionalProps = {
 const defaultProps = {
   data: {},
   isCollapsed: false,
+  isFocused: false,
+  focusMode: '',
   onClick: () => {},
   actions: [],
 };
@@ -56,7 +58,7 @@ const Item = (props: Props) => {
     data,
     onClick,
     isFocused,
-    hasRelation,
+    // hasRelation,
     isCollapsed,
     onDoubleClick,
     focusMode,
@@ -65,11 +67,7 @@ const Item = (props: Props) => {
   if (typeof type === 'string' && /LINK-[0-4]/.test(type)) {
     const [, linkType] = type.split('-') || [];
     return (
-      <RelationLine
-        type={Number(linkType)}
-        isFocus={isFocused}
-        hasRelation={hasRelation || false}
-      />
+      <RelationLine type={Number(linkType)} isFocused={isFocused} focusMode={focusMode || ''} />
     );
   }
 
