@@ -142,6 +142,9 @@ export const BadgeWrapperStyle = css`
   box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
   z-index: 1;
 `;
+export const FullGridWrapperStyle = css`
+  grid-column: span 4;
+`;
 export const LoadingWrapperStyle = css`
   grid-column: span 4;
   display: flex;

@@ -4,6 +4,16 @@ import { fontSizes, colors } from 'styles/common';
 
 const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
 
+const getHighlighColor = (isFocused: boolean, focusMode: ?string) => {
+  if (!isFocused) {
+    return colors.GRAY_QUITE_LIGHT;
+  }
+  if (focusMode === 'HIGHLIGHT') {
+    return 'rgba(17,209,166, 0.2)';
+  }
+  return colors.TEAL;
+};
+
 export const OrderListItemWrapperStyle = (isFocused: boolean) => css`
   box-shadow: none !important;
   border: 5px solid ${getBorderColor(isFocused)};
@@ -58,8 +68,8 @@ export const ResetBaseCardStyle = css`
   }
 `;
 
-export const ItemWrapperStyle = (isFocused: boolean) => {
-  const focused = getBorderColor(isFocused);
+export const ItemWrapperStyle = (isFocused: boolean, focusMode: ?string) => {
+  const focused = getHighlighColor(isFocused, focusMode);
   return css`
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
