@@ -110,7 +110,11 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
                     ? messages.multipleUpdateEventChange
                     : messages.multipleUpdateEventChangeSet)}
                   values={{
-                    field: <span className={FieldStyle}>{change.field}</span>,
+                    field: (
+                      <span className={FieldStyle}>
+                        <FormattedMessage id={`containers.${entityType}s.${change.field}`} />
+                      </span>
+                    ),
                     oldValue: (
                       <span className={OldStyle}>
                         <FormatValue value={change.oldValue} />

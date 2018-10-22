@@ -46,7 +46,11 @@ const UpdateEvent = ({ event, entityType }: Props) => (
               />
             </span>
           ),
-          field: <span className={FieldStyle}>{event.updates[0].field}</span>,
+          field: (
+            <span className={FieldStyle}>
+              <FormattedMessage id={`containers.${entityType}s.${event.updates[0].field}`} />
+            </span>
+          ),
           target:
             entityType === get('__typename', event.target) ? (
               ''

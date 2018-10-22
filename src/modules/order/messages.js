@@ -99,15 +99,15 @@ export default defineMessages({
     defaultMessage: 'View Details',
   },
   PO: {
-    id: 'containers.Orders.PO',
+    id: 'containers.Orders.poNo',
     defaultMessage: 'PO NO.',
   },
   date: {
-    id: 'containers.Orders.date',
+    id: 'containers.Orders.issuedAt',
     defaultMessage: 'PO DATE',
   },
   PI: {
-    id: 'containers.Orders.PI',
+    id: 'containers.Orders.piNo',
     defaultMessage: 'PI NO.',
   },
   incoterm: {
@@ -175,7 +175,7 @@ export default defineMessages({
     defaultMessage: 'QUANTITY',
   },
   packageQuantity: {
-    id: 'containers.Shipments.packageQuantity',
+    id: 'containers.Orders.packageQuantity',
     defaultMessage: 'PACKAGE QUANTITY',
   },
   shippedQuantity: {
@@ -219,8 +219,12 @@ export default defineMessages({
     defaultMessage: 'SUPPLIER',
   },
   batchNo: {
-    id: 'containers.Orders.batchNo',
+    id: 'containers.Orders.no',
     defaultMessage: 'BATCH ID',
+  },
+  packageCapacity: {
+    id: 'containers.Orders.packageCapacity',
+    defaultMessage: 'PACKAGE CAPACITY',
   },
   expiredAt: {
     id: 'containers.Orders.expiredAt',
