@@ -27,7 +27,7 @@ Array [
     "relatedIds": Array [
       "1",
     ],
-    "type": "LINK-0-ORDER",
+    "type": "LINK-1-ORDER",
   },
   Object {
     "id": "1",
@@ -38,7 +38,7 @@ Array [
     "relatedIds": Array [
       "1",
     ],
-    "type": "LINK-0-ORDER",
+    "type": "LINK-1-ORDER",
   },
   Object {
     "id": "1",
@@ -48,43 +48,6 @@ Array [
 `;
 
 exports[`collapse view no orderItem 1`] = `
-Array [
-  Object {
-    "id": "1",
-    "type": "ORDER_HEADER",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "id": "1",
-    "type": "ORDER",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-]
-`;
-
-exports[`generateRelation collapse view 1`] = `
 Array [
   Object {
     "id": "1",
@@ -159,7 +122,7 @@ Array [
     "relatedIds": Array [
       "1",
     ],
-    "type": "LINK-0-ORDER",
+    "type": "LINK-1-ORDER",
   },
   Object {
     "id": "1",
