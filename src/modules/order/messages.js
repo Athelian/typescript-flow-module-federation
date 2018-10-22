@@ -134,6 +134,10 @@ export default defineMessages({
     id: 'containers.Orders.memo',
     defaultMessage: 'MEMO',
   },
+  batchMemo: {
+    id: 'containers.Batches.memo',
+    defaultMessage: 'MEMO',
+  },
   createdAt: {
     id: 'containers.Orders.createdAt',
     defaultMessage: 'CREATED ON',
@@ -162,6 +166,10 @@ export default defineMessages({
     id: 'containers.Orders.price',
     defaultMessage: 'UNIT PRICE',
   },
+  itemPrice: {
+    id: 'containers.OrderItems.price',
+    defaultMessage: 'ORDER ITEM UNIT PRICE',
+  },
   originalPrice: {
     id: 'containers.Orders.originalPrice',
     defaultMessage: 'ORIGINAL UNIT PRICE',
@@ -174,8 +182,16 @@ export default defineMessages({
     id: 'containers.Orders.quantity',
     defaultMessage: 'QUANTITY',
   },
+  itemQuantity: {
+    id: 'containers.OrderItems.quantity',
+    defaultMessage: 'ORDER ITEM QUANTITY',
+  },
+  batchQuantity: {
+    id: 'containers.Batches.quantity',
+    defaultMessage: 'BATCH QUANTITY',
+  },
   packageQuantity: {
-    id: 'containers.Orders.packageQuantity',
+    id: 'containers.Batches.packageQuantity',
     defaultMessage: 'PACKAGE QUANTITY',
   },
   shippedQuantity: {
@@ -219,23 +235,23 @@ export default defineMessages({
     defaultMessage: 'SUPPLIER',
   },
   batchNo: {
-    id: 'containers.Orders.no',
+    id: 'containers.Batches.no',
     defaultMessage: 'BATCH ID',
   },
   packageCapacity: {
-    id: 'containers.Orders.packageCapacity',
+    id: 'containers.Batches.packageCapacity',
     defaultMessage: 'PACKAGE CAPACITY',
   },
   expiredAt: {
-    id: 'containers.Orders.expiredAt',
+    id: 'containers.Batches.expiredAt',
     defaultMessage: 'EXPIRY',
   },
   producedAt: {
-    id: 'containers.Orders.producedAt',
+    id: 'containers.Batches.producedAt',
     defaultMessage: 'PRODUCTION DATE',
   },
   deliveredAt: {
-    id: 'containers.Orders.deliveredAt',
+    id: 'containers.Batches.deliveredAt',
     defaultMessage: 'DELIVERY DATE',
   },
   totalAssignedQuantity: {
@@ -323,7 +339,7 @@ export default defineMessages({
     defaultMessage: 'Arrived at Warehouse',
   },
   packageName: {
-    id: 'containers.Orders.packageName',
+    id: 'containers.Batches.packageName',
     defaultMessage: 'PACKAGE NAME',
   },
   packageGrossWeight: {
@@ -339,7 +355,7 @@ export default defineMessages({
     defaultMessage: 'MAX QUANTITY / PACKAGE',
   },
   packageSize: {
-    id: 'containers.Orders.packageSize',
+    id: 'containers.Batches.packageSize',
     defaultMessage: 'PACKAGE SIZE (m)',
   },
   required: {

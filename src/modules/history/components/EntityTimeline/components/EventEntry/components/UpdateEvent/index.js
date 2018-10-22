@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import pluralize from 'pluralize';
 import { get } from 'lodash/fp';
 import { FormattedMessage } from 'react-intl';
 import { isSameDay } from 'date-fns';
@@ -48,7 +49,11 @@ const UpdateEvent = ({ event, entityType }: Props) => (
           ),
           field: (
             <span className={FieldStyle}>
-              <FormattedMessage id={`containers.${entityType}s.${event.updates[0].field}`} />
+              <FormattedMessage
+                id={`containers.${pluralize(get('entity.__typename', event.updates[0]))}.${
+                  event.updates[0].field
+                }`}
+              />
             </span>
           ),
           target:
