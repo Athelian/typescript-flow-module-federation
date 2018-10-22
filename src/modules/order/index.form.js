@@ -15,7 +15,7 @@ import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
-import OrderEventsList from 'modules/history';
+import { OrderEventsList } from 'modules/history';
 import OrderForm from './form';
 import validator from './form/validator';
 import {

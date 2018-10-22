@@ -1,4 +1,5 @@
 // @flow
 import OrderEventsList from './order/list';
+import ShipmentEventsList from './shipment/list';
 
-export default OrderEventsList;
+export { OrderEventsList, ShipmentEventsList };
