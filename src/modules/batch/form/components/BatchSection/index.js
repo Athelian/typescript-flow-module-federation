@@ -36,6 +36,10 @@ const BatchSection = ({ isNew, selectable }: Props) => (
     <Subscribe to={[BatchFormContainer]}>
       {({ originalValues: initialValues, state, setFieldValue }) => {
         const values = { ...initialValues, ...state };
+        const { batchAdjustments = [] } = values;
+        const totalAdjustment = batchAdjustments
+          ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
+          : 0;
 
         return (
           <>
@@ -62,18 +66,24 @@ const BatchSection = ({ isNew, selectable }: Props) => (
 
                 <FormField
                   name="quantity"
-                  initValue={values.quantity}
+                  initValue={values.quantity + totalAdjustment}
                   setFieldValue={setFieldValue}
                   values={values}
                   validator={validator}
                 >
                   {({ name, ...inputHandlers }) =>
                     numberInputFactory({
-                      inputHandlers,
+                      inputHandlers: {
+                        ...inputHandlers,
+                        onBlur: evt => {
+                          inputHandlers.onBlur(evt);
+                          setFieldValue('quantity', inputHandlers.value - totalAdjustment);
+                        },
+                      },
                       name,
                       isNew,
                       required: true,
-                      originalValue: initialValues[name],
+                      originalValue: initialValues[name] + totalAdjustment,
                       label: <FormattedMessage {...messages.quantity} />,
                     })
                   }
