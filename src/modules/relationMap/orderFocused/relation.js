@@ -13,6 +13,46 @@ export const LINK1 = 'LINK-1';
 export const LINK2 = 'LINK-2';
 export const LINK4 = 'LINK-4';
 
+export const getItemData = ({ order, orderItem, batch }, relation) => {
+  let itemData;
+  switch (relation.type) {
+    case ORDER_ITEM_ALL:
+    case BATCH_ALL:
+    case ORDER:
+      itemData = order[relation.id];
+      break;
+    case ORDER_HEADER:
+      itemData = { data: { id: relation.id } };
+      break;
+    case ORDER_ITEM:
+      itemData = orderItem[relation.id];
+      break;
+    case BATCH:
+      itemData = batch[relation.id];
+      break;
+    default:
+      itemData = {};
+      break;
+  }
+  return itemData;
+};
+
+export const getItemType = type => {
+  switch (type) {
+    case ORDER_ITEM_ALL:
+    case BATCH_ALL:
+    case ORDER:
+      return 'order';
+    case ORDER_HEADER:
+    case ORDER_ITEM:
+      return 'orderItem';
+    case BATCH:
+      return 'batch';
+    default:
+      return '';
+  }
+};
+
 const getRelatedIds = (items, currentIndex) => {
   const ids = [];
   for (let index = items.length - 1; index >= currentIndex; index -= 1) {
@@ -64,6 +104,7 @@ const createBatchRelation = (relations, data) => {
     },
   };
 };
+
 const generateCollapsedRelation = (order, option) => {
   const { isCollapsed } = option;
   const relations = [];
@@ -126,7 +167,6 @@ const generateRelation = (order, option) => {
     const batchExcludeIds = [];
     batches.forEach((batch, batchIndex) => {
       const itemId = getByPathWithDefault({}, 'batch.itemId', result);
-
       const refId = getByPathWithDefault({}, 'batch.refId', result);
       const relatedBatchIds = getRelatedIds(batches, batchIndex);
       if (itemId[batch.id]) {

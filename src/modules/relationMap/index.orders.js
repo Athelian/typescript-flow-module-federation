@@ -34,7 +34,6 @@ const defaultProps = {
   page: 1,
   perPage: 10,
 };
-
 class Order extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 

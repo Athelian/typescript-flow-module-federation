@@ -4,7 +4,7 @@ import { BooleanValue } from 'react-values';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
 import RelationView from '../common/RelationView';
 import DetailFocused from '../common/SlideForm';
-import generateRelation from './relation';
+import generateRelation, { getItemData, getItemType } from './relation';
 import Item from './Item';
 
 type Props = {
@@ -13,46 +13,6 @@ type Props = {
   loadMore: Function,
   nodes: Array<Object>,
   result: Object,
-};
-
-const getItemData = ({ order, orderItem, batch }, relation) => {
-  let itemData;
-  switch (relation.type) {
-    case 'ORDER_ITEM_ALL':
-    case 'BATCH_ALL':
-    case 'ORDER':
-      itemData = order[relation.id];
-      break;
-    case 'ORDER_HEADER':
-      itemData = { data: { id: relation.id } };
-      break;
-    case 'ORDER_ITEM':
-      itemData = orderItem[relation.id];
-      break;
-    case 'BATCH':
-      itemData = batch[relation.id];
-      break;
-    default:
-      itemData = {};
-      break;
-  }
-  return itemData;
-};
-
-const getItemType = type => {
-  switch (type) {
-    case 'ORDER_ITEM_ALL':
-    case 'BATCH_ALL':
-    case 'ORDER':
-      return 'order';
-    case 'ORDER_HEADER':
-    case 'ORDER_ITEM':
-      return 'orderItem';
-    case 'BATCH':
-      return 'batch';
-    default:
-      return '';
-  }
 };
 
 const OrderFocused = ({
