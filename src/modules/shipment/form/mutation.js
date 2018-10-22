@@ -1,5 +1,23 @@
 // @flow
 import gql from 'graphql-tag';
+import {
+  shipmentFormFragment,
+  timelineDateFullFragment,
+  batchFormFragment,
+  userAvatarFragment,
+  metricFragment,
+  sizeFragment,
+  tagFragment,
+  priceFragment,
+  orderCardFragment,
+  imageFragment,
+  partnerNameFragment,
+  shipmentCardFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  documentFragment,
+  partnerCardFragment,
+} from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
@@ -74,6 +92,36 @@ export const createShipmentMutation: Object = gql`
     }
   }
   ${violationFragment}
+`;
+
+export const createShipmentWithReturnDataMutation: Object = gql`
+  mutation shipmentCreate($input: ShipmentCreateInput!) {
+    shipmentCreate(input: $input) {
+      shipment {
+        ...shipmentFormFragment
+      }
+      violations {
+        ...violationFragment
+      }
+    }
+  }
+  ${violationFragment}
+  ${shipmentFormFragment}
+  ${timelineDateFullFragment}
+  ${batchFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${documentFragment}
+  ${partnerCardFragment}
 `;
 
 export const prepareCreateShipmentInput = ({

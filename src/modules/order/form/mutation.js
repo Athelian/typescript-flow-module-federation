@@ -73,6 +73,27 @@ export const updateOrderMutation = gql`
   ${violationFragment}
 `;
 
+export const updateOrderItemMutation = gql`
+  mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
+    orderUpdate(id: $id, input: $input) {
+      order {
+        id
+        orderItems {
+          id
+          batches {
+            id
+          }
+        }
+      }
+      violations {
+        ...violationFragment
+      }
+    }
+  }
+
+  ${violationFragment}
+`;
+
 export const prepareUpdateOrderInput = ({
   issuedAt = '',
   orderItems = [],

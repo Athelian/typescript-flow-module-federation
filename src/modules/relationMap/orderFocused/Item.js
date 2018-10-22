@@ -77,7 +77,7 @@ const isFocusedLink = (focusedItem, relatedIds) =>
 
 const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) => {
   const { relatedIds, type, id } = relation;
-  const { data, relation: itemRelation } = itemData;
+  const { data = {}, relation: itemRelation } = itemData;
   return (
     <FocusedValue>
       {({ value, assign: setItem, reset }) => {
@@ -120,7 +120,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             return <div />;
           }
           case ORDER_HEADER: {
-            return <OrderHeader label={`ORDER ${data.id}`} isChecked />;
+            return <OrderHeader label={`ORDER ${data.id || ''}`} isChecked />;
           }
           case ORDER: {
             return (
@@ -227,10 +227,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                     {({ assign: setSlide }) => {
                       const onDoubleClick = () => setSlide({ show: true, type, id });
                       return (
-                        <WrapperCard
-                          onClick={onClickHighlight('HIGHLIGHT')}
-                          onDoubleClick={onDoubleClick}
-                        >
+                        <WrapperCard onClick={onClickTarget} onDoubleClick={onDoubleClick}>
                           <ShipmentCard shipment={data} />
                           <TagValue>
                             {({ value: isToggle }) =>
