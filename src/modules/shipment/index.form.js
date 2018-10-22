@@ -2,17 +2,20 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
+import SlideView from 'components/SlideView';
 import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
+import { ShipmentEventsList } from 'modules/history';
 import {
   ShipmentInfoContainer,
   ShipmentTagsContainer,
@@ -216,6 +219,32 @@ class ShipmentFormModule extends React.Component<Props> {
                           icon="ORDER"
                         />
                       </JumpToSection>
+                      <BooleanValue>
+                        {({ value: opened, set: slideToggle }) =>
+                          !isNewOrClone && (
+                            <>
+                              <LogsButton onClick={() => slideToggle(true)} />
+                              <SlideView
+                                isOpen={opened}
+                                onRequestClose={() => slideToggle(false)}
+                                options={{ width: '1030px' }}
+                              >
+                                <Layout
+                                  navBar={
+                                    <SlideViewNavBar>
+                                      <EntityIcon icon="LOGS" color="LOGS" />
+                                    </SlideViewNavBar>
+                                  }
+                                >
+                                  {shipmentId ? (
+                                    <ShipmentEventsList id={decodeId(shipmentId)} perPage={10} />
+                                  ) : null}
+                                </Layout>
+                              </SlideView>
+                            </>
+                          )
+                        }
+                      </BooleanValue>
                       <Subscribe
                         to={[
                           ShipmentBatchesContainer,

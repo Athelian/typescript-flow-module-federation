@@ -12,15 +12,15 @@ import {
   eventCommentUpdateMutation,
 } from 'modules/history/mutation';
 import { LogsBodyWrapperStyle, CommentWrapperStyle } from 'modules/history/style';
-import OrderEventsGridView from './OrderEventsGridView';
-import { orderLogsListQuery } from './query';
+import ShipmentEventsGridView from './ShipmentEventsGridView';
+import { shipmentLogsListQuery } from './query';
 
 type Props = {
   perPage: number,
   id: string,
 };
 
-class OrderEventsList extends React.PureComponent<Props> {
+class ShipmentEventsList extends React.PureComponent<Props> {
   componentDidMount() {
     setTimeout(() => {
       scrollIntoView({ targetId: 'topCommentArea', boundaryId: 'logsBody' });
@@ -31,7 +31,7 @@ class OrderEventsList extends React.PureComponent<Props> {
     const { perPage, id } = this.props;
     return (
       <Query
-        query={orderLogsListQuery}
+        query={shipmentLogsListQuery}
         variables={{
           id,
           perPage,
@@ -44,17 +44,17 @@ class OrderEventsList extends React.PureComponent<Props> {
             return error.message;
           }
 
-          const nextPage = getByPathWithDefault(1, 'order.timeline.events.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'order.timeline.events.totalPage', data);
+          const nextPage = getByPathWithDefault(1, 'shipment.timeline.events.page', data) + 1;
+          const totalPage = getByPathWithDefault(1, 'shipment.timeline.events.totalPage', data);
           const hasMore = nextPage <= totalPage;
 
-          const timelineId = getByPathWithDefault(1, 'order.timeline.id', data);
+          const timelineId = getByPathWithDefault(1, 'shipment.timeline.id', data);
           return (
             <>
               <div id="logsBody" className={LogsBodyWrapperStyle}>
-                <OrderEventsGridView
-                  items={getByPathWithDefault([], 'order.timeline.events.nodes', data)}
-                  onLoadMore={() => loadMore({ fetchMore, data }, {}, 'order.timeline.events')}
+                <ShipmentEventsGridView
+                  items={getByPathWithDefault([], 'shipment.timeline.events.nodes', data)}
+                  onLoadMore={() => loadMore({ fetchMore, data }, {}, 'shipment.timeline.events')}
                   hasMore={hasMore}
                   isLoading={loading}
                   onUpdate={async ({ id: commentId, content }) => {
@@ -122,4 +122,4 @@ class OrderEventsList extends React.PureComponent<Props> {
   }
 }
 
-export default OrderEventsList;
+export default ShipmentEventsList;
