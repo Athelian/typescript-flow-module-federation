@@ -77,7 +77,6 @@ const OrderFocused = ({
         );
       })}
     </div>
-
     <DetailFocused />
   </>
 );
