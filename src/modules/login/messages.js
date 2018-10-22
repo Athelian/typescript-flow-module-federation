@@ -3,31 +3,31 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   error: {
-    id: 'containers.Login.error',
+    id: 'modules.Login.error',
     defaultMessage: 'Invalid username/password',
   },
   emailError: {
-    id: 'containers.Login.validation.email',
+    id: 'modules.Login.validation.email',
     defaultMessage: 'Please enter a valid email address',
   },
   required: {
-    id: 'containers.Login.validation.required',
+    id: 'modules.Login.validation.required',
     defaultMessage: 'Required',
   },
   email: {
-    id: 'containers.Login.email',
+    id: 'modules.Login.email',
     defaultMessage: 'EMAIL',
   },
   password: {
-    id: 'containers.Login.password',
+    id: 'modules.Login.password',
     defaultMessage: 'PASSWORD',
   },
   login: {
-    id: 'containers.Login.login',
+    id: 'modules.Login.login',
     defaultMessage: 'LOGIN',
   },
   loggingIn: {
-    id: 'containers.Login.loggingIn',
+    id: 'modules.Login.loggingIn',
     defaultMessage: 'Logging in ...',
   },
 });

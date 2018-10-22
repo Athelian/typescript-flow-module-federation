@@ -63,7 +63,9 @@ const ShipmentEventsGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="800px"
       isEmpty={items.length === 0}
-      emptyMessage={<FormattedMessage id="modules.history.noItem" defaultMessage="No logs found" />}
+      emptyMessage={
+        <FormattedMessage id="modules.Histories.noItem" defaultMessage="No logs found" />
+      }
     >
       {items.reverse().map((item, index) =>
         renderItem({

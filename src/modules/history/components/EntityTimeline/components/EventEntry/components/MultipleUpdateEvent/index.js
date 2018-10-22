@@ -114,7 +114,7 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
                     field: (
                       <span className={FieldStyle}>
                         <FormattedMessage
-                          id={`containers.${pluralize(get('entity.__typename', change))}.${
+                          id={`modules.${pluralize(get('entity.__typename', change))}.${
                             change.field
                           }`}
                         />

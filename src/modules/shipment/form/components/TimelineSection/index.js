@@ -56,7 +56,7 @@ const TimelineSection = ({ isNew }: Props) => (
               isNew={isNew}
               icon="CARGO_READY"
               title={
-                <FormattedMessage id="modules.shipment.cargoReady" defaultMessage="CARGO READY" />
+                <FormattedMessage id="modules.Shipments.cargoReady" defaultMessage="CARGO READY" />
               }
               timelineDate={cargoReady}
               sourceName="cargoReady"
@@ -69,7 +69,7 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="PORT"
               title={
                 <FormattedMessage
-                  id="modules.shipment.loadPortDeparture"
+                  id="modules.Shipments.loadPortDeparture"
                   defaultMessage="LOAD PORT DEPARTURE"
                 />
               }
@@ -85,11 +85,11 @@ const TimelineSection = ({ isNew }: Props) => (
               title={
                 values.voyages.length > 1 ? (
                   <FormattedMessage
-                    id="modules.shipment.firstVoyage"
+                    id="modules.Shipments.firstVoyage"
                     defaultMessage="FIRST VOYAGE"
                   />
                 ) : (
-                  <FormattedMessage id="modules.shipment.voyage" defaultMessage="VOYAGE" />
+                  <FormattedMessage id="modules.Shipments.voyage" defaultMessage="VOYAGE" />
                 )
               }
               voyage={voyages[0]}
@@ -112,12 +112,12 @@ const TimelineSection = ({ isNew }: Props) => (
                   title={
                     values.voyages.length > 2 ? (
                       <FormattedMessage
-                        id="modules.shipment.firstTransitPortArrival"
+                        id="modules.Shipments.firstTransitPortArrival"
                         defaultMessage="FIRST TRANSIT PORT ARRIVAL"
                       />
                     ) : (
                       <FormattedMessage
-                        id="modules.shipment.transitPortArrival"
+                        id="modules.Shipments.transitPortArrival"
                         defaultMessage="TRANSIT PORT ARRIVAL"
                       />
                     )
@@ -134,12 +134,12 @@ const TimelineSection = ({ isNew }: Props) => (
                   title={
                     values.voyages.length > 2 ? (
                       <FormattedMessage
-                        id="modules.shipment.firstTransitPortDeparture"
+                        id="modules.Shipments.firstTransitPortDeparture"
                         defaultMessage="FIRST TRANSIT PORT DEPARTURE"
                       />
                     ) : (
                       <FormattedMessage
-                        id="modules.shipment.transitPortDeparture"
+                        id="modules.Shipments.transitPortDeparture"
                         defaultMessage="TRANSIT PORT DEPARTURE"
                       />
                     )
@@ -155,7 +155,7 @@ const TimelineSection = ({ isNew }: Props) => (
                   icon={getTransportIcon(values.transportType)}
                   title={
                     <FormattedMessage
-                      id="modules.shipment.secondVoyage"
+                      id="modules.Shipments.secondVoyage"
                       defaultMessage="SECOND VOYAGE"
                     />
                   }
@@ -189,7 +189,7 @@ const TimelineSection = ({ isNew }: Props) => (
                   icon="TRANSIT"
                   title={
                     <FormattedMessage
-                      id="modules.shipment.secondTransitPortArrival"
+                      id="modules.Shipments.secondTransitPortArrival"
                       defaultMessage="SECOND TRANSIT PORT ARRIVAL"
                     />
                   }
@@ -204,7 +204,7 @@ const TimelineSection = ({ isNew }: Props) => (
                   icon="TRANSIT"
                   title={
                     <FormattedMessage
-                      id="modules.shipment.secondTransitPortDeparture"
+                      id="modules.Shipments.secondTransitPortDeparture"
                       defaultMessage="SECOND TRANSIT PORT DEPARTURE"
                     />
                   }
@@ -219,7 +219,7 @@ const TimelineSection = ({ isNew }: Props) => (
                   icon={getTransportIcon(values.transportType)}
                   title={
                     <FormattedMessage
-                      id="modules.shipment.thirdVoyage"
+                      id="modules.Shipments.thirdVoyage"
                       defaultMessage="THIRD VOYAGE"
                     />
                   }
@@ -245,7 +245,7 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="PORT"
               title={
                 <FormattedMessage
-                  id="modules.shipment.dischargePortArrival"
+                  id="modules.Shipments.dischargePortArrival"
                   defaultMessage="DISCHARGE PORT ARRIVAL"
                 />
               }
@@ -260,7 +260,7 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="CUSTOMS"
               title={
                 <FormattedMessage
-                  id="modules.shipment.customsClearance"
+                  id="modules.Shipments.customsClearance"
                   defaultMessage="CUSTOMS CLEARANCE"
                 />
               }
@@ -275,7 +275,7 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="WAREHOUSE"
               title={
                 <FormattedMessage
-                  id="modules.shipment.warehouseArrival"
+                  id="modules.Shipments.warehouseArrival"
                   defaultMessage="WAREHOUSE ARRIVAL"
                 />
               }
@@ -327,7 +327,7 @@ const TimelineSection = ({ isNew }: Props) => (
               icon="DELIVERY_READY"
               title={
                 <FormattedMessage
-                  id="modules.shipment.deliveryReady"
+                  id="modules.Shipments.deliveryReady"
                   defaultMessage="DELIVERY READY"
                 />
               }

@@ -67,7 +67,7 @@ const ShipmentGridView = (props: Props) => {
       itemWidth="860px"
       isEmpty={items.length === 0}
       emptyMessage={
-        <FormattedMessage id="modules.shipment.noItem" defaultMessage="No shipments found" />
+        <FormattedMessage id="modules.Shipments.noItem" defaultMessage="No shipments found" />
       }
     >
       {items.map(item => renderItem(item))}

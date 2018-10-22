@@ -45,7 +45,7 @@ const TagSection = ({ isNew }: Props) => (
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.tags.preview" defaultMessage="PREVIEW" />
+                    <FormattedMessage id="modules.Tags.preview" defaultMessage="PREVIEW" />
                   </Label>
                 }
                 input={
@@ -69,7 +69,7 @@ const TagSection = ({ isNew }: Props) => (
                     isNew,
                     required: true,
                     originalValue: originalValues[name],
-                    label: <FormattedMessage id="modules.tags.name" defaultMessage="NAME" />,
+                    label: <FormattedMessage id="modules.Tags.name" defaultMessage="NAME" />,
                   })
                 }
               </FormField>
@@ -93,7 +93,7 @@ const TagSection = ({ isNew }: Props) => (
                     label: (
                       <div className={DescriptionLabelWrapperStyle}>
                         <FormattedMessage
-                          id="modules.tags.description"
+                          id="modules.Tags.description"
                           defaultMessage="DESCRIPTION"
                         />
                       </div>
@@ -113,7 +113,7 @@ const TagSection = ({ isNew }: Props) => (
                   <FieldItem
                     label={
                       <Label required>
-                        <FormattedMessage id="modules.tags.color" defaultMessage="COLOR" />
+                        <FormattedMessage id="modules.Tags.color" defaultMessage="COLOR" />
                       </Label>
                     }
                     tooltip={
@@ -164,7 +164,7 @@ const TagSection = ({ isNew }: Props) => (
                   vertical
                   label={
                     <Label required>
-                      <FormattedMessage id="modules.tags.types" defaultMessage="APPLY TO" />
+                      <FormattedMessage id="modules.Tags.types" defaultMessage="APPLY TO" />
                     </Label>
                   }
                   tooltip={
@@ -175,7 +175,7 @@ const TagSection = ({ isNew }: Props) => (
                           inputHandlers.value.sort().join(',') &&
                         values.entityTypes.length === 0 ? (
                           <FormattedMessage
-                            id="modules.tags.required"
+                            id="modules.Tags.required"
                             defaultMessage="Type is a required field"
                           />
                         ) : (
@@ -200,7 +200,7 @@ const TagSection = ({ isNew }: Props) => (
                             <Icon icon="ORDER" />
                           </div>
                           <Label>
-                            <FormattedMessage id="modules.tags.order" defaultMessage="ORDER" />
+                            <FormattedMessage id="modules.Tags.order" defaultMessage="ORDER" />
                           </Label>
                         </div>
                       </RadioInput>
@@ -213,7 +213,7 @@ const TagSection = ({ isNew }: Props) => (
                             <Icon icon="BATCH" />
                           </div>
                           <Label>
-                            <FormattedMessage id="modules.tags.batch" defaultMessage="BATCH" />
+                            <FormattedMessage id="modules.Tags.batch" defaultMessage="BATCH" />
                           </Label>
                         </div>
                       </RadioInput>
@@ -228,7 +228,7 @@ const TagSection = ({ isNew }: Props) => (
                           </div>
                           <Label>
                             <FormattedMessage
-                              id="modules.tags.shipment"
+                              id="modules.Tags.shipment"
                               defaultMessage="SHIPMENT"
                             />
                           </Label>
@@ -243,7 +243,7 @@ const TagSection = ({ isNew }: Props) => (
                             <Icon icon="PRODUCT" />
                           </div>
                           <Label>
-                            <FormattedMessage id="modules.tags.product" defaultMessage="PRODUCT" />
+                            <FormattedMessage id="modules.Tags.product" defaultMessage="PRODUCT" />
                           </Label>
                         </div>
                       </RadioInput>
@@ -257,7 +257,7 @@ const TagSection = ({ isNew }: Props) => (
                             <Icon icon="STAFF" />
                           </div>
                           <Label>
-                            <FormattedMessage id="modules.tags.staff" defaultMessage="STAFF" />
+                            <FormattedMessage id="modules.Tags.staff" defaultMessage="STAFF" />
                           </Label>
                         </div>
                       </RadioInput>

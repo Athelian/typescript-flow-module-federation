@@ -181,7 +181,7 @@ class ProductFormModule extends React.Component<Props> {
                           link="productSection"
                           label={
                             <FormattedMessage
-                              id="modules.product.product"
+                              id="modules.Products.product"
                               defaultMessage="PRODUCT"
                             />
                           }
@@ -191,7 +191,7 @@ class ProductFormModule extends React.Component<Props> {
                           link="productProvidersSection"
                           label={
                             <FormattedMessage
-                              id="modules.product.providers"
+                              id="modules.Products.providers"
                               defaultMessage="END PRODUCTS"
                             />
                           }

@@ -128,7 +128,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                       <JumpToSection>
                         <SectionTabs
                           link="tagSection"
-                          label={<FormattedMessage id="modules.tags.tag" defaultMessage="TAG" />}
+                          label={<FormattedMessage id="modules.Tags.tag" defaultMessage="TAG" />}
                           icon="TAG"
                         />
                       </JumpToSection>

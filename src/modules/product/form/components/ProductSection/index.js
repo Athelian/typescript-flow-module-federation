@@ -139,7 +139,7 @@ const ProductSection = ({ isNew }: Props) => (
                   isNew,
                   required: true,
                   originalValue: initialValues[name],
-                  label: <FormattedMessage id="modules.product.name" defaultMessage="NAME" />,
+                  label: <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
                 })
               }
             </FormField>
@@ -157,7 +157,7 @@ const ProductSection = ({ isNew }: Props) => (
                   isNew,
                   required: true,
                   originalValue: initialValues[name],
-                  label: <FormattedMessage id="modules.product.serial" defaultMessage="SERIAL" />,
+                  label: <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
                 })
               }
             </FormField>
@@ -175,7 +175,7 @@ const ProductSection = ({ isNew }: Props) => (
                   isNew,
                   originalValue: initialValues[name],
                   label: (
-                    <FormattedMessage id="modules.product.janCode" defaultMessage="JAN CODE" />
+                    <FormattedMessage id="modules.Products.janCode" defaultMessage="JAN CODE" />
                   ),
                 })
               }
@@ -193,7 +193,7 @@ const ProductSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   originalValue: initialValues[name],
-                  label: <FormattedMessage id="modules.product.hsCode" defaultMessage="HS CODE" />,
+                  label: <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />,
                 })
               }
             </FormField>
@@ -211,7 +211,7 @@ const ProductSection = ({ isNew }: Props) => (
                   isNew,
                   originalValue: initialValues[name],
                   label: (
-                    <FormattedMessage id="modules.product.material" defaultMessage="MATERIAL" />
+                    <FormattedMessage id="modules.Products.material" defaultMessage="MATERIAL" />
                   ),
                 })
               }
@@ -224,7 +224,7 @@ const ProductSection = ({ isNew }: Props) => (
                     vertical
                     label={
                       <Label>
-                        <FormattedMessage id="modules.product.tags" defaultMessage="TAGS" />
+                        <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
                       </Label>
                     }
                     input={

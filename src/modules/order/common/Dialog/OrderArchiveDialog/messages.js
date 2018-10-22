@@ -3,20 +3,20 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   confirmMsg: {
-    id: 'modules.order.form.archiveDialog.confirmMsg',
+    id: 'modules.Orders.form.archiveDialog.confirmMsg',
     defaultMessage: 'Are you sure you want to archive this {order}?',
   },
   unshippedMsg: {
-    id: 'modules.order.form.archiveDialog.unshippedMsg',
+    id: 'modules.Orders.form.archiveDialog.unshippedMsg',
     defaultMessage: 'This will make {unshipped}/{total} {batches} archived as well.',
   },
   shippedMsg: {
-    id: 'modules.order.form.archiveDialog.shippedMsg',
+    id: 'modules.Orders.form.archiveDialog.shippedMsg',
     defaultMessage:
       '{shipped}/{total} {batches} will stay active because they are in active {shipments}.',
   },
   warnMsg: {
-    id: 'modules.order.form.archiveDialog.warnMsg',
+    id: 'modules.Orders.form.archiveDialog.warnMsg',
     defaultMessage: 'You need to archive those shipments in order to archive these batches.',
   },
   order: {

@@ -50,7 +50,7 @@ const UpdateEvent = ({ event, entityType }: Props) => (
           field: (
             <span className={FieldStyle}>
               <FormattedMessage
-                id={`containers.${pluralize(get('entity.__typename', event.updates[0]))}.${
+                id={`modules.${pluralize(get('entity.__typename', event.updates[0]))}.${
                   event.updates[0].field
                 }`}
               />

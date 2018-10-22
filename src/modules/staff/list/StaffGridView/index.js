@@ -29,7 +29,7 @@ const StaffGridView = (props: Props) => {
       itemWidth="195px"
       isEmpty={items.length === 0}
       emptyMessage={
-        <FormattedMessage id="modules.staff.noStaffFound" defaultMessage="No staff found" />
+        <FormattedMessage id="modules.Staff.noStaffFound" defaultMessage="No staff found" />
       }
     >
       {items.map(item => renderItem(item))}

@@ -36,7 +36,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   originalValue: originalValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.unitType"
+                      id="modules.ProductProviders.unitType"
                       defaultMessage="UNIT TYPE"
                     />
                   ),
@@ -57,7 +57,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   originalValue: originalValues.unitPrice.amount,
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.unitPrice"
+                      id="modules.ProductProviders.unitPrice"
                       defaultMessage="UNIT PRICE"
                     />
                   ),
@@ -79,7 +79,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   originalValue: originalValues.unitPrice.currency,
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.unitPriceCurrency"
+                      id="modules.ProductProviders.unitPriceCurrency"
                       defaultMessage="UNIT PRICE CURRENCY"
                     />
                   ),
@@ -100,7 +100,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   originalValue: getByPath('unitWeight.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.unitWeight"
+                      id="modules.ProductProviders.unitWeight"
                       defaultMessage="UNIT WEIGHT"
                     />
                   ),
@@ -122,7 +122,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   originalValue: getByPath('unitVolume.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.unitVolume"
+                      id="modules.ProductProviders.unitVolume"
                       defaultMessage="UNIT VOLUME"
                     />
                   ),
@@ -147,7 +147,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   originalValue: getByPath('unitSize.length.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.unitLength"
+                      id="modules.ProductProviders.unitLength"
                       defaultMessage="UNIT LENGTH"
                     />
                   ),
@@ -171,7 +171,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   originalValue: getByPath('unitSize.width.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.unitWidth"
+                      id="modules.ProductProviders.unitWidth"
                       defaultMessage="UNIT WIDTH"
                     />
                   ),
@@ -195,7 +195,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
                   originalValue: getByPath('unitSize.height.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.unitHeight"
+                      id="modules.ProductProviders.unitHeight"
                       defaultMessage="UNIT HEIGHT"
                     />
                   ),

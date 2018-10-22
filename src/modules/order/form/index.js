@@ -73,7 +73,7 @@ export default class OrderForm extends React.Component<Props> {
         <SectionWrapper id="orderSection">
           <SectionHeader
             icon="ORDER"
-            title={<FormattedMessage id="modules.order.order" defaultMessage="ORDER" />}
+            title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
           >
             {!isNew && (
               <>
@@ -117,7 +117,7 @@ export default class OrderForm extends React.Component<Props> {
                 icon="ORDER_ITEM"
                 title={
                   <>
-                    <FormattedMessage id="modules.order.items" defaultMessage="ITEMS" /> (
+                    <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" /> (
                     {values.orderItems.length})
                   </>
                 }
@@ -134,7 +134,7 @@ export default class OrderForm extends React.Component<Props> {
                 icon="DOCUMENT"
                 title={
                   <>
-                    <FormattedMessage id="modules.order.documents" defaultMessage="DOCUMENTS" /> (
+                    <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" /> (
                     {values.files.length})
                   </>
                 }
@@ -152,8 +152,8 @@ export default class OrderForm extends React.Component<Props> {
                   icon="SHIPMENT"
                   title={
                     <>
-                      <FormattedMessage id="modules.order.shipments" defaultMessage="SHIPMENTS" /> (
-                      {shipments.length})
+                      <FormattedMessage id="modules.Orders.shipments" defaultMessage="SHIPMENTS" />{' '}
+                      ({shipments.length})
                     </>
                   }
                 />

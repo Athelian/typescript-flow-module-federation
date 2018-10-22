@@ -3,15 +3,15 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   confirmMsg: {
-    id: 'modules.shipment.form.activateDialog.confirmMsg',
+    id: 'modules.Shipments.form.activateDialog.confirmMsg',
     defaultMessage: 'Are you sure you want to activate this {shipment}?',
   },
   batchesOfArchivedOrderMsg: {
-    id: 'modules.shipment.form.activateDialog.batchesOfArchivedOrderMsg',
+    id: 'modules.Shipments.form.activateDialog.batchesOfArchivedOrderMsg',
     defaultMessage: 'This will activate {batchesOfArchivedOrder}/{total} {batches} as well.',
   },
   batchesOfActiveOrderMsg: {
-    id: 'modules.shipment.form.activateDialog.batchesOfActiveOrderMsg',
+    id: 'modules.Shipments.form.activateDialog.batchesOfActiveOrderMsg',
     defaultMessage:
       '{batchesOfActiveOrder}/{total} {batches} are already active because they are in active {orders}.',
   },

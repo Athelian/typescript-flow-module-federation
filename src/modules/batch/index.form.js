@@ -133,7 +133,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                         <SectionTabs
                           link="batchSection"
                           label={
-                            <FormattedMessage id="modules.batch.batch" defaultMessage="BATCH" />
+                            <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />
                           }
                           icon="BATCH"
                         />
@@ -141,7 +141,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                           link="quantityAdjustmentsSection"
                           label={
                             <FormattedMessage
-                              id="modules.batch.quantityAdjustments"
+                              id="modules.Batches.quantityAdjustments"
                               defaultMessage="QUANTITY ADJUSTMENTS"
                             />
                           }
@@ -151,7 +151,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                           link="packagingSection"
                           label={
                             <FormattedMessage
-                              id="modules.batch.packaging"
+                              id="modules.Batches.packaging"
                               defaultMessage="PACKAGING"
                             />
                           }
@@ -161,7 +161,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                           link="shipmentSection"
                           label={
                             <FormattedMessage
-                              id="modules.batch.shipment"
+                              id="modules.Batches.shipment"
                               defaultMessage="SHIPMENT"
                             />
                           }
@@ -170,7 +170,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                         <SectionTabs
                           link="orderSection"
                           label={
-                            <FormattedMessage id="modules.batch.order" defaultMessage="ORDER" />
+                            <FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />
                           }
                           icon="ORDER"
                         />

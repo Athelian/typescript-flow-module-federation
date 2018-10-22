@@ -3,83 +3,83 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   email: {
-    id: 'containers.Users.email',
+    id: 'modules.Users.email',
     defaultMessage: 'EMAIL',
   },
   role: {
-    id: 'containers.Users.role',
+    id: 'modules.Users.role',
     defaultMessage: 'ROLE',
   },
   tags: {
-    id: 'containers.Users.tags',
+    id: 'modules.Users.tags',
     defaultMessage: 'TAGS',
   },
   firstName: {
-    id: 'containers.Users.firstName',
+    id: 'modules.Users.firstName',
     defaultMessage: 'FIRST NAME',
   },
   lastName: {
-    id: 'containers.Users.lastName',
+    id: 'modules.Users.lastName',
     defaultMessage: 'LAST NAME',
   },
   language: {
-    id: 'containers.Users.language',
+    id: 'modules.Users.language',
     defaultMessage: 'LANGUAGE',
   },
   timezone: {
-    id: 'containers.Users.timezone',
+    id: 'modules.Users.timezone',
     defaultMessage: 'TIMEZONE',
   },
   createdAt: {
-    id: 'containers.Users.createdAt',
+    id: 'modules.Users.createdAt',
     defaultMessage: 'CREATED ON',
   },
   updatedAt: {
-    id: 'containers.Users.updatedAt',
+    id: 'modules.Users.updatedAt',
     defaultMessage: 'LAST MODIFIED',
   },
   required: {
-    id: 'containers.Users.validation.required',
+    id: 'modules.Users.validation.required',
     defaultMessage: 'Required',
   },
   emailError: {
-    id: 'containers.Users.validation.email',
+    id: 'modules.Users.validation.email',
     defaultMessage: 'Please enter a valid email address',
   },
   signUpUser: {
-    id: 'containers.Users.signUp',
+    id: 'modules.Users.signUp',
     defaultMessage: 'ADD STAFF',
   },
   tooltipName: {
-    id: 'containers.Users.tooltip.name',
+    id: 'modules.Users.tooltip.name',
     defaultMessage: '[Name] {firstName} {lastName}',
   },
   tooltipEmail: {
-    id: 'containers.Users.tooltip.email',
+    id: 'modules.Users.tooltip.email',
     defaultMessage: '[Email] {email}',
   },
   tooltipRole: {
-    id: 'containers.Users.tooltip.role',
+    id: 'modules.Users.tooltip.role',
     defaultMessage: '[Role] {role}',
   },
   tooltipDetails: {
-    id: 'containers.Users.tooltip.details',
+    id: 'modules.Users.tooltip.details',
     defaultMessage: 'View Details',
   },
   infoTab: {
-    id: 'containers.Users.infoTab',
+    id: 'modules.Users.infoTab',
     defaultMessage: 'INFO',
   },
   batchItemsTab: {
-    id: 'containers.Users.batchItemsTab',
+    id: 'modules.Users.batchItemsTab',
     defaultMessage: 'BATCHES',
   },
   emailSent: {
-    id: 'containers.Users.emailSent',
+    id: 'modules.Users.emailSent',
     defaultMessage: 'An email will be sent shortly to "{email}" to complete staff sign up.',
   },
   noUsers: {
-    id: 'containers.Users.noUsers',
+    id: 'modules.Users.noUsers',
     defaultMessage: 'No staff found.',
   },
 });

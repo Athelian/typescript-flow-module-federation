@@ -69,14 +69,14 @@ class BatchFormWrapper extends React.Component<Props> {
                   <JumpToSection>
                     <SectionTabs
                       link="batchSection"
-                      label={<FormattedMessage id="modules.batch.batch" defaultMessage="BATCH" />}
+                      label={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
                       icon="BATCH"
                     />
                     <SectionTabs
                       link="quantityAdjustmentsSection"
                       label={
                         <FormattedMessage
-                          id="modules.batch.quantityAdjustments"
+                          id="modules.Batches.quantityAdjustments"
                           defaultMessage="QUANTITY ADJUSTMENTS"
                         />
                       }
@@ -85,20 +85,23 @@ class BatchFormWrapper extends React.Component<Props> {
                     <SectionTabs
                       link="packagingSection"
                       label={
-                        <FormattedMessage id="modules.batch.packaging" defaultMessage="PACKAGING" />
+                        <FormattedMessage
+                          id="modules.Batches.packaging"
+                          defaultMessage="PACKAGING"
+                        />
                       }
                       icon="PACKAGING"
                     />
                     <SectionTabs
                       link="shipmentSection"
                       label={
-                        <FormattedMessage id="modules.batch.shipment" defaultMessage="SHIPMENT" />
+                        <FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />
                       }
                       icon="SHIPMENT"
                     />
                     <SectionTabs
                       link="orderSection"
-                      label={<FormattedMessage id="modules.batch.order" defaultMessage="ORDER" />}
+                      label={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
                       icon="ORDER"
                     />
                   </JumpToSection>

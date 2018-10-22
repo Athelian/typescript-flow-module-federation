@@ -135,7 +135,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                       isEmpty={items.length === 0}
                       emptyMessage={
                         <FormattedMessage
-                          id="modules.order.noProductProvidersFound"
+                          id="modules.Orders.noProductProvidersFound"
                           defaultMessage="No end products found"
                         />
                       }

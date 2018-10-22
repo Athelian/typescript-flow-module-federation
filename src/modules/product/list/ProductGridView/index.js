@@ -68,7 +68,7 @@ const ProductGridView = (props: Props) => {
       itemWidth="195px"
       isEmpty={items.length === 0}
       emptyMessage={
-        <FormattedMessage id="modules.product.noProductFound" defaultMessage="No products found" />
+        <FormattedMessage id="modules.Products.noProductFound" defaultMessage="No products found" />
       }
     >
       {items.map(item => renderItem(item))}

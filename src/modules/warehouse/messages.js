@@ -3,75 +3,75 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   name: {
-    id: 'containers.Warehouses.name',
+    id: 'modules.WareHouses.name',
     defaultMessage: 'NAME',
   },
   status: {
-    id: 'containers.Warehouses.status',
+    id: 'modules.WareHouses.status',
     defaultMessage: 'STATUS',
   },
   streetAddress: {
-    id: 'containers.Warehouses.streetAddress',
+    id: 'modules.WareHouses.streetAddress',
     defaultMessage: 'STREET ADDRESS',
   },
   locality: {
-    id: 'containers.Warehouses.locality',
+    id: 'modules.WareHouses.locality',
     defaultMessage: 'LOCALITY',
   },
   region: {
-    id: 'containers.Warehouses.region',
+    id: 'modules.WareHouses.region',
     defaultMessage: 'REGION',
   },
   postalCode: {
-    id: 'containers.Warehouses.postalCode',
+    id: 'modules.WareHouses.postalCode',
     defaultMessage: 'POSTAL CODE',
   },
   country: {
-    id: 'containers.Warehouses.country',
+    id: 'modules.WareHouses.country',
     defaultMessage: 'COUNTRY',
   },
   surface: {
-    id: 'containers.Warehouses.surface',
+    id: 'modules.WareHouses.surface',
     defaultMessage: 'SURFACE (m²)',
   },
   createdAt: {
-    id: 'containers.Warehouses.createdAt',
+    id: 'modules.WareHouses.createdAt',
     defaultMessage: 'CREATED ON',
   },
   updatedAt: {
-    id: 'containers.Warehouses.updatedAt',
+    id: 'modules.WareHouses.updatedAt',
     defaultMessage: 'LAST MODIFIED',
   },
   required: {
-    id: 'containers.Warehouses.validation.required',
+    id: 'modules.WareHouses.validation.required',
     defaultMessage: 'Required',
   },
   newWarehouse: {
-    id: 'containers.Warehouses.newWarehouse',
+    id: 'modules.WareHouses.newWarehouse',
     defaultMessage: 'NEW',
   },
   active: {
-    id: 'containers.Warehouses.active',
+    id: 'modules.WareHouses.active',
     defaultMessage: 'ACTIVE',
   },
   inactive: {
-    id: 'containers.Warehouses.inactive',
+    id: 'modules.WareHouses.inactive',
     defaultMessage: 'INACTIVE',
   },
   tooltipName: {
-    id: 'containers.Warehouses.tooltip.name',
+    id: 'modules.WareHouses.tooltip.name',
     defaultMessage: '[Name] {name}',
   },
   tooltipPlace: {
-    id: 'containers.Warehouses.tooltip.place',
+    id: 'modules.WareHouses.tooltip.place',
     defaultMessage: '[Place] {place}',
   },
   tooltipDetails: {
-    id: 'containers.Warehouses.tooltip.details',
+    id: 'modules.WareHouses.tooltip.details',
     defaultMessage: 'View Details',
   },
   noWarehouses: {
-    id: 'containers.Warehouses.noWarehouses',
+    id: 'modules.WareHouses.noWarehouses',
     defaultMessage: 'No warehouses found.',
   },
 });

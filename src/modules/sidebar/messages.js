@@ -3,67 +3,67 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   pov: {
-    id: 'containers.SideBar.pov',
+    id: 'modules.SideBar.pov',
     defaultMessage: 'POINT OF VIEW',
   },
   sales: {
-    id: 'containers.SideBar.sales',
+    id: 'modules.SideBar.sales',
     defaultMessage: 'SALES',
   },
   shipment: {
-    id: 'containers.SideBar.shipment',
+    id: 'modules.SideBar.shipment',
     defaultMessage: 'SHIPMENTS',
   },
   batch: {
-    id: 'containers.SideBar.batch',
+    id: 'modules.SideBar.batch',
     defaultMessage: 'BATCHES',
   },
   batchGroup: {
-    id: 'containers.SideBar.batchGroup',
+    id: 'modules.SideBar.batchGroup',
     defaultMessage: 'BATCHGROUPS',
   },
   order: {
-    id: 'containers.SideBar.order',
+    id: 'modules.SideBar.order',
     defaultMessage: 'ORDERS',
   },
   product: {
-    id: 'containers.SideBar.product',
+    id: 'modules.SideBar.product',
     defaultMessage: 'PRODUCTS',
   },
   request: {
-    id: 'containers.SideBar.request',
+    id: 'modules.SideBar.request',
     defaultMessage: 'REQUESTS',
   },
   relationMap: {
-    id: 'containers.SideBar.relationMap',
+    id: 'modules.SideBar.relationMap',
     defaultMessage: 'RELATION MAP',
   },
   network: {
-    id: 'containers.SideBar.network',
+    id: 'modules.SideBar.network',
     defaultMessage: 'NETWORK',
   },
   partner: {
-    id: 'containers.SideBar.partner',
+    id: 'modules.SideBar.partner',
     defaultMessage: 'PARTNERS',
   },
   staff: {
-    id: 'containers.SideBar.staff',
+    id: 'modules.SideBar.staff',
     defaultMessage: 'STAFF',
   },
   warehouse: {
-    id: 'containers.SideBar.warehouse',
+    id: 'modules.SideBar.warehouse',
     defaultMessage: 'WAREHOUSES',
   },
   settings: {
-    id: 'containers.SideBar.settings',
+    id: 'modules.SideBar.settings',
     defaultMessage: 'SETTINGS',
   },
   taskTemplate: {
-    id: 'containers.SideBar.taskTemplate',
+    id: 'modules.SideBar.taskTemplate',
     defaultMessage: 'TASK TEMPLATES',
   },
   tags: {
-    id: 'containers.SideBar.tags',
+    id: 'modules.SideBar.tags',
     defaultMessage: 'TAGS',
   },
 });

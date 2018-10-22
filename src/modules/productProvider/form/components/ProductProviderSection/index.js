@@ -36,7 +36,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
               <GridColumn gap="10px">
                 <Label required>
                   <FormattedMessage
-                    id="modules.productProvider.exporter"
+                    id="modules.ProductProviders.exporter"
                     defaultMessage="EXPORTER"
                   />
                 </Label>
@@ -81,7 +81,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
               <GridColumn gap="10px">
                 <Label>
                   <FormattedMessage
-                    id="modules.productProvider.supplier"
+                    id="modules.ProductProviders.supplier"
                     defaultMessage="SUPPLIER"
                   />
                 </Label>
@@ -139,7 +139,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   originalValue: initialValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.countryOfOrigin"
+                      id="modules.ProductProviders.countryOfOrigin"
                       defaultMessage="COUNTRY OF ORIGIN"
                     />
                   ),
@@ -160,7 +160,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   originalValue: initialValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.productionLeadTime"
+                      id="modules.ProductProviders.productionLeadTime"
                       defaultMessage="PRODUCTION LEAD TIME"
                     />
                   ),
@@ -182,7 +182,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   originalValue: initialValues.inspectionFee.amount,
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.inspectionFee"
+                      id="modules.ProductProviders.inspectionFee"
                       defaultMessage="INSPECTION FEE"
                     />
                   ),
@@ -204,7 +204,7 @@ const ProductProviderSection = ({ isNew }: Props) => (
                   originalValue: initialValues.inspectionFee.currency,
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.inspectionFeeCurrency"
+                      id="modules.ProductProviders.inspectionFeeCurrency"
                       defaultMessage="INSPECTION FEE CURRENCY"
                     />
                   ),

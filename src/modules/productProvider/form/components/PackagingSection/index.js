@@ -36,7 +36,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: originalValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.packageName"
+                      id="modules.ProductProviders.packageName"
                       defaultMessage="PACKAGE NAME"
                     />
                   ),
@@ -57,7 +57,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: originalValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.packageCapacity"
+                      id="modules.ProductProviders.packageCapacity"
                       defaultMessage="PACKAGE CAPACITY"
                     />
                   ),
@@ -80,7 +80,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: getByPath('packageGrossWeight.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.pkgCrossWeight"
+                      id="modules.ProductProviders.pkgCrossWeight"
                       defaultMessage="PKG GROSS WEIGHT"
                     />
                   ),
@@ -104,7 +104,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: getByPath('packageVolume.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.pkgVolume"
+                      id="modules.ProductProviders.pkgVolume"
                       defaultMessage="PKG VOLUME"
                     />
                   ),
@@ -129,7 +129,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: getByPath('packageSize.length.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.pkgLength"
+                      id="modules.ProductProviders.pkgLength"
                       defaultMessage="PKG LENGTH"
                     />
                   ),
@@ -153,7 +153,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: getByPath('packageSize.width.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.pkgWidth"
+                      id="modules.ProductProviders.pkgWidth"
                       defaultMessage="PKG WIDTH"
                     />
                   ),
@@ -177,7 +177,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: getByPath('packageSize.height.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.productProvider.pkgHeight"
+                      id="modules.ProductProviders.pkgHeight"
                       defaultMessage="PKG HEIGHT"
                     />
                   ),

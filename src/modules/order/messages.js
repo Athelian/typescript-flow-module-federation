@@ -3,487 +3,487 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   save: {
-    id: 'containers.Orders.save',
+    id: 'modules.Orders.save',
     defaultMessage: 'SAVE',
   },
   cancel: {
-    id: 'containers.Orders.cancel',
+    id: 'modules.Orders.cancel',
     defaultMessage: 'CANCEL',
   },
   active: {
-    id: 'containers.Orders.active',
+    id: 'modules.Orders.active',
     defaultMessage: 'ACTIVE',
   },
   completed: {
-    id: 'containers.Orders.completed',
+    id: 'modules.Orders.completed',
     defaultMessage: 'COMPLETED',
   },
   newOrder: {
-    id: 'containers.Orders.newOrder',
+    id: 'modules.Orders.newOrder',
     defaultMessage: 'NEW',
   },
   noOrders: {
-    id: 'containers.Orders.noOrders',
+    id: 'modules.Orders.noOrders',
     defaultMessage: 'No orders found.',
   },
   noBatches: {
-    id: 'containers.Orders.noBatches',
+    id: 'modules.Orders.noBatches',
     defaultMessage: 'No batches found.',
   },
   noShipment: {
-    id: 'containers.Orders.noShipment',
+    id: 'modules.Orders.noShipment',
     defaultMessage: 'No shipment.',
   },
   tooltipNo: {
-    id: 'containers.Orders.tooltip.no',
+    id: 'modules.Orders.tooltip.no',
     defaultMessage: '[Batch ID] {no}',
   },
   tooltipDelivery: {
-    id: 'containers.Orders.tooltip.delivery',
+    id: 'modules.Orders.tooltip.delivery',
     defaultMessage: '[Delivery Date] {delivery}',
   },
   tooltipPO: {
-    id: 'containers.Orders.tooltip.PO',
+    id: 'modules.Orders.tooltip.PO',
     defaultMessage: '[PO] {PO}',
   },
   tooltipPODate: {
-    id: 'containers.Orders.tooltip.PODate',
+    id: 'modules.Orders.tooltip.PODate',
     defaultMessage: '[PO Date] {date}',
   },
   tooltipOrderedQuantity: {
-    id: 'containers.Orders.tooltip.orderedQuantity',
+    id: 'modules.Orders.tooltip.orderedQuantity',
     defaultMessage: '[Total Ordered] {totalQuantity}',
   },
   tooltipBatchedQuantity: {
-    id: 'containers.Orders.tooltip.batchedQuantity',
+    id: 'modules.Orders.tooltip.batchedQuantity',
     defaultMessage: '[Total Batched] {totalBatchedQuantity}',
   },
   tooltipShippedQuantity: {
-    id: 'containers.Orders.tooltip.shippedQuantity',
+    id: 'modules.Orders.tooltip.shippedQuantity',
     defaultMessage: '[Total Shipped] {totalShippedQuantity}',
   },
   tooltipUnshippedQuantity: {
-    id: 'containers.Orders.tooltip.unshippedQuantity',
+    id: 'modules.Orders.tooltip.unshippedQuantity',
     defaultMessage: '[Total Unshipped] {totalUnshippedQuantity}',
   },
   tooltipOpenChart: {
-    id: 'containers.Orders.tooltip.openChart',
+    id: 'modules.Orders.tooltip.openChart',
     defaultMessage: 'Show Items',
   },
   tooltipExporter: {
-    id: 'containers.Orders.tooltip.exporter',
+    id: 'modules.Orders.tooltip.exporter',
     defaultMessage: '[Exporter] {exporter}',
   },
   tooltipSupplier: {
-    id: 'containers.Orders.tooltip.supplier',
+    id: 'modules.Orders.tooltip.supplier',
     defaultMessage: '[Supplier] {supplier}',
   },
   tooltipProduct: {
-    id: 'containers.Orders.tooltip.product',
+    id: 'modules.Orders.tooltip.product',
     defaultMessage: '[Product] {product}',
   },
   tooltipSerial: {
-    id: 'containers.Orders.tooltip.serial',
+    id: 'modules.Orders.tooltip.serial',
     defaultMessage: '[Serial] {serial}',
   },
   tooltipQuantity: {
-    id: 'containers.Orders.tooltip.quantity',
+    id: 'modules.Orders.tooltip.quantity',
     defaultMessage: '[Quantity] {quantity}',
   },
   tooltipPrice: {
-    id: 'containers.Orders.tooltip.price',
+    id: 'modules.Orders.tooltip.price',
     defaultMessage: '[Price] {currencyAndPrice}',
   },
   tooltipDetails: {
-    id: 'containers.Orders.tooltip.details',
+    id: 'modules.Orders.tooltip.details',
     defaultMessage: 'View Details',
   },
   PO: {
-    id: 'containers.Orders.poNo',
+    id: 'modules.Orders.poNo',
     defaultMessage: 'PO NO.',
   },
   date: {
-    id: 'containers.Orders.issuedAt',
+    id: 'modules.Orders.issuedAt',
     defaultMessage: 'PO DATE',
   },
   PI: {
-    id: 'containers.Orders.piNo',
+    id: 'modules.Orders.piNo',
     defaultMessage: 'PI NO.',
   },
   incoterm: {
-    id: 'containers.Orders.incoterms',
+    id: 'modules.Orders.incoterms',
     defaultMessage: 'INCOTERMS',
   },
   deliveryPlace: {
-    id: 'containers.Orders.deliveryPlace',
+    id: 'modules.Orders.deliveryPlace',
     defaultMessage: 'PLACE OF DELIVERY',
   },
   currency: {
-    id: 'containers.Orders.currency',
+    id: 'modules.Orders.currency',
     defaultMessage: 'CURRENCY',
   },
   exporter: {
-    id: 'containers.Orders.exporter',
+    id: 'modules.Orders.exporter',
     defaultMessage: 'EXPORTER',
   },
   forwarder: {
-    id: 'containers.Orders.forwarder',
+    id: 'modules.Orders.forwarder',
     defaultMessage: 'FORWARDER',
   },
   memo: {
-    id: 'containers.Orders.memo',
+    id: 'modules.Orders.memo',
     defaultMessage: 'MEMO',
   },
   batchMemo: {
-    id: 'containers.Batches.memo',
+    id: 'modules.Batches.memo',
     defaultMessage: 'MEMO',
   },
   createdAt: {
-    id: 'containers.Orders.createdAt',
+    id: 'modules.Orders.createdAt',
     defaultMessage: 'CREATED ON',
   },
   updatedAt: {
-    id: 'containers.Orders.updatedAt',
+    id: 'modules.Orders.updatedAt',
     defaultMessage: 'LAST MODIFIED',
   },
   status: {
-    id: 'containers.Orders.status',
+    id: 'modules.Orders.status',
     defaultMessage: 'STATUS',
   },
   productExporterSupplier: {
-    id: 'containers.Orders.productExporterSupplier',
+    id: 'modules.Orders.productExporterSupplier',
     defaultMessage: 'PRODUCT',
   },
   serial: {
-    id: 'containers.Orders.serial',
+    id: 'modules.Orders.serial',
     defaultMessage: 'SERIAL',
   },
   unit: {
-    id: 'containers.Orders.unit',
+    id: 'modules.Orders.unit',
     defaultMessage: 'UNIT TYPE',
   },
   price: {
-    id: 'containers.Orders.price',
+    id: 'modules.Orders.price',
     defaultMessage: 'UNIT PRICE',
   },
   itemPrice: {
-    id: 'containers.OrderItems.price',
+    id: 'modules.OrderItems.price',
     defaultMessage: 'ORDER ITEM UNIT PRICE',
   },
   originalPrice: {
-    id: 'containers.Orders.originalPrice',
+    id: 'modules.Orders.originalPrice',
     defaultMessage: 'ORIGINAL UNIT PRICE',
   },
   expiry: {
-    id: 'containers.Orders.expiry',
+    id: 'modules.Orders.expiry',
     defaultMessage: 'EXPIRY DATE',
   },
   quantity: {
-    id: 'containers.Orders.quantity',
+    id: 'modules.Orders.quantity',
     defaultMessage: 'QUANTITY',
   },
   itemQuantity: {
-    id: 'containers.OrderItems.quantity',
+    id: 'modules.OrderItems.quantity',
     defaultMessage: 'ORDER ITEM QUANTITY',
   },
   batchQuantity: {
-    id: 'containers.Batches.quantity',
+    id: 'modules.Batches.quantity',
     defaultMessage: 'BATCH QUANTITY',
   },
   packageQuantity: {
-    id: 'containers.Batches.packageQuantity',
+    id: 'modules.Batches.packageQuantity',
     defaultMessage: 'PACKAGE QUANTITY',
   },
   shippedQuantity: {
-    id: 'containers.Orders.shippedQuantity',
+    id: 'modules.Orders.shippedQuantity',
     defaultMessage: 'ALREADY CARGO READY QUANTITY',
   },
   batchedQuantity: {
-    id: 'containers.Orders.batchedQuantity',
+    id: 'modules.Orders.batchedQuantity',
     defaultMessage: 'CURRENTLY BATCHED QUANTITY',
   },
   quantityAbove: {
-    id: 'containers.Orders.quantityAbove',
+    id: 'modules.Orders.quantityAbove',
     defaultMessage: 'Currently batched quantity is {diff} above the order quantity. Please revise.',
   },
   quantityBelow: {
-    id: 'containers.Orders.quantityBelow',
+    id: 'modules.Orders.quantityBelow',
     defaultMessage: 'Currently batched quantity is {diff} below the order quantity. Please revise.',
   },
   notShippedQuantity: {
-    id: 'containers.Orders.notShippedQuantity',
+    id: 'modules.Orders.notShippedQuantity',
     defaultMessage: 'REST NOT SHIPPED QUANTITY',
   },
   shipmentStatus: {
-    id: 'containers.Orders.shipmentStatus',
+    id: 'modules.Orders.shipmentStatus',
     defaultMessage: 'SHIPMENT STATUS',
   },
   productName: {
-    id: 'containers.Orders.productName',
+    id: 'modules.Orders.productName',
     defaultMessage: 'PRODUCT NAME',
   },
   productPrice: {
-    id: 'containers.Orders.productPrice',
+    id: 'modules.Orders.productPrice',
     defaultMessage: 'PRODUCT PRICE',
   },
   productUnit: {
-    id: 'containers.Orders.productUnit',
+    id: 'modules.Orders.productUnit',
     defaultMessage: 'UNIT TYPE',
   },
   supplier: {
-    id: 'containers.Orders.supplier',
+    id: 'modules.Orders.supplier',
     defaultMessage: 'SUPPLIER',
   },
   batchNo: {
-    id: 'containers.Batches.no',
+    id: 'modules.Batches.no',
     defaultMessage: 'BATCH ID',
   },
   packageCapacity: {
-    id: 'containers.Batches.packageCapacity',
+    id: 'modules.Batches.packageCapacity',
     defaultMessage: 'PACKAGE CAPACITY',
   },
   expiredAt: {
-    id: 'containers.Batches.expiredAt',
+    id: 'modules.Batches.expiredAt',
     defaultMessage: 'EXPIRY',
   },
   producedAt: {
-    id: 'containers.Batches.producedAt',
+    id: 'modules.Batches.producedAt',
     defaultMessage: 'PRODUCTION DATE',
   },
   deliveredAt: {
-    id: 'containers.Batches.deliveredAt',
+    id: 'modules.Batches.deliveredAt',
     defaultMessage: 'DELIVERY DATE',
   },
   totalAssignedQuantity: {
-    id: 'containers.Orders.totalAssignedQuantity',
+    id: 'modules.Orders.totalAssignedQuantity',
     defaultMessage: 'TOTAL ASSIGNED QUANTITY',
   },
   totalPrice: {
-    id: 'containers.Orders.totalPrice',
+    id: 'modules.Orders.totalPrice',
     defaultMessage: 'TOTAL PRICE',
   },
   totalVolume: {
-    id: 'containers.Orders.totalVolume',
+    id: 'modules.Orders.totalVolume',
     defaultMessage: 'TOTAL VOLUME',
   },
   totalOrderPrice: {
-    id: 'containers.Orders.totalOrderPrice',
+    id: 'modules.Orders.totalOrderPrice',
     defaultMessage: 'TOTAL ORDER PRICE',
   },
   totalOrderedQuantity: {
-    id: 'containers.Orders.totalOrderedQuantity',
+    id: 'modules.Orders.totalOrderedQuantity',
     defaultMessage: 'TOTAL ORDERED',
   },
   totalBatchedQuantity: {
-    id: 'containers.Orders.totalBatchedQuantity',
+    id: 'modules.Orders.totalBatchedQuantity',
     defaultMessage: 'TOTAL BATCHED',
   },
   totalShippedQuantity: {
-    id: 'containers.Orders.totalShippedQuantity',
+    id: 'modules.Orders.totalShippedQuantity',
     defaultMessage: 'TOTAL SHIPPED',
   },
   totalUnshippedQuantity: {
-    id: 'containers.Orders.totalUnshippedQuantity',
+    id: 'modules.Orders.totalUnshippedQuantity',
     defaultMessage: 'TOTAL UNSHIPPED',
   },
   inventory: {
-    id: 'containers.Orders.inventory',
+    id: 'modules.Orders.inventory',
     defaultMessage: 'INVENTORY',
   },
   user: {
-    id: 'containers.Orders.user',
+    id: 'modules.Orders.user',
     defaultMessage: 'STAFF',
   },
   itemCount: {
-    id: 'containers.Orders.itemCount',
+    id: 'modules.Orders.itemCount',
     defaultMessage: 'ITEM COUNT',
   },
   item: {
-    id: 'containers.Orders.item',
+    id: 'modules.Orders.item',
     defaultMessage: 'ITEM',
   },
   tags: {
-    id: 'containers.Orders.tags',
+    id: 'modules.Orders.tags',
     defaultMessage: 'TAGS',
   },
   shipmentPending: {
-    id: 'containers.Orders.shipment.pending',
+    id: 'modules.Orders.shipment.pending',
     defaultMessage: 'Before Cargo Ready',
   },
   shipmentCargoReady: {
-    id: 'containers.Orders.shipment.cargoReady',
+    id: 'modules.Orders.shipment.cargoReady',
     defaultMessage: 'Cargo Ready',
   },
   shipmentHasLeftLoadPort: {
-    id: 'containers.Orders.shipment.hasLeftLoadPort',
+    id: 'modules.Orders.shipment.hasLeftLoadPort',
     defaultMessage: 'Departed from Load Port',
   },
   shipmentHasArrivedTransitPort: {
-    id: 'containers.Orders.shipment.hasArrivedTransitPort',
+    id: 'modules.Orders.shipment.hasArrivedTransitPort',
     defaultMessage: 'Arrived at Transit Port {index}',
   },
   shipmentHasLeftTransitPort: {
-    id: 'containers.Orders.shipment.hasLeftTransitPort',
+    id: 'modules.Orders.shipment.hasLeftTransitPort',
     defaultMessage: 'Departed from Transit Port {index}',
   },
   shipmentHasArrivedDischargePort: {
-    id: 'containers.Orders.shipment.hasArrivedDischargePort',
+    id: 'modules.Orders.shipment.hasArrivedDischargePort',
     defaultMessage: 'Arrived at Discharge Port',
   },
   shipmentCustomCleared: {
-    id: 'containers.Orders.shipment.customCleared',
+    id: 'modules.Orders.shipment.customCleared',
     defaultMessage: 'Completed Custom Clearance',
   },
   shipmentArrivedWarehouse: {
-    id: 'containers.Orders.shipment.arrivedWarehouse',
+    id: 'modules.Orders.shipment.arrivedWarehouse',
     defaultMessage: 'Arrived at Warehouse',
   },
   packageName: {
-    id: 'containers.Batches.packageName',
+    id: 'modules.Batches.packageName',
     defaultMessage: 'PACKAGE NAME',
   },
   packageGrossWeight: {
-    id: 'containers.Orders.packageGrossWeight',
+    id: 'modules.Orders.packageGrossWeight',
     defaultMessage: 'PACKAGE GROSS WEIGHT',
   },
   packageVolume: {
-    id: 'containers.Orders.packageVolume',
+    id: 'modules.Orders.packageVolume',
     defaultMessage: 'PACKAGE GROSS VOLUME',
   },
   packageMaxQuantity: {
-    id: 'containers.Orders.packageMaxQuantity',
+    id: 'modules.Orders.packageMaxQuantity',
     defaultMessage: 'MAX QUANTITY / PACKAGE',
   },
   packageSize: {
-    id: 'containers.Batches.packageSize',
+    id: 'modules.Batches.packageSize',
     defaultMessage: 'PACKAGE SIZE (m)',
   },
   required: {
-    id: 'containers.Orders.validation.required',
+    id: 'modules.Orders.validation.required',
     defaultMessage: 'Required',
   },
   minZero: {
-    id: 'containers.Orders.validation.minZero',
+    id: 'modules.Orders.validation.minZero',
     defaultMessage: 'Min value is zero',
   },
   maxDecimal: {
-    id: 'containers.Orders.validation.maxDecimal',
+    id: 'modules.Orders.validation.maxDecimal',
     defaultMessage: 'Max decimal is {count}',
   },
   duplicateProduct: {
-    id: 'containers.Orders.validation.duplicateProduct',
+    id: 'modules.Orders.validation.duplicateProduct',
     defaultMessage: 'Duplicate product',
   },
   chooseExporter: {
-    id: 'containers.Orders.validation.chooseExporter',
+    id: 'modules.Orders.validation.chooseExporter',
     defaultMessage: 'Please choose an Exporter first',
   },
   fileTypeDocument: {
-    id: 'containers.Orders.fileType.document',
+    id: 'modules.Orders.fileType.document',
     defaultMessage: 'Document',
   },
   fileTypeOrderPO: {
-    id: 'containers.Orders.fileType.orderPO',
+    id: 'modules.Orders.fileType.orderPO',
     defaultMessage: 'Order PO',
   },
   fileTypeOrderPI: {
-    id: 'containers.Orders.fileType.orderPI',
+    id: 'modules.Orders.fileType.orderPI',
     defaultMessage: 'Order PI',
   },
   sectionDocuments: {
-    id: 'containers.Orders.sectionDocuments',
+    id: 'modules.Orders.sectionDocuments',
     defaultMessage: 'DOCUMENTS',
   },
   sectionGeneral: {
-    id: 'containers.Orders.sectionGeneral',
+    id: 'modules.Orders.sectionGeneral',
     defaultMessage: 'GENERAL',
   },
   sectionItems: {
-    id: 'containers.Orders.sectionItems',
+    id: 'modules.Orders.sectionItems',
     defaultMessage: 'ITEMS',
   },
   sectionBatches: {
-    id: 'containers.Orders.sectionBatches',
+    id: 'modules.Orders.sectionBatches',
     defaultMessage: 'BATCHES',
   },
   sectionPackage: {
-    id: 'containers.Orders.sectionPackage',
+    id: 'modules.Orders.sectionPackage',
     defaultMessage: 'PACKAGING',
   },
   sectionTimeline: {
-    id: 'containers.Orders.sectionTimeline',
+    id: 'modules.Orders.sectionTimeline',
     defaultMessage: 'LOGS & MESSAGE BOARD',
   },
   sectionAssignments: {
-    id: 'containers.Orders.sectionAssignments',
+    id: 'modules.Orders.sectionAssignments',
     defaultMessage: 'ASSIGNMENTS',
   },
   addItem: {
-    id: 'containers.Orders.addItem',
+    id: 'modules.Orders.addItem',
     defaultMessage: 'ADD ITEM',
   },
   addBatch: {
-    id: 'containers.Orders.addBatch',
+    id: 'modules.Orders.addBatch',
     defaultMessage: 'ADD BATCH',
   },
   currencyNotMatch: {
-    id: 'containers.Orders.currencyNotMatch',
+    id: 'modules.Orders.currencyNotMatch',
     defaultMessage: 'Unit price is in {currency}. Please revise',
   },
   downloadCSV: {
-    id: 'containers.Orders.downloadCSV',
+    id: 'modules.Orders.downloadCSV',
     defaultMessage: 'ALL LIST',
   },
   downloadPO: {
-    id: 'containers.Orders.downloadPO',
+    id: 'modules.Orders.downloadPO',
     defaultMessage: 'PO',
   },
   adjustmentType: {
-    id: 'containers.Orders.adjustmentType',
+    id: 'modules.Orders.adjustmentType',
     defaultMessage: 'CATEGORY',
   },
   sectionAdjustments: {
-    id: 'containers.Orders.sectionAdjustments',
+    id: 'modules.Orders.sectionAdjustments',
     defaultMessage: 'QUANTITY ADJUSTMENTS',
   },
   addAdjustment: {
-    id: 'containers.Orders.addAdjustment',
+    id: 'modules.Orders.addAdjustment',
     defaultMessage: 'ADD ADJUSTMENT',
   },
   poSort: {
-    id: 'modules.order.list.sort.po',
+    id: 'modules.Orders.list.sort.po',
     defaultMessage: 'PO No',
   },
   nameSort: {
-    id: 'modules.order.list.sort.name',
+    id: 'modules.Orders.list.sort.name',
     defaultMessage: 'NAME',
   },
   serialSort: {
-    id: 'modules.order.list.sort.serial',
+    id: 'modules.Orders.list.sort.serial',
     defaultMessage: 'SERIAL',
   },
   exporterSort: {
-    id: 'modules.order.list.sort.exporter',
+    id: 'modules.Orders.list.sort.exporter',
     defaultMessage: 'Exporter',
   },
   createdAtSort: {
-    id: 'modules.order.list.sort.createdAt',
+    id: 'modules.Orders.list.sort.createdAt',
     defaultMessage: 'Created At',
   },
   updatedAtSort: {
-    id: 'modules.order.list.sort.updatedAt',
+    id: 'modules.Orders.list.sort.updatedAt',
     defaultMessage: 'Updated At',
   },
   batch: {
-    id: 'modules.order.form.batch',
+    id: 'modules.Orders.form.batch',
     defaultMessage: 'BATCH',
   },
   noItems: {
-    id: 'modules.order.form.noItems',
+    id: 'modules.Orders.form.noItems',
     defaultMessage: 'No Items found / Please choose Exporter first',
   },
   newItems: {
-    id: 'modules.order.form.newItems',
+    id: 'modules.Orders.form.newItems',
     defaultMessage: 'NEW ITEMS',
   },
 });

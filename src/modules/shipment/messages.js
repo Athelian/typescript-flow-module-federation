@@ -3,531 +3,531 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   shipmentId: {
-    id: 'containers.Shipments.shipmentId',
+    id: 'modules.Shipments.no',
     defaultMessage: 'SHIPMENT ID',
   },
   tags: {
-    id: 'containers.Shipments.tags',
+    id: 'modules.Shipments.tags',
     defaultMessage: 'TAGS',
   },
   carrier: {
-    id: 'containers.Shipments.carrier',
+    id: 'modules.Shipments.carrier',
     defaultMessage: 'CARRIER',
   },
   blNo: {
-    id: 'containers.Shipments.blNo',
+    id: 'modules.Shipments.blNo',
     defaultMessage: 'B/L NO.',
   },
   blDate: {
-    id: 'containers.Shipments.blDate',
+    id: 'modules.Shipments.blDate',
     defaultMessage: 'B/L DATE',
   },
   bookingNo: {
-    id: 'containers.Shipments.bookingNo',
+    id: 'modules.Shipments.bookingNo',
     defaultMessage: 'BOOKING NO.',
   },
   bookingDate: {
-    id: 'containers.Shipments.bookingDate',
+    id: 'modules.Shipments.bookingDate',
     defaultMessage: 'BOOKING DATE',
   },
   invoiceNo: {
-    id: 'containers.Shipments.invoiceNo',
+    id: 'modules.Shipments.invoiceNo',
     defaultMessage: 'INVOICE NO.',
   },
   incoterms: {
-    id: 'containers.Shipments.incoterms',
+    id: 'modules.Shipments.incoterms',
     defaultMessage: 'INCOTERMS',
   },
   forwarder: {
-    id: 'containers.Shipments.forwarder',
+    id: 'modules.Shipments.forwarder',
     defaultMessage: 'FORWARDER',
   },
   exporter: {
-    id: 'containers.Shipments.exporter',
+    id: 'modules.Shipments.exporter',
     defaultMessage: 'EXPORTER',
   },
   importer: {
-    id: 'containers.Shipments.importer',
+    id: 'modules.Shipments.importer',
     defaultMessage: 'IMPORTER',
   },
   PO: {
-    id: 'containers.Shipments.PO',
+    id: 'modules.Shipments.PO',
     defaultMessage: 'PO NO.',
   },
   voyageCode: {
-    id: 'containers.Shipments.voyageCode',
+    id: 'modules.Voyages.voyageCode',
     defaultMessage: 'VOYAGE CODE',
   },
   vesselName: {
-    id: 'containers.Shipments.vesselName',
+    id: 'modules.Voyages.vesselName',
     defaultMessage: 'VESSEL NAME',
   },
   warehouse: {
-    id: 'containers.Shipments.warehouse',
+    id: 'modules.Shipments.warehouse',
     defaultMessage: 'WAREHOUSE',
   },
   loadPort: {
-    id: 'containers.Shipments.loadPort',
+    id: 'modules.Shipments.loadPort',
     defaultMessage: 'LOAD PORT',
   },
   transitPort: {
-    id: 'containers.Shipments.transitPort',
+    id: 'modules.Shipments.transitPort',
     defaultMessage: 'TRANSIT PORT',
   },
   dischargePort: {
-    id: 'containers.Shipments.dischargePort',
+    id: 'modules.Shipments.dischargePort',
     defaultMessage: 'DISCHARGE PORT',
   },
   transportType: {
-    id: 'containers.Shipments.transportType',
+    id: 'modules.Shipments.transportType',
     defaultMessage: 'TRANSPORTATION TYPE',
   },
   loadType: {
-    id: 'containers.Shipments.loadType',
+    id: 'modules.Shipments.loadType',
     defaultMessage: 'LOAD TYPE',
   },
   containerType: {
-    id: 'containers.Shipments.containerType',
+    id: 'modules.Shipments.containerType',
     defaultMessage: 'CONTAINER TYPE',
   },
   containerSize: {
-    id: 'containers.Shipments.containerSize',
+    id: 'modules.Shipments.containerSize',
     defaultMessage: 'CONTAINER SIZE',
   },
   totalVolume: {
-    id: 'containers.Shipments.totalVolume',
+    id: 'modules.Shipments.totalVolume',
     defaultMessage: 'TOTAL VOLUME',
   },
   totalWeight: {
-    id: 'containers.Shipments.totalWeight',
+    id: 'modules.Shipments.totalWeight',
     defaultMessage: 'TOTAL WEIGHT',
   },
   containerNo: {
-    id: 'containers.Shipments.containerNo',
+    id: 'modules.Shipments.containerNo',
     defaultMessage: 'CONTAINER NO.',
   },
   HSCode: {
-    id: 'containers.Shipments.HSCode',
+    id: 'modules.Shipments.HSCode',
     defaultMessage: 'HS CODE',
   },
   product: {
-    id: 'containers.Shipments.product',
+    id: 'modules.Shipments.product',
     defaultMessage: 'PRODUCT',
   },
   serial: {
-    id: 'containers.Shipments.serial',
+    id: 'modules.Shipments.serial',
     defaultMessage: 'SERIAL',
   },
   productPrice: {
-    id: 'containers.Shipments.productPrice',
+    id: 'modules.Shipments.productPrice',
     defaultMessage: 'PRICE PER UNIT',
   },
   productWeight: {
-    id: 'containers.Shipments.productWeight',
+    id: 'modules.Shipments.productWeight',
     defaultMessage: 'WEIGHT PER UNIT',
   },
   productVolume: {
-    id: 'containers.Shipments.productVolume',
+    id: 'modules.Shipments.productVolume',
     defaultMessage: 'VOLUME PER UNIT',
   },
   inspectionFee: {
-    id: 'containers.Shipments.inspectionFee',
+    id: 'modules.Shipments.inspectionFee',
     defaultMessage: 'INSPECTION FEE',
   },
   totalPrice: {
-    id: 'containers.Shipments.totalPrice',
+    id: 'modules.Shipments.totalPrice',
     defaultMessage: 'TOTAL PRODUCT PRICE',
   },
   supplier: {
-    id: 'containers.Shipments.supplier',
+    id: 'modules.Shipments.supplier',
     defaultMessage: 'SUPPLIER',
   },
   expiry: {
-    id: 'containers.Shipments.expiry',
+    id: 'modules.Shipments.expiry',
     defaultMessage: 'EXPIRY',
   },
   availableQuantity: {
-    id: 'containers.Shipments.availableQuantity',
+    id: 'modules.Shipments.availableQuantity',
     defaultMessage: 'AVAILABLE QUANTITY',
   },
   quantity: {
-    id: 'containers.Shipments.quantity',
+    id: 'modules.Shipments.quantity',
     defaultMessage: 'QUANTITY',
   },
   volumePP: {
-    id: 'containers.Shipments.volumePP',
+    id: 'modules.Shipments.volumePP',
     defaultMessage: 'CBM/PKG',
   },
   totalCBM: {
-    id: 'containers.Shipments.totalCBM',
+    id: 'modules.Shipments.totalCBM',
     defaultMessage: 'TOTAL CBM',
   },
   grossWeightPP: {
-    id: 'containers.Shipments.grossWeightPP',
+    id: 'modules.Shipments.grossWeightPP',
     defaultMessage: 'GWT/PKG',
   },
   totalGWT: {
-    id: 'containers.Shipments.totalGWT',
+    id: 'modules.Shipments.totalGWT',
     defaultMessage: 'TOTAL GWT',
   },
   packageQuantity: {
-    id: 'containers.Shipments.packageQuantity',
+    id: 'modules.Shipments.packageQuantity',
     defaultMessage: 'PACKAGE QUANTITY',
   },
   packageVolume: {
-    id: 'containers.Shipments.packageVolume',
+    id: 'modules.Shipments.packageVolume',
     defaultMessage: 'PACKAGE GROSS VOLUME',
   },
   pricePU: {
-    id: 'containers.Shipments.pricePU',
+    id: 'modules.Shipments.pricePU',
     defaultMessage: 'PRICE/UNIT',
   },
   productCost: {
-    id: 'containers.Shipments.productCost',
+    id: 'modules.Shipments.productCost',
     defaultMessage: 'PRODUCT COST',
   },
   productFreightCost: {
-    id: 'containers.Shipments.productFreightCost',
+    id: 'modules.Shipments.productFreightCost',
     defaultMessage: 'PRODUCT FREIGHT COST',
   },
   taxCost: {
-    id: 'containers.Shipments.taxCost',
+    id: 'modules.Shipments.taxCost',
     defaultMessage: 'TAX COST',
   },
   costPU: {
-    id: 'containers.Shipments.costPU',
+    id: 'modules.Shipments.costPU',
     defaultMessage: 'COST/UNIT',
   },
   totalCost: {
-    id: 'containers.Shipments.totalCost',
+    id: 'modules.Shipments.totalCost',
     defaultMessage: 'TOTAL COST',
   },
   freightCost: {
-    id: 'containers.Shipments.freightCost',
+    id: 'modules.Shipments.freightCost',
     defaultMessage: 'FREIGHT COST',
   },
   inlandExporterCost: {
-    id: 'containers.Shipments.inlandExporterCost',
+    id: 'modules.Shipments.inlandExporterCost',
     defaultMessage: 'INLAND EXPORTER COST',
   },
   inlandImporterCost: {
-    id: 'containers.Shipments.inlandImporterCost',
+    id: 'modules.Shipments.inlandImporterCost',
     defaultMessage: 'INLAND IMPORTER COST',
   },
   documentFee: {
-    id: 'containers.Shipments.documentFee',
+    id: 'modules.Shipments.documentFee',
     defaultMessage: 'DOCUMENT FEE',
   },
   deliveryOrderFee: {
-    id: 'containers.Shipments.deliveryOrderFee',
+    id: 'modules.Shipments.deliveryOrderFee',
     defaultMessage: 'D/O FEE',
   },
   exporterMiscFee: {
-    id: 'containers.Shipments.exporterMiscFee',
+    id: 'modules.Shipments.exporterMiscFee',
     defaultMessage: 'EXPORTER MISC FEE',
   },
   importerMiscFee: {
-    id: 'containers.Shipments.importerMiscFee',
+    id: 'modules.Shipments.importerMiscFee',
     defaultMessage: 'IMPORTER MISC FEE',
   },
   tariffTax: {
-    id: 'containers.Shipments.tariffTax',
+    id: 'modules.Shipments.tariffTax',
     defaultMessage: 'TARIFF TAX',
   },
   consumptionTax: {
-    id: 'containers.Shipments.consumptionTax',
+    id: 'modules.Shipments.consumptionTax',
     defaultMessage: 'CONSUMPTION TAX',
   },
   exporterCurrency: {
-    id: 'containers.Shipments.exporterCurrency',
+    id: 'modules.Shipments.exporterCurrency',
     defaultMessage: 'EXPORTER CURRENCY',
   },
   importerCurrency: {
-    id: 'containers.Shipments.importerCurrency',
+    id: 'modules.Shipments.importerCurrency',
     defaultMessage: 'IMPORTER CURRENCY',
   },
   firstExchangeRate: {
-    id: 'containers.Shipments.firstExchangeRate',
+    id: 'modules.Shipments.firstExchangeRate',
     defaultMessage: 'EXCHANGE RATE 1',
   },
   secondExchangeRate: {
-    id: 'containers.Shipments.secondExchangeRate',
+    id: 'modules.Shipments.secondExchangeRate',
     defaultMessage: 'EXCHANGE RATE 2',
   },
   ratio: {
-    id: 'containers.Shipments.ratio',
+    id: 'modules.Shipments.ratio',
     defaultMessage: 'FIRST PAYMENT RATIO',
   },
   memo: {
-    id: 'containers.Shipments.memo',
+    id: 'modules.Shipments.memo',
     defaultMessage: 'MEMO',
   },
   cargoReady: {
-    id: 'containers.Shipments.cargoReady',
+    id: 'modules.Shipments.cargoReady',
     defaultMessage: 'CARGO READY',
   },
   departure: {
-    id: 'containers.Shipments.departure',
+    id: 'modules.Shipments.departure',
     defaultMessage: 'DEPARTURE',
   },
   estimatedDeparture: {
-    id: 'containers.Shipments.estimatedDeparture',
+    id: 'modules.Shipments.estimatedDeparture',
     defaultMessage: 'ETD',
   },
   arrival: {
-    id: 'containers.Shipments.arrival',
+    id: 'modules.Shipments.arrival',
     defaultMessage: 'ARRIVAL',
   },
   estimatedArrival: {
-    id: 'containers.Shipments.estimatedArrival',
+    id: 'modules.Shipments.estimatedArrival',
     defaultMessage: 'ETA',
   },
   customClearance: {
-    id: 'containers.Shipments.customClearance',
+    id: 'modules.Shipments.customClearance',
     defaultMessage: 'CUSTOMS CLEARANCE',
   },
   warehouseArrival: {
-    id: 'containers.Shipments.warehouseArrival',
+    id: 'modules.Shipments.warehouseArrival',
     defaultMessage: 'WAREHOUSE ARRIVAL',
   },
   status: {
-    id: 'containers.Shipments.status',
+    id: 'modules.Shipments.status',
     defaultMessage: 'STATUS',
   },
   createdAt: {
-    id: 'containers.Shipments.createdAt',
+    id: 'modules.Shipments.createdAt',
     defaultMessage: 'CREATED ON',
   },
   updatedAt: {
-    id: 'containers.Shipments.updatedAt',
+    id: 'modules.Shipments.updatedAt',
     defaultMessage: 'LAST MODIFIED',
   },
   user: {
-    id: 'containers.Shipments.user',
+    id: 'modules.Shipments.user',
     defaultMessage: 'STAFF',
   },
   newShipment: {
-    id: 'containers.Shipments.newShipment',
+    id: 'modules.Shipments.newShipment',
     defaultMessage: 'NEW',
   },
   newBatch: {
-    id: 'containers.Shipments.newBatch',
+    id: 'modules.Shipments.newBatch',
     defaultMessage: 'NEW BATCH',
   },
   insurance: {
-    id: 'containers.Shipments.insurance',
+    id: 'modules.Shipments.insurance',
     defaultMessage: 'INSURANCE',
   },
   active: {
-    id: 'containers.Shipments.active',
+    id: 'modules.Shipments.active',
     defaultMessage: 'ACTIVE',
   },
   completed: {
-    id: 'containers.Shipments.completed',
+    id: 'modules.Shipments.completed',
     defaultMessage: 'COMPLETED',
   },
   approved: {
-    id: 'containers.Shipments.approved',
+    id: 'modules.Shipments.approved',
     defaultMessage: 'APPROVED',
   },
   statusCargoReady: {
-    id: 'containers.Shipments.status.cargoReady',
+    id: 'modules.Shipments.status.cargoReady',
     defaultMessage: 'Cargo Ready',
   },
   statusCustomClearance: {
-    id: 'containers.Shipments.status.customClearance',
+    id: 'modules.Shipments.status.customClearance',
     defaultMessage: 'Custom Clearance',
   },
   statusWarehouseArrival: {
-    id: 'containers.Shipments.status.warehouseArrival',
+    id: 'modules.Shipments.status.warehouseArrival',
     defaultMessage: 'Warehouse Arrival',
   },
   tooltipBLNo: {
-    id: 'containers.Shipments.tooltip.BLNo',
+    id: 'modules.Shipments.tooltip.BLNo',
     defaultMessage: '[BL No.] {BL}',
   },
   tooltipShipmentID: {
-    id: 'containers.Shipments.tooltip.shipmentID',
+    id: 'modules.Shipments.tooltip.shipmentID',
     defaultMessage: '[Shipment ID] {no}',
   },
   tooltipExporter: {
-    id: 'containers.Shipments.tooltip.exporter',
+    id: 'modules.Shipments.tooltip.exporter',
     defaultMessage: '[Exporter] {exporter}',
   },
   tooltipProducts: {
-    id: 'containers.Shipments.tooltip.products',
+    id: 'modules.Shipments.tooltip.products',
     defaultMessage: '[Products] {products}',
   },
   tooltipDetails: {
-    id: 'containers.Shipments.tooltip.details',
+    id: 'modules.Shipments.tooltip.details',
     defaultMessage: 'View Details',
   },
   noShipments: {
-    id: 'containers.Shipments.noShipments',
+    id: 'modules.Shipments.noShipments',
     defaultMessage: 'No shipments found.',
   },
   noContainers: {
-    id: 'containers.Shipments.noContainers',
+    id: 'modules.Shipments.noContainers',
     defaultMessage: 'No containers found.',
   },
   noBL: {
-    id: 'containers.Shipments.noBL',
+    id: 'modules.Shipments.noBL',
     defaultMessage: 'No B/L',
   },
   noShipmentID: {
-    id: 'containers.Shipments.noShipmentID',
+    id: 'modules.Shipments.noShipmentID',
     defaultMessage: 'No Shipment ID',
   },
   noItems: {
-    id: 'containers.Shipments.noItems',
+    id: 'modules.Shipments.noItems',
     defaultMessage: 'No items found.',
   },
   next: {
-    id: 'containers.Shipments.next',
+    id: 'modules.Shipments.next',
     defaultMessage: 'NEXT',
   },
   required: {
-    id: 'containers.Shipments.validation.required',
+    id: 'modules.Shipments.validation.required',
     defaultMessage: 'Required',
   },
   idNotAvailable: {
-    id: 'containers.Shipments.validation.idNotAvailable',
+    id: 'modules.Shipments.validation.idNotAvailable',
     defaultMessage: 'Shipment ID is not available',
   },
   chooseExporter: {
-    id: 'containers.Shipments.validation.chooseExporter',
+    id: 'modules.Shipments.validation.chooseExporter',
     defaultMessage: 'Please choose an Exporter first',
   },
   bl: {
-    id: 'containers.Shipments.bl',
+    id: 'modules.Shipments.bl',
     defaultMessage: 'B/L',
   },
   invoice: {
-    id: 'containers.Shipments.invoice',
+    id: 'modules.Shipments.invoice',
     defaultMessage: 'Invoice',
   },
   packingList: {
-    id: 'containers.Shipments.packingList',
+    id: 'modules.Shipments.packingList',
     defaultMessage: 'Packing List',
   },
   importDeclaration: {
-    id: 'containers.Shipments.importDeclaration',
+    id: 'modules.Shipments.importDeclaration',
     defaultMessage: 'Import declaration',
   },
   image: {
-    id: 'containers.Shipments.image',
+    id: 'modules.Shipments.image',
     defaultMessage: 'Image',
   },
   other: {
-    id: 'containers.Shipments.other',
+    id: 'modules.Shipments.other',
     defaultMessage: 'Other',
   },
   sectionDocuments: {
-    id: 'containers.Shipments.sectionDocuments',
+    id: 'modules.Shipments.sectionDocuments',
     defaultMessage: 'DOCUMENTS',
   },
   sectionGeneral: {
-    id: 'containers.Shipments.sectionGeneral',
+    id: 'modules.Shipments.sectionGeneral',
     defaultMessage: 'GENERAL',
   },
   sectionShipmentInfo: {
-    id: 'containers.Shipments.sectionShipmentInfo',
+    id: 'modules.Shipments.sectionShipmentInfo',
     defaultMessage: 'SHIPMENT INFO',
   },
   sectionItems: {
-    id: 'containers.Shipments.sectionItems',
+    id: 'modules.Shipments.sectionItems',
     defaultMessage: 'ITEMS',
   },
   sectionTimeline: {
-    id: 'containers.Shipments.sectionTimeline',
+    id: 'modules.Shipments.sectionTimeline',
     defaultMessage: 'TIMELINE',
   },
   sectionContainers: {
-    id: 'containers.Shipments.sectionContainers',
+    id: 'modules.Shipments.sectionContainers',
     defaultMessage: 'CONTAINERS',
   },
   sectionCosts: {
-    id: 'containers.Shipments.sectionCosts',
+    id: 'modules.Shipments.sectionCosts',
     defaultMessage: 'COSTS',
   },
   sectionTransportation: {
-    id: 'containers.Shipments.sectionTransportation',
+    id: 'modules.Shipments.sectionTransportation',
     defaultMessage: 'TRANSPORTATION',
   },
   sectionDocumentation: {
-    id: 'containers.Shipments.sectionDocumentation',
+    id: 'modules.Shipments.sectionDocumentation',
     defaultMessage: 'DOCUMENTATION',
   },
   sectionTax: {
-    id: 'containers.Shipments.sectionTax',
+    id: 'modules.Shipments.sectionTax',
     defaultMessage: 'TAX',
   },
   sectionPayment: {
-    id: 'containers.Shipments.sectionPayment',
+    id: 'modules.Shipments.sectionPayment',
     defaultMessage: 'PAYMENT',
   },
   sectionPackingList: {
-    id: 'containers.Shipments.sectionPackingList',
+    id: 'modules.Shipments.sectionPackingList',
     defaultMessage: 'PACKING LIST',
   },
   sectionCostResults: {
-    id: 'containers.Shipments.sectionCostResults',
+    id: 'modules.Shipments.sectionCostResults',
     defaultMessage: 'COST RESULTS',
   },
   addBatchItem: {
-    id: 'containers.Shipments.addBatchItem',
+    id: 'modules.Shipments.addBatchItem',
     defaultMessage: 'ADD BATCH',
   },
   createBatchItem: {
-    id: 'containers.Shipments.createBatchItem',
+    id: 'modules.Shipments.createBatchItem',
     defaultMessage: 'NEW BATCH',
   },
   transportTypeWarningMessage: {
-    id: 'containers.Shipments.transportTypeRequired',
+    id: 'modules.Shipments.transportTypeRequired',
     defaultMessage: 'Choose Transportation type.',
   },
   addMultiBatchItems: {
-    id: 'containers.Shipments.addMultiBatchItems',
+    id: 'modules.Shipments.addMultiBatchItems',
     defaultMessage: 'ADD MULTI BATCHES',
   },
   moveSelected: {
-    id: 'containers.Shipments.moveSelected',
+    id: 'modules.Shipments.moveSelected',
     defaultMessage: 'CHOOSE ({count})',
   },
   save: {
-    id: 'containers.Shipments.save',
+    id: 'modules.Shipments.save',
     defaultMessage: 'SAVE',
   },
   cancel: {
-    id: 'containers.Shipments.cancel',
+    id: 'modules.Shipments.cancel',
     defaultMessage: 'CANCEL',
   },
   picked: {
-    id: 'containers.Shipments.picked',
+    id: 'modules.Shipments.picked',
     defaultMessage: 'SELECTED',
   },
   options: {
-    id: 'containers.Shipments.options',
+    id: 'modules.Shipments.options',
     defaultMessage: 'AVAILABLE',
   },
   selectAll: {
-    id: 'containers.Shipments.selectAll',
+    id: 'modules.Shipments.selectAll',
     defaultMessage: 'Select All',
   },
   selectBatches: {
-    id: 'containers.Shipments.selectBatches',
+    id: 'modules.Shipments.selectBatches',
     defaultMessage: 'SELECT BATCHES',
   },
   clearSelection: {
-    id: 'containers.Shipments.clearSelection',
+    id: 'modules.Shipments.clearSelection',
     defaultMessage: 'Clear Selections',
   },
   sectionLogs: {
-    id: 'containers.Shipments.sectionLogs',
+    id: 'modules.Shipments.sectionLogs',
     defaultMessage: 'LOGS & MESSAGE BOARD',
   },
   arrivalPort: {
-    id: 'containers.Shipments.dischargePort',
+    id: 'modules.Shipments.dischargePort',
     defaultMessage: 'DISCHARGE PORT',
   },
 });

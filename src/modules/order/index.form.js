@@ -140,14 +140,14 @@ class OrderFormModule extends React.PureComponent<Props> {
                         <SectionTabs
                           link="orderSection"
                           label={
-                            <FormattedMessage id="modules.order.order" defaultMessage="ORDER" />
+                            <FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />
                           }
                           icon="ORDER"
                         />
                         <SectionTabs
                           link="itemsSection"
                           label={
-                            <FormattedMessage id="modules.order.items" defaultMessage="ITEMS" />
+                            <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />
                           }
                           icon="ORDER_ITEM"
                         />
@@ -155,7 +155,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                           link="documentsSection"
                           label={
                             <FormattedMessage
-                              id="modules.order.documents"
+                              id="modules.Orders.documents"
                               defaultMessage="DOCUMENTS"
                             />
                           }
@@ -165,7 +165,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                           link="shipmentsSection"
                           label={
                             <FormattedMessage
-                              id="modules.order.shipments"
+                              id="modules.Orders.shipments"
                               defaultMessage="SHIPMENTS"
                             />
                           }

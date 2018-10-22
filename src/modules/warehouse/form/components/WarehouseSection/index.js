@@ -41,7 +41,7 @@ const WarehouseSection = ({ isNew }: Props) => (
                   isNew,
                   required: true,
                   originalValue: originalValues[name],
-                  label: <FormattedMessage id="modules.warehouse.name" defaultMessage="NAME" />,
+                  label: <FormattedMessage id="modules.WareHouses.name" defaultMessage="NAME" />,
                 })
               }
             </FormField>
@@ -55,7 +55,7 @@ const WarehouseSection = ({ isNew }: Props) => (
                   originalValue: originalValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.warehouse.streetAddress"
+                      id="modules.WareHouses.streetAddress"
                       defaultMessage="STREET ADDRESS"
                     />
                   ),
@@ -71,7 +71,7 @@ const WarehouseSection = ({ isNew }: Props) => (
                   isNew,
                   originalValue: originalValues[name],
                   label: (
-                    <FormattedMessage id="modules.warehouse.locality" defaultMessage="LOCALITY" />
+                    <FormattedMessage id="modules.WareHouses.locality" defaultMessage="LOCALITY" />
                   ),
                 })
               }
@@ -84,7 +84,9 @@ const WarehouseSection = ({ isNew }: Props) => (
                   name,
                   isNew,
                   originalValue: originalValues[name],
-                  label: <FormattedMessage id="modules.warehouse.region" defaultMessage="REGION" />,
+                  label: (
+                    <FormattedMessage id="modules.WareHouses.region" defaultMessage="REGION" />
+                  ),
                 })
               }
             </FormField>
@@ -102,7 +104,7 @@ const WarehouseSection = ({ isNew }: Props) => (
                   originalValue: originalValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.warehouse.postalCode"
+                      id="modules.WareHouses.postalCode"
                       defaultMessage="POSTAL CODE"
                     />
                   ),
@@ -119,7 +121,7 @@ const WarehouseSection = ({ isNew }: Props) => (
                   isNew,
                   originalValue: originalValues[name],
                   label: (
-                    <FormattedMessage id="modules.warehouse.country" defaultMessage="COUNTRY" />
+                    <FormattedMessage id="modules.WareHouses.country" defaultMessage="COUNTRY" />
                   ),
                 })
               }
@@ -140,7 +142,7 @@ const WarehouseSection = ({ isNew }: Props) => (
                   originalValue: getByPath('surface.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.warehouse.surfaceArea"
+                      id="modules.WareHouses.surfaceArea"
                       defaultMessage="SURFACE AREA"
                     />
                   ),

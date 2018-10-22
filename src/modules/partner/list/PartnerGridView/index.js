@@ -29,7 +29,10 @@ const PartnerGridView = (props: Props) => {
       itemWidth="195px"
       isEmpty={items.length === 0}
       emptyMessage={
-        <FormattedMessage id="modules.partner.noPartnersFound" defaultMessage="No partners found" />
+        <FormattedMessage
+          id="modules.Partners.noPartnersFound"
+          defaultMessage="No partners found"
+        />
       }
     >
       {items.map(item => renderItem(item))}

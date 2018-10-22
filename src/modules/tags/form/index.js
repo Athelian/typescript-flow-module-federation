@@ -51,7 +51,7 @@ export default class TagForm extends React.Component<Props> {
         <SectionWrapper id="tagSection">
           <SectionHeader
             icon="TAG"
-            title={<FormattedMessage id="modules.tags.tag" defaultMessage="TAG" />}
+            title={<FormattedMessage id="modules.Tags.tag" defaultMessage="TAG" />}
           >
             {!isNew && (
               <>

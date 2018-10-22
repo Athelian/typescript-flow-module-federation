@@ -51,7 +51,9 @@ class WarehouseForm extends React.Component<Props> {
         <SectionWrapper id="warehouseSection">
           <SectionHeader
             icon="WAREHOUSE"
-            title={<FormattedMessage id="modules.warehouse.warehouse" defaultMessage="WAREHOUSE" />}
+            title={
+              <FormattedMessage id="modules.WareHouses.warehouse" defaultMessage="WAREHOUSE" />
+            }
           >
             {!isNew && (
               <>
