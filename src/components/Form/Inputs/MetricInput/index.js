@@ -7,7 +7,6 @@ import {
   SelectInput,
   DefaultSelect,
   DefaultOptions,
-  Display,
 } from 'components/Form';
 
 import { type MetricValue } from './type';
@@ -64,38 +63,28 @@ export default class MetricInput extends React.Component<Props> {
       disabled,
       readOnly,
       metrics,
-      isNew,
     } = this.props;
 
     return (
       <div className={MetricInputWrapperStyle}>
-        {disabled || readOnly ? (
-          <>
-            <Display align="right">{value}</Display>
-            <Display align="left">{metric}</Display>
-          </>
-        ) : (
-          <>
-            <DefaultStyle type="number" forceHoverStyle={isNew}>
-              <NumberInput
-                value={value}
-                disabled={disabled}
-                readOnly={readOnly}
-                onChange={e => this.onChange({ value: e.target.value, metric })}
-              />
-            </DefaultStyle>
-            <SelectInput
-              value={metric}
-              selectItem={metric}
-              onChange={newMetric => this.onChange({ value, metric: newMetric })}
-              items={metrics}
-              itemToValue={v => v || null}
-              itemToString={v => v || ''}
-              renderSelect={({ ...rest }) => <DefaultSelect {...rest} align="left" />}
-              renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" />}
-            />
-          </>
-        )}
+        <DefaultStyle type="number" forceHoverStyle={false}>
+          <NumberInput
+            value={value}
+            disabled={disabled}
+            readOnly={readOnly}
+            onChange={e => this.onChange({ value: e.target.value, metric })}
+          />
+        </DefaultStyle>
+        <SelectInput
+          value={metric}
+          selectItem={metric}
+          onChange={newMetric => this.onChange({ value, metric: newMetric })}
+          items={metrics}
+          itemToValue={v => v || null}
+          itemToString={v => v || ''}
+          renderSelect={({ ...rest }) => <DefaultSelect {...rest} align="left" />}
+          renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" />}
+        />
       </div>
     );
   }
