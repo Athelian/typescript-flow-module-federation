@@ -7,7 +7,7 @@ import MetricInput from './index';
 import DefaultMetricStyle from '../Styles/DefaultStyle/DefaultMetricStyle';
 
 storiesOf('Metric Input', module)
-  .add('100cm', () => (
+  .add('without style wrapper', () => (
     <MetricInput
       name="metric"
       value={{ value: 100, metric: 'cm' }}
@@ -15,7 +15,7 @@ storiesOf('Metric Input', module)
       onChange={action('onChange')}
     />
   ))
-  .add('100cm with DefaultMetricStyle', () => (
+  .add('with style wrapper', () => (
     <DefaultMetricStyle>
       <MetricInput
         name="metric"

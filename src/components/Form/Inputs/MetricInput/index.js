@@ -1,30 +1,26 @@
 // @flow
 import * as React from 'react';
 
-import {
-  NumberInput,
-  DefaultStyle,
-  SelectInput,
-  DefaultSelect,
-  DefaultOptions,
-} from 'components/Form';
+import { NumberInput, SelectInput, DefaultSelect, DefaultOptions } from 'components/Form';
 
 import { type MetricValue } from './type';
-import { MetricInputWrapperStyle } from './style';
 
-type Props = {
-  isNew?: boolean,
+type OptionalProps = {
+  isNew: boolean,
+  disabled: boolean,
+  readOnly: boolean,
+  error: boolean,
+  onChange: Function,
+  onBlur: Function,
+  isTouched: boolean,
+  errorMessage: string,
+  isFocused: boolean,
+};
+
+type Props = OptionalProps & {
   name: string,
   value: MetricValue,
-  disabled?: boolean,
-  readOnly?: boolean,
-  error?: boolean,
-  onChange?: Function,
-  onBlur?: Function,
   metrics: Array<string>,
-  isTouched?: boolean,
-  errorMessage?: string,
-  isFocused?: boolean,
 };
 
 const defaultProps = {
@@ -66,15 +62,14 @@ export default class MetricInput extends React.Component<Props> {
     } = this.props;
 
     return (
-      <div className={MetricInputWrapperStyle}>
-        <DefaultStyle type="number" forceHoverStyle={false}>
-          <NumberInput
-            value={value}
-            disabled={disabled}
-            readOnly={readOnly}
-            onChange={e => this.onChange({ value: e.target.value, metric })}
-          />
-        </DefaultStyle>
+      <>
+        <NumberInput
+          value={value}
+          disabled={disabled}
+          readOnly={readOnly}
+          onChange={e => this.onChange({ value: e.target.value, metric })}
+        />
+
         <SelectInput
           value={metric}
           selectItem={metric}
@@ -85,7 +80,7 @@ export default class MetricInput extends React.Component<Props> {
           renderSelect={({ ...rest }) => <DefaultSelect {...rest} align="left" />}
           renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" />}
         />
-      </div>
+      </>
     );
   }
 }
