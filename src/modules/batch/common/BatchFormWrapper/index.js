@@ -29,9 +29,9 @@ const formatDateValue = (batch: BatchFormState) => {
   const { deliveredAt, expiredAt, producedAt, ...rest } = batch;
   return {
     ...rest,
-    deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
-    expiredAt: expiredAt ? new Date(expiredAt) : null,
-    producedAt: producedAt ? new Date(producedAt) : null,
+    deliveredAt: deliveredAt || null,
+    expiredAt: expiredAt || null,
+    producedAt: producedAt || null,
   };
 };
 
