@@ -15,6 +15,7 @@ type OptionalProps = {
   isTouched: boolean,
   errorMessage: string,
   isFocused: boolean,
+  align: 'left' | 'right' | 'center',
 };
 
 type Props = OptionalProps & {
@@ -34,6 +35,7 @@ const defaultProps = {
   isTouched: false,
   errorMessage: '',
   isFocused: false,
+  align: 'right',
 };
 
 export default class MetricInput extends React.Component<Props> {
@@ -59,6 +61,7 @@ export default class MetricInput extends React.Component<Props> {
       disabled,
       readOnly,
       metrics,
+      align,
     } = this.props;
 
     return (
@@ -76,7 +79,7 @@ export default class MetricInput extends React.Component<Props> {
           items={metrics}
           itemToValue={v => v || null}
           itemToString={v => v || ''}
-          renderSelect={({ ...rest }) => <MetricSelect {...rest} align="left" />}
+          renderSelect={({ ...rest }) => <MetricSelect {...rest} align={align} />}
           renderOptions={({ ...rest }) => <DefaultOptions width="100px" {...rest} align="left" />}
         />
       </>

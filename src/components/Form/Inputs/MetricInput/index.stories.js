@@ -16,7 +16,7 @@ storiesOf('Metric Input', module)
     />
   ))
   .add('with style wrapper', () => (
-    <DefaultMetricStyle>
+    <DefaultMetricStyle width="400px">
       <MetricInput
         name="metric"
         value={{ value: 100, metric: 'cm' }}

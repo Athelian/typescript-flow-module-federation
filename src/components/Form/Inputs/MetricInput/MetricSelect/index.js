@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { type RenderSelectProps } from 'components/Form/Inputs/SelectInput/type';
-import { SelectInputStyle, WrapperStyle } from './style';
+import { SelectInputStyle, MetricSelectWrapperStyle } from './style';
 
 type OptionalProps = {
   width: string,
@@ -23,7 +23,7 @@ function MetricSelect({
   ...rest
 }: Props) {
   return (
-    <div className={WrapperStyle} style={{ cursor: 'pointer' }}>
+    <div className={MetricSelectWrapperStyle} style={{ cursor: 'pointer' }}>
       <input
         readOnly
         spellCheck={false}
