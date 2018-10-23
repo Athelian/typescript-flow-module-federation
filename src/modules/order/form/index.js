@@ -9,6 +9,7 @@ import { CloneButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
+import logger from 'utils/logger';
 import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'components/Form';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 import OrderSection from './components/OrderSection';
@@ -58,6 +59,13 @@ export default class OrderForm extends React.Component<Props> {
     const { order } = this.props;
 
     return !isEquals(order, nextProps.order);
+  }
+
+  componentDidUpdate() {
+    const { onFormReady, order } = this.props;
+
+    logger.warn('OrderForm componentDidUpdate', order);
+    if (onFormReady) onFormReady();
   }
 
   onClone = () => {

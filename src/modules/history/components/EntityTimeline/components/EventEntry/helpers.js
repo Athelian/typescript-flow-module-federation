@@ -39,7 +39,8 @@ const FormatValue = ({ value }: Props) => {
       return JSON.stringify(value);
     }
   }
-  return ' ';
+
+  return 'N/A';
 };
 
 export default FormatValue;

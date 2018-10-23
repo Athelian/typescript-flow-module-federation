@@ -105,7 +105,7 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
         {isExpanded && (
           <div className={UpdateListStyle}>
             {event.updates.map(change => (
-              <div className={ChangeStyle} key={change.field}>
+              <div className={ChangeStyle} key={`${get('entity.id', change)}-${change.field}`}>
                 <FormattedMessage
                   {...(change.oldValue
                     ? messages.multipleUpdateEventChange
