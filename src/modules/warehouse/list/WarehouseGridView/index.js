@@ -42,7 +42,7 @@ const WarehouseGridView = (props: Props) => {
       itemWidth="200px"
       isEmpty={items.length === 0}
       emptyMessage={
-        <FormattedMessage id="modules.warehouse.noItem" defaultMessage="No warehouses found" />
+        <FormattedMessage id="modules.WareHouses.noItem" defaultMessage="No warehouses found" />
       }
     >
       {items.map(item => renderItem(item))}

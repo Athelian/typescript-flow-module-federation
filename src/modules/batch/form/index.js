@@ -69,7 +69,7 @@ export default class BatchForm extends React.Component<Props> {
         <SectionWrapper id="batchSection">
           <SectionHeader
             icon="BATCH"
-            title={<FormattedMessage id="modules.batch.batch" defaultMessage="BATCH" />}
+            title={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
           >
             {!isNew && (
               <>
@@ -78,14 +78,14 @@ export default class BatchForm extends React.Component<Props> {
                 <div className={StatusStyle(batch.archived)}>
                   <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
                   {batch.archived ? (
-                    <FormattedMessage id="modules.batch.archived" defaultMessage="Archived" />
+                    <FormattedMessage id="modules.Batches.archived" defaultMessage="Archived" />
                   ) : (
-                    <FormattedMessage id="modules.batch.active" defaultMessage="Active" />
+                    <FormattedMessage id="modules.Batches.active" defaultMessage="Active" />
                   )}
                   <Tooltip
                     infoMessage={
                       <FormattedMessage
-                        id="modules.batch.archived.tooltip.infoMessage"
+                        id="modules.Batches.archived.tooltip.infoMessage"
                         defaultMessage="The status is controlled by the Order and Shipment this Batch belongs to"
                       />
                     }
@@ -103,7 +103,7 @@ export default class BatchForm extends React.Component<Props> {
             icon="QUANTITY_ADJUSTMENTS"
             title={
               <FormattedMessage
-                id="modules.batch.quantityAdjustments"
+                id="modules.Batches.quantityAdjustments"
                 defaultMessage="QUANTITY ADJUSTMENTS"
               />
             }
@@ -114,7 +114,7 @@ export default class BatchForm extends React.Component<Props> {
         <SectionWrapper id="packagingSection">
           <SectionHeader
             icon="PACKAGING"
-            title={<FormattedMessage id="modules.batch.packaging" defaultMessage="PACKAGING" />}
+            title={<FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />}
           >
             <BooleanValue>
               {({ value: syncDialogIsOpen, set: dialogToggle }) => (
@@ -137,7 +137,7 @@ export default class BatchForm extends React.Component<Props> {
                           }}
                           message={
                             <FormattedMessage
-                              id="modules.batch.syncPackagingMessage"
+                              id="modules.Batches.syncPackagingMessage"
                               defaultMessage="Are you sure sync the packaging?"
                             />
                           }
@@ -156,7 +156,7 @@ export default class BatchForm extends React.Component<Props> {
         <SectionWrapper id="shipmentSection">
           <SectionHeader
             icon="SHIPMENT"
-            title={<FormattedMessage id="modules.batch.shipment" defaultMessage="SHIPMENT" />}
+            title={<FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />}
           />
           <ShipmentSection shipment={batch.shipment} />
         </SectionWrapper>
@@ -164,7 +164,7 @@ export default class BatchForm extends React.Component<Props> {
         <SectionWrapper id="orderSection">
           <SectionHeader
             icon="ORDER"
-            title={<FormattedMessage id="modules.batch.order" defaultMessage="ORDER" />}
+            title={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
           />
           <Subscribe to={[BatchFormContainer]}>
             {({ state: { orderItem } }) => <OrderSection order={orderItem && orderItem.order} />}

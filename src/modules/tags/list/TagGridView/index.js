@@ -41,7 +41,7 @@ const TagGridView = (props: Props) => {
       isLoading={isLoading}
       itemWidth="200px"
       isEmpty={items.length === 0}
-      emptyMessage={<FormattedMessage id="modules.tags.noItem" defaultMessage="No tags found" />}
+      emptyMessage={<FormattedMessage id="modules.Tags.noItem" defaultMessage="No tags found" />}
     >
       {items.map(item => renderItem(item))}
     </GridView>

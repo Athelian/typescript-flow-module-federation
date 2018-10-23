@@ -148,7 +148,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                       isEmpty={items.length === 0}
                       emptyMessage={
                         <FormattedMessage
-                          id="modules.batch.noOrderItemsFound"
+                          id="modules.Batches.noOrderItemsFound"
                           defaultMessage="No items found"
                         />
                       }

@@ -131,7 +131,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                           link="warehouseSection"
                           label={
                             <FormattedMessage
-                              id="modules.warehouse.warehouse"
+                              id="modules.WareHouses.warehouse"
                               defaultMessage="WAREHOUSE"
                             />
                           }

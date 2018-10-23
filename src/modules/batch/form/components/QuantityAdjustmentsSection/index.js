@@ -39,7 +39,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
               label={
                 <Label>
                   <FormattedMessage
-                    id="modules.batch.initialQuantity"
+                    id="modules.Batches.initialQuantity"
                     defaultMessage="INITIAL QUANTITY"
                   />
                 </Label>
@@ -88,7 +88,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
               <NewButton
                 label={
                   <FormattedMessage
-                    id="modules.batch.newAdjustment"
+                    id="modules.Batches.newAdjustment"
                     defaultMessage="NEW ADJUSTMENT"
                   />
                 }
@@ -111,7 +111,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
               label={
                 <Label>
                   <FormattedMessage
-                    id="modules.batch.currentQuantity"
+                    id="modules.Batches.currentQuantity"
                     defaultMessage="CURRENT QUANTITY"
                   />
                 </Label>

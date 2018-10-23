@@ -4,62 +4,62 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   // Field
   name: {
-    id: 'containers.tags.name',
+    id: 'modules.Tags.name',
     defaultMessage: 'NAME',
   },
   description: {
-    id: 'containers.tags.description',
+    id: 'modules.Tags.description',
     defaultMessage: 'DESCRIPTION',
   },
   color: {
-    id: 'containers.tags.color',
+    id: 'modules.Tags.color',
     defaultMessage: 'COLOR',
   },
   entityTypes: {
-    id: 'containers.tags.entity.types',
+    id: 'modules.Tags.entity.types',
     defaultMessage: 'Entity Types',
   },
   // Buttons
   newTag: {
-    id: 'containers.tags.newTag',
+    id: 'modules.Tags.newTag',
     defaultMessage: 'NEW TAG',
   },
   editTag: {
-    id: 'containers.tags.editTag',
+    id: 'modules.Tags.editTag',
     defaultMessage: 'EDIT TAG',
   },
   deleteTag: {
-    id: 'containers.tags.deleteTag',
+    id: 'modules.Tags.deleteTag',
     defaultMessage: 'DELETE TAG',
   },
   // Tabs
   productTags: {
-    id: 'containers.tags.productTags',
+    id: 'modules.Tags.productTags',
     defaultMessage: 'PRODUCT TAGS',
   },
   shipmentTags: {
-    id: 'containers.tags.shipmentTags',
+    id: 'modules.Tags.shipmentTags',
     defaultMessage: 'SHIPMENT TAGS',
   },
   userTags: {
-    id: 'containers.tags.userTags',
+    id: 'modules.Tags.userTags',
     defaultMessage: 'USER TAGS',
   },
   batchTags: {
-    id: 'containers.tags.batchTags',
+    id: 'modules.Tags.batchTags',
     defaultMessage: 'BATCH TAGS',
   },
   requestTags: {
-    id: 'containers.tags.requestTags',
+    id: 'modules.Tags.requestTags',
     defaultMessage: 'REQUEST TAGS',
   },
   // form validations
   required: {
-    id: 'containers.tags.validation.required',
+    id: 'modules.Tags.validation.required',
     defaultMessage: 'Required',
   },
   invalidColor: {
-    id: 'containers.tags.validation.invalidColor',
+    id: 'modules.Tags.validation.invalidColor',
     defaultMessage: 'Invalid color',
   },
 });

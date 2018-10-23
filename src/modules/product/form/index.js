@@ -56,7 +56,7 @@ class ProductForm extends React.Component<Props> {
         <SectionWrapper id="productSection">
           <SectionHeader
             icon="PRODUCT"
-            title={<FormattedMessage id="modules.product.product" defaultMessage="PRODUCT" />}
+            title={<FormattedMessage id="modules.Products.product" defaultMessage="PRODUCT" />}
           >
             {!isNewOrClone && (
               <>
@@ -96,7 +96,7 @@ class ProductForm extends React.Component<Props> {
           <SectionHeader
             icon="PROVIDER"
             title={
-              <FormattedMessage id="modules.product.providers" defaultMessage="END PRODUCTS" />
+              <FormattedMessage id="modules.Products.providers" defaultMessage="END PRODUCTS" />
             }
           />
           <Subscribe to={[FormContainer]}>

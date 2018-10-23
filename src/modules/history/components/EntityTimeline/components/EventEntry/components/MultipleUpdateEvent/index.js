@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { get } from 'lodash/fp';
+import pluralize from 'pluralize';
 import { FormattedMessage } from 'react-intl';
 import { isSameDay } from 'date-fns';
 import FormattedDate from 'components/FormattedDate';
@@ -110,7 +111,15 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
                     ? messages.multipleUpdateEventChange
                     : messages.multipleUpdateEventChangeSet)}
                   values={{
-                    field: <span className={FieldStyle}>{change.field}</span>,
+                    field: (
+                      <span className={FieldStyle}>
+                        <FormattedMessage
+                          id={`modules.${pluralize(get('entity.__typename', change))}.${
+                            change.field
+                          }`}
+                        />
+                      </span>
+                    ),
                     oldValue: (
                       <span className={OldStyle}>
                         <FormatValue value={change.oldValue} />

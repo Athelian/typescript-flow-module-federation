@@ -191,7 +191,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                           align: 'right',
                           label: (
                             <FormattedMessage
-                              id="modules.shipment.transportation"
+                              id="modules.Shipments.transportation"
                               defaultMessage="TRANSPORTATION"
                             />
                           ),
@@ -219,7 +219,10 @@ const ShipmentSection = ({ isNew }: Props) => (
                     enumType: 'LoadType',
                     align: 'right',
                     label: (
-                      <FormattedMessage id="modules.shipment.loadType" defaultMessage="LOAD TYPE" />
+                      <FormattedMessage
+                        id="modules.Shipments.loadType"
+                        defaultMessage="LOAD TYPE"
+                      />
                     ),
                     originalValue: initialValues[name],
                     inputHandlers,
@@ -242,7 +245,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     align: 'right',
                     label: (
                       <FormattedMessage
-                        id="modules.shipment.incoterms"
+                        id="modules.Shipments.incoterms"
                         defaultMessage="INCOTERMS"
                       />
                     ),
@@ -278,7 +281,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                   label={
                     <Label>
                       <FormattedMessage
-                        id="modules.shipment.inCharge"
+                        id="modules.Shipments.inCharge"
                         defaultMessage="IN CHARGE "
                       />
                       ({values.inCharges.length})
@@ -288,7 +291,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     <Tooltip
                       infoMessage={
                         <FormattedMessage
-                          id="modules.shipment.tooltipInCharge"
+                          id="modules.Shipments.tooltipInCharge"
                           defaultMessage="You can choose up to 5 people in charge."
                         />
                       }
@@ -352,7 +355,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                   label={
                     <Label>
                       <FormattedMessage
-                        id="modules.shipment.canChooseUp5People"
+                        id="modules.Shipments.canChooseUp5People"
                         defaultMessage="FORWARDER "
                       />
                       ({forwarders.length})
@@ -362,7 +365,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     <Tooltip
                       infoMessage={
                         <FormattedMessage
-                          id="modules.shipment.tooltipForwarder"
+                          id="modules.Shipments.tooltipForwarder"
                           defaultMessage="You can choose up to 4 Forwarders."
                         />
                       }
@@ -405,7 +408,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                           <div className={ExporterLabelStyle}>
                             <Label>
                               <FormattedMessage
-                                id="modules.shipment.exporter"
+                                id="modules.Shipments.exporter"
                                 defaultMessage="EXPORTER"
                               />
                               ({uniqueExporters.length})
@@ -425,7 +428,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                           <Tooltip
                             infoMessage={
                               <FormattedMessage
-                                id="modules.shipment.tooltipExporter"
+                                id="modules.Shipments.tooltipExporter"
                                 defaultMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment."
                               />
                             }

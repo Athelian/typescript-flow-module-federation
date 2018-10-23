@@ -30,7 +30,7 @@ function ProductProvidersSection() {
                   <NewButton
                     label={
                       <FormattedMessage
-                        id="modules.product.newProvider"
+                        id="modules.Products.newProvider"
                         defaultMessage="NEW END PRODUCT"
                       />
                     }
@@ -124,7 +124,7 @@ function ProductProvidersSection() {
             {productProviders.length === 0 ? (
               <div className={EmptyMessageStyle}>
                 <FormattedMessage
-                  id="modules.product.noProviderFound"
+                  id="modules.Products.noProviderFound"
                   defaultMessage="Please create at least one end product"
                 />
               </div>

@@ -20,7 +20,7 @@ function OrderSection({ order }: Props) {
           <OrderCard order={order} />
         ) : (
           <div className={EmptyMessageStyle}>
-            <FormattedMessage id="modules.batch.noOrderFound" defaultMessage="No order found" />
+            <FormattedMessage id="modules.Batches.noOrderFound" defaultMessage="No order found" />
           </div>
         )}
       </div>

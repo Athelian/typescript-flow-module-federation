@@ -178,7 +178,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           link="shipmentSection"
                           label={
                             <FormattedMessage
-                              id="modules.shipment.shipment"
+                              id="modules.Shipments.shipment"
                               defaultMessage="SHIPMENT"
                             />
                           }
@@ -188,7 +188,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           link="timelineSection"
                           label={
                             <FormattedMessage
-                              id="modules.shipment.timeline"
+                              id="modules.Shipments.timeline"
                               defaultMessage="TIMELINE"
                             />
                           }
@@ -197,7 +197,7 @@ class ShipmentFormModule extends React.Component<Props> {
                         <SectionTabs
                           link="cargoSection"
                           label={
-                            <FormattedMessage id="modules.shipment.cargo" defaultMessage="CARGO" />
+                            <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO" />
                           }
                           icon="CARGO"
                         />
@@ -205,7 +205,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           link="documentsSection"
                           label={
                             <FormattedMessage
-                              id="modules.shipment.document"
+                              id="modules.Shipments.document"
                               defaultMessage="DOCUMENTS"
                             />
                           }
@@ -214,7 +214,10 @@ class ShipmentFormModule extends React.Component<Props> {
                         <SectionTabs
                           link="orderSection"
                           label={
-                            <FormattedMessage id="modules.shipment.order" defaultMessage="ORDERS" />
+                            <FormattedMessage
+                              id="modules.Shipments.order"
+                              defaultMessage="ORDERS"
+                            />
                           }
                           icon="ORDER"
                         />

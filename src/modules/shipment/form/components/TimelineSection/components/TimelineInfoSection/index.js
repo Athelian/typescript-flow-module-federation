@@ -109,7 +109,7 @@ class TimelineInfoSection extends React.Component<Props> {
           <div className={AssignedAndApprovalWrapperStyle}>
             <GridColumn gap="5px">
               <Label>
-                <FormattedMessage id="modules.shipment.assignedTo" defaultMessage="ASSIGNED TO" />
+                <FormattedMessage id="modules.Shipments.assignedTo" defaultMessage="ASSIGNED TO" />
               </Label>
               <div className={AssignmentWrapperStyle}>
                 {timelineDate &&
@@ -165,7 +165,7 @@ class TimelineInfoSection extends React.Component<Props> {
 
             <GridColumn gap="5px">
               <Label align="right">
-                <FormattedMessage id="modules.shipment.approval" defaultMessage="APPROVAL" />
+                <FormattedMessage id="modules.Shipments.approval" defaultMessage="APPROVAL" />
               </Label>
               <div className={ApprovalWrapperStyle}>
                 {timelineDate && timelineDate.approvedAt && timelineDate.approvedBy ? (
@@ -205,7 +205,9 @@ class TimelineInfoSection extends React.Component<Props> {
           <GridColumn gap="10px">
             <div className={AddDateButtonWrapperStyle}>
               <NewButton
-                label={<FormattedMessage id="modules.shipment.newDate" defaultMessage="NEW DATE" />}
+                label={
+                  <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
+                }
                 onClick={() => {
                   setFieldDeepValue(
                     `${sourceName}.timelineDateRevisions[${(timelineDate &&
@@ -266,7 +268,7 @@ class TimelineInfoSection extends React.Component<Props> {
               label={
                 <Label>
                   <FormattedMessage
-                    id="modules.shipment.initialDate"
+                    id="modules.Shipments.initialDate"
                     defaultMessage="INITIAL DATE"
                   />
                 </Label>

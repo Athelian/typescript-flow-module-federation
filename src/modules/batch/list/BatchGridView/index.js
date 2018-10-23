@@ -40,7 +40,7 @@ const BatchGridView = (props: Props) => {
       itemWidth="195px"
       isEmpty={items.length === 0}
       emptyMessage={
-        <FormattedMessage id="modules.batch.noBatchesFound" defaultMessage="No batches found" />
+        <FormattedMessage id="modules.Batches.noBatchesFound" defaultMessage="No batches found" />
       }
     >
       {items.map(item => renderItem(item))}

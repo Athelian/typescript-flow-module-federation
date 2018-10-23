@@ -23,7 +23,7 @@ const ProductProviderForm = ({ productProvider, isNew }: Props) => (
       <SectionHeader
         icon="PROVIDER"
         title={
-          <FormattedMessage id="modules.productProvider.provider" defaultMessage="END PRODUCT" />
+          <FormattedMessage id="modules.ProductProviders.provider" defaultMessage="END PRODUCT" />
         }
       >
         {!isNew && (
@@ -41,7 +41,7 @@ const ProductProviderForm = ({ productProvider, isNew }: Props) => (
         icon="SPECIFICATIONS"
         title={
           <FormattedMessage
-            id="modules.productProvider.specifications"
+            id="modules.ProductProviders.specifications"
             defaultMessage="SPECIFICATIONS"
           />
         }
@@ -53,7 +53,7 @@ const ProductProviderForm = ({ productProvider, isNew }: Props) => (
       <SectionHeader
         icon="PACKAGING"
         title={
-          <FormattedMessage id="modules.productProvider.packaging" defaultMessage="PACKAGING" />
+          <FormattedMessage id="modules.ProductProviders.packaging" defaultMessage="PACKAGING" />
         }
       />
       <PackagingSection isNew={isNew} />

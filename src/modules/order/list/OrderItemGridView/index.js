@@ -30,7 +30,7 @@ const OrderItemGridView = (props: Props) => {
       isEmpty={items.length === 0}
       emptyMessage={
         <FormattedMessage
-          id="modules.order.noOrderItemFound"
+          id="modules.Orders.noOrderItemFound"
           defaultMessage="No order items found"
         />
       }

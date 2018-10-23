@@ -95,7 +95,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   isNew,
                   label: (
                     <FormattedMessage
-                      id="modules.shipment.departurePort"
+                      id="modules.Voyages.departurePort"
                       defaultMessage="DEPARTURE PORT"
                     />
                   ),
@@ -107,7 +107,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               label={
                 <Label>
                   <FormattedMessage
-                    id="modules.shipment.departurePort"
+                    id="modules.Voyages.departurePort"
                     defaultMessage="DEPARTURE PORT"
                   />
                 </Label>
@@ -117,7 +117,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   isNew={isNew}
                   infoMessage={
                     <FormattedMessage
-                      id="modules.shipment.tooltipDeparturePort"
+                      id="modules.Shipments.tooltipDeparturePort"
                       defaultMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
                     />
                   }
@@ -126,7 +126,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               input={
                 <div className={SelectTransportTypeMessageStyle}>
                   <FormattedMessage
-                    id="modules.shipment.selectTransportType"
+                    id="modules.Shipments.selectTransportType"
                     defaultMessage="Please select a transport type"
                   />
                 </div>
@@ -154,7 +154,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   isNew,
                   label: (
                     <FormattedMessage
-                      id="modules.shipment.arrivalPort"
+                      id="modules.Voyages.arrivalPort"
                       defaultMessage="ARRIVAL PORT"
                     />
                   ),
@@ -166,7 +166,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               label={
                 <Label>
                   <FormattedMessage
-                    id="modules.shipment.arrivalPort"
+                    id="modules.Voyages.arrivalPort"
                     defaultMessage="ARRIVAL PORT"
                   />
                 </Label>
@@ -176,7 +176,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   isNew={isNew}
                   infoMessage={
                     <FormattedMessage
-                      id="modules.shipment.tooltipArrivalPort"
+                      id="modules.Shipments.tooltipArrivalPort"
                       defaultMessage={`You can select a transport type in the Shipment section under field labeled "TRANSPORTATION"`}
                     />
                   }
@@ -185,7 +185,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               input={
                 <div className={SelectTransportTypeMessageStyle}>
                   <FormattedMessage
-                    id="modules.shipment.selectTransportType"
+                    id="modules.Shipments.selectTransportType"
                     defaultMessage="Please select a transport type"
                   />
                 </div>
@@ -208,7 +208,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                 name,
                 isNew,
                 label: (
-                  <FormattedMessage id="modules.shipment.vesselName" defaultMessage="VESSEL NAME" />
+                  <FormattedMessage id="modules.Voyages.vesselName" defaultMessage="VESSEL NAME" />
                 ),
               })
             }
@@ -229,7 +229,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                 name,
                 isNew,
                 label: (
-                  <FormattedMessage id="modules.shipment.vesselCode" defaultMessage="VESSEL CODE" />
+                  <FormattedMessage id="modules.Voyages.vesselCode" defaultMessage="VESSEL CODE" />
                 ),
               })
             }

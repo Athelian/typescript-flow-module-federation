@@ -101,8 +101,14 @@ export default class FormContainer extends Container<FormState> {
       .catch((yupErrors: Object) => {
         const newErrors = yupToFormErrors(yupErrors);
         if (!isEquals(Object.keys(formData), Object.keys(errors))) {
+          const remainErrors: Object = {};
+          Object.keys(errors).forEach(field => {
+            if (!formData[field]) {
+              remainErrors[field] = errors[field];
+            }
+          });
           this.setState({
-            errors: { ...errors, ...newErrors },
+            errors: { ...remainErrors, ...newErrors },
             hasServerError: false,
           });
         } else if (!isEquals(newErrors, errors)) {

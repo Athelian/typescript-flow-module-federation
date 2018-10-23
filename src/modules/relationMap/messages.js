@@ -40,31 +40,31 @@ export default defineMessages({
     defaultMessage: 'ITEMS',
   },
   poSort: {
-    id: 'modules.relationMap.sort.po',
+    id: 'modules.RelationMaps.sort.po',
     defaultMessage: 'PO No',
   },
   updatedAtSort: {
-    id: 'modules.relationMap.sort.updatedAt',
+    id: 'modules.RelationMaps.sort.updatedAt',
     defaultMessage: 'Updated At',
   },
   createdAtSort: {
-    id: 'modules.relationMap.sort.createdAt',
+    id: 'modules.RelationMaps.sort.createdAt',
     defaultMessage: 'Created At',
   },
   nameSort: {
-    id: 'modules.relationMap.sort.name',
+    id: 'modules.RelationMaps.sort.name',
     defaultMessage: 'NAME',
   },
   serialSort: {
-    id: 'modules.relationMap.sort.serial',
+    id: 'modules.RelationMaps.sort.serial',
     defaultMessage: 'SERIAL',
   },
   all: {
-    id: 'modules.relationMap.label.all',
+    id: 'modules.RelationMaps.label.all',
     defaultMessage: 'ALL',
   },
   total: {
-    id: 'modules.relationMap.label.total',
+    id: 'modules.RelationMaps.label.total',
     defaultMessage: 'Total {number} {name}',
   },
   quantity: {

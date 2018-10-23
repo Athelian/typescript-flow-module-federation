@@ -47,7 +47,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       link="productProviderSection"
                       label={
                         <FormattedMessage
-                          id="modules.product.provider"
+                          id="modules.Products.provider"
                           defaultMessage="END PRODUCT"
                         />
                       }
@@ -57,7 +57,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       link="specificationsSection"
                       label={
                         <FormattedMessage
-                          id="modules.product.specifications"
+                          id="modules.Products.specifications"
                           defaultMessage="SPECIFICATIONS"
                         />
                       }
@@ -67,7 +67,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       link="productProviderPackagingSection"
                       label={
                         <FormattedMessage
-                          id="modules.product.packaging"
+                          id="modules.Products.packaging"
                           defaultMessage="PACKAGING"
                         />
                       }

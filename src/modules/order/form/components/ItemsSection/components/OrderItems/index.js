@@ -114,7 +114,7 @@ class OrderItems extends React.Component<Props> {
                         <NewButton
                           label={
                             <FormattedMessage
-                              id="modules.order.newBatch"
+                              id="modules.Orders.newBatch"
                               defaultMessage="NEW BATCH"
                             />
                           }
@@ -194,7 +194,7 @@ class OrderItems extends React.Component<Props> {
     ) : (
       <div className={EmptyMessageStyle}>
         <FormattedMessage
-          id="modules.order.form.noItems"
+          id="modules.Orders.form.noItems"
           defaultMessage="No items found (needs Exporter to be chosen first as well)"
         />
       </div>

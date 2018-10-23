@@ -3,51 +3,51 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   newPartner: {
-    id: 'containers.Partners.newPartner',
+    id: 'modules.Partners.newPartner',
     defaultMessage: 'ADD NEW PARTNER',
   },
   noPartners: {
-    id: 'containers.Partners.noPartners',
+    id: 'modules.Partners.noPartners',
     defaultMessage: 'No partners found.',
   },
   name: {
-    id: 'containers.Partners.name',
+    id: 'modules.Partners.name',
     defaultMessage: 'NAME',
   },
   type: {
-    id: 'containers.Partners.type',
+    id: 'modules.Partners.type',
     defaultMessage: 'TYPE',
   },
   forwarder: {
-    id: 'containers.Partners.type.forwarder',
+    id: 'modules.Partners.type.forwarder',
     defaultMessage: 'Forwarder',
   },
   importer: {
-    id: 'containers.Partners.type.importer',
+    id: 'modules.Partners.type.importer',
     defaultMessage: 'Importer',
   },
   exporter: {
-    id: 'containers.Partners.type.exporter',
+    id: 'modules.Partners.type.exporter',
     defaultMessage: 'Exporter',
   },
   supplier: {
-    id: 'containers.Partners.type.supplier',
+    id: 'modules.Partners.type.supplier',
     defaultMessage: 'Supplier',
   },
   tooltipName: {
-    id: 'containers.Partners.tooltip.name',
+    id: 'modules.Partners.tooltip.name',
     defaultMessage: '[Name] {name}',
   },
   required: {
-    id: 'containers.Partners.validation.required',
+    id: 'modules.Partners.validation.required',
     defaultMessage: 'Required',
   },
   createdAt: {
-    id: 'containers.Partners.createdAt',
+    id: 'modules.Partners.createdAt',
     defaultMessage: 'CREATED ON',
   },
   updatedAt: {
-    id: 'containers.Partners.updatedAt',
+    id: 'modules.Partners.updatedAt',
     defaultMessage: 'LAST MODIFIED',
   },
 });

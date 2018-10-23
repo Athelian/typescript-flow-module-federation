@@ -78,7 +78,7 @@ class ShipmentForm extends React.Component<Props> {
         <SectionWrapper id="shipmentSection">
           <SectionHeader
             icon="SHIPMENT"
-            title={<FormattedMessage id="modules.shipment.shipment" defaultMessage="SHIPMENT" />}
+            title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
           >
             {!isNew && (
               <>
@@ -116,7 +116,7 @@ class ShipmentForm extends React.Component<Props> {
         <SectionWrapper id="timelineSection">
           <SectionHeader
             icon="TIMELINE"
-            title={<FormattedMessage id="modules.shipment.timeline" defaultMessage="TIMELINE" />}
+            title={<FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />}
           />
           <AsyncTimelineSection isNew={isNew} />
         </SectionWrapper>
@@ -127,7 +127,7 @@ class ShipmentForm extends React.Component<Props> {
                 icon="CARGO"
                 title={
                   <>
-                    <FormattedMessage id="modules.shipment.cargo" defaultMessage="CARGO " />(
+                    <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
                     {batches.length})
                   </>
                 }
@@ -139,7 +139,7 @@ class ShipmentForm extends React.Component<Props> {
         <SectionWrapper id="documentsSection">
           <SectionHeader
             icon="DOCUMENT"
-            title={<FormattedMessage id="modules.shipment.document" defaultMessage="DOCUMENTS" />}
+            title={<FormattedMessage id="modules.Shipments.document" defaultMessage="DOCUMENTS" />}
           />
           <AsyncDocumentsSection />
         </SectionWrapper>
@@ -153,7 +153,7 @@ class ShipmentForm extends React.Component<Props> {
                     icon="ORDER"
                     title={
                       <>
-                        <FormattedMessage id="modules.shipment.order" defaultMessage="ORDERS" />(
+                        <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />(
                         {uniqueOrders.length})
                       </>
                     }

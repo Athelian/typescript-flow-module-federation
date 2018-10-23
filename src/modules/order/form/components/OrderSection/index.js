@@ -167,18 +167,15 @@ const OrderSection = ({ isNew }: Props) => (
                 <FieldItem
                   label={
                     <Label>
-                      <FormattedMessage
-                        id="containers.Orders.inCharge"
-                        defaultMessage="IN CHARGE"
-                      />{' '}
-                      ({values.inCharges.length})
+                      <FormattedMessage id="modules.Orders.inCharge" defaultMessage="IN CHARGE" /> (
+                      {values.inCharges.length})
                     </Label>
                   }
                   tooltip={
                     <Tooltip
                       infoMessage={
                         <FormattedMessage
-                          id="containers.Orders.inChargeExplanation"
+                          id="modules.Orders.inChargeExplanation"
                           defaultMessage="You can choose up to 5 people in charge."
                         />
                       }

@@ -70,7 +70,7 @@ class OrderGridView extends React.PureComponent<Props> {
         itemWidth="195px"
         isEmpty={items.length === 0}
         emptyMessage={
-          <FormattedMessage id="modules.order.noOrderFound" defaultMessage="No orders found" />
+          <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
         }
       >
         {items.map(item => renderItem(item))}

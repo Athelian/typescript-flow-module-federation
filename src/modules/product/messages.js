@@ -3,287 +3,287 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   name: {
-    id: 'containers.Products.name',
+    id: 'modules.Products.name',
     defaultMessage: 'NAME',
   },
   serial: {
-    id: 'containers.Products.serial',
+    id: 'modules.Products.serial',
     defaultMessage: 'SERIAL',
   },
   JANCode: {
-    id: 'containers.Products.JANCode',
+    id: 'modules.Products.JANCode',
     defaultMessage: 'JAN CODE',
   },
   HSCode: {
-    id: 'containers.Products.HSCode',
+    id: 'modules.Products.HSCode',
     defaultMessage: 'HS CODE',
   },
   material: {
-    id: 'containers.Products.material',
+    id: 'modules.Products.material',
     defaultMessage: 'MATERIAL',
   },
   tags: {
-    id: 'containers.Products.tags',
+    id: 'modules.Products.tags',
     defaultMessage: 'TAGS',
   },
   quantity: {
-    id: 'containers.Products.quantity',
+    id: 'modules.Products.quantity',
     defaultMessage: 'UNIT QUANTITY',
   },
   unit: {
-    id: 'containers.Products.unit',
+    id: 'modules.Products.unit',
     defaultMessage: 'UNIT TYPE',
   },
   size: {
-    id: 'containers.Products.size',
+    id: 'modules.Products.size',
     defaultMessage: 'UNIT SIZE (m)',
   },
   volume: {
-    id: 'containers.Products.volume',
+    id: 'modules.Products.volume',
     defaultMessage: 'NET VOLUME / UNIT',
   },
   weight: {
-    id: 'containers.Products.weight',
+    id: 'modules.Products.weight',
     defaultMessage: 'NET WEIGHT / UNIT',
   },
   image: {
-    id: 'containers.Products.image',
+    id: 'modules.Products.image',
     defaultMessage: 'IMAGE',
   },
   createdAt: {
-    id: 'containers.Products.createdAt',
+    id: 'modules.Products.createdAt',
     defaultMessage: 'CREATED ON',
   },
   updatedAt: {
-    id: 'containers.Products.updatedAt',
+    id: 'modules.Products.updatedAt',
     defaultMessage: 'LAST MODIFIED',
   },
   status: {
-    id: 'containers.Products.status',
+    id: 'modules.Products.status',
     defaultMessage: 'STATUS',
   },
   metadataKey: {
-    id: 'containers.Products.metadataKey',
+    id: 'modules.Products.metadataKey',
     defaultMessage: 'KEY',
   },
   metadataValue: {
-    id: 'containers.Products.metadataValue',
+    id: 'modules.Products.metadataValue',
     defaultMessage: 'VALUE',
   },
   exporter: {
-    id: 'containers.Products.exporter',
+    id: 'modules.Products.exporter',
     defaultMessage: 'EXPORTER',
   },
   supplier: {
-    id: 'containers.Products.supplier',
+    id: 'modules.Products.supplier',
     defaultMessage: 'SUPPLIER',
   },
   origin: {
-    id: 'containers.Products.origin',
+    id: 'modules.Products.origin',
     defaultMessage: 'COUNTRY OF ORIGIN',
   },
   price: {
-    id: 'containers.Products.price',
+    id: 'modules.Products.price',
     defaultMessage: 'UNIT PRICE',
   },
   currency: {
-    id: 'containers.Products.currency',
+    id: 'modules.Products.currency',
     defaultMessage: 'CURRENCY',
   },
   productionLeadTime: {
-    id: 'containers.Products.productionLeadTime',
+    id: 'modules.Products.productionLeadTime',
     defaultMessage: 'PRODUCTION LEAD TIME',
   },
   days: {
-    id: 'containers.Products.days',
+    id: 'modules.Products.days',
     defaultMessage: 'Days',
   },
   packageName: {
-    id: 'containers.Products.packageName',
+    id: 'modules.Products.packageName',
     defaultMessage: 'PACKAGE NAME',
   },
   packageGrossWeight: {
-    id: 'containers.Products.packageGrossWeight',
+    id: 'modules.Products.packageGrossWeight',
     defaultMessage: 'PACKAGE GROSS WEIGHT',
   },
   packageVolume: {
-    id: 'containers.Products.packageVolume',
+    id: 'modules.Products.packageVolume',
     defaultMessage: 'PACKAGE GROSS VOLUME',
   },
   packageMaxQuantity: {
-    id: 'containers.Products.packageMaxQuantity',
+    id: 'modules.Products.packageMaxQuantity',
     defaultMessage: 'MAX QUANTITY / PACKAGE',
   },
   packageSize: {
-    id: 'containers.Products.packageSize',
+    id: 'modules.Products.packageSize',
     defaultMessage: 'PACKAGE SIZE (m)',
   },
   inspectionFee: {
-    id: 'containers.Products.inspectionFee',
+    id: 'modules.Products.inspectionFee',
     defaultMessage: 'INSPECTION FEE',
   },
   memo: {
-    id: 'containers.Products.memo',
+    id: 'modules.Products.memo',
     defaultMessage: 'MEMO',
   },
   active: {
-    id: 'containers.Products.active',
+    id: 'modules.Products.active',
     defaultMessage: 'ACTIVE',
   },
   inactive: {
-    id: 'containers.Products.inactive',
+    id: 'modules.Products.inactive',
     defaultMessage: 'INACTIVE',
   },
   required: {
-    id: 'containers.Products.validation.required',
+    id: 'modules.Products.validation.required',
     defaultMessage: 'Required',
   },
   duplicate: {
-    id: 'containers.Products.validation.duplicate',
+    id: 'modules.Products.validation.duplicate',
     defaultMessage: 'Duplicate exporter (and supplier) combination',
   },
   duplicateKey: {
-    id: 'containers.Products.validation.duplicateKey',
+    id: 'modules.Products.validation.duplicateKey',
     defaultMessage: 'Duplicate entry key',
   },
   invalidLength: {
-    id: 'containers.Products.validation.length',
+    id: 'modules.Products.validation.length',
     defaultMessage: 'Must be exactly {length} characters long',
   },
   serialNotAvailable: {
-    id: 'containers.Products.validation.serialNotAvailable',
+    id: 'modules.Products.validation.serialNotAvailable',
     defaultMessage: 'Product serial is not available',
   },
   newProduct: {
-    id: 'containers.Products.newProduct',
+    id: 'modules.Products.newProduct',
     defaultMessage: 'NEW',
   },
   infoTab: {
-    id: 'containers.Products.infoTab',
+    id: 'modules.Products.infoTab',
     defaultMessage: 'INFO',
   },
   ordersTab: {
-    id: 'containers.Products.ordersTab',
+    id: 'modules.Products.ordersTab',
     defaultMessage: 'ORDERS',
   },
   batchItemsTab: {
-    id: 'containers.Products.batchItemsTab',
+    id: 'modules.Products.batchItemsTab',
     defaultMessage: 'BATCHES',
   },
   batchGroupsTab: {
-    id: 'containers.Products.batchGroupsTab',
+    id: 'modules.Products.batchGroupsTab',
     defaultMessage: 'BATCH GROUPS',
   },
   shipmentsTab: {
-    id: 'containers.Products.shipmentsTab',
+    id: 'modules.Products.shipmentsTab',
     defaultMessage: 'SHIPMENTS',
   },
   noOrders: {
-    id: 'containers.Products.noOrders',
+    id: 'modules.Products.noOrders',
     defaultMessage: 'No orders found for this product.',
   },
   noBatches: {
-    id: 'containers.Products.noBatches',
+    id: 'modules.Products.noBatches',
     defaultMessage: 'No batches found for this product.',
   },
   noShipments: {
-    id: 'containers.Products.noShipments',
+    id: 'modules.Products.noShipments',
     defaultMessage: 'No shipments found for this product.',
   },
   tooltipName: {
-    id: 'containers.Products.tooltip.name',
+    id: 'modules.Products.tooltip.name',
     defaultMessage: '[Name] {name}',
   },
   tooltipSerial: {
-    id: 'containers.Products.tooltip.serial',
+    id: 'modules.Products.tooltip.serial',
     defaultMessage: '[Serial] {serial}',
   },
   tooltipExporter: {
-    id: 'containers.Products.tooltip.exporter',
+    id: 'modules.Products.tooltip.exporter',
     defaultMessage: '[Exporter] {exporter}',
   },
   tooltipSupplier: {
-    id: 'containers.Products.tooltip.supplier',
+    id: 'modules.Products.tooltip.supplier',
     defaultMessage: '[Supplier] {supplier}',
   },
   tooltipDetails: {
-    id: 'containers.Products.tooltip.details',
+    id: 'modules.Products.tooltip.details',
     defaultMessage: 'View Details',
   },
   noProducts: {
-    id: 'containers.Products.noProducts',
+    id: 'modules.Products.noProducts',
     defaultMessage: 'No products found.',
   },
   uploadImage: {
-    id: 'containers.Products.uploadImage',
+    id: 'modules.Products.uploadImage',
     defaultMessage: 'UPLOAD IMAGE',
   },
   uploadNewImage: {
-    id: 'containers.Products.uploadNewImage',
+    id: 'modules.Products.uploadNewImage',
     defaultMessage: 'UPLOAD NEW IMAGE',
   },
   specSheet: {
-    id: 'containers.Products.specSheet',
+    id: 'modules.Products.specSheet',
     defaultMessage: 'Specification Sheet',
   },
   analysisCert: {
-    id: 'containers.Products.analysisCert',
+    id: 'modules.Products.analysisCert',
     defaultMessage: 'Certification of Analysis',
   },
   originCert: {
-    id: 'containers.Products.originCert',
+    id: 'modules.Products.originCert',
     defaultMessage: 'Certification of Origin',
   },
   other: {
-    id: 'containers.Products.other',
+    id: 'modules.Products.other',
     defaultMessage: 'Other',
   },
   addPES: {
-    id: 'containers.Products.addPES',
+    id: 'modules.Products.addPES',
     defaultMessage: 'EXPORTER & SUPPLIER',
   },
   addEntry: {
-    id: 'containers.Products.addEntry',
+    id: 'modules.Products.addEntry',
     defaultMessage: 'ADD ENTRY',
   },
   sectionSpec: {
-    id: 'containers.Products.sectionSpec',
+    id: 'modules.Products.sectionSpec',
     defaultMessage: 'SPECIFICATIONS',
   },
   sectionPES: {
-    id: 'containers.Products.sectionPES',
+    id: 'modules.Products.sectionPES',
     defaultMessage: 'EXPORTER & SUPPLIERS',
   },
   sectionPackage: {
-    id: 'containers.Products.sectionPackage',
+    id: 'modules.Products.sectionPackage',
     defaultMessage: 'PACKAGING',
   },
   sectionDocuments: {
-    id: 'containers.Products.sectionDocuments',
+    id: 'modules.Products.sectionDocuments',
     defaultMessage: 'DOCUMENTS',
   },
   sectionMetadata: {
-    id: 'containers.Products.sectionMetadata',
+    id: 'modules.Products.sectionMetadata',
     defaultMessage: 'METADATA',
   },
   infoName: {
-    id: 'containers.Products.infoName',
+    id: 'modules.Products.infoName',
     defaultMessage: 'Product name is required',
   },
   infoSerial: {
-    id: 'containers.Products.infoSerial',
+    id: 'modules.Products.infoSerial',
     defaultMessage: 'Product serial is required',
   },
   infoJANCode: {
-    id: 'containers.Products.infoJANCode',
+    id: 'modules.Products.infoJANCode',
     defaultMessage: 'JAN code is 13 characters long',
   },
   infoHSCode: {
-    id: 'containers.Products.infoHSCode',
+    id: 'modules.Products.infoHSCode',
     defaultMessage: 'HS code is 10 characters long',
   },
   downloadCSV: {
-    id: 'containers.Products.downloadCSV',
+    id: 'modules.Products.downloadCSV',
     defaultMessage: 'DOWNLOAD CSV',
   },
 });

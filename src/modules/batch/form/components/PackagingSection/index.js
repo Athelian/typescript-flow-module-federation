@@ -42,7 +42,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: originalValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.batch.packageName"
+                      id="modules.Batches.packageName"
                       defaultMessage="PACKAGE NAME"
                     />
                   ),
@@ -63,7 +63,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: originalValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.batch.packageCapacity"
+                      id="modules.Batches.packageCapacity"
                       defaultMessage="PACKAGE CAPACITY"
                     />
                   ),
@@ -84,7 +84,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: originalValues[name],
                   label: (
                     <FormattedMessage
-                      id="modules.batch.packageQuantity"
+                      id="modules.Batches.packageQuantity"
                       defaultMessage="PACKAGE QUANTITY"
                     />
                   ),
@@ -108,7 +108,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: getByPath('packageGrossWeight.value', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.batch.pkgGrossWeight"
+                      id="modules.Batches.pkgGrossWeight"
                       defaultMessage="PKG GROSS WEIGHT"
                     />
                   ),
@@ -131,7 +131,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   isNew,
                   originalValue: getByPath('packageVolume.value', originalValues),
                   label: (
-                    <FormattedMessage id="modules.batch.pkgVolume" defaultMessage="PKG VOLUME" />
+                    <FormattedMessage id="modules.Batches.pkgVolume" defaultMessage="PKG VOLUME" />
                   ),
                   WrapperComponent: DefaultVolumeStyle,
                   calculate: calculatePackageVolume,
@@ -153,7 +153,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   isNew,
                   originalValue: getByPath('packageSize.length.value', originalValues),
                   label: (
-                    <FormattedMessage id="modules.batch.pkgLength" defaultMessage="PKG LENGTH" />
+                    <FormattedMessage id="modules.Batches.pkgLength" defaultMessage="PKG LENGTH" />
                   ),
                   WrapperComponent: DefaultDimensionStyle,
                 })
@@ -174,7 +174,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   isNew,
                   originalValue: getByPath('packageSize.width.value', originalValues),
                   label: (
-                    <FormattedMessage id="modules.batch.pkgWidth" defaultMessage="PKG WIDTH" />
+                    <FormattedMessage id="modules.Batches.pkgWidth" defaultMessage="PKG WIDTH" />
                   ),
                   WrapperComponent: DefaultDimensionStyle,
                 })
@@ -195,7 +195,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   isNew,
                   originalValue: getByPath('packageSize.height.value', originalValues),
                   label: (
-                    <FormattedMessage id="modules.batch.pkgHeight" defaultMessage="PKG HEIGHT" />
+                    <FormattedMessage id="modules.Batches.pkgHeight" defaultMessage="PKG HEIGHT" />
                   ),
                   WrapperComponent: DefaultDimensionStyle,
                 })

@@ -67,7 +67,7 @@ const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
         {shownDate ? (
           <FormattedDate value={new Date(shownDate)} />
         ) : (
-          <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+          <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         )}
       </div>
       <div className={DelayStyle({ delayAmount, vertical })}>

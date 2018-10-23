@@ -21,7 +21,7 @@ function ShipmentSection({ shipment }: Props) {
         ) : (
           <div className={EmptyMessageStyle}>
             <FormattedMessage
-              id="modules.batch.noShipmentFound"
+              id="modules.Batches.noShipmentFound"
               defaultMessage="No shipment found"
             />
           </div>
