@@ -9,6 +9,10 @@ import FormattedName from 'components/FormattedName';
 import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
 import messages from 'modules/history/components/EntityTimeline/messages';
 import {
+  FormatValue,
+  findTargetChanges,
+} from 'modules/history/components/EntityTimeline/components/EventEntry/helpers';
+import {
   UpdateEventWrapperStyle,
   EventStyle,
   NameStyle,
@@ -16,8 +20,8 @@ import {
   OldStyle,
   NewStyle,
   FieldStyle,
+  TargetStyle,
 } from './style';
-import FormatValue from '../../helpers';
 
 type Props = {
   event: Event,
@@ -54,7 +58,7 @@ const UpdateEvent = ({ event, entityType }: Props) => (
               />
             </span>
           ),
-          target: entityType,
+          target: <span className={TargetStyle}>{findTargetChanges(entityType, event)}</span>,
           oldValue: (
             <span className={OldStyle}>
               <FormatValue value={event.updates[0].oldValue} />

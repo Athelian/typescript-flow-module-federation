@@ -9,7 +9,10 @@ import FormattedName from 'components/FormattedName';
 import Icon from 'components/Icon';
 import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
 import messages from 'modules/history/components/EntityTimeline/messages';
-import FormatValue from '../../helpers';
+import {
+  FormatValue,
+  findTargetChanges,
+} from 'modules/history/components/EntityTimeline/components/EventEntry/helpers';
 import {
   MultipleUpdateEventWrapperStyle,
   ButtonStyle,
@@ -21,6 +24,7 @@ import {
   NewStyle,
   OldStyle,
   UpdateListStyle,
+  TargetStyle,
   FieldStyle,
 } from './style';
 
@@ -72,7 +76,7 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
                     />
                   </span>
                 ),
-                target: entityType,
+                target: <span className={TargetStyle}>{findTargetChanges(entityType, event)}</span>,
                 count: event.updates.length,
               }}
             />
