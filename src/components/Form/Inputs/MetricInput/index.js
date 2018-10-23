@@ -41,17 +41,10 @@ const defaultProps = {
 export default class MetricInput extends React.Component<Props> {
   static defaultProps = defaultProps;
 
-  onChange = ({ value, metric }: MetricValue) => {
-    const { name, onChange } = this.props;
+  onChange = (evt: any) => {
+    const { onChange } = this.props;
     if (onChange) {
-      onChange(name, { value, metric });
-    }
-  };
-
-  handleBlur = () => {
-    const { name, onBlur } = this.props;
-    if (onBlur) {
-      onBlur(name, true);
+      onChange(evt);
     }
   };
 
@@ -70,12 +63,31 @@ export default class MetricInput extends React.Component<Props> {
           value={value}
           disabled={disabled}
           readOnly={readOnly}
-          onChange={e => this.onChange({ value: e.target.value, metric })}
+          onChange={evt =>
+            this.onChange({
+              ...evt,
+              target: {
+                value: {
+                  value: evt.target.value,
+                  metric,
+                },
+              },
+            })
+          }
         />
         <SelectInput
           value={metric}
           selectItem={metric}
-          onChange={newMetric => this.onChange({ value, metric: newMetric })}
+          onChange={newMetric =>
+            this.onChange({
+              target: {
+                value: {
+                  value,
+                  metric: newMetric,
+                },
+              },
+            })
+          }
           items={metrics}
           itemToValue={v => v || null}
           itemToString={v => v || ''}

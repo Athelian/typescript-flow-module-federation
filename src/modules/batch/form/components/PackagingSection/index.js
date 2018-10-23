@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormField } from 'modules/form';
-import { textInputFactory, numberInputFactory } from 'modules/form/helpers';
+import { textInputFactory, numberInputFactory, metricInputFactory } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
 import { DefaultWeightStyle, DefaultVolumeStyle, DefaultDimensionStyle } from 'components/Form';
 import { getByPath } from 'utils/fp';
@@ -161,22 +161,25 @@ const PackagingSection = ({ isNew }: Props) => (
             </FormField>
 
             <FormField
-              name="packageSize.width.value"
-              initValue={getByPath('packageSize.width.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldArrayValue('packageSize.width', { value, metric: 'm' })
-              }
+              name="packageSize.width"
+              initValue={getByPath('packageSize.width', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('packageSize.width', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
+                metricInputFactory({
                   name,
-                  inputHandlers,
+                  inputHandlers: {
+                    ...inputHandlers,
+                    onBlur: evt => {
+                      inputHandlers.onBlur(evt);
+                      setFieldArrayValue('packageSize.width', inputHandlers.value);
+                    },
+                  },
                   isNew,
-                  originalValue: getByPath('packageSize.width.value', originalValues),
+                  originalValue: getByPath('packageSize.width', originalValues),
                   label: (
                     <FormattedMessage id="modules.Batches.pkgWidth" defaultMessage="PKG WIDTH" />
                   ),
-                  WrapperComponent: DefaultDimensionStyle,
                 })
               }
             </FormField>
