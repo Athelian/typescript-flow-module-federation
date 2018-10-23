@@ -337,7 +337,8 @@ const OrderItemCard = ({
                 )}
 
                 {!selectable &&
-                  !readOnly && (
+                  !readOnly &&
+                  !!unitPrice && (
                     <BooleanValue>
                       {({ value: isOpen, set: dialogToggle }) => (
                         <>
