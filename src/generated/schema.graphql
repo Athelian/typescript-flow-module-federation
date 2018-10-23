@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Oct 15 2018 17:10:18 GMT+0700 (Indochina Time)
+# timestamp: Tue Oct 23 2018 14:10:31 GMT+0700 (Indochina Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -27034,6 +27034,11 @@ type BatchMutated {
   violations: [Violation!]
 }
 
+type BatchMutatedMany {
+  batchs: [Batch!]
+  violations: [[Violation!]]
+}
+
 type BatchPagination {
   nodes: [Batch!]!
   page: Int!
@@ -27076,6 +27081,11 @@ input BatchUpdateInput {
   shipmentId: ID
   batchAssignments: [BatchAssignmentUpdateInput!]
   batchAdjustments: [BatchAdjustmentUpdateInput!]
+}
+
+input BatchUpdateWrapperInput {
+  id: ID!
+  input: BatchUpdateInput!
 }
 
 type ContainerGroup implements Model & Owned & Sortable {
@@ -28378,6 +28388,14 @@ interface Documented {
   files: [File!]!
 }
 
+type EntitiesMutatedMany {
+  orders: OrderMutatedMany
+  shipments: ShipmentMutatedMany
+  products: ProductMutatedMany
+  batches: BatchMutatedMany
+  warehouses: WarehouseMutatedMany
+}
+
 union Entity = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | File | Partnership | EventChange | EventComment
 
 union Event = EventChange | EventComment
@@ -29182,17 +29200,23 @@ type Mutation {
   groupUpdate(id: ID!, input: GroupUpdateInput!): GroupMutated!
   productCreate(input: ProductCreateInput!): ProductMutated!
   productUpdate(id: ID!, input: ProductUpdateInput!): ProductMutated!
+  productUpdateMany(products: [ProductUpdateWrapperInput!]!): ProductMutatedMany!
   orderCreate(input: OrderCreateInput!): OrderMutated!
   orderUpdate(id: ID!, input: OrderUpdateInput!): OrderMutated!
+  orderUpdateMany(orders: [OrderUpdateWrapperInput!]!): OrderMutatedMany!
   batchCreate(input: BatchCreateInput!): BatchMutated!
   batchUpdate(id: ID!, input: BatchUpdateInput!): BatchMutated!
+  batchUpdateMany(batches: [BatchUpdateWrapperInput!]!): BatchMutatedMany!
   batchSimpleSplit(id: ID!, input: BatchSimpleSplitInput!): BatchesMutated!
   batchEqualSplit(id: ID!, input: BatchEqualSplitInput!): BatchesMutated!
   batchBalanceSplit(orderItemId: ID!): BatchesMutated!
   shipmentCreate(input: ShipmentCreateInput!): ShipmentMutated!
   shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentMutated!
+  shipmentUpdateMany(shipments: [ShipmentUpdateWrapperInput!]!): ShipmentMutatedMany!
   warehouseCreate(input: WarehouseCreateInput!): WarehouseMutated!
   warehouseUpdate(id: ID!, input: WarehouseUpdateInput!): WarehouseMutated!
+  warehouseUpdateMany(warehouses: [WarehouseUpdateWrapperInput!]!): WarehouseMutatedMany!
+  entitiesUpdateMany(orders: [OrderUpdateWrapperInput!], shipments: [ShipmentUpdateWrapperInput!], products: [ProductUpdateWrapperInput!], batches: [BatchUpdateWrapperInput!], warehouses: [WarehouseUpdateWrapperInput!]): EntitiesMutatedMany!
   tagCreate(input: TagCreateInput!): TagMutated!
   tagUpdate(id: ID!, input: TagUpdateInput!): TagMutated!
   eventCommentCreate(input: EventCommentCreateInput!): EventCommentMutated!
@@ -29499,6 +29523,11 @@ type OrderMutated {
   violations: [Violation!]
 }
 
+type OrderMutatedMany {
+  orders: [Order!]
+  violations: [[Violation!]]
+}
+
 type OrderPagination {
   nodes: [Order!]!
   page: Int!
@@ -29529,6 +29558,11 @@ input OrderUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadataInput!]
+}
+
+input OrderUpdateWrapperInput {
+  id: ID!
+  input: OrderUpdateInput!
 }
 
 interface Owned {
@@ -29682,6 +29716,11 @@ type ProductMutated {
   violations: [Violation!]
 }
 
+type ProductMutatedMany {
+  products: [Product!]
+  violations: [[Violation!]]
+}
+
 type ProductPagination {
   nodes: [Product!]!
   page: Int!
@@ -29812,6 +29851,11 @@ input ProductUpdateInput {
   productProviders: [ProductProviderUpdateInput!]
   files: [FileInput!]
   metadata: [MetadataInput!]
+}
+
+input ProductUpdateWrapperInput {
+  id: ID!
+  input: ProductUpdateInput!
 }
 
 type Query {
@@ -34855,6 +34899,11 @@ type ShipmentMutated {
   violations: [Violation!]
 }
 
+type ShipmentMutatedMany {
+  shipments: [Shipment!]
+  violations: [[Violation!]]
+}
+
 type ShipmentPagination {
   nodes: [Shipment!]!
   page: Int!
@@ -34920,6 +34969,11 @@ input ShipmentUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadataInput!]
+}
+
+input ShipmentUpdateWrapperInput {
+  id: ID!
+  input: ShipmentUpdateInput!
 }
 
 input ShipmentVoyageCreateInput {
@@ -35252,6 +35306,11 @@ type WarehouseMutated {
   violations: [Violation!]
 }
 
+type WarehouseMutatedMany {
+  warehouses: [Warehouse!]
+  violations: [[Violation!]]
+}
+
 type WarehousePagination {
   nodes: [Warehouse!]!
   page: Int!
@@ -35275,4 +35334,9 @@ input WarehouseUpdateInput {
   region: String
   postalCode: String
   country: Country
+}
+
+input WarehouseUpdateWrapperInput {
+  id: ID!
+  input: WarehouseUpdateInput!
 }
