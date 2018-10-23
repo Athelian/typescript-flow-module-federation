@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { cloneOrder, cloneOrderItem, cloneBatch, cloneShipment } from './clone';
+import { cloneOrder, cloneOrderItem, cloneBatch, cloneShipment, cloneTree } from './clone';
 
 type State = {
   result: Object,
@@ -21,7 +21,10 @@ class ActionContainer extends React.Component<Props, State> {
     });
   };
 
-  cloneTree = async () => {};
+  cloneTree = async (client: any, target: Object) => {
+    const clonedTree = await cloneTree(client, target);
+    return clonedTree;
+  };
 
   clone = async (client: any, target: Object) => {
     const { batch, order, orderItem, shipment } = target;
@@ -45,6 +48,16 @@ class ActionContainer extends React.Component<Props, State> {
     return [result, focus];
   };
 
+  getCloneFunction = (focusMode: string) => {
+    switch (focusMode) {
+      default:
+      case 'TARGET':
+        return this.clone;
+      case 'TARGET_TREE':
+        return this.cloneTree;
+    }
+  };
+
   render() {
     const { result } = this.state;
     const { children } = this.props;
@@ -52,6 +65,8 @@ class ActionContainer extends React.Component<Props, State> {
       result,
       setResult: this.setResult,
       clone: this.clone,
+      cloneTree: this.cloneTree,
+      getCloneFunction: this.getCloneFunction,
     });
   }
 }

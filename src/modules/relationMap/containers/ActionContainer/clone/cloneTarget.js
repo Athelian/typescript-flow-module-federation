@@ -1,42 +1,9 @@
-import update from 'immutability-helper';
 import { differenceBy } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
 import { createBatchMutation } from 'modules/batch/form/mutation';
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
 import { createOrderMutation, updateOrderItemMutation } from 'modules/order/form/mutation';
-
-const createMutationRequest = client => async (mutationData, refId) =>
-  new Promise(resolve => {
-    client.mutate(mutationData).then(result => {
-      resolve({ data: result.data, refId });
-    });
-  });
-
-const initResultObj = ids => ({
-  itemId: {},
-  refId: ids.reduce(
-    (id, refId) => ({
-      ...id,
-      [refId]: {},
-    }),
-    {}
-  ),
-});
-
-const formatResult = (responses, idPath, ids) => {
-  const formattedResult = responses.reduce((result, batch) => {
-    const { data, refId } = batch;
-    const id = getByPathWithDefault(null, idPath, data);
-    if (id) {
-      return update(result, {
-        itemId: { $merge: { [id]: true } },
-        refId: { [refId]: { $merge: { [id]: true } } },
-      });
-    }
-    return result;
-  }, initResultObj(ids));
-  return formattedResult;
-};
+import { createMutationRequest, formatResult } from './index';
 
 export const cloneOrder = async (client, order) => {
   const mutationRequest = createMutationRequest(client);
@@ -193,4 +160,3 @@ export const cloneShipment = async (client, shipment) => {
   );
   return [shipmentResults, shipmentFocus];
 };
-export default null;

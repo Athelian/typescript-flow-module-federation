@@ -64,7 +64,7 @@ class Order extends React.PureComponent<Props> {
               <SortFilterHandler>
                 {({ sort, filter, onChangeFilter }) => (
                   <ActionContainer>
-                    {({ clone, result, setResult }) => (
+                    {({ getCloneFunction, result, setResult }) => (
                       <Query
                         query={query}
                         variables={{
@@ -84,7 +84,7 @@ class Order extends React.PureComponent<Props> {
                           <>
                             <FocusedValue>
                               {({ value: { focusMode, focusedItem }, set: setFocusedValue }) =>
-                                focusMode === 'TARGET' && (
+                                (focusMode === 'TARGET' || focusMode === 'TARGET_TREE') && (
                                   <div className={FullGridWrapperStyle}>
                                     <ActionSelector target={focusedItem}>
                                       <BaseButton
@@ -93,16 +93,13 @@ class Order extends React.PureComponent<Props> {
                                         backgroundColor="TEAL"
                                         hoverBackgroundColor="TEAL_DARK"
                                         onClick={async () => {
+                                          const clone = getCloneFunction(focusMode);
                                           const [newResult, newFocus] = await clone(
                                             client,
                                             focusedItem
                                           );
                                           await refetch({ page: this.page, perPage });
                                           setResult(newResult);
-                                          console.log('[newResult, newFocus]', [
-                                            newResult,
-                                            newFocus,
-                                          ]);
                                           setFocusedValue('focusedItem', newFocus);
                                         }}
                                       />
