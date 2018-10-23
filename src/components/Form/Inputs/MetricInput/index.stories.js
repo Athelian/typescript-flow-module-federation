@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
 import MetricInput from './index';
-import DefaultMetricStyle from '../Styles/DefaultStyle/DefaultMetricStyle';
+import DefaultMetricStyle from './DefaultMetricStyle';
 
 storiesOf('Metric Input', module)
   .add('without style wrapper', () => (

@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 
-import { NumberInput, SelectInput, DefaultSelect, DefaultOptions } from 'components/Form';
-
+import { NumberInput, SelectInput, DefaultOptions } from 'components/Form';
+import MetricSelect from './MetricSelect';
 import { type MetricValue } from './type';
 
 type OptionalProps = {
@@ -69,7 +69,6 @@ export default class MetricInput extends React.Component<Props> {
           readOnly={readOnly}
           onChange={e => this.onChange({ value: e.target.value, metric })}
         />
-
         <SelectInput
           value={metric}
           selectItem={metric}
@@ -77,8 +76,8 @@ export default class MetricInput extends React.Component<Props> {
           items={metrics}
           itemToValue={v => v || null}
           itemToString={v => v || ''}
-          renderSelect={({ ...rest }) => <DefaultSelect {...rest} align="left" />}
-          renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" />}
+          renderSelect={({ ...rest }) => <MetricSelect {...rest} align="left" />}
+          renderOptions={({ ...rest }) => <DefaultOptions width="100px" {...rest} align="left" />}
         />
       </>
     );
