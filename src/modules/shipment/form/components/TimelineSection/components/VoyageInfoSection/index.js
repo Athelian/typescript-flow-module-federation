@@ -95,7 +95,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   isNew,
                   label: (
                     <FormattedMessage
-                      id="modules.Shipments.departurePort"
+                      id="modules.Voyages.departurePort"
                       defaultMessage="DEPARTURE PORT"
                     />
                   ),
@@ -107,7 +107,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               label={
                 <Label>
                   <FormattedMessage
-                    id="modules.Shipments.departurePort"
+                    id="modules.Voyages.departurePort"
                     defaultMessage="DEPARTURE PORT"
                   />
                 </Label>
@@ -154,7 +154,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                   isNew,
                   label: (
                     <FormattedMessage
-                      id="modules.Shipments.arrivalPort"
+                      id="modules.Voyages.arrivalPort"
                       defaultMessage="ARRIVAL PORT"
                     />
                   ),
@@ -166,7 +166,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               label={
                 <Label>
                   <FormattedMessage
-                    id="modules.Shipments.arrivalPort"
+                    id="modules.Voyages.arrivalPort"
                     defaultMessage="ARRIVAL PORT"
                   />
                 </Label>

@@ -343,11 +343,11 @@ export default defineMessages({
     defaultMessage: 'PACKAGE NAME',
   },
   packageGrossWeight: {
-    id: 'modules.Orders.packageGrossWeight',
+    id: 'modules.Batches.packageGrossWeight',
     defaultMessage: 'PACKAGE GROSS WEIGHT',
   },
   packageVolume: {
-    id: 'modules.Orders.packageVolume',
+    id: 'modules.Batches.packageVolume',
     defaultMessage: 'PACKAGE GROSS VOLUME',
   },
   packageMaxQuantity: {
