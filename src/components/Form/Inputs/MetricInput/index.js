@@ -55,11 +55,13 @@ export default class MetricInput extends React.Component<Props> {
       readOnly,
       metrics,
       align,
+      ...rest
     } = this.props;
 
     return (
       <>
         <NumberInput
+          {...rest}
           value={value}
           disabled={disabled}
           readOnly={readOnly}
@@ -88,11 +90,12 @@ export default class MetricInput extends React.Component<Props> {
               },
             })
           }
+          clearSelection={() => {}}
           items={metrics}
           itemToValue={v => v || null}
           itemToString={v => v || ''}
-          renderSelect={({ ...rest }) => <MetricSelect {...rest} align={align} />}
-          renderOptions={({ ...rest }) => <DefaultOptions width="30px" {...rest} align={align} />}
+          renderSelect={({ ...rst }) => <MetricSelect {...rst} align={align} />}
+          renderOptions={({ ...rst }) => <DefaultOptions width="30px" {...rst} align={align} />}
         />
       </>
     );
