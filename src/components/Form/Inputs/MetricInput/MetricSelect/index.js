@@ -14,7 +14,14 @@ type Props = OptionalProps &
     itemToString: any => string,
   };
 
+const defaultProps = {
+  width: '30px',
+  height: '30px',
+};
+
 function MetricSelect({
+  width,
+  height,
   align,
   toggle,
   selectedItem,
@@ -23,7 +30,7 @@ function MetricSelect({
   ...rest
 }: Props) {
   return (
-    <div className={MetricSelectWrapperStyle} style={{ cursor: 'pointer' }}>
+    <div className={MetricSelectWrapperStyle({ width, height })} style={{ cursor: 'pointer' }}>
       <input
         readOnly
         spellCheck={false}
@@ -37,5 +44,7 @@ function MetricSelect({
     </div>
   );
 }
+
+MetricSelect.defaultProps = defaultProps;
 
 export default MetricSelect;

@@ -13,6 +13,7 @@ storiesOf('Metric Input', module)
       value={{ value: 100, metric: 'cm' }}
       metrics={['m', 'cm']}
       onChange={action('onChange')}
+      onBlur={action('onBlur')}
     />
   ))
   .add('with style wrapper', () => (
@@ -22,6 +23,7 @@ storiesOf('Metric Input', module)
         value={{ value: 100, metric: 'cm' }}
         metrics={['m', 'cm']}
         onChange={action('onChange')}
+        onBlur={action('onBlur')}
       />
     </DefaultMetricStyle>
   ));

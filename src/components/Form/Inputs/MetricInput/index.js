@@ -80,7 +80,7 @@ export default class MetricInput extends React.Component<Props> {
           itemToValue={v => v || null}
           itemToString={v => v || ''}
           renderSelect={({ ...rest }) => <MetricSelect {...rest} align={align} />}
-          renderOptions={({ ...rest }) => <DefaultOptions width="100px" {...rest} align="left" />}
+          renderOptions={({ ...rest }) => <DefaultOptions width="30px" {...rest} align={align} />}
         />
       </>
     );
