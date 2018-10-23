@@ -57,6 +57,19 @@ export const orderLogsListQuery = gql`
               adds {
                 entity {
                   __typename
+                  ... on OrderItem {
+                    productProvider {
+                      id
+                      product {
+                        id
+                        name
+                      }
+                    }
+                  }
+                  ... on Batch {
+                    id
+                    no
+                  }
                   ... on Model {
                     id
                   }
@@ -65,6 +78,19 @@ export const orderLogsListQuery = gql`
               removes {
                 entity {
                   __typename
+                  ... on OrderItem {
+                    productProvider {
+                      id
+                      product {
+                        id
+                        name
+                      }
+                    }
+                  }
+                  ... on Batch {
+                    id
+                    no
+                  }
                   ... on Model {
                     id
                   }
@@ -73,6 +99,19 @@ export const orderLogsListQuery = gql`
               updates {
                 entity {
                   __typename
+                  ... on OrderItem {
+                    productProvider {
+                      id
+                      product {
+                        id
+                        name
+                      }
+                    }
+                  }
+                  ... on Batch {
+                    id
+                    no
+                  }
                   ... on Model {
                     id
                   }

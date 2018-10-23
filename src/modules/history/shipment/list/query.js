@@ -57,6 +57,10 @@ export const shipmentLogsListQuery = gql`
               adds {
                 entity {
                   __typename
+                  ... on Batch {
+                    id
+                    no
+                  }
                   ... on Model {
                     id
                   }
@@ -65,6 +69,10 @@ export const shipmentLogsListQuery = gql`
               removes {
                 entity {
                   __typename
+                  ... on Batch {
+                    id
+                    no
+                  }
                   ... on Model {
                     id
                   }
@@ -73,6 +81,10 @@ export const shipmentLogsListQuery = gql`
               updates {
                 entity {
                   __typename
+                  ... on Batch {
+                    id
+                    no
+                  }
                   ... on Model {
                     id
                   }
