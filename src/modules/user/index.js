@@ -31,7 +31,10 @@ const UserProvider = ({ children }: Props) => (
           }
 
           if (loading) return <LoadingIcon />;
-          const { user, permissions } = getByPathWithDefault({}, 'viewer', data);
+          const {
+            user = { email: '', id: '-1', firstName: '', lastName: '', language: 'en' },
+            permissions = [],
+          } = getByPathWithDefault({}, 'viewer', data);
 
           const { email, id, firstName, lastName, language } = user;
           const userProfile = {

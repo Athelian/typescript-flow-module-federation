@@ -48,7 +48,7 @@ export default class SlideView extends React.Component<Props> {
 
   componentWillUnmount() {
     const container = this.slideViewContainer;
-    if (container.parentNode) {
+    if (container.parentNode && container.parentNode.contains(container)) {
       container.parentNode.removeChild(container);
     }
   }
