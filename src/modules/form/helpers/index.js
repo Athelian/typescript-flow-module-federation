@@ -9,7 +9,9 @@ import selectSearchEnumInputFactory, {
 import selectEnumInputFactory from './selectEnumInput';
 import textAreaFactory from './textArea';
 import textInputFactory from './textInput';
-import distanceInputFactory from './distanceInput';
+import distanceInputFactory from './metricInput/distanceInput';
+import areaInputFactory from './metricInput/areaInput';
+import volumeInputFactory from './metricInput/volumeInput';
 
 export {
   parseEnumValue,
@@ -22,4 +24,6 @@ export {
   textAreaFactory,
   textInputFactory,
   distanceInputFactory,
+  areaInputFactory,
+  volumeInputFactory,
 };

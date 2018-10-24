@@ -4,19 +4,16 @@ import Icon from 'components/Icon';
 import { FieldItem, Label, Tooltip } from 'components/Form';
 import DefaultMetricStyle from 'components/Form/Inputs/MetricInput/DefaultMetricStyle';
 import MetricInput from 'components/Form/Inputs/MetricInput';
-import { type MetricValue } from 'components/Form/Inputs/MetricInput/type';
 
 import { CalculatorButtonStyle } from '../numberInput/style';
+import { type MetricInputProps } from './type';
 
-const metrics = ['cm', 'm'];
-
-const calculateValue = (value: number, metric: string, newMetric: string) => {
-  if (metric === 'm' && newMetric === 'cm') return value * 100;
-  if (metric === 'cm' && newMetric === 'm') return value / 100;
-  return value;
+type Props = MetricInputProps & {
+  metrics: Array<string>,
+  convert: Function,
 };
 
-const distanceInputFactory = ({
+const metricInputFactory = ({
   required = false,
   width = '200px',
   height = '30px',
@@ -25,26 +22,9 @@ const distanceInputFactory = ({
   label,
   inputHandlers,
   originalValue,
-}: {
-  required?: boolean,
-  align?: string,
-  width?: string,
-  height?: string,
-  label?: React.Node,
-  calculate?: Function,
-  isNew: boolean,
-  inputHandlers: {
-    name: string,
-    value: MetricValue,
-    isTouched: boolean,
-    errorMessage: string,
-    isFocused: boolean,
-    onChange: Function,
-    onFocus: Function,
-    onBlur: Function,
-  },
-  originalValue: MetricValue,
-}) => {
+  metrics,
+  convert,
+}: Props) => {
   const { isTouched, errorMessage, isFocused, ...inputHandler } = inputHandlers;
   return (
     <FieldItem
@@ -74,7 +54,7 @@ const distanceInputFactory = ({
             width={width}
             height={height}
           >
-            <MetricInput {...inputHandler} metrics={metrics} calculateValue={calculateValue} />
+            <MetricInput {...inputHandler} metrics={metrics} convert={convert} />
           </DefaultMetricStyle>
           {calculate &&
             !isFocused && (
@@ -88,4 +68,4 @@ const distanceInputFactory = ({
   );
 };
 
-export default distanceInputFactory;
+export default metricInputFactory;

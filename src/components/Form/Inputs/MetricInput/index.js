@@ -12,7 +12,7 @@ type OptionalProps = {
   onChange: Function,
   onBlur: Function,
   align: 'left' | 'right' | 'center',
-  calculateValue: Function,
+  convert: Function,
 };
 
 type Props = OptionalProps & {
@@ -52,7 +52,7 @@ export default class MetricInput extends React.Component<Props> {
       disabled,
       readOnly,
       metrics,
-      calculateValue,
+      convert,
       align,
       ...rest
     } = this.props;
@@ -84,7 +84,7 @@ export default class MetricInput extends React.Component<Props> {
             this.onChange({
               target: {
                 value: {
-                  value: calculateValue(value, metric, newMetric),
+                  value: convert(value, metric, newMetric),
                   metric: newMetric,
                 },
               },
