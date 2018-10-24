@@ -1,6 +1,23 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
+import {
+  orderFormFragment,
+  userAvatarFragment,
+  tagFragment,
+  partnerCardFragment,
+  documentFragment,
+  shipmentCardFragment,
+  priceFragment,
+  imageFragment,
+  partnerNameFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  batchFormFragment,
+  metricFragment,
+  sizeFragment,
+  orderCardFragment,
+} from 'graphql';
 import { prepareUpdateBatchInput, prepareCreateBatchInput } from 'modules/batch/form/mutation';
 import type { OrderForm } from '../type.js.flow';
 
@@ -82,7 +99,7 @@ export const updateOrderMutation = gql`
   mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
     orderUpdate(id: $id, input: $input) {
       order {
-        id
+        ...orderFormFragment
       }
       violations {
         ...violationFragment
@@ -90,6 +107,21 @@ export const updateOrderMutation = gql`
     }
   }
 
+  ${orderFormFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
+  ${partnerCardFragment}
+  ${documentFragment}
+  ${shipmentCardFragment}
+  ${priceFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${batchFormFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${orderCardFragment}
   ${violationFragment}
 `;
 

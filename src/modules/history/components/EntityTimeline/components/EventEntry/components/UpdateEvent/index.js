@@ -6,9 +6,12 @@ import { FormattedMessage } from 'react-intl';
 import { isSameDay } from 'date-fns';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
-import logger from 'utils/logger';
 import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
 import messages from 'modules/history/components/EntityTimeline/messages';
+import {
+  FormatValue,
+  findTargetChanges,
+} from 'modules/history/components/EntityTimeline/components/EventEntry/helpers';
 import {
   UpdateEventWrapperStyle,
   EventStyle,
@@ -16,10 +19,9 @@ import {
   DateStyle,
   OldStyle,
   NewStyle,
-  TargetStyle,
   FieldStyle,
+  TargetStyle,
 } from './style';
-import FormatValue from '../../helpers';
 
 type Props = {
   event: Event,
@@ -56,24 +58,7 @@ const UpdateEvent = ({ event, entityType }: Props) => (
               />
             </span>
           ),
-          target:
-            entityType === get('__typename', event.target) ? (
-              ''
-            ) : (
-              <span
-                role="link"
-                tabIndex="0"
-                className={TargetStyle}
-                onClick={() => {
-                  logger.warn(event.target);
-                }}
-                onKeyDown={() => {
-                  logger.warn(event.target);
-                }}
-              >
-                {JSON.stringify(event.target)}
-              </span>
-            ),
+          target: <span className={TargetStyle}>{findTargetChanges(entityType, event)}</span>,
           oldValue: (
             <span className={OldStyle}>
               <FormatValue value={event.updates[0].oldValue} />

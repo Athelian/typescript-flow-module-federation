@@ -240,7 +240,7 @@ const ShipmentBatchCard = ({
                       inputHandlers.onBlur(evt);
                       saveOnBlur({
                         ...batch,
-                        deliveredAt: inputHandlers.value ? new Date(inputHandlers.value) : null,
+                        deliveredAt: inputHandlers.value ? inputHandlers.value : null,
                       });
                     },
                   },

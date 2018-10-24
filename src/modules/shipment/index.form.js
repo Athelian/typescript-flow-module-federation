@@ -239,7 +239,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     </SlideViewNavBar>
                                   }
                                 >
-                                  {shipmentId ? (
+                                  {opened && shipmentId ? (
                                     <ShipmentEventsList id={decodeId(shipmentId)} perPage={10} />
                                   ) : null}
                                 </Layout>

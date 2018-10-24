@@ -4,15 +4,23 @@ import type { User } from 'modules/staff/type.js.flow';
 export type Event = {|
   id: string,
   type: string,
-  target: {
-    __typename: string,
-  },
+  adds: Array<{
+    entity: {
+      __typename: string,
+    },
+  }>,
   removes: Array<{
+    entity: {
+      __typename: string,
+    },
     field: string,
     oldValue: any,
     newValue: any,
   }>,
   updates: Array<{
+    entity: {
+      __typename: string,
+    },
     field: string,
     oldValue: any,
     newValue: any,
