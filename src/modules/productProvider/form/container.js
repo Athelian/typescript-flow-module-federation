@@ -1,8 +1,8 @@
 // @flow
 import { Container } from 'unstated';
-import { set, cloneDeep } from 'lodash';
+import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { cleanUpData, cleanFalsy } from 'utils/data';
+import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
 
 type Price = {
   amount: number,
@@ -111,6 +111,21 @@ export default class ProductProviderContainer extends Container<FormState> {
     this.setState(prevState => {
       const newState = set(cloneDeep(prevState), path, value);
       return newState;
+    });
+  };
+
+  setFieldArrayValue = (path: string, value: any) => {
+    this.setState(prevState => {
+      const newState = set(cloneDeep(prevState), path, value);
+      return newState;
+    });
+  };
+
+  removeArrayItem = (path: string) => {
+    this.setState(prevState => {
+      const cloneState = cloneDeep(prevState);
+      unset(cloneState, path);
+      return removeNulls(cloneState);
     });
   };
 
