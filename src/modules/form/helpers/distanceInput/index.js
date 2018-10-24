@@ -8,6 +8,14 @@ import { type MetricValue } from 'components/Form/Inputs/MetricInput/type';
 
 import { CalculatorButtonStyle } from '../numberInput/style';
 
+const metrics = ['cm', 'm'];
+
+const calculateValue = (value: number, metric: string, newMetric: string) => {
+  if (metric === 'm' && newMetric === 'cm') return value * 100;
+  if (metric === 'cm' && newMetric === 'm') return value / 100;
+  return value;
+};
+
 const distanceInputFactory = ({
   required = false,
   width = '200px',
@@ -68,7 +76,12 @@ const distanceInputFactory = ({
             width={width}
             height={height}
           >
-            <MetricInput name={name} {...inputHandler} metrics={['cm', 'm']} />
+            <MetricInput
+              name={name}
+              {...inputHandler}
+              metrics={metrics}
+              calculateValue={calculateValue}
+            />
           </DefaultMetricStyle>
           {calculate &&
             !isFocused && (
