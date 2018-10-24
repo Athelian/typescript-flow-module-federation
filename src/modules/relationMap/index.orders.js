@@ -8,6 +8,7 @@ import messages from 'modules/relationMap/messages';
 import { BaseButton } from 'components/Buttons';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
+import { formatNodes } from './orderFocused/formatter';
 import Layout from './common/Layout';
 import QueryHandler from './common/QueryHandler';
 import SummaryBadge from './common/SummaryBadge';
@@ -40,7 +41,8 @@ class Order extends React.PureComponent<Props> {
 
   constructor(props: Props) {
     super(props);
-    const { intl } = props;
+    const { intl, page } = props;
+    this.page = page;
     this.sortInputs = [
       { title: intl.formatMessage(messages.poSort), value: 'poNo' },
       { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
@@ -48,10 +50,12 @@ class Order extends React.PureComponent<Props> {
     ];
   }
 
+  page: number;
+
   sortInputs: Array<Object>;
 
   render() {
-    const { page, perPage, intl } = this.props;
+    const { perPage, intl } = this.props;
     return (
       <Layout>
         <RelationMapGrid>
@@ -60,11 +64,11 @@ class Order extends React.PureComponent<Props> {
               <SortFilterHandler>
                 {({ sort, filter, onChangeFilter }) => (
                   <ActionContainer>
-                    {({ clone, result, setResult }) => (
+                    {({ getCloneFunction, result, setResult }) => (
                       <Query
                         query={query}
                         variables={{
-                          page,
+                          page: this.page,
                           perPage,
                           filterBy: {
                             query: filter,
@@ -74,12 +78,13 @@ class Order extends React.PureComponent<Props> {
                           },
                         }}
                         fetchPolicy="network-only"
+                        partialRefetch
                       >
                         {({ loading, data, fetchMore, error, refetch }) => (
                           <>
                             <FocusedValue>
-                              {({ value: { focusMode, focusedItem } }) =>
-                                focusMode === 'TARGET' && (
+                              {({ value: { focusMode, focusedItem }, set: setFocusedValue }) =>
+                                (focusMode === 'TARGET' || focusMode === 'TARGET_TREE') && (
                                   <div className={FullGridWrapperStyle}>
                                     <ActionSelector target={focusedItem}>
                                       <BaseButton
@@ -88,9 +93,14 @@ class Order extends React.PureComponent<Props> {
                                         backgroundColor="TEAL"
                                         hoverBackgroundColor="TEAL_DARK"
                                         onClick={async () => {
-                                          const newState = await clone(client, focusedItem);
-                                          await refetch({ page, perPage });
-                                          setResult(newState);
+                                          const clone = getCloneFunction(focusMode);
+                                          const [newResult, newFocus] = await clone(
+                                            client,
+                                            focusedItem
+                                          );
+                                          await refetch({ page: this.page, perPage });
+                                          setResult(newResult);
+                                          setFocusedValue('focusedItem', newFocus);
                                         }}
                                       />
                                       <BaseButton
@@ -137,7 +147,8 @@ class Order extends React.PureComponent<Props> {
                               error={error}
                             >
                               {({ nodes, hasMore, loadMore }) => {
-                                const order = formatOrderData(nodes);
+                                const order = formatOrderData(nodes || []);
+                                const formattedNodes = formatNodes(nodes, result);
                                 return (
                                   <>
                                     <div className={BadgeWrapperStyle}>
@@ -169,8 +180,11 @@ class Order extends React.PureComponent<Props> {
                                     <OrderFocused
                                       order={order}
                                       hasMore={hasMore}
-                                      loadMore={loadMore}
-                                      nodes={nodes}
+                                      loadMore={() => {
+                                        loadMore();
+                                        this.page = this.page + 1;
+                                      }}
+                                      nodes={formattedNodes}
                                       result={result}
                                     />
                                   </>

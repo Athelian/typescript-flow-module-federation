@@ -18,6 +18,26 @@ export const createOrderMutation = gql`
   ${violationFragment}
 `;
 
+export const createOrderWithReturnDataMutation = gql`
+  mutation orderCreate($input: OrderCreateInput!) {
+    orderCreate(input: $input) {
+      order {
+        id
+        orderItems {
+          id
+          batches {
+            id
+          }
+        }
+      }
+      violations {
+        ...violationFragment
+      }
+    }
+  }
+  ${violationFragment}
+`;
+
 export const prepareCreateOrderInput = ({
   orderItems = [],
   files = [],
@@ -63,6 +83,27 @@ export const updateOrderMutation = gql`
     orderUpdate(id: $id, input: $input) {
       order {
         id
+      }
+      violations {
+        ...violationFragment
+      }
+    }
+  }
+
+  ${violationFragment}
+`;
+
+export const updateOrderItemMutation = gql`
+  mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
+    orderUpdate(id: $id, input: $input) {
+      order {
+        id
+        orderItems {
+          id
+          batches {
+            id
+          }
+        }
       }
       violations {
         ...violationFragment
