@@ -144,9 +144,8 @@ const PackagingSection = ({ isNew }: Props) => (
               initValue={getByPath('packageSize.length', values)}
               setFieldValue={(field, value) => setFieldArrayValue('packageSize.length', value)}
             >
-              {({ name, ...inputHandlers }) =>
+              {({ ...inputHandlers }) =>
                 distanceInputFactory({
-                  name,
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('packageSize.length', originalValues),
@@ -162,9 +161,8 @@ const PackagingSection = ({ isNew }: Props) => (
               initValue={getByPath('packageSize.width', values)}
               setFieldValue={(field, value) => setFieldArrayValue('packageSize.width', value)}
             >
-              {({ name, ...inputHandlers }) =>
+              {({ ...inputHandlers }) =>
                 distanceInputFactory({
-                  name,
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('packageSize.width', originalValues),
@@ -180,9 +178,8 @@ const PackagingSection = ({ isNew }: Props) => (
               initValue={getByPath('packageSize.height', values)}
               setFieldValue={(field, value) => setFieldArrayValue('packageSize.height', value)}
             >
-              {({ name, ...inputHandlers }) =>
+              {({ ...inputHandlers }) =>
                 distanceInputFactory({
-                  name,
                   inputHandlers,
                   isNew,
                   originalValue: getByPath('packageSize.height', originalValues),

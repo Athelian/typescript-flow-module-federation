@@ -2,13 +2,13 @@
 import * as React from 'react';
 
 import { NumberInput, SelectInput, DefaultOptions } from 'components/Form';
+import { toFloat } from 'utils/number';
 import MetricSelect from './MetricSelect';
 import { type MetricValue } from './type';
 
 type OptionalProps = {
   disabled: boolean,
   readOnly: boolean,
-  error: boolean,
   onChange: Function,
   onBlur: Function,
   align: 'left' | 'right' | 'center',
@@ -24,7 +24,6 @@ type Props = OptionalProps & {
 const defaultProps = {
   disabled: false,
   readOnly: false,
-  error: false,
   onChange: () => {},
   onBlur: () => {},
   align: 'right',
@@ -70,7 +69,7 @@ export default class MetricInput extends React.Component<Props> {
               ...evt,
               target: {
                 value: {
-                  value: evt.target.value,
+                  value: toFloat(evt.target.value),
                   metric,
                 },
               },
@@ -78,6 +77,7 @@ export default class MetricInput extends React.Component<Props> {
           }
         />
         <SelectInput
+          {...rest}
           value={metric}
           selectItem={metric}
           onChange={newMetric =>

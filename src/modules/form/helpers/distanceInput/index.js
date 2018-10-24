@@ -23,7 +23,6 @@ const distanceInputFactory = ({
   calculate,
   isNew,
   label,
-  name,
   inputHandlers,
   originalValue,
 }: {
@@ -34,7 +33,6 @@ const distanceInputFactory = ({
   label?: React.Node,
   calculate?: Function,
   isNew: boolean,
-  name: string,
   inputHandlers: {
     name: string,
     value: MetricValue,
@@ -76,12 +74,7 @@ const distanceInputFactory = ({
             width={width}
             height={height}
           >
-            <MetricInput
-              name={name}
-              {...inputHandler}
-              metrics={metrics}
-              calculateValue={calculateValue}
-            />
+            <MetricInput {...inputHandler} metrics={metrics} calculateValue={calculateValue} />
           </DefaultMetricStyle>
           {calculate &&
             !isFocused && (

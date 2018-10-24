@@ -28,6 +28,8 @@ function MetricSelect({
   selectedItem,
   getInputProps,
   itemToString,
+  isOpen,
+  clearSelection,
   ...rest
 }: Props) {
   return (
