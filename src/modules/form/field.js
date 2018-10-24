@@ -154,7 +154,7 @@ const FormField = (props: {
         onValidation,
       }) => (
         <CachedField
-          key={props.initValue}
+          key={JSON.stringify(props.initValue)}
           values={values}
           activeField={activeField}
           isTouched={touched[props.name]}

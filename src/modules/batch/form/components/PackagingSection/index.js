@@ -168,13 +168,7 @@ const PackagingSection = ({ isNew }: Props) => (
               {({ name, ...inputHandlers }) =>
                 distanceInputFactory({
                   name,
-                  inputHandlers: {
-                    ...inputHandlers,
-                    onBlur: evt => {
-                      inputHandlers.onBlur(evt);
-                      setFieldArrayValue('packageSize.width', inputHandlers.value);
-                    },
-                  },
+                  inputHandlers,
                   isNew,
                   originalValue: getByPath('packageSize.width', originalValues),
                   label: (
