@@ -19,24 +19,6 @@ import {
   partnerCardFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
-import {
-  shipmentFormFragment,
-  timelineDateFullFragment,
-  batchFormFragment,
-  userAvatarFragment,
-  metricFragment,
-  sizeFragment,
-  tagFragment,
-  priceFragment,
-  orderCardFragment,
-  imageFragment,
-  partnerNameFragment,
-  shipmentCardFragment,
-  timelineDateMinimalFragment,
-  portFragment,
-  documentFragment,
-  partnerCardFragment,
-} from 'graphql';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
 import type {
