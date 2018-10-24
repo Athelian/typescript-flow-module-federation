@@ -4,9 +4,14 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormField } from 'modules/form';
-import { textInputFactory, numberInputFactory, distanceInputFactory } from 'modules/form/helpers';
+import {
+  textInputFactory,
+  numberInputFactory,
+  distanceInputFactory,
+  weightInputFactory,
+  volumeInputFactory,
+} from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
-import { DefaultWeightStyle, DefaultVolumeStyle } from 'components/Form';
 import { getByPath } from 'utils/fp';
 import { PackagingSectionWrapperStyle } from './style';
 
@@ -94,46 +99,38 @@ const PackagingSection = ({ isNew }: Props) => (
             </FormField>
 
             <FormField
-              name="packageGrossWeight.value"
-              initValue={getByPath('packageGrossWeight.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldArrayValue('packageGrossWeight', { value, metric: 'kg' })
-              }
+              name="packageGrossWeight"
+              initValue={getByPath('packageGrossWeight', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('packageGrossWeight', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+                weightInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('packageGrossWeight.value', originalValues),
+                  originalValue: getByPath('packageGrossWeight', originalValues),
                   label: (
                     <FormattedMessage
                       id="modules.Batches.pkgGrossWeight"
                       defaultMessage="PKG GROSS WEIGHT"
                     />
                   ),
-                  WrapperComponent: DefaultWeightStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="packageVolume.value"
-              initValue={getByPath('packageVolume.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldArrayValue('packageVolume', { value, metric: 'm³' })
-              }
+              name="packageVolume"
+              initValue={getByPath('packageVolume', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('packageVolume', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+                volumeInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('packageVolume.value', originalValues),
+                  originalValue: getByPath('packageVolume', originalValues),
                   label: (
                     <FormattedMessage id="modules.Batches.pkgVolume" defaultMessage="PKG VOLUME" />
                   ),
-                  WrapperComponent: DefaultVolumeStyle,
                   calculate: calculatePackageVolume,
                 })
               }
