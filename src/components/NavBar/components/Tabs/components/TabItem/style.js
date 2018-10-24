@@ -13,6 +13,7 @@ export const TabItemStyle = (isActive: boolean): string => css`
   white-space: nowrap;
   width: 100%;
   height: 50px;
+  text-transform: uppercase;
   ${fontSizes.MEDIUM};
   letter-spacing: 2px;
   & > span {
