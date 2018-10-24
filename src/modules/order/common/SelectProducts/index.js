@@ -88,43 +88,46 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
       }}
     >
       {({ value: filtersAndSort, set: onChange }) => (
-        <ArrayValue>
-          {({ value: selected, push, set }) => (
-            <Layout
-              navBar={
-                <SlideViewNavBar>
-                  <FilterToolBar
-                    icon="PROVIDER"
-                    sortFields={sortFields}
-                    filtersAndSort={filtersAndSort}
-                    onChange={onChange}
-                  />
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton disabled={selected.length === 0} onClick={() => onSelect(selected)} />
-                </SlideViewNavBar>
-              }
-            >
-              <Query
-                query={productProvidersQuery}
-                variables={{
-                  page: 1,
-                  perPage: filtersAndSort.perPage,
-                  filter: filtersAndSort.filter,
-                  sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
-                }}
-              >
-                {({ loading, data, error, fetchMore }) => {
-                  if (error) {
-                    return error.message;
-                  }
+        <Query
+          query={productProvidersQuery}
+          variables={{
+            page: 1,
+            perPage: filtersAndSort.perPage,
+            filter: filtersAndSort.filter,
+            sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
+          }}
+        >
+          {({ loading, data, error, fetchMore }) => {
+            if (error) {
+              return error.message;
+            }
 
-                  const nextPage = getByPathWithDefault(1, 'productProviders.page', data) + 1;
-                  const totalPage = getByPathWithDefault(1, 'productProviders.totalPage', data);
-                  const hasMore = nextPage <= totalPage;
+            const nextPage = getByPathWithDefault(1, 'productProviders.page', data) + 1;
+            const totalPage = getByPathWithDefault(1, 'productProviders.totalPage', data);
+            const hasMore = nextPage <= totalPage;
 
-                  const items = getByPathWithDefault([], 'productProviders.nodes', data);
+            const items = getByPathWithDefault([], 'productProviders.nodes', data);
 
-                  return (
+            return (
+              <ArrayValue>
+                {({ value: selected, push, set }) => (
+                  <Layout
+                    navBar={
+                      <SlideViewNavBar>
+                        <FilterToolBar
+                          icon="PROVIDER"
+                          sortFields={sortFields}
+                          filtersAndSort={filtersAndSort}
+                          onChange={onChange}
+                        />
+                        <CancelButton onClick={onCancel} />
+                        <SaveButton
+                          disabled={selected.length === 0}
+                          onClick={() => onSelect(selected)}
+                        />
+                      </SlideViewNavBar>
+                    }
+                  >
                     <GridView
                       onLoadMore={() =>
                         loadMore({ fetchMore, data }, filtersAndSort, 'productProviders')
@@ -163,16 +166,17 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                         </div>
                       ))}
                     </GridView>
-                  );
-                }}
-              </Query>
-            </Layout>
-          )}
-        </ArrayValue>
+                  </Layout>
+                )}
+              </ArrayValue>
+            );
+          }}
+        </Query>
       )}
     </ObjectValue>
   );
 }
 
 SelectProducts.defaultProps = defaultProps;
+
 export default injectIntl(SelectProducts);
