@@ -1,18 +1,19 @@
 // @flow
 import * as React from 'react';
-import { type RenderSelectProps } from 'components/Form/Inputs/SelectInput/type';
 import { SelectInputStyle, MetricSelectWrapperStyle } from './style';
 
 type OptionalProps = {
   width: string,
   height: string,
   align: 'left' | 'right' | 'center',
+  toggle: () => void,
+  selectedItem: any,
+  getInputProps: Function,
 };
 
-type Props = OptionalProps &
-  RenderSelectProps & {
-    itemToString: any => string,
-  };
+type Props = OptionalProps & {
+  itemToString: any => string,
+};
 
 const defaultProps = {
   width: '30px',

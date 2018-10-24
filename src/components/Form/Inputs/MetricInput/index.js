@@ -6,15 +6,11 @@ import MetricSelect from './MetricSelect';
 import { type MetricValue } from './type';
 
 type OptionalProps = {
-  isNew: boolean,
   disabled: boolean,
   readOnly: boolean,
   error: boolean,
   onChange: Function,
   onBlur: Function,
-  isTouched: boolean,
-  errorMessage: string,
-  isFocused: boolean,
   align: 'left' | 'right' | 'center',
 };
 
@@ -25,16 +21,12 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  isNew: true,
   disabled: false,
   readOnly: false,
   error: false,
   onChange: () => {},
   onBlur: () => {},
   metrics: [],
-  isTouched: false,
-  errorMessage: '',
-  isFocused: false,
   align: 'right',
 };
 
@@ -45,6 +37,13 @@ export default class MetricInput extends React.Component<Props> {
     const { onChange } = this.props;
     if (onChange) {
       onChange(evt);
+    }
+  };
+
+  handleBlur = () => {
+    const { onBlur } = this.props;
+    if (onBlur) {
+      onBlur();
     }
   };
 
@@ -90,7 +89,7 @@ export default class MetricInput extends React.Component<Props> {
               },
             })
           }
-          clearSelection={() => {}}
+          onBlur={this.handleBlur}
           items={metrics}
           itemToValue={v => v || null}
           itemToString={v => v || ''}

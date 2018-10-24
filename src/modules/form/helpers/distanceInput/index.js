@@ -8,7 +8,7 @@ import { type MetricValue } from 'components/Form/Inputs/MetricInput/type';
 
 import { CalculatorButtonStyle } from '../numberInput/style';
 
-const metricInputFactory = ({
+const distanceInputFactory = ({
   required = false,
   width = '200px',
   height = '30px',
@@ -39,7 +39,7 @@ const metricInputFactory = ({
   },
   originalValue: MetricValue,
 }) => {
-  const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
+  const { isTouched, errorMessage, isFocused, ...inputHandler } = inputHandlers;
   return (
     <FieldItem
       label={
@@ -63,12 +63,12 @@ const metricInputFactory = ({
         <>
           <DefaultMetricStyle
             isFocused={isFocused}
-            hasError={isTouched && errorMessage != null}
+            hasError={isTouched && !!errorMessage}
             forceHoverStyle={isNew}
             width={width}
             height={height}
           >
-            <MetricInput name={name} {...rest} metrics={['cm', 'm']} />
+            <MetricInput name={name} {...inputHandler} metrics={['cm', 'm']} />
           </DefaultMetricStyle>
           {calculate &&
             !isFocused && (
@@ -82,4 +82,4 @@ const metricInputFactory = ({
   );
 };
 
-export default metricInputFactory;
+export default distanceInputFactory;

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormField } from 'modules/form';
-import { textInputFactory, numberInputFactory, metricInputFactory } from 'modules/form/helpers';
+import { textInputFactory, numberInputFactory, distanceInputFactory } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
 import { DefaultWeightStyle, DefaultVolumeStyle, DefaultDimensionStyle } from 'components/Form';
 import { getByPath } from 'utils/fp';
@@ -166,7 +166,7 @@ const PackagingSection = ({ isNew }: Props) => (
               setFieldValue={(field, value) => setFieldArrayValue('packageSize.width', value)}
             >
               {({ name, ...inputHandlers }) =>
-                metricInputFactory({
+                distanceInputFactory({
                   name,
                   inputHandlers: {
                     ...inputHandlers,
