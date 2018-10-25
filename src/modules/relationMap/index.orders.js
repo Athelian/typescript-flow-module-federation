@@ -39,23 +39,8 @@ const defaultProps = {
 class Order extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
-  constructor(props: Props) {
-    super(props);
-    const { intl, page } = props;
-    this.page = page;
-    this.sortInputs = [
-      { title: intl.formatMessage(messages.poSort), value: 'poNo' },
-      { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
-      { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
-    ];
-  }
-
-  page: number;
-
-  sortInputs: Array<Object>;
-
   render() {
-    const { perPage, intl } = this.props;
+    const { page, perPage, intl } = this.props;
     return (
       <Layout>
         <RelationMapGrid>
@@ -68,7 +53,7 @@ class Order extends React.PureComponent<Props> {
                       <Query
                         query={query}
                         variables={{
-                          page: this.page,
+                          page,
                           perPage,
                           filterBy: {
                             query: filter,
@@ -78,7 +63,6 @@ class Order extends React.PureComponent<Props> {
                           },
                         }}
                         fetchPolicy="network-only"
-                        partialRefetch
                       >
                         {({ loading, data, fetchMore, error, refetch }) => (
                           <>
@@ -98,7 +82,7 @@ class Order extends React.PureComponent<Props> {
                                             client,
                                             focusedItem
                                           );
-                                          await refetch({ page: this.page, perPage });
+                                          await refetch({ page, perPage });
                                           setResult(newResult);
                                           setFocusedValue('focusedItem', newFocus);
                                         }}
@@ -180,10 +164,7 @@ class Order extends React.PureComponent<Props> {
                                     <OrderFocused
                                       order={order}
                                       hasMore={hasMore}
-                                      loadMore={() => {
-                                        loadMore();
-                                        this.page = this.page + 1;
-                                      }}
+                                      loadMore={loadMore}
                                       nodes={formattedNodes}
                                       result={result}
                                     />

@@ -13,7 +13,7 @@ import {
   BATCH_ALL,
   SHIPMENT,
   SHIPMENT_ALL,
-} from 'modules/relationMap/messages';
+} from 'modules/relationMap/constants';
 import RelationLine from 'components/RelationMap/OrderElement/RelationLine';
 import OrderCard from 'components/RelationMap/OrderElement/OrderCard';
 import OrderItemCard from 'components/RelationMap/OrderElement/OrderItemCard';

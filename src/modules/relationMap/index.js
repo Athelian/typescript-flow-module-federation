@@ -6,7 +6,7 @@ import Products from './index.products';
 
 const RelationMap = () => (
   <Router>
-    <Order path="/orders" />
+    <Order path="/orders" default />
     <Shipment path="/shipments" />
     <Products path="/products" />
   </Router>
