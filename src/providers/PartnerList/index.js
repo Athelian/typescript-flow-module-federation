@@ -11,7 +11,11 @@ type Props = {
 
 // TODO: support pagination
 const PartnerList = ({ types, children }: Props) => (
-  <Query query={query} variables={{ page: 1, perPage: 100, filterBy: { types } }}>
+  <Query
+    fetchPolicy="network-only"
+    query={query}
+    variables={{ page: 1, perPage: 100, filterBy: { types } }}
+  >
     {({ loading, data, error }) =>
       children({
         data:

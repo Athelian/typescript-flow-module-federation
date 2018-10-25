@@ -14,7 +14,7 @@ type Props = {
 };
 
 const EnumProvider = ({ enumType, children }: Props) => (
-  <Query query={query} variables={{ enumType }}>
+  <Query fetchPolicy="network-only" query={query} variables={{ enumType }}>
     {({ loading, error, data }) =>
       children({
         loading,
