@@ -16,6 +16,8 @@ export const partnerListQuery = gql`
                 ...partnerCardFragment
               }
             }
+            page
+            totalPage
           }
         }
       }
