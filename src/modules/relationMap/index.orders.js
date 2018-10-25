@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Query, ApolloConsumer } from 'react-apollo';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'utils/fp';
 import { formatOrderData } from 'modules/relationMap/util';
 import messages from 'modules/relationMap/messages';
 import { BaseButton } from 'components/Buttons';
