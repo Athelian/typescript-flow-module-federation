@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Query, ApolloConsumer } from 'react-apollo';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { formatOrderData } from 'modules/relationMap/util';
 import messages from 'modules/relationMap/messages';
 import { BaseButton } from 'components/Buttons';
@@ -132,7 +133,9 @@ class Order extends React.PureComponent<Props> {
                             >
                               {({ nodes, hasMore, loadMore }) => {
                                 const order = formatOrderData(nodes || []);
-                                const formattedNodes = formatNodes(nodes, result);
+                                const formattedNodes = isEmpty(result)
+                                  ? nodes
+                                  : formatNodes(nodes, result);
                                 return (
                                   <>
                                     <div className={BadgeWrapperStyle}>

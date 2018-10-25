@@ -3,7 +3,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { createBatchMutation } from 'modules/batch/form/mutation';
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
 import { createOrderMutation, updateOrderItemMutation } from 'modules/order/form/mutation';
-import { createMutationRequest, formatResult } from './index';
+import { createMutationRequest } from './index';
 
 export const cloneOrder = async (client, order) => {
   const mutationRequest = createMutationRequest(client);
@@ -109,6 +109,7 @@ export const cloneBatch = async (client, batch) => {
   const batchIds = Object.keys(batch);
   const batchRequests = batchIds.map(batchId => {
     const currentBatch = batch[batchId];
+    const orderItemId = getByPathWithDefault('', 'orderItem.id', currentBatch);
     const request = mutationRequest(
       {
         mutation: createBatchMutation,
@@ -116,17 +117,27 @@ export const cloneBatch = async (client, batch) => {
           input: {
             no: `[cloned] ${currentBatch.no}`,
             quantity: currentBatch.quantity,
-            orderItemId: currentBatch.orderItem && currentBatch.orderItem.id,
+            orderItemId,
           },
         },
       },
-      batchId
+      orderItemId
     );
     return request;
   });
   const newBatches = await Promise.all(batchRequests);
-  const batchResult = formatResult(newBatches, 'batchCreate.batch.id', batchIds);
-  return [batchResult, batchResult.itemId];
+  const batchResult = newBatches.reduce((batchResultObj, newBatch) => {
+    const { refId } = newBatch;
+    const batchId = getByPathWithDefault('', 'data.batchCreate.batch.id', newBatch);
+    return Object.assign(batchResultObj, {
+      [refId]: [...(batchResultObj[refId] || []), { id: batchId }],
+    });
+  }, {});
+  const batchFocus = newBatches.reduce((batchResultObj, newBatch) => {
+    const batchId = getByPathWithDefault('', 'data.batchCreate.batch.id', newBatch);
+    return Object.assign(batchResultObj, { [batchId]: true });
+  }, {});
+  return [batchResult, batchFocus];
 };
 
 export const cloneShipment = async (client, shipment) => {
