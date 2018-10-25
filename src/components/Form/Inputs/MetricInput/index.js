@@ -2,20 +2,17 @@
 import * as React from 'react';
 
 import { NumberInput, SelectInput, DefaultOptions } from 'components/Form';
+import { toFloat } from 'utils/number';
 import MetricSelect from './MetricSelect';
 import { type MetricValue } from './type';
 
 type OptionalProps = {
-  isNew: boolean,
   disabled: boolean,
   readOnly: boolean,
-  error: boolean,
   onChange: Function,
   onBlur: Function,
-  isTouched: boolean,
-  errorMessage: string,
-  isFocused: boolean,
   align: 'left' | 'right' | 'center',
+  convert: Function,
 };
 
 type Props = OptionalProps & {
@@ -25,33 +22,27 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  isNew: true,
   disabled: false,
   readOnly: false,
-  error: false,
   onChange: () => {},
   onBlur: () => {},
-  metrics: [],
-  isTouched: false,
-  errorMessage: '',
-  isFocused: false,
   align: 'right',
 };
 
 export default class MetricInput extends React.Component<Props> {
   static defaultProps = defaultProps;
 
-  onChange = ({ value, metric }: MetricValue) => {
-    const { name, onChange } = this.props;
+  onChange = (evt: any) => {
+    const { onChange } = this.props;
     if (onChange) {
-      onChange(name, { value, metric });
+      onChange(evt);
     }
   };
 
   handleBlur = () => {
-    const { name, onBlur } = this.props;
+    const { onBlur } = this.props;
     if (onBlur) {
-      onBlur(name, true);
+      onBlur();
     }
   };
 
@@ -61,26 +52,52 @@ export default class MetricInput extends React.Component<Props> {
       disabled,
       readOnly,
       metrics,
+      convert,
       align,
+      ...rest
     } = this.props;
 
     return (
       <>
         <NumberInput
+          {...rest}
           value={value}
           disabled={disabled}
           readOnly={readOnly}
-          onChange={e => this.onChange({ value: e.target.value, metric })}
+          onChange={evt =>
+            this.onChange({
+              ...evt,
+              target: {
+                value: {
+                  value: toFloat(evt.target.value),
+                  metric,
+                },
+              },
+            })
+          }
         />
         <SelectInput
+          {...rest}
           value={metric}
           selectItem={metric}
-          onChange={newMetric => this.onChange({ value, metric: newMetric })}
+          onChange={newMetric =>
+            this.onChange({
+              target: {
+                value: {
+                  value: convert(value, metric, newMetric),
+                  metric: newMetric,
+                },
+              },
+            })
+          }
+          onBlur={this.handleBlur}
           items={metrics}
           itemToValue={v => v || null}
           itemToString={v => v || ''}
-          renderSelect={({ ...rest }) => <MetricSelect {...rest} align={align} />}
-          renderOptions={({ ...rest }) => <DefaultOptions width="30px" {...rest} align={align} />}
+          renderSelect={({ ...selectProps }) => <MetricSelect {...selectProps} align={align} />}
+          renderOptions={({ ...optionsProps }) => (
+            <DefaultOptions width="30px" {...optionsProps} align={align} />
+          )}
         />
       </>
     );
