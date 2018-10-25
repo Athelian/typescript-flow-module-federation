@@ -1,6 +1,3 @@
-import { getByPathWithDefault } from 'utils/fp';
-import { difference } from 'lodash';
-
 export const ORDER_HEADER = 'ORDER_HEADER';
 export const ORDER_ITEM_ALL = 'ORDER_ITEM_ALL';
 export const BATCH_ALL = 'BATCH_ALL';
@@ -137,7 +134,7 @@ const generateCollapsedRelation = (order, option) => {
 };
 
 const generateRelation = (order, option) => {
-  const { isCollapsed, result } = option;
+  const { isCollapsed } = option;
   const relations = generateCollapsedRelation(order, option);
   if (isCollapsed) {
     return relations;
@@ -164,30 +161,9 @@ const generateRelation = (order, option) => {
       orderItemIndex,
       relatedOrderItem: relatedProductIds.filter(id => id !== orderItem.id),
     });
-    const batchExcludeIds = [];
     batches.forEach((batch, batchIndex) => {
-      const itemId = getByPathWithDefault({}, 'batch.itemId', result);
-      const refId = getByPathWithDefault({}, 'batch.refId', result);
       const relatedBatchIds = getRelatedIds(batches, batchIndex);
-      if (itemId[batch.id]) {
-        return;
-      }
-      const newBatch = refId[batch.id];
-      if (newBatch) {
-        Object.keys(newBatch).forEach(newBatchId => {
-          batchExcludeIds.push(newBatchId);
-          batchRelation.generateBatchRelation(
-            newBatchId,
-            [...relatedBatchIds, newBatchId],
-            batchIndex
-          );
-          const relatedIds = difference(relatedBatchIds, batchExcludeIds);
-          batchRelation.generateOtherBatch(batch.id, relatedIds);
-        });
-      } else {
-        const relatedIds = difference(relatedBatchIds, batchExcludeIds);
-        batchRelation.generateBatchRelation(batch.id, relatedIds, batchIndex);
-      }
+      batchRelation.generateBatchRelation(batch.id, relatedBatchIds, batchIndex);
     });
   });
   return relations;
