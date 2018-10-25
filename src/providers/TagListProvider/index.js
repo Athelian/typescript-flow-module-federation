@@ -10,8 +10,13 @@ type Props = {
   tagType: TagsQueryType,
 };
 
+// TODO: need to have pagination if > 100 tags
 const TagListProvider = ({ children, tagType }: Props) => (
-  <Query query={tagsQuery} variables={{ page: 1, perPage: 100, entityTypes: [tagType] }}>
+  <Query
+    fetchPolicy="network-only"
+    query={tagsQuery}
+    variables={{ page: 1, perPage: 100, entityTypes: [tagType] }}
+  >
     {({ loading, data }) =>
       children({
         data: !loading && data ? getByPathWithDefault([], `tags.nodes`, data) : [],
