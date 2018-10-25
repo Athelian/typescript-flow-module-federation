@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { navigate, Location } from '@reach/router';
+import { Location, navigate } from '@reach/router';
+import { Subscribe } from 'unstated';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { injectUid } from 'utils/id';
 import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
 import Tabs from 'components/NavBar/components/Tabs';
@@ -11,30 +11,28 @@ import { EntityIcon, RelationMapNavBar } from 'components/NavBar';
 import { ContentWrapperStyle } from 'modules/relationMap/style';
 import messages from 'modules/relationMap/messages';
 import FloatMenu from 'components/RelationMap/FloatMenu';
+import RelationMapContainer from 'modules/relationMap/container';
 
 type Props = {
   intl: IntlShape,
   children: React.Node,
 };
 
-const ENABLE_SHIPMENT_FOCUSED = false;
-
 const RelationMapLayout = ({ intl, children }: Props) => {
   const tabs = [
-    { key: 'orders', icon: 'ORDER', label: intl.formatMessage(messages.ordersTab) },
-    ENABLE_SHIPMENT_FOCUSED && {
-      key: 'shipments',
-      icon: 'SHIPMENT',
-      label: intl.formatMessage(messages.shipmentsTab),
+    {
+      id: 'order-menu-1',
+      key: 'orders',
+      icon: 'ORDER',
+      label: intl.formatMessage(messages.ordersTab),
     },
-    { key: 'products', icon: 'PRODUCT', label: intl.formatMessage(messages.productsTab) },
+    {
+      id: 'order-menu-2',
+      key: 'products',
+      icon: 'PRODUCT',
+      label: intl.formatMessage(messages.productsTab),
+    },
   ].filter(Boolean);
-
-  const onChangeTab = tabIndex => {
-    if (tabs[tabIndex] && tabs[tabIndex].key) {
-      navigate(`/relation-map/${tabs[tabIndex].key}`);
-    }
-  };
 
   return (
     <UIConsumer>
@@ -45,28 +43,29 @@ const RelationMapLayout = ({ intl, children }: Props) => {
             <RelationMapNavBar>
               <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
               <Location>
-                {({ location }) => {
-                  // $FlowFixMe
-                  const activeIndex = tabs.findIndex(({ key }) => {
-                    const path = `/relation-map/${key}`;
-                    return path === location.pathname;
-                  });
-
-                  return (
-                    <Tabs
-                      // $FlowFixMe
-                      tabs={tabs.map(injectUid)}
-                      onChange={onChangeTab}
-                      activeIndex={activeIndex}
-                    />
-                  );
-                }}
+                {({ location }) => (
+                  <Tabs
+                    tabs={tabs}
+                    activeIndex={location.pathname.includes('products') ? 1 : 0}
+                    onChange={tabId => {
+                      if (tabId) {
+                        navigate('products');
+                      } else {
+                        navigate('orders');
+                      }
+                    }}
+                  />
+                )}
               </Location>
             </RelationMapNavBar>
           }
         >
           <div className={ContentWrapperStyle}>{children}</div>
-          <FloatMenu />
+          <Subscribe to={[RelationMapContainer]}>
+            {({ isTargetTreeMode, isTargetMode }) =>
+              isTargetMode() || isTargetTreeMode() ? <FloatMenu /> : null
+            }
+          </Subscribe>
         </Layout>
       )}
     </UIConsumer>

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import { Query, ApolloConsumer } from 'react-apollo';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
@@ -13,10 +14,10 @@ import Layout from './common/Layout';
 import QueryHandler from './common/QueryHandler';
 import SummaryBadge from './common/SummaryBadge';
 import ToggleTag from './common/ToggleTag';
-import FocusedValue from './common/FocusedValue';
 import ActionSelector from './common/ActionPanel/ActionSelector';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
 import { ActionContainer } from './containers';
+import RelationMapContainer from './container';
 import {
   FunctionWrapperStyle,
   BadgeWrapperStyle,
@@ -66,9 +67,14 @@ class Order extends React.PureComponent<Props> {
                       >
                         {({ loading, data, fetchMore, error, refetch }) => (
                           <>
-                            <FocusedValue>
-                              {({ value: { focusMode, focusedItem }, set: setFocusedValue }) =>
-                                (focusMode === 'TARGET' || focusMode === 'TARGET_TREE') && (
+                            <Subscribe to={[RelationMapContainer]}>
+                              {({
+                                state: { focusMode, focusedItem },
+                                isTargetTreeMode,
+                                isTargetMode,
+                                selectItem,
+                              }) =>
+                                (isTargetMode() || isTargetTreeMode()) && (
                                   <div className={FullGridWrapperStyle}>
                                     <ActionSelector target={focusedItem}>
                                       <BaseButton
@@ -84,14 +90,13 @@ class Order extends React.PureComponent<Props> {
                                           );
                                           await refetch({ page, perPage });
                                           setResult(newResult);
-                                          setFocusedValue('focusedItem', newFocus);
+                                          selectItem(newFocus);
                                         }}
                                       />
                                       <BaseButton
                                         icon="SPLIT"
                                         label="SPLIT"
                                         backgroundColor="TEAL"
-                                        s
                                         hoverBackgroundColor="TEAL_DARK"
                                         onClick={() => {}}
                                       />
@@ -113,7 +118,7 @@ class Order extends React.PureComponent<Props> {
                                   </div>
                                 )
                               }
-                            </FocusedValue>
+                            </Subscribe>
                             <div className={TagWrapperStyle}>
                               <ToggleTag />
                             </div>

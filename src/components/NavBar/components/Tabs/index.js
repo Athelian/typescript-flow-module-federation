@@ -10,7 +10,6 @@ type Props = OptionalProps & {
   tabs: Array<{ id: string, icon: string, label: string | React.Node }>,
   disabled?: boolean,
   onChange: number => void,
-  activeIndex?: number,
 };
 
 type State = {
