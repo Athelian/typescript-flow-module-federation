@@ -28,6 +28,7 @@ class ActionContainer extends React.Component<Props, State> {
 
   clone = async (client: any, target: Object) => {
     const { batch, order, orderItem, shipment } = target;
+    // TODO: should run in parallel
     const [orderResults, orderFocus] = await cloneOrder(client, order);
     const [shipmentResults, shipmentFocus] = await cloneShipment(client, shipment);
     const [orderItemResult, orderItemFocus] = await cloneOrderItem(client, orderItem);
