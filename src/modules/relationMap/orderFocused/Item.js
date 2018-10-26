@@ -1,9 +1,8 @@
 // @flow
 import React from 'react';
+import { Subscribe } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
 import { cx } from 'react-emotion';
-// import update from 'immutability-helper'
-import FocusedValue from 'modules/relationMap/common/FocusedValue';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import {
@@ -11,6 +10,7 @@ import {
   ShipmentCardStyle,
   ShipmentCardTotalStyle,
 } from 'modules/relationMap/common/RelationItem/style';
+import RelationMapContainer from 'modules/relationMap/container';
 import BaseCard from 'components/Cards';
 import { CardAction } from 'components/Cards/BaseCard';
 import {
@@ -77,11 +77,10 @@ const isFocusedLink = (focusedItem, relatedIds) =>
 
 const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) => {
   const { relatedIds, type, id } = relation;
-  const { data, relation: itemRelation } = itemData;
+  const { data = {}, relation: itemRelation } = itemData;
   return (
-    <FocusedValue>
-      {({ value, assign: setItem, reset }) => {
-        const { focusedItem, focusMode } = value;
+    <Subscribe to={[RelationMapContainer]}>
+      {({ state: { focusedItem, focusMode }, changeFocusItem, reset }) => {
         if (isRelationLine(type)) {
           const [, linkType, relationType] = relation.type.split('-') || [];
           const lineItemType = getItemType(relationType);
@@ -97,7 +96,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           );
         }
         const onClickHighlight = mode => () =>
-          setItem({ focusedItem: itemRelation || {}, focusMode: mode });
+          changeFocusItem({ focusedItem: itemRelation || {}, focusMode: mode });
         const onClickTarget = () => {
           const item = focusMode === 'TARGET' ? focusedItem : initFocusObj();
           const targetItem = Object.assign(item, {
@@ -106,7 +105,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
               [data.id]: data,
             },
           });
-          setItem({ focusedItem: targetItem, focusMode: 'TARGET' });
+          changeFocusItem({ focusedItem: targetItem, focusMode: 'TARGET' });
         };
         const isFocused = getByPathWithDefault(false, `${itemType}.${id}` || '', focusedItem);
         const cardWrapperClass = ItemWrapperStyle(isFocused, focusMode);
@@ -120,7 +119,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             return <div />;
           }
           case ORDER_HEADER: {
-            return <OrderHeader label={`ORDER ${data.id}`} isChecked />;
+            return <OrderHeader label={`ORDER ${data.id || ''}`} isChecked />;
           }
           case ORDER: {
             return (
@@ -227,10 +226,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                     {({ assign: setSlide }) => {
                       const onDoubleClick = () => setSlide({ show: true, type, id });
                       return (
-                        <WrapperCard
-                          onClick={onClickHighlight('HIGHLIGHT')}
-                          onDoubleClick={onDoubleClick}
-                        >
+                        <WrapperCard onClick={onClickTarget} onDoubleClick={onDoubleClick}>
                           <ShipmentCard shipment={data} />
                           <TagValue>
                             {({ value: isToggle }) =>
@@ -275,7 +271,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
         }
       }}
-    </FocusedValue>
+    </Subscribe>
   );
 };
 

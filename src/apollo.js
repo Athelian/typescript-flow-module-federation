@@ -41,7 +41,7 @@ class SubscriptionSSE {
       }
     };
     this.source.onerror = msg => {
-      logger.error(msg.message);
+      logger.error(msg);
       this.unsubscribe();
 
       const retryTimeout = setTimeout(() => {

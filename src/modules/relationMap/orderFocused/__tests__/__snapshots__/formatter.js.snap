@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`_formatNodes format batches 1`] = `
+Array [
+  Object {
+    "id": 1,
+    "orderItems": Array [
+      Object {
+        "batches": Array [
+          Object {
+            "id": 12,
+          },
+          Object {
+            "id": 14,
+          },
+          Object {
+            "id": 1,
+          },
+          Object {
+            "id": 11,
+          },
+          Object {
+            "id": 13,
+          },
+        ],
+        "id": 1,
+      },
+    ],
+  },
+]
+`;
+
+exports[`_formatNodes format mess data 1`] = `
+Array [
+  Object {
+    "id": 1,
+    "orderItems": Array [
+      Object {
+        "batches": Array [
+          Object {
+            "id": 12,
+          },
+          Object {
+            "id": 14,
+          },
+          Object {
+            "id": 1,
+          },
+          Object {
+            "id": 11,
+          },
+          Object {
+            "id": 13,
+          },
+        ],
+        "id": 1,
+      },
+    ],
+  },
+  Object {
+    "id": 2,
+    "orderItems": Array [
+      Object {
+        "batches": Array [],
+        "id": 4,
+      },
+      Object {
+        "batches": Array [],
+        "id": 2,
+      },
+      Object {
+        "batches": Array [],
+        "id": 3,
+      },
+    ],
+  },
+]
+`;
+
+exports[`_formatNodes format newOrderItem 1`] = `
+Array [
+  Object {
+    "id": 1,
+    "orderItems": Array [
+      Object {
+        "batches": Array [],
+        "id": 4,
+      },
+      Object {
+        "batches": Array [],
+        "id": 1,
+      },
+      Object {
+        "batches": Array [],
+        "id": 2,
+      },
+      Object {
+        "batches": Array [],
+        "id": 3,
+      },
+    ],
+  },
+]
+`;
+
+exports[`_formatNodes format order 1`] = `
+Array [
+  Object {
+    "id": 2,
+    "orderItems": Array [],
+  },
+  Object {
+    "id": 4,
+    "orderItems": Array [],
+  },
+  Object {
+    "id": 1,
+    "orderItems": Array [],
+  },
+  Object {
+    "id": 3,
+    "orderItems": Array [],
+  },
+]
+`;

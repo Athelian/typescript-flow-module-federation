@@ -57,16 +57,64 @@ export const orderLogsListQuery = gql`
               adds {
                 entity {
                   __typename
+                  ... on OrderItem {
+                    productProvider {
+                      id
+                      product {
+                        id
+                        name
+                      }
+                    }
+                  }
+                  ... on Batch {
+                    id
+                    no
+                  }
+                  ... on Model {
+                    id
+                  }
                 }
               }
               removes {
                 entity {
                   __typename
+                  ... on OrderItem {
+                    productProvider {
+                      id
+                      product {
+                        id
+                        name
+                      }
+                    }
+                  }
+                  ... on Batch {
+                    id
+                    no
+                  }
+                  ... on Model {
+                    id
+                  }
                 }
               }
               updates {
                 entity {
                   __typename
+                  ... on OrderItem {
+                    productProvider {
+                      id
+                      product {
+                        id
+                        name
+                      }
+                    }
+                  }
+                  ... on Batch {
+                    id
+                    no
+                  }
+                  ... on Model {
+                    id
+                  }
                 }
                 field
                 oldValue

@@ -76,70 +76,74 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
       }}
     >
       {({ value: filtersAndSort, set: onChange }) => (
-        <ArrayValue>
-          {({ value: selected, push, set }) => (
-            <Layout
-              navBar={
-                <SlideViewNavBar>
-                  <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
-                  <SortInput
-                    sort={
-                      fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]
-                    }
-                    ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
-                    fields={fields}
-                    onChange={({ field: { value }, ascending }) =>
-                      onChange({
-                        ...filtersAndSort,
-                        sort: {
-                          field: value,
-                          direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                        },
-                      })
-                    }
-                  />
-                  <SearchInput
-                    value={filtersAndSort.filter.query}
-                    name="search"
-                    onClear={() =>
-                      onChange({
-                        ...filtersAndSort,
-                        filter: { ...filtersAndSort.filter, query: '' },
-                      })
-                    }
-                    onChange={newQuery =>
-                      onChange({
-                        ...filtersAndSort,
-                        filter: { ...filtersAndSort.filter, query: newQuery },
-                      })
-                    }
-                  />
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton disabled={selected.length === 0} onClick={() => onSelect(selected)} />
-                </SlideViewNavBar>
-              }
-            >
-              <Query
-                query={orderItemsQuery}
-                variables={{
-                  page: 1,
-                  perPage: filtersAndSort.perPage,
-                  filter: filtersAndSort.filter,
-                  sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
-                }}
-              >
-                {({ loading, data, error, fetchMore }) => {
-                  if (error) {
-                    return error.message;
-                  }
+        <Query
+          query={orderItemsQuery}
+          variables={{
+            page: 1,
+            perPage: filtersAndSort.perPage,
+            filter: filtersAndSort.filter,
+            sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
+          }}
+        >
+          {({ loading, data, error, fetchMore }) => {
+            if (error) {
+              return error.message;
+            }
 
-                  const nextPage = getByPathWithDefault(1, 'orderItems.page', data) + 1;
-                  const totalPage = getByPathWithDefault(1, 'orderItems.totalPage', data);
-                  const hasMore = nextPage <= totalPage;
+            const nextPage = getByPathWithDefault(1, 'orderItems.page', data) + 1;
+            const totalPage = getByPathWithDefault(1, 'orderItems.totalPage', data);
+            const hasMore = nextPage <= totalPage;
 
-                  const items = getByPathWithDefault([], 'orderItems.nodes', data);
+            const items = getByPathWithDefault([], 'orderItems.nodes', data);
 
-                  return (
+            return (
+              <ArrayValue>
+                {({ value: selected, push, set }) => (
+                  <Layout
+                    navBar={
+                      <SlideViewNavBar>
+                        <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
+                        <SortInput
+                          sort={
+                            fields.find(item => item.value === filtersAndSort.sort.field) ||
+                            fields[0]
+                          }
+                          ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+                          fields={fields}
+                          onChange={({ field: { value }, ascending }) =>
+                            onChange({
+                              ...filtersAndSort,
+                              sort: {
+                                field: value,
+                                direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                              },
+                            })
+                          }
+                        />
+                        <SearchInput
+                          value={filtersAndSort.filter.query}
+                          name="search"
+                          onClear={() =>
+                            onChange({
+                              ...filtersAndSort,
+                              filter: { ...filtersAndSort.filter, query: '' },
+                            })
+                          }
+                          onChange={newQuery =>
+                            onChange({
+                              ...filtersAndSort,
+                              filter: { ...filtersAndSort.filter, query: newQuery },
+                            })
+                          }
+                        />
+                        <CancelButton onClick={onCancel} />
+                        <SaveButton
+                          disabled={selected.length === 0}
+                          onClick={() => onSelect(selected)}
+                        />
+                      </SlideViewNavBar>
+                    }
+                  >
                     <GridView
                       onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orderItems')}
                       hasMore={hasMore}
@@ -176,12 +180,12 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                         </div>
                       ))}
                     </GridView>
-                  );
-                }}
-              </Query>
-            </Layout>
-          )}
-        </ArrayValue>
+                  </Layout>
+                )}
+              </ArrayValue>
+            );
+          }}
+        </Query>
       )}
     </ObjectValue>
   );

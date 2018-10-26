@@ -46,9 +46,11 @@ export default class Dialog extends React.Component<Props> {
     }
 
     if (prevProps.isOpen && !isOpen) {
-      if (dialogRoot.contains(this.dialogContainer)) {
-        setTimeout(() => dialogRoot.removeChild(this.dialogContainer), ANIMATION_FINISHED);
-      }
+      setTimeout(() => {
+        if (dialogRoot.contains(this.dialogContainer)) {
+          dialogRoot.removeChild(this.dialogContainer);
+        }
+      }, ANIMATION_FINISHED);
     }
   }
 

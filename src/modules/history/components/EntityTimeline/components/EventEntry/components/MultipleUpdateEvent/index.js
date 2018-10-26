@@ -7,10 +7,12 @@ import { isSameDay } from 'date-fns';
 import FormattedDate from 'components/FormattedDate';
 import FormattedName from 'components/FormattedName';
 import Icon from 'components/Icon';
-import logger from 'utils/logger';
 import type { Event } from 'modules/history/components/EntityTimeline/type.js.flow';
 import messages from 'modules/history/components/EntityTimeline/messages';
-import FormatValue from '../../helpers';
+import {
+  FormatValue,
+  findTargetChanges,
+} from 'modules/history/components/EntityTimeline/components/EventEntry/helpers';
 import {
   MultipleUpdateEventWrapperStyle,
   ButtonStyle,
@@ -74,26 +76,7 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
                     />
                   </span>
                 ),
-                target:
-                  entityType === get('__typename', event.target) ? (
-                    ''
-                  ) : (
-                    <span
-                      role="link"
-                      tabIndex="0"
-                      className={TargetStyle}
-                      onClick={e => {
-                        e.stopPropagation();
-                        logger.warn(event.target);
-                      }}
-                      onKeyDown={e => {
-                        e.stopPropagation();
-                        logger.warn(event.target);
-                      }}
-                    >
-                      {JSON.stringify(event.target)}
-                    </span>
-                  ),
+                target: <span className={TargetStyle}>{findTargetChanges(entityType, event)}</span>,
                 count: event.updates.length,
               }}
             />
@@ -105,7 +88,7 @@ export default class MultipleUpdateEvent extends React.Component<Props, State> {
         {isExpanded && (
           <div className={UpdateListStyle}>
             {event.updates.map(change => (
-              <div className={ChangeStyle} key={change.field}>
+              <div className={ChangeStyle} key={`${get('entity.id', change)}-${change.field}`}>
                 <FormattedMessage
                   {...(change.oldValue
                     ? messages.multipleUpdateEventChange

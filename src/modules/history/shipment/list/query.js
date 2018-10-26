@@ -57,16 +57,37 @@ export const shipmentLogsListQuery = gql`
               adds {
                 entity {
                   __typename
+                  ... on Batch {
+                    id
+                    no
+                  }
+                  ... on Model {
+                    id
+                  }
                 }
               }
               removes {
                 entity {
                   __typename
+                  ... on Batch {
+                    id
+                    no
+                  }
+                  ... on Model {
+                    id
+                  }
                 }
               }
               updates {
                 entity {
                   __typename
+                  ... on Batch {
+                    id
+                    no
+                  }
+                  ... on Model {
+                    id
+                  }
                 }
                 field
                 oldValue

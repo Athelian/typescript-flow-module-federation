@@ -7,6 +7,8 @@ import { EmptyMessageStyle, InfiniteScrollWrapperStyle } from '../style';
 type OptionalProps = {
   isLoading: boolean,
   spacing: number,
+  customRender?: () => React.Node,
+  render?: (item: Object) => React.Node,
 };
 
 type Props = OptionalProps & {
@@ -14,9 +16,8 @@ type Props = OptionalProps & {
   emptyMessage: any,
   onLoadMore: Function,
   hasMore: boolean,
-  items: Array<Object>,
+  items?: Array<Object>,
   className: string,
-  render: (item: Object) => React.Node,
 };
 
 const defaultProps = {
@@ -38,6 +39,7 @@ class RelationView extends React.PureComponent<Props> {
       render,
       className,
       spacing,
+      customRender,
     } = this.props;
     if (isLoading) {
       return <LoadingIcon />;
@@ -54,7 +56,8 @@ class RelationView extends React.PureComponent<Props> {
           loader={<LoadingIcon key="loading" />}
           useWindow={false}
         >
-          {items.map((item, index) => render({ item, index }))}
+          {customRender && customRender()}
+          {!customRender && items && render && items.map((item, index) => render({ item, index }))}
         </InfiniteScroll>
       </div>
     );

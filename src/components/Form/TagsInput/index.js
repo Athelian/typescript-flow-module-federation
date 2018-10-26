@@ -9,7 +9,7 @@ import BaseTagsInput from './BaseTagsInput';
 
 type Props = PermissionProps & TagsInputProps & { tagType: TagsQueryType };
 
-export default function SimpleDropDown(props: Props) {
+export default function TagsInput(props: Props) {
   const { permissions, tagType, ...rest } = props;
   return (
     <TagListProvider tagType={tagType}>

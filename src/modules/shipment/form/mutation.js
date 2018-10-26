@@ -1,5 +1,23 @@
 // @flow
 import gql from 'graphql-tag';
+import {
+  shipmentFormFragment,
+  timelineDateFullFragment,
+  batchFormFragment,
+  userAvatarFragment,
+  metricFragment,
+  sizeFragment,
+  tagFragment,
+  priceFragment,
+  orderCardFragment,
+  imageFragment,
+  partnerNameFragment,
+  shipmentCardFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  documentFragment,
+  partnerCardFragment,
+} from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
@@ -34,7 +52,7 @@ const formatTimeline = (timeline: Object): ?CargoReady => {
 
 const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
   voyages.map(({ id, departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
-    id,
+    id: id && id.includes('-') ? null : id,
     vesselCode,
     vesselName,
     departurePort: !departurePort
@@ -74,6 +92,36 @@ export const createShipmentMutation: Object = gql`
     }
   }
   ${violationFragment}
+`;
+
+export const createShipmentWithReturnDataMutation: Object = gql`
+  mutation shipmentCreate($input: ShipmentCreateInput!) {
+    shipmentCreate(input: $input) {
+      shipment {
+        ...shipmentFormFragment
+      }
+      violations {
+        ...violationFragment
+      }
+    }
+  }
+  ${violationFragment}
+  ${shipmentFormFragment}
+  ${timelineDateFullFragment}
+  ${batchFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${documentFragment}
+  ${partnerCardFragment}
 `;
 
 export const prepareCreateShipmentInput = ({
@@ -120,13 +168,30 @@ export const updateShipmentMutation: Object = gql`
   mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
     shipmentUpdate(id: $id, input: $input) {
       shipment {
-        id
+        ...shipmentFormFragment
       }
       violations {
         ...violationFragment
       }
     }
   }
+
+  ${shipmentFormFragment}
+  ${timelineDateFullFragment}
+  ${batchFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${documentFragment}
+  ${partnerCardFragment}
   ${violationFragment}
 `;
 

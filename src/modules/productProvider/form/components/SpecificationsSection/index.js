@@ -8,9 +8,11 @@ import {
   textInputFactory,
   numberInputFactory,
   selectSearchEnumInputFactory,
+  weightInputFactory,
+  volumeInputFactory,
+  distanceInputFactory,
 } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
-import { DefaultWeightStyle, DefaultVolumeStyle, DefaultDimensionStyle } from 'components/Form';
 import { getByPath } from 'utils/fp';
 import { SpecificationsSectionWrapperStyle } from './style';
 
@@ -21,7 +23,7 @@ type Props = {
 const SpecificationsSection = ({ isNew }: Props) => (
   <div className={SpecificationsSectionWrapperStyle}>
     <Subscribe to={[ProductProviderContainer]}>
-      {({ originalValues, state, setFieldValue, calculateUnitVolume }) => {
+      {({ originalValues, state, setFieldValue, setFieldArrayValue, calculateUnitVolume }) => {
         // $FlowFixMe
         const values = { ...originalValues, ...state };
 
@@ -88,118 +90,102 @@ const SpecificationsSection = ({ isNew }: Props) => (
             </FormField>
 
             <FormField
-              name="unitWeight.value"
-              initValue={getByPath('unitWeight.value', values)}
-              setFieldValue={(field, value) => setFieldValue('unitWeight', { value, metric: 'kg' })}
+              name="unitWeight"
+              initValue={getByPath('unitWeight', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('unitWeight', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+                weightInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('unitWeight.value', originalValues),
+                  originalValue: getByPath('unitWeight', originalValues),
                   label: (
                     <FormattedMessage
                       id="modules.ProductProviders.unitWeight"
                       defaultMessage="UNIT WEIGHT"
                     />
                   ),
-                  WrapperComponent: DefaultWeightStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="unitVolume.value"
-              initValue={getByPath('unitVolume.value', values)}
-              setFieldValue={(field, value) => setFieldValue('unitVolume', { value, metric: 'm³' })}
+              name="unitVolume"
+              initValue={getByPath('unitVolume', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('unitVolume', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+                volumeInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('unitVolume.value', originalValues),
+                  originalValue: getByPath('unitVolume', originalValues),
                   label: (
                     <FormattedMessage
                       id="modules.ProductProviders.unitVolume"
                       defaultMessage="UNIT VOLUME"
                     />
                   ),
-                  WrapperComponent: DefaultVolumeStyle,
                   calculate: calculateUnitVolume,
                 })
               }
             </FormField>
 
             <FormField
-              name="unitSize.length.value"
-              initValue={getByPath('unitSize.length.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldValue('unitSize.length', { value, metric: 'm' })
-              }
+              name="unitSize.length"
+              initValue={getByPath('unitSize.length', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('unitSize.length', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+                distanceInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('unitSize.length.value', originalValues),
+                  originalValue: getByPath('unitSize.length', originalValues),
                   label: (
                     <FormattedMessage
                       id="modules.ProductProviders.unitLength"
                       defaultMessage="UNIT LENGTH"
                     />
                   ),
-                  WrapperComponent: DefaultDimensionStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="unitSize.width.value"
-              initValue={getByPath('unitSize.width.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldValue('unitSize.width', { value, metric: 'm' })
-              }
+              name="unitSize.width"
+              initValue={getByPath('unitSize.width', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('unitSize.width', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+                distanceInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('unitSize.width.value', originalValues),
+                  originalValue: getByPath('unitSize.width', originalValues),
                   label: (
                     <FormattedMessage
                       id="modules.ProductProviders.unitWidth"
                       defaultMessage="UNIT WIDTH"
                     />
                   ),
-                  WrapperComponent: DefaultDimensionStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="unitSize.height.value"
-              initValue={getByPath('unitSize.height.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldValue('unitSize.height', { value, metric: 'm' })
-              }
+              name="unitSize.height"
+              initValue={getByPath('unitSize.height', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('unitSize.height', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+                distanceInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('unitSize.height.value', originalValues),
+                  originalValue: getByPath('unitSize.height', originalValues),
                   label: (
                     <FormattedMessage
                       id="modules.ProductProviders.unitHeight"
                       defaultMessage="UNIT HEIGHT"
                     />
                   ),
-                  WrapperComponent: DefaultDimensionStyle,
                 })
               }
             </FormField>

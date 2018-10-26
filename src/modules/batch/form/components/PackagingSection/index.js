@@ -4,9 +4,14 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormField } from 'modules/form';
-import { textInputFactory, numberInputFactory } from 'modules/form/helpers';
+import {
+  textInputFactory,
+  numberInputFactory,
+  distanceInputFactory,
+  weightInputFactory,
+  volumeInputFactory,
+} from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
-import { DefaultWeightStyle, DefaultVolumeStyle, DefaultDimensionStyle } from 'components/Form';
 import { getByPath } from 'utils/fp';
 import { PackagingSectionWrapperStyle } from './style';
 
@@ -94,110 +99,90 @@ const PackagingSection = ({ isNew }: Props) => (
             </FormField>
 
             <FormField
-              name="packageGrossWeight.value"
-              initValue={getByPath('packageGrossWeight.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldArrayValue('packageGrossWeight', { value, metric: 'kg' })
-              }
+              name="packageGrossWeight"
+              initValue={getByPath('packageGrossWeight', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('packageGrossWeight', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+                weightInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('packageGrossWeight.value', originalValues),
+                  originalValue: getByPath('packageGrossWeight', originalValues),
                   label: (
                     <FormattedMessage
                       id="modules.Batches.pkgGrossWeight"
                       defaultMessage="PKG GROSS WEIGHT"
                     />
                   ),
-                  WrapperComponent: DefaultWeightStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="packageVolume.value"
-              initValue={getByPath('packageVolume.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldArrayValue('packageVolume', { value, metric: 'm³' })
-              }
+              name="packageVolume"
+              initValue={getByPath('packageVolume', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('packageVolume', value)}
             >
               {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+                volumeInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('packageVolume.value', originalValues),
+                  originalValue: getByPath('packageVolume', originalValues),
                   label: (
                     <FormattedMessage id="modules.Batches.pkgVolume" defaultMessage="PKG VOLUME" />
                   ),
-                  WrapperComponent: DefaultVolumeStyle,
                   calculate: calculatePackageVolume,
                 })
               }
             </FormField>
 
             <FormField
-              name="packageSize.length.value"
-              initValue={getByPath('packageSize.length.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldArrayValue('packageSize.length', { value, metric: 'm' })
-              }
+              name="packageSize.length"
+              initValue={getByPath('packageSize.length', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('packageSize.length', value)}
             >
-              {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+              {({ ...inputHandlers }) =>
+                distanceInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('packageSize.length.value', originalValues),
+                  originalValue: getByPath('packageSize.length', originalValues),
                   label: (
                     <FormattedMessage id="modules.Batches.pkgLength" defaultMessage="PKG LENGTH" />
                   ),
-                  WrapperComponent: DefaultDimensionStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="packageSize.width.value"
-              initValue={getByPath('packageSize.width.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldArrayValue('packageSize.width', { value, metric: 'm' })
-              }
+              name="packageSize.width"
+              initValue={getByPath('packageSize.width', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('packageSize.width', value)}
             >
-              {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+              {({ ...inputHandlers }) =>
+                distanceInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('packageSize.width.value', originalValues),
+                  originalValue: getByPath('packageSize.width', originalValues),
                   label: (
                     <FormattedMessage id="modules.Batches.pkgWidth" defaultMessage="PKG WIDTH" />
                   ),
-                  WrapperComponent: DefaultDimensionStyle,
                 })
               }
             </FormField>
 
             <FormField
-              name="packageSize.height.value"
-              initValue={getByPath('packageSize.height.value', values)}
-              setFieldValue={(field, value) =>
-                setFieldArrayValue('packageSize.height', { value, metric: 'm' })
-              }
+              name="packageSize.height"
+              initValue={getByPath('packageSize.height', values)}
+              setFieldValue={(field, value) => setFieldArrayValue('packageSize.height', value)}
             >
-              {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
+              {({ ...inputHandlers }) =>
+                distanceInputFactory({
                   inputHandlers,
                   isNew,
-                  originalValue: getByPath('packageSize.height.value', originalValues),
+                  originalValue: getByPath('packageSize.height', originalValues),
                   label: (
                     <FormattedMessage id="modules.Batches.pkgHeight" defaultMessage="PKG HEIGHT" />
                   ),
-                  WrapperComponent: DefaultDimensionStyle,
                 })
               }
             </FormField>

@@ -48,12 +48,13 @@ export const CardWrapperStyle = css`
   display: flex;
   width: 100%;
   padding: 0 25px 0 10px;
+  height: 40px;
+  overflow-y: hidden;
 `;
 export const CardTitleStyle = css`
   ${fontSizes.SMALL};
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
   padding-right: 2px;
   word-break: break-all;
   flex: 1;
@@ -63,6 +64,7 @@ export const CardVisualizeStyle = css`
   position: relative;
   height: 30px;
   flex: 1;
+  align-self: center;
 `;
 export const BatchCardVisualizeStyle = css`
   width: 100%;

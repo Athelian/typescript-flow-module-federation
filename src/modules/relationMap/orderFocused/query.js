@@ -9,6 +9,7 @@ export const orderListQuery = gql`
         id
         poNo
         issuedAt
+        currency
         tags {
           name
           id
@@ -44,6 +45,8 @@ export const orderListQuery = gql`
           }
           voyages {
             id
+            vesselName
+            vesselCode
             departurePort {
               seaport
               airport
@@ -81,6 +84,9 @@ export const orderListQuery = gql`
                 date
               }
             }
+            warehouse {
+              id
+            }
             warehouseArrival {
               id
               approvedAt
@@ -106,6 +112,10 @@ export const orderListQuery = gql`
         orderItems {
           id
           quantity
+          price {
+            amount
+            currency
+          }
           productProvider {
             id
             supplier {
@@ -116,6 +126,12 @@ export const orderListQuery = gql`
               id
               name
               serial
+            }
+          }
+          order {
+            id
+            orderItems {
+              id
             }
           }
           batches {

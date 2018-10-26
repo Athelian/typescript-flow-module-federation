@@ -1,6 +1,3 @@
-import { getByPathWithDefault } from 'utils/fp';
-import { difference } from 'lodash';
-
 export const ORDER_HEADER = 'ORDER_HEADER';
 export const ORDER_ITEM_ALL = 'ORDER_ITEM_ALL';
 export const BATCH_ALL = 'BATCH_ALL';
@@ -12,6 +9,46 @@ export const BATCH = 'BATCH';
 export const LINK1 = 'LINK-1';
 export const LINK2 = 'LINK-2';
 export const LINK4 = 'LINK-4';
+
+export const getItemData = ({ order, orderItem, batch }, relation) => {
+  let itemData;
+  switch (relation.type) {
+    case ORDER_ITEM_ALL:
+    case BATCH_ALL:
+    case ORDER:
+      itemData = order[relation.id];
+      break;
+    case ORDER_HEADER:
+      itemData = { data: { id: relation.id } };
+      break;
+    case ORDER_ITEM:
+      itemData = orderItem[relation.id];
+      break;
+    case BATCH:
+      itemData = batch[relation.id];
+      break;
+    default:
+      itemData = {};
+      break;
+  }
+  return itemData;
+};
+
+export const getItemType = type => {
+  switch (type) {
+    case ORDER_ITEM_ALL:
+    case BATCH_ALL:
+    case ORDER:
+      return 'order';
+    case ORDER_HEADER:
+    case ORDER_ITEM:
+      return 'orderItem';
+    case BATCH:
+      return 'batch';
+    default:
+      return '';
+  }
+};
 
 const getRelatedIds = (items, currentIndex) => {
   const ids = [];
@@ -64,6 +101,7 @@ const createBatchRelation = (relations, data) => {
     },
   };
 };
+
 const generateCollapsedRelation = (order, option) => {
   const { isCollapsed } = option;
   const relations = [];
@@ -96,7 +134,7 @@ const generateCollapsedRelation = (order, option) => {
 };
 
 const generateRelation = (order, option) => {
-  const { isCollapsed, result } = option;
+  const { isCollapsed } = option;
   const relations = generateCollapsedRelation(order, option);
   if (isCollapsed) {
     return relations;
@@ -123,31 +161,9 @@ const generateRelation = (order, option) => {
       orderItemIndex,
       relatedOrderItem: relatedProductIds.filter(id => id !== orderItem.id),
     });
-    const batchExcludeIds = [];
     batches.forEach((batch, batchIndex) => {
-      const itemId = getByPathWithDefault({}, 'batch.itemId', result);
-
-      const refId = getByPathWithDefault({}, 'batch.refId', result);
       const relatedBatchIds = getRelatedIds(batches, batchIndex);
-      if (itemId[batch.id]) {
-        return;
-      }
-      const newBatch = refId[batch.id];
-      if (newBatch) {
-        Object.keys(newBatch).forEach(newBatchId => {
-          batchExcludeIds.push(newBatchId);
-          batchRelation.generateBatchRelation(
-            newBatchId,
-            [...relatedBatchIds, newBatchId],
-            batchIndex
-          );
-          const relatedIds = difference(relatedBatchIds, batchExcludeIds);
-          batchRelation.generateOtherBatch(batch.id, relatedIds);
-        });
-      } else {
-        const relatedIds = difference(relatedBatchIds, batchExcludeIds);
-        batchRelation.generateBatchRelation(batch.id, relatedIds, batchIndex);
-      }
+      batchRelation.generateBatchRelation(batch.id, relatedBatchIds, batchIndex);
     });
   });
   return relations;

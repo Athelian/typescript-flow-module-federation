@@ -1,21 +1,24 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import { Query, ApolloConsumer } from 'react-apollo';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { isEmpty } from 'utils/fp';
 import { formatOrderData } from 'modules/relationMap/util';
 import messages from 'modules/relationMap/messages';
 import { BaseButton } from 'components/Buttons';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
+import { formatNodes } from './orderFocused/formatter';
 import Layout from './common/Layout';
 import QueryHandler from './common/QueryHandler';
 import SummaryBadge from './common/SummaryBadge';
 import ToggleTag from './common/ToggleTag';
-import FocusedValue from './common/FocusedValue';
 import ActionSelector from './common/ActionPanel/ActionSelector';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
 import { ActionContainer } from './containers';
+import RelationMapContainer from './container';
 import {
   FunctionWrapperStyle,
   BadgeWrapperStyle,
@@ -38,18 +41,6 @@ const defaultProps = {
 class Order extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
-  constructor(props: Props) {
-    super(props);
-    const { intl } = props;
-    this.sortInputs = [
-      { title: intl.formatMessage(messages.poSort), value: 'poNo' },
-      { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
-      { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
-    ];
-  }
-
-  sortInputs: Array<Object>;
-
   render() {
     const { page, perPage, intl } = this.props;
     return (
@@ -60,7 +51,7 @@ class Order extends React.PureComponent<Props> {
               <SortFilterHandler>
                 {({ sort, filter, onChangeFilter }) => (
                   <ActionContainer>
-                    {({ clone, result, setResult }) => (
+                    {({ getCloneFunction, result, setResult }) => (
                       <Query
                         query={query}
                         variables={{
@@ -77,9 +68,14 @@ class Order extends React.PureComponent<Props> {
                       >
                         {({ loading, data, fetchMore, error, refetch }) => (
                           <>
-                            <FocusedValue>
-                              {({ value: { focusMode, focusedItem } }) =>
-                                focusMode === 'TARGET' && (
+                            <Subscribe to={[RelationMapContainer]}>
+                              {({
+                                state: { focusMode, focusedItem },
+                                isTargetTreeMode,
+                                isTargetMode,
+                                selectItem,
+                              }) =>
+                                (isTargetMode() || isTargetTreeMode()) && (
                                   <div className={FullGridWrapperStyle}>
                                     <ActionSelector target={focusedItem}>
                                       <BaseButton
@@ -88,16 +84,20 @@ class Order extends React.PureComponent<Props> {
                                         backgroundColor="TEAL"
                                         hoverBackgroundColor="TEAL_DARK"
                                         onClick={async () => {
-                                          const newState = await clone(client, focusedItem);
+                                          const clone = getCloneFunction(focusMode);
+                                          const [newResult, newFocus] = await clone(
+                                            client,
+                                            focusedItem
+                                          );
                                           await refetch({ page, perPage });
-                                          setResult(newState);
+                                          setResult(newResult);
+                                          selectItem(newFocus);
                                         }}
                                       />
                                       <BaseButton
                                         icon="SPLIT"
                                         label="SPLIT"
                                         backgroundColor="TEAL"
-                                        s
                                         hoverBackgroundColor="TEAL_DARK"
                                         onClick={() => {}}
                                       />
@@ -119,7 +119,7 @@ class Order extends React.PureComponent<Props> {
                                   </div>
                                 )
                               }
-                            </FocusedValue>
+                            </Subscribe>
                             <div className={TagWrapperStyle}>
                               <ToggleTag />
                             </div>
@@ -137,7 +137,10 @@ class Order extends React.PureComponent<Props> {
                               error={error}
                             >
                               {({ nodes, hasMore, loadMore }) => {
-                                const order = formatOrderData(nodes);
+                                const order = formatOrderData(nodes || []);
+                                const formattedNodes = isEmpty(result)
+                                  ? nodes
+                                  : formatNodes(nodes, result);
                                 return (
                                   <>
                                     <div className={BadgeWrapperStyle}>
@@ -170,7 +173,7 @@ class Order extends React.PureComponent<Props> {
                                       order={order}
                                       hasMore={hasMore}
                                       loadMore={loadMore}
-                                      nodes={nodes}
+                                      nodes={formattedNodes}
                                       result={result}
                                     />
                                   </>

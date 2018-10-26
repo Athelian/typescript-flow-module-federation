@@ -13,6 +13,7 @@ type Props = {
   error?: Object,
 };
 
+// TODO: how to send the filter and sort
 const QueryHandler = ({ loading, data, fetchMore, model, children, error }: Props) => {
   if (error) {
     return error.message;
