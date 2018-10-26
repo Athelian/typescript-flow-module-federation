@@ -24,6 +24,8 @@ const metricInputFactory = ({
   originalValue,
   metrics,
   convert,
+  metricSelectWidth,
+  metricOptionWidth,
 }: Props) => {
   const { isTouched, errorMessage, isFocused, ...inputHandler } = inputHandlers;
   return (
@@ -54,7 +56,13 @@ const metricInputFactory = ({
             width={width}
             height={height}
           >
-            <MetricInput {...inputHandler} metrics={metrics} convert={convert} />
+            <MetricInput
+              {...inputHandler}
+              metricSelectWidth={metricSelectWidth}
+              metricOptionWidth={metricOptionWidth}
+              metrics={metrics}
+              convert={convert}
+            />
           </DefaultMetricStyle>
           {calculate &&
             !isFocused && (

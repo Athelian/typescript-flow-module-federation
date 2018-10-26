@@ -17,7 +17,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   width: '30px',
-  height: '30px',
+  height: '100%',
 };
 
 function MetricSelect({

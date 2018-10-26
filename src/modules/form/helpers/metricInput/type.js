@@ -21,4 +21,6 @@ export type MetricInputProps = {
     onBlur: Function,
   },
   originalValue: MetricValue,
+  metricOptionWidth?: string,
+  metricSelectWidth?: string,
 };
