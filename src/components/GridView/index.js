@@ -9,6 +9,7 @@ type OptionalProps = {
   isReverse: boolean,
   columnGap: string,
   rowGap: string,
+  padding: string,
 };
 
 type Props = OptionalProps & {
@@ -25,6 +26,7 @@ const defaultProps = {
   columnGap: '20px',
   rowGap: '30px',
   isReverse: false,
+  padding: '50px 20px',
 };
 
 function GridView(props: Props) {
@@ -36,6 +38,7 @@ function GridView(props: Props) {
     emptyMessage,
     itemWidth,
     isReverse,
+    padding,
     gap,
     columnGap,
     rowGap,
@@ -56,6 +59,7 @@ function GridView(props: Props) {
         itemWidth,
         columnGap: gap || columnGap,
         rowGap: gap || rowGap,
+        padding,
       })} InfiniteScroll`}
       loadMore={onLoadMore}
       hasMore={hasMore}

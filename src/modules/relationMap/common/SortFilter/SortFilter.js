@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import { SortInput, SearchInput } from 'components/NavBar';
+import { SortInput, SearchInput, AdvanceFilterInput } from 'components/NavBar';
+import FilterForm from '../SortFilterBar/FilterForm';
 import { GroupFilterStyle, SortWrapperStyle, GroupFilterWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -9,7 +10,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  filter: string,
+  filter: Object,
   sort: {
     field: string,
     direction: string,
@@ -43,11 +44,19 @@ const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) =>
     </div>
     <div className={GroupFilterWrapperStyle}>
       <div className={GroupFilterStyle}>
+        <AdvanceFilterInput
+          initialFilter={{
+            query: '',
+          }}
+          onApply={newFilter => onChange(newFilter)}
+        >
+          {({ onChangeFilter }) => <FilterForm onChange={onChangeFilter} />}
+        </AdvanceFilterInput>
         <SearchInput
           name="filter"
-          value={filter}
-          onClear={() => onChange({ filter: '' })}
-          onChange={newQuery => onChange({ filter: newQuery })}
+          value={filter.query}
+          onClear={() => onChange({ filter: { query: '' } })}
+          onChange={newQuery => onChange({ filter: { query: newQuery } })}
         />
       </div>
     </div>

@@ -101,6 +101,7 @@ const OrderFocused = ({
         );
       })}
     </div>
+
     <DetailFocused />
   </>
 );

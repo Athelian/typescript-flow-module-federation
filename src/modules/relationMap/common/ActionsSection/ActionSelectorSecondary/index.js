@@ -8,12 +8,12 @@ type Props = {
   directive: string,
 };
 
-const ActionsSection1 = ({ directive }: Props) => (
+const ActionsSectionSecondary = ({ directive }: Props) => (
   <div className={style.ActionSection2WrapperStyle}>
     <div className={style.ActionsSelectedStyle}>
       <div>{directive}</div>
     </div>
-    <div className={style.ChildrenWrapperStyle}>
+    <div className={style.ActionButtonWrapperStyle}>
       <TabItem active label="BATCH" icon="BATCH" onClick={() => {}} />
       <TabItem active={false} label="ORDER" icon="ORDER" onClick={() => {}} />
       <TabItem active={false} label="SHIPMENT" icon="SHIPMENT" onClick={() => {}} />
@@ -21,4 +21,4 @@ const ActionsSection1 = ({ directive }: Props) => (
   </div>
 );
 
-export default ActionsSection1;
+export default ActionsSectionSecondary;

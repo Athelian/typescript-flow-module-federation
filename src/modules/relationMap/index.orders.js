@@ -49,7 +49,7 @@ class Order extends React.PureComponent<Props> {
           <ApolloConsumer>
             {client => (
               <SortFilterHandler>
-                {({ sort, filter, onChangeFilter }) => (
+                {({ sort, filter, onChangeSortFilter }) => (
                   <ActionContainer>
                     {({ getCloneFunction, result, setResult }) => (
                       <Query
@@ -58,7 +58,7 @@ class Order extends React.PureComponent<Props> {
                           page,
                           perPage,
                           filterBy: {
-                            query: filter,
+                            ...filter,
                           },
                           sortBy: {
                             [sort.field]: sort.direction,
@@ -126,7 +126,7 @@ class Order extends React.PureComponent<Props> {
                             <SortFilter
                               sort={sort}
                               filter={filter}
-                              onChange={onChangeFilter}
+                              onChange={onChangeSortFilter}
                               className={FunctionWrapperStyle}
                             />
                             <QueryHandler

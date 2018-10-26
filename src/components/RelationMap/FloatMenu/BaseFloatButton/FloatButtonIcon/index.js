@@ -23,7 +23,7 @@ const getIcon = (disabled, icon) => {
 };
 
 // $FlowFixMe
-const CornerIcon = React.forwardRef(({ icon, color, disabled, onClick }: Props, ref) => {
+const FloatButtonIcon = React.forwardRef(({ icon, color, disabled, onClick }: Props, ref) => {
   const iconToShow = getIcon(disabled, icon);
 
   return (
@@ -33,6 +33,6 @@ const CornerIcon = React.forwardRef(({ icon, color, disabled, onClick }: Props, 
   );
 });
 
-CornerIcon.defaultProps = defaultProps;
+FloatButtonIcon.defaultProps = defaultProps;
 
-export default CornerIcon;
+export default FloatButtonIcon;

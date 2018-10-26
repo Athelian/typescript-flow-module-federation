@@ -6,31 +6,33 @@ type Props = {
 };
 
 type State = {
-  filter: string,
+  filter: Object,
   sort: {
     field: string,
     direction: string,
   },
 };
 
-class SortFilterBar extends React.Component<Props, State> {
+class SortFilterHandler extends React.Component<Props, State> {
   state = {
-    filter: '',
+    filter: {
+      query: '',
+    },
     sort: {
       field: 'updatedAt',
       direction: 'DESCENDING',
     },
   };
 
-  onChangeFilter = (newValue: any) => {
+  onChangeSortFilter = (newValue: any) => {
     this.setState(prevState => ({ ...prevState, ...newValue }));
   };
 
   render() {
     const { children } = this.props;
     const { sort, filter } = this.state;
-    return children({ sort, filter, onChangeFilter: this.onChangeFilter });
+    return children({ sort, filter, onChangeSortFilter: this.onChangeSortFilter });
   }
 }
 
-export default SortFilterBar;
+export default SortFilterHandler;
