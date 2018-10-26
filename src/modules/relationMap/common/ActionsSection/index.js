@@ -1,5 +1,5 @@
 // @flow
-import ActionSection1 from './ActionSelector1';
-import ActionSection2 from './ActionSelector2';
+import ActionSectionPrimary from './ActionSelectorPrimary';
+import ActionSectionSecondary from './ActionSelectorSecondary';
 
-export { ActionSection1, ActionSection2 };
+export { ActionSectionPrimary, ActionSectionSecondary };

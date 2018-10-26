@@ -61,7 +61,7 @@ const FloatMenu = (props: Props) => {
         actions.map((action: actionType) => {
           const { icon, color, text } = action;
           return (
-            <BaseFloatButton icon={icon} color={color}>
+            <BaseFloatButton icon={icon} color={color} key={icon}>
               <span>{text}</span>
             </BaseFloatButton>
           );

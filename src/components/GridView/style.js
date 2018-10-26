@@ -6,12 +6,14 @@ type GridViewWrapperProps = {
   itemWidth: string,
   columnGap: string,
   rowGap: string,
+  padding: string,
 };
 
 export const GridViewWrapperStyle = ({
   itemWidth,
   columnGap,
   rowGap,
+  padding,
 }: GridViewWrapperProps): string => css`
   width: 100%;
   display: grid;
@@ -19,7 +21,7 @@ export const GridViewWrapperStyle = ({
   grid-auto-rows: min-content;
   grid-column-gap: ${columnGap};
   grid-row-gap: ${rowGap};
-  padding: 50px 20px;
+  padding: ${padding};
   justify-content: center;
 `;
 

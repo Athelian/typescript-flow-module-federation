@@ -20,6 +20,8 @@ import {
 } from './Inputs';
 import ColorInput from './ColorInput';
 import RadioInput from './RadioInput';
+import RadioInputFilterForm from './RadioInputFilterForm';
+import ToggleInput from './ToggleInput';
 import TagsInput from './TagsInput';
 import DocumentsInput from './DocumentsInput';
 import ImagesUploadInput from './ImagesUploadInput';
@@ -61,6 +63,8 @@ export {
   DashedPlusButton,
   ColorInput,
   RadioInput,
+  RadioInputFilterForm,
+  ToggleInput,
   TagsInput,
   DocumentsInput,
   SectionHeader,

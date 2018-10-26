@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Location, navigate } from '@reach/router';
-import { Subscribe } from 'unstated';
+import { Subscribe, Provider } from 'unstated';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
@@ -35,40 +35,42 @@ const RelationMapLayout = ({ intl, children }: Props) => {
   ].filter(Boolean);
 
   return (
-    <UIConsumer>
-      {uiState => (
-        <Layout
-          {...uiState}
-          navBar={
-            <RelationMapNavBar>
-              <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
-              <Location>
-                {({ location }) => (
-                  <Tabs
-                    tabs={tabs}
-                    activeIndex={location.pathname.includes('products') ? 1 : 0}
-                    onChange={tabId => {
-                      if (tabId) {
-                        navigate('products');
-                      } else {
-                        navigate('orders');
-                      }
-                    }}
-                  />
-                )}
-              </Location>
-            </RelationMapNavBar>
-          }
-        >
-          <div className={ContentWrapperStyle}>{children}</div>
-          <Subscribe to={[RelationMapContainer]}>
-            {({ isTargetTreeMode, isTargetMode }) =>
-              isTargetMode() || isTargetTreeMode() ? <FloatMenu /> : null
+    <Provider>
+      <UIConsumer>
+        {uiState => (
+          <Layout
+            {...uiState}
+            navBar={
+              <RelationMapNavBar>
+                <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
+                <Location>
+                  {({ location }) => (
+                    <Tabs
+                      tabs={tabs}
+                      activeIndex={location.pathname.includes('products') ? 1 : 0}
+                      onChange={tabId => {
+                        if (tabId) {
+                          navigate('products');
+                        } else {
+                          navigate('orders');
+                        }
+                      }}
+                    />
+                  )}
+                </Location>
+              </RelationMapNavBar>
             }
-          </Subscribe>
-        </Layout>
-      )}
-    </UIConsumer>
+          >
+            <div className={ContentWrapperStyle}>{children}</div>
+            <Subscribe to={[RelationMapContainer]}>
+              {({ isTargetTreeMode, isTargetMode }) =>
+                isTargetMode() || isTargetTreeMode() ? <FloatMenu /> : null
+              }
+            </Subscribe>
+          </Layout>
+        )}
+      </UIConsumer>
+    </Provider>
   );
 };
 

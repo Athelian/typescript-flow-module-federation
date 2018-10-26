@@ -8,6 +8,7 @@ export const IconStyle = (color: string, disabled: boolean): string => css`
   height: 20px;
   ${fontSizes.SMALL};
   color: ${disabled ? 'rgba(0, 0, 0, 0.25)' : colors.WHITE};
+  margin-right: 4px;
   background: ${colors[color]};
   cursor: pointer;
   ${disabled && 'cursor: not-allowed'};

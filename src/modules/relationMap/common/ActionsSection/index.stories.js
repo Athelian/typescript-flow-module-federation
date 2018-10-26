@@ -2,11 +2,11 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { BaseButton } from 'components/Buttons';
-import { ActionSection1, ActionSection2 } from './index';
+import { ActionSectionPrimary, ActionSectionSecondary } from './index';
 
 storiesOf('RelationMap/Action', module)
-  .add('ActionSection1', () => (
-    <ActionSection1 directive="SELECTED" target="BATCHES" targetNo={0}>
+  .add('ActionSectionPrimary', () => (
+    <ActionSectionPrimary directive="SELECTED" target="BATCHES" targetNo={0}>
       <BaseButton
         icon="CLONE"
         label="CLONE"
@@ -35,6 +35,6 @@ storiesOf('RelationMap/Action', module)
         hoverBackgroundColor="TEAL_DARK"
         onClick={() => {}}
       />
-    </ActionSection1>
+    </ActionSectionPrimary>
   ))
-  .add('ActionSection2', () => <ActionSection2 directive="CONNECT TO" />);
+  .add('ActionSectionSecondary', () => <ActionSectionSecondary directive="CONNECT TO" />);
