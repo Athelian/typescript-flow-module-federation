@@ -259,6 +259,7 @@ const initOrderItemObj = (orderItem, orderId) => ({
     orderedQuantity: orderItem.quantity,
     batchedQuantity: 0,
     shippedQuantity: 0,
+    orderId,
   },
   relation: {
     order: { [orderId]: true },
@@ -275,6 +276,8 @@ const initBatchObj = (batch, orderId, orderItemId) => {
     data: {
       ...batch,
       volumeLabel: `${volume} ${metric}`,
+      orderId,
+      orderItemId,
     },
     relation: {
       order: { [orderId]: true },

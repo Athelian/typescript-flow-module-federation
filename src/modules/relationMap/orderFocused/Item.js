@@ -5,6 +5,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { cx } from 'react-emotion';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
+import { ToggleDeleteDialog } from 'modules/relationMap/common/Dialog/DeleteDialog';
 import {
   ItemWrapperStyle,
   ShipmentCardStyle,
@@ -13,6 +14,7 @@ import {
 import RelationMapContainer from 'modules/relationMap/container';
 import BaseCard from 'components/Cards';
 import { CardAction } from 'components/Cards/BaseCard';
+
 import {
   RelationLine,
   OrderCard,
@@ -123,67 +125,115 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case ORDER: {
             return (
-              <BaseCard
-                showActionsOnHover
-                icon={type}
-                color={type}
-                actions={actions}
-                wrapperClassName={cardWrapperClass}
-              >
-                <ToggleSlide>
-                  {({ assign: setSlide }) => {
-                    const onDoubleClick = () => setSlide({ show: true, type, id });
-                    return (
-                      <WrapperCard onClick={onClickTarget} onDoubleClick={onDoubleClick}>
-                        <OrderCard order={data} />
-                        <TagValue>
-                          {({ value: isToggle }) => isToggle && <Tags dataSource={data.tags} />}
-                        </TagValue>
-                      </WrapperCard>
-                    );
-                  }}
-                </ToggleSlide>
-              </BaseCard>
+              <ToggleDeleteDialog>
+                {({ assign: toggleDeleteDialog }) => (
+                  <BaseCard
+                    showActionsOnHover
+                    icon={type}
+                    color={type}
+                    wrapperClassName={cardWrapperClass}
+                    actions={[
+                      ...actions,
+                      <CardAction
+                        icon="REMOVE"
+                        onClick={() =>
+                          toggleDeleteDialog({
+                            isOpen: true,
+                            data,
+                            type,
+                          })
+                        }
+                      />,
+                    ]}
+                  >
+                    <ToggleSlide>
+                      {({ assign: setSlide }) => {
+                        const onDoubleClick = () => setSlide({ show: true, type, id });
+                        return (
+                          <WrapperCard onClick={onClickTarget} onDoubleClick={onDoubleClick}>
+                            <OrderCard order={data} />
+                            <TagValue>
+                              {({ value: isToggle }) => isToggle && <Tags dataSource={data.tags} />}
+                            </TagValue>
+                          </WrapperCard>
+                        );
+                      }}
+                    </ToggleSlide>
+                  </BaseCard>
+                )}
+              </ToggleDeleteDialog>
             );
           }
           case ORDER_ITEM: {
             return (
-              <BaseCard
-                showActionsOnHover
-                icon={type}
-                color={type}
-                actions={actions}
-                wrapperClassName={cardWrapperClass}
-              >
-                <WrapperCard onClick={onClickTarget}>
-                  <OrderItemCard orderItem={data} />
-                </WrapperCard>
-              </BaseCard>
+              <ToggleDeleteDialog>
+                {({ assign: toggleDeleteDialog }) => (
+                  <BaseCard
+                    showActionsOnHover
+                    icon={type}
+                    color={type}
+                    actions={[
+                      ...actions,
+                      <CardAction
+                        icon="REMOVE"
+                        onClick={() =>
+                          toggleDeleteDialog({
+                            isOpen: true,
+                            data,
+                            type,
+                          })
+                        }
+                      />,
+                    ]}
+                    wrapperClassName={cardWrapperClass}
+                  >
+                    <WrapperCard onClick={onClickTarget}>
+                      <OrderItemCard orderItem={data} />
+                    </WrapperCard>
+                  </BaseCard>
+                )}
+              </ToggleDeleteDialog>
             );
           }
           case BATCH: {
             return (
-              <BaseCard
-                showActionsOnHover
-                icon={type}
-                color={type}
-                actions={actions}
-                wrapperClassName={cardWrapperClass}
-              >
-                <ToggleSlide>
-                  {({ assign: setSlide }) => {
-                    const onDoubleClick = () => setSlide({ show: true, type, id });
-                    return (
-                      <WrapperCard onClick={onClickTarget} onDoubleClick={onDoubleClick}>
-                        <BatchCard batch={data} />
-                        <TagValue>
-                          {({ value: isToggle }) => isToggle && <Tags dataSource={data.tags} />}
-                        </TagValue>
-                      </WrapperCard>
-                    );
-                  }}
-                </ToggleSlide>
-              </BaseCard>
+              <ToggleDeleteDialog>
+                {({ assign: toggleDeleteDialog }) => (
+                  <BaseCard
+                    showActionsOnHover
+                    icon={type}
+                    color={type}
+                    actions={[
+                      ...actions,
+                      <CardAction
+                        icon="REMOVE"
+                        onClick={() =>
+                          toggleDeleteDialog({
+                            isOpen: true,
+                            data,
+                            type,
+                          })
+                        }
+                      />,
+                    ]}
+                    wrapperClassName={cardWrapperClass}
+                  >
+                    <ToggleSlide>
+                      {({ assign: setSlide }) => {
+                        const onDoubleClick = () => setSlide({ show: true, type, id });
+                        return (
+                          <WrapperCard onClick={onClickTarget} onDoubleClick={onDoubleClick}>
+                            <BatchCard batch={data} />
+                            <TagValue>
+                              {({ value: isToggle }) => isToggle && <Tags dataSource={data.tags} />}
+                            </TagValue>
+                          </WrapperCard>
+                        );
+                      }}
+                    </ToggleSlide>
+                  </BaseCard>
+                )}
+              </ToggleDeleteDialog>
             );
           }
           case ORDER_ITEM_ALL: {
@@ -215,29 +265,45 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   onToggle={onToggle}
                   isCollapsed={isCollapsed}
                 />
-                <BaseCard
-                  showActionsOnHover
-                  icon={type}
-                  color={type}
-                  actions={actions}
-                  wrapperClassName={cx(cardWrapperClass, ShipmentCardStyle)}
-                >
-                  <ToggleSlide>
-                    {({ assign: setSlide }) => {
-                      const onDoubleClick = () => setSlide({ show: true, type, id });
-                      return (
-                        <WrapperCard onClick={onClickTarget} onDoubleClick={onDoubleClick}>
-                          <ShipmentCard shipment={data} />
-                          <TagValue>
-                            {({ value: isToggle }) =>
-                              isToggle ? <Tags dataSource={data.tags} /> : null
-                            }
-                          </TagValue>
-                        </WrapperCard>
-                      );
-                    }}
-                  </ToggleSlide>
-                </BaseCard>
+                <ToggleDeleteDialog>
+                  {({ assign: toggleDeleteDialog }) => (
+                    <BaseCard
+                      showActionsOnHover
+                      icon={type}
+                      color={type}
+                      actions={[
+                        ...actions,
+                        <CardAction
+                          icon="REMOVE"
+                          onClick={() =>
+                            toggleDeleteDialog({
+                              isOpen: true,
+                              data,
+                              type,
+                            })
+                          }
+                        />,
+                      ]}
+                      wrapperClassName={cx(cardWrapperClass, ShipmentCardStyle)}
+                    >
+                      <ToggleSlide>
+                        {({ assign: setSlide }) => {
+                          const onDoubleClick = () => setSlide({ show: true, type, id });
+                          return (
+                            <WrapperCard onClick={onClickTarget} onDoubleClick={onDoubleClick}>
+                              <ShipmentCard shipment={data} />
+                              <TagValue>
+                                {({ value: isToggle }) =>
+                                  isToggle ? <Tags dataSource={data.tags} /> : null
+                                }
+                              </TagValue>
+                            </WrapperCard>
+                          );
+                        }}
+                      </ToggleSlide>
+                    </BaseCard>
+                  )}
+                </ToggleDeleteDialog>
               </>
             );
           }
@@ -252,20 +318,38 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   onToggle={onToggle}
                   isCollapsed={isCollapsed}
                 />
-                <BaseCard
-                  showActionsOnHover
-                  icon="SHIPMENT"
-                  color="SHIPMENT"
-                  actions={actions}
-                  wrapperClassName={cx(cardWrapperClass, ShipmentCardTotalStyle)}
-                >
-                  <WrapperCard onClick={onToggle}>
-                    <ShipmentCollapsed shipment={data} />
-                    <TagValue>
-                      {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
-                    </TagValue>
-                  </WrapperCard>
-                </BaseCard>
+                <ToggleDeleteDialog>
+                  {({ assign: toggleDeleteDialog }) => (
+                    <BaseCard
+                      showActionsOnHover
+                      icon="SHIPMENT"
+                      color="SHIPMENT"
+                      actions={[
+                        ...actions,
+                        <CardAction
+                          icon="REMOVE"
+                          onClick={() =>
+                            toggleDeleteDialog({
+                              isOpen: true,
+                              data,
+                              type,
+                            })
+                          }
+                        />,
+                      ]}
+                      wrapperClassName={cx(cardWrapperClass, ShipmentCardTotalStyle)}
+                    >
+                      <WrapperCard onClick={onToggle}>
+                        <ShipmentCollapsed shipment={data} />
+                        <TagValue>
+                          {({ value: isToggle }) =>
+                            isToggle ? <Tags dataSource={data.tags} /> : null
+                          }
+                        </TagValue>
+                      </WrapperCard>
+                    </BaseCard>
+                  )}
+                </ToggleDeleteDialog>
               </>
             );
           }

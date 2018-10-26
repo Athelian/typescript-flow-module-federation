@@ -5,7 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
 import { isEmpty } from 'lodash';
 import RelationView from '../common/RelationView';
-import DetailFocused from '../common/SlideForm';
+import SlideForm from '../common/SlideForm';
+import DeleteDialog from '../common/Dialog/DeleteDialog';
 import generateRelation, { getItemData, getItemType } from './relation';
 import Item from './Item';
 
@@ -104,8 +105,8 @@ const OrderFocused = ({
         );
       })}
     </div>
-
-    <DetailFocused />
+    <SlideForm />
+    <DeleteDialog />
   </>
 );
 
