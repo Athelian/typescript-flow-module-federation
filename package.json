@@ -61,6 +61,7 @@
     "build:stg": "cross-env NODE_ENV=staging node scripts/build.js",
     "postbuild": "react-snap",
     "test": "node scripts/test.js",
+    "stylelint": "stylelint src/**/*.{js,jsx,css}",
     "cy:open": "npx cypress open",
     "cy:install": "npx cypress install",
     "cy:record": "npx cypress run --record --key 5fa121a7-1994-41fc-963a-9c4fbe7ab112",
@@ -87,6 +88,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json}": [
+      "stylelint --fix",
       "eslint --fix",
       "prettier-eslint --write",
       "git add"
@@ -198,6 +200,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "pnp-webpack-plugin": "^1.1.0",
     "postcss-flexbugs-fixes": "4.1.0",
+    "postcss-jsx": "^0.35.0",
     "postcss-loader": "3.0.0",
     "postcss-preset-env": "6.2.0",
     "postcss-safe-parser": "4.0.1",
@@ -215,6 +218,8 @@
     "sass-loader": "7.1.0",
     "start-server-and-test": "^1.7.5",
     "style-loader": "0.23.1",
+    "stylelint": "^9.6.0",
+    "stylelint-config-standard": "^18.2.0",
     "terser-webpack-plugin": "1.1.0",
     "url-loader": "1.1.2",
     "webpack": "4.22.0",
