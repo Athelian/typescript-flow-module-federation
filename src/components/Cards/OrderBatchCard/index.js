@@ -109,7 +109,13 @@ const OrderBatchCard = ({
   ];
 
   const { no, quantity, deliveredAt, packageVolume, batchAdjustments, shipment } = batch;
-  const warehouseArrivalApproved = false;
+  const warehouseArrivalApproved = !!(
+    batch &&
+    batch.shipment &&
+    batch.shipment.containerGroups &&
+    batch.shipment.containerGroups[0] &&
+    batch.shipment.containerGroups[0].warehouseArrival.date
+  );
 
   const totalAdjustment = batchAdjustments
     ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
