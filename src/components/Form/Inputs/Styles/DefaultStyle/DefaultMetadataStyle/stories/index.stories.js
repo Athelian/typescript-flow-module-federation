@@ -7,7 +7,7 @@ import { Provider, Subscribe } from 'unstated';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import MetadataFormContainer from './container';
-import DefaultMetadataStyle from './index';
+import DefaultMetadataStyle from '../index';
 
 storiesOf('DefaultMetadataStyle', module)
   .add('input', () => (
