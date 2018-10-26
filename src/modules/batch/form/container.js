@@ -9,6 +9,20 @@ type Metric = {
   metric: string,
 };
 
+export function calculateVolume(
+  volumeMetric: string,
+  height: Metric,
+  width: Metric,
+  length: Metric
+): number {
+  const heightValue = height.metric === 'cm' ? height.value : height.value * 100;
+  const widthValue = width.metric === 'cm' ? width.value : width.value * 100;
+  const lengthValue = length.metric === 'cm' ? length.value : length.value * 100;
+  const volumeValue = heightValue * widthValue * lengthValue;
+
+  return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
+}
+
 export type BatchFormState = {
   id?: ?string,
   no?: ?string,
@@ -134,9 +148,12 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       const newState = set(
         cloneDeep(prevState),
         'packageVolume.value',
-        prevState.packageSize.height.value *
-          prevState.packageSize.width.value *
-          prevState.packageSize.length.value
+        calculateVolume(
+          prevState.packageVolume.metric,
+          prevState.packageSize.height,
+          prevState.packageSize.width,
+          prevState.packageSize.length
+        )
       );
       return newState;
     });

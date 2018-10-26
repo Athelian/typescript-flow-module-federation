@@ -13,6 +13,8 @@ type OptionalProps = {
   onBlur: Function,
   align: 'left' | 'right' | 'center',
   convert: Function,
+  metricSelectWidth: string,
+  metricOptionWidth: string,
 };
 
 type Props = OptionalProps & {
@@ -27,6 +29,8 @@ const defaultProps = {
   onChange: () => {},
   onBlur: () => {},
   align: 'right',
+  metricSelectWidth: '30px',
+  metricOptionWidth: '40px',
 };
 
 export default class MetricInput extends React.Component<Props> {
@@ -54,6 +58,8 @@ export default class MetricInput extends React.Component<Props> {
       metrics,
       convert,
       align,
+      metricSelectWidth,
+      metricOptionWidth,
       ...rest
     } = this.props;
 
@@ -94,9 +100,11 @@ export default class MetricInput extends React.Component<Props> {
           items={metrics}
           itemToValue={v => v || null}
           itemToString={v => v || ''}
-          renderSelect={({ ...selectProps }) => <MetricSelect {...selectProps} align={align} />}
+          renderSelect={({ ...selectProps }) => (
+            <MetricSelect width={metricSelectWidth} {...selectProps} align={align} />
+          )}
           renderOptions={({ ...optionsProps }) => (
-            <DefaultOptions width="30px" {...optionsProps} align={align} />
+            <DefaultOptions width={metricOptionWidth} {...optionsProps} align={align} />
           )}
         />
       </>
