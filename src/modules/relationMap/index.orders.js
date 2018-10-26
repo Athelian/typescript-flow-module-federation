@@ -1,13 +1,14 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import { Query, ApolloConsumer } from 'react-apollo';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { isEmpty } from 'utils/fp';
 import { formatOrderData } from 'modules/relationMap/util';
-import messages from 'modules/relationMap/messages';
 import { BaseButton } from 'components/Buttons';
+import SlideView from 'components/SlideView';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
 import { formatNodes } from './orderFocused/formatter';
@@ -17,8 +18,10 @@ import SummaryBadge from './common/SummaryBadge';
 import ToggleTag from './common/ToggleTag';
 import ActionSelector from './common/ActionPanel/ActionSelector';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
+import TableInlineEdit from './common/TableInlineEdit';
 import { ActionContainer } from './containers';
 import RelationMapContainer from './container';
+import messages from './messages';
 import {
   FunctionWrapperStyle,
   BadgeWrapperStyle,
@@ -101,13 +104,31 @@ class Order extends React.PureComponent<Props> {
                                         hoverBackgroundColor="TEAL_DARK"
                                         onClick={() => {}}
                                       />
-                                      <BaseButton
-                                        icon="EDIT"
-                                        label="EDIT"
-                                        backgroundColor="TEAL"
-                                        hoverBackgroundColor="TEAL_DARK"
-                                        onClick={() => {}}
-                                      />
+                                      <BooleanValue>
+                                        {({ value: opened, set: slideToggle }) => (
+                                          <>
+                                            <BaseButton
+                                              icon="EDIT"
+                                              label="EDIT"
+                                              backgroundColor="TEAL"
+                                              hoverBackgroundColor="TEAL_DARK"
+                                              onClick={() => slideToggle(true)}
+                                            />
+                                            <SlideView
+                                              isOpen={opened}
+                                              onRequestClose={() => slideToggle(false)}
+                                              options={{ width: '1030px' }}
+                                            >
+                                              {opened && (
+                                                <TableInlineEdit
+                                                  onSave={() => {}}
+                                                  onCancel={() => slideToggle(false)}
+                                                />
+                                              )}
+                                            </SlideView>
+                                          </>
+                                        )}
+                                      </BooleanValue>
                                       <BaseButton
                                         icon="CONNECT"
                                         label="CONNECT"

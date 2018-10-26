@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { BooleanValue } from 'react-values';
+import { FormattedMessage } from 'react-intl';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
 import { isEmpty } from 'lodash';
 import RelationView from '../common/RelationView';
@@ -28,7 +29,9 @@ const OrderFocused = ({
       className={OrderMapWrapperStyle}
       isEmpty={nodes ? nodes.length === 0 : true}
       spacing={70}
-      emptyMessage="No orders found"
+      emptyMessage={
+        <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
+      }
       hasMore={hasMore}
       onLoadMore={loadMore}
       customRender={() =>
