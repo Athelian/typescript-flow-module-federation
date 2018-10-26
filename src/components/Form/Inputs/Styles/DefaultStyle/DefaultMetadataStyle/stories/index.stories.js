@@ -13,10 +13,10 @@ storiesOf('DefaultMetadataStyle', module)
   .add('input', () => (
     <div
       style={{
-        marginLeft: 100,
-        marginTop: 100,
-        height: 200,
+        marginLeft: 50,
+        marginTop: 50,
         width: 330,
+        height: 200,
       }}
     >
       <Provider>
@@ -41,10 +41,10 @@ storiesOf('DefaultMetadataStyle', module)
   .add('drag', () => (
     <div
       style={{
-        marginLeft: 100,
-        marginTop: 100,
-        height: 200,
+        marginLeft: 50,
+        marginTop: 50,
         width: 330,
+        height: 200,
       }}
     >
       <DragDropContext onDragEnd={action('onDragEnd')}>
