@@ -10,5 +10,5 @@ export const DesktopWrapperStyle = (isSideBarExpanded?: boolean): string => css`
   margin-left: ${isSideBarExpanded ? '200px' : '50px'};
   margin-left: ${isSideBarExpanded === undefined && '0px'};
   background: #eee;
-  ${transitions.MAIN}
+  ${transitions.MAIN};
 `;

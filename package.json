@@ -88,9 +88,9 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json}": [
+      "stylelint --fix",
       "eslint --fix",
       "prettier-eslint --write",
-      "stylelint --fix",
       "git add"
     ],
     "*.md": [
