@@ -1,5 +1,8 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Label } from 'components/Form';
+import messages from 'modules/relationMap/messages';
 import * as style from '../style';
 
 type Props = {
@@ -7,20 +10,44 @@ type Props = {
   target: Object,
 };
 
+const getTotal = (target, type) => (target ? Object.keys(target[type] || {}).length : 0);
+
 const ActionSelector = ({ children, target }: Props) => {
-  const totalOrder = Object.keys(target.order || {}).length;
-  const totalOrderItem = Object.keys(target.orderItem || {}).length;
-  const totalBatch = Object.keys(target.batch || {}).length;
-  const totalShipment = Object.keys(target.shipment || {}).length;
+  const totalOrder = getTotal(target, 'order');
+  const totalOrderItem = getTotal(target, 'orderItem');
+  const totalBatch = getTotal(target, 'batch');
+  const totalShipment = getTotal(target, 'shipment');
   return (
     <div className={style.ActionSection1WrapperStyle}>
       <div className={style.ActionsSelectedStyle}>
-        <div>SELECTED</div>
+        <Label>
+          <FormattedMessage {...messages.selected} />
+        </Label>
         <div>
-          {!!totalOrder && ` ${totalOrder} ORDERS `}
-          {!!totalOrderItem && ` ${totalOrderItem} ORDER ITEMS `}
-          {!!totalBatch && ` ${totalBatch} BATCHES `}
-          {!!totalShipment && ` ${totalShipment} SHIPMENTS `}
+          {!!totalOrder && (
+            <Label>
+              {` ${totalOrder} `}
+              <FormattedMessage {...messages.ordersLabel} />
+            </Label>
+          )}
+          {!!totalOrderItem && (
+            <Label>
+              {` ${totalOrderItem} `}
+              <FormattedMessage {...messages.productsTab} />
+            </Label>
+          )}
+          {!!totalBatch && (
+            <Label>
+              {` ${totalBatch} `}
+              <FormattedMessage {...messages.batchesLabel} />
+            </Label>
+          )}
+          {!!totalShipment && (
+            <Label>
+              {` ${totalShipment} `}
+              <FormattedMessage {...messages.shipmentsLabel} />
+            </Label>
+          )}
         </div>
       </div>
       <div className={style.ChildrenWrapperStyle}>{children}</div>

@@ -9,6 +9,7 @@ import { isEmpty } from 'utils/fp';
 import { formatOrderData } from 'modules/relationMap/util';
 import { BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
+import { Label } from 'components/Form';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
 import { formatNodes } from './orderFocused/formatter';
@@ -17,6 +18,7 @@ import QueryHandler from './common/QueryHandler';
 import SummaryBadge from './common/SummaryBadge';
 import ToggleTag from './common/ToggleTag';
 import ActionSelector from './common/ActionPanel/ActionSelector';
+import SplitPanel from './common/ActionPanel/SplitPanel';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
 import TableInlineEdit from './common/TableInlineEdit';
 import { ActionContainer } from './containers';
@@ -54,7 +56,7 @@ class Order extends React.PureComponent<Props> {
               <SortFilterHandler>
                 {({ sort, filter, onChangeSortFilter }) => (
                   <ActionContainer>
-                    {({ getCloneFunction, result, setResult }) => (
+                    {({ getCloneFunction, result, setResult, currentPanel, setPanel, split }) => (
                       <Query
                         query={query}
                         variables={{
@@ -81,63 +83,99 @@ class Order extends React.PureComponent<Props> {
                                 (isTargetMode() || isTargetTreeMode()) && (
                                   <div className={FullGridWrapperStyle}>
                                     <ActionSelector target={focusedItem}>
-                                      <BaseButton
-                                        icon="CLONE"
-                                        label="CLONE"
-                                        backgroundColor="TEAL"
-                                        hoverBackgroundColor="TEAL_DARK"
-                                        onClick={async () => {
-                                          const clone = getCloneFunction(focusMode);
-                                          const [newResult, newFocus] = await clone(
+                                      {(function renderPanel() {
+                                        switch (currentPanel) {
+                                          default:
+                                            return (
+                                              <>
+                                                <BaseButton
+                                                  icon="CLONE"
+                                                  label="CLONE"
+                                                  backgroundColor="TEAL"
+                                                  hoverBackgroundColor="TEAL_DARK"
+                                                  onClick={async () => {
+                                                    const clone = getCloneFunction(focusMode);
+                                                    const [newResult, newFocus] = await clone(
+                                                      client,
+                                                      focusedItem
+                                                    );
+                                                    await refetch({ page, perPage });
+                                                    setResult(newResult);
+                                                    selectItem(newFocus);
+                                                    setPanel('cloned');
+                                                  }}
+                                                />
+                                                <BaseButton
+                                                  icon="SPLIT"
+                                                  label="SPLIT"
+                                                  backgroundColor="TEAL"
+                                                  hoverBackgroundColor="TEAL_DARK"
+                                                  onClick={() => setPanel('split')}
+                                                />
+                                                <BooleanValue>
+                                                  {({ value: opened, set: slideToggle }) => (
+                                                    <>
+                                                      <BaseButton
+                                                        icon="EDIT"
+                                                        label="EDIT"
+                                                        backgroundColor="TEAL"
+                                                        hoverBackgroundColor="TEAL_DARK"
+                                                        onClick={() => slideToggle(true)}
+                                                      />
+                                                      <SlideView
+                                                        isOpen={opened}
+                                                        onRequestClose={() => slideToggle(false)}
+                                                        options={{ width: '1030px' }}
+                                                      >
+                                                        {opened && (
+                                                          <TableInlineEdit
+                                                            onSave={() => {}}
+                                                            onCancel={() => slideToggle(false)}
+                                                          />
+                                                        )}
+                                                      </SlideView>
+                                                    </>
+                                                  )}
+                                                </BooleanValue>
+                                                <BaseButton
+                                                  icon="CONNECT"
+                                                  label="CONNECT"
+                                                  backgroundColor="TEAL"
+                                                  hoverBackgroundColor="TEAL_DARK"
+                                                  onClick={() => setPanel('connect')}
+                                                />
+                                              </>
+                                            );
+                                          case 'cloned':
+                                            return (
+                                              <>
+                                                <Label>Clear All</Label>
+                                                <BaseButton
+                                                  icon="CLONE"
+                                                  label="CLONE"
+                                                  backgroundColor="TEAL"
+                                                  hoverBackgroundColor="TEAL_DARK"
+                                                  onClick={async () => {}}
+                                                />
+                                              </>
+                                            );
+                                        }
+                                      })()}
+                                    </ActionSelector>
+                                    {currentPanel === 'split' && (
+                                      <SplitPanel
+                                        onApply={async splitData => {
+                                          const [splitResult, splitFocus] = await split(
                                             client,
-                                            focusedItem
+                                            focusedItem,
+                                            splitData
                                           );
                                           await refetch({ page, perPage });
-                                          setResult(newResult);
-                                          selectItem(newFocus);
+                                          setResult(splitResult);
+                                          selectItem(splitFocus);
                                         }}
                                       />
-                                      <BaseButton
-                                        icon="SPLIT"
-                                        label="SPLIT"
-                                        backgroundColor="TEAL"
-                                        hoverBackgroundColor="TEAL_DARK"
-                                        onClick={() => {}}
-                                      />
-                                      <BooleanValue>
-                                        {({ value: opened, set: slideToggle }) => (
-                                          <>
-                                            <BaseButton
-                                              icon="EDIT"
-                                              label="EDIT"
-                                              backgroundColor="TEAL"
-                                              hoverBackgroundColor="TEAL_DARK"
-                                              onClick={() => slideToggle(true)}
-                                            />
-                                            <SlideView
-                                              isOpen={opened}
-                                              onRequestClose={() => slideToggle(false)}
-                                              options={{ width: '1030px' }}
-                                            >
-                                              {opened && (
-                                                <TableInlineEdit
-                                                  onSave={() => {}}
-                                                  onExpand={() => {}}
-                                                  onCancel={() => slideToggle(false)}
-                                                />
-                                              )}
-                                            </SlideView>
-                                          </>
-                                        )}
-                                      </BooleanValue>
-                                      <BaseButton
-                                        icon="CONNECT"
-                                        label="CONNECT"
-                                        backgroundColor="TEAL"
-                                        hoverBackgroundColor="TEAL_DARK"
-                                        onClick={() => {}}
-                                      />
-                                    </ActionSelector>
+                                    )}
                                   </div>
                                 )
                               }

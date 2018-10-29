@@ -28,9 +28,9 @@ const OrderItemDeleteDialog = ({ isOpen, onRequestClose, orderItem, onConfirm }:
         onRequestClose={onRequestClose}
         onCancel={onRequestClose}
         onConfirm={async () => {
-          // $FlowFixMe
           const {
             data: { order = {} },
+            // $FlowFixMe
           } = await client.query({
             query: orderFormQuery,
             variables: {
@@ -50,7 +50,6 @@ const OrderItemDeleteDialog = ({ isOpen, onRequestClose, orderItem, onConfirm }:
               ),
             },
           });
-          // emitter.emit('CHANGE_ORDER_STATUS', orderId);
           onRequestClose();
           onConfirm();
         }}

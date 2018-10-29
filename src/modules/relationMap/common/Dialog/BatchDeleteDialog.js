@@ -19,14 +19,6 @@ type Props = OptionalProps & {
   onRequestClose: () => void,
   batch: Object,
 };
-// $FlowFixMe
-const getOrderById = (client, orderId) =>
-  client.query({
-    query: orderFormQuery,
-    variables: {
-      id: orderId,
-    },
-  });
 
 const BatchDeleteDialog = ({ isOpen, onRequestClose, batch, onConfirm }: Props) => (
   <ApolloConsumer>
@@ -38,7 +30,13 @@ const BatchDeleteDialog = ({ isOpen, onRequestClose, batch, onConfirm }: Props) 
         onConfirm={async () => {
           const {
             data: { order = {} },
-          } = await getOrderById(client, batch.orderId);
+            // $FlowFixMe
+          } = await client.query({
+            query: orderFormQuery,
+            variables: {
+              id: batch.orderId,
+            },
+          });
           const removedOrderItems = order.orderItems.map(item => {
             const removedBatch =
               batch.orderItemId === item.id

@@ -62,4 +62,32 @@ export default defineMessages({
     id: 'global.quantity',
     defaultMessage: 'Quantity',
   },
+  splitType: {
+    id: 'modules.RelationMaps.label.splitType',
+    defaultMessage: 'Split Type',
+  },
+  splitTo: {
+    id: 'modules.RelationMaps.label.splitTo',
+    defaultMessage: 'Split To',
+  },
+  splitQuantity: {
+    id: 'modules.RelationMaps.label.splitQuantity',
+    defaultMessage: 'Split QTY',
+  },
+  splitSimple: {
+    id: 'modules.RelationMaps.label.splitSimple',
+    defaultMessage: 'SIMPLY',
+  },
+  splitEqually: {
+    id: 'modules.RelationMaps.label.splitEqually',
+    defaultMessage: 'EQUALLY',
+  },
+  splitBalance: {
+    id: 'modules.RelationMaps.label.splitBalance',
+    defaultMessage: 'BALANCE',
+  },
+  selected: {
+    id: 'modules.Shipments.picked',
+    defaultMessage: 'selected',
+  },
 });

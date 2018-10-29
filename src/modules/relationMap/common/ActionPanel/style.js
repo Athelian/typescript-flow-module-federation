@@ -8,7 +8,7 @@ export const ActionSection1WrapperStyle: string = css`
   justify-content: space-between;
   width: 100%;
   height: 50px;
-  background: #eeeeee;
+  background: ${colors.GRAY_SUPER_LIGHT};
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   z-index: 2;
   ${transitions.EXPAND};
@@ -17,10 +17,10 @@ export const ActionSection1WrapperStyle: string = css`
 export const ActionSection2WrapperStyle: string = css`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   width: 100%;
   height: 50px;
-  background: #eeeeee;
+  background: ${colors.GRAY_SUPER_LIGHT};
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   z-index: 2;
   ${transitions.EXPAND};
@@ -46,4 +46,8 @@ export const ChildrenWrapperStyle: string = css`
   grid-template-rows: 50px;
   grid-gap: 20px;
   align-items: center;
+`;
+
+export const TabItemWrapperStyle = css`
+  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
