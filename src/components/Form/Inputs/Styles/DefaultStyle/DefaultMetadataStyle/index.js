@@ -43,7 +43,6 @@ const DefaultMetadataStyle = ({
         name={`${targetName}.${index}.label`}
         initValue={metadata.label}
         setFieldValue={setFieldArrayValue}
-        saveOnChange
       >
         {({ name, ...inputHandlers }) => {
           const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
@@ -59,7 +58,6 @@ const DefaultMetadataStyle = ({
         name={`${targetName}.${index}.value`}
         initValue={metadata.value}
         setFieldValue={setFieldArrayValue}
-        saveOnChange
       >
         {({ name, ...inputHandlers }) => {
           const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
