@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Oct 23 2018 14:10:31 GMT+0700 (Indochina Time)
+# timestamp: Mon Oct 29 2018 14:05:31 GMT+0700 (Indochina Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -28601,6 +28601,100 @@ enum Incoterm {
   DDP
 }
 
+type Integration implements Model & Owned {
+  name: String!
+  service: String!
+  bot: User!
+  automated: Boolean!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+type IntegrationConfiguration implements Model & Owned {
+  integration: Integration!
+  automated: Boolean!
+  interval: Long!
+  integrationLinks(page: Int! = 1, perPage: Int! = 10): IntegrationLinkPagination!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+type IntegrationConfigurationPagination {
+  nodes: [IntegrationConfiguration!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+type IntegrationLink implements Model & Owned {
+  configuration: IntegrationConfiguration!
+  status: IntegrationLinkStatus!
+  entity: Entity!
+  externalId: ID!
+  automated: Boolean!
+  interval: Long!
+  lastRunAt: DateTime
+  nextRunAt: DateTime
+  lastError: String
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+type IntegrationLinkPagination {
+  nodes: [IntegrationLink!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+enum IntegrationLinkStatus {
+  """Idle"""
+  Idle
+
+  """Pending"""
+  Pending
+
+  """Running"""
+  Running
+
+  """Error"""
+  Error
+
+  """Stop"""
+  Stop
+}
+
+type IntegrationPagination {
+  nodes: [Integration!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
 enum Language {
   """Afar"""
   aa
@@ -29162,6 +29256,12 @@ enum LoadType {
   FCL
   LCL
 }
+
+"""
+The `Long` scalar type represents non-fractional signed whole numeric values.
+Long can represent values between -(2^63) and 2^63 - 1.
+"""
+scalar Long
 
 type Metadata {
   field: String!
@@ -29881,6 +29981,12 @@ type Query {
   warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePagination!
   tag(id: ID!): Tag
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput): TagPagination!
+  integration(id: ID!): Integration
+  integrations(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
+  integrationsOfPartners(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
+  integrationConfiguration(id: ID!): IntegrationConfiguration
+  integrationConfigurations(page: Int! = 1, perPage: Int! = 10): IntegrationConfigurationPagination!
+  integrationLink(id: ID!): IntegrationLink
 }
 
 enum Seaport {
@@ -34801,6 +34907,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented {
   metadata: [Metadata!]!
   timeline: Timeline!
   batches: [Batch!]!
+  integrationLinks: [IntegrationLink!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!

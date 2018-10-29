@@ -39,3 +39,6 @@ styleguide
 # e2e
 cypress/videos
 cypress/screenshots
+
+# storybook cache
+.cache

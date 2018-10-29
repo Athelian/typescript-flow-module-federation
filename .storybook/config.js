@@ -5,14 +5,10 @@ import { checkA11y } from '@storybook/addon-a11y';
 addDecorator((story, context) => withInfo()(story)(context));
 addDecorator(checkA11y);
 
-function importAll(req) {
-  req.keys().forEach(filename => req(filename));
-}
-
+// automatically import all files ending in *.stories.js
 function loadStories() {
-  let req;
-  req = require.context('../src', true, /\.stories\.(js|jsx)$/);
-  importAll(req);
+  const req = require.context('../src', true, /\.stories\.(js|jsx)$/);
+  req.keys().forEach(filename => req(filename));
 }
 
 configure(loadStories, module);
