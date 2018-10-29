@@ -31,27 +31,25 @@ export const DefaultStyleWrapperStyle = ({
   border: 1px solid ${hasError ? colors.RED : 'transparent'};
   ${isFocused && `border-color: ${hasError ? colors.RED : colors.TEAL}`};
   ${borderRadiuses.MAIN};
-  background-color: ${transparent ? colors.TRANSPARENT : colors.WHITE}
+  background-color: ${transparent ? colors.TRANSPARENT : colors.WHITE};
   background-color: ${disabled && colors.GRAY_SUPER_LIGHT};
   height: ${height};
   width: ${width};
   min-width: ${width};
   cursor: text;
   ${transitions.MAIN};
-  ${
-    forceHoverStyle || isFocused
-      ? `${shadows.INPUT};
+  ${forceHoverStyle || isFocused
+    ? `${shadows.INPUT};
       & > button {
         opacity: 1;
       }
     `
-      : `&:hover {
+    : `&:hover {
       ${shadows.INPUT};
       & > button {
         opacity: 1;
       }
-    }`
-  };
+    }`};
   & > input {
     ${presets.ELLIPSIS};
   }
@@ -65,20 +63,18 @@ export const DefaultStyleWrapperStyle = ({
     padding: 0 5px;
     background: none;
     ${borderRadiuses.MAIN};
-    ${
-      type === 'label'
-        ? `
+    ${type === 'label'
+      ? `
       color: ${colors.GRAY_DARK};
       ${fontSizes.SMALL};
       letter-spacing: 2px;
       text-transform: uppercase;
     `
-        : `
+      : `
       color: ${colors.BLACK};
       ${fontSizes.MAIN};
       font-weight: bold;
-    `
-    };
+    `};
     &:focus {
       outline: none;
     }

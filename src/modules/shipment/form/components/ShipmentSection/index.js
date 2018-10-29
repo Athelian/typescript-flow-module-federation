@@ -414,7 +414,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                               <button
                                 className={ExporterSeeMoreButtonStyle}
                                 type="button"
-                                onClick={console.log('Show full list of exporters')}
+                                onClick={() => {}}
                               >
                                 <Icon icon="HORIZONTAL_ELLIPSIS" />
                               </button>
