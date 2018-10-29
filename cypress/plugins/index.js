@@ -10,12 +10,81 @@
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
+const fetch = require('node-fetch');
 const logger = require('loglevel');
 const faker = require('faker');
 const chance = require('chance').Chance();
+const config = require('../../cypress.json');
+const user = require('../fixtures/user.json');
 
 module.exports = on => {
   on('task', {
+    token: () => {
+      const loginOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `mutation ($input: CredentialsInput!) {
+          login(input: $input) {
+            token {
+              token
+            }
+          }
+        }`,
+          variables: {
+            input: {
+              email: user.username,
+              password: user.password,
+            },
+          },
+        }),
+      };
+
+      return fetch(config.env.graphql, loginOptions).then(res => res.json());
+    },
+    me: token => {
+      const options = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `{
+              viewer {
+                user {
+                  id
+                  email
+                  language
+                }
+              }
+            }`,
+        }),
+      };
+      return fetch(config.env.graphql, options).then(res => res.json());
+    },
+    language: ({ token, variables }) => {
+      const options = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation ChangeUserLanguage($id: ID!, $input: UserUpdateInput!) {
+            userUpdate(id: $id, input: $input) {
+              user {
+                id
+                language
+              }
+            }
+          },
+        `,
+          variables,
+        }),
+      };
+      return fetch(config.env.graphql, options).then(res => res.json());
+    },
     fixture: type => {
       logger.log('create fixture', type);
       if (type === 'order')
