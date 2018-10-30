@@ -45,7 +45,7 @@ const initValues = {
   editingForm: null,
 };
 
-export class OrderFilteredSectionContainer extends Container<FormState> {
+export class OrderFiltering extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;
@@ -91,14 +91,23 @@ export class OrderFilteredSectionContainer extends Container<FormState> {
     }
   };
 
-  onToggleSelectSection = (name: string, setFieldValue: ?Function) => {
+  onToggleSelectSection = (name: string, setFieldValue: ?Function, form: React.Node) => {
     this.setState(
-      ({ selectedSections, ...rest }) => ({
-        selectedSections: selectedSections.includes(name)
-          ? (selectedSections.filter(item => item !== name): Array<?string>)
-          : ([...selectedSections, name]: Array<?string>),
-        ...rest,
-      }),
+      ({ editingSection, selectedSections, ...rest }) => {
+        const isSelecting = selectedSections.includes(name);
+        if (!isSelecting) {
+          this.onEditSection(name, form);
+        }
+
+        return {
+          ...rest,
+          selectedSections: isSelecting
+            ? (selectedSections.filter(item => item !== name): Array<?string>)
+            : ([...selectedSections, name]: Array<?string>),
+          editingForm: isSelecting ? null : form,
+          editingSection: isSelecting ? '' : editingSection,
+        };
+      },
       () => {
         if (setFieldValue) {
           setFieldValue(this.generateQuery(this.state));
@@ -133,11 +142,11 @@ export class OrderFilteredSectionContainer extends Container<FormState> {
     );
   };
 
-  onSave = (name: string, setFieldValue: Function) => {
+  onApply = (name: string, setFieldValue: Function) => {
     this.setState(
       ({ editingSection, editingForm, ...rest }) => ({
         editingSection: '',
-        editingForm: null,
+        // editingForm: null,
         ...rest,
       }),
       () => {
@@ -159,4 +168,4 @@ export class OrderFilteredSectionContainer extends Container<FormState> {
   };
 }
 
-export default OrderFilteredSectionContainer;
+export default OrderFiltering;

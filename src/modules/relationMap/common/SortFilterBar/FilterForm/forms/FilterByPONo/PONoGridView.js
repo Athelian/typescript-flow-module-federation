@@ -3,8 +3,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
-import GridView from 'components/GridView';
-import { OrderFilteredSectionContainer } from 'modules/relationMap/common/SortFilterBar/FilterForm/containers';
+import GridView from 'components/GridView/index';
+import { OrderFilteringContainer } from 'modules/relationMap/common/SortFilterBar/FilterForm/containers';
 import PONoGridViewItem from './PONoGridViewItem';
 
 type Props = {
@@ -51,7 +51,7 @@ class OrderGridView extends React.PureComponent<Props> {
     const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = this.props;
 
     return (
-      <Subscribe to={[OrderFilteredSectionContainer]}>
+      <Subscribe to={[OrderFilteringContainer]}>
         {({ originalValues, state, onAddFilterValue, onRemoveFilterValue }) => (
           <GridView
             onLoadMore={onLoadMore}

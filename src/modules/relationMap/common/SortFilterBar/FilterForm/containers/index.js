@@ -1,6 +1,6 @@
-import { OrderFilteredSectionContainer } from './orderFilteredSection';
-import { BatchFilteredSectionContainer } from './batchFilteredSection';
+import OrderFilteringContainer from './orderFiltering';
+import OrderItemFilteringContainer from './orderItemFiltering';
 
-export { OrderFilteredSectionContainer, BatchFilteredSectionContainer };
+export { OrderFilteringContainer, OrderItemFilteringContainer };
 
 export default null;

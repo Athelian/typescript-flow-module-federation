@@ -20,7 +20,7 @@ export const ScrollWrapperStyle = ({ height }: ScrollType) => css`
 
 export const FilterLayoutStyle = css`
   display: grid;
-  grid-template-columns: minmax(150px, 3fr) 7fr 10fr;
+  grid-template-columns: minmax(120px, 3fr) minmax(250px, 7fr) 10fr;
   height: inherit;
   overflow: hidden;
 `;
@@ -50,7 +50,6 @@ export const FilterGroupSectionStyle: string = css`
   grid-template-columns: 1fr;
   grid-auto-columns: min-content;
   grid-row-gap: 10px;
-  min-width: 400px;
   padding: 20px 10px 10px 20px;
   margin-bottom: 2px;
   background-color: ${colors.ALMOST_WHITE};

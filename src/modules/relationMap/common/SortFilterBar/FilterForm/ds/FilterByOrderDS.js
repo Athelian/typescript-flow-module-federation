@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import FilterByPONo from './components/FilterByPONo';
+import FilterByPONo from '../forms/FilterByPONo';
 
 const filterByOrderDS = [
   {
     key: 'poNo',
+    type: 'multi-select',
     readOnly: false,
     disabled: false,
     label: <FormattedMessage id="modules.relationMap.filter.PONo" defaultMessage="PO No." />,
@@ -12,6 +13,7 @@ const filterByOrderDS = [
   },
   {
     key: 'exporterId',
+    type: 'multi-select',
     readOnly: false,
     disabled: true,
     label: <FormattedMessage id="modules.relationMap.filter.exporter" defaultMessage="Exporter" />,
@@ -19,6 +21,7 @@ const filterByOrderDS = [
   },
   {
     key: 'tagIds',
+    type: 'multi-select',
     readOnly: false,
     disabled: true,
     label: <FormattedMessage id="modules.relationMap.filter.tag" defaultMessage="Tag" />,
@@ -26,6 +29,8 @@ const filterByOrderDS = [
   },
   {
     key: 'assignment',
+    type: 'multi-select',
+    limit: 1,
     readOnly: false,
     disabled: true,
     label: (
@@ -38,6 +43,7 @@ const filterByOrderDS = [
   },
   {
     key: 'created',
+    type: 'range',
     readOnly: false,
     disabled: true,
     label: <FormattedMessage id="modules.relationMap.filter.created" defaultMessage="Created" />,
@@ -45,12 +51,59 @@ const filterByOrderDS = [
   },
   {
     key: 'updatedAt',
+    type: 'range',
     readOnly: false,
     disabled: true,
     label: (
       <FormattedMessage
         id="modules.relationMap.filter.lastModified"
         defaultMessage="Last Modified"
+      />
+    ),
+    form: null,
+  },
+  {
+    key: 'unBatched',
+    type: 'checkbox',
+    readOnly: false,
+    disabled: true,
+    label: (
+      <FormattedMessage id="modules.relationMap.filter.unBatched" defaultMessage="UnBatched" />
+    ),
+    form: null,
+  },
+  {
+    key: 'unShipped',
+    type: 'checkbox',
+    readOnly: false,
+    disabled: true,
+    label: (
+      <FormattedMessage id="modules.relationMap.filter.unShipped" defaultMessage="UnShipped" />
+    ),
+    form: null,
+  },
+  {
+    key: 'includeArchived',
+    type: 'checkbox',
+    readOnly: false,
+    disabled: true,
+    label: (
+      <FormattedMessage
+        id="modules.relationMap.filter.includeArchived"
+        defaultMessage="Include Archived"
+      />
+    ),
+    form: null,
+  },
+  {
+    key: 'onlyArchived',
+    type: 'checkbox',
+    readOnly: false,
+    disabled: true,
+    label: (
+      <FormattedMessage
+        id="modules.relationMap.filter.onlyArchived"
+        defaultMessage="Only Archived"
       />
     ),
     form: null,

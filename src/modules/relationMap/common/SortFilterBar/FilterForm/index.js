@@ -6,7 +6,7 @@ import { SectionWrapper, FieldItem, RadioInputFilterForm, ToggleInput } from 'co
 import JumpToSection from 'components/JumpToSection';
 
 import FilterHeaderLink from './components/FilterHeaderLink';
-import { OrderFilteredSectionContainer, BatchFilteredSectionContainer } from './containers';
+import { OrderFilteringContainer, OrderItemFilteringContainer } from './containers';
 import {
   ScrollWrapperStyle,
   FilterLayoutStyle,
@@ -21,7 +21,8 @@ import {
   FilterTagStyle,
 } from './style';
 import FilterSectionButton from './components/FilterSectionButton';
-import filterByOrderDS from './filterByOrderDS';
+import FilterByOrderDS from './ds/FilterByOrderDS';
+import FilterByOrderItemDS from './ds/FilterByOrderItemDS';
 
 type Props = {
   onChange: (filters: Object) => void,
@@ -30,15 +31,114 @@ type Props = {
 class FilterForm extends React.Component<Props> {
   reset = () => {};
 
-  render() {
+  renderFilterSection = (container: Object, ds: Array<any>) => {
     const { onChange } = this.props;
 
+    return (
+      <Subscribe to={[container]}>
+        {({
+          originalValues,
+          state,
+          onToggleSelectSection,
+          onToggleSection,
+          onEditSection,
+          onApply,
+        }) => {
+          const values = { ...originalValues, ...state };
+
+          return (
+            <FieldItem
+              vertical
+              input={
+                <div className={FilterGroupSectionStyle}>
+                  {ds.map(({ key, type, readOnly, disabled, label, form }) => {
+                    let actions = [];
+                    if (values.editingSection === key && form) {
+                      actions = [
+                        <FilterSectionButton
+                          key="btn-save"
+                          label="APPLY"
+                          active
+                          onClick={() => onApply(key, onChange)}
+                        />,
+                      ].filter(Boolean);
+                    } else if (form) {
+                      actions = [
+                        <FilterSectionButton
+                          key="btn-edit"
+                          label="EDIT"
+                          active={false}
+                          onClick={() => {
+                            if (values.selectedSections.includes(key)) {
+                              onEditSection(key, form);
+                            }
+                          }}
+                        />,
+                      ];
+                    }
+
+                    switch (type) {
+                      case 'multi-select': {
+                        return (
+                          <>
+                            <RadioInputFilterForm
+                              key={key}
+                              selected={values.selectedSections.includes(key)}
+                              onToggle={() => onToggleSelectSection(key, onChange, form)}
+                              readOnly={readOnly}
+                              disabled={disabled}
+                              actions={actions}
+                            >
+                              <div className={FilterSectionStyle}>
+                                <div className={FilterSectionLabel}>{label}</div>
+                              </div>
+                            </RadioInputFilterForm>
+                            {values[key] && values[key].length ? (
+                              <div className={FilterTagsWrapperStyle}>
+                                {values[key].map(el => (
+                                  <div className={FilterTagStyle} key={el.id}>
+                                    {el.text}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+                          </>
+                        );
+                      }
+                      case 'checkbox': {
+                        return (
+                          <>
+                            <ToggleInput
+                              toggled={values.selectedSections.includes(key)}
+                              onToggle={() => onToggleSection(key)}
+                            >
+                              <div className={FilterSectionStyle}>
+                                <div className={FilterSectionLabel}>{label}</div>
+                              </div>
+                            </ToggleInput>
+                          </>
+                        );
+                      }
+                      default:
+                        return null;
+                    }
+                  })}
+                </div>
+              }
+            />
+          );
+        }}
+      </Subscribe>
+    );
+  };
+
+  render() {
     return (
       <>
         <div className={ScrollWrapperStyle({ height: '400px' })}>
           <div className={FilterLayoutStyle}>
             <div className={FilterSectionTabs}>
-              <Subscribe to={[OrderFilteredSectionContainer]}>
+              <Subscribe to={[OrderFilteringContainer]}>
                 {({ originalValues, state }) => {
                   const values = { ...originalValues, ...state };
                   const filteredNo =
@@ -57,14 +157,7 @@ class FilterForm extends React.Component<Props> {
                 }}
               </Subscribe>
 
-              <JumpToSection>
-                <FilterHeaderLink
-                  link="itemFilterSection"
-                  label={<FormattedMessage id="global.item" defaultMessage="Item" />}
-                />
-              </JumpToSection>
-
-              <Subscribe to={[BatchFilteredSectionContainer]}>
+              <Subscribe to={[OrderItemFilteringContainer]}>
                 {({ originalValues, state }) => {
                   const values = { ...originalValues, ...state };
                   const filteredNo =
@@ -73,8 +166,8 @@ class FilterForm extends React.Component<Props> {
                   return (
                     <JumpToSection>
                       <FilterHeaderLink
-                        link="batchFilterSection"
-                        label={<FormattedMessage id="global.batch" defaultMessage="Batch" />}
+                        link="orderItemFilterSection"
+                        label={<FormattedMessage id="global.item" defaultMessage="Item" />}
                       >
                         {filteredNo ? <div className={FilteredNoStyle}>{filteredNo}</div> : null}
                       </FilterHeaderLink>
@@ -85,6 +178,13 @@ class FilterForm extends React.Component<Props> {
 
               <JumpToSection>
                 <FilterHeaderLink
+                  link="batchFilterSection"
+                  label={<FormattedMessage id="global.batch" defaultMessage="Batch" />}
+                />
+              </JumpToSection>
+
+              <JumpToSection>
+                <FilterHeaderLink
                   link="shipmentFilterSection"
                   label={<FormattedMessage id="global.shipment" defaultMessage="Shipment" />}
                 />
@@ -92,150 +192,19 @@ class FilterForm extends React.Component<Props> {
             </div>
             <div className={FilterGroupSectionWrapperStyle}>
               <SectionWrapper id="orderFilterSection">
-                <Subscribe to={[OrderFilteredSectionContainer]}>
-                  {({
-                    originalValues,
-                    state,
-                    onToggleSelectSection,
-                    onToggleSection,
-                    onEditSection,
-                    onSave,
-                  }) => {
-                    const values = { ...originalValues, ...state };
-
-                    return (
-                      <FieldItem
-                        vertical
-                        input={
-                          <div className={FilterGroupSectionStyle}>
-                            {filterByOrderDS.map(({ key, readOnly, disabled, label, form }) => {
-                              let actions = [];
-                              if (values.editingSection === key) {
-                                actions = [
-                                  <FilterSectionButton
-                                    key="btn-save"
-                                    label="APPLY"
-                                    active
-                                    onClick={() => onSave(key, onChange)}
-                                  />,
-                                ].filter(Boolean);
-                              } else if (form) {
-                                actions = [
-                                  <FilterSectionButton
-                                    key="btn-edit"
-                                    label="EDIT"
-                                    active={false}
-                                    onClick={() => {
-                                      if (values.selectedSections.includes(key)) {
-                                        onEditSection(key, form);
-                                      }
-                                    }}
-                                  />,
-                                ];
-                              }
-
-                              return (
-                                <>
-                                  <RadioInputFilterForm
-                                    key={key}
-                                    selected={values.selectedSections.includes(key)}
-                                    onToggle={() => onToggleSelectSection(key, onChange)}
-                                    readOnly={readOnly}
-                                    disabled={disabled}
-                                    actions={actions}
-                                  >
-                                    <div className={FilterSectionStyle}>
-                                      <div className={FilterSectionLabel}>{label}</div>
-                                    </div>
-                                  </RadioInputFilterForm>
-                                  {values[key] && values[key].length ? (
-                                    <div className={FilterTagsWrapperStyle}>
-                                      {values[key].map(el => (
-                                        <div className={FilterTagStyle} key={el.id}>
-                                          {el.text}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  ) : null}
-                                </>
-                              );
-                            })}
-                            <FieldItem
-                              vertical
-                              input={
-                                <div className={FilterGroupSectionStyle}>
-                                  <ToggleInput
-                                    toggled={values.selectedSections.includes('unBatched')}
-                                    onToggle={() => onToggleSection('unBatched')}
-                                  >
-                                    <div className={FilterSectionStyle}>
-                                      <div className={FilterSectionLabel}>
-                                        <FormattedMessage
-                                          id="modules.relationMap.filter.unBatched"
-                                          defaultMessage="UnBatched"
-                                        />
-                                      </div>
-                                    </div>
-                                  </ToggleInput>
-                                  <ToggleInput
-                                    toggled={values.selectedSections.includes('unShipped')}
-                                    onToggle={() => onToggleSection('unShipped')}
-                                  >
-                                    <div className={FilterSectionStyle}>
-                                      <div className={FilterSectionLabel}>
-                                        <FormattedMessage
-                                          id="modules.relationMap.filter.unShipped"
-                                          defaultMessage="UnShipped"
-                                        />
-                                      </div>
-                                    </div>
-                                  </ToggleInput>
-
-                                  <ToggleInput
-                                    toggled={values.selectedSections.includes('includeArchived')}
-                                    onToggle={() => onToggleSection('includeArchived')}
-                                  >
-                                    <div className={FilterSectionStyle}>
-                                      <div className={FilterSectionLabel}>
-                                        <FormattedMessage
-                                          id="modules.relationMap.filter.includeArchived"
-                                          defaultMessage="IncludeArchived"
-                                        />
-                                      </div>
-                                    </div>
-                                  </ToggleInput>
-                                  <ToggleInput
-                                    toggled={values.selectedSections.includes('onlyArchived')}
-                                    onToggle={() => onToggleSection('onlyArchived')}
-                                  >
-                                    <div className={FilterSectionStyle}>
-                                      <div className={FilterSectionLabel}>
-                                        <FormattedMessage
-                                          id="modules.relationMap.filter.onlyArchived"
-                                          defaultMessage="Only Archived"
-                                        />
-                                      </div>
-                                    </div>
-                                  </ToggleInput>
-                                </div>
-                              }
-                            />
-                          </div>
-                        }
-                      />
-                    );
-                  }}
-                </Subscribe>
+                {this.renderFilterSection(OrderFilteringContainer, FilterByOrderDS)}
               </SectionWrapper>
 
-              <SectionWrapper id="itemFilterSection" />
+              <SectionWrapper id="orderItemFilterSection">
+                {this.renderFilterSection(OrderItemFilteringContainer, FilterByOrderItemDS)}
+              </SectionWrapper>
 
               <SectionWrapper id="batchFilterSection" />
 
               <SectionWrapper id="shipmentFilterSection" />
             </div>
             <div className={FilterSectionEditForm}>
-              <Subscribe to={[OrderFilteredSectionContainer]}>
+              <Subscribe to={[OrderFilteringContainer]}>
                 {({ originalValues, state }) => {
                   const values = { ...originalValues, ...state };
 

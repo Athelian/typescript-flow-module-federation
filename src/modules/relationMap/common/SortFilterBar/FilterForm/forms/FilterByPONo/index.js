@@ -4,8 +4,8 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import { FormattedMessage } from 'react-intl';
-import { SearchInput } from 'components/NavBar';
-import { SortFilterHandler } from 'modules/relationMap/common/SortFilter';
+import { SearchInput } from 'components/NavBar/index';
+import { SortFilterHandler } from 'modules/relationMap/common/SortFilter/index';
 import PONoGridView from './PONoGridView';
 import { orderListQuery } from './query';
 
