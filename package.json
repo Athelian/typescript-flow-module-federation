@@ -199,7 +199,7 @@
     "jest-dom": "^2.1.0",
     "jest-emotion": "^9.2.11",
     "jest-pnp-resolver": "1.0.1",
-    "lint-staged": "^7.3.0",
+    "lint-staged": "^8.0.3",
     "mini-css-extract-plugin": "^0.4.4",
     "node-fetch": "^2.2.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
