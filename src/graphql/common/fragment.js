@@ -113,8 +113,8 @@ export const portFragment = gql`
 `;
 
 export const metadataFragment = gql`
-  fragment metadataFragment on Metadata {
-    field
+  fragment metadataFragment on Metadatum {
+    key
     value
   }
 `;

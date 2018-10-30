@@ -1,10 +1,18 @@
 // @flow
 import * as React from 'react';
 
-export default function LineNumber() {
-  return (
-    <>
-      <div>Line Number</div>
-    </>
-  );
+type OptionalProps = {
+  line: number,
+};
+
+type Props = OptionalProps & {};
+
+const defaultProps = {
+  line: 0,
+};
+
+export default function LineNumber({ line }: Props) {
+  return <div>{line > 0 ? line : ''}</div>;
 }
+
+LineNumber.defaultProps = defaultProps;

@@ -3,7 +3,13 @@ import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { getInitialLocale, translationMessages } from 'i18n';
 
-const LanguageContext = React.createContext({
+type ContextProps = {
+  language: string,
+  changeLocale: Function,
+  setLocale: Function,
+};
+
+const LanguageContext: React.Context<ContextProps> = React.createContext({
   language: getInitialLocale(),
   changeLocale: () => {},
   setLocale: language => language,

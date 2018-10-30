@@ -10,9 +10,16 @@ import { isAppInProduction } from 'utils/env';
 import { getByPathWithDefault } from 'utils/fp';
 import query from './query';
 
-const UserContext = React.createContext({
+type ContextProps = {
   user: {
-    id: -1,
+    id: string,
+  },
+  permissions: Array<string>,
+};
+
+const UserContext: React.Context<ContextProps> = React.createContext({
+  user: {
+    id: '-1',
   },
   permissions: [],
 });

@@ -5,13 +5,12 @@ import { FormattedMessage } from 'react-intl';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/relationMap/messages';
+import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
-import HeaderSection from './components/HeaderSection';
 import { WrapperStyle } from './style';
-import { SortFilter, SortFilterHandler } from '../SortFilter';
 import ExpandHeader from '../ExpandHeader';
-import ToggleTag from '../ToggleTag';
 import SummaryBadge from '../SummaryBadge';
+import TableHeader from './components/TableHeader';
 
 type Props = {
   onSave: () => void,
@@ -30,15 +29,6 @@ export default function TableInlineEdit({ onSave, onCancel, onExpand }: Props) {
         </SlideViewNavBar>
       }
     >
-      <HeaderSection isShowAll />
-      <div>
-        <SortFilterHandler>
-          {({ sort, filter, onChangeSortFilter }) => (
-            <SortFilter sort={sort} filter={filter} onChange={onChangeSortFilter} />
-          )}
-        </SortFilterHandler>
-        <ToggleTag />
-      </div>
       <div className={WrapperStyle}>
         <ExpandHeader isExpanding={false} onClick={onExpand}>
           <SummaryBadge
@@ -73,9 +63,41 @@ export default function TableInlineEdit({ onSave, onCancel, onExpand }: Props) {
           />
         </ExpandHeader>
       </div>
-      <div>
-        <LineNumber /> Main Content
-      </div>
+      <TableRow>
+        <LineNumber />
+        <TableHeader
+          info={[
+            {
+              group: 'General',
+              columns: ['PO No.', 'PI No.'],
+            },
+          ]}
+        />
+        <TableHeader
+          info={[
+            {
+              group: 'General',
+              columns: ['OrderItem No.', 'Product Name'],
+            },
+          ]}
+        />
+        <TableHeader
+          info={[
+            {
+              group: 'General',
+              columns: ['Batch No.', 'Initial Quantity'],
+            },
+          ]}
+        />
+        <TableHeader
+          info={[
+            {
+              group: 'General',
+              columns: ['Shipment ID', 'B/L No.'],
+            },
+          ]}
+        />
+      </TableRow>
     </Layout>
   );
 }

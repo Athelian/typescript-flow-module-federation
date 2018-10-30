@@ -8,6 +8,7 @@ import { DashedPlusButton } from 'components/Form';
 import { ExporterEmptyCardStyle } from './style';
 
 export const getUniqueExporters = (batches: Array<Object>) => {
+  // $FlowFixMe need to change type from lodash
   const uniqueExporters = uniqBy(
     batches.map(batch => batch.orderItem.productProvider.exporter),
     'id'

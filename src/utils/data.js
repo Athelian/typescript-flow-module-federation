@@ -1,7 +1,7 @@
 // @flow
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
 
-export const replaceUndefined = when(
+export const replaceUndefined: Function = when(
   either(is(Array), is(Object)),
   pipe(
     map(x => (x === undefined ? null : x)),
@@ -25,7 +25,7 @@ export const removeEmpty: Function = when(
   )
 );
 
-export const replaceEmptyString = when(
+export const replaceEmptyString: Function = when(
   either(is(Array), is(Object)),
   pipe(
     map(x => (x === '' ? null : x)),
@@ -33,7 +33,7 @@ export const replaceEmptyString = when(
   )
 );
 
-export const removeTypename = when(
+export const removeTypename: Function = when(
   either(is(Array), is(Object)),
   pipe(
     x => (is(Object, x) && !is(Array, x) ? omit(['__typename'], x) : x),
@@ -41,12 +41,12 @@ export const removeTypename = when(
   )
 );
 
-export const cleanUpData = pipe(
+export const cleanUpData: Function = pipe(
   removeTypename,
   removeNulls
 );
 
-export const cleanFalsy = pipe(
+export const cleanFalsy: Function = pipe(
   removeNulls,
   removeEmpty
 );

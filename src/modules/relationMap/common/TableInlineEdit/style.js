@@ -7,4 +7,8 @@ export const WrapperStyle: string = css`
   justify-content: space-around;
 `;
 
-export default WrapperStyle;
+export const TableContentStyle: string = css`
+  display: grid;
+  width: 100%;
+  grid-template-columns: 20px auto auto auto auto;
+`;
