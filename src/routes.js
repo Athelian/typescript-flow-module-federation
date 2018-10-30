@@ -23,28 +23,30 @@ const AsyncRelationMap = lazy(() => import('./modules/relationMap'));
 const AsyncNotifications = lazy(() => import('./modules/notifications'));
 
 const Routes = () => (
-  <Suspense fallback={<LoadingIcon />}>
+  <>
     <SideBar />
-    <Router>
-      <Authorized path="/">
-        <DashBoard path="/" />
-        <Order path="order/*" />
-        <AsyncBatch path="batch/*" />
-        <AsyncShipment path="shipment/*" />
-        <AsyncProduct path="product/*" />
-        <AsyncWarehouse path="warehouse/*" />
-        <AsyncPartner path="partner/*" />
-        <AsyncStaff path="staff/*" />
-        <AsyncTags path="tags/*" />
-        <AsyncRelationMap path="relation-map/*" />
-        <AsyncNotifications path="notifications/*" />
+    <Suspense fallback={<LoadingIcon />}>
+      <Router>
+        <Authorized path="/">
+          <DashBoard path="/" />
+          <Order path="order/*" />
+          <AsyncBatch path="batch/*" />
+          <AsyncShipment path="shipment/*" />
+          <AsyncProduct path="product/*" />
+          <AsyncWarehouse path="warehouse/*" />
+          <AsyncPartner path="partner/*" />
+          <AsyncStaff path="staff/*" />
+          <AsyncTags path="tags/*" />
+          <AsyncRelationMap path="relation-map/*" />
+          <AsyncNotifications path="notifications/*" />
+          <PageNotFound default />
+        </Authorized>
+        <Login path="/login" redirectUrl="/order" />
+        <NoPermission path="/403" />
         <PageNotFound default />
-      </Authorized>
-      <Login path="/login" redirectUrl="/order" />
-      <NoPermission path="/403" />
-      <PageNotFound default />
-    </Router>
-  </Suspense>
+      </Router>
+    </Suspense>
+  </>
 );
 
 export default hot(module)(Routes);
