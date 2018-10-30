@@ -44,6 +44,17 @@
       },
       {
         "kind": "INTERFACE",
+        "name": "Metadata",
+        "possibleTypes": [
+          { "name": "Order" },
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Shipment" },
+          { "name": "Warehouse" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
         "name": "Model",
         "possibleTypes": [
           { "name": "Batch" },
@@ -57,6 +68,7 @@
           { "name": "Integration" },
           { "name": "IntegrationConfiguration" },
           { "name": "IntegrationLink" },
+          { "name": "MetadataTemplate" },
           { "name": "Order" },
           { "name": "OrderItem" },
           { "name": "Partner" },
@@ -86,6 +98,7 @@
           { "name": "Integration" },
           { "name": "IntegrationConfiguration" },
           { "name": "IntegrationLink" },
+          { "name": "MetadataTemplate" },
           { "name": "Order" },
           { "name": "OrderItem" },
           { "name": "Product" },
