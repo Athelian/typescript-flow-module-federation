@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
-import GridView from 'components/GridView/index';
+import GridView from 'components/GridView';
 import { OrderFilteringContainer } from 'modules/relationMap/common/SortFilterBar/FilterForm/containers';
 import PONoGridViewItem from './PONoGridViewItem';
 

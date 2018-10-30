@@ -4,13 +4,65 @@ import { Container } from 'unstated';
 import { removeTypename } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
-type objectType = {
+type MultiSelectDataType = {
   id: string,
   text: string,
 };
 
+type OrderFilterFieldMultiSelect = {
+  poNo?: Array<MultiSelectDataType>,
+  exporterId?: Array<MultiSelectDataType>,
+  tagIds?: Array<MultiSelectDataType>,
+  assignment?: Array<MultiSelectDataType>,
+};
+type OrderFilterFieldCheckBox = {
+  unBatched?: boolean,
+  unShipped?: boolean,
+  includeArchived?: boolean,
+  onlyArchived?: boolean,
+};
+type OrderFilterFieldRange = {
+  created?: Array<string>,
+  updatedAt?: Array<string>,
+};
+type OrderFilter = {
+  multiSelect?: OrderFilterFieldMultiSelect,
+  checkbox?: OrderFilterFieldCheckBox,
+  range?: OrderFilterFieldRange,
+};
+
+type OrderItemFilterFieldMultiSelect = {
+  productName?: Array<MultiSelectDataType>,
+  productSerial?: Array<MultiSelectDataType>,
+  janCode?: Array<MultiSelectDataType>,
+  hsCode?: Array<MultiSelectDataType>,
+  exporter?: Array<MultiSelectDataType>,
+  supplier?: Array<MultiSelectDataType>,
+  countryOfOrigin?: Array<MultiSelectDataType>,
+  currency?: Array<MultiSelectDataType>,
+  packageInfo?: Array<MultiSelectDataType>,
+  metadata?: Array<MultiSelectDataType>,
+  tag?: Array<MultiSelectDataType>,
+};
+type OrderItemFilterFieldSelect = {
+  unBatched?: boolean,
+  unShipped?: boolean,
+  includeArchived?: boolean,
+  onlyArchived?: boolean,
+}
+type OrderItemFilterFieldRange = {};
+type OrderItemFilter = {
+  multiSelect?: OrderItemFilterFieldMultiSelect,
+  checkbox?: OrderItemFilterFieldSelect,
+  range?: OrderItemFilterFieldRange,
+};
+
+
 type FormState = {
-  poNo?: Array<objectType>,
+  order: OrderFilter,
+  orderItem: OrderItemFilter,
+
+  poNo?: Array<MultiSelectDataType>,
   exporterId?: Array<string>,
   tagIds?: Array<string>,
   assignment?: Array<string>,
@@ -28,6 +80,47 @@ type FormState = {
 };
 
 const initValues = {
+  order: {
+    multiSelect: {
+      poNo: [],
+      exporterId: [],
+      tagIds: [],
+      assignment: [],
+    },
+    checkbox: {
+      unBatched: false,
+      unShipped: false,
+      includeArchived: false,
+      onlyArchived: false,
+    },
+    range: {
+      created: [],
+      updatedAt: [],
+    },
+  },
+  orderItem: {
+    multiSelect: {
+      productName: [],
+      productSerial: [],
+      janCode: [],
+      hsCode: [],
+      exporter: [],
+      supplier: [],
+      countryOfOrigin: [],
+      currency: [],
+      packageInfo: [],
+      metadata: [],
+      tag: [],
+    },
+    checkbox: {
+      unBatched: false,
+      unShipped: false,
+      includeArchived: false,
+      onlyArchived: false,
+    },
+    range: {},
+  },
+
   poNo: [],
   exporterId: [],
   tagIds: [],
@@ -68,24 +161,24 @@ export class OrderFiltering extends Container<FormState> {
     };
   };
 
-  onAddFilterValue = (name: string, data: objectType) => {
+  onAddFilterValue = (name: string, data: MultiSelectDataType) => {
     if (this.state[name] !== undefined) {
       this.setState(prevState => ({
         ...prevState,
         [name]: prevState[name].filter(el => el.id === data.id).length
           ? prevState[name]
-          : ([...prevState[name], data]: Array<?objectType>),
+          : ([...prevState[name], data]: Array<?MultiSelectDataType>),
       }));
     }
   };
 
-  onRemoveFilterValue = (name: string, data: objectType) => {
+  onRemoveFilterValue = (name: string, data: MultiSelectDataType) => {
     if (this.state[name] !== undefined) {
       this.setState(prevState => ({
         ...prevState,
         [name]:
           prevState[name].findIndex(el => el.id === data.id) !== -1
-            ? (prevState[name].filter(el => el.id !== data.id): Array<?objectType>)
+            ? (prevState[name].filter(el => el.id !== data.id): Array<?MultiSelectDataType>)
             : prevState[name],
       }));
     }

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, colors, layout, shadows, presets } from 'styles/common';
+import { borderRadiuses, colors, layout, presets } from 'styles/common';
 
 export const RadioInputFilterFormWrapperStyle = css`
   display: grid;
@@ -15,7 +15,7 @@ export const RadioInputLabelStyle = (selected: boolean, disabled: boolean): stri
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: min-content 1fr;
-  grid-gap: 15px;
+  grid-gap: 8px;
   align-items: center;
   width: 100%;
 
@@ -38,7 +38,6 @@ export const RadioInputLabelStyle = (selected: boolean, disabled: boolean): stri
 
 export const RadioButtonStyle = (selected: boolean, disabled: boolean): string => css`
   ${!disabled && presets.BUTTON};
-  ${!disabled && shadows.INPUT};
 
   width: 20px;
   height: 20px;
