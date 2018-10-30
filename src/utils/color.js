@@ -24,7 +24,7 @@ export const computeTextColor = (color: string) => {
 export function SpanStyle(color: string) {
   return css`
     color: ${colors[color]};
-`;
+  `;
 }
 
 export function spanWithColor(value: any, color: string) {
