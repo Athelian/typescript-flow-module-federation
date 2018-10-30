@@ -330,8 +330,6 @@ npx graphql-cli generate-fragments
 │
 ├── .gitignore                            // git ignored files
 │
-├── .gitlab                               // folder for managing gitlab templates
-│
 ├── .npmrc                                // keys for private registry
 │
 ├── .prettierrc.json                      // config file for prettier
@@ -452,13 +450,19 @@ build                                    // auto generated build folder containi
 
   a tiny but mighty list virtualization library
 
+* [react-transition-group](https://github.com/reactjs/react-transition-group#readme)
+  A react component toolset for managing animations
+
+- [react-values](https://github.com/ianstormtaylor/react-values)
+
+  A set of tiny, composable React components for handling state with render props.
+
 * [reach-router](https://github.com/reach/router)
 
   for managing routes.
 
-* [react-loadable](https://github.com/thejameskyle/react-loadable)
-
-  for managing component based code splitting.
+- [scroll-into-view-if-needed](https://scroll-into-view-if-needed.netlify.com)
+  Polyfill for upcoming Element.scrollIntoView() APIs like scrollMode: if-needed, behavior: smooth and block: center
 
 * [emotion](https://github.com/emotion-js/emotion)
 
@@ -484,25 +488,31 @@ build                                    // auto generated build folder containi
 
   for generating attractive colors.
 
-* [react-input-mask](https://github.com/sanniassin/react-input-mask)
-
-  for input masking component.
-
-* [react-debounce-input](https://github.com/nkbt/react-debounce-input)
+- [react-debounce-input](https://github.com/nkbt/react-debounce-input)
 
   for input with debounced onChange.
 
-* [react-intl](https://github.com/yahoo/react-intl)
+- [react-intl](https://github.com/yahoo/react-intl)
 
   for managing internationalization.
 
-* [react-fontawesome](https://github.com/FortAwesome/react-fontawesome)
+- [react-fontawesome](https://github.com/FortAwesome/react-fontawesome)
 
   for importing fontawesome in react.
 
-* [yup](https://github.com/jquense/yupdt)
+- [yup](https://github.com/jquense/yup)
 
   for JavaScript object schema validator and object parser.
+
+- [emitter](https://github.com/facebook/emitter#readme)
+
+  Facebook's EventEmitter is a simple emitter implementation that prioritizes speed and simplicity.
+
+- [pluralize](https://github.com/blakeembrey/pluralize#readme)
+  Pluralize and singularize any word
+
+- [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
+  Beautiful, accessible drag and drop for lists with React.js
 
 * [react-snap](https://github.com/stereobooster/react-snap)
 
@@ -514,26 +524,10 @@ build                                    // auto generated build folder containi
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://gitlab.com/zenport.io/web-app/tags).
+We use [SemVer](http://semver.org/) for versioning.
 
 ### Troubleshooting
 
 Try to run `pkill flow` if you meet a memory issue with `flow` then restart VSCode.
-
-### Issues
-
-To file any issues regarding the project, create one at
-
-https://gitlab.com/zenport.io/web-app/issues
-
-and follow the provided templates.
-
-### Pull/Merge Requests
-
-To create a merge/pull request, create one at
-
-https://gitlab.com/zenport.io/web-app/merge_requests
-
-and follow the provided template.
 
 **NOTE:** As a convention [git flow](https://danielkummer.github.io/git-flow-cheatsheet/) is followed.
