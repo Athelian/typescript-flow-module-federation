@@ -20,6 +20,7 @@ export const ButtonStyle: string = css`
   width: 30px;
   height: 30px;
   outline: none;
+  position: relative;
   &:hover {
   }
 `;
