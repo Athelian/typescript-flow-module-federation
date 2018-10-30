@@ -1,9 +1,9 @@
 // @flow
-import * as React from 'react';
+// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+import React, { lazy, Suspense } from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import Loadable from 'react-loadable';
 import { uniqBy } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { Subscribe } from 'unstated';
@@ -32,22 +32,10 @@ const defaultProps = {
   onFormReady: () => {},
 };
 
-const AsyncTimelineSection = Loadable({
-  loading: () => <LoadingIcon />,
-  loader: () => import('./components/TimelineSection'),
-});
-const AsyncCargoSection = Loadable({
-  loading: () => <LoadingIcon />,
-  loader: () => import('./components/CargoSection'),
-});
-const AsyncOrdersSection = Loadable({
-  loading: () => <LoadingIcon />,
-  loader: () => import('./components/OrdersSection'),
-});
-const AsyncDocumentsSection = Loadable({
-  loading: () => <LoadingIcon />,
-  loader: () => import('./components/DocumentsSection'),
-});
+const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
+const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
+const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
+const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 
 class ShipmentForm extends React.Component<Props> {
   static defaultProps = defaultProps;
@@ -80,97 +68,101 @@ class ShipmentForm extends React.Component<Props> {
     const { updatedAt, updatedBy, archived } = shipment;
 
     return (
-      <div className={ShipmentFormWrapperStyle}>
-        <SectionWrapper id="shipmentSection">
-          <SectionHeader
-            icon="SHIPMENT"
-            title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
-          >
-            {!isNew && (
-              <>
-                <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-                {!isClone && <CloneButton onClick={this.onClone} />}
-                <BooleanValue>
-                  {({ value: statusDialogIsOpen, set: dialogToggle }) => (
-                    <StatusToggle
-                      archived={archived}
-                      openStatusDialog={() => dialogToggle(true)}
-                      activateDialog={
-                        <ShipmentActivateDialog
-                          shipment={shipment}
-                          isOpen={statusDialogIsOpen && !!archived}
-                          onRequestClose={() => dialogToggle(false)}
-                          onConfirm={() => window.location.reload()}
-                        />
-                      }
-                      archiveDialog={
-                        <ShipmentArchiveDialog
-                          shipment={shipment}
-                          isOpen={statusDialogIsOpen && !archived}
-                          onRequestClose={() => dialogToggle(false)}
-                          onConfirm={() => window.location.reload()}
-                        />
+      <Suspense fallback={<LoadingIcon />}>
+        <div className={ShipmentFormWrapperStyle}>
+          <SectionWrapper id="shipmentSection">
+            <SectionHeader
+              icon="SHIPMENT"
+              title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
+            >
+              {!isNew && (
+                <>
+                  <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
+                  {!isClone && <CloneButton onClick={this.onClone} />}
+                  <BooleanValue>
+                    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+                      <StatusToggle
+                        archived={archived}
+                        openStatusDialog={() => dialogToggle(true)}
+                        activateDialog={
+                          <ShipmentActivateDialog
+                            shipment={shipment}
+                            isOpen={statusDialogIsOpen && !!archived}
+                            onRequestClose={() => dialogToggle(false)}
+                            onConfirm={() => window.location.reload()}
+                          />
+                        }
+                        archiveDialog={
+                          <ShipmentArchiveDialog
+                            shipment={shipment}
+                            isOpen={statusDialogIsOpen && !archived}
+                            onRequestClose={() => dialogToggle(false)}
+                            onConfirm={() => window.location.reload()}
+                          />
+                        }
+                      />
+                    )}
+                  </BooleanValue>
+                </>
+              )}
+            </SectionHeader>
+            <ShipmentSection isNew={isNew} />
+          </SectionWrapper>
+          <SectionWrapper id="timelineSection">
+            <SectionHeader
+              icon="TIMELINE"
+              title={<FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />}
+            />
+            <AsyncTimelineSection isNew={isNew} />
+          </SectionWrapper>
+          <SectionWrapper id="cargoSection">
+            <Subscribe to={[ShipmentBatchesContainer]}>
+              {({ state: { batches } }) => (
+                <SectionHeader
+                  icon="CARGO"
+                  title={
+                    <>
+                      <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
+                      {batches.length})
+                    </>
+                  }
+                />
+              )}
+            </Subscribe>
+            <AsyncCargoSection />
+          </SectionWrapper>
+          <SectionWrapper id="documentsSection">
+            <SectionHeader
+              icon="DOCUMENT"
+              title={
+                <FormattedMessage id="modules.Shipments.document" defaultMessage="DOCUMENTS" />
+              }
+            />
+            <AsyncDocumentsSection />
+          </SectionWrapper>
+          <SectionWrapper id="orderSection">
+            <Subscribe to={[ShipmentBatchesContainer]}>
+              {({ state: { batches } }) => {
+                const uniqueOrders = uniqBy(batches.map(batch => batch.orderItem.order), 'id');
+                return (
+                  <>
+                    <SectionHeader
+                      icon="ORDER"
+                      title={
+                        <>
+                          <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />(
+                          {uniqueOrders.length})
+                        </>
                       }
                     />
-                  )}
-                </BooleanValue>
-              </>
-            )}
-          </SectionHeader>
-          <ShipmentSection isNew={isNew} />
-        </SectionWrapper>
-        <SectionWrapper id="timelineSection">
-          <SectionHeader
-            icon="TIMELINE"
-            title={<FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />}
-          />
-          <AsyncTimelineSection isNew={isNew} />
-        </SectionWrapper>
-        <SectionWrapper id="cargoSection">
-          <Subscribe to={[ShipmentBatchesContainer]}>
-            {({ state: { batches } }) => (
-              <SectionHeader
-                icon="CARGO"
-                title={
-                  <>
-                    <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
-                    {batches.length})
+                    <AsyncOrdersSection orders={uniqueOrders} />
                   </>
-                }
-              />
-            )}
-          </Subscribe>
-          <AsyncCargoSection />
-        </SectionWrapper>
-        <SectionWrapper id="documentsSection">
-          <SectionHeader
-            icon="DOCUMENT"
-            title={<FormattedMessage id="modules.Shipments.document" defaultMessage="DOCUMENTS" />}
-          />
-          <AsyncDocumentsSection />
-        </SectionWrapper>
-        <SectionWrapper id="orderSection">
-          <Subscribe to={[ShipmentBatchesContainer]}>
-            {({ state: { batches } }) => {
-              const uniqueOrders = uniqBy(batches.map(batch => batch.orderItem.order), 'id');
-              return (
-                <>
-                  <SectionHeader
-                    icon="ORDER"
-                    title={
-                      <>
-                        <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />(
-                        {uniqueOrders.length})
-                      </>
-                    }
-                  />
-                  <AsyncOrdersSection orders={uniqueOrders} />
-                </>
-              );
-            }}
-          </Subscribe>
-        </SectionWrapper>
-      </div>
+                );
+              }}
+            </Subscribe>
+          </SectionWrapper>
+        </div>
+      </Suspense>
     );
   }
 }

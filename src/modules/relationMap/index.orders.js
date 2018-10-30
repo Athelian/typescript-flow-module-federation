@@ -122,6 +122,7 @@ class Order extends React.PureComponent<Props> {
                                               {opened && (
                                                 <TableInlineEdit
                                                   onSave={() => {}}
+                                                  onExpand={() => {}}
                                                   onCancel={() => slideToggle(false)}
                                                 />
                                               )}

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { isNullOrUndefined } from 'utils/fp';
 import withCache from 'hoc/withCache';
-import logger from 'utils/logger';
 import FormContainer from './container';
 
 type OptionalProps = {
@@ -67,7 +66,6 @@ class BaseFormField extends React.Component<Props, State> {
     }
 
     const { name, setActiveField } = this.props;
-    logger.warn('onFocus', name);
     setActiveField(name);
   };
 
@@ -81,7 +79,6 @@ class BaseFormField extends React.Component<Props, State> {
 
     const { value } = event.target;
     const { validationOnChange, onValidate, saveOnChange, setFieldValue, name }: Props = this.props;
-    logger.warn('onChange', name, value);
     this.setState({ value });
 
     if (validationOnChange && onValidate) {
@@ -104,7 +101,6 @@ class BaseFormField extends React.Component<Props, State> {
     const { setFieldValue } = this.props;
     const { value } = this.state;
     const { name, validationOnBlur, onValidate, setFieldTouched, setActiveField } = this.props;
-    logger.warn('onBlur', name, value);
     if (validationOnBlur && onValidate) {
       onValidate({ [name]: value });
     }
