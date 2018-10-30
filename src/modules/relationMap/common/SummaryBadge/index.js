@@ -6,7 +6,7 @@ import { IconStyle, SummaryBadgeWrapper, SummaryBadgeLabel } from './style';
 type Props = {
   icon: string,
   color: string,
-  label: string,
+  label: string | React.Node,
   no: number,
 };
 

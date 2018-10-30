@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { SortInput, SearchInput, AdvanceFilterInput } from 'components/NavBar';
 import FilterForm from '../SortFilterBar/FilterForm';
 import { GroupFilterStyle, SortWrapperStyle, GroupFilterWrapperStyle } from './style';
