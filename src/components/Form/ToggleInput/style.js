@@ -8,9 +8,13 @@ export const ToggleInputStyle = (toggled: boolean): string => css`
   grid-auto-flow: column;
   grid-auto-columns: 1fr min-content;
   grid-gap: 5px;
-  color: ${toggled ? colors.TEAL : colors.GRAY};
+  color: ${colors.GRAY_DARK_1};
   ${fontSizes.MAIN};
   align-items: center;
+  
+  button {
+    color: ${toggled ? colors.TEAL : colors.GRAY};
+  }
 `;
 
 export const ToggleButtonStyle = (toggled: boolean): string => css`

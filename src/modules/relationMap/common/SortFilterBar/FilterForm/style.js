@@ -43,7 +43,9 @@ export const FilteredNoStyle = css`
   color: ${colors.WHITE};
 `;
 
-export const FilterGroupSectionWrapperStyle = css``;
+export const FilterGroupSectionWrapperStyle = css`
+  overflow-y: auto;
+`;
 
 export const FilterGroupSectionStyle: string = css`
   display: grid;
@@ -60,7 +62,7 @@ export const FilterSectionStyle: string = css`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr min-content;
-  grid-gap: 5px;
+  grid-column-gap: 5px;
   align-items: center;
 `;
 
@@ -77,6 +79,8 @@ export const FilterSectionLabel = css`
   letter-spacing: 2px;
   user-select: none;
   padding: 0 5px;
+  line-height: 20px;
+  height: 20px;
 `;
 
 export const FilterTagStyle = css`
@@ -96,6 +100,20 @@ export const FilterTagStyle = css`
 export const FilterTagsWrapperStyle = css`
   display: flex;
   flex-flow: row wrap;
+`;
+
+export const ToggleInputLabelStyle = css`
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-column-gap: 8px;
+`;
+
+export const ToggleInputIconStyle = css`
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  color: ${colors.GRAY_LIGHT};
 `;
 
 export default null;

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { SectionWrapper, FieldItem, RadioInputFilterForm, ToggleInput } from 'components/Form';
 import JumpToSection from 'components/JumpToSection';
-
+import Icon from 'components/Icon';
 import FilterHeaderLink from './components/FilterHeaderLink';
 import { OrderFilteringContainer, OrderItemFilteringContainer } from './containers';
 import {
@@ -19,6 +19,8 @@ import {
   FilterSectionStyle,
   FilterTagsWrapperStyle,
   FilterTagStyle,
+  ToggleInputLabelStyle,
+  ToggleInputIconStyle,
 } from './style';
 import FilterSectionButton from './components/FilterSectionButton';
 import FilterByOrderDS from './ds/FilterByOrderDS';
@@ -51,7 +53,7 @@ class FilterForm extends React.Component<Props> {
               vertical
               input={
                 <div className={FilterGroupSectionStyle}>
-                  {ds.map(({ key, type, readOnly, disabled, label, form }) => {
+                  {ds.map(({ key, type, readOnly, disabled, label, form, icon }) => {
                     let actions = [];
                     if (values.editingSection === key && form) {
                       actions = [
@@ -112,8 +114,11 @@ class FilterForm extends React.Component<Props> {
                               toggled={values.selectedSections.includes(key)}
                               onToggle={() => onToggleSection(key)}
                             >
-                              <div className={FilterSectionStyle}>
-                                <div className={FilterSectionLabel}>{label}</div>
+                              <div className={ToggleInputLabelStyle}>
+                                {icon ? <div className={ToggleInputIconStyle}><Icon icon={icon} /></div> : null}
+                                <div className={FilterSectionLabel}>
+                                  {label}
+                                </div>
                               </div>
                             </ToggleInput>
                           </>
@@ -196,7 +201,7 @@ class FilterForm extends React.Component<Props> {
               </SectionWrapper>
 
               <SectionWrapper id="orderItemFilterSection">
-                {this.renderFilterSection(OrderItemFilteringContainer, FilterByOrderItemDS)}
+                {this.renderFilterSection(OrderFilteringContainer, FilterByOrderItemDS)}
               </SectionWrapper>
 
               <SectionWrapper id="batchFilterSection" />

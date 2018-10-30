@@ -65,6 +65,7 @@ const filterByOrderDS = [
   {
     key: 'unBatched',
     type: 'checkbox',
+    icon: 'BATCH_LIGHT',
     readOnly: false,
     disabled: true,
     label: (
@@ -75,6 +76,7 @@ const filterByOrderDS = [
   {
     key: 'unShipped',
     type: 'checkbox',
+    icon: 'SHIPMENT_LIGHT',
     readOnly: false,
     disabled: true,
     label: (
@@ -85,6 +87,7 @@ const filterByOrderDS = [
   {
     key: 'includeArchived',
     type: 'checkbox',
+    icon: 'ARCHIVE_LIGHT',
     readOnly: false,
     disabled: true,
     label: (
@@ -98,6 +101,7 @@ const filterByOrderDS = [
   {
     key: 'onlyArchived',
     type: 'checkbox',
+    icon: 'ARCHIVE_LIGHT',
     readOnly: false,
     disabled: true,
     label: (

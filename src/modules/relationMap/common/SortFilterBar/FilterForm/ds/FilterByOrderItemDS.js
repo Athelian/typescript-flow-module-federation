@@ -105,6 +105,56 @@ const filterByOrderDS = [
     label: <FormattedMessage id="modules.relationMap.filter.tag" defaultMessage="Tag" />,
     form: null,
   },
+  {
+    key: 'unBatched',
+    type: 'checkbox',
+    icon: 'BATCH_LIGHT',
+    readOnly: false,
+    disabled: true,
+    label: (
+      <FormattedMessage id="modules.relationMap.filter.unBatched" defaultMessage="UnBatched" />
+    ),
+    form: null,
+  },
+  {
+    key: 'unShipped',
+    type: 'checkbox',
+    icon: 'SHIPMENT_LIGHT',
+    readOnly: false,
+    disabled: true,
+    label: (
+      <FormattedMessage id="modules.relationMap.filter.unShipped" defaultMessage="UnShipped" />
+    ),
+    form: null,
+  },
+  {
+    key: 'includeArchived',
+    type: 'checkbox',
+    icon: 'ARCHIVE_LIGHT',
+    readOnly: false,
+    disabled: true,
+    label: (
+      <FormattedMessage
+        id="modules.relationMap.filter.includeArchived"
+        defaultMessage="Include Archived"
+      />
+    ),
+    form: null,
+  },
+  {
+    key: 'onlyArchived',
+    type: 'checkbox',
+    icon: 'ARCHIVE_LIGHT',
+    readOnly: false,
+    disabled: true,
+    label: (
+      <FormattedMessage
+        id="modules.relationMap.filter.onlyArchived"
+        defaultMessage="Only Archived"
+      />
+    ),
+    form: null,
+  },
 ];
 
 export default filterByOrderDS;

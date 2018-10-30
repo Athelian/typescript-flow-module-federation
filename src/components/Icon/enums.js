@@ -121,6 +121,10 @@ import {
   // Common UI
   faAngleLeft as ANGLE_LEFT,
   faAngleRight as ANGLE_RIGHT,
+
+  faBox as BATCH_LIGHT,
+  faShip as SHIPMENT_LIGHT,
+  faArchive as ARCHIVE_LIGHT,
 } from '@fortawesome/pro-light-svg-icons';
 
 export default {
@@ -236,4 +240,7 @@ export default {
   MAGIC_REGULAR,
   DOCUMENT_REGULAR,
   CHECKED_REGULAR,
+  BATCH_LIGHT,
+  SHIPMENT_LIGHT,
+  ARCHIVE_LIGHT,
 };
