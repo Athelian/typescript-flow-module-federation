@@ -4,7 +4,12 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import query from './query';
 
-const AuthenticationContext = React.createContext({
+type ContextProps = {
+  authenticated: boolean,
+  setAuthenticated: Function,
+};
+
+const AuthenticationContext: React.Context<ContextProps> = React.createContext({
   authenticated: false,
   setAuthenticated: authenticated => authenticated,
 });

@@ -10,7 +10,12 @@ const setIsSidebarExpanded = val => {
   window.localStorage.setItem('is-sidebar-expanded', setValue);
 };
 
-const UIContext = React.createContext({
+type ContextProps = {
+  isSideBarExpanded: boolean,
+  toggleSideBarExpansion: Function,
+};
+
+const UIContext: React.Context<ContextProps> = React.createContext({
   isSideBarExpanded: true,
   toggleSideBarExpansion: () => {},
 });

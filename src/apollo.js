@@ -119,7 +119,7 @@ const defaultOptions = {
   },
 };
 
-const client = new ApolloClient({
+const client: Object = new ApolloClient({
   link: ApolloLink.from([errorLink, SSELink, httpLink]),
   cache,
   defaultOptions,
