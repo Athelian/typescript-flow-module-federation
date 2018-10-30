@@ -17,8 +17,7 @@ import Layout from './common/Layout';
 import QueryHandler from './common/QueryHandler';
 import SummaryBadge from './common/SummaryBadge';
 import ToggleTag from './common/ToggleTag';
-import ActionSelector from './common/ActionPanel/ActionSelector';
-import SplitPanel from './common/ActionPanel/SplitPanel';
+import { ActionSelector, SplitPanel, ConnectPanel } from './common/ActionPanel';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
 import TableInlineEdit from './common/TableInlineEdit';
 import { ActionContainer } from './containers';
@@ -56,7 +55,16 @@ class Order extends React.PureComponent<Props> {
               <SortFilterHandler>
                 {({ sort, filter, onChangeSortFilter }) => (
                   <ActionContainer>
-                    {({ getCloneFunction, result, setResult, currentPanel, setPanel, split }) => (
+                    {({
+                      clone,
+                      result,
+                      setResult,
+                      currentAction,
+                      setAction,
+                      split,
+                      connectNewShipment,
+                      connectExistingShipment,
+                    }) => (
                       <Query
                         query={query}
                         variables={{
@@ -84,7 +92,7 @@ class Order extends React.PureComponent<Props> {
                                   <div className={FullGridWrapperStyle}>
                                     <ActionSelector target={focusedItem}>
                                       {(function renderPanel() {
-                                        switch (currentPanel) {
+                                        switch (currentAction) {
                                           default:
                                             return (
                                               <>
@@ -94,15 +102,16 @@ class Order extends React.PureComponent<Props> {
                                                   backgroundColor="TEAL"
                                                   hoverBackgroundColor="TEAL_DARK"
                                                   onClick={async () => {
-                                                    const clone = getCloneFunction(focusMode);
+                                                    // const clone = getCloneFunction(focusMode);
                                                     const [newResult, newFocus] = await clone(
                                                       client,
-                                                      focusedItem
+                                                      focusedItem,
+                                                      focusMode
                                                     );
                                                     await refetch({ page, perPage });
                                                     setResult(newResult);
                                                     selectItem(newFocus);
-                                                    setPanel('cloned');
+                                                    setAction('cloned');
                                                   }}
                                                 />
                                                 <BaseButton
@@ -110,7 +119,7 @@ class Order extends React.PureComponent<Props> {
                                                   label="SPLIT"
                                                   backgroundColor="TEAL"
                                                   hoverBackgroundColor="TEAL_DARK"
-                                                  onClick={() => setPanel('split')}
+                                                  onClick={() => setAction('split')}
                                                 />
                                                 <BooleanValue>
                                                   {({ value: opened, set: slideToggle }) => (
@@ -142,7 +151,7 @@ class Order extends React.PureComponent<Props> {
                                                   label="CONNECT"
                                                   backgroundColor="TEAL"
                                                   hoverBackgroundColor="TEAL_DARK"
-                                                  onClick={() => setPanel('connect')}
+                                                  onClick={() => setAction('connect')}
                                                 />
                                               </>
                                             );
@@ -162,7 +171,7 @@ class Order extends React.PureComponent<Props> {
                                         }
                                       })()}
                                     </ActionSelector>
-                                    {currentPanel === 'split' && (
+                                    {currentAction === 'split' && (
                                       <SplitPanel
                                         onApply={async splitData => {
                                           const [splitResult, splitFocus] = await split(
@@ -174,6 +183,18 @@ class Order extends React.PureComponent<Props> {
                                           setResult(splitResult);
                                           selectItem(splitFocus);
                                         }}
+                                      />
+                                    )}
+                                    {currentAction === 'connect' && (
+                                      <ConnectPanel
+                                        onConnectNewShipment={async () => {
+                                          const [newResult, newTarget] = await connectNewShipment(client, focusedItem)
+                                          setResult(newResult);
+                                          selectItem(newTarget);
+                                        }}
+                                        onConnectExistingShipment={() =>
+                                          connectExistingShipment(client, focusedItem)
+                                        }
                                       />
                                     )}
                                   </div>

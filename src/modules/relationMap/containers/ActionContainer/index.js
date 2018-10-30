@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react';
-import { cloneOrder, cloneOrderItem, cloneBatch, cloneShipment, cloneTree } from './clone';
+import { getCloneFunction } from './clone';
 import { getSplitFunction, getSplitResult, getSplitFocus, getSplitType } from './split';
+import { connectNewShipment, connectExistingShipment } from './connect'
 
 type State = {
   result: Object,
-  currentPanel: string,
+  currentAction: string,
 };
 
 type Props = {
@@ -29,7 +30,7 @@ const getDefaultFocus = () => ({
 class ActionContainer extends React.Component<Props, State> {
   state = {
     result: {},
-    currentPanel: '',
+    currentAction: '',
   };
 
   setResult = (result: Object) => {
@@ -38,9 +39,9 @@ class ActionContainer extends React.Component<Props, State> {
     });
   };
 
-  setPanel = (currentPanel: string) => {
+  setAction = (currentAction: string) => {
     this.setState({
-      currentPanel,
+      currentAction,
     });
   };
 
@@ -60,56 +61,34 @@ class ActionContainer extends React.Component<Props, State> {
     ];
   };
 
-  cloneTree = async (client: any, target: Object) => {
-    const clonedTree = await cloneTree(client, target);
-    return clonedTree;
+  clone = async (client: any, target: Object, focusMode: string) => {
+    const clone = getCloneFunction(focusMode)
+    const cloned = await clone(client, target)
+    return cloned
   };
 
-  clone = async (client: any, target: Object) => {
-    const { batch, order, orderItem, shipment } = target;
-    // TODO: should run in parallel
-    const [orderResults, orderFocus] = await cloneOrder(client, order);
-    const [shipmentResults, shipmentFocus] = await cloneShipment(client, shipment);
-    const [orderItemResult, orderItemFocus] = await cloneOrderItem(client, orderItem);
-    const [batchResult, batchFocus] = await cloneBatch(client, batch);
+  connectNewShipment = async (client, target) => {
+    const newTarget = await connectNewShipment(client, target)
+    return newTarget
+  }
 
-    const result = {
-      order: orderResults,
-      orderItem: orderItemResult,
-      batch: batchResult,
-      shipment: shipmentResults,
-    };
-    const focus = {
-      order: orderFocus,
-      orderItem: orderItemFocus,
-      batch: batchFocus,
-      shipment: shipmentFocus,
-    };
-    return [result, focus];
-  };
-
-  getCloneFunction = (focusMode: string) => {
-    switch (focusMode) {
-      default:
-      case 'TARGET':
-        return this.clone;
-      case 'TARGET_TREE':
-        return this.cloneTree;
-    }
-  };
+  connectExistingShipment = async (client, target) => {
+    const newTarget = await connectExistingShipment(client, target)
+    return newTarget
+  }
 
   render() {
-    const { result, currentPanel } = this.state;
+    const { result, currentAction } = this.state;
     const { children } = this.props;
     return children({
       result,
-      currentPanel,
+      currentAction,
       setResult: this.setResult,
-      setPanel: this.setPanel,
+      setAction: this.setAction,
       split: this.split,
       clone: this.clone,
-      cloneTree: this.cloneTree,
-      getCloneFunction: this.getCloneFunction,
+      connectNewShipment: this.connectNewShipment,
+      connectExistingShipment: this.connectExistingShipment
     });
   }
 }

@@ -1,46 +1,46 @@
+// @flow
 import React from 'react';
-import { SelectInput, DefaultOptions, Label } from 'components/Form';
+import { Label } from 'components/Form';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
+import { BaseButton } from 'components/Buttons';
+import messages from 'modules/relationMap/messages';
 import * as style from './style';
 
-const ConnectPanel = () => (
+type Props = {
+  onConnectNewShipment: Function,
+  onConnectExistingShipment: Function,
+};
+const ConnectPanel = ({ onConnectNewShipment, onConnectExistingShipment }: Props) => (
   <div className={style.PanelWrapperStyle}>
-    <Label>Connect</Label>
-    <div style={{ display: 'flex' }}>
-      <Label>Select</Label>
-      <SelectInput
-        items={[{ title: 'Shipment', value: 'shipment' }, { title: 'Order', value: 'order' }]}
-        itemToString={v => (v ? v.title : '')}
-        itemToValue={v => (v ? v.value : null)}
-        renderSelect={({ ...rest }) => (
-          <button
-            type="button"
-            onClick={rest.toggle}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              backgroundColor: 'transparent',
-              border: 'none',
-            }}
-          >
-            <Icon icon="SHIPMENT" />
-            <Label>Shipment</Label>
-          </button>
-        )}
-        renderOptions={({ ...rest }) => (
-          <DefaultOptions
-            {...rest}
-            align="left"
-            items={rest.items}
-            itemToString={item => item && item.title}
-            itemToValue={item => (item ? item.value : '')}
-            width="200px"
-          />
-        )}
-      />
+    <Label>
+      <FormattedMessage {...messages.connect} />
+    </Label>
+    <Label>
+      <FormattedMessage {...messages.select} />
+    </Label>
+    <div style={{ fontSize: '10px' }}>
+      <Icon icon="SHIPMENT" />
     </div>
-    <Label>To connect to the list</Label>
-    <Label>Connect To</Label>
+
+    <Label>
+      <FormattedMessage {...messages.shipmentsTab} />
+    </Label>
+
+    <Label>
+      <FormattedMessage {...messages.connectShipment} />
+    </Label>
+    <Label>
+      <FormattedMessage {...messages.connectTo} />
+    </Label>
+    <BaseButton
+      icon="ADD"
+      onClick={onConnectNewShipment}
+      label={<FormattedMessage {...messages.newShipment} />}
+    />
+    <button type="button" onClick={onConnectExistingShipment}>
+      Existing Shipment
+    </button>
   </div>
 );
 
