@@ -86,8 +86,33 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.splitBalance',
     defaultMessage: 'BALANCE',
   },
+  select: {
+    id: 'modules.RelationMaps.select',
+    defaultMessage: 'SELECT',
+  },
   selected: {
     id: 'modules.Shipments.picked',
     defaultMessage: 'selected',
   },
+  connect: {
+    id: 'modules.RelationMaps.label.connect',
+    defaultMessage: 'CONNECT'
+  },
+  connectTo: {
+    id: 'modules.RelationMaps.label.connectTo',
+    defaultMessage: 'CONNECT TO'
+  },
+  connectShipment: {
+    id: 'modules.RelationMaps.label.connectShipment',
+    defaultMessage: 'Connect Shipment on the list'
+  },
+  disconnect: {
+    id: 'modules.RelationMaps.label.disconnect',
+    defaultMessage: 'Disconnect' 
+  },
+  newShipment: {
+    id: 'modules.RelationMaps.label.newShipment',
+    defaultMessage: 'New Shipment' 
+  }
+
 });

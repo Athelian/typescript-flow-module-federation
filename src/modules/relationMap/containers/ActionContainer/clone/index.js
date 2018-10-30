@@ -1,8 +1,8 @@
 import update from 'immutability-helper';
 import { getByPathWithDefault as get } from 'utils/fp';
 
-export { cloneOrder, cloneOrderItem, cloneBatch, cloneShipment } from './cloneTarget';
-export { cloneTree } from './cloneTree';
+import { cloneTarget } from './cloneTarget';
+import { cloneTree } from './cloneTree';
 
 export const createMutationRequest = client => async (mutationData, refId) =>
   new Promise(resolve => {
@@ -35,4 +35,14 @@ export const formatResult = (responses, idPath, ids) => {
     return result;
   }, initResultObj(ids));
   return formattedResult;
+};
+
+export const getCloneFunction = (focusMode) => {
+  switch (focusMode) {
+    default:
+    case 'TARGET':
+      return cloneTarget;
+    case 'TARGET_TREE':
+      return cloneTree;
+  }
 };

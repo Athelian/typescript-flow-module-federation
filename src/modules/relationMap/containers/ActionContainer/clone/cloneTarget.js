@@ -171,3 +171,26 @@ export const cloneShipment = async (client, shipment) => {
   );
   return [shipmentResults, shipmentFocus];
 };
+
+export const cloneTarget = async (client, target) => {
+  const { batch, order, orderItem, shipment } = target;
+    // TODO: should run in parallel
+    const [orderResults, orderFocus] = await cloneOrder(client, order);
+    const [shipmentResults, shipmentFocus] = await cloneShipment(client, shipment);
+    const [orderItemResult, orderItemFocus] = await cloneOrderItem(client, orderItem);
+    const [batchResult, batchFocus] = await cloneBatch(client, batch);
+
+    const result = {
+      order: orderResults,
+      orderItem: orderItemResult,
+      batch: batchResult,
+      shipment: shipmentResults,
+    };
+    const focus = {
+      order: orderFocus,
+      orderItem: orderItemFocus,
+      batch: batchFocus,
+      shipment: shipmentFocus,
+    };
+    return [result, focus];
+}

@@ -6,6 +6,7 @@ import { translationMessages } from 'i18n';
 import SplitPanel from './SplitPanel';
 import ActionSelector from './ActionSelector';
 import ConnectPanel from './ConnectPanel';
+import 'styles/reset.css'
 
 storiesOf('RelationMap/ActionPanel', module)
   .add('SplitPanel', () => (
