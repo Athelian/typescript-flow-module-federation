@@ -1,6 +1,5 @@
-import * as fp from 'utils/fp';
-
-const { getByPathWithDefault } = fp;
+// @flow
+import { getByPathWithDefault } from 'utils/fp';
 
 const getBatchLinkType = (itemNo, numberOfItem, haveNewItem) => {
   let linkType = 'LINK-0';
@@ -27,7 +26,7 @@ const getRelatedIds = (items, currentIndex, resultIds) => {
   return ids;
 };
 
-export const generateOrderRelation = (order, option) => {
+export const generateOrderRelation = (order: Object, option: Object = {}): Array<Object> => {
   const { isCollapsed, result, resultId } = option;
   const orderRelations = [];
   const { orderItems } = order;
@@ -142,7 +141,7 @@ export const generateOrderRelation = (order, option) => {
   return orderRelations;
 };
 
-export const generateRelationConfig = data => {
+export const generateRelationConfig = (data: Array<Object>) => {
   const relations = [];
   data.forEach(order => {
     const orderRelations = generateOrderRelation(order);
@@ -151,7 +150,7 @@ export const generateRelationConfig = data => {
   return relations;
 };
 
-export const generateShipmentRelation = (shipment, option) => {
+export const generateShipmentRelation = (shipment: Object, option: Object) => {
   const relations = [];
   relations.push({ type: 'ORDER_ITEM_ALL', id: shipment.id });
   relations.push({ type: 'LINK-0', id: shipment.id });
@@ -181,7 +180,7 @@ export const generateShipmentRelation = (shipment, option) => {
   return relations;
 };
 
-export const formatShipmentFromOrder = orders => {
+export const formatShipmentFromOrder = (orders: Array<Object>) => {
   const shipmentObj = {};
   orders.forEach(order => {
     const { shipments, id: orderId } = order;
@@ -203,7 +202,7 @@ export const formatShipmentFromOrder = orders => {
   return shipmentObj;
 };
 
-export const formatOrderFromShipment = shipments => {
+export const formatOrderFromShipment = (shipments: Array<Object>) => {
   const orderObj = {};
   shipments.forEach(shipment => {
     const { batches, id: shipmentId } = shipment;
@@ -288,7 +287,7 @@ const initBatchObj = (batch, orderId, orderItemId) => {
   };
 };
 
-export const formatOrderData = orders => {
+export const formatOrderData = (orders: Array<Object>) => {
   const orderObj = {};
   const orderItemObj = {};
   const batchObj = {};
@@ -356,10 +355,10 @@ export const formatOrderData = orders => {
   });
 
   return {
-    orderObj,
-    orderItemObj,
-    batchObj,
-    shipmentObj,
+    order: orderObj,
+    orderItem: orderItemObj,
+    batch: batchObj,
+    shipment: shipmentObj,
     sumOrders,
     sumOrderItems,
     sumBatches,
@@ -367,7 +366,7 @@ export const formatOrderData = orders => {
   };
 };
 
-export const formatShipmentData = shipments => {
+export const formatShipmentData = (shipments: Array<Object>) => {
   const orderItemObj = {};
   const batchObj = {};
   const orderObj = {};
@@ -441,10 +440,10 @@ export const formatShipmentData = shipments => {
   });
   sumOrders = Object.keys(orderObj || {}).length;
   return {
-    orderObj,
-    orderItemObj,
-    batchObj,
-    shipmentObj,
+    order: orderObj,
+    orderItem: orderItemObj,
+    batch: batchObj,
+    shipment: shipmentObj,
     sumOrders,
     sumOrderItems,
     sumBatches,
