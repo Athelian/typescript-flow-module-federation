@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Location, navigate } from '@reach/router';
-import { Subscribe, Provider } from 'unstated';
+import { Provider } from 'unstated';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
@@ -10,8 +10,6 @@ import Tabs from 'components/NavBar/components/Tabs';
 import { EntityIcon, RelationMapNavBar } from 'components/NavBar';
 import { ContentWrapperStyle } from 'modules/relationMap/style';
 import messages from 'modules/relationMap/messages';
-import FloatMenu from 'components/RelationMap/FloatMenu';
-import RelationMapContainer from 'modules/relationMap/container';
 
 type Props = {
   intl: IntlShape,
@@ -62,11 +60,6 @@ const RelationMapLayout = ({ intl, children }: Props) => {
             }
           >
             <div className={ContentWrapperStyle}>{children}</div>
-            <Subscribe to={[RelationMapContainer]}>
-              {({ isTargetTreeMode, isTargetMode }) =>
-                isTargetMode() || isTargetTreeMode() ? <FloatMenu /> : null
-              }
-            </Subscribe>
           </Layout>
         )}
       </UIConsumer>
