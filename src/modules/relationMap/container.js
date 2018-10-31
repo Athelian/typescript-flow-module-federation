@@ -34,6 +34,10 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     this.setState(newState);
   };
 
+  reset = () => {
+    this.setState({ ...initState });
+  };
+
   isTargetTreeMode = () => {
     const { focusMode } = this.state;
     return focusMode === 'TARGET_TREE';

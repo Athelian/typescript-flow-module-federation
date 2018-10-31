@@ -12,5 +12,5 @@ export const OuterCardWrapperStyle = fit => css`
 `;
 
 export const InnerCardWrapperStyle = css`
-  pointer-events: none;
+  /* pointer-events: none; */
 `;

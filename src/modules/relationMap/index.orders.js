@@ -138,6 +138,7 @@ class Order extends React.PureComponent<Props> {
                                                       >
                                                         {opened && (
                                                           <TableInlineEdit
+                                                            onExpand={() => {}}
                                                             onSave={() => {}}
                                                             onCancel={() => slideToggle(false)}
                                                           />
@@ -188,7 +189,10 @@ class Order extends React.PureComponent<Props> {
                                     {currentAction === 'connect' && (
                                       <ConnectPanel
                                         onConnectNewShipment={async () => {
-                                          const [newResult, newTarget] = await connectNewShipment(client, focusedItem)
+                                          const [newResult, newTarget] = await connectNewShipment(
+                                            client,
+                                            focusedItem
+                                          );
                                           setResult(newResult);
                                           selectItem(newTarget);
                                         }}
