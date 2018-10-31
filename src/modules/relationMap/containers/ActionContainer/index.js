@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { getCloneFunction } from './clone';
 import { getSplitFunction, getSplitResult, getSplitFocus, getSplitType } from './split';
-import { connectNewShipment, connectExistingShipment } from './connect'
+import { connectNewShipment, connectExistingShipment } from './connect';
 
 type State = {
   result: Object,
@@ -62,20 +62,20 @@ class ActionContainer extends React.Component<Props, State> {
   };
 
   clone = async (client: any, target: Object, focusMode: string) => {
-    const clone = getCloneFunction(focusMode)
-    const cloned = await clone(client, target)
-    return cloned
+    const clone = getCloneFunction(focusMode);
+    const cloned = await clone(client, target);
+    return cloned;
   };
 
-  connectNewShipment = async (client, target) => {
-    const newTarget = await connectNewShipment(client, target)
-    return newTarget
-  }
+  connectNewShipment = async (client: any, target: Object) => {
+    const newTarget = await connectNewShipment(client, target);
+    return newTarget;
+  };
 
-  connectExistingShipment = async (client, target) => {
-    const newTarget = await connectExistingShipment(client, target)
-    return newTarget
-  }
+  connectExistingShipment = async (client: any, target: Object) => {
+    const newTarget = await connectExistingShipment(client, target);
+    return newTarget;
+  };
 
   render() {
     const { result, currentAction } = this.state;
@@ -88,7 +88,7 @@ class ActionContainer extends React.Component<Props, State> {
       split: this.split,
       clone: this.clone,
       connectNewShipment: this.connectNewShipment,
-      connectExistingShipment: this.connectExistingShipment
+      connectExistingShipment: this.connectExistingShipment,
     });
   }
 }

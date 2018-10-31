@@ -87,9 +87,6 @@
     "build-storybook": "build-storybook"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,css}": [
-      "stylelint --fix"
-    ],
     "src/**/*.{js,jsx,json}": [
       "eslint --fix",
       "prettier-eslint --write",

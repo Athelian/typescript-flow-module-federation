@@ -94,6 +94,7 @@ import {
   faLink as CONNECT,
   faBezierCurve as SPLIT,
   faBezierCurve as ENTITY,
+  faMagic as MAGIC,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -226,4 +227,5 @@ export default {
   SQUARE,
   TARGET,
   ENTITY,
+  MAGIC,
 };
