@@ -26,12 +26,14 @@ export const ActionWrapperStyle = targetted => css`
   justify-content: center;
   align-items: center;
   height: 100%;
-
   color: ${targetted ? colors.GRAY_DARK_1 : colors.GRAY_DARK};
 
+  transition: background-color 0.2s linear;
+  background-color: ${colors.TRANSPARENT};
   &:hover {
     color: ${targetted ? colors.GRAY_DARK_1 : colors.WHITE};
     background-color: ${colors.TEAL};
+    opacity: 1;
   }
   ${targetted && `background-color: ${colors.TEAL}`};
 `;
