@@ -41,14 +41,20 @@ export const getQuantitySummary = (orderItems: Array<Object>) => {
       if (item.batches) {
         item.batches.forEach(batch => {
           batchedQuantity += batch.quantity;
+
+          let currentQuantity = batch.quantity;
+
           if (batch.batchAdjustments) {
             batch.batchAdjustments.forEach(batchAdjustment => {
-              batchedQuantity -= batchAdjustment.quantity;
+              batchedQuantity += batchAdjustment.quantity;
+              currentQuantity += batchAdjustment.quantity;
             });
           }
+
           if (batch.shipment) {
-            shippedQuantity += batch.quantity;
+            shippedQuantity += currentQuantity;
           }
+
           if (batch.archived) {
             archivedBatches += 1;
           } else {
