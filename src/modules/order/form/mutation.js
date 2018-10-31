@@ -169,7 +169,7 @@ export const prepareUpdateOrderInput = ({
   memo,
   archived,
   exporterId: exporter.id,
-  issuedAt,
+  issuedAt: issuedAt || null,
   tagIds: tags.map(({ id: tagId }) => tagId),
   inChargeIds: inCharges.map(({ id: userId }) => userId),
   orderItems: orderItems.map(

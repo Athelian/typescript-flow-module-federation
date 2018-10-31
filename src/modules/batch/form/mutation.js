@@ -96,9 +96,9 @@ export const prepareUpdateBatchInput = (
   ...(shipment && !inShipmentOrBatchForm ? { shipmentId: shipment.id } : {}),
   ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   ...(!inBatchForm && !isNew ? { id } : {}),
-  deliveredAt,
-  expiredAt,
-  producedAt,
+  deliveredAt: deliveredAt || null,
+  expiredAt: expiredAt || null,
+  producedAt: producedAt || null,
   tagIds: tags.map(({ id: tagId }) => tagId),
   batchAdjustments: batchAdjustments.map(
     ({
