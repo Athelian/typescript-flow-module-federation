@@ -4,7 +4,7 @@ import FilterByPONo from '../forms/FilterByPONo';
 
 const filterByOrderDS = [
   {
-    key: 'poNo',
+    key: 'order.multiSelect.poNo',
     type: 'multi-select',
     readOnly: false,
     disabled: false,
@@ -12,7 +12,7 @@ const filterByOrderDS = [
     form: <FilterByPONo />,
   },
   {
-    key: 'exporterId',
+    key: 'order.multiSelect.exporterId',
     type: 'multi-select',
     readOnly: false,
     disabled: true,
@@ -20,7 +20,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'tagIds',
+    key: 'order.multiSelect.tagIds',
     type: 'multi-select',
     readOnly: false,
     disabled: true,
@@ -28,7 +28,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'assignment',
+    key: 'order.multiSelect.assignment',
     type: 'multi-select',
     limit: 1,
     readOnly: false,
@@ -42,7 +42,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'created',
+    key: 'order.range.created',
     type: 'range',
     readOnly: false,
     disabled: true,
@@ -50,7 +50,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'updatedAt',
+    key: 'order.range.updatedAt',
     type: 'range',
     readOnly: false,
     disabled: true,
@@ -63,7 +63,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'unBatched',
+    key: 'order.checkbox.unBatched',
     type: 'checkbox',
     icon: 'BATCH_LIGHT',
     readOnly: false,
@@ -74,7 +74,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'unShipped',
+    key: 'order.checkbox.unShipped',
     type: 'checkbox',
     icon: 'SHIPMENT_LIGHT',
     readOnly: false,
@@ -85,7 +85,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'includeArchived',
+    key: 'order.checkbox.includeArchived',
     type: 'checkbox',
     icon: 'ARCHIVE_LIGHT',
     readOnly: false,
@@ -99,7 +99,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'onlyArchived',
+    key: 'order.checkbox.onlyArchived',
     type: 'checkbox',
     icon: 'ARCHIVE_LIGHT',
     readOnly: false,

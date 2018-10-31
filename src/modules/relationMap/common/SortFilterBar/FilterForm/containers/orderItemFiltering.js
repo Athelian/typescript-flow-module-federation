@@ -68,7 +68,7 @@ export class OrderFiltering extends Container<FormState> {
     };
   };
 
-  onAddFilterValue = (name: string, data: objectType) => {
+  onAddFilterMultiSelectValue = (name: string, data: objectType) => {
     if (this.state[name] !== undefined) {
       this.setState(prevState => ({
         ...prevState,
@@ -79,7 +79,7 @@ export class OrderFiltering extends Container<FormState> {
     }
   };
 
-  onRemoveFilterValue = (name: string, data: objectType) => {
+  onRemoveFilterMultiSelectValue = (name: string, data: objectType) => {
     if (this.state[name] !== undefined) {
       this.setState(prevState => ({
         ...prevState,
@@ -115,7 +115,7 @@ export class OrderFiltering extends Container<FormState> {
     );
   };
 
-  onToggleSection = (name: string) => {
+  onToggleFilterCheckBox = (name: string) => {
     if (this.state[name] !== undefined && typeof this.state[name] === 'boolean') {
       this.setState(({ selectedSections, ...rest }) => ({
         selectedSections: rest[name]

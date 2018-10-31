@@ -17,8 +17,8 @@ type Props = {
 
 const defaultRenderItem = (
   item: Object,
-  onAddFilterValue: Function,
-  onRemoveFilterValue: Function,
+  onAddFilterMultiSelectValue: Function,
+  onRemoveFilterMultiSelectValue: Function,
   isSelected: boolean
 ) => (
   <BooleanValue
@@ -26,9 +26,9 @@ const defaultRenderItem = (
     defaultValue={isSelected}
     onChange={selected => {
       if (selected) {
-        onAddFilterValue('poNo', { id: item.id, text: item.poNo });
+        onAddFilterMultiSelectValue('order.multiSelect.poNo', { id: item.id, text: item.poNo });
       } else {
-        onRemoveFilterValue('poNo', { id: item.id, text: item.poNo });
+        onRemoveFilterMultiSelectValue('order.multiSelect.poNo', { id: item.id, text: item.poNo });
       }
     }}
   >
@@ -52,7 +52,12 @@ class OrderGridView extends React.PureComponent<Props> {
 
     return (
       <Subscribe to={[OrderFilteringContainer]}>
-        {({ originalValues, state, onAddFilterValue, onRemoveFilterValue }) => (
+        {({
+          originalValues,
+          state,
+          onAddFilterMultiSelectValue,
+          onRemoveFilterMultiSelectValue,
+        }) => (
           <GridView
             onLoadMore={onLoadMore}
             hasMore={hasMore}
@@ -73,7 +78,12 @@ class OrderGridView extends React.PureComponent<Props> {
               const values = { ...originalValues, ...state };
               const selected = values.poNo.findIndex(el => el.id === item.id) !== -1;
 
-              return renderItem(item, onAddFilterValue, onRemoveFilterValue, selected);
+              return renderItem(
+                item,
+                onAddFilterMultiSelectValue,
+                onRemoveFilterMultiSelectValue,
+                selected
+              );
             })}
           </GridView>
         )}

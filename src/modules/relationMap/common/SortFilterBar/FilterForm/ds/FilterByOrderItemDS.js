@@ -3,8 +3,8 @@ import { FormattedMessage } from 'react-intl';
 
 const filterByOrderDS = [
   {
-    key: 'productName',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.productName',
+    type: 'multiSelect',
     readOnly: false,
     disabled: false,
     label: (
@@ -13,8 +13,8 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'productSerial',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.productSerial',
+    type: 'multiSelect',
     readOnly: false,
     disabled: false,
     label: (
@@ -26,24 +26,24 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'janCode',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.janCode',
+    type: 'multiSelect',
     readOnly: false,
     disabled: true,
     label: <FormattedMessage id="modules.relationMap.filter.janCode" defaultMessage="JAN Code" />,
     form: null,
   },
   {
-    key: 'hsCode',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.hsCode',
+    type: 'multiSelect',
     readOnly: false,
     disabled: true,
     label: <FormattedMessage id="modules.relationMap.filter.hsCode" defaultMessage="HS Code" />,
     form: null,
   },
   {
-    key: 'exporter',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.exporter',
+    type: 'multiSelect',
     limit: 1,
     readOnly: false,
     disabled: true,
@@ -51,16 +51,16 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'supplier',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.supplier',
+    type: 'multiSelect',
     readOnly: false,
     disabled: true,
     label: <FormattedMessage id="modules.relationMap.filter.supplier" defaultMessage="Supplier" />,
     form: null,
   },
   {
-    key: 'countryOfOrigin',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.countryOfOrigin',
+    type: 'multiSelect',
     readOnly: false,
     disabled: true,
     label: (
@@ -72,16 +72,16 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'currency',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.currency',
+    type: 'multiSelect',
     readOnly: false,
     disabled: true,
     label: <FormattedMessage id="modules.relationMap.filter.currency" defaultMessage="Currency" />,
     form: null,
   },
   {
-    key: 'packageInfo',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.packageInfo',
+    type: 'multiSelect',
     readOnly: false,
     disabled: true,
     label: (
@@ -90,23 +90,23 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'metadata',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.metadata',
+    type: 'multiSelect',
     readOnly: false,
     disabled: true,
     label: <FormattedMessage id="modules.relationMap.filter.metadata" defaultMessage="Meta Data" />,
     form: null,
   },
   {
-    key: 'tag',
-    type: 'multi-select',
+    key: 'orderItem.multiSelect.tag',
+    type: 'multiSelect',
     readOnly: false,
     disabled: true,
     label: <FormattedMessage id="modules.relationMap.filter.tag" defaultMessage="Tag" />,
     form: null,
   },
   {
-    key: 'unBatched',
+    key: 'orderItem.checkbox.unBatched',
     type: 'checkbox',
     icon: 'BATCH_LIGHT',
     readOnly: false,
@@ -117,7 +117,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'unShipped',
+    key: 'orderItem.checkbox.unShipped',
     type: 'checkbox',
     icon: 'SHIPMENT_LIGHT',
     readOnly: false,
@@ -128,7 +128,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'includeArchived',
+    key: 'orderItem.checkbox.includeArchived',
     type: 'checkbox',
     icon: 'ARCHIVE_LIGHT',
     readOnly: false,
@@ -142,7 +142,7 @@ const filterByOrderDS = [
     form: null,
   },
   {
-    key: 'onlyArchived',
+    key: 'orderItem.checkbox.onlyArchived',
     type: 'checkbox',
     icon: 'ARCHIVE_LIGHT',
     readOnly: false,

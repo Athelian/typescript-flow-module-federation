@@ -49,7 +49,7 @@ type OrderItemFilterFieldSelect = {
   unShipped?: boolean,
   includeArchived?: boolean,
   onlyArchived?: boolean,
-}
+};
 type OrderItemFilterFieldRange = {};
 type OrderItemFilter = {
   multiSelect?: OrderItemFilterFieldMultiSelect,
@@ -57,10 +57,65 @@ type OrderItemFilter = {
   range?: OrderItemFilterFieldRange,
 };
 
+type BatchFilterFieldMultiSelect = {
+  tagIds?: Array<MultiSelectDataType>,
+};
+type BatchFilterFieldCheckBox = {};
+type BatchFilterFieldRange = {
+  deliveryDate?: Array<string>,
+  desiredDate?: Array<string>,
+  expiryDate?: Array<string>,
+  productionDate?: Array<string>,
+};
+type BatchFilter = {
+  multiSelect?: BatchFilterFieldMultiSelect,
+  checkbox?: BatchFilterFieldCheckBox,
+  range?: BatchFilterFieldRange,
+};
+
+type ShipmentFilterFieldMultiSelect = {
+  tagIds?: Array<MultiSelectDataType>,
+  carrier?: Array<MultiSelectDataType>,
+  forwarder?: Array<MultiSelectDataType>,
+  loadPortName?: Array<MultiSelectDataType>,
+  dischargePortName?: Array<MultiSelectDataType>,
+  transitPort1Name?: Array<MultiSelectDataType>,
+  transitPort2Name?: Array<MultiSelectDataType>,
+};
+type ShipmentFilterFieldCheckBox = {
+  cargoReady?: boolean,
+  departureFromLoadPort?: boolean,
+  arrivalAtDischargePort?: boolean,
+  arrivalAtTransitPort1?: boolean,
+  departureFromTransitPort1?: boolean,
+  arrivalAtTransitPort2?: boolean,
+  departureFromTransitPort2?: boolean,
+  customClearance?: boolean,
+  warehouseArrival?: boolean,
+};
+type ShipmentFilterFieldRange = {
+  cargoReadyDate?: Array<string>,
+  departureFromLoadPortDate?: Array<string>,
+  arrivalAtDischargePortDate?: Array<string>,
+  arrivalAtTransitPort1Date?: Array<string>,
+  departureFromTransitPort1Date?: Array<string>,
+  arrivalAtTransitPort2Date?: Array<string>,
+  departureFromTransitPort2Date?: Array<string>,
+  customClearanceDate?: Array<string>,
+  warehouseArrivalDate?: Array<string>,
+  deliveryReadyDate?: Array<string>,
+};
+type ShipmentFilter = {
+  multiSelect?: ShipmentFilterFieldMultiSelect,
+  checkbox?: ShipmentFilterFieldCheckBox,
+  range?: ShipmentFilterFieldRange,
+};
 
 type FormState = {
   order: OrderFilter,
   orderItem: OrderItemFilter,
+  batch: BatchFilter,
+  shipment: ShipmentFilter,
 
   poNo?: Array<MultiSelectDataType>,
   exporterId?: Array<string>,
@@ -120,6 +175,54 @@ const initValues = {
     },
     range: {},
   },
+  batch: {
+    multiSelect: {
+      tagIds: [],
+    },
+    checkbox: {},
+    range: {
+      deliveryDate: [],
+      desiredDate: [],
+      expiryDate: [],
+      productionDate: [],
+    },
+  },
+  shipment: {
+    multiSelect: {
+      tagIds: [],
+      carrier: [],
+      forwarder: [],
+      loadPortName: [],
+      dischargePortName: [],
+      transitPort1Name: [],
+      transitPort2Name: [],
+      warehouseName: [],
+    },
+    range: {
+      cargoReadyDate: [],
+      departureFromLoadPortDate: [],
+      arrivalAtDischargePortDate: [],
+      arrivalAtTransitPort1Date: [],
+      departureFromTransitPort1Date: [],
+      arrivalAtTransitPort2Date: [],
+      departureFromTransitPort2Date: [],
+      customClearanceDate: [],
+      warehouseArrivalDate: [],
+      deliveryReadyDate: [],
+    },
+    checkbox: {
+      cargoReady: false,
+      departureFromLoadPort: false,
+      arrivalAtDischargePort: false,
+      arrivalAtTransitPort1: false,
+      departureFromTransitPort1: false,
+      arrivalAtTransitPort2: false,
+      departureFromTransitPort2: false,
+      customClearance: false,
+      warehouseArrival: false,
+      deliveryReady: false,
+    },
+  },
 
   poNo: [],
   exporterId: [],
@@ -161,27 +264,94 @@ export class OrderFiltering extends Container<FormState> {
     };
   };
 
-  onAddFilterValue = (name: string, data: MultiSelectDataType) => {
-    if (this.state[name] !== undefined) {
-      this.setState(prevState => ({
-        ...prevState,
-        [name]: prevState[name].filter(el => el.id === data.id).length
-          ? prevState[name]
-          : ([...prevState[name], data]: Array<?MultiSelectDataType>),
-      }));
+  getFilterNoInSection = (section: string) => {
+    if (this.state[section] === undefined) {
+      return null;
     }
+
+    const sectionObj = this.state[section];
+
+    const multiSelectNo = Object.keys(sectionObj.multiSelect).reduce((prev, key) => {
+      const up = sectionObj.multiSelect[key].length > 0 ? 1 : 0;
+      return prev + up;
+    }, 0);
+    const checkboxNo = Object.keys(sectionObj.checkbox)
+      ? Object.keys(sectionObj.checkbox).reduce(
+          (prev, key) => prev + sectionObj.checkbox[key] || 0,
+          0
+        )
+      : 0;
+    const rangeNo = Object.keys(sectionObj.range)
+      ? Object.keys(sectionObj.range).reduce(
+          (prev, key) => (prev + sectionObj.range[key] && sectionObj.range[key].length) || 0,
+          0
+        )
+      : 0;
+
+    return multiSelectNo + checkboxNo + rangeNo;
   };
 
-  onRemoveFilterValue = (name: string, data: MultiSelectDataType) => {
-    if (this.state[name] !== undefined) {
-      this.setState(prevState => ({
-        ...prevState,
-        [name]:
-          prevState[name].findIndex(el => el.id === data.id) !== -1
-            ? (prevState[name].filter(el => el.id !== data.id): Array<?MultiSelectDataType>)
-            : prevState[name],
-      }));
+  onAddFilterMultiSelectValue = (filterName: string, data: MultiSelectDataType) => {
+    const filterNameObj = filterName.split('.');
+    const [section, type, name] = filterNameObj;
+    if (
+      this.state[section] === undefined ||
+      this.state[section][type] === undefined ||
+      !this.state[section][type][name] === undefined ||
+      typeof this.state[section][type][name] !== 'object'
+    ) {
+      return;
     }
+
+    this.setState(({ [section]: prevSection, ...restState }) => {
+      const { [type]: prevType, ...restType } = prevSection;
+      const { [name]: prevName, ...restName } = prevType;
+
+      return {
+        [section]: {
+          [type]: {
+            [name]: prevName.filter(el => el.id === data.id).length
+              ? prevName
+              : ([...prevName, data]: Array<?MultiSelectDataType>),
+            ...restName,
+          },
+          ...restType,
+        },
+        ...restState,
+      };
+    });
+  };
+
+  onRemoveFilterMultiSelectValue = (filterName: string, data: MultiSelectDataType) => {
+    const filterNameObj = filterName.split('.');
+    const [section, type, name] = filterNameObj;
+    if (
+      this.state[section] === undefined ||
+      this.state[section][type] === undefined ||
+      !this.state[section][type][name] === undefined ||
+      typeof this.state[section][type][name] !== 'object'
+    ) {
+      return;
+    }
+
+    this.setState(({ [section]: prevSection, ...restState }) => {
+      const { [type]: prevType, ...restType } = prevSection;
+      const { [name]: prevName, ...restName } = prevType;
+
+      return {
+        [section]: {
+          [type]: {
+            [name]:
+              prevName.findIndex(el => el.id === data.id) !== -1
+                ? (prevName.filter(el => el.id !== data.id): Array<?MultiSelectDataType>)
+                : prevName,
+            ...restName,
+          },
+          ...restType,
+        },
+        ...restState,
+      };
+    });
   };
 
   onToggleSelectSection = (name: string, setFieldValue: ?Function, form: React.Node) => {
@@ -209,15 +379,33 @@ export class OrderFiltering extends Container<FormState> {
     );
   };
 
-  onToggleSection = (name: string) => {
-    if (this.state[name] !== undefined && typeof this.state[name] === 'boolean') {
-      this.setState(({ selectedSections, ...rest }) => ({
-        selectedSections: rest[name]
-          ? (selectedSections.filter(item => item !== name): Array<?string>)
-          : ([...selectedSections, name]: Array<?string>),
-        [name]: !rest[name],
-      }));
+  onToggleFilterCheckBox = (filterName: string) => {
+    const filterNameObj = filterName.split('.');
+    const [section, type, name] = filterNameObj;
+    if (
+      this.state[section] === undefined ||
+      this.state[section][type] === undefined ||
+      !this.state[section][type][name] === undefined ||
+      typeof this.state[section][type][name] !== 'boolean'
+    ) {
+      return;
     }
+
+    this.setState(({ [section]: prevSection, ...restState }) => {
+      const { [type]: prevType, ...restType } = prevSection;
+      const { [name]: prevName, ...restName } = prevType;
+
+      return {
+        [section]: {
+          [type]: {
+            [name]: !prevName,
+            ...restName,
+          },
+          ...restType,
+        },
+        ...restState,
+      };
+    });
   };
 
   onEditSection = (name: string, form: React.Node) => {
