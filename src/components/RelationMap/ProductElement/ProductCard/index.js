@@ -21,17 +21,23 @@ function getQuantitySummary(item: Object) {
     item.batches.nodes.forEach(batch => {
       batchedQuantity += batch.quantity;
       numOfBatched += 1;
+
+      let currentQuantity = batch.quantity;
+
       const { orderItem } = batch;
       if (orderItem) {
         orderedQuantity += orderItem.quantity || 0;
       }
+
       if (batch.batchAdjustments) {
         batch.batchAdjustments.forEach(batchAdjustment => {
           batchedQuantity += batchAdjustment.quantity;
+          currentQuantity += batchAdjustment.quantity;
         });
       }
+
       if (batch.shipment) {
-        shippedQuantity += batch.quantity;
+        shippedQuantity += currentQuantity;
         numOfShipped += 1;
       }
     });
