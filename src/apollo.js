@@ -3,6 +3,7 @@ import { navigate } from '@reach/router';
 import { getOperationAST } from 'graphql/utilities/getOperationAST';
 import { print } from 'graphql/language/printer';
 import { ApolloClient } from 'apollo-client';
+import { withClientState } from 'apollo-link-state';
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { ApolloLink, Observable, type Operation } from 'apollo-link';
 import { createHttpLink } from 'apollo-link-http';
@@ -119,8 +120,12 @@ const defaultOptions = {
   },
 };
 
+const stateLink = withClientState({
+  cache,
+});
+
 const client: Object = new ApolloClient({
-  link: ApolloLink.from([errorLink, SSELink, httpLink]),
+  link: ApolloLink.from([stateLink, errorLink, SSELink, httpLink]),
   cache,
   defaultOptions,
 });
