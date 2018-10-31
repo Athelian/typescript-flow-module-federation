@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/relationMap/messages';
+import { formatOrderData } from 'modules/relationMap/util';
 import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
 import { WrapperStyle } from './style';
@@ -16,9 +17,20 @@ type Props = {
   onSave: () => void,
   onCancel: () => void,
   onExpand: () => void,
+  type: string,
 };
 
-export default function TableInlineEdit({ onSave, onCancel, onExpand }: Props) {
+export default function TableInlineEdit({ type, onSave, onCancel, onExpand }: Props) {
+  const data = JSON.parse(window.localStorage.getItem(type));
+  const {
+    sumShipments,
+    sumOrders,
+    sumOrderItems,
+    sumBatches,
+    ...relationObjects
+  } = formatOrderData(data);
+  console.warn('data', data);
+  console.warn('relationObjects', relationObjects);
   return (
     <Layout
       navBar={
@@ -35,7 +47,7 @@ export default function TableInlineEdit({ onSave, onCancel, onExpand }: Props) {
             icon="ORDER"
             color="ORDER"
             label={<FormattedMessage {...messages.ordersLabel} />}
-            no={0}
+            no={sumOrders}
           />
         </ExpandHeader>
         <ExpandHeader isExpanding={false} onClick={onExpand}>
@@ -43,7 +55,7 @@ export default function TableInlineEdit({ onSave, onCancel, onExpand }: Props) {
             icon="ORDER_ITEM"
             color="ORDER_ITEM"
             label={<FormattedMessage {...messages.itemsLabel} />}
-            no={0}
+            no={sumOrderItems}
           />
         </ExpandHeader>
         <ExpandHeader isExpanding={false} onClick={onExpand}>
@@ -51,7 +63,7 @@ export default function TableInlineEdit({ onSave, onCancel, onExpand }: Props) {
             icon="BATCH"
             color="BATCH"
             label={<FormattedMessage {...messages.batchesLabel} />}
-            no={0}
+            no={sumBatches}
           />
         </ExpandHeader>
         <ExpandHeader isExpanding={false} onClick={onExpand}>
@@ -59,7 +71,7 @@ export default function TableInlineEdit({ onSave, onCancel, onExpand }: Props) {
             icon="SHIPMENT"
             color="SHIPMENT"
             label={<FormattedMessage {...messages.shipmentsLabel} />}
-            no={0}
+            no={sumShipments}
           />
         </ExpandHeader>
       </div>
