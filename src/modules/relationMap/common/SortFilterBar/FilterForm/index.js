@@ -6,7 +6,7 @@ import { SectionWrapper, FieldItem, RadioInputFilterForm, ToggleInput } from 'co
 import JumpToSection from 'components/JumpToSection';
 import Icon from 'components/Icon';
 import FilterHeaderLink from './components/FilterHeaderLink';
-import { OrderFilteringContainer, OrderItemFilteringContainer } from './containers';
+import { OrderFilteringContainer } from './containers';
 import {
   ScrollWrapperStyle,
   FilterLayoutStyle,
@@ -25,6 +25,8 @@ import {
 import FilterSectionButton from './components/FilterSectionButton';
 import FilterByOrderDS from './ds/FilterByOrderDS';
 import FilterByOrderItemDS from './ds/FilterByOrderItemDS';
+import FilterByBatchDS from './ds/FilterByBatchDS';
+import FilterByShipmentDS from './ds/FilterByShipmentDS';
 
 type Props = {
   onChange: (filters: Object) => void,
@@ -42,7 +44,7 @@ class FilterForm extends React.Component<Props> {
           originalValues,
           state,
           onToggleSelectSection,
-          onToggleSection,
+          onToggleFilterCheckBox,
           onEditSection,
           onApply,
         }) => {
@@ -53,7 +55,7 @@ class FilterForm extends React.Component<Props> {
               vertical
               input={
                 <div className={FilterGroupSectionStyle}>
-                  {ds.map(({ key, type, readOnly, disabled, label, form, icon }) => {
+                  {ds.map(({ key, readOnly, disabled, label, form, icon }) => {
                     let actions = [];
                     if (values.editingSection === key && form) {
                       actions = [
@@ -79,8 +81,37 @@ class FilterForm extends React.Component<Props> {
                       ];
                     }
 
+                    const filterNameObj = key.split('.');
+                    const [section, type, name] = filterNameObj;
+
                     switch (type) {
-                      case 'multi-select': {
+                      case 'multiSelect':
+                        return (
+                          <>
+                            <RadioInputFilterForm
+                              key={key}
+                              selected={values.selectedSections.includes(key)}
+                              onToggle={() => onToggleSelectSection(key, onChange, form)}
+                              readOnly={readOnly}
+                              disabled={disabled}
+                              actions={actions}
+                            >
+                              <div className={FilterSectionStyle}>
+                                <div className={FilterSectionLabel}>{label}</div>
+                              </div>
+                            </RadioInputFilterForm>
+                            {values[section][type][name] && values[section][type][name].length ? (
+                              <div className={FilterTagsWrapperStyle}>
+                                {values[section][type][name].map(el => (
+                                  <div className={FilterTagStyle} key={el.id}>
+                                    {el.text}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+                          </>
+                        );
+                      case 'range':
                         return (
                           <>
                             <RadioInputFilterForm
@@ -106,24 +137,26 @@ class FilterForm extends React.Component<Props> {
                             ) : null}
                           </>
                         );
-                      }
-                      case 'checkbox': {
+
+                      case 'checkbox':
                         return (
                           <>
                             <ToggleInput
-                              toggled={values.selectedSections.includes(key)}
-                              onToggle={() => onToggleSection(key)}
+                              toggled={values[section][type][name]}
+                              onToggle={() => onToggleFilterCheckBox(key)}
                             >
                               <div className={ToggleInputLabelStyle}>
-                                {icon ? <div className={ToggleInputIconStyle}><Icon icon={icon} /></div> : null}
-                                <div className={FilterSectionLabel}>
-                                  {label}
-                                </div>
+                                {icon ? (
+                                  <div className={ToggleInputIconStyle}>
+                                    <Icon icon={icon} />
+                                  </div>
+                                ) : null}
+                                <div className={FilterSectionLabel}>{label}</div>
                               </div>
                             </ToggleInput>
                           </>
                         );
-                      }
+
                       default:
                         return null;
                     }
@@ -144,14 +177,13 @@ class FilterForm extends React.Component<Props> {
           <div className={FilterLayoutStyle}>
             <div className={FilterSectionTabs}>
               <Subscribe to={[OrderFilteringContainer]}>
-                {({ originalValues, state }) => {
-                  const values = { ...originalValues, ...state };
-                  const filteredNo =
-                    (values.selectedSections && values.selectedSections.length) || 0;
+                {({ getFilterNoInSection }) => {
+                  const filteredNo = getFilterNoInSection('order');
 
                   return (
                     <JumpToSection>
                       <FilterHeaderLink
+                        active={false}
                         link="orderFilterSection"
                         label={<FormattedMessage id="global.order" defaultMessage="Order" />}
                       >
@@ -162,15 +194,14 @@ class FilterForm extends React.Component<Props> {
                 }}
               </Subscribe>
 
-              <Subscribe to={[OrderItemFilteringContainer]}>
-                {({ originalValues, state }) => {
-                  const values = { ...originalValues, ...state };
-                  const filteredNo =
-                    (values.selectedSections && values.selectedSections.length) || 0;
+              <Subscribe to={[OrderFilteringContainer]}>
+                {({ getFilterNoInSection }) => {
+                  const filteredNo = getFilterNoInSection('orderItem');
 
                   return (
                     <JumpToSection>
                       <FilterHeaderLink
+                        active={false}
                         link="orderItemFilterSection"
                         label={<FormattedMessage id="global.item" defaultMessage="Item" />}
                       >
@@ -181,19 +212,41 @@ class FilterForm extends React.Component<Props> {
                 }}
               </Subscribe>
 
-              <JumpToSection>
-                <FilterHeaderLink
-                  link="batchFilterSection"
-                  label={<FormattedMessage id="global.batch" defaultMessage="Batch" />}
-                />
-              </JumpToSection>
+              <Subscribe to={[OrderFilteringContainer]}>
+                {({ getFilterNoInSection }) => {
+                  const filteredNo = getFilterNoInSection('batch');
 
-              <JumpToSection>
-                <FilterHeaderLink
-                  link="shipmentFilterSection"
-                  label={<FormattedMessage id="global.shipment" defaultMessage="Shipment" />}
-                />
-              </JumpToSection>
+                  return (
+                    <JumpToSection>
+                      <FilterHeaderLink
+                        active={false}
+                        link="batchFilterSection"
+                        label={<FormattedMessage id="global.batch" defaultMessage="Batch" />}
+                      >
+                        {filteredNo ? <div className={FilteredNoStyle}>{filteredNo}</div> : null}
+                      </FilterHeaderLink>
+                    </JumpToSection>
+                  );
+                }}
+              </Subscribe>
+
+              <Subscribe to={[OrderFilteringContainer]}>
+                {({ getFilterNoInSection }) => {
+                  const filteredNo = getFilterNoInSection('shipment');
+
+                  return (
+                    <JumpToSection>
+                      <FilterHeaderLink
+                        active={false}
+                        link="shipmentFilterSection"
+                        label={<FormattedMessage id="global.shipment" defaultMessage="Shipment" />}
+                      >
+                        {filteredNo ? <div className={FilteredNoStyle}>{filteredNo}</div> : null}
+                      </FilterHeaderLink>
+                    </JumpToSection>
+                  );
+                }}
+              </Subscribe>
             </div>
             <div className={FilterGroupSectionWrapperStyle}>
               <SectionWrapper id="orderFilterSection">
@@ -204,9 +257,13 @@ class FilterForm extends React.Component<Props> {
                 {this.renderFilterSection(OrderFilteringContainer, FilterByOrderItemDS)}
               </SectionWrapper>
 
-              <SectionWrapper id="batchFilterSection" />
+              <SectionWrapper id="batchFilterSection">
+                {this.renderFilterSection(OrderFilteringContainer, FilterByBatchDS)}
+              </SectionWrapper>
 
-              <SectionWrapper id="shipmentFilterSection" />
+              <SectionWrapper id="shipmentFilterSection">
+                {this.renderFilterSection(OrderFilteringContainer, FilterByShipmentDS)}
+              </SectionWrapper>
             </div>
             <div className={FilterSectionEditForm}>
               <Subscribe to={[OrderFilteringContainer]}>
