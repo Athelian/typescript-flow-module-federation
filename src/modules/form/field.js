@@ -8,7 +8,6 @@ import FormContainer from './container';
 type OptionalProps = {
   validationOnChange: boolean,
   validationOnBlur: boolean,
-  saveOnChange: boolean,
   isTouched: boolean,
   errorMessage: string,
   activeField: string,
@@ -39,7 +38,6 @@ type State = {
 
 const defaultProps = {
   activeField: '',
-  saveOnChange: false,
   validationOnChange: false,
   validationOnBlur: true,
   isTouched: false,
@@ -78,15 +76,11 @@ class BaseFormField extends React.Component<Props, State> {
     }
 
     const { value } = event.target;
-    const { validationOnChange, onValidate, saveOnChange, setFieldValue, name }: Props = this.props;
+    const { validationOnChange, onValidate, name }: Props = this.props;
     this.setState({ value });
 
     if (validationOnChange && onValidate) {
       onValidate({ [name]: value });
-    }
-
-    if (saveOnChange) {
-      setFieldValue(name, value);
     }
   };
 
