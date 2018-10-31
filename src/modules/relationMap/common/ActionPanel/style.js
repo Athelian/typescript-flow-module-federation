@@ -6,7 +6,7 @@ export const ActionSection1WrapperStyle: string = css`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  /* width: 100%; */
   height: 50px;
   background: ${colors.GRAY_SUPER_LIGHT};
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);

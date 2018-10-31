@@ -13,6 +13,7 @@ type ActionCardProps = {
 type OptionalActionProps = {
   className: string,
   onClick: Function,
+  onUnClick?: Function,
   toggle: Function,
 };
 
@@ -21,24 +22,31 @@ type ActionProps = OptionalActionProps & {
   targetted: boolean,
 };
 
-const Action = ({ icon, targetted, className, onClick, toggle }: ActionProps) => (
+const Action = ({ icon, targetted, className, onClick, onUnClick, toggle }: ActionProps) => (
   <div
-    className={cx(style.ActionWrapperStyle(targetted === icon), className)}
+    className={style.ActionWrapperStyle(targetted === icon)}
     role="presentation"
     onClick={() => {
-      if (toggle) {
-        if (targetted === icon) {
+      if (targetted === icon) {
+        if (toggle) {
           toggle(null);
-        } else {
+        }
+        if (onUnClick) {
+          onUnClick();
+        }
+      } else {
+        if (toggle) {
           toggle(icon);
         }
-      }
-      if (onClick) {
-        onClick();
+        if (onClick) {
+          onClick();
+        }
       }
     }}
   >
-    <Icon icon={icon} />
+    <div className={className}>
+      <Icon icon={targetted ? `${icon}_REGULAR` : icon} />
+    </div>
   </div>
 );
 Action.defaultProps = {

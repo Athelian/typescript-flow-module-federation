@@ -1,22 +1,20 @@
 // @flow
 import React from 'react';
 import { Subscribe } from 'unstated';
-import { getByPathWithDefault, omit } from 'utils/fp';
+import { getByPathWithDefault as get, omit } from 'utils/fp';
 import { cx } from 'react-emotion';
 import { BooleanValue } from 'react-values';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
-// import { ToggleDeleteDialog } from 'modules/relationMap/common/Dialog/DeleteDialog';
 import {
   ItemWrapperStyle,
   ShipmentCardStyle,
   ShipmentCardTotalStyle,
 } from 'modules/relationMap/common/RelationItem/style';
+import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import RelationMapContainer from 'modules/relationMap/container';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import BaseCard from 'components/Cards';
-// import { CardAction } from 'components/Cards/BaseCard';
-
 import {
   RelationLine,
   OrderCard,
@@ -89,7 +87,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           const [, linkType, relationType] = relation.type.split('-') || [];
           const lineItemType = getItemType(relationType);
           const isFocused = isFocusedLink(focusedItem[lineItemType], relatedIds);
-          const hasRelation = getByPathWithDefault(false, `${lineItemType}.${id}`, focusedItem);
+          const hasRelation = get(false, `${lineItemType}.${id}`, focusedItem);
           return (
             <RelationLine
               type={linkType}
@@ -99,37 +97,38 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             />
           );
         }
-        const onClickHighlight = mode => () => {
-          if (getByPathWithDefault(false, `${itemType}.${id}`, focusedItem)) {
-            return reset();
-          }
-          return changeFocusItem({
+        const onClickHighlight = mode => () =>
+          changeFocusItem({
             focusedItem: itemRelation || {},
             focusMode: mode,
           });
-        };
         const onClickTarget = () => {
           const item = focusMode === 'TARGET' ? focusedItem : initFocusObj();
           const targetItem = Object.assign(item, {
-            [itemType]: getByPathWithDefault(false, `${itemType}.${id}`, item)
-              ? omit([id], item[itemType])
-              : {
-                  ...item[itemType],
-                  [data.id]: data,
-                },
+            [itemType]: {
+              ...item[itemType],
+              [data.id]: data,
+            },
           });
           changeFocusItem({
             focusedItem: targetItem,
             focusMode: 'TARGET',
           });
         };
-        const isFocused = getByPathWithDefault(false, `${itemType}.${id}` || '', focusedItem);
+        const onUnClickTarget = () => {
+          const item = focusMode === 'TARGET' ? focusedItem : initFocusObj();
+          if (get(false, `${itemType}.${id}`, item)) {
+            const targetItem = Object.assign(item, {
+              [itemType]: omit([id], item[itemType]),
+            });
+            changeFocusItem({
+              focusedItem: targetItem,
+              focusMode: 'TARGET',
+            });
+          }
+        };
+        const isFocused = get(false, `${itemType}.${id}` || '', focusedItem);
         const cardWrapperClass = ItemWrapperStyle(isFocused, focusMode);
-        // const actions = [
-        //   <CardAction icon="SQUARE" onClick={onClickHighlight('HIGHLIGHT')} />,
-        //   <CardAction icon="BRANCH" onClick={onClickHighlight('TARGET_TREE')} />,
-        //   <CardAction icon="CLEAR" onClick={reset} />,
-        // ];
         switch (type) {
           default: {
             return <div />;
@@ -157,6 +156,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   targetted={targetted}
                                   toggle={toggle}
                                   onClick={onClickHighlight('HIGHLIGHT')}
+                                  onUnClick={reset}
                                 />
                                 <Action
                                   icon="DOCUMENT"
@@ -169,12 +169,15 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   targetted={targetted}
                                   toggle={toggle}
                                   onClick={onClickHighlight('TARGET_TREE')}
+                                  onUnClick={reset}
+                                  className={RotateIcon}
                                 />
                                 <Action
                                   icon="CHECKED"
                                   targetted={targetted}
                                   toggle={toggle}
                                   onClick={onClickTarget}
+                                  onUnClick={onUnClickTarget}
                                 />
                               </>
                             )}
@@ -208,18 +211,22 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                               targetted={targetted}
                               toggle={toggle}
                               onClick={onClickHighlight('HIGHLIGHT')}
+                              onUnClick={reset}
                             />
                             <Action
                               icon="BRANCH"
                               targetted={targetted}
                               toggle={toggle}
                               onClick={onClickHighlight('TARGET_TREE')}
+                              className={RotateIcon}
+                              onUnClick={reset}
                             />
                             <Action
                               icon="CHECKED"
                               targetted={targetted}
                               toggle={toggle}
                               onClick={onClickTarget}
+                              onUnClick={onUnClickTarget}
                             />
                           </>
                         )}
@@ -255,6 +262,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   targetted={targetted}
                                   toggle={toggle}
                                   onClick={onClickHighlight('HIGHLIGHT')}
+                                  onUnClick={reset}
                                 />
                                 <Action
                                   icon="DOCUMENT"
@@ -263,16 +271,11 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   onClick={() => setSlide({ show: true, type, id })}
                                 />
                                 <Action
-                                  icon="BRANCH"
-                                  targetted={targetted}
-                                  toggle={toggle}
-                                  onClick={onClickHighlight('TARGET_TREE')}
-                                />
-                                <Action
                                   icon="CHECKED"
                                   targetted={targetted}
                                   toggle={toggle}
                                   onClick={onClickTarget}
+                                  onUnClick={onUnClickTarget}
                                 />
                               </>
                             )}
@@ -341,6 +344,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                     targetted={targetted}
                                     toggle={toggle}
                                     onClick={onClickHighlight('HIGHLIGHT')}
+                                    onUnClick={reset}
                                   />
                                   <Action
                                     icon="DOCUMENT"
@@ -349,16 +353,11 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                     onClick={() => setSlide({ show: true, type, id })}
                                   />
                                   <Action
-                                    icon="BRANCH"
-                                    targetted={targetted}
-                                    toggle={toggle}
-                                    onClick={onClickHighlight('TARGET_TREE')}
-                                  />
-                                  <Action
                                     icon="CHECKED"
                                     targetted={targetted}
                                     toggle={toggle}
                                     onClick={onClickTarget}
+                                    onUnClick={onUnClickTarget}
                                   />
                                 </>
                               )}
