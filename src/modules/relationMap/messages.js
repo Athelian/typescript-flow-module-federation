@@ -96,23 +96,34 @@ export default defineMessages({
   },
   connect: {
     id: 'modules.RelationMaps.label.connect',
-    defaultMessage: 'CONNECT'
+    defaultMessage: 'CONNECT',
   },
   connectTo: {
     id: 'modules.RelationMaps.label.connectTo',
-    defaultMessage: 'CONNECT TO'
+    defaultMessage: 'CONNECT TO',
   },
   connectShipment: {
     id: 'modules.RelationMaps.label.connectShipment',
-    defaultMessage: 'Connect Shipment on the list'
+    defaultMessage: 'Connect Shipment on the list',
   },
   disconnect: {
     id: 'modules.RelationMaps.label.disconnect',
-    defaultMessage: 'Disconnect' 
+    defaultMessage: 'Disconnect',
   },
   newShipment: {
     id: 'modules.RelationMaps.label.newShipment',
-    defaultMessage: 'New Shipment' 
-  }
-
+    defaultMessage: 'New Shipment',
+  },
+  confirmDeleteBatch: {
+    id: 'modules.RelationMaps.label.confirmDeleteBatch',
+    defaultMessage: 'Confirm To delete batch',
+  },
+  confirmDeleteOrderItem: {
+    id: 'modules.RelationMaps.label.confirmDeleteOrderItem',
+    defaultMessage: 'Confirm To delete order item',
+  },
+  confirmDeleteShipment: {
+    id: 'modules.RelationMaps.label.confirmDeleteShipment',
+    defaultMessage: 'Confirm To delete shipment',
+  },
 });

@@ -1,8 +1,10 @@
 // @flow
 import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
+import { FormattedMessage } from 'react-intl';
 import DefaultDialog from 'components/Dialog/ArchiveDialog';
 import { updateShipmentMutation } from 'modules/shipment/form/mutation';
+import messages from 'modules/relationMap/messages';
 
 type OptionalProps = {
   onConfirm: () => void,
@@ -40,7 +42,7 @@ const ShipmentDeleteDialog = ({ isOpen, onRequestClose, shipment, onConfirm }: P
           onConfirm();
         }}
         width={360}
-        message="Confirm To delete shipment"
+        message={<FormattedMessage {...messages.confirmDeleteShipment} />}
       />
     )}
   </ApolloConsumer>
