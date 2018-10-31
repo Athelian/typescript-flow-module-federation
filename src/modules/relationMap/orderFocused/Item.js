@@ -99,7 +99,8 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         }
         const onClickHighlight = mode => () =>
           changeFocusItem({
-            focusedItem: itemRelation || {},
+            focusedItem:
+              (mode === 'TARGET_TREE' ? { ...itemRelation, shipment: {} } : itemRelation) || {},
             focusMode: mode,
           });
         const onClickTarget = () => {
@@ -293,7 +294,11 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case ORDER_ITEM_ALL: {
             return (
-              <BaseCard wrapperClassName={cardWrapperClass}>
+              <BaseCard
+                wrapperClassName={
+                  focusMode === 'TARGET' ? ItemWrapperStyle(false) : cardWrapperClass
+                }
+              >
                 <WrapperCard onClick={onToggle}>
                   <TotalCard name="Items" quantity={data.totalItem} />
                 </WrapperCard>
@@ -302,7 +307,11 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case BATCH_ALL: {
             return (
-              <BaseCard wrapperClassName={cardWrapperClass}>
+              <BaseCard
+                wrapperClassName={
+                  focusMode === 'TARGET' ? ItemWrapperStyle(false) : cardWrapperClass
+                }
+              >
                 <WrapperCard onClick={onToggle}>
                   <TotalCard name="Batches" quantity={data.totalBatch} />
                 </WrapperCard>
