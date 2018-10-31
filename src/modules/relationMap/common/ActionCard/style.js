@@ -20,6 +20,7 @@ export const CardWrapperStyle = css`
 
 export const ActionWrapperStyle = targetted => css`
   flex: 1;
+  z-index: 2;
 
   display: flex;
   justify-content: center;

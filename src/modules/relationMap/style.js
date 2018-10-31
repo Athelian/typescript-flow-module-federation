@@ -59,10 +59,10 @@ const GridColumn = css`
 `;
 
 export const ContentWrapperStyle = css`
-  /* overflow-y: hidden; */
   height: calc(100vh - 50px);
   padding: 30px 0;
-  width: calc(100vw - 200px);
+  width: 100%;
+  overflow-y: hidden;
 `;
 
 export const RelationMapGrid = styled('div')`

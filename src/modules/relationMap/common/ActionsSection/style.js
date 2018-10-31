@@ -8,7 +8,7 @@ export const ActionSection1WrapperStyle: string = css`
   justify-content: space-between;
   width: 100%;
   height: 50px;
-  padding: 0 30px 0 40px;
+  /* padding: 0 30px 0 40px; */
   background: #eeeeee;
   z-index: 2;
   ${transitions.EXPAND};

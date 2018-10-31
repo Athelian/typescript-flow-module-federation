@@ -95,6 +95,7 @@ import {
   faBezierCurve as SPLIT,
   faBezierCurve as ENTITY,
   faMagic as MAGIC,
+  faCodeBranch as BRANCH,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -108,9 +109,12 @@ import {
   faList as LIST,
   faCheckCircle as UNCHECKED,
   faEye as EYE,
-  faCodeBranch as BRANCH,
+  faCodeBranch as BRANCH_REGULAR,
   faSquare as SQUARE,
   faAngleRight as TARGET,
+  faMagic as MAGIC_REGULAR,
+  faFileAlt as DOCUMENT_REGULAR,
+  faCheckCircle as CHECKED_REGULAR,
 } from '@fortawesome/pro-regular-svg-icons';
 
 import {
@@ -228,4 +232,8 @@ export default {
   TARGET,
   ENTITY,
   MAGIC,
+  BRANCH_REGULAR,
+  MAGIC_REGULAR,
+  DOCUMENT_REGULAR,
+  CHECKED_REGULAR,
 };

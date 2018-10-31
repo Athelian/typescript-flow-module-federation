@@ -28,7 +28,7 @@ import {
   BadgeWrapperStyle,
   TagWrapperStyle,
   RelationMapGrid,
-  FullGridWrapperStyle,
+  // FullGridWrapperStyle,
 } from './style';
 
 type Props = {
@@ -49,232 +49,233 @@ class Order extends React.PureComponent<Props> {
     const { page, perPage, intl } = this.props;
     return (
       <Layout>
-        <RelationMapGrid>
-          <ApolloConsumer>
-            {client => (
-              <SortFilterHandler>
-                {({ sort, filter, onChangeSortFilter }) => (
-                  <ActionContainer>
-                    {({
-                      clone,
-                      result,
-                      setResult,
-                      currentAction,
-                      setAction,
-                      split,
-                      connectNewShipment,
-                      connectExistingShipment,
-                    }) => (
-                      <Query
-                        query={query}
-                        variables={{
-                          page,
-                          perPage,
-                          filterBy: {
-                            ...filter,
-                          },
-                          sortBy: {
-                            [sort.field]: sort.direction,
-                          },
-                        }}
-                        fetchPolicy="network-only"
-                      >
-                        {({ loading, data, fetchMore, error, refetch }) => (
-                          <>
-                            <Subscribe to={[RelationMapContainer]}>
-                              {({
-                                state: { focusMode, focusedItem },
-                                isTargetTreeMode,
-                                isTargetMode,
-                                selectItem,
-                              }) =>
-                                (isTargetMode() || isTargetTreeMode()) && (
-                                  <div className={FullGridWrapperStyle}>
-                                    <ActionSelector target={focusedItem}>
-                                      {(function renderPanel() {
-                                        switch (currentAction) {
-                                          default:
-                                            return (
-                                              <>
-                                                <BaseButton
-                                                  icon="CLONE"
-                                                  label="CLONE"
-                                                  backgroundColor="TEAL"
-                                                  hoverBackgroundColor="TEAL_DARK"
-                                                  onClick={async () => {
-                                                    // const clone = getCloneFunction(focusMode);
-                                                    const [newResult, newFocus] = await clone(
-                                                      client,
-                                                      focusedItem,
-                                                      focusMode
-                                                    );
-                                                    await refetch({ page, perPage });
-                                                    setResult(newResult);
-                                                    selectItem(newFocus);
-                                                    setAction('cloned');
-                                                  }}
-                                                />
-                                                <BaseButton
-                                                  icon="SPLIT"
-                                                  label="SPLIT"
-                                                  backgroundColor="TEAL"
-                                                  hoverBackgroundColor="TEAL_DARK"
-                                                  onClick={() => setAction('split')}
-                                                />
-                                                <BooleanValue>
-                                                  {({ value: opened, set: slideToggle }) => (
-                                                    <>
-                                                      <BaseButton
-                                                        icon="EDIT"
-                                                        label="EDIT"
-                                                        backgroundColor="TEAL"
-                                                        hoverBackgroundColor="TEAL_DARK"
-                                                        onClick={() => slideToggle(true)}
-                                                      />
-                                                      <SlideView
-                                                        isOpen={opened}
-                                                        onRequestClose={() => slideToggle(false)}
-                                                        options={{ width: '1030px' }}
-                                                      >
-                                                        {opened && (
-                                                          <TableInlineEdit
-                                                            onExpand={() => {}}
-                                                            onSave={() => {}}
-                                                            onCancel={() => slideToggle(false)}
-                                                          />
-                                                        )}
-                                                      </SlideView>
-                                                    </>
-                                                  )}
-                                                </BooleanValue>
-                                                <BaseButton
-                                                  icon="CONNECT"
-                                                  label="CONNECT"
-                                                  backgroundColor="TEAL"
-                                                  hoverBackgroundColor="TEAL_DARK"
-                                                  onClick={() => setAction('connect')}
-                                                />
-                                              </>
-                                            );
-                                          case 'cloned':
-                                            return (
-                                              <>
-                                                <Label>Clear All</Label>
-                                                <BaseButton
-                                                  icon="CLONE"
-                                                  label="CLONE"
-                                                  backgroundColor="TEAL"
-                                                  hoverBackgroundColor="TEAL_DARK"
-                                                  onClick={async () => {}}
-                                                />
-                                              </>
-                                            );
-                                        }
-                                      })()}
-                                    </ActionSelector>
-                                    {currentAction === 'split' && (
-                                      <SplitPanel
-                                        onApply={async splitData => {
-                                          const [splitResult, splitFocus] = await split(
-                                            client,
-                                            focusedItem,
-                                            splitData
+        {/* <RelationMapGrid> */}
+        <ApolloConsumer>
+          {client => (
+            <SortFilterHandler>
+              {({ sort, filter, onChangeSortFilter }) => (
+                <ActionContainer>
+                  {({
+                    clone,
+                    result,
+                    setResult,
+                    currentAction,
+                    setAction,
+                    split,
+                    connectNewShipment,
+                    connectExistingShipment,
+                  }) => (
+                    <Query
+                      query={query}
+                      variables={{
+                        page,
+                        perPage,
+                        filterBy: {
+                          ...filter,
+                        },
+                        sortBy: {
+                          [sort.field]: sort.direction,
+                        },
+                      }}
+                      fetchPolicy="network-only"
+                    >
+                      {({ loading, data, fetchMore, error, refetch }) => (
+                        <>
+                          <Subscribe to={[RelationMapContainer]}>
+                            {({
+                              state: { focusMode, focusedItem },
+                              isTargetTreeMode,
+                              isTargetMode,
+                              selectItem,
+                            }) =>
+                              (isTargetMode() || isTargetTreeMode()) && (
+                                <>
+                                  <ActionSelector target={focusedItem}>
+                                    {(function renderPanel() {
+                                      switch (currentAction) {
+                                        default:
+                                          return (
+                                            <>
+                                              <BaseButton
+                                                icon="CLONE"
+                                                label="CLONE"
+                                                backgroundColor="TEAL"
+                                                hoverBackgroundColor="TEAL_DARK"
+                                                onClick={async () => {
+                                                  // const clone = getCloneFunction(focusMode);
+                                                  const [newResult, newFocus] = await clone(
+                                                    client,
+                                                    focusedItem,
+                                                    focusMode
+                                                  );
+                                                  await refetch({ page, perPage });
+                                                  setResult(newResult);
+                                                  selectItem(newFocus);
+                                                  setAction('cloned');
+                                                }}
+                                              />
+                                              <BaseButton
+                                                icon="SPLIT"
+                                                label="SPLIT"
+                                                backgroundColor="TEAL"
+                                                hoverBackgroundColor="TEAL_DARK"
+                                                onClick={() => setAction('split')}
+                                              />
+                                              <BooleanValue>
+                                                {({ value: opened, set: slideToggle }) => (
+                                                  <>
+                                                    <BaseButton
+                                                      icon="EDIT"
+                                                      label="EDIT"
+                                                      backgroundColor="TEAL"
+                                                      hoverBackgroundColor="TEAL_DARK"
+                                                      onClick={() => slideToggle(true)}
+                                                    />
+                                                    <SlideView
+                                                      isOpen={opened}
+                                                      onRequestClose={() => slideToggle(false)}
+                                                      options={{ width: '1030px' }}
+                                                    >
+                                                      {opened && (
+                                                        <TableInlineEdit
+                                                          onExpand={() => {}}
+                                                          onSave={() => {}}
+                                                          onCancel={() => slideToggle(false)}
+                                                        />
+                                                      )}
+                                                    </SlideView>
+                                                  </>
+                                                )}
+                                              </BooleanValue>
+                                              <BaseButton
+                                                icon="CONNECT"
+                                                label="CONNECT"
+                                                backgroundColor="TEAL"
+                                                hoverBackgroundColor="TEAL_DARK"
+                                                disabled
+                                                onClick={() => setAction('connect')}
+                                              />
+                                            </>
                                           );
-                                          await refetch({ page, perPage });
-                                          setResult(splitResult);
-                                          selectItem(splitFocus);
-                                        }}
-                                      />
-                                    )}
-                                    {currentAction === 'connect' && (
-                                      <ConnectPanel
-                                        onConnectNewShipment={async () => {
-                                          const [newResult, newTarget] = await connectNewShipment(
-                                            client,
-                                            focusedItem
+                                        case 'cloned':
+                                          return (
+                                            <>
+                                              <Label>Clear All</Label>
+                                              <BaseButton
+                                                icon="CLONE"
+                                                label="CLONE"
+                                                backgroundColor="TEAL"
+                                                hoverBackgroundColor="TEAL_DARK"
+                                                onClick={async () => {}}
+                                              />
+                                            </>
                                           );
-                                          setResult(newResult);
-                                          selectItem(newTarget);
-                                        }}
-                                        onConnectExistingShipment={() =>
-                                          connectExistingShipment(client, focusedItem)
-                                        }
-                                      />
-                                    )}
-                                  </div>
-                                )
-                              }
-                            </Subscribe>
-                            <div className={TagWrapperStyle}>
-                              <ToggleTag />
-                            </div>
-                            <SortFilter
-                              sort={sort}
-                              filter={filter}
-                              onChange={onChangeSortFilter}
-                              className={FunctionWrapperStyle}
-                            />
-                            <QueryHandler
-                              model="orders"
-                              loading={loading}
-                              data={data}
-                              fetchMore={fetchMore}
-                              error={error}
-                            >
-                              {({ nodes, hasMore, loadMore }) => {
-                                const order = formatOrderData(nodes || []);
-                                const formattedNodes = isEmpty(result)
-                                  ? nodes
-                                  : formatNodes(nodes, result);
-                                return (
-                                  <>
-                                    <div className={BadgeWrapperStyle}>
-                                      <SummaryBadge
-                                        icon="ORDER"
-                                        color="ORDER"
-                                        label={intl.formatMessage(messages.ordersLabel)}
-                                        no={order.sumOrders}
-                                      />
-                                      <SummaryBadge
-                                        icon="ORDER_ITEM"
-                                        color="ORDER_ITEM"
-                                        label={intl.formatMessage(messages.itemsLabel)}
-                                        no={order.sumOrderItems}
-                                      />
-                                      <SummaryBadge
-                                        icon="BATCH"
-                                        color="BATCH"
-                                        label={intl.formatMessage(messages.batchesLabel)}
-                                        no={order.sumBatches}
-                                      />
-                                      <SummaryBadge
-                                        icon="SHIPMENT"
-                                        color="SHIPMENT"
-                                        label={intl.formatMessage(messages.shipmentsLabel)}
-                                        no={order.sumShipments}
-                                      />
-                                    </div>
-                                    <OrderFocused
-                                      order={order}
-                                      hasMore={hasMore}
-                                      loadMore={loadMore}
-                                      nodes={formattedNodes}
-                                      result={result}
+                                      }
+                                    })()}
+                                  </ActionSelector>
+                                  {currentAction === 'split' && (
+                                    <SplitPanel
+                                      onApply={async splitData => {
+                                        const [splitResult, splitFocus] = await split(
+                                          client,
+                                          focusedItem,
+                                          splitData
+                                        );
+                                        await refetch({ page, perPage });
+                                        setResult(splitResult);
+                                        selectItem(splitFocus);
+                                      }}
                                     />
-                                  </>
-                                );
-                              }}
-                            </QueryHandler>
-                          </>
-                        )}
-                      </Query>
-                    )}
-                  </ActionContainer>
-                )}
-              </SortFilterHandler>
-            )}
-          </ApolloConsumer>
-        </RelationMapGrid>
+                                  )}
+                                  {currentAction === 'connect' && (
+                                    <ConnectPanel
+                                      onConnectNewShipment={async () => {
+                                        const [newResult, newTarget] = await connectNewShipment(
+                                          client,
+                                          focusedItem
+                                        );
+                                        setResult(newResult);
+                                        selectItem(newTarget);
+                                      }}
+                                      onConnectExistingShipment={() =>
+                                        connectExistingShipment(client, focusedItem)
+                                      }
+                                    />
+                                  )}
+                                </>
+                              )
+                            }
+                          </Subscribe>
+                          <div className={TagWrapperStyle}>
+                            <ToggleTag />
+                          </div>
+                          <SortFilter
+                            sort={sort}
+                            filter={filter}
+                            onChange={onChangeSortFilter}
+                            className={FunctionWrapperStyle}
+                          />
+                          <QueryHandler
+                            model="orders"
+                            loading={loading}
+                            data={data}
+                            fetchMore={fetchMore}
+                            error={error}
+                          >
+                            {({ nodes, hasMore, loadMore }) => {
+                              const order = formatOrderData(nodes || []);
+                              const formattedNodes = isEmpty(result)
+                                ? nodes
+                                : formatNodes(nodes, result);
+                              return (
+                                <RelationMapGrid>
+                                  <div className={BadgeWrapperStyle}>
+                                    <SummaryBadge
+                                      icon="ORDER"
+                                      color="ORDER"
+                                      label={intl.formatMessage(messages.ordersLabel)}
+                                      no={order.sumOrders}
+                                    />
+                                    <SummaryBadge
+                                      icon="ORDER_ITEM"
+                                      color="ORDER_ITEM"
+                                      label={intl.formatMessage(messages.itemsLabel)}
+                                      no={order.sumOrderItems}
+                                    />
+                                    <SummaryBadge
+                                      icon="BATCH"
+                                      color="BATCH"
+                                      label={intl.formatMessage(messages.batchesLabel)}
+                                      no={order.sumBatches}
+                                    />
+                                    <SummaryBadge
+                                      icon="SHIPMENT"
+                                      color="SHIPMENT"
+                                      label={intl.formatMessage(messages.shipmentsLabel)}
+                                      no={order.sumShipments}
+                                    />
+                                  </div>
+                                  <OrderFocused
+                                    order={order}
+                                    hasMore={hasMore}
+                                    loadMore={loadMore}
+                                    nodes={formattedNodes}
+                                    result={result}
+                                  />
+                                </RelationMapGrid>
+                              );
+                            }}
+                          </QueryHandler>
+                        </>
+                      )}
+                    </Query>
+                  )}
+                </ActionContainer>
+              )}
+            </SortFilterHandler>
+          )}
+        </ApolloConsumer>
+        {/* </RelationMapGrid> */}
       </Layout>
     );
   }
