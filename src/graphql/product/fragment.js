@@ -23,9 +23,6 @@ export const productFormFragment = gql`
     productProviders {
       ...productProviderFormFragment
     }
-    metadata {
-      ...metadataFragment
-    }
   }
 `;
 
