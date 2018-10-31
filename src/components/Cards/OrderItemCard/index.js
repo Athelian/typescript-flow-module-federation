@@ -64,13 +64,18 @@ function getQuantitySummary(item: Object) {
     item.batches.forEach(batch => {
       batchedQuantity += batch.quantity;
       numOfBatched += 1;
+
+      let currentQuantity = batch.quantity;
+
       if (batch.batchAdjustments) {
         batch.batchAdjustments.forEach(batchAdjustment => {
           batchedQuantity += batchAdjustment.quantity;
+          currentQuantity += batchAdjustment.quantity;
         });
       }
+
       if (batch.shipment) {
-        shippedQuantity += batch.quantity;
+        shippedQuantity += currentQuantity;
         numOfShipped += 1;
       }
     });
