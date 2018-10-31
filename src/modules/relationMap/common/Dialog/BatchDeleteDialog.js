@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
+import { FormattedMessage } from 'react-intl';
 import DefaultDialog from 'components/Dialog/ArchiveDialog';
 import { orderFormQuery } from 'modules/order/form/query';
 import { updateOrderMutation, prepareUpdateOrderInput } from 'modules/order/form/mutation';
+import messages from 'modules/relationMap/messages';
 import { removeTypename } from 'utils/data';
 
 type OptionalProps = {
@@ -63,7 +65,7 @@ const BatchDeleteDialog = ({ isOpen, onRequestClose, batch, onConfirm }: Props) 
           onConfirm();
         }}
         width={360}
-        message="Confirm To delete batch"
+        message={<FormattedMessage {...messages.confirmDeleteBatch} />}
       />
     )}
   </ApolloConsumer>
