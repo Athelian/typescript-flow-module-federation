@@ -9,7 +9,7 @@ const getHighlighColor = (isFocused: boolean, focusMode: ?string) => {
     return colors.GRAY_QUITE_LIGHT;
   }
   if (focusMode === 'HIGHLIGHT') {
-    return 'rgba(251,170,29, 0.5)';
+    return colors.HIGHLIGHT;
   }
   return colors.TEAL;
 };

@@ -6,3 +6,6 @@ export const BATCH = 'BATCH';
 export const BATCH_ALL = 'BATCH_ALL';
 export const SHIPMENT = 'SHIPMENT';
 export const SHIPMENT_ALL = 'SHIPMENT_ALL';
+export const SIMPLE = 0;
+export const EQUALLY = 1;
+export const BALANCE = 2;

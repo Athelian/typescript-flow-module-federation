@@ -11,7 +11,7 @@ const getborderbackground = (isFocus: boolean, focusMode: string) => {
     return colors.TEAL;
   }
   if (focusMode === 'HIGHLIGHT') {
-    return 'rgba(251,170,29, 0.5)';
+    return colors.HIGHLIGHT;
   }
   return colors.GRAY_QUITE_LIGHT;
 };

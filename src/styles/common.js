@@ -50,6 +50,8 @@ export const colors = {
   ENTITY: '#0B6EDE',
 
   URGENT: '#F12C2C',
+
+  HIGHLIGHT: 'rgba(251,170,29, 0.5)',
 };
 
 export const gradients = {
