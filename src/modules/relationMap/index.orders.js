@@ -141,6 +141,7 @@ class Order extends React.PureComponent<Props> {
                                                           onExpand={() => {}}
                                                           onSave={() => {}}
                                                           onCancel={() => slideToggle(false)}
+                                                          type="orders"
                                                         />
                                                       )}
                                                     </SlideView>

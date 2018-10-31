@@ -19,7 +19,7 @@ type Props = {
 };
 
 const OrderFocused = ({
-  order: { orderObj: order, orderItemObj: orderItem, batchObj: batch, shipmentObj: shipment },
+  order: { order, orderItem, batch, shipment },
   nodes,
   hasMore,
   loadMore,

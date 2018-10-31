@@ -26,6 +26,8 @@ const QueryHandler = ({ loading, data, fetchMore, model, children, error }: Prop
   const totalPage = getByPathWithDefault(1, `${model}.totalPage`, data);
   const hasMore: boolean = nextPage <= totalPage;
   const loadMore = () => loadMoreUtil({ fetchMore, data }, {}, model);
+  // Save on local storage for table inline edit
+  window.localStorage.setItem(model, JSON.stringify(nodes));
   return children({ nodes, hasMore, loadMore });
 };
 

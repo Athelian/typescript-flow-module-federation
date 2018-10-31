@@ -34,7 +34,7 @@ const ShipmentFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) =
                     <Item
                       key={orderId}
                       type="ORDER"
-                      data={shipment.orderObj[orderId]}
+                      data={shipment.order[orderId]}
                       isFocused={
                         focusedOrderId
                           ? focusedOrderId === orderId
@@ -81,21 +81,21 @@ const ShipmentFocused = ({ order, shipment, nodes, hasMore, loadMore }: Props) =
                   itemData = { id: item.id };
                   break;
                 case 'ORDER':
-                  itemData = shipment.orderObj[relation.id];
+                  itemData = shipment.order[relation.id];
                   break;
                 case 'ORDER_ITEM':
-                  itemData = shipment.orderItemObj[relation.id];
+                  itemData = shipment.orderItem[relation.id];
                   break;
                 case 'BATCH':
-                  itemData = shipment.batchObj[relation.id];
+                  itemData = shipment.batch[relation.id];
                   break;
                 case 'ORDER_ITEM_ALL':
                 case 'BATCH_ALL':
-                  itemData = shipment.shipmentObj[relation.id];
+                  itemData = shipment.shipment[relation.id];
                   break;
                 case 'SHIPMENT':
                 case 'SHIPMENT_ALL':
-                  itemData = shipment.shipmentObj[relation.id].data;
+                  itemData = shipment.shipment[relation.id].data;
                   break;
                 default:
                   itemData = {};
