@@ -36,6 +36,7 @@ function LoginForm({ onLogin }: Props) {
                 validator={validator}
                 values={loginFormState.state}
                 validationOnChange
+                saveOnChange
               >
                 {({ name: fieldName, isTouched, errorMessage, isFocused, ...inputHandlers }) => (
                   <FieldItem
@@ -71,6 +72,7 @@ function LoginForm({ onLogin }: Props) {
                 values={loginFormState.state}
                 setFieldValue={loginFormState.setFieldValue}
                 validationOnChange
+                saveOnChange
               >
                 {({ name: fieldName, isTouched, errorMessage, isFocused, ...inputHandlers }) => (
                   <FieldItem
