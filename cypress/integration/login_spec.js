@@ -11,8 +11,7 @@ describe('Login', () => {
       .should('have.value', username);
     cy.get('input[data-testid="password"]')
       .type('wrong')
-      .should('have.value', 'wrong')
-      .blur();
+      .should('have.value', 'wrong');
     cy.get('button[data-testid="submitButton"]').click();
     cy.wait(500);
     cy.contains('#errorMsg', 'Invalid username/password');
@@ -26,8 +25,7 @@ describe('Login', () => {
       .should('have.value', username);
     cy.get('input[data-testid="password"]')
       .type(`${password}`)
-      .should('have.value', password)
-      .blur();
+      .should('have.value', password);
     cy.get('button[data-testid="submitButton"]').click();
     cy.wait(500);
     cy.url().should('include', '/order');
