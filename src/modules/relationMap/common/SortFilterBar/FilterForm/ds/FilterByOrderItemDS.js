@@ -6,7 +6,7 @@ const filterByOrderDS = [
     key: 'orderItem.multiSelect.productName',
     type: 'multiSelect',
     readOnly: false,
-    disabled: false,
+    disabled: true,
     label: (
       <FormattedMessage id="modules.relationMap.filter.productName" defaultMessage="Product Name" />
     ),
@@ -16,7 +16,7 @@ const filterByOrderDS = [
     key: 'orderItem.multiSelect.productSerial',
     type: 'multiSelect',
     readOnly: false,
-    disabled: false,
+    disabled: true,
     label: (
       <FormattedMessage
         id="modules.relationMap.filter.productSerial"

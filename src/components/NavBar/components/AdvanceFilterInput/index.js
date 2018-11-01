@@ -110,6 +110,7 @@ class AdvanceFilterInput extends React.Component<Props, State> {
         </button>
         <OutsideClickHandler
           onOutsideClick={this.close}
+          ignoreClick={false}
           ignoreElements={
             this.filterButtonRef && this.filterButtonRef.current
               ? [this.filterButtonRef.current]
