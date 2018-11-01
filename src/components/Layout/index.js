@@ -31,6 +31,13 @@ export default class Layout extends React.Component<Props, State> {
     }
   };
 
+  static getDerivedStateFromError(error: Object) {
+    if (!isDevEnvironment) {
+      Raven.captureException(error);
+    }
+    return { hasError: true };
+  }
+
   componentDidCatch(error: Object, info: Object) {
     this.setState({ hasError: true });
     if (!isDevEnvironment) {
