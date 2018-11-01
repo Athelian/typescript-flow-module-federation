@@ -7,6 +7,7 @@ import { CalculatorButtonStyle } from './style';
 const numberInputFactory = ({
   WrapperComponent = DefaultStyle,
   required = false,
+  hasTooltip = true,
   width = '200px',
   height = '30px',
   align = 'right',
@@ -19,6 +20,7 @@ const numberInputFactory = ({
 }: {
   WrapperComponent?: () => React.Node,
   required?: boolean,
+  hasTooltip?: boolean,
   align?: string,
   width?: string,
   height?: string,
@@ -49,14 +51,16 @@ const numberInputFactory = ({
         )
       }
       tooltip={
-        <Tooltip
-          isNew={isNew}
-          errorMessage={isTouched && errorMessage}
-          changedValues={{
-            oldValue: originalValue,
-            newValue: inputHandlers.value,
-          }}
-        />
+        hasTooltip ? (
+          <Tooltip
+            isNew={isNew}
+            errorMessage={isTouched && errorMessage}
+            changedValues={{
+              oldValue: originalValue,
+              newValue: inputHandlers.value,
+            }}
+          />
+        ) : null
       }
       input={
         <>

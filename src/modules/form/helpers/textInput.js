@@ -5,6 +5,7 @@ import { FieldItem, Label, Tooltip, DefaultStyle, TextInput } from 'components/F
 const textInputFactory = ({
   type = 'standard',
   required = false,
+  hasTooltip = true,
   WrapperComponent = DefaultStyle,
   align = 'right',
   InputComponent = TextInput,
@@ -20,6 +21,7 @@ const textInputFactory = ({
   WrapperComponent?: () => React.Node,
   InputComponent?: TextInput,
   required?: boolean,
+  hasTooltip?: boolean,
   align?: string,
   width?: string,
   height?: string,
@@ -49,14 +51,16 @@ const textInputFactory = ({
         )
       }
       tooltip={
-        <Tooltip
-          isNew={isNew}
-          errorMessage={isTouched && errorMessage}
-          changedValues={{
-            oldValue: originalValue,
-            newValue: inputHandlers.value,
-          }}
-        />
+        hasTooltip ? (
+          <Tooltip
+            isNew={isNew}
+            errorMessage={isTouched && errorMessage}
+            changedValues={{
+              oldValue: originalValue,
+              newValue: inputHandlers.value,
+            }}
+          />
+        ) : null
       }
       input={
         <WrapperComponent
