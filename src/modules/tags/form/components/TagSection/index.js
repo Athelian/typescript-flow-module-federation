@@ -150,7 +150,6 @@ const TagSection = ({ isNew }: Props) => (
       </Subscribe>
       <Subscribe to={[EntityTypeContainer]}>
         {({ originalValues, state, toggleSelectType }) => {
-          // $FlowFixMe
           const values = { ...originalValues, ...state };
 
           return (

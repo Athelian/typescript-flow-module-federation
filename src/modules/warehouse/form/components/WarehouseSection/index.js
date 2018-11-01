@@ -23,7 +23,6 @@ const WarehouseSection = ({ isNew }: Props) => (
   <div className={WarehouseSectionWrapperStyle}>
     <Subscribe to={[WarehouseContainer]}>
       {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
-        // $FlowFixMe
         const values = { ...originalValues, ...state };
 
         return (

@@ -7,7 +7,6 @@ const textInputFactory = ({
   required = false,
   WrapperComponent = DefaultStyle,
   align = 'right',
-  // $FlowFixMe
   InputComponent = TextInput,
   width = '200px',
   height = '30px',

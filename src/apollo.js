@@ -13,7 +13,7 @@ import introspectionQueryResultData from './generated/fragmentTypes.json';
 import logger from './utils/logger';
 
 class SubscriptionSSE {
-  // $FlowFixMe
+  // $FlowFixMe missing EventSource https://github.com/facebook/flow/issues/6493
   source: ?EventSource;
 
   subscribe(operation, handler) {
