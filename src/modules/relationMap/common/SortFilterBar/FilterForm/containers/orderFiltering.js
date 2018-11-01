@@ -117,17 +117,6 @@ type FormState = {
   batch: BatchFilter,
   shipment: ShipmentFilter,
 
-  poNo?: Array<MultiSelectDataType>,
-  exporterId?: Array<string>,
-  tagIds?: Array<string>,
-  assignment?: Array<string>,
-  created?: Array<string>,
-  updatedAt?: Array<string>,
-  unBatched?: boolean,
-  unShipped?: boolean,
-  includeArchived?: boolean,
-  onlyArchived?: boolean,
-
   selectedSections: Array<?string>,
   beforeEditingData: Array<?string>,
   editingSection: string,
@@ -224,17 +213,6 @@ const initValues = {
     },
   },
 
-  poNo: [],
-  exporterId: [],
-  tagIds: [],
-  assignment: [],
-  created: [],
-  updatedAt: [],
-  unBatched: false,
-  unShipped: false,
-  includeArchived: false,
-  onlyArchived: false,
-
   selectedSections: [],
   beforeEditingData: [],
   editingSection: '',
@@ -253,12 +231,13 @@ export class OrderFiltering extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
-  generateQuery = ({ selectedSections, poNo = [] }: FormState) => {
-    const [firstPoNo] = poNo;
+  generateQuery = () => {
+    const { order } = this.state;
+    const [firstPoNo] = order.multiSelect.poNo;
     const query = firstPoNo && firstPoNo.text;
     return {
       filter: {
-        query: selectedSections.includes('poNo') ? query : '',
+        query,
         tagIds: [],
       },
     };
@@ -272,7 +251,9 @@ export class OrderFiltering extends Container<FormState> {
     const sectionObj = this.state[section];
 
     const multiSelectNo = Object.keys(sectionObj.multiSelect).reduce((prev, key) => {
-      const up = sectionObj.multiSelect[key].length > 0 ? 1 : 0;
+      const isSelected = this.state.selectedSections.includes(`${section}.multiSelect.${key}`);
+      const up = isSelected && sectionObj.multiSelect[key].length > 0 ? 1 : 0;
+
       return prev + up;
     }, 0);
     const checkboxNo = Object.keys(sectionObj.checkbox)
@@ -281,12 +262,12 @@ export class OrderFiltering extends Container<FormState> {
           0
         )
       : 0;
-    const rangeNo = Object.keys(sectionObj.range)
-      ? Object.keys(sectionObj.range).reduce(
-          (prev, key) => (prev + sectionObj.range[key] && sectionObj.range[key].length) || 0,
-          0
-        )
-      : 0;
+    const rangeNo = Object.keys(sectionObj.range).reduce((prev, key) => {
+      const isSelected = this.state.selectedSections.includes(`${section}.range.${key}`);
+      const up = isSelected && sectionObj.range[key].length > 0 ? 1 : 0;
+
+      return prev + up;
+    }, 0);
 
     return multiSelectNo + checkboxNo + rangeNo;
   };
@@ -354,29 +335,22 @@ export class OrderFiltering extends Container<FormState> {
     });
   };
 
-  onToggleSelectSection = (name: string, setFieldValue: ?Function, form: React.Node) => {
-    this.setState(
-      ({ editingSection, selectedSections, ...rest }) => {
-        const isSelecting = selectedSections.includes(name);
-        if (!isSelecting) {
-          this.onEditSection(name, form);
-        }
-
-        return {
-          ...rest,
-          selectedSections: isSelecting
-            ? (selectedSections.filter(item => item !== name): Array<?string>)
-            : ([...selectedSections, name]: Array<?string>),
-          editingForm: isSelecting ? null : form,
-          editingSection: isSelecting ? '' : editingSection,
-        };
-      },
-      () => {
-        if (setFieldValue) {
-          setFieldValue(this.generateQuery(this.state));
-        }
+  onToggleFilterMultiSelect = (name: string, setFieldValue: ?Function, form: React.Node) => {
+    this.setState(({ editingSection, selectedSections, ...rest }) => {
+      const isSelecting = selectedSections.includes(name);
+      if (!isSelecting) {
+        this.onEditSection(name, form);
       }
-    );
+
+      return {
+        ...rest,
+        selectedSections: isSelecting
+          ? (selectedSections.filter(item => item !== name): Array<?string>)
+          : ([...selectedSections, name]: Array<?string>),
+        // editingForm: isSelecting ? null : form,
+        editingSection: isSelecting ? '' : editingSection,
+      };
+    });
   };
 
   onToggleFilterCheckBox = (filterName: string) => {
@@ -409,18 +383,12 @@ export class OrderFiltering extends Container<FormState> {
   };
 
   onEditSection = (name: string, form: React.Node) => {
-    this.setState(
-      ({ editingSection, editingForm, beforeEditingData, ...rest }) => ({
-        editingSection: name,
-        editingForm: form,
-        beforeEditingData: rest[name],
-        ...rest,
-      }),
-      () => {
-        // this.onToggleSelectSection(name);
-        // this.onToggleSelectSection(name);
-      }
-    );
+    this.setState(({ editingSection, editingForm, beforeEditingData, ...rest }) => ({
+      editingSection: name,
+      editingForm: form,
+      beforeEditingData: rest[name],
+      ...rest,
+    }));
   };
 
   onApply = (name: string, setFieldValue: Function) => {
@@ -432,7 +400,7 @@ export class OrderFiltering extends Container<FormState> {
       }),
       () => {
         if (setFieldValue) {
-          setFieldValue(this.generateQuery(this.state));
+          setFieldValue(this.generateQuery());
         }
       }
     );

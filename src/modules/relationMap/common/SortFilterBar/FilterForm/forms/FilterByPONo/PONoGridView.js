@@ -76,7 +76,8 @@ class OrderGridView extends React.PureComponent<Props> {
           >
             {items.map(item => {
               const values = { ...originalValues, ...state };
-              const selected = values.poNo.findIndex(el => el.id === item.id) !== -1;
+              const selected =
+                values.order.multiSelect.poNo.findIndex(el => el.id === item.id) !== -1;
 
               return renderItem(
                 item,

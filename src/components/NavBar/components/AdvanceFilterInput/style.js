@@ -83,7 +83,6 @@ export const ResetButtonStyle: string = css`
   ${borderRadiuses.BUTTON};
   color: ${colors.GRAY};
   padding: 5px 10px;
-  margin-right: 20px;
   text-align: center;
   outline: none;
   &:hover {
