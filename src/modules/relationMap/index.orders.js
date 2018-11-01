@@ -1,15 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
-import { Query, ApolloConsumer } from 'react-apollo';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { Query } from 'react-apollo';
 import { isEmpty } from 'utils/fp';
 import { formatOrderData } from 'modules/relationMap/util';
-import { BaseButton } from 'components/Buttons';
-import SlideView from 'components/SlideView';
-import { Label } from 'components/Form';
+import { ActionContainer } from 'modules/relationMap/containers';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
 import { formatNodes } from './orderFocused/formatter';
@@ -17,262 +12,91 @@ import Layout from './common/Layout';
 import QueryHandler from './common/QueryHandler';
 import SummaryBadge from './common/SummaryBadge';
 import ToggleTag from './common/ToggleTag';
-import { ActionSelector, SplitPanel, ConnectPanel } from './common/ActionPanel';
+import { ActionSubscribe } from './common/ActionPanel';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
-import TableInlineEdit from './common/TableInlineEdit';
-import { ActionContainer } from './containers';
-import RelationMapContainer from './container';
-import messages from './messages';
 import { FunctionWrapperStyle, BadgeWrapperStyle, TagWrapperStyle, RelationMapGrid } from './style';
 
 type Props = {
   page: number,
   perPage: number,
-  intl: IntlShape,
 };
 
 const defaultProps = {
   page: 1,
   perPage: 10,
 };
-
 class Order extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
   render() {
-    const { page, perPage, intl } = this.props;
+    const { page, perPage } = this.props;
     return (
       <Layout>
-        <ApolloConsumer>
-          {client => (
-            <SortFilterHandler>
-              {({ sort, filter, onChangeSortFilter }) => (
-                <ActionContainer>
-                  {({
-                    clone,
-                    result,
-                    setResult,
-                    currentAction,
-                    setAction,
-                    split,
-                    connectNewShipment,
-                    connectExistingShipment,
-                  }) => (
-                    <Query
-                      query={query}
-                      variables={{
-                        page,
-                        perPage,
-                        filterBy: {
-                          ...filter,
-                        },
-                        sortBy: {
-                          [sort.field]: sort.direction,
-                        },
-                      }}
-                      fetchPolicy="network-only"
-                    >
-                      {({ loading, data, fetchMore, error, refetch }) => (
-                        <>
-                          <Subscribe to={[RelationMapContainer]}>
-                            {({
-                              state: { focusMode, focusedItem },
-                              isTargetTreeMode,
-                              isTargetMode,
-                              selectItem,
-                            }) =>
-                              (isTargetMode() || isTargetTreeMode()) && (
-                                <>
-                                  <ActionSelector target={focusedItem}>
-                                    {(function renderPanel() {
-                                      switch (currentAction) {
-                                        default:
-                                          return (
-                                            <>
-                                              <BaseButton
-                                                icon="CLONE"
-                                                label="CLONE"
-                                                backgroundColor="TEAL"
-                                                hoverBackgroundColor="TEAL_DARK"
-                                                onClick={async () => {
-                                                  // const clone = getCloneFunction(focusMode);
-                                                  const [newResult, newFocus] = await clone(
-                                                    client,
-                                                    focusedItem,
-                                                    focusMode
-                                                  );
-                                                  await refetch({ page, perPage });
-                                                  setResult(newResult);
-                                                  selectItem(newFocus);
-                                                  setAction('cloned');
-                                                }}
-                                              />
-                                              <BaseButton
-                                                icon="SPLIT"
-                                                label="SPLIT"
-                                                backgroundColor="TEAL"
-                                                hoverBackgroundColor="TEAL_DARK"
-                                                onClick={() => setAction('split')}
-                                              />
-                                              <BooleanValue>
-                                                {({ value: opened, set: slideToggle }) => (
-                                                  <>
-                                                    <BaseButton
-                                                      icon="EDIT"
-                                                      label="EDIT"
-                                                      backgroundColor="TEAL"
-                                                      hoverBackgroundColor="TEAL_DARK"
-                                                      onClick={() => slideToggle(true)}
-                                                    />
-                                                    <SlideView
-                                                      isOpen={opened}
-                                                      onRequestClose={() => slideToggle(false)}
-                                                      options={{ width: '1030px' }}
-                                                    >
-                                                      {opened && (
-                                                        <TableInlineEdit
-                                                          onExpand={() => {}}
-                                                          onSave={() => {}}
-                                                          onCancel={() => slideToggle(false)}
-                                                          type="orders"
-                                                        />
-                                                      )}
-                                                    </SlideView>
-                                                  </>
-                                                )}
-                                              </BooleanValue>
-                                              <BaseButton
-                                                icon="CONNECT"
-                                                label="CONNECT"
-                                                backgroundColor="TEAL"
-                                                hoverBackgroundColor="TEAL_DARK"
-                                                disabled
-                                                onClick={() => setAction('connect')}
-                                              />
-                                            </>
-                                          );
-                                        case 'cloned':
-                                          return (
-                                            <>
-                                              <Label>Clear All</Label>
-                                              <BaseButton
-                                                icon="CLONE"
-                                                label="CLONE"
-                                                backgroundColor="TEAL"
-                                                hoverBackgroundColor="TEAL_DARK"
-                                                onClick={async () => {}}
-                                              />
-                                            </>
-                                          );
-                                      }
-                                    })()}
-                                  </ActionSelector>
-                                  {currentAction === 'split' && (
-                                    <SplitPanel
-                                      onApply={async splitData => {
-                                        const [splitResult, splitFocus] = await split(
-                                          client,
-                                          focusedItem,
-                                          splitData
-                                        );
-                                        await refetch({ page, perPage });
-                                        setResult(splitResult);
-                                        selectItem(splitFocus);
-                                      }}
-                                    />
-                                  )}
-                                  {currentAction === 'connect' && (
-                                    <ConnectPanel
-                                      onConnectNewShipment={async () => {
-                                        const [newResult, newTarget] = await connectNewShipment(
-                                          client,
-                                          focusedItem
-                                        );
-                                        setResult(newResult);
-                                        selectItem(newTarget);
-                                      }}
-                                      onConnectExistingShipment={() =>
-                                        connectExistingShipment(client, focusedItem)
-                                      }
-                                    />
-                                  )}
-                                </>
-                              )
-                            }
-                          </Subscribe>
-                          <div className={TagWrapperStyle}>
-                            <ToggleTag />
+        <SortFilterHandler>
+          {({ sort, filter, onChangeSortFilter }) => (
+            <Query
+              query={query}
+              variables={{
+                page,
+                perPage,
+                filterBy: {
+                  ...filter,
+                },
+                sortBy: {
+                  [sort.field]: sort.direction,
+                },
+              }}
+              fetchPolicy="network-only"
+            >
+              {({ loading, data, fetchMore, error, refetch }) => (
+                <>
+                  <ActionSubscribe refetch={() => refetch({ page, perPage })} />
+                  <div className={TagWrapperStyle}>
+                    <ToggleTag />
+                  </div>
+                  <SortFilter
+                    sort={sort}
+                    filter={filter}
+                    onChange={onChangeSortFilter}
+                    className={FunctionWrapperStyle}
+                  />
+                  <QueryHandler
+                    model="orders"
+                    loading={loading}
+                    data={data}
+                    fetchMore={fetchMore}
+                    error={error}
+                  >
+                    {({ nodes, hasMore, loadMore }) => {
+                      const order = formatOrderData(nodes || []);
+                      return (
+                        <RelationMapGrid>
+                          <div className={BadgeWrapperStyle}>
+                            <SummaryBadge summary={order} />
                           </div>
-                          <SortFilter
-                            sort={sort}
-                            filter={filter}
-                            onChange={onChangeSortFilter}
-                            className={FunctionWrapperStyle}
-                          />
-                          <QueryHandler
-                            model="orders"
-                            loading={loading}
-                            data={data}
-                            fetchMore={fetchMore}
-                            error={error}
-                          >
-                            {({ nodes, hasMore, loadMore }) => {
-                              const order = formatOrderData(nodes || []);
-                              const formattedNodes = isEmpty(result)
-                                ? nodes
-                                : formatNodes(nodes, result);
-                              return (
-                                <RelationMapGrid>
-                                  <div className={BadgeWrapperStyle}>
-                                    <SummaryBadge
-                                      icon="ORDER"
-                                      color="ORDER"
-                                      label={intl.formatMessage(messages.ordersLabel)}
-                                      no={order.sumOrders}
-                                    />
-                                    <SummaryBadge
-                                      icon="ORDER_ITEM"
-                                      color="ORDER_ITEM"
-                                      label={intl.formatMessage(messages.itemsLabel)}
-                                      no={order.sumOrderItems}
-                                    />
-                                    <SummaryBadge
-                                      icon="BATCH"
-                                      color="BATCH"
-                                      label={intl.formatMessage(messages.batchesLabel)}
-                                      no={order.sumBatches}
-                                    />
-                                    <SummaryBadge
-                                      icon="SHIPMENT"
-                                      color="SHIPMENT"
-                                      label={intl.formatMessage(messages.shipmentsLabel)}
-                                      no={order.sumShipments}
-                                    />
-                                  </div>
-                                  <OrderFocused
-                                    order={order}
-                                    hasMore={hasMore}
-                                    loadMore={loadMore}
-                                    nodes={formattedNodes}
-                                    result={result}
-                                  />
-                                </RelationMapGrid>
-                              );
-                            }}
-                          </QueryHandler>
-                        </>
-                      )}
-                    </Query>
-                  )}
-                </ActionContainer>
+                          <Subscribe to={[ActionContainer]}>
+                            {({ state: { result } }) => (
+                              <OrderFocused
+                                order={order}
+                                hasMore={hasMore}
+                                loadMore={loadMore}
+                                nodes={isEmpty(result) ? nodes : formatNodes(nodes, result)}
+                                result={result}
+                              />
+                            )}
+                          </Subscribe>
+                        </RelationMapGrid>
+                      );
+                    }}
+                  </QueryHandler>
+                </>
               )}
-            </SortFilterHandler>
+            </Query>
           )}
-        </ApolloConsumer>
-        {/* </RelationMapGrid> */}
+        </SortFilterHandler>
       </Layout>
     );
   }
 }
 
-export default injectIntl(Order);
+export default Order;

@@ -57,30 +57,7 @@ const Order = ({ page, perPage }: Props) => (
                   return (
                     <>
                       <div className={BadgeWrapperStyle}>
-                        <SummaryBadge
-                          icon="ORDER"
-                          color="ORDER"
-                          label="ORDERS"
-                          no={shipment.sumOrders}
-                        />
-                        <SummaryBadge
-                          icon="ORDER_ITEM"
-                          color="ORDER_ITEM"
-                          label="ITEMS"
-                          no={shipment.sumOrderItems}
-                        />
-                        <SummaryBadge
-                          icon="BATCH"
-                          color="BATCH"
-                          label="BATCHES"
-                          no={shipment.sumBatches}
-                        />
-                        <SummaryBadge
-                          icon="SHIPMENT"
-                          color="SHIPMENT"
-                          label="SHIPMENTS"
-                          no={shipment.sumShipments}
-                        />
+                        <SummaryBadge summary={shipment} />
                       </div>
                       <ShipmentFocused
                         order={order}

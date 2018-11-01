@@ -1,11 +1,11 @@
 import { getByPathWithDefault as get } from 'utils/fp';
 import { SIMPLE, EQUALLY, BALANCE } from 'modules/relationMap/constants';
+import { createMutationRequest } from 'modules/relationMap/containers/action';
 import {
   batchSimpleSplitMutation,
   batchBalanceSplitMutaion,
   batchEqualSplitMutaion,
 } from '../mutation';
-import { createMutationRequest } from '../action';
 
 const getPrecision = quantityType => {
   switch (quantityType) {
