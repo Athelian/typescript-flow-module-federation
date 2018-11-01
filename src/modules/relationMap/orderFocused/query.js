@@ -7,6 +7,7 @@ export const orderListQuery = gql`
       nodes {
         id
         poNo
+        piNo
         issuedAt
         currency
         tags {
@@ -21,6 +22,8 @@ export const orderListQuery = gql`
         shipments {
           id
           no
+          blNo
+          blDate
           batches {
             id
             packageVolume {
