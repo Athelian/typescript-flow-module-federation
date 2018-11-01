@@ -23,13 +23,7 @@ import TableInlineEdit from './common/TableInlineEdit';
 import { ActionContainer } from './containers';
 import RelationMapContainer from './container';
 import messages from './messages';
-import {
-  FunctionWrapperStyle,
-  BadgeWrapperStyle,
-  TagWrapperStyle,
-  RelationMapGrid,
-  // FullGridWrapperStyle,
-} from './style';
+import { FunctionWrapperStyle, BadgeWrapperStyle, TagWrapperStyle, RelationMapGrid } from './style';
 
 type Props = {
   page: number,
@@ -49,7 +43,6 @@ class Order extends React.PureComponent<Props> {
     const { page, perPage, intl } = this.props;
     return (
       <Layout>
-        {/* <RelationMapGrid> */}
         <ApolloConsumer>
           {client => (
             <SortFilterHandler>

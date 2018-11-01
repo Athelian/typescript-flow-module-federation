@@ -287,7 +287,7 @@ const initBatchObj = (batch, orderId, orderItemId) => {
   };
 };
 
-export const formatOrderData = (orders: Array<Object>) => {
+export const formatOrderData = (orders: Array<Object> = []) => {
   const orderObj = {};
   const orderItemObj = {};
   const batchObj = {};
