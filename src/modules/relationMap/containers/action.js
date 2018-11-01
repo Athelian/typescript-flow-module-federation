@@ -5,4 +5,16 @@ export const createMutationRequest = client => async (mutationData, refId) =>
     });
   });
 
-export default null;
+export const getDefaultResult = () => ({
+  order: [],
+  shipment: [],
+  orderItem: {},
+  batch: {},
+});
+
+export const getDefaultFocus = () => ({
+  order: {},
+  orderItem: {},
+  shipment: {},
+  batch: {},
+});

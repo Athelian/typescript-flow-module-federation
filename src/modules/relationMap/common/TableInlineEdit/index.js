@@ -11,7 +11,7 @@ import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
 import { WrapperStyle } from './style';
 import ExpandHeader from '../ExpandHeader';
-import SummaryBadge from '../SummaryBadge';
+import Badge from '../SummaryBadge/Badge';
 import TableHeader from './components/TableHeader';
 
 type Props = {
@@ -44,7 +44,7 @@ export default function TableInlineEdit({ type, onSave, onCancel, onExpand }: Pr
     >
       <div className={WrapperStyle}>
         <ExpandHeader isExpanding={false} onClick={onExpand}>
-          <SummaryBadge
+          <Badge
             icon="ORDER"
             color="ORDER"
             label={<FormattedMessage {...messages.ordersLabel} />}
@@ -52,7 +52,7 @@ export default function TableInlineEdit({ type, onSave, onCancel, onExpand }: Pr
           />
         </ExpandHeader>
         <ExpandHeader isExpanding={false} onClick={onExpand}>
-          <SummaryBadge
+          <Badge
             icon="ORDER_ITEM"
             color="ORDER_ITEM"
             label={<FormattedMessage {...messages.itemsLabel} />}
@@ -60,7 +60,7 @@ export default function TableInlineEdit({ type, onSave, onCancel, onExpand }: Pr
           />
         </ExpandHeader>
         <ExpandHeader isExpanding={false} onClick={onExpand}>
-          <SummaryBadge
+          <Badge
             icon="BATCH"
             color="BATCH"
             label={<FormattedMessage {...messages.batchesLabel} />}
@@ -68,7 +68,7 @@ export default function TableInlineEdit({ type, onSave, onCancel, onExpand }: Pr
           />
         </ExpandHeader>
         <ExpandHeader isExpanding={false} onClick={onExpand}>
-          <SummaryBadge
+          <Badge
             icon="SHIPMENT"
             color="SHIPMENT"
             label={<FormattedMessage {...messages.shipmentsLabel} />}

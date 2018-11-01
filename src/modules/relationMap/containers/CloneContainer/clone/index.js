@@ -37,7 +37,7 @@ export const formatResult = (responses, idPath, ids) => {
   return formattedResult;
 };
 
-export const getCloneFunction = (focusMode) => {
+export const getCloneFunction = focusMode => {
   switch (focusMode) {
     default:
     case 'TARGET':
