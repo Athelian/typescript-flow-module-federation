@@ -84,6 +84,7 @@ export default function selectEnumInputFactory({
                 renderSelect={({ ...rest }) => (
                   <DefaultSelect
                     {...rest}
+                    required={required}
                     type={type}
                     align={align}
                     forceHoverStyle={isNew}
