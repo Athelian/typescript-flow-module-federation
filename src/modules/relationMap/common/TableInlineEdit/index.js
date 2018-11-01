@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/relationMap/messages';
+import logger from 'utils/logger';
 import { formatOrderData } from 'modules/relationMap/util';
 import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
@@ -29,8 +30,8 @@ export default function TableInlineEdit({ type, onSave, onCancel, onExpand }: Pr
     sumBatches,
     ...relationObjects
   } = formatOrderData(data);
-  console.warn('data', data);
-  console.warn('relationObjects', relationObjects);
+  logger.warn('data', data);
+  logger.warn('relationObjects', relationObjects);
   return (
     <Layout
       navBar={

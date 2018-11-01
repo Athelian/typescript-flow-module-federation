@@ -32,7 +32,7 @@ const OrderItemDeleteDialog = ({ isOpen, onRequestClose, orderItem, onConfirm }:
         onConfirm={async () => {
           const {
             data: { order = {} },
-            // $FlowFixMe
+            // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
           } = await client.query({
             query: orderFormQuery,
             variables: {
