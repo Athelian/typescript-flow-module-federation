@@ -21,7 +21,7 @@ type Props = {
 };
 
 export default function TableInlineEdit({ type, onSave, onCancel, onExpand }: Props) {
-  const data = JSON.parse(window.localStorage.getItem(type));
+  const data = JSON.parse(window.localStorage.getItem(type)) || [];
   const {
     sumShipments,
     sumOrders,
