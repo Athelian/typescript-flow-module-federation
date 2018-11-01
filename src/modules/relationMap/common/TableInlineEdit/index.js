@@ -87,6 +87,31 @@ const findAllPossibleOrders = (
       }
     });
   }
+
+  if (shipmentIds.length) {
+    // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
+    (Object.entries(mappingObjects.shipment): any).forEach((item: [string, MappingObject]) => {
+      const [shipmentId, shipment] = item;
+      if (selected.shipment[shipmentId]) {
+        orderIds.push(...Object.keys(shipment.relation.order));
+        orderItemsIds.push(...Object.keys(shipment.relation.orderItem));
+        batchIds.push(...Object.keys(shipment.relation.batch));
+      }
+    });
+  }
+
+  if (batchIds.length) {
+    // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
+    (Object.entries(mappingObjects.batch): any).forEach((item: [string, MappingObject]) => {
+      const [batchId, batch] = item;
+      if (selected.batch[batchId]) {
+        orderIds.push(...Object.keys(batch.relation.order));
+        orderItemsIds.push(...Object.keys(batch.relation.orderItem));
+        shipmentIds.push(...Object.keys(batch.relation.shipment));
+      }
+    });
+  }
+
   return {
     orderIds: [...new Set(orderIds)],
     orderItemsIds: [...new Set(orderItemsIds)],
