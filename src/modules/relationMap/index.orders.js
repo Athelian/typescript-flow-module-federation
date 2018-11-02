@@ -69,9 +69,13 @@ class Order extends React.PureComponent<Props> {
                       return (
                         <RelationMapGrid>
                           <Subscribe to={[RelationMapContainer]}>
-                            {({ selectAll }) => (
+                            {({ selectAll, unSelectAll }) => (
                               <div className={BadgeWrapperStyle}>
-                                <SummaryBadge summary={order} selectAll={selectAll(order)} />
+                                <SummaryBadge
+                                  summary={order}
+                                  unSelectAll={unSelectAll}
+                                  selectAll={selectAll(order)}
+                                />
                               </div>
                             )}
                           </Subscribe>
