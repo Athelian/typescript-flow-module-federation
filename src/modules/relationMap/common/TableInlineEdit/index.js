@@ -17,7 +17,6 @@ import ExpandHeader from '../ExpandHeader';
 import Badge from '../SummaryBadge/Badge';
 import TableHeader from './components/TableHeader';
 import TableItem from './components/TableItem';
-// import EmptyCell from './components/EmptyCell';
 
 type Props = {
   onSave: () => void,
@@ -277,7 +276,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
                     Object.keys(orderItem.relation.batch).length === 0 ? (
                       <TableItem
                         cell={`order.${counter + 1}.duplication.${orderItem.data.id}`}
-                        fields={orderValidator}
+                        fields={orderColumnFields}
                         values={order.data}
                         validator={orderValidator}
                       />
@@ -289,7 +288,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
                             cell={`order.${counter + 1}.duplication.${
                               orderItem.data.id
                             }.batch.${batchId}`}
-                            fields={orderValidator}
+                            fields={orderColumnFields}
                             values={order.data}
                             validator={orderValidator}
                           />
