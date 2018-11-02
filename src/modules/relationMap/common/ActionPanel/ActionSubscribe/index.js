@@ -100,6 +100,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                                 >
                                   {opened && (
                                     <TableInlineEdit
+                                      selected={focusedItem}
                                       onExpand={() => {}}
                                       onSave={() => {}}
                                       onCancel={() => slideToggle(false)}
