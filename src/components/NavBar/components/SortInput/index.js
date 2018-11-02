@@ -15,7 +15,11 @@ type Sort = {
   value: string,
 };
 
-type Props = {
+type OptionalProps = {
+  borderRound: boolean,
+};
+
+type Props = OptionalProps & {
   sort: Sort,
   ascending: boolean,
   fields: Array<{
@@ -26,6 +30,10 @@ type Props = {
 };
 
 class SortInput extends React.Component<Props> {
+  static defaultProps = {
+    borderRound: true,
+  };
+
   onFieldChange = (field: Sort) => {
     const { onChange } = this.props;
     onChange({ field, ascending: false });
@@ -38,7 +46,7 @@ class SortInput extends React.Component<Props> {
   };
 
   render() {
-    const { sort, ascending, fields } = this.props;
+    const { sort, ascending, fields, borderRound } = this.props;
     const itemToString = item => (item ? item.title : '');
     const itemToValue = item => (item ? item.value : '');
 
@@ -51,7 +59,7 @@ class SortInput extends React.Component<Props> {
         itemToValue={itemToValue}
         onChange={this.onFieldChange}
         renderSelect={({ toggle, selectedItem, getInputProps }) => (
-          <div className={WrapperStyle}>
+          <div className={WrapperStyle(borderRound)}>
             <input
               readOnly
               spellCheck={false}

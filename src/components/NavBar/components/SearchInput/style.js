@@ -10,13 +10,13 @@ import {
   shadows,
 } from 'styles/common';
 
-export const SearchInputStyle: string = css`
+export const SearchInputStyle = (round: boolean) => css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   position: relative;
   overflow: hidden;
   background: #fff;
-  ${borderRadiuses.BUTTON};
+  ${round ? borderRadiuses.BUTTON : ''};
   width: 200px;
   height: 30px;
   ${transitions.MAIN};

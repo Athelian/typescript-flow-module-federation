@@ -2,10 +2,10 @@ import { css } from 'react-emotion';
 import { layout } from 'styles/common';
 
 export const SortWrapperStyle = css`
-  flex: 1;
+  flex: 0.96;
 
   > div:first-child > div:first-child {
-    width: calc(90% - 20px);
+    width: calc(100% - 20px);
   }
 `;
 
@@ -14,7 +14,7 @@ export const GroupFilterWrapperStyle = css`
 `;
 
 export const GroupFilterStyle = css`
-  float: right;
+  float: left;
   width: 26.3%;
 
   ${layout.HORIZONTAL};
