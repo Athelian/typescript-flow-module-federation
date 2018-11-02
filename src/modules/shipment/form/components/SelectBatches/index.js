@@ -116,6 +116,7 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
                         />
                         <CancelButton onClick={onCancel} />
                         <SaveButton
+                          data-testid="saveButtonOnSelectBatches"
                           disabled={selected.length === 0}
                           onClick={() => onSelect(selected)}
                         />

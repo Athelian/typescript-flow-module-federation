@@ -8,6 +8,7 @@ import {
   textInputFactory,
   dateInputFactory,
   selectEnumInputFactory,
+  selectSearchEnumInputFactory,
   textAreaFactory,
 } from 'modules/form/helpers';
 import {
@@ -237,9 +238,8 @@ const ShipmentSection = ({ isNew }: Props) => (
                 validator={validator}
               >
                 {({ name, ...inputHandlers }) =>
-                  selectEnumInputFactory({
+                  selectSearchEnumInputFactory({
                     enumType: 'Incoterm',
-                    align: 'right',
                     label: (
                       <FormattedMessage
                         id="modules.Shipments.incoterms"
