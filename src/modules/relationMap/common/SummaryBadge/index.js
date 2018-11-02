@@ -10,9 +10,10 @@ type SummaryBadgeProps = {
   intl: IntlShape,
   summary: Object,
   selectAll?: Function,
+  unSelectAll?: Function,
 };
 
-const SummaryBadge = ({ summary, intl, selectAll }: SummaryBadgeProps) => (
+const SummaryBadge = ({ summary, intl, selectAll, unSelectAll }: SummaryBadgeProps) => (
   <>
     <BooleanValue>
       {({ value, toggle }) => (
@@ -23,8 +24,11 @@ const SummaryBadge = ({ summary, intl, selectAll }: SummaryBadgeProps) => (
           no={summary.sumOrders}
           onClick={() => {
             toggle();
-            if (selectAll) {
+            if (!value && selectAll) {
               selectAll('order');
+            }
+            if (value && unSelectAll) {
+              unSelectAll('order');
             }
           }}
         />
@@ -39,8 +43,11 @@ const SummaryBadge = ({ summary, intl, selectAll }: SummaryBadgeProps) => (
           no={summary.sumOrderItems}
           onClick={() => {
             toggle();
-            if (selectAll) {
+            if (!value && selectAll) {
               selectAll('orderItem');
+            }
+            if (value && unSelectAll) {
+              unSelectAll('orderItem');
             }
           }}
         />
@@ -55,8 +62,11 @@ const SummaryBadge = ({ summary, intl, selectAll }: SummaryBadgeProps) => (
           no={summary.sumBatches}
           onClick={() => {
             toggle();
-            if (selectAll) {
+            if (!value && selectAll) {
               selectAll('batch');
+            }
+            if (value && unSelectAll) {
+              unSelectAll('batch');
             }
           }}
         />
@@ -71,8 +81,11 @@ const SummaryBadge = ({ summary, intl, selectAll }: SummaryBadgeProps) => (
           no={summary.sumShipments}
           onClick={() => {
             toggle();
-            if (selectAll) {
+            if (!value && selectAll) {
               selectAll('shipment');
+            }
+            if (value && unSelectAll) {
+              unSelectAll('shipment');
             }
           }}
         />

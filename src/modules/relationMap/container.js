@@ -26,6 +26,16 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     });
   };
 
+  unSelectAll = (type: string) => {
+    this.setState(prevState => ({
+      focusMode: 'TARGET',
+      focusedItem: {
+        ...prevState.focusedItem,
+        [type]: {},
+      },
+    }));
+  };
+
   selectAll = (data: Object) => (type: string) => {
     const itemIds = Object.keys(data[type] || {});
     const itemAll = itemIds.reduce((obj, itemId) => Object.assign(obj, { [itemId]: true }), {});
