@@ -8,15 +8,18 @@ type BadgeProps = {
   color: string,
   label: string | React.Node,
   no: number,
+  onClick?: Function,
 };
 
 const Badge = (props: BadgeProps) => {
-  const { icon, color, label, no } = props;
+  const { icon, color, label, no, onClick } = props;
   return (
-    <div className={SummaryBadgeWrapper}>
-      <div className={IconStyle(color)}>
-        <Icon icon={icon} />
-      </div>
+    <div className={SummaryBadgeWrapper} role="presentation">
+      <button type="button" onClick={onClick}>
+        <div className={IconStyle(color)}>
+          <Icon icon={icon} />
+        </div>
+      </button>
       <span className={SummaryBadgeLabel}>
         {label} ({no})
       </span>

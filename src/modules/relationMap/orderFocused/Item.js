@@ -6,6 +6,7 @@ import { cx } from 'react-emotion';
 import { BooleanValue } from 'react-values';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
+import SelectedShipment from 'modules/relationMap/common/SelectedShipment';
 import {
   ItemWrapperStyle,
   ShipmentCardStyle,
@@ -13,6 +14,7 @@ import {
 } from 'modules/relationMap/common/RelationItem/style';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import RelationMapContainer from 'modules/relationMap/container';
+import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import BaseCard from 'components/Cards';
 import {
@@ -338,47 +340,75 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 >
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
-                      <BooleanValue>
-                        {({ value: hovered, set: setToggle }) => (
-                          <WrapperCard
-                            onMouseEnter={() => setToggle(true)}
-                            onMouseLeave={() => setToggle(false)}
-                          >
-                            <ShipmentCard shipment={data} />
-                            <ActionCard show={hovered}>
-                              {({ targetted, toggle }) => (
-                                <>
-                                  <Action
-                                    icon="MAGIC"
-                                    targetted={targetted}
-                                    toggle={toggle}
-                                    onClick={onClickHighlight('HIGHLIGHT')}
-                                    onUnClick={reset}
-                                  />
-                                  <Action
-                                    icon="DOCUMENT"
-                                    targetted={targetted}
-                                    toggle={toggle}
-                                    onClick={() => setSlide({ show: true, type, id })}
-                                  />
-                                  <Action
-                                    icon="CHECKED"
-                                    targetted={targetted}
-                                    toggle={toggle}
-                                    onClick={onClickTarget}
-                                    onUnClick={onUnClickTarget}
-                                  />
-                                </>
-                              )}
-                            </ActionCard>
-                            <TagValue>
-                              {({ value: isToggle }) =>
-                                isToggle ? <Tags dataSource={data.tags} /> : null
-                              }
-                            </TagValue>
-                          </WrapperCard>
+                      <Subscribe to={[ActionContainer, ConnectContainer]}>
+                        {(
+                          { state: { currentAction } },
+                          { state: { selectedShipment }, selectShipment }
+                        ) => (
+                          <BooleanValue>
+                            {({ value: hovered, set: setToggle }) => (
+                              <WrapperCard
+                                onMouseEnter={() => setToggle(true)}
+                                onMouseLeave={() => setToggle(false)}
+                              >
+                                <ShipmentCard shipment={data} />
+                                {selectedShipment && isFocused ? (
+                                  <ActionCard show>
+                                    {() => <SelectedShipment onClick={onUnClickTarget} />}
+                                  </ActionCard>
+                                ) : (
+                                  <ActionCard show={hovered}>
+                                    {({ targetted, toggle }) => (
+                                      <>
+                                        <Action
+                                          icon="MAGIC"
+                                          targetted={targetted}
+                                          toggle={toggle}
+                                          onClick={onClickHighlight('HIGHLIGHT')}
+                                          onUnClick={reset}
+                                        />
+                                        <Action
+                                          icon="DOCUMENT"
+                                          targetted={targetted}
+                                          toggle={toggle}
+                                          onClick={() => setSlide({ show: true, type, id })}
+                                        />
+                                        <Action
+                                          icon="CHECKED"
+                                          targetted={targetted}
+                                          toggle={toggle}
+                                          onClick={() => {
+                                            if (currentAction === 'connect') {
+                                              selectShipment(true);
+                                              return changeFocusItem({
+                                                focusedItem: {
+                                                  ...focusedItem,
+                                                  shipment: {
+                                                    [id]: true,
+                                                  },
+                                                },
+                                                focusMode: 'TARGET',
+                                              });
+                                            }
+                                            return onClickTarget();
+                                          }}
+                                          onUnClick={onUnClickTarget}
+                                        />
+                                      </>
+                                    )}
+                                  </ActionCard>
+                                )}
+
+                                <TagValue>
+                                  {({ value: isToggle }) =>
+                                    isToggle ? <Tags dataSource={data.tags} /> : null
+                                  }
+                                </TagValue>
+                              </WrapperCard>
+                            )}
+                          </BooleanValue>
                         )}
-                      </BooleanValue>
+                      </Subscribe>
                     )}
                   </ToggleSlide>
                 </BaseCard>

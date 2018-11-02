@@ -9,6 +9,7 @@ export const IconStyle = (color: string) => css`
   ${layout.CENTER_CENTER};
   width: 30px;
   height: 30px;
+  cursor: pointer;
   ${fontSizes.HUGE};
 `;
 

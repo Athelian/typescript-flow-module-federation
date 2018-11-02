@@ -49,7 +49,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
           { setResult, setAction, state: { currentAction } },
           { clone },
           { split },
-          { connectNewShipment, connectExistingShipment }
+          connectContainer
         ) =>
           (isTargetMode() || isTargetTreeMode()) && (
             <>
@@ -129,7 +129,13 @@ const ActionSubscribe = ({ refetch }: Props) => (
                     case 'cloned':
                       return (
                         <>
-                          <button type="button" onClick={cancelTarget}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              cancelTarget();
+                              setAction(null);
+                            }}
+                          >
                             <Label>Clear All</Label>
                           </button>
                           <BaseButton
@@ -142,7 +148,13 @@ const ActionSubscribe = ({ refetch }: Props) => (
                       );
                     case 'connect':
                       return (
-                        <button type="button" onClick={cancelTarget}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            cancelTarget();
+                            setAction(null);
+                          }}
+                        >
                           <Label>Cancel</Label>
                         </button>
                       );
@@ -159,16 +171,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                   }}
                 />
               )}
-              {currentAction === 'connect' && (
-                <ConnectPanel
-                  onConnectNewShipment={async () => {
-                    const [newResult, newTarget] = await connectNewShipment(client, focusedItem);
-                    setResult(newResult);
-                    selectItem(newTarget);
-                  }}
-                  onConnectExistingShipment={() => connectExistingShipment(client, focusedItem)}
-                />
-              )}
+              {currentAction === 'connect' && <ConnectPanel connect={connectContainer} />}
             </>
           )
         }

@@ -2,7 +2,9 @@
 import React from 'react';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import { Subscribe } from 'unstated';
 import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
+import { ActionContainer } from 'modules/relationMap/containers';
 import { isEmpty } from 'lodash';
 import RelationView from '../common/RelationView';
 import SlideForm from '../common/SlideForm';
@@ -15,7 +17,6 @@ type Props = {
   hasMore: boolean,
   loadMore: Function,
   nodes: Array<Object>,
-  result: Object,
 };
 
 const OrderFocused = ({
@@ -23,7 +24,6 @@ const OrderFocused = ({
   nodes,
   hasMore,
   loadMore,
-  result,
 }: Props) => (
   <>
     <RelationView
@@ -60,51 +60,55 @@ const OrderFocused = ({
         ))
       }
     />
-    <div className={ScrollWrapperStyle}>
-      {result.shipment &&
-        result.shipment.map(newShipment => {
-          if (isEmpty(newShipment)) {
-            return null;
-          }
-          return (
-            <BooleanValue defaultValue key={newShipment.id}>
-              {({ value: isCollapsed, toggle }) => (
-                <Item
-                  key={newShipment.id}
-                  onToggle={toggle}
-                  isCollapsed={isCollapsed}
-                  relation={{
-                    type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
-                    id: newShipment.id,
-                  }}
-                  itemData={{ data: newShipment }}
-                  itemType="shipment"
-                />
-              )}
-            </BooleanValue>
-          );
-        })}
-      {Object.keys(shipment).map(shipmentId => {
-        const currentShipment = shipment[shipmentId];
-        return (
-          <BooleanValue defaultValue key={shipmentId}>
-            {({ value: isCollapsed, toggle }) => (
-              <Item
-                key={shipmentId}
-                onToggle={toggle}
-                isCollapsed={isCollapsed}
-                relation={{
-                  type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
-                  id: shipmentId,
-                }}
-                itemData={currentShipment}
-                itemType="shipment"
-              />
-            )}
-          </BooleanValue>
-        );
-      })}
-    </div>
+    <Subscribe to={[ActionContainer]}>
+      {({ state: { result } }) => (
+        <div className={ScrollWrapperStyle}>
+          {result.shipment &&
+            result.shipment.map(newShipment => {
+              if (isEmpty(newShipment)) {
+                return null;
+              }
+              return (
+                <BooleanValue defaultValue key={newShipment.id}>
+                  {({ value: isCollapsed, toggle }) => (
+                    <Item
+                      key={newShipment.id}
+                      onToggle={toggle}
+                      isCollapsed={isCollapsed}
+                      relation={{
+                        type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
+                        id: newShipment.id,
+                      }}
+                      itemData={{ data: newShipment }}
+                      itemType="shipment"
+                    />
+                  )}
+                </BooleanValue>
+              );
+            })}
+          {Object.keys(shipment).map(shipmentId => {
+            const currentShipment = shipment[shipmentId];
+            return (
+              <BooleanValue defaultValue key={shipmentId}>
+                {({ value: isCollapsed, toggle }) => (
+                  <Item
+                    key={shipmentId}
+                    onToggle={toggle}
+                    isCollapsed={isCollapsed}
+                    relation={{
+                      type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
+                      id: shipmentId,
+                    }}
+                    itemData={currentShipment}
+                    itemType="shipment"
+                  />
+                )}
+              </BooleanValue>
+            );
+          })}
+        </div>
+      )}
+    </Subscribe>
     <SlideForm />
     <DeleteDialog />
   </>

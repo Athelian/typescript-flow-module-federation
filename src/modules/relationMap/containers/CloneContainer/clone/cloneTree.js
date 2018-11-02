@@ -16,10 +16,14 @@ export const cloneTree = async (client, target) => {
         variables: {
           input: {
             no: `[cloned] ${currentShipment.no}`,
-            containerGroups: currentShipment.containerGroups.map(group => ({
-              warehouseId: get('1', 'warehouse.id', group),
-            })),
-            voyages: currentShipment.voyages.map(voyage => ({ vesselName: voyage.vesselName })),
+            containerGroups:
+              currentShipment.containerGroups &&
+              currentShipment.containerGroups.map(group => ({
+                warehouseId: get('1', 'warehouse.id', group),
+              })),
+            voyages:
+              currentShipment.voyages &&
+              currentShipment.voyages.map(voyage => ({ vesselName: voyage.vesselName })),
           },
         },
       },
