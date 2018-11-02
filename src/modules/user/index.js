@@ -58,7 +58,7 @@ const UserProvider = ({ children }: Props) => (
           }
 
           if (['ja', 'jp'].includes(language)) {
-            setLocale('en');
+            setLocale('ja');
           } else {
             setLocale('en');
           }
