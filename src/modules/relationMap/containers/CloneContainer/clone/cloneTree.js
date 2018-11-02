@@ -48,7 +48,8 @@ export const cloneTree = async (client: any, target: Object) => {
   const mappedNewShipment = newShipments.reduce((mappedObj, newShipment) => {
     const newShipmentId = get(null, 'data.shipmentCreate.shipment.id', newShipment);
     const oldShipmentId = newShipment.refId;
-    return Object.assign(mappedObj, { [oldShipmentId]: newShipmentId });
+    const oldShipmentRef = oldShipmentId ? { [oldShipmentId]: newShipmentId } : {};
+    return Object.assign(mappedObj, oldShipmentRef);
   }, {});
 
   const orderIds = Object.keys(order);

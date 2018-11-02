@@ -3,23 +3,20 @@
 import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
-const getborderbackground = (isFocus: boolean, focusMode: string) => {
-  if (!isFocus) {
-    return colors.GRAY_QUITE_LIGHT;
-  }
-  if (focusMode === 'TARGET_TREE') {
+const getborderbackground = (isFocused: boolean, isTargeted: boolean) => {
+  if (isTargeted) {
     return colors.TEAL;
   }
-  if (focusMode === 'HIGHLIGHT') {
+  if (isFocused) {
     return colors.HIGHLIGHT;
   }
   return colors.GRAY_QUITE_LIGHT;
 };
 
-const getrelatedbackground = (isFocus: boolean, focusMode: string, hasRelation: boolean) =>
-  hasRelation ? getborderbackground(isFocus, focusMode) : colors.GRAY_QUITE_LIGHT;
+const getrelatedbackground = (isFocus: boolean, isTargeted: boolean, hasRelation: boolean) =>
+  hasRelation ? getborderbackground(isFocus, isTargeted) : colors.GRAY_QUITE_LIGHT;
 
-export const RelationLine0Style = (isFocus: boolean, focusMode: string) => css`
+export const RelationLine0Style = (isFocus: boolean, isTargeted: boolean) => css`
   position: relative;
   width: calc(100%);
   height: 40px;
@@ -30,13 +27,13 @@ export const RelationLine0Style = (isFocus: boolean, focusMode: string) => css`
     left: 0;
     right: 0;
     top: calc(50% + 5px);
-    border-top: 2px solid ${getborderbackground(isFocus, focusMode)};
+    border-top: 2px solid ${getborderbackground(isFocus, isTargeted)};
   }
 `;
 
 export const RelationLine1Style = (
   isFocus: boolean,
-  focusMode: string,
+  isTargeted: boolean,
   hasRelation: boolean
 ) => css`
   position: relative;
@@ -49,7 +46,7 @@ export const RelationLine1Style = (
     left: 0;
     right: calc(50% - 3px);
     top: calc(50% + 3px);
-    border-top: 2px solid ${getborderbackground(isFocus, focusMode)};
+    border-top: 2px solid ${getborderbackground(isFocus, isTargeted)};
   }
 
   &::after {
@@ -58,11 +55,11 @@ export const RelationLine1Style = (
     left: calc(50% + 3px);
     right: 0;
     top: calc(50% + 3px);
-    border-top: 2px solid ${getrelatedbackground(isFocus, focusMode, hasRelation)};
+    border-top: 2px solid ${getrelatedbackground(isFocus, isTargeted, hasRelation)};
   }
 `;
 
-export const RelationLine2Style = (isFocus: boolean, focusMode: string) => css`
+export const RelationLine2Style = (isFocus: boolean, isTargeted: boolean) => css`
   position: relative;
   width: calc(100%);
   height: 40px;
@@ -73,11 +70,11 @@ export const RelationLine2Style = (isFocus: boolean, focusMode: string) => css`
     left: 50%;
     bottom: -20px;
     top: -40px;
-    border-right: 3px solid ${getborderbackground(isFocus, focusMode)};
+    border-right: 3px solid ${getborderbackground(isFocus, isTargeted)};
   }
 `;
 
-export const RelationLine3Style = (isFocus: boolean, focusMode: string) => css`
+export const RelationLine3Style = (isFocus: boolean, isTargeted: boolean) => css`
   position: relative;
   width: calc(100%);
   height: 40px;
@@ -88,15 +85,15 @@ export const RelationLine3Style = (isFocus: boolean, focusMode: string) => css`
     left: 50%;
     top: -40px;
     bottom: calc(50% - 5px);
-    border-left: 2px solid ${getborderbackground(isFocus, focusMode)};
-    border-bottom: 2px solid ${getborderbackground(isFocus, focusMode)};
+    border-left: 2px solid ${getborderbackground(isFocus, isTargeted)};
+    border-bottom: 2px solid ${getborderbackground(isFocus, isTargeted)};
     width: 50%;
   }
 `;
 
 export const RelationLine4Style = (
   isFocus: boolean,
-  focusMode: string,
+  isTargeted: boolean,
   hasRelation: boolean
 ) => css`
   position: relative;
@@ -109,7 +106,7 @@ export const RelationLine4Style = (
     left: 50%;
     top: -40px;
     bottom: calc(50% - 5px);
-    border-right: 3px solid ${getborderbackground(isFocus, focusMode)};
+    border-right: 3px solid ${getborderbackground(isFocus, isTargeted)};
   }
 
   &::after {
@@ -118,6 +115,6 @@ export const RelationLine4Style = (
     left: calc(50% + 2px);
     right: 0;
     top: calc(50% + 3px);
-    border-top: 2px solid ${getrelatedbackground(isFocus, focusMode, hasRelation)};
+    border-top: 2px solid ${getrelatedbackground(isFocus, isTargeted, hasRelation)};
   }
 `;

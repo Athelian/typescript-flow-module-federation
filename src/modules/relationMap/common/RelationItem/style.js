@@ -2,41 +2,15 @@
 import { css } from 'react-emotion';
 import { fontSizes, colors } from 'styles/common';
 
-const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
-
-const getHighlighColor = (isFocused: boolean, focusMode: ?string) => {
-  if (!isFocused) {
-    return colors.GRAY_QUITE_LIGHT;
+const getHighlighColor = (isFocused: boolean, isTargeted: ?boolean) => {
+  if (isTargeted) {
+    return colors.TEAL;
   }
-  if (focusMode === 'HIGHLIGHT') {
+  if (isFocused) {
     return colors.HIGHLIGHT;
   }
-  return colors.TEAL;
+  return colors.GRAY_QUITE_LIGHT;
 };
-
-export const OrderListItemWrapperStyle = (isFocused: boolean) => css`
-  box-shadow: none !important;
-  border: 5px solid ${getBorderColor(isFocused)};
-`;
-
-export const OrderListItemStyle = (isFocused: boolean) => css`
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  -webkit-box-shadow: ${getBorderColor(isFocused)} 0 0 0 5px;
-  -moz-box-shadow: ${getBorderColor(isFocused)} 0 0 0 5px;
-  box-shadow: ${getBorderColor(isFocused)} 0 0 0 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-width: 190px;
-  height: 40px;
-  ${fontSizes.MAIN};
-  font-weight: bold;
-  color: ${colors.BLACK};
-`;
 
 export const TotalCardWrapperStyle = css`
   margin-left: 1em;
@@ -68,8 +42,8 @@ export const ResetBaseCardStyle = css`
   }
 `;
 
-export const ItemWrapperStyle = (isFocused: boolean, focusMode: ?string) => {
-  const focused = getHighlighColor(isFocused, focusMode);
+export const ItemWrapperStyle = (isFocused: boolean, isTargeted: ?boolean) => {
+  const focused = getHighlighColor(isFocused, isTargeted);
   return css`
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;

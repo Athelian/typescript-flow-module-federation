@@ -6,17 +6,18 @@ import { IconStyle, SummaryBadgeWrapper, SummaryBadgeLabel } from './style';
 type BadgeProps = {
   icon: string,
   color: string,
+  hoverColor?: string,
   label: string | React.Node,
   no: number,
   onClick?: Function,
 };
 
 const Badge = (props: BadgeProps) => {
-  const { icon, color, label, no, onClick } = props;
+  const { icon, color, hoverColor, label, no, onClick } = props;
   return (
     <div className={SummaryBadgeWrapper} role="presentation">
       <button type="button" onClick={onClick}>
-        <div className={IconStyle(color)}>
+        <div className={IconStyle(color, hoverColor)}>
           <Icon icon={icon} />
         </div>
       </button>

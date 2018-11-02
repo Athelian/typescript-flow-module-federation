@@ -33,7 +33,7 @@ type OptionalProps = {
   isCollapsed: boolean,
   isFocused: boolean,
   // hasRelation?: boolean,
-  focusMode?: string,
+  focusMode?: boolean,
   onClick: Function,
   onDoubleClick?: Function,
   actions: Array<React.Node>,
@@ -43,7 +43,7 @@ const defaultProps = {
   data: {},
   isCollapsed: false,
   isFocused: false,
-  focusMode: '',
+  focusMode: false,
   onClick: () => {},
   actions: [],
 };
