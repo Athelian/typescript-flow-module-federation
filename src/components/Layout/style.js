@@ -12,7 +12,7 @@ export const LayoutWrapperStyle: string = css`
 export const ContentWrapperStyle: string = css`
   height: calc(100vh - 50px);
   width: 100%;
-  min-width: min-content;
+  //min-width: min-content;
   overflow-x: hidden;
   overflow-y: overlay;
   ${scrollbars.MAIN};

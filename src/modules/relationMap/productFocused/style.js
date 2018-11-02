@@ -20,4 +20,8 @@ export const BatchListWrapperStyle = css`
   overflow-x: auto;
   align-items: center;
   background-color: ${colors.GRAY_VERY_LIGHT};
+
+  > div:last-child {
+    margin-right: 10px;
+  }
 `;
