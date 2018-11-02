@@ -186,6 +186,7 @@ class TimelineInfoSection extends React.Component<Props> {
                       lastName={timelineDate.approvedBy.lastName}
                     />
                     <button
+                      data-testid={`${sourceName}_unApproveButton`}
                       className={UnapproveButtonStyle}
                       onClick={this.handleUnapprove}
                       type="button"
@@ -195,16 +196,22 @@ class TimelineInfoSection extends React.Component<Props> {
                   </>
                 ) : (
                   <UserConsumer>
-                    {({ user }) => <ApproveButton onClick={() => this.handleApprove(user)} />}
+                    {({ user }) => (
+                      <ApproveButton
+                        data-testid={`${sourceName}_approveButton`}
+                        onClick={() => this.handleApprove(user)}
+                      />
+                    )}
                   </UserConsumer>
                 )}
               </div>
             </GridColumn>
           </div>
 
-          <GridColumn gap="10px">
+          <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
             <div className={AddDateButtonWrapperStyle}>
               <NewButton
+                data-testid={`${sourceName}_addDateButton`}
                 label={
                   <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
                 }

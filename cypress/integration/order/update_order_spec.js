@@ -32,7 +32,7 @@ describe('Order', () => {
         .children()
         .first()
         .click()
-        .get('button[data-testid="saveButton"]')
+        .getByTestId('saveButton')
         .children()
         .last()
         .click()
@@ -55,7 +55,7 @@ describe('Order', () => {
         .type(memo)
         .should('have.value', memo)
         .blur()
-        .get('button[data-testid="saveButton"]')
+        .getByTestId('saveButton')
         .click()
         .wait(1000)
         .should('not.exist');

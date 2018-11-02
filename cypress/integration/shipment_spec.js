@@ -28,7 +28,7 @@ describe('Shipment', () => {
         .get('button[data-testid="saveButtonOnSelectBatches"]')
         .click()
         .wait(1000)
-        .get('button[data-testid="saveButton"]')
+        .getByTestId('saveButton')
         .click()
         .wait(1000)
         .should('not.exist');
@@ -59,7 +59,7 @@ describe('Shipment', () => {
         .should('have.value', incoterm)
         .wait(500)
         .blur()
-        .get('button[data-testid="saveButton"]')
+        .getByTestId('saveButton')
         .click()
         .wait(1000)
         .should('not.exist');
@@ -69,6 +69,48 @@ describe('Shipment', () => {
         .should('have.value', date)
         .get('input[aria-labelledby="incotermSearchSelectInput"]')
         .should('have.value', incoterm);
+    });
+  });
+
+  it('update timeline', () => {
+    cy.visit('/shipment')
+      .get('.InfiniteScroll')
+      .children()
+      .first()
+      .click()
+      .wait(1000);
+    cy.url().should('include', '/shipment/emV');
+
+    cy.task('fixture', 'shipment').then(({ cargoReadyDate }) => {
+      const cargoReadyDateMoment = Cypress.moment(cargoReadyDate).format('YYYY-MM-DD');
+
+      cy.getByTestId('cargoReady_approveButton').click();
+      cy.getByTestId('cargoReady_unApproveButton').should('be.visible');
+      cy.getByTestId('cargoReady_DateRevisions')
+        .children()
+        .should('have.length', 2);
+      cy.get('input[name="cargoReady.date"]')
+        .type(cargoReadyDateMoment)
+        .should('have.value', cargoReadyDateMoment);
+
+      cy.getByTestId('cargoReady_addDateButton').click();
+      cy.getByTestId('cargoReady_DateRevisions')
+        .children()
+        .should('have.length', 3)
+        .wait(500);
+
+      cy.getByTestId('voyageSelector').click();
+      cy.getByTestId('voyageOptions')
+        .children()
+        .should('have.length', 3);
+
+      cy.getByTestId('saveButton')
+        .click()
+        .wait(1000)
+        .should('not.exist');
+
+      // Verify
+      cy.get('input[name="cargoReady.date"]').should('have.value', cargoReadyDateMoment);
     });
   });
 });

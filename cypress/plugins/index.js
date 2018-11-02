@@ -118,6 +118,7 @@ module.exports = on => {
           shipmentNo: faker.name.findName(),
           blDate: faker.date.future(),
           incoterm: 'DAT',
+          cargoReadyDate: faker.date.future(),
         };
 
       return null;
