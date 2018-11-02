@@ -5,6 +5,7 @@ import { Query } from 'react-apollo';
 import { isEmpty } from 'utils/fp';
 import { formatOrderData } from 'modules/relationMap/util';
 import { ActionContainer } from 'modules/relationMap/containers';
+import RelationMapContainer from 'modules/relationMap/container';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
 import { formatNodes } from './orderFocused/formatter';
@@ -71,9 +72,13 @@ class Order extends React.PureComponent<Props> {
                       const order = formatOrderData(nodes || []);
                       return (
                         <RelationMapGrid>
-                          <div className={BadgeWrapperStyle}>
-                            <SummaryBadge summary={order} />
-                          </div>
+                          <Subscribe to={[RelationMapContainer]}>
+                            {({ selectAll }) => (
+                              <div className={BadgeWrapperStyle}>
+                                <SummaryBadge summary={order} selectAll={selectAll(order)} />
+                              </div>
+                            )}
+                          </Subscribe>
                           <Subscribe to={[ActionContainer]}>
                             {({ state: { result } }) => (
                               <OrderFocused
@@ -81,7 +86,6 @@ class Order extends React.PureComponent<Props> {
                                 hasMore={hasMore}
                                 loadMore={loadMore}
                                 nodes={isEmpty(result) ? nodes : formatNodes(nodes, result)}
-                                result={result}
                               />
                             )}
                           </Subscribe>

@@ -126,4 +126,8 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.confirmDeleteShipment',
     defaultMessage: 'Confirm To delete shipment',
   },
+  connectType: {
+    id: 'modules.RelationMaps.label.connectType',
+    defaultMessage: 'Do you want to connect to',
+  },
 });
