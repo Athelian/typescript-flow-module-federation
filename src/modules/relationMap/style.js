@@ -60,9 +60,10 @@ const GridColumn = css`
 
 export const ContentWrapperStyle = css`
   height: calc(100vh - 50px);
-  padding: 30px 0;
+  padding: 0 0;
   width: 100%;
   overflow-y: hidden;
+  z-index: 0;
 `;
 
 export const RelationMapGrid = styled('div')`
@@ -92,6 +93,13 @@ export const ScrollWrapperStyle = css`
   padding: 10px 10px;
 `;
 
+export const OrderFocusedShipmentScrollWrapperStyle = css`
+  height: calc(100vh - 220px);
+  overflow-y: auto;
+  background-color: ${colors.ALMOST_WHITE};
+  padding: 20px 10px;
+`;
+
 export const LeftScrollWrapperStyle = css`
   background-color: ${colors.ALMOST_WHITE};
   padding: 0 10px;
@@ -114,7 +122,7 @@ export const OrderMapWrapperStyle = css`
   display: grid;
   grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1fr;
   background-color: ${colors.WHITE};
-  padding: 0 10px;
+  padding: 15px 10px;
 `;
 export const FunctionWrapperStyle = css`
   grid-column: span 4;

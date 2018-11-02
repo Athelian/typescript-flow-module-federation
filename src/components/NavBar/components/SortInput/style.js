@@ -10,11 +10,11 @@ import {
   shadows,
 } from 'styles/common';
 
-export const WrapperStyle: string = css`
+export const WrapperStyle = (borderRound: boolean) => css`
   ${presets.BUTTON};
   ${layout.HORIZONTAL};
   ${layout.CENTER};
-  ${borderRadiuses.MAIN};
+  ${borderRound && borderRadiuses.MAIN};
   position: relative;
   background: #fff;
   overflow: hidden;

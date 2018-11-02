@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { SortInput, SearchInput, AdvanceFilterInput } from 'components/NavBar';
+import ToggleTag from 'modules/relationMap/common/ToggleTag';
 import FilterForm from '../SortFilterBar/FilterForm';
 import { GroupFilterStyle, SortWrapperStyle, GroupFilterWrapperStyle } from './style';
 
@@ -29,6 +30,7 @@ const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) =>
   <div className={className}>
     <div className={SortWrapperStyle}>
       <SortInput
+        borderRound={false}
         sort={sortInputs.find(item => item.value === sort.field) || sortInputs[0]}
         ascending={sort.direction !== 'DESCENDING'}
         fields={sortInputs}
@@ -53,6 +55,7 @@ const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) =>
           {({ onChangeFilter }) => <FilterForm onChange={onChangeFilter} />}
         </AdvanceFilterInput>
         <SearchInput
+          round={false}
           name="filter"
           value={filter.query}
           onClear={() => onChange({ filter: { query: '' } })}
@@ -60,6 +63,7 @@ const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) =>
         />
       </div>
     </div>
+    <ToggleTag />
   </div>
 );
 SortFilter.defaultProps = defaultProps;

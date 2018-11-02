@@ -3,7 +3,10 @@ import React from 'react';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { ScrollWrapperStyle, OrderMapWrapperStyle } from 'modules/relationMap/style';
+import {
+  OrderFocusedShipmentScrollWrapperStyle,
+  OrderMapWrapperStyle,
+} from 'modules/relationMap/style';
 import { ActionContainer } from 'modules/relationMap/containers';
 import { isEmpty } from 'lodash';
 import RelationView from '../common/RelationView';
@@ -62,7 +65,7 @@ const OrderFocused = ({
     />
     <Subscribe to={[ActionContainer]}>
       {({ state: { result } }) => (
-        <div className={ScrollWrapperStyle}>
+        <div className={OrderFocusedShipmentScrollWrapperStyle}>
           {result.shipment &&
             result.shipment.map(newShipment => {
               if (isEmpty(newShipment)) {

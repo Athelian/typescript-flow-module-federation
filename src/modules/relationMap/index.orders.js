@@ -12,10 +12,9 @@ import { formatNodes } from './orderFocused/formatter';
 import Layout from './common/Layout';
 import QueryHandler from './common/QueryHandler';
 import SummaryBadge from './common/SummaryBadge';
-import ToggleTag from './common/ToggleTag';
 import { ActionSubscribe } from './common/ActionPanel';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
-import { FunctionWrapperStyle, BadgeWrapperStyle, TagWrapperStyle, RelationMapGrid } from './style';
+import { FunctionWrapperStyle, BadgeWrapperStyle, RelationMapGrid } from './style';
 
 type Props = {
   page: number,
@@ -52,9 +51,6 @@ class Order extends React.PureComponent<Props> {
               {({ loading, data, fetchMore, error, refetch }) => (
                 <>
                   <ActionSubscribe refetch={() => refetch({ page, perPage })} />
-                  <div className={TagWrapperStyle}>
-                    <ToggleTag />
-                  </div>
                   <SortFilter
                     sort={sort}
                     filter={filter}

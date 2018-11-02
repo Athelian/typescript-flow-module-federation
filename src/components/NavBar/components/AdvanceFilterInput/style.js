@@ -15,7 +15,7 @@ export const WrapperStyle: string = css``;
 export const ButtonStyle: string = css`
   ${presets.BUTTON};
   ${transitions.MAIN};
-  ${fontSizes.MAIN};
+  ${fontSizes.HUGE};
   color: ${colors.GRAY_LIGHT};
   width: 30px;
   height: 30px;
