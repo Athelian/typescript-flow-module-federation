@@ -164,7 +164,7 @@ class VoyageSelector extends React.Component<Props> {
         {({ value: isOptionsOpen, set: selectorToggle }) =>
           isOptionsOpen ? (
             <OutsideClickHandler onOutsideClick={() => selectorToggle(false)}>
-              <div className={VoyageOptionsWrapperStyle}>
+              <div data-testid="voyageOptions" className={VoyageOptionsWrapperStyle}>
                 {this.renderIcon({
                   numOfIcons: 1,
                   isActive: voyages.length === 1,
@@ -187,6 +187,7 @@ class VoyageSelector extends React.Component<Props> {
             </OutsideClickHandler>
           ) : (
             <div
+              data-testid="voyageSelector"
               className={VoyageSelectorWrapperStyle}
               onClick={() => selectorToggle(true)}
               role="presentation"

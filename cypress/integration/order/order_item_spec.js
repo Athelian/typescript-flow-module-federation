@@ -28,11 +28,11 @@ describe('Order', () => {
       .get('button[data-testid="increaseButton"]')
       .click()
       .click()
-      .get('button[data-testid="saveButton"]')
+      .getByTestId('saveButton')
       .children()
       .last()
       .click()
-      .get('button[data-testid="saveButton"]')
+      .getByTestId('saveButton')
       .click()
       .wait(1000)
       .should('not.exist');

@@ -38,7 +38,7 @@ describe('Order', () => {
         .get('button[data-testid="saveButtonOnSelectExporters"]')
         .click()
         .wait(1000)
-        .get('button[data-testid="saveButton"]')
+        .getByTestId('saveButton')
         .click()
         .wait(1000)
         .should('not.exist');

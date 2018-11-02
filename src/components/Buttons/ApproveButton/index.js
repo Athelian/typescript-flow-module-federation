@@ -15,7 +15,7 @@ const defaultProps = {
   onClick: () => {},
 };
 
-const ApproveButton = ({ disabled, onClick }: Props): React.Node => (
+const ApproveButton = ({ disabled, onClick, ...rest }: Props): React.Node => (
   <BaseButton
     icon="CHECKED"
     label={<FormattedMessage id="components.button.approve" defaultMessage="APPROVE" />}
@@ -23,6 +23,8 @@ const ApproveButton = ({ disabled, onClick }: Props): React.Node => (
     hoverBackgroundColor="BLUE_DARK"
     disabled={disabled}
     onClick={onClick}
+    data-testid="approveButton"
+    {...rest}
   />
 );
 

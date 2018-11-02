@@ -14,8 +14,12 @@ const defaultProps = {
   gap: '20px',
 };
 
-function GridColumn({ children, gap }: Props) {
-  return <div className={GridColumnWrapperStyle(gap)}>{children}</div>;
+function GridColumn({ children, gap, ...rest }: Props) {
+  return (
+    <div className={GridColumnWrapperStyle(gap)} {...rest}>
+      {children}
+    </div>
+  );
 }
 
 GridColumn.defaultProps = defaultProps;
