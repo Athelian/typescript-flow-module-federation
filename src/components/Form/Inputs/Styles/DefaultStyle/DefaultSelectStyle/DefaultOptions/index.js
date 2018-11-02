@@ -64,7 +64,13 @@ function DefaultOptions({
                   align,
                   type,
                 })}
-                {...getItemProps({ item, style })}
+                {...getItemProps({
+                  style,
+                  item,
+                  index,
+                  isActive: highlightedIndex === index,
+                  isSelected: selectedItem === item,
+                })}
               >
                 {itemToString(item)}
               </div>
