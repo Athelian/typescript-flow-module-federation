@@ -35,6 +35,7 @@ function CargoSection({ intl }: Props) {
           {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
             <>
               <NewButton
+                data-testid="selectBatchesButton"
                 label={intl.formatMessage(messages.selectBatches)}
                 onClick={() => selectBatchesSlideToggle(true)}
               />

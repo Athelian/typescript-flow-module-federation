@@ -113,6 +113,13 @@ module.exports = on => {
           tags: [],
         };
 
+      if (type === 'shipment')
+        return {
+          shipmentNo: faker.name.findName(),
+          blDate: faker.date.future(),
+          incoterm: 'DAT',
+        };
+
       return null;
     },
     log(message) {
