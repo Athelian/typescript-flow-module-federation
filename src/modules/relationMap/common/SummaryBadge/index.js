@@ -20,6 +20,7 @@ const SummaryBadge = ({ summary, intl, selectAll, unSelectAll }: SummaryBadgePro
         <Badge
           icon="ORDER"
           color={value ? 'ORDER_DARK' : 'ORDER'}
+          hoverColor="ORDER_DARK"
           label={intl.formatMessage(messages.ordersLabel)}
           no={summary.sumOrders}
           onClick={() => {
@@ -39,6 +40,7 @@ const SummaryBadge = ({ summary, intl, selectAll, unSelectAll }: SummaryBadgePro
         <Badge
           icon="ORDER_ITEM"
           color={value ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'}
+          hoverColor="ORDER_ITEM_DARK"
           label={intl.formatMessage(messages.itemsLabel)}
           no={summary.sumOrderItems}
           onClick={() => {
@@ -58,6 +60,7 @@ const SummaryBadge = ({ summary, intl, selectAll, unSelectAll }: SummaryBadgePro
         <Badge
           icon="BATCH"
           color={value ? 'BATCH_DARK' : 'BATCH'}
+          hoverColor="BATCH_DARK"
           label={intl.formatMessage(messages.batchesLabel)}
           no={summary.sumBatches}
           onClick={() => {
@@ -77,6 +80,7 @@ const SummaryBadge = ({ summary, intl, selectAll, unSelectAll }: SummaryBadgePro
         <Badge
           icon="SHIPMENT"
           color={value ? 'SHIPMENT_DARK' : 'SHIPMENT'}
+          hoverColor="SHIPMENT_DARK"
           label={intl.formatMessage(messages.shipmentsLabel)}
           no={summary.sumShipments}
           onClick={() => {

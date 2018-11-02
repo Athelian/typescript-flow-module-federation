@@ -7,14 +7,14 @@ type Props = {
   type: number,
   isFocused: boolean,
   hasRelation?: boolean,
-  focusMode: string,
+  isTargeted?: boolean,
 };
 
 const RelationLine = (props: Props) => {
-  const { type, isFocused, focusMode, hasRelation } = props;
+  const { type, isFocused, isTargeted, hasRelation } = props;
   const className = getByPathWithDefault('', `RelationLine${type}Style`, style)(
     isFocused,
-    focusMode,
+    isTargeted,
     hasRelation
   );
   return <div className={className} />;

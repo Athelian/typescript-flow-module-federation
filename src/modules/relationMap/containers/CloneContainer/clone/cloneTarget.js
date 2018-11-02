@@ -130,9 +130,8 @@ export const cloneBatch = async (client: any, batch: Object) => {
   const batchResult = newBatches.reduce((batchResultObj, newBatch) => {
     const { refId } = newBatch;
     const batchId = getByPathWithDefault('', 'data.batchCreate.batch.id', newBatch);
-    return Object.assign(batchResultObj, {
-      [refId]: [...(batchResultObj[refId] || []), { id: batchId }],
-    });
+    const batchRef = refId ? { [refId]: [...(batchResultObj[refId] || []), { id: batchId }] } : {};
+    return Object.assign(batchResultObj, batchRef);
   }, {});
   const batchFocus = newBatches.reduce((batchResultObj, newBatch) => {
     const batchId = getByPathWithDefault('', 'data.batchCreate.batch.id', newBatch);

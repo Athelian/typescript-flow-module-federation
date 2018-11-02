@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Subscribe } from 'unstated';
-import { getByPathWithDefault as get, omit } from 'utils/fp';
+import { getByPathWithDefault as get } from 'utils/fp';
 import { cx } from 'react-emotion';
 import { BooleanValue } from 'react-values';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
@@ -49,13 +49,6 @@ type Props = {
   isCollapsed: boolean,
 };
 
-const initFocusObj = () => ({
-  order: {},
-  orderItem: {},
-  batch: {},
-  shipment: {},
-});
-
 const isRelationLine = type => /LINK-[0-4]-(\w+)/.test(type);
 
 const getItemType = type => {
@@ -84,54 +77,38 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
   const { data = {}, relation: itemRelation } = itemData;
   return (
     <Subscribe to={[RelationMapContainer]}>
-      {({ state: { focusedItem, focusMode }, changeFocusItem, reset }) => {
+      {({
+        state: { focusedItem, targetedItem, focusMode },
+        toggleHighlight,
+        toggleTargetTree,
+        toggleTarget,
+      }) => {
         if (isRelationLine(type)) {
           const [, linkType, relationType] = relation.type.split('-') || [];
           const lineItemType = getItemType(relationType);
           const isFocused = isFocusedLink(focusedItem[lineItemType], relatedIds);
-          const hasRelation = get(false, `${lineItemType}.${id}`, focusedItem);
+          const isTargeted =
+            focusMode === 'TARGET' ? false : isFocusedLink(targetedItem[lineItemType], relatedIds);
+          const hasRelation = get(
+            false,
+            `${lineItemType}.${id}`,
+            isTargeted ? targetedItem : focusedItem
+          );
           return (
             <RelationLine
               type={linkType}
-              focusMode={focusMode}
+              isTargeted={isTargeted}
               isFocused={isFocused}
               hasRelation={hasRelation}
             />
           );
         }
-        const onClickHighlight = mode => () =>
-          changeFocusItem({
-            focusedItem:
-              (mode === 'TARGET_TREE' ? { ...itemRelation, shipment: {} } : itemRelation) || {},
-            focusMode: mode,
-          });
-        const onClickTarget = () => {
-          const item = focusMode === 'TARGET' ? focusedItem : initFocusObj();
-          const targetItem = Object.assign(item, {
-            [itemType]: {
-              ...item[itemType],
-              [data.id]: data,
-            },
-          });
-          changeFocusItem({
-            focusedItem: targetItem,
-            focusMode: 'TARGET',
-          });
-        };
-        const onUnClickTarget = () => {
-          const item = focusMode === 'TARGET' ? focusedItem : initFocusObj();
-          if (get(false, `${itemType}.${id}`, item)) {
-            const targetItem = Object.assign(item, {
-              [itemType]: omit([id], item[itemType]),
-            });
-            changeFocusItem({
-              focusedItem: targetItem,
-              focusMode: 'TARGET',
-            });
-          }
-        };
+        const onClickHighlight = toggleHighlight(itemRelation);
+        const onClickTargetTree = toggleTargetTree(itemRelation);
+        const onClickTarget = toggleTarget(itemType, id, data);
         const isFocused = get(false, `${itemType}.${id}` || '', focusedItem);
-        const cardWrapperClass = ItemWrapperStyle(isFocused, focusMode);
+        const isTargeted = get(false, `${itemType}.${id}` || '', targetedItem);
+        const cardWrapperClass = ItemWrapperStyle(isFocused, isTargeted);
         switch (type) {
           default: {
             return <div />;
@@ -158,8 +135,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   icon="MAGIC"
                                   targetted={targetted}
                                   toggle={toggle}
-                                  onClick={onClickHighlight('HIGHLIGHT')}
-                                  onUnClick={reset}
+                                  onClick={onClickHighlight}
                                 />
                                 <Action
                                   icon="DOCUMENT"
@@ -171,8 +147,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   icon="BRANCH"
                                   targetted={targetted}
                                   toggle={toggle}
-                                  onClick={onClickHighlight('TARGET_TREE')}
-                                  onUnClick={reset}
+                                  onClick={onClickTargetTree}
                                   className={RotateIcon}
                                 />
                                 <Action
@@ -180,7 +155,6 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   targetted={targetted}
                                   toggle={toggle}
                                   onClick={onClickTarget}
-                                  onUnClick={onUnClickTarget}
                                 />
                               </>
                             )}
@@ -213,23 +187,20 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                               icon="MAGIC"
                               targetted={targetted}
                               toggle={toggle}
-                              onClick={onClickHighlight('HIGHLIGHT')}
-                              onUnClick={reset}
+                              onClick={onClickHighlight}
                             />
                             <Action
                               icon="BRANCH"
                               targetted={targetted}
                               toggle={toggle}
-                              onClick={onClickHighlight('TARGET_TREE')}
+                              onClick={onClickTargetTree}
                               className={RotateIcon}
-                              onUnClick={reset}
                             />
                             <Action
                               icon="CHECKED"
                               targetted={targetted}
                               toggle={toggle}
                               onClick={onClickTarget}
-                              onUnClick={onUnClickTarget}
                             />
                           </>
                         )}
@@ -264,8 +235,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   icon="MAGIC"
                                   targetted={targetted}
                                   toggle={toggle}
-                                  onClick={onClickHighlight('HIGHLIGHT')}
-                                  onUnClick={reset}
+                                  onClick={onClickHighlight}
                                 />
                                 <Action
                                   icon="DOCUMENT"
@@ -278,7 +248,6 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   targetted={targetted}
                                   toggle={toggle}
                                   onClick={onClickTarget}
-                                  onUnClick={onUnClickTarget}
                                 />
                               </>
                             )}
@@ -341,10 +310,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
                       <Subscribe to={[ActionContainer, ConnectContainer]}>
-                        {(
-                          { state: { currentAction } },
-                          { state: { selectedShipment }, selectShipment }
-                        ) => (
+                        {() => (
                           <BooleanValue>
                             {({ value: hovered, set: setToggle }) => (
                               <WrapperCard
@@ -352,9 +318,9 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                 onMouseLeave={() => setToggle(false)}
                               >
                                 <ShipmentCard shipment={data} />
-                                {selectedShipment && isFocused ? (
+                                {isTargeted ? (
                                   <ActionCard show>
-                                    {() => <SelectedShipment onClick={onUnClickTarget} />}
+                                    {() => <SelectedShipment onClick={() => {}} />}
                                   </ActionCard>
                                 ) : (
                                   <ActionCard show={hovered}>
@@ -364,8 +330,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                           icon="MAGIC"
                                           targetted={targetted}
                                           toggle={toggle}
-                                          onClick={onClickHighlight('HIGHLIGHT')}
-                                          onUnClick={reset}
+                                          onClick={onClickHighlight}
                                         />
                                         <Action
                                           icon="DOCUMENT"
@@ -377,22 +342,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                           icon="CHECKED"
                                           targetted={targetted}
                                           toggle={toggle}
-                                          onClick={() => {
-                                            if (currentAction === 'connect') {
-                                              selectShipment(true);
-                                              return changeFocusItem({
-                                                focusedItem: {
-                                                  ...focusedItem,
-                                                  shipment: {
-                                                    [id]: true,
-                                                  },
-                                                },
-                                                focusMode: 'TARGET',
-                                              });
-                                            }
-                                            return onClickTarget();
-                                          }}
-                                          onUnClick={onUnClickTarget}
+                                          onClick={onClickTarget}
                                         />
                                       </>
                                     )}

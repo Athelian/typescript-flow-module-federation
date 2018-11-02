@@ -40,7 +40,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
       >
         {(
           {
-            state: { focusMode, focusedItem },
+            state: { focusMode, targetedItem },
             isTargetTreeMode,
             isTargetMode,
             selectItem,
@@ -53,7 +53,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
         ) =>
           (isTargetMode() || isTargetTreeMode()) && (
             <>
-              <ActionSelector target={focusedItem} onCancelTarget={cancelTarget}>
+              <ActionSelector target={targetedItem} onCancelTarget={cancelTarget}>
                 {(function renderPanel() {
                   switch (currentAction) {
                     default:
@@ -67,7 +67,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                             onClick={async () => {
                               const [newResult, newFocus] = await clone(
                                 client,
-                                focusedItem,
+                                targetedItem,
                                 focusMode
                               );
                               await refetch();
@@ -165,7 +165,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
               {currentAction === 'split' && (
                 <SplitPanel
                   onApply={async splitData => {
-                    const [splitResult, splitFocus] = await split(client, focusedItem, splitData);
+                    const [splitResult, splitFocus] = await split(client, targetedItem, splitData);
                     await refetch();
                     setResult(splitResult);
                     selectItem(splitFocus);

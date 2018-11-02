@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, layout, fontSizes } from 'styles/common';
 
-export const IconStyle = (color: string) => css`
+export const IconStyle = (color: string, hoverColor: ?string) => css`
   background: ${colors[color]};
   color: ${colors.WHITE};
   display: flex;
@@ -11,6 +11,12 @@ export const IconStyle = (color: string) => css`
   height: 30px;
   cursor: pointer;
   ${fontSizes.HUGE};
+  ${hoverColor &&
+    `
+    &:hover {
+      background: ${colors[hoverColor]};
+    }
+  `};
 `;
 
 export const SummaryBadgeLabel = css`
