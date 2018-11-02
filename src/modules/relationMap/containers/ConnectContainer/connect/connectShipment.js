@@ -1,8 +1,9 @@
+// @flow
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
 import { updateBatchMutation } from 'modules/batch/form/mutation';
 import { getByPathWithDefault as get } from 'utils/fp';
 
-const connectShipmentInBatch = (client, batch, shipmentId) => {
+const connectShipmentInBatch = (client: any, batch: Object, shipmentId: string) => {
   const batchIds = Object.keys(batch);
   const requests = batchIds.map(batchId => {
     const request = client.mutate({
@@ -19,7 +20,7 @@ const connectShipmentInBatch = (client, batch, shipmentId) => {
   return requests;
 };
 
-export const connectNewShipment = async (client, target) => {
+export const connectNewShipment = async (client: any, target: Object) => {
   const { data } = await client.mutate({
     mutation: createShipmentWithReturnDataMutation,
     variables: {
@@ -47,7 +48,7 @@ export const connectNewShipment = async (client, target) => {
   return [result, focus];
 };
 
-export const connectExistingShipment = async (client, target) => {
+export const connectExistingShipment = async (client: any, target: Object) => {
   const shipmentIds = Object.keys(target.shipment || {});
   const connectedShipmentId = shipmentIds.length > 0 ? shipmentIds[0] : '';
   await Promise.all(connectShipmentInBatch(client, target.batch || {}, connectedShipmentId));

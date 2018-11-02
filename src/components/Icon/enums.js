@@ -121,7 +121,6 @@ import {
   // Common UI
   faAngleLeft as ANGLE_LEFT,
   faAngleRight as ANGLE_RIGHT,
-
   faBox as BATCH_LIGHT,
   faShip as SHIPMENT_LIGHT,
   faArchive as ARCHIVE_LIGHT,

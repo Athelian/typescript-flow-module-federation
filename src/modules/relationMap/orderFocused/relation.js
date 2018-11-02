@@ -1,3 +1,4 @@
+// @flow
 export const ORDER_HEADER = 'ORDER_HEADER';
 export const ORDER_ITEM_ALL = 'ORDER_ITEM_ALL';
 export const BATCH_ALL = 'BATCH_ALL';
@@ -10,7 +11,7 @@ export const LINK1 = 'LINK-1';
 export const LINK2 = 'LINK-2';
 export const LINK4 = 'LINK-4';
 
-export const getItemData = ({ order, orderItem, batch }, relation) => {
+export const getItemData = ({ order, orderItem, batch }: Object, relation: Object) => {
   let itemData;
   switch (relation.type) {
     case ORDER_ITEM_ALL:
@@ -34,7 +35,7 @@ export const getItemData = ({ order, orderItem, batch }, relation) => {
   return itemData;
 };
 
-export const getItemType = type => {
+export const getItemType = (type: string) => {
   switch (type) {
     case ORDER_ITEM_ALL:
     case BATCH_ALL:
@@ -50,7 +51,7 @@ export const getItemType = type => {
   }
 };
 
-const getRelatedIds = (items, currentIndex) => {
+const getRelatedIds = (items: Array<Object>, currentIndex: number) => {
   const ids = [];
   for (let index = items.length - 1; index >= currentIndex; index -= 1) {
     const { id } = items[index];
@@ -59,7 +60,7 @@ const getRelatedIds = (items, currentIndex) => {
   return ids;
 };
 
-const createBatchRelation = (relations, data) => {
+const createBatchRelation = (relations: Array<Object>, data: Object) => {
   const { orderItems, orderItemIndex, relatedOrderItem } = data;
   const generateFirstBatch = (id, relatedIds) => {
     relations.push({
@@ -102,7 +103,7 @@ const createBatchRelation = (relations, data) => {
   };
 };
 
-const generateCollapsedRelation = (order, option) => {
+const generateCollapsedRelation = (order: Object, option: Object) => {
   const { isCollapsed } = option;
   const relations = [];
   const { orderItems } = order;
@@ -133,7 +134,7 @@ const generateCollapsedRelation = (order, option) => {
   return relations;
 };
 
-const generateRelation = (order, option) => {
+const generateRelation = (order: Object, option: Object) => {
   const { isCollapsed } = option;
   const relations = generateCollapsedRelation(order, option);
   if (isCollapsed) {

@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-// import { detailedBatchFragment } from 'graphql/batchDetail/fragment';
 import { metricFragment } from 'graphql';
 
 export const orderListQuery = gql`

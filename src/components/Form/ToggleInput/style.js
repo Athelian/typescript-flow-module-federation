@@ -11,7 +11,7 @@ export const ToggleInputStyle = (toggled: boolean): string => css`
   color: ${colors.GRAY_DARK_1};
   ${fontSizes.MAIN};
   align-items: center;
-  
+
   button {
     color: ${toggled ? colors.TEAL : colors.GRAY};
   }
