@@ -17,7 +17,7 @@ import ExpandHeader from '../ExpandHeader';
 import Badge from '../SummaryBadge/Badge';
 import TableHeader from './components/TableHeader';
 import TableItem from './components/TableItem';
-import EmptyCell from './components/EmptyCell';
+// import EmptyCell from './components/EmptyCell';
 
 type Props = {
   onSave: () => void,
@@ -131,6 +131,47 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
     selected,
     mappingObjects
   );
+
+  const orderColumnFields = [
+    {
+      name: 'poNo',
+      type: 'text',
+    },
+    {
+      name: 'piNo',
+      type: 'text',
+    },
+  ];
+  const orderItemColumnFields = [
+    {
+      name: 'productProvider.product.name',
+      type: 'text',
+    },
+    {
+      name: 'productProvider.product.serial',
+      type: 'text',
+    },
+  ];
+  const batchColumnFields = [
+    {
+      name: 'no',
+      type: 'text',
+    },
+    {
+      name: 'quantity',
+      type: 'number',
+    },
+  ];
+  const shipmentColumnFields = [
+    {
+      name: 'no',
+      type: 'text',
+    },
+    {
+      name: 'blNo',
+      type: 'text',
+    },
+  ];
   return (
     <Layout
       navBar={
@@ -222,45 +263,65 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
         return (
           <TableRow>
             <LineNumber line={counter + 1} />
-            <TableItem
-              cell={`order.${counter + 1}`}
-              fields={[
-                {
-                  name: 'poNo',
-                  type: 'text',
-                },
-                {
-                  name: 'piNo',
-                  type: 'text',
-                },
-              ]}
-              values={order.data}
-              validator={orderValidator}
-            />
+            <div>
+              {orderItems.length === 0 ? (
+                <TableItem
+                  cell={`order.${counter + 1}`}
+                  fields={orderColumnFields}
+                  values={order.data}
+                  validator={orderValidator}
+                />
+              ) : (
+                orderItems.map(
+                  orderItem =>
+                    Object.keys(orderItem.relation.batch).length === 0 ? (
+                      <TableItem
+                        cell={`order.${counter + 1}.duplication.${orderItem.data.id}`}
+                        fields={orderValidator}
+                        values={order.data}
+                        validator={orderValidator}
+                      />
+                    ) : (
+                      Object.keys(orderItem.relation.batch)
+                        .filter(batchId => batchIds.includes(batchId))
+                        .map(batchId => (
+                          <TableItem
+                            cell={`order.${counter + 1}.duplication.${
+                              orderItem.data.id
+                            }.batch.${batchId}`}
+                            fields={orderValidator}
+                            values={order.data}
+                            validator={orderValidator}
+                          />
+                        ))
+                    )
+                )
+              )}
+            </div>
             <div>
               {orderItems.map((orderItem, position) => (
                 <>
-                  <TableItem
-                    cell={`orderItem.${counter + 1}.${position}`}
-                    key={orderItem.data.id}
-                    fields={[
-                      {
-                        name: 'productProvider.product.name',
-                        type: 'text',
-                      },
-                      {
-                        name: 'productProvider.product.serial',
-                        type: 'text',
-                      },
-                    ]}
-                    values={orderItem.data}
-                    validator={orderValidator}
-                  />
-                  {Object.keys(orderItem.relation.batch)
-                    .filter(batchId => batchIds.includes(batchId))
-                    .map(batchId => (
-                      <EmptyCell key={batchId} />
-                    ))}
+                  {Object.keys(orderItem.relation.batch).length === 0 ? (
+                    <TableItem
+                      cell={`orderItem.${counter + 1}.${position}`}
+                      key={orderItem.data.id}
+                      fields={orderItemColumnFields}
+                      values={orderItem.data}
+                      validator={orderValidator}
+                    />
+                  ) : (
+                    Object.keys(orderItem.relation.batch)
+                      .filter(batchId => batchIds.includes(batchId))
+                      .map(batchId => (
+                        <TableItem
+                          cell={`orderItem.${counter + 1}.${position}.duplication.${batchId}`}
+                          key={orderItem.data.id}
+                          fields={orderItemColumnFields}
+                          values={orderItem.data}
+                          validator={orderValidator}
+                        />
+                      ))
+                  )}
                 </>
               ))}
             </div>
@@ -269,16 +330,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
                 <TableItem
                   cell={`batch.${counter + 1}.${position}`}
                   key={batch.data.id}
-                  fields={[
-                    {
-                      name: 'no',
-                      type: 'text',
-                    },
-                    {
-                      name: 'quantity',
-                      type: 'number',
-                    },
-                  ]}
+                  fields={batchColumnFields}
                   values={batch.data}
                   validator={batchValidator}
                 />
@@ -293,16 +345,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
                     <TableItem
                       cell={`shipment.${counter + 1}.${position}`}
                       key={shipment.data.id}
-                      fields={[
-                        {
-                          name: 'no',
-                          type: 'text',
-                        },
-                        {
-                          name: 'blNo',
-                          type: 'text',
-                        },
-                      ]}
+                      fields={shipmentColumnFields}
                       values={shipment.data}
                       validator={shipmentValidator}
                     />
