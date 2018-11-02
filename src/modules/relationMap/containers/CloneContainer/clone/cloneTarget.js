@@ -1,3 +1,4 @@
+// @flow
 import { differenceBy } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
 import { createBatchMutation } from 'modules/batch/form/mutation';
@@ -5,7 +6,7 @@ import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/muta
 import { createOrderMutation, updateOrderItemMutation } from 'modules/order/form/mutation';
 import { createMutationRequest } from './index';
 
-export const cloneOrder = async (client, order) => {
+export const cloneOrder = async (client: any, order: Object) => {
   const mutationRequest = createMutationRequest(client);
   const orderIds = Object.keys(order);
   const orderRequests = orderIds.map(orderId => {
@@ -22,8 +23,8 @@ export const cloneOrder = async (client, order) => {
     });
     return request;
   });
-  const newOrders = await Promise.all(orderRequests);
-  const orderResults = newOrders.map(newOrder =>
+  const newOrders: Array<Object> = await Promise.all(orderRequests);
+  const orderResults: Array<Object> = newOrders.map(newOrder =>
     getByPathWithDefault({}, 'data.orderCreate.order', newOrder)
   );
   const orderFocus = orderResults.reduce(
@@ -36,7 +37,7 @@ export const cloneOrder = async (client, order) => {
   return [orderResults, orderFocus];
 };
 
-export const cloneOrderItem = async (client, orderItem) => {
+export const cloneOrderItem = async (client: any, orderItem: Object) => {
   const mutationRequest = createMutationRequest(client);
   const orderItemIds = Object.keys(orderItem);
   const orderUpdate = orderItemIds.reduce((orderUpdateObj, orderItemId) => {
@@ -104,7 +105,7 @@ export const cloneOrderItem = async (client, orderItem) => {
   return [orderItemResult, orderItemFocus];
 };
 
-export const cloneBatch = async (client, batch) => {
+export const cloneBatch = async (client: any, batch: Object) => {
   const mutationRequest = createMutationRequest(client);
   const batchIds = Object.keys(batch);
   const batchRequests = batchIds.map(batchId => {
@@ -140,7 +141,7 @@ export const cloneBatch = async (client, batch) => {
   return [batchResult, batchFocus];
 };
 
-export const cloneShipment = async (client, shipment) => {
+export const cloneShipment = async (client: any, shipment: Object) => {
   const shipmentIds = Object.keys(shipment);
   const shipmentRequests = shipmentIds.map(shipmentId => {
     const currentShipment = shipment[shipmentId];
@@ -159,7 +160,7 @@ export const cloneShipment = async (client, shipment) => {
     return request;
   });
   const newShipments = await Promise.all(shipmentRequests);
-  const shipmentResults = newShipments.map(newShipment =>
+  const shipmentResults: Array<Object> = newShipments.map(newShipment =>
     getByPathWithDefault({}, 'data.shipmentCreate.shipment', newShipment)
   );
   const shipmentFocus = shipmentResults.reduce(
@@ -172,7 +173,7 @@ export const cloneShipment = async (client, shipment) => {
   return [shipmentResults, shipmentFocus];
 };
 
-export const cloneTarget = async (client, target) => {
+export const cloneTarget = async (client: any, target: Object) => {
   const { batch, order, orderItem, shipment } = target;
   // TODO: should run in parallel
   const [orderResults, orderFocus] = await cloneOrder(client, order);

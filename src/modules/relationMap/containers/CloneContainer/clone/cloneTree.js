@@ -1,10 +1,11 @@
+// @flow
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
 import { orderFormQuery } from 'modules/order/form/query';
 import { createOrderWithReturnDataMutation } from 'modules/order/form/mutation';
 import { getByPathWithDefault as get } from 'utils/fp';
 import { createMutationRequest } from './index';
 
-export const cloneTree = async (client, target) => {
+export const cloneTree = async (client: any, target: Object) => {
   const mutationRequest = createMutationRequest(client);
   const { shipment, order, orderItem, batch } = target;
   const shipmentIds = Object.keys(shipment);
@@ -33,7 +34,7 @@ export const cloneTree = async (client, target) => {
   });
   const newShipments = await Promise.all(shipmentRequests);
 
-  const shipmentResults = newShipments.map(newShipment =>
+  const shipmentResults: Array<Object> = newShipments.map(newShipment =>
     get({}, 'data.shipmentCreate.shipment', newShipment)
   );
   const shipmentFocus = shipmentResults.reduce(
@@ -95,7 +96,9 @@ export const cloneTree = async (client, target) => {
     })
   );
   const newOrders = await Promise.all(orderCreateMutates);
-  const orderResults = newOrders.map(newOrder => get({}, 'data.orderCreate.order', newOrder));
+  const orderResults: Array<Object> = newOrders.map(newOrder =>
+    get({}, 'data.orderCreate.order', newOrder)
+  );
   const orderFocus = orderResults.reduce(
     (focus, orderResult) =>
       Object.assign(focus, {

@@ -7,7 +7,7 @@ export default class SplitContainer extends Container {
   split = async (client: any, target: Object, data: Object) => {
     const split = getSplitFunction(data.tabIndex);
     const splitType = getSplitType(data.tabIndex);
-    const results = await split(client, target, data);
+    const results = await split({ client, target, data });
     return [
       {
         ...getDefaultResult(),

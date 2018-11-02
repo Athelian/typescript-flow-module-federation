@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { Label } from 'components/Form';
 import { BaseButton } from 'components/Buttons';

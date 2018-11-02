@@ -1,3 +1,4 @@
+// @flow
 import { getByPathWithDefault as get } from 'utils/fp';
 import { SIMPLE, EQUALLY, BALANCE } from 'modules/relationMap/constants';
 import { createMutationRequest } from 'modules/relationMap/containers/action';
@@ -7,7 +8,7 @@ import {
   batchEqualSplitMutaion,
 } from '../mutation';
 
-const getPrecision = quantityType => {
+const getPrecision = (quantityType: string) => {
   switch (quantityType) {
     default:
     case 'integer':
@@ -17,7 +18,7 @@ const getPrecision = quantityType => {
   }
 };
 
-export const getSplitResult = (results, splitType) => {
+export const getSplitResult = (results: Object, splitType: string) => {
   const splitResult = results.reduce((obj, result) => {
     const { refId, data } = result;
     const newBatches = get([], `${splitType}.batches`, data);
@@ -29,7 +30,7 @@ export const getSplitResult = (results, splitType) => {
   return splitResult;
 };
 
-export const getSplitFocus = (results, splitType) => {
+export const getSplitFocus = (results: Object, splitType: string) => {
   const splitFocus = results.reduce((obj, result) => {
     const { data } = result;
     const newBatches = get([], `${splitType}.batches`, data);
@@ -42,7 +43,12 @@ export const getSplitFocus = (results, splitType) => {
   return splitFocus;
 };
 
-export const simpleSplit = async (client, target, data) => {
+type SplitType = {
+  client: any,
+  target: Object,
+  data: Object,
+};
+export const simpleSplit = async ({ client, target, data }: SplitType) => {
   const mutationRequest = createMutationRequest(client);
   const { batch } = target;
   const batchIds = Object.keys(batch);
@@ -66,7 +72,7 @@ export const simpleSplit = async (client, target, data) => {
   return results;
 };
 
-export const equallySplit = async (client, target, data) => {
+export const equallySplit = async ({ client, target, data }: SplitType) => {
   const mutationRequest = createMutationRequest(client);
   const { batch } = target;
   const batchIds = Object.keys(batch);
@@ -91,7 +97,7 @@ export const equallySplit = async (client, target, data) => {
   return results;
 };
 
-export const balanceSplit = async (client, target) => {
+export const balanceSplit = async ({ client, target }: { client: any, target: Object }) => {
   const mutationRequest = createMutationRequest(client);
   const { orderItem } = target;
   const orderItemIds = Object.keys(orderItem);
@@ -109,7 +115,7 @@ export const balanceSplit = async (client, target) => {
   return results;
 };
 
-export const getSplitFunction = type => {
+export const getSplitFunction = (type: string) => {
   switch (type) {
     default:
     case SIMPLE: {
@@ -124,7 +130,7 @@ export const getSplitFunction = type => {
   }
 };
 
-export const getSplitType = type => {
+export const getSplitType = (type: string) => {
   switch (type) {
     default:
     case SIMPLE: {
