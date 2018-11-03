@@ -40,8 +40,7 @@ class SubscriptionSSE {
         logger.error(e);
       }
     };
-    this.source.onerror = msg => {
-      logger.error(msg);
+    this.source.onerror = () => {
       this.unsubscribe();
 
       const retryTimeout = setTimeout(() => {
