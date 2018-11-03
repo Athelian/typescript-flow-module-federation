@@ -134,7 +134,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
           item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
         );
         return (
-          <TableRow>
+          <TableRow key={orderId}>
             <LineNumber line={counter + 1} />
             <div>
               {orderItems.length === 0 ? (
@@ -149,6 +149,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
                   orderItem =>
                     Object.keys(orderItem.relation.batch).length === 0 ? (
                       <TableItem
+                        key={`order.${counter + 1}.duplication.${orderItem.data.id}`}
                         cell={`order.${counter + 1}.duplication.${orderItem.data.id}`}
                         fields={orderColumnFields}
                         values={order.data}
@@ -159,6 +160,9 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
                         .filter(batchId => batchIds.includes(batchId))
                         .map(batchId => (
                           <TableItem
+                            key={`order.${counter + 1}.duplication.${
+                              orderItem.data.id
+                            }.batch.${batchId}`}
                             cell={`order.${counter + 1}.duplication.${
                               orderItem.data.id
                             }.batch.${batchId}`}
@@ -172,12 +176,12 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
               )}
             </div>
             <div>
-              {orderItems.map((orderItem, position) => (
-                <>
-                  {Object.keys(orderItem.relation.batch).length === 0 ? (
+              {orderItems.map(
+                (orderItem, position) =>
+                  Object.keys(orderItem.relation.batch).length === 0 ? (
                     <TableItem
                       cell={`orderItem.${counter + 1}.${position}`}
-                      key={orderItem.data.id}
+                      key={`orderItem.${counter + 1}.${orderItem.data.id}`}
                       fields={orderItemColumnFields}
                       values={orderItem.data}
                       validator={orderValidator}
@@ -188,15 +192,14 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
                       .map(batchId => (
                         <TableItem
                           cell={`orderItem.${counter + 1}.${position}.duplication.${batchId}`}
-                          key={orderItem.data.id}
+                          key={`orderItem.${counter + 1}.duplication.${batchId}`}
                           fields={orderItemColumnFields}
                           values={orderItem.data}
                           validator={orderValidator}
                         />
                       ))
-                  )}
-                </>
-              ))}
+                  )
+              )}
             </div>
             <div>
               {batches.map((batch, position) => (
