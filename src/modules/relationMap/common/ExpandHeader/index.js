@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { ExpandStyle } from './style';
+import { ExpandStyle, ExpandButtonStyle } from './style';
 
 type Props = {
   isExpanding: boolean,
@@ -12,7 +12,7 @@ export default function ExpandHeader({ children, isExpanding, onClick }: Props) 
   return (
     <div className={ExpandStyle(isExpanding)}>
       {children}
-      <button type="button" onClick={onClick}>
+      <button className={ExpandButtonStyle} type="button" onClick={onClick}>
         {isExpanding ? '<' : '>'}
       </button>
     </div>

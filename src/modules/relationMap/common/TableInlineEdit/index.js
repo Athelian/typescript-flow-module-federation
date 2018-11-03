@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
 import Layout from 'components/Layout';
 import { FormattedMessage } from 'react-intl';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -24,16 +25,16 @@ import {
   batchColumnFields,
   shipmentColumnFields,
 } from './constants';
+import RelationMapTableEditContainer from './container';
 
 type Props = {
   onSave: () => void,
   onCancel: () => void,
-  onExpand: () => void,
   type: string,
   selected: Object,
 };
 
-export default function TableInlineEdit({ type, selected, onSave, onCancel, onExpand }: Props) {
+export default function TableInlineEdit({ type, selected, onSave, onCancel }: Props) {
   const data = JSON.parse(window.localStorage.getItem(type)) || [];
   const { sumShipments, sumOrders, sumOrderItems, sumBatches, ...mappingObjects } = formatOrderData(
     data
@@ -56,38 +57,56 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel, onEx
       }
     >
       <div className={WrapperStyle}>
-        <ExpandHeader isExpanding={false} onClick={onExpand}>
-          <Badge
-            icon="ORDER"
-            color="ORDER"
-            label={<FormattedMessage {...messages.ordersLabel} />}
-            no={sumOrders}
-          />
-        </ExpandHeader>
-        <ExpandHeader isExpanding={false} onClick={onExpand}>
-          <Badge
-            icon="ORDER_ITEM"
-            color="ORDER_ITEM"
-            label={<FormattedMessage {...messages.itemsLabel} />}
-            no={sumOrderItems}
-          />
-        </ExpandHeader>
-        <ExpandHeader isExpanding={false} onClick={onExpand}>
-          <Badge
-            icon="BATCH"
-            color="BATCH"
-            label={<FormattedMessage {...messages.batchesLabel} />}
-            no={sumBatches}
-          />
-        </ExpandHeader>
-        <ExpandHeader isExpanding={false} onClick={onExpand}>
-          <Badge
-            icon="SHIPMENT"
-            color="SHIPMENT"
-            label={<FormattedMessage {...messages.shipmentsLabel} />}
-            no={sumShipments}
-          />
-        </ExpandHeader>
+        <Subscribe to={[RelationMapTableEditContainer]}>
+          {({ toggleExpandGroup, isExpanding }) => (
+            <>
+              <ExpandHeader
+                isExpanding={isExpanding('order')}
+                onClick={() => toggleExpandGroup('order')}
+              >
+                <Badge
+                  icon="ORDER"
+                  color="ORDER"
+                  label={<FormattedMessage {...messages.ordersLabel} />}
+                  no={sumOrders}
+                />
+              </ExpandHeader>
+              <ExpandHeader
+                isExpanding={isExpanding('orderItem')}
+                onClick={() => toggleExpandGroup('orderItem')}
+              >
+                <Badge
+                  icon="ORDER_ITEM"
+                  color="ORDER_ITEM"
+                  label={<FormattedMessage {...messages.itemsLabel} />}
+                  no={sumOrderItems}
+                />
+              </ExpandHeader>
+              <ExpandHeader
+                isExpanding={isExpanding('batch')}
+                onClick={() => toggleExpandGroup('batch')}
+              >
+                <Badge
+                  icon="BATCH"
+                  color="BATCH"
+                  label={<FormattedMessage {...messages.batchesLabel} />}
+                  no={sumBatches}
+                />
+              </ExpandHeader>
+              <ExpandHeader
+                isExpanding={isExpanding('shipment')}
+                onClick={() => toggleExpandGroup('shipment')}
+              >
+                <Badge
+                  icon="SHIPMENT"
+                  color="SHIPMENT"
+                  label={<FormattedMessage {...messages.shipmentsLabel} />}
+                  no={sumShipments}
+                />
+              </ExpandHeader>
+            </>
+          )}
+        </Subscribe>
       </div>
       <TableRow>
         <LineNumber />
