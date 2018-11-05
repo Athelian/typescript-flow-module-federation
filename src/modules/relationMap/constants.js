@@ -9,3 +9,7 @@ export const SHIPMENT_ALL = 'SHIPMENT_ALL';
 export const SIMPLE = 0;
 export const EQUALLY = 1;
 export const BALANCE = 2;
+export const ORDER_ALL = 'ORDER_ALL';
+export const LINK1 = 'LINK-1';
+export const LINK2 = 'LINK-2';
+export const LINK4 = 'LINK-4';

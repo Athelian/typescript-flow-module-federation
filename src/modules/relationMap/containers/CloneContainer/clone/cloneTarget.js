@@ -4,7 +4,6 @@ import { getByPathWithDefault } from 'utils/fp';
 import { createBatchMutation } from 'modules/batch/form/mutation';
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
 import { createOrderMutation, updateOrderItemMutation } from 'modules/order/form/mutation';
-import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import { createMutationRequest } from './index';
 
 export const cloneOrder = async (client: any, order: Object) => {
@@ -116,14 +115,6 @@ export const cloneBatch = async (client: any, batch: Object) => {
     const request = mutationRequest(
       {
         mutation: createBatchMutation,
-        ignoreResults: true,
-        refetchQueries: [
-          {
-            query: orderListQuery,
-            variables: { page: 2, perPage: 10 },
-          },
-        ],
-        awaitRefetchQueries: true,
         variables: {
           input: {
             no: `[cloned] ${currentBatch.no}`,
