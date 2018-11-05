@@ -33,11 +33,11 @@ import {
   AddAssignmentButtonStyle,
 } from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import TotalSummary from './components/TotalSummary';
-import MetadataEditForm from './components/MetadataEditForm';
-import {
-  MetadataMessageStyle,
-  MetadataMessageWrapperStyle,
-} from './components/MetadataEditForm/style';
+// import MetadataEditForm from './components/MetadataEditForm';
+// import {
+//   MetadataMessageStyle,
+//   MetadataMessageWrapperStyle,
+// } from './components/MetadataEditForm/style';
 import {
   OrderSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -167,7 +167,7 @@ const OrderSection = ({ isNew }: Props) => (
                   }
                 </FormField>
                 {/* TODO: waiting API */}
-                <BooleanValue>
+                {/* <BooleanValue>
                   {({ value: isOpen, set: slideToggle }) => (
                     <>
                       <div className={MetadataMessageWrapperStyle}>
@@ -200,7 +200,7 @@ const OrderSection = ({ isNew }: Props) => (
                       </SlideView>
                     </>
                   )}
-                </BooleanValue>
+                </BooleanValue> */}
               </GridColumn>
 
               <GridColumn gap="10px">
