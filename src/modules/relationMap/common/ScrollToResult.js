@@ -1,7 +1,10 @@
 // @flow
 import * as React from 'react';
 import { isEmpty } from 'utils/fp';
+<<<<<<< HEAD
 import scrollIntoView from 'utils/scrollIntoView';
+=======
+>>>>>>> feat(relation-map): scroll to view after action
 
 type Props = {
   id: string,
@@ -15,6 +18,7 @@ class ScrollToResult extends React.Component<Props> {
     const { id, result, scrolled, setScroll } = this.props;
     const { orderItem = {}, batch = {} } = result;
     if (!scrolled && (!isEmpty(orderItem) || !isEmpty(batch))) {
+
       const orderIds = Object.keys(orderItem);
       const orderItemIds = Object.keys(batch);
       const scrollOrderId = orderIds && orderIds.length > 0 ? orderIds[0] : '';
