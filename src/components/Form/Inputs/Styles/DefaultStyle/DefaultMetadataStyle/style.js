@@ -21,6 +21,17 @@ export const AdjustmentFieldsWrapperStyle: string = css`
   grid-gap: 10px;
 `;
 
+export const EditHandleStyle = css`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: -30px;
+  ${presets.BUTTON};
+  ${fontSizes.SMALL};
+  opacity: 1;
+  color: ${colors.GRAY_LIGHT};
+`;
+
 export const DragBarStyle = css`
   position: absolute;
   width: 30px;

@@ -32,6 +32,7 @@ import {
   faBook as LOGS,
   faCalculator as CALCULATOR,
   faGripVertical as DRAG_HANDLE,
+  faEdit as METADATA,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -160,6 +161,7 @@ export default {
   LOGS,
   CALCULATOR,
   DRAG_HANDLE,
+  METADATA,
 
   RELATION_MAP,
   CONNECT,

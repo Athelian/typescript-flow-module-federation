@@ -26,9 +26,8 @@ storiesOf('DefaultMetadataStyle', module)
             return (
               <DefaultMetadataStyle
                 targetName="story-metadata"
-                width="150px"
+                width="200px"
                 metadata={values.state.metadata}
-                index={1}
                 setFieldArrayValue={setFieldValue}
                 onRemove={action('remove')}
               />
@@ -61,11 +60,11 @@ storiesOf('DefaultMetadataStyle', module)
                             const values = { ...originalValues, ...state };
                             return (
                               <DefaultMetadataStyle
+                                draggable
                                 dragHandleProps={provided.dragHandleProps}
                                 targetName="story-metadata"
-                                width="150px"
+                                width="200px"
                                 metadata={values.state.metadata}
-                                index={1}
                                 setFieldArrayValue={setFieldValue}
                                 onRemove={action('remove')}
                               />
