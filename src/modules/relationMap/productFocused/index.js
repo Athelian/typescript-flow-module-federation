@@ -7,7 +7,7 @@ import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
 import DetailFocused, { ToggleSlide } from '../common/SlideForm';
 import RelationView from '../common/RelationView';
 
-import { Row, BatchListWrapperStyle, ProductFocusContent } from './style';
+import { Row, BatchListWrapperStyle, ProductFocusContent, BatchListStyle } from './style';
 
 type Props = {
   items: Array<Object>,
@@ -48,23 +48,25 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => (
             </ToggleSlide>
             {batches && batches.length ? (
               <div className={BatchListWrapperStyle}>
-                {batches.map(batch => (
-                  <ToggleSlide key={batch.id}>
-                    {({ assign: setSlide }) => (
-                      <WrapperCard
-                        onDoubleClick={() =>
-                          setSlide({
-                            show: true,
-                            type: 'BATCH',
-                            id: batch.id,
-                          })
-                        }
-                      >
-                        <BatchCard key={batch.id} batch={batch} product={item} />
-                      </WrapperCard>
-                    )}
-                  </ToggleSlide>
-                ))}
+                <div className={BatchListStyle}>
+                  {batches.map(batch => (
+                    <ToggleSlide key={batch.id}>
+                      {({ assign: setSlide }) => (
+                        <WrapperCard
+                          onDoubleClick={() =>
+                            setSlide({
+                              show: true,
+                              type: 'BATCH',
+                              id: batch.id,
+                            })
+                          }
+                        >
+                          <BatchCard key={batch.id} batch={batch} product={item} />
+                        </WrapperCard>
+                      )}
+                    </ToggleSlide>
+                  ))}
+                </div>
               </div>
             ) : null}
           </Row>

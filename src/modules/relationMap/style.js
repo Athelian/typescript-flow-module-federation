@@ -83,7 +83,7 @@ export const EmptyMessageStyle = css`
 export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`
   grid-column: span 3;
   overflow: auto;
-  height: calc(100vh - 150px - ${spacing}px);
+  height: calc(100vh - 80px - ${spacing}px);
 `;
 
 export const ScrollWrapperStyle = css`
@@ -94,7 +94,7 @@ export const ScrollWrapperStyle = css`
 `;
 
 export const OrderFocusedShipmentScrollWrapperStyle = css`
-  height: calc(100vh - 220px);
+  height: calc(100vh - 150px);
   overflow-y: auto;
   background-color: ${colors.ALMOST_WHITE};
   padding: 20px 10px;
