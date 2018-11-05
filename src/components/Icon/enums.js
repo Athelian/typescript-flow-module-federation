@@ -33,6 +33,7 @@ import {
   faCalculator as CALCULATOR,
   faGripVertical as DRAG_HANDLE,
   faEdit as METADATA,
+  faFileSpreadsheet as TEMPLATE,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -162,6 +163,7 @@ export default {
   CALCULATOR,
   DRAG_HANDLE,
   METADATA,
+  TEMPLATE,
 
   RELATION_MAP,
   CONNECT,

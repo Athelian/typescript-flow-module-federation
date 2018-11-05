@@ -53,6 +53,7 @@ export const colors = {
   TARGET: '#555555',
   ENTITY: '#0B6EDE',
   METADATA: '#CCCCCC',
+  TEMPLATE: '#CCCCCC',
 
   URGENT: '#F12C2C',
 
