@@ -2,60 +2,85 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import { FormField } from 'modules/form';
+import { Label } from 'components/Form';
 import { TextInput, DefaultStyle } from 'components/Form/Inputs';
 
 import {
   AdjustmentWrapperStyle,
   AdjustmentFieldsWrapperStyle,
   DragBarStyle,
+  EditHandleStyle,
   RemoveButtonStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  rearrange: boolean,
+  isKeyReadOnly: boolean,
+  onRemove?: Function,
+};
+
+type Props = OptionalProps & {
   metadata: {
-    label: string,
+    key: string,
     value: string,
   },
   targetName: string,
-  index: number,
   setFieldArrayValue: Function,
   dragHandleProps?: any,
-  onRemove: Function,
   width: string,
 };
 
+const defaultProps = {
+  rearrange: false,
+  isKeyReadOnly: true,
+};
+
 const DefaultMetadataStyle = ({
+  rearrange,
+  isKeyReadOnly,
   metadata,
   dragHandleProps,
   targetName,
-  index,
   setFieldArrayValue,
   onRemove,
   width,
 }: Props) => (
   <div className={AdjustmentWrapperStyle}>
     <div className={AdjustmentFieldsWrapperStyle}>
-      <div className={DragBarStyle} {...dragHandleProps}>
-        <Icon icon="DRAG_HANDLE" />
-      </div>
+      {rearrange ? (
+        <div className={DragBarStyle} {...dragHandleProps}>
+          <Icon icon="DRAG_HANDLE" />
+        </div>
+      ) : (
+        <div className={EditHandleStyle}>
+          <Icon icon="METADATA" />
+        </div>
+      )}
+      {isKeyReadOnly ? (
+        <Label>{metadata.key}</Label>
+      ) : (
+        <FormField
+          name={`${targetName}.key`}
+          initValue={metadata.key}
+          setFieldValue={setFieldArrayValue}
+        >
+          {({ name, ...inputHandlers }) => {
+            const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
+            return (
+              <DefaultStyle
+                width={width}
+                isFocused={isFocused}
+                hasError={isTouched && errorMessage}
+              >
+                <TextInput name={name} {...rest} />
+              </DefaultStyle>
+            );
+          }}
+        </FormField>
+      )}
 
       <FormField
-        name={`${targetName}.${index}.label`}
-        initValue={metadata.label}
-        setFieldValue={setFieldArrayValue}
-      >
-        {({ name, ...inputHandlers }) => {
-          const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
-          return (
-            <DefaultStyle width={width} isFocused={isFocused} hasError={isTouched && errorMessage}>
-              <TextInput name={name} {...rest} />
-            </DefaultStyle>
-          );
-        }}
-      </FormField>
-
-      <FormField
-        name={`${targetName}.${index}.value`}
+        name={`${targetName}.value`}
         initValue={metadata.value}
         setFieldValue={setFieldArrayValue}
       >
@@ -69,11 +94,15 @@ const DefaultMetadataStyle = ({
         }}
       </FormField>
 
-      <button className={RemoveButtonStyle} onClick={onRemove} type="button">
-        <Icon icon="REMOVE" />
-      </button>
+      {onRemove && (
+        <button className={RemoveButtonStyle} onClick={onRemove} type="button">
+          <Icon icon="REMOVE" />
+        </button>
+      )}
     </div>
   </div>
 );
+
+DefaultMetadataStyle.defaultProps = defaultProps;
 
 export default DefaultMetadataStyle;
