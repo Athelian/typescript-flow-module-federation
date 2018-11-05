@@ -5,14 +5,14 @@ import { cleanFalsy, cleanUpData } from 'utils/data';
 
 export type BatchFormState = {
   metadata: {
-    label: string,
+    key: string,
     value: string,
   },
 };
 
 const initValues = {
   metadata: {
-    label: '',
+    key: '',
     value: '',
   },
 };

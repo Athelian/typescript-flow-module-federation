@@ -52,6 +52,7 @@ export const colors = {
   LOGS: '#bbbbbb',
   TARGET: '#555555',
   ENTITY: '#0B6EDE',
+  METADATA: '#CCCCCC',
 
   URGENT: '#F12C2C',
 
