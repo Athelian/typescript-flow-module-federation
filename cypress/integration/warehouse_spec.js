@@ -49,7 +49,7 @@ describe('Warehouse', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(500)
+      .wait(1000)
       .should('not.exist');
 
     cy.get('input[name="name"]')
@@ -79,14 +79,14 @@ describe('Warehouse', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(500)
+      .wait(1000)
       .should('not.exist');
   });
 
   it('clone a warehouse', () => {
     cy.getByTestId('cloneButton').click();
     cy.url().should('include', 'clone');
-    cy.wait(500);
+    cy.wait(1000);
     cy.get('input[name="name"]')
       .clear()
       .type(WAREHOUSE.clonedName)
@@ -94,7 +94,7 @@ describe('Warehouse', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(500)
+      .wait(1000)
       .should('not.exist');
   });
 });

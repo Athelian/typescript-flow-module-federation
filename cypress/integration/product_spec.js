@@ -33,7 +33,7 @@ describe('Product', () => {
 
       cy.getByTestId('saveButton')
         .click()
-        .wait(500);
+        .wait(1000);
 
       cy.get('input[name="name"]')
         .should('have.value', name)
@@ -60,7 +60,7 @@ describe('Product', () => {
         .blur();
       cy.getByTestId('saveButton')
         .click()
-        .wait(500);
+        .wait(1000);
 
       cy.get('input[name="name"]').should('have.value', updatedName);
     });
@@ -71,7 +71,7 @@ describe('Product', () => {
       ({ clonedName, clonedSerial, clonedJanCode, clonedHsCode, material }) => {
         cy.getByTestId('cloneButton')
           .click()
-          .wait(500);
+          .wait(1000);
         cy.url().should('include', 'clone');
 
         cy.get('input[name="name"]')
@@ -90,7 +90,7 @@ describe('Product', () => {
 
         cy.getByTestId('saveButton')
           .click()
-          .wait(500);
+          .wait(1000);
 
         cy.get('input[name="name"]')
           .should('have.value', clonedName)
@@ -113,7 +113,7 @@ describe('Product', () => {
       .should('have.length', 1);
     cy.getByTestId('archiveButton')
       .click()
-      .wait(500);
+      .wait(1000);
     cy.get('svg[data-icon="toggle-off"]').should('be.exist');
   });
 
@@ -124,7 +124,7 @@ describe('Product', () => {
       .should('have.length', 1);
     cy.getByTestId('activeButton')
       .click()
-      .wait(500);
+      .wait(1000);
     cy.get('svg[data-icon="toggle-on"]').should('be.exist');
   });
 });
