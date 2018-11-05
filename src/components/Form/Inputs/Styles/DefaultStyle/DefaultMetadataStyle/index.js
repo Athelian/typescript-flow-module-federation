@@ -14,8 +14,8 @@ import {
 } from './style';
 
 type OptionalProps = {
-  draggable: boolean,
-  onRemove: Function,
+  isKeyReadOnly: boolean,
+  onRemove?: Function,
 };
 
 type Props = OptionalProps & {
@@ -30,12 +30,11 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  draggable: false,
-  onRemove: () => {},
+  isKeyReadOnly: true,
 };
 
 const DefaultMetadataStyle = ({
-  draggable,
+  isKeyReadOnly,
   metadata,
   dragHandleProps,
   targetName,
@@ -45,7 +44,7 @@ const DefaultMetadataStyle = ({
 }: Props) => (
   <div className={AdjustmentWrapperStyle}>
     <div className={AdjustmentFieldsWrapperStyle}>
-      {draggable ? (
+      {!isKeyReadOnly ? (
         <>
           <div className={DragBarStyle} {...dragHandleProps}>
             <Icon icon="DRAG_HANDLE" />
@@ -94,7 +93,7 @@ const DefaultMetadataStyle = ({
         }}
       </FormField>
 
-      {draggable && (
+      {onRemove && (
         <button className={RemoveButtonStyle} onClick={onRemove} type="button">
           <Icon icon="REMOVE" />
         </button>

@@ -12,7 +12,7 @@ export type BatchFormState = {
 
 const initValues = {
   metadata: {
-    key: '',
+    key: 'METADATA 1',
     value: '',
   },
 };
