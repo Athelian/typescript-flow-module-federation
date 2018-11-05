@@ -4,15 +4,18 @@ import loadMoreUtil from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 
-type Props = {
+type OptionalProps = {
+  filter?: Object,
   loading?: boolean,
+  onChangePage?: Function,
+};
+
+type Props = OptionalProps & {
   data: any,
   fetchMore: Function,
   model: string,
   children: Function,
   error?: Object,
-  onChangePage?: Function,
-  filter?: Object,
 };
 
 // TODO: how to send the filter and sort

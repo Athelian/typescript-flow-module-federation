@@ -1,16 +1,15 @@
 // @flow
-export const ORDER_HEADER = 'ORDER_HEADER';
-export const ORDER_ITEM_ALL = 'ORDER_ITEM_ALL';
-export const BATCH_ALL = 'BATCH_ALL';
-export const SHIPMENT = 'SHIPMENT';
-export const SHIPMENT_ALL = 'SHIPMENT_ALL';
-export const ORDER = 'ORDER';
-export const ORDER_ALL = 'ORDER_ALL';
-export const ORDER_ITEM = 'ORDER_ITEM';
-export const BATCH = 'BATCH';
-export const LINK1 = 'LINK-1';
-export const LINK2 = 'LINK-2';
-export const LINK4 = 'LINK-4';
+import {
+  ORDER_HEADER,
+  ORDER_ITEM_ALL,
+  BATCH_ALL,
+  ORDER,
+  ORDER_ITEM,
+  BATCH,
+  LINK1,
+  LINK2,
+  LINK4,
+} from 'modules/relationMap/constants';
 
 export const getItemData = ({ order, orderItem, batch }: Object, relation: Object) => {
   let itemData;

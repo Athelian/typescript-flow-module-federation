@@ -42,7 +42,7 @@ import {
   BATCH,
   SHIPMENT,
   SHIPMENT_ALL,
-} from './relation';
+} from 'modules/relationMap/constants';
 
 type Props = {
   relation: Object,

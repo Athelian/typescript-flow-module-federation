@@ -1,7 +1,7 @@
 import React from 'react';
 import { createObjectValue } from 'react-values';
 import { OrderArchiveDialog } from 'modules/order/common/Dialog';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/orderFocused/relation';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
 import { OrderItemDeleteDialog, ShipmentDeleteDialog, BatchDeleteDialog } from './index';
 
 export const ToggleDeleteDialog = createObjectValue({ isOpen: false, data: null, type: '' });
