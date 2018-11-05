@@ -10,7 +10,7 @@ import MetadataFormContainer from './container';
 import DefaultMetadataStyle from '../index';
 
 storiesOf('DefaultMetadataStyle', module)
-  .add('input', () => (
+  .add('metadata update', () => (
     <div
       style={{
         marginLeft: 50,
@@ -29,7 +29,6 @@ storiesOf('DefaultMetadataStyle', module)
                 width="200px"
                 metadata={values.state.metadata}
                 setFieldArrayValue={setFieldValue}
-                onRemove={action('remove')}
               />
             );
           }}
@@ -37,7 +36,7 @@ storiesOf('DefaultMetadataStyle', module)
       </Provider>
     </div>
   ))
-  .add('drag', () => (
+  .add('metadata define and resort', () => (
     <div
       style={{
         marginLeft: 50,
@@ -60,7 +59,7 @@ storiesOf('DefaultMetadataStyle', module)
                             const values = { ...originalValues, ...state };
                             return (
                               <DefaultMetadataStyle
-                                draggable
+                                isKeyReadOnly={false}
                                 dragHandleProps={provided.dragHandleProps}
                                 targetName="story-metadata"
                                 width="200px"
