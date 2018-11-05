@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, createObjectValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import {
@@ -15,21 +15,33 @@ import DeleteDialog from '../common/Dialog/DeleteDialog';
 import generateRelation, { getItemData, getItemType } from './relation';
 import Item from './Item';
 
-type Props = {
+type OptionalProps = {
+  id: string,
+};
+
+type Props = OptionalProps & {
   order: Object,
   hasMore: boolean,
   loadMore: Function,
   nodes: Array<Object>,
 };
 
+const defaultProps = {
+  id: '',
+};
+
+const ToggleCollpased = createObjectValue({});
+
 const OrderFocused = ({
   order: { order, orderItem, batch, shipment },
   nodes,
   hasMore,
   loadMore,
+  id,
 }: Props) => (
   <>
     <RelationView
+      id={id}
       className={OrderMapWrapperStyle}
       isEmpty={nodes ? nodes.length === 0 : true}
       spacing={70}
@@ -39,33 +51,32 @@ const OrderFocused = ({
       hasMore={hasMore}
       onLoadMore={loadMore}
       customRender={() =>
-        nodes.map(item => {
-          const isCollapsedValue = Object.prototype.hasOwnProperty.call(item, 'isCollapsed')
-            ? item.isCollapsed
-            : true;
-          return (
-            <BooleanValue defaultValue={isCollapsedValue} key={item.id}>
-              {({ value: isCollapsed, toggle }) => {
-                const relations = generateRelation(item, { isCollapsed });
-                return relations.map((relation, relationIndex) => {
-                  const key = `relation-${relationIndex}`;
-                  const itemData = getItemData({ order, orderItem, batch }, relation);
-                  const itemType = getItemType(relation.type);
-                  return (
-                    <Item
-                      key={key}
-                      onToggle={toggle}
-                      isCollapsed={isCollapsed}
-                      relation={relation}
-                      itemData={itemData}
-                      itemType={itemType}
-                    />
-                  );
-                });
-              }}
-            </BooleanValue>
-          );
-        })
+        nodes.map(item => (
+          <ToggleCollpased key={item.id}>
+            {({ value: collapsed, set }) => {
+              const isCollapsed = Object.prototype.hasOwnProperty.call(collapsed, item.id)
+                ? collapsed[item.id]
+                : true;
+              const toggle = () => set(item.id, !isCollapsed);
+              const relations = generateRelation(item, { isCollapsed });
+              return relations.map((relation, relationIndex) => {
+                const key = `relation-${relationIndex}`;
+                const itemData = getItemData({ order, orderItem, batch }, relation);
+                const itemType = getItemType(relation.type);
+                return (
+                  <Item
+                    key={key}
+                    onToggle={toggle}
+                    isCollapsed={isCollapsed}
+                    relation={relation}
+                    itemData={itemData}
+                    itemType={itemType}
+                  />
+                );
+              });
+            }}
+          </ToggleCollpased>
+        ))
       }
     />
     <Subscribe to={[ActionContainer]}>
@@ -121,5 +132,7 @@ const OrderFocused = ({
     <DeleteDialog />
   </>
 );
+
+OrderFocused.defaultProps = defaultProps;
 
 export default OrderFocused;

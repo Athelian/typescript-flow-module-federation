@@ -194,7 +194,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case ORDER_ITEM: {
             return (
-              <BaseCard id={id} icon={type} color={type} wrapperClassName={cardWrapperClass}>
+              <BaseCard id={data.id} icon={type} color={type} wrapperClassName={cardWrapperClass}>
                 <>
                   {isNew && (
                     <div className={IsNewItemStyle}>
@@ -243,7 +243,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           case BATCH: {
             return (
               <BaseCard
-                id={id}
+                id={data.id}
                 showActionsOnHover
                 icon={type}
                 color={type}
