@@ -39,28 +39,33 @@ const OrderFocused = ({
       hasMore={hasMore}
       onLoadMore={loadMore}
       customRender={() =>
-        nodes.map(item => (
-          <BooleanValue defaultValue key={item.id}>
-            {({ value: isCollapsed, toggle }) => {
-              const relations = generateRelation(item, { isCollapsed });
-              return relations.map((relation, relationIndex) => {
-                const key = `relation-${relationIndex}`;
-                const itemData = getItemData({ order, orderItem, batch }, relation);
-                const itemType = getItemType(relation.type);
-                return (
-                  <Item
-                    key={key}
-                    onToggle={toggle}
-                    isCollapsed={isCollapsed}
-                    relation={relation}
-                    itemData={itemData}
-                    itemType={itemType}
-                  />
-                );
-              });
-            }}
-          </BooleanValue>
-        ))
+        nodes.map(item => {
+          const isCollapsedValue = Object.prototype.hasOwnProperty.call(item, 'isCollapsed')
+            ? item.isCollapsed
+            : true;
+          return (
+            <BooleanValue defaultValue={isCollapsedValue} key={item.id}>
+              {({ value: isCollapsed, toggle }) => {
+                const relations = generateRelation(item, { isCollapsed });
+                return relations.map((relation, relationIndex) => {
+                  const key = `relation-${relationIndex}`;
+                  const itemData = getItemData({ order, orderItem, batch }, relation);
+                  const itemType = getItemType(relation.type);
+                  return (
+                    <Item
+                      key={key}
+                      onToggle={toggle}
+                      isCollapsed={isCollapsed}
+                      relation={relation}
+                      itemData={itemData}
+                      itemType={itemType}
+                    />
+                  );
+                });
+              }}
+            </BooleanValue>
+          );
+        })
       }
     />
     <Subscribe to={[ActionContainer]}>

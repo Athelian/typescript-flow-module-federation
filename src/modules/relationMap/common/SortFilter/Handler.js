@@ -7,6 +7,8 @@ type Props = {
 
 type State = {
   filter: Object,
+  page: number,
+  perPage: number,
   sort: {
     field: string,
     direction: string,
@@ -15,6 +17,8 @@ type State = {
 
 class SortFilterHandler extends React.Component<Props, State> {
   state = {
+    page: 1,
+    perPage: 10,
     filter: {
       query: '',
     },
@@ -30,8 +34,8 @@ class SortFilterHandler extends React.Component<Props, State> {
 
   render() {
     const { children } = this.props;
-    const { sort, filter } = this.state;
-    return children({ sort, filter, onChangeSortFilter: this.onChangeSortFilter });
+    const { sort, filter, page, perPage } = this.state;
+    return children({ sort, filter, page, perPage, onChangeSortFilter: this.onChangeSortFilter });
   }
 }
 

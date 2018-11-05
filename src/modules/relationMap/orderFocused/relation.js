@@ -62,15 +62,15 @@ const getRelatedIds = (items: Array<Object>, currentIndex: number) => {
 
 const createBatchRelation = (relations: Array<Object>, data: Object) => {
   const { orderItems, orderItemIndex, relatedOrderItem } = data;
-  const generateFirstBatch = (id, relatedIds) => {
+  const generateFirstBatch = (id, isNew, relatedIds) => {
     relations.push({
       id,
       type: `${LINK1}-${BATCH}`,
       relatedIds,
     });
-    relations.push({ type: BATCH, id });
+    relations.push({ type: BATCH, id, isNew });
   };
-  const generateOtherBatch = (id, relatedIds) => {
+  const generateOtherBatch = (id, isNew, relatedIds) => {
     const isLastOrderItem = orderItemIndex === orderItems.length - 1;
     relations.push({ type: '' });
     if (isLastOrderItem) {
@@ -88,16 +88,17 @@ const createBatchRelation = (relations: Array<Object>, data: Object) => {
       type: `${LINK4}-${BATCH}`,
       relatedIds,
     });
-    relations.push({ type: BATCH, id });
+    relations.push({ type: BATCH, id, isNew });
   };
   return {
     generateFirstBatch,
     generateOtherBatch,
-    generateBatchRelation: (id, relatedIds, index) => {
+    generateBatchRelation: (batchData, relatedIds, index) => {
+      const { id, isNew = false } = batchData;
       if (index === 0) {
-        generateFirstBatch(id, relatedIds);
+        generateFirstBatch(id, isNew, relatedIds);
       } else {
-        generateOtherBatch(id, relatedIds);
+        generateOtherBatch(id, isNew, relatedIds);
       }
     },
   };
@@ -113,7 +114,7 @@ const generateCollapsedRelation = (order: Object, option: Object) => {
   relations.push({ type: '' });
   relations.push({ type: '' });
   relations.push({ type: '' });
-  relations.push({ type: ORDER, id: order.id });
+  relations.push({ type: ORDER, id: order.id, isNew: order.isNew });
   if (numberOfProduct === 0) {
     relations.push({ type: '' });
     relations.push({ type: '' });
@@ -151,7 +152,7 @@ const generateRelation = (order: Object, option: Object) => {
       type: `${LINK4}-${ORDER_ITEM}`,
       relatedIds: relatedProductIds,
     });
-    relations.push({ type: ORDER_ITEM, id: orderItem.id });
+    relations.push({ type: ORDER_ITEM, id: orderItem.id, isNew: orderItem.isNew });
     if (noBatch) {
       relations.push({ type: '' });
       relations.push({ type: '' });
@@ -164,7 +165,7 @@ const generateRelation = (order: Object, option: Object) => {
     });
     batches.forEach((batch, batchIndex) => {
       const relatedBatchIds = getRelatedIds(batches, batchIndex);
-      batchRelation.generateBatchRelation(batch.id, relatedBatchIds, batchIndex);
+      batchRelation.generateBatchRelation(batch, relatedBatchIds, batchIndex);
     });
   });
   return relations;

@@ -43,7 +43,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
             state: { focusMode, targetedItem },
             isTargetTreeMode,
             isTargetMode,
-            selectItem,
+            selectTargetItem,
             reset: cancelTarget,
           },
           { setResult, setAction, state: { currentAction } },
@@ -72,7 +72,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                               );
                               await refetch();
                               setResult(newResult);
-                              selectItem(newFocus);
+                              selectTargetItem(newFocus);
                               setAction('cloned');
                             }}
                           />
@@ -100,7 +100,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                                 >
                                   {opened && (
                                     <TableInlineEdit
-                                      selected={focusedItem}
+                                      selected={targetedItem}
                                       onExpand={() => {}}
                                       onSave={() => {}}
                                       onCancel={() => slideToggle(false)}
@@ -168,7 +168,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                     const [splitResult, splitFocus] = await split(client, targetedItem, splitData);
                     await refetch();
                     setResult(splitResult);
-                    selectItem(splitFocus);
+                    selectTargetItem(splitFocus);
                   }}
                 />
               )}
