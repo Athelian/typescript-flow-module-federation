@@ -29,6 +29,7 @@ export const NotificationsListWrapperStyle: string = css`
   top: 40px;
   left: 0;
   height: calc(100% - 80px);
+  width: 100%;
   overflow: hidden;
   ${scrollbars.SMALL};
   &:hover {
