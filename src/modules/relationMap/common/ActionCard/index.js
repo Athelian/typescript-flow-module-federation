@@ -18,7 +18,7 @@ type OptionalActionProps = {
 
 type ActionProps = OptionalActionProps & {
   icon: string,
-  targetted: boolean,
+  targetted: string,
 };
 
 const Action = ({ icon, targetted, className, onClick, toggle }: ActionProps) => (
@@ -33,21 +33,6 @@ const Action = ({ icon, targetted, className, onClick, toggle }: ActionProps) =>
       if (onClick) {
         onClick(isSelectedAction);
       }
-      // if (targetted === icon) {
-      //   if (toggle) {
-      //     toggle(null);
-      //   }
-      //   if (onUnClick) {
-      //     onUnClick();
-      //   }
-      // } else {
-      //   if (toggle) {
-      //     toggle(icon);
-      //   }
-      //   if (onClick) {
-      //     onClick();
-      //   }
-      // }
     }}
   >
     <div className={className}>

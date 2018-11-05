@@ -57,6 +57,7 @@ export const colors = {
   URGENT: '#F12C2C',
 
   HIGHLIGHT: 'rgba(251,170,29, 0.5)',
+  HIGHLIGHT_DARK: '#EF8460',
 };
 
 export const gradients = {

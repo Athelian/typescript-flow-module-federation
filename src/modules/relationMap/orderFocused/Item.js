@@ -37,6 +37,7 @@ import {
   BATCH_ALL,
   ORDER_HEADER,
   ORDER,
+  ORDER_ALL,
   ORDER_ITEM,
   BATCH,
   SHIPMENT,
@@ -57,6 +58,7 @@ const getItemType = type => {
   switch (type) {
     case ORDER_ITEM_ALL:
     case BATCH_ALL:
+    case ORDER_ALL:
     case ORDER:
       return 'order';
     case ORDER_HEADER:
@@ -80,22 +82,28 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
   return (
     <Subscribe to={[RelationMapContainer]}>
       {({
-        state: { focusedItem, targetedItem, focusMode },
+        state: { focusedItem, targetedItem, focusMode, focusedId },
         toggleHighlight,
         toggleTargetTree,
         toggleTarget,
+        isTargeted: isTargetedItem,
+        isFocused: isFocusedItem,
       }) => {
         if (isRelationLine(type)) {
           const [, linkType, relationType] = relation.type.split('-') || [];
           const lineItemType = getItemType(relationType);
-          const isFocused = isFocusedLink(focusedItem[lineItemType], relatedIds);
+          const isAllOrderItemLine = relationType === ORDER_ITEM_ALL && !isCollapsed;
+          const isAllBatchLine = relationType === BATCH_ALL && !isCollapsed;
+          const isFocused = isAllBatchLine
+            ? false
+            : isFocusedLink(focusedItem[lineItemType], relatedIds);
           const isTargeted =
-            focusMode === 'TARGET' ? false : isFocusedLink(targetedItem[lineItemType], relatedIds);
-          const hasRelation = get(
-            false,
-            `${lineItemType}.${id}`,
-            isTargeted ? targetedItem : focusedItem
-          );
+            focusMode === 'TARGET' || isAllBatchLine
+              ? false
+              : isFocusedLink(targetedItem[lineItemType], relatedIds);
+          const hasRelation = isAllOrderItemLine
+            ? false
+            : get(false, `${lineItemType}.${id}`, isTargeted ? targetedItem : focusedItem);
           return (
             <RelationLine
               type={linkType}
@@ -105,12 +113,17 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             />
           );
         }
-        const onClickHighlight = toggleHighlight(itemRelation);
+        const onClickHighlight = toggleHighlight(itemRelation, id);
         const onClickTargetTree = toggleTargetTree(itemRelation);
         const onClickTarget = toggleTarget(itemType, id, data);
-        const isFocused = get(false, `${itemType}.${id}` || '', focusedItem);
-        const isTargeted = get(false, `${itemType}.${id}` || '', targetedItem);
-        const cardWrapperClass = ItemWrapperStyle(isFocused, isTargeted);
+        const isFocused = isFocusedItem(itemType, id);
+        const isCurrentFocused = focusedId && focusedId === id;
+        const isTargeted = isTargetedItem(itemType, id);
+        const cardWrapperClass = ItemWrapperStyle(isFocused, isTargeted, isCurrentFocused);
+        const totalCardWrapperClass =
+          !isCollapsed || focusMode === 'TARGET'
+            ? ItemWrapperStyle(false)
+            : ItemWrapperStyle(isFocused, isTargeted);
         switch (type) {
           default: {
             return <div />;
@@ -120,7 +133,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case ORDER: {
             return (
-              <BaseCard icon={type} color={type} wrapperClassName={cardWrapperClass}>
+              <BaseCard id={id} icon={type} color={type} wrapperClassName={cardWrapperClass}>
                 <>
                   {isNew && (
                     <div className={IsNewItemStyle}>
@@ -160,7 +173,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   />
                                   <Action
                                     icon="CHECKED"
-                                    targetted={targetted}
+                                    targetted={isTargeted ? 'CHECKED' : targetted}
                                     toggle={toggle}
                                     onClick={onClickTarget}
                                   />
@@ -181,7 +194,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case ORDER_ITEM: {
             return (
-              <BaseCard icon={type} color={type} wrapperClassName={cardWrapperClass}>
+              <BaseCard id={id} icon={type} color={type} wrapperClassName={cardWrapperClass}>
                 <>
                   {isNew && (
                     <div className={IsNewItemStyle}>
@@ -213,7 +226,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                               />
                               <Action
                                 icon="CHECKED"
-                                targetted={targetted}
+                                targetted={isTargeted || targetted}
                                 toggle={toggle}
                                 onClick={onClickTarget}
                               />
@@ -230,6 +243,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           case BATCH: {
             return (
               <BaseCard
+                id={id}
                 showActionsOnHover
                 icon={type}
                 color={type}
@@ -288,11 +302,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case ORDER_ITEM_ALL: {
             return (
-              <BaseCard
-                wrapperClassName={
-                  focusMode === 'TARGET' ? ItemWrapperStyle(false) : cardWrapperClass
-                }
-              >
+              <BaseCard wrapperClassName={totalCardWrapperClass}>
                 <WrapperCard onClick={onToggle}>
                   <TotalCard name="Items" quantity={data.totalItem} />
                 </WrapperCard>
@@ -301,11 +311,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case BATCH_ALL: {
             return (
-              <BaseCard
-                wrapperClassName={
-                  focusMode === 'TARGET' ? ItemWrapperStyle(false) : cardWrapperClass
-                }
-              >
+              <BaseCard wrapperClassName={totalCardWrapperClass}>
                 <WrapperCard onClick={onToggle}>
                   <TotalCard name="Batches" quantity={data.totalBatch} />
                 </WrapperCard>
@@ -325,6 +331,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 />
 
                 <BaseCard
+                  id={id}
                   showActionsOnHover
                   icon={type}
                   color={type}
