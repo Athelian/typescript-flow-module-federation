@@ -11,6 +11,7 @@ import query from './orderFocused/query';
 import { formatNodes } from './orderFocused/formatter';
 import Layout from './common/Layout';
 import QueryHandler from './common/QueryHandler';
+import ScrollToResult from './common/ScrollToResult';
 import SummaryBadge from './common/SummaryBadge';
 import { ActionSubscribe } from './common/ActionPanel';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
@@ -69,12 +70,17 @@ const Order = () => (
                       </Subscribe>
                       <Subscribe to={[ActionContainer]}>
                         {({ state: { result } }) => (
-                          <OrderFocused
-                            order={order}
-                            hasMore={hasMore}
-                            loadMore={loadMore}
-                            nodes={isEmpty(result) ? nodes : formatNodes(nodes, result)}
-                          />
+                          <ScrollToResult id="OrderMapWrapper" result={result}>
+                            {({ id }) => (
+                              <OrderFocused
+                                id={id}
+                                order={order}
+                                hasMore={hasMore}
+                                loadMore={loadMore}
+                                nodes={isEmpty(result) ? nodes : formatNodes(nodes, result)}
+                              />
+                            )}
+                          </ScrollToResult>
                         )}
                       </Subscribe>
                     </RelationMapGrid>

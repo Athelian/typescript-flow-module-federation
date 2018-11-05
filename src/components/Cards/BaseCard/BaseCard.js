@@ -15,6 +15,7 @@ type OptionalProps = {
   selected: boolean,
   onSelect: Function,
   wrapperClassName: string | Function,
+  id: ?string,
 };
 
 type Props = OptionalProps & {
@@ -36,6 +37,7 @@ const defaultProps = {
   selected: false,
   onSelect: () => {},
   wrapperClassName: '',
+  id: '',
 };
 
 export default class BaseCard extends React.Component<Props, State> {
@@ -79,6 +81,7 @@ export default class BaseCard extends React.Component<Props, State> {
       onSelect,
       wrapperClassName,
       children,
+      id,
       ...rest
     } = this.props;
 
@@ -87,6 +90,7 @@ export default class BaseCard extends React.Component<Props, State> {
     const cardStyle = CardStyle(disabled, readOnly);
     return (
       <div
+        id={id}
         className={cx(cardStyle, wrapperClassName)}
         onMouseOver={() => {
           if (showActionsOnHover) {
