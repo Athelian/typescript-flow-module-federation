@@ -48,6 +48,20 @@ export const CenterPanel = styled('div')`
   justify-content: center;
 `;
 
+export const PanelLabelStyle = css`
+  width: min-content;
+  padding: 0;
+`;
+
+export const ConnectTypeChoosingGroupStyle = css`
+  display: grid;
+  grid-template-columns: repeat(3, min-content);
+  grid-auto-flow: row;
+  grid-column-gap: 10px;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const LabelConnectStyle = css`
   width: min-content;
   min-width: 120px;
