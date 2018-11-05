@@ -1,4 +1,4 @@
-import { formatNodes } from '../formatter';
+import { formatNodes, getIsCollapsed } from '../formatter';
 
 describe('_formatNodes', () => {
   it('format order', () => {
@@ -81,5 +81,99 @@ describe('_formatNodes', () => {
     };
     const expected = formatNodes(data, result);
     expect(expected).toMatchSnapshot();
+  });
+});
+
+describe.only('getIsCollapsed', () => {
+  it('no orderItem', () => {
+    const order = {
+      id: 1,
+      orderItems: [],
+    };
+    const newResult = {
+      newOrderItem: {},
+      newBatch: {},
+    };
+    const result = getIsCollapsed(newResult, order);
+    expect(result).toEqual(true);
+  });
+
+  it('has orderItem', () => {
+    const order = {
+      id: 1,
+      orderItems: [],
+    };
+    const newResult = {
+      newOrderItem: {
+        '1': ['1', '2'],
+      },
+      newBatch: {},
+    };
+    const result = getIsCollapsed(newResult, order);
+    expect(result).toEqual(false);
+  });
+
+  it('has new orderItem', () => {
+    const order = {
+      id: 1,
+      orderItems: [
+        {
+          id: '1',
+        },
+        {
+          id: '2',
+        },
+      ],
+    };
+    const newResult = {
+      newOrderItem: {},
+      newBatch: {
+        '1': [{ id: 1 }],
+      },
+    };
+    const result = getIsCollapsed(newResult, order);
+    expect(result).toEqual(false);
+  });
+
+  it.only('has new orderItem with batch', () => {
+    const order = {
+      id: '1',
+      orderItems: [
+        {
+          id: '1',
+          batches: [{ id: '1' }],
+        },
+        {
+          id: '2',
+        },
+      ],
+    };
+    const newResult = {
+      newOrderItem: {
+        '1': [{ id: '1' }],
+      },
+      newBatch: {},
+    };
+    const result = getIsCollapsed(newResult, order);
+    expect(result).toEqual(false);
+  });
+  it('has not new orderItem', () => {
+    const order = {
+      id: 1,
+      orderItems: [
+        {
+          id: 1,
+        },
+        {
+          id: 2,
+        },
+      ],
+    };
+    const newResult = {
+      newOrderItem: {},
+      newBatch: {},
+    };
+    const result = getIsCollapsed(newResult, order);
+    expect(result).toEqual(true);
   });
 });

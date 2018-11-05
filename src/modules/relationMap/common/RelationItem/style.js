@@ -42,6 +42,12 @@ export const ResetBaseCardStyle = css`
   }
 `;
 
+export const IsNewItemStyle = css`
+  position: absolute;
+  top: -10px;
+  left: -10px;
+`;
+
 export const ItemWrapperStyle = (isFocused: boolean, isTargeted: ?boolean) => {
   const focused = getHighlighColor(isFocused, isTargeted);
   return css`
@@ -61,6 +67,7 @@ export const ItemWrapperStyle = (isFocused: boolean, isTargeted: ?boolean) => {
     ${fontSizes.MAIN};
     font-weight: bold;
     color: ${colors.BLACK};
+    position: relative;
   `;
 };
 

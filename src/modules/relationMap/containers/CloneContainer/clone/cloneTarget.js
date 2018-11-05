@@ -67,6 +67,7 @@ export const cloneOrderItem = async (client: any, orderItem: Object) => {
     const updateOrderItems = orderUpdate[updateId];
     const request = mutationRequest({
       mutation: updateOrderItemMutation,
+      ignoreResults: true,
       variables: {
         id: updateId,
         input: { orderItems: updateOrderItems },
@@ -114,6 +115,7 @@ export const cloneBatch = async (client: any, batch: Object) => {
     const request = mutationRequest(
       {
         mutation: createBatchMutation,
+        ignoreResults: true,
         variables: {
           input: {
             no: `[cloned] ${currentBatch.no}`,

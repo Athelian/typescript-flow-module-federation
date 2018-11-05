@@ -30,7 +30,7 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     });
   };
 
-  selectItem = (focusedItem: Object) => {
+  selectFocusItem = (focusedItem: Object) => {
     this.setState({
       focusedItem,
     });
