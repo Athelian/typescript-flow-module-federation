@@ -3,6 +3,7 @@ import { Container } from 'unstated';
 import { getByPathWithDefault as get, omit } from 'utils/fp';
 
 type RelationMapState = {
+  focusedId: string,
   focusedItem: Object,
   targetedItem: Object,
   focusMode: string,
@@ -19,6 +20,7 @@ const initState = {
   focusedItem: getInitialItem(),
   targetedItem: getInitialItem(),
   focusMode: '',
+  focusedId: '',
 };
 
 export default class RelationMapContainer extends Container<RelationMapState> {
@@ -45,8 +47,8 @@ export default class RelationMapContainer extends Container<RelationMapState> {
   unSelectAll = (type: string) => {
     this.setState(prevState => ({
       focusMode: 'TARGET',
-      focusedItem: {
-        ...prevState.focusedItem,
+      targetedItem: {
+        ...prevState.targetedItem,
         [type]: {},
       },
     }));
@@ -57,8 +59,8 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     const itemAll = itemIds.reduce((obj, itemId) => Object.assign(obj, { [itemId]: true }), {});
     this.setState(prevState => ({
       focusMode: 'TARGET',
-      focusedItem: {
-        ...prevState.focusedItem,
+      targetedItem: {
+        ...prevState.targetedItem,
         [type]: itemAll,
       },
     }));
@@ -83,6 +85,7 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     this.setState(prevState => ({
       ...prevState,
       focusedItem: {},
+      focusedId: '',
     }));
   };
 
@@ -96,11 +99,25 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     return focusMode === 'TARGET';
   };
 
-  highlightTree = (focusedItem: Object) => {
-    this.setState({
+  isTargeted = (itemType: string, id: string) => {
+    const { targetedItem } = this.state;
+    const isTargeted = get(false, `${itemType}.${id}` || '', targetedItem);
+    return isTargeted;
+  };
+
+  isFocused = (itemType: string, id: string) => {
+    const { focusedItem } = this.state;
+    const isFocused = get(false, `${itemType}.${id}` || '', focusedItem);
+    return isFocused;
+  };
+
+  highlightTree = (focusedItem: Object, focusedId: string) => {
+    this.setState(prevState => ({
+      ...prevState,
+      focusedId,
       focusedItem,
-      focusMode: 'HIGHLIGHT',
-    });
+      // focusMode: 'HIGHLIGHT',
+    }));
   };
 
   targetTree = (itemRelation: Object) => {
@@ -135,6 +152,7 @@ export default class RelationMapContainer extends Container<RelationMapState> {
       if (isTarget) {
         return {
           ...prevState,
+          focusMode: 'TARGET',
           targetedItem: {
             ...prevState.targetedItem,
             [itemType]: omit([id], get({}, `targetedItem.${itemType}`, prevState)),
@@ -145,11 +163,13 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     });
   };
 
-  toggleHighlight = (focusedItem: Object) => (isHighlighted: boolean) => {
+  toggleHighlight = (focusedItem: Object, focusedId: string) => () => {
+    const { focusedId: currentFocusedId } = this.state;
+    const isHighlighted = currentFocusedId && currentFocusedId === focusedId;
     if (isHighlighted) {
       this.resetFocusedItem();
     } else {
-      this.highlightTree(focusedItem);
+      this.highlightTree(focusedItem, focusedId);
     }
   };
 
@@ -161,8 +181,8 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }
   };
 
-  toggleTarget = (itemType: string, id: string, data: Object) => (isHighlighted: boolean) => {
-    if (isHighlighted) {
+  toggleTarget = (itemType: string, id: string, data: Object) => () => {
+    if (this.isTargeted(itemType, id)) {
       this.removeTarget(itemType, id);
     } else {
       this.addTarget(itemType, id, data);

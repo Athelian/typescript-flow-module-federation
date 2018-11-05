@@ -35,7 +35,13 @@ class SortFilterHandler extends React.Component<Props, State> {
   render() {
     const { children } = this.props;
     const { sort, filter, page, perPage } = this.state;
-    return children({ sort, filter, page, perPage, onChangeSortFilter: this.onChangeSortFilter });
+    return children({
+      sort,
+      filter,
+      page,
+      perPage,
+      onChangeSortFilter: this.onChangeSortFilter,
+    });
   }
 }
 

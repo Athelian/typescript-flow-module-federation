@@ -2,9 +2,12 @@
 import { css } from 'react-emotion';
 import { fontSizes, colors } from 'styles/common';
 
-const getHighlighColor = (isFocused: boolean, isTargeted: ?boolean) => {
+const getHighlighColor = (isFocused: boolean, isTargeted: ?boolean, isCurrentFocused: ?boolean) => {
   if (isTargeted) {
     return colors.TEAL;
+  }
+  if (isCurrentFocused) {
+    return colors.HIGHLIGHT_DARK;
   }
   if (isFocused) {
     return colors.HIGHLIGHT;
@@ -48,8 +51,12 @@ export const IsNewItemStyle = css`
   left: -10px;
 `;
 
-export const ItemWrapperStyle = (isFocused: boolean, isTargeted: ?boolean) => {
-  const focused = getHighlighColor(isFocused, isTargeted);
+export const ItemWrapperStyle = (
+  isFocused: boolean,
+  isTargeted: ?boolean,
+  isCurrentFocused: ?boolean
+) => {
+  const focused = getHighlighColor(isFocused, isTargeted, isCurrentFocused);
   return css`
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;

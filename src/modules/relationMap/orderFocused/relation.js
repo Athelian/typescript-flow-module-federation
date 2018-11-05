@@ -5,6 +5,7 @@ export const BATCH_ALL = 'BATCH_ALL';
 export const SHIPMENT = 'SHIPMENT';
 export const SHIPMENT_ALL = 'SHIPMENT_ALL';
 export const ORDER = 'ORDER';
+export const ORDER_ALL = 'ORDER_ALL';
 export const ORDER_ITEM = 'ORDER_ITEM';
 export const BATCH = 'BATCH';
 export const LINK1 = 'LINK-1';
@@ -122,15 +123,18 @@ const generateCollapsedRelation = (order: Object, option: Object) => {
     relations.push({ type: '' });
     return relations;
   }
-
   const relatedOrderIds = [order.id];
   relations.push({
-    type: isCollapsed ? `${LINK1}-${ORDER}` : `${LINK1}-${ORDER}`,
+    type: isCollapsed ? `${LINK1}-${ORDER}` : `${LINK1}-${ORDER_ITEM_ALL}`,
     id: order.id,
     relatedIds: relatedOrderIds,
   });
   relations.push({ type: ORDER_ITEM_ALL, id: order.id });
-  relations.push({ type: `${LINK1}-${ORDER}`, id: order.id, relatedIds: relatedOrderIds });
+  relations.push({
+    type: isCollapsed ? `${LINK1}-${ORDER}` : `${LINK1}-${BATCH_ALL}`,
+    id: order.id,
+    relatedIds: relatedOrderIds,
+  });
   relations.push({ type: BATCH_ALL, id: order.id });
   return relations;
 };

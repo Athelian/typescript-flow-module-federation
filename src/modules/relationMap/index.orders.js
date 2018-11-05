@@ -38,23 +38,23 @@ const Order = () => (
           {({ loading, data, fetchMore, error, refetch }) => (
             <QueryHandler
               model="orders"
+              filter={{ perPage }}
               loading={loading}
               data={data}
               fetchMore={fetchMore}
               error={error}
             >
-              {({ nodes, hasMore, loadMore }) => {
+              {({ nodes, hasMore, loadMore, currentPage }) => {
                 const order = formatOrderData(nodes || []);
                 return (
                   <>
-                    <ActionSubscribe refetch={() => refetch({ page, perPage })} />
+                    <ActionSubscribe refetch={() => refetch({ perPage: currentPage * perPage })} />
                     <SortFilter
                       sort={sort}
                       filter={filter}
                       onChange={onChangeSortFilter}
                       className={FunctionWrapperStyle}
                     />
-
                     <RelationMapGrid>
                       <Subscribe to={[RelationMapContainer]}>
                         {({ selectAll, unSelectAll }) => (
