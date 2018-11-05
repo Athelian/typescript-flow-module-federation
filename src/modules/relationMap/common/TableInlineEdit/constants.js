@@ -8,6 +8,26 @@ export const orderColumnFields = [
     name: 'piNo',
     type: 'text',
   },
+  {
+    name: 'issuedAt',
+    type: 'date',
+  },
+  {
+    name: 'currency',
+    type: 'enum',
+  },
+  {
+    name: 'incoterm',
+    type: 'enum',
+  },
+  {
+    name: 'deliveryPlace',
+    type: 'text',
+  },
+  {
+    name: 'memo',
+    type: 'text',
+  },
 ];
 
 export const orderItemColumnFields = [

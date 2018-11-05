@@ -10,10 +10,18 @@ export const orderListQuery = gql`
         piNo
         issuedAt
         currency
+        incoterm
+        deliveryPlace
+        memo
         tags {
           name
           id
           color
+        }
+        inCharges {
+          id
+          firstName
+          lastName
         }
         exporter {
           id

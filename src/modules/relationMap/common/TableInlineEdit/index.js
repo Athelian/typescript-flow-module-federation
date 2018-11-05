@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
-import { Subscribe } from 'unstated';
 import Layout from 'components/Layout';
 import { FormattedMessage } from 'react-intl';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import logger from 'utils/logger';
 import messages from 'modules/relationMap/messages';
+import orderMessages from 'modules/order/messages';
 import { formatOrderData } from 'modules/relationMap/util';
 import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
@@ -14,7 +14,6 @@ import shipmentValidator from 'modules/shipment/form/validator';
 import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
 import { WrapperStyle } from './style';
-import ExpandHeader from '../ExpandHeader';
 import Badge from '../SummaryBadge/Badge';
 import TableHeader from './components/TableHeader';
 import TableItem from './components/TableItem';
@@ -25,7 +24,6 @@ import {
   batchColumnFields,
   shipmentColumnFields,
 } from './constants';
-import RelationMapTableEditContainer from './container';
 
 type Props = {
   onSave: () => void,
@@ -56,122 +54,138 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
         </SlideViewNavBar>
       }
     >
-      <div className={WrapperStyle}>
-        <Subscribe to={[RelationMapTableEditContainer]}>
-          {({ toggleExpandGroup, isExpanding }) => (
-            <>
-              <ExpandHeader
-                isExpanding={isExpanding('order')}
-                onClick={() => toggleExpandGroup('order')}
-              >
-                <Badge
-                  icon="ORDER"
-                  color="ORDER"
-                  label={<FormattedMessage {...messages.ordersLabel} />}
-                  no={sumOrders}
-                />
-              </ExpandHeader>
-              <ExpandHeader
-                isExpanding={isExpanding('orderItem')}
-                onClick={() => toggleExpandGroup('orderItem')}
-              >
-                <Badge
-                  icon="ORDER_ITEM"
-                  color="ORDER_ITEM"
-                  label={<FormattedMessage {...messages.itemsLabel} />}
-                  no={sumOrderItems}
-                />
-              </ExpandHeader>
-              <ExpandHeader
-                isExpanding={isExpanding('batch')}
-                onClick={() => toggleExpandGroup('batch')}
-              >
-                <Badge
-                  icon="BATCH"
-                  color="BATCH"
-                  label={<FormattedMessage {...messages.batchesLabel} />}
-                  no={sumBatches}
-                />
-              </ExpandHeader>
-              <ExpandHeader
-                isExpanding={isExpanding('shipment')}
-                onClick={() => toggleExpandGroup('shipment')}
-              >
-                <Badge
-                  icon="SHIPMENT"
-                  color="SHIPMENT"
-                  label={<FormattedMessage {...messages.shipmentsLabel} />}
-                  no={sumShipments}
-                />
-              </ExpandHeader>
-            </>
-          )}
-        </Subscribe>
-      </div>
-      <TableRow>
-        <LineNumber />
-        <TableHeader
-          info={[
-            {
-              group: 'General',
-              columns: ['PO No.', 'PI No.'],
-            },
-          ]}
-        />
-        <TableHeader
-          info={[
-            {
-              group: 'General',
-              columns: ['Product Name', 'Product Serial'],
-            },
-          ]}
-        />
-        <TableHeader
-          info={[
-            {
-              group: 'General',
-              columns: ['Batch No.', 'Initial Quantity'],
-            },
-          ]}
-        />
-        <TableHeader
-          info={[
-            {
-              group: 'General',
-              columns: ['Shipment ID', 'B/L No.'],
-            },
-          ]}
-        />
-      </TableRow>
-      {orderIds.map((orderId, counter) => {
-        const order = mappingObjects.order[orderId];
-        // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
-        const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
-          item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
-        );
-        const batches = (Object.values(mappingObjects.batch): any).filter(
-          item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
-        );
-        return (
-          <TableRow key={orderId}>
-            <LineNumber line={counter + 1} />
-            <div>
-              {orderItems.length === 0 ? (
-                <TableItem
-                  cell={`order.${counter + 1}`}
-                  fields={orderColumnFields}
-                  values={order.data}
-                  validator={orderValidator}
-                />
-              ) : (
-                orderItems.map(
-                  orderItem =>
+      <>
+        <div className={WrapperStyle}>
+          <Badge
+            icon="ORDER"
+            color="ORDER"
+            label={<FormattedMessage {...messages.ordersLabel} />}
+            no={sumOrders}
+          />
+
+          <Badge
+            icon="ORDER_ITEM"
+            color="ORDER_ITEM"
+            label={<FormattedMessage {...messages.itemsLabel} />}
+            no={sumOrderItems}
+          />
+
+          <Badge
+            icon="BATCH"
+            color="BATCH"
+            label={<FormattedMessage {...messages.batchesLabel} />}
+            no={sumBatches}
+          />
+
+          <Badge
+            icon="SHIPMENT"
+            color="SHIPMENT"
+            label={<FormattedMessage {...messages.shipmentsLabel} />}
+            no={sumShipments}
+          />
+        </div>
+        <TableRow>
+          <LineNumber />
+          <TableHeader
+            info={[
+              {
+                group: 'General',
+                columns: [
+                  <FormattedMessage {...orderMessages.PO} />,
+                  <FormattedMessage {...orderMessages.PI} />,
+                  <FormattedMessage {...orderMessages.date} />,
+                  <FormattedMessage {...orderMessages.currency} />,
+                  <FormattedMessage {...orderMessages.incoterm} />,
+                  <FormattedMessage {...orderMessages.deliveryPlace} />,
+                ],
+              },
+            ]}
+          />
+          <TableHeader
+            info={[
+              {
+                group: 'General',
+                columns: ['Product Name', 'Product Serial'],
+              },
+            ]}
+          />
+          <TableHeader
+            info={[
+              {
+                group: 'General',
+                columns: ['Batch No.', 'Initial Quantity'],
+              },
+            ]}
+          />
+          <TableHeader
+            info={[
+              {
+                group: 'General',
+                columns: ['Shipment ID', 'B/L No.'],
+              },
+            ]}
+          />
+        </TableRow>
+        {orderIds.map((orderId, counter) => {
+          const order = mappingObjects.order[orderId];
+          // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
+          const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+            item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
+          );
+          const batches = (Object.values(mappingObjects.batch): any).filter(
+            item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
+          );
+          return (
+            <TableRow key={orderId}>
+              <LineNumber line={counter + 1} />
+              <div>
+                {orderItems.length === 0 ? (
+                  <TableItem
+                    cell={`order.${counter + 1}`}
+                    fields={orderColumnFields}
+                    values={order.data}
+                    validator={orderValidator}
+                  />
+                ) : (
+                  orderItems.map(
+                    orderItem =>
+                      Object.keys(orderItem.relation.batch).length === 0 ? (
+                        <TableItem
+                          key={`order.${counter + 1}.duplication.${orderItem.data.id}`}
+                          cell={`order.${counter + 1}.duplication.${orderItem.data.id}`}
+                          fields={orderColumnFields}
+                          values={order.data}
+                          validator={orderValidator}
+                        />
+                      ) : (
+                        Object.keys(orderItem.relation.batch)
+                          .filter(batchId => batchIds.includes(batchId))
+                          .map(batchId => (
+                            <TableItem
+                              key={`order.${counter + 1}.duplication.${
+                                orderItem.data.id
+                              }.batch.${batchId}`}
+                              cell={`order.${counter + 1}.duplication.${
+                                orderItem.data.id
+                              }.batch.${batchId}`}
+                              fields={orderColumnFields}
+                              values={order.data}
+                              validator={orderValidator}
+                            />
+                          ))
+                      )
+                  )
+                )}
+              </div>
+              <div>
+                {orderItems.map(
+                  (orderItem, position) =>
                     Object.keys(orderItem.relation.batch).length === 0 ? (
                       <TableItem
-                        key={`order.${counter + 1}.duplication.${orderItem.data.id}`}
-                        cell={`order.${counter + 1}.duplication.${orderItem.data.id}`}
-                        fields={orderColumnFields}
-                        values={order.data}
+                        cell={`orderItem.${counter + 1}.${position}`}
+                        key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                        fields={orderItemColumnFields}
+                        values={orderItem.data}
                         validator={orderValidator}
                       />
                     ) : (
@@ -179,77 +193,47 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                         .filter(batchId => batchIds.includes(batchId))
                         .map(batchId => (
                           <TableItem
-                            key={`order.${counter + 1}.duplication.${
-                              orderItem.data.id
-                            }.batch.${batchId}`}
-                            cell={`order.${counter + 1}.duplication.${
-                              orderItem.data.id
-                            }.batch.${batchId}`}
-                            fields={orderColumnFields}
-                            values={order.data}
+                            cell={`orderItem.${counter + 1}.${position}.duplication.${batchId}`}
+                            key={`orderItem.${counter + 1}.duplication.${batchId}`}
+                            fields={orderItemColumnFields}
+                            values={orderItem.data}
                             validator={orderValidator}
                           />
                         ))
                     )
-                )
-              )}
-            </div>
-            <div>
-              {orderItems.map(
-                (orderItem, position) =>
-                  Object.keys(orderItem.relation.batch).length === 0 ? (
-                    <TableItem
-                      cell={`orderItem.${counter + 1}.${position}`}
-                      key={`orderItem.${counter + 1}.${orderItem.data.id}`}
-                      fields={orderItemColumnFields}
-                      values={orderItem.data}
-                      validator={orderValidator}
-                    />
-                  ) : (
-                    Object.keys(orderItem.relation.batch)
-                      .filter(batchId => batchIds.includes(batchId))
-                      .map(batchId => (
-                        <TableItem
-                          cell={`orderItem.${counter + 1}.${position}.duplication.${batchId}`}
-                          key={`orderItem.${counter + 1}.duplication.${batchId}`}
-                          fields={orderItemColumnFields}
-                          values={orderItem.data}
-                          validator={orderValidator}
-                        />
-                      ))
-                  )
-              )}
-            </div>
-            <div>
-              {batches.map((batch, position) => (
-                <TableItem
-                  cell={`batch.${counter + 1}.${position}`}
-                  key={batch.data.id}
-                  fields={batchColumnFields}
-                  values={batch.data}
-                  validator={batchValidator}
-                />
-              ))}
-            </div>
-            <div>
-              {shipmentIds
-                .filter(shipmentId => !!order.relation.shipment[shipmentId])
-                .map((shipmentId, position) => {
-                  const shipment = mappingObjects.shipment[shipmentId];
-                  return (
-                    <TableItem
-                      cell={`shipment.${counter + 1}.${position}`}
-                      key={shipment.data.id}
-                      fields={shipmentColumnFields}
-                      values={shipment.data}
-                      validator={shipmentValidator}
-                    />
-                  );
-                })}
-            </div>
-          </TableRow>
-        );
-      })}
+                )}
+              </div>
+              <div>
+                {batches.map((batch, position) => (
+                  <TableItem
+                    cell={`batch.${counter + 1}.${position}`}
+                    key={batch.data.id}
+                    fields={batchColumnFields}
+                    values={batch.data}
+                    validator={batchValidator}
+                  />
+                ))}
+              </div>
+              <div>
+                {shipmentIds
+                  .filter(shipmentId => !!order.relation.shipment[shipmentId])
+                  .map((shipmentId, position) => {
+                    const shipment = mappingObjects.shipment[shipmentId];
+                    return (
+                      <TableItem
+                        cell={`shipment.${counter + 1}.${position}`}
+                        key={shipment.data.id}
+                        fields={shipmentColumnFields}
+                        values={shipment.data}
+                        validator={shipmentValidator}
+                      />
+                    );
+                  })}
+              </div>
+            </TableRow>
+          );
+        })}
+      </>
     </Layout>
   );
 }
