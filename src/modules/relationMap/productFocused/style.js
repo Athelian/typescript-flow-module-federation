@@ -7,21 +7,28 @@ export const ProductFocusContent = css`
 `;
 
 export const Row = styled('div')`
-  ${layout.HORIZONTAL};
+  display: grid;
+  grid-template-columns: min-content 1fr;
   margin: 0 0 20px 0;
 `;
 
 export const BatchListWrapperStyle = css`
   margin-left: 5px;
-  padding: 10px;
-  ${layout.GRID_HORIZONTAL};
-  grid-gap: 5px;
-  ${borderRadiuses.MAIN};
+
   overflow-x: auto;
   align-items: center;
-  background-color: ${colors.GRAY_VERY_LIGHT};
+  background-color: ${colors.WHITE};
 
   > div:last-child {
     margin-right: 10px;
   }
+`;
+
+export const BatchListStyle = css`
+  padding: 10px;
+  ${borderRadiuses.MAIN};
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
+  background-color: ${colors.GRAY_VERY_LIGHT};
+  width: min-content;
 `;
