@@ -59,6 +59,7 @@ storiesOf('DefaultMetadataStyle', module)
                             const values = { ...originalValues, ...state };
                             return (
                               <DefaultMetadataStyle
+                                rearrange
                                 isKeyReadOnly={false}
                                 dragHandleProps={provided.dragHandleProps}
                                 targetName="story-metadata"

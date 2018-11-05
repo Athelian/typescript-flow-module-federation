@@ -14,6 +14,7 @@ import {
 } from './style';
 
 type OptionalProps = {
+  rearrange: boolean,
   isKeyReadOnly: boolean,
   onRemove?: Function,
 };
@@ -30,10 +31,12 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
+  rearrange: false,
   isKeyReadOnly: true,
 };
 
 const DefaultMetadataStyle = ({
+  rearrange,
   isKeyReadOnly,
   metadata,
   dragHandleProps,
@@ -44,38 +47,36 @@ const DefaultMetadataStyle = ({
 }: Props) => (
   <div className={AdjustmentWrapperStyle}>
     <div className={AdjustmentFieldsWrapperStyle}>
-      {!isKeyReadOnly ? (
-        <>
-          <div className={DragBarStyle} {...dragHandleProps}>
-            <Icon icon="DRAG_HANDLE" />
-          </div>
-          <FormField
-            name={`${targetName}.key`}
-            initValue={metadata.key}
-            setFieldValue={setFieldArrayValue}
-          >
-            {({ name, ...inputHandlers }) => {
-              const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
-              return (
-                <DefaultStyle
-                  width={width}
-                  isFocused={isFocused}
-                  hasError={isTouched && errorMessage}
-                >
-                  <TextInput name={name} {...rest} />
-                </DefaultStyle>
-              );
-            }}
-          </FormField>
-        </>
+      {rearrange ? (
+        <div className={DragBarStyle} {...dragHandleProps}>
+          <Icon icon="DRAG_HANDLE" />
+        </div>
       ) : (
-        <>
-          <div className={EditHandleStyle}>
-            <Icon icon="METADATA" />
-          </div>
-
-          <Label>{metadata.key}</Label>
-        </>
+        <div className={EditHandleStyle}>
+          <Icon icon="METADATA" />
+        </div>
+      )}
+      {isKeyReadOnly ? (
+        <Label>{metadata.key}</Label>
+      ) : (
+        <FormField
+          name={`${targetName}.key`}
+          initValue={metadata.key}
+          setFieldValue={setFieldArrayValue}
+        >
+          {({ name, ...inputHandlers }) => {
+            const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
+            return (
+              <DefaultStyle
+                width={width}
+                isFocused={isFocused}
+                hasError={isTouched && errorMessage}
+              >
+                <TextInput name={name} {...rest} />
+              </DefaultStyle>
+            );
+          }}
+        </FormField>
       )}
 
       <FormField
