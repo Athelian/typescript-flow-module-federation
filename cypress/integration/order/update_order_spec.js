@@ -43,7 +43,7 @@ describe('Order', () => {
         .clear()
         .type(incoterm)
         .should('have.value', incoterm)
-        .wait(400)
+        .wait(500)
         .get('input[name="deliveryPlace"]')
         .clear()
         .type(deliveryPlace)
