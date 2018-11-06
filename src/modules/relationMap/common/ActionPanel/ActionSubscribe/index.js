@@ -87,6 +87,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                             {({ value: opened, set: slideToggle }) => (
                               <>
                                 <BaseButton
+                                  disabled
                                   icon="EDIT"
                                   label="EDIT"
                                   backgroundColor="TEAL"
@@ -112,6 +113,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                             )}
                           </BooleanValue>
                           <BaseButton
+                            disabled
                             icon="CONNECT"
                             label="CONNECT"
                             backgroundColor={getButtonBackground(currentAction, 'connect')}
