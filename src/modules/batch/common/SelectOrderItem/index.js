@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { ObjectValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
-import { cleanUpData } from 'utils/data';
+import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import OrderItemsList from 'providers/OrderItemsList';
 import Layout from 'components/Layout';
@@ -52,7 +52,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => (
                     <CancelButton onClick={onCancel} />
                     <SaveButton
                       disabled={isEquals(value, selected)}
-                      onClick={() => onSelect({ ...cleanUpData(value) })}
+                      onClick={() => onSelect({ ...removeTypename(value) })}
                     />
                   </SlideViewNavBar>
                 }
