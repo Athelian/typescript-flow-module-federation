@@ -89,7 +89,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
           <TableHeader
             info={[
               {
-                group: 'General',
+                group: 'ORDER',
                 columns: [
                   <FormattedMessage {...orderMessages.PO} />,
                   <FormattedMessage {...orderMessages.PI} />,
@@ -97,6 +97,8 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                   <FormattedMessage {...orderMessages.currency} />,
                   <FormattedMessage {...orderMessages.incoterm} />,
                   <FormattedMessage {...orderMessages.deliveryPlace} />,
+                  <FormattedMessage {...orderMessages.memo} />,
+                  <FormattedMessage {...orderMessages.tags} />,
                 ],
               },
             ]}
@@ -105,7 +107,23 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             info={[
               {
                 group: 'General',
-                columns: ['Product Name', 'Product Serial'],
+                columns: [
+                  <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
+                  <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
+                  <FormattedMessage
+                    id="modules.ProductProviders.supplier"
+                    defaultMessage="SUPPLIER"
+                  />,
+                  <FormattedMessage
+                    id="modules.ProductProviders.unitPrice"
+                    defaultMessage="UNIT PRICE"
+                  />,
+                  <FormattedMessage
+                    id="modules.ProductProviders.unitPriceCurrency"
+                    defaultMessage="UNIT PRICE CURRENCY"
+                  />,
+                  <FormattedMessage id="global.quantity" defaultMessage="QUANTITY" />,
+                ],
               },
             ]}
           />

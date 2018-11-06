@@ -28,6 +28,10 @@ export const orderColumnFields = [
     name: 'memo',
     type: 'text',
   },
+  {
+    name: 'tags',
+    type: 'tags',
+  },
 ];
 
 export const orderItemColumnFields = [
@@ -38,6 +42,22 @@ export const orderItemColumnFields = [
   {
     name: 'productProvider.product.serial',
     type: 'text',
+  },
+  {
+    name: 'productProvider.supplier.name',
+    type: 'text',
+  },
+  {
+    name: 'price.amount',
+    type: 'number',
+  },
+  {
+    name: 'price.currency',
+    type: 'enum',
+  },
+  {
+    name: 'quantity',
+    type: 'number',
   },
 ];
 

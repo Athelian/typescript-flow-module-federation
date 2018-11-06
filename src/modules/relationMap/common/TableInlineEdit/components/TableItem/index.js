@@ -1,7 +1,14 @@
 // @flow
 import * as React from 'react';
 import { FormField } from 'modules/form';
-import { textInputFactory, numberInputFactory } from 'modules/form/helpers';
+import {
+  textInputFactory,
+  numberInputFactory,
+  priceInputFactory,
+  dateInputFactory,
+  selectEnumInputFactory,
+  selectSearchEnumInputFactory,
+} from 'modules/form/helpers';
 import { getByPath } from 'utils/fp';
 import { WrapperStyle, ItemStyle } from './style';
 
@@ -19,6 +26,14 @@ const renderInputByType = (type: string): Function => {
   switch (type) {
     case 'number':
       return numberInputFactory;
+    case 'price':
+      return priceInputFactory;
+    case 'date':
+      return dateInputFactory;
+    case 'enum':
+      return selectEnumInputFactory;
+    case 'search':
+      return selectSearchEnumInputFactory;
 
     default:
       return textInputFactory;
