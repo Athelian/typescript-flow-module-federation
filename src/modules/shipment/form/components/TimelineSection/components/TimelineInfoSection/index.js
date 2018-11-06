@@ -99,6 +99,7 @@ class TimelineInfoSection extends React.Component<Props> {
       renderBelowHeader,
       ...rest
     } = this.props;
+    const timelineDateRevisions = [...((timelineDate && timelineDate.timelineDateRevisions) || [])];
     return (
       <div className={TimelineInfoSectionWrapperStyle} {...rest}>
         <GridColumn gap="10px">
@@ -217,10 +218,7 @@ class TimelineInfoSection extends React.Component<Props> {
                 }
                 onClick={() => {
                   setFieldDeepValue(
-                    `${sourceName}.timelineDateRevisions[${(timelineDate &&
-                      timelineDate.timelineDateRevisions &&
-                      timelineDate.timelineDateRevisions.length) ||
-                      0}]`,
+                    `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
                     injectUid({
                       isNew: true,
                       type: 'Other',
@@ -232,45 +230,42 @@ class TimelineInfoSection extends React.Component<Props> {
                 }}
               />
             </div>
-            {timelineDate &&
-              timelineDate.timelineDateRevisions &&
-              timelineDate.timelineDateRevisions.reverse().map(
-                (adjustment, index) =>
-                  adjustment && (
-                    <DefaultAdjustmentStyle
-                      isNew={isNew}
-                      index={timelineDate.timelineDateRevisions.length - 1 - index}
-                      adjustment={adjustment}
-                      key={adjustment.id}
-                      setFieldArrayValue={setFieldDeepValue}
-                      removeArrayItem={removeArrayItem}
-                      values={timelineDate}
-                      enumType="TimelineDateRevisionType"
-                      targetName={`${sourceName}.timelineDateRevisions`}
-                      typeName="type"
-                      memoName="memo"
-                      valueInput={
-                        <FormField
-                          name={`${sourceName}.timelineDateRevisions.${timelineDate
-                            .timelineDateRevisions.length -
-                            1 -
-                            index}.date`}
-                          initValue={adjustment.date}
-                          setFieldValue={setFieldDeepValue}
-                        >
-                          {({ name, ...inputHandlers }) =>
-                            dateInputFactory({
-                              name,
-                              inputHandlers,
-                              isNew,
-                              originalValue: adjustment.date,
-                            })
-                          }
-                        </FormField>
-                      }
-                    />
-                  )
-              )}
+            {timelineDateRevisions.reverse().map(
+              (adjustment, index) =>
+                adjustment && (
+                  <DefaultAdjustmentStyle
+                    isNew={isNew}
+                    index={timelineDateRevisions.length - 1 - index}
+                    adjustment={adjustment}
+                    key={adjustment.id}
+                    setFieldArrayValue={setFieldDeepValue}
+                    removeArrayItem={removeArrayItem}
+                    values={timelineDate}
+                    enumType="TimelineDateRevisionType"
+                    targetName={`${sourceName}.timelineDateRevisions`}
+                    typeName="type"
+                    memoName="memo"
+                    valueInput={
+                      <FormField
+                        name={`${sourceName}.timelineDateRevisions.${timelineDateRevisions.length -
+                          1 -
+                          index}.date`}
+                        initValue={adjustment.date}
+                        setFieldValue={setFieldDeepValue}
+                      >
+                        {({ name, ...inputHandlers }) =>
+                          dateInputFactory({
+                            name,
+                            inputHandlers,
+                            isNew,
+                            originalValue: adjustment.date,
+                          })
+                        }
+                      </FormField>
+                    }
+                  />
+                )
+            )}
             <FieldItem
               label={
                 <Label>

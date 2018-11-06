@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { cleanUpData } from 'utils/data';
+import { removeNulls, cleanUpData } from 'utils/data';
 
 type ActionDetail = {
   approvedAt: ?Date,
@@ -81,7 +81,7 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
     this.setState(prevState => {
       const cloneState = cloneDeep(prevState);
       unset(cloneState, path);
-      return cloneState;
+      return removeNulls(cloneState);
     });
   };
 

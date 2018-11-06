@@ -41,7 +41,7 @@ const formatTimeline = (timeline: Object): ?CargoReady => {
     timelineDateRevisions: timelineDateRevisions
       .filter(item => item && (item.date || item.memo))
       .map(({ id, date: dateRevision, type, memo: memoRevision }) => ({
-        id,
+        id: id && id.includes('-') ? null : id,
         type,
         memo: memoRevision,
         date: dateRevision ? new Date(dateRevision) : null,
@@ -73,7 +73,7 @@ const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
 
 const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGroups> =>
   voyages.map(({ id, warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
-    id,
+    id: id && id.includes('-') ? null : id,
     warehouseId: warehouse && warehouse.id,
     customClearance: !customClearance ? null : formatTimeline(customClearance),
     warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),

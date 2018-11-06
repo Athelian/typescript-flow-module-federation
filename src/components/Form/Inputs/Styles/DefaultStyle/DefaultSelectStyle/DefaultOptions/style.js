@@ -8,6 +8,7 @@ const ResetOptionWrapperStyle: string = css`
   margin: 0;
   padding: 0;
   margin-top: 5px;
+  right: 1px;
   overflow: hidden;
   z-index: 1;
   min-width: min-content;

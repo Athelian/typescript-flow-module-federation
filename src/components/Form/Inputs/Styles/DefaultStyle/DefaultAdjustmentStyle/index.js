@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { isDataType } from 'utils/fp';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
@@ -119,9 +120,11 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
               <FormattedMessage id="components.form.lastModified" defaultMessage="LAST MODIFIED" />
             </Label>
             <GridRow gap="5px">
-              <Display>
-                <FormattedDate value={adjustment.updatedAt} />
-              </Display>
+              {isDataType(Date, adjustment.updatedAt) && (
+                <Display>
+                  <FormattedDate value={adjustment.updatedAt} />
+                </Display>
+              )}
               <div className={UserIconStyle}>
                 <UserAvatar firstName="TODO" lastName="TODO" width="20px" height="20px" />
               </div>
