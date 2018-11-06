@@ -135,6 +135,7 @@ export const prepareCreateShipmentInput = ({
   transportType,
   incoterm,
   carrier,
+  memo,
   cargoReady,
   voyages = [],
   containerGroups = [],
@@ -150,6 +151,7 @@ export const prepareCreateShipmentInput = ({
   bookingNo,
   bookingDate: bookingDate ? new Date(bookingDate) : null,
   invoiceNo,
+  memo,
   loadType: loadType && loadType.length > 0 ? loadType : null,
   transportType: transportType && transportType.length > 0 ? transportType : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
@@ -161,7 +163,12 @@ export const prepareCreateShipmentInput = ({
   voyages: formatVoyages(voyages),
   batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
   containerGroups: formatContainerGroups(containerGroups),
-  files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
+  files: files.map(({ id, name, type, memo: fileMemo }) => ({
+    id,
+    name,
+    type,
+    memo: fileMemo,
+  })),
 });
 
 export const updateShipmentMutation: Object = gql`
@@ -202,6 +209,7 @@ export const prepareUpdateShipmentInput = ({
   bookingNo,
   bookingDate,
   invoiceNo,
+  memo,
   loadType,
   transportType,
   incoterm,
@@ -221,6 +229,7 @@ export const prepareUpdateShipmentInput = ({
   bookingNo,
   bookingDate: bookingDate ? new Date(bookingDate) : null,
   invoiceNo,
+  memo,
   loadType: loadType && loadType.length > 0 ? loadType : null,
   transportType: transportType && transportType.length > 0 ? transportType : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
@@ -232,5 +241,10 @@ export const prepareUpdateShipmentInput = ({
   batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
   voyages: formatVoyages(voyages),
   containerGroups: formatContainerGroups(containerGroups),
-  files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
+  files: files.map(({ id, name, type, memo: fileMemo }) => ({
+    id,
+    name,
+    type,
+    memo: fileMemo,
+  })),
 });
