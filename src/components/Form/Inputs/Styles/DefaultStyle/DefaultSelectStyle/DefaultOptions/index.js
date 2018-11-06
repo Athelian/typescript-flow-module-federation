@@ -65,11 +65,9 @@ function DefaultOptions({
                   type,
                 })}
                 {...getItemProps({
-                  style,
-                  item,
                   index,
-                  isActive: highlightedIndex === index,
-                  isSelected: selectedItem === item,
+                  item,
+                  style,
                 })}
               >
                 {itemToString(item)}
