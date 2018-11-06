@@ -1,6 +1,8 @@
 // @flow
 import gql from 'graphql-tag';
 
+import { metricFragment, sizeFragment, imageFragment, partnerCardFragment } from 'graphql';
+
 export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: OrderItemSortInput) {
     orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
@@ -49,27 +51,35 @@ export const orderListQuery = gql`
         }
         productProvider {
           id
+          packageGrossWeight {
+            ...metricFragment
+          }
+          packageVolume {
+            ...metricFragment
+          }
+          packageSize {
+            ...sizeFragment
+          }
           product {
             id
             name
             serial
             files {
-              id
-              path
+              ...imageFragment
             }
           }
           exporter {
-            id
-            name
-          }
-          supplier {
-            id
-            name
+            ...partnerCardFragment
           }
         }
       }
     }
   }
+
+  ${metricFragment}
+  ${sizeFragment}
+  ${imageFragment}
+  ${partnerCardFragment}
 `;
 
 export default orderListQuery;
