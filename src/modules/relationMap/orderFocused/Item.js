@@ -133,7 +133,12 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case ORDER: {
             return (
-              <BaseCard id={id} icon={type} color={type} wrapperClassName={cardWrapperClass}>
+              <BaseCard
+                id={`item-${id}`}
+                icon={type}
+                color={type}
+                wrapperClassName={cardWrapperClass}
+              >
                 <>
                   {isNew && (
                     <div className={IsNewItemStyle}>
@@ -194,7 +199,12 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           }
           case ORDER_ITEM: {
             return (
-              <BaseCard id={data.id} icon={type} color={type} wrapperClassName={cardWrapperClass}>
+              <BaseCard
+                id={`item-${id}`}
+                icon={type}
+                color={type}
+                wrapperClassName={cardWrapperClass}
+              >
                 <>
                   {isNew && (
                     <div className={IsNewItemStyle}>
@@ -243,7 +253,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           case BATCH: {
             return (
               <BaseCard
-                id={data.id}
+                id={`item-${id}`}
                 showActionsOnHover
                 icon={type}
                 color={type}

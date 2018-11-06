@@ -69,8 +69,13 @@ const Order = () => (
                         )}
                       </Subscribe>
                       <Subscribe to={[ActionContainer]}>
-                        {({ state: { result } }) => (
-                          <ScrollToResult id="OrderMapWrapper" result={result}>
+                        {({ state: { result, scrolled }, setScroll }) => (
+                          <ScrollToResult
+                            id="OrderMapWrapper"
+                            result={result}
+                            scrolled={scrolled}
+                            setScroll={setScroll}
+                          >
                             {({ id }) => (
                               <OrderFocused
                                 id={id}
