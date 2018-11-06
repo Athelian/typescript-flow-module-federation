@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-// $FlowFixMe
+// $FlowFixMe https://github.com/atlassian/react-beautiful-dnd/issues/286#issuecomment-426604779
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { SaveButton, CancelButton, NewButton } from 'components/Buttons';
 
