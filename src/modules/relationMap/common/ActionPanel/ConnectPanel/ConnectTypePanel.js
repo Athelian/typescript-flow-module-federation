@@ -6,15 +6,15 @@ import { FormattedMessage } from 'react-intl';
 import messages from 'modules/relationMap/messages';
 import Icon from 'components/Icon';
 import { Panel } from './index';
-import { ConnectTypeChoosingGroupStyle, PanelLabelStyle } from './style';
+import { GroupLabelButtonStyle, LabelConnectStyle } from './style';
 
 const ConnectTypePanel = () => (
   <Panel>
-    <Label className={PanelLabelStyle}>
+    <Label className={LabelConnectStyle}>
       <FormattedMessage {...messages.connect} />
       <Icon icon="CONNECT" />
     </Label>
-    <Label className={ConnectTypeChoosingGroupStyle}>
+    <Label className={GroupLabelButtonStyle}>
       <FormattedMessage {...messages.connectType} />
       <BaseButton icon="ORDER" label="ORDER" />
       <BaseButton icon="SHIPMENT" label="SHIPMENT" />

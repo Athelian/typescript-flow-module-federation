@@ -34,6 +34,7 @@ export const SelectedPanelWrapper = styled('div')`
   grid-auto-flow: column;
 `;
 
+<<<<<<< HEAD
 export const SuccessPanelWrapper = styled('div')`
   ${PanelWrapperStyle};
   display: grid;
@@ -43,23 +44,28 @@ export const SuccessPanelWrapper = styled('div')`
   color: ${colors.WHITE};
 `;
 
+=======
+>>>>>>> feat(relation-map): update step1 step2a step2b
 export const CenterPanel = styled('div')`
   ${PanelWrapperStyle};
   justify-content: center;
 `;
 
-export const PanelLabelStyle = css`
+export const LabelConnectStyle = css`
   width: min-content;
+  min-width: 120px;
   padding: 0;
+  text-transform: uppercase;
 `;
 
-export const ConnectTypeChoosingGroupStyle = css`
+export const GroupLabelButtonStyle = css`
   display: grid;
-  grid-template-columns: repeat(3, min-content);
-  grid-auto-flow: row;
+  grid-auto-columns: min-content;
+  grid-auto-flow: column;
   grid-column-gap: 10px;
   align-items: center;
   justify-content: center;
+  text-transform: uppercase;
 `;
 
 export const LabelConnectStyle = css`
