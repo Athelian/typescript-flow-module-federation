@@ -1,5 +1,6 @@
 // @flow
 import { Container } from 'unstated';
+import ApolloClient from 'apollo-client';
 import { connectNewShipment, connectExistingShipment } from './connect';
 
 type State = {
@@ -44,7 +45,7 @@ export default class ConnectContainer extends Container<State> {
     return newTarget;
   };
 
-  connectExistingShipment = async (client: any, target: Object) => {
+  connectExistingShipment = async (client: ApolloClient<any>, target?: Object) => {
     const newTarget = await connectExistingShipment(client, target);
     return newTarget;
   };

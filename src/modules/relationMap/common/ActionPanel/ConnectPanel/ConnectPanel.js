@@ -13,9 +13,9 @@ const ConnectPanel = ({ connect }: Props) => {
   switch (connect.step()) {
     default:
     case 1:
-      return <ConnectTypePanel />;
+      return <ConnectTypePanel onClick={connect.setConnectType} />;
     case 2:
-      return <SelectedPanel />;
+      return <SelectedPanel connect={connect} />;
     case 3:
       return <ApplyPanel />;
   }

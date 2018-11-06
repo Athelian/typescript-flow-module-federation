@@ -129,6 +129,15 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     );
   };
 
+  overrideTarget = (item: Object) => {
+    this.setState(prevState => ({
+      targetedItem: {
+        ...prevState.targetedItem,
+        ...item,
+      },
+    }));
+  };
+
   addTarget = (itemType: string, id: string, data: Object) => {
     this.setState(prevState => {
       const prevTarget = get({}, `targetedItem.${itemType}`, prevState);

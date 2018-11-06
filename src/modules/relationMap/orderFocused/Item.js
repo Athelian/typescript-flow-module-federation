@@ -86,6 +86,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         toggleHighlight,
         toggleTargetTree,
         toggleTarget,
+        overrideTarget,
         isTargeted: isTargetedItem,
         isFocused: isFocusedItem,
       }) => {
@@ -355,8 +356,8 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                     )}
                     <ToggleSlide>
                       {({ assign: setSlide }) => (
-                        <Subscribe to={[ActionContainer, ConnectContainer]}>
-                          {() => (
+                        <Subscribe to={[ConnectContainer, ActionContainer]}>
+                          {({ state: { connectType }, setConnectItem }) => (
                             <BooleanValue>
                               {({ value: hovered, set: setToggle }) => (
                                 <WrapperCard
@@ -364,9 +365,9 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   onMouseLeave={() => setToggle(false)}
                                 >
                                   <ShipmentCard shipment={data} />
-                                  {isTargeted ? (
+                                  {isTargeted && connectType === 'SHIPMENT' ? (
                                     <ActionCard show>
-                                      {() => <SelectedShipment onClick={() => {}} />}
+                                      {() => <SelectedShipment onClick={onClickTarget} />}
                                     </ActionCard>
                                   ) : (
                                     <ActionCard show={hovered}>
@@ -388,7 +389,14 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                             icon="CHECKED"
                                             targetted={targetted}
                                             toggle={toggle}
-                                            onClick={onClickTarget}
+                                            onClick={() => {
+                                              if (connectType === 'SHIPMENT') {
+                                                const target = { shipment: { [id]: data } };
+                                                setConnectItem(target);
+                                                return overrideTarget(target);
+                                              }
+                                              return onClickTarget();
+                                            }}
                                           />
                                         </>
                                       )}

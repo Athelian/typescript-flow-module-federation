@@ -2,41 +2,47 @@
 import React from 'react';
 import { Label } from 'components/Form';
 import { FormattedMessage } from 'react-intl';
+import { Subscribe } from 'unstated';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
 import messages from 'modules/relationMap/messages';
+import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
+import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import RelationMapContainer from 'modules/relationMap/container';
+import { removeAdditionBatchFields } from 'modules/relationMap/orderFocused/formatter';
 import * as style from './style';
 
 const { SelectedPanelWrapper } = style;
 
 type Props = {
   type: 'SHIPMENT' | 'ORDER',
+  connect: Object,
 };
 
-const SelectedPanel = ({ type }: Props) => {
-  let text;
-  let button;
+const getConnectTypeMessage = type => {
   switch (type) {
     default:
-    case 'SHIPMENT':
-      text = <FormattedMessage {...messages.shipmentsTab} />;
-      button = (
-        <BaseButton
-          icon="ADD"
-          label={<FormattedMessage {...messages.newShipment} className={style.PanelButtonStyle} />}
-        />
-      );
-      break;
     case 'ORDER':
-      text = <FormattedMessage {...messages.ordersTab} />;
-      button = (
-        <BaseButton
-          icon="ADD"
-          label={<FormattedMessage {...messages.newOrder} className={style.PanelButtonStyle} />}
-        />
-      );
+      return messages.ordersTab;
+    case 'SHIPMENT':
+      return messages.shipmentsTab;
   }
+};
 
+const getNewConnectTypeMessage = type => {
+  switch (type) {
+    default:
+    case 'ORDER':
+      return messages.newOrder;
+    case 'SHIPMENT':
+      return messages.newShipment;
+  }
+};
+
+const SelectedPanel = ({ type, connect }: Props) => {
+  const {
+    state: { connectType },
+  } = connect;
   return (
     <SelectedPanelWrapper>
       <div className={style.SubPanel}>
@@ -48,7 +54,7 @@ const SelectedPanel = ({ type }: Props) => {
           <FormattedMessage {...messages.select} />
           <Label color={type} className={style.GroupLabelButtonStyle}>
             <Icon icon={type} />
-            {text}
+            <FormattedMessage {...getConnectTypeMessage(connectType)} />
           </Label>
           <FormattedMessage {...messages.toConnectToTheList} />
         </Label>
@@ -57,7 +63,35 @@ const SelectedPanel = ({ type }: Props) => {
       <div className={style.SubPanel}>
         <Label className={style.GroupLabelButtonStyle}>
           <FormattedMessage {...messages.connectTo} />
-          {button}
+          <ToggleSlide>
+            {({ assign: setSlide }) => (
+              <Subscribe to={[ShipmentBatchesContainer, RelationMapContainer]}>
+                {(batchContainer, { state: { targetedItem } }) => (
+                  <BaseButton
+                    icon="ADD"
+                    label={
+                      <FormattedMessage
+                        {...getNewConnectTypeMessage(connectType)}
+                        className={style.PanelButtonStyle}
+                      />
+                    }
+                    onClick={() => {
+                      const { batch } = targetedItem;
+                      const batches = Object.keys(batch || {}).map(batchId =>
+                        removeAdditionBatchFields(batch[batchId])
+                      );
+                      batchContainer.initDetailValues(batches);
+                      setSlide({
+                        show: true,
+                        type: `NEW_${connectType}`,
+                        onSuccess: d => console.log(d),
+                      });
+                    }}
+                  />
+                )}
+              </Subscribe>
+            )}
+          </ToggleSlide>
         </Label>
       </div>
       <Label className={style.GroupLabelButtonStyle}>

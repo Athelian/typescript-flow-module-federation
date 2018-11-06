@@ -1,5 +1,14 @@
 import gql from 'graphql-tag';
-import { metricFragment } from 'graphql';
+import {
+  metricFragment,
+  batchCardFragment,
+  tagFragment,
+  priceFragment,
+  imageFragment,
+  partnerNameFragment,
+  orderCardFragment,
+  userAvatarFragment,
+} from 'graphql';
 
 export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
@@ -145,19 +154,8 @@ export const orderListQuery = gql`
             }
           }
           batches {
-            id
-            no
-            quantity
-            archived
-            deliveredAt
-            orderItem {
-              id
-            }
-            tags {
-              id
-              name
-              color
-            }
+            ...batchCardFragment
+
             shipment {
               id
               blNo
@@ -168,13 +166,6 @@ export const orderListQuery = gql`
                 }
               }
             }
-            packageVolume {
-              value
-              metric
-            }
-            batchAdjustments {
-              quantity
-            }
           }
         }
       }
@@ -182,8 +173,14 @@ export const orderListQuery = gql`
       totalPage
     }
   }
-
+  ${userAvatarFragment}
   ${metricFragment}
+  ${batchCardFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${orderCardFragment}
 `;
 
 export default orderListQuery;
