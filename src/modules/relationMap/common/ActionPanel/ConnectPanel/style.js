@@ -51,6 +51,17 @@ export const CenterPanel = styled('div')`
   justify-content: center;
 `;
 
+export const ConnectLogoStyle = css`
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  margin-left: 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+`;
+
 export const LabelConnectStyle = css`
   width: min-content;
   min-width: 120px;

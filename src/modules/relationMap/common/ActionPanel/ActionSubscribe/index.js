@@ -26,6 +26,19 @@ type Props = {
   refetch: Function,
 };
 
+const isDisabledSplit = targetedItem => {
+  const { orderItem = {}, batch = {} } = targetedItem;
+  const numberOfOrderItem = Object.keys(orderItem).length;
+  const numberOfBatch = Object.keys(batch).length;
+  if (numberOfOrderItem === 1 && numberOfBatch === 0) {
+    return false;
+  }
+  if (numberOfBatch === 1 && numberOfOrderItem === 0) {
+    return false;
+  }
+  return true;
+};
+
 const ActionSubscribe = ({ refetch }: Props) => (
   <ApolloConsumer>
     {client => (
@@ -72,6 +85,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                 className={TabItemStyled}
                 label="SPLIT"
                 icon="SPLIT"
+                disabled={isDisabledSplit(targetedItem)}
                 active={actionKey === 'split'}
                 onClick={() => setAction(currentAction !== 'split' ? 'split' : null)}
               />
@@ -162,7 +176,13 @@ const ActionSubscribe = ({ refetch }: Props) => (
                     }}
                   />
                 )}
-                {currentAction === 'connect' && <ConnectPanel connect={connectContainer} />}
+                {currentAction === 'connect' && (
+                  <ConnectPanel
+                    connect={connectContainer}
+                    refetch={refetch}
+                    targetedItem={targetedItem}
+                  />
+                )}
               </>
             )
           );

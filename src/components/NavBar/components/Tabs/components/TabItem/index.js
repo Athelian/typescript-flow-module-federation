@@ -25,7 +25,7 @@ const defaultProps = {
 const TabItem = ({ icon = '', label, disabled, active, onClick, className }: Props) => (
   <button
     type="button"
-    onClick={onClick}
+    onClick={!disabled && onClick}
     className={disabled ? DisabledStyle : cx(TabItemStyle(active), className)}
   >
     {icon && (

@@ -1,12 +1,15 @@
 // @flow
 import { Container } from 'unstated';
 import { getByPathWithDefault as get, omit } from 'utils/fp';
+import { ORDER_ITEM } from 'modules/relationMap/constants';
 
 type RelationMapState = {
   focusedId: string,
   focusedItem: Object,
+  targetedId: string,
   targetedItem: Object,
   focusMode: string,
+  targetMode: string,
 };
 
 const getInitialItem = () => ({
@@ -21,6 +24,8 @@ const initState = {
   targetedItem: getInitialItem(),
   focusMode: '',
   focusedId: '',
+  targetedId: '',
+  targetMode: '',
 };
 
 export default class RelationMapContainer extends Container<RelationMapState> {
@@ -74,10 +79,16 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     this.setState({ ...initState });
   };
 
-  resetTargetedItem = () => {
+  resetTargetedItem = (itemType: ?string) => {
     this.setState(prevState => ({
       ...prevState,
-      targetedItem: {},
+      focusMode: 'TARGET',
+      targetMode: '',
+      targetedId: '',
+      targetedItem:
+        itemType === ORDER_ITEM
+          ? Object.assign(prevState.targetedItem, { orderItem: {}, batch: {} })
+          : {},
     }));
   };
 
@@ -105,6 +116,11 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     return isTargeted;
   };
 
+  isCurrentTarget = (id: string) => {
+    const { targetedId } = this.state;
+    return targetedId === id;
+  };
+
   isFocused = (itemType: string, id: string) => {
     const { focusedItem } = this.state;
     const isFocused = get(false, `${itemType}.${id}` || '', focusedItem);
@@ -120,11 +136,16 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }));
   };
 
-  targetTree = (itemRelation: Object) => {
+  targetTree = (itemType: ?string, id: string, itemRelation: Object) => {
     this.setState(prevState =>
       Object.assign(prevState, {
-        targetedItem: { ...itemRelation, shipment: {} },
+        targetedItem:
+          itemType === ORDER_ITEM
+            ? { ...itemRelation, order: {}, shipment: {} }
+            : { ...itemRelation, shipment: {} },
         focusMode: 'TARGET_TREE',
+        targetMode: itemType || '',
+        targetedId: id,
       })
     );
   };
@@ -141,16 +162,19 @@ export default class RelationMapContainer extends Container<RelationMapState> {
   addTarget = (itemType: string, id: string, data: Object) => {
     this.setState(prevState => {
       const prevTarget = get({}, `targetedItem.${itemType}`, prevState);
+      const targetedItem = {
+        ...prevState.targetedItem,
+        [itemType]: {
+          ...prevTarget,
+          [id]: data,
+        },
+      };
       return {
         ...prevState,
         focusMode: 'TARGET',
-        targetedItem: {
-          ...prevState.targetedItem,
-          [itemType]: {
-            ...prevTarget,
-            [id]: data,
-          },
-        },
+        targetMode: '',
+        targetedId: id,
+        targetedItem,
       };
     });
   };
@@ -162,6 +186,7 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         return {
           ...prevState,
           focusMode: 'TARGET',
+          targetMode: '',
           targetedItem: {
             ...prevState.targetedItem,
             [itemType]: omit([id], get({}, `targetedItem.${itemType}`, prevState)),
@@ -182,11 +207,12 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }
   };
 
-  toggleTargetTree = (focusedItem: Object) => (isHighlighted: boolean) => {
-    if (isHighlighted) {
-      this.resetTargetedItem();
+  toggleTargetTree = (focusedItem: Object, id: string) => (itemType?: string) => () => {
+    const { focusMode } = this.state;
+    if (this.isCurrentTarget(id) && focusMode === 'TARGET_TREE') {
+      this.resetTargetedItem(itemType);
     } else {
-      this.targetTree(focusedItem);
+      this.targetTree(itemType, id, focusedItem);
     }
   };
 

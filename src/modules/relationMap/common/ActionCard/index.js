@@ -36,7 +36,7 @@ const Action = ({ icon, targetted, className, onClick, toggle }: ActionProps) =>
     }}
   >
     <div className={className}>
-      <Icon icon={targetted ? `${icon}_REGULAR` : icon} />
+      <Icon icon={targetted ? icon : `${icon}_REGULAR`} />
     </div>
   </div>
 );

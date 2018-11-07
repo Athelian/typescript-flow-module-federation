@@ -29,4 +29,9 @@ storiesOf('RelationMap/ActionPanel', module)
         <SuccessPanel />
       </>
     </IntlProvider>
+  ))
+  .add('SuccessPanel', () => (
+    <IntlProvider locale="en" messages={translationMessages.en}>
+      <SuccessPanel />
+    </IntlProvider>
   ));
