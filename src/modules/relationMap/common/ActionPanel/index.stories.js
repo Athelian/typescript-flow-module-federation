@@ -5,7 +5,7 @@ import { storiesOf } from '@storybook/react';
 import { translationMessages } from 'i18n';
 import SplitPanel from './SplitPanel';
 import ActionSelector from './ActionSelector';
-import { SelectedPanel, ApplyPanel } from './ConnectPanel';
+import { SelectedPanel, ApplyPanel, SuccessPanel, ConnectTypePanel } from './ConnectPanel';
 import 'styles/reset.css';
 
 storiesOf('RelationMap/ActionPanel', module)
@@ -22,8 +22,11 @@ storiesOf('RelationMap/ActionPanel', module)
   .add('ConnectPanel', () => (
     <IntlProvider locale="en" messages={translationMessages.en}>
       <>
-        <SelectedPanel />
+        <ConnectTypePanel />
+        <SelectedPanel type="SHIPMENT" />
+        <SelectedPanel type="ORDER" />
         <ApplyPanel />
+        <SuccessPanel />
       </>
     </IntlProvider>
   ));

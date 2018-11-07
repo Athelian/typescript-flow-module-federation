@@ -5,11 +5,15 @@ import { BaseButton } from 'components/Buttons';
 import { FormattedMessage } from 'react-intl';
 import messages from 'modules/relationMap/messages';
 import Icon from 'components/Icon';
-import { Panel } from './index';
-import { GroupLabelButtonStyle, LabelConnectStyle } from './style';
+import {
+  SuccessPanelButtonCloseStyle,
+  SuccessPanelWrapper,
+  GroupLabelButtonStyle,
+  LabelConnectStyle,
+} from './style';
 
-const ConnectTypePanel = () => (
-  <Panel>
+const SuccessPanel = () => (
+  <SuccessPanelWrapper>
     <Label className={LabelConnectStyle}>
       <FormattedMessage {...messages.connect} />
       <Icon icon="CONNECT" />
@@ -19,7 +23,10 @@ const ConnectTypePanel = () => (
       <BaseButton icon="ORDER" label="ORDER" />
       <BaseButton icon="SHIPMENT" label="SHIPMENT" />
     </Label>
-  </Panel>
+    <button className={SuccessPanelButtonCloseStyle} type="button" onClick={() => {}}>
+      <Icon icon="CANCEL" />
+    </button>
+  </SuccessPanelWrapper>
 );
 
-export default ConnectTypePanel;
+export default SuccessPanel;

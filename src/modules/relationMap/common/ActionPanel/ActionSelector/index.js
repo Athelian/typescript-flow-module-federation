@@ -22,7 +22,7 @@ const ActionSelector = ({ children, target, onCancelTarget }: Props) => {
   return (
     <div className={style.ActionSection1WrapperStyle}>
       <div className={style.ActionsSelectedStyle}>
-        <Label>
+        <Label className={style.ActionSelectedLabelStyle}>
           <FormattedMessage {...messages.selected} />
         </Label>
         <button className={style.CancelButtonStyle} type="button" onClick={onCancelTarget}>

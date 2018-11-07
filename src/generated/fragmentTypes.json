@@ -63,6 +63,7 @@
           { "name": "ContainerGroup" },
           { "name": "EventChange" },
           { "name": "EventComment" },
+          { "name": "ExportTemplate" },
           { "name": "File" },
           { "name": "Group" },
           { "name": "Integration" },

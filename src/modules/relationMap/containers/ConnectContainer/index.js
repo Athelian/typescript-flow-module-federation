@@ -7,7 +7,7 @@ type State = {
   connectedItem: boolean,
   selectedShipment: boolean,
 };
-export default class CloneContainer extends Container<State> {
+export default class ConnectContainer extends Container<State> {
   state = {
     connectType: '',
     connectedItem: false,

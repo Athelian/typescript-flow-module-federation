@@ -7,48 +7,68 @@ import { BaseButton } from 'components/Buttons';
 import messages from 'modules/relationMap/messages';
 import * as style from './style';
 
-const { Panel } = style;
+const { SelectedPanelWrapper } = style;
 
-const SelectedPanel = () => (
-  <Panel>
-    <div className={style.SubPanel(3)}>
-      <div style={{ flex: 1 }}>
-        <Label>
+type Props = {
+  type: 'SHIPMENT' | 'ORDER',
+};
+
+const SelectedPanel = ({ type }: Props) => {
+  let text;
+  let button;
+  switch (type) {
+    default:
+    case 'SHIPMENT':
+      text = <FormattedMessage {...messages.shipmentsTab} />;
+      button = (
+        <BaseButton
+          icon="ADD"
+          label={<FormattedMessage {...messages.newShipment} className={style.PanelButtonStyle} />}
+        />
+      );
+      break;
+    case 'ORDER':
+      text = <FormattedMessage {...messages.ordersTab} />;
+      button = (
+        <BaseButton
+          icon="ADD"
+          label={<FormattedMessage {...messages.newOrder} className={style.PanelButtonStyle} />}
+        />
+      );
+  }
+
+  return (
+    <SelectedPanelWrapper>
+      <div className={style.SubPanel}>
+        <Label className={style.LabelConnectStyle}>
           <FormattedMessage {...messages.connect} />
+          <Icon icon="CONNECT" />
         </Label>
-      </div>
-      <div style={{ flex: 1 }}>
-        <Label>
+        <Label className={style.GroupLabelButtonLeftStyle}>
           <FormattedMessage {...messages.select} />
+          <Label color={type} className={style.GroupLabelButtonStyle}>
+            <Icon icon={type} />
+            {text}
+          </Label>
+          <FormattedMessage {...messages.toConnectToTheList} />
         </Label>
       </div>
 
-      <div className={style.GroupItem} style={{ fontSize: '10px', flex: 1 }}>
-        <Icon icon="SHIPMENT" />
-        <Label>
-          <FormattedMessage {...messages.shipmentsTab} />
-        </Label>
-      </div>
-      <div style={{ flex: 1.8 }}>
-        <Label>
-          <FormattedMessage {...messages.connectShipment} />
-        </Label>
-      </div>
-    </div>
-    <div className={style.SubPanel(2)}>
-      <div style={{ flex: 1 }}>
-        <Label>
+      <div className={style.SubPanel}>
+        <Label className={style.GroupLabelButtonStyle}>
           <FormattedMessage {...messages.connectTo} />
+          {button}
         </Label>
       </div>
-      <div style={{ flex: 1 }}>
-        <BaseButton icon="ADD" label={<FormattedMessage {...messages.newShipment} />} />
-      </div>
-    </div>
-    <div className={style.CancelPanel(1)}>
-      <BaseButton icon="CLEAR" label="Disconnect" />
-    </div>
-  </Panel>
-);
+      <Label className={style.GroupLabelButtonStyle}>
+        <BaseButton icon="CLEAR" label="Disconnect" className={style.PanelButtonStyle} />
+      </Label>
+    </SelectedPanelWrapper>
+  );
+};
+
+SelectedPanel.defaultProps = {
+  type: 'SHIPMENT',
+};
 
 export default SelectedPanel;
