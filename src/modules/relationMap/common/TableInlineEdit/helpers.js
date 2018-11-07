@@ -92,4 +92,8 @@ export const findAllPossibleOrders = (
   };
 };
 
-export default findAllPossibleOrders;
+export const totalColumns = (
+  groups: Array<{
+    columns: Array<any>,
+  }>
+) => groups.reduce((total, currentGroup) => total + currentGroup.columns.length, 0);

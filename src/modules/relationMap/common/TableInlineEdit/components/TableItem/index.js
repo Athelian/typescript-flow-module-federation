@@ -6,8 +6,8 @@ import {
   numberInputFactory,
   priceInputFactory,
   dateInputFactory,
-  selectEnumInputFactory,
-  selectSearchEnumInputFactory,
+  // selectEnumInputFactory,
+  // selectSearchEnumInputFactory,
 } from 'modules/form/helpers';
 import { getByPath } from 'utils/fp';
 import { WrapperStyle, ItemStyle } from './style';
@@ -30,10 +30,10 @@ const renderInputByType = (type: string): Function => {
       return priceInputFactory;
     case 'date':
       return dateInputFactory;
-    case 'enum':
-      return selectEnumInputFactory;
-    case 'search':
-      return selectSearchEnumInputFactory;
+    // case 'enum':
+    //   return selectEnumInputFactory;
+    // case 'search':
+    //   return selectSearchEnumInputFactory;
 
     default:
       return textInputFactory;
