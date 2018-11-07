@@ -152,6 +152,8 @@ export const orderListQuery = gql`
             currency
             exporter {
               id
+              name
+              types
             }
             orderItems {
               id

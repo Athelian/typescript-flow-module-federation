@@ -107,16 +107,46 @@ const SelectedPanel = ({ connect }: Props) => {
                         batchContainer.initDetailValues(batches);
                       }
                       if (connectType === 'ORDER') {
+                        const orderItemObj = batchIds
+                          .filter(batchId => {
+                            const orderItemId = get(false, 'orderItem.id', batch[batchId]);
+                            return !orderItem[orderItemId];
+                          })
+                          .reduce((obj, batchId) => {
+                            const currentOrderItem = get(false, 'orderItem', batch[batchId]);
+                            return Object.assign(obj, {
+                              [currentOrderItem.id]: {
+                                ...currentOrderItem,
+                                batches: [
+                                  ...get([], `${currentOrderItem.id}.batches`, obj),
+                                  batch[batchId],
+                                ],
+                              },
+                            });
+                          }, {});
+                        const filteredOrderItemIds = Object.keys(orderItemObj);
+                        const filteredOrderItems = filteredOrderItemIds.map(orderItemId =>
+                          removeAdditionOrderItemFields(orderItemObj[orderItemId])
+                        );
                         const orderItems = orderItemIds.map(orderItemId =>
                           removeAdditionOrderItemFields(orderItem[orderItemId])
                         );
-                        orderItemContainer.initDetailValues(orderItems);
+                        const allOrderItem = orderItems.concat(filteredOrderItems);
+
                         const firstItem = orderItem[head(orderItemIds)];
                         const firstCurrency = get('', 'order.currency', firstItem);
-                        const exporter = get('', 'order.exporter.id', firstItem);
-                        const currency = orderItems.every(isSameCurrency(firstCurrency))
-                          ? firstCurrency
-                          : null;
+                        const exporter = get('', 'order.exporter', firstItem);
+                        const sameCurrency = allOrderItem.every(isSameCurrency(firstCurrency));
+                        const currency = sameCurrency ? firstCurrency : null;
+                        const formatedOrderItem = allOrderItem.map(
+                          currentOrderItem =>
+                            isSameCurrency
+                              ? currentOrderItem
+                              : Object.assign(currentOrderItem, {
+                                  price: { amount: 0, currency: 'ALL' },
+                                })
+                        );
+                        orderItemContainer.initDetailValues(formatedOrderItem);
                         orderInfoContainer.initDetailValues({
                           exporter,
                           currency,

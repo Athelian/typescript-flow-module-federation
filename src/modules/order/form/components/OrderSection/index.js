@@ -55,7 +55,6 @@ const OrderSection = ({ isNew }: Props) => (
       {({ originalValues: initialValues, state, setFieldValue }) => {
         const values = { ...initialValues, ...state };
         const { currency } = values;
-
         return (
           <>
             <div className={MainFieldsWrapperStyle}>
