@@ -91,6 +91,7 @@ const AssignUsers = ({ selected, onCancel, onSelect }: Props) => (
                   </h3>
                   <CancelButton onClick={onCancel} />
                   <SaveButton
+                    data-testid="saveButtonOnAssignUsers"
                     disabled={isEquals(values, selected)}
                     onClick={() => onSelect(values)}
                   />

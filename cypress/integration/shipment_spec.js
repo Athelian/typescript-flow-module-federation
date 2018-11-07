@@ -25,7 +25,7 @@ describe('Shipment', () => {
         .children()
         .first()
         .click()
-        .get('button[data-testid="saveButtonOnSelectBatches"]')
+        .getByTestId('saveButtonOnSelectBatches')
         .click()
         .wait(1000)
         .getByTestId('saveButton')

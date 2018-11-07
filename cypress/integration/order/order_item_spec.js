@@ -25,7 +25,7 @@ describe('Order', () => {
       .children()
       .first()
       .click()
-      .get('button[data-testid="increaseButton"]')
+      .getByTestId('increaseButton')
       .click()
       .click()
       .getByTestId('saveButton')
