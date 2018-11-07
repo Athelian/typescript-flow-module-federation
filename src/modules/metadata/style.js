@@ -5,7 +5,9 @@ import { layout } from 'styles/common';
 export const MainContentWrapperStyle: string = css`
   width: 100%;
   ${layout.GRID_HORIZONTAL};
-  justify-content: space-between;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  overflow-y: hidden;
 `;
 
 export default MainContentWrapperStyle;

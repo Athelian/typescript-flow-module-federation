@@ -7,7 +7,12 @@ import { SaveButton, CancelButton, NewButton } from 'components/Buttons';
 
 import DefaultMetadataStyle from 'components/Form/Inputs/Styles/DefaultStyle/DefaultMetadataStyle';
 
-import { MetadataDefineFormContainerWrapperStayle, AddButtonWrapperStyle } from './style';
+import FormHeader from '../FormHeader';
+import {
+  CustomFieldsEditFormWrapperStyle,
+  CustomFieldsEditFormContainerWrapperStayle,
+  AddButtonWrapperStyle,
+} from './style';
 
 type OptionalProps = {
   values: Array<Object>,
@@ -53,7 +58,7 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-class MetadataDefineForm extends React.Component<Props, State> {
+class CustomFieldsEditForm extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
   constructor(props: Props) {
@@ -79,13 +84,18 @@ class MetadataDefineForm extends React.Component<Props, State> {
     const { metadatas } = this.state;
 
     return (
-      <div>
+      <div className={CustomFieldsEditFormWrapperStyle}>
         <div>
-          <FormattedMessage id="modules.metadata.customFields" defaultMessage="CUSTOM FIELDS" />
-          <CancelButton onClick={onCancel} />
-          <SaveButton onClick={onSave} />
+          <FormHeader
+            name={
+              <FormattedMessage id="modules.metadata.customFields" defaultMessage="CUSTOM FIELDS" />
+            }
+          >
+            <CancelButton onClick={onCancel} />
+            <SaveButton onClick={onSave} />
+          </FormHeader>
         </div>
-        <div className={MetadataDefineFormContainerWrapperStayle}>
+        <div className={CustomFieldsEditFormContainerWrapperStayle}>
           <DragDropContext onDragEnd={this.onDragEnd}>
             <Droppable droppableId="droppable">
               {DropProvided => (
@@ -100,7 +110,7 @@ class MetadataDefineForm extends React.Component<Props, State> {
                               isKeyReadOnly={false}
                               dragHandleProps={provided.dragHandleProps}
                               targetName={`metadata_${metadata.key}`}
-                              width="200px"
+                              width="240px"
                               metadata={metadata}
                               setFieldArrayValue={() => {}}
                               onRemove={() => {}}
@@ -135,4 +145,4 @@ class MetadataDefineForm extends React.Component<Props, State> {
   }
 }
 
-export default MetadataDefineForm;
+export default CustomFieldsEditForm;

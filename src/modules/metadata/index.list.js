@@ -8,7 +8,8 @@ import NavBar, { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { UIConsumer } from 'modules/ui';
 import MetadataContainer from './container';
-import MetadataDefineForm from './components/MetadataDefineForm';
+import CustomFieldsEditForm from './components/CustomFieldsEditForm';
+import CustomFieldsTemplateList from './components/CustomFieldsTemplateList';
 
 import { MainContentWrapperStyle } from './style';
 
@@ -72,9 +73,11 @@ const MetadataList = () => (
         >
           <div className={MainContentWrapperStyle}>
             <GridColumn>
-              <Subscribe to={[MetadataContainer]}>{() => <MetadataDefineForm />}</Subscribe>
+              <Subscribe to={[MetadataContainer]}>{() => <CustomFieldsEditForm />}</Subscribe>
             </GridColumn>
-            <GridColumn gap="10px">metadata template list</GridColumn>
+            <GridColumn gap="10px">
+              <CustomFieldsTemplateList />
+            </GridColumn>
           </div>
         </Layout>
       )}
