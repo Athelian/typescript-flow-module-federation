@@ -31,7 +31,22 @@ type Props = {
 const UserProvider = ({ children }: Props) => (
   <LanguageConsumer>
     {({ setLocale }) => (
-      <Query query={query} fetchPolicy="network-only">
+      <Query
+        query={query}
+        fetchPolicy="network-only"
+        onCompleted={result => {
+          const {
+            viewer: {
+              user: { language },
+            },
+          } = result;
+          if (['ja', 'jp'].includes(language)) {
+            setLocale('ja');
+          } else {
+            setLocale('en');
+          }
+        }}
+      >
         {({ loading, data, error }) => {
           if (error) {
             return error.message;
@@ -43,7 +58,7 @@ const UserProvider = ({ children }: Props) => (
             permissions = [],
           } = getByPathWithDefault({}, 'viewer', data);
 
-          const { email, id, firstName, lastName, language } = user;
+          const { email, id, firstName, lastName } = user;
           const userProfile = {
             id,
             email,
@@ -55,12 +70,6 @@ const UserProvider = ({ children }: Props) => (
               name: `${lastName} ${firstName}`,
               email,
             });
-          }
-
-          if (['ja', 'jp'].includes(language)) {
-            setLocale('ja');
-          } else {
-            setLocale('en');
           }
 
           return (

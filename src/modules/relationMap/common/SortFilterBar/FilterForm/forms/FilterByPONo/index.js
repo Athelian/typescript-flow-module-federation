@@ -74,7 +74,7 @@ class FilterByPONo extends React.PureComponent<Props> {
                   <div className={FilterByPONoLabel}>
                     <span>
                       <FormattedMessage
-                        id="modules.relationMap.filter.toSelectPoNo"
+                        id="modules.RelationMaps.filter.toSelectPoNo"
                         defaultMessage="TO SELECT PO NO."
                       />
                     </span>
