@@ -56,16 +56,15 @@ const MetadataList = () => (
                 icon="PRODUCT"
                 onClick={() => {}}
               />
-              {/* FIXME: which entity type? */}
               <TabItem
                 active={false}
                 label={
                   <FormattedMessage
                     id="modules.metadata.endProducts"
-                    defaultMessage="END PRODOCTS"
+                    defaultMessage="END PRODUCTS"
                   />
                 }
-                icon="PRODUCTS"
+                icon="PROVIDER"
                 onClick={() => {}}
               />
             </NavBar>
