@@ -58,4 +58,11 @@ export const formatNodes = (orders: Array<Object>, result: Object) => {
 };
 
 export const removeAdditionBatchFields: Function = omit(['volumeLabel', 'orderId', 'orderItemId']);
+export const removeAdditionOrderItemFields: Function = omit([
+  'name',
+  'orderedQuantity',
+  'batchedQuantity',
+  'shippedQuantity',
+  'orderId',
+]);
 export default null;

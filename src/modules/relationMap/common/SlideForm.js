@@ -23,7 +23,14 @@ const SlideForm = () => (
           break;
         }
         case 'NEW_ORDER': {
-          form = <OrderForm path="new" isSlideView />;
+          form = (
+            <OrderForm
+              path="new"
+              isSlideView
+              onSuccessCallback={onSuccess}
+              redirectAfterSuccess={false}
+            />
+          );
           break;
         }
         case 'BATCH': {

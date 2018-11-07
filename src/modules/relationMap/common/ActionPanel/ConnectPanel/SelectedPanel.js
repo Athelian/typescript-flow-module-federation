@@ -3,19 +3,23 @@ import React from 'react';
 import { Label } from 'components/Form';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { head, getByPathWithDefault as get } from 'utils/fp';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
 import messages from 'modules/relationMap/messages';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
 import RelationMapContainer from 'modules/relationMap/container';
-import { removeAdditionBatchFields } from 'modules/relationMap/orderFocused/formatter';
+import {
+  removeAdditionBatchFields,
+  removeAdditionOrderItemFields,
+} from 'modules/relationMap/orderFocused/formatter';
 import * as style from './style';
 
 const { SelectedPanelWrapper } = style;
 
 type Props = {
-  type: 'SHIPMENT' | 'ORDER',
   connect: Object,
 };
 
@@ -39,7 +43,12 @@ const getNewConnectTypeMessage = type => {
   }
 };
 
-const SelectedPanel = ({ type, connect }: Props) => {
+const isSameCurrency = (currency: string) => (item: Object) => {
+  const compareCurrency = get(null, `order.currency`, item);
+  return compareCurrency === currency;
+};
+
+const SelectedPanel = ({ connect }: Props) => {
   const {
     state: { connectType },
   } = connect;
@@ -65,8 +74,20 @@ const SelectedPanel = ({ type, connect }: Props) => {
           <FormattedMessage {...messages.connectTo} />
           <ToggleSlide>
             {({ assign: setSlide }) => (
-              <Subscribe to={[ShipmentBatchesContainer, RelationMapContainer]}>
-                {(batchContainer, { state: { targetedItem } }) => (
+              <Subscribe
+                to={[
+                  RelationMapContainer,
+                  ShipmentBatchesContainer,
+                  OrderItemsContainer,
+                  OrderInfoContainer,
+                ]}
+              >
+                {(
+                  { state: { targetedItem } },
+                  batchContainer,
+                  orderItemContainer,
+                  orderInfoContainer
+                ) => (
                   <BaseButton
                     icon="ADD"
                     label={
@@ -76,11 +97,31 @@ const SelectedPanel = ({ type, connect }: Props) => {
                       />
                     }
                     onClick={() => {
-                      const { batch } = targetedItem;
-                      const batches = Object.keys(batch || {}).map(batchId =>
-                        removeAdditionBatchFields(batch[batchId])
-                      );
-                      batchContainer.initDetailValues(batches);
+                      const { batch, orderItem } = targetedItem;
+                      const batchIds = Object.keys(batch || {});
+                      const orderItemIds = Object.keys(orderItem || {});
+                      if (connectType === 'SHIPMENT') {
+                        const batches = batchIds.map(batchId =>
+                          removeAdditionBatchFields(batch[batchId])
+                        );
+                        batchContainer.initDetailValues(batches);
+                      }
+                      if (connectType === 'ORDER') {
+                        const orderItems = orderItemIds.map(orderItemId =>
+                          removeAdditionOrderItemFields(orderItem[orderItemId])
+                        );
+                        orderItemContainer.initDetailValues(orderItems);
+                        const firstItem = orderItem[head(orderItemIds)];
+                        const firstCurrency = get('', 'order.currency', firstItem);
+                        const exporter = get('', 'order.exporter.id', firstItem);
+                        const currency = orderItems.every(isSameCurrency(firstCurrency))
+                          ? firstCurrency
+                          : null;
+                        orderInfoContainer.initDetailValues({
+                          exporter,
+                          currency,
+                        });
+                      }
                       setSlide({
                         show: true,
                         type: `NEW_${connectType}`,
