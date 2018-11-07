@@ -14,6 +14,7 @@ type OptionalProps = {
   readOnly: boolean,
   selected: boolean,
   onSelect: Function,
+  invertCornerIcon: boolean,
   wrapperClassName: string | Function,
   id: ?string,
 };
@@ -36,6 +37,7 @@ const defaultProps = {
   readOnly: false,
   selected: false,
   onSelect: () => {},
+  invertCornerIcon: false,
   wrapperClassName: '',
   id: '',
 };
@@ -79,6 +81,7 @@ export default class BaseCard extends React.Component<Props, State> {
       readOnly,
       selected,
       onSelect,
+      invertCornerIcon: invert,
       wrapperClassName,
       children,
       id,
@@ -139,6 +142,7 @@ export default class BaseCard extends React.Component<Props, State> {
               selectable={selectable}
               selected={selected}
               onClick={this.toggleActions}
+              invert={invert}
             />
           )}
         {children}

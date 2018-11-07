@@ -21,7 +21,7 @@ export const ContainerWrapperStyle: string = css`
 `;
 
 export const ContainerStyle: string = css`
-  width: 840px;
+  width: 440px;
   margin: 0 100px;
 `;
 

@@ -21,7 +21,7 @@ const MetadataList = () => (
           {...uiState}
           navBar={
             <NavBar>
-              <EntityIcon icon="METADATA" color="METADATA" />
+              <EntityIcon icon="METADATA" color="METADATA" invert />
               <TabItem
                 active
                 label={<FormattedMessage id="modules.metadata.orders" defaultMessage="ORDERS" />}

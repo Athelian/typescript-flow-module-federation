@@ -112,7 +112,7 @@ class CustomFieldsEditForm extends React.Component<Props, State> {
                               isKeyReadOnly={false}
                               dragHandleProps={provided.dragHandleProps}
                               targetName={`metadata_${metadata.key}`}
-                              width="400px"
+                              width="200px"
                               metadata={metadata}
                               setFieldArrayValue={() => {}}
                               onRemove={() => {}}
