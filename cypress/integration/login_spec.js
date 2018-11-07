@@ -6,28 +6,28 @@ describe('Login', () => {
   it('Show error message when login failed', function loginFailed() {
     const { username } = this.userJSON;
     cy.visit('/login');
-    cy.get('input[data-testid="email"]')
+    cy.getByTestId('email')
       .type(username)
       .should('have.value', username);
-    cy.get('input[data-testid="password"]')
+    cy.getByTestId('password')
       .type('wrong')
       .should('have.value', 'wrong');
-    cy.get('button[data-testid="submitButton"]').click();
-    cy.wait(500);
+    cy.getByTestId('submitButton').click();
+    cy.wait(1000);
     cy.contains('#errorMsg', 'Invalid username/password');
   });
 
   it('Redirect to home page after successful login', function loginSuccess() {
     const { username, password } = this.userJSON;
     cy.visit('/login');
-    cy.get('input[data-testid="email"]')
+    cy.getByTestId('email')
       .type(username)
       .should('have.value', username);
-    cy.get('input[data-testid="password"]')
+    cy.getByTestId('password')
       .type(`${password}`)
       .should('have.value', password);
-    cy.get('button[data-testid="submitButton"]').click();
-    cy.wait(500);
+    cy.getByTestId('submitButton').click();
+    cy.wait(1000);
     cy.url().should('include', '/order');
   });
 });

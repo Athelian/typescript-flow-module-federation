@@ -4,8 +4,10 @@ export const colors = {
   BLUE: '#0b6ede',
   BLUE_DARK: '#0756af',
   TEAL: '#11d1a6',
-  TEAL_DARK: '#0bbc94',
+  TEAL_HALF: '#b9ece0',
   TEAL_VERY_DARK: '#08a380',
+  TEAL_DARK: '#0bbc94',
+  TEAL_QUITE_DARK: '#78c5b4',
   TEAL_LIGHT: '#caeee6',
   TEAL_QUITE_LIGHT: '#12B791',
 

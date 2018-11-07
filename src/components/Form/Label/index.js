@@ -8,6 +8,7 @@ type OptionalProps = {
   align: 'left' | 'right' | 'center',
   width: string,
   className: string,
+  color: string,
 };
 
 type Props = OptionalProps & {
@@ -19,10 +20,11 @@ const defaultProps = {
   required: false,
   align: 'left',
   width: '100%',
+  color: '',
 };
 
-const Label = ({ required, align, width, children, className }: Props) => (
-  <div className={cx(LabelWrapperStyle(align, width), className)}>
+const Label = ({ required, align, width, children, className, color }: Props) => (
+  <div className={cx(LabelWrapperStyle({ align, width, color }), className)}>
     {children}
     {required && ' *'}
   </div>

@@ -21,6 +21,7 @@ const AsyncProduct = lazy(() => import('./modules/product'));
 const AsyncBatch = lazy(() => import('./modules/batch'));
 const AsyncRelationMap = lazy(() => import('./modules/relationMap'));
 const AsyncNotifications = lazy(() => import('./modules/notifications'));
+const AsyncMetadata = lazy(() => import('./modules/metadata'));
 
 const Routes = () => (
   <>
@@ -39,6 +40,7 @@ const Routes = () => (
           <AsyncTags path="tags/*" />
           <AsyncRelationMap path="relation-map/*" />
           <AsyncNotifications path="notifications/*" />
+          <AsyncMetadata path="metadata/*" />
           <PageNotFound default />
         </Authorized>
         <Login path="/login" redirectUrl="/order" />

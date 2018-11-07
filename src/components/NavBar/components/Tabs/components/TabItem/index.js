@@ -13,7 +13,7 @@ type Props = OptionalProps & {
   label: string | React.Node,
   disabled?: boolean,
   active: boolean,
-  onClick: number => void,
+  onClick: Function,
 };
 
 const defaultProps = {

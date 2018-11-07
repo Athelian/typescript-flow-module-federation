@@ -30,7 +30,7 @@ describe('Tag', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(500)
+      .wait(1000)
       .should('not.exist');
 
     cy.get('input[name="name"]')
@@ -52,14 +52,14 @@ describe('Tag', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(500)
+      .wait(1000)
       .should('not.exist');
   });
 
   it('clone a tag', () => {
     cy.getByTestId('cloneButton').click();
     cy.url().should('include', 'clone');
-    cy.wait(500);
+    cy.wait(1000);
     cy.get('input[name="name"]')
       .clear()
       .type(TAG.clonedName)
@@ -67,7 +67,7 @@ describe('Tag', () => {
 
     cy.getByTestId('saveButton')
       .click()
-      .wait(500)
+      .wait(1000)
       .should('not.exist');
   });
 });
