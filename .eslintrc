@@ -12,7 +12,17 @@
     "browser": true,
     "cypress/globals": true
   },
-  "plugins": ["jsx-a11y", "cypress", "import", "json", "flowtype", "prettier", "graphql", "react"],
+  "plugins": [
+    "jsx-a11y",
+    "cypress",
+    "import",
+    "json",
+    "flowtype",
+    "prettier",
+    "graphql",
+    "react",
+    "react-hooks"
+  ],
   "rules": {
     "graphql/template-strings": [
       "error",
@@ -24,7 +34,8 @@
     "react/default-props-match-prop-types": ["error", { "allowRequiredDefaults": true }],
     "react/require-default-props": 0,
     "jsx-a11y/label-has-for": 0,
-    "jsx-a11y/label-has-associated-control": 0
+    "jsx-a11y/label-has-associated-control": 0,
+    "react-hooks/rules-of-hooks": "error"
   },
   "settings": {
     "import/resolver": {
