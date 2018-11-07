@@ -3,8 +3,8 @@ import { FormattedMessage } from 'react-intl';
 import { NewButton } from 'components/Buttons';
 
 import FormHeader from '../FormHeader';
-import CustomFieldsTemplateGridView from '../CustomFieldsTemplateGridView';
-import { CustomFieldsEditFormWrapperStyle } from './style';
+import CustomFieldsTemplateGridView from './components/CustomFieldsTemplateGridView';
+import { CustomFieldsEditFormWrapperStyle, CustomFieldsFormHeaderStyle } from './style';
 
 const dummyCustomFieldsTemplates = [
   {
@@ -179,11 +179,13 @@ const dummyCustomFieldsTemplates = [
 
 const CustomFieldTemplateList = () => (
   <div>
-    <FormHeader
-      name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
-    >
-      <NewButton onClick={() => {}} />
-    </FormHeader>
+    <div className={CustomFieldsFormHeaderStyle}>
+      <FormHeader
+        name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
+      >
+        <NewButton onClick={() => {}} />
+      </FormHeader>
+    </div>
     <div className={CustomFieldsEditFormWrapperStyle}>
       <CustomFieldsTemplateGridView
         items={dummyCustomFieldsTemplates}

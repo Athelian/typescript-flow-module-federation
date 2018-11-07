@@ -11,9 +11,9 @@ import {
 
 export const MetadataTemplateCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
-  grid-template-columns: 195px;
-  grid-gap: 5px;
-  padding: 5px 0;
+  grid-template-columns: 240px;
+  grid-gap: 10px;
+  padding: 10px 0;
 `;
 
 export const MetadataTemplateNameStyle: string = css`

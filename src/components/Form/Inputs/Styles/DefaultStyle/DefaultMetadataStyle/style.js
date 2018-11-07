@@ -51,7 +51,7 @@ export const RemoveButtonStyle: string = css`
   position: absolute;
   width: 30px;
   height: 30px;
-  right: -30px;
+  right: 0;
   ${presets.BUTTON};
   ${fontSizes.SMALL};
   opacity: 0;

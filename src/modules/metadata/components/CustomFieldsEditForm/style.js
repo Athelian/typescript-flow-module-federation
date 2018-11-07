@@ -8,8 +8,14 @@ export const CustomFieldsEditFormWrapperStyle: string = css`
   ${shadows.FAINT};
 `;
 
+export const CustomFieldsEditFormHeaderStyle: string = css`
+  padding: 0 100px;
+  ${shadows.HEADER};
+`;
+
 export const CustomFieldsEditFormContainerWrapperStayle: string = css`
-  margin: 0 20px;
+  width: 840px;
+  margin: 0 100px;
 `;
 
 export const AddButtonWrapperStyle: string = css`

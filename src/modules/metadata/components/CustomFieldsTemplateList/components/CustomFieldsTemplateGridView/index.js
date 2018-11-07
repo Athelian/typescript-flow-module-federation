@@ -25,7 +25,7 @@ const CustomFieldsTemplateGridView = (props: Props) => {
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="200px"
+      itemWidth="260px"
       isEmpty={items.length === 0}
       emptyMessage={
         <FormattedMessage id="modules.metadata.noItem" defaultMessage="No template found" />

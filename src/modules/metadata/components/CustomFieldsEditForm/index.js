@@ -10,6 +10,7 @@ import DefaultMetadataStyle from 'components/Form/Inputs/Styles/DefaultStyle/Def
 import FormHeader from '../FormHeader';
 import {
   CustomFieldsEditFormWrapperStyle,
+  CustomFieldsEditFormHeaderStyle,
   CustomFieldsEditFormContainerWrapperStayle,
   AddButtonWrapperStyle,
 } from './style';
@@ -85,7 +86,7 @@ class CustomFieldsEditForm extends React.Component<Props, State> {
 
     return (
       <div className={CustomFieldsEditFormWrapperStyle}>
-        <div>
+        <div className={CustomFieldsEditFormHeaderStyle}>
           <FormHeader
             name={
               <FormattedMessage id="modules.metadata.customFields" defaultMessage="CUSTOM FIELDS" />
@@ -110,7 +111,7 @@ class CustomFieldsEditForm extends React.Component<Props, State> {
                               isKeyReadOnly={false}
                               dragHandleProps={provided.dragHandleProps}
                               targetName={`metadata_${metadata.key}`}
-                              width="240px"
+                              width="400px"
                               metadata={metadata}
                               setFieldArrayValue={() => {}}
                               onRemove={() => {}}
@@ -124,21 +125,21 @@ class CustomFieldsEditForm extends React.Component<Props, State> {
               )}
             </Droppable>
           </DragDropContext>
-        </div>
-        <div className={AddButtonWrapperStyle}>
-          <NewButton
-            label={
-              <FormattedMessage
-                id="modules.metadata.addCustomFields"
-                defaultMessage="ADD CUSTOM FIELDS"
-              />
-            }
-            onClick={() => {
-              this.setState({
-                metadatas: [...metadatas, { key: '', value: '' }],
-              });
-            }}
-          />
+          <div className={AddButtonWrapperStyle}>
+            <NewButton
+              label={
+                <FormattedMessage
+                  id="modules.metadata.addCustomFields"
+                  defaultMessage="ADD CUSTOM FIELDS"
+                />
+              }
+              onClick={() => {
+                this.setState({
+                  metadatas: [...metadatas, { key: '', value: '' }],
+                });
+              }}
+            />
+          </div>
         </div>
       </div>
     );
