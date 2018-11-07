@@ -3,7 +3,7 @@ import { css } from 'react-emotion';
 import { shadows } from 'styles/common';
 
 export const CustomFieldsFormHeaderStyle: string = css`
-  padding: 0 100px;
+  padding: 0 20px;
   ${shadows.HEADER};
 `;
 

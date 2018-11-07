@@ -23,7 +23,7 @@ const MetadataList = () => (
             <NavBar>
               <EntityIcon icon="METADATA" color="METADATA" />
               <TabItem
-                active={false}
+                active
                 label={<FormattedMessage id="modules.metadata.orders" defaultMessage="ORDERS" />}
                 icon="ORDER"
                 onClick={() => {}}

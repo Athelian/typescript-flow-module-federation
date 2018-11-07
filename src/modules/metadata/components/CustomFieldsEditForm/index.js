@@ -9,9 +9,10 @@ import DefaultMetadataStyle from 'components/Form/Inputs/Styles/DefaultStyle/Def
 
 import FormHeader from '../FormHeader';
 import {
-  CustomFieldsEditFormWrapperStyle,
-  CustomFieldsEditFormHeaderStyle,
-  CustomFieldsEditFormContainerWrapperStayle,
+  WrapperStyle,
+  HeaderStyle,
+  ContainerWrapperStyle,
+  ContainerStyle,
   AddButtonWrapperStyle,
 } from './style';
 
@@ -29,20 +30,20 @@ type State = {
 
 const dummyMetadatas = [
   {
-    key: '1',
-    value: 1,
+    key: 'METADATA 1',
+    value: 'Input',
   },
   {
-    key: '2',
-    value: 2,
+    key: 'METADATA 2',
+    value: 'Input',
   },
   {
-    key: '3',
-    value: 3,
+    key: 'METADATA 3',
+    value: 'Input',
   },
   {
-    key: '4',
-    value: 4,
+    key: 'METADATA 4',
+    value: 'Input',
   },
 ];
 
@@ -85,8 +86,8 @@ class CustomFieldsEditForm extends React.Component<Props, State> {
     const { metadatas } = this.state;
 
     return (
-      <div className={CustomFieldsEditFormWrapperStyle}>
-        <div className={CustomFieldsEditFormHeaderStyle}>
+      <div className={WrapperStyle}>
+        <div className={HeaderStyle}>
           <FormHeader
             name={
               <FormattedMessage id="modules.metadata.customFields" defaultMessage="CUSTOM FIELDS" />
@@ -96,15 +97,15 @@ class CustomFieldsEditForm extends React.Component<Props, State> {
             <SaveButton onClick={onSave} />
           </FormHeader>
         </div>
-        <div className={CustomFieldsEditFormContainerWrapperStayle}>
-          <DragDropContext onDragEnd={this.onDragEnd}>
-            <Droppable droppableId="droppable">
-              {DropProvided => (
-                <div ref={DropProvided.innerRef}>
-                  {metadatas.map((metadata, index) => (
-                    <Draggable key={metadata.key} draggableId={metadata.key} index={index}>
-                      {provided => (
-                        <div ref={provided.innerRef}>
+        <div className={ContainerWrapperStyle}>
+          <div className={ContainerStyle}>
+            <DragDropContext onDragEnd={this.onDragEnd}>
+              <Droppable droppableId="droppable">
+                {DropProvided => (
+                  <div ref={DropProvided.innerRef}>
+                    {metadatas.map((metadata, index) => (
+                      <Draggable key={metadata.key} draggableId={metadata.key} index={index}>
+                        {provided => (
                           <div ref={provided.innerRef} {...provided.draggableProps}>
                             <DefaultMetadataStyle
                               rearrange
@@ -117,28 +118,28 @@ class CustomFieldsEditForm extends React.Component<Props, State> {
                               onRemove={() => {}}
                             />
                           </div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-          <div className={AddButtonWrapperStyle}>
-            <NewButton
-              label={
-                <FormattedMessage
-                  id="modules.metadata.addCustomFields"
-                  defaultMessage="ADD CUSTOM FIELDS"
-                />
-              }
-              onClick={() => {
-                this.setState({
-                  metadatas: [...metadatas, { key: '', value: '' }],
-                });
-              }}
-            />
+                        )}
+                      </Draggable>
+                    ))}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+            <div className={AddButtonWrapperStyle}>
+              <NewButton
+                label={
+                  <FormattedMessage
+                    id="modules.metadata.addCustomFields"
+                    defaultMessage="ADD CUSTOM FIELDS"
+                  />
+                }
+                onClick={() => {
+                  this.setState({
+                    metadatas: [...metadatas, { key: '', value: '' }],
+                  });
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
