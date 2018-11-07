@@ -43,9 +43,9 @@ const ApplyPanel = ({ type }: Props) => {
                   icon="CONFIRM"
                   label="APPLY"
                   onClick={async () => {
-                    const { connectExistingShipment } = connect;
-                    const result = await connectExistingShipment(client, targetedItem);
-                    console.log(result);
+                    const { connectExistingShipment, setCurrentStep } = connect;
+                    await connectExistingShipment(client, targetedItem);
+                    setCurrentStep(4);
                   }}
                 />
               </Label>

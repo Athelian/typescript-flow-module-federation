@@ -34,7 +34,6 @@ export const SelectedPanelWrapper = styled('div')`
   grid-auto-flow: column;
 `;
 
-<<<<<<< HEAD
 export const SuccessPanelWrapper = styled('div')`
   ${PanelWrapperStyle};
   display: grid;
@@ -44,8 +43,6 @@ export const SuccessPanelWrapper = styled('div')`
   color: ${colors.WHITE};
 `;
 
-=======
->>>>>>> feat(relation-map): update step1 step2a step2b
 export const CenterPanel = styled('div')`
   ${PanelWrapperStyle};
   justify-content: center;
@@ -60,23 +57,6 @@ export const ConnectLogoStyle = css`
   height: 100%;
   display: flex;
   align-items: center;
-`;
-
-export const LabelConnectStyle = css`
-  width: min-content;
-  min-width: 120px;
-  padding: 0;
-  text-transform: uppercase;
-`;
-
-export const GroupLabelButtonStyle = css`
-  display: grid;
-  grid-auto-columns: min-content;
-  grid-auto-flow: column;
-  grid-column-gap: 10px;
-  align-items: center;
-  justify-content: center;
-  text-transform: uppercase;
 `;
 
 export const LabelConnectStyle = css`
