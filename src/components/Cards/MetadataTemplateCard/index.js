@@ -38,7 +38,7 @@ const MetadataTemplateCard = ({ metadataTemplate, onClick, actions, ...rest }: P
   const { name, description, customFields } = metadataTemplate;
 
   return (
-    <BaseCard icon="TEMPLATE" color="TEMPLATE" actions={actions} {...rest}>
+    <BaseCard icon="TEMPLATE" color="TEMPLATE" actions={actions} {...rest} invertCornerIcon>
       <div className={MetadataTemplateCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={MetadataTemplateNameStyle}>{name}</div>
         <div className={MetadataTemplateDescriptionStyle}>{description}</div>
