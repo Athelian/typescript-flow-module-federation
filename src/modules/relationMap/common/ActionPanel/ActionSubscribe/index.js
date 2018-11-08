@@ -102,6 +102,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                     <BaseButton
                       icon="EDIT"
                       label="EDIT"
+                      disabled
                       backgroundColor="TEAL"
                       hoverBackgroundColor="TEAL_DARK"
                       onClick={() => slideToggle(true)}
