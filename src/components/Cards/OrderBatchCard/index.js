@@ -214,7 +214,7 @@ const OrderBatchCard = ({
           <FormField name={`batch.${batch.id}.deliveredAt`} initValue={deliveredAt}>
             {({ name, ...inputHandlers }) =>
               dateInputFactory({
-                width: '90px',
+                width: '120px',
                 height: '20px',
                 name,
                 isNew: false,
