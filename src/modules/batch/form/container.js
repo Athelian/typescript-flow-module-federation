@@ -9,6 +9,13 @@ type Metric = {
   metric: string,
 };
 
+type ProductProvider = {
+  packageName: string,
+  packageCapacity: number,
+  packageGrossWeight: Metric,
+  packageVolume: Metric,
+};
+
 export function calculateVolume(
   volumeMetric: string,
   height: Metric,
@@ -115,8 +122,13 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     this.originalValues = Object.assign({}, parsedValues);
   };
 
-  syncProductProvider = (productProvider: Object) => {
-    const { packageCapacity, packageGrossWeight, packageName, packageVolume } = productProvider;
+  syncProductProvider = (productProvider: ProductProvider) => {
+    const {
+      packageName = '',
+      packageCapacity = 0,
+      packageGrossWeight = { value: 0, metric: 'kg' },
+      packageVolume = { value: 0, metric: 'm³' },
+    } = productProvider;
 
     this.setState({
       packageCapacity,
