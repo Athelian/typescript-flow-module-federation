@@ -29,7 +29,7 @@ export const ProductImageStyle: string = css`
   border-bottom-right-radius: 0;
   width: 100%;
   height: 80px;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 export const ProductInfoWrapperStyle: string = css`
@@ -107,7 +107,7 @@ export const QuantityWrapperStyle: string = css`
 
 export const DeliveryDateWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 95px 90px;
+  grid-template-columns: 65px 120px;
   width: 100%;
   padding: 0 5px;
 `;

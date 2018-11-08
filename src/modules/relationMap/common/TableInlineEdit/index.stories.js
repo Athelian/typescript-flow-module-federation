@@ -9,11 +9,7 @@ import TableInlineEdit from './index';
 storiesOf('RelationMap/TableInlineEdit', module).add('without selected field', () => (
   <Provider>
     <IntlProvider locale="en">
-      <TableInlineEdit
-        onSave={action('onSave')}
-        onCancel={action('onCancel')}
-        onExpand={action('onExpand')}
-      />
+      <TableInlineEdit onSave={action('onSave')} onCancel={action('onCancel')} />
     </IntlProvider>
   </Provider>
 ));

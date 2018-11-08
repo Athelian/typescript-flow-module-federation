@@ -1,5 +1,5 @@
 // @flow
-import { pipe, filter, isEmpty } from 'ramda';
+import { pipe, filter, isEmpty, omit } from 'ramda';
 
 const prependArray = (arr: Array<any>) => (newArr: Array<any>) => [...arr, ...newArr];
 
@@ -57,4 +57,12 @@ export const formatNodes = (orders: Array<Object>, result: Object) => {
   return nodes;
 };
 
+export const removeAdditionBatchFields: Function = omit(['volumeLabel', 'orderId', 'orderItemId']);
+export const removeAdditionOrderItemFields: Function = omit([
+  'name',
+  'orderedQuantity',
+  'batchedQuantity',
+  'shippedQuantity',
+  'orderId',
+]);
 export default null;

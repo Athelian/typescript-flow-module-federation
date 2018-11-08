@@ -69,7 +69,7 @@ class OrderGridView extends React.PureComponent<Props> {
             isEmpty={items.length === 0}
             emptyMessage={
               <FormattedMessage
-                id="modules.relationMap.filter.emptyPONo"
+                id="modules.RelationMaps.filter.emptyPONo"
                 defaultMessage="No PO No. found"
               />
             }

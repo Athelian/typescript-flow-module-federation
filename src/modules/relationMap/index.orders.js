@@ -58,10 +58,11 @@ const Order = () => (
                     />
                     <RelationMapGrid>
                       <Subscribe to={[RelationMapContainer]}>
-                        {({ selectAll, unSelectAll }) => (
+                        {({ selectAll, unSelectAll, state: { targetedItem } }) => (
                           <div className={BadgeWrapperStyle}>
                             <SummaryBadge
                               summary={order}
+                              targetedItem={targetedItem}
                               unSelectAll={unSelectAll}
                               selectAll={selectAll(order)}
                             />

@@ -7,7 +7,7 @@ const filterByOrderDS = [
     type: 'multiSelect',
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.tag" defaultMessage="Tag" />,
+    label: <FormattedMessage id="modules.RelationMaps.filter.tag" defaultMessage="Tag" />,
     form: null,
   },
   {
@@ -16,7 +16,7 @@ const filterByOrderDS = [
     limit: 1,
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.carrier" defaultMessage="Carrier" />,
+    label: <FormattedMessage id="modules.RelationMaps.filter.carrier" defaultMessage="Carrier" />,
     form: null,
   },
   {
@@ -26,7 +26,7 @@ const filterByOrderDS = [
     readOnly: false,
     disabled: true,
     label: (
-      <FormattedMessage id="modules.relationMap.filter.forwarder" defaultMessage="Forwarder" />
+      <FormattedMessage id="modules.RelationMaps.filter.forwarder" defaultMessage="Forwarder" />
     ),
     form: null,
   },
@@ -38,7 +38,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.loadPortName"
+        id="modules.RelationMaps.filter.loadPortName"
         defaultMessage="Load Port Name"
       />
     ),
@@ -52,7 +52,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.dischargePortName"
+        id="modules.RelationMaps.filter.dischargePortName"
         defaultMessage="Discharge Port Name"
       />
     ),
@@ -66,7 +66,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.transitPort1Name"
+        id="modules.RelationMaps.filter.transitPort1Name"
         defaultMessage="Transit Port 1 Name"
       />
     ),
@@ -80,7 +80,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.transitPort2Name"
+        id="modules.RelationMaps.filter.transitPort2Name"
         defaultMessage="Transit Port 2 Name"
       />
     ),
@@ -94,7 +94,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.warehouseName"
+        id="modules.RelationMaps.filter.warehouseName"
         defaultMessage="Warehouse Name"
       />
     ),
@@ -106,7 +106,7 @@ const filterByOrderDS = [
     readOnly: false,
     disabled: true,
     label: (
-      <FormattedMessage id="modules.relationMap.filter.cargoReady" defaultMessage="CargoReady" />
+      <FormattedMessage id="modules.RelationMaps.filter.cargoReady" defaultMessage="CargoReady" />
     ),
     form: null,
   },
@@ -117,7 +117,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.departureFromLoadPort"
+        id="modules.RelationMaps.filter.departureFromLoadPort"
         defaultMessage="Departure from Load Port"
       />
     ),
@@ -130,7 +130,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.arrivalAtDischargePort"
+        id="modules.RelationMaps.filter.arrivalAtDischargePort"
         defaultMessage="Arrival at Discharge Port"
       />
     ),
@@ -143,7 +143,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.arrivalAtTransitPort1"
+        id="modules.RelationMaps.filter.arrivalAtTransitPort1"
         defaultMessage="Arrival at Transit Port 1"
       />
     ),
@@ -156,7 +156,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.departureFromTransitPort1"
+        id="modules.RelationMaps.filter.departureFromTransitPort1"
         defaultMessage="Departure from Transit Port 1"
       />
     ),
@@ -169,7 +169,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.arrivalAtTransitPort2"
+        id="modules.RelationMaps.filter.arrivalAtTransitPort2"
         defaultMessage="Arrival at Transit Port 2"
       />
     ),
@@ -182,7 +182,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.departureFromTransitPort2"
+        id="modules.RelationMaps.filter.departureFromTransitPort2"
         defaultMessage="Departure from Transit Port 2"
       />
     ),
@@ -195,7 +195,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.customClearance"
+        id="modules.RelationMaps.filter.customClearance"
         defaultMessage="Custom Clearance"
       />
     ),
@@ -208,7 +208,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.warehouseArrival"
+        id="modules.RelationMaps.filter.warehouseArrival"
         defaultMessage="WarehouseArrival"
       />
     ),
@@ -221,7 +221,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.deliveryReady"
+        id="modules.RelationMaps.filter.deliveryReady"
         defaultMessage="DeliveryReady"
       />
     ),
@@ -233,7 +233,7 @@ const filterByOrderDS = [
     readOnly: false,
     disabled: true,
     label: (
-      <FormattedMessage id="modules.relationMap.filter.cargoReady" defaultMessage="CargoReady" />
+      <FormattedMessage id="modules.RelationMaps.filter.cargoReady" defaultMessage="CargoReady" />
     ),
     form: null,
   },
@@ -244,7 +244,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.departureFromLoadPort"
+        id="modules.RelationMaps.filter.departureFromLoadPort"
         defaultMessage="Departure from Load Port"
       />
     ),
@@ -257,7 +257,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.arrivalAtDischargePort"
+        id="modules.RelationMaps.filter.arrivalAtDischargePort"
         defaultMessage="Arrival at Discharge Port"
       />
     ),
@@ -270,7 +270,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.arrivalAtTransitPort1"
+        id="modules.RelationMaps.filter.arrivalAtTransitPort1"
         defaultMessage="Arrival at Transit Port 1"
       />
     ),
@@ -283,7 +283,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.departureFromTransitPort1"
+        id="modules.RelationMaps.filter.departureFromTransitPort1"
         defaultMessage="Departure from Transit Port 1"
       />
     ),
@@ -296,7 +296,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.arrivalAtTransitPort2"
+        id="modules.RelationMaps.filter.arrivalAtTransitPort2"
         defaultMessage="Arrival at Transit Port 2"
       />
     ),
@@ -309,7 +309,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.departureFromTransitPort2"
+        id="modules.RelationMaps.filter.departureFromTransitPort2"
         defaultMessage="Departure from Transit Port 2"
       />
     ),
@@ -322,7 +322,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.customClearance"
+        id="modules.RelationMaps.filter.customClearance"
         defaultMessage="Custom Clearance"
       />
     ),
@@ -335,7 +335,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.warehouseArrival"
+        id="modules.RelationMaps.filter.warehouseArrival"
         defaultMessage="WarehouseArrival"
       />
     ),
@@ -348,7 +348,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.deliveryReady"
+        id="modules.RelationMaps.filter.deliveryReady"
         defaultMessage="DeliveryReady"
       />
     ),

@@ -8,7 +8,10 @@ const filterByOrderDS = [
     readOnly: false,
     disabled: true,
     label: (
-      <FormattedMessage id="modules.relationMap.filter.productName" defaultMessage="Product Name" />
+      <FormattedMessage
+        id="modules.RelationMaps.filter.productName"
+        defaultMessage="Product Name"
+      />
     ),
     form: null,
   },
@@ -19,7 +22,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.productSerial"
+        id="modules.RelationMaps.filter.productSerial"
         defaultMessage="Product Serial"
       />
     ),
@@ -30,7 +33,7 @@ const filterByOrderDS = [
     type: 'multiSelect',
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.janCode" defaultMessage="JAN Code" />,
+    label: <FormattedMessage id="modules.RelationMaps.filter.janCode" defaultMessage="JAN Code" />,
     form: null,
   },
   {
@@ -38,7 +41,7 @@ const filterByOrderDS = [
     type: 'multiSelect',
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.hsCode" defaultMessage="HS Code" />,
+    label: <FormattedMessage id="modules.RelationMaps.filter.hsCode" defaultMessage="HS Code" />,
     form: null,
   },
   {
@@ -47,7 +50,7 @@ const filterByOrderDS = [
     limit: 1,
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.exporter" defaultMessage="Exporter" />,
+    label: <FormattedMessage id="modules.RelationMaps.filter.exporter" defaultMessage="Exporter" />,
     form: null,
   },
   {
@@ -55,7 +58,7 @@ const filterByOrderDS = [
     type: 'multiSelect',
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.supplier" defaultMessage="Supplier" />,
+    label: <FormattedMessage id="modules.RelationMaps.filter.supplier" defaultMessage="Supplier" />,
     form: null,
   },
   {
@@ -65,7 +68,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.countryOfOrigin"
+        id="modules.RelationMaps.filter.countryOfOrigin"
         defaultMessage="Country of Origin"
       />
     ),
@@ -76,7 +79,7 @@ const filterByOrderDS = [
     type: 'multiSelect',
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.currency" defaultMessage="Currency" />,
+    label: <FormattedMessage id="modules.RelationMaps.filter.currency" defaultMessage="Currency" />,
     form: null,
   },
   {
@@ -85,7 +88,10 @@ const filterByOrderDS = [
     readOnly: false,
     disabled: true,
     label: (
-      <FormattedMessage id="modules.relationMap.filter.packageInfo" defaultMessage="Package Info" />
+      <FormattedMessage
+        id="modules.RelationMaps.filter.packageInfo"
+        defaultMessage="Package Info"
+      />
     ),
     form: null,
   },
@@ -94,7 +100,9 @@ const filterByOrderDS = [
     type: 'multiSelect',
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.metadata" defaultMessage="Meta Data" />,
+    label: (
+      <FormattedMessage id="modules.RelationMaps.filter.metadata" defaultMessage="Meta Data" />
+    ),
     form: null,
   },
   {
@@ -102,7 +110,7 @@ const filterByOrderDS = [
     type: 'multiSelect',
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.tag" defaultMessage="Tag" />,
+    label: <FormattedMessage id="modules.RelationMaps.filter.tag" defaultMessage="Tag" />,
     form: null,
   },
   {
@@ -112,7 +120,7 @@ const filterByOrderDS = [
     readOnly: false,
     disabled: true,
     label: (
-      <FormattedMessage id="modules.relationMap.filter.unBatched" defaultMessage="UnBatched" />
+      <FormattedMessage id="modules.RelationMaps.filter.unBatched" defaultMessage="UnBatched" />
     ),
     form: null,
   },
@@ -123,7 +131,7 @@ const filterByOrderDS = [
     readOnly: false,
     disabled: true,
     label: (
-      <FormattedMessage id="modules.relationMap.filter.unShipped" defaultMessage="UnShipped" />
+      <FormattedMessage id="modules.RelationMaps.filter.unShipped" defaultMessage="UnShipped" />
     ),
     form: null,
   },
@@ -135,7 +143,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.includeArchived"
+        id="modules.RelationMaps.filter.includeArchived"
         defaultMessage="Include Archived"
       />
     ),
@@ -149,7 +157,7 @@ const filterByOrderDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.onlyArchived"
+        id="modules.RelationMaps.filter.onlyArchived"
         defaultMessage="Only Archived"
       />
     ),

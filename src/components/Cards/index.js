@@ -13,6 +13,7 @@ import ShipmentWarehouseCard from './ShipmentWarehouseCard';
 import StaffCard from './StaffCard';
 import TagCard from './TagCard';
 import WarehouseCard from './WarehouseCard';
+import MetadataTemplateCard from './MetadataTemplateCard';
 
 export default BaseCard;
 
@@ -32,4 +33,5 @@ export {
   StaffCard,
   TagCard,
   WarehouseCard,
+  MetadataTemplateCard,
 };

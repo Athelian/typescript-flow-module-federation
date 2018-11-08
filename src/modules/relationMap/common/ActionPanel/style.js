@@ -8,8 +8,8 @@ export const ActionSection1WrapperStyle: string = css`
   justify-content: space-between;
   /* width: 100%; */
   height: 50px;
-  padding: 0 20px;
-  background: ${colors.GRAY_SUPER_LIGHT};
+  padding: 0 10px;
+  background-color: ${colors.TEAL_HALF};
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   z-index: 2;
   ${transitions.EXPAND};
@@ -31,6 +31,13 @@ export const ActionsSelectedStyle: string = css`
   display: flex;
   flex-direction: row;
   align-items: center;
+`;
+
+export const ActionSelectedLabelStyle: string = css`
+  margin-right: 50px;
+  padding: 0;
+  color: ${colors.TEAL_VERY_DARK};
+  font-weight: bold;
 `;
 
 const ChildrenGrid = css`
@@ -55,7 +62,7 @@ export const TabItemWrapperStyle = css`
 export const CancelButtonStyle = css`
   cursor: pointer;
   user-select: none;
-  color: ${colors.BLACK};
+  color: ${colors.TEAL_QUITE_DARK};
   &:hover {
     color: ${colors.TEAL};
   }

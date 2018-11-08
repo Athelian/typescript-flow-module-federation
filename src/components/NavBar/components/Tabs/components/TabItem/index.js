@@ -13,7 +13,7 @@ type Props = OptionalProps & {
   label: string | React.Node,
   disabled?: boolean,
   active: boolean,
-  onClick: number => void,
+  onClick: Function,
 };
 
 const defaultProps = {
@@ -25,7 +25,7 @@ const defaultProps = {
 const TabItem = ({ icon = '', label, disabled, active, onClick, className }: Props) => (
   <button
     type="button"
-    onClick={onClick}
+    onClick={!disabled && onClick}
     className={disabled ? DisabledStyle : cx(TabItemStyle(active), className)}
   >
     {icon && (

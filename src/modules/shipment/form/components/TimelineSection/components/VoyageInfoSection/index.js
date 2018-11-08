@@ -21,10 +21,10 @@ type OptionalProps = {
       airport: string,
       seaport: string,
     },
-    vesselCode?: string,
-    vesselName?: string,
+    vesselCode: string,
+    vesselName: string,
   },
-  initialVoyage: ?{
+  initialVoyage: {
     arrivalPort?: {
       airport: string,
       seaport: string,
@@ -33,8 +33,8 @@ type OptionalProps = {
       airport: string,
       seaport: string,
     },
-    vesselCode?: string,
-    vesselName?: string,
+    vesselCode: string,
+    vesselName: string,
   },
 };
 
@@ -200,10 +200,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           >
             {({ name, ...inputHandlers }) =>
               textInputFactory({
-                originalValue:
-                  initialVoyage && Object.prototype.hasOwnProperty.call(initialVoyage, name)
-                    ? initialVoyage[name]
-                    : '',
+                originalValue: initialVoyage.vesselName,
                 inputHandlers,
                 name,
                 isNew,
@@ -221,10 +218,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
           >
             {({ name, ...inputHandlers }) =>
               textInputFactory({
-                originalValue:
-                  initialVoyage && Object.prototype.hasOwnProperty.call(initialVoyage, name)
-                    ? initialVoyage[name]
-                    : '',
+                originalValue: initialVoyage.vesselCode,
                 inputHandlers,
                 name,
                 isNew,

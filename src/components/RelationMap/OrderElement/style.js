@@ -30,10 +30,10 @@ export const OrderListItemStyle = (isFocused: boolean) => css`
 
 export const TotalCardWrapperStyle = css`
   margin: auto 10px;
-
   display: flex;
   justify-content: space-between;
-
+  align-items: center;
+  height: 40px;
   > span:nth-child(1) {
     color: ${colors.BLACK};
   }

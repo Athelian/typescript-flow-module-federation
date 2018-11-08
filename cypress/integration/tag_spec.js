@@ -1,9 +1,12 @@
+import randomcolor from 'randomcolor';
+import faker from 'faker';
+
 const TAG = {
-  name: 'test name',
-  updatedName: '[updated] test name',
-  clonedName: '[cloned] test name',
-  description: 'test description',
-  color: '#d4f492',
+  name: faker.name.findName(),
+  updatedName: faker.name.findName(),
+  clonedName: faker.name.findName(),
+  description: faker.lorem.sentence(),
+  color: randomcolor(),
 };
 
 describe('Tag', () => {

@@ -27,3 +27,7 @@ export function injectUid(obj: Object) {
   const id = `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   return { id, ...obj };
 }
+
+export function uuid() {
+  return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+}

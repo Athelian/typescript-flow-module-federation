@@ -1,42 +1,28 @@
 // @flow
 import { Container } from 'unstated';
+import ApolloClient from 'apollo-client';
 import { connectNewShipment, connectExistingShipment } from './connect';
 
 type State = {
   connectType: string,
-  connectedItem: boolean,
-  selectedShipment: boolean,
+  currentStep: number,
 };
-export default class CloneContainer extends Container<State> {
+export default class ConnectContainer extends Container<State> {
   state = {
     connectType: '',
-    connectedItem: false,
-    selectedShipment: false,
+    currentStep: 1,
   };
 
   setConnectType = (connectType: string) => {
-    this.setState({ connectType });
+    this.setState({ connectType, currentStep: 2 });
   };
 
-  setConnectItem = (connectedItem: boolean) => {
-    this.setState({ connectedItem });
+  setCurrentStep = (currentStep: number) => {
+    this.setState({ currentStep });
   };
 
-  selectShipment = (selectedShipment: boolean) => {
-    this.setState({ selectedShipment });
-  };
-
-  step = () => {
-    const { connectType, connectedItem } = this.state;
-    let step;
-    if (!connectType) {
-      step = 1;
-    } else if (!connectedItem) {
-      step = 2;
-    } else {
-      step = 3;
-    }
-    return step;
+  nextStep = () => {
+    this.setState(prevState => prevState.currentStep + 1);
   };
 
   connectNewShipment = async (client: any, target: Object) => {
@@ -44,7 +30,7 @@ export default class CloneContainer extends Container<State> {
     return newTarget;
   };
 
-  connectExistingShipment = async (client: any, target: Object) => {
+  connectExistingShipment = async (client: ApolloClient<any>, target?: Object) => {
     const newTarget = await connectExistingShipment(client, target);
     return newTarget;
   };

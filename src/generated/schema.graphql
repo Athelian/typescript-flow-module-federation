@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Oct 30 2018 13:25:19 GMT+0700 (Indochina Time)
+# timestamp: Mon Nov 05 2018 08:07:30 GMT+0700 (Indochina Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -27881,7 +27881,7 @@ enum Currency {
   """ARS"""
   ARS
 
-  """A$"""
+  """AUD"""
   AUD
 
   """AWG"""
@@ -27917,7 +27917,7 @@ enum Currency {
   """BOB"""
   BOB
 
-  """R$"""
+  """BRL"""
   BRL
 
   """BSD"""
@@ -27935,7 +27935,7 @@ enum Currency {
   """BZD"""
   BZD
 
-  """CA$"""
+  """CAD"""
   CAD
 
   """CDF"""
@@ -27947,7 +27947,7 @@ enum Currency {
   """CLP"""
   CLP
 
-  """CN¥"""
+  """CNY"""
   CNY
 
   """COP"""
@@ -27986,7 +27986,7 @@ enum Currency {
   """ETB"""
   ETB
 
-  """€"""
+  """EUR"""
   EUR
 
   """FJD"""
@@ -27995,7 +27995,7 @@ enum Currency {
   """FKP"""
   FKP
 
-  """£"""
+  """GBP"""
   GBP
 
   """GEL"""
@@ -28019,7 +28019,7 @@ enum Currency {
   """GYD"""
   GYD
 
-  """HK$"""
+  """HKD"""
   HKD
 
   """HNL"""
@@ -28037,10 +28037,10 @@ enum Currency {
   """IDR"""
   IDR
 
-  """₪"""
+  """ILS"""
   ILS
 
-  """₹"""
+  """INR"""
   INR
 
   """IQD"""
@@ -28058,7 +28058,7 @@ enum Currency {
   """JOD"""
   JOD
 
-  """¥"""
+  """JPY"""
   JPY
 
   """KES"""
@@ -28076,7 +28076,7 @@ enum Currency {
   """KPW"""
   KPW
 
-  """₩"""
+  """KRW"""
   KRW
 
   """KWD"""
@@ -28139,7 +28139,7 @@ enum Currency {
   """MWK"""
   MWK
 
-  """MX$"""
+  """MXN"""
   MXN
 
   """MYR"""
@@ -28163,7 +28163,7 @@ enum Currency {
   """NPR"""
   NPR
 
-  """NZ$"""
+  """NZD"""
   NZD
 
   """OMR"""
@@ -28274,7 +28274,7 @@ enum Currency {
   """TTD"""
   TTD
 
-  """NT$"""
+  """TWD"""
   TWD
 
   """TZS"""
@@ -28286,7 +28286,7 @@ enum Currency {
   """UGX"""
   UGX
 
-  """$"""
+  """USD"""
   USD
 
   """UYU"""
@@ -28298,7 +28298,7 @@ enum Currency {
   """VEF"""
   VEF
 
-  """₫"""
+  """VND"""
   VND
 
   """VUV"""
@@ -28307,7 +28307,7 @@ enum Currency {
   """WST"""
   WST
 
-  """FCFA"""
+  """XAF"""
   XAF
 
   """XAG"""
@@ -28328,7 +28328,7 @@ enum Currency {
   """XBD"""
   XBD
 
-  """EC$"""
+  """XCD"""
   XCD
 
   """XDR"""
@@ -28337,13 +28337,13 @@ enum Currency {
   """XFU"""
   XFU
 
-  """CFA"""
+  """XOF"""
   XOF
 
   """XPD"""
   XPD
 
-  """CFPF"""
+  """XPF"""
   XPF
 
   """XPT"""
@@ -29927,7 +29927,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   unitSize: Size
   inspectionFee: Price
   origin: Country
-  productionLeadTime: Float
+  productionLeadTime: Int
   memo: String
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
   id: ID!
@@ -29959,7 +29959,7 @@ input ProductProviderCreateInput {
   unitSize: SizeInput
   inspectionFee: PriceInput
   origin: Country
-  productionLeadTime: Float
+  productionLeadTime: Int
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -30009,7 +30009,7 @@ input ProductProviderUpdateInput {
   unitSize: SizeInput
   inspectionFee: PriceInput
   origin: Country
-  productionLeadTime: Float
+  productionLeadTime: Int
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput

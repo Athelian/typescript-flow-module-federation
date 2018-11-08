@@ -37,6 +37,8 @@ import {
 type OptionalProps = {
   path: string,
   isSlideView: boolean,
+  onSuccessCallback: ?Function,
+  redirectAfterSuccess: boolean,
 };
 
 type Props = OptionalProps & {
@@ -47,6 +49,8 @@ const defaultProps = {
   path: '',
   shipmentId: '',
   isSlideView: false,
+  onSuccessCallback: null,
+  redirectAfterSuccess: true,
 };
 
 type CreateShipmentResponse = {|
@@ -92,7 +96,7 @@ class ShipmentFormModule extends React.Component<Props> {
     onSuccess: () => void,
     onErrors: (Array<Object>) => void
   ) => {
-    const { shipmentId } = this.props;
+    const { shipmentId, onSuccessCallback } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
     const input = isNewOrClone
@@ -113,6 +117,9 @@ class ShipmentFormModule extends React.Component<Props> {
             onErrors(violations);
           } else {
             onSuccess();
+            if (onSuccessCallback) {
+              onSuccessCallback(data);
+            }
           }
         }
       }
@@ -136,6 +143,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onMutationCompleted = (result: CreateShipmentResponse | UpdateShipmentResponse) => {
     const isNewOrClone = this.isNewOrClone();
+    const { redirectAfterSuccess } = this.props;
 
     if (isNewOrClone && result.shipmentCreate) {
       const {
@@ -143,7 +151,7 @@ class ShipmentFormModule extends React.Component<Props> {
       } = result;
 
       if (!violations) {
-        if (shipment && shipment.id) {
+        if (shipment && shipment.id && redirectAfterSuccess) {
           navigate(`/shipment/${encodeId(shipment.id)}`);
         }
       }

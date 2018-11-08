@@ -58,138 +58,141 @@ class FilterForm extends React.Component<Props, State> {
 
   reset = () => {};
 
-  renderFilterSection = (container: Object, ds: Array<any>) => {
+  renderFilterSection = (container: Object, ds: Array<any>, sectionKey: string) => {
     const { onChange } = this.props;
 
     return (
-      <Subscribe to={[container]}>
-        {({
-          originalValues,
-          state,
-          onToggleFilterMultiSelect,
-          onToggleFilterCheckBox,
-          onEditSection,
-          onApply,
-        }) => {
-          const values = { ...originalValues, ...state };
+      <div key={sectionKey}>
+        <Subscribe to={[container]} key={sectionKey}>
+          {({
+            originalValues,
+            state,
+            onToggleFilterMultiSelect,
+            onToggleFilterCheckBox,
+            onEditSection,
+            onApply,
+          }) => {
+            const values = { ...originalValues, ...state };
 
-          return (
-            <FieldItem
-              vertical
-              input={
-                <div className={FilterGroupSectionStyle}>
-                  {ds.map(({ key, readOnly, disabled, label, form, icon }) => {
-                    let actions = [];
-                    if (values.editingSection === key && form) {
-                      actions = [
-                        <FilterSectionButton
-                          key="btn-save"
-                          label="APPLY"
-                          active
-                          onClick={() => onApply(key, onChange)}
-                        />,
-                      ].filter(Boolean);
-                    } else if (form) {
-                      actions = [
-                        <FilterSectionButton
-                          key="btn-edit"
-                          label="EDIT"
-                          active={false}
-                          onClick={() => {
-                            if (values.selectedSections.includes(key)) {
-                              onEditSection(key, form);
-                            }
-                          }}
-                        />,
-                      ];
-                    }
+            return (
+              <FieldItem
+                keyName={sectionKey}
+                vertical
+                input={
+                  <div className={FilterGroupSectionStyle}>
+                    {ds.map(({ key, readOnly, disabled, label, form, icon }) => {
+                      let actions = [];
+                      if (values.editingSection === key && form) {
+                        actions = [
+                          <FilterSectionButton
+                            key="btn-save"
+                            label="APPLY"
+                            active
+                            onClick={() => onApply(key, onChange)}
+                          />,
+                        ].filter(Boolean);
+                      } else if (form) {
+                        actions = [
+                          <FilterSectionButton
+                            key="btn-edit"
+                            label="EDIT"
+                            active={false}
+                            onClick={() => {
+                              if (values.selectedSections.includes(key)) {
+                                onEditSection(key, form);
+                              }
+                            }}
+                          />,
+                        ];
+                      }
 
-                    const filterNameObj = key.split('.');
-                    const [section, type, name] = filterNameObj;
+                      const filterNameObj = key.split('.');
+                      const [section, type, name] = filterNameObj;
 
-                    switch (type) {
-                      case 'multiSelect':
-                        return (
-                          <>
-                            <RadioInputFilterForm
-                              key={key}
-                              selected={values.selectedSections.includes(key)}
-                              onToggle={() => onToggleFilterMultiSelect(key, onChange, form)}
-                              readOnly={readOnly}
-                              disabled={disabled}
-                              actions={actions}
-                            >
-                              <div className={FilterSectionStyle}>
-                                <div className={FilterSectionLabel}>{label}</div>
-                              </div>
-                            </RadioInputFilterForm>
-                            {values[section][type][name] && values[section][type][name].length ? (
-                              <div className={FilterTagsWrapperStyle}>
-                                {values[section][type][name].map(el => (
-                                  <div className={FilterTagStyle} key={el.id}>
-                                    {el.text}
-                                  </div>
-                                ))}
-                              </div>
-                            ) : null}
-                          </>
-                        );
-                      case 'range':
-                        return (
-                          <>
-                            <RadioInputFilterForm
-                              key={key}
-                              selected={values.selectedSections.includes(key)}
-                              onToggle={() => onToggleFilterMultiSelect(key, onChange, form)}
-                              readOnly={readOnly}
-                              disabled={disabled}
-                              actions={actions}
-                            >
-                              <div className={FilterSectionStyle}>
-                                <div className={FilterSectionLabel}>{label}</div>
-                              </div>
-                            </RadioInputFilterForm>
-                            {values[key] && values[key].length ? (
-                              <div className={FilterTagsWrapperStyle}>
-                                {values[key].map(el => (
-                                  <div className={FilterTagStyle} key={el.id}>
-                                    {el.text}
-                                  </div>
-                                ))}
-                              </div>
-                            ) : null}
-                          </>
-                        );
+                      switch (type) {
+                        case 'multiSelect':
+                          return (
+                            <div key={key}>
+                              <RadioInputFilterForm
+                                key={key}
+                                selected={values.selectedSections.includes(key)}
+                                onToggle={() => onToggleFilterMultiSelect(key, onChange, form)}
+                                readOnly={readOnly}
+                                disabled={disabled}
+                                actions={actions}
+                              >
+                                <div className={FilterSectionStyle}>
+                                  <div className={FilterSectionLabel}>{label}</div>
+                                </div>
+                              </RadioInputFilterForm>
+                              {values[section][type][name] && values[section][type][name].length ? (
+                                <div className={FilterTagsWrapperStyle}>
+                                  {values[section][type][name].map(el => (
+                                    <div className={FilterTagStyle} key={el.id}>
+                                      {el.text}
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : null}
+                            </div>
+                          );
+                        case 'range':
+                          return (
+                            <div key={key}>
+                              <RadioInputFilterForm
+                                key={key}
+                                selected={values.selectedSections.includes(key)}
+                                onToggle={() => onToggleFilterMultiSelect(key, onChange, form)}
+                                readOnly={readOnly}
+                                disabled={disabled}
+                                actions={actions}
+                              >
+                                <div className={FilterSectionStyle}>
+                                  <div className={FilterSectionLabel}>{label}</div>
+                                </div>
+                              </RadioInputFilterForm>
+                              {values[key] && values[key].length ? (
+                                <div className={FilterTagsWrapperStyle}>
+                                  {values[key].map(el => (
+                                    <div className={FilterTagStyle} key={el.id}>
+                                      {el.text}
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : null}
+                            </div>
+                          );
 
-                      case 'checkbox':
-                        return (
-                          <>
-                            <ToggleInput
-                              toggled={values[section][type][name]}
-                              onToggle={() => onToggleFilterCheckBox(key)}
-                            >
-                              <div className={ToggleInputLabelStyle}>
-                                {icon ? (
-                                  <div className={ToggleInputIconStyle}>
-                                    <Icon icon={icon} />
-                                  </div>
-                                ) : null}
-                                <div className={FilterSectionLabel}>{label}</div>
-                              </div>
-                            </ToggleInput>
-                          </>
-                        );
+                        case 'checkbox':
+                          return (
+                            <div key={key}>
+                              <ToggleInput
+                                toggled={values[section][type][name]}
+                                onToggle={() => onToggleFilterCheckBox(key)}
+                              >
+                                <div className={ToggleInputLabelStyle}>
+                                  {icon ? (
+                                    <div className={ToggleInputIconStyle}>
+                                      <Icon icon={icon} />
+                                    </div>
+                                  ) : null}
+                                  <div className={FilterSectionLabel}>{label}</div>
+                                </div>
+                              </ToggleInput>
+                            </div>
+                          );
 
-                      default:
-                        return null;
-                    }
-                  })}
-                </div>
-              }
-            />
-          );
-        }}
-      </Subscribe>
+                        default:
+                          return null;
+                      }
+                    })}
+                  </div>
+                }
+              />
+            );
+          }}
+        </Subscribe>
+      </div>
     );
   };
 
@@ -208,7 +211,7 @@ class FilterForm extends React.Component<Props, State> {
         <div className={ScrollWrapperStyle({ height: '400px' })}>
           <div className={FilterLayoutStyle}>
             <div className={FilterSectionTabs}>
-              <Subscribe to={[OrderFilteringContainer]}>
+              <Subscribe key="orderFilterSection" to={[OrderFilteringContainer]}>
                 {({ getFilterNoInSection }) => {
                   const filteredNo = getFilterNoInSection('order');
 
@@ -225,7 +228,7 @@ class FilterForm extends React.Component<Props, State> {
                 }}
               </Subscribe>
 
-              <Subscribe to={[OrderFilteringContainer]}>
+              <Subscribe key="orderItemFilterSection" to={[OrderFilteringContainer]}>
                 {({ getFilterNoInSection }) => {
                   const filteredNo = getFilterNoInSection('orderItem');
 
@@ -242,7 +245,7 @@ class FilterForm extends React.Component<Props, State> {
                 }}
               </Subscribe>
 
-              <Subscribe to={[OrderFilteringContainer]}>
+              <Subscribe key="batchFilterSection" to={[OrderFilteringContainer]}>
                 {({ getFilterNoInSection }) => {
                   const filteredNo = getFilterNoInSection('batch');
 
@@ -259,7 +262,7 @@ class FilterForm extends React.Component<Props, State> {
                 }}
               </Subscribe>
 
-              <Subscribe to={[OrderFilteringContainer]}>
+              <Subscribe key="shipmentFilterSection" to={[OrderFilteringContainer]}>
                 {({ getFilterNoInSection }) => {
                   const filteredNo = getFilterNoInSection('shipment');
 
@@ -278,19 +281,35 @@ class FilterForm extends React.Component<Props, State> {
             </div>
             <div className={FilterGroupSectionWrapperStyle}>
               <SectionWrapper id="orderFilterSection" display={orderSection}>
-                {this.renderFilterSection(OrderFilteringContainer, FilterByOrderDS)}
+                {this.renderFilterSection(
+                  OrderFilteringContainer,
+                  FilterByOrderDS,
+                  'orderFilterSection'
+                )}
               </SectionWrapper>
 
               <SectionWrapper id="orderItemFilterSection" display={orderItemSection}>
-                {this.renderFilterSection(OrderFilteringContainer, FilterByOrderItemDS)}
+                {this.renderFilterSection(
+                  OrderFilteringContainer,
+                  FilterByOrderItemDS,
+                  'orderItemFilterSection'
+                )}
               </SectionWrapper>
 
               <SectionWrapper id="batchFilterSection" display={batchSection}>
-                {this.renderFilterSection(OrderFilteringContainer, FilterByBatchDS)}
+                {this.renderFilterSection(
+                  OrderFilteringContainer,
+                  FilterByBatchDS,
+                  'batchFilterSection'
+                )}
               </SectionWrapper>
 
               <SectionWrapper id="shipmentFilterSection" display={shipmentSection}>
-                {this.renderFilterSection(OrderFilteringContainer, FilterByShipmentDS)}
+                {this.renderFilterSection(
+                  OrderFilteringContainer,
+                  FilterByShipmentDS,
+                  'shipmentFilterSection'
+                )}
               </SectionWrapper>
             </div>
             <div className={FilterSectionEditForm}>

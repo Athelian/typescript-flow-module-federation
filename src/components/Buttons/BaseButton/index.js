@@ -2,6 +2,7 @@
 import * as React from 'react';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
+import { cx } from 'react-emotion';
 import {
   ButtonWrapperStyle,
   DisabledButtonWrapperStyle,
@@ -11,6 +12,7 @@ import {
 } from './style';
 
 type OptionalProps = {
+  className: string,
   icon?: string,
   label: React.Node,
   disabled: boolean,
@@ -25,6 +27,7 @@ type OptionalProps = {
 type Props = OptionalProps;
 
 const defaultProps = {
+  className: '',
   disabled: false,
   isLoading: false,
   textColor: 'WHITE',
@@ -35,6 +38,7 @@ const defaultProps = {
 };
 
 const BaseButton = ({
+  className,
   icon,
   label,
   disabled,
@@ -51,7 +55,15 @@ const BaseButton = ({
     className={
       disabled || isLoading
         ? DisabledButtonWrapperStyle
-        : ButtonWrapperStyle({ textColor, hoverTextColor, backgroundColor, hoverBackgroundColor })
+        : cx(
+            ButtonWrapperStyle({
+              textColor,
+              hoverTextColor,
+              backgroundColor,
+              hoverBackgroundColor,
+            }),
+            className
+          )
     }
     disabled={disabled || isLoading}
     onClick={onClick}
@@ -63,12 +75,11 @@ const BaseButton = ({
         <LoadingIcon size={10} />
       </div>
     )}
-    {icon &&
-      !isLoading && (
-        <div className={ButtonIconStyle}>
-          <Icon icon={icon} />
-        </div>
-      )}
+    {icon && !isLoading && (
+      <div className={ButtonIconStyle}>
+        <Icon icon={icon} />
+      </div>
+    )}
   </button>
 );
 

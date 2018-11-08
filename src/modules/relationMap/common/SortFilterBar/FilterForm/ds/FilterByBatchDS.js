@@ -7,7 +7,7 @@ const filterByBatchDS = [
     type: 'multiSelect',
     readOnly: false,
     disabled: true,
-    label: <FormattedMessage id="modules.relationMap.filter.tag" defaultMessage="Tag" />,
+    label: <FormattedMessage id="modules.RelationMaps.filter.tag" defaultMessage="Tag" />,
     form: null,
   },
   {
@@ -17,7 +17,7 @@ const filterByBatchDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.deliveryDate"
+        id="modules.RelationMaps.filter.deliveryDate"
         defaultMessage="Delivery Date"
       />
     ),
@@ -29,7 +29,10 @@ const filterByBatchDS = [
     readOnly: false,
     disabled: true,
     label: (
-      <FormattedMessage id="modules.relationMap.filter.desiredDate" defaultMessage="Desired Date" />
+      <FormattedMessage
+        id="modules.RelationMaps.filter.desiredDate"
+        defaultMessage="Desired Date"
+      />
     ),
     form: null,
   },
@@ -39,7 +42,7 @@ const filterByBatchDS = [
     readOnly: false,
     disabled: true,
     label: (
-      <FormattedMessage id="modules.relationMap.filter.expiryDate" defaultMessage="Expiry Date" />
+      <FormattedMessage id="modules.RelationMaps.filter.expiryDate" defaultMessage="Expiry Date" />
     ),
     form: null,
   },
@@ -50,7 +53,7 @@ const filterByBatchDS = [
     disabled: true,
     label: (
       <FormattedMessage
-        id="modules.relationMap.filter.productionDate"
+        id="modules.RelationMaps.filter.productionDate"
         defaultMessage="Production Date"
       />
     ),

@@ -1,13 +1,15 @@
+import faker from 'faker';
+
 const WAREHOUSE = {
-  name: 'test name',
-  updatedName: '[updated] test name',
-  clonedName: '[cloned] test name',
-  street: 'test street',
+  name: faker.name.findName(),
+  updatedName: faker.name.findName(),
+  clonedName: faker.name.findName(),
+  street: faker.address.streetAddress(),
   locality: 'test locality',
-  region: 'test region',
-  postalCode: '123456',
-  country: 'China',
-  surface: '200',
+  region: faker.address.state(),
+  postalCode: faker.address.zipCode(),
+  country: faker.address.country(),
+  surface: faker.random.number(),
 };
 
 describe('Warehouse', () => {

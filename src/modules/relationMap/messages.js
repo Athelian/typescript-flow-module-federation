@@ -102,6 +102,14 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.connectTo',
     defaultMessage: 'CONNECT TO',
   },
+  askConnectToOrder: {
+    id: 'modules.RelationMaps.label.askConnectToOrder',
+    defaultMessage: 'Do you want to connect to this order',
+  },
+  askConnectToShipment: {
+    id: 'modules.RelationMaps.label.askConnectToShipment',
+    defaultMessage: 'Do you want to connect to this shipment',
+  },
   connectShipment: {
     id: 'modules.RelationMaps.label.connectShipment',
     defaultMessage: 'Connect Shipment on the list',
@@ -113,6 +121,10 @@ export default defineMessages({
   newShipment: {
     id: 'modules.RelationMaps.label.newShipment',
     defaultMessage: 'New Shipment',
+  },
+  newOrder: {
+    id: 'modules.RelationMaps.label.newOrder',
+    defaultMessage: 'New Order',
   },
   confirmDeleteBatch: {
     id: 'modules.RelationMaps.label.confirmDeleteBatch',
@@ -129,5 +141,13 @@ export default defineMessages({
   connectType: {
     id: 'modules.RelationMaps.label.connectType',
     defaultMessage: 'Do you want to connect to',
+  },
+  connectSuccess: {
+    id: 'modules.RelationMaps.label.connectSuccess',
+    defaultMessage: 'Connected SuccessFully',
+  },
+  toConnectToTheList: {
+    id: 'modules.RelationMaps.label.toConnectToTheList',
+    defaultMessage: 'to connect on the list',
   },
 });
