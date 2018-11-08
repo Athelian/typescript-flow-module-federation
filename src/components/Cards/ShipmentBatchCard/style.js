@@ -14,7 +14,7 @@ export const ShipmentBatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 264px;
+  height: 329px;
 `;
 
 export const ProductWrapperStyle: string = css`
@@ -149,6 +149,21 @@ export const OrderIconStyle: string = css`
   :focus {
     background-color: ${colors.TEAL_DARK};
   }
+`;
+
+export const OrderInChargeWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 5px;
+  width: 195px;
+  padding: 0 5px;
+`;
+
+export const InChargeWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 6.25px;
+  padding: 0 5px;
+  width: 100%;
+  height: 30px;
 `;
 
 export const BatchTagsWrapperStyle: string = css`

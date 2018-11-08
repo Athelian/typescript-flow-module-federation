@@ -194,9 +194,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             >
               <Icon icon="ORDER" />
             </Link>
-            <Display align="left">
-              {batch.orderItem && batch.orderItem.order && batch.orderItem.order.poNo}
-            </Display>
+            <Display align="left">{order.poNo}</Display>
           </div>
 
           <div className={ShipmentWrapperStyle}>
