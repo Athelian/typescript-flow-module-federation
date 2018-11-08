@@ -84,6 +84,7 @@ const ShipmentBatchCard = ({
     deliveredAt,
     batchAdjustments,
     packageVolume,
+    packageQuantity,
     orderItem,
     tags,
     orderItem: {
@@ -280,12 +281,12 @@ const ShipmentBatchCard = ({
               }
               input={
                 <Display>
-                  {packageVolume && (
-                    <FormattedNumber
-                      value={packageVolume.value * (quantity + totalAdjustment)}
-                      suffix={packageVolume.metric}
-                    />
-                  )}
+                {packageVolume && packageQuantity != null && (
+                  <FormattedNumber
+                    value={packageVolume.value * packageQuantity}
+                    suffix={packageVolume.metric}
+                  />
+                )}
                 </Display>
               }
             />

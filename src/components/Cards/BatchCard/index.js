@@ -50,6 +50,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
     quantity,
     deliveredAt,
     packageVolume,
+    packageQuantity,
     orderItem,
     shipment,
     batchAdjustments,
@@ -173,9 +174,9 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             }
             input={
               <Display>
-                {packageVolume && (
+                {packageVolume && packageQuantity != null && (
                   <FormattedNumber
-                    value={packageVolume.value * (quantity + totalAdjustment)}
+                    value={packageVolume.value * packageQuantity}
                     suffix={packageVolume.metric}
                   />
                 )}
