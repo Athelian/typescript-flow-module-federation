@@ -52,7 +52,7 @@ const formatTimeline = (timeline: Object): ?CargoReady => {
 
 const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
   voyages.map(({ id, departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
-    id: id && id.includes('-') ? null : id,
+    ...(id && id.includes('-') ? {} : { id }),
     vesselCode,
     vesselName,
     departurePort: !departurePort
@@ -73,7 +73,7 @@ const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
 
 const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGroups> =>
   voyages.map(({ id, warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
-    id: id && id.includes('-') ? null : id,
+    ...(id && id.includes('-') ? {} : { id }),
     warehouseId: warehouse && warehouse.id,
     customClearance: !customClearance ? null : formatTimeline(customClearance),
     warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),
