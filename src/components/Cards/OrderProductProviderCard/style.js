@@ -27,7 +27,7 @@ export const ProductImageStyle: string = css`
   border-bottom-right-radius: 0;
   width: 100%;
   height: 75px;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 export const ProductImageChevronButtonStyle = (position: 'left' | 'right'): string => css`

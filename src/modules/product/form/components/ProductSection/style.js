@@ -62,7 +62,7 @@ export const ProductImageStyle: string = css`
   height: 180px;
   width: 180px;
   ${borderRadiuses.MAIN};
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 export const ViewImageButtonStyle: string = css`
