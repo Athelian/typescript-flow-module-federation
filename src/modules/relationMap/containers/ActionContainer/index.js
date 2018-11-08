@@ -14,11 +14,15 @@ class ActionContainer extends Container<State> {
     scrolled: true,
   };
 
-  setResult = (result: Object) => {
-    this.setState({
-      result,
-      scrolled: false,
-    });
+  setResult = (result: Object | Function) => {
+    this.setState(
+      typeof result === 'function'
+        ? result
+        : {
+            result,
+            scrolled: false,
+          }
+    );
   };
 
   setAction = (currentAction: string) => {

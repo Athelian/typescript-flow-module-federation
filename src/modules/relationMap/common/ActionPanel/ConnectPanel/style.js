@@ -11,7 +11,7 @@ export const PanelWrapperStyle = css`
   position: relative;
   color: ${colors.GRAY_DARK};
 
-  &:after {
+  /* &:after {
     content: '';
     position: absolute;
     top: 0;
@@ -20,7 +20,7 @@ export const PanelWrapperStyle = css`
     right: 0;
     z-index: 1;
     ${shadows.HEADER};
-  }
+  } */
 `;
 
 export const Panel = styled('div')`
@@ -46,6 +46,17 @@ export const SuccessPanelWrapper = styled('div')`
 export const CenterPanel = styled('div')`
   ${PanelWrapperStyle};
   justify-content: center;
+`;
+
+export const ConnectLogoStyle = css`
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  margin-left: 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 `;
 
 export const LabelConnectStyle = css`
@@ -83,7 +94,7 @@ export const SubPanel = css`
   align-items: center;
   position: relative;
   height: 100%;
-  &:after {
+  /* &:after {
     content: '';
     position: absolute;
     top: 0;
@@ -93,6 +104,8 @@ export const SubPanel = css`
     z-index: 1;
     box-shadow: 5px 0 10px 0 rgba(0, 0, 0, 0.1);
   }
+    ${shadows.HEADER};
+  } */
 `;
 
 export const SuccessPanelButtonCloseStyle = css`

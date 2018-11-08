@@ -35,6 +35,8 @@ import {
 type OptionalProps = {
   path: string,
   isSlideView: boolean,
+  redirectAfterSuccess: boolean,
+  onSuccessCallback: ?Function,
 };
 
 type Props = OptionalProps & {
@@ -45,6 +47,8 @@ const defaultProps = {
   path: '',
   orderId: '',
   isSlideView: false,
+  onSuccessCallback: null,
+  redirectAfterSuccess: true,
 };
 
 class OrderFormModule extends React.PureComponent<Props> {
@@ -72,7 +76,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
-    const { orderId } = this.props;
+    const { orderId, onSuccessCallback } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
     const input = isNewOrClone
@@ -88,6 +92,9 @@ class OrderFormModule extends React.PureComponent<Props> {
         onErrors(violations);
       } else {
         onSuccess();
+        if (onSuccessCallback) {
+          onSuccessCallback(data);
+        }
       }
     } else if (orderId) {
       const { data } = await saveOrder({ variables: { input, id: decodeId(orderId) } });
@@ -103,13 +110,16 @@ class OrderFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
+    const { redirectAfterSuccess } = this.props;
     if (this.isNewOrClone()) {
       const {
         orderCreate: {
           order: { id },
         },
       } = result;
-      navigate(`/order/${encodeId(id)}`);
+      if (redirectAfterSuccess) {
+        navigate(`/order/${encodeId(id)}`);
+      }
     }
   };
 

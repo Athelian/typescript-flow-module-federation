@@ -57,7 +57,7 @@ const Order = ({ page, perPage }: Props) => (
                   return (
                     <>
                       <div className={BadgeWrapperStyle}>
-                        <SummaryBadge summary={shipment} />
+                        <SummaryBadge summary={shipment} targetedItem={{}} />
                       </div>
                       <ShipmentFocused
                         order={order}

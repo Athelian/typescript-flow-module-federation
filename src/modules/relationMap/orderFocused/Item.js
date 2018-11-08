@@ -54,7 +54,7 @@ type Props = {
 
 const isRelationLine = type => /LINK-[0-4]-(\w+)/.test(type);
 
-const getItemType = type => {
+export const getItemType = (type: string) => {
   switch (type) {
     case ORDER_ITEM_ALL:
     case BATCH_ALL:
@@ -66,6 +66,8 @@ const getItemType = type => {
       return 'orderItem';
     case BATCH:
       return 'batch';
+    case SHIPMENT:
+      return 'shipment';
     default:
       return '';
   }
@@ -82,11 +84,13 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
   return (
     <Subscribe to={[RelationMapContainer]}>
       {({
-        state: { focusedItem, targetedItem, focusMode, focusedId },
+        state: { focusedItem, targetedItem, targetMode, focusMode, focusedId },
         toggleHighlight,
         toggleTargetTree,
         toggleTarget,
+        overrideTarget,
         isTargeted: isTargetedItem,
+        isCurrentTarget: isCurrentTargetItem,
         isFocused: isFocusedItem,
       }) => {
         if (isRelationLine(type)) {
@@ -98,7 +102,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             ? false
             : isFocusedLink(focusedItem[lineItemType], relatedIds);
           const isTargeted =
-            focusMode === 'TARGET' || isAllBatchLine
+            focusMode === 'TARGET' || targetMode === relationType || isAllBatchLine
               ? false
               : isFocusedLink(targetedItem[lineItemType], relatedIds);
           const hasRelation = isAllOrderItemLine
@@ -114,11 +118,12 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           );
         }
         const onClickHighlight = toggleHighlight(itemRelation, id);
-        const onClickTargetTree = toggleTargetTree(itemRelation);
+        const onClickTargetTree = toggleTargetTree(itemRelation, id);
         const onClickTarget = toggleTarget(itemType, id, data);
         const isFocused = isFocusedItem(itemType, id);
         const isCurrentFocused = focusedId && focusedId === id;
         const isTargeted = isTargetedItem(itemType, id);
+        const isCurrentTarget = isCurrentTargetItem(id);
         const cardWrapperClass = ItemWrapperStyle(isFocused, isTargeted, isCurrentFocused);
         const totalCardWrapperClass =
           !isCollapsed || focusMode === 'TARGET'
@@ -171,9 +176,9 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   />
                                   <Action
                                     icon="BRANCH"
-                                    targetted={targetted}
+                                    targetted={isCurrentTarget ? 'BRANCH' : targetted}
                                     toggle={toggle}
-                                    onClick={onClickTargetTree}
+                                    onClick={onClickTargetTree()}
                                     className={RotateIcon}
                                   />
                                   <Action
@@ -229,14 +234,14 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                               />
                               <Action
                                 icon="BRANCH"
-                                targetted={targetted}
+                                targetted={isCurrentTarget ? 'BRANCH' : targetted}
                                 toggle={toggle}
-                                onClick={onClickTargetTree}
+                                onClick={onClickTargetTree(ORDER_ITEM)}
                                 className={RotateIcon}
                               />
                               <Action
                                 icon="CHECKED"
-                                targetted={isTargeted || targetted}
+                                targetted={isTargeted ? 'CHECKED' : targetted}
                                 toggle={toggle}
                                 onClick={onClickTarget}
                               />
@@ -355,8 +360,8 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                     )}
                     <ToggleSlide>
                       {({ assign: setSlide }) => (
-                        <Subscribe to={[ActionContainer, ConnectContainer]}>
-                          {() => (
+                        <Subscribe to={[ConnectContainer, ActionContainer]}>
+                          {({ state: { connectType } }) => (
                             <BooleanValue>
                               {({ value: hovered, set: setToggle }) => (
                                 <WrapperCard
@@ -364,9 +369,9 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   onMouseLeave={() => setToggle(false)}
                                 >
                                   <ShipmentCard shipment={data} />
-                                  {isTargeted ? (
+                                  {isTargeted && connectType === 'SHIPMENT' ? (
                                     <ActionCard show>
-                                      {() => <SelectedShipment onClick={() => {}} />}
+                                      {() => <SelectedShipment onClick={onClickTarget} />}
                                     </ActionCard>
                                   ) : (
                                     <ActionCard show={hovered}>
@@ -388,7 +393,13 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                             icon="CHECKED"
                                             targetted={targetted}
                                             toggle={toggle}
-                                            onClick={onClickTarget}
+                                            onClick={() => {
+                                              if (connectType === 'SHIPMENT') {
+                                                const target = { shipment: { [id]: data } };
+                                                return overrideTarget(target);
+                                              }
+                                              return onClickTarget();
+                                            }}
                                           />
                                         </>
                                       )}

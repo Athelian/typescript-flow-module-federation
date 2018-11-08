@@ -142,6 +142,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.connectType',
     defaultMessage: 'Do you want to connect to',
   },
+  connectSuccess: {
+    id: 'modules.RelationMaps.label.connectSuccess',
+    defaultMessage: 'Connected SuccessFully',
+  },
   toConnectToTheList: {
     id: 'modules.RelationMaps.label.toConnectToTheList',
     defaultMessage: 'to connect on the list',

@@ -2,99 +2,97 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { BooleanValue } from 'react-values';
 import messages from 'modules/relationMap/messages';
 import Badge from './Badge';
 
 type SummaryBadgeProps = {
   intl: IntlShape,
   summary: Object,
+  targetedItem: Object,
   selectAll?: Function,
   unSelectAll?: Function,
 };
 
-const SummaryBadge = ({ summary, intl, selectAll, unSelectAll }: SummaryBadgeProps) => (
-  <>
-    <BooleanValue>
-      {({ value, toggle }) => (
-        <Badge
-          icon="ORDER"
-          color={value ? 'ORDER_DARK' : 'ORDER'}
-          hoverColor="ORDER_DARK"
-          label={intl.formatMessage(messages.ordersLabel)}
-          no={summary.sumOrders}
-          onClick={() => {
-            toggle();
-            if (!value && selectAll) {
-              selectAll('order');
-            }
-            if (value && unSelectAll) {
-              unSelectAll('order');
-            }
-          }}
-        />
-      )}
-    </BooleanValue>
-    <BooleanValue>
-      {({ value, toggle }) => (
-        <Badge
-          icon="ORDER_ITEM"
-          color={value ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'}
-          hoverColor="ORDER_ITEM_DARK"
-          label={intl.formatMessage(messages.itemsLabel)}
-          no={summary.sumOrderItems}
-          onClick={() => {
-            toggle();
-            if (!value && selectAll) {
-              selectAll('orderItem');
-            }
-            if (value && unSelectAll) {
-              unSelectAll('orderItem');
-            }
-          }}
-        />
-      )}
-    </BooleanValue>
-    <BooleanValue>
-      {({ value, toggle }) => (
-        <Badge
-          icon="BATCH"
-          color={value ? 'BATCH_DARK' : 'BATCH'}
-          hoverColor="BATCH_DARK"
-          label={intl.formatMessage(messages.batchesLabel)}
-          no={summary.sumBatches}
-          onClick={() => {
-            toggle();
-            if (!value && selectAll) {
-              selectAll('batch');
-            }
-            if (value && unSelectAll) {
-              unSelectAll('batch');
-            }
-          }}
-        />
-      )}
-    </BooleanValue>
-    <BooleanValue>
-      {({ value, toggle }) => (
-        <Badge
-          icon="SHIPMENT"
-          color={value ? 'SHIPMENT_DARK' : 'SHIPMENT'}
-          hoverColor="SHIPMENT_DARK"
-          label={intl.formatMessage(messages.shipmentsLabel)}
-          no={summary.sumShipments}
-          onClick={() => {
-            toggle();
-            if (!value && selectAll) {
-              selectAll('shipment');
-            }
-            if (value && unSelectAll) {
-              unSelectAll('shipment');
-            }
-          }}
-        />
-      )}
-    </BooleanValue>
-  </>
-);
+const isSelected = (selected, totalItem) => {
+  const totalSelected = Object.keys(selected || {}).length;
+  return totalItem === totalSelected;
+};
+const SummaryBadge = ({
+  summary,
+  intl,
+  selectAll,
+  unSelectAll,
+  targetedItem,
+}: SummaryBadgeProps) => {
+  const { order, orderItem, batch, shipment } = targetedItem;
+  const { sumOrders, sumOrderItems, sumBatches, sumShipments } = summary;
+  const orderSelected = isSelected(order, sumOrders);
+  const orderItemSelected = isSelected(orderItem, sumOrderItems);
+  const batchSelected = isSelected(batch, sumBatches);
+  const shipmentSelected = isSelected(shipment, sumShipments);
+  return (
+    <>
+      <Badge
+        icon="ORDER"
+        color={orderSelected ? 'ORDER_DARK' : 'ORDER'}
+        hoverColor="ORDER_DARK"
+        label={intl.formatMessage(messages.ordersLabel)}
+        no={sumOrders}
+        onClick={() => {
+          if (!orderSelected && selectAll) {
+            selectAll('order');
+          }
+          if (orderSelected && unSelectAll) {
+            unSelectAll('order');
+          }
+        }}
+      />
+      <Badge
+        icon="ORDER_ITEM"
+        color={orderItemSelected ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'}
+        hoverColor="ORDER_ITEM_DARK"
+        label={intl.formatMessage(messages.itemsLabel)}
+        no={sumOrderItems}
+        onClick={() => {
+          if (!orderItemSelected && selectAll) {
+            selectAll('orderItem');
+          }
+          if (orderItemSelected && unSelectAll) {
+            unSelectAll('orderItem');
+          }
+        }}
+      />
+      <Badge
+        icon="BATCH"
+        color={batchSelected ? 'BATCH_DARK' : 'BATCH'}
+        hoverColor="BATCH_DARK"
+        label={intl.formatMessage(messages.batchesLabel)}
+        no={sumBatches}
+        onClick={() => {
+          if (!batchSelected && selectAll) {
+            selectAll('batch');
+          }
+          if (batchSelected && unSelectAll) {
+            unSelectAll('batch');
+          }
+        }}
+      />
+      <Badge
+        icon="SHIPMENT"
+        color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
+        hoverColor="SHIPMENT_DARK"
+        label={intl.formatMessage(messages.shipmentsLabel)}
+        no={sumShipments}
+        onClick={() => {
+          if (!shipmentSelected && selectAll) {
+            selectAll('shipment');
+          }
+          if (shipmentSelected && unSelectAll) {
+            unSelectAll('shipment');
+          }
+        }}
+      />
+    </>
+  );
+};
 export default injectIntl(SummaryBadge);

@@ -9,9 +9,9 @@ import { encodeId } from 'utils/id';
 
 export const ToggleSlide = createObjectValue({ id: null, type: null, show: false });
 
-const DetailFocused = () => (
+const SlideForm = () => (
   <ToggleSlide>
-    {({ value: { show, id, type }, set }) => {
+    {({ value: { show, id, type, onSuccess }, set }) => {
       let form = null;
       switch (type) {
         default: {
@@ -22,12 +22,34 @@ const DetailFocused = () => (
           form = <OrderForm orderId={encodeId(id)} isSlideView />;
           break;
         }
+        case 'NEW_ORDER': {
+          form = (
+            <OrderForm
+              path="new"
+              isSlideView
+              onSuccessCallback={onSuccess}
+              redirectAfterSuccess={false}
+            />
+          );
+          break;
+        }
         case 'BATCH': {
           form = <BatchForm batchId={encodeId(id)} isSlideView />;
           break;
         }
         case 'SHIPMENT': {
           form = <ShipmentForm shipmentId={encodeId(id)} isSlideView />;
+          break;
+        }
+        case 'NEW_SHIPMENT': {
+          form = (
+            <ShipmentForm
+              path="new"
+              isSlideView
+              onSuccessCallback={onSuccess}
+              redirectAfterSuccess={false}
+            />
+          );
           break;
         }
         case 'PRODUCT': {
@@ -48,4 +70,4 @@ const DetailFocused = () => (
   </ToggleSlide>
 );
 
-export default DetailFocused;
+export default SlideForm;

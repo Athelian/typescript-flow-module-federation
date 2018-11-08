@@ -2,6 +2,7 @@
 import * as React from 'react';
 // import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
+import { getByPathWithDefault as get } from 'utils/fp';
 import {
   ProgressIconStyle,
   BarStyle,
@@ -10,6 +11,8 @@ import {
   CenterTopNumberStyle,
   BatchedBadgeStyle,
   ShippedBadgeStyle,
+  SerialWrapperStyle,
+  ProductNameWrapperStyle,
 } from '../Card/style';
 import { CardWrapperStyle, CardVisualizeStyle, CardTitleStyle } from '../style';
 import Number from '../Card/Number';
@@ -24,17 +27,30 @@ type Props = {
     shippedQuantity: number,
     batched?: number,
     shipped?: number,
+    productProvider: Object,
   },
 };
 
 export default class OrderItemCard extends React.PureComponent<Props> {
   render() {
     const {
-      orderItem: { name, orderedQuantity, batchedQuantity, shippedQuantity, batched, shipped },
+      orderItem: {
+        name,
+        orderedQuantity,
+        batchedQuantity,
+        shippedQuantity,
+        batched,
+        shipped,
+        productProvider,
+      },
     } = this.props;
     return (
       <div className={CardWrapperStyle}>
-        <div className={CardTitleStyle}>{name}</div>
+        <div className={ProductNameWrapperStyle}>
+          <div className={CardTitleStyle}>{name}</div>
+          <div className={SerialWrapperStyle}>{get('', 'product.serial', productProvider)}</div>
+        </div>
+
         <div className={CardVisualizeStyle}>
           {/* number in middle */}
           <div className={NumberLineStyle}>
