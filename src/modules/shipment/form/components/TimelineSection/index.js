@@ -122,8 +122,8 @@ const TimelineSection = ({ isNew }: Props) => (
                       />
                     )
                   }
-                  timelineDate={values.voyages[1].arrival}
-                  sourceName="voyages.1.arrival"
+                  timelineDate={values.voyages[0].arrival}
+                  sourceName="voyages.0.arrival"
                   setFieldDeepValue={setFieldDeepValue}
                   removeArrayItem={removeArrayItem}
                 />
@@ -193,8 +193,8 @@ const TimelineSection = ({ isNew }: Props) => (
                       defaultMessage="SECOND TRANSIT PORT ARRIVAL"
                     />
                   }
-                  timelineDate={values.voyages[2].arrival}
-                  sourceName="voyages.2.arrival"
+                  timelineDate={values.voyages[1].arrival}
+                  sourceName="voyages.1.arrival"
                   setFieldDeepValue={setFieldDeepValue}
                   removeArrayItem={removeArrayItem}
                 />
