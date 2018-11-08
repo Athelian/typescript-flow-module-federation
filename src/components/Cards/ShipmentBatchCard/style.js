@@ -29,7 +29,7 @@ export const ProductImageStyle: string = css`
   border-bottom-right-radius: 0;
   width: 100%;
   height: 80px;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 export const ProductInfoWrapperStyle: string = css`
