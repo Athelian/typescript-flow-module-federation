@@ -93,6 +93,7 @@ export const batchCardFragment = gql`
     packageVolume {
       ...metricFragment
     }
+    packageQuantity
     batchAdjustments {
       id
       quantity
