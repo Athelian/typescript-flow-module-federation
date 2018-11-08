@@ -4,7 +4,6 @@ import { SectionWrapperStyle } from './style';
 
 type OptionalProps = {
   display: Boolean,
-  key: string,
 };
 
 type Props = OptionalProps & {
@@ -12,15 +11,14 @@ type Props = OptionalProps & {
   children: React.Node,
 };
 
-const SectionWrapper = ({ children, id, display, key }: Props) => (
-  <div className={SectionWrapperStyle(display)} id={id} key={key}>
+const SectionWrapper = ({ children, id, display }: Props) => (
+  <div className={SectionWrapperStyle(display)} id={id}>
     {children}
   </div>
 );
 
 SectionWrapper.defaultProps = {
   display: true,
-  key: '',
 };
 
 export default SectionWrapper;

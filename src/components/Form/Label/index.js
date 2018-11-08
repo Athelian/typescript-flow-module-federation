@@ -24,7 +24,7 @@ const defaultProps = {
 };
 
 const Label = ({ required, align, width, children, className, color }: Props) => (
-  <div className={cx(LabelWrapperStyle(align, width, color), className)}>
+  <div className={cx(LabelWrapperStyle({ align, width, color }), className)}>
     {children}
     {required && ' *'}
   </div>

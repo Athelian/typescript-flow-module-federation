@@ -1,13 +1,23 @@
 // @flow
 import { css } from 'react-emotion';
 
-import { borderRadiuses, fontSizes, colors } from 'styles/common';
+import { borderRadiuses, fontSizes, fontSizesWithHeights, colors, presets } from 'styles/common';
 
 export const ProgressBarStyle = (color: string, percent: number) => css`
   background-color: ${colors[color]};
   ${borderRadiuses.BUTTON};
   height: inherit;
   width: ${percent > 1 ? 100 : percent * 100}%;
+`;
+
+export const SerialWrapperStyle = css`
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+`;
+
+export const ProductNameWrapperStyle = css`
+  align-self: center;
 `;
 
 export const ProgressIconStyle = css`
