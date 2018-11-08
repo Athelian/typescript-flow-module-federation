@@ -12,7 +12,7 @@ import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
 import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
-import { WrapperStyle, TableHeaderStyle } from './style';
+import { TableHeaderStyle, HorizonScrollStyle } from './style';
 import Badge from '../SummaryBadge/Badge';
 import TableHeader from './components/TableHeader';
 import TableItem from './components/TableItem';
@@ -57,8 +57,9 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
         </SlideViewNavBar>
       }
     >
-      <div>
-        <div className={WrapperStyle}>
+      <div className={HorizonScrollStyle}>
+        <TableRow>
+          <LineNumber />
           <div className={TableHeaderStyle(totalColumns(orderColumns))}>
             <Badge
               icon="ORDER"
@@ -91,7 +92,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
               no={shipmentIds.length}
             />
           </div>
-        </div>
+        </TableRow>
         <TableRow>
           <LineNumber />
           <TableHeader info={orderColumns} />
