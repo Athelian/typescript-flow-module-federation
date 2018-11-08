@@ -12,7 +12,7 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import { batchListQuery } from 'modules/batch/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import messages from 'modules/order/messages';
+import messages from 'modules/batch/messages';
 
 type Props = {
   onCancel: Function,
@@ -40,8 +40,32 @@ function onSelectBatch({
 
 function SelectBatches({ intl, onCancel, onSelect }: Props) {
   const fields = [
-    { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
+    { title: intl.formatMessage(messages.batchNo), value: 'no' },
+    { title: intl.formatMessage(messages.PO), value: 'poNo' },
+    {
+      title: intl.formatMessage(messages.productName),
+      value: 'product',
+    },
+    {
+      title: intl.formatMessage(messages.deliveredAt),
+      value: 'deliveredAt',
+    },
+    {
+      title: intl.formatMessage(messages.expiredAt),
+      value: 'expiredAt',
+    },
+    {
+      title: intl.formatMessage(messages.producedAt),
+      value: 'producedAt',
+    },
+    {
+      title: intl.formatMessage(messages.updatedAt),
+      value: 'updatedAt',
+    },
+    {
+      title: intl.formatMessage(messages.createdAt),
+      value: 'createdAt',
+    },
   ];
   return (
     <ObjectValue
