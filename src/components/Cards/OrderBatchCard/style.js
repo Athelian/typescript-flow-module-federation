@@ -24,7 +24,7 @@ export const QuantityWrapperStyle: string = css`
 
 export const DeliveryDateWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 95px 90px;
+  grid-template-columns: 65px 120px;
   width: 100%;
   padding: 0 5px;
 `;
