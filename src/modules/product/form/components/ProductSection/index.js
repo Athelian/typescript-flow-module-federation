@@ -43,7 +43,13 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
 
 const ProductSection = ({ isNew }: Props) => (
   <Subscribe to={[ProductInfoContainer]}>
-    {({ originalValues: initialValues, state, setFieldValue, setFieldArrayValue }) => {
+    {({
+      originalValues: initialValues,
+      state,
+      setFieldValue,
+      setFieldArrayValue,
+      removeArrayItem,
+    }) => {
       const values = { ...initialValues, ...state };
       return (
         <div className={ProductSectionWrapperStyle}>
@@ -216,7 +222,7 @@ const ProductSection = ({ isNew }: Props) => (
                 })
               }
             </FormField>
-            {metadataInputFactory({ values: values.metadata, setFieldArrayValue })}
+            {metadataInputFactory({ values: values.metadata, setFieldArrayValue, removeArrayItem })}
 
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>

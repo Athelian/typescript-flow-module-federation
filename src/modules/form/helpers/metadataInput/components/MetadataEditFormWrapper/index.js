@@ -7,7 +7,7 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SectionHeader, SectionWrapper } from 'components/Form';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import MetadataForm from '../MetadataForm';
+import MetadataEditForm from '../MetadataEditForm';
 import { MetadataEditFormWrapperStyle, CustomFieldsSectionWrapperStyle } from './style';
 
 type Props = {
@@ -15,9 +15,16 @@ type Props = {
   onCancel: Function,
   onSave: Function,
   setFieldArrayValue: Function,
+  removeArrayItem: Function,
 };
 
-const MetadataEditFormWrapper = ({ values, onCancel, onSave, setFieldArrayValue }: Props) => (
+const MetadataEditFormWrapper = ({
+  values,
+  onCancel,
+  onSave,
+  setFieldArrayValue,
+  removeArrayItem,
+}: Props) => (
   <Layout
     navBar={
       <SlideViewNavBar>
@@ -54,7 +61,11 @@ const MetadataEditFormWrapper = ({ values, onCancel, onSave, setFieldArrayValue 
           }
         />
         <div className={CustomFieldsSectionWrapperStyle}>
-          <MetadataForm values={values} setFieldArrayValue={setFieldArrayValue} />
+          <MetadataEditForm
+            values={values}
+            setFieldArrayValue={setFieldArrayValue}
+            removeArrayItem={removeArrayItem}
+          />
         </div>
       </SectionWrapper>
     </div>

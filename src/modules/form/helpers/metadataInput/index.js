@@ -13,9 +13,10 @@ import { ShowAllButtonStyle } from './style';
 type Props = {
   values: Array<Object>,
   setFieldArrayValue: Function,
+  removeArrayItem: Function,
 };
 
-const metadataInputFactory = ({ values, setFieldArrayValue }: Props) => (
+const metadataInputFactory = ({ values, setFieldArrayValue, removeArrayItem }: Props) => (
   <FieldItem
     label={
       <Label>
@@ -44,6 +45,7 @@ const metadataInputFactory = ({ values, setFieldArrayValue }: Props) => (
                   onCancel={() => slideToggle(false)}
                   onSave={() => slideToggle(false)}
                   setFieldArrayValue={setFieldArrayValue}
+                  removeArrayItem={removeArrayItem}
                 />
               )}
             </SlideView>
