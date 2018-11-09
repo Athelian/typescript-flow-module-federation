@@ -106,6 +106,7 @@ const httpLink = createHttpLink({
 });
 
 const cache = new InMemoryCache({
+  dataIdFromObject: data => data.id || null,
   fragmentMatcher: new IntrospectionFragmentMatcher({
     introspectionQueryResultData,
   }),

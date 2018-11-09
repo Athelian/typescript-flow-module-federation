@@ -39,19 +39,29 @@ export const createOrderWithReturnDataMutation = gql`
   mutation orderCreate($input: OrderCreateInput!) {
     orderCreate(input: $input) {
       order {
-        id
-        orderItems {
-          id
-          batches {
-            id
-          }
-        }
+        ...orderFormFragment
       }
       violations {
         ...violationFragment
       }
     }
   }
+  ${violationFragment}
+  ${orderFormFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
+  ${partnerCardFragment}
+  ${documentFragment}
+  ${shipmentCardFragment}
+  ${priceFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${batchFormFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${orderCardFragment}
   ${violationFragment}
 `;
 

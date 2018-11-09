@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { BooleanValue, createObjectValue } from 'react-values';
-import { FormattedMessage } from 'react-intl';
+// import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import {
   OrderFocusedShipmentScrollWrapperStyle,
@@ -45,9 +45,6 @@ const OrderFocused = ({
       className={OrderMapWrapperStyle}
       isEmpty={nodes ? nodes.length === 0 : true}
       spacing={70}
-      emptyMessage={
-        <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
-      }
       hasMore={hasMore}
       onLoadMore={loadMore}
       customRender={() =>
@@ -61,7 +58,7 @@ const OrderFocused = ({
               const relations = generateRelation(item, { isCollapsed });
               return relations.map((relation, relationIndex) => {
                 const key = `relation-${relationIndex}`;
-                const itemData = getItemData({ order, orderItem, batch }, relation);
+                const itemData = getItemData({ order, orderItem, batch }, relation) || {};
                 const itemType = getItemType(relation.type);
                 return (
                   <Item
