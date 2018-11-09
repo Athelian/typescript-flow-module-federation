@@ -3,7 +3,11 @@ import { differenceBy } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
 import { createBatchMutation } from 'modules/batch/form/mutation';
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
-import { createOrderMutation, updateOrderItemMutation } from 'modules/order/form/mutation';
+import {
+  createOrderWithReturnDataMutation,
+  updateOrderItemMutation,
+} from 'modules/order/form/mutation';
+// import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import { createMutationRequest } from './index';
 
 export const cloneOrder = async (client: any, order: Object) => {
@@ -12,7 +16,7 @@ export const cloneOrder = async (client: any, order: Object) => {
   const orderRequests = orderIds.map(orderId => {
     const currentOrder = order[orderId];
     const request = mutationRequest({
-      mutation: createOrderMutation,
+      mutation: createOrderWithReturnDataMutation,
       variables: {
         input: {
           poNo: `[cloned] ${currentOrder.poNo}`,
@@ -67,7 +71,6 @@ export const cloneOrderItem = async (client: any, orderItem: Object) => {
     const updateOrderItems = orderUpdate[updateId];
     const request = mutationRequest({
       mutation: updateOrderItemMutation,
-      ignoreResults: true,
       variables: {
         id: updateId,
         input: { orderItems: updateOrderItems },
@@ -173,7 +176,7 @@ export const cloneShipment = async (client: any, shipment: Object) => {
   return [shipmentResults, shipmentFocus];
 };
 
-export const cloneTarget = async (client: any, target: Object) => {
+export const cloneTarget = async ({ client, target }: { client: any, target: Object }) => {
   const { batch, order, orderItem, shipment } = target;
   // TODO: should run in parallel
   const [orderResults, orderFocus] = await cloneOrder(client, order);

@@ -22,9 +22,10 @@ import RelationMapContainer from 'modules/relationMap/container';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { TabItemStyled } from './style';
 
-type Props = {
-  refetch: Function,
-};
+// type Props = {
+//   refetch: Function,
+//   filter: Object,
+// };
 
 const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
@@ -39,7 +40,7 @@ const isDisabledSplit = targetedItem => {
   return true;
 };
 
-const ActionSubscribe = ({ refetch }: Props) => (
+const ActionSubscribe = () => (
   <ApolloConsumer>
     {client => (
       <Subscribe
@@ -52,13 +53,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
         ]}
       >
         {(
-          {
-            state: { focusMode, targetedItem },
-            isTargetTreeMode,
-            isTargetMode,
-            selectTargetItem,
-            reset: cancelTarget,
-          },
+          { state: { focusMode, targetedItem }, isTargetAnyItem, selectTargetItem, cancelTarget },
           { setResult, setAction, state: { currentAction } },
           { clone },
           { split },
@@ -74,8 +69,12 @@ const ActionSubscribe = ({ refetch }: Props) => (
                 icon="CLONE"
                 active={actionKey === 'clone'}
                 onClick={async () => {
-                  const [newResult, newFocus] = await clone(client, targetedItem, focusMode);
-                  await refetch();
+                  const [newResult, newFocus] = await clone({
+                    client,
+                    target: targetedItem,
+                    focusMode,
+                  });
+                  // await refetch();
                   setResult(newResult);
                   selectTargetItem(newFocus);
                   setAction('cloned');
@@ -129,9 +128,15 @@ const ActionSubscribe = ({ refetch }: Props) => (
           );
 
           return (
-            (isTargetMode() || isTargetTreeMode()) && (
+            isTargetAnyItem() && (
               <>
-                <ActionSelector target={targetedItem} onCancelTarget={cancelTarget}>
+                <ActionSelector
+                  target={targetedItem}
+                  onCancelTarget={() => {
+                    cancelTarget();
+                    setAction('');
+                  }}
+                >
                   {(function renderPanel() {
                     switch (currentAction) {
                       default:
@@ -145,7 +150,7 @@ const ActionSubscribe = ({ refetch }: Props) => (
                               type="button"
                               onClick={() => {
                                 cancelTarget();
-                                setAction(null);
+                                setAction('');
                               }}
                             >
                               <Label>Clear All</Label>
@@ -165,24 +170,21 @@ const ActionSubscribe = ({ refetch }: Props) => (
                 </ActionSelector>
                 {currentAction === 'split' && (
                   <SplitPanel
+                    targetedItem={targetedItem}
                     onApply={async splitData => {
                       const [splitResult, splitFocus] = await split(
                         client,
                         targetedItem,
                         splitData
                       );
-                      await refetch();
+                      // await refetch();
                       setResult(splitResult);
                       selectTargetItem(splitFocus);
                     }}
                   />
                 )}
                 {currentAction === 'connect' && (
-                  <ConnectPanel
-                    connect={connectContainer}
-                    refetch={refetch}
-                    targetedItem={targetedItem}
-                  />
+                  <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
                 )}
               </>
             )

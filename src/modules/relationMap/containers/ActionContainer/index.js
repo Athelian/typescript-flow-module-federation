@@ -14,6 +14,10 @@ class ActionContainer extends Container<State> {
     scrolled: true,
   };
 
+  clearResult = () => {
+    this.setState({ result: {} });
+  };
+
   setResult = (result: Object | Function) => {
     this.setState(
       typeof result === 'function'
