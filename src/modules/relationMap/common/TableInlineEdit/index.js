@@ -27,6 +27,7 @@ import {
   batchColumns,
   shipmentColumns,
 } from './constants';
+import TableEmptyItem from './components/TableEmptyItem';
 
 type Props = {
   onSave: () => void,
@@ -102,6 +103,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
         </TableRow>
         {orderIds.map((orderId, counter) => {
           const order = mappingObjects.order[orderId];
+          if (!order) return null;
           // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
           const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
             item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
@@ -131,60 +133,90 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                         validator={orderValidator}
                       />
                     ) : (
-                      Object.keys(orderItem.relation.batch)
-                        .filter(batchId => batchIds.includes(batchId))
-                        .map(batchId => (
-                          <TableItem
-                            key={`order.${counter + 1}.duplication.${
-                              orderItem.data.id
-                            }.batch.${batchId}`}
-                            cell={`order.${counter + 1}.duplication.${
-                              orderItem.data.id
-                            }.batch.${batchId}`}
-                            fields={orderColumnFields}
-                            values={order.data}
-                            validator={orderValidator}
-                          />
-                        ))
+                      <>
+                        {Object.keys(orderItem.relation.batch)
+                          .filter(batchId => batchIds.includes(batchId))
+                          .map(batchId => (
+                            <TableItem
+                              key={`order.${counter + 1}.duplication.${
+                                orderItem.data.id
+                              }.batch.${batchId}`}
+                              cell={`order.${counter + 1}.duplication.${
+                                orderItem.data.id
+                              }.batch.${batchId}`}
+                              fields={orderColumnFields}
+                              values={order.data}
+                              validator={orderValidator}
+                            />
+                          ))}
+                        {Object.keys(orderItem.relation.batch)
+                          .filter(batchId => !batchIds.includes(batchId))
+                          .map(batchId => (
+                            <TableEmptyItem
+                              key={`order.${counter + 1}.hidden.${
+                                orderItem.data.id
+                              }.batch.${batchId}`}
+                              fields={orderColumnFields}
+                            />
+                          ))}
+                      </>
                     )
                   )
                 )}
               </div>
               <div>
-                {orderItems.map((orderItem, position) =>
-                  Object.keys(orderItem.relation.batch).length === 0 ? (
-                    <TableItem
-                      cell={`orderItem.${counter + 1}.${position}`}
-                      key={`orderItem.${counter + 1}.${orderItem.data.id}`}
-                      fields={orderItemColumnFields}
-                      values={orderItem.data}
-                      validator={orderValidator}
-                    />
-                  ) : (
-                    Object.keys(orderItem.relation.batch)
-                      .filter(batchId => batchIds.includes(batchId))
-                      .map(batchId => (
-                        <TableItem
-                          cell={`orderItem.${counter + 1}.${position}.duplication.${batchId}`}
-                          key={`orderItem.${counter + 1}.duplication.${batchId}`}
-                          fields={orderItemColumnFields}
-                          values={orderItem.data}
-                          validator={orderValidator}
-                        />
-                      ))
+                {orderItems.length ? (
+                  orderItems.map((orderItem, position) =>
+                    Object.keys(orderItem.relation.batch).length === 0 ? (
+                      <TableItem
+                        cell={`orderItem.${counter + 1}.${position}`}
+                        key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                        fields={orderItemColumnFields}
+                        values={orderItem.data}
+                        validator={orderValidator}
+                      />
+                    ) : (
+                      <>
+                        {Object.keys(orderItem.relation.batch)
+                          .filter(batchId => batchIds.includes(batchId))
+                          .map(batchId => (
+                            <TableItem
+                              cell={`orderItem.${counter + 1}.${position}.duplication.${batchId}`}
+                              key={`orderItem.${counter + 1}.duplication.${batchId}`}
+                              fields={orderItemColumnFields}
+                              values={orderItem.data}
+                              validator={orderValidator}
+                            />
+                          ))}
+                        {Object.keys(orderItem.relation.batch)
+                          .filter(batchId => !batchIds.includes(batchId))
+                          .map(batchId => (
+                            <TableEmptyItem
+                              key={`orderItem.${counter + 1}.hidden.${batchId}`}
+                              fields={orderItemColumnFields}
+                            />
+                          ))}
+                      </>
+                    )
                   )
+                ) : (
+                  <TableEmptyItem fields={orderItemColumnFields} />
                 )}
               </div>
               <div>
-                {batches.map((batch, position) => (
-                  <TableItem
-                    cell={`batch.${counter + 1}.${position}`}
-                    key={batch.data.id}
-                    fields={batchColumnFields}
-                    values={batch.data}
-                    validator={batchValidator}
-                  />
-                ))}
+                {batches.length ? (
+                  batches.map((batch, position) => (
+                    <TableItem
+                      cell={`batch.${counter + 1}.${position}`}
+                      key={batch.data.id}
+                      fields={batchColumnFields}
+                      values={batch.data}
+                      validator={batchValidator}
+                    />
+                  ))
+                ) : (
+                  <TableEmptyItem fields={batchColumnFields} />
+                )}
               </div>
               <div>
                 {shipmentIds
