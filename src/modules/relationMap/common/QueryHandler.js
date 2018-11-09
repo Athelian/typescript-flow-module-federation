@@ -46,8 +46,7 @@ const QueryHandler = ({
       onChangePage();
     }
   };
-  // Save on local storage for table inline edit
-  window.localStorage.setItem(model, JSON.stringify(nodes));
+
   return children({ nodes, hasMore, loadMore, currentPage });
 };
 
