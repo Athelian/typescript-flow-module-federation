@@ -6,14 +6,22 @@ import SlideView from 'components/SlideView';
 import { FieldItem, Label } from 'components/Form';
 import Icon from 'components/Icon';
 
+import MetadataEditFormWrapper from './components/MetadataEditFormWrapper';
+
 import { ShowAllButtonStyle } from './style';
 
-const metadataInputFactory = () => (
+type Props = {
+  values: Array<Object>,
+  setFieldArrayValue: Function,
+};
+
+const metadataInputFactory = ({ values, setFieldArrayValue }: Props) => (
   <FieldItem
     label={
       <Label>
         <Icon icon="METADATA" />
-        <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />({'12'})
+        <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />(
+        {values.length})
       </Label>
     }
     input={
@@ -30,7 +38,14 @@ const metadataInputFactory = () => (
               onRequestClose={() => slideToggle(false)}
               options={{ width: '1030px' }}
             >
-              {isOpen && 'metadata slide view'}
+              {isOpen && (
+                <MetadataEditFormWrapper
+                  values={values}
+                  onCancel={() => slideToggle(false)}
+                  onSave={() => slideToggle(false)}
+                  setFieldArrayValue={setFieldArrayValue}
+                />
+              )}
             </SlideView>
           </>
         )}

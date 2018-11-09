@@ -1,7 +1,13 @@
 // @flow
 import { Container } from 'unstated';
+import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { cleanUpData, cleanFalsy } from 'utils/data';
+import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
+
+type Metadata = {
+  key: string,
+  value: string,
+};
 
 type FormState = {
   name?: string,
@@ -9,7 +15,7 @@ type FormState = {
   janCode?: ?string,
   hsCode?: ?string,
   material?: ?string,
-  metadata?: Array<Object>,
+  metadata?: Array<Metadata>,
 };
 
 const initValues = {
@@ -31,6 +37,21 @@ export default class ProductInfoContainer extends Container<FormState> {
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
       [name]: value,
+    });
+  };
+
+  setFieldArrayValue = (path: string, value: any) => {
+    this.setState(prevState => {
+      const newState = set(cloneDeep(prevState), path, value);
+      return newState;
+    });
+  };
+
+  removeArrayItem = (path: string) => {
+    this.setState(prevState => {
+      const cloneState = cloneDeep(prevState);
+      unset(cloneState, path);
+      return removeNulls(cloneState);
     });
   };
 
