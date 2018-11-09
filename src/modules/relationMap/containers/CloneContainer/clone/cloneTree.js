@@ -2,19 +2,11 @@
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
 import { orderFormQuery } from 'modules/order/form/query';
 import { createOrderWithReturnDataMutation } from 'modules/order/form/mutation';
-import { orderListQuery } from 'modules/relationMap/orderFocused/query';
+// import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import { getByPathWithDefault as get } from 'utils/fp';
 import { createMutationRequest } from './index';
 
-export const cloneTree = async ({
-  client,
-  target,
-  filter,
-}: {
-  client: any,
-  target: Object,
-  filter: Object,
-}) => {
+export const cloneTree = async ({ client, target }: { client: any, target: Object }) => {
   const mutationRequest = createMutationRequest(client);
   const { shipment, order, orderItem, batch } = target;
   const shipmentIds = Object.keys(shipment);
@@ -103,16 +95,6 @@ export const cloneTree = async ({
     client.mutate({
       mutation: createOrderWithReturnDataMutation,
       variables: { input },
-      update: (store, { data }) => {
-        const query = { query: orderListQuery, variables: filter };
-        const orderList = store.readQuery(query);
-        const hasList = get(false, 'orders.nodes', orderList);
-        if (hasList) {
-          const newOrder = get({}, 'orderCreate.order', data);
-          orderList.orders.nodes.push(newOrder);
-        }
-        store.writeQuery({ query: orderListQuery, variables: filter, data: orderList });
-      },
     })
   );
   const newOrders = await Promise.all(orderCreateMutates);

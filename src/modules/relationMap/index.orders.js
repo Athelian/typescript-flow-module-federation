@@ -29,8 +29,8 @@ const Order = () => (
           sortBy: { [sort.field]: sort.direction },
         };
         return (
-          <Query query={query} variables={filterVariables} fetchPolicy="cache-and-network">
-            {({ loading, data, fetchMore, error, refetch }) => (
+          <Query query={query} variables={filterVariables} fetchPolicy="network-only">
+            {({ loading, data, fetchMore, error }) => (
               <QueryHandler
                 model="orders"
                 filter={{ perPage }}
@@ -38,14 +38,11 @@ const Order = () => (
                 fetchMore={fetchMore}
                 error={error}
               >
-                {({ nodes, hasMore, loadMore, currentPage }) => {
+                {({ nodes, hasMore, loadMore }) => {
                   const order = formatOrderData(nodes || []);
                   return (
                     <>
-                      <ActionSubscribe
-                        filter={filterVariables}
-                        refetch={() => refetch({ perPage: currentPage * perPage })}
-                      />
+                      <ActionSubscribe />
                       <Subscribe to={[ActionContainer]}>
                         {({ clearResult }) => (
                           <SortFilter

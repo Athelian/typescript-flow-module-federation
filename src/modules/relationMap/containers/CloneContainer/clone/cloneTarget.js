@@ -7,10 +7,10 @@ import {
   createOrderWithReturnDataMutation,
   updateOrderItemMutation,
 } from 'modules/order/form/mutation';
-import { orderListQuery } from 'modules/relationMap/orderFocused/query';
+// import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import { createMutationRequest } from './index';
 
-export const cloneOrder = async (client: any, order: Object, filter: Object) => {
+export const cloneOrder = async (client: any, order: Object) => {
   const mutationRequest = createMutationRequest(client);
   const orderIds = Object.keys(order);
   const orderRequests = orderIds.map(orderId => {
@@ -23,24 +23,6 @@ export const cloneOrder = async (client: any, order: Object, filter: Object) => 
           exporterId: currentOrder.exporter && currentOrder.exporter.id,
           currency: currentOrder.currency,
         },
-      },
-      update: (store, { data }) => {
-        const query = orderListQuery;
-        const variables = filter;
-        const orderList = store.readQuery({
-          query,
-          variables,
-        });
-        const hasList = getByPathWithDefault(false, 'orders.nodes', orderList);
-        if (hasList) {
-          const newOrder = getByPathWithDefault({}, 'orderCreate.order', data);
-          orderList.orders.nodes.push(newOrder);
-          // store.writeQuery({
-          //   query,
-          //   variables,
-          //   data: { ...orderList }
-          // });
-        }
       },
     });
     return request;
@@ -194,18 +176,10 @@ export const cloneShipment = async (client: any, shipment: Object) => {
   return [shipmentResults, shipmentFocus];
 };
 
-export const cloneTarget = async ({
-  client,
-  target,
-  filter,
-}: {
-  client: any,
-  target: Object,
-  filter: Object,
-}) => {
+export const cloneTarget = async ({ client, target }: { client: any, target: Object }) => {
   const { batch, order, orderItem, shipment } = target;
   // TODO: should run in parallel
-  const [orderResults, orderFocus] = await cloneOrder(client, order, filter);
+  const [orderResults, orderFocus] = await cloneOrder(client, order);
   const [shipmentResults, shipmentFocus] = await cloneShipment(client, shipment);
   const [orderItemResult, orderItemFocus] = await cloneOrderItem(client, orderItem);
   const [batchResult, batchFocus] = await cloneBatch(client, batch);

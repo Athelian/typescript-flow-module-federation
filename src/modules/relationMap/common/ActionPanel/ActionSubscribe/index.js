@@ -22,10 +22,10 @@ import RelationMapContainer from 'modules/relationMap/container';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { TabItemStyled } from './style';
 
-type Props = {
-  refetch: Function,
-  filter: Object,
-};
+// type Props = {
+//   refetch: Function,
+//   filter: Object,
+// };
 
 const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
@@ -40,7 +40,7 @@ const isDisabledSplit = targetedItem => {
   return true;
 };
 
-const ActionSubscribe = ({ refetch, filter }: Props) => (
+const ActionSubscribe = () => (
   <ApolloConsumer>
     {client => (
       <Subscribe
@@ -73,7 +73,6 @@ const ActionSubscribe = ({ refetch, filter }: Props) => (
                     client,
                     target: targetedItem,
                     focusMode,
-                    filter,
                   });
                   // await refetch();
                   setResult(newResult);
@@ -177,18 +176,14 @@ const ActionSubscribe = ({ refetch, filter }: Props) => (
                         targetedItem,
                         splitData
                       );
-                      await refetch();
+                      // await refetch();
                       setResult(splitResult);
                       selectTargetItem(splitFocus);
                     }}
                   />
                 )}
                 {currentAction === 'connect' && (
-                  <ConnectPanel
-                    connect={connectContainer}
-                    refetch={refetch}
-                    targetedItem={targetedItem}
-                  />
+                  <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
                 )}
               </>
             )

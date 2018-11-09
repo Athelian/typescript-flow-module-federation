@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { BooleanValue, createObjectValue } from 'react-values';
-// import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import {
   OrderFocusedShipmentScrollWrapperStyle,
@@ -45,6 +45,9 @@ const OrderFocused = ({
       className={OrderMapWrapperStyle}
       isEmpty={nodes ? nodes.length === 0 : true}
       spacing={70}
+      emptyMessage={
+        <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
+      }
       hasMore={hasMore}
       onLoadMore={loadMore}
       customRender={() =>

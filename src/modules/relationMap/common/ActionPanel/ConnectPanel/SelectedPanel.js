@@ -25,7 +25,7 @@ const { SelectedPanelWrapper } = style;
 
 type Props = {
   connect: Object,
-  refetch: Function,
+  // refetch: Function,
 };
 
 const getConnectTypeMessage = (type: string) => {
@@ -53,7 +53,7 @@ const isSameCurrency = (currency: string) => (item: Object) => {
   return compareCurrency === currency;
 };
 
-const SelectedPanel = ({ connect, refetch }: Props) => {
+const SelectedPanel = ({ connect }: Props) => {
   const {
     state: { connectType },
     setCurrentStep,
@@ -148,13 +148,12 @@ const SelectedPanel = ({ connect, refetch }: Props) => {
                             const exporter = get('', 'order.exporter', firstItem);
                             const sameCurrency = allOrderItem.every(isSameCurrency(firstCurrency));
                             const currency = sameCurrency ? firstCurrency : null;
-                            const formatedOrderItem = allOrderItem.map(
-                              currentOrderItem =>
-                                isSameCurrency
-                                  ? currentOrderItem
-                                  : Object.assign(currentOrderItem, {
-                                      price: { amount: 0, currency: 'ALL' },
-                                    })
+                            const formatedOrderItem = allOrderItem.map(currentOrderItem =>
+                              isSameCurrency
+                                ? currentOrderItem
+                                : Object.assign(currentOrderItem, {
+                                    price: { amount: 0, currency: 'ALL' },
+                                  })
                             );
                             orderItemContainer.initDetailValues(formatedOrderItem);
                             orderInfoContainer.initDetailValues({
@@ -169,7 +168,7 @@ const SelectedPanel = ({ connect, refetch }: Props) => {
                               let result = null;
                               if (connectType === 'ORDER') {
                                 result = get(null, 'orderCreate.order', data);
-                                await refetch();
+                                // await refetch();
                               }
                               if (connectType === 'SHIPMENT') {
                                 // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
