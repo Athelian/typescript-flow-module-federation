@@ -12433,6 +12433,11 @@ react-treebeard@^3.1.0:
     shallowequal "^1.1.0"
     velocity-react "^1.4.1"
 
+react-use-idb@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-use-idb/-/react-use-idb-1.0.1.tgz#bd8b41d500660b0bc31fea1b08200f86f2cc76e2"
+  integrity sha512-gbjYDLIYPiBCzT8+P4qRsql3GzLE4qqQmHUg1w/9aqHEhL3ZTa6Etjl0EkhtlulnyTtz9l/FPNev5hAZLMJkSQ==
+
 react-values@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/react-values/-/react-values-0.3.1.tgz#3d60489e8230b37b36080f7e53a3639dfe0192f9"

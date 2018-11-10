@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { useIdb } from 'react-use-idb';
 import Layout from 'components/Layout';
 import { FormattedMessage } from 'react-intl';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -37,7 +38,8 @@ type Props = {
 };
 
 export default function TableInlineEdit({ type, selected, onSave, onCancel }: Props) {
-  const data = JSON.parse(window.localStorage.getItem(type)) || [];
+  const [data] = useIdb(type, []);
+
   const { sumShipments, sumOrders, sumOrderItems, sumBatches, ...mappingObjects } = formatOrderData(
     data
   );

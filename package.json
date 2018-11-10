@@ -47,6 +47,7 @@
     "react-intl": "^2.7.2",
     "react-tiny-virtual-list": "^2.2.0",
     "react-transition-group": "^2.5.0",
+    "react-use-idb": "^1.0.1",
     "react-values": "^0.3.1",
     "scroll-into-view-if-needed": "^2.2.20",
     "unstated": "^2.1.1",
