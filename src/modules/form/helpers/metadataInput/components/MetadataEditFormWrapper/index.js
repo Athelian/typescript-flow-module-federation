@@ -10,66 +10,79 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import MetadataEditForm from '../MetadataEditForm';
 import { MetadataEditFormWrapperStyle, CustomFieldsSectionWrapperStyle } from './style';
 
-type Props = {
-  values: Array<Object>,
-  onCancel: Function,
-  onSave: Function,
-  setFieldArrayValue: Function,
-  removeArrayItem: Function,
+type OptionalProps = {
+  metadata: Array<Object>,
+  onFormReady: () => void,
 };
 
-const MetadataEditFormWrapper = ({
-  values,
-  onCancel,
-  onSave,
-  setFieldArrayValue,
-  removeArrayItem,
-}: Props) => (
-  <Layout
-    navBar={
-      <SlideViewNavBar>
-        <EntityIcon icon="METADATA" color="METADATA" />
-        <JumpToSection>
-          <SectionTabs
-            link="metadataSection"
-            label={
-              <>
-                <FormattedMessage
-                  id="modules.metadata.sectionHeader"
-                  defaultMessage="CUSTOM FIELDS"
-                />
-                ({values.length})
-              </>
-            }
-            icon="METADATA"
-          />
-        </JumpToSection>
-        <CancelButton onClick={onCancel} />
-        <SaveButton onClick={onSave} />
-      </SlideViewNavBar>
-    }
-  >
-    <div className={MetadataEditFormWrapperStyle}>
-      <SectionWrapper id="metadataSection">
-        <SectionHeader
-          icon="METADATA"
-          title={
-            <>
-              <FormattedMessage id="module.metadata.sectionHeader" defaultMessage="CUSTOM FIELDS" />
-              ({values.length})
-            </>
-          }
-        />
-        <div className={CustomFieldsSectionWrapperStyle}>
-          <MetadataEditForm
-            values={values}
-            setFieldArrayValue={setFieldArrayValue}
-            removeArrayItem={removeArrayItem}
-          />
+type Props = OptionalProps & {
+  onCancel: Function,
+  onSave: Function,
+};
+
+const defaultProps = {
+  metadata: [],
+  onFormReady: () => {},
+};
+
+class MetadataEditFormWrapper extends React.Component<Props> {
+  static defaultProps = defaultProps;
+
+  componentDidMount() {
+    const { onFormReady } = this.props;
+
+    if (onFormReady) onFormReady();
+  }
+
+  render() {
+    const { metadata, onCancel, onSave } = this.props;
+    return (
+      <Layout
+        navBar={
+          <SlideViewNavBar>
+            <EntityIcon icon="METADATA" color="METADATA" />
+            <JumpToSection>
+              <SectionTabs
+                link="metadataSection"
+                label={
+                  <>
+                    <FormattedMessage
+                      id="modules.metadata.sectionHeader"
+                      defaultMessage="CUSTOM FIELDS"
+                    />
+                    ({metadata.length})
+                  </>
+                }
+                icon="METADATA"
+              />
+            </JumpToSection>
+            <CancelButton onClick={onCancel} />
+            <SaveButton onClick={onSave} />
+          </SlideViewNavBar>
+        }
+      >
+        <div className={MetadataEditFormWrapperStyle}>
+          <SectionWrapper id="metadataSection">
+            <SectionHeader
+              icon="METADATA"
+              title={
+                <>
+                  <FormattedMessage
+                    id="module.metadata.sectionHeader"
+                    defaultMessage="CUSTOM FIELDS"
+                  />
+                  ({metadata.length})
+                </>
+              }
+            />
+            <div className={CustomFieldsSectionWrapperStyle}>
+              <MetadataEditForm />
+            </div>
+          </SectionWrapper>
         </div>
-      </SectionWrapper>
-    </div>
-  </Layout>
-);
+      </Layout>
+    );
+  }
+}
 
 export default MetadataEditFormWrapper;

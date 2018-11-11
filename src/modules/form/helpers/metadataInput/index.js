@@ -1,28 +1,28 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import { FieldItem, Label } from 'components/Form';
 import Icon from 'components/Icon';
 
 import MetadataEditFormWrapper from './components/MetadataEditFormWrapper';
-
+import MetadataFormContainer from './container';
 import { ShowAllButtonStyle } from './style';
 
 type Props = {
-  values: Array<Object>,
-  setFieldArrayValue: Function,
-  removeArrayItem: Function,
+  metadata: Array<Object>,
+  setFieldValue: Function,
 };
 
-const metadataInputFactory = ({ values, setFieldArrayValue, removeArrayItem }: Props) => (
+const metadataInputFactory = ({ metadata, setFieldValue }: Props) => (
   <FieldItem
     label={
       <Label>
         <Icon icon="METADATA" />
         <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />(
-        {values.length})
+        {metadata.length})
       </Label>
     }
     input={
@@ -40,13 +40,24 @@ const metadataInputFactory = ({ values, setFieldArrayValue, removeArrayItem }: P
               options={{ width: '1030px' }}
             >
               {isOpen && (
-                <MetadataEditFormWrapper
-                  values={values}
-                  onCancel={() => slideToggle(false)}
-                  onSave={() => slideToggle(false)}
-                  setFieldArrayValue={setFieldArrayValue}
-                  removeArrayItem={removeArrayItem}
-                />
+                <Subscribe to={[MetadataFormContainer]}>
+                  {({ initDetailValues, originalValues, state }) => {
+                    const values = { ...originalValues, ...state };
+                    return (
+                      <MetadataEditFormWrapper
+                        metadata={values.metadata}
+                        onCancel={() => slideToggle(false)}
+                        onSave={() => {
+                          slideToggle(false);
+                          setFieldValue('metadata', values.metadata);
+                        }}
+                        onFormReady={() => {
+                          initDetailValues({ metadata });
+                        }}
+                      />
+                    );
+                  }}
+                </Subscribe>
               )}
             </SlideView>
           </>

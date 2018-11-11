@@ -10,11 +10,6 @@ type Metadata = {
 };
 
 type FormState = {
-  name?: string,
-  serial?: string,
-  janCode?: ?string,
-  hsCode?: ?string,
-  material?: ?string,
   metadata?: Array<Metadata>,
 };
 
@@ -22,10 +17,16 @@ const initValues = {
   metadata: [],
 };
 
-export default class ProductInfoContainer extends Container<FormState> {
+export default class MetadataFormContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;
+
+  setFieldValue = (name: string, value: mixed) => {
+    this.setState({
+      [name]: value,
+    });
+  };
 
   isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
 
@@ -34,13 +35,12 @@ export default class ProductInfoContainer extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
-  setFieldValue = (name: string, value: mixed) => {
-    this.setState({
-      [name]: value,
-    });
+  initDetailValues = (values: Object) => {
+    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    this.setState(parsedValues);
+    this.originalValues = Object.assign({}, parsedValues);
   };
 
-  // FIXME: delete
   setFieldArrayValue = (path: string, value: any) => {
     this.setState(prevState => {
       const newState = set(cloneDeep(prevState), path, value);
@@ -54,11 +54,5 @@ export default class ProductInfoContainer extends Container<FormState> {
       unset(cloneState, path);
       return removeNulls(cloneState);
     });
-  };
-
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = cleanUpData(values);
-    this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
   };
 }
