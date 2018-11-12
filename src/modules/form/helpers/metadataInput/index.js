@@ -61,7 +61,7 @@ const metadataInputFactory = ({ metadata, setFieldValue }: Props) => (
                                 const { id, ...rest } = item;
                                 return { ...rest };
                               })
-                              .filter(item => item.key !== '' || item.value !== '')
+                              .filter(item => item.key !== '')
                           );
                         }}
                         onFormReady={() => {
