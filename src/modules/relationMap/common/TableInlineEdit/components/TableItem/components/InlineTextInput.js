@@ -6,6 +6,7 @@ import { useTextInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
 
 type OptionalProps = {
   isRequired: boolean,
+  disabled: boolean,
 };
 
 type Props = OptionalProps & {
@@ -15,14 +16,22 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isRequired: false,
+  disabled: false,
 };
 
-export default function InlineTextInput({ name, value, isRequired }: Props) {
+export default function InlineTextInput({ name, value, isRequired, disabled }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
   return (
-    <DefaultStyle type="text" isFocused={isFocused} hasError={hasError} forceHoverStyle>
+    <DefaultStyle
+      disabled={disabled}
+      type="text"
+      isFocused={isFocused}
+      hasError={hasError}
+      forceHoverStyle
+    >
       <TextInput
         name={name}
+        disabled={disabled}
         {...inputHandlers}
         onBlur={() => {
           inputHandlers.onBlur();

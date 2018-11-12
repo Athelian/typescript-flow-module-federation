@@ -20,6 +20,13 @@ export const orderColumnFields = [
     type: 'date',
   },
   {
+    name: 'exporter.name',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
     name: 'currency',
     type: 'enum',
   },
@@ -93,6 +100,7 @@ export const orderColumns = [
       <FormattedMessage {...orderMessages.PO} />,
       <FormattedMessage {...orderMessages.PI} />,
       <FormattedMessage {...orderMessages.date} />,
+      <FormattedMessage {...orderMessages.exporter} />,
       <FormattedMessage {...orderMessages.currency} />,
       <FormattedMessage {...orderMessages.incoterm} />,
       <FormattedMessage {...orderMessages.deliveryPlace} />,
