@@ -8,6 +8,7 @@ import InlineNumberInput from './components/InlineNumberInput';
 import InlineDateInput from './components/InlineDateInput';
 import InlineSearchEnumInput from './components/InlineSearchEnumInput';
 import InlineInChargeInput from './components/InlineInChargeInput';
+import InlineTagInput from './components/InlineTagInput';
 
 type Props = {
   cell: string,
@@ -35,6 +36,7 @@ function renderItem({
   if (type === 'date') return <InlineDateInput name={name} value={value} {...meta} />;
   if (type === 'enum') return <InlineSearchEnumInput name={name} value={value} {...meta} />;
   if (type === 'inCharges') return <InlineInChargeInput name={name} values={value} {...meta} />;
+  if (type === 'tags') return <InlineTagInput name={name} values={value} {...meta} />;
 
   return <InlineTextInput name={name} value={value} {...meta} />;
 }

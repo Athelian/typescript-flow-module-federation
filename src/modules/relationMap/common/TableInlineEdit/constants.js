@@ -55,6 +55,9 @@ export const orderColumnFields = [
   {
     name: 'tags',
     type: 'tags',
+    meta: {
+      tagType: 'Order',
+    },
   },
 ];
 
