@@ -29,10 +29,17 @@ export const orderColumnFields = [
   {
     name: 'currency',
     type: 'enum',
+    meta: {
+      enumType: 'Currency',
+      isRequired: true,
+    },
   },
   {
     name: 'incoterm',
     type: 'enum',
+    meta: {
+      enumType: 'Incoterm',
+    },
   },
   {
     name: 'deliveryPlace',
@@ -64,6 +71,10 @@ export const orderItemColumnFields = [
   {
     name: 'price.currency',
     type: 'enum',
+    meta: {
+      enumType: 'Currency',
+      isRequired: true,
+    },
   },
   {
     name: 'quantity',

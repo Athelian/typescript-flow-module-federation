@@ -6,6 +6,7 @@ import { WrapperStyle, ItemStyle } from './style';
 import InlineTextInput from './components/InlineTextInput';
 import InlineNumberInput from './components/InlineNumberInput';
 import InlineDateInput from './components/InlineDateInput';
+import InlineSearchEnumInput from './components/InlineSearchEnumInput';
 
 type Props = {
   cell: string,
@@ -31,6 +32,7 @@ function renderItem({
 }) {
   if (type === 'number') return <InlineNumberInput name={name} value={value} {...meta} />;
   if (type === 'date') return <InlineDateInput name={name} value={value} {...meta} />;
+  if (type === 'enum') return <InlineSearchEnumInput name={name} value={value} {...meta} />;
 
   return <InlineTextInput name={name} value={value} {...meta} />;
 }
