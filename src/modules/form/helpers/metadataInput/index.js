@@ -7,6 +7,7 @@ import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import { FieldItem, Label } from 'components/Form';
 import Icon from 'components/Icon';
+import { injectUid } from 'utils/id';
 import MetadataEditFormWrapper from './components/MetadataEditFormWrapper';
 import MetadataFormContainer from './container';
 import { ShowAllButtonStyle, MetadataIconStyle } from './style';
@@ -56,7 +57,7 @@ const metadataInputFactory = ({ metadata, setFieldValue }: Props) => (
                           setFieldValue('metadata', values.metadata);
                         }}
                         onFormReady={() => {
-                          initDetailValues({ metadata });
+                          initDetailValues({ metadata: metadata.map(item => injectUid(item)) });
                         }}
                       />
                     );
