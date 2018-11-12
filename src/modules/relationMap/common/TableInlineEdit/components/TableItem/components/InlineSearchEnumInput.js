@@ -75,7 +75,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                 emitter.emit('INLINE_CHANGE', {
                   name,
                   hasError: !!isRequired,
-                  value: inputHandlers.value,
+                  value: '',
                 });
                 inputHandlers.onFocus();
               }, 0);

@@ -46,6 +46,13 @@ export const orderColumnFields = [
     type: 'text',
   },
   {
+    name: 'inCharges',
+    type: 'inCharges',
+    meta: {
+      max: 5,
+    },
+  },
+  {
     name: 'tags',
     type: 'tags',
   },
@@ -115,6 +122,7 @@ export const orderColumns = [
       <FormattedMessage {...orderMessages.currency} />,
       <FormattedMessage {...orderMessages.incoterm} />,
       <FormattedMessage {...orderMessages.deliveryPlace} />,
+      <FormattedMessage {...orderMessages.inCharge} />,
       <FormattedMessage {...orderMessages.tags} />,
     ],
   },
