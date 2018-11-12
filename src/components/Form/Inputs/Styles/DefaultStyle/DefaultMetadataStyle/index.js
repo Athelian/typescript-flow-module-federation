@@ -17,6 +17,7 @@ type OptionalProps = {
   rearrange: boolean,
   isKeyReadOnly: boolean,
   onRemove?: Function,
+  width: string,
 };
 
 type Props = OptionalProps & {
@@ -27,12 +28,12 @@ type Props = OptionalProps & {
   targetName: string,
   setFieldArrayValue: Function,
   dragHandleProps?: any,
-  width: string,
 };
 
 const defaultProps = {
   rearrange: false,
   isKeyReadOnly: true,
+  width: '200px',
 };
 
 const DefaultMetadataStyle = ({
@@ -57,7 +58,7 @@ const DefaultMetadataStyle = ({
         </div>
       )}
       {isKeyReadOnly ? (
-        <Label>{metadata.key}</Label>
+        <Label width={width}>{metadata.key}</Label>
       ) : (
         <FormField
           name={`${targetName}.key`}
@@ -68,11 +69,12 @@ const DefaultMetadataStyle = ({
             const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
             return (
               <DefaultStyle
+                type="label"
                 width={width}
                 isFocused={isFocused}
                 hasError={isTouched && errorMessage}
               >
-                <TextInput name={name} {...rest} />
+                <TextInput name={name} {...rest} align="left" />
               </DefaultStyle>
             );
           }}
