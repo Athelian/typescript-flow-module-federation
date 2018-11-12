@@ -18,7 +18,7 @@ const getPrecision = (quantityType: string) => {
   }
 };
 
-export const getSplitResult = (results: Object, splitType: string) => {
+export const getSplitResult = (results: Array<Object>, splitType: string) => {
   const splitResult = results.reduce((obj, result) => {
     const { refId, data } = result;
     const newBatches = get([], `${splitType}.batches`, data);
@@ -30,7 +30,7 @@ export const getSplitResult = (results: Object, splitType: string) => {
   return splitResult;
 };
 
-export const getSplitFocus = (results: Object, splitType: string) => {
+export const getSplitFocus = (results: Array<Object>, splitType: string) => {
   const splitFocus = results.reduce((obj, result) => {
     const { data } = result;
     const newBatches = get([], `${splitType}.batches`, data);
