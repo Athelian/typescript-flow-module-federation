@@ -1,9 +1,14 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
+import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
+import CustomFieldsTemplateForm from 'modules/metadata/components/CustomFieldsTemplateForm';
 
 import FormHeader from '../FormHeader';
+
 import CustomFieldsTemplateGridView from './components/CustomFieldsTemplateGridView';
+
 import { CustomFieldsEditFormWrapperStyle, CustomFieldsFormHeaderStyle } from './style';
 
 const dummyCustomFieldsTemplates = [
@@ -179,21 +184,47 @@ const dummyCustomFieldsTemplates = [
 
 const CustomFieldTemplateList = () => (
   <div>
-    <div className={CustomFieldsFormHeaderStyle}>
-      <FormHeader
-        name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
-      >
-        <NewButton onClick={() => {}} />
-      </FormHeader>
-    </div>
-    <div className={CustomFieldsEditFormWrapperStyle}>
-      <CustomFieldsTemplateGridView
-        items={dummyCustomFieldsTemplates}
-        onLoadMore={() => {}}
-        hashMore={false}
-        isLoading={false}
-      />
-    </div>
+    <BooleanValue>
+      {({ value: isOpen, set: toggle }) => (
+        <>
+          <div className={CustomFieldsFormHeaderStyle}>
+            <FormHeader
+              name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
+            >
+              <NewButton onClick={() => toggle(true)} />
+            </FormHeader>
+          </div>
+          <div className={CustomFieldsEditFormWrapperStyle}>
+            <CustomFieldsTemplateGridView
+              items={dummyCustomFieldsTemplates}
+              onLoadMore={() => {}}
+              hashMore={false}
+              isLoading={false}
+            />
+          </div>
+          <SlideView
+            isOpen={isOpen}
+            onRequestClose={() => toggle(false)}
+            options={{ width: '1030px' }}
+          >
+            <CustomFieldsTemplateForm
+              template={{
+                name: 'template name',
+                description: 'template description',
+                metadata: [
+                  { checked: false, key: 'custom fields 1', value: 'Input' },
+                  { checked: true, key: 'custom fields 2', value: 'Input' },
+                  { checked: false, key: 'custom fields 3', value: 'Input' },
+                  { checked: false, key: 'custom fields 4', value: 'Input' },
+                ],
+              }}
+              onSave={() => toggle(false)}
+              onCancel={() => toggle(false)}
+            />
+          </SlideView>
+        </>
+      )}
+    </BooleanValue>
   </div>
 );
 
