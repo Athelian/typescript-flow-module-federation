@@ -7,6 +7,9 @@ export const orderColumnFields = [
   {
     name: 'poNo',
     type: 'text',
+    meta: {
+      isRequired: true,
+    },
   },
   {
     name: 'piNo',
@@ -26,10 +29,6 @@ export const orderColumnFields = [
   },
   {
     name: 'deliveryPlace',
-    type: 'text',
-  },
-  {
-    name: 'memo',
     type: 'text',
   },
   {
@@ -89,7 +88,7 @@ export const shipmentColumnFields = [
 
 export const orderColumns = [
   {
-    group: 'ORDER',
+    group: 'General',
     columns: [
       <FormattedMessage {...orderMessages.PO} />,
       <FormattedMessage {...orderMessages.PI} />,
@@ -97,7 +96,6 @@ export const orderColumns = [
       <FormattedMessage {...orderMessages.currency} />,
       <FormattedMessage {...orderMessages.incoterm} />,
       <FormattedMessage {...orderMessages.deliveryPlace} />,
-      <FormattedMessage {...orderMessages.memo} />,
       <FormattedMessage {...orderMessages.tags} />,
     ],
   },
