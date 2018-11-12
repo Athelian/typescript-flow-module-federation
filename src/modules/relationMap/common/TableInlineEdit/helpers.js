@@ -30,10 +30,10 @@ export const findAllPossibleOrders = (
   batchIds: Array<string>,
   shipmentIds: Array<string>,
 } => {
-  const orderIds = Object.keys(selected.order);
-  const orderItemsIds = Object.keys(selected.orderItem);
-  const batchIds = Object.keys(selected.batch);
-  const shipmentIds = Object.keys(selected.shipment);
+  const orderIds = selected.order ? Object.keys(selected.order) : [];
+  const orderItemsIds = selected.orderItem ? Object.keys(selected.orderItem) : [];
+  const batchIds = selected.batch ? Object.keys(selected.batch) : [];
+  const shipmentIds = selected.shipment ? Object.keys(selected.shipment) : [];
 
   // find all orders from selected order
   if (orderIds.length) {

@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { setConfig } from 'react-hot-loader';
 import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 import UNSTATED from 'unstated-debug';
@@ -16,7 +15,6 @@ import errorReport from './errorReport';
 import './styles/reset.css';
 import * as serviceWorker from './serviceWorker';
 
-setConfig({ pureSFC: true });
 loadFonts();
 errorReport();
 

@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { useIdb } from 'react-use-idb';
+import { setConfig } from 'react-hot-loader';
+import { range } from 'lodash';
 import Layout from 'components/Layout';
 import { FormattedMessage } from 'react-intl';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -36,6 +38,8 @@ type Props = {
   type: string,
   selected: Object,
 };
+
+setConfig({ pureSFC: true });
 
 export default function TableInlineEdit({ type, selected, onSave, onCancel }: Props) {
   const [data] = useIdb(type, []);
@@ -113,6 +117,18 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
           const batches = (Object.values(mappingObjects.batch): any).filter(
             item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
           );
+          let totalLines = 0;
+          if (orderItems.length === 0) {
+            totalLines = 1;
+          } else {
+            totalLines = orderItems.reduce((result, orderItem) => {
+              const totalBatches = Object.keys(orderItem.relation.batch).length;
+              if (totalBatches === 0) {
+                return result + 1;
+              }
+              return result + totalBatches;
+            }, 0);
+          }
           return (
             <TableRow key={orderId}>
               <LineNumber line={counter + 1} />
@@ -207,17 +223,24 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
               </div>
               <div>
                 {batches.length ? (
-                  batches.map((batch, position) => (
-                    <TableItem
-                      cell={`batch.${counter + 1}.${position}`}
-                      key={batch.data.id}
-                      fields={batchColumnFields}
-                      values={batch.data}
-                      validator={batchValidator}
-                    />
-                  ))
+                  <>
+                    {batches.map((batch, position) => (
+                      <TableItem
+                        cell={`batch.${counter + 1}.${position}`}
+                        key={batch.data.id}
+                        fields={batchColumnFields}
+                        values={batch.data}
+                        validator={batchValidator}
+                      />
+                    ))}
+                    {range(totalLines - batches.length).map(index => (
+                      <TableEmptyItem key={index} fields={batchColumnFields} />
+                    ))}
+                  </>
                 ) : (
-                  <TableEmptyItem fields={batchColumnFields} />
+                  range(totalLines).map(index => (
+                    <TableEmptyItem key={index} fields={batchColumnFields} />
+                  ))
                 )}
               </div>
               <div>
@@ -235,6 +258,12 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                       />
                     );
                   })}
+                {range(
+                  totalLines -
+                    shipmentIds.filter(shipmentId => !!order.relation.shipment[shipmentId]).length
+                ).map(index => (
+                  <TableEmptyItem key={index} fields={batchColumnFields} />
+                ))}
               </div>
             </TableRow>
           );
