@@ -54,7 +54,15 @@ const metadataInputFactory = ({ metadata, setFieldValue }: Props) => (
                         onCancel={() => slideToggle(false)}
                         onSave={() => {
                           slideToggle(false);
-                          setFieldValue('metadata', values.metadata);
+                          setFieldValue(
+                            'metadata',
+                            values.metadata
+                              .map(item => {
+                                const { id, ...rest } = item;
+                                return { ...rest };
+                              })
+                              .filter(item => item.key !== '' || item.value !== '')
+                          );
                         }}
                         onFormReady={() => {
                           initDetailValues({ metadata: metadata.map(item => injectUid(item)) });
