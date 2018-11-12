@@ -7,6 +7,7 @@ import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import { FieldItem, Label } from 'components/Form';
 import Icon from 'components/Icon';
+import { injectUid } from 'utils/id';
 import MetadataEditFormWrapper from './components/MetadataEditFormWrapper';
 import MetadataFormContainer from './container';
 import { ShowAllButtonStyle, MetadataIconStyle } from './style';
@@ -53,10 +54,18 @@ const metadataInputFactory = ({ metadata, setFieldValue }: Props) => (
                         onCancel={() => slideToggle(false)}
                         onSave={() => {
                           slideToggle(false);
-                          setFieldValue('metadata', values.metadata);
+                          setFieldValue(
+                            'metadata',
+                            values.metadata
+                              .map(item => {
+                                const { id, ...rest } = item;
+                                return { ...rest };
+                              })
+                              .filter(item => item.key !== '')
+                          );
                         }}
                         onFormReady={() => {
-                          initDetailValues({ metadata });
+                          initDetailValues({ metadata: metadata.map(item => injectUid(item)) });
                         }}
                       />
                     );

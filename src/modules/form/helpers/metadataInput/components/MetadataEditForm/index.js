@@ -41,13 +41,9 @@ const MetadataEditForm = () => (
                     <GridColumn gap="10px">
                       {values &&
                         values.metadata.map((metadata, index) => (
-                          <Draggable key={metadata.key} draggableId={metadata.key} index={index}>
+                          <Draggable key={metadata.id} draggableId={metadata.id} index={index}>
                             {provided => (
-                              <div
-                                key={uuid()}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                              >
+                              <div ref={provided.innerRef} {...provided.draggableProps}>
                                 <DefaultMetadataStyle
                                   rearrange
                                   dragHandleProps={provided.dragHandleProps}
@@ -73,6 +69,7 @@ const MetadataEditForm = () => (
                       }
                       onClick={() => {
                         setFieldArrayValue(`metadata.${values.metadata.length}`, {
+                          id: uuid(),
                           key: '',
                           value: '',
                         });
