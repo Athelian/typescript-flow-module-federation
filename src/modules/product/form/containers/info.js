@@ -40,7 +40,6 @@ export default class ProductInfoContainer extends Container<FormState> {
     });
   };
 
-  // FIXME: delete
   setFieldArrayValue = (path: string, value: any) => {
     this.setState(prevState => {
       const newState = set(cloneDeep(prevState), path, value);

@@ -7,7 +7,7 @@ import { Subscribe } from 'unstated';
 import DefaultMetadataStyle from 'components/Form/Inputs/Styles/DefaultStyle/DefaultMetadataStyle';
 import { NewButton } from 'components/Buttons';
 import { uuid } from 'utils/id';
-import MetadataFormContainer from '../../container';
+import MetadataFormContainer from 'modules/form/helpers/metadataInput/container';
 
 import { AddButtonWrapperStyle } from './style';
 
