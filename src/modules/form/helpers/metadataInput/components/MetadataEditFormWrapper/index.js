@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import FormattedNumber from 'components/FormattedNumber';
 import Layout from 'components/Layout';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -8,7 +9,7 @@ import { SectionHeader, SectionWrapper } from 'components/Form';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import MetadataEditForm from '../MetadataEditForm';
-import { MetadataEditFormWrapperStyle, CustomFieldsSectionWrapperStyle } from './style';
+import { MetadataEditFormWrapperStyle } from './style';
 
 type OptionalProps = {
   metadata: Array<Object>,
@@ -50,7 +51,9 @@ class MetadataEditFormWrapper extends React.Component<Props> {
                       id="modules.metadata.sectionHeader"
                       defaultMessage="CUSTOM FIELDS"
                     />
-                    ({metadata.length})
+                    {' ('}
+                    <FormattedNumber value={metadata.length} />
+                    {')'}
                   </>
                 }
                 icon="METADATA"
@@ -71,13 +74,13 @@ class MetadataEditFormWrapper extends React.Component<Props> {
                     id="module.metadata.sectionHeader"
                     defaultMessage="CUSTOM FIELDS"
                   />
-                  ({metadata.length})
+                  {' ('}
+                  <FormattedNumber value={metadata.length} />
+                  {')'}
                 </>
               }
             />
-            <div className={CustomFieldsSectionWrapperStyle}>
-              <MetadataEditForm />
-            </div>
+            <MetadataEditForm />
           </SectionWrapper>
         </div>
       </Layout>

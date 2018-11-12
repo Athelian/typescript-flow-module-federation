@@ -1,9 +1,17 @@
 // @flow
 import { css } from 'react-emotion';
+import { presets } from 'styles/common';
 
-export const AddButtonWrapperStyle: string = css`
+export const MetadataSectionWrapperStyle: string = css`
+  ${presets.BOX};
+  width: 880px;
+  padding: 40px 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 `;
 
-export default AddButtonWrapperStyle;
+export const AddMetadataButtonWrapperStyle: string = css`
+  display: flex;
+  justify-content: flex-end;
+  width: 410px;
+`;

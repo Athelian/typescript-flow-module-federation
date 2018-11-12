@@ -3,16 +3,23 @@ import { css } from 'react-emotion';
 import { presets, colors, fontSizesWithHeights, fontSizes } from 'styles/common';
 
 export const ShowAllButtonStyle: string = css`
-  width: '100%';
+  ${presets.BUTTON};
+  width: 100%;
+  height: 30px;
   ${fontSizesWithHeights.MAIN};
-  ${fontSizes.SMALL};
   ${presets.ELLIPSIS};
   color: ${colors.GRAY_DARK};
-  letter-spacing: 2px;
+  font-weight: bold;
   user-select: none;
   padding: 0 5px;
-  text-align: 'right';
-  cursor: pointer;
+  justify-content: flex-end;
+  &:hover,
+  :focus {
+    color: ${colors.TEAL};
+  }
 `;
 
-export default ShowAllButtonStyle;
+export const MetadataIconStyle: string = css`
+  color: ${colors.GRAY_LIGHT};
+  ${fontSizes.SMALL};
+`;

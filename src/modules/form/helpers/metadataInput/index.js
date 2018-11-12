@@ -1,15 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import FormattedNumber from 'components/FormattedNumber';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import { FieldItem, Label } from 'components/Form';
 import Icon from 'components/Icon';
-
 import MetadataEditFormWrapper from './components/MetadataEditFormWrapper';
 import MetadataFormContainer from './container';
-import { ShowAllButtonStyle } from './style';
+import { ShowAllButtonStyle, MetadataIconStyle } from './style';
 
 type Props = {
   metadata: Array<Object>,
@@ -20,19 +20,23 @@ const metadataInputFactory = ({ metadata, setFieldValue }: Props) => (
   <FieldItem
     label={
       <Label>
-        <Icon icon="METADATA" />
-        <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />(
-        {metadata.length})
+        <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />
+        {' ('}
+        <FormattedNumber value={metadata.length} />
+        {')'}
       </Label>
+    }
+    tooltip={
+      <div className={MetadataIconStyle}>
+        <Icon icon="METADATA" />
+      </div>
     }
     input={
       <BooleanValue>
         {({ value: isOpen, set: slideToggle }) => (
           <>
-            <button type="button" onClick={() => slideToggle(true)}>
-              <div className={ShowAllButtonStyle}>
-                <FormattedMessage id="modules.form.showAll" defaultMessage="Show All" />
-              </div>
+            <button onClick={() => slideToggle(true)} className={ShowAllButtonStyle} type="button">
+              <FormattedMessage id="modules.form.showAll" defaultMessage="Show All" />
             </button>
             <SlideView
               isOpen={isOpen}
