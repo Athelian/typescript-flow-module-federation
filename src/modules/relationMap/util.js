@@ -450,3 +450,23 @@ export const formatShipmentData = (shipments: Array<Object>) => {
     sumShipments,
   };
 };
+
+export const calculateTotalPackageGrossWeight = (batches: Array<Object>) => {
+  if (!batches || !batches.length) {
+    return 0;
+  }
+
+  return batches.reduce((accumulator, { packageVolume, packageQuantity = 0 }) => {
+    const { metric, value } = packageVolume || {};
+    const addingValue = (packageVolume && value) || 0;
+
+    switch (metric) {
+      case 'cm³':
+        return accumulator + packageQuantity * addingValue;
+      case 'm³':
+        return accumulator + packageQuantity * addingValue * 1000;
+      default:
+        return accumulator;
+    }
+  }, 0);
+};
