@@ -243,7 +243,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                   orderItems.map((orderItem, position) =>
                     Object.keys(orderItem.relation.batch).length === 0 ? (
                       <TableItem
-                        cell={`orderItem.${counter + 1}.${position}`}
+                        cell={`${order.data.id}.orderItems.${position}`}
                         key={`orderItem.${counter + 1}.${orderItem.data.id}`}
                         fields={orderItemColumnFields}
                         values={orderItem.data}
@@ -255,7 +255,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                           .filter(batchId => batchIds.includes(batchId))
                           .map(batchId => (
                             <TableItem
-                              cell={`orderItem.${counter + 1}.${position}.duplication.${batchId}`}
+                              cell={`${order.data.id}.orderItems.${position}`}
                               key={`orderItem.${counter + 1}.duplication.${batchId}`}
                               fields={orderItemColumnFields}
                               values={orderItem.data}

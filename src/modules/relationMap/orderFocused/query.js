@@ -139,6 +139,10 @@ export const orderListQuery = gql`
           }
           productProvider {
             id
+            exporter {
+              id
+              name
+            }
             supplier {
               id
               name

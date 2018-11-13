@@ -63,16 +63,29 @@ export const orderColumnFields = [
 
 export const orderItemColumnFields = [
   {
-    name: 'productProvider.product.name',
-    type: 'text',
+    name: 'productProvider',
+    type: 'productProvider',
   },
   {
     name: 'productProvider.product.serial',
     type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    name: 'productProvider.exporter.name',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
   },
   {
     name: 'productProvider.supplier.name',
     type: 'text',
+    meta: {
+      disabled: true,
+    },
   },
   {
     name: 'price.amount',
@@ -137,6 +150,7 @@ export const orderItemColumns = [
     columns: [
       <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
       <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
+      <FormattedMessage id="modules.ProductProviders.exporter" defaultMessage="EXPORTER" />,
       <FormattedMessage id="modules.ProductProviders.supplier" defaultMessage="SUPPLIER" />,
       <FormattedMessage id="modules.ProductProviders.unitPrice" defaultMessage="UNIT PRICE" />,
       <FormattedMessage
