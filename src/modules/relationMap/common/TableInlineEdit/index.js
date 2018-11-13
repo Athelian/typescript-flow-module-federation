@@ -1,10 +1,14 @@
 // @flow
-import * as React from 'react';
+// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+import React, { useEffect, useState, useRef } from 'react';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
-import { range } from 'lodash';
-import Layout from 'components/Layout';
+import { range, clone, set } from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import emitter from 'utils/emitter';
+import { arrayToObject, isEquals } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
+import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import logger from 'utils/logger';
@@ -43,12 +47,47 @@ setConfig({ pureSFC: true });
 
 export default function TableInlineEdit({ type, selected, onSave, onCancel }: Props) {
   const [data] = useIdb(type, []);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const editDataRef = useRef();
+
+  useEffect(() => {
+    if (data.length) {
+      if (
+        !editDataRef.current ||
+        (Array.isArray(editDataRef.current) && editDataRef.current.length === 0)
+      ) {
+        logger.warn('copy data');
+        editDataRef.current = clone(data);
+      }
+
+      const listener = emitter.once('INLINE_CHANGE', newData => {
+        const result = arrayToObject(clone(editDataRef.current), 'id');
+        const { name, value, hasError } = newData;
+        editDataRef.current = [].concat(Object.values(set(result, name, value)));
+
+        if (!touched[name]) {
+          setTouched({
+            ...touched,
+            [name]: true,
+          });
+        }
+
+        if (hasError) {
+          setErrors({ ...errors, [name]: true });
+        } else {
+          delete errors[name];
+          setErrors(errors);
+        }
+      });
+      return () => listener.remove();
+    }
+    return () => {};
+  });
 
   const { sumShipments, sumOrders, sumOrderItems, sumBatches, ...mappingObjects } = formatOrderData(
     data
   );
-  logger.warn('selected', selected);
-  logger.warn('mappingObjects', mappingObjects);
   const { orderIds, orderItemsIds, batchIds, shipmentIds } = findAllPossibleOrders(
     selected,
     mappingObjects
@@ -60,7 +99,20 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
         <SlideViewNavBar>
           <EntityIcon icon="ORDER" color="ORDER" />
           <CancelButton onClick={onCancel} />
-          <SaveButton onClick={onSave} />
+          <SaveButton
+            onClick={onSave}
+            disabled={
+              !(
+                editDataRef.current &&
+                isEquals(
+                  cleanUpData(arrayToObject(editDataRef.current, 'id')),
+                  cleanUpData(arrayToObject(data, 'id'))
+                ) &&
+                Object.keys(touched).length > 0 &&
+                Object.keys(errors).length === 0
+              )
+            }
+          />
         </SlideViewNavBar>
       }
     >
@@ -135,7 +187,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
               <div>
                 {orderItems.length === 0 ? (
                   <TableItem
-                    cell={`order.${counter + 1}`}
+                    cell={order.data.id}
                     fields={orderColumnFields}
                     values={order.data}
                     validator={orderValidator}
@@ -144,24 +196,28 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                   orderItems.map(orderItem =>
                     Object.keys(orderItem.relation.batch).length === 0 ? (
                       <TableItem
-                        key={`order.${counter + 1}.duplication.${orderItem.data.id}`}
-                        cell={`order.${counter + 1}.duplication.${orderItem.data.id}`}
+                        key={`order.${order.data.id}.${counter + 1}.duplication.${
+                          orderItem.data.id
+                        }`}
+                        cell={order.data.id}
                         fields={orderColumnFields}
                         values={order.data}
                         validator={orderValidator}
                       />
                     ) : (
-                      <>
+                      <React.Fragment
+                        key={`order.${order.data.id}.${counter + 1}.duplication.${
+                          orderItem.data.id
+                        }`}
+                      >
                         {Object.keys(orderItem.relation.batch)
                           .filter(batchId => batchIds.includes(batchId))
                           .map(batchId => (
                             <TableItem
-                              key={`order.${counter + 1}.duplication.${
+                              key={`order.${order.data.id}.${counter + 1}.duplication.${
                                 orderItem.data.id
                               }.batch.${batchId}`}
-                              cell={`order.${counter + 1}.duplication.${
-                                orderItem.data.id
-                              }.batch.${batchId}`}
+                              cell={order.data.id}
                               fields={orderColumnFields}
                               values={order.data}
                               validator={orderValidator}
@@ -177,7 +233,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                               fields={orderColumnFields}
                             />
                           ))}
-                      </>
+                      </React.Fragment>
                     )
                   )
                 )}
@@ -194,7 +250,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                         validator={orderValidator}
                       />
                     ) : (
-                      <>
+                      <React.Fragment key={`orderItem.${counter + 1}.${orderItem.data.id}`}>
                         {Object.keys(orderItem.relation.batch)
                           .filter(batchId => batchIds.includes(batchId))
                           .map(batchId => (
@@ -214,7 +270,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                               fields={orderItemColumnFields}
                             />
                           ))}
-                      </>
+                      </React.Fragment>
                     )
                   )
                 ) : (

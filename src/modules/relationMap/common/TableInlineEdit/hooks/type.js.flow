@@ -1,0 +1,5 @@
+// @flow
+export type ValidationObject = {
+  isRequired?: boolean,
+  max?: number,
+};

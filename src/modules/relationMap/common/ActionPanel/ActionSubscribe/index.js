@@ -115,7 +115,6 @@ const ActionSubscribe = () => (
                       {opened && (
                         <TableInlineEdit
                           selected={targetedItem}
-                          onExpand={() => {}}
                           onSave={() => {}}
                           onCancel={() => slideToggle(false)}
                           type="orders"

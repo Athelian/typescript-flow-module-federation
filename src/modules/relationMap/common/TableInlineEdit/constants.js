@@ -7,6 +7,9 @@ export const orderColumnFields = [
   {
     name: 'poNo',
     type: 'text',
+    meta: {
+      isRequired: true,
+    },
   },
   {
     name: 'piNo',
@@ -17,24 +20,44 @@ export const orderColumnFields = [
     type: 'date',
   },
   {
+    name: 'exporter.name',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
     name: 'currency',
     type: 'enum',
+    meta: {
+      enumType: 'Currency',
+      isRequired: true,
+    },
   },
   {
     name: 'incoterm',
     type: 'enum',
+    meta: {
+      enumType: 'Incoterm',
+    },
   },
   {
     name: 'deliveryPlace',
     type: 'text',
   },
   {
-    name: 'memo',
-    type: 'text',
+    name: 'inCharges',
+    type: 'inCharges',
+    meta: {
+      max: 5,
+    },
   },
   {
     name: 'tags',
     type: 'tags',
+    meta: {
+      tagType: 'Order',
+    },
   },
 ];
 
@@ -58,6 +81,10 @@ export const orderItemColumnFields = [
   {
     name: 'price.currency',
     type: 'enum',
+    meta: {
+      enumType: 'Currency',
+      isRequired: true,
+    },
   },
   {
     name: 'quantity',
@@ -89,15 +116,16 @@ export const shipmentColumnFields = [
 
 export const orderColumns = [
   {
-    group: 'ORDER',
+    group: 'General',
     columns: [
       <FormattedMessage {...orderMessages.PO} />,
       <FormattedMessage {...orderMessages.PI} />,
       <FormattedMessage {...orderMessages.date} />,
+      <FormattedMessage {...orderMessages.exporter} />,
       <FormattedMessage {...orderMessages.currency} />,
       <FormattedMessage {...orderMessages.incoterm} />,
       <FormattedMessage {...orderMessages.deliveryPlace} />,
-      <FormattedMessage {...orderMessages.memo} />,
+      <FormattedMessage {...orderMessages.inCharge} />,
       <FormattedMessage {...orderMessages.tags} />,
     ],
   },

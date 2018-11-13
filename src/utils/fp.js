@@ -67,3 +67,6 @@ export const setIn = (propPath: string, value: any, onObject: any): any => {
   const proplens = lens(path(pathToArray), assocPath(pathToArray));
   return set(proplens, value, onObject);
 };
+
+export const arrayToObject = (inputArray: Array<Object>, keyField: string) =>
+  inputArray.reduce((obj, item) => ({ ...obj, [item[keyField]]: item }), {});
