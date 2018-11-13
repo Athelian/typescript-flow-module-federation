@@ -19,7 +19,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  width: '200px',
+  width: '300px',
 };
 
 const MetadataItem = ({ width, value: { checked, key, value } }: Props) => (
@@ -30,7 +30,9 @@ const MetadataItem = ({ width, value: { checked, key, value } }: Props) => (
       </div>
 
       <Label width={width}>{key}</Label>
-      <Label width={width}>{value}</Label>
+      <Label width={width} align="right">
+        {value}
+      </Label>
     </div>
   </div>
 );

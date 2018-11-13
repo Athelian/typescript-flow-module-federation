@@ -11,7 +11,7 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
 import { textInputFactory, textAreaFactory } from 'modules/form/helpers';
-
+import MetadataItem from './components/MetadataItem';
 import { TemplateFormWrapperStyle, FormFieldsStyle } from './style';
 
 type OptionalProps = {
@@ -80,8 +80,8 @@ const CustomFieldsTemplateForm = ({
           icon="TEMPLATE"
           title={<FormattedMessage id="modules.metadata.template" defaultMessage="TEMPLATE" />}
         />
-        <ContentWrapper width="880px">
-          <div className={FormFieldsStyle}>
+        <ContentWrapper width="880px" className={FormFieldsStyle}>
+          <div>
             <FormField name="name" initValue={name}>
               {({ name: fieldName, ...inputHandlers }) =>
                 textInputFactory({
@@ -131,7 +131,13 @@ const CustomFieldsTemplateForm = ({
             />
           }
         />
-        {metadata.length}
+        <ContentWrapper width="880px" className={FormFieldsStyle}>
+          <div>
+            {metadata.map(item => (
+              <MetadataItem value={item} />
+            ))}
+          </div>
+        </ContentWrapper>
       </SectionWrapper>
     </div>
   </Layout>

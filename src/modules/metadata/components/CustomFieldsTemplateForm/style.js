@@ -9,10 +9,9 @@ export const TemplateFormWrapperStyle: string = css`
 `;
 
 export const FormFieldsStyle: string = css`
-  width: 400px;
   ${layout.GRID_VERTICAL};
   grid-gap: 20px;
-  margin: 40px 100px;
+  padding: 40px 100px;
 `;
 
 export default TemplateFormWrapperStyle;

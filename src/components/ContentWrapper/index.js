@@ -1,15 +1,26 @@
 // @flow
 import * as React from 'react';
-
+import { cx } from 'react-emotion';
 import { ContentWrapperStyle } from './style';
 
-type Props = {
+type OptionProps = {
   width: string,
+  className: string,
+};
+
+type Props = OptionProps & {
   children: React.Node,
 };
 
-const ContentWrapper = ({ children, width }: Props) => (
-  <div className={ContentWrapperStyle(width)}>{children}</div>
+const defaultProps = {
+  width: '100%',
+  className: '',
+};
+
+const ContentWrapper = ({ className, children, width }: Props) => (
+  <div className={cx(ContentWrapperStyle(width), className)}>{children}</div>
 );
+
+ContentWrapper.defaultProps = defaultProps;
 
 export default ContentWrapper;

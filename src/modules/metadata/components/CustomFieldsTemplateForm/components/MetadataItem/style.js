@@ -21,6 +21,6 @@ export const AdjustmentFieldsWrapperStyle: string = css`
   height: 30px;
   position: relative;
   ${layout.GRID_HORIZONTAL};
+  grid-gap: 80px;
   align-content: center;
-  grid-gap: 10px;
 `;
