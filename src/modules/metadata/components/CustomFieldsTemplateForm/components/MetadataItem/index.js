@@ -19,7 +19,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  width: '300px',
+  width: '200px',
 };
 
 const MetadataItem = ({ width, value: { checked, key, value } }: Props) => (

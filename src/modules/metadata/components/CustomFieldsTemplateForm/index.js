@@ -9,10 +9,11 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SectionHeader, SectionWrapper } from 'components/Form';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import GridColumn from 'components/GridColumn';
 import { FormField } from 'modules/form';
 import { textInputFactory, textAreaFactory } from 'modules/form/helpers';
 import MetadataItem from './components/MetadataItem';
-import { TemplateFormWrapperStyle, FormFieldsStyle } from './style';
+import { TemplateFormWrapperStyle, FormFieldsStyle, DescriptionLabelWrapperStyle } from './style';
 
 type OptionalProps = {
   template: {
@@ -81,7 +82,7 @@ const CustomFieldsTemplateForm = ({
           title={<FormattedMessage id="modules.metadata.template" defaultMessage="TEMPLATE" />}
         />
         <ContentWrapper width="880px" className={FormFieldsStyle}>
-          <div>
+          <GridColumn>
             <FormField name="name" initValue={name}>
               {({ name: fieldName, ...inputHandlers }) =>
                 textInputFactory({
@@ -104,13 +105,15 @@ const CustomFieldsTemplateForm = ({
               {({ name: fieldName, ...inputHandlers }) =>
                 textAreaFactory({
                   label: (
-                    <FormattedMessage
-                      id="modules.metadata.description"
-                      defaultMessage="DESCRIPTION"
-                    />
+                    <div className={DescriptionLabelWrapperStyle}>
+                      <FormattedMessage
+                        id="modules.metadata.description"
+                        defaultMessage="DESCRIPTION"
+                      />
+                    </div>
                   ),
                   isNew,
-                  height: '65px',
+                  height: '100px',
                   align: 'right',
                   name: fieldName,
                   inputHandlers,
@@ -118,7 +121,7 @@ const CustomFieldsTemplateForm = ({
                 })
               }
             </FormField>
-          </div>
+          </GridColumn>
         </ContentWrapper>
       </SectionWrapper>
       <SectionWrapper id="customFieldsSection">
