@@ -11,6 +11,7 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
 import { FormField } from 'modules/form';
+import { uuid } from 'utils/id';
 import { textInputFactory, textAreaFactory } from 'modules/form/helpers';
 import MetadataItem from './components/MetadataItem';
 import { TemplateFormWrapperStyle, FormFieldsStyle, DescriptionLabelWrapperStyle } from './style';
@@ -137,7 +138,7 @@ const CustomFieldsTemplateForm = ({
         <ContentWrapper width="880px" className={FormFieldsStyle}>
           <div>
             {metadata.map(item => (
-              <MetadataItem value={item} />
+              <MetadataItem key={uuid()} value={item} />
             ))}
           </div>
         </ContentWrapper>
