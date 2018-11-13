@@ -4,20 +4,26 @@ import { ShipmentLabelStyle } from './style';
 
 type Props = {
   name: string,
-  vol: string,
+  vol: number,
+  metric: 'cm³' | 'm³',
 };
 
-const cbmElement = vol => (
+type cbmType = {
+  vol: number,
+  metric: 'cm³' | 'm³',
+};
+
+const cbmElement = ({ vol, metric }: cbmType) => (
   <span>
-    {vol}m<sup>3</sup>
+    {vol} {metric}
   </span>
 );
 
-export default function ShipmentLabel({ name = '', vol = '' }: Props) {
+export default function ShipmentLabel({ name = '', vol = 0, metric = 'cm³' }: Props) {
   return (
     <div className={ShipmentLabelStyle}>
       <span>{name}</span>
-      {vol && cbmElement(vol)}
+      {vol && cbmElement({ vol, metric })}
     </div>
   );
 }

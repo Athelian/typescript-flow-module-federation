@@ -47,6 +47,7 @@ export const orderListQuery = gql`
             packageVolume {
               ...metricFragment
             }
+            packageQuantity
           }
           tags {
             id
