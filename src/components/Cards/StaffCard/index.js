@@ -48,6 +48,7 @@ const StaffCard = ({ staff, onClick, ...rest }: Props) => {
           width="105px"
           height="105px"
           showBothInitials
+          hideTooltip
         />
         <div className={StaffNameStyle}>
           <FormattedName firstName={firstName} lastName={lastName} />

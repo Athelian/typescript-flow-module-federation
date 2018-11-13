@@ -9,11 +9,15 @@ export const BatchFormWrapperStyle: string = css`
 `;
 
 export const StatusStyle = (archived: boolean): string => css`
-  ${presets.ELLIPSIS};
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   color: ${archived ? colors.GRAY : colors.TEAL};
+  align-items: center;
+  ${fontSizes.SMALL};
+`;
+
+export const StatusLabelStyle: string = css`
+  ${presets.ELLIPSIS};
   ${fontSizes.MAIN};
   font-weight: bold;
-  align-items: center;
 `;

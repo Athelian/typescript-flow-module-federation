@@ -18,7 +18,7 @@ import {
   PackagingSection,
   ShipmentSection,
 } from './components';
-import { BatchFormWrapperStyle, StatusStyle } from './style';
+import { BatchFormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
@@ -77,11 +77,13 @@ export default class BatchForm extends React.Component<Props> {
                 {!isClone && <CloneButton onClick={this.onClone} />}
                 <div className={StatusStyle(batch.archived)}>
                   <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
-                  {batch.archived ? (
-                    <FormattedMessage id="modules.Batches.archived" defaultMessage="Archived" />
-                  ) : (
-                    <FormattedMessage id="modules.Batches.active" defaultMessage="Active" />
-                  )}
+                  <div className={StatusLabelStyle}>
+                    {batch.archived ? (
+                      <FormattedMessage id="modules.Batches.archived" defaultMessage="Archived" />
+                    ) : (
+                      <FormattedMessage id="modules.Batches.active" defaultMessage="Active" />
+                    )}
+                  </div>
                   <Tooltip
                     infoMessage={
                       <FormattedMessage
