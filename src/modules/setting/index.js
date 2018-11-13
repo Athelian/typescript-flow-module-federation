@@ -138,7 +138,11 @@ class Setting extends React.Component<Props, State> {
                     data-testid="setting-button"
                     ref={this.userMenuRef}
                   >
-                    <UserAvatar firstName={viewer.firstName} lastName={viewer.lastName} />
+                    <UserAvatar
+                      firstName={viewer.firstName}
+                      lastName={viewer.lastName}
+                      hideTooltip
+                    />
                   </button>
 
                   <OutsideClickHandler

@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { isEquals } from 'utils/fp';
 import TooltipBubble from './TooltipBubble';
 import TooltipIcon from './TooltipIcon';
@@ -10,6 +10,7 @@ type OptionalProps = TooltipBubbleProps & {
   preShow: boolean,
   showDuration: number,
   isNew: boolean,
+  customIcon?: React.Node,
 };
 
 type Props = OptionalProps;
@@ -62,7 +63,7 @@ export default class Tooltip extends React.Component<Props, State> {
     if (warningMessage) return 'warning';
     if (this.showChanged()) return 'changed';
     if (infoMessage) return 'info';
-    return '';
+    return null;
   };
 
   showChanged = () => {
@@ -106,12 +107,19 @@ export default class Tooltip extends React.Component<Props, State> {
   timeout: ?TimeoutID;
 
   render() {
-    const { errorMessage, warningMessage, infoMessage, changedValues, position } = this.props;
+    const {
+      errorMessage,
+      warningMessage,
+      infoMessage,
+      changedValues,
+      position,
+      customIcon,
+    } = this.props;
     const { isShown } = this.state;
 
     const type = this.getTooltipType();
 
-    if (type) {
+    if (type || customIcon) {
       return (
         <div className={TooltipRelativeWrapperStyle}>
           <div className={BubbleWrapperStyle(isShown)}>
@@ -130,7 +138,7 @@ export default class Tooltip extends React.Component<Props, State> {
             onMouseOut={this.hide}
             onBlur={this.hide}
           >
-            <TooltipIcon type={type} hasInfo={!!infoMessage} />
+            {customIcon || (type && <TooltipIcon type={type} hasInfo={!!infoMessage} />)}
           </div>
         </div>
       );
