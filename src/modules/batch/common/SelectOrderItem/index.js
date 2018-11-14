@@ -51,6 +51,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => (
                     <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
                     <CancelButton onClick={onCancel} />
                     <SaveButton
+                      data-testid="saveButtonOnSelectOrderItem"
                       disabled={isEquals(value, selected)}
                       onClick={() => onSelect({ ...removeTypename(value) })}
                     />
