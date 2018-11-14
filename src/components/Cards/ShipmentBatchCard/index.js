@@ -284,12 +284,12 @@ const ShipmentBatchCard = ({
               }
               input={
                 <Display>
-                {packageVolume && packageQuantity != null && (
-                  <FormattedNumber
-                    value={packageVolume.value * packageQuantity}
-                    suffix={packageVolume.metric}
-                  />
-                )}
+                  {packageVolume && packageQuantity != null && (
+                    <FormattedNumber
+                      value={packageVolume.value * packageQuantity}
+                      suffix={packageVolume.metric}
+                    />
+                  )}
                 </Display>
               }
             />

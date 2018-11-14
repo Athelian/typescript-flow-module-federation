@@ -88,6 +88,7 @@ import {
   faArrowFromLeft as DEPARTURE_HORIZONTAL,
   // Document Types
   faFileExcel as EXCEL,
+  faFileCsv as CSV,
   faFileImage as IMAGE,
   faFilePdf as PDF,
   faFilePowerpoint as POWER_POINT,
@@ -231,6 +232,7 @@ export default {
   DEPARTURE_HORIZONTAL,
 
   EXCEL,
+  CSV,
   IMAGE,
   PDF,
   POWER_POINT,

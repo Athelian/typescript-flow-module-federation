@@ -16,6 +16,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
 import { ShipmentEventsList } from 'modules/history';
+import { shipmentExportQuery } from './query';
 import {
   ShipmentInfoContainer,
   ShipmentTagsContainer,
@@ -335,10 +336,9 @@ class ShipmentFormModule extends React.Component<Props> {
                               !shipmentTimelineState.isDirty() &&
                               !shipmentTransportTypeState.isDirty() && (
                                 <ExportButton
-                                  type="data"
-                                  format="csv"
-                                  template="ShipmentID"
-                                  id={decodeId(shipmentId)}
+                                  type="Shipment"
+                                  exportQuery={shipmentExportQuery}
+                                  variables={{ id: decodeId(shipmentId) }}
                                 />
                               )}
                           </>

@@ -4,6 +4,7 @@
   "components.button.archive": "ARCHIVE",
   "components.button.cancel": "CANCEL",
   "components.button.export": "EXPORT",
+  "components.button.export.noTemplates": "No export available",
   "components.button.new": "NEW",
   "components.button.no": "NO",
   "components.button.save": "SAVE",

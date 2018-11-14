@@ -83,32 +83,30 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
         <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
           <div className={ProductImageWrapperStyle}>
             <img className={ProductImageStyle} src={productImage} alt="product_image" />
-            {files &&
-              activeImage > 0 && (
-                <button
-                  className={ProductImageChevronButtonStyle('left')}
-                  onClick={evt => {
-                    evt.preventDefault();
-                    this.navigateImages('left');
-                  }}
-                  type="button"
-                >
-                  <Icon icon="ANGLE_LEFT" />
-                </button>
-              )}
-            {files &&
-              activeImage < files.length - 1 && (
-                <button
-                  className={ProductImageChevronButtonStyle('right')}
-                  onClick={evt => {
-                    evt.preventDefault();
-                    this.navigateImages('right');
-                  }}
-                  type="button"
-                >
-                  <Icon icon="ANGLE_RIGHT" />
-                </button>
-              )}
+            {files && activeImage > 0 && (
+              <button
+                className={ProductImageChevronButtonStyle('left')}
+                onClick={evt => {
+                  evt.preventDefault();
+                  this.navigateImages('left');
+                }}
+                type="button"
+              >
+                <Icon icon="ANGLE_LEFT" />
+              </button>
+            )}
+            {files && activeImage < files.length - 1 && (
+              <button
+                className={ProductImageChevronButtonStyle('right')}
+                onClick={evt => {
+                  evt.preventDefault();
+                  this.navigateImages('right');
+                }}
+                type="button"
+              >
+                <Icon icon="ANGLE_RIGHT" />
+              </button>
+            )}
             <div className={ProductImageDotsWrapperStyle}>
               {files &&
                 files.length > 1 &&

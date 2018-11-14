@@ -10,6 +10,7 @@ import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import OrderList from './list';
 import messages from './messages';
+import { ordersExportQuery } from './query';
 
 type Props = {
   intl: IntlShape,
@@ -50,6 +51,7 @@ class OrderModule extends React.Component<Props, State> {
 
   render() {
     const { intl } = this.props;
+    const { filter, sort } = this.state;
 
     const sortFields = [
       { title: intl.formatMessage(messages.poSort), value: 'poNo' },
@@ -70,10 +72,19 @@ class OrderModule extends React.Component<Props, State> {
                   filtersAndSort={this.state}
                   onChange={this.onChangeFilter}
                 />
+                <ExportButton
+                  type="Orders"
+                  exportQuery={ordersExportQuery}
+                  variables={{
+                    sortBy: {
+                      [sort.field]: sort.direction,
+                    },
+                    filterBy: filter,
+                  }}
+                />
                 <Link to="new">
                   <NewButton />
                 </Link>
-                <ExportButton type="data" format="csv" template="OrderShipment" />
               </NavBar>
             }
           >

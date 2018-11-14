@@ -108,7 +108,15 @@ const OrderBatchCard = ({
     </BooleanValue>,
   ];
 
-  const { no, quantity, deliveredAt, packageVolume, packageQuantity, batchAdjustments, shipment } = batch;
+  const {
+    no,
+    quantity,
+    deliveredAt,
+    packageVolume,
+    packageQuantity,
+    batchAdjustments,
+    shipment,
+  } = batch;
   const warehouseArrivalApproved = !!(
     batch &&
     batch.shipment &&
@@ -253,12 +261,12 @@ const OrderBatchCard = ({
             <FormattedMessage id="components.cards.volume" defaultMessage="TTL VOL" />
           </Label>
           <Display>
-          {packageVolume && packageQuantity != null && (
-                  <FormattedNumber
-                    value={packageVolume.value * packageQuantity}
-                    suffix={packageVolume.metric}
-                  />
-                )}
+            {packageVolume && packageQuantity != null && (
+              <FormattedNumber
+                value={packageVolume.value * packageQuantity}
+                suffix={packageVolume.metric}
+              />
+            )}
           </Display>
         </div>
 

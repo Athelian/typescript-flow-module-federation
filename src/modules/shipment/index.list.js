@@ -9,6 +9,7 @@ import Layout from 'components/Layout';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import ShipmentList from './list';
+import { shipmentsExportQuery } from './query';
 import messages from './messages';
 
 type Props = {
@@ -50,6 +51,7 @@ class ShipmentListModule extends React.Component<Props, State> {
 
   render() {
     const { intl } = this.props;
+    const { filter, sort } = this.state;
 
     const sortFields = [
       { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
@@ -72,7 +74,16 @@ class ShipmentListModule extends React.Component<Props, State> {
                 <Link to="new">
                   <NewButton />
                 </Link>
-                <ExportButton type="data" format="csv" template="ShipmentOrder" />
+                <ExportButton
+                  type="Shipments"
+                  exportQuery={shipmentsExportQuery}
+                  variables={{
+                    sortBy: {
+                      [sort.field]: sort.direction,
+                    },
+                    filterBy: filter,
+                  }}
+                />
               </NavBar>
             }
           >

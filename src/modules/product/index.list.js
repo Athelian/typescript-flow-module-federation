@@ -9,6 +9,7 @@ import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import ProductList from './list';
+import { productsExportQuery } from './query';
 import messages from './messages';
 
 type Props = {
@@ -50,6 +51,7 @@ class ProductListModule extends React.Component<Props, State> {
 
   render() {
     const { intl } = this.props;
+    const { filter, sort } = this.state;
 
     const sortFields = [
       { title: intl.formatMessage(messages.name), value: 'name' },
@@ -74,7 +76,16 @@ class ProductListModule extends React.Component<Props, State> {
                 <Link to="new">
                   <NewButton data-testid="newButton" />
                 </Link>
-                <ExportButton type="data" format="csv" template="Product" />
+                <ExportButton
+                  type="Products"
+                  exportQuery={productsExportQuery}
+                  variables={{
+                    sortBy: {
+                      [sort.field]: sort.direction,
+                    },
+                    filterBy: filter,
+                  }}
+                />
               </NavBar>
             }
           >

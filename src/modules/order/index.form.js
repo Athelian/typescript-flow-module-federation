@@ -16,6 +16,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import { OrderEventsList } from 'modules/history';
+import { orderExportQuery } from './query';
 import OrderForm from './form';
 import validator from './form/validator';
 import {
@@ -274,7 +275,11 @@ class OrderFormModule extends React.PureComponent<Props> {
                               !orderInfoState.isDirty() &&
                               !orderTagsState.isDirty() &&
                               !orderFilesState.isDirty() && (
-                                <ExportButton type="PO" format="xlsx" id={decodeId(orderId)} />
+                                <ExportButton
+                                  type="Order"
+                                  exportQuery={orderExportQuery}
+                                  variables={{ id: decodeId(orderId) }}
+                                />
                               )}
                           </>
                         )}
