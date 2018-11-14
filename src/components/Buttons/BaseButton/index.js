@@ -75,12 +75,11 @@ const BaseButton = ({
         <LoadingIcon size={10} />
       </div>
     )}
-    {icon &&
-      !isLoading && (
-        <div className={ButtonIconStyle}>
-          <Icon icon={icon} />
-        </div>
-      )}
+    {icon && !isLoading && (
+      <div className={ButtonIconStyle}>
+        <Icon icon={icon} />
+      </div>
+    )}
   </button>
 );
 

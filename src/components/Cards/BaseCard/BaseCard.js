@@ -117,43 +117,36 @@ export default class BaseCard extends React.Component<Props, State> {
         }}
         {...rest}
       >
-        {!disabled &&
-          actions.length > 0 && (
-            <OutsideClickHandler
-              onOutsideClick={this.closeActions}
-              ignoreClick={!actionsAreShown}
-              ignoreElements={
-                this.cornerIcon && this.cornerIcon.current ? [this.cornerIcon.current] : []
-              }
-            >
-              <Actions visible={actionsAreShown}>
-                {React.Children.map(actions, action => action)}
-              </Actions>
-            </OutsideClickHandler>
-          )}
-        {icon &&
-          icon.length && (
-            <CornerIcon
-              ref={this.cornerIcon}
-              icon={icon}
-              color={color}
-              disabled={disabled}
-              readOnly={readOnly}
-              selectable={selectable}
-              selected={selected}
-              onClick={this.toggleActions}
-              invert={invert}
-            />
-          )}
+        {!disabled && actions.length > 0 && (
+          <OutsideClickHandler
+            onOutsideClick={this.closeActions}
+            ignoreClick={!actionsAreShown}
+            ignoreElements={
+              this.cornerIcon && this.cornerIcon.current ? [this.cornerIcon.current] : []
+            }
+          >
+            <Actions visible={actionsAreShown}>
+              {React.Children.map(actions, action => action)}
+            </Actions>
+          </OutsideClickHandler>
+        )}
+        {icon && icon.length && (
+          <CornerIcon
+            ref={this.cornerIcon}
+            icon={icon}
+            color={color}
+            disabled={disabled}
+            readOnly={readOnly}
+            selectable={selectable}
+            selected={selected}
+            onClick={this.toggleActions}
+            invert={invert}
+          />
+        )}
         {children}
-        {!disabled &&
-          selectable && (
-            <div
-              className={SelectableCardStyle(!!selected)}
-              onClick={onSelect}
-              role="presentation"
-            />
-          )}
+        {!disabled && selectable && (
+          <div className={SelectableCardStyle(!!selected)} onClick={onSelect} role="presentation" />
+        )}
       </div>
     );
   }
