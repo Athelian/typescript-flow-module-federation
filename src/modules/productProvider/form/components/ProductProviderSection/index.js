@@ -53,7 +53,8 @@ const ProductProviderSection = ({ isNew }: Props) => (
                       ) : (
                         <PartnerCard
                           partner={values.exporter}
-                          onClick={() => exporterSlideToggle(true)}
+                          // TODO: reopen when api is Ready. https://app.asana.com/0/870010833087896/909813386222635/f
+                          // onClick={() => exporterSlideToggle(true)}
                         />
                       )}
                       <SlideView
@@ -97,7 +98,8 @@ const ProductProviderSection = ({ isNew }: Props) => (
                       ) : (
                         <PartnerCard
                           partner={values.supplier}
-                          onClick={() => supplierSlideToggle(true)}
+                          // TODO: reopen when api is Ready. https://app.asana.com/0/870010833087896/909813386222635/f
+                          // onClick={() => supplierSlideToggle(true)}
                         />
                       )}
                       <SlideView
