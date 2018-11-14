@@ -1,10 +1,10 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const WrapperRowStyle: string = css`
+export const TableRowWrapperStyle: string = css`
   display: grid;
   width: 100%;
-  grid-template-columns: 20px auto auto auto auto;
+  grid-template-columns: auto auto auto auto auto;
 `;
 
-export default WrapperRowStyle;
+export default TableRowWrapperStyle;

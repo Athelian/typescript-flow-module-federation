@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import FormattedNumber from 'components/FormattedNumber';
+import { LineNumberStyle } from './style';
 
 type OptionalProps = {
   line: number,
@@ -12,7 +14,11 @@ const defaultProps = {
 };
 
 export default function LineNumber({ line }: Props) {
-  return <div>{line > 0 ? line : ''}</div>;
+  return (
+    <div className={LineNumberStyle}>
+      <FormattedNumber value={line} />
+    </div>
+  );
 }
 
 LineNumber.defaultProps = defaultProps;

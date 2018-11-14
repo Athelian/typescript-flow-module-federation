@@ -56,6 +56,7 @@ export const colors = {
   ENTITY: '#0B6EDE',
   METADATA: '#CCCCCC',
   TEMPLATE: '#CCCCCC',
+  EDIT: '#CCCCCC',
 
   URGENT: '#F12C2C',
 
