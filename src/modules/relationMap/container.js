@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { getByPathWithDefault as get, omit, isEmpty } from 'utils/fp';
-import { ORDER, ORDER_ITEM } from 'modules/relationMap/constants';
+import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 
 type RelationMapState = {
   focusedId: string,
@@ -37,12 +37,13 @@ const createTreeObj = (entity: Object) =>
     {}
   );
 
-const createLineObj = (entity: Object) =>
+const createLineObj = (entity: Object, type: string) =>
   Object.keys(entity || {}).reduce(
     (obj, entityId) =>
       Object.assign(obj, {
         [entityId]: {
           id: entityId,
+          type,
           line: true,
           related: true,
         },
@@ -53,10 +54,10 @@ const createLineObj = (entity: Object) =>
 const getAllIds = (item: Object) =>
   Object.keys({ ...item.order, ...item.orderItem, ...item.batch });
 
-const filterRelatedTrees = (trees: Array<Object>, itemRelation: Object) => {
+const filterRelated = (trees: Array<Object>, itemRelation: Object) => {
   const relatedIds = getAllIds(itemRelation);
-  const filteredTree = trees.filter(prevTree => {
-    const isRelated = relatedIds.some(relatedId => prevTree[relatedId]);
+  const filteredTree = trees.filter(tree => {
+    const isRelated = relatedIds.some(relatedId => get(false, `${relatedId}`, tree));
     return !isRelated;
   });
   return filteredTree;
@@ -132,8 +133,9 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     this.setState(prevState => Object.assign(prevState, { targetedItem: {}, focusMode: '' }));
   };
 
-  resetTargetedItem = (itemRelation: Object, itemType: ?string) => {
-    const removeItem = itemRelation; // this.formatTargetTreeItem(itemRelation, itemType)
+  resetTargetedItem = (itemRelation: Object, relation: Object) => {
+    const { type: itemType, isLast } = relation;
+    const removeItem = this.formatTargetTreeItem(itemRelation, itemType);
     const removeObj = { ...removeItem.order, ...removeItem.orderItem, ...removeItem.batch };
     const removeIds = Object.keys(removeObj);
     this.setState(prevState => {
@@ -154,13 +156,17 @@ export default class RelationMapContainer extends Container<RelationMapState> {
           .map(line => {
             if (itemType === ORDER_ITEM) {
               const lineIds = Object.keys(line);
+              const orderItemLines = lineIds.filter(lineId => {
+                const currentLine = line[lineId];
+                return currentLine.type === ORDER_ITEM;
+              });
               return lineIds.reduce((obj, lineId) => {
                 const currentLine = line[lineId];
                 if (itemRelation.order[lineId] || itemRelation.orderItem[lineId]) {
                   return Object.assign(obj, {
                     [lineId]: {
                       id: lineId,
-                      line: true,
+                      line: orderItemLines.length === 1 ? false : !isLast,
                       related: false,
                     },
                   });
@@ -174,7 +180,12 @@ export default class RelationMapContainer extends Container<RelationMapState> {
                     },
                   });
                 }
-                return Object.assign(obj, { [lineId]: currentLine });
+                return Object.assign(obj, {
+                  [lineId]: {
+                    ...currentLine,
+                    ...(orderItemLines.length === 1 ? { line: false } : {}),
+                  },
+                });
               }, {});
             }
             return line;
@@ -206,14 +217,14 @@ export default class RelationMapContainer extends Container<RelationMapState> {
 
   isCurrentTree = (id: string) => this.state.trees.some(tree => tree[id]);
 
-  isSubTree = (itemRelation: Object) => {
+  isSubTree = (itemRelation: Object, itemType: string) => {
     const ids = Object.keys({
-      ...itemRelation.order,
+      ...(itemType === ORDER_ITEM ? {} : itemRelation.order),
       ...itemRelation.orderItem,
       ...itemRelation.batch,
     });
     const { trees } = this.state;
-    return ids.every(id => trees.some(tree => tree[id]));
+    return ids.every(id => trees.some(tree => get(false, id, tree)));
   };
 
   isTargetedLine = (id: string) => {
@@ -264,14 +275,14 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     const targetedItem = this.formatTargetTreeItem(itemRelation, itemType);
     const { order = {}, orderItem = {}, batch = {} } = targetedItem;
     const tree = {
-      ...createTreeObj(order),
+      ...(itemType !== ORDER_ITEM ? createTreeObj(order) : {}),
       ...createTreeObj(orderItem),
       ...createTreeObj(batch),
     };
     const line = {
-      ...createLineObj(order),
-      ...(itemType !== ORDER_ITEM ? createLineObj(orderItem) : {}),
-      ...createLineObj(batch),
+      ...createLineObj(order, ORDER),
+      ...(itemType !== ORDER_ITEM ? createLineObj(orderItem, ORDER_ITEM) : {}),
+      ...createLineObj(batch, BATCH),
     };
     this.setState(prevState => {
       const {
@@ -279,7 +290,8 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         orderItem: targetOrderItem,
         batch: targetBatch,
       } = prevState.targetedItem;
-      const prevTrees = filterRelatedTrees(prevState.trees, itemRelation);
+      const prevTrees = filterRelated(prevState.trees, itemRelation);
+      const prevLines = filterRelated(prevState.lines, itemRelation);
       const removedIds = getRemovedIds(prevState.trees, itemRelation);
       return Object.assign(prevState, {
         targetedItem: {
@@ -289,7 +301,7 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         },
         focusMode: 'TARGET_TREE',
         trees: [...prevTrees, tree],
-        lines: [...prevState.lines, line],
+        lines: [...prevLines, line],
       });
     });
   };
@@ -351,8 +363,8 @@ export default class RelationMapContainer extends Container<RelationMapState> {
 
   toggleTargetTree = (itemRelation: Object, relation: Object) => () => {
     const { id, type: itemType } = relation;
-    if (this.isCurrentTree(id) && this.isSubTree(itemRelation)) {
-      this.resetTargetedItem(itemRelation, itemType);
+    if (this.isCurrentTree(id) && this.isSubTree(itemRelation, itemType)) {
+      this.resetTargetedItem(itemRelation, relation);
     } else {
       this.targetTree(itemRelation, relation);
     }

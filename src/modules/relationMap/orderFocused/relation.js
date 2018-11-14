@@ -145,6 +145,7 @@ const generateRelation = (order: Object, option: Object) => {
     return relations;
   }
   const { orderItems } = order;
+  const lastOrderItem = orderItems.length - 1;
   orderItems.forEach((orderItem, orderItemIndex) => {
     const relatedProductIds = getRelatedIds(orderItems, orderItemIndex);
     const { batches } = orderItem;
@@ -155,7 +156,12 @@ const generateRelation = (order: Object, option: Object) => {
       type: `${LINK4}-${ORDER_ITEM}`,
       relatedIds: relatedProductIds,
     });
-    relations.push({ type: ORDER_ITEM, id: orderItem.id, isNew: orderItem.isNew });
+    relations.push({
+      type: ORDER_ITEM,
+      id: orderItem.id,
+      isNew: orderItem.isNew,
+      isLast: lastOrderItem === orderItemIndex,
+    });
     if (noBatch) {
       relations.push({ type: '' });
       relations.push({ type: '' });
