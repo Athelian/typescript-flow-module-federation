@@ -1,7 +1,7 @@
 // @flow
 
 export const getShipmentSummary = (shipment: Object) => {
-  const totalBatches = shipment.batches.length;
+  const totalBatches = shipment.batches ? shipment.batches.length : 0;
   const batchesOfActiveOrder = shipment.batches.reduce(
     (total, { orderItem }) =>
       orderItem && orderItem.order && orderItem.order.archived ? total : total + 1,

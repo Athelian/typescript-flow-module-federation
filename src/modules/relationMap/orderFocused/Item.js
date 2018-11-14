@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Subscribe } from 'unstated';
-import { getByPathWithDefault as get } from 'utils/fp';
+// import { getByPathWithDefault as get } from 'utils/fp';
 import { cx } from 'react-emotion';
 import { BooleanValue } from 'react-values';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
@@ -84,13 +84,15 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
   return (
     <Subscribe to={[RelationMapContainer]}>
       {({
-        state: { focusedItem, targetedItem, targetMode, focusMode, focusedId },
+        state: { focusedItem, focusMode, focusedId },
         toggleHighlight,
         toggleTargetTree,
         toggleTarget,
         overrideTarget,
+        isTargetedLine,
+        isRelatedLine,
         isTargeted: isTargetedItem,
-        isCurrentTarget: isCurrentTargetItem,
+        isCurrentTree,
         isFocused: isFocusedItem,
       }) => {
         if (isRelationLine(type)) {
@@ -101,13 +103,8 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           const isFocused = isAllBatchLine
             ? false
             : isFocusedLink(focusedItem[lineItemType], relatedIds);
-          const isTargeted =
-            focusMode === 'TARGET' || targetMode === relationType || isAllBatchLine
-              ? false
-              : isFocusedLink(targetedItem[lineItemType], relatedIds);
-          const hasRelation = isAllOrderItemLine
-            ? false
-            : get(false, `${lineItemType}.${id}`, isTargeted ? targetedItem : focusedItem);
+          const isTargeted = isAllBatchLine ? false : isTargetedLine(id); // isFocusedLink(targetedItem[lineItemType], relatedIds) // && isSelectedLine;
+          const hasRelation = isAllOrderItemLine ? false : isRelatedLine(id); // get(false, `${lineItemType}.${id}`, isTargeted ? targetedItem : focusedItem);
           return (
             <RelationLine
               type={linkType}
@@ -118,12 +115,12 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           );
         }
         const onClickHighlight = toggleHighlight(itemRelation, id);
-        const onClickTargetTree = toggleTargetTree(itemRelation, id);
+        const onClickTargetTree = toggleTargetTree(itemRelation, relation);
         const onClickTarget = toggleTarget(itemType, id, data);
         const isFocused = isFocusedItem(itemType, id);
         const isCurrentFocused = focusedId && focusedId === id;
         const isTargeted = isTargetedItem(itemType, id);
-        const isCurrentTarget = isCurrentTargetItem(id);
+        const isCurrentTarget = isCurrentTree(id);
         const cardWrapperClass = ItemWrapperStyle(isFocused, isTargeted, isCurrentFocused);
         const totalCardWrapperClass =
           !isCollapsed || focusMode === 'TARGET'
@@ -178,7 +175,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                     icon="BRANCH"
                                     targetted={isCurrentTarget ? 'BRANCH' : targetted}
                                     toggle={toggle}
-                                    onClick={onClickTargetTree()}
+                                    onClick={onClickTargetTree}
                                     className={RotateIcon}
                                   />
                                   <Action
@@ -236,7 +233,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                 icon="BRANCH"
                                 targetted={isCurrentTarget ? 'BRANCH' : targetted}
                                 toggle={toggle}
-                                onClick={onClickTargetTree(ORDER_ITEM)}
+                                onClick={onClickTargetTree}
                                 className={RotateIcon}
                               />
                               <Action

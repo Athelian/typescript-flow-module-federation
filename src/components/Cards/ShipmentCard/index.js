@@ -43,7 +43,9 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
           </div>
           <div className={ShipmentRightWrapperStyle}>
             <div className={ShipmentTagsWrapperStyle}>
-              {shipment.tags.length > 0 && shipment.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              {shipment.tags &&
+                shipment.tags.length > 0 &&
+                shipment.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
           </div>
         </div>
