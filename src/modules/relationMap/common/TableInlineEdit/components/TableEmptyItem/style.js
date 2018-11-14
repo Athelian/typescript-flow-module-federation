@@ -7,7 +7,7 @@ export const WrapperStyle: string = css`
 `;
 
 export const EmptyItemStyle: string = css`
-  width: 100px;
+  width: 200px;
   height: 25px;
   padding: 5px;
   margin: 10px;

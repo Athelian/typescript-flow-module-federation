@@ -118,3 +118,19 @@ export const findBatchPosition = (order: Object, batch: Object) => {
 
   return position;
 };
+
+export const totalLinePerOrder = (orderItems: Array<Object>) => {
+  let totalLines = 0;
+  if (orderItems.length === 0) {
+    totalLines = 1;
+  } else {
+    totalLines = orderItems.reduce((result, orderItem) => {
+      const totalBatches = Object.keys(orderItem.relation.batch).length;
+      if (totalBatches === 0) {
+        return result + 1;
+      }
+      return result + totalBatches;
+    }, 0);
+  }
+  return totalLines;
+};
