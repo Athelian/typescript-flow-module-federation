@@ -22,7 +22,7 @@ import LineNumber from './components/LineNumber';
 import TableHeader from './components/TableHeader';
 import TableItem from './components/TableItem';
 // import { findAllPossibleOrders, totalColumns } from './helpers';
-import { findAllPossibleOrders } from './helpers';
+import { findAllPossibleOrders, totalLinePerOrder } from './helpers';
 import {
   orderColumnFields,
   orderItemColumnFields,
@@ -150,18 +150,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             const batches = (Object.values(mappingObjects.batch): any).filter(
               item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
             );
-            let totalLines = 0;
-            if (orderItems.length === 0) {
-              totalLines = 1;
-            } else {
-              totalLines = orderItems.reduce((result, orderItem) => {
-                const totalBatches = Object.keys(orderItem.relation.batch).length;
-                if (totalBatches === 0) {
-                  return result + 1;
-                }
-                return result + totalBatches;
-              }, 0);
-            }
+            const totalLines = totalLinePerOrder(orderItems);
             return (
               <TableRow key={orderId}>
                 <div>
@@ -298,7 +287,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                     totalLines -
                       shipmentIds.filter(shipmentId => !!order.relation.shipment[shipmentId]).length
                   ).map(index => (
-                    <TableEmptyItem key={index} fields={batchColumnFields} />
+                    <TableEmptyItem key={index} fields={shipmentColumnFields} />
                   ))}
                 </div>
               </TableRow>
@@ -307,7 +296,18 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
         </div>
 
         <div className={SidebarWrapperStyle} ref={sidebarRef}>
-          <LineNumber line={0} />
+          {orderIds.map((orderId, counter) => {
+            const order = mappingObjects.order[orderId];
+            if (!order) return null;
+            // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
+            const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+              item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
+            );
+            const totalLines = totalLinePerOrder(orderItems);
+            return (
+              <LineNumber height={totalLines * 43} line={counter + 1} key={`line-for-${orderId}`} />
+            );
+          })}
         </div>
 
         <div className={HeaderWrapperStyle} ref={headerRef}>
