@@ -98,6 +98,13 @@ module.exports = on => {
           incoterm: 'FAS',
         };
 
+      if (type === 'batch')
+        return {
+          batchNo: faker.random.word(),
+          quantity: faker.random.number(100),
+          batchAdjustmentsQuantity: faker.random.number(100),
+        };
+
       if (type === 'product')
         return {
           name: 'e2e-test',

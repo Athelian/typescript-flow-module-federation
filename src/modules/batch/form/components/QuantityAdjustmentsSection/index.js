@@ -45,7 +45,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                 </Label>
               }
               input={
-                <div className={InitialQuantityStyle}>
+                <div data-testid="initialQuantityDiv" className={InitialQuantityStyle}>
                   <FormattedNumber value={values.quantity || 0} />
                 </div>
               }
@@ -86,6 +86,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
               )}
             <div className={AddAdjustmentButtonWrapperStyle}>
               <NewButton
+                data-testid="addAdjustmentButton"
                 label={
                   <FormattedMessage
                     id="modules.Batches.newAdjustment"
@@ -117,7 +118,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                 </Label>
               }
               input={
-                <div className={CurrentQuantityStyle}>
+                <div data-testid="currentQuantityDiv" className={CurrentQuantityStyle}>
                   <FormattedNumber value={currentQuantity || 0} />
                 </div>
               }

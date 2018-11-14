@@ -152,6 +152,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                     <React.Fragment>
                       {!values.orderItem ? (
                         <DashedPlusButton
+                          data-testid="selectOrderItemButton"
                           width="195px"
                           height="217px"
                           onClick={() => slideToggle(true)}
