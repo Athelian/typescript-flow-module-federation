@@ -144,6 +144,9 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
               item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
             );
+            const batches = (Object.values(mappingObjects.batch): any).filter(
+              item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
+            );
             const totalLines = totalLinePerOrder(orderItems);
             return (
               <TableRow key={orderId}>
@@ -254,7 +257,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                           />
                         ))
                       )}
-                      {range(totalLines - batchIds.length).map(index => (
+                      {range(totalLines - batches.length).map(index => (
                         <TableEmptyItem key={index} fields={batchColumnFields} />
                       ))}
                     </>
