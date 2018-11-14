@@ -314,10 +314,10 @@ export const formatOrderData = (orders: Array<Object> = []) => {
       shipmentObj[shipment.id].relation.order[orderId] = true;
     });
 
-    orderItems.forEach(orderItem => {
+    orderItems.forEach((orderItem, orderItemId) => {
       const { batches } = orderItem;
       if (!orderItemObj[orderItem.id]) {
-        orderRelation.orderItem[orderItem.id] = true;
+        orderRelation.orderItem[orderItem.id] = { parentId: orderId, index: orderItemId };
         orderItemObj[orderItem.id] = initOrderItemObj(orderItem, orderId);
       }
       const { relation: orderItemRelation, data: orderItemData } = orderItemObj[orderItem.id];
@@ -325,11 +325,11 @@ export const formatOrderData = (orders: Array<Object> = []) => {
       orderData.totalBatch += batches ? batches.length : 0;
       orderData.orderedQuantity += orderItem.quantity || 0;
 
-      batches.forEach(batch => {
+      batches.forEach((batch, batchIndex) => {
         const { shipment } = batch;
         if (!batchObj[batch.id]) {
-          orderRelation.batch[batch.id] = true;
-          orderItemRelation.batch[batch.id] = true;
+          orderRelation.batch[batch.id] = { parentId: orderItem.id, index: batchIndex };
+          orderItemRelation.batch[batch.id] = { parentId: orderItem.id, index: batchIndex };
           batchObj[batch.id] = initBatchObj(batch, order.id, orderItem.id);
 
           if (shipment) {

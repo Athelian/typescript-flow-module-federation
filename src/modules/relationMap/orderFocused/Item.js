@@ -103,8 +103,8 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           const isFocused = isAllBatchLine
             ? false
             : isFocusedLink(focusedItem[lineItemType], relatedIds);
-          const isTargeted = isAllBatchLine ? false : isTargetedLine(id); // isFocusedLink(targetedItem[lineItemType], relatedIds) // && isSelectedLine;
-          const hasRelation = isAllOrderItemLine ? false : isRelatedLine(id); // get(false, `${lineItemType}.${id}`, isTargeted ? targetedItem : focusedItem);
+          const isTargeted = isAllBatchLine ? false : isTargetedLine(id);
+          const hasRelation = isAllOrderItemLine ? false : isRelatedLine(id);
           return (
             <RelationLine
               type={linkType}
@@ -115,8 +115,8 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           );
         }
         const onClickHighlight = toggleHighlight(itemRelation, id);
-        const onClickTargetTree = toggleTargetTree(itemRelation, relation);
-        const onClickTarget = toggleTarget(itemType, id, data);
+        const onClickTargetTree = toggleTargetTree(itemData, relation);
+        const onClickTarget = toggleTarget(itemType, relation, data);
         const isFocused = isFocusedItem(itemType, id);
         const isCurrentFocused = focusedId && focusedId === id;
         const isTargeted = isTargetedItem(itemType, id);
