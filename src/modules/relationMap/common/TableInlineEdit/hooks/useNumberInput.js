@@ -5,7 +5,7 @@ import { number } from 'yup';
 import type { ValidationObject } from './type.js.flow';
 
 function useNumberInput(initialValue: number, schema: ValidationObject) {
-  const [value, setValue] = useState(initialValue);
+  const [value, setValue] = useState(initialValue || 0);
   const [focus, setFocus] = useState(false);
   const hasError = schema.isRequired
     ? !number()

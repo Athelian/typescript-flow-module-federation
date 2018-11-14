@@ -4,7 +4,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
 import { range, clone, set } from 'lodash';
-// import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
 import { arrayToObject, isEquals } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
@@ -12,7 +11,6 @@ import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import logger from 'utils/logger';
-// import messages from 'modules/relationMap/messages';
 import { formatOrderData } from 'modules/relationMap/util';
 import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
@@ -21,7 +19,6 @@ import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
 import TableHeader from './components/TableHeader';
 import TableItem from './components/TableItem';
-// import { findAllPossibleOrders, totalColumns } from './helpers';
 import { findAllPossibleOrders, totalLinePerOrder } from './helpers';
 import {
   orderColumnFields,
@@ -147,9 +144,6 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
               item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
             );
-            const batches = (Object.values(mappingObjects.batch): any).filter(
-              item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
-            );
             const totalLines = totalLinePerOrder(orderItems);
             return (
               <TableRow key={orderId}>
@@ -247,18 +241,20 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                   )}
                 </div>
                 <div>
-                  {batches.length ? (
+                  {batchIds.length ? (
                     <>
-                      {batches.map((batch, position) => (
-                        <TableItem
-                          cell={`batch.${counter + 1}.${position}`}
-                          key={batch.data.id}
-                          fields={batchColumnFields}
-                          values={batch.data}
-                          validator={batchValidator}
-                        />
-                      ))}
-                      {range(totalLines - batches.length).map(index => (
+                      {orderItems.map((orderItem, position) =>
+                        orderItem.data.batches.map((batch, index) => (
+                          <TableItem
+                            cell={`${order.data.id}.orderItems.${position}.batches.${index}`}
+                            key={batch.id}
+                            fields={batchColumnFields}
+                            values={batch}
+                            validator={batchValidator}
+                          />
+                        ))
+                      )}
+                      {range(totalLines - batchIds.length).map(index => (
                         <TableEmptyItem key={index} fields={batchColumnFields} />
                       ))}
                     </>
@@ -304,6 +300,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
               item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
             );
             const totalLines = totalLinePerOrder(orderItems);
+            // TODO: handle vertical scroll for line
             return (
               <LineNumber height={totalLines * 43} line={counter + 1} key={`line-for-${orderId}`} />
             );
