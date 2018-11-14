@@ -2,10 +2,11 @@
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
 import { orderFormQuery } from 'modules/order/form/query';
 import { createOrderWithReturnDataMutation } from 'modules/order/form/mutation';
+// import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import { getByPathWithDefault as get } from 'utils/fp';
 import { createMutationRequest } from './index';
 
-export const cloneTree = async (client: any, target: Object) => {
+export const cloneTree = async ({ client, target }: { client: any, target: Object }) => {
   const mutationRequest = createMutationRequest(client);
   const { shipment, order, orderItem, batch } = target;
   const shipmentIds = Object.keys(shipment);

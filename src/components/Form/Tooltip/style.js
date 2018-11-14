@@ -3,8 +3,6 @@ import { css } from 'react-emotion';
 
 export const TooltipRelativeWrapperStyle: string = css`
   position: relative;
-  width: 20px;
-  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;

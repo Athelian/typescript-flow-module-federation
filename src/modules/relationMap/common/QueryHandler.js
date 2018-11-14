@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
 import loadMoreUtil from 'utils/loadMore';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
+import { useIdb } from 'react-use-idb';
 
 type OptionalProps = {
   filter?: Object,
@@ -18,7 +19,6 @@ type Props = OptionalProps & {
   error?: Object,
 };
 
-// TODO: how to send the filter and sort
 const QueryHandler = ({
   loading,
   data,
@@ -29,15 +29,18 @@ const QueryHandler = ({
   onChangePage,
   filter,
 }: Props) => {
+  // Save on indexDb for table inline edit
+  const [db, setDb] = useIdb(model, []);
   if (error) {
     return error.message;
   }
   if (loading) {
     return <LoadingIcon />;
   }
-  const nodes = getByPathWithDefault(null, `${model}.nodes`, data);
   const currentPage = getByPathWithDefault(1, `${model}.page`, data);
   const nextPage = currentPage + 1;
+  const nodes = getByPathWithDefault([], `${model}.nodes`, data);
+  if (!isEquals(nodes, db)) setDb(nodes);
   const totalPage = getByPathWithDefault(1, `${model}.totalPage`, data);
   const hasMore: boolean = nextPage <= totalPage;
   const loadMore = () => {
@@ -46,7 +49,6 @@ const QueryHandler = ({
       onChangePage();
     }
   };
-
   return children({ nodes, hasMore, loadMore, currentPage });
 };
 

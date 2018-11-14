@@ -1,7 +1,14 @@
 // @flow
-import * as React from 'react';
-import Layout from 'components/Layout';
+// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+import React, { useEffect, useState, useRef } from 'react';
+import { useIdb } from 'react-use-idb';
+import { setConfig } from 'react-hot-loader';
+import { range, clone, set } from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import emitter from 'utils/emitter';
+import { arrayToObject, isEquals } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
+import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import logger from 'utils/logger';
@@ -12,7 +19,7 @@ import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
 import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
-import { WrapperStyle, TableHeaderStyle } from './style';
+import { TableHeaderStyle, HorizonScrollStyle } from './style';
 import Badge from '../SummaryBadge/Badge';
 import TableHeader from './components/TableHeader';
 import TableItem from './components/TableItem';
@@ -27,6 +34,7 @@ import {
   batchColumns,
   shipmentColumns,
 } from './constants';
+import TableEmptyItem from './components/TableEmptyItem';
 
 type Props = {
   onSave: () => void,
@@ -35,13 +43,51 @@ type Props = {
   selected: Object,
 };
 
+setConfig({ pureSFC: true });
+
 export default function TableInlineEdit({ type, selected, onSave, onCancel }: Props) {
-  const data = JSON.parse(window.localStorage.getItem(type)) || [];
+  const [data] = useIdb(type, []);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const editDataRef = useRef();
+
+  useEffect(() => {
+    if (data.length) {
+      if (
+        !editDataRef.current ||
+        (Array.isArray(editDataRef.current) && editDataRef.current.length === 0)
+      ) {
+        logger.warn('copy data');
+        editDataRef.current = clone(data);
+      }
+
+      const listener = emitter.once('INLINE_CHANGE', newData => {
+        const result = arrayToObject(clone(editDataRef.current), 'id');
+        const { name, value, hasError } = newData;
+        editDataRef.current = [].concat(Object.values(set(result, name, value)));
+
+        if (!touched[name]) {
+          setTouched({
+            ...touched,
+            [name]: true,
+          });
+        }
+
+        if (hasError) {
+          setErrors({ ...errors, [name]: true });
+        } else {
+          delete errors[name];
+          setErrors(errors);
+        }
+      });
+      return () => listener.remove();
+    }
+    return () => {};
+  });
+
   const { sumShipments, sumOrders, sumOrderItems, sumBatches, ...mappingObjects } = formatOrderData(
     data
   );
-  logger.warn('selected', selected);
-  logger.warn('mappingObjects', mappingObjects);
   const { orderIds, orderItemsIds, batchIds, shipmentIds } = findAllPossibleOrders(
     selected,
     mappingObjects
@@ -53,12 +99,26 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
         <SlideViewNavBar>
           <EntityIcon icon="ORDER" color="ORDER" />
           <CancelButton onClick={onCancel} />
-          <SaveButton onClick={onSave} />
+          <SaveButton
+            onClick={onSave}
+            disabled={
+              !(
+                editDataRef.current &&
+                isEquals(
+                  cleanUpData(arrayToObject(editDataRef.current, 'id')),
+                  cleanUpData(arrayToObject(data, 'id'))
+                ) &&
+                Object.keys(touched).length > 0 &&
+                Object.keys(errors).length === 0
+              )
+            }
+          />
         </SlideViewNavBar>
       }
     >
-      <div>
-        <div className={WrapperStyle}>
+      <div className={HorizonScrollStyle}>
+        <TableRow>
+          <LineNumber />
           <div className={TableHeaderStyle(totalColumns(orderColumns))}>
             <Badge
               icon="ORDER"
@@ -91,7 +151,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
               no={shipmentIds.length}
             />
           </div>
-        </div>
+        </TableRow>
         <TableRow>
           <LineNumber />
           <TableHeader info={orderColumns} />
@@ -101,6 +161,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
         </TableRow>
         {orderIds.map((orderId, counter) => {
           const order = mappingObjects.order[orderId];
+          if (!order) return null;
           // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
           const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
             item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
@@ -108,13 +169,25 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
           const batches = (Object.values(mappingObjects.batch): any).filter(
             item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
           );
+          let totalLines = 0;
+          if (orderItems.length === 0) {
+            totalLines = 1;
+          } else {
+            totalLines = orderItems.reduce((result, orderItem) => {
+              const totalBatches = Object.keys(orderItem.relation.batch).length;
+              if (totalBatches === 0) {
+                return result + 1;
+              }
+              return result + totalBatches;
+            }, 0);
+          }
           return (
             <TableRow key={orderId}>
               <LineNumber line={counter + 1} />
               <div>
                 {orderItems.length === 0 ? (
                   <TableItem
-                    cell={`order.${counter + 1}`}
+                    cell={order.data.id}
                     fields={orderColumnFields}
                     values={order.data}
                     validator={orderValidator}
@@ -123,67 +196,108 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                   orderItems.map(orderItem =>
                     Object.keys(orderItem.relation.batch).length === 0 ? (
                       <TableItem
-                        key={`order.${counter + 1}.duplication.${orderItem.data.id}`}
-                        cell={`order.${counter + 1}.duplication.${orderItem.data.id}`}
+                        key={`order.${order.data.id}.${counter + 1}.duplication.${
+                          orderItem.data.id
+                        }`}
+                        cell={order.data.id}
                         fields={orderColumnFields}
                         values={order.data}
                         validator={orderValidator}
                       />
                     ) : (
-                      Object.keys(orderItem.relation.batch)
-                        .filter(batchId => batchIds.includes(batchId))
-                        .map(batchId => (
-                          <TableItem
-                            key={`order.${counter + 1}.duplication.${
-                              orderItem.data.id
-                            }.batch.${batchId}`}
-                            cell={`order.${counter + 1}.duplication.${
-                              orderItem.data.id
-                            }.batch.${batchId}`}
-                            fields={orderColumnFields}
-                            values={order.data}
-                            validator={orderValidator}
-                          />
-                        ))
+                      <React.Fragment
+                        key={`order.${order.data.id}.${counter + 1}.duplication.${
+                          orderItem.data.id
+                        }`}
+                      >
+                        {Object.keys(orderItem.relation.batch)
+                          .filter(batchId => batchIds.includes(batchId))
+                          .map(batchId => (
+                            <TableItem
+                              key={`order.${order.data.id}.${counter + 1}.duplication.${
+                                orderItem.data.id
+                              }.batch.${batchId}`}
+                              cell={order.data.id}
+                              fields={orderColumnFields}
+                              values={order.data}
+                              validator={orderValidator}
+                            />
+                          ))}
+                        {Object.keys(orderItem.relation.batch)
+                          .filter(batchId => !batchIds.includes(batchId))
+                          .map(batchId => (
+                            <TableEmptyItem
+                              key={`order.${counter + 1}.hidden.${
+                                orderItem.data.id
+                              }.batch.${batchId}`}
+                              fields={orderColumnFields}
+                            />
+                          ))}
+                      </React.Fragment>
                     )
                   )
                 )}
               </div>
               <div>
-                {orderItems.map((orderItem, position) =>
-                  Object.keys(orderItem.relation.batch).length === 0 ? (
-                    <TableItem
-                      cell={`orderItem.${counter + 1}.${position}`}
-                      key={`orderItem.${counter + 1}.${orderItem.data.id}`}
-                      fields={orderItemColumnFields}
-                      values={orderItem.data}
-                      validator={orderValidator}
-                    />
-                  ) : (
-                    Object.keys(orderItem.relation.batch)
-                      .filter(batchId => batchIds.includes(batchId))
-                      .map(batchId => (
-                        <TableItem
-                          cell={`orderItem.${counter + 1}.${position}.duplication.${batchId}`}
-                          key={`orderItem.${counter + 1}.duplication.${batchId}`}
-                          fields={orderItemColumnFields}
-                          values={orderItem.data}
-                          validator={orderValidator}
-                        />
-                      ))
+                {orderItems.length ? (
+                  orderItems.map((orderItem, position) =>
+                    Object.keys(orderItem.relation.batch).length === 0 ? (
+                      <TableItem
+                        cell={`${order.data.id}.orderItems.${position}`}
+                        key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                        fields={orderItemColumnFields}
+                        values={orderItem.data}
+                        validator={orderValidator}
+                      />
+                    ) : (
+                      <React.Fragment key={`orderItem.${counter + 1}.${orderItem.data.id}`}>
+                        {Object.keys(orderItem.relation.batch)
+                          .filter(batchId => batchIds.includes(batchId))
+                          .map(batchId => (
+                            <TableItem
+                              cell={`${order.data.id}.orderItems.${position}`}
+                              key={`orderItem.${counter + 1}.duplication.${batchId}`}
+                              fields={orderItemColumnFields}
+                              values={orderItem.data}
+                              validator={orderValidator}
+                            />
+                          ))}
+                        {Object.keys(orderItem.relation.batch)
+                          .filter(batchId => !batchIds.includes(batchId))
+                          .map(batchId => (
+                            <TableEmptyItem
+                              key={`orderItem.${counter + 1}.hidden.${batchId}`}
+                              fields={orderItemColumnFields}
+                            />
+                          ))}
+                      </React.Fragment>
+                    )
                   )
+                ) : (
+                  <TableEmptyItem fields={orderItemColumnFields} />
                 )}
               </div>
               <div>
-                {batches.map((batch, position) => (
-                  <TableItem
-                    cell={`batch.${counter + 1}.${position}`}
-                    key={batch.data.id}
-                    fields={batchColumnFields}
-                    values={batch.data}
-                    validator={batchValidator}
-                  />
-                ))}
+                {batches.length ? (
+                  <>
+                    {batches.map((batch, position) => (
+                      <TableItem
+                        cell={`batch.${counter + 1}.${position}`}
+                        key={batch.data.id}
+                        fields={batchColumnFields}
+                        values={batch.data}
+                        validator={batchValidator}
+                      />
+                    ))}
+                    {range(totalLines - batches.length).map(index => (
+                      <TableEmptyItem key={index} fields={batchColumnFields} />
+                    ))}
+                  </>
+                ) : (
+                  range(totalLines).map(index => (
+                    <TableEmptyItem key={index} fields={batchColumnFields} />
+                  ))
+                )}
               </div>
               <div>
                 {shipmentIds
@@ -200,6 +314,12 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                       />
                     );
                   })}
+                {range(
+                  totalLines -
+                    shipmentIds.filter(shipmentId => !!order.relation.shipment[shipmentId]).length
+                ).map(index => (
+                  <TableEmptyItem key={index} fields={batchColumnFields} />
+                ))}
               </div>
             </TableRow>
           );

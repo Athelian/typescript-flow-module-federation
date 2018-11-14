@@ -51,6 +51,7 @@ export const RemoveAssignmentButtonStyle: string = css`
   top: -6px;
   right: -6px;
   opacity: 0;
+  z-index: 1;
   &:hover,
   :focus {
     color: ${colors.RED};

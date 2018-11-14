@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Nov 05 2018 08:07:30 GMT+0700 (Indochina Time)
+# timestamp: Sat Nov 10 2018 13:31:06 GMT+0700 (Indochina Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -28461,6 +28461,45 @@ type EventPagination {
   totalCount: Int!
 }
 
+type ExportTemplate implements Model {
+  name: String!
+  types: [ExportType!]!
+  dynamic: Boolean!
+  ownedBy: Group
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+}
+
+input ExportTemplateFilterInput {
+  type: ExportType
+  dynamic: Boolean
+}
+
+enum ExportType {
+  """Order"""
+  Order
+
+  """Orders"""
+  Orders
+
+  """Shipment"""
+  Shipment
+
+  """Shipments"""
+  Shipments
+
+  """Product"""
+  Product
+
+  """Products"""
+  Products
+}
+
 type File implements Model & Owned {
   name: String!
   type: FileType!
@@ -30058,6 +30097,9 @@ type Query {
   productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPagination!
   order(id: ID!): Order
   orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPagination!
+  orderExport(id: ID!, templateId: ID!, fields: [String!]): File
+  ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput, fields: [String!]): File
+  ordersByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): File
   orderItem(id: ID!): OrderItem
   orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPagination!
   batch(id: ID!): Batch
@@ -30076,6 +30118,7 @@ type Query {
   integrationConfiguration(id: ID!): IntegrationConfiguration
   integrationConfigurations(page: Int! = 1, perPage: Int! = 10): IntegrationConfigurationPagination!
   integrationLink(id: ID!): IntegrationLink
+  exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplate!]!
 }
 
 enum Seaport {

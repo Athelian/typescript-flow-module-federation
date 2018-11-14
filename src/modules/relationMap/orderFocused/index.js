@@ -61,7 +61,7 @@ const OrderFocused = ({
               const relations = generateRelation(item, { isCollapsed });
               return relations.map((relation, relationIndex) => {
                 const key = `relation-${relationIndex}`;
-                const itemData = getItemData({ order, orderItem, batch }, relation);
+                const itemData = getItemData({ order, orderItem, batch }, relation) || {};
                 const itemType = getItemType(relation.type);
                 return (
                   <Item

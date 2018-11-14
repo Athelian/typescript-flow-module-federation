@@ -7,6 +7,7 @@ import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
+import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { FieldItem, Label, Display } from 'components/Form';
@@ -30,6 +31,8 @@ import {
   VolumeWrapperStyle,
   OrderWrapperStyle,
   OrderIconStyle,
+  OrderInChargeWrapperStyle,
+  InChargeWrapperStyle,
   BatchTagsWrapperStyle,
 } from './style';
 
@@ -84,10 +87,11 @@ const ShipmentBatchCard = ({
     deliveredAt,
     batchAdjustments,
     packageVolume,
-    orderItem,
+    packageQuantity,
     tags,
     orderItem: {
       productProvider: { product, supplier, exporter },
+      order,
     },
   } = batch;
 
@@ -280,22 +284,47 @@ const ShipmentBatchCard = ({
               }
               input={
                 <Display>
-                  {packageVolume && (
-                    <FormattedNumber
-                      value={packageVolume.value * (quantity + totalAdjustment)}
-                      suffix={packageVolume.metric}
-                    />
-                  )}
+                {packageVolume && packageQuantity != null && (
+                  <FormattedNumber
+                    value={packageVolume.value * packageQuantity}
+                    suffix={packageVolume.metric}
+                  />
+                )}
                 </Display>
               }
             />
           </div>
 
           <div className={OrderWrapperStyle}>
-            <button className={OrderIconStyle} type="button">
+            <Link
+              className={OrderIconStyle}
+              to={`/order/${encodeId(order.id)}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
               <Icon icon="ORDER" />
-            </button>
-            <Display align="left">{orderItem && orderItem.order && orderItem.order.poNo}</Display>
+            </Link>
+            <Display align="left">{order.poNo}</Display>
+          </div>
+
+          <div className={OrderInChargeWrapperStyle}>
+            <Label>
+              <FormattedMessage
+                id="components.cards.orderInCharge"
+                defaultMessage="ORDER IN CHARGE"
+              />
+            </Label>
+            <div className={InChargeWrapperStyle}>
+              {order.inCharges &&
+                order.inCharges.map(inCharge => (
+                  <UserAvatar
+                    firstName={inCharge.firstName}
+                    lastName={inCharge.lastName}
+                    key={inCharge.id}
+                  />
+                ))}
+            </div>
           </div>
 
           <div className={BatchTagsWrapperStyle}>

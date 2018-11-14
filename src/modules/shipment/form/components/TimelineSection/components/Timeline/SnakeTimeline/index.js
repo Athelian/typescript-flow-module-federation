@@ -51,7 +51,12 @@ const TimelineLayout = ({ shipment }: Props) => {
           <div className={TimelineIconWrapperStyle}>
             <div className={TimelineIconName}>
               <TimelinePortNameSnakeLayout
-                port={voyage.departurePort[(transportType || '').toLowerCase()] || ''}
+                port={
+                  voyage.departurePort[(transportType || '').toLowerCase()] || {
+                    airport: '',
+                    seaport: '',
+                  }
+                }
                 color={coloring[index * 2 + 2]}
                 transportType={transportType}
                 size="LITTLE"

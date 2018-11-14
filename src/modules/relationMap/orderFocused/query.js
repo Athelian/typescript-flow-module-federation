@@ -14,6 +14,7 @@ export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
+        ...orderCardFragment
         id
         poNo
         piNo
@@ -46,6 +47,7 @@ export const orderListQuery = gql`
             packageVolume {
               ...metricFragment
             }
+            packageQuantity
           }
           tags {
             id
@@ -137,6 +139,10 @@ export const orderListQuery = gql`
           }
           productProvider {
             id
+            exporter {
+              id
+              name
+            }
             supplier {
               id
               name

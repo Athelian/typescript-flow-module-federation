@@ -30,17 +30,17 @@ export const findAllPossibleOrders = (
   batchIds: Array<string>,
   shipmentIds: Array<string>,
 } => {
-  const orderIds = Object.keys(selected.order);
-  const orderItemsIds = Object.keys(selected.orderItem);
-  const batchIds = Object.keys(selected.batch);
-  const shipmentIds = Object.keys(selected.shipment);
+  const orderIds = selected.order ? Object.keys(selected.order) : [];
+  const orderItemsIds = selected.orderItem ? Object.keys(selected.orderItem) : [];
+  const batchIds = selected.batch ? Object.keys(selected.batch) : [];
+  const shipmentIds = selected.shipment ? Object.keys(selected.shipment) : [];
 
   // find all orders from selected order
   if (orderIds.length) {
     // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
     (Object.entries(mappingObjects.order): any).forEach((item: [string, MappingObject]) => {
       const [orderId, order] = item;
-      if (selected.order[orderId]) {
+      if (selected.order && selected.order[orderId]) {
         orderItemsIds.push(...Object.keys(order.relation.orderItem));
         batchIds.push(...Object.keys(order.relation.batch));
         shipmentIds.push(...Object.keys(order.relation.shipment));
@@ -52,7 +52,7 @@ export const findAllPossibleOrders = (
     // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
     (Object.entries(mappingObjects.orderItem): any).forEach((item: [string, MappingObject]) => {
       const [orderItemId, orderItem] = item;
-      if (selected.orderItem[orderItemId]) {
+      if (selected.orderItem && selected.orderItem[orderItemId]) {
         orderIds.push(...Object.keys(orderItem.relation.order));
         batchIds.push(...Object.keys(orderItem.relation.batch));
         shipmentIds.push(...Object.keys(orderItem.relation.shipment));
@@ -64,7 +64,7 @@ export const findAllPossibleOrders = (
     // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
     (Object.entries(mappingObjects.shipment): any).forEach((item: [string, MappingObject]) => {
       const [shipmentId, shipment] = item;
-      if (selected.shipment[shipmentId]) {
+      if (selected.shipment && selected.shipment[shipmentId]) {
         orderIds.push(...Object.keys(shipment.relation.order));
         orderItemsIds.push(...Object.keys(shipment.relation.orderItem));
         batchIds.push(...Object.keys(shipment.relation.batch));
@@ -76,7 +76,7 @@ export const findAllPossibleOrders = (
     // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
     (Object.entries(mappingObjects.batch): any).forEach((item: [string, MappingObject]) => {
       const [batchId, batch] = item;
-      if (selected.batch[batchId]) {
+      if (selected.batch && selected.batch[batchId]) {
         orderIds.push(...Object.keys(batch.relation.order));
         orderItemsIds.push(...Object.keys(batch.relation.orderItem));
         shipmentIds.push(...Object.keys(batch.relation.shipment));

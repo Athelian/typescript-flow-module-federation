@@ -25,7 +25,7 @@ const { SelectedPanelWrapper } = style;
 
 type Props = {
   connect: Object,
-  refetch: Function,
+  // refetch: Function,
 };
 
 const getConnectTypeMessage = (type: string) => {
@@ -53,7 +53,7 @@ const isSameCurrency = (currency: string) => (item: Object) => {
   return compareCurrency === currency;
 };
 
-const SelectedPanel = ({ connect, refetch }: Props) => {
+const SelectedPanel = ({ connect }: Props) => {
   const {
     state: { connectType },
     setCurrentStep,
@@ -168,7 +168,7 @@ const SelectedPanel = ({ connect, refetch }: Props) => {
                               let result = null;
                               if (connectType === 'ORDER') {
                                 result = get(null, 'orderCreate.order', data);
-                                await refetch();
+                                // await refetch();
                               }
                               if (connectType === 'SHIPMENT') {
                                 // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233

@@ -15,6 +15,7 @@ import * as splitStyle from './style';
 type Props = {
   onApply: Function,
   intl: IntlShape,
+  targetedItem: Object,
 };
 
 type State = {
@@ -44,6 +45,15 @@ const defaultInputOption = {
   height: '20px',
 };
 
+const isDisabledSimpleAndEquallySplit = targetedItem => {
+  const { batch = {} } = targetedItem;
+  return Object.keys(batch).length === 0;
+};
+
+const isDisabledBalanceSplit = targetedItem => {
+  const { orderItem = {} } = targetedItem;
+  return Object.keys(orderItem).length === 0;
+};
 class SplitPanel extends React.Component<Props, State> {
   state = getInitialState();
 
@@ -68,22 +78,25 @@ class SplitPanel extends React.Component<Props, State> {
 
   render() {
     const { tabIndex, quantity } = this.state;
-    const { intl } = this.props;
+    const { intl, targetedItem } = this.props;
     const tabs = [
       {
         key: SIMPLE,
         label: intl.formatMessage(messages.splitSimple),
         className: style.TabItemWrapperStyle,
+        disabled: isDisabledSimpleAndEquallySplit(targetedItem),
       },
       {
         key: EQUALLY,
         label: intl.formatMessage(messages.splitEqually),
         className: style.TabItemWrapperStyle,
+        disabled: isDisabledSimpleAndEquallySplit(targetedItem),
       },
       {
         key: BALANCE,
         label: intl.formatMessage(messages.splitBalance),
         className: style.TabItemWrapperStyle,
+        disabled: isDisabledBalanceSplit(targetedItem),
       },
     ];
     return (

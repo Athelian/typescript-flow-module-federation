@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { calculateTotalPackageGrossWeight } from 'modules/relationMap/util';
 import { ShipmentCardWrapperStyle, ShipmentBlankContent } from '../style';
 import ShipmentLabel from '../ShipmentLabel';
 
@@ -10,16 +11,11 @@ type Props = {
 const ShipmentCollapsed = ({ shipment }: Props) => {
   const { batches = [] } = shipment;
 
-  const totalPackageGrossWeight = batches
-    ? batches.reduce((accumulator, { packageVolume }) => {
-        const currentValue = (packageVolume && packageVolume.value) || 0;
-        return accumulator + currentValue;
-      }, 0)
-    : 0;
+  const totalPackageGrossWeight = calculateTotalPackageGrossWeight(batches);
 
   return (
     <div className={ShipmentCardWrapperStyle}>
-      <ShipmentLabel name={shipment.no} vol={totalPackageGrossWeight.toFixed(2)} />
+      <ShipmentLabel name={shipment.no} vol={totalPackageGrossWeight} metric="cm³" />
       <div className={ShipmentBlankContent} />
     </div>
   );
