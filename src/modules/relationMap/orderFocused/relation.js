@@ -61,23 +61,23 @@ const getRelatedIds = (items: Array<Object>, currentIndex: number) => {
 };
 
 const createBatchRelation = (relations: Array<Object>, data: Object) => {
-  const { orderItems, orderItemIndex, relatedOrderItem } = data;
-  const generateFirstBatch = (id, isNew, relatedIds) => {
+  const { orderItems, orderItemIndex, relatedOrderItem, numberOfBatch } = data;
+  const generateFirstBatch = ({ id, isNew, relatedIds, isLast }) => {
     relations.push({
       id,
       type: `${LINK1}-${BATCH}`,
       relatedIds,
     });
-    relations.push({ type: BATCH, id, isNew });
+    relations.push({ type: BATCH, id, isNew, isLast });
   };
-  const generateOtherBatch = (id, isNew, relatedIds) => {
+  const generateOtherBatch = ({ id, isNew, relatedIds, isLast }) => {
     const isLastOrderItem = orderItemIndex === orderItems.length - 1;
     relations.push({ type: '' });
     if (isLastOrderItem) {
       relations.push({ type: '' });
     } else {
       relations.push({
-        type: `${LINK2}-${ORDER_ITEM}`,
+        type: `${LINK2}-${BATCH}`,
         id: orderItems[orderItemIndex].id,
         relatedIds: relatedOrderItem,
       });
@@ -88,17 +88,18 @@ const createBatchRelation = (relations: Array<Object>, data: Object) => {
       type: `${LINK4}-${BATCH}`,
       relatedIds,
     });
-    relations.push({ type: BATCH, id, isNew });
+    relations.push({ type: BATCH, id, isNew, isLast });
   };
   return {
     generateFirstBatch,
     generateOtherBatch,
     generateBatchRelation: (batchData, relatedIds, index) => {
       const { id, isNew = false } = batchData;
+      const isLast = index === numberOfBatch - 1;
       if (index === 0) {
-        generateFirstBatch(id, isNew, relatedIds);
+        generateFirstBatch({ id, isNew, relatedIds, isLast });
       } else {
-        generateOtherBatch(id, isNew, relatedIds);
+        generateOtherBatch({ id, isNew, relatedIds, isLast });
       }
     },
   };
@@ -171,6 +172,7 @@ const generateRelation = (order: Object, option: Object) => {
       orderItems,
       orderItemIndex,
       relatedOrderItem: relatedProductIds.filter(id => id !== orderItem.id),
+      numberOfBatch: batches.length,
     });
     batches.forEach((batch, batchIndex) => {
       const relatedBatchIds = getRelatedIds(batches, batchIndex);
