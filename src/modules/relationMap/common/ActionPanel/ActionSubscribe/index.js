@@ -22,11 +22,6 @@ import RelationMapContainer from 'modules/relationMap/container';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { TabItemStyled } from './style';
 
-// type Props = {
-//   refetch: Function,
-//   filter: Object,
-// };
-
 const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
   const numberOfOrderItem = Object.keys(orderItem).length;

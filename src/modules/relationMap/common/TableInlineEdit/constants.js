@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import orderMessages from 'modules/order/messages';
+import batchMessages from 'modules/batch/messages';
 import { FormattedMessage } from 'react-intl';
 
 export const orderColumnFields = [
@@ -90,6 +91,9 @@ export const orderItemColumnFields = [
   {
     name: 'price.amount',
     type: 'number',
+    meta: {
+      isRequired: true,
+    },
   },
   {
     name: 'price.currency',
@@ -102,6 +106,9 @@ export const orderItemColumnFields = [
   {
     name: 'quantity',
     type: 'number',
+    meta: {
+      isRequired: true,
+    },
   },
 ];
 
@@ -109,10 +116,43 @@ export const batchColumnFields = [
   {
     name: 'no',
     type: 'text',
+    meta: {
+      isRequired: true,
+    },
   },
   {
     name: 'quantity',
     type: 'number',
+    meta: {
+      isRequired: true,
+    },
+  },
+  {
+    name: 'deliveredAt',
+    type: 'date',
+  },
+  {
+    name: 'expiredAt',
+    type: 'date',
+  },
+  {
+    name: 'producedAt',
+    type: 'date',
+  },
+  {
+    name: 'packageName',
+    type: 'text',
+  },
+  {
+    name: 'packageQuantity',
+    type: 'number',
+  },
+  {
+    name: 'tags',
+    type: 'tags',
+    meta: {
+      tagType: 'Batch',
+    },
   },
 ];
 
@@ -165,7 +205,16 @@ export const orderItemColumns = [
 export const batchColumns = [
   {
     group: 'General',
-    columns: ['Batch No.', 'Initial Quantity'],
+    columns: [
+      <FormattedMessage {...batchMessages.batchNo} />,
+      <FormattedMessage {...batchMessages.quantity} />,
+      <FormattedMessage {...batchMessages.deliveredAt} />,
+      <FormattedMessage {...batchMessages.expiredAt} />,
+      <FormattedMessage {...batchMessages.producedAt} />,
+      <FormattedMessage {...batchMessages.packageName} />,
+      <FormattedMessage {...batchMessages.packageQuantity} />,
+      <FormattedMessage {...batchMessages.tags} />,
+    ],
   },
 ];
 

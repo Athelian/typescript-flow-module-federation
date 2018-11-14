@@ -97,3 +97,24 @@ export const totalColumns = (
     columns: Array<any>,
   }>
 ) => groups.reduce((total, currentGroup) => total + currentGroup.columns.length, 0);
+
+export const findOrderItemPosition = (order: Object, batch: Object) => {
+  const { orderItems = [] } = order;
+  const { id } = batch;
+  return orderItems.findIndex(item => item.batches.map(batchItem => batchItem.id).includes(id));
+};
+
+export const findBatchPosition = (order: Object, batch: Object) => {
+  const { orderItems = [] } = order;
+  const { id } = batch;
+
+  let position = 0;
+  orderItems.forEach(orderItem => {
+    const batchIds = orderItem.batches.map(batchItem => batchItem.id);
+    if (batchIds.includes(id)) {
+      position = batchIds.indexOf(id);
+    }
+  });
+
+  return position;
+};
