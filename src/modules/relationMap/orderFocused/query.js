@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import {
+  sizeFragment,
   metricFragment,
   batchCardFragment,
   tagFragment,
@@ -167,7 +168,21 @@ export const orderListQuery = gql`
           }
           batches {
             ...batchCardFragment
-
+            producedAt
+            deliveredAt
+            expiredAt
+            packageName
+            packageCapacity
+            packageQuantity
+            packageGrossWeight {
+              ...metricFragment
+            }
+            packageVolume {
+              ...metricFragment
+            }
+            packageSize {
+              ...sizeFragment
+            }
             shipment {
               id
               blNo
@@ -186,6 +201,7 @@ export const orderListQuery = gql`
     }
   }
   ${userAvatarFragment}
+  ${sizeFragment}
   ${metricFragment}
   ${batchCardFragment}
   ${tagFragment}

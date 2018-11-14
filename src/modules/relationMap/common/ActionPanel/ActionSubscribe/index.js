@@ -20,13 +20,7 @@ import {
 } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
-import { isEnableBetaFeature } from 'utils/env';
 import { TabItemStyled } from './style';
-
-// type Props = {
-//   refetch: Function,
-//   filter: Object,
-// };
 
 const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
@@ -102,7 +96,6 @@ const ActionSubscribe = () => (
                     <BaseButton
                       icon="EDIT"
                       label="EDIT"
-                      disabled={!isEnableBetaFeature}
                       backgroundColor="TEAL"
                       hoverBackgroundColor="TEAL_DARK"
                       onClick={() => slideToggle(true)}
