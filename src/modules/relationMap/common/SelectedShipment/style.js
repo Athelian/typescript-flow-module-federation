@@ -13,8 +13,8 @@ export const OverlayStyle = css`
 `;
 
 export const CenteredStyle = css`
-  ${layout.LAYOUT}
-  ${layout.JUSTIFIED_CENTER}
-  ${layout.CENTER}
+  ${layout.LAYOUT};
+  ${layout.JUSTIFIED_CENTER};
+  ${layout.CENTER};
 `;
 export default null;

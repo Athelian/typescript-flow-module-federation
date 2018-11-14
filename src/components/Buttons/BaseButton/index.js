@@ -22,6 +22,7 @@ type OptionalProps = {
   backgroundColor: string,
   hoverBackgroundColor: string,
   onClick: Function,
+  buttonRef?: any,
 };
 
 type Props = OptionalProps;
@@ -48,6 +49,7 @@ const BaseButton = ({
   backgroundColor,
   hoverBackgroundColor,
   onClick,
+  buttonRef,
   ...rest
 }: Props): React.Node => (
   <button
@@ -67,6 +69,7 @@ const BaseButton = ({
     }
     disabled={disabled || isLoading}
     onClick={onClick}
+    ref={buttonRef}
     {...rest}
   >
     <div className={ButtonLabelStyle}>{label}</div>

@@ -341,76 +341,74 @@ const OrderItemCard = ({
                   </FormField>
                 )}
 
-                {!selectable &&
-                  !readOnly &&
-                  !!unitPrice && (
-                    <BooleanValue>
-                      {({ value: isOpen, set: dialogToggle }) => (
-                        <>
-                          <ConfirmDialog
-                            isOpen={isOpen}
-                            onRequestClose={() => dialogToggle(false)}
-                            onCancel={() => dialogToggle(false)}
-                            onConfirm={() => {
-                              assign({ price: { currency, amount: unitPrice.amount } });
-                              saveOnBlur({
-                                quantity,
-                                price: { currency, amount: unitPrice.amount },
-                              });
-                              dialogToggle(false);
-                            }}
-                            message={
-                              <GridColumn>
-                                <div>
-                                  <FormattedMessage
-                                    id="components.cards.endProductUnitPrice"
-                                    defaultMessage="The unit price of {product} is {unitPrice}"
-                                    values={{
-                                      product: spanWithColor(product.name, 'PRODUCT'),
-                                      unitPrice: spanWithColor(
-                                        <FormattedNumber
-                                          value={unitPrice.amount}
-                                          suffix={unitPrice.currency}
-                                        />,
-                                        'TEAL'
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                                <div>
-                                  <FormattedMessage
-                                    id="components.cards.wantSync"
-                                    defaultMessage="Currency is not matched. Do you want to sync?"
-                                  />
-                                </div>
-                              </GridColumn>
-                            }
-                            width={400}
-                          />
-                          <button
-                            className={SyncButtonStyle}
-                            type="button"
-                            onClick={() => {
-                              if (unitPrice) {
-                                if (unitPrice.currency === currency) {
-                                  assign({ price: { currency, amount: unitPrice.amount } });
-                                  saveOnBlur({
-                                    quantity,
-                                    price: { currency, amount: unitPrice.amount },
-                                  });
-                                } else {
-                                  dialogToggle(true);
-                                }
+                {!selectable && !readOnly && !!unitPrice && (
+                  <BooleanValue>
+                    {({ value: isOpen, set: dialogToggle }) => (
+                      <>
+                        <ConfirmDialog
+                          isOpen={isOpen}
+                          onRequestClose={() => dialogToggle(false)}
+                          onCancel={() => dialogToggle(false)}
+                          onConfirm={() => {
+                            assign({ price: { currency, amount: unitPrice.amount } });
+                            saveOnBlur({
+                              quantity,
+                              price: { currency, amount: unitPrice.amount },
+                            });
+                            dialogToggle(false);
+                          }}
+                          message={
+                            <GridColumn>
+                              <div>
+                                <FormattedMessage
+                                  id="components.cards.endProductUnitPrice"
+                                  defaultMessage="The unit price of {product} is {unitPrice}"
+                                  values={{
+                                    product: spanWithColor(product.name, 'PRODUCT'),
+                                    unitPrice: spanWithColor(
+                                      <FormattedNumber
+                                        value={unitPrice.amount}
+                                        suffix={unitPrice.currency}
+                                      />,
+                                      'TEAL'
+                                    ),
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <FormattedMessage
+                                  id="components.cards.wantSync"
+                                  defaultMessage="Currency is not matched. Do you want to sync?"
+                                />
+                              </div>
+                            </GridColumn>
+                          }
+                          width={400}
+                        />
+                        <button
+                          className={SyncButtonStyle}
+                          type="button"
+                          onClick={() => {
+                            if (unitPrice) {
+                              if (unitPrice.currency === currency) {
+                                assign({ price: { currency, amount: unitPrice.amount } });
+                                saveOnBlur({
+                                  quantity,
+                                  price: { currency, amount: unitPrice.amount },
+                                });
+                              } else {
+                                dialogToggle(true);
                               }
-                            }}
-                          >
-                            <FormattedMessage id="components.cards.sync" defaultMessage="SYNC" />
-                            <Icon icon="SYNC" />
-                          </button>
-                        </>
-                      )}
-                    </BooleanValue>
-                  )}
+                            }
+                          }}
+                        >
+                          <FormattedMessage id="components.cards.sync" defaultMessage="SYNC" />
+                          <Icon icon="SYNC" />
+                        </button>
+                      </>
+                    )}
+                  </BooleanValue>
+                )}
               </div>
               <div className={DividerStyle} />
               <div className={ChartWrapperStyle}>

@@ -18,12 +18,11 @@ const LogsButton = ({ onClick, badge }: Props) => (
   <button type="button" onClick={onClick} className={LogsButtonWrapperStyle}>
     <Icon icon="LOGS" />{' '}
     <FormattedMessage id="components.navBar.logsButton.logs" defaultMessage="LOGS" />
-    {!!badge &&
-      badge > 0 && (
-        <div className={BadgeStyle}>
-          <FormattedNumber value={badge} />
-        </div>
-      )}
+    {!!badge && badge > 0 && (
+      <div className={BadgeStyle}>
+        <FormattedNumber value={badge} />
+      </div>
+    )}
   </button>
 );
 

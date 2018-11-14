@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Sat Nov 10 2018 13:31:06 GMT+0700 (Indochina Time)
+# timestamp: Wed Nov 14 2018 14:37:01 GMT+0900 (JST)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -28464,6 +28464,7 @@ type EventPagination {
 type ExportTemplate implements Model {
   name: String!
   types: [ExportType!]!
+  extension: String!
   dynamic: Boolean!
   ownedBy: Group
   id: ID!
@@ -30093,6 +30094,9 @@ type Query {
   partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPagination!
   product(id: ID!): Product
   products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPagination!
+  productExport(id: ID!, templateId: ID!, fields: [String!]): File
+  productsExport(templateId: ID!, filterBy: ProductFilterInput, sortBy: ProductSortInput, fields: [String!]): File
+  productsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): File
   productProvider(id: ID!): ProductProvider
   productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPagination!
   order(id: ID!): Order
@@ -30106,6 +30110,9 @@ type Query {
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
   shipment(id: ID!): Shipment
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPagination!
+  shipmentExport(id: ID!, templateId: ID!, fields: [String!]): File
+  shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput, fields: [String!]): File
+  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): File
   warehouse(id: ID!): Warehouse
   warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePagination!
   metadataTemplate(id: ID!): MetadataTemplate

@@ -75,34 +75,33 @@ class ProductCard extends React.PureComponent<Props, State> {
         <Link className={ProductCardWrapperStyle} to={`/product/${encodeId(id)}`}>
           <div className={ProductImageWrapperStyle}>
             <img className={ProductImageStyle} src={productImage} alt="product_image" />
-            {files &&
-              files.length > 1 && (
-                <>
-                  <button
-                    className={ProductImageChevronButtonStyle('left', activeImage === 0)}
-                    onClick={evt => {
-                      evt.preventDefault();
-                      this.navigateImages('left');
-                    }}
-                    type="button"
-                  >
-                    <Icon icon="ANGLE_LEFT" />
-                  </button>
-                  <button
-                    className={ProductImageChevronButtonStyle(
-                      'right',
-                      activeImage === files.length - 1
-                    )}
-                    onClick={evt => {
-                      evt.preventDefault();
-                      this.navigateImages('right');
-                    }}
-                    type="button"
-                  >
-                    <Icon icon="ANGLE_RIGHT" />
-                  </button>
-                </>
-              )}
+            {files && files.length > 1 && (
+              <>
+                <button
+                  className={ProductImageChevronButtonStyle('left', activeImage === 0)}
+                  onClick={evt => {
+                    evt.preventDefault();
+                    this.navigateImages('left');
+                  }}
+                  type="button"
+                >
+                  <Icon icon="ANGLE_LEFT" />
+                </button>
+                <button
+                  className={ProductImageChevronButtonStyle(
+                    'right',
+                    activeImage === files.length - 1
+                  )}
+                  onClick={evt => {
+                    evt.preventDefault();
+                    this.navigateImages('right');
+                  }}
+                  type="button"
+                >
+                  <Icon icon="ANGLE_RIGHT" />
+                </button>
+              </>
+            )}
             <div className={ProductImageDotsWrapperStyle}>
               {files &&
                 files.length > 1 &&

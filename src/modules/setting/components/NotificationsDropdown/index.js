@@ -67,17 +67,16 @@ class NotificationsDropdown extends React.Component<Props> {
             <div className={NotificationsDropDownWrapperStyle(isOpen)}>
               <div className={NotificationsBodyWrapperStyle}>
                 <div className={NotificationsListWrapperStyle}>
-                  {!loading &&
-                    items.length === 0 && (
-                      <div className={NoNotificationStyle}>
-                        <FormattedMessage
-                          id="components.Header.notification.noNotifications"
-                          defaultMessage="No notifications"
-                        />
-                      </div>
-                    )}
-                  {items.map(
-                    (item: Object) => (renderItem ? renderItem(item) : defaultRenderItem(item))
+                  {!loading && items.length === 0 && (
+                    <div className={NoNotificationStyle}>
+                      <FormattedMessage
+                        id="components.Header.notification.noNotifications"
+                        defaultMessage="No notifications"
+                      />
+                    </div>
+                  )}
+                  {items.map((item: Object) =>
+                    renderItem ? renderItem(item) : defaultRenderItem(item)
                   )}
                   {loading && <LoadingIcon />}
                 </div>

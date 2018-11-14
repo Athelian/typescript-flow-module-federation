@@ -101,15 +101,14 @@ class CommentEntry extends React.Component<Props, State> {
               )}
               <div className={ContentWrapperStyle(isSameUser)}>
                 <div className={NameDateWrapperStyle(isSameUser)}>
-                  {!isSameUser &&
-                    !hideAvatar && (
-                      <div className={NameStyle}>
-                        <FormattedName
-                          firstName={comment.createdBy.firstName}
-                          lastName={comment.createdBy.lastName}
-                        />
-                      </div>
-                    )}
+                  {!isSameUser && !hideAvatar && (
+                    <div className={NameStyle}>
+                      <FormattedName
+                        firstName={comment.createdBy.firstName}
+                        lastName={comment.createdBy.lastName}
+                      />
+                    </div>
+                  )}
                   <div className={DateStyle(isSameUser)}>
                     {isSameDay(new Date(), comment.createdAt) ? (
                       <FormattedDate value={comment.createdAt} mode="time-relative" />

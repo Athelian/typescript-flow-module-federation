@@ -4,6 +4,7 @@
   "components.button.archive": "終了",
   "components.button.cancel": "キャンセル",
   "components.button.export": "エクスポート",
+  "components.button.export.noTemplates": "No export available",
   "components.button.new": "追加",
   "components.button.no": "いいえ",
   "components.button.save": "保存",

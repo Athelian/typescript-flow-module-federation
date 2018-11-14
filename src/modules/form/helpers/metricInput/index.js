@@ -64,12 +64,11 @@ const metricInputFactory = ({
               convert={convert}
             />
           </DefaultMetricStyle>
-          {calculate &&
-            !isFocused && (
-              <button className={CalculatorButtonStyle} type="button" onClick={calculate}>
-                <Icon icon="CALCULATOR" />
-              </button>
-            )}
+          {calculate && !isFocused && (
+            <button className={CalculatorButtonStyle} type="button" onClick={calculate}>
+              <Icon icon="CALCULATOR" />
+            </button>
+          )}
         </>
       }
     />
