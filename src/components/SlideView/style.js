@@ -9,7 +9,6 @@ const SlideViewWrapperStyle: string = css`
   height: 100vh;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   box-shadow: -10px 0 20px rgba(0, 0, 0, 0.1);
-  z-index: 10001;
 `;
 
 export const SlideInStyle = (width: string): string => css`
@@ -63,7 +62,7 @@ const BackdropStyle: string = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000;
+  z-index: 3;
 `;
 
 export const BackdropFadeInStyle: string = css`

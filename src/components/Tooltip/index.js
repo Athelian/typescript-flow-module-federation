@@ -10,7 +10,16 @@ type Props = {
 
 export default function Tooltip({ message, children, ...rest }: Props) {
   return (
-    <Tippy content={message} arrow arrowType="round" delay={[200, 200]} distance={10} {...rest}>
+    <Tippy
+      content={message}
+      arrow
+      arrowType="round"
+      delay={[200, 200]}
+      distance={10}
+      interactive
+      performance
+      {...rest}
+    >
       {children}
     </Tippy>
   );
