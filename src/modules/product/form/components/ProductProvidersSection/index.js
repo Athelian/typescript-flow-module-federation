@@ -46,7 +46,7 @@ function ProductProvidersSection() {
                       <Subscribe to={[ProductProviderContainer]}>
                         {({ initDetailValues }) => (
                           <ProductProviderFormWrapper
-                            formNewButton
+                            isAddedProvider
                             productProviders={productProviders}
                             productProvider={injectUid({
                               isNew: true,

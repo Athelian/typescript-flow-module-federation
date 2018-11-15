@@ -14,7 +14,7 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import { contains, getByPathWithDefault } from 'utils/fp';
 
 type OptionalProps = {
-  formNewButton: boolean,
+  isAddedProvider: boolean,
 };
 
 type Props = OptionalProps & {
@@ -27,7 +27,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  formNewButton: false,
+  isAddedProvider: false,
 };
 
 const formContainer = new FormContainer();
@@ -35,13 +35,13 @@ const formContainer = new FormContainer();
 function isExist(
   productProvider: Object,
   productProviders: Array<Object>,
-  formNewButton: boolean
+  isAddedProvider: boolean
 ): boolean {
   const provider = {
     exporter: getByPathWithDefault(0, 'exporter.id', productProvider),
     supplier: getByPathWithDefault(0, 'supplier.id', productProvider),
   };
-  const providers = formNewButton
+  const providers = isAddedProvider
     ? productProviders.map(item => ({
         exporter: getByPathWithDefault(0, 'exporter.id', item),
         supplier: getByPathWithDefault(0, 'supplier.id', item),
@@ -69,7 +69,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, onSave, onCancel, productProviders, formNewButton } = this.props;
+    const { isNew, onSave, onCancel, productProviders, isAddedProvider } = this.props;
 
     return (
       <Provider inject={[formContainer]}>
@@ -116,7 +116,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                     disabled={
                       !isDirty() ||
                       !formContainer.isReady(state, validator) ||
-                      isExist(state, productProviders, formNewButton)
+                      isExist(state, productProviders, isAddedProvider)
                     }
                     onClick={() => onSave(state)}
                     data-testid="saveProviderButton"
@@ -126,7 +126,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
             >
               <ProductProviderForm
                 productProvider={state}
-                isExist={isExist(state, productProviders, formNewButton)}
+                isExist={isExist(state, productProviders, isAddedProvider)}
                 isNew={isNew}
               />
             </Layout>
