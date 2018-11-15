@@ -124,7 +124,11 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                 </SlideViewNavBar>
               }
             >
-              <ProductProviderForm productProvider={state} isNew={isNew} />
+              <ProductProviderForm
+                productProvider={state}
+                isExist={isExist(state, productProviders, formNewButton)}
+                isNew={isNew}
+              />
             </Layout>
           )}
         </Subscribe>
