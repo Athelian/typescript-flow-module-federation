@@ -12,7 +12,7 @@ import {
   DefaultStyle,
   FieldItem,
   Label,
-  Tooltip,
+  FormTooltip,
   RadioInput,
   TextInput,
 } from 'components/Form';
@@ -117,7 +117,7 @@ const TagSection = ({ isNew }: Props) => (
                       </Label>
                     }
                     tooltip={
-                      <Tooltip
+                      <FormTooltip
                         isNew={isNew}
                         errorMessage={isTouched && errorMessage}
                         changedValues={{
@@ -167,7 +167,7 @@ const TagSection = ({ isNew }: Props) => (
                     </Label>
                   }
                   tooltip={
-                    <Tooltip
+                    <FormTooltip
                       isNew={isNew}
                       errorMessage={
                         originalValues.entityTypes.sort().join(',') !==

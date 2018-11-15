@@ -4,7 +4,7 @@ import EnumProvider from 'providers/enum';
 import {
   FieldItem,
   Label,
-  Tooltip,
+  FormTooltip,
   SelectInput,
   DefaultSelect,
   DefaultOptions,
@@ -53,7 +53,7 @@ export default function selectEnumInputFactory({
         )
       }
       tooltip={
-        <Tooltip
+        <FormTooltip
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, Tooltip, DefaultStyle, NumberInput } from 'components/Form';
+import { FieldItem, Label, FormTooltip, DefaultStyle, NumberInput } from 'components/Form';
 import Icon from 'components/Icon';
 import { CalculatorButtonStyle } from './style';
 
@@ -52,7 +52,7 @@ const numberInputFactory = ({
       }
       tooltip={
         hasTooltip ? (
-          <Tooltip
+          <FormTooltip
             isNew={isNew}
             errorMessage={isTouched && errorMessage}
             changedValues={{

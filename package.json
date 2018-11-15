@@ -11,6 +11,7 @@
     "@fortawesome/pro-solid-svg-icons": "^5.5.0",
     "@fortawesome/react-fontawesome": "^0.1.3",
     "@reach/router": "^1.2.1",
+    "@tippy.js/react": "^1.0.1",
     "apollo-cache-inmemory": "^1.3.9",
     "apollo-client": "^2.4.5",
     "apollo-link": "^1.2.3",
@@ -50,6 +51,7 @@
     "react-use-idb": "^1.0.1",
     "react-values": "^0.3.3",
     "scroll-into-view-if-needed": "^2.2.20",
+    "tippy.js": "^3.2.0",
     "unstated": "^2.1.1",
     "unstated-debug": "^0.3.2",
     "yup": "^0.26.6"
