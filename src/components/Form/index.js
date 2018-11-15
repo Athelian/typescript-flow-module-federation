@@ -27,8 +27,7 @@ import DocumentsInput from './DocumentsInput';
 import ImagesUploadInput from './ImagesUploadInput';
 import FieldItem from './FieldItem';
 import Label from './Label';
-import Tooltip from './Tooltip';
-import TooltipBubble from './Tooltip/TooltipBubble';
+import FormTooltip from './FormTooltip';
 import Display from './Display';
 import DashedPlusButton from './DashedPlusButton';
 import SectionHeader from './SectionHeader';
@@ -57,8 +56,7 @@ export {
   DefaultSelect,
   FieldItem,
   Label,
-  Tooltip,
-  TooltipBubble,
+  FormTooltip,
   Display,
   DashedPlusButton,
   ColorInput,

@@ -8,7 +8,7 @@ import BatchFormContainer from 'modules/batch/form/container';
 import Icon from 'components/Icon';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
-import { Tooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
+import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import { SyncButton, CloneButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import {
@@ -84,7 +84,7 @@ export default class BatchForm extends React.Component<Props> {
                       <FormattedMessage id="modules.Batches.active" defaultMessage="Active" />
                     )}
                   </div>
-                  <Tooltip
+                  <FormTooltip
                     infoMessage={
                       <FormattedMessage
                         id="modules.Batches.archived.tooltip.infoMessage"

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import FormattedDate from 'components/FormattedDate';
-import { FieldItem, Label, Tooltip, DefaultStyle, DateInput } from 'components/Form';
+import { FieldItem, Label, FormTooltip, DefaultStyle, DateInput } from 'components/Form';
 
 export default function dateInputFactory({
   required = false,
@@ -44,7 +44,7 @@ export default function dateInputFactory({
         )
       }
       tooltip={
-        <Tooltip
+        <FormTooltip
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{

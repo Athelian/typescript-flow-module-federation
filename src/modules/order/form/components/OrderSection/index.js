@@ -12,7 +12,7 @@ import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
-import { FieldItem, Label, DashedPlusButton, TagsInput, Tooltip } from 'components/Form';
+import { FieldItem, Label, DashedPlusButton, TagsInput, FormTooltip } from 'components/Form';
 import {
   textInputFactory,
   textAreaFactory,
@@ -211,7 +211,7 @@ const OrderSection = ({ isNew }: Props) => (
                     </Label>
                   }
                   tooltip={
-                    <Tooltip
+                    <FormTooltip
                       infoMessage={
                         <FormattedMessage
                           id="modules.Orders.inChargeExplanation"

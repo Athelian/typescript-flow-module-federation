@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, Tooltip, NumberInput, DefaultPriceStyle } from 'components/Form';
+import { FieldItem, Label, FormTooltip, NumberInput, DefaultPriceStyle } from 'components/Form';
 
 export default function priceInputFactory({
   required = false,
@@ -45,7 +45,7 @@ export default function priceInputFactory({
         )
       }
       tooltip={
-        <Tooltip
+        <FormTooltip
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{

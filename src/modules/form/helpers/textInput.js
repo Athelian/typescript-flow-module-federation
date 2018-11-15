@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, Tooltip, DefaultStyle, TextInput } from 'components/Form';
+import { FieldItem, Label, FormTooltip, DefaultStyle, TextInput } from 'components/Form';
 
 const textInputFactory = ({
   type = 'standard',
@@ -52,7 +52,7 @@ const textInputFactory = ({
       }
       tooltip={
         hasTooltip ? (
-          <Tooltip
+          <FormTooltip
             isNew={isNew}
             errorMessage={isTouched && errorMessage}
             changedValues={{

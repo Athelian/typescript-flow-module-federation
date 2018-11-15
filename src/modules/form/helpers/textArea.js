@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, Tooltip, DefaultStyle, TextAreaInput } from 'components/Form';
+import { FieldItem, Label, FormTooltip, DefaultStyle, TextAreaInput } from 'components/Form';
 
 export default function textAreaFactory({
   required = false,
@@ -46,7 +46,7 @@ export default function textAreaFactory({
         )
       }
       tooltip={
-        <Tooltip
+        <FormTooltip
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{

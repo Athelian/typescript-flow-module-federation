@@ -2,7 +2,7 @@
 import * as React from 'react';
 import FormattedName from 'components/FormattedName';
 import Icon from 'components/Icon';
-import { Tooltip } from 'components/Form';
+import Tooltip from 'components/Tooltip';
 import { AvatarWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -66,10 +66,9 @@ function UserAvatar({
   }
 
   return (
-    <Tooltip
-      infoMessage={<FormattedName firstName={firstName} lastName={lastName} />}
-      customIcon={content}
-    />
+    <Tooltip message={<FormattedName firstName={firstName} lastName={lastName} />}>
+      {content}
+    </Tooltip>
   );
 }
 
