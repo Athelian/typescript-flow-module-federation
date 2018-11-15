@@ -114,6 +114,7 @@ class ExportButton extends React.Component<Props, State> {
                         dynamic,
                       },
                     }}
+                    fetchPolicy="network-only"
                   >
                     {({ data, loading }) => {
                       const templates = getByPathWithDefault([], 'exportTemplates', data);

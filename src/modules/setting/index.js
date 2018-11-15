@@ -71,7 +71,7 @@ class Setting extends React.Component<Props, State> {
 
     return (
       <div className={SettingsWrapperStyle}>
-        <Query query={query}>
+        <Query query={query} fetchPolicy="network-only">
           {({ data, client, refetch }) => {
             const viewer = {
               firstName: getByPathWithDefault('TODO', 'viewer.user.firstName', data),
