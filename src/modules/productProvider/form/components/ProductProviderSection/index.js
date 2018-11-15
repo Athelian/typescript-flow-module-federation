@@ -15,7 +15,7 @@ import SlideView from 'components/SlideView';
 import validator from 'modules/product/form/validator';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
-import { PartnerCard } from 'components/Cards';
+import { PartnerCard, GrayCard } from 'components/Cards';
 import { Label, DashedPlusButton } from 'components/Form';
 import SelectSupplier from '../SelectSupplier';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
@@ -40,43 +40,52 @@ const ProductProviderSection = ({ isNew }: Props) => (
                     defaultMessage="EXPORTER"
                   />
                 </Label>
-                <BooleanValue>
-                  {({ value: opened, set: exporterSlideToggle }) => (
-                    <>
-                      {!values.exporter ? (
-                        <DashedPlusButton
-                          width="195px"
-                          height="215px"
-                          onClick={() => exporterSlideToggle(true)}
-                          data-testid="selectExportersButton"
-                        />
-                      ) : (
-                        <PartnerCard
-                          partner={values.exporter}
-                          // TODO: reopen when api is Ready. https://app.asana.com/0/870010833087896/909813386222635/f
-                          // onClick={() => exporterSlideToggle(true)}
-                        />
-                      )}
-                      <SlideView
-                        isOpen={opened}
-                        onRequestClose={() => exporterSlideToggle(false)}
-                        options={{ width: '980px' }}
-                        rootElementId="slide-view-root2"
-                      >
-                        {opened && (
-                          <SelectExporters
-                            selected={values.exporter}
-                            onCancel={() => exporterSlideToggle(false)}
-                            onSelect={newValue => {
-                              exporterSlideToggle(false);
-                              setFieldValue('exporter', newValue);
-                            }}
+                {isNew ? (
+                  <BooleanValue>
+                    {({ value: opened, set: exporterSlideToggle }) => (
+                      <>
+                        {!values.exporter ? (
+                          <DashedPlusButton
+                            width="195px"
+                            height="215px"
+                            onClick={() => exporterSlideToggle(true)}
+                            data-testid="selectExportersButton"
+                          />
+                        ) : (
+                          <PartnerCard
+                            partner={values.exporter}
+                            onClick={() => exporterSlideToggle(true)}
                           />
                         )}
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
+                        <SlideView
+                          isOpen={opened}
+                          onRequestClose={() => exporterSlideToggle(false)}
+                          options={{ width: '980px' }}
+                          rootElementId="slide-view-root2"
+                        >
+                          {opened && (
+                            <SelectExporters
+                              selected={values.exporter}
+                              onCancel={() => exporterSlideToggle(false)}
+                              onSelect={newValue => {
+                                exporterSlideToggle(false);
+                                setFieldValue('exporter', newValue);
+                              }}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                ) : (
+                  <>
+                    {!values.exporter ? (
+                      <GrayCard width="195px" height="215px" />
+                    ) : (
+                      <PartnerCard partner={values.exporter} />
+                    )}
+                  </>
+                )}
               </GridColumn>
 
               <GridColumn gap="10px">
@@ -86,42 +95,51 @@ const ProductProviderSection = ({ isNew }: Props) => (
                     defaultMessage="SUPPLIER"
                   />
                 </Label>
-                <BooleanValue>
-                  {({ value: opened, set: supplierSlideToggle }) => (
-                    <>
-                      {!values.supplier ? (
-                        <DashedPlusButton
-                          width="195px"
-                          height="215px"
-                          onClick={() => supplierSlideToggle(true)}
-                        />
-                      ) : (
-                        <PartnerCard
-                          partner={values.supplier}
-                          // TODO: reopen when api is Ready. https://app.asana.com/0/870010833087896/909813386222635/f
-                          // onClick={() => supplierSlideToggle(true)}
-                        />
-                      )}
-                      <SlideView
-                        isOpen={opened}
-                        onRequestClose={() => supplierSlideToggle(false)}
-                        options={{ width: '980px' }}
-                        rootElementId="slide-view-root2"
-                      >
-                        {opened && (
-                          <SelectSupplier
-                            selected={values.supplier}
-                            onCancel={() => supplierSlideToggle(false)}
-                            onSelect={newValue => {
-                              supplierSlideToggle(false);
-                              setFieldValue('supplier', newValue);
-                            }}
+                {isNew ? (
+                  <BooleanValue>
+                    {({ value: opened, set: supplierSlideToggle }) => (
+                      <>
+                        {!values.supplier ? (
+                          <DashedPlusButton
+                            width="195px"
+                            height="215px"
+                            onClick={() => supplierSlideToggle(true)}
+                          />
+                        ) : (
+                          <PartnerCard
+                            partner={values.supplier}
+                            onClick={() => supplierSlideToggle(true)}
                           />
                         )}
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
+                        <SlideView
+                          isOpen={opened}
+                          onRequestClose={() => supplierSlideToggle(false)}
+                          options={{ width: '980px' }}
+                          rootElementId="slide-view-root2"
+                        >
+                          {opened && (
+                            <SelectSupplier
+                              selected={values.supplier}
+                              onCancel={() => supplierSlideToggle(false)}
+                              onSelect={newValue => {
+                                supplierSlideToggle(false);
+                                setFieldValue('supplier', newValue);
+                              }}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                ) : (
+                  <>
+                    {!values.supplier ? (
+                      <GrayCard width="195px" height="215px" />
+                    ) : (
+                      <PartnerCard partner={values.supplier} />
+                    )}
+                  </>
+                )}
               </GridColumn>
             </GridRow>
 

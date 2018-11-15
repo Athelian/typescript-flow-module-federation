@@ -42,6 +42,12 @@ class ProductForm extends React.Component<Props> {
     return !isEquals(product, nextProps.product);
   }
 
+  componentDidUpdate() {
+    const { onFormReady } = this.props;
+
+    if (onFormReady) onFormReady();
+  }
+
   onClone = () => {
     const { product } = this.props;
     navigate(`/product/clone/${encodeId(product.id)}`);
