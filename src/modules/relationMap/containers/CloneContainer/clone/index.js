@@ -5,6 +5,7 @@ import { getByPathWithDefault as get } from 'utils/fp';
 import { cloneTarget } from './cloneTarget';
 import { cloneTree } from './cloneTree';
 
+export { cloneTarget };
 export const createMutationRequest = (client: any) => async (
   mutationData: Object,
   refId?: string

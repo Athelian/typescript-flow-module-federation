@@ -39,10 +39,11 @@ const Order = () => (
                 error={error}
               >
                 {({ nodes, hasMore, loadMore }) => {
+                  console.log('rerender', nodes);
                   const order = formatOrderData(nodes || []);
                   return (
                     <>
-                      <ActionSubscribe />
+                      <ActionSubscribe filter={filterVariables} />
                       <Subscribe to={[ActionContainer]}>
                         {({ clearResult }) => (
                           <SortFilter
