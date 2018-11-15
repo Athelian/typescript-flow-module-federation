@@ -88,6 +88,7 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
             filter: filtersAndSort.filter,
             sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
           }}
+          fetchPolicy="network-only"
         >
           {({ loading, data, error, fetchMore }) => {
             if (error) {

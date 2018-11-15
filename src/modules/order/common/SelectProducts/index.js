@@ -96,6 +96,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
             filter: filtersAndSort.filter,
             sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
           }}
+          fetchPolicy="network-only"
         >
           {({ loading, data, error, fetchMore }) => {
             if (error) {
