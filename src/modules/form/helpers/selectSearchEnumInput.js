@@ -6,7 +6,7 @@ import EnumProvider from 'providers/enum';
 import {
   FieldItem,
   Label,
-  Tooltip,
+  FormTooltip,
   SearchSelectInput,
   DefaultSearchSelect,
   DefaultOptions,
@@ -77,7 +77,7 @@ export default function selectSearchEnumInputFactory({
               )
             }
             tooltip={
-              <Tooltip
+              <FormTooltip
                 isNew={isNew}
                 errorMessage={inputHandlers.isTouched && inputHandlers.errorMessage}
                 changedValues={{

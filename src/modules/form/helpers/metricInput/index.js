@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { FieldItem, Label, Tooltip } from 'components/Form';
+import { FieldItem, Label, FormTooltip } from 'components/Form';
 import DefaultMetricStyle from 'components/Form/Inputs/MetricInput/DefaultMetricStyle';
 import MetricInput from 'components/Form/Inputs/MetricInput';
 
@@ -38,7 +38,7 @@ const metricInputFactory = ({
         )
       }
       tooltip={
-        <Tooltip
+        <FormTooltip
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{

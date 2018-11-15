@@ -8,7 +8,7 @@ import {
   selectSearchEnumInputFactory,
   textInputFactory,
 } from 'modules/form/helpers';
-import { SectionHeader, Label, FieldItem, Tooltip } from 'components/Form';
+import { SectionHeader, Label, FieldItem, FormTooltip } from 'components/Form';
 import { VoyageInfoSectionWrapperStyle, SelectTransportTypeMessageStyle } from './style';
 
 type OptionalProps = {
@@ -113,7 +113,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                 </Label>
               }
               tooltip={
-                <Tooltip
+                <FormTooltip
                   isNew={isNew}
                   infoMessage={
                     <FormattedMessage
@@ -172,7 +172,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
                 </Label>
               }
               tooltip={
-                <Tooltip
+                <FormTooltip
                   isNew={isNew}
                   infoMessage={
                     <FormattedMessage

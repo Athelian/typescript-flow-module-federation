@@ -23,7 +23,7 @@ import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import GridColumn from 'components/GridColumn';
-import { FieldItem, Label, Tooltip, TagsInput } from 'components/Form';
+import { FieldItem, Label, FormTooltip, TagsInput } from 'components/Form';
 import messages from 'modules/shipment/messages';
 import AssignUsers from 'modules/shipment/form/components/TimelineSection/components/AssignUsers';
 import {
@@ -285,7 +285,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     </Label>
                   }
                   tooltip={
-                    <Tooltip
+                    <FormTooltip
                       infoMessage={
                         <FormattedMessage
                           id="modules.Shipments.tooltipInCharge"
@@ -359,7 +359,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                     </Label>
                   }
                   tooltip={
-                    <Tooltip
+                    <FormTooltip
                       infoMessage={
                         <FormattedMessage
                           id="modules.Shipments.tooltipForwarder"
@@ -422,7 +422,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                           </div>
                         }
                         tooltip={
-                          <Tooltip
+                          <FormTooltip
                             infoMessage={
                               <FormattedMessage
                                 id="modules.Shipments.tooltipExporter"

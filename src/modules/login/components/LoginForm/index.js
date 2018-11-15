@@ -12,7 +12,7 @@ import {
   FieldItem,
   DefaultStyle,
   Label,
-  Tooltip,
+  FormTooltip,
   EmailInput,
   PasswordInput,
 } from 'components/Form';
@@ -46,7 +46,7 @@ function LoginForm({ onLogin }: Props) {
                         <FormattedMessage {...messages.email} />
                       </Label>
                     }
-                    tooltip={<Tooltip isNew errorMessage={isTouched && errorMessage} />}
+                    tooltip={<FormTooltip isNew errorMessage={isTouched && errorMessage} />}
                     input={
                       <DefaultStyle
                         isFocused={isFocused}
@@ -82,7 +82,7 @@ function LoginForm({ onLogin }: Props) {
                         <FormattedMessage {...messages.password} />
                       </Label>
                     }
-                    tooltip={<Tooltip isNew errorMessage={isTouched && errorMessage} />}
+                    tooltip={<FormTooltip isNew errorMessage={isTouched && errorMessage} />}
                     input={
                       <DefaultStyle
                         isFocused={isFocused}
