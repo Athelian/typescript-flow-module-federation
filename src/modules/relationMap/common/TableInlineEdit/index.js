@@ -64,6 +64,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
       }
 
       const listener = emitter.once('INLINE_CHANGE', newData => {
+        logger.warn({ newData });
         const result = arrayToObject(clone(editDataRef.current), 'id');
         const { name, value, hasError } = newData;
         editDataRef.current = [].concat(Object.values(set(result, name, value)));

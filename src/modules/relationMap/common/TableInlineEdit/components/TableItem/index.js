@@ -5,6 +5,7 @@ import { getByPath } from 'utils/fp';
 import { WrapperStyle, ItemStyle } from './style';
 import InlineTextInput from './components/InlineTextInput';
 import InlineNumberInput from './components/InlineNumberInput';
+import InlineNumberAdjustmentInput from './components/InlineNumberAdjustmentInput';
 import InlineDateInput from './components/InlineDateInput';
 import InlineSearchEnumInput from './components/InlineSearchEnumInput';
 import InlineInChargeInput from './components/InlineInChargeInput';
@@ -27,13 +28,29 @@ function renderItem({
   value,
   name,
   meta,
+  values,
 }: {
   value: any,
   type: string,
   name: string,
+  values: Object,
   meta?: Object,
 }) {
   if (type === 'number') return <InlineNumberInput name={name} value={value} {...meta} />;
+  if (type === 'numberAdjustment') {
+    const adjustments = getByPath('batchAdjustments', values) || [];
+    const totalAdjustment = adjustments
+      ? adjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
+      : 0;
+    return (
+      <InlineNumberAdjustmentInput
+        name={name}
+        value={value}
+        {...meta}
+        adjustment={totalAdjustment}
+      />
+    );
+  }
   if (type === 'date') return <InlineDateInput name={name} value={value} {...meta} />;
   if (type === 'enum') return <InlineSearchEnumInput name={name} value={value} {...meta} />;
   if (type === 'inCharges') return <InlineInChargeInput name={name} values={value} {...meta} />;
@@ -58,7 +75,7 @@ export default function TableItem({ cell, fields, values, validator }: Props) {
             values={values}
           >
             {({ name: fieldName }) =>
-              renderItem({ name: fieldName, type, meta, value: getByPath(name, values) })
+              renderItem({ name: fieldName, type, meta, value: getByPath(name, values), values })
             }
           </FormField>
         </div>

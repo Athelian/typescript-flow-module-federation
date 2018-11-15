@@ -122,7 +122,7 @@ export const batchColumnFields = [
   },
   {
     name: 'quantity',
-    type: 'number',
+    type: 'numberAdjustment',
     meta: {
       isRequired: true,
     },
