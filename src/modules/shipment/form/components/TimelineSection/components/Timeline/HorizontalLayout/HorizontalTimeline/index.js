@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { encodeId } from 'utils/id';
 import { TimelineIcon, TimelineTransitIcon, TimelineLine, TimelineVoyage } from '../../components';
 import { getTimelineColoring, getTransportIcon } from '../../helpers';
 import { HorizontalTimelineWrapperStyle, BlankSpaceStyle } from './style';
@@ -29,8 +30,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
       <TimelineIcon
         icon="CARGO_READY"
         color={cargoReadyColoring}
-        targetId="cargoReady"
-        boundaryId="timelineInfoSection"
+        linkPath={`/shipment/${encodeId(shipment.id)}/cargoReady`}
       />
 
       <TimelineLine color={loadPortDepartureColoring} />
@@ -38,8 +38,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
       <TimelineIcon
         icon="PORT"
         color={loadPortDepartureColoring}
-        targetId="loadPortDeparture"
-        boundaryId="timelineInfoSection"
+        linkPath={`/shipment/${encodeId(shipment.id)}/loadPortDeparture`}
       />
 
       <TimelineVoyage>
@@ -48,8 +47,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
         <TimelineIcon
           icon={transportIcon}
           color={loadPortDepartureColoring}
-          targetId="firstVoyage"
-          boundaryId="timelineInfoSection"
+          linkPath={`/shipment/${encodeId(shipment.id)}/firstVoyage`}
         />
       </TimelineVoyage>
 
@@ -58,11 +56,12 @@ const HorizontalTimeline = ({ shipment }: Props) => {
           <React.Fragment key={voyage.id}>
             <TimelineTransitIcon
               color={coloring[index * 2 + 2]}
-              arrivalTargetId={index === 0 ? 'firstTransitPortArrival' : 'secondTransitPortArrival'}
-              departureTargetId={
+              arrivalLinkPath={`/shipment/${encodeId(shipment.id)}/${
+                index === 0 ? 'firstTransitPortArrival' : 'secondTransitPortArrival'
+              }`}
+              departureLinkPath={`/shipment/${encodeId(shipment.id)}/${
                 index === 0 ? 'firstTransitPortDeparture' : 'secondTransitPortDeparture'
-              }
-              boundaryId="timelineInfoSection"
+              }`}
             />
 
             <TimelineVoyage>
@@ -71,8 +70,9 @@ const HorizontalTimeline = ({ shipment }: Props) => {
               <TimelineIcon
                 icon={transportIcon}
                 color={coloring[index * 2 + 3]}
-                targetId={index === 0 ? 'secondVoyage' : 'thirdVoyage'}
-                boundaryId="timelineInfoSection"
+                linkPath={`/shipment/${encodeId(shipment.id)}/${
+                  index === 0 ? 'secondVoyage' : 'thirdVoyage'
+                }`}
               />
             </TimelineVoyage>
           </React.Fragment>
@@ -81,8 +81,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
       <TimelineIcon
         icon="PORT"
         color={dischargePortArrivalColoring}
-        targetId="dischargePortArrival"
-        boundaryId="timelineInfoSection"
+        linkPath={`/shipment/${encodeId(shipment.id)}/dischargePortArrival`}
       />
 
       <TimelineLine color={customClearanceColoring} />
@@ -90,8 +89,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
       <TimelineIcon
         icon="CUSTOMS"
         color={customClearanceColoring}
-        targetId="customClearance"
-        boundaryId="timelineInfoSection"
+        linkPath={`/shipment/${encodeId(shipment.id)}/customClearance`}
       />
 
       <TimelineLine color={warehouseArrivalColoring} />
@@ -99,8 +97,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
       <TimelineIcon
         icon="WAREHOUSE"
         color={warehouseArrivalColoring}
-        targetId="warehouseArrival"
-        boundaryId="timelineInfoSection"
+        linkPath={`/shipment/${encodeId(shipment.id)}/warehouseArrival`}
       />
 
       <TimelineLine color={deliveryReadyColoring} />
@@ -108,8 +105,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
       <TimelineIcon
         icon="DELIVERY_READY"
         color={deliveryReadyColoring}
-        targetId="deliveryReady"
-        boundaryId="timelineInfoSection"
+        linkPath={`/shipment/${encodeId(shipment.id)}/deliveryReady`}
       />
 
       <div className={BlankSpaceStyle} />

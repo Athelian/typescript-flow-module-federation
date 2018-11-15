@@ -10,6 +10,7 @@ import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { CloneButton } from 'components/Buttons';
 import { encodeId } from 'utils/id';
+import scrollIntoView from 'utils/scrollIntoView';
 import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 import { ShipmentBatchesContainer } from './containers';
@@ -20,6 +21,7 @@ type OptionalProps = {
   isNew: boolean,
   isClone: boolean,
   onFormReady: () => void,
+  anchor: string,
 };
 
 type Props = OptionalProps & {
@@ -30,6 +32,7 @@ const defaultProps = {
   isNew: false,
   isClone: false,
   onFormReady: () => {},
+  anchor: '',
 };
 
 const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
@@ -41,9 +44,13 @@ class ShipmentForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   componentDidMount() {
-    const { onFormReady } = this.props;
+    const { onFormReady, anchor } = this.props;
 
     if (onFormReady) onFormReady();
+
+    if (anchor) {
+      scrollIntoView({ targetId: anchor });
+    }
   }
 
   shouldComponentUpdate(nextProps: Props) {
