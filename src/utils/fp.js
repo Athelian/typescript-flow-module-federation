@@ -19,7 +19,7 @@ import {
   pick,
 } from 'ramda';
 
-export { pipe, when, reject, isNil, isEmpty, omit, pick, head } from 'ramda';
+export { pipe, when, reject, isNil, isEmpty, omit, pick, head, contains } from 'ramda';
 /**
  * See if an object (val) is an instance of the supplied constructor. This function will check up the inheritance chain, if any.
  */

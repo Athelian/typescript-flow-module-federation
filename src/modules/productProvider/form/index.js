@@ -7,6 +7,7 @@ import { ProductProviderFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
+  isExist: boolean,
 };
 
 type Props = OptionalProps & {
@@ -15,9 +16,10 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isNew: false,
+  isExist: false,
 };
 
-const ProductProviderForm = ({ productProvider, isNew }: Props) => (
+const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
   <div className={ProductProviderFormWrapperStyle}>
     <SectionWrapper id="productProviderSection">
       <SectionHeader
@@ -33,7 +35,7 @@ const ProductProviderForm = ({ productProvider, isNew }: Props) => (
           />
         )}
       </SectionHeader>
-      <ProductProviderSection isNew={isNew} />
+      <ProductProviderSection isExist={isExist} isNew={isNew} />
     </SectionWrapper>
 
     <SectionWrapper id="specificationsSection">
