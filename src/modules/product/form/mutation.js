@@ -1,5 +1,16 @@
 // @flow
 import gql from 'graphql-tag';
+import {
+  productFormFragment,
+  userAvatarFragment,
+  tagFragment,
+  imageFragment,
+  partnerCardFragment,
+  priceFragment,
+  metricFragment,
+  sizeFragment,
+  productProviderFormFragment,
+} from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
 import type { ProductCreate, ProductUpdate } from '../type.js.flow';
 
@@ -7,13 +18,23 @@ export const createProductMutation: Object = gql`
   mutation productCreate($input: ProductCreateInput!) {
     productCreate(input: $input) {
       product {
-        id
+        ...productFormFragment
       }
       violations {
         ...violationFragment
       }
     }
   }
+  ${productFormFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
+  ${imageFragment}
+  ${partnerCardFragment}
+  ${priceFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${productProviderFormFragment}
+
   ${violationFragment}
 `;
 
@@ -51,13 +72,23 @@ export const updateProductMutation: Object = gql`
   mutation productUpdate($id: ID!, $input: ProductUpdateInput!) {
     productUpdate(id: $id, input: $input) {
       product {
-        id
+        ...productFormFragment
       }
       violations {
         ...violationFragment
       }
     }
   }
+  ${productFormFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
+  ${imageFragment}
+  ${partnerCardFragment}
+  ${priceFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${productProviderFormFragment}
+
   ${violationFragment}
 `;
 
