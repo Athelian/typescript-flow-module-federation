@@ -13,7 +13,11 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { contains, getByPathWithDefault } from 'utils/fp';
 
-type Props = {
+type OptionalProps = {
+  formNewButton: boolean,
+};
+
+type Props = OptionalProps & {
   productProviders: Array<Object>,
   productProvider: Object,
   isNew: boolean,
@@ -22,19 +26,22 @@ type Props = {
   onCancel: Function,
 };
 
+const defaultProps = {
+  formNewButton: false,
+};
+
 const formContainer = new FormContainer();
 
 function isExist(
   productProvider: Object,
   productProviders: Array<Object>,
-  isNew: boolean
+  formNewButton: boolean
 ): boolean {
-  // const { isNew } = productProvider;
   const provider = {
     exporter: getByPathWithDefault(0, 'exporter.id', productProvider),
     supplier: getByPathWithDefault(0, 'supplier.id', productProvider),
   };
-  const providers = isNew
+  const providers = formNewButton
     ? productProviders.map(item => ({
         exporter: getByPathWithDefault(0, 'exporter.id', item),
         supplier: getByPathWithDefault(0, 'supplier.id', item),
@@ -46,11 +53,12 @@ function isExist(
           supplier: getByPathWithDefault(0, 'supplier.id', item),
         }));
 
-  console.log({ provider, providers, isNew, isExist: contains(provider, providers) });
   return contains(provider, providers);
 }
 
 class ProductProviderFormWrapper extends React.Component<Props> {
+  static defaultProps = defaultProps;
+
   componentDidMount() {
     const { productProvider, initDetailValues } = this.props;
     initDetailValues(productProvider);
@@ -61,7 +69,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, onSave, onCancel, productProviders } = this.props;
+    const { isNew, onSave, onCancel, productProviders, formNewButton } = this.props;
 
     return (
       <Provider inject={[formContainer]}>
@@ -108,7 +116,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                     disabled={
                       !isDirty() ||
                       !formContainer.isReady(state, validator) ||
-                      isExist(state, productProviders, isNew)
+                      isExist(state, productProviders, formNewButton)
                     }
                     onClick={() => onSave(state)}
                     data-testid="saveProviderButton"
