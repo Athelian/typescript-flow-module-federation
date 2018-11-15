@@ -1,17 +1,3 @@
-import faker from 'faker';
-
-const WAREHOUSE = {
-  name: faker.name.findName(),
-  updatedName: faker.name.findName(),
-  clonedName: faker.name.findName(),
-  street: faker.address.streetAddress(),
-  locality: 'test locality',
-  region: faker.address.state(),
-  postalCode: faker.address.zipCode(),
-  country: faker.address.country(),
-  surface: faker.random.number(),
-};
-
 describe('Warehouse', () => {
   before(() => {
     cy.login();
@@ -22,81 +8,89 @@ describe('Warehouse', () => {
   });
 
   it('new a warehouse', () => {
-    cy.visit('/warehouse/new');
+    cy.task('fixture', 'warehouse').then(
+      ({ name, street, locality, region, postalCode, country, surface }) => {
+        cy.visit('/warehouse/new');
 
-    cy.get('input[name="name"]')
-      .type(WAREHOUSE.name)
-      .should('have.value', WAREHOUSE.name);
-    cy.get('input[name="street"]')
-      .type(WAREHOUSE.street)
-      .should('have.value', WAREHOUSE.street);
-    cy.get('input[name="locality"]')
-      .type(WAREHOUSE.locality)
-      .should('have.value', WAREHOUSE.locality);
-    cy.get('input[name="region"]')
-      .type(WAREHOUSE.region)
-      .should('have.value', WAREHOUSE.region);
-    cy.get('input[name="postalCode"]')
-      .type(WAREHOUSE.postalCode)
-      .should('have.value', WAREHOUSE.postalCode);
-    // TODO: downshift cypress: https://github.com/paypal/downshift/blob/master/cypress/integration/combobox.js
-    // cy.get('input[name="country"]')
-    //   .type(WAREHOUSE.country)
-    //   .should('have.value', WAREHOUSE.country);
-    cy.get('input[name="surface"]')
-      .type(WAREHOUSE.surface)
-      .blur()
-      .get('input[name="surface"]')
-      .should('have.value', WAREHOUSE.surface);
+        cy.get('input[name="name"]')
+          .type(name)
+          .should('have.value', name);
+        cy.get('input[name="street"]')
+          .type(street)
+          .should('have.value', street);
+        cy.get('input[name="locality"]')
+          .type(locality)
+          .should('have.value', locality);
+        cy.get('input[name="region"]')
+          .type(region)
+          .should('have.value', region);
+        cy.get('input[name="postalCode"]')
+          .type(postalCode)
+          .should('have.value', postalCode)
+          .get('input[aria-labelledby="countrySearchSelectInput"]')
+          .type(country)
+          .should('have.value', country)
+          .wait(500)
+          .get('input[name="surface"]')
+          .type(surface)
+          .blur()
+          .get('input[name="surface"]')
+          .should('have.value', `${surface}`);
 
-    cy.getByTestId('saveButton')
-      .click()
-      .wait(1000)
-      .should('not.exist');
+        cy.getByTestId('saveButton')
+          .click()
+          .wait(1000)
+          .should('not.exist');
 
-    cy.get('input[name="name"]')
-      .should('have.value', WAREHOUSE.name)
-      .get('input[name="street"]')
-      .should('have.value', WAREHOUSE.street)
-      .get('input[name="locality"]')
-      .should('have.value', WAREHOUSE.locality)
-      .get('input[name="region"]')
-      .should('have.value', WAREHOUSE.region)
-      .get('input[name="postalCode"]')
-      .should('have.value', WAREHOUSE.postalCode);
+        cy.get('input[name="name"]')
+          .should('have.value', name)
+          .get('input[name="street"]')
+          .should('have.value', street)
+          .get('input[name="locality"]')
+          .should('have.value', locality)
+          .get('input[name="region"]')
+          .should('have.value', region)
+          .get('input[name="postalCode"]')
+          .should('have.value', postalCode);
+      }
+    );
   });
 
   it('update a warehouse', () => {
-    cy.get('input[name="name"]')
-      .clear()
-      .blur();
+    cy.task('fixture', 'warehouse').then(({ updatedName }) => {
+      cy.get('input[name="name"]')
+        .clear()
+        .blur();
 
-    cy.getByTestId('saveButton').should('be.disabled');
+      cy.getByTestId('saveButton').should('be.disabled');
 
-    cy.get('input[name="name"]')
-      .type(WAREHOUSE.updatedName)
-      .get('input[name="name"]')
-      .should('have.value', WAREHOUSE.updatedName)
-      .blur();
+      cy.get('input[name="name"]')
+        .type(updatedName)
+        .get('input[name="name"]')
+        .should('have.value', updatedName)
+        .blur();
 
-    cy.getByTestId('saveButton')
-      .click()
-      .wait(1000)
-      .should('not.exist');
+      cy.getByTestId('saveButton')
+        .click()
+        .wait(1000)
+        .should('not.exist');
+    });
   });
 
   it('clone a warehouse', () => {
-    cy.getByTestId('cloneButton').click();
-    cy.url().should('include', 'clone');
-    cy.wait(1000);
-    cy.get('input[name="name"]')
-      .clear()
-      .type(WAREHOUSE.clonedName)
-      .blur();
+    cy.task('fixture', 'warehouse').then(({ clonedName }) => {
+      cy.getByTestId('cloneButton').click();
+      cy.url().should('include', 'clone');
+      cy.wait(1000);
+      cy.get('input[name="name"]')
+        .clear()
+        .type(clonedName)
+        .blur();
 
-    cy.getByTestId('saveButton')
-      .click()
-      .wait(1000)
-      .should('not.exist');
+      cy.getByTestId('saveButton')
+        .click()
+        .wait(1000)
+        .should('not.exist');
+    });
   });
 });
