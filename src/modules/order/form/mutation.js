@@ -87,7 +87,7 @@ export const prepareCreateOrderInput = ({
   memo,
   exporterId: exporter.id,
   issuedAt: issuedAt ? new Date(issuedAt) : null,
-  tagIds: tags && tags.map(({ id }) => id),
+  tagIds: tags.map(({ id }) => id),
   inChargeIds: inCharges && inCharges.map(({ id }) => id),
   orderItems: orderItems.map(
     ({ batches = [], productProvider = {}, price, isNew, id: itemId, ...orderItem }) => ({
