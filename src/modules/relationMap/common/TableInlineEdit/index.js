@@ -119,6 +119,8 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
     mappingObjects
   );
 
+  logger.warn({ orderIds, orderItemsIds, batchIds, shipmentIds });
+
   logger.warn({
     data,
     origialData,
@@ -157,7 +159,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             const batches = (Object.values(mappingObjects.batch): any).filter(
               item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
             );
-            const totalLines = totalLinePerOrder(orderItems);
+            const totalLines = totalLinePerOrder(orderItems, batchIds);
             return (
               <TableRow key={orderId}>
                 <div>
@@ -199,16 +201,19 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                                 validator={orderValidator}
                               />
                             ))}
-                          {Object.keys(orderItem.relation.batch)
-                            .filter(batchId => !batchIds.includes(batchId))
-                            .map(batchId => (
-                              <TableEmptyItem
-                                key={`order.${counter + 1}.hidden.${
-                                  orderItem.data.id
-                                }.batch.${batchId}`}
-                                fields={orderColumnFields}
-                              />
-                            ))}
+                          {Object.keys(orderItem.relation.batch).filter(
+                            batchId => !batchIds.includes(batchId)
+                          ).length < totalLines &&
+                            Object.keys(orderItem.relation.batch)
+                              .filter(batchId => !batchIds.includes(batchId))
+                              .map(batchId => (
+                                <TableEmptyItem
+                                  key={`order.${counter + 1}.hidden.${
+                                    orderItem.data.id
+                                  }.batch.${batchId}`}
+                                  fields={orderColumnFields}
+                                />
+                              ))}
                         </React.Fragment>
                       )
                     )
@@ -238,14 +243,17 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                                 validator={orderValidator}
                               />
                             ))}
-                          {Object.keys(orderItem.relation.batch)
-                            .filter(batchId => !batchIds.includes(batchId))
-                            .map(batchId => (
-                              <TableEmptyItem
-                                key={`orderItem.${counter + 1}.hidden.${batchId}`}
-                                fields={orderItemColumnFields}
-                              />
-                            ))}
+                          {Object.keys(orderItem.relation.batch).filter(
+                            batchId => !batchIds.includes(batchId)
+                          ).length < totalLines &&
+                            Object.keys(orderItem.relation.batch)
+                              .filter(batchId => !batchIds.includes(batchId))
+                              .map(batchId => (
+                                <TableEmptyItem
+                                  key={`orderItem.${counter + 1}.hidden.${batchId}`}
+                                  fields={orderItemColumnFields}
+                                />
+                              ))}
                         </React.Fragment>
                       )
                     )
@@ -257,15 +265,17 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                   {batchIds.length ? (
                     <>
                       {orderItems.map((orderItem, position) =>
-                        orderItem.data.batches.map((batch, index) => (
-                          <TableItem
-                            cell={`${order.data.id}.orderItems.${position}.batches.${index}`}
-                            key={batch.id}
-                            fields={batchColumnFields}
-                            values={batch}
-                            validator={batchValidator}
-                          />
-                        ))
+                        orderItem.data.batches
+                          .filter(batch => batchIds.includes(batch.id))
+                          .map((batch, index) => (
+                            <TableItem
+                              cell={`${order.data.id}.orderItems.${position}.batches.${index}`}
+                              key={batch.id}
+                              fields={batchColumnFields}
+                              values={batch}
+                              validator={batchValidator}
+                            />
+                          ))
                       )}
                       {range(totalLines - batches.length).map(index => (
                         <TableEmptyItem key={index} fields={batchColumnFields} />
@@ -312,7 +322,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
               item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
             );
-            const totalLines = totalLinePerOrder(orderItems);
+            const totalLines = totalLinePerOrder(orderItems, batchIds);
             // TODO: handle vertical scroll for line
             return (
               <LineNumber height={totalLines * 43} line={counter + 1} key={`line-for-${orderId}`} />
