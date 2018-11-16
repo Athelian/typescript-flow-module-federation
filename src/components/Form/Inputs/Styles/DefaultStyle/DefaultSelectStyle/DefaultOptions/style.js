@@ -14,12 +14,6 @@ const ResetOptionWrapperStyle: string = css`
   min-width: min-content;
 `;
 
-const ResetOptionStyle: string = css`
-  min-width: min-content;
-  width: 100%;
-  white-space: nowrap;
-`;
-
 export const OptionWrapperStyle = (width: string, height: string): string => css`
   ${ResetOptionWrapperStyle};
   display: flex;
@@ -43,7 +37,8 @@ type OptionProps = {
 };
 
 export const OptionStyle = ({ onHover, selected, align, type }: OptionProps): string => css`
-  ${ResetOptionStyle};
+  width: 100%;
+  white-space: nowrap;
   background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
   ${presets.BUTTON};
   ${align === 'left' && 'justify-content: flex-start'};
