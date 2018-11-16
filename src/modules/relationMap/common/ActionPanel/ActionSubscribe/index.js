@@ -29,10 +29,7 @@ const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
   const numberOfOrderItem = Object.keys(orderItem).length;
   const numberOfBatch = Object.keys(batch).length;
-  if (numberOfOrderItem === 1 && numberOfBatch === 0) {
-    return false;
-  }
-  if (numberOfBatch === 1 && numberOfOrderItem === 0) {
+  if (numberOfOrderItem === 1 || numberOfBatch === 1) {
     return false;
   }
   return true;
@@ -73,7 +70,6 @@ const ActionSubscribe = ({ filter }: Props) => (
                     focusMode,
                     filter,
                   });
-                  // await refetch();
                   setResult(newResult);
                   selectTargetItem(newFocus);
                   setAction('cloned');
