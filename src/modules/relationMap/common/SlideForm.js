@@ -1,4 +1,5 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import { createObjectValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import OrderForm from 'modules/order/index.form';
@@ -9,9 +10,25 @@ import { encodeId } from 'utils/id';
 
 export const ToggleSlide = createObjectValue({ id: null, type: null, show: false });
 
+type SlideViewWrapperProps = {
+  children: React.Node,
+  reset: Function,
+};
+class SlideViewWrapper extends React.Component<SlideViewWrapperProps> {
+  componentWillUnmount() {
+    const { reset } = this.props;
+    reset();
+  }
+
+  render() {
+    const { children } = this.props;
+    return children;
+  }
+}
+
 const SlideForm = () => (
   <ToggleSlide>
-    {({ value: { show, id, type, onSuccess }, set }) => {
+    {({ value: { show, id, type, onSuccess }, set, reset }) => {
       let form = null;
       switch (type) {
         default: {
@@ -58,13 +75,15 @@ const SlideForm = () => (
         }
       }
       return (
-        <SlideView
-          isOpen={show}
-          onRequestClose={() => set('show', false)}
-          options={{ width: '1030px' }}
-        >
-          {form}
-        </SlideView>
+        <SlideViewWrapper reset={reset}>
+          <SlideView
+            isOpen={show}
+            onRequestClose={() => set('show', false)}
+            options={{ width: '1030px' }}
+          >
+            {form}
+          </SlideView>
+        </SlideViewWrapper>
       );
     }}
   </ToggleSlide>
