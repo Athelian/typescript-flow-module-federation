@@ -2,32 +2,24 @@
 import { css } from 'react-emotion';
 import { colors, borderRadiuses, presets, fontSizes, scrollbars, shadows } from 'styles/common';
 
-const ResetOptionWrapperStyle: string = css`
-  list-style-type: none;
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  margin-top: 5px;
-  right: 1px;
-  overflow: hidden;
-  z-index: 1;
-  min-width: min-content;
-`;
-
 export const OptionWrapperStyle = (width: string, height: string): string => css`
   & > div {
-    ${ResetOptionWrapperStyle};
-    display: flex;
-    flex-flow: column;
+    list-style-type: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    margin-top: 5px;
+    overflow: hidden;
+    z-index: 1;
+    min-width: min-content;
     ${shadows.INPUT};
     min-width: ${width};
     max-width: ${width};
-    background: #fff;
+    background: ${colors.WHITE};
     ${borderRadiuses.MAIN};
     max-height: ${height};
-    overflow-x: hidden;
-    overflow-y: auto;
     ${scrollbars.SMALL};
+    cursor: pointer;
   }
 `;
 
@@ -39,14 +31,10 @@ type OptionProps = {
 };
 
 export const OptionStyle = ({ onHover, selected, align, type }: OptionProps): string => css`
-  width: 100%;
-  background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
-  ${presets.BUTTON};
-  ${align === 'left' && 'justify-content: flex-start'};
-  ${align === 'right' && 'justify-content: flex-end'};
-  ${align === 'center' && 'justify-content: space-around'};
+  background: ${onHover ? colors.GRAY_SUPER_LIGHT : colors.WHITE};
+  text-align: ${align};
+  line-height: 20px;
   padding: 5px;
-  flex: 1;
   ${presets.ELLIPSIS};
   flex-shrink: 0;
   ${type === 'label'

@@ -46,10 +46,10 @@ function DefaultOptions({
     <div className={OptionWrapperStyle(width, height)}>
       {items.length > 0 ? (
         <VirtualList
+          height={removePx(height)}
           width={removePx(width)}
           scrollToIndex={highlightedIndex || 0}
           scrollToAlignment="auto"
-          height={removePx(height)}
           itemCount={items.length}
           itemSize={30}
           renderItem={({ index, style }) => {
