@@ -30,14 +30,30 @@ const items = [
   '20',
 ];
 
-storiesOf('Default Select Style', module).add('SelectInput', () => (
-  <SelectInput
-    name="select-input"
-    value="3"
-    items={items}
-    itemToValue={v => v || null}
-    itemToString={v => v || ''}
-    renderSelect={({ ...rest }) => <DefaultSelect {...rest} required align="left" width="120px" />}
-    renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="120px" />}
-  />
-));
+storiesOf('Default Select Style', module)
+  .add('short', () => (
+    <SelectInput
+      name="select-input"
+      value="3"
+      items={items}
+      itemToValue={v => v || null}
+      itemToString={v => v || ''}
+      renderSelect={({ ...rest }) => (
+        <DefaultSelect {...rest} required align="left" width="120px" />
+      )}
+      renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="120px" />}
+    />
+  ))
+  .add('long', () => (
+    <SelectInput
+      name="select-input"
+      value="3"
+      items={['1231231321321231231231231231231123123', ...items]}
+      itemToValue={v => v || null}
+      itemToString={v => v || ''}
+      renderSelect={({ ...rest }) => (
+        <DefaultSelect {...rest} required align="left" width="120px" />
+      )}
+      renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="120px" />}
+    />
+  ));
