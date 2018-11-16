@@ -88,7 +88,7 @@ export const prepareCreateOrderInput = ({
   exporterId: exporter.id,
   issuedAt: issuedAt ? new Date(issuedAt) : null,
   tagIds: tags.map(({ id }) => id),
-  inChargeIds: inCharges && inCharges.map(({ id }) => id),
+  inChargeIds: inCharges.map(({ id }) => id),
   orderItems: orderItems.map(
     ({ batches = [], productProvider = {}, price, isNew, id: itemId, ...orderItem }) => ({
       ...orderItem,
@@ -97,14 +97,12 @@ export const prepareCreateOrderInput = ({
       batches: batches.map(batch => prepareCreateBatchInput(batch, false)),
     })
   ),
-  files:
-    files &&
-    files.map(({ id, name, type, memo: fileMemo }) => ({
-      id,
-      name,
-      type,
-      memo: fileMemo,
-    })),
+  files: files.map(({ id, name, type, memo: fileMemo }) => ({
+    id,
+    name,
+    type,
+    memo: fileMemo,
+  })),
 });
 
 export const updateOrderMutation = gql`
