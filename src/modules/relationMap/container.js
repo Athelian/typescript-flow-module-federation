@@ -53,26 +53,19 @@ const createLineObj = (entity: Object, type: string) =>
     {}
   );
 
-const getAllIds = (item: Object) =>
-  Object.keys({ ...item.order, ...item.orderItem, ...item.batch });
-
 const filterRelated = (trees: Array<Object>, itemRelation: Object) => {
-  const relatedIds = getAllIds(itemRelation);
-  const filteredTree = trees.filter(tree => {
+  const relatedIds = Object.keys(itemRelation);
+  const itemNotHasTree = !trees.some(tree =>
+    relatedIds.some(relatedId => get(false, `${relatedId}`, tree))
+  );
+  if (itemNotHasTree) {
+    return [...trees, itemRelation];
+  }
+  const filteredTree = trees.map(tree => {
     const isRelated = relatedIds.some(relatedId => get(false, `${relatedId}`, tree));
-    return !isRelated;
+    return isRelated ? { ...tree, ...itemRelation } : tree;
   });
   return filteredTree;
-};
-
-const getRemovedIds = (trees: Array<Object>, itemRelation: Object) => {
-  const relatedIds = getAllIds(itemRelation);
-  const removedTree = trees.find(prevTree => {
-    const isRelated = relatedIds.some(relatedId => prevTree[relatedId]);
-    return isRelated;
-  });
-  const removedIds = Object.keys(removedTree || {});
-  return removedIds;
 };
 
 const mapRemoveTargetLine = (relation: Object, data: Object, targetedItem: Object) => (
@@ -206,6 +199,15 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     this.setState(prevState => ({ ...prevState, ...state }));
   };
 
+  overrideTarget = (item: Object) => {
+    this.setState(prevState => ({
+      targetedItem: {
+        ...prevState.targetedItem,
+        ...item,
+      },
+    }));
+  };
+
   changeMode = (focusMode: string) => {
     this.setState({
       focusMode,
@@ -258,32 +260,6 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     this.setState(prevState =>
       Object.assign(prevState, { targetedItem: {}, focusMode: '', lines: [], trees: [] })
     );
-  };
-
-  resetTargetedItem = (itemData: Object, relation: Object) => {
-    const { relation: itemRelation } = itemData;
-    const { type: itemType } = relation;
-    const removeItem = this.formatTargetTreeItem(itemRelation, itemType);
-    const removeObj = { ...removeItem.order, ...removeItem.orderItem, ...removeItem.batch };
-    const removeIds = Object.keys(removeObj);
-    this.setState(prevState => {
-      const { targetedItem } = prevState;
-      const { order, orderItem, batch } = targetedItem;
-      const newTarget = Object.assign(targetedItem, {
-        order: itemType === ORDER_ITEM ? order : omit(Object.keys(itemRelation.order || {}), order),
-        orderItem: omit(Object.keys(itemRelation.orderItem || {}), orderItem),
-        batch: omit(Object.keys(itemRelation.batch || {}), batch),
-      });
-      return {
-        ...prevState,
-        focusMode: 'TARGET',
-        targetedItem: newTarget,
-        trees: prevState.trees.map(tree => omit(removeIds, tree)),
-        lines: prevState.lines
-          .filter(line => (itemType === ORDER ? !removeIds.some(removeId => line[removeId]) : true))
-          .map(mapRemoveTreeLine(itemData, relation, newTarget)),
-      };
-    });
   };
 
   resetFocusedItem = () => {
@@ -354,6 +330,32 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }));
   };
 
+  resetTargetedItem = (itemData: Object, relation: Object) => {
+    const { relation: itemRelation } = itemData;
+    const { type: itemType } = relation;
+    const removeItem = this.formatTargetTreeItem(itemRelation, itemType);
+    const removeObj = { ...removeItem.order, ...removeItem.orderItem, ...removeItem.batch };
+    const removeIds = Object.keys(removeObj);
+    this.setState(prevState => {
+      const { targetedItem } = prevState;
+      const { order, orderItem, batch } = targetedItem;
+      const newTarget = Object.assign(targetedItem, {
+        order: itemType === ORDER_ITEM ? order : omit(Object.keys(itemRelation.order || {}), order),
+        orderItem: omit(Object.keys(itemRelation.orderItem || {}), orderItem),
+        batch: omit(Object.keys(itemRelation.batch || {}), batch),
+      });
+      return {
+        ...prevState,
+        focusMode: 'TARGET',
+        targetedItem: newTarget,
+        trees: prevState.trees.map(tree => omit(removeIds, tree)),
+        lines: prevState.lines
+          .filter(line => (itemType === ORDER ? !removeIds.some(removeId => line[removeId]) : true))
+          .map(mapRemoveTreeLine(itemData, relation, newTarget)),
+      };
+    });
+  };
+
   formatTargetTreeItem = (itemRelation: Object, itemType: ?string) => {
     const targetedItem =
       itemType === ORDER_ITEM
@@ -368,13 +370,13 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     const targetedItem = this.formatTargetTreeItem(itemRelation, itemType);
     const { order = {}, orderItem = {}, batch = {} } = targetedItem;
     const tree = {
-      ...(itemType !== ORDER_ITEM ? createTreeObj(order) : {}),
+      ...createTreeObj(order),
       ...createTreeObj(orderItem),
       ...createTreeObj(batch),
     };
     const line = {
       ...createLineObj(order, ORDER),
-      ...(itemType !== ORDER_ITEM ? createLineObj(orderItem, ORDER_ITEM) : {}),
+      ...createLineObj(orderItem, ORDER_ITEM),
       ...createLineObj(batch, BATCH),
     };
     this.setState(prevState => {
@@ -383,39 +385,29 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         orderItem: targetOrderItem,
         batch: targetBatch,
       } = prevState.targetedItem;
-      const prevTrees = filterRelated(prevState.trees, itemRelation);
-      const prevLines = filterRelated(prevState.lines, itemRelation);
-      const removedIds = getRemovedIds(prevState.trees, itemRelation);
+      const trees = filterRelated(prevState.trees, tree);
+      const lines = filterRelated(prevState.lines, line);
       return Object.assign(prevState, {
         targetedItem: {
           order: {
-            ...omit(removedIds, targetOrder),
+            ...targetOrder,
             ...(itemType === ORDER ? { [Object.keys(order)[0]]: { ...data } } : order),
           },
           orderItem: {
-            ...omit(removedIds, targetOrderItem),
+            ...targetOrderItem,
             ...(itemType === ORDER_ITEM
               ? {
                   [Object.keys(orderItem)[0]]: { ...data, ...orderItem[Object.keys(orderItem)[0]] },
                 }
               : orderItem),
           },
-          batch: { ...omit(removedIds, targetBatch), ...batch },
+          batch: { ...targetBatch, ...batch },
         },
         focusMode: 'TARGET_TREE',
-        trees: [...prevTrees, tree],
-        lines: [...prevLines, line],
+        trees,
+        lines,
       });
     });
-  };
-
-  overrideTarget = (item: Object) => {
-    this.setState(prevState => ({
-      targetedItem: {
-        ...prevState.targetedItem,
-        ...item,
-      },
-    }));
   };
 
   addTarget = (itemType: string, id: string, data: Object) => {
