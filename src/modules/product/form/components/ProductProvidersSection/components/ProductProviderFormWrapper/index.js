@@ -11,8 +11,14 @@ import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import { contains, getByPathWithDefault } from 'utils/fp';
 
-type Props = {
+type OptionalProps = {
+  isAddedProvider: boolean,
+};
+
+type Props = OptionalProps & {
+  productProviders: Array<Object>,
   productProvider: Object,
   isNew: boolean,
   initDetailValues: Function,
@@ -20,9 +26,39 @@ type Props = {
   onCancel: Function,
 };
 
+const defaultProps = {
+  isAddedProvider: false,
+};
+
 const formContainer = new FormContainer();
 
+function isExist(
+  productProvider: Object,
+  productProviders: Array<Object>,
+  isAddedProvider: boolean
+): boolean {
+  const provider = {
+    exporter: getByPathWithDefault(0, 'exporter.id', productProvider),
+    supplier: getByPathWithDefault(0, 'supplier.id', productProvider),
+  };
+  const providers = isAddedProvider
+    ? productProviders.map(item => ({
+        exporter: getByPathWithDefault(0, 'exporter.id', item),
+        supplier: getByPathWithDefault(0, 'supplier.id', item),
+      }))
+    : productProviders
+        .filter(item => item.id !== productProvider.id)
+        .map(item => ({
+          exporter: getByPathWithDefault(0, 'exporter.id', item),
+          supplier: getByPathWithDefault(0, 'supplier.id', item),
+        }));
+
+  return contains(provider, providers);
+}
+
 class ProductProviderFormWrapper extends React.Component<Props> {
+  static defaultProps = defaultProps;
+
   componentDidMount() {
     const { productProvider, initDetailValues } = this.props;
     initDetailValues(productProvider);
@@ -33,7 +69,8 @@ class ProductProviderFormWrapper extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, onSave, onCancel } = this.props;
+    const { isNew, onSave, onCancel, productProviders, isAddedProvider } = this.props;
+
     return (
       <Provider inject={[formContainer]}>
         <Subscribe to={[ProductProviderContainer]}>
@@ -76,14 +113,22 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                   </JumpToSection>
                   <CancelButton onClick={onCancel} />
                   <SaveButton
-                    disabled={!isDirty() || !formContainer.isReady(state, validator)}
+                    disabled={
+                      !isDirty() ||
+                      !formContainer.isReady(state, validator) ||
+                      isExist(state, productProviders, isAddedProvider)
+                    }
                     onClick={() => onSave(state)}
                     data-testid="saveProviderButton"
                   />
                 </SlideViewNavBar>
               }
             >
-              <ProductProviderForm productProvider={state} isNew={isNew} />
+              <ProductProviderForm
+                productProvider={state}
+                isExist={isExist(state, productProviders, isAddedProvider)}
+                isNew={isNew}
+              />
             </Layout>
           )}
         </Subscribe>

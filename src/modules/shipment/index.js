@@ -8,8 +8,9 @@ const ShipmentApp = () => (
   <Router>
     <ShipmentListModule path="/" />
     <ShipmentFormModule path="new" />
-    <ShipmentFormModule path="clone/:shipmentId" />
+    <ShipmentFormModule path=":shipmentId/:anchor" />
     <ShipmentFormModule path=":shipmentId" />
+    <ShipmentFormModule path="clone/:shipmentId" />
   </Router>
 );
 

@@ -37,18 +37,19 @@ import {
 
 type OptionalProps = {
   path: string,
+  shipmentId: string,
+  anchor: string,
   isSlideView: boolean,
   onSuccessCallback: ?Function,
   redirectAfterSuccess: boolean,
 };
 
-type Props = OptionalProps & {
-  shipmentId?: string,
-};
+type Props = OptionalProps;
 
 const defaultProps = {
   path: '',
   shipmentId: '',
+  anchor: '',
   isSlideView: false,
   onSuccessCallback: null,
   redirectAfterSuccess: true,
@@ -160,7 +161,7 @@ class ShipmentFormModule extends React.Component<Props> {
   };
 
   render() {
-    const { shipmentId, isSlideView } = this.props;
+    const { shipmentId, anchor, isSlideView } = this.props;
     const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (shipmentId && !isNewOrClone) {
@@ -377,6 +378,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             <ShipmentForm
                               isClone={this.isClone()}
                               shipment={shipment}
+                              anchor={anchor}
                               onFormReady={() => {
                                 const {
                                   batches,

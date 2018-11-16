@@ -16,15 +16,16 @@ import validator from 'modules/product/form/validator';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { PartnerCard, GrayCard } from 'components/Cards';
-import { Label, DashedPlusButton } from 'components/Form';
+import { FieldItem, FormTooltip, Label, DashedPlusButton } from 'components/Form';
 import SelectSupplier from '../SelectSupplier';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
 
 type Props = {
   isNew: boolean,
+  isExist: boolean,
 };
 
-const ProductProviderSection = ({ isNew }: Props) => (
+const ProductProviderSection = ({ isNew, isExist }: Props) => (
   <Subscribe to={[ProductProviderContainer]}>
     {({ originalValues: initialValues, state, setFieldValue }) => {
       const values = { ...initialValues, ...state };
@@ -34,12 +35,29 @@ const ProductProviderSection = ({ isNew }: Props) => (
           <GridColumn>
             <GridRow>
               <GridColumn gap="10px">
-                <Label required>
-                  <FormattedMessage
-                    id="modules.ProductProviders.exporter"
-                    defaultMessage="EXPORTER"
-                  />
-                </Label>
+                <FieldItem
+                  label={
+                    <Label required>
+                      <FormattedMessage
+                        id="modules.ProductProviders.exporter"
+                        defaultMessage="EXPORTER"
+                      />
+                    </Label>
+                  }
+                  tooltip={
+                    isExist ? (
+                      <FormTooltip
+                        errorMessage={
+                          <FormattedMessage
+                            id="modules.productProvider.unique"
+                            defaultMessage="The pair of Exporter and Supplier must be unique"
+                          />
+                        }
+                      />
+                    ) : null
+                  }
+                />
+
                 {isNew ? (
                   <BooleanValue>
                     {({ value: opened, set: exporterSlideToggle }) => (
@@ -89,12 +107,28 @@ const ProductProviderSection = ({ isNew }: Props) => (
               </GridColumn>
 
               <GridColumn gap="10px">
-                <Label>
-                  <FormattedMessage
-                    id="modules.ProductProviders.supplier"
-                    defaultMessage="SUPPLIER"
-                  />
-                </Label>
+                <FieldItem
+                  label={
+                    <Label>
+                      <FormattedMessage
+                        id="modules.ProductProviders.supplier"
+                        defaultMessage="SUPPLIER"
+                      />
+                    </Label>
+                  }
+                  tooltip={
+                    isExist ? (
+                      <FormTooltip
+                        errorMessage={
+                          <FormattedMessage
+                            id="modules.productProvider.unique"
+                            defaultMessage="The pair of Exporter and Supplier must be unique"
+                          />
+                        }
+                      />
+                    ) : null
+                  }
+                />
                 {isNew ? (
                   <BooleanValue>
                     {({ value: opened, set: supplierSlideToggle }) => (

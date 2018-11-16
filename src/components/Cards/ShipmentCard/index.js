@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
+import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
@@ -35,7 +35,11 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
 
   return (
     <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions} {...rest}>
-      <Link className={ShipmentCardWrapperStyle} to={`/shipment/${encodeId(id)}`}>
+      <div
+        className={ShipmentCardWrapperStyle}
+        onClick={() => navigate(`/shipment/${encodeId(id)}`)}
+        role="presentation"
+      >
         <div className={ShipmentInfoWrapperStyle}>
           <div className={ShipmentLeftWrapperStyle}>
             <div className={ShipmentNoStyle}>{shipment.no}</div>
@@ -51,7 +55,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
         </div>
         <div className={DividerStyle} />
         <HorizontalLayout shipment={shipment} />
-      </Link>
+      </div>
     </BaseCard>
   );
 };
