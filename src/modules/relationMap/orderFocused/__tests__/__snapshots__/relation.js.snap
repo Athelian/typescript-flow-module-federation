@@ -20,6 +20,7 @@ Array [
   },
   Object {
     "id": "1",
+    "isNew": undefined,
     "type": "ORDER",
   },
   Object {
@@ -67,6 +68,7 @@ Array [
   },
   Object {
     "id": "1",
+    "isNew": undefined,
     "type": "ORDER",
   },
   Object {
@@ -104,6 +106,7 @@ Array [
   },
   Object {
     "id": "1",
+    "isNew": undefined,
     "type": "ORDER",
   },
   Object {
@@ -111,7 +114,7 @@ Array [
     "relatedIds": Array [
       "1",
     ],
-    "type": "LINK-1-ORDER",
+    "type": "LINK-1-ORDER_ITEM_ALL",
   },
   Object {
     "id": "1",
@@ -122,7 +125,7 @@ Array [
     "relatedIds": Array [
       "1",
     ],
-    "type": "LINK-1-ORDER",
+    "type": "LINK-1-BATCH_ALL",
   },
   Object {
     "id": "1",
@@ -141,6 +144,8 @@ Array [
   },
   Object {
     "id": "1",
+    "isLast": false,
+    "isNew": undefined,
     "type": "ORDER_ITEM",
   },
   Object {
@@ -153,6 +158,8 @@ Array [
   },
   Object {
     "id": "1",
+    "isLast": false,
+    "isNew": false,
     "type": "BATCH",
   },
   Object {
@@ -163,7 +170,7 @@ Array [
     "relatedIds": Array [
       "2",
     ],
-    "type": "LINK-2-ORDER_ITEM",
+    "type": "LINK-2-BATCH",
   },
   Object {
     "type": "",
@@ -177,6 +184,8 @@ Array [
   },
   Object {
     "id": "2",
+    "isLast": true,
+    "isNew": false,
     "type": "BATCH",
   },
   Object {
@@ -191,6 +200,8 @@ Array [
   },
   Object {
     "id": "2",
+    "isLast": true,
+    "isNew": undefined,
     "type": "ORDER_ITEM",
   },
   Object {

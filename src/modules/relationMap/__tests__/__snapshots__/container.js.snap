@@ -344,75 +344,24 @@ Object {
     "shipment": Object {},
   },
   "lines": Array [
-    Object {
-      "batch1": Object {
-        "id": "batch1",
-        "line": true,
-        "related": true,
-        "type": "BATCH",
-      },
-      "batch2": Object {
-        "id": "batch2",
-        "line": true,
-        "related": true,
-        "type": "BATCH",
-      },
-      "batch3": Object {
-        "id": "batch3",
-        "line": true,
-        "related": true,
-        "type": "BATCH",
-      },
-      "item1": Object {
-        "id": "item1",
-        "line": true,
-        "related": true,
-        "type": "ORDER_ITEM",
-      },
-      "item2": Object {
-        "id": "item2",
-        "line": true,
-        "related": true,
-        "type": "ORDER_ITEM",
-      },
-      "order1": Object {
-        "id": "order1",
-        "line": true,
-        "related": true,
-        "type": "ORDER",
-      },
-    },
+    Object {},
   ],
   "targetedItem": Object {
-    "batch": Object {
-      "batch1": true,
-      "batch2": true,
-      "batch3": true,
-    },
+    "batch": Object {},
     "order": Object {
-      "order1": true,
+      "undefined": Object {},
     },
-    "orderItem": Object {
-      "item1": true,
-      "item2": true,
-    },
+    "orderItem": Object {},
   },
   "trees": Array [
-    Object {
-      "batch1": true,
-      "batch2": true,
-      "batch3": true,
-      "item1": true,
-      "item2": true,
-      "order1": true,
-    },
+    Object {},
   ],
 }
 `;
 
 exports[`targetTree target Order => untarget OrderItem => target OrderItem 2`] = `
 Object {
-  "focusMode": "TARGET",
+  "focusMode": "TARGET_TREE",
   "focusedId": "",
   "focusedItem": Object {
     "batch": Object {},
@@ -421,61 +370,17 @@ Object {
     "shipment": Object {},
   },
   "lines": Array [
-    Object {
-      "batch1": Object {
-        "id": "batch1",
-        "line": true,
-        "related": true,
-        "type": "BATCH",
-      },
-      "batch2": Object {
-        "id": "batch2",
-        "line": true,
-        "related": true,
-        "type": "BATCH",
-      },
-      "batch3": Object {
-        "id": "batch3",
-        "line": true,
-        "related": true,
-        "type": "BATCH",
-      },
-      "item1": Object {
-        "id": "item1",
-        "line": true,
-        "related": true,
-        "type": "ORDER_ITEM",
-      },
-      "item2": Object {
-        "id": "item2",
-        "line": true,
-        "related": true,
-        "type": "ORDER_ITEM",
-      },
-      "order1": Object {
-        "id": "order1",
-        "line": true,
-        "related": true,
-        "type": "ORDER",
-      },
-    },
+    Object {},
   ],
   "targetedItem": Object {
-    "batch": Object {
-      "batch2": true,
-      "batch3": true,
+    "batch": Object {},
+    "order": Object {
+      "undefined": Object {},
     },
-    "order": Object {},
-    "orderItem": Object {
-      "item2": true,
-    },
+    "orderItem": Object {},
   },
   "trees": Array [
-    Object {
-      "batch2": true,
-      "batch3": true,
-      "item2": true,
-    },
+    Object {},
   ],
 }
 `;
@@ -491,52 +396,19 @@ Object {
     "shipment": Object {},
   },
   "lines": Array [
-    Object {
-      "batch1": Object {
-        "id": "batch1",
-        "line": true,
-        "related": true,
-        "type": "BATCH",
-      },
-      "item1": Object {
-        "id": "item1",
-        "line": true,
-        "related": true,
-        "type": "ORDER_ITEM",
-      },
-      "order1": Object {
-        "id": "order1",
-        "line": true,
-        "related": true,
-        "type": "ORDER",
-      },
-    },
+    Object {},
+    Object {},
   ],
   "targetedItem": Object {
-    "batch": Object {
-      "batch1": true,
-      "batch2": true,
-      "batch3": true,
-    },
+    "batch": Object {},
     "order": Object {
-      "order1": true,
+      "undefined": Object {},
     },
-    "orderItem": Object {
-      "item1": true,
-      "item2": true,
-    },
+    "orderItem": Object {},
   },
   "trees": Array [
-    Object {
-      "batch2": true,
-      "batch3": true,
-      "item2": true,
-    },
-    Object {
-      "batch1": true,
-      "item1": true,
-      "order1": true,
-    },
+    Object {},
+    Object {},
   ],
 }
 `;
