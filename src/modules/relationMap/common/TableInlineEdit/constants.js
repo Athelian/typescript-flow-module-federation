@@ -2,6 +2,18 @@
 import * as React from 'react';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
+import {
+  metrics as weightMetrics,
+  convert as weightConvert,
+} from 'modules/form/helpers/metricInput/weightInput';
+import {
+  metrics as volumeMetrics,
+  convert as volumeConvert,
+} from 'modules/form/helpers/metricInput/volumeInput';
+import {
+  metrics as distanceMetrics,
+  convert as distanceConvert,
+} from 'modules/form/helpers/metricInput/distanceInput';
 import { FormattedMessage } from 'react-intl';
 
 export const orderColumnFields = [
@@ -148,6 +160,46 @@ export const batchColumnFields = [
     type: 'number',
   },
   {
+    name: 'packageGrossWeight',
+    type: 'metric',
+    meta: {
+      metrics: weightMetrics,
+      convert: weightConvert,
+    },
+  },
+  {
+    name: 'packageVolume',
+    type: 'metric',
+    meta: {
+      metrics: volumeMetrics,
+      convert: volumeConvert,
+    },
+  },
+  {
+    name: 'packageSize.width',
+    type: 'metric',
+    meta: {
+      metrics: distanceMetrics,
+      convert: distanceConvert,
+    },
+  },
+  {
+    name: 'packageSize.height',
+    type: 'metric',
+    meta: {
+      metrics: distanceMetrics,
+      convert: distanceConvert,
+    },
+  },
+  {
+    name: 'packageSize.length',
+    type: 'metric',
+    meta: {
+      metrics: distanceMetrics,
+      convert: distanceConvert,
+    },
+  },
+  {
     name: 'tags',
     type: 'tags',
     meta: {
@@ -213,6 +265,11 @@ export const batchColumns = [
       <FormattedMessage {...batchMessages.producedAt} />,
       <FormattedMessage {...batchMessages.packageName} />,
       <FormattedMessage {...batchMessages.packageQuantity} />,
+      <FormattedMessage {...batchMessages.packageGrossWeight} />,
+      <FormattedMessage {...batchMessages.packageVolume} />,
+      <FormattedMessage id="modules.Batches.pkgLength" defaultMessage="PKG LENGTH" />,
+      <FormattedMessage id="modules.Batches.pkgWidth" defaultMessage="PKG WIDTH" />,
+      <FormattedMessage id="modules.Batches.pkgHeight" defaultMessage="PKG HEIGHT" />,
       <FormattedMessage {...batchMessages.tags} />,
     ],
   },

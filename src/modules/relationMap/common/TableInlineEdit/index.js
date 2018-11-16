@@ -84,9 +84,14 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
           setErrors(errors);
         }
       });
-      return () => listener.remove();
+      return () => {
+        listener.remove();
+        origialData = [];
+      };
     }
-    return () => {};
+    return () => {
+      origialData = [];
+    };
   });
 
   const headerRef = useRef();
