@@ -3,10 +3,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
-import { range, clone, set } from 'lodash';
+import { range, set, cloneDeep, intersectionWith, isEqual } from 'lodash';
 import emitter from 'utils/emitter';
-import { arrayToObject, isEquals } from 'utils/fp';
-import { cleanUpData } from 'utils/data';
+import { arrayToObject } from 'utils/fp';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -46,6 +45,7 @@ type Props = {
 };
 
 setConfig({ pureSFC: true });
+let origialData = [];
 
 export default function TableInlineEdit({ type, selected, onSave, onCancel }: Props) {
   const [data] = useIdb(type, []);
@@ -60,12 +60,13 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
         (Array.isArray(editDataRef.current) && editDataRef.current.length === 0)
       ) {
         logger.warn('copy data');
-        editDataRef.current = clone(data);
+        origialData = cloneDeep(data);
+        editDataRef.current = data.slice();
       }
 
       const listener = emitter.once('INLINE_CHANGE', newData => {
         logger.warn({ newData });
-        const result = arrayToObject(clone(editDataRef.current), 'id');
+        const result = arrayToObject(editDataRef.current, 'id');
         const { name, value, hasError } = newData;
         editDataRef.current = [].concat(Object.values(set(result, name, value)));
 
@@ -113,6 +114,11 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
     mappingObjects
   );
 
+  logger.warn({
+    data,
+    origialData,
+    intersection: intersectionWith(origialData, data, isEqual),
+  });
   return (
     <Layout
       navBar={
@@ -124,10 +130,8 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             disabled={
               !(
                 editDataRef.current &&
-                isEquals(
-                  cleanUpData(arrayToObject(editDataRef.current, 'id')),
-                  cleanUpData(arrayToObject(data, 'id'))
-                ) &&
+                intersectionWith(origialData, data, isEqual).length !==
+                  editDataRef.current.length &&
                 Object.keys(touched).length > 0 &&
                 Object.keys(errors).length === 0
               )
