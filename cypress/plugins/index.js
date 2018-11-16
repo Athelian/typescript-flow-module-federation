@@ -128,6 +128,19 @@ module.exports = on => {
           cargoReadyDate: faker.date.future(),
         };
 
+      if (type === 'warehouse')
+        return {
+          name: faker.name.findName(),
+          updatedName: faker.name.findName(),
+          clonedName: faker.name.findName(),
+          street: faker.address.streetAddress(),
+          locality: 'test locality',
+          region: faker.address.state(),
+          postalCode: faker.address.zipCode(),
+          country: faker.address.country(),
+          surface: faker.random.number(),
+        };
+
       return null;
     },
     log(message) {
