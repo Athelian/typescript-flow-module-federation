@@ -22,6 +22,9 @@ import RelationMapContainer from 'modules/relationMap/container';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { TabItemStyled } from './style';
 
+type Props = {
+  filter: Object,
+};
 const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
   const numberOfOrderItem = Object.keys(orderItem).length;
@@ -35,7 +38,7 @@ const isDisabledSplit = targetedItem => {
   return true;
 };
 
-const ActionSubscribe = () => (
+const ActionSubscribe = ({ filter }: Props) => (
   <ApolloConsumer>
     {client => (
       <Subscribe
@@ -68,6 +71,7 @@ const ActionSubscribe = () => (
                     client,
                     target: targetedItem,
                     focusMode,
+                    filter,
                   });
                   // await refetch();
                   setResult(newResult);

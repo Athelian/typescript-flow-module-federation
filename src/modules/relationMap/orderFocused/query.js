@@ -7,193 +7,58 @@ import {
   priceFragment,
   imageFragment,
   partnerNameFragment,
+  partnerCardFragment,
+  orderFormFragment,
   orderCardFragment,
   userAvatarFragment,
+  documentFragment,
+  batchFormFragment,
+  shipmentCardFragment,
+  timelineDateMinimalFragment,
+  portFragment,
 } from 'graphql';
+
+export const orderItemRmFragment = gql`
+  fragment orderItemRmFragment on OrderItem {
+    id
+    quantity
+    price {
+      ...priceFragment
+    }
+    productProvider {
+      id
+      unitPrice {
+        currency
+        amount
+      }
+      product {
+        id
+        name
+        serial
+      }
+      exporter {
+        ...partnerNameFragment
+      }
+      supplier {
+        ...partnerNameFragment
+      }
+    }
+    order {
+      ...orderCardFragment
+    }
+    batches {
+      ...batchCardFragment
+    }
+  }
+`;
 
 export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...orderCardFragment
-        id
-        poNo
-        piNo
-        issuedAt
-        currency
-        incoterm
-        deliveryPlace
-        memo
-        tags {
-          name
-          id
-          color
-        }
-        inCharges {
-          id
-          firstName
-          lastName
-        }
-        exporter {
-          id
-          name
-        }
-        shipments {
-          id
-          no
-          blNo
-          blDate
-          batches {
-            id
-            packageVolume {
-              ...metricFragment
-            }
-            packageQuantity
-          }
-          tags {
-            id
-            name
-            color
-          }
-          transportType
-          cargoReady {
-            id
-            approvedAt
-            date
-            timelineDateRevisions {
-              id
-              date
-            }
-          }
-          voyages {
-            id
-            vesselName
-            vesselCode
-            departurePort {
-              seaport
-              airport
-            }
-            arrivalPort {
-              seaport
-              airport
-            }
-            departure {
-              id
-              approvedAt
-              date
-              timelineDateRevisions {
-                id
-                date
-              }
-            }
-            arrival {
-              id
-              approvedAt
-              date
-              timelineDateRevisions {
-                id
-                date
-              }
-            }
-          }
-          containerGroups {
-            customClearance {
-              id
-              approvedAt
-              date
-              timelineDateRevisions {
-                id
-                date
-              }
-            }
-            warehouse {
-              id
-            }
-            warehouseArrival {
-              id
-              approvedAt
-              date
-              timelineDateRevisions {
-                id
-                date
-              }
-            }
-            deliveryReady {
-              id
-              approvedAt
-              date
-              timelineDateRevisions {
-                id
-                date
-              }
-            }
-          }
-        }
-        updatedAt
-        createdAt
+        ...orderFormFragment
         orderItems {
-          id
-          quantity
-          price {
-            amount
-            currency
-          }
-          productProvider {
-            id
-            exporter {
-              id
-              name
-            }
-            supplier {
-              id
-              name
-            }
-            product {
-              id
-              name
-              serial
-            }
-          }
-          order {
-            id
-            currency
-            exporter {
-              id
-              name
-              types
-            }
-            orderItems {
-              id
-            }
-          }
-          batches {
-            ...batchCardFragment
-            producedAt
-            deliveredAt
-            expiredAt
-            packageName
-            packageCapacity
-            packageQuantity
-            packageGrossWeight {
-              ...metricFragment
-            }
-            packageVolume {
-              ...metricFragment
-            }
-            packageSize {
-              ...sizeFragment
-            }
-            shipment {
-              id
-              blNo
-              containerGroups {
-                warehouseArrival {
-                  id
-                  date
-                }
-              }
-            }
-          }
+          ...orderItemRmFragment
         }
       }
       page
@@ -206,9 +71,17 @@ export const orderListQuery = gql`
   ${batchCardFragment}
   ${tagFragment}
   ${priceFragment}
+  ${portFragment}
   ${imageFragment}
   ${partnerNameFragment}
+  ${partnerCardFragment}
+  ${documentFragment}
+  ${orderFormFragment}
   ${orderCardFragment}
+  ${orderItemRmFragment}
+  ${batchFormFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
 `;
 
 export default orderListQuery;
