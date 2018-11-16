@@ -5,6 +5,7 @@ import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
+import FormattedDate from 'components/FormattedDate';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
@@ -36,7 +37,7 @@ const defaultProps = {
 const OrderCard = ({ order, actions, ...rest }: Props) => {
   if (!order) return '';
 
-  const { id, poNo, orderItems, currency, exporter, inCharges } = order;
+  const { id, poNo, issuedAt: poDate, orderItems, currency, exporter, inCharges } = order;
 
   const totalItems = orderItems.length;
 
@@ -108,6 +109,18 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
             input={
               <Display>
                 <FormattedNumber value={totalItems} />
+              </Display>
+            }
+          />
+          <FieldItem
+            label={
+              <Label>
+                <FormattedMessage id="components.cards.poDate" defaultMessage="PO DATE" />
+              </Label>
+            }
+            input={
+              <Display>
+                <FormattedDate value={poDate} />
               </Display>
             }
           />

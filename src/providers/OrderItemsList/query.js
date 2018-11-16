@@ -22,6 +22,7 @@ export const orderListQuery = gql`
         order {
           id
           poNo
+          issuedAt
           currency
           exporter {
             id
