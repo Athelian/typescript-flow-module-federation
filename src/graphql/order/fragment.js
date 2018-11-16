@@ -70,6 +70,7 @@ export const orderCardFragment = gql`
     id
     archived
     poNo
+    issuedAt
     currency
     exporter {
       ...partnerNameFragment
