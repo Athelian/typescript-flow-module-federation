@@ -39,7 +39,6 @@ const Order = () => (
                 error={error}
               >
                 {({ nodes, hasMore, loadMore }) => {
-                  console.log('rerender', nodes);
                   const order = formatOrderData(nodes || []);
                   return (
                     <>
