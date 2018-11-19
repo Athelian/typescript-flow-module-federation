@@ -263,6 +263,13 @@ export const shipmentColumnFields = [
     type: 'text',
   },
   {
+    name: 'forwarders',
+    type: 'forwarders',
+    meta: {
+      max: 4,
+    },
+  },
+  {
     name: 'inCharges',
     type: 'inCharges',
     meta: {
@@ -322,6 +329,12 @@ export const batchColumns = [
       <FormattedMessage {...batchMessages.deliveredAt} />,
       <FormattedMessage {...batchMessages.expiredAt} />,
       <FormattedMessage {...batchMessages.producedAt} />,
+      <FormattedMessage {...batchMessages.tags} />,
+    ],
+  },
+  {
+    group: 'PACKING',
+    columns: [
       <FormattedMessage {...batchMessages.packageName} />,
       <FormattedMessage {...batchMessages.packageQuantity} />,
       <FormattedMessage {...batchMessages.packageGrossWeight} />,
@@ -329,7 +342,6 @@ export const batchColumns = [
       <FormattedMessage id="modules.Batches.pkgLength" defaultMessage="PKG LENGTH" />,
       <FormattedMessage id="modules.Batches.pkgWidth" defaultMessage="PKG WIDTH" />,
       <FormattedMessage id="modules.Batches.pkgHeight" defaultMessage="PKG HEIGHT" />,
-      <FormattedMessage {...batchMessages.tags} />,
     ],
   },
 ];
@@ -348,6 +360,7 @@ export const shipmentColumns = [
       <FormattedMessage {...shipmentMessages.loadType} />,
       <FormattedMessage {...shipmentMessages.incoterms} />,
       <FormattedMessage {...shipmentMessages.carrier} />,
+      <FormattedMessage {...shipmentMessages.forwarder} />,
       <FormattedMessage id="modules.Shipments.inCharge" defaultMessage="IN CHARGE " />,
       <FormattedMessage {...shipmentMessages.tags} />,
     ],

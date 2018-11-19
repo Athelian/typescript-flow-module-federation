@@ -15,8 +15,79 @@ import {
   batchFormFragment,
   shipmentCardFragment,
   timelineDateMinimalFragment,
+  timelineDateFullFragment,
   portFragment,
 } from 'graphql';
+
+export const shipmentRMFragment = gql`
+  fragment shipmentRMFragment on Shipment {
+    id
+    archived
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    memo
+    no
+    blNo
+    blDate
+    bookingNo
+    bookingDate
+    invoiceNo
+    incoterm
+    loadType
+    transportType
+    carrier
+    forwarders {
+      ...partnerCardFragment
+    }
+    inCharges {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    cargoReady {
+      ...timelineDateFullFragment
+    }
+    voyages {
+      id
+      vesselName
+      vesselCode
+      departurePort {
+        ...portFragment
+      }
+      arrivalPort {
+        ...portFragment
+      }
+      departure {
+        ...timelineDateFullFragment
+      }
+      arrival {
+        ...timelineDateFullFragment
+      }
+    }
+    containerGroups {
+      id
+      warehouse {
+        id
+        name
+      }
+      customClearance {
+        ...timelineDateFullFragment
+      }
+      warehouseArrival {
+        ...timelineDateFullFragment
+      }
+      deliveryReady {
+        ...timelineDateFullFragment
+      }
+    }
+    batches {
+      id
+    }
+  }
+`;
 
 export const orderItemRmFragment = gql`
   fragment orderItemRmFragment on OrderItem {
@@ -60,6 +131,9 @@ export const orderListQuery = gql`
         orderItems {
           ...orderItemRmFragment
         }
+        shipments {
+          ...shipmentRMFragment
+        }
       }
       page
       totalPage
@@ -79,9 +153,11 @@ export const orderListQuery = gql`
   ${orderFormFragment}
   ${orderCardFragment}
   ${orderItemRmFragment}
+  ${shipmentRMFragment}
   ${batchFormFragment}
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
+  ${timelineDateFullFragment}
 `;
 
 export default orderListQuery;
