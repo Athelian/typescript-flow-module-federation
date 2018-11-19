@@ -106,7 +106,9 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             : isFocusedLink(focusedItem[lineItemType], relatedIds);
 
           const isTargeted = isAllBatchLine ? false : isTargetedLine(id);
-          const isRelated = get(false, `${lineItemType}.${id}`, targetedItem);
+          const isRelated =
+            get(false, `${lineItemType}.${id}`, focusedItem) ||
+            get(false, `${lineItemType}.${id}`, targetedItem);
           // isFocused && !isTargeted
           //   ? get(false, `${lineItemType}.${id}`, focusedItem)
           //   : isRelatedLine(id);
