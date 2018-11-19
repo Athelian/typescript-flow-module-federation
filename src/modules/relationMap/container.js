@@ -410,7 +410,42 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     });
   };
 
-  addTarget = (itemType: string, id: string, data: Object) => {
+  addTarget = (itemData: Object, relation: Object, itemType: string) => {
+    const { id } = relation;
+    const { data, relation: itemRelation } = itemData;
+    const isInTree = this.isCurrentTree(id);
+    const createTree = () => {
+      const targetedItem = this.formatTargetTreeItem(itemRelation, itemType);
+      const { order = {}, orderItem = {}, batch = {} } = targetedItem;
+      const tree = {
+        ...createTreeObj(order),
+        ...createTreeObj(orderItem),
+        ...createTreeObj(batch),
+      };
+      return tree;
+    };
+
+    // const createLine = () => {
+    //   const { lines } = this.state
+    //   const newLines = lines.map(line => {
+    //     const isRelated = previousIds.some(previousId => line[previousId])
+    //     if (isRelated) {
+    //       return (Object.entries(line): any).reduce((result, data) => {
+    //         const [dataId, detail] = data
+    //         if (previousIds.includes(dataId)) {
+    //           return Object.assign(result, { [dataId]: {
+    //               ...detail,
+    //               line: true,
+
+    //             }
+    //           })
+    //         }
+    //         return Object.assign(result, { [dataId]: detail })
+    //       }, {})
+    //     }
+    //     return lines
+    //   })
+    // }
     this.setState(prevState => {
       const prevTarget = get({}, `targetedItem.${itemType}`, prevState);
       const targetedItem = {
@@ -422,8 +457,8 @@ export default class RelationMapContainer extends Container<RelationMapState> {
       };
       return {
         ...prevState,
-        focusMode: 'TARGET',
         targetedItem,
+        trees: [...prevState.trees, !isInTree && createTree()],
       };
     });
   };
@@ -474,12 +509,13 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }
   };
 
-  toggleTarget = (itemType: string, relation: Object, data: Object) => () => {
+  toggleTarget = (itemData: Object, relation: Object, itemType: string) => () => {
     const { id } = relation;
+    const { data } = itemData;
     if (this.isTargeted(itemType, id)) {
       this.removeTarget(itemType, relation, data);
     } else {
-      this.addTarget(itemType, id, data);
+      this.addTarget(itemData, relation, itemType);
     }
   };
 }
