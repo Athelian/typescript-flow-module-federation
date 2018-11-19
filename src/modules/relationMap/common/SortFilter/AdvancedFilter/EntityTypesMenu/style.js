@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, shadows, scrollbars, fontSizes, borderRadiuses } from 'styles/common';
+import { presets, colors, scrollbars, fontSizes, borderRadiuses } from 'styles/common';
 
 export const EntityTypesWrapperStyle: string = css`
   display: flex;
@@ -9,7 +9,6 @@ export const EntityTypesWrapperStyle: string = css`
   width: 200px;
   overflow: hidden;
   ${scrollbars.SMALL};
-  ${shadows.HEADER_RIGHT};
   &:hover {
     overflow-x: hidden;
     overflow-y: overlay;

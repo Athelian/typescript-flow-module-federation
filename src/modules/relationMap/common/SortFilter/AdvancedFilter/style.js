@@ -48,11 +48,12 @@ export const AdvancedFilterBodyWrapperStyle = ({
 `;
 
 export const AdvancedFilterNavbarStyle: string = css`
+  position: relative;
   display: flex;
   align-items: center;
-  ${shadows.HEADER};
   height: 50px;
   padding: 0 10px;
+  border-bottom: 1px solid ${colors.GRAY_VERY_LIGHT};
 `;
 
 export const AdvancedFilterBodyStyle: string = css`
