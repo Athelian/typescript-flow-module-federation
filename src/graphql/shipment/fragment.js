@@ -90,6 +90,9 @@ export const shipmentCardFragment = gql`
     tags {
       ...tagFragment
     }
+    inCharges {
+      ...userAvatarFragment
+    }
     voyages {
       id
       departurePort {

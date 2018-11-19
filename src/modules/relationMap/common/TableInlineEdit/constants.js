@@ -263,6 +263,13 @@ export const shipmentColumnFields = [
     type: 'text',
   },
   {
+    name: 'inCharges',
+    type: 'inCharges',
+    meta: {
+      max: 5,
+    },
+  },
+  {
     name: 'tags',
     type: 'tags',
     meta: {
@@ -341,6 +348,7 @@ export const shipmentColumns = [
       <FormattedMessage {...shipmentMessages.loadType} />,
       <FormattedMessage {...shipmentMessages.incoterms} />,
       <FormattedMessage {...shipmentMessages.carrier} />,
+      <FormattedMessage id="modules.Shipments.inCharge" defaultMessage="IN CHARGE " />,
       <FormattedMessage {...shipmentMessages.tags} />,
     ],
   },
