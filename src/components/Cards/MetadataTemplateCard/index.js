@@ -13,9 +13,10 @@ import {
 } from './style';
 
 type MetadataTemplate = {
+  id: string,
   name: string,
-  description: string,
-  customFields: Array<Object>,
+  memo: string,
+  fieldDefinitions: Array<Object>,
 };
 
 type OptionalProps = {
@@ -35,18 +36,16 @@ const defaultProps = {
 const MetadataTemplateCard = ({ metadataTemplate, onClick, actions, ...rest }: Props) => {
   if (!metadataTemplate) return '';
 
-  const { name, description, customFields } = metadataTemplate;
+  const { name, memo, fieldDefinitions } = metadataTemplate;
 
   return (
     <BaseCard icon="TEMPLATE" color="TEMPLATE" actions={actions} {...rest} invertCornerIcon>
       <div className={MetadataTemplateCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={MetadataTemplateNameStyle}>{name}</div>
-        <div className={MetadataTemplateDescriptionStyle}>{description}</div>
+        <div className={MetadataTemplateDescriptionStyle}>{memo}</div>
         <div className={MetadataTemplateCustomFieldsLengthStyle}>
           <Icon icon="METADATA" />
-          <FormattedNumber
-            value={(customFields && customFields.filter(field => field.checked).length) || 0}
-          />
+          <FormattedNumber value={(fieldDefinitions && fieldDefinitions.length) || 0} />
         </div>
       </div>
     </BaseCard>
