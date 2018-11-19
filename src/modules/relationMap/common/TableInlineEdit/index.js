@@ -8,6 +8,7 @@ import emitter from 'utils/emitter';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
 import { formatOrderData } from 'modules/relationMap/util';
 import orderValidator from 'modules/order/form/validator';
@@ -142,6 +143,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
     >
       <div className={EditTableViewWrapperStyle}>
         <div className={BodyWrapperStyle} ref={bodyRef}>
+          {Object.keys(editData.orders).length === 0 && <LoadingIcon />}
           {orderIds.map((orderId, counter) => {
             const order = mappingObjects.order[orderId];
             if (!order) return null;
