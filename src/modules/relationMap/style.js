@@ -129,7 +129,8 @@ export const FunctionWrapperStyle = css`
   display: flex;
   //grid-template-columns: 1fr 3.8fr;
   background-color: ${colors.WHITE};
-  padding: 10px 10px;
+  padding: 0 10px;
+  align-items: center;
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
