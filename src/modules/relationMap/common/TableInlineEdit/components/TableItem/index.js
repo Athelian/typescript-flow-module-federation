@@ -20,7 +20,7 @@ type Props = {
     type: string,
     meta?: Object,
   }>,
-  values: Object,
+  values: ?Object,
   validator: Object,
 };
 
@@ -66,6 +66,7 @@ function renderItem({
 }
 
 export default function TableItem({ cell, fields, values, validator }: Props) {
+  if (!values) return null;
   return (
     <div className={WrapperStyle}>
       {fields.map(({ name, type, meta }) => (
