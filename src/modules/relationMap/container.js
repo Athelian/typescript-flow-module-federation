@@ -65,7 +65,12 @@ const createTree = (data: Object, type: string) => {
       line[batch.id] = true;
     });
     tree[data.id] = { children: orderItemChildren };
-    tree[data.orderId] = { children: [data.id] };
+    tree[data.orderId] = {
+      children: (data.order.orderItems || []).map(item => item.id),
+      // .filter(
+      //   item => target.orderItem[item.id] || item.id === data.id
+      // ),
+    };
   }
   return [tree, line];
 };
@@ -81,19 +86,19 @@ const filterRelated = (trees: Array<Object>, itemRelation: Object) => {
   const filteredTree = trees.map(tree => {
     const isRelated = relatedIds.some(relatedId => get(false, `${relatedId}`, tree));
     if (isRelated) {
-      const newTree = relatedIds.reduce(
-        (result, relatedId) =>
-          Object.assign(result, {
-            [relatedId]: {
-              children: [
-                ...get([], `${relatedId}.children`, tree),
-                ...get([], `${relatedId}.children`, itemRelation),
-              ],
-            },
-          }),
-        {}
-      );
-      return { ...tree, ...newTree };
+      // const newTree = relatedIds.reduce(
+      //   (result, relatedId) =>
+      //     Object.assign(result, {
+      //       [relatedId]: {
+      //         children: [
+      //           ...get([], `${relatedId}.children`, tree),
+      //           ...get([], `${relatedId}.children`, itemRelation),
+      //         ],
+      //       },
+      //     }),
+      //   {}
+      // );
+      return { ...tree, ...itemRelation };
     }
     return tree;
   });

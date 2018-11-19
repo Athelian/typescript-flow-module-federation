@@ -112,15 +112,12 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           //   : isRelatedLine(id);
           const hasRelation = isAllOrderItemLine ? false : isRelated;
           return (
-            <div>
-              {id}
-              <RelationLine
-                type={linkType}
-                isTargeted={isTargeted}
-                isFocused={isFocused}
-                hasRelation={hasRelation}
-              />
-            </div>
+            <RelationLine
+              type={linkType}
+              isTargeted={isTargeted}
+              isFocused={isFocused}
+              hasRelation={hasRelation}
+            />
           );
         }
         const onClickHighlight = toggleHighlight(itemRelation, id);
