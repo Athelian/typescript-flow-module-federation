@@ -12,9 +12,9 @@ type Props = {
 
 export default function TableHeader({ info }: Props) {
   return (
-    <div>
+    <div className={WrapperHeaderStyle}>
       {info.map(({ group, columns }) => (
-        <React.Fragment key={group}>
+        <div key={group}>
           <h3 className={TitleStyle}> {group} </h3>
           <div className={WrapperHeaderStyle}>
             {columns.map(column => (
@@ -23,7 +23,7 @@ export default function TableHeader({ info }: Props) {
               </p>
             ))}
           </div>
-        </React.Fragment>
+        </div>
       ))}
     </div>
   );

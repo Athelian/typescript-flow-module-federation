@@ -365,4 +365,8 @@ export const shipmentColumns = [
       <FormattedMessage {...shipmentMessages.tags} />,
     ],
   },
+  {
+    group: 'TIMELINE',
+    columns: [],
+  },
 ];
