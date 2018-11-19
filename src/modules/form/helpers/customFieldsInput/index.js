@@ -17,15 +17,18 @@ type Props = {
     fieldValues: Array<Object>,
     fieldDefinitions: Array<Object>,
   },
+  setFieldValue: Function,
 };
 
-const metadataInputFactory = ({ customFields }: Props) => (
+const customFieldsInputFactory = ({ customFields, setFieldValue }: Props) => (
   <FieldItem
     label={
       <Label>
         <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />
         {' ('}
-        <FormattedNumber value={customFields.fieldValues.length} />
+        <FormattedNumber
+          value={(customFields.fieldValues && customFields.fieldValues.length) || 0}
+        />
         {')'}
       </Label>
     }
@@ -50,15 +53,13 @@ const metadataInputFactory = ({ customFields }: Props) => (
                 <Subscribe to={[MetadataFormContainer]}>
                   {({ initDetailValues, originalValues, state }) => {
                     const values = { ...originalValues, ...state };
-                    console.log(values);
                     return (
                       <MetadataEditFormWrapper
                         customFields={values.customFields}
                         onCancel={() => slideToggle(false)}
                         onSave={() => {
                           slideToggle(false);
-                          // TODO:
-                          // setFieldValue()
+                          setFieldValue(values.customFields);
                         }}
                         onFormReady={() => {
                           initDetailValues(customFields);
@@ -76,4 +77,4 @@ const metadataInputFactory = ({ customFields }: Props) => (
   />
 );
 
-export default metadataInputFactory;
+export default customFieldsInputFactory;

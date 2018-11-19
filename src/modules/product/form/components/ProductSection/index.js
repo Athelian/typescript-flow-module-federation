@@ -44,7 +44,7 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
 const dummyData = {
   customFields: {
     mask: {
-      id: '123',
+      id: '1',
       name: 'METADATA TEMPLATE 1',
       memo: 'SOME MEMO',
       fieldDefinitions: [{ id: 'id1' }, { id: 'id2' }, { id: 'id3' }, { id: 'id4' }, { id: 'id5' }],
@@ -283,7 +283,7 @@ const ProductSection = ({ isNew }: Props) => (
                 })
               }
             </FormField>
-            {customFieldsInputFactory({ customFields: dummyData.customFields })}
+            {customFieldsInputFactory({ customFields: dummyData.customFields, setFieldValue })}
 
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>

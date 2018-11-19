@@ -10,13 +10,14 @@ import DefaultMetadataStyle from 'components/Form/Inputs/Styles/DefaultStyle/Def
 import MetadataFormContainer from 'modules/form/helpers/customFieldsInput/container';
 import GridColumn from 'components/GridColumn';
 import SlideView from 'components/SlideView';
+import { uuid } from 'utils/id';
 import { MetadataTemplateCard } from 'components/Cards';
 import SelectMetadataTemplate from '../SelectMetadataTemplate';
 import { MetadataSectionWrapperStyle } from './style';
 
 const MetadataEditForm = () => (
   <Subscribe to={[MetadataFormContainer]}>
-    {({ originalValues, state, setFieldArrayValue, removeArrayItem }) => {
+    {({ originalValues, state, setFieldValue, setFieldArrayValue, removeArrayItem }) => {
       const values = { ...originalValues, ...state };
       const { mask, fieldValues } = values;
 
@@ -53,7 +54,10 @@ const MetadataEditForm = () => (
                       <SelectMetadataTemplate
                         selected={mask}
                         onCancel={() => slideToggle(false)}
-                        onSave={() => slideToggle(false)}
+                        onSave={item => {
+                          setFieldValue('mask', item);
+                          slideToggle(false);
+                        }}
                       />
                     )}
                   </SlideView>
@@ -67,6 +71,7 @@ const MetadataEditForm = () => (
             {fieldValues &&
               fieldValues.map((fieldValue, index) => (
                 <DefaultMetadataStyle
+                  key={uuid()}
                   isKeyReadOnly
                   targetName={`metadata.${index}`}
                   metadata={{ key: '123', value: '123' }}

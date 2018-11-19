@@ -6,8 +6,7 @@ import { NewButton } from 'components/Buttons';
 import CustomFieldsTemplateForm from 'modules/metadata/components/CustomFieldsTemplateForm';
 
 import FormHeader from '../FormHeader';
-
-import CustomFieldsTemplateGridView from './components/CustomFieldsTemplateGridView';
+import CustomFieldsTemplateGridView from '../CustomFieldsTemplateGridView';
 
 import { CustomFieldsEditFormWrapperStyle, CustomFieldsFormHeaderStyle } from './style';
 

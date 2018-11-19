@@ -12,7 +12,9 @@ import MetadataEditForm from '../MetadataEditForm';
 import { MetadataEditFormWrapperStyle } from './style';
 
 type OptionalProps = {
-  customFields: Object,
+  customFields: {
+    fieldValues: Array<Object>,
+  },
   onFormReady: () => void,
 };
 
@@ -22,6 +24,9 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
+  customFields: {
+    fieldValues: [],
+  },
   onFormReady: () => {},
 };
 
