@@ -58,7 +58,9 @@ const DefaultMetadataStyle = ({
         </div>
       )}
       {isKeyReadOnly ? (
-        <Label width={width}>{metadata.key}</Label>
+        <DefaultStyle type="label" width={width}>
+          <Label width={width}>{metadata.key}</Label>
+        </DefaultStyle>
       ) : (
         <FormField
           name={`${targetName}.key`}
