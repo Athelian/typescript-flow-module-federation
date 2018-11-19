@@ -84,13 +84,13 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
   return (
     <Subscribe to={[RelationMapContainer]}>
       {({
-        state: { focusedItem, focusMode, focusedId },
+        state: { focusedItem, focusMode, focusedId, targetedItem },
         toggleHighlight,
         toggleTargetTree,
         toggleTarget,
         overrideTarget,
         isTargetedLine,
-        isRelatedLine,
+        // isRelatedLine,
         isTargeted: isTargetedItem,
         isCurrentTree,
         isFocused: isFocusedItem,
@@ -106,18 +106,21 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             : isFocusedLink(focusedItem[lineItemType], relatedIds);
 
           const isTargeted = isAllBatchLine ? false : isTargetedLine(id);
-          const isRelated =
-            isFocused && !isTargeted
-              ? get(false, `${lineItemType}.${id}`, focusedItem)
-              : isRelatedLine(id);
+          const isRelated = get(false, `${lineItemType}.${id}`, targetedItem);
+          // isFocused && !isTargeted
+          //   ? get(false, `${lineItemType}.${id}`, focusedItem)
+          //   : isRelatedLine(id);
           const hasRelation = isAllOrderItemLine ? false : isRelated;
           return (
-            <RelationLine
-              type={linkType}
-              isTargeted={isTargeted}
-              isFocused={isFocused}
-              hasRelation={hasRelation}
-            />
+            <div>
+              {id}
+              <RelationLine
+                type={linkType}
+                isTargeted={isTargeted}
+                isFocused={isFocused}
+                hasRelation={hasRelation}
+              />
+            </div>
           );
         }
         const onClickHighlight = toggleHighlight(itemRelation, id);

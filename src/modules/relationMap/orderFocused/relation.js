@@ -78,7 +78,7 @@ const createBatchRelation = (relations: Array<Object>, data: Object) => {
     } else {
       relations.push({
         type: `${LINK2}-${ORDER_ITEM}`,
-        id: orderItems[orderItemIndex].id,
+        id: orderItems[orderItemIndex + 1].id,
         relatedIds: relatedOrderItem,
       });
     }
@@ -123,9 +123,12 @@ const generateCollapsedRelation = (order: Object, option: Object) => {
     return relations;
   }
   const relatedOrderIds = [order.id];
+  const hasOrderItem = order.orderItems[0];
   relations.push({
-    type: isCollapsed ? `${LINK1}-${ORDER}` : `${LINK1}-${ORDER_ITEM_ALL}`,
-    id: order.id,
+    type: isCollapsed
+      ? `${LINK1}-${hasOrderItem ? ORDER_ITEM : ORDER}`
+      : `${LINK1}-${ORDER_ITEM_ALL}`,
+    id: hasOrderItem ? order.orderItems[0].id : order.id,
     relatedIds: relatedOrderIds,
   });
   relations.push({ type: ORDER_ITEM_ALL, id: order.id });
