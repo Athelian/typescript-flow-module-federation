@@ -131,7 +131,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             onClick={onSave}
             disabled={
               !(
-                isEqual(entities, editData) &&
+                !isEqual(entities, editData) &&
                 Object.keys(touched).length > 0 &&
                 Object.keys(errors).length === 0
               )
