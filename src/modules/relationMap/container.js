@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { getByPathWithDefault as get, omit, isEmpty } from 'utils/fp';
+import { getByPathWithDefault as get, omit, isEmpty, flatten } from 'utils/fp';
 import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 
 type RelationMapState = {
@@ -39,30 +39,36 @@ const getParentId = (data: Object, type: string) => {
   }
 };
 
-const createTreeObj = (entity: Object) =>
-  Object.keys(entity || {}).reduce(
-    (obj, entityId) =>
-      Object.assign(obj, {
-        [entityId]: true,
-      }),
-    {}
-  );
-
-const createLineObj = (entity: Object, type: string) =>
-  Object.keys(entity || {}).reduce(
-    (obj, entityId) =>
-      Object.assign(obj, {
-        [entityId]: {
-          id: entityId,
-          parentId: entity[entityId].parentId,
-          index: entity[entityId].index,
-          type,
-          line: true,
-          related: true,
-        },
-      }),
-    {}
-  );
+const createTree = (data: Object, type: string) => {
+  const tree = {};
+  const line = {};
+  if (type === ORDER) {
+    const orderChildren = [];
+    data.orderItems.forEach(orderItem => {
+      orderChildren.push(orderItem.id);
+      const orderItemChildren = [];
+      orderItem.batches.forEach(batch => {
+        orderItemChildren.push(batch.id);
+        tree[batch.id] = { children: [] };
+        line[batch.id] = true;
+      });
+      tree[orderItem.id] = { children: orderItemChildren };
+      line[orderItem.id] = true;
+    });
+    tree[data.id] = { children: orderChildren };
+  }
+  if (type === ORDER_ITEM) {
+    const orderItemChildren = [];
+    data.batches.forEach(batch => {
+      orderItemChildren.push(batch.id);
+      tree[batch.id] = { children: [] };
+      line[batch.id] = true;
+    });
+    tree[data.id] = { children: orderItemChildren };
+    tree[data.orderId] = { children: [data.id] };
+  }
+  return [tree, line];
+};
 
 const filterRelated = (trees: Array<Object>, itemRelation: Object) => {
   const relatedIds = Object.keys(itemRelation);
@@ -74,132 +80,35 @@ const filterRelated = (trees: Array<Object>, itemRelation: Object) => {
   }
   const filteredTree = trees.map(tree => {
     const isRelated = relatedIds.some(relatedId => get(false, `${relatedId}`, tree));
-    return isRelated ? { ...tree, ...itemRelation } : tree;
+    if (isRelated) {
+      const newTree = relatedIds.reduce(
+        (result, relatedId) =>
+          Object.assign(result, {
+            [relatedId]: {
+              children: [
+                ...get([], `${relatedId}.children`, tree),
+                ...get([], `${relatedId}.children`, itemRelation),
+              ],
+            },
+          }),
+        {}
+      );
+      return { ...tree, ...newTree };
+    }
+    return tree;
   });
   return filteredTree;
 };
 
-// const mapRemoveTargetLine = (relation: Object, data: Object, targetedItem: Object) => (
-//   line: Object
-// ) => {
-//   const { id, type } = relation;
-//   const lines: any = Object.entries(line);
-//   return lines.reduce((result, objData) => {
-//     const [lineId, lineData] = objData;
-//     let currentLine = Object.assign(result, { [lineId]: lineData });
-//     if (type === ORDER) {
-//       if (lineData.type === ORDER || lineData.type === ORDER_ITEM) {
-//         currentLine = Object.assign(result, {
-//           [lineId]: { ...lineData, line: false },
-//         });
-//       }
-//     }
-//     if (type === ORDER_ITEM) {
-//       if (lineData.type === ORDER_ITEM && lineData.parentId === data.orderId) {
-//         const isSelectedLine = (Object.entries(targetedItem.orderItem): any).some(item => {
-//           const [, itemData] = item;
-//           const isSameParent = itemData.parentId === data.orderId;
-//           return isSameParent && itemData.index > lineData.index;
-//         });
-//         currentLine = Object.assign(result, {
-//           [lineId]: {
-//             ...lineData,
-//             line: targetedItem.orderItem[lineId] || isSelectedLine,
-//             related: lineId === id ? false : lineData.related,
-//           },
-//         });
-//       }
-//       if (lineData.type === BATCH && lineData.parentId === data.id) {
-//         currentLine = Object.assign(result, {
-//           [lineId]: {
-//             ...lineData,
-//             line: false,
-//             related: false,
-//           },
-//         });
-//       }
-//     }
-//     if (type === BATCH) {
-//       if (lineData.type === BATCH && lineData.parentId === data.orderItemId) {
-//         const isSelectedLine = (Object.entries(targetedItem.batch): any).some(item => {
-//           const [, itemData] = item;
-//           const isSameParent = itemData.parentId === data.orderItemId;
-//           return isSameParent && itemData.index > lineData.index;
-//         });
-//         currentLine = Object.assign(result, {
-//           [lineId]: {
-//             ...lineData,
-//             line: targetedItem.batch[lineId] || isSelectedLine,
-//             related: lineId === id ? false : lineData.related,
-//           },
-//         });
-//       }
-//     }
-//     return currentLine;
-//   }, {});
-// };
-
-const mapRemoveTreeLine = (itemData: Object, relation: Object, targetedItem: Object) => (
-  line: Object
-) => {
-  const { relation: itemRelation, data } = itemData;
-  const { type: itemType, id } = relation;
-  const lineIds = Object.keys(line);
-  if (itemType === ORDER) {
-    return lineIds.reduce((obj, lineId) => {
-      const currentLine = line[lineId];
-      if (itemRelation.order[lineId] || itemRelation.orderItem[lineId]) {
-        return Object.assign(obj, {
-          [lineId]: {
-            id: lineId,
-            line: false,
-            related: false,
-          },
-        });
-      }
-      return Object.assign(obj, { [lineId]: currentLine });
-    });
+const getAllSelectedChildren = (currentTree, id) => {
+  const ids = currentTree[id] ? currentTree[id].children : [];
+  if (currentTree[id] && currentTree[id].children.length > 0) {
+    const childIds = currentTree[id].children.map(childId =>
+      getAllSelectedChildren(currentTree, childId)
+    );
+    ids.push(...childIds);
   }
-
-  if (itemType === ORDER_ITEM) {
-    const orderItemLines = lineIds.filter(lineId => {
-      const currentLine = line[lineId];
-      return currentLine.type === ORDER_ITEM;
-    });
-    return lineIds.reduce((obj, lineId) => {
-      const currentLine = line[lineId];
-      if (currentLine.type === ORDER_ITEM && currentLine.parentId === data.orderId) {
-        const isSelectedLine = (Object.entries(targetedItem.orderItem): any).some(item => {
-          const [, targetedData] = item;
-          const isSameParent = targetedData.parentId === data.orderId;
-          return isSameParent && targetedData.index > currentLine.index;
-        });
-        return Object.assign(obj, {
-          [lineId]: {
-            ...currentLine,
-            line: targetedItem.orderItem[lineId] || isSelectedLine,
-            related: lineId === id ? false : currentLine.related,
-          },
-        });
-      }
-      if (itemRelation.batch[lineId]) {
-        return Object.assign(obj, {
-          [lineId]: {
-            id: lineId,
-            line: false,
-            related: false,
-          },
-        });
-      }
-      return Object.assign(obj, {
-        [lineId]: {
-          ...currentLine,
-          ...(orderItemLines.length === 1 ? { line: false } : {}),
-        },
-      });
-    }, {});
-  }
-  return line;
+  return flatten(ids);
 };
 
 const getChildren = (data, type) => {
@@ -331,7 +240,6 @@ export default class RelationMapContainer extends Container<RelationMapState> {
   isTargetedLine = (id: string) => {
     const { lines } = this.state;
     return lines[id];
-    // return lines.some(line => line[id] && line[id].line);
   };
 
   isRelatedLine = (id: string) => {
@@ -360,13 +268,14 @@ export default class RelationMapContainer extends Container<RelationMapState> {
       ...prevState,
       focusedId,
       focusedItem,
-      // focusMode: 'HIGHLIGHT',
     }));
   };
 
   resetTargetedItem = (itemData: Object, relation: Object) => {
-    const { relation: itemRelation } = itemData;
-    const { type: itemType } = relation;
+    const { relation: itemRelation, data } = itemData;
+    const { type: itemType, id } = relation;
+    const parentId = getParentId(data, itemType);
+    const allRelationIds = getAllRelationIds(itemRelation);
     const removeItem = this.formatTargetTreeItem(itemRelation, itemType);
     const removeObj = { ...removeItem.order, ...removeItem.orderItem, ...removeItem.batch };
     const removeIds = Object.keys(removeObj);
@@ -378,14 +287,24 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         orderItem: omit(Object.keys(itemRelation.orderItem || {}), orderItem),
         batch: omit(Object.keys(itemRelation.batch || {}), batch),
       });
+
+      const currentTree = prevState.trees.find(
+        tree => tree[id] || allRelationIds.some(relationId => tree[relationId])
+      );
+      const parents = currentTree[parentId] ? currentTree[parentId].children : [];
+      const children = getAllSelectedChildren(currentTree, id); // currentTree[id] ? currentTree[id].children : [];
+      const allTargetIds = getAllRelationIds(newTarget);
+      const parentLines = reduceNewLine(parents, allTargetIds);
+      const childrenLines = children.reduce(
+        (result, childId) => Object.assign(result, { [childId]: false }),
+        {}
+      );
       return {
         ...prevState,
         focusMode: 'TARGET',
         targetedItem: newTarget,
         trees: prevState.trees.map(tree => omit(removeIds, tree)),
-        lines: prevState.lines
-          .filter(line => (itemType === ORDER ? !removeIds.some(removeId => line[removeId]) : true))
-          .map(mapRemoveTreeLine(itemData, relation, newTarget)),
+        lines: { ...prevState.lines, ...parentLines, ...childrenLines },
       };
     });
   };
@@ -403,16 +322,10 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     const { type: itemType } = relation;
     const targetedItem = this.formatTargetTreeItem(itemRelation, itemType);
     const { order = {}, orderItem = {}, batch = {} } = targetedItem;
-    const tree = {
-      ...createTreeObj(order),
-      ...createTreeObj(orderItem),
-      ...createTreeObj(batch),
-    };
-    const line = {
-      ...createLineObj(order, ORDER),
-      ...createLineObj(orderItem, ORDER_ITEM),
-      ...createLineObj(batch, BATCH),
-    };
+    const [tree, line] = createTree(data, itemType);
+    if (itemType === ORDER_ITEM && this.isTargeted('order', getParentId(data, itemType))) {
+      line[data.id] = true;
+    }
     this.setState(prevState => {
       const {
         order: targetOrder,
@@ -420,7 +333,6 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         batch: targetBatch,
       } = prevState.targetedItem;
       const trees = filterRelated(prevState.trees, tree);
-      const lines = filterRelated(prevState.lines, line);
       return Object.assign(prevState, {
         targetedItem: {
           order: {
@@ -437,9 +349,8 @@ export default class RelationMapContainer extends Container<RelationMapState> {
           },
           batch: { ...targetBatch, ...batch },
         },
-        focusMode: 'TARGET_TREE',
         trees,
-        lines,
+        lines: { ...prevState.lines, ...line },
       });
     });
   };
@@ -545,7 +456,6 @@ export default class RelationMapContainer extends Container<RelationMapState> {
 
   toggleTarget = (itemData: Object, relation: Object, itemType: string) => () => {
     const { id } = relation;
-    // const { data } = itemData;
     if (this.isTargeted(itemType, id)) {
       this.removeTarget(itemData, relation, itemType);
     } else {
