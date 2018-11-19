@@ -60,19 +60,6 @@ export const AdvancedFilterBodyStyle: string = css`
   height: 300px;
 `;
 
-export const FilterFieldsWrapperStyle: string = css`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-  ${scrollbars.SMALL};
-  ${shadows.HEADER_RIGHT};
-  &:hover {
-    overflow-x: hidden;
-    overflow-y: overlay;
-  }
-`;
-
 export const FilterInputWrapperStyle: string = css`
   display: flex;
   flex-direction: column;

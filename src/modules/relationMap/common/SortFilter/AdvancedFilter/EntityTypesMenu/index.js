@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
+import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import {
   EntityTypesWrapperStyle,
   EntityTypeStyle,
@@ -12,8 +13,8 @@ import {
 } from './style';
 
 type Props = {
-  activeEntityType: 'order' | 'item' | 'batch' | 'shipment',
-  changeEntityType: (entityType: 'order' | 'item' | 'batch' | 'shipment') => void,
+  selectedEntityType: EntityTypes,
+  changeEntityType: (entityType: EntityTypes) => void,
   numOfActiveOrderFilters: number,
   numOfActiveItemFilters: number,
   numOfActiveBatchFilters: number,
@@ -21,17 +22,24 @@ type Props = {
 };
 
 export default function EntityTypesMenu({
-  activeEntityType,
+  selectedEntityType,
   changeEntityType,
   numOfActiveOrderFilters,
   numOfActiveItemFilters,
   numOfActiveBatchFilters,
   numOfActiveShipmentFilters,
 }: Props) {
+  const selectedEntityTypeMap = {
+    order: selectedEntityType === 'order',
+    item: selectedEntityType === 'item',
+    batch: selectedEntityType === 'batch',
+    shipment: selectedEntityType === 'shipment',
+  };
+
   return (
     <div className={EntityTypesWrapperStyle}>
       <div
-        className={EntityTypeStyle(activeEntityType === 'order')}
+        className={EntityTypeStyle(selectedEntityTypeMap.order)}
         onClick={() => changeEntityType('order')}
         role="presentation"
       >
@@ -42,14 +50,14 @@ export default function EntityTypesMenu({
           <FormattedMessage id="modules.RelationMaps.filter.order" defaultMessage="ORDER" />
         </div>
         {numOfActiveOrderFilters > 0 && (
-          <div className={EntityTypeBadgeStyle(activeEntityType === 'order')}>
+          <div className={EntityTypeBadgeStyle(selectedEntityTypeMap.order)}>
             <FormattedNumber value={1} />
           </div>
         )}
       </div>
 
       <div
-        className={EntityTypeStyle(activeEntityType === 'item')}
+        className={EntityTypeStyle(selectedEntityTypeMap.item)}
         onClick={() => changeEntityType('item')}
         role="presentation"
       >
@@ -60,14 +68,14 @@ export default function EntityTypesMenu({
           <FormattedMessage id="modules.RelationMaps.filter.item" defaultMessage="ITEM" />
         </div>
         {numOfActiveItemFilters > 0 && (
-          <div className={EntityTypeBadgeStyle(activeEntityType === 'item')}>
+          <div className={EntityTypeBadgeStyle(selectedEntityTypeMap.item)}>
             <FormattedNumber value={1} />
           </div>
         )}
       </div>
 
       <div
-        className={EntityTypeStyle(activeEntityType === 'batch')}
+        className={EntityTypeStyle(selectedEntityTypeMap.batch)}
         onClick={() => changeEntityType('batch')}
         role="presentation"
       >
@@ -78,14 +86,14 @@ export default function EntityTypesMenu({
           <FormattedMessage id="modules.RelationMaps.filter.batch" defaultMessage="BATCH" />
         </div>
         {numOfActiveBatchFilters > 0 && (
-          <div className={EntityTypeBadgeStyle(activeEntityType === 'batch')}>
+          <div className={EntityTypeBadgeStyle(selectedEntityTypeMap.batch)}>
             <FormattedNumber value={1} />
           </div>
         )}
       </div>
 
       <div
-        className={EntityTypeStyle(activeEntityType === 'shipment')}
+        className={EntityTypeStyle(selectedEntityTypeMap.shipment)}
         onClick={() => changeEntityType('shipment')}
         role="presentation"
       >
@@ -96,7 +104,7 @@ export default function EntityTypesMenu({
           <FormattedMessage id="modules.RelationMaps.filter.shipment" defaultMessage="SHIPMENT" />
         </div>
         {numOfActiveShipmentFilters > 0 && (
-          <div className={EntityTypeBadgeStyle(activeEntityType === 'shipment')}>
+          <div className={EntityTypeBadgeStyle(selectedEntityTypeMap.shipment)}>
             <FormattedNumber value={1} />
           </div>
         )}

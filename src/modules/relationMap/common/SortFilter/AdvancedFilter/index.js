@@ -7,6 +7,8 @@ import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { UIConsumer } from 'modules/ui';
 import EntityTypesMenu from './EntityTypesMenu';
+import FilterMenu from './FilterMenu';
+import { type EntityTypes } from './type';
 import {
   AdvancedFilterWrapperStyle,
   FilterToggleButtonStyle,
@@ -14,7 +16,6 @@ import {
   AdvancedFilterBodyWrapperStyle,
   AdvancedFilterNavbarStyle,
   AdvancedFilterBodyStyle,
-  FilterFieldsWrapperStyle,
   FilterInputWrapperStyle,
 } from './style';
 
@@ -30,7 +31,7 @@ type filterType = {
 type State = {
   isActive: boolean,
   filter: filterType,
-  activeEntityType: 'order' | 'item' | 'batch' | 'shipment',
+  selectedEntityType: EntityTypes,
 };
 
 class AdvanceFilterInput extends React.Component<Props, State> {
@@ -43,7 +44,7 @@ class AdvanceFilterInput extends React.Component<Props, State> {
         ...initialFilter,
         query: initialFilter.query || '',
       },
-      activeEntityType: 'order',
+      selectedEntityType: 'order',
     };
 
     this.filterButtonRef = React.createRef();
@@ -55,8 +56,8 @@ class AdvanceFilterInput extends React.Component<Props, State> {
     this.setState({ isActive });
   }
 
-  changeEntityType = (entityType: 'order' | 'item' | 'batch' | 'shipment') => {
-    this.setState({ activeEntityType: entityType });
+  changeEntityType = (entityType: EntityTypes) => {
+    this.setState({ selectedEntityType: entityType });
   };
 
   hasAnyFilter = (values: Object) => Object.values(values).some(value => !!value);
@@ -81,7 +82,7 @@ class AdvanceFilterInput extends React.Component<Props, State> {
 
   render() {
     const { initialFilter } = this.props;
-    const { isActive, activeEntityType } = this.state;
+    const { isActive, selectedEntityType } = this.state;
 
     const numOfActiveOrderFilters = 2;
     const numOfActiveItemFilters = 0;
@@ -130,14 +131,14 @@ class AdvanceFilterInput extends React.Component<Props, State> {
                     </div>
                     <div className={AdvancedFilterBodyStyle}>
                       <EntityTypesMenu
-                        activeEntityType={activeEntityType}
+                        selectedEntityType={selectedEntityType}
                         changeEntityType={this.changeEntityType}
                         numOfActiveOrderFilters={numOfActiveOrderFilters}
                         numOfActiveItemFilters={numOfActiveItemFilters}
                         numOfActiveBatchFilters={numOfActiveBatchFilters}
                         numOfActiveShipmentFilters={numOfActiveShipmentFilters}
                       />
-                      <div className={FilterFieldsWrapperStyle}>2</div>
+                      <FilterMenu selectedEntityType={selectedEntityType} />
                       <div className={FilterInputWrapperStyle}>3</div>
                     </div>
                   </div>
