@@ -2,6 +2,7 @@
 import * as React from 'react';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
+import shipmentMessages from 'modules/shipment/messages';
 import {
   metrics as weightMetrics,
   convert as weightConvert,
@@ -212,16 +213,67 @@ export const shipmentColumnFields = [
   {
     name: 'no',
     type: 'text',
+    meta: {
+      isRequired: true,
+    },
   },
   {
     name: 'blNo',
     type: 'text',
   },
+  {
+    name: 'blDate',
+    type: 'date',
+  },
+  {
+    name: 'bookingNo',
+    type: 'text',
+  },
+  {
+    name: 'bookingDate',
+    type: 'date',
+  },
+  {
+    name: 'invoiceNo',
+    type: 'text',
+  },
+  {
+    name: 'transportType',
+    type: 'enum',
+    meta: {
+      enumType: 'TransportType',
+    },
+  },
+  {
+    name: 'loadType',
+    type: 'enum',
+    meta: {
+      enumType: 'LoadType',
+    },
+  },
+  {
+    name: 'incoterm',
+    type: 'enum',
+    meta: {
+      enumType: 'Incoterm',
+    },
+  },
+  {
+    name: 'carrier',
+    type: 'text',
+  },
+  {
+    name: 'tags',
+    type: 'tags',
+    meta: {
+      tagType: 'Shipment',
+    },
+  },
 ];
 
 export const orderColumns = [
   {
-    group: 'General',
+    group: 'ORDER',
     columns: [
       <FormattedMessage {...orderMessages.PO} />,
       <FormattedMessage {...orderMessages.PI} />,
@@ -238,7 +290,7 @@ export const orderColumns = [
 
 export const orderItemColumns = [
   {
-    group: 'General',
+    group: 'ORDER ITEM',
     columns: [
       <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
       <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
@@ -256,7 +308,7 @@ export const orderItemColumns = [
 
 export const batchColumns = [
   {
-    group: 'General',
+    group: 'BATCH',
     columns: [
       <FormattedMessage {...batchMessages.batchNo} />,
       <FormattedMessage {...batchMessages.quantity} />,
@@ -277,7 +329,19 @@ export const batchColumns = [
 
 export const shipmentColumns = [
   {
-    group: 'General',
-    columns: ['Shipment ID', 'B/L No.'],
+    group: 'SHIPMENT',
+    columns: [
+      <FormattedMessage {...shipmentMessages.shipmentId} />,
+      <FormattedMessage {...shipmentMessages.blNo} />,
+      <FormattedMessage {...shipmentMessages.blDate} />,
+      <FormattedMessage {...shipmentMessages.bookingNo} />,
+      <FormattedMessage {...shipmentMessages.bookingDate} />,
+      <FormattedMessage {...shipmentMessages.invoiceNo} />,
+      <FormattedMessage {...shipmentMessages.transportType} />,
+      <FormattedMessage {...shipmentMessages.loadType} />,
+      <FormattedMessage {...shipmentMessages.incoterms} />,
+      <FormattedMessage {...shipmentMessages.carrier} />,
+      <FormattedMessage {...shipmentMessages.tags} />,
+    ],
   },
 ];

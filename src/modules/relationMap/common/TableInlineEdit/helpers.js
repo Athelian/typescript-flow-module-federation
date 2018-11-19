@@ -1,4 +1,6 @@
 // @flow
+import { intersection } from 'lodash';
+
 type MappingObject = {
   data: {
     id: string,
@@ -92,13 +94,13 @@ export const findAllPossibleOrders = (
   };
 };
 
-export const totalLinePerOrder = (orderItems: Array<Object>) => {
+export const totalLinePerOrder = (orderItems: Array<Object>, batchIds: Array<string>) => {
   let totalLines = 0;
   if (orderItems.length === 0) {
     totalLines = 1;
   } else {
     totalLines = orderItems.reduce((result, orderItem) => {
-      const totalBatches = Object.keys(orderItem.relation.batch).length;
+      const totalBatches = intersection(Object.keys(orderItem.relation.batch), batchIds).length;
       if (totalBatches === 0) {
         return result + 1;
       }

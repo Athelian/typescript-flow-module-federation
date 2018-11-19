@@ -3,9 +3,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
-import { range, set, cloneDeep, intersectionWith, isEqual } from 'lodash';
+import { range, set, isEqual } from 'lodash';
 import emitter from 'utils/emitter';
-import { arrayToObject } from 'utils/fp';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -18,7 +17,9 @@ import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
 import TableHeader from './components/TableHeader';
 import TableItem from './components/TableItem';
+import TableEmptyItem from './components/TableEmptyItem';
 import { findAllPossibleOrders, totalLinePerOrder } from './helpers';
+import normalize from './normalize';
 import {
   orderColumnFields,
   orderItemColumnFields,
@@ -29,7 +30,6 @@ import {
   batchColumns,
   shipmentColumns,
 } from './constants';
-import TableEmptyItem from './components/TableEmptyItem';
 import {
   EditTableViewWrapperStyle,
   HeaderWrapperStyle,
@@ -45,30 +45,32 @@ type Props = {
 };
 
 setConfig({ pureSFC: true });
-let origialData = [];
 
 export default function TableInlineEdit({ type, selected, onSave, onCancel }: Props) {
   const [data] = useIdb(type, []);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-  const editDataRef = useRef();
+  const [editData, setEditData] = useState({
+    orders: {},
+    orderItems: {},
+    batches: {},
+    shipments: {},
+  });
 
   useEffect(() => {
     if (data.length) {
-      if (
-        !editDataRef.current ||
-        (Array.isArray(editDataRef.current) && editDataRef.current.length === 0)
-      ) {
+      if (Object.keys(editData.orders).length === 0) {
         logger.warn('copy data');
-        origialData = cloneDeep(data);
-        editDataRef.current = data.slice();
+        const { entities } = normalize({ orders: data });
+        setEditData(entities);
       }
 
       const listener = emitter.once('INLINE_CHANGE', newData => {
-        logger.warn({ newData });
-        const result = arrayToObject(editDataRef.current, 'id');
+        logger.warn({ newData, editData });
+
         const { name, value, hasError } = newData;
-        editDataRef.current = [].concat(Object.values(set(result, name, value)));
+        const newEditData = set(editData, name, value);
+        setEditData(newEditData);
 
         if (!touched[name]) {
           setTouched({
@@ -86,12 +88,9 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
       });
       return () => {
         listener.remove();
-        origialData = [];
       };
     }
-    return () => {
-      origialData = [];
-    };
+    return () => {};
   });
 
   const headerRef = useRef();
@@ -119,11 +118,9 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
     mappingObjects
   );
 
-  logger.warn({
-    data,
-    origialData,
-    intersection: intersectionWith(origialData, data, isEqual),
-  });
+  logger.warn({ selected, mappingObjects });
+  logger.warn({ orderIds, orderItemsIds, batchIds, shipmentIds });
+  const { entities } = normalize({ orders: data });
   return (
     <Layout
       navBar={
@@ -134,9 +131,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             onClick={onSave}
             disabled={
               !(
-                editDataRef.current &&
-                intersectionWith(origialData, data, isEqual).length !==
-                  editDataRef.current.length &&
+                !isEqual(entities, editData) &&
                 Object.keys(touched).length > 0 &&
                 Object.keys(errors).length === 0
               )
@@ -157,15 +152,15 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             const batches = (Object.values(mappingObjects.batch): any).filter(
               item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
             );
-            const totalLines = totalLinePerOrder(orderItems);
+            const totalLines = totalLinePerOrder(orderItems, batchIds);
             return (
               <TableRow key={orderId}>
                 <div>
                   {orderItems.length === 0 ? (
                     <TableItem
-                      cell={order.data.id}
+                      cell={`orders.${order.data.id}`}
                       fields={orderColumnFields}
-                      values={order.data}
+                      values={editData.orders[orderId]}
                       validator={orderValidator}
                     />
                   ) : (
@@ -175,9 +170,9 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                           key={`order.${order.data.id}.${counter + 1}.duplication.${
                             orderItem.data.id
                           }`}
-                          cell={order.data.id}
+                          cell={`orders.${order.data.id}`}
                           fields={orderColumnFields}
-                          values={order.data}
+                          values={editData.orders[orderId]}
                           validator={orderValidator}
                         />
                       ) : (
@@ -193,22 +188,25 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                                 key={`order.${order.data.id}.${counter + 1}.duplication.${
                                   orderItem.data.id
                                 }.batch.${batchId}`}
-                                cell={order.data.id}
+                                cell={`orders.${order.data.id}`}
                                 fields={orderColumnFields}
-                                values={order.data}
+                                values={editData.orders[orderId]}
                                 validator={orderValidator}
                               />
                             ))}
-                          {Object.keys(orderItem.relation.batch)
-                            .filter(batchId => !batchIds.includes(batchId))
-                            .map(batchId => (
-                              <TableEmptyItem
-                                key={`order.${counter + 1}.hidden.${
-                                  orderItem.data.id
-                                }.batch.${batchId}`}
-                                fields={orderColumnFields}
-                              />
-                            ))}
+                          {Object.keys(orderItem.relation.batch).filter(
+                            batchId => !batchIds.includes(batchId)
+                          ).length < totalLines &&
+                            Object.keys(orderItem.relation.batch)
+                              .filter(batchId => !batchIds.includes(batchId))
+                              .map(batchId => (
+                                <TableEmptyItem
+                                  key={`order.${counter + 1}.hidden.${
+                                    orderItem.data.id
+                                  }.batch.${batchId}`}
+                                  fields={orderColumnFields}
+                                />
+                              ))}
                         </React.Fragment>
                       )
                     )
@@ -216,13 +214,13 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                 </div>
                 <div>
                   {orderItems.length ? (
-                    orderItems.map((orderItem, position) =>
+                    orderItems.map(orderItem =>
                       Object.keys(orderItem.relation.batch).length === 0 ? (
                         <TableItem
-                          cell={`${order.data.id}.orderItems.${position}`}
+                          cell={`orderItems.${orderItem.data.id}`}
                           key={`orderItem.${counter + 1}.${orderItem.data.id}`}
                           fields={orderItemColumnFields}
-                          values={orderItem.data}
+                          values={editData.orderItems[orderItem.data.id]}
                           validator={orderValidator}
                         />
                       ) : (
@@ -231,21 +229,24 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                             .filter(batchId => batchIds.includes(batchId))
                             .map(batchId => (
                               <TableItem
-                                cell={`${order.data.id}.orderItems.${position}`}
+                                cell={`orderItems.${orderItem.data.id}`}
                                 key={`orderItem.${counter + 1}.duplication.${batchId}`}
                                 fields={orderItemColumnFields}
-                                values={orderItem.data}
+                                values={editData.orderItems[orderItem.data.id]}
                                 validator={orderValidator}
                               />
                             ))}
-                          {Object.keys(orderItem.relation.batch)
-                            .filter(batchId => !batchIds.includes(batchId))
-                            .map(batchId => (
-                              <TableEmptyItem
-                                key={`orderItem.${counter + 1}.hidden.${batchId}`}
-                                fields={orderItemColumnFields}
-                              />
-                            ))}
+                          {Object.keys(orderItem.relation.batch).filter(
+                            batchId => !batchIds.includes(batchId)
+                          ).length < totalLines &&
+                            Object.keys(orderItem.relation.batch)
+                              .filter(batchId => !batchIds.includes(batchId))
+                              .map(batchId => (
+                                <TableEmptyItem
+                                  key={`orderItem.${counter + 1}.hidden.${batchId}`}
+                                  fields={orderItemColumnFields}
+                                />
+                              ))}
                         </React.Fragment>
                       )
                     )
@@ -256,16 +257,18 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                 <div>
                   {batchIds.length ? (
                     <>
-                      {orderItems.map((orderItem, position) =>
-                        orderItem.data.batches.map((batch, index) => (
-                          <TableItem
-                            cell={`${order.data.id}.orderItems.${position}.batches.${index}`}
-                            key={batch.id}
-                            fields={batchColumnFields}
-                            values={batch}
-                            validator={batchValidator}
-                          />
-                        ))
+                      {orderItems.map(orderItem =>
+                        orderItem.data.batches
+                          .filter(batch => batchIds.includes(batch.id))
+                          .map(batch => (
+                            <TableItem
+                              cell={`batches.${batch.id}`}
+                              key={batch.id}
+                              fields={batchColumnFields}
+                              values={editData.batches[batch.id]}
+                              validator={batchValidator}
+                            />
+                          ))
                       )}
                       {range(totalLines - batches.length).map(index => (
                         <TableEmptyItem key={index} fields={batchColumnFields} />
@@ -280,14 +283,14 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
                 <div>
                   {shipmentIds
                     .filter(shipmentId => !!order.relation.shipment[shipmentId])
-                    .map((shipmentId, position) => {
+                    .map(shipmentId => {
                       const shipment = mappingObjects.shipment[shipmentId];
                       return (
                         <TableItem
-                          cell={`shipment.${counter + 1}.${position}`}
-                          key={shipment.data.id}
+                          key={`shipment.${counter + 1}.${shipmentId}`}
+                          cell={`shipments.${shipment.data.id}`}
                           fields={shipmentColumnFields}
-                          values={shipment.data}
+                          values={editData.shipments[shipment.data.id]}
                           validator={shipmentValidator}
                         />
                       );
@@ -312,7 +315,7 @@ export default function TableInlineEdit({ type, selected, onSave, onCancel }: Pr
             const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
               item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
             );
-            const totalLines = totalLinePerOrder(orderItems);
+            const totalLines = totalLinePerOrder(orderItems, batchIds);
             // TODO: handle vertical scroll for line
             return (
               <LineNumber height={totalLines * 43} line={counter + 1} key={`line-for-${orderId}`} />

@@ -15,11 +15,6 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   justify-items: center;
 }
 
-.emotion-0 {
-  position: absolute;
-  left: -20px;
-}
-
 .emotion-11 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -71,6 +66,11 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
 .emotion-10 {
   margin: 0 0 0 5px;
   font-size: 12px;
+}
+
+.emotion-0 {
+  position: absolute;
+  left: -20px;
 }
 
 .emotion-8 {
@@ -394,11 +394,6 @@ exports[`<LoginForm /> should render without crash 1`] = `
   justify-items: center;
 }
 
-.emotion-0 {
-  position: absolute;
-  left: -20px;
-}
-
 .emotion-11 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -450,6 +445,11 @@ exports[`<LoginForm /> should render without crash 1`] = `
 .emotion-10 {
   margin: 0 0 0 5px;
   font-size: 12px;
+}
+
+.emotion-0 {
+  position: absolute;
+  left: -20px;
 }
 
 .emotion-8 {
