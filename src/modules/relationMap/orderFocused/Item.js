@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Subscribe } from 'unstated';
-// import { getByPathWithDefault as get } from 'utils/fp';
+import { getByPathWithDefault as get } from 'utils/fp';
 import { cx } from 'react-emotion';
 import { BooleanValue } from 'react-values';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
@@ -84,13 +84,13 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
   return (
     <Subscribe to={[RelationMapContainer]}>
       {({
-        state: { focusedItem, focusMode, focusedId },
+        state: { focusedItem, focusMode, focusedId, targetedItem },
         toggleHighlight,
         toggleTargetTree,
         toggleTarget,
         overrideTarget,
         isTargetedLine,
-        isRelatedLine,
+        // isRelatedLine,
         isTargeted: isTargetedItem,
         isCurrentTree,
         isFocused: isFocusedItem,
@@ -98,13 +98,21 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         if (isRelationLine(type)) {
           const [, linkType, relationType] = relation.type.split('-') || [];
           const lineItemType = getItemType(relationType);
+          // @TODO need refactor for more clear logic
           const isAllOrderItemLine = relationType === ORDER_ITEM_ALL && !isCollapsed;
           const isAllBatchLine = relationType === BATCH_ALL && !isCollapsed;
           const isFocused = isAllBatchLine
             ? false
             : isFocusedLink(focusedItem[lineItemType], relatedIds);
+
           const isTargeted = isAllBatchLine ? false : isTargetedLine(id);
-          const hasRelation = isAllOrderItemLine ? false : isRelatedLine(id);
+          const isRelated =
+            get(false, `${lineItemType}.${id}`, focusedItem) ||
+            get(false, `${lineItemType}.${id}`, targetedItem);
+          // isFocused && !isTargeted
+          //   ? get(false, `${lineItemType}.${id}`, focusedItem)
+          //   : isRelatedLine(id);
+          const hasRelation = isAllOrderItemLine ? false : isRelated;
           return (
             <RelationLine
               type={linkType}
@@ -116,7 +124,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         }
         const onClickHighlight = toggleHighlight(itemRelation, id);
         const onClickTargetTree = toggleTargetTree(itemData, relation);
-        const onClickTarget = toggleTarget(itemType, relation, data);
+        const onClickTarget = toggleTarget(itemData, relation, itemType);
         const isFocused = isFocusedItem(itemType, id);
         const isCurrentFocused = focusedId && focusedId === id;
         const isTargeted = isTargetedItem(itemType, id);
