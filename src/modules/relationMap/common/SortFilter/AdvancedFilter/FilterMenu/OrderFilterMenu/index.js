@@ -12,38 +12,26 @@ type Props = {
     poNo: Array<string>,
     exporter: Array<string>,
   },
+  activeFilters: Array<string>,
+  toggleActiveFilter: (string, string) => void,
 };
 
 type State = {
   selectedFilter: string,
-  activeFilters: Array<string>,
 };
 
 class OrderFilterMenu extends React.Component<Props, State> {
   state = {
     selectedFilter: 'poNo',
-    activeFilters: [],
   };
 
   changeSelectedFilter = (filter: string) => {
     this.setState({ selectedFilter: filter });
   };
 
-  toggleActiveFilter = (filter: string) => {
-    const { activeFilters } = this.state;
-
-    if (!activeFilters.some(activeFilter => activeFilter === filter)) {
-      this.setState({ activeFilters: [...activeFilters, filter] });
-    } else {
-      const newActiveFilters = activeFilters.filter(activeFilter => activeFilter !== filter);
-
-      this.setState({ activeFilters: newActiveFilters });
-    }
-  };
-
   render() {
-    const { data } = this.props;
-    const { selectedFilter, activeFilters } = this.state;
+    const { data, activeFilters, toggleActiveFilter } = this.props;
+    const { selectedFilter } = this.state;
 
     const filtersMap = [{ name: 'poNo' }, { name: 'exporter' }];
 
@@ -61,7 +49,7 @@ class OrderFilterMenu extends React.Component<Props, State> {
               isSelected={isSelected}
               changeSelectedFilter={this.changeSelectedFilter}
               isActive={isActive}
-              toggleActiveFilter={this.toggleActiveFilter}
+              toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
               data={data[name]}
             />
           );

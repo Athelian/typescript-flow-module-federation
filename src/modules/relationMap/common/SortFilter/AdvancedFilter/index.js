@@ -32,6 +32,12 @@ type State = {
   isActive: boolean,
   filter: filterType,
   selectedEntityType: EntityTypes,
+  activeFilters: {
+    order: Array<string>,
+    item: Array<string>,
+    batch: Array<string>,
+    shipment: Array<string>,
+  },
 };
 
 class AdvanceFilterInput extends React.Component<Props, State> {
@@ -45,6 +51,12 @@ class AdvanceFilterInput extends React.Component<Props, State> {
         query: initialFilter.query || '',
       },
       selectedEntityType: 'order',
+      activeFilters: {
+        order: [],
+        item: [],
+        batch: [],
+        shipment: [],
+      },
     };
 
     this.filterButtonRef = React.createRef();
@@ -58,6 +70,27 @@ class AdvanceFilterInput extends React.Component<Props, State> {
 
   changeEntityType = (entityType: EntityTypes) => {
     this.setState({ selectedEntityType: entityType });
+  };
+
+  toggleActiveFilter = (entityType: string, filter: string) => {
+    const { activeFilters } = this.state;
+
+    // Add
+    if (!activeFilters[entityType].some(activeFilter => activeFilter === filter)) {
+      const newActiveFilters = { ...activeFilters };
+      newActiveFilters[entityType] = [...newActiveFilters[entityType], filter];
+
+      this.setState({ activeFilters: newActiveFilters });
+    }
+    // Remove
+    else {
+      const newActiveFilters = { ...activeFilters };
+      newActiveFilters[entityType] = newActiveFilters[entityType].filter(
+        activeFilter => activeFilter !== filter
+      );
+
+      this.setState({ activeFilters: newActiveFilters });
+    }
   };
 
   hasAnyFilter = (values: Object) => Object.values(values).some(value => !!value);
@@ -82,7 +115,7 @@ class AdvanceFilterInput extends React.Component<Props, State> {
 
   render() {
     const { initialFilter } = this.props;
-    const { isActive, selectedEntityType } = this.state;
+    const { isActive, selectedEntityType, activeFilters } = this.state;
 
     const filterData = {
       order: {
@@ -93,11 +126,6 @@ class AdvanceFilterInput extends React.Component<Props, State> {
       batch: {},
       shipment: {},
     };
-
-    const numOfActiveOrderFilters = 2;
-    const numOfActiveItemFilters = 0;
-    const numOfActiveBatchFilters = 1;
-    const numOfActiveShipmentFilters = 0;
 
     return (
       <UIConsumer>
@@ -143,12 +171,14 @@ class AdvanceFilterInput extends React.Component<Props, State> {
                       <EntityTypesMenu
                         selectedEntityType={selectedEntityType}
                         changeEntityType={this.changeEntityType}
-                        numOfActiveOrderFilters={numOfActiveOrderFilters}
-                        numOfActiveItemFilters={numOfActiveItemFilters}
-                        numOfActiveBatchFilters={numOfActiveBatchFilters}
-                        numOfActiveShipmentFilters={numOfActiveShipmentFilters}
+                        activeFilters={activeFilters}
                       />
-                      <FilterMenu selectedEntityType={selectedEntityType} filterData={filterData} />
+                      <FilterMenu
+                        selectedEntityType={selectedEntityType}
+                        activeFilters={activeFilters}
+                        toggleActiveFilter={this.toggleActiveFilter}
+                        filterData={filterData}
+                      />
                       <div className={FilterInputWrapperStyle}>3</div>
                     </div>
                   </div>

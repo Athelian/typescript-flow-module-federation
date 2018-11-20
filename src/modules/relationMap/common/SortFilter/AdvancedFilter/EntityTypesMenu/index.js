@@ -17,40 +17,39 @@ import {
 type Props = {
   selectedEntityType: EntityTypes,
   changeEntityType: (entityType: EntityTypes) => void,
-  numOfActiveOrderFilters: number,
-  numOfActiveItemFilters: number,
-  numOfActiveBatchFilters: number,
-  numOfActiveShipmentFilters: number,
+  activeFilters: {
+    order: Array<string>,
+    item: Array<string>,
+    batch: Array<string>,
+    shipment: Array<string>,
+  },
 };
 
 export default function EntityTypesMenu({
   selectedEntityType,
   changeEntityType,
-  numOfActiveOrderFilters,
-  numOfActiveItemFilters,
-  numOfActiveBatchFilters,
-  numOfActiveShipmentFilters,
+  activeFilters,
 }: Props) {
   const entityTypesMap = [
     {
       name: 'order',
       icon: 'ORDER',
-      count: numOfActiveOrderFilters,
+      count: activeFilters.order.length,
     },
     {
       name: 'item',
       icon: 'ORDER_ITEM',
-      count: numOfActiveItemFilters,
+      count: activeFilters.item.length,
     },
     {
       name: 'batch',
       icon: 'BATCH',
-      count: numOfActiveBatchFilters,
+      count: activeFilters.batch.length,
     },
     {
       name: 'shipment',
       icon: 'SHIPMENT',
-      count: numOfActiveShipmentFilters,
+      count: activeFilters.shipment.length,
     },
   ];
 

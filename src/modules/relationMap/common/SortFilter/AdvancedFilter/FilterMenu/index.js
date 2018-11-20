@@ -6,6 +6,13 @@ import { FilterMenuWrapperStyle } from './style';
 
 type Props = {
   selectedEntityType: EntityTypes,
+  activeFilters: {
+    order: Array<string>,
+    item: Array<string>,
+    batch: Array<string>,
+    shipment: Array<string>,
+  },
+  toggleActiveFilter: (string, string) => void,
   filterData: any,
 };
 
@@ -24,12 +31,21 @@ const getFilterMenu = (selectedEntityType: EntityTypes) => {
   }
 };
 
-export default function FilterMenu({ selectedEntityType, filterData }: Props) {
+export default function FilterMenu({
+  selectedEntityType,
+  activeFilters,
+  toggleActiveFilter,
+  filterData,
+}: Props) {
   const SelectedFilterMenu = getFilterMenu(selectedEntityType);
 
   return (
     <div className={FilterMenuWrapperStyle}>
-      <SelectedFilterMenu data={filterData[selectedEntityType]} />
+      <SelectedFilterMenu
+        data={filterData[selectedEntityType]}
+        activeFilters={activeFilters[selectedEntityType]}
+        toggleActiveFilter={toggleActiveFilter}
+      />
     </div>
   );
 }

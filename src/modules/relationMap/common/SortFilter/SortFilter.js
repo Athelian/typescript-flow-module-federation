@@ -30,7 +30,6 @@ const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) =>
   <div className={className}>
     <div className={SortWrapperStyle}>
       <SortInput
-        borderRound={false}
         sort={sortInputs.find(item => item.value === sort.field) || sortInputs[0]}
         ascending={sort.direction !== 'DESCENDING'}
         fields={sortInputs}
