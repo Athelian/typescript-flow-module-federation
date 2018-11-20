@@ -14,7 +14,7 @@ export const ItemStyle: string = css`
 
 export const DisableCellStyle: string = css`
   width: 200px;
-  height: 30px;
+  height: 25px;
   margin: 5px;
   color: #fff;
   border: 1px solid #000;
