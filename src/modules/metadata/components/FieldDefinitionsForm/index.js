@@ -22,6 +22,7 @@ import {
 type OptionalProps = {
   fieldDefinitions: Array<Object>,
   setFieldArrayValue: Function,
+  removeArrayItem: Function,
   onCancel: Function,
   onSave: Function,
   onFormReady: Function,
@@ -75,7 +76,7 @@ class FieldDefinitionsForm extends React.Component<Props> {
   // };
 
   render() {
-    const { onCancel, onSave, setFieldArrayValue, fieldDefinitions } = this.props;
+    const { onCancel, onSave, setFieldArrayValue, fieldDefinitions, removeArrayItem } = this.props;
 
     return (
       <div className={WrapperStyle}>
@@ -101,7 +102,7 @@ class FieldDefinitionsForm extends React.Component<Props> {
                   width="200px"
                   metadata={customField}
                   setFieldArrayValue={setFieldArrayValue}
-                  onRemove={() => {}}
+                  onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
                 />
               ))}
 
