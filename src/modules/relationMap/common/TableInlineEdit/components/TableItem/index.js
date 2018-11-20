@@ -13,6 +13,7 @@ import InlineTagInput from './components/InlineTagInput';
 import InlineProductProvider from './components/InlineProductProvider';
 import InlineMetricInput from './components/InlineMetricInput';
 import InlineForwarderInput from './components/InlineForwarderInput';
+import InlineTimeLineInput from './components/InlineTimeLineInput';
 
 type Props = {
   cell: string,
@@ -54,6 +55,7 @@ function renderItem({
     );
   }
   if (type === 'date') return <InlineDateInput name={name} value={value} {...meta} />;
+  if (type === 'timeline') return <InlineTimeLineInput name={name} value={value} {...meta} />;
   if (type === 'metric') return <InlineMetricInput name={name} value={value} {...meta} />;
   if (type === 'enum') return <InlineSearchEnumInput name={name} value={value} {...meta} />;
   if (type === 'inCharges') return <InlineInChargeInput name={name} values={value} {...meta} />;

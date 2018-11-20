@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { compact } from 'lodash';
-// $FlowFixMe flow not yet configured
 import differenceInDays from 'date-fns/differenceInDays';
 import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';

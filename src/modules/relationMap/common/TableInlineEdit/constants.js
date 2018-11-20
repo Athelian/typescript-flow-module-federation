@@ -283,6 +283,10 @@ export const shipmentColumnFields = [
       tagType: 'Shipment',
     },
   },
+  {
+    name: 'cargoReady',
+    type: 'timeline',
+  },
 ];
 
 export const orderColumns = [
@@ -367,6 +371,6 @@ export const shipmentColumns = [
   },
   {
     group: 'TIMELINE',
-    columns: [],
+    columns: [<FormattedMessage {...shipmentMessages.cargoReady} />],
   },
 ];
