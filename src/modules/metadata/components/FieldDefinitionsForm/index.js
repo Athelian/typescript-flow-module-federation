@@ -4,28 +4,16 @@ import { FormattedMessage } from 'react-intl';
 
 // $FlowFixMe https://github.com/atlassian/react-beautiful-dnd/issues/286#issuecomment-426604779
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { SaveButton, CancelButton, NewButton } from 'components/Buttons';
+import { NewButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
-
 import DefaultMetadataStyle from 'components/Form/Inputs/Styles/DefaultStyle/DefaultMetadataStyle';
-
 import { uuid } from 'utils/id';
-
-import FormHeader from '../FormHeader';
-import {
-  WrapperStyle,
-  HeaderStyle,
-  ContainerWrapperStyle,
-  ContainerStyle,
-  AddButtonWrapperStyle,
-} from './style';
+import { ContainerStyle, AddButtonWrapperStyle } from './style';
 
 type OptionalProps = {
   fieldDefinitions: Array<Object>,
   setFieldArrayValue: Function,
   removeArrayItem: Function,
-  onCancel: Function,
-  onSave: Function,
   onFormReady: Function,
 };
 
@@ -33,8 +21,6 @@ type Props = OptionalProps & {};
 
 const defaultProps = {
   fieldDefinitions: [],
-  onCancel: () => {},
-  onSave: () => {},
   onFormReady: () => {},
 };
 
@@ -66,78 +52,64 @@ class FieldDefinitionsForm extends React.Component<Props> {
   };
 
   render() {
-    const { onCancel, onSave, setFieldArrayValue, fieldDefinitions, removeArrayItem } = this.props;
+    const { setFieldArrayValue, fieldDefinitions, removeArrayItem } = this.props;
 
     return (
-      <div className={WrapperStyle}>
-        <div className={HeaderStyle}>
-          <FormHeader
-            name={
-              <FormattedMessage id="modules.metadata.customFields" defaultMessage="CUSTOM FIELDS" />
-            }
-          >
-            <CancelButton onClick={onCancel} />
-            <SaveButton onClick={onSave} />
-          </FormHeader>
-        </div>
-        <div className={ContainerWrapperStyle}>
-          <div className={ContainerStyle}>
-            <DragDropContext onDragEnd={this.onDragEnd}>
-              <Droppable droppableId="droppable">
-                {dropProvided => (
-                  <div>
+      <div className={ContainerStyle}>
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <Droppable droppableId="droppable">
+            {dropProvided => (
+              <div>
+                <GridColumn gap="10px">
+                  <div ref={dropProvided.innerRef}>
                     <GridColumn gap="10px">
-                      <div ref={dropProvided.innerRef}>
-                        <GridColumn gap="10px">
-                          {fieldDefinitions &&
-                            fieldDefinitions.map((customField, index) => (
-                              <Draggable
-                                key={customField.id}
-                                draggableId={customField.id}
-                                index={index}
-                              >
-                                {provided => (
-                                  <div ref={provided.innerRef} {...provided.draggableProps}>
-                                    <DefaultMetadataStyle
-                                      rearrange
-                                      dragHandleProps={provided.dragHandleProps}
-                                      isKeyReadOnly={false}
-                                      isValueReadOnly
-                                      targetName={`fieldDefinitions.${index}`}
-                                      width="200px"
-                                      metadata={customField}
-                                      setFieldArrayValue={setFieldArrayValue}
-                                      onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
-                                    />
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))}
-                        </GridColumn>
-                      </div>
+                      {fieldDefinitions &&
+                        fieldDefinitions.map((customField, index) => (
+                          <Draggable
+                            key={customField.id}
+                            draggableId={customField.id}
+                            index={index}
+                          >
+                            {provided => (
+                              <div ref={provided.innerRef} {...provided.draggableProps}>
+                                <DefaultMetadataStyle
+                                  rearrange
+                                  dragHandleProps={provided.dragHandleProps}
+                                  isKeyReadOnly={false}
+                                  isValueReadOnly
+                                  targetName={`fieldDefinitions.${index}`}
+                                  width="200px"
+                                  metadata={customField}
+                                  setFieldArrayValue={setFieldArrayValue}
+                                  onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
                     </GridColumn>
                   </div>
-                )}
-              </Droppable>
-            </DragDropContext>
+                </GridColumn>
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
 
-            <div className={AddButtonWrapperStyle}>
-              <NewButton
-                label={
-                  <FormattedMessage
-                    id="modules.metadata.addCustomFields"
-                    defaultMessage="ADD CUSTOM FIELDS"
-                  />
-                }
-                onClick={() => {
-                  setFieldArrayValue('fieldDefinitions', [
-                    ...fieldDefinitions,
-                    { id: uuid(), name: '' },
-                  ]);
-                }}
+        <div className={AddButtonWrapperStyle}>
+          <NewButton
+            label={
+              <FormattedMessage
+                id="modules.metadata.addCustomFields"
+                defaultMessage="ADD CUSTOM FIELDS"
               />
-            </div>
-          </div>
+            }
+            onClick={() => {
+              setFieldArrayValue('fieldDefinitions', [
+                ...fieldDefinitions,
+                { id: uuid(), name: '' },
+              ]);
+            }}
+          />
         </div>
       </div>
     );
