@@ -5,7 +5,7 @@ import { scrollbars } from 'styles/common';
 export const FilterInputAreaWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  align-items: center;
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;

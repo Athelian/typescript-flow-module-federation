@@ -28,7 +28,7 @@ const getFilterMenu = (selectedEntityType: EntityTypes) => {
     case 'shipment':
       return OrderFilterMenu;
     default:
-      return '';
+      return OrderFilterMenu;
   }
 };
 
