@@ -16,7 +16,7 @@ export const ToggleButtonStyle = (isActive: boolean): string => css`
       }
     `
     : `
-      color: ${colors.GRAY};
+      color: ${colors.GRAY_LIGHT};
       &:hover, :focus {
         color: ${colors.GRAY_DARK};
       }

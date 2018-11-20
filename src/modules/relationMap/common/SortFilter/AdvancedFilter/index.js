@@ -84,6 +84,16 @@ class AdvanceFilterInput extends React.Component<Props, State> {
     const { initialFilter } = this.props;
     const { isActive, selectedEntityType } = this.state;
 
+    const filterData = {
+      order: {
+        poNo: ['ABC'],
+        exporter: [],
+      },
+      item: {},
+      batch: {},
+      shipment: {},
+    };
+
     const numOfActiveOrderFilters = 2;
     const numOfActiveItemFilters = 0;
     const numOfActiveBatchFilters = 1;
@@ -138,7 +148,7 @@ class AdvanceFilterInput extends React.Component<Props, State> {
                         numOfActiveBatchFilters={numOfActiveBatchFilters}
                         numOfActiveShipmentFilters={numOfActiveShipmentFilters}
                       />
-                      <FilterMenu selectedEntityType={selectedEntityType} />
+                      <FilterMenu selectedEntityType={selectedEntityType} filterData={filterData} />
                       <div className={FilterInputWrapperStyle}>3</div>
                     </div>
                   </div>

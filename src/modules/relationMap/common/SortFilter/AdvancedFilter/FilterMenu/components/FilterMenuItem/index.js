@@ -1,7 +1,14 @@
 // @flow
 import * as React from 'react';
+import Icon from 'components/Icon';
 import { ToggleButton } from '..';
-import { FilterMenuItemWrapperStyle, FilterMenuItemStyle, FilterMenuLabelStyle } from './style';
+import {
+  FilterMenuItemWrapperStyle,
+  FilterMenuItemStyle,
+  FilterMenuLabelStyle,
+  FilterDataWrapperStyle,
+  FilterDataStyle,
+} from './style';
 
 type Props = {
   name: string,
@@ -10,6 +17,7 @@ type Props = {
   changeSelectedFilter: (filter: string) => void,
   isActive: boolean,
   toggleActiveFilter: (filter: string) => void,
+  data: Array<any>,
 };
 
 export default function FilterMenuItem({
@@ -19,17 +27,29 @@ export default function FilterMenuItem({
   changeSelectedFilter,
   isActive,
   toggleActiveFilter,
+  data,
 }: Props) {
   return (
-    <div
+    <button
       className={FilterMenuItemWrapperStyle(isSelected)}
       onClick={() => changeSelectedFilter(name)}
-      role="presentation"
+      type="button"
     >
       <div className={FilterMenuItemStyle}>
         <ToggleButton isOn={isActive} onClick={() => toggleActiveFilter(name)} />
         <div className={FilterMenuLabelStyle}>{label}</div>
       </div>
-    </div>
+
+      {data.length > 0 && (
+        <div className={FilterDataWrapperStyle}>
+          {data.map(datum => (
+            <button className={FilterDataStyle} type="button">
+              {datum}
+              <Icon icon="CLEAR" />
+            </button>
+          ))}
+        </div>
+      )}
+    </button>
   );
 }

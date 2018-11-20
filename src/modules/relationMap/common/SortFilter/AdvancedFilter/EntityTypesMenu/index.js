@@ -7,7 +7,8 @@ import { type EntityTypes } from 'modules/relationMap/common/SortFilter/Advanced
 import messages from './messages';
 import {
   EntityTypesWrapperStyle,
-  EntityTypeStyle,
+  EntityTypeMenuItemStyle,
+  EntityTypeLayoutStyle,
   EntityTypeIconStyle,
   EntityTypeLabelStyle,
   EntityTypeBadgeStyle,
@@ -61,23 +62,25 @@ export default function EntityTypesMenu({
         const showBadge = count > 0;
 
         return (
-          <div
-            className={EntityTypeStyle(isSelected)}
+          <button
+            className={EntityTypeMenuItemStyle(isSelected)}
             onClick={() => changeEntityType(name)}
-            role="presentation"
+            type="button"
           >
-            <div className={EntityTypeIconStyle}>
-              <Icon icon={icon} />
-            </div>
-            <div className={EntityTypeLabelStyle}>
-              <FormattedMessage {...messages[name]} />
-            </div>
-            {showBadge && (
-              <div className={EntityTypeBadgeStyle(isSelected)}>
-                <FormattedNumber value={count} />
+            <div className={EntityTypeLayoutStyle}>
+              <div className={EntityTypeIconStyle(isSelected)}>
+                <Icon icon={icon} />
               </div>
-            )}
-          </div>
+              <div className={EntityTypeLabelStyle(isSelected)}>
+                <FormattedMessage {...messages[name]} />
+              </div>
+              {showBadge && (
+                <div className={EntityTypeBadgeStyle(isSelected)}>
+                  <FormattedNumber value={count} />
+                </div>
+              )}
+            </div>
+          </button>
         );
       })}
     </div>

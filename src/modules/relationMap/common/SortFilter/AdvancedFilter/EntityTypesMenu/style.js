@@ -15,38 +15,43 @@ export const EntityTypesWrapperStyle: string = css`
   }
 `;
 
-export const EntityTypeIconStyle: string = css`
+export const EntityTypeIconStyle = (isActive: boolean): string => css`
   display: flex;
   align-items: center;
   justify-content: center;
+  color: ${isActive ? colors.TEAL : colors.GRAY_LIGHT};
 `;
 
-export const EntityTypeStyle = (isActive: boolean): string => css`
+export const EntityTypeMenuItemStyle = (isActive: boolean): string => css`
   ${presets.BUTTON};
+  flex-shrink: 0;
+  width: 100%;
+  ${fontSizes.MAIN};
+  ${isActive
+    ? `
+  background-color: ${colors.WHITE};
+`
+    : `
+  &:hover, :focus {
+    background-color: ${colors.WHITE};
+  }
+`};
+`;
+
+export const EntityTypeLayoutStyle: string = css`
   display: grid;
   grid-template-columns: 40px 1fr 30px;
   grid-template-rows: 40px;
   align-items: center;
   height: 40px;
-  flex-shrink: 0;
+  width: 100%;
   padding: 0 10px 0 0;
-  ${fontSizes.MAIN};
-  ${isActive
-    ? `
-    background-color: ${colors.WHITE};
-    color: ${colors.TEAL};
-  `
-    : `
-    color: ${colors.GRAY_DARK};
-    &:hover, :focus {
-      background-color: ${colors.WHITE};
-    }
-  `};
 `;
 
-export const EntityTypeLabelStyle: string = css`
+export const EntityTypeLabelStyle = (isActive: boolean): string => css`
   ${presets.ELLIPSIS};
   letter-spacing: 2px;
+  color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
 `;
 
 export const EntityTypeBadgeStyle = (isActive: boolean): string => css`

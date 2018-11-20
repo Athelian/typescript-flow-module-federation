@@ -7,7 +7,12 @@ import { FilterMenuItem } from '../components';
 import messages from './messages';
 import { OrderFilterMenuWrapperStyle } from './style';
 
-type Props = {};
+type Props = {
+  data: {
+    poNo: Array<string>,
+    exporter: Array<string>,
+  },
+};
 
 type State = {
   selectedFilter: string,
@@ -24,35 +29,20 @@ class OrderFilterMenu extends React.Component<Props, State> {
     this.setState({ selectedFilter: filter });
   };
 
-  addActiveFilter = (filter: string) => {
+  toggleActiveFilter = (filter: string) => {
     const { activeFilters } = this.state;
 
     if (!activeFilters.some(activeFilter => activeFilter === filter)) {
       this.setState({ activeFilters: [...activeFilters, filter] });
-    }
-  };
-
-  removeActiveFilter = (filter: string) => {
-    const { activeFilters } = this.state;
-
-    if (activeFilters.some(activeFilter => activeFilter === filter)) {
+    } else {
       const newActiveFilters = activeFilters.filter(activeFilter => activeFilter !== filter);
 
       this.setState({ activeFilters: newActiveFilters });
     }
   };
 
-  toggleActiveFilter = (filter: string) => {
-    const { activeFilters } = this.state;
-
-    if (!activeFilters.some(activeFilter => activeFilter === filter)) {
-      this.addActiveFilter(filter);
-    } else {
-      this.removeActiveFilter(filter);
-    }
-  };
-
   render() {
+    const { data } = this.props;
     const { selectedFilter, activeFilters } = this.state;
 
     const filtersMap = [{ name: 'poNo' }, { name: 'exporter' }];
@@ -72,6 +62,7 @@ class OrderFilterMenu extends React.Component<Props, State> {
               changeSelectedFilter={this.changeSelectedFilter}
               isActive={isActive}
               toggleActiveFilter={this.toggleActiveFilter}
+              data={data[name]}
             />
           );
         })}
