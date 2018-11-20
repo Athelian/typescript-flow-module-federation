@@ -1,6 +1,7 @@
 // @flow
 // $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
 import { useState, useCallback } from 'react';
+import * as Yup from 'yup';
 import differenceInDays from 'date-fns/differenceInDays';
 
 type TimeLineProps = {
@@ -52,7 +53,8 @@ function useTimeLineInput(initialValue: TimeLineProps) {
   const [focus, setFocus] = useState(false);
 
   const onChange = useCallback(event => {
-    setValue(new Date(event.currentTarget.value));
+    const newDate = new Date(event.currentTarget.value);
+    if (Yup.date().isValidSync(newDate)) setValue(newDate);
   }, []);
 
   const onFocus = useCallback(() => {
