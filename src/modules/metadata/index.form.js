@@ -31,6 +31,16 @@ const defaultProps = {
   entityType: 'Order',
 };
 
+const EntityTypeMap = {
+  order: 'Order',
+  item: 'OrderItem',
+  batch: 'Batch',
+  shipment: 'Shipment',
+  product: 'Product',
+  end_product: 'ProductProvider',
+  warehouse: 'Warehouse',
+};
+
 class MetadataForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -57,7 +67,8 @@ class MetadataForm extends React.Component<Props> {
   };
 
   render() {
-    const { entityType } = this.props;
+    const { entityType: entity } = this.props;
+    const entityType = EntityTypeMap[entity];
     return (
       <Provider>
         <UIConsumer>
@@ -73,13 +84,13 @@ class MetadataForm extends React.Component<Props> {
                       <FormattedMessage id="modules.metadata.orders" defaultMessage="ORDERS" />
                     }
                     icon="ORDER"
-                    onClick={() => navigate('/metadata/Order')}
+                    onClick={() => navigate('/metadata/order')}
                   />
                   <TabItem
                     active={entityType === 'OrderItem'}
                     label={<FormattedMessage id="modules.metadata.items" defaultMessage="ITEMS" />}
                     icon="ORDER_ITEM"
-                    onClick={() => navigate('/metadata/OrderItem')}
+                    onClick={() => navigate('/metadata/item')}
                   />
                   <TabItem
                     active={entityType === 'Batch'}
@@ -87,7 +98,7 @@ class MetadataForm extends React.Component<Props> {
                       <FormattedMessage id="modules.metadata.batches" defaultMessage="BATCHES" />
                     }
                     icon="BATCH"
-                    onClick={() => navigate('/metadata/Batch')}
+                    onClick={() => navigate('/metadata/batch')}
                   />
                   <TabItem
                     active={entityType === 'Shipment'}
@@ -98,7 +109,7 @@ class MetadataForm extends React.Component<Props> {
                       />
                     }
                     icon="SHIPMENT"
-                    onClick={() => navigate('/metadata/Shipment')}
+                    onClick={() => navigate('/metadata/shipment')}
                   />
                   <TabItem
                     active={entityType === 'Product'}
@@ -106,7 +117,7 @@ class MetadataForm extends React.Component<Props> {
                       <FormattedMessage id="modules.metadata.products" defaultMessage="PRODUCTS" />
                     }
                     icon="PRODUCT"
-                    onClick={() => navigate('/metadata/Product')}
+                    onClick={() => navigate('/metadata/product')}
                   />
                   <TabItem
                     active={entityType === 'ProductProvider'}
@@ -117,7 +128,7 @@ class MetadataForm extends React.Component<Props> {
                       />
                     }
                     icon="PROVIDER"
-                    onClick={() => navigate('/metadata/ProductProvider')}
+                    onClick={() => navigate('/metadata/end_product')}
                   />
                   <TabItem
                     active={entityType === 'Warehouse'}
@@ -128,7 +139,7 @@ class MetadataForm extends React.Component<Props> {
                       />
                     }
                     icon="WAREHOUSE"
-                    onClick={() => navigate('/metadata/Warehouse')}
+                    onClick={() => navigate('/metadata/warehouse')}
                   />
                 </NavBar>
               }
