@@ -5,7 +5,7 @@ import { ApproveIconButton } from 'components/Buttons';
 import { DefaultStyle, DateInput } from 'components/Form';
 import emitter from 'utils/emitter';
 import { useTimeLineInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
-import { ApprovalWrapperStyle } from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
+import { ApprovalWrapperStyle, DateInputWrapperStyle } from './style';
 
 type Props = {
   name: string,
@@ -33,6 +33,7 @@ export default function InlineTimeLineInput({ name, value }: Props) {
       >
         <DateInput
           align="left"
+          className={DateInputWrapperStyle}
           name={name}
           {...inputHandlers}
           onBlur={() => {
