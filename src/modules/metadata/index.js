@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
 import { Router } from '@reach/router';
-import MetadataList from './index.list';
+import MetadataForm from './index.form';
 
 const MetadataModule = () => (
   <Router>
-    <MetadataList path="/" />
+    <MetadataForm path="/:entityType" />
   </Router>
 );
 
