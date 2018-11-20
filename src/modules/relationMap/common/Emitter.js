@@ -8,7 +8,6 @@ type Props = {
 class Emitter extends React.Component<Props> {
   componentDidMount() {
     emitter.addListener('FORCE_RENDER', () => {
-      console.log('XXXXXXXXXXXX');
       this.forceUpdate();
     });
   }

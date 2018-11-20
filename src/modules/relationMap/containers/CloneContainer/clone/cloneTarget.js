@@ -2,7 +2,7 @@
 import { differenceBy } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
-import emitter from 'utils/emitter';
+// import emitter from 'utils/emitter';
 // import update from 'immutability-helper';
 // import { createBatchMutation } from 'modules/batch/form/mutation';
 // import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
@@ -195,6 +195,7 @@ export const cloneBatchByUpdateOrder = async (client: any, batches: Object, filt
     });
     const request = mutationRequest({
       mutation: cloneOrderItemMutation,
+      fetchpolicy: 'cache-and-network',
       variables: {
         id: order.id,
         input: { orderItems: updateOrderItems },
@@ -213,9 +214,25 @@ export const cloneBatchByUpdateOrder = async (client: any, batches: Object, filt
     return request;
   });
   const updatedBatches = await Promise.all(batchRequests);
-  console.log(updatedBatches);
-  // const batchesFocus = updatedBatches.reduce((result, batch) => {}, {});
-  return [null, null];
+  const batchesFocus = {};
+  updatedBatches.forEach(updatedData => {
+    const order = getByPathWithDefault({}, 'data.orderUpdate.order', updatedData);
+    order.orderItems.forEach(orderItem => {
+      const newBatches = orderItem.batches;
+      const oldBatches = getByPathWithDefault(
+        {},
+        `${order.id}.itemObj.${orderItem.id}.batches`,
+        orders
+      );
+      if (oldBatches) {
+        const diffBatches = differenceBy(newBatches, oldBatches, 'id');
+        diffBatches.forEach(batch => {
+          batchesFocus[batch.id] = true;
+        });
+      }
+    });
+  });
+  return [{}, batchesFocus];
 };
 
 export const cloneBatch = async (client: any, batches: Object, filter: Object) => {
@@ -228,7 +245,7 @@ export const cloneBatch = async (client: any, batches: Object, filter: Object) =
         variables: {
           input: {
             no: `[cloned] ${currentBatch.no}`,
-            quantity: currentBatch.quantity,
+            quantity: Math.floor(Math.random() * 10 + 1), // currentBatch.quantity,
             orderItemId,
           },
         },
@@ -257,7 +274,6 @@ export const cloneBatch = async (client: any, batches: Object, filter: Object) =
 
   const query = { query: orderListQuery, variables: filter };
   const orderList = client.readQuery(query);
-  // console.log('orderList ===>', orderList)
 
   const batchResult = newBatches.reduce((batchResultObj, newBatch) => {
     const { refId } = newBatch;
@@ -276,7 +292,6 @@ export const cloneBatch = async (client: any, batches: Object, filter: Object) =
     });
     return Object.assign(batchResultObj, batchRef);
   }, {});
-  emitter.emit('FORCE_RENDER', null);
   const batchFocus = newBatches.reduce((batchResultObj, newBatch) => {
     const batchId = getByPathWithDefault('', 'data.batchCreate.batch.id', newBatch);
     return Object.assign(batchResultObj, { [batchId]: true });
@@ -352,7 +367,7 @@ const filterTargetedBatch = (target: Object) => {
   const batches: any = (Object.entries(target.batch || {}): any)
     .filter(data => {
       const [, batch] = data;
-      return target.order && !target.order[batch.rootId || batch.orderId];
+      return !target.order ? true : !target.order[batch.rootId || batch.orderId];
     })
     .map(data => {
       const [, batch] = data;
@@ -377,8 +392,8 @@ export const cloneTarget = async ({
   const [orderResults, orderFocus] = await cloneOrder(client, targetedOrder, filter);
   const [shipmentResults, shipmentFocus] = await cloneShipment(client, target.shipment);
   const [orderItemResult, orderItemFocus] = await cloneOrderItem(client, targetedOrderItem, filter);
-  // const [batchResult, batchFocus] = await cloneBatch(client, targetedBatch, filter);
-  const [batchResult, batchFocus] = await cloneBatchByUpdateOrder(client, targetedBatch, filter);
+  const [batchResult, batchFocus] = await cloneBatch(client, targetedBatch, filter);
+  // const [batchResult, batchFocus] = await cloneBatchByUpdateOrder(client, targetedBatch, filter);
 
   const result = {
     order: orderResults,

@@ -11,7 +11,6 @@ import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
 import { formatNodes } from './orderFocused/formatter';
 import Layout from './common/Layout';
-import Emitter from './common/Emitter';
 import QueryHandler from './common/QueryHandler';
 import ScrollToResult from './common/ScrollToResult';
 import SummaryBadge from './common/SummaryBadge';
@@ -30,85 +29,80 @@ const Order = () => (
           sortBy: { [sort.field]: sort.direction },
         };
         return (
-          <Emitter>
-            <Query query={query} variables={filterVariables} fetchPolicy="network-only">
-              {({ loading, data, fetchMore, error }) => (
-                <QueryHandler
-                  model="orders"
-                  filter={{ perPage }}
-                  data={data}
-                  fetchMore={fetchMore}
-                  error={error}
-                >
-                  {({ nodes, hasMore, loadMore }) => {
-                    console.log('rerender', nodes);
-                    const order = formatOrderData(nodes || []);
-                    return (
-                      <>
-                        <ActionSubscribe filter={filterVariables} />
-                        <Subscribe to={[ActionContainer]}>
-                          {({ clearResult }) => (
-                            <SortFilter
-                              sort={sort}
-                              filter={filter}
-                              onChange={newFilter => {
-                                onChangeSortFilter(newFilter);
-                                clearResult();
-                              }}
-                              className={FunctionWrapperStyle}
-                            />
-                          )}
-                        </Subscribe>
-
-                        {loading ? (
-                          <LoadingIcon />
-                        ) : (
-                          <RelationMapGrid>
-                            <Subscribe to={[RelationMapContainer]}>
-                              {({ selectAll, unSelectAll, state: { targetedItem } }) => (
-                                <div className={BadgeWrapperStyle}>
-                                  <SummaryBadge
-                                    summary={order}
-                                    targetedItem={targetedItem}
-                                    unSelectAll={unSelectAll}
-                                    selectAll={selectAll(order)}
-                                  />
-                                </div>
-                              )}
-                            </Subscribe>
-                            <Subscribe to={[ActionContainer]}>
-                              {({ state: { result, scrolled }, setScroll }) => (
-                                <ScrollToResult
-                                  id="OrderMapWrapper"
-                                  result={result}
-                                  scrolled={scrolled}
-                                  setScroll={setScroll}
-                                >
-                                  {({ id }) => (
-                                    <OrderFocused
-                                      id={id}
-                                      order={order}
-                                      hasMore={hasMore}
-                                      loadMore={loadMore}
-                                      nodes={
-                                        isEmpty(result) || !nodes
-                                          ? nodes
-                                          : formatNodes(nodes, result)
-                                      }
-                                    />
-                                  )}
-                                </ScrollToResult>
-                              )}
-                            </Subscribe>
-                          </RelationMapGrid>
+          <Query query={query} variables={filterVariables} fetchPolicy="network-only">
+            {({ loading, data, fetchMore, error }) => (
+              <QueryHandler
+                model="orders"
+                filter={{ perPage }}
+                data={data}
+                fetchMore={fetchMore}
+                error={error}
+              >
+                {({ nodes, hasMore, loadMore }) => {
+                  const order = formatOrderData(nodes || []);
+                  return (
+                    <>
+                      <ActionSubscribe filter={filterVariables} />
+                      <Subscribe to={[ActionContainer]}>
+                        {({ clearResult }) => (
+                          <SortFilter
+                            sort={sort}
+                            filter={filter}
+                            onChange={newFilter => {
+                              onChangeSortFilter(newFilter);
+                              clearResult();
+                            }}
+                            className={FunctionWrapperStyle}
+                          />
                         )}
-                      </>
-                    );
-                  }}
-                </QueryHandler>
-              )}
-            </Query>
-          </Emitter>
+                      </Subscribe>
+
+                      {loading ? (
+                        <LoadingIcon />
+                      ) : (
+                        <RelationMapGrid>
+                          <Subscribe to={[RelationMapContainer]}>
+                            {({ selectAll, unSelectAll, state: { targetedItem } }) => (
+                              <div className={BadgeWrapperStyle}>
+                                <SummaryBadge
+                                  summary={order}
+                                  targetedItem={targetedItem}
+                                  unSelectAll={unSelectAll}
+                                  selectAll={selectAll(order)}
+                                />
+                              </div>
+                            )}
+                          </Subscribe>
+                          <Subscribe to={[ActionContainer]}>
+                            {({ state: { result, scrolled }, setScroll }) => (
+                              <ScrollToResult
+                                id="OrderMapWrapper"
+                                result={result}
+                                scrolled={scrolled}
+                                setScroll={setScroll}
+                              >
+                                {({ id }) => (
+                                  <OrderFocused
+                                    id={id}
+                                    order={order}
+                                    hasMore={hasMore}
+                                    loadMore={loadMore}
+                                    nodes={
+                                      isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result)
+                                    }
+                                  />
+                                )}
+                              </ScrollToResult>
+                            )}
+                          </Subscribe>
+                        </RelationMapGrid>
+                      )}
+                    </>
+                  );
+                }}
+              </QueryHandler>
+            )}
+          </Query>
         );
       }}
     </SortFilterHandler>
