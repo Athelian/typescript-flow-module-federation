@@ -117,16 +117,6 @@ class AdvanceFilterInput extends React.Component<Props, State> {
     const { initialFilter } = this.props;
     const { isActive, selectedEntityType, activeFilters } = this.state;
 
-    const filterData = {
-      order: {
-        poNo: ['ABC'],
-        exporter: [],
-      },
-      item: {},
-      batch: {},
-      shipment: {},
-    };
-
     return (
       <UIConsumer>
         {uiState => (
@@ -177,7 +167,6 @@ class AdvanceFilterInput extends React.Component<Props, State> {
                         selectedEntityType={selectedEntityType}
                         activeFilters={activeFilters}
                         toggleActiveFilter={this.toggleActiveFilter}
-                        filterData={filterData}
                       />
                       <div className={FilterInputWrapperStyle}>3</div>
                     </div>

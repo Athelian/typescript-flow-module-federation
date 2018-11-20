@@ -13,7 +13,6 @@ type Props = {
     shipment: Array<string>,
   },
   toggleActiveFilter: (string, string) => void,
-  filterData: any,
 };
 
 const getFilterMenu = (selectedEntityType: EntityTypes) => {
@@ -35,14 +34,12 @@ export default function FilterMenu({
   selectedEntityType,
   activeFilters,
   toggleActiveFilter,
-  filterData,
 }: Props) {
   const SelectedFilterMenu = getFilterMenu(selectedEntityType);
 
   return (
     <div className={FilterMenuWrapperStyle}>
       <SelectedFilterMenu
-        data={filterData[selectedEntityType]}
         activeFilters={activeFilters[selectedEntityType]}
         toggleActiveFilter={toggleActiveFilter}
       />

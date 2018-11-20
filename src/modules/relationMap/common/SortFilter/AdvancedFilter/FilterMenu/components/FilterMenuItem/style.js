@@ -7,6 +7,7 @@ export const FilterMenuItemWrapperStyle = (isActive: boolean): string => css`
   align-items: flex-start;
   flex-direction: column;
   width: 100%;
+  flex-shrink: 0;
   ${isActive
     ? `
       background-color: ${colors.WHITE};

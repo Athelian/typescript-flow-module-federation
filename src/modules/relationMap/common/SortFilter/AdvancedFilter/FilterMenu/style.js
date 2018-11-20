@@ -7,14 +7,11 @@ export const FilterMenuWrapperStyle: string = css`
   flex-direction: column;
   height: 100%;
   width: 400px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   ${scrollbars.SMALL};
   border-left: 1px solid ${colors.GRAY_VERY_LIGHT};
   border-right: 1px solid ${colors.GRAY_VERY_LIGHT};
-  &:hover {
-    overflow-x: hidden;
-    overflow-y: overlay;
-  }
 `;
 
 export default FilterMenuWrapperStyle;

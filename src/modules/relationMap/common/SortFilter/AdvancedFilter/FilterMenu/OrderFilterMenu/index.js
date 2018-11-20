@@ -1,17 +1,11 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-// import Icon from 'components/Icon';
-// import FormattedNumber from 'components/FormattedNumber';
-import { FilterMenuItem } from '../components';
+import { FilterMenuItem, ToggleMenuItem } from '../components';
 import messages from './messages';
-import { OrderFilterMenuWrapperStyle } from './style';
+import { OrderFilterMenuWrapperStyle, OrderFiltersBodyStyle, OrderTogglesBodyStyle } from './style';
 
 type Props = {
-  data: {
-    poNo: Array<string>,
-    exporter: Array<string>,
-  },
   activeFilters: Array<string>,
   toggleActiveFilter: (string, string) => void,
 };
@@ -30,30 +24,62 @@ class OrderFilterMenu extends React.Component<Props, State> {
   };
 
   render() {
-    const { data, activeFilters, toggleActiveFilter } = this.props;
+    const { activeFilters, toggleActiveFilter } = this.props;
     const { selectedFilter } = this.state;
 
-    const filtersMap = [{ name: 'poNo' }, { name: 'exporter' }];
+    const filtersMap = [
+      { name: 'poNo', chosen: [] },
+      { name: 'exporter', chosen: [] },
+      { name: 'inCharge', chosen: [] },
+      { name: 'tags', chosen: [] },
+      { name: 'createdAt', chosen: [] },
+      { name: 'updatedAt', chosen: [] },
+    ];
+
+    const togglesMap = [
+      { name: 'completelyBatched', icon: 'BATCH' },
+      { name: 'completelyShipped', icon: 'SHIPMENT' },
+      { name: 'showActive', icon: 'ACTIVE' },
+      { name: 'showArchived', icon: 'ARCHIVE' },
+    ];
 
     return (
       <div className={OrderFilterMenuWrapperStyle}>
-        {filtersMap.map(filter => {
-          const { name } = filter;
-          const isSelected = selectedFilter === name;
-          const isActive = activeFilters.some(activeFilter => activeFilter === name);
+        <div className={OrderFiltersBodyStyle}>
+          {filtersMap.map(filter => {
+            const { name, chosen } = filter;
+            const isSelected = selectedFilter === name;
+            const isActive = activeFilters.some(activeFilter => activeFilter === name);
 
-          return (
-            <FilterMenuItem
-              name={name}
-              label={<FormattedMessage {...messages[name]} />}
-              isSelected={isSelected}
-              changeSelectedFilter={this.changeSelectedFilter}
-              isActive={isActive}
-              toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
-              data={data[name]}
-            />
-          );
-        })}
+            return (
+              <FilterMenuItem
+                name={name}
+                label={<FormattedMessage {...messages[name]} />}
+                isSelected={isSelected}
+                changeSelectedFilter={this.changeSelectedFilter}
+                isActive={isActive}
+                toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
+                data={chosen}
+              />
+            );
+          })}
+        </div>
+        <div className={OrderTogglesBodyStyle}>
+          {togglesMap.map(toggle => {
+            const { name, icon } = toggle;
+            const isActive = activeFilters.some(activeFilter => activeFilter === name);
+
+            return (
+              <ToggleMenuItem
+                name={name}
+                label={<FormattedMessage {...messages[name]} />}
+                icon={icon}
+                isActive={isActive}
+                toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
+              />
+            );
+          })}
+        </div>
       </div>
     );
   }
