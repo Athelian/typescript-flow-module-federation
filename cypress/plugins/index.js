@@ -87,61 +87,62 @@ module.exports = on => {
     },
     fixture: type => {
       logger.log('create fixture', type);
-      if (type === 'order')
-        return {
-          poNo: faker.name.findName(),
-          piNo: faker.name.findName(),
-          issueAt: faker.date.future(),
-          deliveryPlace: faker.address.city(),
-          memo: faker.lorem.paragraph(),
-          currency: 'ALL',
-          incoterm: 'FAS',
-        };
+      switch (type) {
+        case 'order':
+          return {
+            poNo: faker.name.findName(),
+            piNo: faker.name.findName(),
+            issueAt: faker.date.future(),
+            deliveryPlace: faker.address.city(),
+            memo: faker.lorem.paragraph(),
+            currency: 'ALL',
+            incoterm: 'FAS',
+          };
 
-      if (type === 'batch')
-        return {
-          batchNo: faker.random.word(),
-          quantity: faker.random.number(100),
-          batchAdjustmentsQuantity: faker.random.number(100),
-        };
+        case 'batch':
+          return {
+            batchNo: faker.random.word(),
+            quantity: faker.random.number(100),
+            batchAdjustmentsQuantity: faker.random.number(100),
+          };
 
-      if (type === 'product')
-        return {
-          name: 'e2e-test',
-          updatedName: '[updated] e2e-test',
-          clonedName: '[cloned] e2e-test',
-          serial: chance.string({ length: 8 }),
-          clonedSerial: chance.string({ length: 8 }),
-          janCode: chance.string({ length: 13 }),
-          clonedJanCode: chance.string({ length: 13 }),
-          hsCode: chance.string({ length: 10 }),
-          clonedHsCode: chance.string({ length: 10 }),
-          material: 'e2e-material',
-          tags: [],
-        };
+        case 'product':
+          return {
+            name: faker.name.findName(),
+            updatedName: faker.name.findName(),
+            clonedName: faker.name.findName(),
+            serial: chance.string({ length: 8 }),
+            clonedSerial: chance.string({ length: 8 }),
+            janCode: chance.string({ length: 13 }),
+            clonedJanCode: chance.string({ length: 13 }),
+            hsCode: chance.string({ length: 10 }),
+            clonedHsCode: chance.string({ length: 10 }),
+            material: faker.name.findName(),
+            tags: [],
+          };
 
-      if (type === 'shipment')
-        return {
-          shipmentNo: faker.name.findName(),
-          blDate: faker.date.future(),
-          incoterm: 'DAT',
-          cargoReadyDate: faker.date.future(),
-        };
-
-      if (type === 'warehouse')
-        return {
-          name: faker.name.findName(),
-          updatedName: faker.name.findName(),
-          clonedName: faker.name.findName(),
-          street: faker.address.streetAddress(),
-          locality: 'test locality',
-          region: faker.address.state(),
-          postalCode: faker.address.zipCode(),
-          country: faker.address.country(),
-          surface: faker.random.number(),
-        };
-
-      return null;
+        case 'shipment':
+          return {
+            shipmentNo: faker.name.findName(),
+            blDate: faker.date.future(),
+            incoterm: 'DAT',
+            cargoReadyDate: faker.date.future(),
+          };
+        case 'warehouse':
+          return {
+            name: faker.name.findName(),
+            updatedName: faker.name.findName(),
+            clonedName: faker.name.findName(),
+            street: faker.address.streetAddress(),
+            locality: faker.name.findName(),
+            region: faker.address.state(),
+            postalCode: faker.address.zipCode(),
+            country: faker.address.country(),
+            surface: faker.random.number(),
+          };
+        default:
+          return null;
+      }
     },
     log(message) {
       logger.log(message);
