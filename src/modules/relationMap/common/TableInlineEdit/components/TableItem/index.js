@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormField } from 'modules/form';
 import { getByPath } from 'utils/fp';
-import { WrapperStyle, ItemStyle } from './style';
+import { WrapperStyle, ItemStyle, DisableCellStyle } from './style';
 import InlineTextInput from './components/InlineTextInput';
 import InlineNumberInput from './components/InlineNumberInput';
 import InlineNumberAdjustmentInput from './components/InlineNumberAdjustmentInput';
@@ -55,7 +55,10 @@ function renderItem({
     );
   }
   if (type === 'date') return <InlineDateInput name={name} value={value} {...meta} />;
-  if (type === 'timeline') return <InlineTimeLineInput name={name} value={value} {...meta} />;
+  if (type === 'timeline') {
+    if (!value) return <div className={DisableCellStyle} />;
+    return <InlineTimeLineInput name={name} value={value} {...meta} />;
+  }
   if (type === 'metric') return <InlineMetricInput name={name} value={value} {...meta} />;
   if (type === 'enum') return <InlineSearchEnumInput name={name} value={value} {...meta} />;
   if (type === 'inCharges') return <InlineInChargeInput name={name} values={value} {...meta} />;

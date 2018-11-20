@@ -287,6 +287,42 @@ export const shipmentColumnFields = [
     name: 'cargoReady',
     type: 'timeline',
   },
+  {
+    name: 'voyages.0.departure',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.0.arrival',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.1.departure',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.1.arrival',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.2.departure',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.2.arrival',
+    type: 'timeline',
+  },
+  {
+    name: 'containerGroups.0.customClearance',
+    type: 'timeline',
+  },
+  {
+    name: 'containerGroups.0.warehouseArrival',
+    type: 'timeline',
+  },
+  {
+    name: 'containerGroups.0.deliveryReady',
+    type: 'timeline',
+  },
 ];
 
 export const orderColumns = [
@@ -371,6 +407,41 @@ export const shipmentColumns = [
   },
   {
     group: 'TIMELINE',
-    columns: [<FormattedMessage {...shipmentMessages.cargoReady} />],
+    columns: [
+      <FormattedMessage {...shipmentMessages.cargoReady} />,
+      <FormattedMessage
+        id="modules.Shipments.loadPortDeparture"
+        defaultMessage="LOAD PORT DEPARTURE"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.firstTransitPortArrival"
+        defaultMessage="FIRST TRANSIT PORT ARRIVAL"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.firstTransitPortDeparture"
+        defaultMessage="FIRST TRANSIT PORT DEPARTURE"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.secondTransitPortArrival"
+        defaultMessage="SECOND TRANSIT PORT ARRIVAL"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.secondTransitPortDeparture"
+        defaultMessage="SECOND TRANSIT PORT DEPARTURE"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.dischargePortArrival"
+        defaultMessage="DISCHARGE PORT ARRIVAL"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.customsClearance"
+        defaultMessage="CUSTOMS CLEARANCE"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.warehouseArrival"
+        defaultMessage="WAREHOUSE ARRIVAL"
+      />,
+      <FormattedMessage id="modules.Shipments.deliveryReady" defaultMessage="DELIVERY READY" />,
+    ],
   },
 ];
