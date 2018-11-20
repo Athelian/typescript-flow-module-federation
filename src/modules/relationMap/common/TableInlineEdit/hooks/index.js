@@ -5,6 +5,7 @@ import useDateInput from './useDateInput';
 import useInChargeInput from './useInChargeInput';
 import useTagInput from './useTagInput';
 import useMetricInput from './useMetricInput';
+import useTimeLineInput from './useTimeLineInput';
 
 export {
   useTextInput,
@@ -13,4 +14,5 @@ export {
   useInChargeInput,
   useTagInput,
   useMetricInput,
+  useTimeLineInput,
 };

@@ -263,11 +263,65 @@ export const shipmentColumnFields = [
     type: 'text',
   },
   {
+    name: 'forwarders',
+    type: 'forwarders',
+    meta: {
+      max: 4,
+    },
+  },
+  {
+    name: 'inCharges',
+    type: 'inCharges',
+    meta: {
+      max: 5,
+    },
+  },
+  {
     name: 'tags',
     type: 'tags',
     meta: {
       tagType: 'Shipment',
     },
+  },
+  {
+    name: 'cargoReady',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.0.departure',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.0.arrival',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.1.departure',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.1.arrival',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.2.departure',
+    type: 'timeline',
+  },
+  {
+    name: 'voyages.2.arrival',
+    type: 'timeline',
+  },
+  {
+    name: 'containerGroups.0.customClearance',
+    type: 'timeline',
+  },
+  {
+    name: 'containerGroups.0.warehouseArrival',
+    type: 'timeline',
+  },
+  {
+    name: 'containerGroups.0.deliveryReady',
+    type: 'timeline',
   },
 ];
 
@@ -315,6 +369,12 @@ export const batchColumns = [
       <FormattedMessage {...batchMessages.deliveredAt} />,
       <FormattedMessage {...batchMessages.expiredAt} />,
       <FormattedMessage {...batchMessages.producedAt} />,
+      <FormattedMessage {...batchMessages.tags} />,
+    ],
+  },
+  {
+    group: 'PACKING',
+    columns: [
       <FormattedMessage {...batchMessages.packageName} />,
       <FormattedMessage {...batchMessages.packageQuantity} />,
       <FormattedMessage {...batchMessages.packageGrossWeight} />,
@@ -322,7 +382,6 @@ export const batchColumns = [
       <FormattedMessage id="modules.Batches.pkgLength" defaultMessage="PKG LENGTH" />,
       <FormattedMessage id="modules.Batches.pkgWidth" defaultMessage="PKG WIDTH" />,
       <FormattedMessage id="modules.Batches.pkgHeight" defaultMessage="PKG HEIGHT" />,
-      <FormattedMessage {...batchMessages.tags} />,
     ],
   },
 ];
@@ -341,7 +400,48 @@ export const shipmentColumns = [
       <FormattedMessage {...shipmentMessages.loadType} />,
       <FormattedMessage {...shipmentMessages.incoterms} />,
       <FormattedMessage {...shipmentMessages.carrier} />,
+      <FormattedMessage {...shipmentMessages.forwarder} />,
+      <FormattedMessage id="modules.Shipments.inCharge" defaultMessage="IN CHARGE " />,
       <FormattedMessage {...shipmentMessages.tags} />,
+    ],
+  },
+  {
+    group: 'TIMELINE',
+    columns: [
+      <FormattedMessage {...shipmentMessages.cargoReady} />,
+      <FormattedMessage
+        id="modules.Shipments.loadPortDeparture"
+        defaultMessage="LOAD PORT DEPARTURE"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.firstTransitPortArrival"
+        defaultMessage="FIRST TRANSIT PORT ARRIVAL"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.firstTransitPortDeparture"
+        defaultMessage="FIRST TRANSIT PORT DEPARTURE"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.secondTransitPortArrival"
+        defaultMessage="SECOND TRANSIT PORT ARRIVAL"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.secondTransitPortDeparture"
+        defaultMessage="SECOND TRANSIT PORT DEPARTURE"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.dischargePortArrival"
+        defaultMessage="DISCHARGE PORT ARRIVAL"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.customsClearance"
+        defaultMessage="CUSTOMS CLEARANCE"
+      />,
+      <FormattedMessage
+        id="modules.Shipments.warehouseArrival"
+        defaultMessage="WAREHOUSE ARRIVAL"
+      />,
+      <FormattedMessage id="modules.Shipments.deliveryReady" defaultMessage="DELIVERY READY" />,
     ],
   },
 ];

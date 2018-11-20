@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormField } from 'modules/form';
 import { getByPath } from 'utils/fp';
-import { WrapperStyle, ItemStyle } from './style';
+import { WrapperStyle, ItemStyle, DisableCellStyle } from './style';
 import InlineTextInput from './components/InlineTextInput';
 import InlineNumberInput from './components/InlineNumberInput';
 import InlineNumberAdjustmentInput from './components/InlineNumberAdjustmentInput';
@@ -12,6 +12,8 @@ import InlineInChargeInput from './components/InlineInChargeInput';
 import InlineTagInput from './components/InlineTagInput';
 import InlineProductProvider from './components/InlineProductProvider';
 import InlineMetricInput from './components/InlineMetricInput';
+import InlineForwarderInput from './components/InlineForwarderInput';
+import InlineTimeLineInput from './components/InlineTimeLineInput';
 
 type Props = {
   cell: string,
@@ -53,9 +55,14 @@ function renderItem({
     );
   }
   if (type === 'date') return <InlineDateInput name={name} value={value} {...meta} />;
+  if (type === 'timeline') {
+    if (!value) return <div className={DisableCellStyle} />;
+    return <InlineTimeLineInput name={name} value={value} {...meta} />;
+  }
   if (type === 'metric') return <InlineMetricInput name={name} value={value} {...meta} />;
   if (type === 'enum') return <InlineSearchEnumInput name={name} value={value} {...meta} />;
   if (type === 'inCharges') return <InlineInChargeInput name={name} values={value} {...meta} />;
+  if (type === 'forwarders') return <InlineForwarderInput name={name} values={value} {...meta} />;
   if (type === 'tags') return <InlineTagInput name={name} values={value} {...meta} />;
   if (type === 'productProvider')
     return (
