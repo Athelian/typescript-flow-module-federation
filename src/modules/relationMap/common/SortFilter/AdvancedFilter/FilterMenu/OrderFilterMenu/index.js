@@ -8,81 +8,69 @@ import { OrderFilterMenuWrapperStyle, OrderFiltersBodyStyle, OrderTogglesBodySty
 type Props = {
   activeFilters: Array<string>,
   toggleActiveFilter: (string, string) => void,
+  selectedFilterItem: string,
+  changeSelectedFilterItem: string => void,
 };
 
-type State = {
-  selectedFilter: string,
-};
+export default function OrderFilterMenu({
+  activeFilters,
+  toggleActiveFilter,
+  selectedFilterItem,
+  changeSelectedFilterItem,
+}: Props) {
+  const filtersMap = [
+    { name: 'poNo', chosen: [] },
+    { name: 'exporter', chosen: [] },
+    { name: 'inCharge', chosen: [] },
+    { name: 'tags', chosen: [] },
+    { name: 'createdAt', chosen: [] },
+    { name: 'updatedAt', chosen: [] },
+  ];
 
-class OrderFilterMenu extends React.Component<Props, State> {
-  state = {
-    selectedFilter: 'poNo',
-  };
+  const togglesMap = [
+    { name: 'completelyBatched', icon: 'BATCH' },
+    { name: 'completelyShipped', icon: 'SHIPMENT' },
+    { name: 'showActive', icon: 'ACTIVE' },
+    { name: 'showArchived', icon: 'ARCHIVE' },
+  ];
 
-  changeSelectedFilter = (filter: string) => {
-    this.setState({ selectedFilter: filter });
-  };
+  return (
+    <div className={OrderFilterMenuWrapperStyle}>
+      <div className={OrderFiltersBodyStyle}>
+        {filtersMap.map(filter => {
+          const { name, chosen } = filter;
+          const isSelected = selectedFilterItem === name;
+          const isActive = activeFilters.some(activeFilter => activeFilter === name);
 
-  render() {
-    const { activeFilters, toggleActiveFilter } = this.props;
-    const { selectedFilter } = this.state;
-
-    const filtersMap = [
-      { name: 'poNo', chosen: [] },
-      { name: 'exporter', chosen: [] },
-      { name: 'inCharge', chosen: [] },
-      { name: 'tags', chosen: [] },
-      { name: 'createdAt', chosen: [] },
-      { name: 'updatedAt', chosen: [] },
-    ];
-
-    const togglesMap = [
-      { name: 'completelyBatched', icon: 'BATCH' },
-      { name: 'completelyShipped', icon: 'SHIPMENT' },
-      { name: 'showActive', icon: 'ACTIVE' },
-      { name: 'showArchived', icon: 'ARCHIVE' },
-    ];
-
-    return (
-      <div className={OrderFilterMenuWrapperStyle}>
-        <div className={OrderFiltersBodyStyle}>
-          {filtersMap.map(filter => {
-            const { name, chosen } = filter;
-            const isSelected = selectedFilter === name;
-            const isActive = activeFilters.some(activeFilter => activeFilter === name);
-
-            return (
-              <FilterMenuItem
-                name={name}
-                label={<FormattedMessage {...messages[name]} />}
-                isSelected={isSelected}
-                changeSelectedFilter={this.changeSelectedFilter}
-                isActive={isActive}
-                toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
-                data={chosen}
-              />
-            );
-          })}
-        </div>
-        <div className={OrderTogglesBodyStyle}>
-          {togglesMap.map(toggle => {
-            const { name, icon } = toggle;
-            const isActive = activeFilters.some(activeFilter => activeFilter === name);
-
-            return (
-              <ToggleMenuItem
-                name={name}
-                label={<FormattedMessage {...messages[name]} />}
-                icon={icon}
-                isActive={isActive}
-                toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
-              />
-            );
-          })}
-        </div>
+          return (
+            <FilterMenuItem
+              name={name}
+              label={<FormattedMessage {...messages[name]} />}
+              isSelected={isSelected}
+              changeSelectedFilterItem={changeSelectedFilterItem}
+              isActive={isActive}
+              toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
+              data={chosen}
+            />
+          );
+        })}
       </div>
-    );
-  }
-}
+      <div className={OrderTogglesBodyStyle}>
+        {togglesMap.map(toggle => {
+          const { name, icon } = toggle;
+          const isActive = activeFilters.some(activeFilter => activeFilter === name);
 
-export default OrderFilterMenu;
+          return (
+            <ToggleMenuItem
+              name={name}
+              label={<FormattedMessage {...messages[name]} />}
+              icon={icon}
+              isActive={isActive}
+              toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}

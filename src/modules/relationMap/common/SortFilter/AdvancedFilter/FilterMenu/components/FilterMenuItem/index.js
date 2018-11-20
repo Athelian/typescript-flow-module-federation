@@ -14,7 +14,7 @@ type Props = {
   name: string,
   label: React.Node,
   isSelected: boolean,
-  changeSelectedFilter: (filter: string) => void,
+  changeSelectedFilterItem: (filter: string) => void,
   isActive: boolean,
   toggleActiveFilter: (filter: string) => void,
   data: Array<any>,
@@ -24,7 +24,7 @@ export default function FilterMenuItem({
   name,
   label,
   isSelected,
-  changeSelectedFilter,
+  changeSelectedFilterItem,
   isActive,
   toggleActiveFilter,
   data,
@@ -32,7 +32,7 @@ export default function FilterMenuItem({
   return (
     <button
       className={FilterMenuItemWrapperStyle(isSelected)}
-      onClick={() => changeSelectedFilter(name)}
+      onClick={() => changeSelectedFilterItem(name)}
       type="button"
     >
       <div className={FilterMenuItemStyle}>

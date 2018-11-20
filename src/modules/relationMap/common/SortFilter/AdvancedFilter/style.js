@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, shadows, scrollbars } from 'styles/common';
+import { presets, colors, shadows, borderRadiuses } from 'styles/common';
 
 export const AdvancedFilterWrapperStyle: string = css`
   position: relative;
@@ -22,11 +22,13 @@ export const FilterToggleButtonStyle: string = css`
 
 export const FilterToggleBadgeStyle: string = css`
   position: absolute;
-  top: -5px;
-  right: -5px;
-  width: 20px;
-  height: 20px;
+  top: 5px;
+  right: 5px;
+  width: 10px;
+  height: 10px;
   background-color: ${colors.RED};
+  ${borderRadiuses.CIRCLE};
+  flex-shrink: 0;
 `;
 
 type AdvancedFilterBodyWrapperType = {
@@ -59,17 +61,4 @@ export const AdvancedFilterNavbarStyle: string = css`
 export const AdvancedFilterBodyStyle: string = css`
   display: flex;
   height: 300px;
-`;
-
-export const FilterInputWrapperStyle: string = css`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-  ${scrollbars.SMALL};
-  ${shadows.HEADER_RIGHT};
-  &:hover {
-    overflow-x: hidden;
-    overflow-y: overlay;
-  }
 `;

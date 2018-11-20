@@ -52,6 +52,7 @@ export const EntityTypeLabelStyle = (isActive: boolean): string => css`
   ${presets.ELLIPSIS};
   letter-spacing: 2px;
   color: ${isActive ? colors.TEAL : colors.GRAY_DARK};
+  text-align: left;
 `;
 
 export const EntityTypeBadgeStyle = (isActive: boolean): string => css`

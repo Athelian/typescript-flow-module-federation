@@ -16,7 +16,7 @@ import {
 
 type Props = {
   selectedEntityType: EntityTypes,
-  changeEntityType: (entityType: EntityTypes) => void,
+  changeSelectedEntityType: (entityType: EntityTypes) => void,
   activeFilters: {
     order: Array<string>,
     item: Array<string>,
@@ -27,7 +27,7 @@ type Props = {
 
 export default function EntityTypesMenu({
   selectedEntityType,
-  changeEntityType,
+  changeSelectedEntityType,
   activeFilters,
 }: Props) {
   const entityTypesMap = [
@@ -63,7 +63,7 @@ export default function EntityTypesMenu({
         return (
           <button
             className={EntityTypeMenuItemStyle(isSelected)}
-            onClick={() => changeEntityType(name)}
+            onClick={() => changeSelectedEntityType(name)}
             type="button"
           >
             <div className={EntityTypeLayoutStyle}>

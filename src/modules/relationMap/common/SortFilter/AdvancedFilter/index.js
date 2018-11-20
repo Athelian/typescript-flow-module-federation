@@ -8,6 +8,7 @@ import OutsideClickHandler from 'components/OutsideClickHandler';
 import { UIConsumer } from 'modules/ui';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';
+import FilterInputArea from './FilterInputArea';
 import { type EntityTypes } from './type';
 import {
   AdvancedFilterWrapperStyle,
@@ -16,22 +17,13 @@ import {
   AdvancedFilterBodyWrapperStyle,
   AdvancedFilterNavbarStyle,
   AdvancedFilterBodyStyle,
-  FilterInputWrapperStyle,
 } from './style';
 
-type Props = {
-  initialFilter: Object,
-  onApply: (filters: Object) => void,
-};
-
-type filterType = {
-  query: ?string,
-};
+type Props = {};
 
 type State = {
-  isActive: boolean,
-  filter: filterType,
   selectedEntityType: EntityTypes,
+  selectedFilterItem: string,
   activeFilters: {
     order: Array<string>,
     item: Array<string>,
@@ -43,14 +35,10 @@ type State = {
 class AdvanceFilterInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    const { initialFilter = {} } = props;
+
     this.state = {
-      isActive: false,
-      filter: {
-        ...initialFilter,
-        query: initialFilter.query || '',
-      },
       selectedEntityType: 'order',
+      selectedFilterItem: 'poNo',
       activeFilters: {
         order: [],
         item: [],
@@ -62,14 +50,12 @@ class AdvanceFilterInput extends React.Component<Props, State> {
     this.filterButtonRef = React.createRef();
   }
 
-  componentDidMount() {
-    const { initialFilter } = this.props;
-    const isActive = this.hasAnyFilter(initialFilter);
-    this.setState({ isActive });
-  }
-
-  changeEntityType = (entityType: EntityTypes) => {
+  changeSelectedEntityType = (entityType: EntityTypes) => {
     this.setState({ selectedEntityType: entityType });
+  };
+
+  changeSelectedFilterItem = (filterItem: string) => {
+    this.setState({ selectedFilterItem: filterItem });
   };
 
   toggleActiveFilter = (entityType: string, filter: string) => {
@@ -93,29 +79,15 @@ class AdvanceFilterInput extends React.Component<Props, State> {
     }
   };
 
-  hasAnyFilter = (values: Object) => Object.values(values).some(value => !!value);
-
-  onChangeFilter = (filter: filterType) => {
-    this.setState({ filter });
-  };
-
-  submit = () => {
-    const { onApply } = this.props;
-    const { filter } = this.state;
-    const isActive = this.hasAnyFilter(filter);
-    onApply(filter);
-    this.setState({ isActive });
-  };
-
-  reset = () => {
-    this.setState({ isActive: false, filter: { query: '' } });
-  };
-
   filterButtonRef: any;
 
   render() {
-    const { initialFilter } = this.props;
-    const { isActive, selectedEntityType, activeFilters } = this.state;
+    const { selectedEntityType, selectedFilterItem, activeFilters } = this.state;
+    const isActive =
+      activeFilters.order.length > 0 ||
+      activeFilters.item.length > 0 ||
+      activeFilters.batch.length > 0 ||
+      activeFilters.shipment.length > 0;
 
     return (
       <UIConsumer>
@@ -129,9 +101,7 @@ class AdvanceFilterInput extends React.Component<Props, State> {
                   type="button"
                   ref={this.filterButtonRef}
                 >
-                  {(isActive || this.hasAnyFilter(initialFilter)) && (
-                    <div className={FilterToggleBadgeStyle} />
-                  )}
+                  {isActive && <div className={FilterToggleBadgeStyle} />}
                   <Icon icon="FILTER" />
                 </button>
                 <OutsideClickHandler
@@ -160,15 +130,20 @@ class AdvanceFilterInput extends React.Component<Props, State> {
                     <div className={AdvancedFilterBodyStyle}>
                       <EntityTypesMenu
                         selectedEntityType={selectedEntityType}
-                        changeEntityType={this.changeEntityType}
+                        changeSelectedEntityType={this.changeSelectedEntityType}
                         activeFilters={activeFilters}
                       />
                       <FilterMenu
                         selectedEntityType={selectedEntityType}
                         activeFilters={activeFilters}
                         toggleActiveFilter={this.toggleActiveFilter}
+                        selectedFilterItem={selectedFilterItem}
+                        changeSelectedFilterItem={this.changeSelectedFilterItem}
                       />
-                      <div className={FilterInputWrapperStyle}>3</div>
+                      <FilterInputArea
+                        selectedEntityType={selectedEntityType}
+                        selectedFilterItem={selectedFilterItem}
+                      />
                     </div>
                   </div>
                 </OutsideClickHandler>
