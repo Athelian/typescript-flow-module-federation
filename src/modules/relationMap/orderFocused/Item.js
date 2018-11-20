@@ -109,9 +109,6 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           const isRelated =
             get(false, `${lineItemType}.${id}`, focusedItem) ||
             get(false, `${lineItemType}.${id}`, targetedItem);
-          // isFocused && !isTargeted
-          //   ? get(false, `${lineItemType}.${id}`, focusedItem)
-          //   : isRelatedLine(id);
           const hasRelation = isAllOrderItemLine ? false : isRelated;
           return (
             <RelationLine
