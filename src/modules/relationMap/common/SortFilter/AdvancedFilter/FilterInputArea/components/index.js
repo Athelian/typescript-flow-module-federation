@@ -1,6 +1,5 @@
 // @flow
 import DateRange from './DateRange';
+import Tags from './Tags';
 
-export { DateRange };
-
-export default DateRange;
+export { DateRange, Tags };

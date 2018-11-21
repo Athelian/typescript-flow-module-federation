@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
-import { DateRange } from './components';
+import { DateRange, Tags } from './components';
 import { FilterInputAreaWrapperStyle } from './style';
 
 type Props = {
@@ -9,26 +9,45 @@ type Props = {
   selectedFilterItem: string,
 };
 
+const Placeholder = () => <div>Not done</div>;
+
 const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem: string) => {
   switch (selectedEntityType) {
     case 'order': {
       switch (selectedFilterItem) {
+        case 'poNo':
+          return Placeholder;
+        case 'exporter':
+          return Placeholder;
+        case 'inCharge':
+          return Placeholder;
+        case 'tags':
+          return Tags;
         case 'createdAt':
           return DateRange;
         case 'updatedAt':
           return DateRange;
         default:
-          return DateRange;
+          return Placeholder;
       }
     }
     case 'item':
-      return DateRange;
+      switch (selectedFilterItem) {
+        case 'price':
+          return Placeholder;
+        case 'createdAt':
+          return DateRange;
+        case 'updatedAt':
+          return DateRange;
+        default:
+          return Placeholder;
+      }
     case 'batch':
-      return DateRange;
+      return Placeholder;
     case 'shipment':
-      return DateRange;
+      return Placeholder;
     default:
-      return DateRange;
+      return Placeholder;
   }
 };
 

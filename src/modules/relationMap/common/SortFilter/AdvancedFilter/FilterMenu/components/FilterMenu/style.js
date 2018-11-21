@@ -2,23 +2,23 @@
 import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
-export const OrderFilterMenuWrapperStyle: string = css`
+export const FilterMenuWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   width: 100%;
 `;
 
-export const OrderFiltersBodyStyle: string = css`
+export const FiltersBodyStyle: string = css`
   display: flex;
   flex-direction: column;
   width: 100%;
-  border-bottom: 1px solid ${colors.GRAY_VERY_LIGHT};
   flex-shrink: 0;
 `;
 
-export const OrderTogglesBodyStyle: string = css`
+export const TogglesBodyStyle: string = css`
   display: flex;
   flex-direction: column;
   width: 100%;
   flex-shrink: 0;
+  border-top: 1px solid ${colors.GRAY_VERY_LIGHT};
 `;

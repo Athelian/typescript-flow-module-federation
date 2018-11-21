@@ -51,7 +51,17 @@ class AdvanceFilterInput extends React.Component<Props, State> {
   }
 
   changeSelectedEntityType = (entityType: EntityTypes) => {
-    this.setState({ selectedEntityType: entityType });
+    const defaultFilterMenuItemMap = {
+      order: 'poNo',
+      item: 'price',
+      batch: 'tags',
+      shipment: 'forwarder',
+    };
+
+    this.setState({
+      selectedEntityType: entityType,
+      selectedFilterItem: defaultFilterMenuItemMap[entityType],
+    });
   };
 
   changeSelectedFilterItem = (filterItem: string) => {

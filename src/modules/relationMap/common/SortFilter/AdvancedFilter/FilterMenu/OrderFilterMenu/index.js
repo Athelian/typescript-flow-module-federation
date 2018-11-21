@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { FilterMenuItem, ToggleMenuItem } from '../components';
+import { FilterMenu } from '../components';
 import messages from './messages';
-import { OrderFilterMenuWrapperStyle, OrderFiltersBodyStyle, OrderTogglesBodyStyle } from './style';
 
 type Props = {
   activeFilters: Array<string>,
@@ -19,58 +18,47 @@ export default function OrderFilterMenu({
   changeSelectedFilterItem,
 }: Props) {
   const filtersMap = [
-    { name: 'poNo', chosen: [] },
-    { name: 'exporter', chosen: [] },
-    { name: 'inCharge', chosen: [] },
-    { name: 'tags', chosen: [] },
-    { name: 'createdAt', chosen: [] },
-    { name: 'updatedAt', chosen: [] },
+    {
+      label: <FormattedMessage {...messages.order} />,
+      icon: 'ORDER',
+      filters: [
+        { name: 'poNo', label: <FormattedMessage {...messages.poNo} /> },
+        { name: 'exporter', label: <FormattedMessage {...messages.exporter} /> },
+        { name: 'inCharge', label: <FormattedMessage {...messages.inCharge} /> },
+        { name: 'tags', label: <FormattedMessage {...messages.tags} /> },
+        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} /> },
+        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} /> },
+      ],
+    },
   ];
 
   const togglesMap = [
-    { name: 'completelyBatched', icon: 'BATCH' },
-    { name: 'completelyShipped', icon: 'SHIPMENT' },
-    { name: 'showActive', icon: 'ACTIVE' },
-    { name: 'showArchived', icon: 'ARCHIVE' },
+    {
+      name: 'completelyBatched',
+      label: <FormattedMessage {...messages.completelyBatched} />,
+      icon: 'BATCH',
+    },
+    {
+      name: 'completelyShipped',
+      label: <FormattedMessage {...messages.completelyShipped} />,
+      icon: 'SHIPMENT',
+    },
+    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+    {
+      name: 'showArchived',
+      label: <FormattedMessage {...messages.showArchived} />,
+      icon: 'ARCHIVE',
+    },
   ];
 
   return (
-    <div className={OrderFilterMenuWrapperStyle}>
-      <div className={OrderFiltersBodyStyle}>
-        {filtersMap.map(filter => {
-          const { name, chosen } = filter;
-          const isSelected = selectedFilterItem === name;
-          const isActive = activeFilters.some(activeFilter => activeFilter === name);
-
-          return (
-            <FilterMenuItem
-              name={name}
-              label={<FormattedMessage {...messages[name]} />}
-              isSelected={isSelected}
-              changeSelectedFilterItem={changeSelectedFilterItem}
-              isActive={isActive}
-              toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
-              data={chosen}
-            />
-          );
-        })}
-      </div>
-      <div className={OrderTogglesBodyStyle}>
-        {togglesMap.map(toggle => {
-          const { name, icon } = toggle;
-          const isActive = activeFilters.some(activeFilter => activeFilter === name);
-
-          return (
-            <ToggleMenuItem
-              name={name}
-              label={<FormattedMessage {...messages[name]} />}
-              icon={icon}
-              isActive={isActive}
-              toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
-            />
-          );
-        })}
-      </div>
-    </div>
+    <FilterMenu
+      filtersMap={filtersMap}
+      togglesMap={togglesMap}
+      activeFilters={activeFilters}
+      toggleActiveFilter={toggleActiveFilter}
+      selectedFilterItem={selectedFilterItem}
+      changeSelectedFilterItem={changeSelectedFilterItem}
+    />
   );
 }

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import OrderFilterMenu from './OrderFilterMenu';
+import ItemFilterMenu from './ItemFilterMenu';
 import { FilterMenuWrapperStyle } from './style';
 
 type Props = {
@@ -22,7 +23,7 @@ const getFilterMenu = (selectedEntityType: EntityTypes) => {
     case 'order':
       return OrderFilterMenu;
     case 'item':
-      return OrderFilterMenu;
+      return ItemFilterMenu;
     case 'batch':
       return OrderFilterMenu;
     case 'shipment':

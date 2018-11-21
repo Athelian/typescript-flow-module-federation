@@ -2,6 +2,9 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  order: {
+    id: 'modules.Orders.order',
+  },
   poNo: {
     id: 'modules.Orders.poNo',
   },
