@@ -22,37 +22,32 @@ const ActionSelector = ({ children, target, onCancelTarget }: Props) => {
   return (
     <div className={style.ActionSection1WrapperStyle}>
       <div className={style.ActionsSelectedStyle}>
+        <button className={style.CancelButtonStyle} type="button" onClick={onCancelTarget}>
+          <Icon icon="CLEAR" />
+        </button>
         <Label className={style.ActionSelectedLabelStyle}>
           <FormattedMessage {...messages.selected} />
         </Label>
-        <button className={style.CancelButtonStyle} type="button" onClick={onCancelTarget}>
-          <Icon icon="CANCEL" />
-        </button>
+
         <div className={style.SelectedWrapperStyle}>
-          {!!totalOrder && (
-            <Label>
-              {` ${totalOrder} `}
-              <FormattedMessage {...messages.ordersLabel} />
-            </Label>
-          )}
-          {!!totalOrderItem && (
-            <Label>
-              {` ${totalOrderItem} `}
-              <FormattedMessage {...messages.itemsLabel} />
-            </Label>
-          )}
-          {!!totalBatch && (
-            <Label>
-              {` ${totalBatch} `}
-              <FormattedMessage {...messages.batchesLabel} />
-            </Label>
-          )}
-          {!!totalShipment && (
-            <Label>
-              {` ${totalShipment} `}
-              <FormattedMessage {...messages.shipmentsLabel} />
-            </Label>
-          )}
+          <Label className={style.ItemWrapper(!!totalOrder)}>{` ${totalOrder} `}</Label>
+          <div className={style.IconWrapper(!!totalOrder)}>
+            <Icon icon="ORDER" />
+          </div>
+          <Label className={style.ItemWrapper(!!totalOrderItem)}>{` ${totalOrderItem} `}</Label>
+          <div className={style.IconWrapper(!!totalOrderItem)}>
+            <Icon icon="ORDER_ITEM" />
+          </div>
+
+          <Label className={style.ItemWrapper(!!totalBatch)}>{` ${totalBatch} `}</Label>
+          <div className={style.IconWrapper(!!totalBatch)}>
+            <Icon icon="BATCH" />
+          </div>
+
+          <Label className={style.ItemWrapper(!!totalShipment)}>{` ${totalShipment} `}</Label>
+          <div className={style.IconWrapper(!!totalShipment)}>
+            <Icon icon="SHIPMENT" />
+          </div>
         </div>
       </div>
       <div className={style.ChildrenWrapperStyle}>{children}</div>
