@@ -178,4 +178,28 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.tryAgain',
     defaultMessage: 'Something went wrong Please try again',
   },
+  expressionOr: {
+    id: 'modules.RelationMaps.expression.or',
+    defaultMessage: 'Or',
+  },
+  expressionAnd: {
+    id: 'modules.RelationMaps.expression.and',
+    defaultMessage: 'And',
+  },
+  expressionAndOr: {
+    id: 'modules.RelationMaps.expression.andOr',
+    defaultMessage: 'And / Or',
+  },
+  actionAvailable: {
+    id: 'modules.RelationMaps.action.actionAvailable',
+    defaultMessage: 'This action is only available for a selection of',
+  },
+  atLeast: {
+    id: 'modules.RelationMaps.action.atLeast',
+    defaultMessage: 'at least',
+  },
+  shareSameExport: {
+    id: 'modules.RelationMaps.action.shareSameExprot',
+    defaultMessage: 'That share the same export',
+  },
 });

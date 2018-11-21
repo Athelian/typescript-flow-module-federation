@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
 import messages from 'modules/relationMap/messages';
