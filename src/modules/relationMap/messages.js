@@ -163,7 +163,7 @@ export default defineMessages({
     defaultMessage: 'Please wait for a moment',
   },
   cloning: {
-    id: 'modules.RelationMaps.label.waiting',
+    id: 'modules.RelationMaps.label.cloning',
     defaultMessage: 'Cloning',
   },
   spliting: {
