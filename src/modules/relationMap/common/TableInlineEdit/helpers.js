@@ -109,3 +109,51 @@ export const totalLinePerOrder = (orderItems: Array<Object>, batchIds: Array<str
   }
   return totalLines;
 };
+
+export const parseChangedData = (
+  changedData: { orders?: Object, shipments?: Object, orderItems?: Object, batches?: Object },
+  editData: Object
+) => {
+  console.warn({ changedData, editData });
+  const orders = [];
+  if (changedData.orders) {
+    (Object.entries(changedData.orders): any).forEach(item => {
+      const [id, order] = item;
+      const keys = Object.keys(order);
+      const changedOrder = {};
+      keys.forEach(key => {
+        const updateValue = editData.orders[id][key];
+        switch (key) {
+          case 'issuedAt': {
+            changedOrder[key] = updateValue ? new Date(updateValue) : null;
+            break;
+          }
+
+          case 'inCharges':
+            changedOrder.inChargeIds = updateValue.map(({ id: userId }) => userId);
+            break;
+          case 'tags':
+            changedOrder.tagIds = updateValue.map(({ id: tagId }) => tagId);
+            break;
+
+          case 'currency':
+          case 'incoterm': {
+            changedOrder[key] = updateValue && updateValue.length > 0 ? updateValue : null;
+            break;
+          }
+
+          default:
+            changedOrder[key] = updateValue;
+        }
+      });
+      orders.push({ input: changedOrder, id });
+    });
+  }
+  return {
+    orders,
+    batches: [],
+    warehouses: [],
+    products: [],
+    shipments: [],
+  };
+};

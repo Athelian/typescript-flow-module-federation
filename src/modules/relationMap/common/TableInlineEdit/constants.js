@@ -153,6 +153,13 @@ export const batchColumnFields = [
     type: 'date',
   },
   {
+    name: 'tags',
+    type: 'tags',
+    meta: {
+      tagType: 'Batch',
+    },
+  },
+  {
     name: 'packageName',
     type: 'text',
   },
@@ -198,13 +205,6 @@ export const batchColumnFields = [
     meta: {
       metrics: distanceMetrics,
       convert: distanceConvert,
-    },
-  },
-  {
-    name: 'tags',
-    type: 'tags',
-    meta: {
-      tagType: 'Batch',
     },
   },
 ];
