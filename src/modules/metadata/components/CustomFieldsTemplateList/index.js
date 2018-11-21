@@ -9,7 +9,7 @@ import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import FormHeader from 'modules/metadata/components/FormHeader';
 import CustomFieldsTemplateGridView from 'modules/metadata/components/CustomFieldsTemplateGridView';
-// import CustomFieldsTemplateForm from 'modules/metadata/components/CustomFieldsTemplateForm';
+import CustomFieldsTemplateForm from 'modules/metadata/components/CustomFieldsTemplateForm';
 import { masksQuery } from 'modules/metadata/query';
 
 import { CustomFieldsEditFormWrapperStyle, CustomFieldsFormHeaderStyle } from './style';
@@ -69,21 +69,11 @@ const CustomFieldTemplateList = ({ entityType }: Props) => (
                   onRequestClose={() => toggle(false)}
                   options={{ width: '1030px' }}
                 >
-                  template
-                  {/* <CustomFieldsTemplateForm
-                    template={{
-                      name: 'template name',
-                      description: 'template description',
-                      metadata: [
-                        { checked: false, key: 'custom fields 1', value: 'Input' },
-                        { checked: true, key: 'custom fields 2', value: 'Input' },
-                        { checked: false, key: 'custom fields 3', value: 'Input' },
-                        { checked: false, key: 'custom fields 4', value: 'Input' },
-                      ],
-                    }}
+                  <CustomFieldsTemplateForm
+                    isNew
                     onSave={() => toggle(false)}
                     onCancel={() => toggle(false)}
-                  /> */}
+                  />
                 </SlideView>
               </>
             )}

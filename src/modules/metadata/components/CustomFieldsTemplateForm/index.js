@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Subscribe } from 'unstated';
 import Layout from 'components/Layout';
 import ContentWrapper from 'components/ContentWrapper';
 
@@ -11,142 +12,133 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
 import { FormField } from 'modules/form';
-import { uuid } from 'utils/id';
 import { textInputFactory, textAreaFactory } from 'modules/form/helpers';
+import FieldDefinitionContainer from 'modules/metadata/container';
+import MaskContainer from 'modules/metadata/components/CustomFieldsTemplateForm/container';
 import MetadataItem from './components/MetadataItem';
 import { TemplateFormWrapperStyle, FormFieldsStyle, DescriptionLabelWrapperStyle } from './style';
 
-type OptionalProps = {
-  template: {
-    name: string,
-    description: string,
-    metadata: [
-      {
-        checked: boolean,
-        key: string,
-        value: string,
-      },
-    ],
-  },
-};
-
-type Props = OptionalProps & {
+type Props = {
   isNew: boolean,
   onCancel: Function,
   onSave: Function,
 };
 
-const defaultProps = {
-  template: {
-    name: '',
-    description: '',
-    metadata: [],
-  },
-};
+const CustomFieldsTemplateForm = ({ isNew, onCancel, onSave }: Props) => (
+  <Subscribe to={[FieldDefinitionContainer, MaskContainer]}>
+    {(fieldDefinitionState, maskState) => {
+      const {
+        originalValues: { fieldDefinitions },
+      } = fieldDefinitionState;
+      const { originalValues: mask } = maskState;
 
-const CustomFieldsTemplateForm = ({
-  template: { name, description, metadata },
-  isNew,
-  onCancel,
-  onSave,
-}: Props) => (
-  <Layout
-    navBar={
-      <SlideViewNavBar>
-        <EntityIcon icon="METADATA" color="METADATA" />
-        <JumpToSection>
-          <SectionTabs
-            link="templateSection"
-            label={<FormattedMessage id="modules.metadata.template" defaultMessage="TEMPLATE" />}
-            icon="TEMPLATE"
-          />
-          <SectionTabs
-            link="customFieldsSection"
-            label={
-              <FormattedMessage
-                id="modules.metadata.customFieldsSection"
-                defaultMessage="CUSTOM FIELDS"
-              />
-            }
-            icon="METADATA"
-          />
-        </JumpToSection>
-        <CancelButton onClick={onCancel} />
-        <SaveButton onClick={onSave} />
-      </SlideViewNavBar>
-    }
-  >
-    <div className={TemplateFormWrapperStyle}>
-      <SectionWrapper id="templateSection">
-        <SectionHeader
-          icon="TEMPLATE"
-          title={<FormattedMessage id="modules.metadata.template" defaultMessage="TEMPLATE" />}
-        />
-        <ContentWrapper width="880px" className={FormFieldsStyle}>
-          <GridColumn>
-            <FormField name="name" initValue={name}>
-              {({ name: fieldName, ...inputHandlers }) =>
-                textInputFactory({
-                  label: (
+      return (
+        <Layout
+          navBar={
+            <SlideViewNavBar>
+              <EntityIcon icon="METADATA" color="METADATA" />
+              <JumpToSection>
+                <SectionTabs
+                  link="templateSection"
+                  label={
+                    <FormattedMessage id="modules.metadata.template" defaultMessage="TEMPLATE" />
+                  }
+                  icon="TEMPLATE"
+                />
+                <SectionTabs
+                  link="customFieldsSection"
+                  label={
                     <FormattedMessage
-                      id="modules.metadata.templateName"
-                      defaultMessage="TEMPLATE NAME"
+                      id="modules.metadata.customFieldsSection"
+                      defaultMessage="CUSTOM FIELDS"
                     />
-                  ),
-                  required: true,
-                  isNew,
-                  name: fieldName,
-                  inputHandlers,
-                  originalValue: name,
-                })
-              }
-            </FormField>
-
-            <FormField name="description" initValue={description}>
-              {({ name: fieldName, ...inputHandlers }) =>
-                textAreaFactory({
-                  label: (
-                    <div className={DescriptionLabelWrapperStyle}>
-                      <FormattedMessage
-                        id="modules.metadata.description"
-                        defaultMessage="DESCRIPTION"
-                      />
-                    </div>
-                  ),
-                  isNew,
-                  height: '100px',
-                  align: 'right',
-                  name: fieldName,
-                  inputHandlers,
-                  originalValue: description,
-                })
-              }
-            </FormField>
-          </GridColumn>
-        </ContentWrapper>
-      </SectionWrapper>
-      <SectionWrapper id="customFieldsSection">
-        <SectionHeader
-          icon="METADATA"
-          title={
-            <FormattedMessage
-              id="modules.metadata.customFieldsSection"
-              defaultMessage="CUSTOM FIELDS"
-            />
+                  }
+                  icon="METADATA"
+                />
+              </JumpToSection>
+              <CancelButton onClick={onCancel} />
+              <SaveButton onClick={onSave} />
+            </SlideViewNavBar>
           }
-        />
-        <ContentWrapper width="880px" className={FormFieldsStyle}>
-          <div>
-            {metadata.map(item => (
-              <MetadataItem key={uuid()} value={item} />
-            ))}
-          </div>
-        </ContentWrapper>
-      </SectionWrapper>
-    </div>
-  </Layout>
-);
+        >
+          <div className={TemplateFormWrapperStyle}>
+            <SectionWrapper id="templateSection">
+              <SectionHeader
+                icon="TEMPLATE"
+                title={
+                  <FormattedMessage id="modules.metadata.template" defaultMessage="TEMPLATE" />
+                }
+              />
+              <ContentWrapper width="880px" className={FormFieldsStyle}>
+                <GridColumn>
+                  <FormField name="name" initValue={mask.name}>
+                    {({ name: fieldName, ...inputHandlers }) =>
+                      textInputFactory({
+                        label: (
+                          <FormattedMessage
+                            id="modules.metadata.templateName"
+                            defaultMessage="TEMPLATE NAME"
+                          />
+                        ),
+                        required: true,
+                        isNew,
+                        name: fieldName,
+                        inputHandlers,
+                        originalValue: mask.name,
+                      })
+                    }
+                  </FormField>
 
-CustomFieldsTemplateForm.defaultProps = defaultProps;
+                  <FormField name="description" initValue={mask.memo}>
+                    {({ name: fieldName, ...inputHandlers }) =>
+                      textAreaFactory({
+                        label: (
+                          <div className={DescriptionLabelWrapperStyle}>
+                            <FormattedMessage
+                              id="modules.metadata.description"
+                              defaultMessage="DESCRIPTION"
+                            />
+                          </div>
+                        ),
+                        isNew,
+                        height: '100px',
+                        align: 'right',
+                        name: fieldName,
+                        inputHandlers,
+                        originalValue: mask.memo,
+                      })
+                    }
+                  </FormField>
+                </GridColumn>
+              </ContentWrapper>
+            </SectionWrapper>
+            <SectionWrapper id="customFieldsSection">
+              <SectionHeader
+                icon="METADATA"
+                title={
+                  <FormattedMessage
+                    id="modules.metadata.customFieldsSection"
+                    defaultMessage="CUSTOM FIELDS"
+                  />
+                }
+              />
+              <ContentWrapper width="880px" className={FormFieldsStyle}>
+                <div>
+                  {fieldDefinitions.map(fieldDefinition => (
+                    <MetadataItem
+                      key={fieldDefinition.id}
+                      checked={mask.fieldDefinitionIDs.includes(fieldDefinition.id)}
+                      item={fieldDefinition}
+                    />
+                  ))}
+                </div>
+              </ContentWrapper>
+            </SectionWrapper>
+          </div>
+        </Layout>
+      );
+    }}
+  </Subscribe>
+);
 
 export default CustomFieldsTemplateForm;

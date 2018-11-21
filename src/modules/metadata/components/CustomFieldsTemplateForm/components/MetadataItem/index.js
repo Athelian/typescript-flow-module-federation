@@ -11,10 +11,9 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  value: {
+  item: {
     checked: boolean,
-    key: string,
-    value: string,
+    name: string,
   },
 };
 
@@ -22,16 +21,16 @@ const defaultProps = {
   width: '200px',
 };
 
-const MetadataItem = ({ width, value: { checked, key, value } }: Props) => (
+const MetadataItem = ({ width, item: { checked, name } }: Props) => (
   <div className={AdjustmentWrapperStyle}>
     <div className={AdjustmentFieldsWrapperStyle}>
       <div className={CheckBoxStyle(checked)}>
         <Icon icon="CONFIRM" />
       </div>
 
-      <Label width={width}>{key}</Label>
+      <Label width={width}>{name}</Label>
       <Label width={width} align="right">
-        {value}
+        Input
       </Label>
     </div>
   </div>
