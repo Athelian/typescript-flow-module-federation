@@ -39,37 +39,56 @@ function renderItem({
   values: Object,
   meta?: Object,
 }) {
-  if (type === 'number') return <InlineNumberInput name={name} value={value} {...meta} />;
-  if (type === 'numberAdjustment') {
-    const adjustments = getByPath('batchAdjustments', values) || [];
-    const totalAdjustment = adjustments
-      ? adjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
-      : 0;
-    return (
-      <InlineNumberAdjustmentInput
-        name={name}
-        value={value}
-        {...meta}
-        adjustment={totalAdjustment}
-      />
-    );
-  }
-  if (type === 'date') return <InlineDateInput name={name} value={value} {...meta} />;
-  if (type === 'timeline') {
-    if (!value) return <div className={DisableCellStyle} />;
-    return <InlineTimeLineInput name={name} value={value} {...meta} />;
-  }
-  if (type === 'metric') return <InlineMetricInput name={name} value={value} {...meta} />;
-  if (type === 'enum') return <InlineSearchEnumInput name={name} value={value} {...meta} />;
-  if (type === 'inCharges') return <InlineInChargeInput name={name} values={value} {...meta} />;
-  if (type === 'forwarders') return <InlineForwarderInput name={name} values={value} {...meta} />;
-  if (type === 'tags') return <InlineTagInput name={name} values={value} {...meta} />;
-  if (type === 'productProvider')
-    return (
-      <InlineProductProvider name={name} value={value} exporter={value.exporter.id} {...meta} />
-    );
+  switch (type) {
+    case 'number':
+      return <InlineNumberInput name={name} value={value} {...meta} />;
 
-  return <InlineTextInput name={name} value={value} {...meta} />;
+    case 'numberAdjustment': {
+      const adjustments = getByPath('batchAdjustments', values) || [];
+      const totalAdjustment = adjustments
+        ? adjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
+        : 0;
+      return (
+        <InlineNumberAdjustmentInput
+          name={name}
+          value={value}
+          {...meta}
+          adjustment={totalAdjustment}
+        />
+      );
+    }
+
+    case 'date':
+      return <InlineDateInput name={name} value={value} {...meta} />;
+
+    case 'timeline': {
+      if (!value) return <div className={DisableCellStyle} />;
+      return <InlineTimeLineInput name={name} value={value} {...meta} />;
+    }
+
+    case 'metric':
+      return <InlineMetricInput name={name} value={value} values={values} {...meta} />;
+
+    case 'enum':
+      return <InlineSearchEnumInput name={name} value={value} {...meta} />;
+
+    case 'inCharges':
+      return <InlineInChargeInput name={name} values={value} {...meta} />;
+
+    case 'forwarders':
+      return <InlineForwarderInput name={name} values={value} {...meta} />;
+
+    case 'tags':
+      return <InlineTagInput name={name} values={value} {...meta} />;
+
+    case 'productProvider':
+      return (
+        <InlineProductProvider name={name} value={value} exporter={value.exporter.id} {...meta} />
+      );
+
+    default:
+      return <InlineTextInput name={name} value={value} {...meta} />;
+  }
 }
 
 export default function TableItem({ cell, fields, values, validator }: Props) {

@@ -21,18 +21,18 @@ describe('I18n', () => {
       cy.task('me', token.token).then(({ data: { viewer: { user } } }) => {
         cy.task('language', {
           ...token,
-          variables: { id: user.id, input: { language: 'en' } },
+          variables: { id: user.id, input: { language: 'ja' } },
         }).then(() => {
           cy.visit('/')
             .wait(1000)
-            .contains('RELATION MAP');
+            .contains('リレーションマップ');
           cy.task('language', {
             ...token,
-            variables: { id: user.id, input: { language: 'ja' } },
+            variables: { id: user.id, input: { language: 'en' } },
           }).then(() => {
             cy.visit('/')
               .wait(1000)
-              .contains('リレーションマップ');
+              .contains('RELATION MAP');
           });
         });
       });

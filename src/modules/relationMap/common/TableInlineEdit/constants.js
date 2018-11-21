@@ -153,6 +153,13 @@ export const batchColumnFields = [
     type: 'date',
   },
   {
+    name: 'tags',
+    type: 'tags',
+    meta: {
+      tagType: 'Batch',
+    },
+  },
+  {
     name: 'packageName',
     type: 'text',
   },
@@ -182,6 +189,8 @@ export const batchColumnFields = [
     meta: {
       metrics: distanceMetrics,
       convert: distanceConvert,
+      sourcePath: 'packageSize',
+      destPath: 'width',
     },
   },
   {
@@ -190,6 +199,8 @@ export const batchColumnFields = [
     meta: {
       metrics: distanceMetrics,
       convert: distanceConvert,
+      sourcePath: 'packageSize',
+      destPath: 'height',
     },
   },
   {
@@ -198,13 +209,8 @@ export const batchColumnFields = [
     meta: {
       metrics: distanceMetrics,
       convert: distanceConvert,
-    },
-  },
-  {
-    name: 'tags',
-    type: 'tags',
-    meta: {
-      tagType: 'Batch',
+      sourcePath: 'packageSize',
+      destPath: 'length',
     },
   },
 ];
@@ -379,9 +385,9 @@ export const batchColumns = [
       <FormattedMessage {...batchMessages.packageQuantity} />,
       <FormattedMessage {...batchMessages.packageGrossWeight} />,
       <FormattedMessage {...batchMessages.packageVolume} />,
-      <FormattedMessage id="modules.Batches.pkgLength" defaultMessage="PKG LENGTH" />,
       <FormattedMessage id="modules.Batches.pkgWidth" defaultMessage="PKG WIDTH" />,
       <FormattedMessage id="modules.Batches.pkgHeight" defaultMessage="PKG HEIGHT" />,
+      <FormattedMessage id="modules.Batches.pkgLength" defaultMessage="PKG LENGTH" />,
     ],
   },
 ];
