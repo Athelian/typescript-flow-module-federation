@@ -195,7 +195,6 @@ export const cloneBatchByUpdateOrder = async (client: any, batches: Object, filt
     });
     const request = mutationRequest({
       mutation: cloneOrderItemMutation,
-      fetchpolicy: 'cache-and-network',
       variables: {
         id: order.id,
         input: { orderItems: updateOrderItems },
@@ -245,7 +244,7 @@ export const cloneBatch = async (client: any, batches: Object, filter: Object) =
         variables: {
           input: {
             no: `[cloned] ${currentBatch.no}`,
-            quantity: Math.floor(Math.random() * 10 + 1), // currentBatch.quantity,
+            quantity: currentBatch.quantity,
             orderItemId,
           },
         },
