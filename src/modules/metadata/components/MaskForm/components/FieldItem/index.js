@@ -8,25 +8,28 @@ import { AdjustmentWrapperStyle, AdjustmentFieldsWrapperStyle, CheckBoxStyle } f
 
 type OptionalProps = {
   width: string,
+  onClick: Function,
 };
 
 type Props = OptionalProps & {
   item: {
     checked: boolean,
+    id: string,
     name: string,
   },
 };
 
 const defaultProps = {
   width: '200px',
+  onClick: () => {},
 };
 
-const MetadataItem = ({ width, item: { checked, name } }: Props) => (
+const FieldItem = ({ width, item: { checked, name }, onClick }: Props) => (
   <div className={AdjustmentWrapperStyle}>
     <div className={AdjustmentFieldsWrapperStyle}>
-      <div className={CheckBoxStyle(checked)}>
+      <button type="button" className={CheckBoxStyle(checked)} onClick={onClick}>
         <Icon icon="CONFIRM" />
-      </div>
+      </button>
 
       <Label width={width}>{name}</Label>
       <Label width={width} align="right">
@@ -36,6 +39,6 @@ const MetadataItem = ({ width, item: { checked, name } }: Props) => (
   </div>
 );
 
-MetadataItem.defaultProps = defaultProps;
+FieldItem.defaultProps = defaultProps;
 
-export default MetadataItem;
+export default FieldItem;

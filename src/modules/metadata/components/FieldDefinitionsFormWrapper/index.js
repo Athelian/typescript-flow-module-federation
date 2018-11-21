@@ -30,7 +30,9 @@ class FieldDefinitionsFormWrapper extends React.Component<Props> {
   ) => {
     const input = {
       entityType: formData.entityType,
-      fieldDefinitions: formData.fieldDefinitions.map(customField => ({ name: customField.name })),
+      fieldDefinitions: formData.fieldDefinitions
+        .filter(item => item.name !== '')
+        .map(({ id, name, isNew = false }) => (isNew ? { name } : { id, name })),
     };
 
     const { data } = await saveFieldDefinitions({ variables: { input } });

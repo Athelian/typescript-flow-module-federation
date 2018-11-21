@@ -9,8 +9,9 @@ import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import FormHeader from 'modules/metadata/components/FormHeader';
 import CustomFieldsTemplateGridView from 'modules/metadata/components/CustomFieldsTemplateGridView';
-import CustomFieldsTemplateForm from 'modules/metadata/components/CustomFieldsTemplateForm';
+import MaskFormWrapper from 'modules/metadata/components/MaskFormWrapper';
 import { masksQuery } from 'modules/metadata/query';
+import MetadataTemplateCard from 'components/Cards/MetadataTemplateCard';
 
 import { CustomFieldsEditFormWrapperStyle, CustomFieldsFormHeaderStyle } from './style';
 
@@ -39,45 +40,67 @@ const CustomFieldTemplateList = ({ entityType }: Props) => (
 
       return (
         <div>
-          <BooleanValue>
-            {({ value: isOpen, set: toggle }) => (
-              <>
-                <div className={CustomFieldsFormHeaderStyle}>
-                  <FormHeader
-                    name={
-                      <FormattedMessage
-                        id="modules.metadata.templates"
-                        defaultMessage="TEMPLATES"
-                      />
-                    }
-                  >
+          <div className={CustomFieldsFormHeaderStyle}>
+            <FormHeader
+              name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
+            >
+              <BooleanValue>
+                {({ value: isOpen, set: toggle }) => (
+                  <>
                     <NewButton onClick={() => toggle(true)} />
-                  </FormHeader>
-                </div>
-                <div className={CustomFieldsEditFormWrapperStyle}>
-                  <CustomFieldsTemplateGridView
-                    items={getByPathWithDefault([], 'masks.nodes', data)}
-                    onLoadMore={() =>
-                      loadMore({ fetchMore, data }, { filterBy: entityType }, 'masks')
-                    }
-                    hasMore={hasMore}
-                    isLoading={loading}
-                  />
-                </div>
-                <SlideView
-                  isOpen={isOpen}
-                  onRequestClose={() => toggle(false)}
-                  options={{ width: '1030px' }}
-                >
-                  <CustomFieldsTemplateForm
-                    isNew
-                    onSave={() => toggle(false)}
-                    onCancel={() => toggle(false)}
-                  />
-                </SlideView>
-              </>
-            )}
-          </BooleanValue>
+                    <SlideView
+                      isOpen={isOpen}
+                      onRequestClose={() => toggle(false)}
+                      options={{ width: '1030px' }}
+                    >
+                      <MaskFormWrapper
+                        entityType={entityType}
+                        isNew
+                        onSave={() => toggle(false)}
+                        onCancel={() => toggle(false)}
+                      />
+                    </SlideView>
+                  </>
+                )}
+              </BooleanValue>
+            </FormHeader>
+          </div>
+          <div className={CustomFieldsEditFormWrapperStyle}>
+            <CustomFieldsTemplateGridView
+              entityType={entityType}
+              items={getByPathWithDefault([], 'masks.nodes', data)}
+              onLoadMore={() => loadMore({ fetchMore, data }, { filterBy: entityType }, 'masks')}
+              hasMore={hasMore}
+              isLoading={loading}
+              renderItem={mask => (
+                <BooleanValue>
+                  {({ value: isOpen, set: toggle }) => (
+                    <>
+                      <MetadataTemplateCard
+                        key={mask.id}
+                        metadataTemplate={mask}
+                        onClick={() => {
+                          toggle(true);
+                        }}
+                      />
+                      <SlideView
+                        isOpen={isOpen}
+                        onRequestClose={() => toggle(false)}
+                        options={{ width: '1030px' }}
+                      >
+                        <MaskFormWrapper
+                          entityType={entityType}
+                          id={mask.id}
+                          onSave={() => toggle(false)}
+                          onCancel={() => toggle(false)}
+                        />
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
+              )}
+            />
+          </div>
         </div>
       );
     }}
