@@ -1,5 +1,6 @@
 // @flow
 import { intersection } from 'lodash';
+import { removeTypename } from 'utils/data';
 
 type MappingObject = {
   data: {
@@ -116,6 +117,7 @@ export const parseChangedData = (
 ) => {
   console.warn({ changedData, editData });
   const orders = [];
+  const batches = [];
   if (changedData.orders) {
     (Object.entries(changedData.orders): any).forEach(item => {
       const [id, order] = item;
@@ -149,9 +151,61 @@ export const parseChangedData = (
       orders.push({ input: changedOrder, id });
     });
   }
+
+  if (changedData.batches) {
+    (Object.entries(changedData.batches): any).forEach(item => {
+      const [id, batch] = item;
+      const keys = Object.keys(batch);
+      const changedBatch = {};
+      keys.forEach(key => {
+        const updateValue = editData.batches[id][key];
+        switch (key) {
+          case 'deliveredAt':
+          case 'expiredAt':
+          case 'producedAt': {
+            changedBatch[key] = updateValue ? new Date(updateValue) : null;
+            break;
+          }
+
+          case 'packageSize': {
+            const packageSize = removeTypename(updateValue);
+            if (!packageSize.width) {
+              packageSize.width = {
+                value: 0,
+                metric: '',
+              };
+            }
+            if (!packageSize.height) {
+              packageSize.height = {
+                value: 0,
+                metric: '',
+              };
+            }
+            if (!packageSize.length) {
+              packageSize.length = {
+                value: 0,
+                metric: '',
+              };
+            }
+
+            changedBatch[key] = packageSize;
+            break;
+          }
+
+          case 'tags':
+            changedBatch.tagIds = updateValue.map(({ id: tagId }) => tagId);
+            break;
+
+          default:
+            changedBatch[key] = updateValue;
+        }
+      });
+      batches.push({ input: changedBatch, id });
+    });
+  }
   return {
     orders,
-    batches: [],
+    batches,
     warehouses: [],
     products: [],
     shipments: [],
