@@ -2,6 +2,7 @@
 import { differenceBy } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
+// import emitter from 'utils/emitter';
 // import update from 'immutability-helper';
 // import { createBatchMutation } from 'modules/batch/form/mutation';
 // import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
@@ -21,9 +22,7 @@ import { createMutationRequest } from './index';
 
 export const cloneOrder = async (client: any, orders: Array<Object>, filter: Object) => {
   const mutationRequest = createMutationRequest(client);
-  // const orderIds = Object.keys(order);
   const orderRequests = orders.map(currentOrder => {
-    // const currentOrder = order[orderId];
     const request = mutationRequest({
       mutation: cloneOrderMutation,
       variables: {
@@ -74,9 +73,7 @@ export const cloneOrder = async (client: any, orders: Array<Object>, filter: Obj
 
 export const cloneOrderItem = async (client: any, orderItems: Array<Object>, filter: Object) => {
   const mutationRequest = createMutationRequest(client);
-  // const orderItemIds = Object.keys(orderItem || {});
   const orderUpdate = orderItems.reduce((orderUpdateObj, currentOrderItem) => {
-    // const currentOrderItem = orderItem[orderItemId];
     const orderId = getByPathWithDefault('', 'order.id', currentOrderItem);
     return Object.assign(orderUpdateObj, {
       [orderId]: [
@@ -150,11 +147,96 @@ export const cloneOrderItem = async (client: any, orderItems: Array<Object>, fil
   return [orderItemResult, orderItemFocus];
 };
 
-export const cloneBatch = async (client: any, batches: Object) => {
+export const cloneBatchByUpdateOrder = async (client: any, batches: Object, filter: Object) => {
   const mutationRequest = createMutationRequest(client);
-  // const batchIds = Object.keys(batch || {});
+  const orderItems = batches.reduce(
+    (result, batch) =>
+      Object.assign(result, {
+        [batch.orderItemId]: {
+          ...result[batch.orderItemId],
+          [batch.id]: { no: `[cloned] ${batch.no}`, quantity: batch.quantity },
+        },
+      }),
+    {}
+  );
+  const orders = batches.reduce((result, batch) => {
+    const order = getByPathWithDefault({}, 'orderItem.order', batch);
+    const sameOrderItem = order.orderItems.some(orderItem => orderItem.id === batch.orderItemId);
+    if (sameOrderItem) {
+      return Object.assign(result, {
+        [order.id]: {
+          ...order,
+          itemObj: order.orderItems.reduce(
+            (itemObj, item) =>
+              Object.assign(itemObj, {
+                [item.id]: item,
+              }),
+            {}
+          ),
+        },
+      });
+    }
+    return result;
+  }, {});
+  const batchRequests = Object.keys(orders).map(orderId => {
+    const order = orders[orderId];
+    const updateOrderItems = order.orderItems.map(orderItem => {
+      if (orderItems[orderItem.id]) {
+        const newBatches = (Object.entries(orderItems[orderItem.id]): any).map(newBatch => {
+          const [, batch] = newBatch;
+          return batch;
+        });
+        return {
+          id: orderItem.id,
+          batches: orderItem.batches.map(batch => ({ id: batch.id })).concat(newBatches),
+        };
+      }
+      return { id: orderItem.id };
+    });
+    const request = mutationRequest({
+      mutation: cloneOrderItemMutation,
+      variables: {
+        id: order.id,
+        input: { orderItems: updateOrderItems },
+      },
+      update: (store, { data }) => {
+        const query = { query: orderListQuery, variables: filter };
+        const orderList = store.readQuery(query);
+        const updateData = data.orderUpdate.order;
+        orderList.orders.nodes.forEach((currentOrder, orderIndex) => {
+          if (currentOrder.id === updateData.id) {
+            orderList.orders.nodes[orderIndex] = updateData;
+          }
+        });
+      },
+    });
+    return request;
+  });
+  const updatedBatches = await Promise.all(batchRequests);
+  const batchesFocus = {};
+  updatedBatches.forEach(updatedData => {
+    const order = getByPathWithDefault({}, 'data.orderUpdate.order', updatedData);
+    order.orderItems.forEach(orderItem => {
+      const newBatches = orderItem.batches;
+      const oldBatches = getByPathWithDefault(
+        {},
+        `${order.id}.itemObj.${orderItem.id}.batches`,
+        orders
+      );
+      if (oldBatches) {
+        const diffBatches = differenceBy(newBatches, oldBatches, 'id');
+        diffBatches.forEach(batch => {
+          batchesFocus[batch.id] = true;
+        });
+      }
+    });
+  });
+  return [{}, batchesFocus];
+};
+
+export const cloneBatch = async (client: any, batches: Object, filter: Object) => {
+  const mutationRequest = createMutationRequest(client);
   const batchRequests = batches.map(currentBatch => {
-    // const currentBatch = batch[batchId];
     const orderItemId = getByPathWithDefault('', 'orderItem.id', currentBatch);
     const request = mutationRequest(
       {
@@ -166,16 +248,47 @@ export const cloneBatch = async (client: any, batches: Object) => {
             orderItemId,
           },
         },
+        update: (store, { data }) => {
+          const query = { query: orderListQuery, variables: filter };
+          const orderList = store.readQuery(query);
+          const updateData = data.batchCreate && data.batchCreate.batch;
+          orderList.orders.nodes.forEach((order, orderIndex) => {
+            if (order.id === getByPathWithDefault(false, 'orderItem.order.id', updateData)) {
+              order.orderItems.forEach((orderItem, orderItemIndex) => {
+                if (orderItem.id === getByPathWithDefault(false, 'orderItem.id', updateData)) {
+                  orderList.orders.nodes[orderIndex].orderItems[orderItemIndex].batches.push(
+                    updateData
+                  );
+                }
+              });
+            }
+          });
+        },
       },
       orderItemId
     );
     return request;
   });
   const newBatches = await Promise.all(batchRequests);
+
+  const query = { query: orderListQuery, variables: filter };
+  const orderList = client.readQuery(query);
+
   const batchResult = newBatches.reduce((batchResultObj, newBatch) => {
     const { refId } = newBatch;
     const batchId = getByPathWithDefault('', 'data.batchCreate.batch.id', newBatch);
     const batchRef = refId ? { [refId]: [...(batchResultObj[refId] || []), { id: batchId }] } : {};
+
+    const updateData = getByPathWithDefault({}, 'data.batchCreate.batch', newBatch);
+    orderList.orders.nodes.forEach((order, orderIndex) => {
+      if (order.id === getByPathWithDefault(false, 'orderItem.order.id', updateData)) {
+        order.orderItems.forEach((orderItem, orderItemIndex) => {
+          if (orderItem.id === getByPathWithDefault(false, 'orderItem.id', updateData)) {
+            orderList.orders.nodes[orderIndex].orderItems[orderItemIndex].batches.push(updateData);
+          }
+        });
+      }
+    });
     return Object.assign(batchResultObj, batchRef);
   }, {});
   const batchFocus = newBatches.reduce((batchResultObj, newBatch) => {
@@ -253,7 +366,7 @@ const filterTargetedBatch = (target: Object) => {
   const batches: any = (Object.entries(target.batch || {}): any)
     .filter(data => {
       const [, batch] = data;
-      return !target.order[batch.rootId || batch.orderId];
+      return !target.order ? true : !target.order[batch.rootId || batch.orderId];
     })
     .map(data => {
       const [, batch] = data;
@@ -278,7 +391,8 @@ export const cloneTarget = async ({
   const [orderResults, orderFocus] = await cloneOrder(client, targetedOrder, filter);
   const [shipmentResults, shipmentFocus] = await cloneShipment(client, target.shipment);
   const [orderItemResult, orderItemFocus] = await cloneOrderItem(client, targetedOrderItem, filter);
-  const [batchResult, batchFocus] = await cloneBatch(client, targetedBatch);
+  const [batchResult, batchFocus] = await cloneBatch(client, targetedBatch, filter);
+  // const [batchResult, batchFocus] = await cloneBatchByUpdateOrder(client, targetedBatch, filter);
 
   const result = {
     order: orderResults,
