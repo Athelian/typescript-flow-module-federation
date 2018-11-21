@@ -202,6 +202,15 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }));
   };
 
+  isHighlighted = () => {
+    const { focusedItem } = this.state;
+    if (isEmpty(focusedItem)) {
+      return false;
+    }
+    const { order = {}, orderItem = {}, batch = {}, shipment = {} } = focusedItem;
+    return !isEmpty(order) || !isEmpty(orderItem) || !isEmpty(batch) || !isEmpty(shipment);
+  };
+
   isTargeted = (itemType: string, id: string) => {
     const { targetedItem } = this.state;
     const isTargeted = get(false, `${itemType}.${id}` || '', targetedItem);

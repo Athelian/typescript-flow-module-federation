@@ -62,6 +62,10 @@ export default defineMessages({
     id: 'global.quantity',
     defaultMessage: 'Quantity',
   },
+  clone: {
+    id: 'modules.RelationMaps.label.clone',
+    defaultMessage: 'Clone',
+  },
   splitType: {
     id: 'modules.RelationMaps.label.splitType',
     defaultMessage: 'Split Type',
@@ -93,6 +97,10 @@ export default defineMessages({
   selected: {
     id: 'modules.Shipments.picked',
     defaultMessage: 'selected',
+  },
+  highlighted: {
+    id: 'modules.Shipments.highlighted',
+    defaultMessage: 'highlighted',
   },
   connect: {
     id: 'modules.RelationMaps.label.connect',
@@ -149,5 +157,25 @@ export default defineMessages({
   toConnectToTheList: {
     id: 'modules.RelationMaps.label.toConnectToTheList',
     defaultMessage: 'to connect on the list',
+  },
+  waiting: {
+    id: 'modules.RelationMaps.label.waiting',
+    defaultMessage: 'Please wait for a moment',
+  },
+  cloning: {
+    id: 'modules.RelationMaps.label.waiting',
+    defaultMessage: 'Cloning',
+  },
+  spliting: {
+    id: 'modules.RelationMaps.label.spliting',
+    defaultMessage: 'Spliting',
+  },
+  connecting: {
+    id: 'modules.RelationMaps.label.connecting',
+    defaultMessage: 'Connecting',
+  },
+  tryAgain: {
+    id: 'modules.RelationMaps.label.tryAgain',
+    defaultMessage: 'Something went wrong Please try again',
   },
 });
