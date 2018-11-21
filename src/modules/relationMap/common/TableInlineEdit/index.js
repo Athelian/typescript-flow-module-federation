@@ -2,6 +2,7 @@
 // $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
 import React, { useEffect, useState, useRef } from 'react';
 import { ApolloConsumer } from 'react-apollo';
+import { FormattedMessage } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
@@ -10,6 +11,7 @@ import emitter from 'utils/emitter';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import { ToggleInput } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
 import { formatOrderData } from 'modules/relationMap/util';
@@ -52,6 +54,8 @@ setConfig({ pureSFC: true });
 export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const [data] = useIdb(type, []);
   const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showAll, setShowAll] = useState(true);
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState({});
   const [editData, setEditData] = useState({
@@ -71,6 +75,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
       const listener = emitter.once('INLINE_CHANGE', newData => {
         logger.warn({ newData, editData });
+        setErrorMessage('');
 
         const { name, value, hasError } = newData;
         const newEditData = set(editData, name, value);
@@ -139,12 +144,52 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   const changedData = diff(entities, editData);
                   setLoading(true);
                   try {
-                    const result = await client.mutate({
+                    const result: {
+                      data: ?{
+                        entitiesUpdateMany: {
+                          orders: {
+                            violations?: Array<{ message: string }>,
+                          },
+                          shipments: {
+                            violations?: Array<{ message: string }>,
+                          },
+                          batches: {
+                            violations?: Array<{ message: string }>,
+                          },
+                        },
+                      },
+                    } = await client.mutate({
                       mutation: entitiesUpdateManyMutation,
                       variables: parseChangedData(changedData, editData),
                     });
                     setLoading(false);
                     logger.warn({ result });
+                    if (result && result.data && result.data.entitiesUpdateMany) {
+                      if (
+                        result.data.entitiesUpdateMany.orders.violations &&
+                        result.data.entitiesUpdateMany.orders.violations.length
+                      ) {
+                        setErrorMessage(
+                          result.data.entitiesUpdateMany.orders.violations[0].message
+                        );
+                      }
+                      if (
+                        result.data.entitiesUpdateMany.shipments.violations &&
+                        result.data.entitiesUpdateMany.shipments.violations.length
+                      ) {
+                        setErrorMessage(
+                          result.data.entitiesUpdateMany.shipments.violations[0].message
+                        );
+                      }
+                      if (
+                        result.data.entitiesUpdateMany.batches.violations &&
+                        result.data.entitiesUpdateMany.batches.violations.length
+                      ) {
+                        setErrorMessage(
+                          result.data.entitiesUpdateMany.batches.violations[0].message
+                        );
+                      }
+                    }
                     setTouched({});
                   } catch (error) {
                     setLoading(false);
@@ -158,9 +203,18 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   )
                 }
               />
+              {errorMessage.length > 0 && <p> Error: {errorMessage} </p>}
             </SlideViewNavBar>
           }
         >
+          <div>
+            <ToggleInput
+              toggled={showAll}
+              onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
+            >
+              <FormattedMessage id="modules.RelationMaps.showAll" defaultMessage="SHOW ALL" />
+            </ToggleInput>
+          </div>
           <div className={EditTableViewWrapperStyle}>
             <div className={BodyWrapperStyle} ref={bodyRef}>
               {Object.keys(editData.orders).length === 0 && <LoadingIcon />}
