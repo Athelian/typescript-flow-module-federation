@@ -67,7 +67,7 @@ function renderItem({
     }
 
     case 'metric':
-      return <InlineMetricInput name={name} value={value} {...meta} />;
+      return <InlineMetricInput name={name} value={value} values={values} {...meta} />;
 
     case 'enum':
       return <InlineSearchEnumInput name={name} value={value} {...meta} />;
