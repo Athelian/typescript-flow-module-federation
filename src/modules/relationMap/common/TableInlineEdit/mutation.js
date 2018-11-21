@@ -1,6 +1,25 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
+import {
+  orderFormFragment,
+  shipmentFormFragment,
+  userAvatarFragment,
+  tagFragment,
+  partnerCardFragment,
+  documentFragment,
+  shipmentCardFragment,
+  priceFragment,
+  imageFragment,
+  partnerNameFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  batchFormFragment,
+  metricFragment,
+  sizeFragment,
+  orderCardFragment,
+  timelineDateFullFragment,
+} from 'graphql';
 
 export const entitiesUpdateManyMutation = gql`
   mutation entitiesUpdateMany(
@@ -18,11 +37,17 @@ export const entitiesUpdateManyMutation = gql`
       warehouses: $warehouses
     ) {
       orders {
+        orders {
+          ...orderFormFragment
+        }
         violations {
           ...violationFragment
         }
       }
       shipments {
+        shipments {
+          ...shipmentFormFragment
+        }
         violations {
           ...violationFragment
         }
@@ -45,6 +70,23 @@ export const entitiesUpdateManyMutation = gql`
     }
   }
   ${violationFragment}
+  ${orderFormFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
+  ${partnerCardFragment}
+  ${documentFragment}
+  ${shipmentCardFragment}
+  ${priceFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${batchFormFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${orderCardFragment}
+  ${shipmentFormFragment}
+  ${timelineDateFullFragment}
 `;
 
 export default entitiesUpdateManyMutation;

@@ -1,6 +1,7 @@
 // @flow
 import { intersection } from 'lodash';
 import { removeTypename } from 'utils/data';
+import logger from 'utils/logger';
 import {
   formatTimeline,
   formatContainerGroups,
@@ -120,7 +121,7 @@ export const parseChangedData = (
   changedData: { orders?: Object, shipments?: Object, orderItems?: Object, batches?: Object },
   editData: Object
 ) => {
-  console.warn({ changedData, editData });
+  logger.warn({ changedData, editData });
   const orders = [];
   const batches = [];
   const shipments = [];

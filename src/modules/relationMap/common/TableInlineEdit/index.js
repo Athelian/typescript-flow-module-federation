@@ -144,10 +144,9 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       variables: parseChangedData(changedData, editData),
                     });
                     setLoading(false);
+                    logger.warn({ result });
                     setTouched({});
-                    console.warn({ result });
                   } catch (error) {
-                    console.warn({ error });
                     setLoading(false);
                   }
                 }}
