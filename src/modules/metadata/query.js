@@ -11,4 +11,20 @@ export const fieldDefinitionsQuery = gql`
   }
 `;
 
-export default fieldDefinitionsQuery;
+export const masksQuery = gql`
+  query($page: Int!, $perPage: Int!, $filter: MaskFilterInput) {
+    masks(page: $page, perPage: $perPage, filterBy: $filter) {
+      nodes {
+        id
+        name
+        memo
+        entityType
+        fieldDefinitions {
+          id
+        }
+      }
+      page
+      totalPage
+    }
+  }
+`;
