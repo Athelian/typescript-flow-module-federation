@@ -212,6 +212,79 @@ export const parseChangedData = (
     });
   }
 
+  if (changedData.orderItems) {
+    (Object.entries(changedData.orderItems): any).forEach(item => {
+      const [id, orderItem] = item;
+      const keys = Object.keys(orderItem);
+      const changedOrderItem = {};
+      keys.forEach(key => {
+        const updateValue = editData.orderItems[id][key];
+        switch (key) {
+          case 'productProvider':
+            changedOrderItem.productProviderId = updateValue.id;
+            break;
+          case 'price':
+            changedOrderItem[key] = removeTypename(updateValue);
+            break;
+
+          default:
+            changedOrderItem[key] = updateValue;
+        }
+      });
+      const orderId = editData.orderItems[id].order;
+      const existUpdateOrder = orders.find(order => order.id === orderId);
+      const order = editData.orders[orderId];
+      if (existUpdateOrder) {
+        if (existUpdateOrder.input && existUpdateOrder.input.orderItems) {
+          orders.splice(orders.findIndex(currentOrder => currentOrder.id === orderId), 1, {
+            input: {
+              ...existUpdateOrder.input,
+              orderItems: [
+                ...existUpdateOrder.input.orderItems.filter(orderItemId => orderItemId.id !== id),
+                {
+                  ...existUpdateOrder.input.orderItems.find(orderItemId => orderItemId.id === id),
+                  ...changedOrderItem,
+                },
+              ],
+            },
+            id: orderId,
+          });
+        } else {
+          orders.splice(orders.findIndex(currentOrder => currentOrder.id === orderId), 1, {
+            input: {
+              ...existUpdateOrder.input,
+              orderItems: [
+                ...order.orderItems
+                  .filter(orderItemId => orderItemId !== id)
+                  .map(orderItemId => ({ id: orderItemId })),
+                {
+                  ...changedOrderItem,
+                  id,
+                },
+              ],
+            },
+            id: orderId,
+          });
+        }
+      } else {
+        orders.push({
+          input: {
+            orderItems: [
+              ...order.orderItems
+                .filter(orderItemId => orderItemId !== id)
+                .map(orderItemId => ({ id: orderItemId })),
+              {
+                ...changedOrderItem,
+                id,
+              },
+            ],
+          },
+          id: orderId,
+        });
+      }
+    });
+  }
+
   if (changedData.batches) {
     (Object.entries(changedData.batches): any).forEach(item => {
       const [id, batch] = item;
@@ -263,6 +336,7 @@ export const parseChangedData = (
       batches.push({ input: changedBatch, id });
     });
   }
+
   return {
     orders,
     batches,
