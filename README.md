@@ -297,7 +297,7 @@ yarn apollo-fragments
 #2. Download latest schema from our graphql server
 npx graphql-cli get-schema
 #3. Generate fragments
-npx graphql-cli generate-fragments
+yarn post:install
 ```
 
 ### Configuration

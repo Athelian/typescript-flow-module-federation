@@ -16,13 +16,14 @@ import {
 type OptionalProps = {
   rearrange: boolean,
   isKeyReadOnly: boolean,
+  isValueReadOnly: boolean,
   onRemove?: Function,
   width: string,
 };
 
 type Props = OptionalProps & {
   metadata: {
-    key: string,
+    name: string,
     value: string,
   },
   targetName: string,
@@ -33,12 +34,14 @@ type Props = OptionalProps & {
 const defaultProps = {
   rearrange: false,
   isKeyReadOnly: true,
+  isValueReadOnly: false,
   width: '200px',
 };
 
 const DefaultMetadataStyle = ({
   rearrange,
   isKeyReadOnly,
+  isValueReadOnly,
   metadata,
   dragHandleProps,
   targetName,
@@ -59,12 +62,12 @@ const DefaultMetadataStyle = ({
       )}
       {isKeyReadOnly ? (
         <DefaultStyle type="label" width={width}>
-          <Label width={width}>{metadata.key}</Label>
+          <Label width={width}>{metadata.name}</Label>
         </DefaultStyle>
       ) : (
         <FormField
-          name={`${targetName}.key`}
-          initValue={metadata.key}
+          name={`${targetName}.name`}
+          initValue={metadata.name}
           setFieldValue={setFieldArrayValue}
         >
           {({ name, ...inputHandlers }) => {
@@ -82,21 +85,30 @@ const DefaultMetadataStyle = ({
           }}
         </FormField>
       )}
-
-      <FormField
-        name={`${targetName}.value`}
-        initValue={metadata.value}
-        setFieldValue={setFieldArrayValue}
-      >
-        {({ name, ...inputHandlers }) => {
-          const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
-          return (
-            <DefaultStyle width={width} isFocused={isFocused} hasError={isTouched && errorMessage}>
-              <TextInput name={name} {...rest} />
-            </DefaultStyle>
-          );
-        }}
-      </FormField>
+      {isValueReadOnly ? (
+        <DefaultStyle type="standard" width={width}>
+          <Label width={width}>Input</Label>
+        </DefaultStyle>
+      ) : (
+        <FormField
+          name={`${targetName}.value`}
+          initValue={metadata.value}
+          setFieldValue={setFieldArrayValue}
+        >
+          {({ name, ...inputHandlers }) => {
+            const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
+            return (
+              <DefaultStyle
+                width={width}
+                isFocused={isFocused}
+                hasError={isTouched && errorMessage}
+              >
+                <TextInput name={name} {...rest} />
+              </DefaultStyle>
+            );
+          }}
+        </FormField>
+      )}
 
       {onRemove && (
         <button className={RemoveButtonStyle} onClick={onRemove} type="button">

@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Nov 14 2018 14:37:01 GMT+0900 (JST)
+# timestamp: Tue Nov 20 2018 13:52:56 GMT+0900 (JST)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -26886,7 +26886,7 @@ enum Airport {
 """Any scalar"""
 scalar Any
 
-type Batch implements Model & Owned & Package & Tagged {
+type Batch implements Model & Owned & Package & Tagged & Customizable {
   archived: Boolean!
   orderItem: OrderItem!
   shipment: Shipment
@@ -26913,6 +26913,7 @@ type Batch implements Model & Owned & Package & Tagged {
   packageSize: Size
   packageCapacity: Float
   tags: [Tag!]!
+  customFields: CustomFields!
 }
 
 type BatchAdjustment implements Model & Owned & Sortable {
@@ -26998,6 +26999,7 @@ input BatchCreateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   orderItemId: ID!
   shipmentId: ID
   batchAssignments: [BatchAssignmentCreateInput!]
@@ -27077,6 +27079,7 @@ input BatchUpdateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   orderItemId: ID
   shipmentId: ID
   batchAssignments: [BatchAssignmentUpdateInput!]
@@ -27086,6 +27089,10 @@ input BatchUpdateInput {
 input BatchUpdateWrapperInput {
   id: ID!
   input: BatchUpdateInput!
+}
+
+type BooleanValue {
+  boolean: Boolean!
 }
 
 type ContainerGroup implements Model & Owned & Sortable {
@@ -27115,7 +27122,7 @@ enum Country {
   """Afghanistan"""
   AFG
 
-  """Antigua & Barbuda"""
+  """Antigua and Barbuda"""
   ATG
 
   """Anguilla"""
@@ -27126,6 +27133,9 @@ enum Country {
 
   """Armenia"""
   ARM
+
+  """Netherlands Antilles"""
+  ANT
 
   """Angola"""
   AGO
@@ -27154,7 +27164,7 @@ enum Country {
   """Azerbaijan"""
   AZE
 
-  """Bosnia & Herzegovina"""
+  """Bosnia and Herzegovina"""
   BIH
 
   """Barbados"""
@@ -27181,7 +27191,7 @@ enum Country {
   """Benin"""
   BEN
 
-  """St. Barthélemy"""
+  """Saint Barthélemy"""
   BLM
 
   """Bermuda"""
@@ -27193,7 +27203,7 @@ enum Country {
   """Bolivia"""
   BOL
 
-  """Caribbean Netherlands"""
+  """Bonaire, Sint Eustatius and Saba"""
   BES
 
   """Brazil"""
@@ -27220,22 +27230,22 @@ enum Country {
   """Canada"""
   CAN
 
-  """Cocos (Keeling) Islands"""
+  """Cocos Islands"""
   CCK
 
-  """Congo - Kinshasa"""
+  """The Democratic Republic Of Congo"""
   COD
 
   """Central African Republic"""
   CAF
 
-  """Congo - Brazzaville"""
+  """Congo"""
   COG
 
   """Switzerland"""
   CHE
 
-  """Côte d’Ivoire"""
+  """Côte d'Ivoire"""
   CIV
 
   """Cook Islands"""
@@ -27271,7 +27281,7 @@ enum Country {
   """Cyprus"""
   CYP
 
-  """Czechia"""
+  """Czech Republic"""
   CZE
 
   """Germany"""
@@ -27373,7 +27383,7 @@ enum Country {
   """Greece"""
   GRC
 
-  """South Georgia & South Sandwich Islands"""
+  """South Georgia And The South Sandwich Islands"""
   SGS
 
   """Guatemala"""
@@ -27388,10 +27398,10 @@ enum Country {
   """Guyana"""
   GUY
 
-  """Hong Kong SAR China"""
+  """Hong Kong"""
   HKG
 
-  """Heard & McDonald Islands"""
+  """Heard Island And McDonald Islands"""
   HMD
 
   """Honduras"""
@@ -27415,7 +27425,7 @@ enum Country {
   """Israel"""
   ISR
 
-  """Isle of Man"""
+  """Isle Of Man"""
   IMN
 
   """India"""
@@ -27463,7 +27473,7 @@ enum Country {
   """Comoros"""
   COM
 
-  """St. Kitts & Nevis"""
+  """Saint Kitts And Nevis"""
   KNA
 
   """North Korea"""
@@ -27487,7 +27497,7 @@ enum Country {
   """Lebanon"""
   LBN
 
-  """St. Lucia"""
+  """Saint Lucia"""
   LCA
 
   """Liechtenstein"""
@@ -27526,7 +27536,7 @@ enum Country {
   """Montenegro"""
   MNE
 
-  """St. Martin"""
+  """Saint Martin"""
   MAF
 
   """Madagascar"""
@@ -27541,13 +27551,13 @@ enum Country {
   """Mali"""
   MLI
 
-  """Myanmar (Burma)"""
+  """Myanmar"""
   MMR
 
   """Mongolia"""
   MNG
 
-  """Macau SAR China"""
+  """Macao"""
   MAC
 
   """Northern Mariana Islands"""
@@ -27643,16 +27653,16 @@ enum Country {
   """Poland"""
   POL
 
-  """St. Pierre & Miquelon"""
+  """Saint Pierre And Miquelon"""
   SPM
 
-  """Pitcairn Islands"""
+  """Pitcairn"""
   PCN
 
   """Puerto Rico"""
   PRI
 
-  """Palestinian Territories"""
+  """Palestine"""
   PSE
 
   """Portugal"""
@@ -27667,7 +27677,7 @@ enum Country {
   """Qatar"""
   QAT
 
-  """Réunion"""
+  """Reunion"""
   REU
 
   """Romania"""
@@ -27700,13 +27710,13 @@ enum Country {
   """Singapore"""
   SGP
 
-  """St. Helena"""
+  """Saint Helena"""
   SHN
 
   """Slovenia"""
   SVN
 
-  """Svalbard & Jan Mayen"""
+  """Svalbard And Jan Mayen"""
   SJM
 
   """Slovakia"""
@@ -27730,13 +27740,13 @@ enum Country {
   """South Sudan"""
   SSD
 
-  """São Tomé & Príncipe"""
+  """Sao Tome And Principe"""
   STP
 
   """El Salvador"""
   SLV
 
-  """Sint Maarten"""
+  """Sint Maarten (Dutch part)"""
   SXM
 
   """Syria"""
@@ -27745,7 +27755,7 @@ enum Country {
   """Swaziland"""
   SWZ
 
-  """Turks & Caicos Islands"""
+  """Turks And Caicos Islands"""
   TCA
 
   """Chad"""
@@ -27781,7 +27791,7 @@ enum Country {
   """Turkey"""
   TUR
 
-  """Trinidad & Tobago"""
+  """Trinidad and Tobago"""
   TTO
 
   """Tuvalu"""
@@ -27799,7 +27809,7 @@ enum Country {
   """Uganda"""
   UGA
 
-  """U.S. Outlying Islands"""
+  """United States Minor Outlying Islands"""
   UMI
 
   """United States"""
@@ -27811,10 +27821,10 @@ enum Country {
   """Uzbekistan"""
   UZB
 
-  """Vatican City"""
+  """Vatican"""
   VAT
 
-  """St. Vincent & Grenadines"""
+  """Saint Vincent And The Grenadines"""
   VCT
 
   """Venezuela"""
@@ -27832,7 +27842,7 @@ enum Country {
   """Vanuatu"""
   VUT
 
-  """Wallis & Futuna"""
+  """Wallis And Futuna"""
   WLF
 
   """Samoa"""
@@ -28374,6 +28384,31 @@ enum Currency {
   ZWL
 }
 
+type CustomFields {
+  mask: Mask
+  fieldValues: [FieldValue!]!
+  fieldDefinitions: [FieldDefinition!]!
+}
+
+input CustomFieldsInput {
+  maskId: ID
+  fieldValues: [FieldValueInput!]
+}
+
+interface Customizable {
+  customFields: CustomFields!
+}
+
+enum CustomizableEntityType {
+  Product
+  ProductProvider
+  Order
+  OrderItem
+  Batch
+  Shipment
+  Warehouse
+}
+
 input DateRangeInput {
   after: DateTime
   before: DateTime
@@ -28501,6 +28536,46 @@ enum ExportType {
   Products
 }
 
+type FieldDefinition implements Model & Owned & Sortable {
+  name: String!
+  entityType: CustomizableEntityType!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+  sort: Int!
+}
+
+input FieldDefinitionInput {
+  id: ID
+  name: String
+}
+
+input FieldDefinitionsInput {
+  entityType: CustomizableEntityType!
+  fieldDefinitions: [FieldDefinitionInput!]!
+}
+
+type FieldDefinitionsMutated {
+  fieldDefinitions: [FieldDefinition!]
+  violations: [Violation!]
+}
+
+type FieldValue {
+  value: Value!
+  fieldDefinition: FieldDefinition!
+  entity: Entity!
+}
+
+input FieldValueInput {
+  value: ValueInput
+  fieldDefinitionId: ID!
+}
+
 type File implements Model & Owned {
   name: String!
   type: FileType!
@@ -28566,6 +28641,10 @@ enum FileType {
 
   """ProductOriginCert"""
   ProductOriginCert
+}
+
+type FloatValue {
+  float: Float!
 }
 
 type Group implements Model {
@@ -28732,6 +28811,10 @@ type IntegrationPagination {
   totalCount: Int!
 }
 
+type IntValue {
+  int: Int!
+}
+
 enum Language {
   """Afar"""
   aa
@@ -28787,7 +28870,7 @@ enum Language {
   """Bambara"""
   bm
 
-  """Bangla"""
+  """Bengali"""
   bn
 
   """Tibetan"""
@@ -28877,7 +28960,7 @@ enum Language {
   """French"""
   fr
 
-  """Western Frisian"""
+  """Frisian"""
   fy
 
   """Irish"""
@@ -28886,7 +28969,7 @@ enum Language {
   """Scottish Gaelic"""
   gd
 
-  """Galician"""
+  """Gallegan"""
   gl
 
   """Guarani"""
@@ -28913,7 +28996,7 @@ enum Language {
   """Croatian"""
   hr
 
-  """Haitian Creole"""
+  """Haitian"""
   ht
 
   """Hungarian"""
@@ -28973,13 +29056,13 @@ enum Language {
   """Kikuyu"""
   ki
 
-  """Kuanyama"""
+  """Kwanyama"""
   kj
 
   """Kazakh"""
   kk
 
-  """Kalaallisut"""
+  """Greenlandic"""
   kl
 
   """Khmer"""
@@ -29006,7 +29089,7 @@ enum Language {
   """Cornish"""
   kw
 
-  """Kyrgyz"""
+  """Kirghiz"""
   ky
 
   """Latin"""
@@ -29111,13 +29194,13 @@ enum Language {
   """Oromo"""
   om
 
-  """Odia"""
+  """Oriya"""
   or
 
-  """Ossetic"""
+  """Ossetian"""
   os
 
-  """Punjabi"""
+  """Panjabi"""
   pa
 
   """Pali"""
@@ -29126,7 +29209,7 @@ enum Language {
   """Polish"""
   pl
 
-  """Pashto"""
+  """Pushto"""
   ps
 
   """Portuguese"""
@@ -29135,7 +29218,7 @@ enum Language {
   """Quechua"""
   qu
 
-  """Romansh"""
+  """Raeto-Romance"""
   rm
 
   """Rundi"""
@@ -29165,7 +29248,7 @@ enum Language {
   """Sango"""
   sg
 
-  """Sinhala"""
+  """Sinhalese"""
   si
 
   """Slovak"""
@@ -29228,7 +29311,7 @@ enum Language {
   """Tswana"""
   tn
 
-  """Tongan"""
+  """Tonga"""
   to
 
   """Turkish"""
@@ -29246,7 +29329,7 @@ enum Language {
   """Tahitian"""
   ty
 
-  """Uyghur"""
+  """Uighur"""
   ug
 
   """Ukrainian"""
@@ -29299,6 +29382,53 @@ The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
 """
 scalar Long
+
+type Mask implements Model & Owned {
+  name: String!
+  entityType: CustomizableEntityType!
+  memo: String
+  fieldDefinitions: [FieldDefinition!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+input MaskCreateInput {
+  name: String!
+  entityType: CustomizableEntityType!
+  memo: String
+  fieldDefinitionIDs: [ID!]!
+}
+
+input MaskFilterInput {
+  entityTypes: [CustomizableEntityType!]
+}
+
+type MaskMutated {
+  mask: Mask
+  violations: [Violation!]
+}
+
+type MaskPagination {
+  nodes: [Mask!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input MaskUpdateInput {
+  name: String
+  entityType: CustomizableEntityType
+  memo: String
+  fieldDefinitionIDs: [ID!]
+}
 
 interface Metadata {
   metadata: [Metadatum!]!
@@ -29441,6 +29571,10 @@ type Mutation {
   entitiesUpdateMany(orders: [OrderUpdateWrapperInput!], shipments: [ShipmentUpdateWrapperInput!], products: [ProductUpdateWrapperInput!], batches: [BatchUpdateWrapperInput!], warehouses: [WarehouseUpdateWrapperInput!]): EntitiesMutatedMany!
   tagCreate(input: TagCreateInput!): TagMutated!
   tagUpdate(id: ID!, input: TagUpdateInput!): TagMutated!
+  fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsMutated!
+  maskCreate(input: MaskCreateInput!): MaskMutated!
+  maskUpdate(id: ID!, input: MaskUpdateInput!): MaskMutated!
+  maskDelete(id: ID!): Boolean!
   eventCommentCreate(input: EventCommentCreateInput!): EventCommentMutated!
   eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): EventCommentMutated!
   eventCommentDelete(id: ID!): Boolean!
@@ -29566,7 +29700,7 @@ enum NotificationType {
   NewComment
 }
 
-type Order implements Model & Owned & Tagged & Supervised & Documented & Metadata {
+type Order implements Model & Owned & Tagged & Supervised & Documented & Metadata & Customizable {
   archived: Boolean!
   exporter: Group!
   poNo: String!
@@ -29592,6 +29726,7 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Metadat
   files: [File!]!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input OrderCreateInput {
@@ -29609,6 +29744,7 @@ input OrderCreateInput {
   memo: String
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input OrderFilterInput {
@@ -29621,7 +29757,7 @@ input OrderFilterInput {
   tagIds: [ID!]
 }
 
-type OrderItem implements Model & Owned & Sortable {
+type OrderItem implements Model & Owned & Sortable & Customizable {
   order: Order!
   productProvider: ProductProvider!
   price: Price!
@@ -29636,6 +29772,7 @@ type OrderItem implements Model & Owned & Sortable {
   deletedBy: User
   ownedBy: Group!
   sort: Int!
+  customFields: CustomFields!
 }
 
 input OrderItemBatchAdjustmentCreateInput {
@@ -29678,6 +29815,7 @@ input OrderItemBatchCreateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   shipmentId: ID
   batchAssignments: [OrderItemBatchAssignmentCreateInput!]
   batchAdjustments: [OrderItemBatchAdjustmentCreateInput!]
@@ -29697,6 +29835,7 @@ input OrderItemBatchUpdateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   id: ID
   shipmentId: ID
   batchAssignments: [OrderItemBatchAssignmentUpdateInput!]
@@ -29708,6 +29847,7 @@ input OrderItemCreateInput {
   price: PriceInput!
   quantity: Float!
   batches: [OrderItemBatchCreateInput!]
+  customFields: CustomFieldsInput
 }
 
 input OrderItemFilterInput {
@@ -29739,6 +29879,7 @@ input OrderItemUpdateInput {
   price: PriceInput
   quantity: Float
   batches: [OrderItemBatchUpdateInput!]
+  customFields: CustomFieldsInput
 }
 
 type OrderMutated {
@@ -29781,6 +29922,8 @@ input OrderUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
+  metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input OrderUpdateWrapperInput {
@@ -29889,7 +30032,7 @@ input PriceInput {
   currency: Currency!
 }
 
-type Product implements Model & Owned & Tagged & Documented & Metadata {
+type Product implements Model & Owned & Tagged & Documented & Metadata & Customizable {
   archived: Boolean!
   name: String!
   serial: String!
@@ -29911,6 +30054,7 @@ type Product implements Model & Owned & Tagged & Documented & Metadata {
   files: [File!]!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input ProductCreateInput {
@@ -29924,6 +30068,7 @@ input ProductCreateInput {
   files: [FileInput!]
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ProductFilterInput {
@@ -29955,7 +30100,7 @@ type ProductPagination {
   totalCount: Int!
 }
 
-type ProductProvider implements Model & Owned & Sortable & Package & Documented & Metadata {
+type ProductProvider implements Model & Owned & Sortable & Package & Documented & Metadata & Customizable {
   archived: Boolean!
   product: Product!
   exporter: Group!
@@ -29987,6 +30132,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   files: [File!]!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input ProductProviderCreateInput {
@@ -30009,6 +30155,7 @@ input ProductProviderCreateInput {
   memo: String
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ProductProviderFilterInput {
@@ -30058,6 +30205,8 @@ input ProductProviderUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
+  metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ProductSortInput {
@@ -30078,6 +30227,8 @@ input ProductUpdateInput {
   productProviders: [ProductProviderUpdateInput!]
   files: [FileInput!]
   metadata: [MetadatumInput!]
+  metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ProductUpdateWrapperInput {
@@ -30119,6 +30270,10 @@ type Query {
   metadataTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: MetadataTemplateFilterInput, sortBy: MetadataTemplateSortInput): MetadataTemplatePagination!
   tag(id: ID!): Tag
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput): TagPagination!
+  fieldDefinition(id: ID!): FieldDefinition
+  fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinition!]!
+  mask(id: ID!): Mask
+  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput): MaskPagination!
   integration(id: ID!): Integration
   integrations(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
   integrationsOfPartners(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
@@ -35026,7 +35181,7 @@ enum Seaport {
   ZWUTA
 }
 
-type Shipment implements Model & Owned & Tagged & Supervised & Documented & Metadata {
+type Shipment implements Model & Owned & Tagged & Supervised & Documented & Metadata & Customizable {
   archived: Boolean!
   no: String!
   blNo: String
@@ -35059,6 +35214,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Meta
   files: [File!]!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input ShipmentBatchAdjustmentInput {
@@ -35089,6 +35245,7 @@ input ShipmentBatchInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   id: ID
   orderItemId: ID
   batchAssignments: [ShipmentBatchAssignmentInput!]
@@ -35132,6 +35289,7 @@ input ShipmentCreateInput {
   memo: String
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ShipmentFilterInput {
@@ -35217,6 +35375,8 @@ input ShipmentUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
+  metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ShipmentUpdateWrapperInput {
@@ -35262,6 +35422,10 @@ interface Sortable {
 enum SortOrder {
   ASCENDING
   DESCENDING
+}
+
+type StringValue {
+  string: String!
 }
 
 type Subscription {
@@ -35473,6 +35637,15 @@ input UserUpdateInput {
   tagIds: [ID!]
 }
 
+union Value = StringValue | IntValue | FloatValue | BooleanValue
+
+input ValueInput {
+  string: String
+  int: Int
+  float: Float
+  boolean: Boolean
+}
+
 type Viewer {
   user: User!
   notifications(page: Int! = 1, perPage: Int! = 10): NotificationPagination!
@@ -35513,7 +35686,7 @@ type Voyage implements Model & Owned & Sortable {
   sort: Int!
 }
 
-type Warehouse implements Model & Owned & Metadata {
+type Warehouse implements Model & Owned & Metadata & Customizable {
   archived: Boolean!
   name: String!
   surface: MetricValue
@@ -35532,6 +35705,7 @@ type Warehouse implements Model & Owned & Metadata {
   ownedBy: Group!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input WarehouseCreateInput {
@@ -35544,6 +35718,7 @@ input WarehouseCreateInput {
   country: Country
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input WarehouseFilterInput {
@@ -35588,6 +35763,7 @@ input WarehouseUpdateInput {
   country: Country
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input WarehouseUpdateWrapperInput {

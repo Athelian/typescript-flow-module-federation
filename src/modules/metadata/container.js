@@ -1,14 +1,15 @@
 // @flow
 import { Container } from 'unstated';
-import { cleanUpData, cleanFalsy } from 'utils/data';
+import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
+import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
 
 type FormState = {
-  metadatas: Array<Object>,
+  fieldDefinitions: Array<Object>,
 };
 
 const initValues = {
-  metadatas: [],
+  fieldDefinitions: [],
 };
 
 export default class MetadataContainer extends Container<FormState> {
@@ -33,5 +34,20 @@ export default class MetadataContainer extends Container<FormState> {
     const parsedValues: Object = cleanUpData(values);
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
+  };
+
+  setFieldArrayValue = (path: string, value: any) => {
+    this.setState(prevState => {
+      const newState = set(cloneDeep(prevState), path, value);
+      return newState;
+    });
+  };
+
+  removeArrayItem = (path: string) => {
+    this.setState(prevState => {
+      const cloneState = cloneDeep(prevState);
+      unset(cloneState, path);
+      return removeNulls(cloneState);
+    });
   };
 }

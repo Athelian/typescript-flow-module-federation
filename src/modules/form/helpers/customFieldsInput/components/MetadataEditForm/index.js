@@ -75,7 +75,7 @@ const MetadataEditForm = () => (
                   isKeyReadOnly
                   targetName={`metadata.${index}`}
                   // FIXME: this is dummy data
-                  metadata={{ key: '123', value: '123' }}
+                  metadata={{ name: 'METADATA 1', value: '123' }}
                   setFieldArrayValue={setFieldArrayValue}
                   onRemove={() => removeArrayItem(`metadata.${index}`)}
                 />
