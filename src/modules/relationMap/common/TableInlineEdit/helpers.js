@@ -1,6 +1,11 @@
 // @flow
 import { intersection } from 'lodash';
 import { removeTypename } from 'utils/data';
+import {
+  formatTimeline,
+  formatContainerGroups,
+  formatVoyages,
+} from 'modules/shipment/form/mutation';
 
 type MappingObject = {
   data: {
@@ -118,6 +123,7 @@ export const parseChangedData = (
   console.warn({ changedData, editData });
   const orders = [];
   const batches = [];
+  const shipments = [];
   if (changedData.orders) {
     (Object.entries(changedData.orders): any).forEach(item => {
       const [id, order] = item;
@@ -149,6 +155,60 @@ export const parseChangedData = (
         }
       });
       orders.push({ input: changedOrder, id });
+    });
+  }
+
+  if (changedData.shipments) {
+    (Object.entries(changedData.shipments): any).forEach(item => {
+      const [id, shipment] = item;
+      const keys = Object.keys(shipment);
+      const changedShipment = {};
+      keys.forEach(key => {
+        const updateValue = editData.shipments[id][key];
+        switch (key) {
+          case 'bookingDate':
+          case 'blDate': {
+            changedShipment[key] = updateValue ? new Date(updateValue) : null;
+            break;
+          }
+
+          case 'inCharges':
+            changedShipment.inChargeIds = updateValue.map(({ id: userId }) => userId);
+            break;
+          case 'forwarders':
+            changedShipment.forwarderIds = updateValue.map(({ id: userId }) => userId);
+            break;
+          case 'tags':
+            changedShipment.tagIds = updateValue.map(({ id: tagId }) => tagId);
+            break;
+
+          case 'cargoReady': {
+            changedShipment[key] = formatTimeline(updateValue);
+            break;
+          }
+
+          case 'voyages': {
+            changedShipment[key] = formatVoyages(updateValue);
+            break;
+          }
+
+          case 'containerGroups': {
+            changedShipment[key] = formatContainerGroups(updateValue);
+            break;
+          }
+
+          case 'loadType':
+          case 'transportType':
+          case 'incoterm': {
+            changedShipment[key] = updateValue && updateValue.length > 0 ? updateValue : null;
+            break;
+          }
+
+          default:
+            changedShipment[key] = updateValue;
+        }
+      });
+      shipments.push({ input: changedShipment, id });
     });
   }
 
@@ -206,8 +266,8 @@ export const parseChangedData = (
   return {
     orders,
     batches,
+    shipments,
     warehouses: [],
     products: [],
-    shipments: [],
   };
 };
