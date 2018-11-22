@@ -58,9 +58,10 @@ export const cloneOrder = async (client: any, orders: Array<Object>, filter: Obj
     return request;
   });
   const newOrders: Array<Object> = await Promise.all(orderRequests);
-  const orderResults: Array<Object> = newOrders.map(newOrder =>
-    getByPathWithDefault({}, 'data.orderCreate.order', newOrder)
-  );
+  const orderResults: Array<Object> = newOrders.map(newOrder => {
+    const result = getByPathWithDefault({}, 'data.orderCreate.order', newOrder);
+    return Object.assign(result, { actionType: 'clone' });
+  });
   const orderFocus = orderResults.reduce(
     (focus, orderResult) =>
       Object.assign(focus, {
@@ -126,7 +127,10 @@ export const cloneOrderItem = async (client: any, orderItems: Array<Object>, fil
     );
     const oldOrderItems = orderUpdate[updatedOrderId];
     const diffOrderItems = differenceBy(newOrderItems, oldOrderItems, 'id');
-    return Object.assign(resultOrderItemObj, { [updatedOrderId]: diffOrderItems });
+    const results = diffOrderItems.map(diffItem =>
+      Object.assign(diffItem, { actionType: 'clone' })
+    );
+    return Object.assign(resultOrderItemObj, { [updatedOrderId]: results });
   }, {});
 
   const orderItemFocus = updatedOrderItems.reduce((resultOrderItemObj, updatedOrderItem) => {
@@ -271,24 +275,13 @@ export const cloneBatch = async (client: any, batches: Object, filter: Object) =
   });
   const newBatches = await Promise.all(batchRequests);
 
-  const query = { query: orderListQuery, variables: filter };
-  const orderList = client.readQuery(query);
-
   const batchResult = newBatches.reduce((batchResultObj, newBatch) => {
     const { refId } = newBatch;
     const batchId = getByPathWithDefault('', 'data.batchCreate.batch.id', newBatch);
-    const batchRef = refId ? { [refId]: [...(batchResultObj[refId] || []), { id: batchId }] } : {};
+    const batchRef = refId
+      ? { [refId]: [...(batchResultObj[refId] || []), { id: batchId, actionType: 'clone' }] }
+      : {};
 
-    const updateData = getByPathWithDefault({}, 'data.batchCreate.batch', newBatch);
-    orderList.orders.nodes.forEach((order, orderIndex) => {
-      if (order.id === getByPathWithDefault(false, 'orderItem.order.id', updateData)) {
-        order.orderItems.forEach((orderItem, orderItemIndex) => {
-          if (orderItem.id === getByPathWithDefault(false, 'orderItem.id', updateData)) {
-            orderList.orders.nodes[orderIndex].orderItems[orderItemIndex].batches.push(updateData);
-          }
-        });
-      }
-    });
     return Object.assign(batchResultObj, batchRef);
   }, {});
   const batchFocus = newBatches.reduce((batchResultObj, newBatch) => {
@@ -317,9 +310,10 @@ export const cloneShipment = async (client: any, shipment: Object) => {
     return request;
   });
   const newShipments = await Promise.all(shipmentRequests);
-  const shipmentResults: Array<Object> = newShipments.map(newShipment =>
-    getByPathWithDefault({}, 'data.shipmentCreate.shipment', newShipment)
-  );
+  const shipmentResults: Array<Object> = newShipments.map(newShipment => {
+    const result = getByPathWithDefault({}, 'data.shipmentCreate.shipment', newShipment);
+    return Object.assign(result, { actionType: 'clone' });
+  });
   const shipmentFocus = shipmentResults.reduce(
     (focus, shipmentResult) =>
       Object.assign(focus, {
@@ -392,7 +386,6 @@ export const cloneTarget = async ({
   const [shipmentResults, shipmentFocus] = await cloneShipment(client, target.shipment);
   const [orderItemResult, orderItemFocus] = await cloneOrderItem(client, targetedOrderItem, filter);
   const [batchResult, batchFocus] = await cloneBatch(client, targetedBatch, filter);
-  // const [batchResult, batchFocus] = await cloneBatchByUpdateOrder(client, targetedBatch, filter);
 
   const result = {
     order: orderResults,

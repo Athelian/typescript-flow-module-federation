@@ -7,6 +7,7 @@ import { BooleanValue } from 'react-values';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import SelectedShipment from 'modules/relationMap/common/SelectedShipment';
+import NewItemBadge from 'modules/relationMap/common/NewItemBadge';
 import {
   ItemWrapperStyle,
   ShipmentCardStyle,
@@ -147,11 +148,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 wrapperClassName={cardWrapperClass}
               >
                 <>
-                  {isNew && (
-                    <div className={IsNewItemStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  )}
+                  {isNew && <NewItemBadge label={isNew} />}
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
                       <BooleanValue>
@@ -213,11 +210,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 wrapperClassName={cardWrapperClass}
               >
                 <>
-                  {isNew && (
-                    <div className={IsNewItemStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  )}
+                  {isNew && <NewItemBadge label={isNew} />}
                   <BooleanValue>
                     {({ value: hovered, set: setToggle }) => (
                       <WrapperCard
@@ -267,11 +260,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 wrapperClassName={cardWrapperClass}
               >
                 <>
-                  {isNew && (
-                    <div className={IsNewItemStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  )}
+                  {isNew && <NewItemBadge label={isNew} />}
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
                       <BooleanValue>

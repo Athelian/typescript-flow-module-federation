@@ -9,6 +9,7 @@ import Layout from 'components/Layout';
 import { QueryForm } from 'components/common';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
+import { cloneOrderItemMutation as orderUpdateFromSlideView } from 'modules/relationMap/orderFocused/mutation';
 import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
@@ -131,13 +132,13 @@ class OrderFormModule extends React.PureComponent<Props> {
     if (orderId && !isNewOrClone) {
       mutationKey = { key: decodeId(orderId) };
     }
-
+    const updateOrder = isSlideView ? orderUpdateFromSlideView : updateOrderMutation;
     return (
       <Provider>
         <UIConsumer>
           {uiState => (
             <Mutation
-              mutation={isNewOrClone ? createOrderMutation : updateOrderMutation}
+              mutation={isNewOrClone ? createOrderMutation : updateOrder}
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >

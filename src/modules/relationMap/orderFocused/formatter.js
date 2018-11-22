@@ -9,7 +9,7 @@ const filterOutNewData = (newData: Array<Object>) => (data: Object) =>
 const createFilterData = (newData: Array<Object> = []) =>
   pipe(
     filter(filterOutNewData(newData || [])),
-    prependArray(newData.map(d => Object.assign(d, { isNew: true })))
+    prependArray(newData.map(d => Object.assign(d, { isNew: d.actionType || 'newItem' })))
   );
 const getIsNew = (item: Object) => item.isNew || false;
 

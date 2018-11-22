@@ -62,9 +62,17 @@ export default defineMessages({
     id: 'global.quantity',
     defaultMessage: 'Quantity',
   },
+  newItem: {
+    id: 'modules.RelationMaps.label.newItem',
+    defaultMessage: 'New',
+  },
   clone: {
     id: 'modules.RelationMaps.label.clone',
     defaultMessage: 'Clone',
+  },
+  split: {
+    id: 'modules.RelationMaps.label.split',
+    defaultMessage: 'Split',
   },
   splitType: {
     id: 'modules.RelationMaps.label.splitType',
@@ -163,7 +171,7 @@ export default defineMessages({
     defaultMessage: 'Please wait for a moment',
   },
   cloning: {
-    id: 'modules.RelationMaps.label.waiting',
+    id: 'modules.RelationMaps.label.cloning',
     defaultMessage: 'Cloning',
   },
   spliting: {
