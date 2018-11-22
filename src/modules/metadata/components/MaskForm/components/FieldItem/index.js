@@ -7,24 +7,25 @@ import Icon from 'components/Icon';
 import { AdjustmentWrapperStyle, AdjustmentFieldsWrapperStyle, CheckBoxStyle } from './style';
 
 type OptionalProps = {
+  checked: boolean,
   width: string,
   onClick: Function,
 };
 
 type Props = OptionalProps & {
   item: {
-    checked: boolean,
     id: string,
     name: string,
   },
 };
 
 const defaultProps = {
+  checked: false,
   width: '200px',
   onClick: () => {},
 };
 
-const FieldItem = ({ width, item: { checked, name }, onClick }: Props) => (
+const FieldItem = ({ width, checked, item: { name }, onClick }: Props) => (
   <div className={AdjustmentWrapperStyle}>
     <div className={AdjustmentFieldsWrapperStyle}>
       <button type="button" className={CheckBoxStyle(checked)} onClick={onClick}>
