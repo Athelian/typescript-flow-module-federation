@@ -482,7 +482,7 @@
   "modules.RelationMaps.filter.hsCode": "HS Code",
   "modules.RelationMaps.filter.supplier": "Supplier",
   "modules.RelationMaps.filter.countryOfOrigin": "Country of Origin",
-  "modules.RelationMaps.filter.currency": "Currency",
+  "modules.RelationMaps.filter.currency": "CURRENCY",
   "modules.RelationMaps.filter.packageInfo": "Package Info",
   "modules.RelationMaps.filter.metadata": "Meta Data",
   "modules.RelationMaps.filter.carrier": "Carrier",

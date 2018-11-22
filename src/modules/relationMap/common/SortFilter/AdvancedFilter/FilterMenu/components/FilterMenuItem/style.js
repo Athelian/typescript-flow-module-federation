@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, fontSizesWithHeights, fontSizes, borderRadiuses } from 'styles/common';
+import { presets, colors, fontSizesWithHeights, fontSizes, borderRadiuses, shadows } from 'styles/common';
 
 export const FilterMenuItemWrapperStyle = (isActive: boolean): string => css`
   ${presets.BUTTON};
@@ -12,11 +12,13 @@ export const FilterMenuItemWrapperStyle = (isActive: boolean): string => css`
     ? `
       background-color: ${colors.WHITE};
       color: ${colors.TEAL};
+      ${shadows.INPUT};
     `
     : `
       color: ${colors.GRAY_DARK};
       &:hover, :focus {
         background-color: ${colors.WHITE};
+        ${shadows.INPUT};
       }
     `};
 `;

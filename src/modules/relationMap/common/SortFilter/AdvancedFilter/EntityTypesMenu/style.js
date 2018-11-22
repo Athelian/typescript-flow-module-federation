@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, scrollbars, fontSizes, borderRadiuses } from 'styles/common';
+import { presets, colors, scrollbars, fontSizes, borderRadiuses, shadows } from 'styles/common';
 
 export const EntityTypesWrapperStyle: string = css`
   display: flex;
@@ -30,10 +30,12 @@ export const EntityTypeMenuItemStyle = (isActive: boolean): string => css`
   ${isActive
     ? `
   background-color: ${colors.WHITE};
+  ${shadows.INPUT};
 `
     : `
   &:hover, :focus {
     background-color: ${colors.WHITE};
+    ${shadows.INPUT};
   }
 `};
 `;
