@@ -20,52 +20,52 @@ type Props = {
 };
 
 const CustomFieldTemplateList = ({ entityType }: Props) => (
-  <Query
-    query={masksQuery}
-    variables={{
-      page: 1,
-      perPage: 10,
-      filterBy: entityType,
-    }}
-    fetchPolicy="network-only"
-  >
-    {({ loading, data, fetchMore, error }) => {
-      if (error) {
-        return error.message;
-      }
+  <div>
+    <div className={CustomFieldsFormHeaderStyle}>
+      <FormHeader
+        name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
+      >
+        <BooleanValue>
+          {({ value: isOpen, set: toggle }) => (
+            <>
+              <NewButton onClick={() => toggle(true)} />
+              <SlideView
+                isOpen={isOpen}
+                onRequestClose={() => toggle(false)}
+                options={{ width: '1030px' }}
+              >
+                <MaskFormWrapper
+                  entityType={entityType}
+                  isNew
+                  onSave={() => toggle(false)}
+                  onCancel={() => toggle(false)}
+                />
+              </SlideView>
+            </>
+          )}
+        </BooleanValue>
+      </FormHeader>
+    </div>
+    <div className={CustomFieldsEditFormWrapperStyle}>
+      <Query
+        query={masksQuery}
+        variables={{
+          page: 1,
+          perPage: 10,
+          filter: { entityTypes: entityType },
+        }}
+        fetchPolicy="network-only"
+      >
+        {({ loading, data, fetchMore, error }) => {
+          if (error) {
+            return error.message;
+          }
 
-      const nextPage = getByPathWithDefault(1, 'masks.page', data) + 1;
-      const totalPage = getByPathWithDefault(1, 'masks.totalPage', data);
-      const hasMore = nextPage <= totalPage;
+          const nextPage = getByPathWithDefault(1, 'masks.page', data) + 1;
+          const totalPage = getByPathWithDefault(1, 'masks.totalPage', data);
+          const hasMore = nextPage <= totalPage;
 
-      return (
-        <div>
-          <div className={CustomFieldsFormHeaderStyle}>
-            <FormHeader
-              name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
-            >
-              <BooleanValue>
-                {({ value: isOpen, set: toggle }) => (
-                  <>
-                    <NewButton onClick={() => toggle(true)} />
-                    <SlideView
-                      isOpen={isOpen}
-                      onRequestClose={() => toggle(false)}
-                      options={{ width: '1030px' }}
-                    >
-                      <MaskFormWrapper
-                        entityType={entityType}
-                        isNew
-                        onSave={() => toggle(false)}
-                        onCancel={() => toggle(false)}
-                      />
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
-            </FormHeader>
-          </div>
-          <div className={CustomFieldsEditFormWrapperStyle}>
+          return (
             <CustomFieldsTemplateGridView
               entityType={entityType}
               items={getByPathWithDefault([], 'masks.nodes', data)}
@@ -100,11 +100,11 @@ const CustomFieldTemplateList = ({ entityType }: Props) => (
                 </BooleanValue>
               )}
             />
-          </div>
-        </div>
-      );
-    }}
-  </Query>
+          );
+        }}
+      </Query>
+    </div>
+  </div>
 );
 
 export default CustomFieldTemplateList;
