@@ -1,6 +1,6 @@
 // @flow
 import { differenceBy } from 'lodash';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, compose, omit } from 'utils/fp';
 import { cleanUpData, removeId } from 'utils/data';
 import { prepareCreateOrderInput } from 'modules/order/form/mutation';
 import { prepareCreateShipmentInput } from 'modules/shipment/form/mutation';
@@ -243,35 +243,24 @@ export const cloneBatchByUpdateOrder = async (client: any, batches: Object, filt
   return [{}, batchesFocus];
 };
 
-export const cloneBatch = async (client: any, batches: Object, filter: Object) => {
+export const cloneBatch = async (client: any, batches: Object) => {
   const mutationRequest = createMutationRequest(client);
   const batchRequests = batches.map(currentBatch => {
     const orderItemId = getByPathWithDefault('', 'orderItem.id', currentBatch);
+    const inputBatch = compose(
+      cleanUpData,
+      omit(['archived', 'updatedBy', 'updatedAt']),
+      removeAdditionBatchFields
+    )(currentBatch);
     const request = mutationRequest(
       {
         mutation: cloneBatchMutation,
-        variables: prepareCreateBatchInput(
-          cleanUpData({
-            ...removeAdditionBatchFields(currentBatch),
+        variables: {
+          input: prepareCreateBatchInput({
+            ...inputBatch,
             orderItemId,
             no: `[cloned] ${currentBatch.no}`,
-          })
-        ),
-        update: (store, { data }) => {
-          const query = { query: orderListQuery, variables: filter };
-          const orderList = store.readQuery(query);
-          const updateData = data.batchCreate && data.batchCreate.batch;
-          orderList.orders.nodes.forEach((order, orderIndex) => {
-            if (order.id === getByPathWithDefault(false, 'orderItem.order.id', updateData)) {
-              order.orderItems.forEach((orderItem, orderItemIndex) => {
-                if (orderItem.id === getByPathWithDefault(false, 'orderItem.id', updateData)) {
-                  orderList.orders.nodes[orderIndex].orderItems[orderItemIndex].batches.push(
-                    updateData
-                  );
-                }
-              });
-            }
-          });
+          }),
         },
       },
       orderItemId
@@ -370,11 +359,6 @@ const filterTargetedBatch = (target: Object) => {
         target.orderItem && target.orderItem[batch.parentId || batch.orderItemId];
       const isTargetRootItem = target.order && target.order[batch.rootId || batch.orderId];
       return !(isTargetParentItem || isTargetRootItem);
-      // if (isTargetParentItem ||  )
-      // if (target.orderItem && target.orderItem[batch.orderItemId]) {
-      //   return false
-      // }
-      // return !target.order ? true : !target.order[batch.rootId || batch.orderId];
     })
     .map(data => {
       const [, batch] = data;
@@ -403,7 +387,7 @@ export const cloneTarget = async ({
     { orderItems: targetedOrderItem, batch: target.batch },
     filter
   );
-  const [batchResult, batchFocus] = await cloneBatch(client, targetedBatch, filter);
+  const [batchResult, batchFocus] = await cloneBatch(client, targetedBatch);
 
   const result = {
     order: orderResults,

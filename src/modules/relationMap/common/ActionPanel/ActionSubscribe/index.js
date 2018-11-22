@@ -93,6 +93,7 @@ const ActionSubscribe = ({ filter }: Props) => (
             setLoading,
             setCurrentAction,
             setError,
+            overrideState: setActionState,
             state: { currentAction, loading, error },
           },
           { clone },
@@ -109,17 +110,17 @@ const ActionSubscribe = ({ filter }: Props) => (
                   focusMode,
                   filter,
                 });
-                setResult(newResult);
                 selectTargetItem(newFocus);
-                setAction('');
-                setLoading(false);
-                if (error) {
-                  setError(false);
-                }
+                setActionState({
+                  result: newResult,
+                  action: '',
+                  loading: false,
+                  error: false,
+                });
               } catch (err) {
-                logger.error(err);
                 setLoading(false);
                 setError(!!err);
+                logger.error(err);
               }
             };
             setCurrentAction(action);
@@ -205,11 +206,11 @@ const ActionSubscribe = ({ filter }: Props) => (
                       </BooleanValue>
                     </>
                   </ActionSelector>
-                  {currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
-                  {currentAction === 'split' && (
+                  {!error && currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
+                  {!error && currentAction === 'split' && (
                     <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
                   )}
-                  {currentAction === 'connect' && (
+                  {!error && currentAction === 'connect' && (
                     <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
                   )}
                   {error && (
