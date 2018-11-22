@@ -76,7 +76,42 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
           return Placeholder;
       }
     case 'shipment':
-      return Placeholder;
+      switch (selectedFilterItem) {
+        case 'forwarder':
+          return Placeholder;
+        case 'inCharge':
+          return Placeholder;
+        case 'ports':
+          return Placeholder;
+        case 'cargoReady':
+          return DateRange;
+        case 'loadPortDeparture':
+          return DateRange;
+        case 'firstTransitPortArrival':
+          return DateRange;
+        case 'firstTransitPortDeparture':
+          return DateRange;
+        case 'secondTransitPortArrival':
+          return DateRange;
+        case 'secondTransitPortDeparture':
+          return DateRange;
+        case 'dischargePortArrival':
+          return DateRange;
+        case 'customClearance':
+          return DateRange;
+        case 'warehouseArrival':
+          return DateRange;
+        case 'deliveryReady':
+          return DateRange;
+        case 'tags':
+          return Tags;
+        case 'createdAt':
+          return DateRange;
+        case 'updatedAt':
+          return DateRange;
+        default:
+          return Placeholder;
+      }
     default:
       return Placeholder;
   }

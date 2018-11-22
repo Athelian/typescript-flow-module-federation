@@ -4,6 +4,7 @@ import { type EntityTypes } from 'modules/relationMap/common/SortFilter/Advanced
 import OrderFilterMenu from './OrderFilterMenu';
 import ItemFilterMenu from './ItemFilterMenu';
 import BatchFilterMenu from './BatchFilterMenu';
+import ShipmentFilterMenu from './ShipmentFilterMenu';
 import { FilterMenuWrapperStyle } from './style';
 
 type Props = {
@@ -28,7 +29,7 @@ const getFilterMenu = (selectedEntityType: EntityTypes) => {
     case 'batch':
       return BatchFilterMenu;
     case 'shipment':
-      return OrderFilterMenu;
+      return ShipmentFilterMenu;
     default:
       return OrderFilterMenu;
   }
