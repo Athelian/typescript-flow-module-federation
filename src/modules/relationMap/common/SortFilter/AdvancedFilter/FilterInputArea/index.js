@@ -39,6 +39,20 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
           return DateRange;
         case 'updatedAt':
           return DateRange;
+        case 'tags':
+          return Tags;
+        case 'exporter':
+          return Placeholder;
+        case 'supplier':
+          return Placeholder;
+        case 'origin':
+          return Placeholder;
+        case 'specifications':
+          return Placeholder;
+        case 'productionLeadTime':
+          return Placeholder;
+        case 'packaging':
+          return Placeholder;
         default:
           return Placeholder;
       }

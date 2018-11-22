@@ -27,6 +27,26 @@ export default function ItemFilterMenu({
         { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} /> },
       ],
     },
+    {
+      label: <FormattedMessage {...messages.product} />,
+      icon: 'PRODUCT',
+      filters: [{ name: 'tags', label: <FormattedMessage {...messages.tags} /> }],
+    },
+    {
+      label: <FormattedMessage {...messages.endProduct} />,
+      icon: 'PROVIDER',
+      filters: [
+        { name: 'exporter', label: <FormattedMessage {...messages.exporter} /> },
+        { name: 'supplier', label: <FormattedMessage {...messages.supplier} /> },
+        { name: 'origin', label: <FormattedMessage {...messages.origin} /> },
+        { name: 'specifications', label: <FormattedMessage {...messages.specifications} /> },
+        {
+          name: 'productionLeadTime',
+          label: <FormattedMessage {...messages.productionLeadTime} />,
+        },
+        { name: 'packaging', label: <FormattedMessage {...messages.packaging} /> },
+      ],
+    },
   ];
 
   return (
