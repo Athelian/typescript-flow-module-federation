@@ -22,6 +22,7 @@ import {
   ClonePanel,
   ErrorPanel,
   HighlightPanel,
+  ConstrainPanel,
 } from 'modules/relationMap/common/ActionPanel';
 // containers
 import {
@@ -59,7 +60,10 @@ const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
   const numberOfOrderItem = Object.keys(orderItem).length;
   const numberOfBatch = Object.keys(batch).length;
-  if (numberOfOrderItem === 1 || numberOfBatch === 1) {
+  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
+  const selctedOrderItem = numberOfOrderItem === 1 && numberOfBatch === 0;
+  const selectedBatch = numberOfBatch === 1 && numberOfOrderItem === 0;
+  if (selectSomeItem && (selctedOrderItem || selectedBatch)) {
     return false;
   }
   return true;
@@ -84,6 +88,7 @@ const ActionSubscribe = ({ filter }: Props) => (
             isHighlighted,
             resetFocusedItem,
             selectTargetItem,
+            overrideState: setRelationState,
             cancelTarget,
           },
           {
@@ -110,7 +115,11 @@ const ActionSubscribe = ({ filter }: Props) => (
                   focusMode,
                   filter,
                 });
-                selectTargetItem(newFocus);
+                setRelationState({
+                  targetedItem: newFocus,
+                  tress: [],
+                  lines: {},
+                });
                 setActionState({
                   result: newResult,
                   action: '',
@@ -149,6 +158,7 @@ const ActionSubscribe = ({ filter }: Props) => (
             cancelTarget();
             setAction('');
           };
+          const disabledSplit = isDisabledSplit(targetedItem);
           return (
             <>
               {isTargetAnyItem() && (
@@ -166,7 +176,7 @@ const ActionSubscribe = ({ filter }: Props) => (
                         className={TabItemStyled}
                         label="SPLIT"
                         icon="SPLIT"
-                        disabled={isDisabledSplit(targetedItem)}
+                        disabled={disabledSplit}
                         active={currentAction === 'split'}
                         onClick={() => setAction(currentAction !== 'split' ? 'split' : null)}
                       />
@@ -206,8 +216,9 @@ const ActionSubscribe = ({ filter }: Props) => (
                       </BooleanValue>
                     </>
                   </ActionSelector>
+                  {disabledSplit && <ConstrainPanel type="split" />}
                   {!error && currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
-                  {!error && currentAction === 'split' && (
+                  {!error && !isDisabledSplit && currentAction === 'split' && (
                     <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
                   )}
                   {!error && currentAction === 'connect' && (

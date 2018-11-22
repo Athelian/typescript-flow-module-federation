@@ -268,7 +268,6 @@ export const cloneBatch = async (client: any, batches: Object) => {
     return request;
   });
   const newBatches = await Promise.all(batchRequests);
-
   const batchResult = newBatches.reduce((batchResultObj, newBatch) => {
     const { refId } = newBatch;
     const batchId = getByPathWithDefault('', 'data.batchCreate.batch.id', newBatch);
@@ -300,6 +299,9 @@ export const cloneShipment = async (client: any, shipment: Object) => {
             voyages: removeId(currentShipment.voyages),
           })
         ),
+      },
+      onError: err => {
+        throw err;
       },
     });
     return request;

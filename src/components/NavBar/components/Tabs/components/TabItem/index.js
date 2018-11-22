@@ -11,7 +11,6 @@ type OptionalProps = {
 };
 type Props = OptionalProps & {
   label: string | React.Node,
-  disabled?: boolean,
   active: boolean,
   onClick: Function,
 };
@@ -36,6 +35,7 @@ const TabItem = ({ icon = '', label, disabled, active, onClick, className }: Pro
     )}
     {label}
     <span />
+    {disabled}
   </button>
 );
 

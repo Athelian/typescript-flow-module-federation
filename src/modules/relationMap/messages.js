@@ -200,7 +200,7 @@ export default defineMessages({
   },
   actionAvailable: {
     id: 'modules.RelationMaps.action.actionAvailable',
-    defaultMessage: 'This action is only available for a selection of',
+    defaultMessage: 'action is only available for a selection of',
   },
   atLeast: {
     id: 'modules.RelationMaps.action.atLeast',
