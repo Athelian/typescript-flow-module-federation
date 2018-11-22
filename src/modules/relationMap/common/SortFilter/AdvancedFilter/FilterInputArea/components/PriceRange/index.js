@@ -12,7 +12,7 @@ import {
   DefaultOptions,
 } from 'components/Form';
 import { PriceRangeWrapperStyle, NumberInputsWrapperStyle } from './style';
-import messages from './messages';
+import messages from '../messages';
 
 export const parseEnumValue = (enumValue: ?string | ?{ name: string }) => {
   if (enumValue && enumValue.name) return enumValue.name;

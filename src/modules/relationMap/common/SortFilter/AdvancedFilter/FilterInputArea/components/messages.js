@@ -14,4 +14,16 @@ export default defineMessages({
     id: 'modules.RelationMaps.filter.max',
     defaultMessage: 'MAX',
   },
+  from: {
+    id: 'modules.RelationMaps.filter.from',
+    defaultMessage: 'FROM',
+  },
+  to: {
+    id: 'modules.RelationMaps.filter.to',
+    defaultMessage: 'TO',
+  },
+  days: {
+    id: 'modules.RelationMaps.filter.days',
+    defaultMessage: 'Days',
+  },
 });
