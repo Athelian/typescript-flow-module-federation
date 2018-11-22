@@ -52,6 +52,7 @@ export default function ItemFilterMenu({
   return (
     <FilterMenu
       filtersMap={filtersMap}
+      entityType="item"
       activeFilters={activeFilters}
       toggleActiveFilter={toggleActiveFilter}
       selectedFilterItem={selectedFilterItem}

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import { FilterMenuItem, SectionHeader, ToggleMenuItem } from '..';
 import { FilterMenuWrapperStyle, FiltersBodyStyle, TogglesBodyStyle } from './style';
 
@@ -20,6 +21,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  entityType: EntityTypes,
   activeFilters: Array<string>,
   toggleActiveFilter: (string, string) => void,
   selectedFilterItem: string,
@@ -29,6 +31,7 @@ type Props = OptionalProps & {
 export default function ItemFilterMenu({
   filtersMap,
   togglesMap,
+  entityType,
   activeFilters,
   toggleActiveFilter,
   selectedFilterItem,
@@ -57,7 +60,7 @@ export default function ItemFilterMenu({
                       changeSelectedFilterItem={changeSelectedFilterItem}
                       isActive={isActive}
                       toggleActiveFilter={(fieldName: string) =>
-                        toggleActiveFilter('item', fieldName)
+                        toggleActiveFilter(entityType, fieldName)
                       }
                       data={[]}
                     />
@@ -80,7 +83,9 @@ export default function ItemFilterMenu({
                 label={toggleLabel}
                 icon={icon}
                 isActive={isActive}
-                toggleActiveFilter={(fieldName: string) => toggleActiveFilter('order', fieldName)}
+                toggleActiveFilter={(fieldName: string) =>
+                  toggleActiveFilter(entityType, fieldName)
+                }
               />
             );
           })}

@@ -55,6 +55,7 @@ export default function OrderFilterMenu({
     <FilterMenu
       filtersMap={filtersMap}
       togglesMap={togglesMap}
+      entityType="order"
       activeFilters={activeFilters}
       toggleActiveFilter={toggleActiveFilter}
       selectedFilterItem={selectedFilterItem}

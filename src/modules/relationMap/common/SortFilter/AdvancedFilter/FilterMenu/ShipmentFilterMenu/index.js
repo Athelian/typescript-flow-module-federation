@@ -70,6 +70,7 @@ export default function ShipmentFilterMenu({
     <FilterMenu
       filtersMap={filtersMap}
       togglesMap={togglesMap}
+      entityType="shipment"
       activeFilters={activeFilters}
       toggleActiveFilter={toggleActiveFilter}
       selectedFilterItem={selectedFilterItem}

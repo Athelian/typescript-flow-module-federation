@@ -46,6 +46,7 @@ export default function BatchFilterMenu({
     <FilterMenu
       filtersMap={filtersMap}
       togglesMap={togglesMap}
+      entityType="batch"
       activeFilters={activeFilters}
       toggleActiveFilter={toggleActiveFilter}
       selectedFilterItem={selectedFilterItem}
