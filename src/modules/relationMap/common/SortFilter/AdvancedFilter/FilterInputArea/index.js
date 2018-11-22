@@ -57,7 +57,24 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
           return Placeholder;
       }
     case 'batch':
-      return Placeholder;
+      switch (selectedFilterItem) {
+        case 'deliveredAt':
+          return DateRange;
+        case 'expiredAt':
+          return DateRange;
+        case 'producedAt':
+          return DateRange;
+        case 'packaging':
+          return Placeholder;
+        case 'tags':
+          return Tags;
+        case 'createdAt':
+          return DateRange;
+        case 'updatedAt':
+          return DateRange;
+        default:
+          return Placeholder;
+      }
     case 'shipment':
       return Placeholder;
     default:

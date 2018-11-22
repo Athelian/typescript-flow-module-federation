@@ -54,7 +54,7 @@ class AdvanceFilterInput extends React.Component<Props, State> {
     const defaultFilterMenuItemMap = {
       order: 'poNo',
       item: 'price',
-      batch: 'tags',
+      batch: 'deliveredAt',
       shipment: 'forwarder',
     };
 
