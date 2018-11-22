@@ -12,14 +12,12 @@ import {
   ItemWrapperStyle,
   ShipmentCardStyle,
   ShipmentCardTotalStyle,
-  IsNewItemStyle,
 } from 'modules/relationMap/common/RelationItem/style';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import RelationMapContainer from 'modules/relationMap/container';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import BaseCard from 'components/Cards';
-import Icon from 'components/Icon';
 import {
   RelationLine,
   OrderCard,
@@ -344,11 +342,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   wrapperClassName={cx(cardWrapperClass, ShipmentCardStyle)}
                 >
                   <>
-                    {isNew && (
-                      <div className={IsNewItemStyle}>
-                        <Icon icon="CHECKED" />
-                      </div>
-                    )}
+                    {isNew && <NewItemBadge label={isNew} />}
                     <ToggleSlide>
                       {({ assign: setSlide }) => (
                         <Subscribe to={[ConnectContainer, ActionContainer]}>

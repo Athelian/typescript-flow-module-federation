@@ -1,12 +1,10 @@
 // @flow
 import { differenceBy } from 'lodash';
 import { getByPathWithDefault } from 'utils/fp';
-import { cleanUpData } from 'utils/data';
-// import emitter from 'utils/emitter';
-// import update from 'immutability-helper';
-// import { createBatchMutation } from 'modules/batch/form/mutation';
-// import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
+import { cleanUpData, removeId } from 'utils/data';
 import { prepareCreateOrderInput } from 'modules/order/form/mutation';
+import { prepareCreateShipmentInput } from 'modules/shipment/form/mutation';
+import { prepareCreateBatchInput, prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import {
   cloneOrderMutation,
   cloneOrderItemMutation,
@@ -72,10 +70,16 @@ export const cloneOrder = async (client: any, orders: Array<Object>, filter: Obj
   return [orderResults, orderFocus];
 };
 
-export const cloneOrderItem = async (client: any, orderItems: Array<Object>, filter: Object) => {
+export const cloneOrderItem = async (client: any, target: Object, filter: Object) => {
+  const { orderItems, batch: targetedBatch } = target;
   const mutationRequest = createMutationRequest(client);
   const orderUpdate = orderItems.reduce((orderUpdateObj, currentOrderItem) => {
     const orderId = getByPathWithDefault('', 'order.id', currentOrderItem);
+    const oldBatches = currentOrderItem.batches.map(batch => ({ id: batch.id }));
+    const newBatches = currentOrderItem.batches
+      .filter(batch => !!targetedBatch[batch.id])
+      .map(batch => prepareUpdateBatchInput(cleanUpData(batch)));
+    const batches = oldBatches.concat(newBatches);
     return Object.assign(orderUpdateObj, {
       [orderId]: [
         ...(!orderUpdateObj[orderId]
@@ -91,6 +95,7 @@ export const cloneOrderItem = async (client: any, orderItems: Array<Object>, fil
             amount: getByPathWithDefault(0, 'price.amount', currentOrderItem),
             currency: getByPathWithDefault('All', 'price.currency', currentOrderItem),
           },
+          batches,
         },
       ],
     });
@@ -245,13 +250,13 @@ export const cloneBatch = async (client: any, batches: Object, filter: Object) =
     const request = mutationRequest(
       {
         mutation: cloneBatchMutation,
-        variables: {
-          input: {
-            no: `[cloned] ${currentBatch.no}`,
-            quantity: currentBatch.quantity,
+        variables: prepareCreateBatchInput(
+          cleanUpData({
+            ...removeAdditionBatchFields(currentBatch),
             orderItemId,
-          },
-        },
+            no: `[cloned] ${currentBatch.no}`,
+          })
+        ),
         update: (store, { data }) => {
           const query = { query: orderListQuery, variables: filter };
           const orderList = store.readQuery(query);
@@ -298,13 +303,14 @@ export const cloneShipment = async (client: any, shipment: Object) => {
     const request = client.mutate({
       mutation: cloneShipmentMutation,
       variables: {
-        input: {
-          no: `[cloned] ${currentShipment.no}`,
-          containerGroups: currentShipment.containerGroups.map(group => ({
-            warehouseId: getByPathWithDefault('1', 'warehouse.id', group),
-          })),
-          voyages: currentShipment.voyages.map(voyage => ({ vesselName: voyage.vesselName })),
-        },
+        input: prepareCreateShipmentInput(
+          cleanUpData({
+            ...currentShipment,
+            no: `[cloned] ${currentShipment.no}`,
+            containerGroups: removeId(currentShipment.containerGroups),
+            voyages: removeId(currentShipment.voyages),
+          })
+        ),
       },
     });
     return request;
@@ -312,7 +318,7 @@ export const cloneShipment = async (client: any, shipment: Object) => {
   const newShipments = await Promise.all(shipmentRequests);
   const shipmentResults: Array<Object> = newShipments.map(newShipment => {
     const result = getByPathWithDefault({}, 'data.shipmentCreate.shipment', newShipment);
-    return Object.assign(result, { actionType: 'clone' });
+    return Object.assign(result, { actionType: 'clone', isNew: 'clone' });
   });
   const shipmentFocus = shipmentResults.reduce(
     (focus, shipmentResult) =>
@@ -360,7 +366,15 @@ const filterTargetedBatch = (target: Object) => {
   const batches: any = (Object.entries(target.batch || {}): any)
     .filter(data => {
       const [, batch] = data;
-      return !target.order ? true : !target.order[batch.rootId || batch.orderId];
+      const isTargetParentItem =
+        target.orderItem && target.orderItem[batch.parentId || batch.orderItemId];
+      const isTargetRootItem = target.order && target.order[batch.rootId || batch.orderId];
+      return !(isTargetParentItem || isTargetRootItem);
+      // if (isTargetParentItem ||  )
+      // if (target.orderItem && target.orderItem[batch.orderItemId]) {
+      //   return false
+      // }
+      // return !target.order ? true : !target.order[batch.rootId || batch.orderId];
     })
     .map(data => {
       const [, batch] = data;
@@ -384,7 +398,11 @@ export const cloneTarget = async ({
   // TODO: should run in parallel
   const [orderResults, orderFocus] = await cloneOrder(client, targetedOrder, filter);
   const [shipmentResults, shipmentFocus] = await cloneShipment(client, target.shipment);
-  const [orderItemResult, orderItemFocus] = await cloneOrderItem(client, targetedOrderItem, filter);
+  const [orderItemResult, orderItemFocus] = await cloneOrderItem(
+    client,
+    { orderItems: targetedOrderItem, batch: target.batch },
+    filter
+  );
   const [batchResult, batchFocus] = await cloneBatch(client, targetedBatch, filter);
 
   const result = {

@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
+import logger from 'utils/logger';
 // components
 import { BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -116,6 +117,7 @@ const ActionSubscribe = ({ filter }: Props) => (
                   setError(false);
                 }
               } catch (err) {
+                logger.error(err);
                 setLoading(false);
                 setError(!!err);
               }

@@ -84,7 +84,7 @@ export const shipmentRMFragment = gql`
       }
     }
     batches {
-      id
+      ...batchCardFragment
     }
   }
 `;
