@@ -142,7 +142,20 @@ class MaskFormWrapper extends React.Component<Props> {
               }
             >
               {isNew ? (
-                <MaskForm isNew />
+                <Subscribe to={[MaskContainer]}>
+                  {({ initDetailValues }) => (
+                    <MaskForm
+                      isNew
+                      onFormReady={() =>
+                        initDetailValues({
+                          name: '',
+                          memo: '',
+                          fieldDefinitionIDs: [],
+                        })
+                      }
+                    />
+                  )}
+                </Subscribe>
               ) : (
                 <Query query={maskQuery} variables={{ id }} fetchPolicy="network-only">
                   {({ loading, data, error }) => {
