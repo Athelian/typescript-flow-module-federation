@@ -142,6 +142,18 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   logger.warn({ selected, mappingObjects });
   logger.warn({ orderIds, orderItemsIds, batchIds, shipmentIds });
   const { entities } = normalize({ orders: data });
+  const orderColumnFieldsFilter = showAll
+    ? orderColumnFields
+    : orderColumnFields.filter((item, idx) => !hideColumns.includes(`ORDER-${idx}`));
+  const orderItemColumnFieldsFilter = showAll
+    ? orderItemColumnFields
+    : orderItemColumnFields.filter((item, idx) => !hideColumns.includes(`ORDER_ITEM-${idx}`));
+  const batchColumnFieldsFilter = showAll
+    ? batchColumnFields
+    : batchColumnFields.filter((item, idx) => !hideColumns.includes(`BATCH-${idx}`));
+  const shipmentColumnFieldsFilter = showAll
+    ? shipmentColumnFields
+    : shipmentColumnFields.filter((item, idx) => !hideColumns.includes(`SHIPMENT-${idx}`));
   return (
     <ApolloConsumer>
       {client => (
@@ -248,7 +260,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       {orderItems.length === 0 ? (
                         <TableItem
                           cell={`orders.${order.data.id}`}
-                          fields={orderColumnFields}
+                          fields={orderColumnFieldsFilter}
                           values={editData.orders[orderId]}
                           validator={orderValidator}
                         />
@@ -260,7 +272,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                 orderItem.data.id
                               }`}
                               cell={`orders.${order.data.id}`}
-                              fields={orderColumnFields}
+                              fields={orderColumnFieldsFilter}
                               values={editData.orders[orderId]}
                               validator={orderValidator}
                             />
@@ -278,7 +290,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                       orderItem.data.id
                                     }.batch.${batchId}`}
                                     cell={`orders.${order.data.id}`}
-                                    fields={orderColumnFields}
+                                    fields={orderColumnFieldsFilter}
                                     values={editData.orders[orderId]}
                                     validator={orderValidator}
                                   />
@@ -293,7 +305,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                       key={`order.${counter + 1}.hidden.${
                                         orderItem.data.id
                                       }.batch.${batchId}`}
-                                      fields={orderColumnFields}
+                                      fields={orderColumnFieldsFilter}
                                     />
                                   ))}
                             </React.Fragment>
@@ -308,7 +320,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             <TableItem
                               cell={`orderItems.${orderItem.data.id}`}
                               key={`orderItem.${counter + 1}.${orderItem.data.id}`}
-                              fields={orderItemColumnFields}
+                              fields={batchColumnFieldsFilter}
                               values={editData.orderItems[orderItem.data.id]}
                               validator={orderValidator}
                             />
@@ -320,7 +332,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                   <TableItem
                                     cell={`orderItems.${orderItem.data.id}`}
                                     key={`orderItem.${counter + 1}.duplication.${batchId}`}
-                                    fields={orderItemColumnFields}
+                                    fields={batchColumnFieldsFilter}
                                     values={editData.orderItems[orderItem.data.id]}
                                     validator={orderValidator}
                                   />
@@ -333,14 +345,14 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                   .map(batchId => (
                                     <TableEmptyItem
                                       key={`orderItem.${counter + 1}.hidden.${batchId}`}
-                                      fields={orderItemColumnFields}
+                                      fields={batchColumnFieldsFilter}
                                     />
                                   ))}
                             </React.Fragment>
                           )
                         )
                       ) : (
-                        <TableEmptyItem fields={orderItemColumnFields} />
+                        <TableEmptyItem fields={batchColumnFieldsFilter} />
                       )}
                     </div>
                     <div>
@@ -353,19 +365,19 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                 <TableItem
                                   cell={`batches.${batch.id}`}
                                   key={batch.id}
-                                  fields={batchColumnFields}
+                                  fields={orderItemColumnFieldsFilter}
                                   values={editData.batches[batch.id]}
                                   validator={batchValidator}
                                 />
                               ))
                           )}
                           {range(totalLines - batches.length).map(index => (
-                            <TableEmptyItem key={index} fields={batchColumnFields} />
+                            <TableEmptyItem key={index} fields={orderItemColumnFieldsFilter} />
                           ))}
                         </>
                       ) : (
                         range(totalLines).map(index => (
-                          <TableEmptyItem key={index} fields={batchColumnFields} />
+                          <TableEmptyItem key={index} fields={orderItemColumnFieldsFilter} />
                         ))
                       )}
                     </div>
@@ -378,7 +390,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             <TableItem
                               key={`shipment.${counter + 1}.${shipmentId}`}
                               cell={`shipments.${shipment.data.id}`}
-                              fields={shipmentColumnFields}
+                              fields={shipmentColumnFieldsFilter}
                               values={editData.shipments[shipment.data.id]}
                               validator={shipmentValidator}
                             />
@@ -389,7 +401,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                           shipmentIds.filter(shipmentId => !!order.relation.shipment[shipmentId])
                             .length
                       ).map(index => (
-                        <TableEmptyItem key={index} fields={shipmentColumnFields} />
+                        <TableEmptyItem key={index} fields={shipmentColumnFieldsFilter} />
                       ))}
                     </div>
                   </TableRow>
@@ -422,24 +434,28 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
               <TableRow>
                 <TableHeader
                   entity="ORDER"
+                  showAll={showAll}
                   info={orderColumns}
                   hideColumns={hideColumns}
                   onToggle={onToggle}
                 />
                 <TableHeader
                   entity="ORDER_ITEM"
+                  showAll={showAll}
                   info={orderItemColumns}
                   hideColumns={hideColumns}
                   onToggle={onToggle}
                 />
                 <TableHeader
                   entity="BATCH"
+                  showAll={showAll}
                   info={batchColumns}
                   hideColumns={hideColumns}
                   onToggle={onToggle}
                 />
                 <TableHeader
                   entity="SHIPMENT"
+                  showAll={showAll}
                   info={shipmentColumns}
                   hideColumns={hideColumns}
                   onToggle={onToggle}
