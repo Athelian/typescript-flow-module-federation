@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { diff } from 'deep-object-diff';
@@ -55,6 +55,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const [data] = useIdb(type, []);
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
+  const [hideColumns, setHideColumns] = useState([]);
   const [showAll, setShowAll] = useState(true);
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState({});
@@ -64,6 +65,17 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     batches: {},
     shipments: {},
   });
+
+  const onToggle = useCallback(
+    selectedColumn => {
+      setHideColumns(
+        hideColumns.includes(selectedColumn)
+          ? hideColumns.filter(item => item !== selectedColumn)
+          : [...hideColumns, selectedColumn]
+      );
+    },
+    [hideColumns]
+  );
 
   useEffect(() => {
     if (data.length) {
@@ -408,10 +420,30 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
             <div className={HeaderWrapperStyle} ref={headerRef}>
               <TableRow>
-                <TableHeader info={orderColumns} />
-                <TableHeader info={orderItemColumns} />
-                <TableHeader info={batchColumns} />
-                <TableHeader info={shipmentColumns} />
+                <TableHeader
+                  entity="ORDER"
+                  info={orderColumns}
+                  hideColumns={hideColumns}
+                  onToggle={onToggle}
+                />
+                <TableHeader
+                  entity="ORDER_ITEM"
+                  info={orderItemColumns}
+                  hideColumns={hideColumns}
+                  onToggle={onToggle}
+                />
+                <TableHeader
+                  entity="BATCH"
+                  info={batchColumns}
+                  hideColumns={hideColumns}
+                  onToggle={onToggle}
+                />
+                <TableHeader
+                  entity="SHIPMENT"
+                  info={shipmentColumns}
+                  hideColumns={hideColumns}
+                  onToggle={onToggle}
+                />
               </TableRow>
             </div>
           </div>
