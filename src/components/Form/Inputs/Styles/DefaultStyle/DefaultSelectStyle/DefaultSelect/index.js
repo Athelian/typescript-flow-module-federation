@@ -14,6 +14,7 @@ type OptionalProps = {
   width: string,
   height: string,
   align: 'left' | 'right' | 'center',
+  hideChevron: boolean,
 };
 
 type Props = OptionalProps &
@@ -30,6 +31,7 @@ const defaultProps = {
   width: '100%',
   height: '30px',
   align: 'right',
+  hideChevron: false,
 };
 
 function DefaultSelect({
@@ -47,6 +49,7 @@ function DefaultSelect({
   selectedItem,
   getInputProps,
   itemToString,
+  hideChevron,
   ...rest
 }: Props) {
   return (
@@ -62,16 +65,16 @@ function DefaultSelect({
       })}
       style={{ cursor: 'pointer' }}
     >
-      {align === 'right' &&
-        (!required && selectedItem ? (
-          <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
-            <Icon icon="CLEAR" />
-          </button>
-        ) : (
-          <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
-            <Icon icon="CHEVRON_DOWN" />
-          </button>
-        ))}
+      {align === 'right' && !required && selectedItem && (
+        <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
+          <Icon icon="CLEAR" />
+        </button>
+      )}
+      {align === 'right' && !selectedItem && !hideChevron && (
+        <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+          <Icon icon="CHEVRON_DOWN" />
+        </button>
+      )}
       <input
         readOnly
         spellCheck={false}
@@ -82,16 +85,16 @@ function DefaultSelect({
         })}
         {...rest}
       />
-      {align === 'left' &&
-        (!required && selectedItem ? (
-          <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
-            <Icon icon="CLEAR" />
-          </button>
-        ) : (
-          <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
-            <Icon icon="CHEVRON_DOWN" />
-          </button>
-        ))}
+      {align === 'left' && !required && selectedItem && (
+        <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
+          <Icon icon="CLEAR" />
+        </button>
+      )}
+      {align === 'left' && !selectedItem && !hideChevron && (
+        <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
+          <Icon icon="CHEVRON_DOWN" />
+        </button>
+      )}
     </div>
   );
 }

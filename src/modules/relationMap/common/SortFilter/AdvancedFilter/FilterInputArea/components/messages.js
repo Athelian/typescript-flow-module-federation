@@ -26,4 +26,23 @@ export default defineMessages({
     id: 'modules.RelationMaps.filter.days',
     defaultMessage: 'Days',
   },
+  metric: {
+    id: 'modules.RelationMaps.filter.metric',
+    defaultMessage: 'METRIC',
+  },
+  length: {
+    id: 'modules.ProductProviders.unitLength',
+  },
+  width: {
+    id: 'modules.ProductProviders.unitWidth',
+  },
+  height: {
+    id: 'modules.ProductProviders.unitHeight',
+  },
+  volume: {
+    id: 'modules.ProductProviders.unitVolume',
+  },
+  weight: {
+    id: 'modules.ProductProviders.unitWeight',
+  },
 });

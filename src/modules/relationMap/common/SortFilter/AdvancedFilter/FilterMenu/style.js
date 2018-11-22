@@ -6,7 +6,7 @@ export const FilterMenuWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 400px;
+  width: 300px;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
