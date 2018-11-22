@@ -21,12 +21,19 @@ import { createMutationRequest } from './index';
 export const cloneOrder = async (client: any, orders: Array<Object>, filter: Object) => {
   const mutationRequest = createMutationRequest(client);
   const orderRequests = orders.map(currentOrder => {
+    const orderItems = currentOrder.orderItems.map(orderItem => {
+      const batches =
+        orderItem.batches &&
+        orderItem.batches.map(batch => omit(['archived', 'updatedBy', 'updatedAt'], batch));
+      return Object.assign(orderItem, { batches });
+    });
     const request = mutationRequest({
       mutation: cloneOrderMutation,
       variables: {
         input: prepareCreateOrderInput(
           cleanUpData({
             ...currentOrder,
+            orderItems,
             poNo: `[cloned] ${currentOrder.poNo}`,
             currency: currentOrder.currency === 'All' ? 'ALL' : currentOrder.currency,
           })

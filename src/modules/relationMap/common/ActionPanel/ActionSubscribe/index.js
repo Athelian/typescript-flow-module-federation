@@ -56,6 +56,14 @@ const LoadingMessage = ({ type }: LoadingProps) => {
   }
 };
 
+const isSelectSomeItem = targetedItem => {
+  const { orderItem = {}, batch = {} } = targetedItem;
+  const numberOfOrderItem = Object.keys(orderItem).length;
+  const numberOfBatch = Object.keys(batch).length;
+  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
+  return selectSomeItem;
+};
+
 const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
   const numberOfOrderItem = Object.keys(orderItem).length;
@@ -157,6 +165,7 @@ const ActionSubscribe = ({ filter }: Props) => (
           const onCancelTarget = () => {
             cancelTarget();
             setAction('');
+            setError(false);
           };
           const disabledSplit = isDisabledSplit(targetedItem);
           return (
@@ -216,9 +225,11 @@ const ActionSubscribe = ({ filter }: Props) => (
                       </BooleanValue>
                     </>
                   </ActionSelector>
-                  {disabledSplit && <ConstrainPanel type="split" />}
+                  {isSelectSomeItem(targetedItem) && disabledSplit && (
+                    <ConstrainPanel type="split" />
+                  )}
                   {!error && currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
-                  {!error && !isDisabledSplit && currentAction === 'split' && (
+                  {!error && !disabledSplit && currentAction === 'split' && (
                     <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
                   )}
                   {!error && currentAction === 'connect' && (
