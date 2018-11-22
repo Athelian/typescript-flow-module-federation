@@ -193,25 +193,31 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                         result.data.entitiesUpdateMany.orders.violations &&
                         result.data.entitiesUpdateMany.orders.violations.length
                       ) {
-                        setErrorMessage(
-                          result.data.entitiesUpdateMany.orders.violations[0].message
+                        const errorMesages = result.data.entitiesUpdateMany.orders.violations.filter(
+                          item => !!item
                         );
+                        logger.warn({ errorMesages });
+                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
                       }
                       if (
                         result.data.entitiesUpdateMany.shipments.violations &&
                         result.data.entitiesUpdateMany.shipments.violations.length
                       ) {
-                        setErrorMessage(
-                          result.data.entitiesUpdateMany.shipments.violations[0].message
+                        const errorMesages = result.data.entitiesUpdateMany.shipments.violations.filter(
+                          item => !!item
                         );
+                        logger.warn({ errorMesages });
+                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
                       }
                       if (
                         result.data.entitiesUpdateMany.batches.violations &&
                         result.data.entitiesUpdateMany.batches.violations.length
                       ) {
-                        setErrorMessage(
-                          result.data.entitiesUpdateMany.batches.violations[0].message
+                        const errorMesages = result.data.entitiesUpdateMany.batches.violations.filter(
+                          item => !!item
                         );
+                        logger.warn({ errorMesages });
+                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
                       }
                     }
                     setTouched({});
@@ -227,7 +233,9 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   )
                 }
               />
-              {errorMessage.length > 0 && <p> Error: {errorMessage} </p>}
+              {errorMessage && errorMessage.length > 0 && (
+                <div style={{ width: 400 }}> Error: {errorMessage} </div>
+              )}
             </SlideViewNavBar>
           }
         >
@@ -320,7 +328,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             <TableItem
                               cell={`orderItems.${orderItem.data.id}`}
                               key={`orderItem.${counter + 1}.${orderItem.data.id}`}
-                              fields={batchColumnFieldsFilter}
+                              fields={orderItemColumnFieldsFilter}
                               values={editData.orderItems[orderItem.data.id]}
                               validator={orderValidator}
                             />
@@ -332,7 +340,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                   <TableItem
                                     cell={`orderItems.${orderItem.data.id}`}
                                     key={`orderItem.${counter + 1}.duplication.${batchId}`}
-                                    fields={batchColumnFieldsFilter}
+                                    fields={orderItemColumnFieldsFilter}
                                     values={editData.orderItems[orderItem.data.id]}
                                     validator={orderValidator}
                                   />
@@ -345,14 +353,14 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                   .map(batchId => (
                                     <TableEmptyItem
                                       key={`orderItem.${counter + 1}.hidden.${batchId}`}
-                                      fields={batchColumnFieldsFilter}
+                                      fields={orderItemColumnFieldsFilter}
                                     />
                                   ))}
                             </React.Fragment>
                           )
                         )
                       ) : (
-                        <TableEmptyItem fields={batchColumnFieldsFilter} />
+                        <TableEmptyItem fields={orderItemColumnFieldsFilter} />
                       )}
                     </div>
                     <div>
@@ -365,19 +373,19 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                 <TableItem
                                   cell={`batches.${batch.id}`}
                                   key={batch.id}
-                                  fields={orderItemColumnFieldsFilter}
+                                  fields={batchColumnFieldsFilter}
                                   values={editData.batches[batch.id]}
                                   validator={batchValidator}
                                 />
                               ))
                           )}
                           {range(totalLines - batches.length).map(index => (
-                            <TableEmptyItem key={index} fields={orderItemColumnFieldsFilter} />
+                            <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
                           ))}
                         </>
                       ) : (
                         range(totalLines).map(index => (
-                          <TableEmptyItem key={index} fields={orderItemColumnFieldsFilter} />
+                          <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
                         ))
                       )}
                     </div>
