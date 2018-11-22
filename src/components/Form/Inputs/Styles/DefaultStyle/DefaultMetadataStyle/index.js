@@ -74,7 +74,6 @@ const DefaultMetadataStyle = ({
             const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
             return (
               <DefaultStyle
-                type="label"
                 width={width}
                 isFocused={isFocused}
                 hasError={isTouched && errorMessage}
