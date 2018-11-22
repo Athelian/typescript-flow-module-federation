@@ -92,6 +92,7 @@ function renderItem({
 }
 
 export default function TableItem({ cell, fields, values, validator }: Props) {
+  console.warn({ cell, fields, values });
   if (!values) return null;
   return (
     <div className={WrapperStyle}>

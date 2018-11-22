@@ -6,6 +6,7 @@ type Props = {
   fields: Array<{
     name: string,
     type: string,
+    meta?: Object,
   }>,
 };
 

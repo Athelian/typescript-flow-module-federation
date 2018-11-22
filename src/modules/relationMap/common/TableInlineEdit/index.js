@@ -1,7 +1,8 @@
 // @flow
 // $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { ApolloConsumer } from 'react-apollo';
+import { FormattedMessage } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
@@ -10,6 +11,7 @@ import emitter from 'utils/emitter';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import { ToggleInput } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
 import { formatOrderData } from 'modules/relationMap/util';
@@ -52,6 +54,9 @@ setConfig({ pureSFC: true });
 export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const [data] = useIdb(type, []);
   const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
+  const [hideColumns, setHideColumns] = useState([]);
+  const [showAll, setShowAll] = useState(true);
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState({});
   const [editData, setEditData] = useState({
@@ -60,6 +65,17 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     batches: {},
     shipments: {},
   });
+
+  const onToggle = useCallback(
+    selectedColumn => {
+      setHideColumns(
+        hideColumns.includes(selectedColumn)
+          ? hideColumns.filter(item => item !== selectedColumn)
+          : [...hideColumns, selectedColumn]
+      );
+    },
+    [hideColumns]
+  );
 
   useEffect(() => {
     if (data.length) {
@@ -71,6 +87,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
       const listener = emitter.once('INLINE_CHANGE', newData => {
         logger.warn({ newData, editData });
+        setErrorMessage('');
 
         const { name, value, hasError } = newData;
         const newEditData = set(editData, name, value);
@@ -125,6 +142,18 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   logger.warn({ selected, mappingObjects });
   logger.warn({ orderIds, orderItemsIds, batchIds, shipmentIds });
   const { entities } = normalize({ orders: data });
+  const orderColumnFieldsFilter = showAll
+    ? orderColumnFields
+    : orderColumnFields.filter((item, idx) => !hideColumns.includes(`ORDER-${idx}`));
+  const orderItemColumnFieldsFilter = showAll
+    ? orderItemColumnFields
+    : orderItemColumnFields.filter((item, idx) => !hideColumns.includes(`ORDER_ITEM-${idx}`));
+  const batchColumnFieldsFilter = showAll
+    ? batchColumnFields
+    : batchColumnFields.filter((item, idx) => !hideColumns.includes(`BATCH-${idx}`));
+  const shipmentColumnFieldsFilter = showAll
+    ? shipmentColumnFields
+    : shipmentColumnFields.filter((item, idx) => !hideColumns.includes(`SHIPMENT-${idx}`));
   return (
     <ApolloConsumer>
       {client => (
@@ -139,12 +168,58 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   const changedData = diff(entities, editData);
                   setLoading(true);
                   try {
-                    const result = await client.mutate({
+                    const result: {
+                      data: ?{
+                        entitiesUpdateMany: {
+                          orders: {
+                            violations?: Array<{ message: string }>,
+                          },
+                          shipments: {
+                            violations?: Array<{ message: string }>,
+                          },
+                          batches: {
+                            violations?: Array<{ message: string }>,
+                          },
+                        },
+                      },
+                    } = await client.mutate({
                       mutation: entitiesUpdateManyMutation,
                       variables: parseChangedData(changedData, editData),
                     });
                     setLoading(false);
                     logger.warn({ result });
+                    if (result && result.data && result.data.entitiesUpdateMany) {
+                      if (
+                        result.data.entitiesUpdateMany.orders.violations &&
+                        result.data.entitiesUpdateMany.orders.violations.length
+                      ) {
+                        const errorMesages = result.data.entitiesUpdateMany.orders.violations.filter(
+                          item => !!item
+                        );
+                        logger.warn({ errorMesages });
+                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
+                      }
+                      if (
+                        result.data.entitiesUpdateMany.shipments.violations &&
+                        result.data.entitiesUpdateMany.shipments.violations.length
+                      ) {
+                        const errorMesages = result.data.entitiesUpdateMany.shipments.violations.filter(
+                          item => !!item
+                        );
+                        logger.warn({ errorMesages });
+                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
+                      }
+                      if (
+                        result.data.entitiesUpdateMany.batches.violations &&
+                        result.data.entitiesUpdateMany.batches.violations.length
+                      ) {
+                        const errorMesages = result.data.entitiesUpdateMany.batches.violations.filter(
+                          item => !!item
+                        );
+                        logger.warn({ errorMesages });
+                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
+                      }
+                    }
                     setTouched({});
                   } catch (error) {
                     setLoading(false);
@@ -158,9 +233,20 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   )
                 }
               />
+              {errorMessage && errorMessage.length > 0 && (
+                <div style={{ width: 400 }}> Error: {errorMessage} </div>
+              )}
             </SlideViewNavBar>
           }
         >
+          <div>
+            <ToggleInput
+              toggled={showAll}
+              onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
+            >
+              <FormattedMessage id="modules.RelationMaps.showAll" defaultMessage="SHOW ALL" />
+            </ToggleInput>
+          </div>
           <div className={EditTableViewWrapperStyle}>
             <div className={BodyWrapperStyle} ref={bodyRef}>
               {Object.keys(editData.orders).length === 0 && <LoadingIcon />}
@@ -182,7 +268,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       {orderItems.length === 0 ? (
                         <TableItem
                           cell={`orders.${order.data.id}`}
-                          fields={orderColumnFields}
+                          fields={orderColumnFieldsFilter}
                           values={editData.orders[orderId]}
                           validator={orderValidator}
                         />
@@ -194,7 +280,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                 orderItem.data.id
                               }`}
                               cell={`orders.${order.data.id}`}
-                              fields={orderColumnFields}
+                              fields={orderColumnFieldsFilter}
                               values={editData.orders[orderId]}
                               validator={orderValidator}
                             />
@@ -212,7 +298,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                       orderItem.data.id
                                     }.batch.${batchId}`}
                                     cell={`orders.${order.data.id}`}
-                                    fields={orderColumnFields}
+                                    fields={orderColumnFieldsFilter}
                                     values={editData.orders[orderId]}
                                     validator={orderValidator}
                                   />
@@ -227,7 +313,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                       key={`order.${counter + 1}.hidden.${
                                         orderItem.data.id
                                       }.batch.${batchId}`}
-                                      fields={orderColumnFields}
+                                      fields={orderColumnFieldsFilter}
                                     />
                                   ))}
                             </React.Fragment>
@@ -242,7 +328,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             <TableItem
                               cell={`orderItems.${orderItem.data.id}`}
                               key={`orderItem.${counter + 1}.${orderItem.data.id}`}
-                              fields={orderItemColumnFields}
+                              fields={orderItemColumnFieldsFilter}
                               values={editData.orderItems[orderItem.data.id]}
                               validator={orderValidator}
                             />
@@ -254,7 +340,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                   <TableItem
                                     cell={`orderItems.${orderItem.data.id}`}
                                     key={`orderItem.${counter + 1}.duplication.${batchId}`}
-                                    fields={orderItemColumnFields}
+                                    fields={orderItemColumnFieldsFilter}
                                     values={editData.orderItems[orderItem.data.id]}
                                     validator={orderValidator}
                                   />
@@ -267,14 +353,14 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                   .map(batchId => (
                                     <TableEmptyItem
                                       key={`orderItem.${counter + 1}.hidden.${batchId}`}
-                                      fields={orderItemColumnFields}
+                                      fields={orderItemColumnFieldsFilter}
                                     />
                                   ))}
                             </React.Fragment>
                           )
                         )
                       ) : (
-                        <TableEmptyItem fields={orderItemColumnFields} />
+                        <TableEmptyItem fields={orderItemColumnFieldsFilter} />
                       )}
                     </div>
                     <div>
@@ -287,19 +373,19 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                 <TableItem
                                   cell={`batches.${batch.id}`}
                                   key={batch.id}
-                                  fields={batchColumnFields}
+                                  fields={batchColumnFieldsFilter}
                                   values={editData.batches[batch.id]}
                                   validator={batchValidator}
                                 />
                               ))
                           )}
                           {range(totalLines - batches.length).map(index => (
-                            <TableEmptyItem key={index} fields={batchColumnFields} />
+                            <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
                           ))}
                         </>
                       ) : (
                         range(totalLines).map(index => (
-                          <TableEmptyItem key={index} fields={batchColumnFields} />
+                          <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
                         ))
                       )}
                     </div>
@@ -312,7 +398,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             <TableItem
                               key={`shipment.${counter + 1}.${shipmentId}`}
                               cell={`shipments.${shipment.data.id}`}
-                              fields={shipmentColumnFields}
+                              fields={shipmentColumnFieldsFilter}
                               values={editData.shipments[shipment.data.id]}
                               validator={shipmentValidator}
                             />
@@ -323,7 +409,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                           shipmentIds.filter(shipmentId => !!order.relation.shipment[shipmentId])
                             .length
                       ).map(index => (
-                        <TableEmptyItem key={index} fields={shipmentColumnFields} />
+                        <TableEmptyItem key={index} fields={shipmentColumnFieldsFilter} />
                       ))}
                     </div>
                   </TableRow>
@@ -354,10 +440,34 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
             <div className={HeaderWrapperStyle} ref={headerRef}>
               <TableRow>
-                <TableHeader info={orderColumns} />
-                <TableHeader info={orderItemColumns} />
-                <TableHeader info={batchColumns} />
-                <TableHeader info={shipmentColumns} />
+                <TableHeader
+                  entity="ORDER"
+                  showAll={showAll}
+                  info={orderColumns}
+                  hideColumns={hideColumns}
+                  onToggle={onToggle}
+                />
+                <TableHeader
+                  entity="ORDER_ITEM"
+                  showAll={showAll}
+                  info={orderItemColumns}
+                  hideColumns={hideColumns}
+                  onToggle={onToggle}
+                />
+                <TableHeader
+                  entity="BATCH"
+                  showAll={showAll}
+                  info={batchColumns}
+                  hideColumns={hideColumns}
+                  onToggle={onToggle}
+                />
+                <TableHeader
+                  entity="SHIPMENT"
+                  showAll={showAll}
+                  info={shipmentColumns}
+                  hideColumns={hideColumns}
+                  onToggle={onToggle}
+                />
               </TableRow>
             </div>
           </div>
