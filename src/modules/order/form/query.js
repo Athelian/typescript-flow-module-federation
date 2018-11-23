@@ -30,10 +30,6 @@ export const orderFormQuery = gql`
   }
 
   ${orderFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
@@ -48,6 +44,10 @@ export const orderFormQuery = gql`
   ${metricFragment}
   ${sizeFragment}
   ${orderCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default orderFormQuery;

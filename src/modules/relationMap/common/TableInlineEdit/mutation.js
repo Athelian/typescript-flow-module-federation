@@ -75,10 +75,6 @@ export const entitiesUpdateManyMutation = gql`
   }
   ${violationFragment}
   ${orderFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
@@ -95,6 +91,10 @@ export const entitiesUpdateManyMutation = gql`
   ${orderCardFragment}
   ${shipmentFormFragment}
   ${timelineDateFullFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default entitiesUpdateManyMutation;

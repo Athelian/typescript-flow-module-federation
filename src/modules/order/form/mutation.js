@@ -53,10 +53,6 @@ export const createOrderWithReturnDataMutation = gql`
   ${violationFragment}
 
   ${orderFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
@@ -72,6 +68,10 @@ export const createOrderWithReturnDataMutation = gql`
   ${sizeFragment}
   ${orderCardFragment}
   ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareCreateOrderInput = ({
@@ -137,10 +137,6 @@ export const updateOrderMutation = gql`
   }
 
   ${orderFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
@@ -156,6 +152,10 @@ export const updateOrderMutation = gql`
   ${sizeFragment}
   ${orderCardFragment}
   ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const updateOrderItemMutation = gql`

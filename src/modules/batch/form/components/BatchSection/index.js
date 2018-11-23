@@ -13,6 +13,7 @@ import {
   numberInputFactory,
   dateInputFactory,
   textAreaFactory,
+  customFieldsInputFactory,
 } from 'modules/form/helpers';
 import { OrderItemCard } from 'components/Cards';
 import GridColumn from 'components/GridColumn';
@@ -142,6 +143,11 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                     })
                   }
                 </FormField>
+                {customFieldsInputFactory({
+                  entityType: 'Batch',
+                  customFields: values.customFields,
+                  setFieldValue,
+                })}
               </GridColumn>
               <div className={ItemSectionStyle}>
                 <Label required>

@@ -14,6 +14,10 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   partnerCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const selectBatchListQuery = gql`
@@ -40,6 +44,10 @@ export const selectBatchListQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default selectBatchListQuery;

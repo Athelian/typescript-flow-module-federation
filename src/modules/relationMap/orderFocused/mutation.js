@@ -43,10 +43,6 @@ export const cloneOrderMutation: Object = gql`
   }
   ${violationFragment}
   ${orderFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
@@ -64,6 +60,10 @@ export const cloneOrderMutation: Object = gql`
   ${violationFragment}
   ${batchCardFragment}
   ${orderItemRmFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const cloneOrderItemMutation: Object = gql`
@@ -82,10 +82,6 @@ export const cloneOrderItemMutation: Object = gql`
   }
   ${violationFragment}
   ${orderFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
@@ -103,6 +99,10 @@ export const cloneOrderItemMutation: Object = gql`
   ${violationFragment}
   ${batchCardFragment}
   ${orderItemRmFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const cloneBatchMutation: Object = gql`
@@ -130,6 +130,10 @@ export const cloneBatchMutation: Object = gql`
   ${shipmentCardFragment}
   ${portFragment}
   ${timelineDateMinimalFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const cloneShipmentMutation: Object = gql`
@@ -160,4 +164,8 @@ export const cloneShipmentMutation: Object = gql`
   ${portFragment}
   ${documentFragment}
   ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;

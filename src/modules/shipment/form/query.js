@@ -17,6 +17,10 @@ import {
   portFragment,
   documentFragment,
   partnerCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const shipmentFormQuery = gql`
@@ -42,6 +46,10 @@ export const shipmentFormQuery = gql`
   ${portFragment}
   ${documentFragment}
   ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default shipmentFormQuery;

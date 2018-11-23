@@ -155,10 +155,6 @@ export const orderListQuery = gql`
   ${partnerCardFragment}
   ${documentFragment}
   ${orderFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${orderCardFragment}
   ${orderItemRmFragment}
   ${shipmentRMFragment}
@@ -166,6 +162,10 @@ export const orderListQuery = gql`
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
   ${timelineDateFullFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default orderListQuery;
