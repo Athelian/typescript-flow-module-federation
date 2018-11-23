@@ -2,7 +2,11 @@
 import * as React from 'react';
 import { EntityIcon, SortInput, SearchInput, StatusToggleTabs } from 'components/NavBar';
 
-type Props = {
+type OptionalProps = {
+  renderIcon: Function,
+};
+
+type Props = OptionalProps & {
   icon: string,
   sortFields: Array<{
     title: React.Node,
@@ -17,6 +21,10 @@ type Props = {
   onChange: Object => void,
 };
 
+const defaultProps = {
+  renderIcon: icon => <EntityIcon icon={icon} color={icon} />,
+};
+
 function currentSort(
   fields,
   sort
@@ -29,10 +37,16 @@ function currentSort(
   return fields[0];
 }
 
-export default function FilterToolBar({ icon, sortFields, filtersAndSort, onChange }: Props) {
+export default function FilterToolBar({
+  icon,
+  renderIcon,
+  sortFields,
+  filtersAndSort,
+  onChange,
+}: Props) {
   return (
     <>
-      <EntityIcon icon={icon} color={icon} />
+      {renderIcon(icon)}
       {Object.prototype.hasOwnProperty.call(filtersAndSort.filter, 'archived') && (
         <StatusToggleTabs
           onChange={index =>
@@ -73,3 +87,5 @@ export default function FilterToolBar({ icon, sortFields, filtersAndSort, onChan
     </>
   );
 }
+
+FilterToolBar.defaultProps = defaultProps;
