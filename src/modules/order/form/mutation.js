@@ -23,6 +23,7 @@ import {
   fieldDefinitionFragment,
 } from 'graphql';
 import { prepareUpdateBatchInput, prepareCreateBatchInput } from 'modules/batch/form/mutation';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import type { OrderForm } from '../type.js.flow';
 
 export const createOrderMutation = gql`
@@ -94,15 +95,7 @@ export const prepareCreateOrderInput = ({
   currency: currency && currency.length > 0 ? currency : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   deliveryPlace,
-  customFields: customFields
-    ? {
-        maskId: customFields.mask ? customFields.mask.id : null,
-        fieldValues: customFields.fieldValues.map(fieldValue => ({
-          value: { string: fieldValue.value.string },
-          fieldDefinitionId: fieldValue.fieldDefinition.id,
-        })),
-      }
-    : null,
+  customFields: prepareCustomFieldsData(customFields),
   memo,
   exporterId: exporter.id,
   issuedAt: issuedAt ? new Date(issuedAt) : null,
@@ -199,15 +192,7 @@ export const prepareUpdateOrderInput = ({
   currency: currency && currency.length > 0 ? currency : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   deliveryPlace,
-  customFields: customFields
-    ? {
-        maskId: customFields.mask ? customFields.mask.id : null,
-        fieldValues: customFields.fieldValues.map(fieldValue => ({
-          value: { string: fieldValue.value.string },
-          fieldDefinitionId: fieldValue.fieldDefinition.id,
-        })),
-      }
-    : null,
+  customFields: prepareCustomFieldsData(customFields),
   piNo,
   memo,
   archived,

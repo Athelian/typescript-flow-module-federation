@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import type { BatchCreate, BatchUpdate } from '../type.js.flow';
 
 export const createBatchMutation = gql`
@@ -42,15 +43,7 @@ export const prepareCreateBatchInput = (
   deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
   expiredAt: expiredAt ? new Date(expiredAt) : null,
   producedAt: producedAt ? new Date(producedAt) : null,
-  customFields: customFields
-    ? {
-        maskId: customFields.mask ? customFields.mask.id : null,
-        fieldValues: customFields.fieldValues.map(fieldValue => ({
-          value: { string: fieldValue.value.string },
-          fieldDefinitionId: fieldValue.fieldDefinition.id,
-        })),
-      }
-    : null,
+  customFields: prepareCustomFieldsData(customFields),
   ...(shipment ? { shipmentId: shipment.id } : {}),
   ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   tagIds: tags.map(({ id: tagId }) => tagId),
@@ -109,15 +102,7 @@ export const prepareUpdateBatchInput = (
   ...(!inBatchForm && !isNew ? { id } : {}),
   deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
   expiredAt: expiredAt ? new Date(expiredAt) : null,
-  customFields: customFields
-    ? {
-        maskId: customFields.mask ? customFields.mask.id : null,
-        fieldValues: customFields.fieldValues.map(fieldValue => ({
-          value: { string: fieldValue.value.string },
-          fieldDefinitionId: fieldValue.fieldDefinition.id,
-        })),
-      }
-    : null,
+  customFields: prepareCustomFieldsData(customFields),
   producedAt: producedAt ? new Date(producedAt) : null,
   tagIds: tags.map(({ id: tagId }) => tagId),
   batchAdjustments: batchAdjustments.map(
