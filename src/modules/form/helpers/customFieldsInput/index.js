@@ -62,7 +62,6 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
                         onCancel={() => slideToggle(false)}
                         onSave={() => {
                           slideToggle(false);
-                          console.log(values);
                           setFieldValue('customFields', values);
                         }}
                         onFormReady={() => {
