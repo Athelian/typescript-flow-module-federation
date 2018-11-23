@@ -34,7 +34,6 @@ const renderApp = (Component, renderFn) => {
         <AuthenticationProvider>
           <LanguageProvider>
             <UIProvider>
-              {/* $FlowFixMe: React Flow typings are not updated to React 16.3 yet */}
               <React.StrictMode>
                 <Component />
               </React.StrictMode>

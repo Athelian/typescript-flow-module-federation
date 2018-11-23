@@ -7,6 +7,7 @@ import { shipmentFormFragment, shipmentCardFragment } from './shipment/fragment'
 import { staffFormFragment, staffCardFragment } from './staff/fragment';
 import { tagFormFragment, tagCardFragment } from './tag/fragment';
 import { warehouseFormFragment, warehouseCardFragment } from './warehouse/fragment';
+import { tableTemplateCardFragment } from './tableTemplate/fragment';
 import {
   metricFragment,
   sizeFragment,
@@ -52,4 +53,5 @@ export {
   timelineDateMinimalFragment,
   portFragment,
   metadataFragment,
+  tableTemplateCardFragment,
 };
