@@ -139,28 +139,9 @@ export const cloneOrderItem = async (client: any, target: Object, filter: Object
     );
     const oldOrderItems = orderUpdate[updatedOrderId];
     const diffOrderItems = differenceBy(newOrderItems, oldOrderItems, 'id');
-    const results = diffOrderItems.map(diffItem => {
-      const orderId = diffItem.order && diffItem.order.id;
-      const newItem = {
-        actionType: 'clone',
-        ...diffItem,
-        data: {
-          ...diffItem,
-          orderId,
-        },
-        relation: {
-          order: { [orderId]: true },
-          orderItem: { [diffItem.id]: true },
-          batches: diffItem.batches.map((batch, batchIndex) => ({
-            index: batchIndex,
-            parentId: diffItem.id,
-            rootId: orderId,
-          })),
-        },
-      };
-      return newItem;
-      // return Object.assign(diffItem, { actionType: 'clone' })
-    });
+    const results = diffOrderItems.map(diffItem =>
+      Object.assign(diffItem, { actionType: 'clone' })
+    );
     return Object.assign(resultOrderItemObj, { [updatedOrderId]: results });
   }, {});
 
