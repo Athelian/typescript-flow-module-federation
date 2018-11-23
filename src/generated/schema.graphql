@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Nov 20 2018 13:52:56 GMT+0900 (JST)
+# timestamp: Fri Nov 23 2018 08:22:28 GMT+0700 (Indochina Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -27021,8 +27021,8 @@ input BatchFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  exporterId: ID
+  supplierId: ID
   producedAt: DateRangeInput
   deliveredAt: DateRangeInput
   expiredAt: DateRangeInput
@@ -27122,7 +27122,7 @@ enum Country {
   """Afghanistan"""
   AFG
 
-  """Antigua and Barbuda"""
+  """Antigua & Barbuda"""
   ATG
 
   """Anguilla"""
@@ -27133,9 +27133,6 @@ enum Country {
 
   """Armenia"""
   ARM
-
-  """Netherlands Antilles"""
-  ANT
 
   """Angola"""
   AGO
@@ -27164,7 +27161,7 @@ enum Country {
   """Azerbaijan"""
   AZE
 
-  """Bosnia and Herzegovina"""
+  """Bosnia & Herzegovina"""
   BIH
 
   """Barbados"""
@@ -27191,7 +27188,7 @@ enum Country {
   """Benin"""
   BEN
 
-  """Saint Barthélemy"""
+  """St. Barthélemy"""
   BLM
 
   """Bermuda"""
@@ -27203,7 +27200,7 @@ enum Country {
   """Bolivia"""
   BOL
 
-  """Bonaire, Sint Eustatius and Saba"""
+  """Caribbean Netherlands"""
   BES
 
   """Brazil"""
@@ -27230,22 +27227,22 @@ enum Country {
   """Canada"""
   CAN
 
-  """Cocos Islands"""
+  """Cocos (Keeling) Islands"""
   CCK
 
-  """The Democratic Republic Of Congo"""
+  """Congo - Kinshasa"""
   COD
 
   """Central African Republic"""
   CAF
 
-  """Congo"""
+  """Congo - Brazzaville"""
   COG
 
   """Switzerland"""
   CHE
 
-  """Côte d'Ivoire"""
+  """Côte d’Ivoire"""
   CIV
 
   """Cook Islands"""
@@ -27281,7 +27278,7 @@ enum Country {
   """Cyprus"""
   CYP
 
-  """Czech Republic"""
+  """Czechia"""
   CZE
 
   """Germany"""
@@ -27383,7 +27380,7 @@ enum Country {
   """Greece"""
   GRC
 
-  """South Georgia And The South Sandwich Islands"""
+  """South Georgia & South Sandwich Islands"""
   SGS
 
   """Guatemala"""
@@ -27398,10 +27395,10 @@ enum Country {
   """Guyana"""
   GUY
 
-  """Hong Kong"""
+  """Hong Kong SAR China"""
   HKG
 
-  """Heard Island And McDonald Islands"""
+  """Heard & McDonald Islands"""
   HMD
 
   """Honduras"""
@@ -27425,7 +27422,7 @@ enum Country {
   """Israel"""
   ISR
 
-  """Isle Of Man"""
+  """Isle of Man"""
   IMN
 
   """India"""
@@ -27473,7 +27470,7 @@ enum Country {
   """Comoros"""
   COM
 
-  """Saint Kitts And Nevis"""
+  """St. Kitts & Nevis"""
   KNA
 
   """North Korea"""
@@ -27497,7 +27494,7 @@ enum Country {
   """Lebanon"""
   LBN
 
-  """Saint Lucia"""
+  """St. Lucia"""
   LCA
 
   """Liechtenstein"""
@@ -27536,7 +27533,7 @@ enum Country {
   """Montenegro"""
   MNE
 
-  """Saint Martin"""
+  """St. Martin"""
   MAF
 
   """Madagascar"""
@@ -27551,13 +27548,13 @@ enum Country {
   """Mali"""
   MLI
 
-  """Myanmar"""
+  """Myanmar (Burma)"""
   MMR
 
   """Mongolia"""
   MNG
 
-  """Macao"""
+  """Macau SAR China"""
   MAC
 
   """Northern Mariana Islands"""
@@ -27653,16 +27650,16 @@ enum Country {
   """Poland"""
   POL
 
-  """Saint Pierre And Miquelon"""
+  """St. Pierre & Miquelon"""
   SPM
 
-  """Pitcairn"""
+  """Pitcairn Islands"""
   PCN
 
   """Puerto Rico"""
   PRI
 
-  """Palestine"""
+  """Palestinian Territories"""
   PSE
 
   """Portugal"""
@@ -27677,7 +27674,7 @@ enum Country {
   """Qatar"""
   QAT
 
-  """Reunion"""
+  """Réunion"""
   REU
 
   """Romania"""
@@ -27710,13 +27707,13 @@ enum Country {
   """Singapore"""
   SGP
 
-  """Saint Helena"""
+  """St. Helena"""
   SHN
 
   """Slovenia"""
   SVN
 
-  """Svalbard And Jan Mayen"""
+  """Svalbard & Jan Mayen"""
   SJM
 
   """Slovakia"""
@@ -27740,13 +27737,13 @@ enum Country {
   """South Sudan"""
   SSD
 
-  """Sao Tome And Principe"""
+  """São Tomé & Príncipe"""
   STP
 
   """El Salvador"""
   SLV
 
-  """Sint Maarten (Dutch part)"""
+  """Sint Maarten"""
   SXM
 
   """Syria"""
@@ -27755,7 +27752,7 @@ enum Country {
   """Swaziland"""
   SWZ
 
-  """Turks And Caicos Islands"""
+  """Turks & Caicos Islands"""
   TCA
 
   """Chad"""
@@ -27791,7 +27788,7 @@ enum Country {
   """Turkey"""
   TUR
 
-  """Trinidad and Tobago"""
+  """Trinidad & Tobago"""
   TTO
 
   """Tuvalu"""
@@ -27809,7 +27806,7 @@ enum Country {
   """Uganda"""
   UGA
 
-  """United States Minor Outlying Islands"""
+  """U.S. Outlying Islands"""
   UMI
 
   """United States"""
@@ -27821,10 +27818,10 @@ enum Country {
   """Uzbekistan"""
   UZB
 
-  """Vatican"""
+  """Vatican City"""
   VAT
 
-  """Saint Vincent And The Grenadines"""
+  """St. Vincent & Grenadines"""
   VCT
 
   """Venezuela"""
@@ -27842,7 +27839,7 @@ enum Country {
   """Vanuatu"""
   VUT
 
-  """Wallis And Futuna"""
+  """Wallis & Futuna"""
   WLF
 
   """Samoa"""
@@ -28870,7 +28867,7 @@ enum Language {
   """Bambara"""
   bm
 
-  """Bengali"""
+  """Bangla"""
   bn
 
   """Tibetan"""
@@ -28960,7 +28957,7 @@ enum Language {
   """French"""
   fr
 
-  """Frisian"""
+  """Western Frisian"""
   fy
 
   """Irish"""
@@ -28969,7 +28966,7 @@ enum Language {
   """Scottish Gaelic"""
   gd
 
-  """Gallegan"""
+  """Galician"""
   gl
 
   """Guarani"""
@@ -28996,7 +28993,7 @@ enum Language {
   """Croatian"""
   hr
 
-  """Haitian"""
+  """Haitian Creole"""
   ht
 
   """Hungarian"""
@@ -29056,13 +29053,13 @@ enum Language {
   """Kikuyu"""
   ki
 
-  """Kwanyama"""
+  """Kuanyama"""
   kj
 
   """Kazakh"""
   kk
 
-  """Greenlandic"""
+  """Kalaallisut"""
   kl
 
   """Khmer"""
@@ -29089,7 +29086,7 @@ enum Language {
   """Cornish"""
   kw
 
-  """Kirghiz"""
+  """Kyrgyz"""
   ky
 
   """Latin"""
@@ -29194,13 +29191,13 @@ enum Language {
   """Oromo"""
   om
 
-  """Oriya"""
+  """Odia"""
   or
 
-  """Ossetian"""
+  """Ossetic"""
   os
 
-  """Panjabi"""
+  """Punjabi"""
   pa
 
   """Pali"""
@@ -29209,7 +29206,7 @@ enum Language {
   """Polish"""
   pl
 
-  """Pushto"""
+  """Pashto"""
   ps
 
   """Portuguese"""
@@ -29218,7 +29215,7 @@ enum Language {
   """Quechua"""
   qu
 
-  """Raeto-Romance"""
+  """Romansh"""
   rm
 
   """Rundi"""
@@ -29248,7 +29245,7 @@ enum Language {
   """Sango"""
   sg
 
-  """Sinhalese"""
+  """Sinhala"""
   si
 
   """Slovak"""
@@ -29311,7 +29308,7 @@ enum Language {
   """Tswana"""
   tn
 
-  """Tonga"""
+  """Tongan"""
   to
 
   """Turkish"""
@@ -29329,7 +29326,7 @@ enum Language {
   """Tahitian"""
   ty
 
-  """Uighur"""
+  """Uyghur"""
   ug
 
   """Ukrainian"""
@@ -29403,6 +29400,66 @@ input MaskCreateInput {
   entityType: CustomizableEntityType!
   memo: String
   fieldDefinitionIDs: [ID!]!
+}
+
+type MaskEdit implements Model & Owned {
+  name: String!
+  type: MaskEditType!
+  memo: String
+  fields: [String!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+input MaskEditCreateInput {
+  name: String!
+  type: MaskEditType!
+  memo: String
+  fields: [String!]!
+}
+
+input MaskEditFilterInput {
+  query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  type: MaskEditType
+}
+
+type MaskEditMutated {
+  maskEdit: MaskEdit
+  violations: [Violation!]
+}
+
+type MaskEditPagination {
+  nodes: [MaskEdit!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input MaskEditSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+enum MaskEditType {
+  """Order"""
+  Order
+}
+
+input MaskEditUpdateInput {
+  name: String
+  type: MaskEditType
+  memo: String
+  fields: [String!]
 }
 
 input MaskFilterInput {
@@ -29575,6 +29632,9 @@ type Mutation {
   maskCreate(input: MaskCreateInput!): MaskMutated!
   maskUpdate(id: ID!, input: MaskUpdateInput!): MaskMutated!
   maskDelete(id: ID!): Boolean!
+  maskEditCreate(input: MaskEditCreateInput!): MaskEditMutated!
+  maskEditUpdate(id: ID!, input: MaskEditUpdateInput!): MaskEditMutated!
+  maskEditDelete(id: ID!): Boolean!
   eventCommentCreate(input: EventCommentCreateInput!): EventCommentMutated!
   eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): EventCommentMutated!
   eventCommentDelete(id: ID!): Boolean!
@@ -29752,9 +29812,18 @@ input OrderFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  poNos: [String!]
+  inChargeIds: [ID!]
+  exporterIds: [ID!]
   tagIds: [ID!]
+  orderItemPrice: PriceRangeInput
+  orderItemCreatedAt: DateRangeInput
+  orderItemUpdatedAt: DateRangeInput
+  productProviderExporterIds: [ID!]
+  productProviderSupplierIds: [ID!]
+  productTagIds: [ID!]
+  batchTagIds: [ID!]
+  shipmentTagIds: [ID!]
 }
 
 type OrderItem implements Model & Owned & Sortable & Customizable {
@@ -29855,8 +29924,8 @@ input OrderItemFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  exporterId: ID
+  supplierId: ID
 }
 
 type OrderItemPagination {
@@ -30032,6 +30101,12 @@ input PriceInput {
   currency: Currency!
 }
 
+input PriceRangeInput {
+  min: Float
+  max: Float
+  currency: Currency
+}
+
 type Product implements Model & Owned & Tagged & Documented & Metadata & Customizable {
   archived: Boolean!
   name: String!
@@ -30041,7 +30116,10 @@ type Product implements Model & Owned & Tagged & Documented & Metadata & Customi
   material: String
   productProviders: [ProductProvider!]!
   timeline: Timeline!
+  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPagination!
+  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPagination!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
+  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPagination!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30076,8 +30154,8 @@ input ProductFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  exporterId: ID
+  supplierId: ID
   tagIds: [ID!]
 }
 
@@ -30102,6 +30180,11 @@ type ProductPagination {
 
 type ProductProvider implements Model & Owned & Sortable & Package & Documented & Metadata & Customizable {
   archived: Boolean!
+
+  """
+  Determined if the ProductProvider is referenced by at least one OrderItem or not
+  """
+  referenced: Boolean!
   product: Product!
   exporter: Group!
   supplier: Group
@@ -30163,8 +30246,8 @@ input ProductProviderFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  exporterId: ID
+  supplierId: ID
   tagIds: [ID!]
 }
 
@@ -30269,11 +30352,13 @@ type Query {
   metadataTemplate(id: ID!): MetadataTemplate
   metadataTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: MetadataTemplateFilterInput, sortBy: MetadataTemplateSortInput): MetadataTemplatePagination!
   tag(id: ID!): Tag
-  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput): TagPagination!
+  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPagination!
   fieldDefinition(id: ID!): FieldDefinition
   fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinition!]!
   mask(id: ID!): Mask
   masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput): MaskPagination!
+  maskEdit(id: ID!): MaskEdit
+  maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPagination!
   integration(id: ID!): Integration
   integrations(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
   integrationsOfPartners(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
@@ -35476,6 +35561,9 @@ enum TagEntityType {
 }
 
 input TagFilterInput {
+  query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
   entityTypes: [TagEntityType!]
 }
 
@@ -35495,6 +35583,12 @@ type TagPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+input TagSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
 }
 
 input TagUpdateInput {
