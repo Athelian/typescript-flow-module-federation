@@ -19,6 +19,10 @@ import {
   timelineDateMinimalFragment,
   timelineDateFullFragment,
   portFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
 import { orderItemRmFragment } from './query';
@@ -39,6 +43,10 @@ export const cloneOrderMutation: Object = gql`
   }
   ${violationFragment}
   ${orderFormFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
@@ -74,6 +82,10 @@ export const cloneOrderItemMutation: Object = gql`
   }
   ${violationFragment}
   ${orderFormFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}

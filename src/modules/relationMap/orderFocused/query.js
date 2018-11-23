@@ -17,6 +17,10 @@ import {
   timelineDateMinimalFragment,
   timelineDateFullFragment,
   portFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const shipmentRMFragment = gql`
@@ -151,6 +155,10 @@ export const orderListQuery = gql`
   ${partnerCardFragment}
   ${documentFragment}
   ${orderFormFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${orderCardFragment}
   ${orderItemRmFragment}
   ${shipmentRMFragment}
