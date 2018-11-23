@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { getByPathWithDefault as get, omit, isEmpty, flatten } from 'utils/fp';
-import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
+import { ORDER, ORDER_ITEM, ORDER_ITEM_ALL, BATCH } from 'modules/relationMap/constants';
 
 type RelationMapState = {
   focusedId: string,
@@ -28,10 +28,22 @@ const initState = () => ({
   lines: {},
 });
 
+const getParentType = type => {
+  switch (type) {
+    default:
+      return '';
+    case ORDER_ITEM_ALL:
+    case ORDER_ITEM:
+      return 'order';
+    case BATCH:
+      return 'orderItem';
+  }
+};
 const getParentId = (data: Object, type: string) => {
   switch (type) {
     default:
       return '';
+    case ORDER_ITEM_ALL:
     case ORDER_ITEM:
       return data.orderId;
     case BATCH:
@@ -211,6 +223,14 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     return !isEmpty(order) || !isEmpty(orderItem) || !isEmpty(batch) || !isEmpty(shipment);
   };
 
+  isParentTargeted = (data: Object, type: string) => {
+    const { targetedItem } = this.state;
+    const parentId = getParentId(data, type);
+    const parentType = getParentType(type);
+    const isTargeted = get(false, `${parentType}.${parentId}` || '', targetedItem);
+    return isTargeted;
+  };
+
   isTargeted = (itemType: string, id: string) => {
     const { targetedItem } = this.state;
     const isTargeted = get(false, `${itemType}.${id}` || '', targetedItem);
@@ -352,6 +372,41 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         lines: { ...prevState.lines, ...line },
       });
     });
+  };
+
+  addNewResult = (result: Object, target: Object) => {
+    let lines = [];
+    const trees = [];
+    const orderTargets = result.order;
+    orderTargets.forEach(currentTarget => {
+      const children = getChildren(currentTarget, ORDER);
+      lines = lines.concat(children);
+      trees.push({ [currentTarget.id]: { children } });
+    });
+
+    const orderItemTargets = (Object.entries(result.orderItem): any);
+    orderItemTargets.forEach(currentTarget => {
+      const [, items] = currentTarget;
+      const tree = {};
+      items.forEach(item => {
+        const children = getChildren(item, ORDER_ITEM);
+        lines = lines.concat(children);
+        tree[item.id] = { children };
+      });
+      trees.push(tree);
+    });
+
+    const batchTargets = (Object.entries(result.batch): any);
+    batchTargets.forEach(currentTarget => {
+      const [, items] = currentTarget;
+      const tree = {};
+      items.forEach(item => {
+        const children = getChildren(item, ORDER);
+        tree[item.id] = { children };
+      });
+      trees.push(tree);
+    });
+    this.setState({ targetedItem: target, trees, lines });
   };
 
   addTarget = (itemData: Object, relation: Object, itemType: string) => {

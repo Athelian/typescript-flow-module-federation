@@ -22,7 +22,7 @@ export const getSplitResult = (results: Array<Object>, splitType: string) => {
   const splitResult = results.reduce((obj, result) => {
     const { refId, data } = result;
     const newBatches = get([], `${splitType}.batches`, data);
-    const newBatchIds = newBatches.map(d => ({ id: d.id }));
+    const newBatchIds = newBatches.map(d => ({ id: d.id, actionType: 'split' }));
     return Object.assign(obj, {
       [refId]: newBatchIds,
     });

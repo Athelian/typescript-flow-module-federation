@@ -46,13 +46,13 @@ const defaultInputOption = {
 };
 
 const isDisabledSimpleAndEquallySplit = targetedItem => {
-  const { batch = {} } = targetedItem;
-  return Object.keys(batch).length === 0;
+  const { orderItem = {}, batch = {} } = targetedItem;
+  return Object.keys(orderItem).length > 0 || !(Object.keys(batch).length === 1);
 };
 
 const isDisabledBalanceSplit = targetedItem => {
-  const { orderItem = {} } = targetedItem;
-  return Object.keys(orderItem).length === 0;
+  const { orderItem = {}, batch = {} } = targetedItem;
+  return Object.keys(batch).length > 0 || !(Object.keys(orderItem).length === 1);
 };
 class SplitPanel extends React.Component<Props, State> {
   state = getInitialState();
@@ -79,36 +79,38 @@ class SplitPanel extends React.Component<Props, State> {
   render() {
     const { tabIndex, quantity } = this.state;
     const { intl, targetedItem } = this.props;
+    const disabledBatchSplit = isDisabledSimpleAndEquallySplit(targetedItem);
+    const disabledBalanceSplit = isDisabledBalanceSplit(targetedItem);
     const tabs = [
       {
         key: SIMPLE,
         label: intl.formatMessage(messages.splitSimple),
         className: style.TabItemWrapperStyle,
-        disabled: isDisabledSimpleAndEquallySplit(targetedItem),
+        disabled: disabledBatchSplit,
       },
       {
         key: EQUALLY,
         label: intl.formatMessage(messages.splitEqually),
         className: style.TabItemWrapperStyle,
-        disabled: isDisabledSimpleAndEquallySplit(targetedItem),
+        disabled: disabledBatchSplit,
       },
       {
         key: BALANCE,
         label: intl.formatMessage(messages.splitBalance),
         className: style.TabItemWrapperStyle,
-        disabled: isDisabledBalanceSplit(targetedItem),
+        disabled: disabledBalanceSplit,
       },
     ];
     return (
       <div className={style.ActionSection2WrapperStyle}>
         <div className={splitStyle.SplitTapWrapperStyle}>
-          <Label width="80px">
+          <Label width="120px">
             <FormattedMessage {...messages.splitType} />
           </Label>
           <Tabs tabs={tabs.map(injectUid)} onChange={this.onChangeTab} />
         </div>
         <div className={splitStyle.SplitTypeWrapperStyle}>
-          {tabIndex === SIMPLE && (
+          {tabIndex === SIMPLE && !disabledBatchSplit && (
             <>
               <Label width="80px">
                 <FormattedMessage {...messages.splitTo} />
@@ -122,11 +124,11 @@ class SplitPanel extends React.Component<Props, State> {
                 <TextInput value={quantity} onChange={this.onChangeQuantity} />
               </div>
               <div className={splitStyle.SplitInputWrapperStyle}>
-                <CardAction icon="ARRIVAL_HORIZONTAL" onClick={this.onApply} />
+                <CardAction icon="ARROW_RIGHT" onClick={this.onApply} />
               </div>
             </>
           )}
-          {tabIndex === EQUALLY && (
+          {tabIndex === EQUALLY && !disabledBatchSplit && (
             <>
               <Label width="80px">
                 <FormattedMessage {...messages.splitTo} />
@@ -157,11 +159,13 @@ class SplitPanel extends React.Component<Props, State> {
                 <TextInput value={quantity} onChange={this.onChangeQuantity} />
               </div>
               <div className={splitStyle.SplitInputWrapperStyle}>
-                <CardAction icon="ARRIVAL_HORIZONTAL" onClick={this.onApply} />
+                <CardAction icon="ARROW_RIGHT" onClick={this.onApply} />
               </div>
             </>
           )}
-          {tabIndex === BALANCE && <CardAction icon="ARRIVAL_HORIZONTAL" onClick={this.onApply} />}
+          {tabIndex === BALANCE && !disabledBalanceSplit && (
+            <CardAction icon="ARROW_RIGHT" onClick={this.onApply} />
+          )}
         </div>
       </div>
     );

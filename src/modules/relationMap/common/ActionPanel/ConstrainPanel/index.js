@@ -14,10 +14,9 @@ const ConstrainPanel = ({ type }: Props) => (
     {type === 'split' && (
       <div>
         <Label>
-          <FormattedMessage {...messages.actionAvailable} />
-          1 <Icon icon="ORDER_ITEM" />
-          <FormattedMessage {...messages.expressionOr} />
-          1 <Icon icon="BATCH" />
+          <FormattedMessage {...messages.split} />{' '}
+          <FormattedMessage {...messages.actionAvailable} /> 1 <Icon icon="ORDER_ITEM" />{' '}
+          <FormattedMessage {...messages.expressionOr} /> 1 <Icon icon="BATCH" />
         </Label>
       </div>
     )}

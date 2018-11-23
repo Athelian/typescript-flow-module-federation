@@ -62,9 +62,17 @@ export default defineMessages({
     id: 'global.quantity',
     defaultMessage: 'Quantity',
   },
+  newItem: {
+    id: 'modules.RelationMaps.label.newItem',
+    defaultMessage: 'New',
+  },
   clone: {
     id: 'modules.RelationMaps.label.clone',
     defaultMessage: 'Clone',
+  },
+  split: {
+    id: 'modules.RelationMaps.label.split',
+    defaultMessage: 'Split',
   },
   splitType: {
     id: 'modules.RelationMaps.label.splitType',
@@ -192,7 +200,7 @@ export default defineMessages({
   },
   actionAvailable: {
     id: 'modules.RelationMaps.action.actionAvailable',
-    defaultMessage: 'This action is only available for a selection of',
+    defaultMessage: 'action is only available for a selection of',
   },
   atLeast: {
     id: 'modules.RelationMaps.action.atLeast',

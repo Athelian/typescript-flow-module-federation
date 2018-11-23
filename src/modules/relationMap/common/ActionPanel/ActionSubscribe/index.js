@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
+import logger from 'utils/logger';
 // components
 import { BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -21,6 +22,7 @@ import {
   ClonePanel,
   ErrorPanel,
   HighlightPanel,
+  ConstrainPanel,
 } from 'modules/relationMap/common/ActionPanel';
 // containers
 import {
@@ -54,11 +56,22 @@ const LoadingMessage = ({ type }: LoadingProps) => {
   }
 };
 
+const isSelectSomeItem = targetedItem => {
+  const { orderItem = {}, batch = {} } = targetedItem;
+  const numberOfOrderItem = Object.keys(orderItem).length;
+  const numberOfBatch = Object.keys(batch).length;
+  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
+  return selectSomeItem;
+};
+
 const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
   const numberOfOrderItem = Object.keys(orderItem).length;
   const numberOfBatch = Object.keys(batch).length;
-  if (numberOfOrderItem === 1 || numberOfBatch === 1) {
+  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
+  const selctedOrderItem = numberOfOrderItem === 1 && numberOfBatch === 0;
+  const selectedBatch = numberOfBatch === 1 && numberOfOrderItem === 0;
+  if (selectSomeItem && (selctedOrderItem || selectedBatch)) {
     return false;
   }
   return true;
@@ -83,6 +96,8 @@ const ActionSubscribe = ({ filter }: Props) => (
             isHighlighted,
             resetFocusedItem,
             selectTargetItem,
+            // overrideState: setRelationState,
+            addNewResult,
             cancelTarget,
           },
           {
@@ -92,6 +107,7 @@ const ActionSubscribe = ({ filter }: Props) => (
             setLoading,
             setCurrentAction,
             setError,
+            overrideState: setActionState,
             state: { currentAction, loading, error },
           },
           { clone },
@@ -108,16 +124,22 @@ const ActionSubscribe = ({ filter }: Props) => (
                   focusMode,
                   filter,
                 });
-                setResult(newResult);
-                selectTargetItem(newFocus);
-                setAction('');
-                setLoading(false);
-                if (error) {
-                  setError(false);
-                }
+                // setRelationState({
+                //   targetedItem: newFocus,
+                //   tress: [],
+                //   lines: {},
+                // });
+                addNewResult(newResult, newFocus);
+                setActionState({
+                  result: newResult,
+                  action: '',
+                  loading: false,
+                  error: false,
+                });
               } catch (err) {
                 setLoading(false);
                 setError(!!err);
+                logger.error(err);
               }
             };
             setCurrentAction(action);
@@ -145,7 +167,9 @@ const ActionSubscribe = ({ filter }: Props) => (
           const onCancelTarget = () => {
             cancelTarget();
             setAction('');
+            setError(false);
           };
+          const disabledSplit = isDisabledSplit(targetedItem);
           return (
             <>
               {isTargetAnyItem() && (
@@ -163,7 +187,7 @@ const ActionSubscribe = ({ filter }: Props) => (
                         className={TabItemStyled}
                         label="SPLIT"
                         icon="SPLIT"
-                        disabled={isDisabledSplit(targetedItem)}
+                        disabled={disabledSplit}
                         active={currentAction === 'split'}
                         onClick={() => setAction(currentAction !== 'split' ? 'split' : null)}
                       />
@@ -203,17 +227,22 @@ const ActionSubscribe = ({ filter }: Props) => (
                       </BooleanValue>
                     </>
                   </ActionSelector>
-                  {currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
-                  {currentAction === 'split' && (
+                  {!error && currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
+                  {!error && !disabledSplit && currentAction === 'split' && (
                     <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
                   )}
-                  {currentAction === 'connect' && (
+                  {!error && currentAction === 'connect' && (
                     <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
+                  )}
+                  {isHighlighted() && (
+                    <HighlightPanel item={focusedItem} onCancel={resetFocusedItem} />
+                  )}
+                  {isSelectSomeItem(targetedItem) && disabledSplit && (
+                    <ConstrainPanel type="split" />
                   )}
                   {error && (
                     <ErrorPanel onClickCancel={onCancelTarget} onClickRefresh={actionFunc} />
                   )}
-
                   <OutsideClickHandler ignoreClick onOutsideClick={() => {}}>
                     <Dialog isOpen={loading} options={{ width: 300 }} onRequestClose={() => {}}>
                       <div className={LoadingContainerStyle}>
@@ -229,7 +258,6 @@ const ActionSubscribe = ({ filter }: Props) => (
                   </OutsideClickHandler>
                 </>
               )}
-              {isHighlighted() && <HighlightPanel item={focusedItem} onCancel={resetFocusedItem} />}
             </>
           );
         }}

@@ -18,6 +18,10 @@ class ActionContainer extends Container<State> {
     error: false,
   };
 
+  overrideState = (newState: Object) => {
+    this.setState(prevState => ({ ...prevState, ...newState }));
+  };
+
   clearResult = () => {
     this.setState({ result: {} });
   };

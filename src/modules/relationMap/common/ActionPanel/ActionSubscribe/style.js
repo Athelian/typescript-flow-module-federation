@@ -14,6 +14,6 @@ export const TabItemStyled: string = css`
 `;
 
 export const LoadingContainerStyle: string = css`
-  padding: 50px 100px;
+  padding: 50px 20px;
 `;
 export default null;

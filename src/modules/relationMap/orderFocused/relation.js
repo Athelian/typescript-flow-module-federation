@@ -11,10 +11,20 @@ import {
   LINK4,
 } from 'modules/relationMap/constants';
 
+const isRelationLine = type => /LINK-[0-4]-(\w+)/.test(type);
+
 export const getItemData = ({ order, orderItem, batch }: Object, relation: Object) => {
   let itemData;
-  switch (relation.type) {
+  let type = relation.type || '';
+  const isLine = isRelationLine(relation.type);
+  if (isLine) {
+    const [, , relationType] = relation.type.split('-') || [];
+    type = relationType;
+  }
+  switch (type) {
     case ORDER_ITEM_ALL:
+      itemData = orderItem[relation.id] || order[relation.id];
+      break;
     case BATCH_ALL:
     case ORDER:
       itemData = order[relation.id];

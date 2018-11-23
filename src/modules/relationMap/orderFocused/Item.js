@@ -7,18 +7,17 @@ import { BooleanValue } from 'react-values';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import SelectedShipment from 'modules/relationMap/common/SelectedShipment';
+import NewItemBadge from 'modules/relationMap/common/NewItemBadge';
 import {
   ItemWrapperStyle,
   ShipmentCardStyle,
   ShipmentCardTotalStyle,
-  IsNewItemStyle,
 } from 'modules/relationMap/common/RelationItem/style';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import RelationMapContainer from 'modules/relationMap/container';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import BaseCard from 'components/Cards';
-import Icon from 'components/Icon';
 import {
   RelationLine,
   OrderCard,
@@ -90,7 +89,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         toggleTarget,
         overrideTarget,
         isTargetedLine,
-        // isRelatedLine,
+        isParentTargeted,
         isTargeted: isTargetedItem,
         isCurrentTree,
         isFocused: isFocusedItem,
@@ -105,7 +104,9 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             ? false
             : isFocusedLink(focusedItem[lineItemType], relatedIds);
 
-          const isTargeted = isAllBatchLine ? false : isTargetedLine(id);
+          const isTargeted = isAllBatchLine
+            ? false
+            : isParentTargeted(data, relationType) && isTargetedLine(id);
           const isRelated =
             get(false, `${lineItemType}.${id}`, focusedItem) ||
             get(false, `${lineItemType}.${id}`, targetedItem);
@@ -147,11 +148,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 wrapperClassName={cardWrapperClass}
               >
                 <>
-                  {isNew && (
-                    <div className={IsNewItemStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  )}
+                  {isNew && <NewItemBadge label={isNew} />}
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
                       <BooleanValue>
@@ -213,11 +210,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 wrapperClassName={cardWrapperClass}
               >
                 <>
-                  {isNew && (
-                    <div className={IsNewItemStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  )}
+                  {isNew && <NewItemBadge label={isNew} />}
                   <BooleanValue>
                     {({ value: hovered, set: setToggle }) => (
                       <WrapperCard
@@ -267,11 +260,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 wrapperClassName={cardWrapperClass}
               >
                 <>
-                  {isNew && (
-                    <div className={IsNewItemStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  )}
+                  {isNew && <NewItemBadge label={isNew} />}
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
                       <BooleanValue>
@@ -355,11 +344,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   wrapperClassName={cx(cardWrapperClass, ShipmentCardStyle)}
                 >
                   <>
-                    {isNew && (
-                      <div className={IsNewItemStyle}>
-                        <Icon icon="CHECKED" />
-                      </div>
-                    )}
+                    {isNew && <NewItemBadge label={isNew} />}
                     <ToggleSlide>
                       {({ assign: setSlide }) => (
                         <Subscribe to={[ConnectContainer, ActionContainer]}>

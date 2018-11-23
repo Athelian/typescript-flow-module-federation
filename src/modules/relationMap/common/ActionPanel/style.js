@@ -33,7 +33,7 @@ export const ActionSection2WrapperStyle: string = css`
   height: 50px;
   background: ${colors.GRAY_SUPER_LIGHT};
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  z-index: 2;
+  padding: 0 10px;
   ${transitions.EXPAND};
 `;
 
