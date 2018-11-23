@@ -19,22 +19,11 @@ type Props = {
   entityType: string,
 };
 
-const list2Map = (list: Array<Object>): Map<string, string> => {
-  const map = new Map();
-
-  list.forEach(item => {
-    map.set(item.id, item.name);
-  });
-  return map;
-};
-
 const MetadataEditForm = ({ entityType }: Props) => (
   <Subscribe to={[CustomFieldsContainer]}>
     {({ originalValues, state, setFieldArrayValue }) => {
       const values = { ...originalValues, ...state };
-      const { mask, fieldValues, fieldDefinitions } = values;
-      const fieldDefinitionMap = list2Map(fieldDefinitions);
-
+      const { mask, fieldValues } = values;
       return (
         <div className={MetadataSectionWrapperStyle}>
           <div>
@@ -98,7 +87,7 @@ const MetadataEditForm = ({ entityType }: Props) => (
                   key={fieldDefinition.id}
                   isKeyReadOnly
                   targetName={`fieldValues.${index}`}
-                  fieldName={fieldDefinitionMap.get(fieldDefinition.id)}
+                  fieldName={fieldDefinition.name}
                   value={value}
                   setFieldArrayValue={setFieldArrayValue}
                 />

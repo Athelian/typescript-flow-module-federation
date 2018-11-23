@@ -13,7 +13,7 @@ import { ShowAllButtonStyle, MetadataIconStyle } from './style';
 
 type Props = {
   entityType: string,
-  customFields: {
+  customFields: ?{
     mask: Object,
     fieldValues: Array<Object>,
     fieldDefinitions: Array<Object>,
