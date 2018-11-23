@@ -89,7 +89,7 @@ const DefaultCustomFieldStyle = ({
         </DefaultStyle>
       ) : (
         <FormField
-          name={`${targetName}.value`}
+          name={`${targetName}.value.string`}
           initValue={value.string}
           setFieldValue={setFieldArrayValue}
         >

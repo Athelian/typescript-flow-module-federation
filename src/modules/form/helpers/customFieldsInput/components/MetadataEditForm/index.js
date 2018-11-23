@@ -7,7 +7,7 @@ import { Subscribe } from 'unstated';
 import Divider from 'components/Divider';
 import { Label, DashedPlusButton } from 'components/Form';
 import { DefaultCustomFieldStyle } from 'components/Form/Inputs/Styles';
-import MetadataFormContainer from 'modules/form/helpers/customFieldsInput/container';
+import CustomFieldsContainer from 'modules/form/helpers/customFieldsInput/container';
 import GridColumn from 'components/GridColumn';
 import SlideView from 'components/SlideView';
 
@@ -29,8 +29,8 @@ const list2Map = (list: Array<Object>): Map<string, string> => {
 };
 
 const MetadataEditForm = ({ entityType }: Props) => (
-  <Subscribe to={[MetadataFormContainer]}>
-    {({ originalValues, state, setFieldArrayValue, removeArrayItem }) => {
+  <Subscribe to={[CustomFieldsContainer]}>
+    {({ originalValues, state, setFieldArrayValue }) => {
       const values = { ...originalValues, ...state };
       const { mask, fieldValues, fieldDefinitions } = values;
       const fieldDefinitionMap = list2Map(fieldDefinitions);
@@ -96,11 +96,10 @@ const MetadataEditForm = ({ entityType }: Props) => (
                 <DefaultCustomFieldStyle
                   key={fieldDefinition.id}
                   isKeyReadOnly
-                  targetName={`metadata.${index}`}
+                  targetName={`fieldValues.${index}`}
                   fieldName={fieldDefinitionMap.get(fieldDefinition.id)}
                   value={value}
                   setFieldArrayValue={setFieldArrayValue}
-                  onRemove={() => removeArrayItem(`metadata.${index}`)}
                 />
               ))}
           </GridColumn>

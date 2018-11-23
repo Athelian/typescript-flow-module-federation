@@ -8,7 +8,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import MetadataEditFormWrapper from './components/MetadataEditFormWrapper';
-import MetadataFormContainer from './container';
+import CustomFieldsContainer from './container';
 import { ShowAllButtonStyle, MetadataIconStyle } from './style';
 
 type Props = {
@@ -51,9 +51,10 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
               options={{ width: '1030px' }}
             >
               {isOpen && (
-                <Subscribe to={[MetadataFormContainer]}>
+                <Subscribe to={[CustomFieldsContainer]}>
                   {({ initDetailValues, originalValues, state }) => {
                     const values = { ...originalValues, ...state };
+
                     return (
                       <MetadataEditFormWrapper
                         entityType={entityType}
@@ -61,7 +62,8 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
                         onCancel={() => slideToggle(false)}
                         onSave={() => {
                           slideToggle(false);
-                          setFieldValue(values.customFields);
+                          console.log(values);
+                          setFieldValue('customFields', values);
                         }}
                         onFormReady={() => {
                           initDetailValues(customFields);

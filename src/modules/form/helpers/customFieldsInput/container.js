@@ -15,7 +15,7 @@ const initValues = {
   fieldDefinitions: [],
 };
 
-export default class MetadataFormContainer extends Container<FormState> {
+export default class CustomFieldsContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;
