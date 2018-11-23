@@ -18,7 +18,9 @@ import {
   textAreaFactory,
   dateInputFactory,
   selectSearchEnumInputFactory,
+  customFieldsInputFactory,
 } from 'modules/form/helpers';
+import { isEnableBetaFeature } from 'utils/env';
 import { PartnerCard } from 'components/Cards';
 import { getQuantitySummary } from 'modules/order/helpers';
 import messages from 'modules/order/messages';
@@ -33,11 +35,6 @@ import {
   AddAssignmentButtonStyle,
 } from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import TotalSummary from './components/TotalSummary';
-// import MetadataEditForm from './components/MetadataEditForm';
-// import {
-//   MetadataMessageStyle,
-//   MetadataMessageWrapperStyle,
-// } from './components/MetadataEditForm/style';
 import {
   OrderSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -165,41 +162,12 @@ const OrderSection = ({ isNew }: Props) => (
                     })
                   }
                 </FormField>
-                {/* TODO: waiting API */}
-                {/* <BooleanValue>
-                  {({ value: isOpen, set: slideToggle }) => (
-                    <>
-                      <div className={MetadataMessageWrapperStyle}>
-                        <button
-                          data-testid="customFieldsButton"
-                          className={MetadataMessageStyle}
-                          type="button"
-                          onClick={() => slideToggle(true)}
-                        >
-                          <Icon icon="METADATA" />
-                          <FormattedMessage
-                            id="modules.order.metadata.sectionHeader"
-                            defaultMessage="CUSTOM FIELDS"
-                          />
-                          ({4})
-                        </button>
-                      </div>
-
-                      <SlideView
-                        isOpen={isOpen}
-                        onRequestClose={() => slideToggle(false)}
-                        options={{ width: '1030px' }}
-                      >
-                        {isOpen && (
-                          <MetadataEditForm
-                            onCancel={() => slideToggle(false)}
-                            onSave={() => slideToggle(false)}
-                          />
-                        )}
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue> */}
+                {isEnableBetaFeature &&
+                  customFieldsInputFactory({
+                    entityType: 'Order',
+                    customFields: values.customFields,
+                    setFieldValue,
+                  })}
               </GridColumn>
 
               <GridColumn gap="10px">

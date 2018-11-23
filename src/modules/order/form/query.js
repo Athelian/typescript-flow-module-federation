@@ -16,6 +16,10 @@ import {
   metricFragment,
   sizeFragment,
   orderCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const orderFormQuery = gql`
@@ -26,6 +30,10 @@ export const orderFormQuery = gql`
   }
 
   ${orderFormFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}

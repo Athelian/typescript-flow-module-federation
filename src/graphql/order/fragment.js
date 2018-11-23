@@ -16,6 +16,9 @@ export const orderFormFragment = gql`
     piNo
     incoterm
     deliveryPlace
+    customFields {
+      ...customFieldsFragment
+    }
     exporter {
       ...partnerCardFragment
     }
