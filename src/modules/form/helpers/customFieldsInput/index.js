@@ -12,6 +12,7 @@ import MetadataFormContainer from './container';
 import { ShowAllButtonStyle, MetadataIconStyle } from './style';
 
 type Props = {
+  entityType: string,
   customFields: {
     mask: Object,
     fieldValues: Array<Object>,
@@ -20,7 +21,7 @@ type Props = {
   setFieldValue: Function,
 };
 
-const customFieldsInputFactory = ({ customFields, setFieldValue }: Props) => (
+const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: Props) => (
   <FieldItem
     label={
       <Label>
@@ -55,6 +56,7 @@ const customFieldsInputFactory = ({ customFields, setFieldValue }: Props) => (
                     const values = { ...originalValues, ...state };
                     return (
                       <MetadataEditFormWrapper
+                        entityType={entityType}
                         customFields={values.customFields}
                         onCancel={() => slideToggle(false)}
                         onSave={() => {

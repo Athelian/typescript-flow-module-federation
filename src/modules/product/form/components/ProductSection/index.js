@@ -285,7 +285,11 @@ const ProductSection = ({ isNew }: Props) => (
               }
             </FormField>
             {isEnableBetaFeature &&
-              customFieldsInputFactory({ customFields: values.customFields, setFieldValue })}
+              customFieldsInputFactory({
+                entityType: 'Product',
+                customFields: values.customFields,
+                setFieldValue,
+              })}
 
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>

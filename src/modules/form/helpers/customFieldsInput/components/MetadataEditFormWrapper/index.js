@@ -19,6 +19,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  entityType: string,
   onCancel: Function,
   onSave: Function,
 };
@@ -40,7 +41,7 @@ class MetadataEditFormWrapper extends React.Component<Props> {
   }
 
   render() {
-    const { customFields, onCancel, onSave } = this.props;
+    const { entityType, customFields, onCancel, onSave } = this.props;
 
     return (
       <Layout
@@ -85,7 +86,7 @@ class MetadataEditFormWrapper extends React.Component<Props> {
                 </>
               }
             />
-            <MetadataEditForm />
+            <MetadataEditForm entityType={entityType} />
           </SectionWrapper>
         </div>
       </Layout>

@@ -15,12 +15,17 @@ import { MetadataTemplateCard } from 'components/Cards';
 import SelectMetadataTemplate from '../SelectMetadataTemplate';
 import { MetadataSectionWrapperStyle } from './style';
 
-const MetadataEditForm = () => (
-  <Subscribe to={[MetadataFormContainer]}>
-    {({ originalValues, state, setFieldValue, setFieldArrayValue, removeArrayItem }) => {
-      const values = { ...originalValues, ...state };
-      const { mask, fieldValues } = values;
+type Props = {
+  entityType: string,
+};
 
+const MetadataEditForm = ({ entityType }: Props) => (
+  <Subscribe to={[MetadataFormContainer]}>
+    {({ originalValues, state, setFieldArrayValue, removeArrayItem }) => {
+      const values = { ...originalValues, ...state };
+      const {
+        customFields: { mask, fieldValues },
+      } = values;
       return (
         <div className={MetadataSectionWrapperStyle}>
           <div>
@@ -52,10 +57,11 @@ const MetadataEditForm = () => (
                   >
                     {opened && (
                       <SelectMetadataTemplate
+                        entityType={entityType}
                         selected={mask}
                         onCancel={() => slideToggle(false)}
                         onSave={item => {
-                          setFieldValue('mask', item);
+                          setFieldArrayValue('customFields.mask', item);
                           slideToggle(false);
                         }}
                       />
