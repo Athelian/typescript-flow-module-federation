@@ -106,7 +106,7 @@ class FieldDefinitionsForm extends React.Component<Props> {
             onClick={() => {
               setFieldArrayValue('fieldDefinitions', [
                 ...fieldDefinitions,
-                { id: uuid(), name: '' },
+                { id: uuid(), name: '', isNew: true },
               ]);
             }}
           />

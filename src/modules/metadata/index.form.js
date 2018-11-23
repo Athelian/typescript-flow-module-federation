@@ -107,7 +107,7 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                 <FieldDefinitionsFormWrapper entityType={entityType} />
               </GridColumn>
               <GridColumn gap="10px">
-                <CustomFieldsTemplateList />
+                <CustomFieldsTemplateList entityType={entityType} />
               </GridColumn>
             </div>
           </Layout>

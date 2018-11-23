@@ -7,36 +7,39 @@ import Icon from 'components/Icon';
 import { AdjustmentWrapperStyle, AdjustmentFieldsWrapperStyle, CheckBoxStyle } from './style';
 
 type OptionalProps = {
+  checked: boolean,
   width: string,
+  onClick: Function,
 };
 
 type Props = OptionalProps & {
-  value: {
-    checked: boolean,
-    key: string,
-    value: string,
+  item: {
+    id: string,
+    name: string,
   },
 };
 
 const defaultProps = {
+  checked: false,
   width: '200px',
+  onClick: () => {},
 };
 
-const MetadataItem = ({ width, value: { checked, key, value } }: Props) => (
+const FieldItem = ({ width, checked, item: { name }, onClick }: Props) => (
   <div className={AdjustmentWrapperStyle}>
     <div className={AdjustmentFieldsWrapperStyle}>
-      <div className={CheckBoxStyle(checked)}>
+      <button type="button" className={CheckBoxStyle(checked)} onClick={onClick}>
         <Icon icon="CONFIRM" />
-      </div>
+      </button>
 
-      <Label width={width}>{key}</Label>
+      <Label width={width}>{name}</Label>
       <Label width={width} align="right">
-        {value}
+        Input
       </Label>
     </div>
   </div>
 );
 
-MetadataItem.defaultProps = defaultProps;
+FieldItem.defaultProps = defaultProps;
 
-export default MetadataItem;
+export default FieldItem;
