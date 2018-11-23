@@ -42,72 +42,72 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
   return cloneItems;
 };
 
-const dummyData = {
-  customFields: {
-    mask: {
-      id: '1',
-      name: 'METADATA TEMPLATE 1',
-      memo: 'SOME MEMO',
-      fieldDefinitions: [{ id: 'id1' }, { id: 'id2' }, { id: 'id3' }, { id: 'id4' }, { id: 'id5' }],
-    },
-    fieldValues: [
-      {
-        fieldDefinition: {
-          id: 'id1',
-        },
-        value: {
-          string: 'value 1',
-        },
-      },
-      {
-        fieldDefinition: {
-          id: 'id2',
-        },
-        value: {
-          string: 'value 2',
-        },
-      },
-      {
-        fieldDefinition: {
-          id: 'id3',
-        },
-        value: {
-          string: 'value 3',
-        },
-      },
-      {
-        fieldDefinition: {
-          id: 'id4',
-        },
-        value: {
-          string: 'value 4',
-        },
-      },
-    ],
-    fieldDefinitions: [
-      {
-        id: 'id1',
-        name: 'METADATA 1',
-      },
-      {
-        id: 'id2',
-        name: 'METADATA 2',
-      },
-      {
-        id: 'id3',
-        name: 'METADATA 3',
-      },
-      {
-        id: 'id4',
-        name: 'METADATA 4',
-      },
-      {
-        id: 'id5',
-        name: 'METADATA 5',
-      },
-    ],
-  },
-};
+// const dummyData = {
+//   customFields: {
+//     mask: {
+//       id: '1',
+//       name: 'METADATA TEMPLATE 1',
+//       memo: 'SOME MEMO',
+//       fieldDefinitions: [{ id: 'id1' }, { id: 'id2' }, { id: 'id3' }, { id: 'id4' }, { id: 'id5' }],
+//     },
+//     fieldValues: [
+//       {
+//         fieldDefinition: {
+//           id: 'id1',
+//         },
+//         value: {
+//           string: 'value 1',
+//         },
+//       },
+//       {
+//         fieldDefinition: {
+//           id: 'id2',
+//         },
+//         value: {
+//           string: 'value 2',
+//         },
+//       },
+//       {
+//         fieldDefinition: {
+//           id: 'id3',
+//         },
+//         value: {
+//           string: 'value 3',
+//         },
+//       },
+//       {
+//         fieldDefinition: {
+//           id: 'id4',
+//         },
+//         value: {
+//           string: 'value 4',
+//         },
+//       },
+//     ],
+//     fieldDefinitions: [
+//       {
+//         id: 'id1',
+//         name: 'METADATA 1',
+//       },
+//       {
+//         id: 'id2',
+//         name: 'METADATA 2',
+//       },
+//       {
+//         id: 'id3',
+//         name: 'METADATA 3',
+//       },
+//       {
+//         id: 'id4',
+//         name: 'METADATA 4',
+//       },
+//       {
+//         id: 'id5',
+//         name: 'METADATA 5',
+//       },
+//     ],
+//   },
+// };
 
 const ProductSection = ({ isNew }: Props) => (
   <Subscribe to={[ProductInfoContainer]}>
@@ -285,7 +285,7 @@ const ProductSection = ({ isNew }: Props) => (
               }
             </FormField>
             {isEnableBetaFeature &&
-              customFieldsInputFactory({ customFields: dummyData.customFields, setFieldValue })}
+              customFieldsInputFactory({ customFields: values.customFields, setFieldValue })}
 
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>

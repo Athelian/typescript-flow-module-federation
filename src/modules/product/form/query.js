@@ -9,6 +9,11 @@ import {
   priceFragment,
   metricFragment,
   sizeFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
+  // fieldDefinitionsFragment,
   productProviderFormFragment,
 } from 'graphql';
 
@@ -20,6 +25,10 @@ export const productFormQuery = gql`
   }
 
   ${productFormFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${imageFragment}

@@ -21,6 +21,10 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   metadataFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from './common/fragment';
 
 export {
@@ -54,4 +58,8 @@ export {
   portFragment,
   metadataFragment,
   tableTemplateCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 };

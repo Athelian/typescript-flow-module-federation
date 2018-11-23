@@ -18,6 +18,9 @@ export const productFormFragment = gql`
       key
       value
     }
+    customFields {
+      ...customFieldsFragment
+    }
     tags {
       ...tagFragment
     }

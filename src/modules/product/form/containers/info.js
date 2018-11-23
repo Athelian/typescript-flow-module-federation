@@ -16,10 +16,12 @@ type FormState = {
   hsCode?: ?string,
   material?: ?string,
   metadata?: Array<Metadata>,
+  customFields?: Array<Object>,
 };
 
 const initValues = {
   metadata: [],
+  customFields: [],
 };
 
 export default class ProductInfoContainer extends Container<FormState> {
