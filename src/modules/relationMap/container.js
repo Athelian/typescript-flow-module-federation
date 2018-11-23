@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { getByPathWithDefault as get, omit, isEmpty, flatten } from 'utils/fp';
-import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
+import { ORDER, ORDER_ITEM, ORDER_ITEM_ALL, BATCH } from 'modules/relationMap/constants';
 
 type RelationMapState = {
   focusedId: string,
@@ -28,10 +28,22 @@ const initState = () => ({
   lines: {},
 });
 
+const getParentType = type => {
+  switch (type) {
+    default:
+      return '';
+    case ORDER_ITEM_ALL:
+    case ORDER_ITEM:
+      return 'order';
+    case BATCH:
+      return 'orderItem';
+  }
+};
 const getParentId = (data: Object, type: string) => {
   switch (type) {
     default:
       return '';
+    case ORDER_ITEM_ALL:
     case ORDER_ITEM:
       return data.orderId;
     case BATCH:
@@ -209,6 +221,14 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }
     const { order = {}, orderItem = {}, batch = {}, shipment = {} } = focusedItem;
     return !isEmpty(order) || !isEmpty(orderItem) || !isEmpty(batch) || !isEmpty(shipment);
+  };
+
+  isParentTargeted = (data: Object, type: string) => {
+    const { targetedItem } = this.state;
+    const parentId = getParentId(data, type);
+    const parentType = getParentType(type);
+    const isTargeted = get(false, `${parentType}.${parentId}` || '', targetedItem);
+    return isTargeted;
   };
 
   isTargeted = (itemType: string, id: string) => {

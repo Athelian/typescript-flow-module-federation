@@ -89,7 +89,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         toggleTarget,
         overrideTarget,
         isTargetedLine,
-        // isRelatedLine,
+        isParentTargeted,
         isTargeted: isTargetedItem,
         isCurrentTree,
         isFocused: isFocusedItem,
@@ -104,7 +104,9 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             ? false
             : isFocusedLink(focusedItem[lineItemType], relatedIds);
 
-          const isTargeted = isAllBatchLine ? false : isTargetedLine(id);
+          const isTargeted = isAllBatchLine
+            ? false
+            : isParentTargeted(data, relationType) && isTargetedLine(id);
           const isRelated =
             get(false, `${lineItemType}.${id}`, focusedItem) ||
             get(false, `${lineItemType}.${id}`, targetedItem);

@@ -227,9 +227,6 @@ const ActionSubscribe = ({ filter }: Props) => (
                       </BooleanValue>
                     </>
                   </ActionSelector>
-                  {isSelectSomeItem(targetedItem) && disabledSplit && (
-                    <ConstrainPanel type="split" />
-                  )}
                   {!error && currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
                   {!error && !disabledSplit && currentAction === 'split' && (
                     <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
@@ -237,10 +234,15 @@ const ActionSubscribe = ({ filter }: Props) => (
                   {!error && currentAction === 'connect' && (
                     <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
                   )}
+                  {isHighlighted() && (
+                    <HighlightPanel item={focusedItem} onCancel={resetFocusedItem} />
+                  )}
+                  {isSelectSomeItem(targetedItem) && disabledSplit && (
+                    <ConstrainPanel type="split" />
+                  )}
                   {error && (
                     <ErrorPanel onClickCancel={onCancelTarget} onClickRefresh={actionFunc} />
                   )}
-
                   <OutsideClickHandler ignoreClick onOutsideClick={() => {}}>
                     <Dialog isOpen={loading} options={{ width: 300 }} onRequestClose={() => {}}>
                       <div className={LoadingContainerStyle}>
@@ -256,7 +258,6 @@ const ActionSubscribe = ({ filter }: Props) => (
                   </OutsideClickHandler>
                 </>
               )}
-              {isHighlighted() && <HighlightPanel item={focusedItem} onCancel={resetFocusedItem} />}
             </>
           );
         }}
