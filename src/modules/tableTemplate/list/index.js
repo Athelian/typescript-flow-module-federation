@@ -11,19 +11,26 @@ type Props = {
   filter: {
     type: string,
   },
+  sort: {
+    field: string,
+    direction: string,
+  },
   perPage: number,
   page: number,
 };
 
 class TableTemplateList extends React.Component<Props> {
   render() {
-    const { viewType, ...filtersAndSort } = this.props;
+    const { viewType, sort, ...filtersAndSort } = this.props;
 
     return (
       <Query
         query={tableTemplateQuery}
         variables={{
           page: 1,
+          sort: {
+            [sort.field]: sort.direction,
+          },
           ...filtersAndSort,
         }}
         fetchPolicy="network-only"
