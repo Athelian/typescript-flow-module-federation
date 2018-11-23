@@ -64,13 +64,15 @@ export const prepareCreateProductInput = ({
   hsCode,
   material,
   metadata,
-  customFields: {
-    maskId: customFields.mask.id,
-    fieldValues: customFields.fieldValues.map(fieldValue => ({
-      value: { string: fieldValue.value.string },
-      fieldDefinitionId: fieldValue.fieldDefinition.id,
-    })),
-  },
+  customFields: customFields
+    ? {
+        maskId: customFields.mask ? customFields.mask.id : null,
+        fieldValues: customFields.fieldValues.map(fieldValue => ({
+          value: { string: fieldValue.value.string },
+          fieldDefinitionId: fieldValue.fieldDefinition.id,
+        })),
+      }
+    : null,
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
@@ -130,13 +132,15 @@ export const prepareUpdateProductInput = ({
   hsCode,
   material,
   metadata,
-  customFields: {
-    maskId: customFields.mask.id,
-    fieldValues: customFields.fieldValues.map(fieldValue => ({
-      value: { string: fieldValue.value.string },
-      fieldDefinitionId: fieldValue.fieldDefinition.id,
-    })),
-  },
+  customFields: customFields
+    ? {
+        maskId: customFields.mask ? customFields.mask.id : null,
+        fieldValues: customFields.fieldValues.map(fieldValue => ({
+          value: { string: fieldValue.value.string },
+          fieldDefinitionId: fieldValue.fieldDefinition.id,
+        })),
+      }
+    : null,
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(

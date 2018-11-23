@@ -15,6 +15,7 @@ type FormState = {
   poNo?: string,
   shipments: Array<Object>,
   inCharges: Array<Object>,
+  customFields: Object,
 };
 
 const initValues = {

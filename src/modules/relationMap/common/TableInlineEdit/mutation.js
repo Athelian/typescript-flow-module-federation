@@ -19,6 +19,10 @@ import {
   sizeFragment,
   orderCardFragment,
   timelineDateFullFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const entitiesUpdateManyMutation = gql`
@@ -71,6 +75,10 @@ export const entitiesUpdateManyMutation = gql`
   }
   ${violationFragment}
   ${orderFormFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
