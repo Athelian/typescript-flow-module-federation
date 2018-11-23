@@ -38,16 +38,19 @@ export const formatNodes = (orders: Array<Object>, result: Object) => {
     const orderItems = filterOrderItem(order.orderItems || []).map(orderItem => {
       const filterBatch = createFilterData(newBatch[orderItem.id]);
       const batches = filterBatch(orderItem.batches || []).map(batch => ({
+        ...batch,
         id: batch.id,
         isNew: getIsNew(batch),
       }));
       return {
+        ...orderItem,
         id: orderItem.id,
         isNew: getIsNew(orderItem),
         batches,
       };
     });
     return {
+      ...order,
       id: order.id,
       isNew: getIsNew(order),
       isCollapsed: getIsCollapsed({ newOrderItem, newBatch }, order),

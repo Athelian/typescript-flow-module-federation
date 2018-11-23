@@ -354,6 +354,41 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     });
   };
 
+  addNewResult = (result: Object, target: Object) => {
+    let lines = [];
+    const trees = [];
+    const orderTargets = result.order;
+    orderTargets.forEach(currentTarget => {
+      const children = getChildren(currentTarget, ORDER);
+      lines = lines.concat(children);
+      trees.push({ [currentTarget.id]: { children } });
+    });
+
+    const orderItemTargets = (Object.entries(result.orderItem): any);
+    orderItemTargets.forEach(currentTarget => {
+      const [, items] = currentTarget;
+      const tree = {};
+      items.forEach(item => {
+        const children = getChildren(item, ORDER_ITEM);
+        lines = lines.concat(children);
+        tree[item.id] = { children };
+      });
+      trees.push(tree);
+    });
+
+    const batchTargets = (Object.entries(result.batch): any);
+    batchTargets.forEach(currentTarget => {
+      const [, items] = currentTarget;
+      const tree = {};
+      items.forEach(item => {
+        const children = getChildren(item, ORDER);
+        tree[item.id] = { children };
+      });
+      trees.push(tree);
+    });
+    this.setState({ targetedItem: target, trees, lines });
+  };
+
   addTarget = (itemData: Object, relation: Object, itemType: string) => {
     const { id, type } = relation;
     const { data, relation: itemRelation } = itemData;

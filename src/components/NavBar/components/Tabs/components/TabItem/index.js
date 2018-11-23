@@ -35,7 +35,6 @@ const TabItem = ({ icon = '', label, disabled, active, onClick, className }: Pro
     )}
     {label}
     <span />
-    {disabled}
   </button>
 );
 

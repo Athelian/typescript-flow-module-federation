@@ -96,7 +96,8 @@ const ActionSubscribe = ({ filter }: Props) => (
             isHighlighted,
             resetFocusedItem,
             selectTargetItem,
-            overrideState: setRelationState,
+            // overrideState: setRelationState,
+            addNewResult,
             cancelTarget,
           },
           {
@@ -123,11 +124,12 @@ const ActionSubscribe = ({ filter }: Props) => (
                   focusMode,
                   filter,
                 });
-                setRelationState({
-                  targetedItem: newFocus,
-                  tress: [],
-                  lines: {},
-                });
+                // setRelationState({
+                //   targetedItem: newFocus,
+                //   tress: [],
+                //   lines: {},
+                // });
+                addNewResult(newResult, newFocus);
                 setActionState({
                   result: newResult,
                   action: '',
