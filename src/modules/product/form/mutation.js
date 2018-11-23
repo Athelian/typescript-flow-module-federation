@@ -9,6 +9,10 @@ import {
   priceFragment,
   metricFragment,
   sizeFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
   productProviderFormFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
@@ -26,6 +30,10 @@ export const createProductMutation: Object = gql`
     }
   }
   ${productFormFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${imageFragment}
@@ -45,6 +53,7 @@ export const prepareCreateProductInput = ({
   hsCode,
   material,
   metadata,
+  customFields,
   tags = [],
   files = [],
   productProviders = [],
@@ -55,6 +64,13 @@ export const prepareCreateProductInput = ({
   hsCode,
   material,
   metadata,
+  customFields: {
+    maskId: customFields.mask.id,
+    fieldValues: customFields.fieldValues.map(fieldValue => ({
+      value: { string: fieldValue.value.string },
+      fieldDefinitionId: fieldValue.fieldDefinition.id,
+    })),
+  },
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
@@ -80,6 +96,10 @@ export const updateProductMutation: Object = gql`
     }
   }
   ${productFormFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${imageFragment}
@@ -99,6 +119,7 @@ export const prepareUpdateProductInput = ({
   hsCode,
   material,
   metadata,
+  customFields,
   tags = [],
   files = [],
   productProviders = [],
@@ -109,6 +130,13 @@ export const prepareUpdateProductInput = ({
   hsCode,
   material,
   metadata,
+  customFields: {
+    maskId: customFields.mask.id,
+    fieldValues: customFields.fieldValues.map(fieldValue => ({
+      value: { string: fieldValue.value.string },
+      fieldDefinitionId: fieldValue.fieldDefinition.id,
+    })),
+  },
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(

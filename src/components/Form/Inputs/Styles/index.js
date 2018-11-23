@@ -6,6 +6,7 @@ import DefaultWeightStyle from './DefaultStyle/DefaultWeightStyle';
 import DefaultVolumeStyle from './DefaultStyle/DefaultVolumeStyle';
 import DefaultSurfaceStyle from './DefaultStyle/DefaultSurfaceStyle';
 import DefaultDimensionStyle from './DefaultStyle/DefaultDimensionStyle';
+import DefaultCustomFieldStyle from './DefaultStyle/DefaultCustomFieldStyle';
 import {
   DefaultOptions,
   DefaultSearchSelect,
@@ -23,4 +24,5 @@ export {
   DefaultOptions,
   DefaultSearchSelect,
   DefaultSelect,
+  DefaultCustomFieldStyle,
 };

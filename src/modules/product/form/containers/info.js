@@ -16,6 +16,7 @@ type FormState = {
   hsCode?: ?string,
   material?: ?string,
   metadata?: Array<Metadata>,
+  customFields?: Object,
 };
 
 const initValues = {

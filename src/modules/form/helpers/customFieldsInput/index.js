@@ -8,11 +8,12 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import MetadataEditFormWrapper from './components/MetadataEditFormWrapper';
-import MetadataFormContainer from './container';
+import CustomFieldsContainer from './container';
 import { ShowAllButtonStyle, MetadataIconStyle } from './style';
 
 type Props = {
-  customFields: {
+  entityType: string,
+  customFields: ?{
     mask: Object,
     fieldValues: Array<Object>,
     fieldDefinitions: Array<Object>,
@@ -20,14 +21,14 @@ type Props = {
   setFieldValue: Function,
 };
 
-const customFieldsInputFactory = ({ customFields, setFieldValue }: Props) => (
+const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: Props) => (
   <FieldItem
     label={
       <Label>
         <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />
         {' ('}
         <FormattedNumber
-          value={(customFields.fieldValues && customFields.fieldValues.length) || 0}
+          value={(customFields && customFields.fieldValues && customFields.fieldValues.length) || 0}
         />
         {')'}
       </Label>
@@ -50,16 +51,18 @@ const customFieldsInputFactory = ({ customFields, setFieldValue }: Props) => (
               options={{ width: '1030px' }}
             >
               {isOpen && (
-                <Subscribe to={[MetadataFormContainer]}>
+                <Subscribe to={[CustomFieldsContainer]}>
                   {({ initDetailValues, originalValues, state }) => {
                     const values = { ...originalValues, ...state };
+
                     return (
                       <MetadataEditFormWrapper
+                        entityType={entityType}
                         customFields={values.customFields}
                         onCancel={() => slideToggle(false)}
                         onSave={() => {
                           slideToggle(false);
-                          setFieldValue(values.customFields);
+                          setFieldValue('customFields', values);
                         }}
                         onFormReady={() => {
                           initDetailValues(customFields);
