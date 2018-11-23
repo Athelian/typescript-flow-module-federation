@@ -13,7 +13,6 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
-  // fieldDefinitionsFragment,
   productProviderFormFragment,
 } from 'graphql';
 

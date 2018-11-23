@@ -21,6 +21,7 @@ export const masksQuery = gql`
         entityType
         fieldDefinitions {
           id
+          name
         }
       }
       page

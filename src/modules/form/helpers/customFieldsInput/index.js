@@ -28,7 +28,7 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
         <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />
         {' ('}
         <FormattedNumber
-          value={(customFields.fieldValues && customFields.fieldValues.length) || 0}
+          value={(customFields && customFields.fieldValues && customFields.fieldValues.length) || 0}
         />
         {')'}
       </Label>

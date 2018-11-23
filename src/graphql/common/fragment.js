@@ -148,7 +148,9 @@ export const maskFragment = gql`
 export const fieldValuesFragment = gql`
   fragment fieldValuesFragment on FieldValue {
     value {
-      __typename
+      ... on StringValue {
+        string
+      }
     }
     fieldDefinition {
       ...fieldDefinitionFragment

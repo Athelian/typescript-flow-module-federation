@@ -71,6 +71,7 @@ const MetadataEditForm = ({ entityType }: Props) => (
                         onCancel={() => slideToggle(false)}
                         onSave={item => {
                           setFieldArrayValue('mask', item);
+                          setFieldArrayValue('fieldDefinitions', item.fieldDefinitions);
                           setFieldArrayValue(
                             'fieldValues',
                             item.fieldDefinitions.map(fieldDefinition => ({
