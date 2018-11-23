@@ -1,43 +1,52 @@
 // @flow
 import * as React from 'react';
+
+import Icon from 'components/Icon';
+import FormattedNumber from 'components/FormattedNumber';
 import BaseCard from '../BaseCard';
+
 import {
   TableTemplateCardWrapperStyle,
-  TableTemplateWrapperStyle,
-  TableTemplateDescriptionWrapperStyle,
-  TableTemplateDescriptionFadeStyle,
-  TableTemplateTypesWrapperStyle,
+  TableTemplateNameStyle,
+  TableTemplateDescriptionStyle,
+  TableTemplateCustomFieldsLengthStyle,
 } from './style';
 
+type TableTemplate = {
+  id: string,
+  name: string,
+  memo: string,
+  fields: Array<Object>,
+};
+
 type OptionalProps = {
+  onClick: Function,
   actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
-  template: ?{
-    name: string,
-    description: string,
-    fields: Array<string>,
-  },
+  template: ?TableTemplate,
 };
 
 const defaultProps = {
+  onClick: () => {},
   actions: [],
 };
-const TableTemplateCard = ({ template, actions, ...rest }: Props) => {
+
+const TableTemplateCard = ({ template, onClick, actions, ...rest }: Props) => {
   if (!template) return '';
 
-  const { description, name } = template;
+  const { name, memo, fields } = template;
 
   return (
-    <BaseCard icon="TAG" color="TAG" actions={actions} {...rest}>
-      <div className={TableTemplateCardWrapperStyle}>
-        <div className={TableTemplateWrapperStyle} />
-        <div className={TableTemplateDescriptionWrapperStyle}>
-          {description}
-          <div className={TableTemplateDescriptionFadeStyle} />
+    <BaseCard icon="METADATA" color="TEMPLATE" actions={actions} {...rest} invertCornerIcon>
+      <div className={TableTemplateCardWrapperStyle} onClick={onClick} role="presentation">
+        <div className={TableTemplateNameStyle}>{name}</div>
+        <div className={TableTemplateDescriptionStyle}>{memo}</div>
+        <div className={TableTemplateCustomFieldsLengthStyle}>
+          <Icon icon="METADATA" />
+          <FormattedNumber value={(fields && fields.length) || 0} />
         </div>
-        <div className={TableTemplateTypesWrapperStyle}>{name}</div>
       </div>
     </BaseCard>
   );
