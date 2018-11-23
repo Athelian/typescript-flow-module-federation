@@ -1,5 +1,4 @@
 // @flow
-// TODO: clean old version metadata
 import * as React from 'react';
 import Icon from 'components/Icon';
 import { FormField } from 'modules/form';
@@ -23,10 +22,8 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  metadata: {
-    name: string,
-    value: string,
-  },
+  value: Object,
+  fieldName: any,
   targetName: string,
   setFieldArrayValue: Function,
   dragHandleProps?: any,
@@ -39,11 +36,12 @@ const defaultProps = {
   width: '200px',
 };
 
-const DefaultMetadataStyle = ({
+const DefaultCustomFieldStyle = ({
   rearrange,
   isKeyReadOnly,
   isValueReadOnly,
-  metadata,
+  value,
+  fieldName,
   dragHandleProps,
   targetName,
   setFieldArrayValue,
@@ -63,12 +61,12 @@ const DefaultMetadataStyle = ({
       )}
       {isKeyReadOnly ? (
         <DefaultStyle type="label" width={width}>
-          <Label width={width}>{metadata.name}</Label>
+          <Label width={width}>{fieldName}</Label>
         </DefaultStyle>
       ) : (
         <FormField
           name={`${targetName}.name`}
-          initValue={metadata.name}
+          initValue={fieldName}
           setFieldValue={setFieldArrayValue}
         >
           {({ name, ...inputHandlers }) => {
@@ -92,7 +90,7 @@ const DefaultMetadataStyle = ({
       ) : (
         <FormField
           name={`${targetName}.value`}
-          initValue={metadata.value}
+          initValue={value.string}
           setFieldValue={setFieldArrayValue}
         >
           {({ name, ...inputHandlers }) => {
@@ -119,6 +117,6 @@ const DefaultMetadataStyle = ({
   </div>
 );
 
-DefaultMetadataStyle.defaultProps = defaultProps;
+DefaultCustomFieldStyle.defaultProps = defaultProps;
 
-export default DefaultMetadataStyle;
+export default DefaultCustomFieldStyle;

@@ -5,19 +5,14 @@ import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
 
 type FormState = {
-  customFields: {
-    mask: Object,
-    fieldValues: Array<Object>,
-    fieldDefinitions: Array<Object>,
-  },
+  mask: Object,
+  fieldValues: Array<Object>,
+  fieldDefinitions: Array<Object>,
 };
 
 const initValues = {
-  customFields: {
-    mask: null,
-    fieldValues: [],
-    fieldDefinitions: [],
-  },
+  fieldValues: [],
+  fieldDefinitions: [],
 };
 
 export default class MetadataFormContainer extends Container<FormState> {

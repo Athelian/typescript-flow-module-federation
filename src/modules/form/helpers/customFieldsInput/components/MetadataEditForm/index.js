@@ -6,11 +6,11 @@ import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import Divider from 'components/Divider';
 import { Label, DashedPlusButton } from 'components/Form';
-import DefaultMetadataStyle from 'components/Form/Inputs/Styles/DefaultStyle/DefaultMetadataStyle';
+import { DefaultCustomFieldStyle } from 'components/Form/Inputs/Styles';
 import MetadataFormContainer from 'modules/form/helpers/customFieldsInput/container';
 import GridColumn from 'components/GridColumn';
 import SlideView from 'components/SlideView';
-import { uuid } from 'utils/id';
+
 import { MetadataTemplateCard } from 'components/Cards';
 import SelectMetadataTemplate from '../SelectMetadataTemplate';
 import { MetadataSectionWrapperStyle } from './style';
@@ -19,13 +19,22 @@ type Props = {
   entityType: string,
 };
 
+const list2Map = (list: Array<Object>): Map<string, string> => {
+  const map = new Map();
+
+  list.forEach(item => {
+    map.set(item.id, item.name);
+  });
+  return map;
+};
+
 const MetadataEditForm = ({ entityType }: Props) => (
   <Subscribe to={[MetadataFormContainer]}>
     {({ originalValues, state, setFieldArrayValue, removeArrayItem }) => {
       const values = { ...originalValues, ...state };
-      const {
-        customFields: { mask, fieldValues },
-      } = values;
+      const { mask, fieldValues, fieldDefinitions } = values;
+      const fieldDefinitionMap = list2Map(fieldDefinitions);
+
       return (
         <div className={MetadataSectionWrapperStyle}>
           <div>
@@ -61,7 +70,15 @@ const MetadataEditForm = ({ entityType }: Props) => (
                         selected={mask}
                         onCancel={() => slideToggle(false)}
                         onSave={item => {
-                          setFieldArrayValue('customFields.mask', item);
+                          setFieldArrayValue('mask', item);
+                          setFieldArrayValue(
+                            'fieldValues',
+                            item.fieldDefinitions.map(fieldDefinition => ({
+                              value: {},
+                              fieldDefinition,
+                              entityType,
+                            }))
+                          );
                           slideToggle(false);
                         }}
                       />
@@ -75,13 +92,13 @@ const MetadataEditForm = ({ entityType }: Props) => (
           <Divider />
           <GridColumn gap="10px">
             {fieldValues &&
-              fieldValues.map((fieldValue, index) => (
-                <DefaultMetadataStyle
-                  key={uuid()}
+              fieldValues.map(({ value, fieldDefinition }, index) => (
+                <DefaultCustomFieldStyle
+                  key={fieldDefinition.id}
                   isKeyReadOnly
                   targetName={`metadata.${index}`}
-                  // FIXME: this is dummy data
-                  metadata={{ name: 'METADATA 1', value: '123' }}
+                  fieldName={fieldDefinitionMap.get(fieldDefinition.id)}
+                  value={value}
                   setFieldArrayValue={setFieldArrayValue}
                   onRemove={() => removeArrayItem(`metadata.${index}`)}
                 />
