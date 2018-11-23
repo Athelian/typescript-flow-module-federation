@@ -15,6 +15,7 @@ import TagCard from './TagCard';
 import WarehouseCard from './WarehouseCard';
 import MetadataTemplateCard from './MetadataTemplateCard';
 import GrayCard from './GrayCard';
+import TableTemplateCard from './TableTemplateCard';
 
 export default BaseCard;
 
@@ -36,4 +37,5 @@ export {
   WarehouseCard,
   MetadataTemplateCard,
   GrayCard,
+  TableTemplateCard,
 };
