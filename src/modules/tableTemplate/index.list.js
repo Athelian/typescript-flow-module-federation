@@ -1,12 +1,14 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
+import { BooleanValue } from 'react-values';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import SlideView from 'components/SlideView';
+import { UIConsumer } from 'modules/ui';
+import TableTemplateForm from 'modules/tableTemplate/form';
 import Layout from 'components/Layout';
 import Icon from 'components/Icon';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import TableTemplateList from './list';
@@ -78,9 +80,20 @@ class TableTemplateModule extends React.Component<Props, State> {
                   filtersAndSort={this.state}
                   onChange={this.onChangeFilter}
                 />
-                <Link to="new">
-                  <NewButton data-testid="newButton" />
-                </Link>
+                <BooleanValue>
+                  {({ value: isOpen, set: toggle }) => (
+                    <>
+                      <NewButton onClick={() => toggle(true)} />
+                      <SlideView
+                        isOpen={isOpen}
+                        onRequestClose={() => toggle(false)}
+                        options={{ width: '1030px' }}
+                      >
+                        <TableTemplateForm isNew onCancel={() => toggle(false)} />
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
               </NavBar>
             }
           >
