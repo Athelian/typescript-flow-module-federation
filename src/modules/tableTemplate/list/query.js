@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { tableTemplateCardFragment } from 'graphql';
+import { tableTemplateCardFragment, userAvatarFragment } from 'graphql';
 
 export const tableTemplateQuery = gql`
   query($page: Int!, $perPage: Int!, $filter: MaskEditFilterInput, $sort: MaskEditSortInput) {
@@ -15,6 +15,7 @@ export const tableTemplateQuery = gql`
     }
   }
 
+  ${userAvatarFragment}
   ${tableTemplateCardFragment}
 `;
 
