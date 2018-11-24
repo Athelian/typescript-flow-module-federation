@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Provider } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
@@ -58,49 +59,51 @@ class TableTemplateModule extends React.Component<Props, State> {
       { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
     ];
     return (
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <EntityIcon icon="METADATA" color="METADATA" />
-                <FilterToolBar
-                  icon="ORDER"
-                  renderIcon={icon => (
-                    <div className={HeaderIconStyle}>
-                      <Icon icon={icon} />
-                      <FormattedMessage
-                        id="modules.TableTemplates.orderFocus"
-                        defaultMessage="ORDER FOCUS"
-                      />
-                    </div>
-                  )}
-                  sortFields={sortFields}
-                  filtersAndSort={this.state}
-                  onChange={this.onChangeFilter}
-                />
-                <BooleanValue>
-                  {({ value: isOpen, set: toggle }) => (
-                    <>
-                      <NewButton onClick={() => toggle(true)} />
-                      <SlideView
-                        isOpen={isOpen}
-                        onRequestClose={() => toggle(false)}
-                        options={{ width: '1030px' }}
-                      >
-                        <TableTemplateForm isNew onCancel={() => toggle(false)} />
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
-              </NavBar>
-            }
-          >
-            <TableTemplateList {...this.state} />
-          </Layout>
-        )}
-      </UIConsumer>
+      <Provider>
+        <UIConsumer>
+          {uiState => (
+            <Layout
+              {...uiState}
+              navBar={
+                <NavBar>
+                  <EntityIcon icon="METADATA" color="METADATA" />
+                  <FilterToolBar
+                    icon="ORDER"
+                    renderIcon={icon => (
+                      <div className={HeaderIconStyle}>
+                        <Icon icon={icon} />
+                        <FormattedMessage
+                          id="modules.TableTemplates.orderFocus"
+                          defaultMessage="ORDER FOCUS"
+                        />
+                      </div>
+                    )}
+                    sortFields={sortFields}
+                    filtersAndSort={this.state}
+                    onChange={this.onChangeFilter}
+                  />
+                  <BooleanValue>
+                    {({ value: isOpen, set: toggle }) => (
+                      <>
+                        <NewButton onClick={() => toggle(true)} />
+                        <SlideView
+                          isOpen={isOpen}
+                          onRequestClose={() => toggle(false)}
+                          options={{ width: '1030px' }}
+                        >
+                          <TableTemplateForm isNew onCancel={() => toggle(false)} />
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                </NavBar>
+              }
+            >
+              <TableTemplateList {...this.state} />
+            </Layout>
+          )}
+        </UIConsumer>
+      </Provider>
     );
   }
 }

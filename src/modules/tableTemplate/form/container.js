@@ -4,12 +4,16 @@ import { cleanFalsy, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
-  name?: string,
-  memo?: string,
-  type?: string,
+  name: string,
+  memo: string,
+  type: string,
 };
 
-const initValues = {};
+const initValues = {
+  name: '',
+  memo: '',
+  type: 'Order',
+};
 
 export default class TemplateFormContainer extends Container<FormState> {
   state = initValues;
@@ -21,6 +25,10 @@ export default class TemplateFormContainer extends Container<FormState> {
   onSuccess = () => {
     this.originalValues = { ...this.state };
     this.setState(this.originalValues);
+  };
+
+  onCleanUp = () => {
+    this.setState(initValues);
   };
 
   setFieldValue = (name: string, value: mixed) => {
