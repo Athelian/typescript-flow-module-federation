@@ -1593,9 +1593,10 @@
     merge-deep "^3.0.2"
     svgo "^1.1.1"
 
-"@svgr/webpack@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@svgr/webpack/-/webpack-4.0.3.tgz#318907269dd93d4f911541236948e885df7f058d"
+"@svgr/webpack@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@svgr/webpack/-/webpack-4.0.4.tgz#d77b04841b6e73277aec3b0cc7e0e4e95111fed9"
+  integrity sha512-Olez7r/PrW2VQtsnq+Xe1Ykm+mb2oqSne8HvIVgXB9sfR6jlk4DP0C3Y6HZe4JiF5qGcsJmPPH4AHNaxIoi76g==
   dependencies:
     "@babel/core" "^7.1.5"
     "@babel/plugin-transform-react-constant-elements" "^7.0.0"
@@ -1606,13 +1607,13 @@
     "@svgr/plugin-svgo" "^4.0.3"
     loader-utils "^1.1.0"
 
-"@tippy.js/react@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-1.1.0.tgz#ea6730b8a2904ffad76e82910f93cdcb6ec29b5d"
-  integrity sha512-NyHO7hOAmjkdL5IqoIMVwnOSa9rLu+6HqtVPQ+9nfvtryi1m0qFxwF2Yp4ImGZdJSw1nKTQ6WQX3AqH+0vaUzQ==
+"@tippy.js/react@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-1.1.1.tgz#91476726529e31d4c9f9074d995d0fa31f3b6e2d"
+  integrity sha512-TkL1VufxgUvTMouDoBGv2vTdtUxtLUaRpspI4Rv0DsoKe2Ex1E5bl/qISk434mhuAhEnXuemrcgTaPWrfDvmGw==
   dependencies:
     prop-types "^15.6.2"
-    tippy.js "^3.0.6"
+    tippy.js "^3.2.0"
 
 "@types/async@2.0.50":
   version "2.0.50"
@@ -13156,7 +13157,7 @@ tiny-invariant@^1.0.0, tiny-invariant@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.2.tgz#8d343bf86acce627a2e0857d48a46a297fda2cc3"
 
-tippy.js@^3.0.6, tippy.js@^3.2.0:
+tippy.js@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-3.2.0.tgz#dc4d1f13047f973ff062b5305201d068819f9935"
   integrity sha512-OBZzx/g0ukTJ4CpS165pNU8RZ1uSWG1rDJHLFol4nA8kt+8VB7DQbnXh/HFEJ2hxo7K3+Np3Acqn0NbJ6iJUIg==
