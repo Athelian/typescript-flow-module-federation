@@ -1,11 +1,12 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
+import { tableTemplateCardFragment, userAvatarFragment } from 'graphql';
 
-export const createTagMutation = gql`
-  mutation tagCreate($input: TagCreateInput!) {
-    tagCreate(input: $input) {
-      tag {
+export const maskEditCreateMutation = gql`
+  mutation maskEditCreate($input: MaskEditCreateInput!) {
+    maskEditCreate(input: $input) {
+      maskEdit {
         id
       }
       violations {
@@ -17,11 +18,11 @@ export const createTagMutation = gql`
   ${violationFragment}
 `;
 
-export const updateTagMutation = gql`
-  mutation tagUpdate($id: ID!, $input: TagUpdateInput!) {
-    tagUpdate(id: $id, input: $input) {
-      tag {
-        id
+export const maskEditUpdateMutation = gql`
+  mutation maskEditUpdate($id: ID!, $input: MaskEditUpdateInput!) {
+    maskEditUpdate(id: $id, input: $input) {
+      maskEdit {
+        ...tableTemplateCardFragment
       }
       violations {
         ...violationFragment
@@ -29,4 +30,6 @@ export const updateTagMutation = gql`
     }
   }
   ${violationFragment}
+  ${userAvatarFragment}
+  ${tableTemplateCardFragment}
 `;

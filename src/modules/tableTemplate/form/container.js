@@ -7,12 +7,14 @@ type FormState = {
   name: string,
   memo: string,
   type: string,
+  fields: Array<string>,
 };
 
 const initValues = {
   name: '',
   memo: '',
   type: 'Order',
+  fields: [],
 };
 
 export default class TemplateFormContainer extends Container<FormState> {
