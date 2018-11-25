@@ -30,11 +30,8 @@ export const createProductMutation: Object = gql`
       }
     }
   }
+  ${violationFragment}
   ${productFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${imageFragment}
@@ -43,8 +40,10 @@ export const createProductMutation: Object = gql`
   ${metricFragment}
   ${sizeFragment}
   ${productProviderFormFragment}
-
-  ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareCreateProductInput = ({
@@ -69,12 +68,22 @@ export const prepareCreateProductInput = ({
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
-    ({ isNew, id, updatedAt, exporter, supplier, origin, ...productProvider }) => ({
+    ({
+      isNew,
+      id,
+      updatedAt,
+      exporter,
+      supplier,
+      origin,
+      customFields: productProviderCustomFields,
+      ...productProvider
+    }) => ({
       ...productProvider,
       ...(isNew ? {} : { id }),
       origin: origin && origin.length > 0 ? origin : null,
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
+      customFields: prepareCustomFieldsData(productProviderCustomFields),
     })
   ),
 });
@@ -90,11 +99,8 @@ export const updateProductMutation: Object = gql`
       }
     }
   }
+  ${violationFragment}
   ${productFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${imageFragment}
@@ -103,8 +109,10 @@ export const updateProductMutation: Object = gql`
   ${metricFragment}
   ${sizeFragment}
   ${productProviderFormFragment}
-
-  ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareUpdateProductInput = ({
@@ -138,6 +146,7 @@ export const prepareUpdateProductInput = ({
       sort,
       exporter,
       supplier,
+      customFields: productProviderCustomFields,
       ...productProvider
     }) => ({
       ...productProvider,
@@ -145,6 +154,7 @@ export const prepareUpdateProductInput = ({
       origin: origin && origin.length > 0 ? origin : null,
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
+      customFields: prepareCustomFieldsData(productProviderCustomFields),
     })
   ),
 });

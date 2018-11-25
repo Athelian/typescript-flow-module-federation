@@ -24,10 +24,6 @@ export const productFormQuery = gql`
   }
 
   ${productFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${imageFragment}
@@ -36,6 +32,10 @@ export const productFormQuery = gql`
   ${metricFragment}
   ${sizeFragment}
   ${productProviderFormFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default productFormQuery;
