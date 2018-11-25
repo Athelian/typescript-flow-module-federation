@@ -23,6 +23,7 @@ import {
   fieldDefinitionFragment,
 } from 'graphql';
 import { prepareUpdateBatchInput, prepareCreateBatchInput } from 'modules/batch/form/mutation';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import type { OrderForm } from '../type.js.flow';
 
 export const createOrderMutation = gql`
@@ -53,10 +54,6 @@ export const createOrderWithReturnDataMutation = gql`
   ${violationFragment}
 
   ${orderFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
@@ -72,6 +69,10 @@ export const createOrderWithReturnDataMutation = gql`
   ${sizeFragment}
   ${orderCardFragment}
   ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareCreateOrderInput = ({
@@ -94,15 +95,7 @@ export const prepareCreateOrderInput = ({
   currency: currency && currency.length > 0 ? currency : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   deliveryPlace,
-  customFields: customFields
-    ? {
-        maskId: customFields.mask ? customFields.mask.id : null,
-        fieldValues: customFields.fieldValues.map(fieldValue => ({
-          value: { string: fieldValue.value.string },
-          fieldDefinitionId: fieldValue.fieldDefinition.id,
-        })),
-      }
-    : null,
+  customFields: prepareCustomFieldsData(customFields),
   memo,
   exporterId: exporter.id,
   issuedAt: issuedAt ? new Date(issuedAt) : null,
@@ -137,10 +130,6 @@ export const updateOrderMutation = gql`
   }
 
   ${orderFormFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${partnerCardFragment}
@@ -156,6 +145,10 @@ export const updateOrderMutation = gql`
   ${sizeFragment}
   ${orderCardFragment}
   ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const updateOrderItemMutation = gql`
@@ -199,15 +192,7 @@ export const prepareUpdateOrderInput = ({
   currency: currency && currency.length > 0 ? currency : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   deliveryPlace,
-  customFields: customFields
-    ? {
-        maskId: customFields.mask ? customFields.mask.id : null,
-        fieldValues: customFields.fieldValues.map(fieldValue => ({
-          value: { string: fieldValue.value.string },
-          fieldDefinitionId: fieldValue.fieldDefinition.id,
-        })),
-      }
-    : null,
+  customFields: prepareCustomFieldsData(customFields),
   piNo,
   memo,
   archived,

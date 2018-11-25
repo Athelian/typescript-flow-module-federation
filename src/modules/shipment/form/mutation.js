@@ -17,6 +17,10 @@ import {
   portFragment,
   documentFragment,
   partnerCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
@@ -122,6 +126,10 @@ export const createShipmentWithReturnDataMutation: Object = gql`
   ${portFragment}
   ${documentFragment}
   ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareCreateShipmentInput = ({
@@ -200,6 +208,10 @@ export const updateShipmentMutation: Object = gql`
   ${documentFragment}
   ${partnerCardFragment}
   ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareUpdateShipmentInput = ({

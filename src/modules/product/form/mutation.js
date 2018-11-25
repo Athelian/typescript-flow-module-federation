@@ -16,6 +16,7 @@ import {
   productProviderFormFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import type { ProductCreate, ProductUpdate } from '../type.js.flow';
 
 export const createProductMutation: Object = gql`
@@ -64,15 +65,7 @@ export const prepareCreateProductInput = ({
   hsCode,
   material,
   metadata,
-  customFields: customFields
-    ? {
-        maskId: customFields.mask ? customFields.mask.id : null,
-        fieldValues: customFields.fieldValues.map(fieldValue => ({
-          value: { string: fieldValue.value.string },
-          fieldDefinitionId: fieldValue.fieldDefinition.id,
-        })),
-      }
-    : null,
+  customFields: prepareCustomFieldsData(customFields),
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
@@ -132,15 +125,7 @@ export const prepareUpdateProductInput = ({
   hsCode,
   material,
   metadata,
-  customFields: customFields
-    ? {
-        maskId: customFields.mask ? customFields.mask.id : null,
-        fieldValues: customFields.fieldValues.map(fieldValue => ({
-          value: { string: fieldValue.value.string },
-          fieldDefinitionId: fieldValue.fieldDefinition.id,
-        })),
-      }
-    : null,
+  customFields: prepareCustomFieldsData(customFields),
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(

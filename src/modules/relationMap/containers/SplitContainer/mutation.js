@@ -14,6 +14,10 @@ import {
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
 
@@ -42,6 +46,10 @@ export const batchSimpleSplitMutation = gql`
   ${shipmentCardFragment}
   ${portFragment}
   ${timelineDateMinimalFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const batchEqualSplitMutaion = gql`
@@ -69,6 +77,10 @@ export const batchEqualSplitMutaion = gql`
   ${shipmentCardFragment}
   ${portFragment}
   ${timelineDateMinimalFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const batchBalanceSplitMutaion = gql`
@@ -96,4 +108,8 @@ export const batchBalanceSplitMutaion = gql`
   ${shipmentCardFragment}
   ${portFragment}
   ${timelineDateMinimalFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;

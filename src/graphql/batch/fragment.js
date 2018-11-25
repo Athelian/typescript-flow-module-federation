@@ -15,6 +15,9 @@ export const batchFormFragment = gql`
     producedAt
     deliveredAt
     expiredAt
+    customFields {
+      ...customFieldsFragment
+    }
     batchAdjustments {
       id
       updatedAt
