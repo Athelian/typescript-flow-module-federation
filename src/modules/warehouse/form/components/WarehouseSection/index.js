@@ -9,6 +9,7 @@ import {
   textInputFactory,
   numberInputFactory,
   selectSearchEnumInputFactory,
+  customFieldsInputFactory,
 } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
 import { DefaultSurfaceStyle } from 'components/Form';
@@ -149,6 +150,12 @@ const WarehouseSection = ({ isNew }: Props) => (
                 })
               }
             </FormField>
+
+            {customFieldsInputFactory({
+              entityType: 'Warehouse',
+              customFields: values.customFields,
+              setFieldValue,
+            })}
           </GridColumn>
         );
       }}
