@@ -23,6 +23,7 @@ import {
   fieldDefinitionFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
 import type {
@@ -143,6 +144,7 @@ export const prepareCreateShipmentInput = ({
   transportType,
   incoterm,
   carrier,
+  customFields,
   memo,
   cargoReady,
   voyages = [],
@@ -164,6 +166,7 @@ export const prepareCreateShipmentInput = ({
   transportType: transportType && transportType.length > 0 ? transportType : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   carrier,
+  customFields: prepareCustomFieldsData(customFields),
   cargoReady: formatTimeline(cargoReady),
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
@@ -226,6 +229,7 @@ export const prepareUpdateShipmentInput = ({
   transportType,
   incoterm,
   carrier,
+  customFields,
   cargoReady,
   voyages = [],
   containerGroups = [],
@@ -246,6 +250,7 @@ export const prepareUpdateShipmentInput = ({
   transportType: transportType && transportType.length > 0 ? transportType : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   carrier,
+  customFields: prepareCustomFieldsData(customFields),
   cargoReady: formatTimeline(cargoReady),
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
