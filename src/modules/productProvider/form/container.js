@@ -39,6 +39,7 @@ type FormState = {
     height: Metric,
     length: Metric,
   },
+  customFields: Object,
 };
 
 const initValues = {
@@ -100,6 +101,11 @@ const initValues = {
       metric: 'm',
       value: 0,
     },
+  },
+  customFields: {
+    mask: null,
+    fieldValues: [],
+    fieldDefinitions: [],
   },
 };
 

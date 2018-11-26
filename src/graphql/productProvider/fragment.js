@@ -44,6 +44,9 @@ export const productProviderFormFragment = gql`
     packageSize {
       ...sizeFragment
     }
+    customFields {
+      ...customFieldsFragment
+    }
   }
 `;
 
