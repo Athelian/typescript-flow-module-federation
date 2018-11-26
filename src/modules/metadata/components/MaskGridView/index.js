@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 
-import { MetadataTemplateCard } from 'components/Cards';
+import { MaskCard } from 'components/Cards';
 
 type Props = {
   items: Array<Object>,
@@ -13,11 +13,9 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => (
-  <MetadataTemplateCard key={item.id} metadataTemplate={item} />
-);
+const defaultRenderItem = (item: Object) => <MaskCard key={item.id} mask={item} />;
 
-const CustomFieldsTemplateGridView = ({
+const MaskGridView = ({
   items,
   onLoadMore,
   hasMore,
@@ -38,4 +36,4 @@ const CustomFieldsTemplateGridView = ({
   </GridView>
 );
 
-export default CustomFieldsTemplateGridView;
+export default MaskGridView;

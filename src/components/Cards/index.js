@@ -13,7 +13,7 @@ import ShipmentWarehouseCard from './ShipmentWarehouseCard';
 import StaffCard from './StaffCard';
 import TagCard from './TagCard';
 import WarehouseCard from './WarehouseCard';
-import MetadataTemplateCard from './MetadataTemplateCard';
+import MaskCard from './MaskCard';
 import GrayCard from './GrayCard';
 import TableTemplateCard from './TableTemplateCard';
 
@@ -35,7 +35,7 @@ export {
   StaffCard,
   TagCard,
   WarehouseCard,
-  MetadataTemplateCard,
+  MaskCard,
   GrayCard,
   TableTemplateCard,
 };

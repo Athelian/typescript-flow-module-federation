@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { NewButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
-import DefaultMetadataStyle from 'components/Form/Inputs/Styles/DefaultStyle/DefaultMetadataStyle';
+import DefaultCustomFieldStyle from 'components/Form/Inputs/Styles/DefaultStyle/DefaultCustomFieldStyle';
 import { uuid } from 'utils/id';
 import { ContainerStyle, AddButtonWrapperStyle } from './style';
 
@@ -63,18 +63,22 @@ class FieldDefinitionsForm extends React.Component<Props> {
                 <div ref={dropProvided.innerRef}>
                   <GridColumn gap="10px">
                     {fieldDefinitions &&
-                      fieldDefinitions.map((customField, index) => (
-                        <Draggable key={customField.id} draggableId={customField.id} index={index}>
+                      fieldDefinitions.map((fieldDefinition, index) => (
+                        <Draggable
+                          key={fieldDefinition.id}
+                          draggableId={fieldDefinition.id}
+                          index={index}
+                        >
                           {provided => (
                             <div ref={provided.innerRef} {...provided.draggableProps}>
-                              <DefaultMetadataStyle
+                              <DefaultCustomFieldStyle
                                 rearrange
                                 dragHandleProps={provided.dragHandleProps}
                                 isKeyReadOnly={false}
                                 isValueReadOnly
                                 targetName={`fieldDefinitions.${index}`}
                                 width="200px"
-                                metadata={customField}
+                                fieldName={fieldDefinition.name}
                                 setFieldArrayValue={setFieldArrayValue}
                                 onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
                               />

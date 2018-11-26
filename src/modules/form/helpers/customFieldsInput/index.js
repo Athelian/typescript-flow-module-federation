@@ -7,7 +7,7 @@ import { FieldItem, Label } from 'components/Form';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
-import MetadataEditFormWrapper from './components/MetadataEditFormWrapper';
+import MetadataEditForm from './components/MetadataEditForm';
 import CustomFieldsContainer from './container';
 import { ShowAllButtonStyle, MetadataIconStyle } from './style';
 
@@ -56,9 +56,8 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
                     const values = { ...originalValues, ...state };
 
                     return (
-                      <MetadataEditFormWrapper
+                      <MetadataEditForm
                         entityType={entityType}
-                        customFields={values.customFields}
                         onCancel={() => slideToggle(false)}
                         onSave={() => {
                           slideToggle(false);
