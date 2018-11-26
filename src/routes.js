@@ -3,7 +3,6 @@
 import React, { lazy, Suspense } from 'react';
 import { hot } from 'react-hot-loader';
 import { Router } from '@reach/router';
-import { isEnableBetaFeature } from 'utils/env';
 import LoadingIcon from './components/LoadingIcon';
 import PageNotFound from './components/PageNotFound';
 import NoPermission from './components/NoPermission';
@@ -42,7 +41,7 @@ const Routes = () => (
           <AsyncTags path="tags/*" />
           <AsyncRelationMap path="relation-map/*" />
           <AsyncNotifications path="notifications/*" />
-          {isEnableBetaFeature && <AsyncMetadata path="metadata/*" />}
+          <AsyncMetadata path="metadata/*" />
           <AsyncTableTemplate path="template/table/*" />
           <PageNotFound default />
         </Authorized>

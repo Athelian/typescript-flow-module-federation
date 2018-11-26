@@ -15,7 +15,6 @@ import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, TagsInput, ImagesUploadInput } from 'components/Form';
 import ImagePreviewDialog from 'components/Dialog/ImagePreviewDialog';
-import { isEnableBetaFeature } from 'utils/env';
 import {
   ProductSectionWrapperStyle,
   ProductImagesWrapperStyle,
@@ -217,13 +216,11 @@ const ProductSection = ({ isNew }: Props) => (
                 })
               }
             </FormField>
-            {isEnableBetaFeature &&
-              customFieldsInputFactory({
-                entityType: 'Product',
-                customFields: values.customFields,
-                setFieldValue,
-              })}
-
+            {customFieldsInputFactory({
+              entityType: 'Product',
+              customFields: values.customFields,
+              setFieldValue,
+            })}
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>
                 {({ state: { tags }, setFieldValue: changeTags }) => (
