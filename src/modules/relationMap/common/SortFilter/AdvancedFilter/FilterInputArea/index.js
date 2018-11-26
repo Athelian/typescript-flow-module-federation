@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
-import { DateRange, DayRange, PriceRange, Specifications, Tags } from './components';
+import { DateRange, DayRange, Ports, PriceRange, Specifications, Tags } from './components';
 import { FilterInputAreaWrapperStyle } from './style';
 
 type Props = {
@@ -81,8 +81,10 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
           return Placeholder;
         case 'inCharge':
           return Placeholder;
-        case 'ports':
-          return Placeholder;
+        case 'seaports':
+          return () => Ports({ portType: 'Seaport' });
+        case 'airports':
+          return () => Ports({ portType: 'Airport' });
         case 'cargoReady':
           return DateRange;
         case 'loadPortDeparture':

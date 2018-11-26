@@ -41,6 +41,7 @@ export default function PriceRange() {
                       forceHoverStyle
                       width="200px"
                       itemToString={item => (item ? item.description || item.name : '')}
+                      align="left"
                     />
                   )}
                   renderOptions={({ ...rest }) => (
@@ -50,6 +51,7 @@ export default function PriceRange() {
                       itemToString={item => (item ? item.description || item.name : '')}
                       itemToValue={item => (item ? item.name : '')}
                       width="200px"
+                      align="left"
                     />
                   )}
                 />

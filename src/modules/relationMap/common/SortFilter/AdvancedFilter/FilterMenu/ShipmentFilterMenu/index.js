@@ -24,7 +24,8 @@ export default function ShipmentFilterMenu({
       filters: [
         { name: 'forwarder', label: <FormattedMessage {...messages.forwarder} /> },
         { name: 'inCharge', label: <FormattedMessage {...messages.inCharge} /> },
-        { name: 'ports', label: <FormattedMessage {...messages.ports} /> },
+        { name: 'seaports', label: <FormattedMessage {...messages.seaports} /> },
+        { name: 'airports', label: <FormattedMessage {...messages.airports} /> },
         { name: 'cargoReady', label: <FormattedMessage {...messages.cargoReady} /> },
         { name: 'loadPortDeparture', label: <FormattedMessage {...messages.loadPortDeparture} /> },
         {

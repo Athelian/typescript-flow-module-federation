@@ -45,4 +45,24 @@ export default defineMessages({
   weight: {
     id: 'modules.ProductProviders.unitWeight',
   },
+  addPort: {
+    id: 'modules.RelationMaps.filter.addPort',
+    defaultMessage: 'ADD PORT',
+  },
+  loadPort: {
+    id: 'modules.RelationMaps.filter.loadPort',
+    defaultMessage: 'LOAD PORT',
+  },
+  firstTransitPort: {
+    id: 'modules.RelationMaps.filter.firstTransitPort',
+    defaultMessage: 'FIRST TRANSIT PORT',
+  },
+  secondTransitPort: {
+    id: 'modules.RelationMaps.filter.secondTransitPort',
+    defaultMessage: 'SECOND TRANSIT PORT',
+  },
+  dischargePort: {
+    id: 'modules.RelationMaps.filter.dischargePort',
+    defaultMessage: 'DISCHARGE PORT',
+  },
 });

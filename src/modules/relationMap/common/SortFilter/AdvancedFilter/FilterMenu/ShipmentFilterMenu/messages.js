@@ -41,9 +41,13 @@ export default defineMessages({
   deliveryReady: {
     id: 'modules.Shipments.deliveryReady',
   },
-  ports: {
-    id: 'modules.Shipments.ports',
-    defaultMessage: 'PORTS',
+  seaports: {
+    id: 'modules.Shipments.seaports',
+    defaultMessage: 'SEAPORTS',
+  },
+  airports: {
+    id: 'modules.Shipments.airports',
+    defaultMessage: 'AIRPORTS',
   },
   tags: {
     id: 'modules.Shipments.tags',
