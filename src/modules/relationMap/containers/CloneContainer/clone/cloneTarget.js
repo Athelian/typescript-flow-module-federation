@@ -282,22 +282,6 @@ export const cloneBatch = async (client: any, batches: Object) => {
             no: `[cloned] ${currentBatch.no}`,
           }),
         },
-        //   update: (store, { data }) => {
-        //     const query = { query: orderListQuery, variables: filter };
-        //     const orderList = store.readQuery(query);
-        //     const updateData = data.batchCreate && data.batchCreate.batch;
-        //     orderList.orders.nodes.forEach((order, orderIndex) => {
-        //       if (order.id === getByPathWithDefault(false, 'orderItem.order.id', updateData)) {
-        //         order.orderItems.forEach((orderItem, orderItemIndex) => {
-        //           if (orderItem.id === getByPathWithDefault(false, 'orderItem.id', updateData)) {
-        //             orderList.orders.nodes[orderIndex].orderItems[orderItemIndex].batches.push(
-        //               updateData
-        //             );
-        //           }
-        //         });
-        //       }
-        //     });
-        //   },
       },
       orderItemId
     );
