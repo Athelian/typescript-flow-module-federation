@@ -428,6 +428,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   wrapperClassName={cx(cardWrapperClass, ShipmentCardTotalStyle)}
                 >
                   <WrapperCard onClick={onToggle}>
+                    {isNew && <NewItemBadge label={isNew} />}
                     <ShipmentCollapsed shipment={data} />
                     <TagValue>
                       {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}
