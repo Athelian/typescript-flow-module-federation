@@ -296,12 +296,6 @@ export const NotificationFragment = `fragment Notification on Notification {
 }
 `;
 
-export const MetadataFragment = `fragment Metadata on Metadata {
-  field
-  value
-}
-`;
-
 export const UserPaginationFragment = `fragment UserPagination on UserPagination {
   page
   perPage
@@ -1124,12 +1118,6 @@ export const NotificationNoNestingFragment = `fragment NotificationNoNesting on 
 }
 `;
 
-export const MetadataNoNestingFragment = `fragment MetadataNoNesting on Metadata {
-  field
-  value
-}
-`;
-
 export const UserPaginationNoNestingFragment = `fragment UserPaginationNoNesting on UserPagination {
   page
   perPage
@@ -1758,12 +1746,6 @@ export const NotificationDeepNestingFragment = `fragment NotificationDeepNesting
   read
   seen
   createdAt
-}
-`;
-
-export const MetadataDeepNestingFragment = `fragment MetadataDeepNesting on Metadata {
-  field
-  value
 }
 `;
 

@@ -4,24 +4,16 @@ import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
 
-type Metadata = {
-  key: string,
-  value: string,
-};
-
 type FormState = {
   name?: string,
   serial?: string,
   janCode?: ?string,
   hsCode?: ?string,
   material?: ?string,
-  metadata?: Array<Metadata>,
   customFields?: Object,
 };
 
-const initValues = {
-  metadata: [],
-};
+const initValues = {};
 
 export default class ProductInfoContainer extends Container<FormState> {
   state = initValues;
