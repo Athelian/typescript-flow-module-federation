@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { shadows } from 'styles/common';
+import { shadows, scrollbars, transitions } from 'styles/common';
 
 export const CustomFieldsFormHeaderStyle: string = css`
   padding: 0 20px;
@@ -8,7 +8,13 @@ export const CustomFieldsFormHeaderStyle: string = css`
 `;
 
 export const CustomFieldsEditFormWrapperStyle: string = css`
-  overflow-y: auto;
+  height: calc(100vh - 100px);
+  min-width: min-content;
+  overflow-x: hidden;
+  overflow-y: overlay;
+  ${scrollbars.MAIN};
+  align-items: center;
+  ${transitions.EXPAND};
 `;
 
 export default CustomFieldsEditFormWrapperStyle;
