@@ -17,6 +17,8 @@ export const HeaderStyle: string = css`
 export const ContainerWrapperStyle: string = css`
   background-color: ${colors.WHITE};
   height: 100%;
+  padding-top: 50px;
+  padding-bottom: 100px;
   overflow-x: hidden;
   overflow-y: overlay;
   ${scrollbars.MAIN};
