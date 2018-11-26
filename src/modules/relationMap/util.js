@@ -328,12 +328,19 @@ export const formatOrderData = (orders: Array<Object> = []) => {
 
       batches.forEach((batch, batchIndex) => {
         const { shipment } = batch;
+        let batchedQuantity = batch.quantity;
         if (!batchObj[batch.id]) {
           const batchRelation = { rootId: order.id, parentId: orderItem.id, index: batchIndex };
           orderRelation.batch[batch.id] = batchRelation;
           orderItemRelation.batch[batch.id] = batchRelation;
           batchObj[batch.id] = initBatchObj(batch, order.id, orderItem.id);
-
+          if (batch.batchAdjustments) {
+            batchedQuantity = batch.batchAdjustments.reduce(
+              (totalQuantity, batchAdjustment) => totalQuantity + batchAdjustment.quantity,
+              batchedQuantity
+            );
+          }
+          batchObj[batch.id].batchedQuantity = batchedQuantity;
           if (shipment) {
             orderRelation.shipment[shipment.id] = true;
             orderItemRelation.shipment[shipment.id] = true;
@@ -346,11 +353,11 @@ export const formatOrderData = (orders: Array<Object> = []) => {
             shipmentRelation.batch[batch.id] = true;
           }
         }
-        orderData.batchedQuantity += batch.quantity;
-        orderItemData.batchedQuantity += batch.quantity;
+        orderData.batchedQuantity += batchedQuantity;
+        orderItemData.batchedQuantity += batchedQuantity;
         if (batch.shipment) {
-          orderData.shippedQuantity += batch.quantity;
-          orderItemData.shippedQuantity += batch.quantity;
+          orderData.shippedQuantity += batchedQuantity;
+          orderItemData.shippedQuantity += batchedQuantity;
         }
       });
     });
