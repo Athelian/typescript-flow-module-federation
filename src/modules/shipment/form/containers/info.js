@@ -13,6 +13,7 @@ type FormState = {
   loadType?: string,
   incoterm?: string,
   carrier?: string,
+  customFields: Object,
   forwarders: Array<{ id: string, name: string }>,
   inCharges: Array<{ id: string, firstName: string, lastName: string }>,
 };

@@ -10,6 +10,7 @@ import {
   selectEnumInputFactory,
   selectSearchEnumInputFactory,
   textAreaFactory,
+  customFieldsInputFactory,
 } from 'modules/form/helpers';
 import {
   ShipmentInfoContainer,
@@ -159,7 +160,6 @@ const ShipmentSection = ({ isNew }: Props) => (
                   })
                 }
               </FormField>
-
               <Subscribe to={[ShipmentTransportTypeContainer, ShipmentTimelineContainer]}>
                 {(
                   {
@@ -205,7 +205,6 @@ const ShipmentSection = ({ isNew }: Props) => (
                   );
                 }}
               </Subscribe>
-
               <FormField
                 name="loadType"
                 initValue={values.loadType}
@@ -270,6 +269,11 @@ const ShipmentSection = ({ isNew }: Props) => (
                   })
                 }
               </FormField>
+              {customFieldsInputFactory({
+                entityType: 'Shipment',
+                customFields: values.customFields,
+                setFieldValue,
+              })}
             </GridColumn>
 
             <GridColumn>
