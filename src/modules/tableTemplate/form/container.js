@@ -44,4 +44,8 @@ export default class TemplateFormContainer extends Container<FormState> {
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
+
+  hasSelectField = () => false;
+
+  toggleSelectField = () => {};
 }
