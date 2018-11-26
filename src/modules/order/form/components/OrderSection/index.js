@@ -20,7 +20,6 @@ import {
   selectSearchEnumInputFactory,
   customFieldsInputFactory,
 } from 'modules/form/helpers';
-import { isEnableBetaFeature } from 'utils/env';
 import { PartnerCard } from 'components/Cards';
 import { getQuantitySummary } from 'modules/order/helpers';
 import messages from 'modules/order/messages';
@@ -162,12 +161,11 @@ const OrderSection = ({ isNew }: Props) => (
                     })
                   }
                 </FormField>
-                {isEnableBetaFeature &&
-                  customFieldsInputFactory({
-                    entityType: 'Order',
-                    customFields: values.customFields,
-                    setFieldValue,
-                  })}
+                {customFieldsInputFactory({
+                  entityType: 'Order',
+                  customFields: values.customFields,
+                  setFieldValue,
+                })}
               </GridColumn>
 
               <GridColumn gap="10px">
