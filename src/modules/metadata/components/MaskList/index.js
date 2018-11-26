@@ -39,7 +39,7 @@ const MaskList = ({ entityType }: Props) => (
       const hasMore = nextPage <= totalPage;
 
       return (
-        <div>
+        <BooleanValue>
           <div className={CustomFieldsFormHeaderStyle}>
             <FormHeader
               name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
@@ -68,7 +68,7 @@ const MaskList = ({ entityType }: Props) => (
               </BooleanValue>
             </FormHeader>
           </div>
-          <div className={CustomFieldsEditFormWrapperStyle}>
+          <BooleanValue className={CustomFieldsEditFormWrapperStyle}>
             <MaskGridView
               entityType={entityType}
               items={getByPathWithDefault([], 'masks.nodes', data)}
@@ -78,9 +78,8 @@ const MaskList = ({ entityType }: Props) => (
               renderItem={mask => (
                 <BooleanValue>
                   {({ value: isOpen, set: toggle }) => (
-                    <>
+                    <div key={mask.id}>
                       <MaskCard
-                        key={mask.id}
                         mask={mask}
                         onClick={() => {
                           toggle(true);
@@ -101,13 +100,13 @@ const MaskList = ({ entityType }: Props) => (
                           onCancel={() => toggle(false)}
                         />
                       </SlideView>
-                    </>
+                    </div>
                   )}
                 </BooleanValue>
               )}
             />
-          </div>
-        </div>
+          </BooleanValue>
+        </BooleanValue>
       );
     }}
   </Query>

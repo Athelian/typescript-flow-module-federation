@@ -71,13 +71,13 @@ const SelectMask = ({ entityType, selected, onCancel, onSave }: Props) => (
                 onLoadMore={() => loadMore({ fetchMore, data }, { filterBy: entityType }, 'masks')}
                 hasMore={hasMore}
                 isLoading={loading}
-                renderItem={item => (
+                renderItem={mask => (
                   <MaskCard
-                    mask={item}
-                    onSelect={() => set(item)}
+                    key={mask.id}
+                    mask={mask}
+                    onSelect={() => set(mask)}
                     selectable
-                    selected={value && item.id === value.id}
-                    key={item.id}
+                    selected={value && mask.id === value.id}
                   />
                 )}
               />
