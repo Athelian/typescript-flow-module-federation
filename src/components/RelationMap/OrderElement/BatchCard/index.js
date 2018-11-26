@@ -10,7 +10,7 @@ import messages from './messages';
 type Props = {
   batch: {
     no: string | React.Node,
-    quantity: number,
+    batchedQuantity: number,
     volumeLabel: number,
     deliveredAt: ?string,
   },
@@ -21,7 +21,7 @@ const volumeTitle = <FormattedMessage {...messages.volumeTitle} />;
 export default class BatchCard extends React.PureComponent<Props> {
   render() {
     const {
-      batch: { no, quantity, volumeLabel, deliveredAt },
+      batch: { no, batchedQuantity: quantity, volumeLabel, deliveredAt },
     } = this.props;
     return (
       <div className={CardWrapperStyle}>

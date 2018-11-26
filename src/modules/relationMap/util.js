@@ -276,6 +276,7 @@ const initBatchObj = (batch, orderId, orderItemId) => {
     data: {
       ...batch,
       volumeLabel: `${volume * packageQuantity} ${metric}`,
+      batchedQuantity: 0,
       orderId,
       orderItemId,
     },
