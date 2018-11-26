@@ -8,10 +8,10 @@ import loadMore from 'utils/loadMore';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import FormHeader from 'modules/metadata/components/FormHeader';
-import CustomFieldsTemplateGridView from 'modules/metadata/components/CustomFieldsTemplateGridView';
+import MaskGridView from 'modules/metadata/components/MaskGridView';
 import MaskFormWrapper from 'modules/metadata/components/MaskFormWrapper';
 import { masksQuery } from 'modules/metadata/query';
-import MetadataTemplateCard from 'components/Cards/MetadataTemplateCard';
+import { MaskCard } from 'components/Cards';
 
 import { CustomFieldsEditFormWrapperStyle, CustomFieldsFormHeaderStyle } from './style';
 
@@ -19,7 +19,7 @@ type Props = {
   entityType: string,
 };
 
-const CustomFieldTemplateList = ({ entityType }: Props) => (
+const MaskList = ({ entityType }: Props) => (
   <Query
     query={masksQuery}
     variables={{
@@ -69,7 +69,7 @@ const CustomFieldTemplateList = ({ entityType }: Props) => (
             </FormHeader>
           </div>
           <div className={CustomFieldsEditFormWrapperStyle}>
-            <CustomFieldsTemplateGridView
+            <MaskGridView
               entityType={entityType}
               items={getByPathWithDefault([], 'masks.nodes', data)}
               onLoadMore={() => loadMore({ fetchMore, data }, { filterBy: entityType }, 'masks')}
@@ -79,9 +79,9 @@ const CustomFieldTemplateList = ({ entityType }: Props) => (
                 <BooleanValue>
                   {({ value: isOpen, set: toggle }) => (
                     <>
-                      <MetadataTemplateCard
+                      <MaskCard
                         key={mask.id}
-                        metadataTemplate={mask}
+                        mask={mask}
                         onClick={() => {
                           toggle(true);
                         }}
@@ -113,4 +113,4 @@ const CustomFieldTemplateList = ({ entityType }: Props) => (
   </Query>
 );
 
-export default CustomFieldTemplateList;
+export default MaskList;

@@ -8,11 +8,12 @@ import Divider from 'components/Divider';
 import { Label, DashedPlusButton } from 'components/Form';
 import { DefaultCustomFieldStyle } from 'components/Form/Inputs/Styles';
 import CustomFieldsContainer from 'modules/form/helpers/customFieldsInput/container';
+import SelectMask from 'modules/form/helpers/customFieldsInput/components/SelectMask';
 import GridColumn from 'components/GridColumn';
 import SlideView from 'components/SlideView';
 
-import { MetadataTemplateCard } from 'components/Cards';
-import SelectMetadataTemplate from '../SelectMetadataTemplate';
+import { MaskCard } from 'components/Cards';
+
 import { MetadataSectionWrapperStyle } from './style';
 
 type Props = {
@@ -40,12 +41,7 @@ const MetadataEditForm = ({ entityType }: Props) => (
                       onClick={() => slideToggle(true)}
                     />
                   ) : (
-                    <MetadataTemplateCard
-                      selectable
-                      metadataTemplate={mask}
-                      onSelect={() => slideToggle(true)}
-                      readOnly
-                    />
+                    <MaskCard selectable mask={mask} onSelect={() => slideToggle(true)} readOnly />
                   )}
 
                   <SlideView
@@ -54,7 +50,7 @@ const MetadataEditForm = ({ entityType }: Props) => (
                     options={{ width: '980px' }}
                   >
                     {opened && (
-                      <SelectMetadataTemplate
+                      <SelectMask
                         entityType={entityType}
                         selected={mask}
                         onCancel={() => slideToggle(false)}

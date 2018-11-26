@@ -9,14 +9,14 @@ import {
   borderRadiuses,
 } from 'styles/common';
 
-export const MetadataTemplateCardWrapperStyle: string = css`
+export const MaskCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-template-columns: 240px;
   grid-gap: 10px;
   padding: 10px 0;
 `;
 
-export const MetadataTemplateNameStyle: string = css`
+export const MaskNameStyle: string = css`
   ${fontSizesWithHeights.MAIN};
   color: ${colors.BLACK};
   font-weight: bold;
@@ -25,7 +25,7 @@ export const MetadataTemplateNameStyle: string = css`
   width: 100%;
 `;
 
-export const MetadataTemplateDescriptionStyle: string = css`
+export const MaskDescriptionStyle: string = css`
   position: relative;
   ${fontSizes.MAIN};
   color: ${colors.BLACK};
@@ -35,7 +35,7 @@ export const MetadataTemplateDescriptionStyle: string = css`
   overflow: hidden;
 `;
 
-export const MetadataTemplateCustomFieldsLengthStyle: string = css`
+export const MaskCustomFieldsLengthStyle: string = css`
   position: relative;
   ${fontSizes.MAIN};
   background-color: ${colors.GRAY};

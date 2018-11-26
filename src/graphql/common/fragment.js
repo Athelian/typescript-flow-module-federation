@@ -111,13 +111,6 @@ export const portFragment = gql`
     airport
   }
 `;
-// TODO: clean old version metadata
-export const metadataFragment = gql`
-  fragment metadataFragment on Metadatum {
-    key
-    value
-  }
-`;
 
 export const customFieldsFragment = gql`
   fragment customFieldsFragment on CustomFields {

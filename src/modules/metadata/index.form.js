@@ -9,7 +9,7 @@ import GridColumn from 'components/GridColumn';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import FieldDefinitionsFormWrapper from 'modules/metadata/components/FieldDefinitionsFormWrapper';
-import CustomFieldsTemplateList from './components/CustomFieldsTemplateList';
+import MaskList from 'modules/metadata/components/MaskList';
 
 import { MainContentWrapperStyle } from './style';
 
@@ -107,7 +107,7 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                 <FieldDefinitionsFormWrapper entityType={entityType} />
               </GridColumn>
               <GridColumn gap="10px">
-                <CustomFieldsTemplateList entityType={entityType} />
+                <MaskList entityType={entityType} />
               </GridColumn>
             </div>
           </Layout>

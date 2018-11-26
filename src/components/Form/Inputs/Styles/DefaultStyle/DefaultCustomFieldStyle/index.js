@@ -19,10 +19,10 @@ type OptionalProps = {
   isValueReadOnly: boolean,
   onRemove?: Function,
   width: string,
+  value: Object,
 };
 
 type Props = OptionalProps & {
-  value: Object,
   fieldName: any,
   targetName: string,
   setFieldArrayValue: Function,
@@ -34,6 +34,7 @@ const defaultProps = {
   isKeyReadOnly: true,
   isValueReadOnly: false,
   width: '200px',
+  value: {},
 };
 
 const DefaultCustomFieldStyle = ({
