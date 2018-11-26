@@ -158,7 +158,7 @@ class TemplateFormWrapper extends React.Component<Props> {
                           link="editFieldsSection"
                           label={
                             <FormattedMessage
-                              id="modules.Templatees.editFields"
+                              id="modules.Templates.editFields"
                               defaultMessage="EDIT FIELDS"
                             />
                           }

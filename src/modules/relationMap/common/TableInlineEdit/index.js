@@ -23,6 +23,10 @@ import {
   orderItemColumnFields,
   batchColumnFields,
   shipmentColumnFields,
+  orderColumns,
+  orderItemColumns,
+  batchColumns,
+  shipmentColumns,
 } from 'modules/tableTemplate/constants';
 import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
@@ -32,7 +36,6 @@ import TableEmptyItem from './components/TableEmptyItem';
 import { entitiesUpdateManyMutation } from './mutation';
 import { findAllPossibleOrders, totalLinePerOrder, parseChangedData } from './helpers';
 import normalize from './normalize';
-import { orderColumns, orderItemColumns, batchColumns, shipmentColumns } from './constants';
 import {
   EditTableViewWrapperStyle,
   HeaderWrapperStyle,
