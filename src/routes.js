@@ -43,7 +43,7 @@ const Routes = () => (
           <AsyncRelationMap path="relation-map/*" />
           <AsyncNotifications path="notifications/*" />
           {isEnableBetaFeature && <AsyncMetadata path="metadata/*" />}
-          <AsyncTableTemplate path="template/table/*" />
+          <AsyncTableTemplate path="template/*" />
           <PageNotFound default />
         </Authorized>
         <Login path="/login" redirectUrl="/order" />
