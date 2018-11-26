@@ -340,7 +340,7 @@ export const formatOrderData = (orders: Array<Object> = []) => {
               batchedQuantity
             );
           }
-          batchObj[batch.id].batchedQuantity = batchedQuantity;
+          batchObj[batch.id].data.batchedQuantity = batchedQuantity;
           if (shipment) {
             orderRelation.shipment[shipment.id] = true;
             orderItemRelation.shipment[shipment.id] = true;

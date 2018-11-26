@@ -9,7 +9,11 @@ import {
   priceFragment,
   imageFragment,
   partnerNameFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
+import { customFieldsFragment } from 'graphql/common/fragment';
 
 export const batchListQuery = gql`
   query($page: Int!, $perPage: Int!, $filter: BatchFilterInput, $sort: BatchSortInput) {
@@ -30,6 +34,10 @@ export const batchListQuery = gql`
   ${priceFragment}
   ${imageFragment}
   ${partnerNameFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default batchListQuery;

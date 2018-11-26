@@ -35,7 +35,7 @@ export const getSplitFocus = (results: Array<Object>, splitType: string) => {
     const { data } = result;
     const newBatches = get([], `${splitType}.batches`, data);
     const newBatchIdObj = newBatches.reduce(
-      (batchObj, batch) => Object.assign(batchObj, { [batch.id]: true }),
+      (batchObj, batch) => Object.assign(batchObj, { [batch.id]: batch }),
       {}
     );
     return Object.assign(obj, newBatchIdObj);
