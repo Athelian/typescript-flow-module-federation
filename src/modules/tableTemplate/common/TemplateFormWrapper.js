@@ -4,7 +4,6 @@ import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import TemplateFormContainer from 'modules/tableTemplate/form/container';
-import query from 'modules/tableTemplate/list/query';
 import validator from 'modules/tableTemplate/form/validator';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -13,6 +12,7 @@ import {
   maskEditUpdateMutation,
   maskEditCreateMutation,
 } from 'modules/tableTemplate/form/mutation';
+import query from 'modules/tableTemplate/list/query';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -58,11 +58,26 @@ class TemplateFormWrapper extends React.Component<Props> {
     if (isNew) {
       const { data } = await saveTemplate({
         variables: { input },
-        update: (proxy, { data: { maskEditCreate } }) => {
-          const store = proxy.readQuery({ query });
-          // store.comments.push(maskEditCreate);
-          // proxy.writeQuery({ query, data });
-          console.warn({ maskEditCreate, store, proxy });
+        update: (store, { data: { maskEditCreate } }) => {
+          const collections = store.readQuery({
+            query,
+            variables: {
+              page: 1,
+              perPage: 10,
+              filter: {
+                type: 'Order',
+              },
+              sort: {
+                updatedAt: 'DESCENDING',
+              },
+            },
+          });
+          collections.maskEdits.nodes.unshift(maskEditCreate.maskEdit);
+          collections.maskEdits.totalCount += 1;
+          if (collections.maskEdits.totalCount % collections.maskEdits.perPageo === 1) {
+            collections.maskEdits.totalPage += 1;
+          }
+          store.writeQuery({ query, data: collections });
         },
       });
       const {
