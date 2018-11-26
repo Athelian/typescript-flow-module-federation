@@ -104,9 +104,6 @@ export const batchCardFragment = gql`
       quantity
       sort
     }
-    customFields {
-      ...customFieldsFragment
-    }
     tags {
       ...tagFragment
     }
