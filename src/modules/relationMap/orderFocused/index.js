@@ -97,6 +97,7 @@ const OrderFocused = ({
                       relation={{
                         type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
                         id: newShipment.id,
+                        isNew: newShipment.actionType,
                       }}
                       itemData={{ data: newShipment }}
                       itemType="shipment"

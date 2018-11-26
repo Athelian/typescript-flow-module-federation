@@ -22,7 +22,7 @@ export const getSplitResult = (results: Array<Object>, splitType: string) => {
   const splitResult = results.reduce((obj, result) => {
     const { refId, data } = result;
     const newBatches = get([], `${splitType}.batches`, data);
-    const newBatchIds = newBatches.map(d => ({ id: d.id, actionType: 'split' }));
+    const newBatchIds = newBatches.map(newBatch => ({ ...newBatch, actionType: 'split' }));
     return Object.assign(obj, {
       [refId]: newBatchIds,
     });
@@ -35,7 +35,7 @@ export const getSplitFocus = (results: Array<Object>, splitType: string) => {
     const { data } = result;
     const newBatches = get([], `${splitType}.batches`, data);
     const newBatchIdObj = newBatches.reduce(
-      (batchObj, batch) => Object.assign(batchObj, { [batch.id]: true }),
+      (batchObj, batch) => Object.assign(batchObj, { [batch.id]: batch }),
       {}
     );
     return Object.assign(obj, newBatchIdObj);

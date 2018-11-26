@@ -20,6 +20,7 @@ export const batchFormFragment = gql`
     }
     batchAdjustments {
       id
+      sort
       updatedAt
       updatedBy {
         ...userAvatarFragment
@@ -91,6 +92,7 @@ export const batchCardFragment = gql`
   fragment batchCardFragment on Batch {
     id
     no
+    archived
     quantity
     deliveredAt
     packageVolume {
