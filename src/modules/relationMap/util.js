@@ -271,10 +271,11 @@ const initOrderItemObj = (orderItem, orderId) => ({
 const initBatchObj = (batch, orderId, orderItemId) => {
   const volume = getByPathWithDefault('', 'packageVolume.value', batch);
   const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
+  const packageQuantity = batch.packageQuantity || 0;
   return {
     data: {
       ...batch,
-      volumeLabel: `${volume} ${metric}`,
+      volumeLabel: `${volume * packageQuantity} ${metric}`,
       orderId,
       orderItemId,
     },
