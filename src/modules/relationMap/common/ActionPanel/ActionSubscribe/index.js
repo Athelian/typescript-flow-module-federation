@@ -234,7 +234,7 @@ const ActionSubscribe = ({ filter }: Props) => (
                   {!error && currentAction === 'connect' && (
                     <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
                   )}
-                  {isSelectSomeItem(targetedItem) && disabledSplit && (
+                  {isSelectSomeItem(targetedItem) && disabledSplit && currentAction !== 'split' && (
                     <ConstrainPanel type="split" />
                   )}
                   {error && (
