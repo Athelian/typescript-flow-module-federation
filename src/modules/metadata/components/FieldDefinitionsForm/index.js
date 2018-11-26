@@ -59,38 +59,32 @@ class FieldDefinitionsForm extends React.Component<Props> {
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable">
             {dropProvided => (
-              <div>
-                <GridColumn gap="10px">
-                  <div ref={dropProvided.innerRef}>
-                    <GridColumn gap="10px">
-                      {fieldDefinitions &&
-                        fieldDefinitions.map((customField, index) => (
-                          <Draggable
-                            key={customField.id}
-                            draggableId={customField.id}
-                            index={index}
-                          >
-                            {provided => (
-                              <div ref={provided.innerRef} {...provided.draggableProps}>
-                                <DefaultMetadataStyle
-                                  rearrange
-                                  dragHandleProps={provided.dragHandleProps}
-                                  isKeyReadOnly={false}
-                                  isValueReadOnly
-                                  targetName={`fieldDefinitions.${index}`}
-                                  width="200px"
-                                  metadata={customField}
-                                  setFieldArrayValue={setFieldArrayValue}
-                                  onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                    </GridColumn>
-                  </div>
-                </GridColumn>
-              </div>
+              <GridColumn gap="10px">
+                <div ref={dropProvided.innerRef}>
+                  <GridColumn gap="10px">
+                    {fieldDefinitions &&
+                      fieldDefinitions.map((customField, index) => (
+                        <Draggable key={customField.id} draggableId={customField.id} index={index}>
+                          {provided => (
+                            <div ref={provided.innerRef} {...provided.draggableProps}>
+                              <DefaultMetadataStyle
+                                rearrange
+                                dragHandleProps={provided.dragHandleProps}
+                                isKeyReadOnly={false}
+                                isValueReadOnly
+                                targetName={`fieldDefinitions.${index}`}
+                                width="200px"
+                                metadata={customField}
+                                setFieldArrayValue={setFieldArrayValue}
+                                onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                  </GridColumn>
+                </div>
+              </GridColumn>
             )}
           </Droppable>
         </DragDropContext>
