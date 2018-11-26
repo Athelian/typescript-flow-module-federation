@@ -45,6 +45,21 @@ export default defineMessages({
   weight: {
     id: 'modules.ProductProviders.unitWeight',
   },
+  packageLength: {
+    id: 'modules.ProductProviders.pkgLength',
+  },
+  packageWidth: {
+    id: 'modules.ProductProviders.pkgWidth',
+  },
+  packageHeight: {
+    id: 'modules.ProductProviders.pkgHeight',
+  },
+  packageVolume: {
+    id: 'modules.ProductProviders.pkgVolume',
+  },
+  packageWeight: {
+    id: 'modules.ProductProviders.pkgWeight',
+  },
   addPort: {
     id: 'modules.RelationMaps.filter.addPort',
     defaultMessage: 'ADD PORT',

@@ -440,7 +440,7 @@
   "modules.Products.downloadCSV": "DOWNLOAD CSV",
   "modules.ProductProviders.packageName": "PACKAGE NAME",
   "modules.ProductProviders.packageCapacity": "PACKAGE CAPACITY",
-  "modules.ProductProviders.pkgCrossWeight": "PKG GROSS WEIGHT",
+  "modules.ProductProviders.pkgWeight": "PKG WEIGHT",
   "modules.ProductProviders.pkgVolume": "PKG VOLUME",
   "modules.ProductProviders.pkgLength": "PKG LENGTH",
   "modules.ProductProviders.pkgWidth": "PKG WIDTH",
