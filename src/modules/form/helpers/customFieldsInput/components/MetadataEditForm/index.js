@@ -51,7 +51,6 @@ class MetadataEditForm extends React.Component<Props> {
         {({ originalValues, state, setFieldArrayValue }) => {
           const values = { ...originalValues, ...state };
           const { mask, fieldValues } = values;
-          console.log(fieldValues);
           return (
             <Layout
               navBar={
