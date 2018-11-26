@@ -1,8 +1,12 @@
 // @flow
 import * as React from 'react';
+import FormattedName from 'components/FormattedName';
+import UserAvatar from 'components/UserAvatar';
+import { Display } from 'components/Form';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import { orderListQuery } from 'modules/order/list/query';
 import { partnerListQuery } from 'providers/PartnerList/query';
+import { userListQuery } from 'providers/UserList/query';
 import {
   DateRange,
   DayRange,
@@ -37,7 +41,7 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
               },
               renderItem: (item: Object) => (
                 <MiniSelectorItem key={item.id} isArchived={item.archived}>
-                  {item.poNo}
+                  <Display align="left">{item.poNo}</Display>
                 </MiniSelectorItem>
               ),
             });
@@ -51,12 +55,35 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
                 types: ['Exporter'],
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>{item.group.name}</MiniSelectorItem>
+                <MiniSelectorItem key={item.id}>
+                  <Display align="left">{item.group.name}</Display>
+                </MiniSelectorItem>
               ),
               hideToggles: true,
             });
         case 'inCharge':
-          return MiniSelector;
+          return () =>
+            MiniSelector({
+              entityType: 'users',
+              query: userListQuery,
+              filterBy: {
+                query: '',
+              },
+              renderItem: (item: Object) => (
+                <MiniSelectorItem key={item.id}>
+                  <UserAvatar
+                    firstName={item.firstName}
+                    lastName={item.lastName}
+                    height="20px"
+                    width="20px"
+                  />
+                  <Display align="left">
+                    <FormattedName firstName={item.firstName} lastName={item.lastName} />
+                  </Display>
+                </MiniSelectorItem>
+              ),
+              hideToggles: true,
+            });
         case 'tags':
           return Tags;
         case 'createdAt':
@@ -87,7 +114,9 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
                 types: ['Exporter'],
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>{item.group.name}</MiniSelectorItem>
+                <MiniSelectorItem key={item.id}>
+                  <Display align="left">{item.group.name}</Display>
+                </MiniSelectorItem>
               ),
               hideToggles: true,
             });
@@ -101,7 +130,9 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
                 types: ['Supplier'],
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>{item.group.name}</MiniSelectorItem>
+                <MiniSelectorItem key={item.id}>
+                  <Display align="left">{item.group.name}</Display>
+                </MiniSelectorItem>
               ),
               hideToggles: true,
             });
@@ -147,12 +178,35 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
                 types: ['Forwarder'],
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>{item.group.name}</MiniSelectorItem>
+                <MiniSelectorItem key={item.id}>
+                  <Display align="left">{item.group.name}</Display>
+                </MiniSelectorItem>
               ),
               hideToggles: true,
             });
         case 'inCharge':
-          return MiniSelector;
+          return () =>
+            MiniSelector({
+              entityType: 'users',
+              query: userListQuery,
+              filterBy: {
+                query: '',
+              },
+              renderItem: (item: Object) => (
+                <MiniSelectorItem key={item.id}>
+                  <UserAvatar
+                    firstName={item.firstName}
+                    lastName={item.lastName}
+                    height="20px"
+                    width="20px"
+                  />
+                  <Display align="left">
+                    <FormattedName firstName={item.firstName} lastName={item.lastName} />
+                  </Display>
+                </MiniSelectorItem>
+              ),
+              hideToggles: true,
+            });
         case 'seaports':
           return () => Ports({ portType: 'Seaport' });
         case 'airports':
