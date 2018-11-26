@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import { orderListQuery } from 'modules/order/list/query';
+import { partnerListQuery } from 'providers/PartnerList/query';
 import {
   DateRange,
   DayRange,
@@ -30,7 +31,7 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
             MiniSelector({
               entityType: 'orders',
               query: orderListQuery,
-              filters: {
+              filterBy: {
                 query: '',
                 archived: null,
               },
@@ -41,7 +42,19 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
               ),
             });
         case 'exporter':
-          return MiniSelector;
+          return () =>
+            MiniSelector({
+              entityType: 'viewer.user.group.partners',
+              query: partnerListQuery,
+              filterBy: {
+                query: '',
+                types: ['Exporter'],
+              },
+              renderItem: (item: Object) => (
+                <MiniSelectorItem key={item.id}>{item.group.name}</MiniSelectorItem>
+              ),
+              hideToggles: true,
+            });
         case 'inCharge':
           return MiniSelector;
         case 'tags':
@@ -65,9 +78,33 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'tags':
           return Tags;
         case 'exporter':
-          return MiniSelector;
+          return () =>
+            MiniSelector({
+              entityType: 'viewer.user.group.partners',
+              query: partnerListQuery,
+              filterBy: {
+                query: '',
+                types: ['Exporter'],
+              },
+              renderItem: (item: Object) => (
+                <MiniSelectorItem key={item.id}>{item.group.name}</MiniSelectorItem>
+              ),
+              hideToggles: true,
+            });
         case 'supplier':
-          return MiniSelector;
+          return () =>
+            MiniSelector({
+              entityType: 'viewer.user.group.partners',
+              query: partnerListQuery,
+              filterBy: {
+                query: '',
+                types: ['Supplier'],
+              },
+              renderItem: (item: Object) => (
+                <MiniSelectorItem key={item.id}>{item.group.name}</MiniSelectorItem>
+              ),
+              hideToggles: true,
+            });
         case 'origin':
           return Origin;
         case 'specifications':
@@ -101,7 +138,19 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
     case 'shipment':
       switch (selectedFilterItem) {
         case 'forwarder':
-          return MiniSelector;
+          return () =>
+            MiniSelector({
+              entityType: 'viewer.user.group.partners',
+              query: partnerListQuery,
+              filterBy: {
+                query: '',
+                types: ['Forwarder'],
+              },
+              renderItem: (item: Object) => (
+                <MiniSelectorItem key={item.id}>{item.group.name}</MiniSelectorItem>
+              ),
+              hideToggles: true,
+            });
         case 'inCharge':
           return MiniSelector;
         case 'seaports':

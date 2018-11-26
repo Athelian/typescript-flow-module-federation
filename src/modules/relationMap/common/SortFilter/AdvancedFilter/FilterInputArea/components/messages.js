@@ -67,9 +67,9 @@ export default defineMessages({
   origin: {
     id: 'modules.ProductProviders.countryOfOrigin',
   },
-  addPort: {
-    id: 'modules.RelationMaps.filter.addPort',
-    defaultMessage: 'ADD PORT',
+  add: {
+    id: 'modules.RelationMaps.filter.add',
+    defaultMessage: 'ADD',
   },
   loadPort: {
     id: 'modules.RelationMaps.filter.loadPort',

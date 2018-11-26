@@ -18,41 +18,51 @@ import {
 import messages from '../messages';
 import { MiniSelectorItem } from '..';
 
-type Props = {
+type OptionalProps = {
+  hideToggles?: boolean,
+};
+
+type Props = OptionalProps & {
   renderItem: (item: Object) => React.Node,
   entityType: string,
   query: any,
-  filters: {
-    query: string,
-    archived: ?boolean,
-  },
+  filterBy: Object,
 };
 
 const defaultProps = {
-  renderItem: (item: Object) => (
-    <MiniSelectorItem item={item}>CHANGE ME</MiniSelectorItem>
-  ),
+  renderItem: (item: Object) => <MiniSelectorItem item={item}>CHANGE ME</MiniSelectorItem>,
   entityType: 'orders',
   query: orderListQuery,
-  filters: {
+  filterBy: {
     query: '',
     archived: false,
   },
+  hideToggles: false,
 };
 
-export default function MiniSelector({ renderItem, entityType, query, filters }: Props) {
+export default function MiniSelector({
+  renderItem,
+  entityType,
+  query,
+  filterBy,
+  hideToggles,
+}: Props) {
   return (
     <div className={MiniSelectorWrapperStyle}>
       <div className={MiniSelectorSearchWrapperStyle}>
+      {!hideToggles && (
+          <>
+            <div className={MiniSelectorStatusTogglesWrapperStyle}>
+              <Icon icon="ACTIVE" />
+              <ToggleButton isOn />
+            </div>
+            <div className={MiniSelectorStatusTogglesWrapperStyle}>
+              <Icon icon="ARCHIVE" />
+              <ToggleButton isOn />
+            </div>
+          </>
+        )}
         <SearchInput name="hardcoded" value="" onChange={() => {}} onClear={() => {}} />
-        <div className={MiniSelectorStatusTogglesWrapperStyle}>
-          <Icon icon="ACTIVE" />
-          <ToggleButton isOn={false} />
-        </div>
-        <div className={MiniSelectorStatusTogglesWrapperStyle}>
-          <Icon icon="ARCHIVE" />
-          <ToggleButton isOn={false} />
-        </div>
       </div>
       <div className={MiniSelectorBodyWrapperStyle}>
         <Query
@@ -60,7 +70,7 @@ export default function MiniSelector({ renderItem, entityType, query, filters }:
           variables={{
             page: 1,
             perPage: 10,
-            ...filters,
+            filterBy,
           }}
           fetchPolicy="network-only"
         >
@@ -74,7 +84,7 @@ export default function MiniSelector({ renderItem, entityType, query, filters }:
             const hasMore = nextPage <= totalPage;
 
             const items = getByPathWithDefault([], `${entityType}.nodes`, data);
-            const onLoadMore = () => loadMore({ fetchMore, data }, filters, entityType);
+            const onLoadMore = () => loadMore({ fetchMore, data }, filterBy, entityType);
 
             return (
               <GridView

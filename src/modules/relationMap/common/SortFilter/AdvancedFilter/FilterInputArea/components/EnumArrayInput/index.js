@@ -58,7 +58,7 @@ export default function EnumArrayInput({ enumType }: Props) {
           </button>
         }
       </div>
-      <NewButton label={<FormattedMessage {...messages.addPort} />} />
+      <NewButton label={<FormattedMessage {...messages.add} />} />
     </div>
   );
 }

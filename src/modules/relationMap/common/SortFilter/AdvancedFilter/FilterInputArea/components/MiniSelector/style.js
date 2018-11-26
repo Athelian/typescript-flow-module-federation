@@ -13,6 +13,7 @@ export const MiniSelectorSearchWrapperStyle: string = css`
   width: 100%;
   padding: 20px 20px 0 20px;
   ${layout.GRID_HORIZONTAL};
+  grid-template-rows: 40px;
   grid-gap: 20px;
   justify-content: end;
   align-items: center;
