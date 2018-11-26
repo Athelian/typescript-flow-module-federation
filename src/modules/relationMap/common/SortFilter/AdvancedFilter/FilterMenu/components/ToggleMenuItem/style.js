@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, fontSizesWithHeights } from 'styles/common';
+import { presets, colors, fontSizesWithHeights, fontSizes } from 'styles/common';
 
 export const ToggleMenuItemWrapperStyle: string = css`
   display: grid;
@@ -17,6 +17,7 @@ export const ToggleMenuIconStyle: string = css`
   align-items: center;
   justify-content: center;
   color: ${colors.GRAY_LIGHT};
+  ${fontSizes.MAIN};
 `;
 
 export const ToggleMenuLabelStyle: string = css`

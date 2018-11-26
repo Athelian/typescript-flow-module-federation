@@ -6,6 +6,7 @@ export const DateRangeWrapperStyle: string = css`
   grid-template-columns: 200px 200px;
   grid-gap: 20px;
   width: 100%;
+  padding: 20px;
 `;
 
 export default DateRangeWrapperStyle;

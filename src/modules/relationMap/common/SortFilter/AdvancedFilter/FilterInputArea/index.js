@@ -1,9 +1,12 @@
 // @flow
 import * as React from 'react';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
+import { orderListQuery } from 'modules/order/list/query';
 import {
   DateRange,
   DayRange,
+  MiniSelector,
+  MiniSelectorItem,
   Packaging,
   Ports,
   PriceRange,
@@ -24,11 +27,24 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
     case 'order': {
       switch (selectedFilterItem) {
         case 'poNo':
-          return Placeholder;
+          return () =>
+            MiniSelector({
+              entityType: 'orders',
+              query: orderListQuery,
+              filters: {
+                query: '',
+                archived: null,
+              },
+              renderItem: (item: Object) => (
+                <MiniSelectorItem key={item.id} isArchived={item.archived}>
+                  {item.poNo}
+                </MiniSelectorItem>
+              ),
+            });
         case 'exporter':
-          return Placeholder;
+          return MiniSelector;
         case 'inCharge':
-          return Placeholder;
+          return MiniSelector;
         case 'tags':
           return Tags;
         case 'createdAt':
@@ -36,7 +52,7 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'updatedAt':
           return DateRange;
         default:
-          return Placeholder;
+          return null;
       }
     }
     case 'item':
@@ -50,9 +66,9 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'tags':
           return Tags;
         case 'exporter':
-          return Placeholder;
+          return MiniSelector;
         case 'supplier':
-          return Placeholder;
+          return MiniSelector;
         case 'origin':
           return Placeholder;
         case 'specifications':
@@ -62,7 +78,7 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'packaging':
           return Packaging;
         default:
-          return Placeholder;
+          return null;
       }
     case 'batch':
       switch (selectedFilterItem) {
@@ -81,14 +97,14 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'updatedAt':
           return DateRange;
         default:
-          return Placeholder;
+          return null;
       }
     case 'shipment':
       switch (selectedFilterItem) {
         case 'forwarder':
-          return Placeholder;
+          return MiniSelector;
         case 'inCharge':
-          return Placeholder;
+          return MiniSelector;
         case 'seaports':
           return () => Ports({ portType: 'Seaport' });
         case 'airports':
@@ -120,10 +136,10 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'updatedAt':
           return DateRange;
         default:
-          return Placeholder;
+          return null;
       }
     default:
-      return Placeholder;
+      return null;
   }
 };
 

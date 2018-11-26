@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  tags: {
+    id: 'modules.RelationMaps.filter.tags',
+    defaultMessage: 'TAGS',
+  },
   currency: {
     id: 'modules.RelationMaps.filter.currency',
     defaultMessage: 'CURRENCY',
@@ -79,5 +83,9 @@ export default defineMessages({
   dischargePort: {
     id: 'modules.RelationMaps.filter.dischargePort',
     defaultMessage: 'DISCHARGE PORT',
+  },
+  noDataFound: {
+    id: 'modules.RelationMaps.filter.noDataFound',
+    defaultMessage: 'No data found',
   },
 });

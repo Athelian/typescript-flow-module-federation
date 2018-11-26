@@ -8,6 +8,7 @@ export const PortsWrapperStyle: string = css`
   grid-auto-rows: min-content;
   grid-gap: 40px;
   width: 100%;
+  padding: 20px;
 `;
 
 export const PortInputsWrapperStyle: string = css`

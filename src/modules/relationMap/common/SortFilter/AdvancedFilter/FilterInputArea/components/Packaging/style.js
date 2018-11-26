@@ -6,6 +6,7 @@ export const PackagingWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding: 20px;
 `;
 
 export const LabelsWrapperStyle: string = css`

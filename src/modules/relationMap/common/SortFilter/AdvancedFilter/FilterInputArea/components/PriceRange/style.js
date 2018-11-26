@@ -6,6 +6,7 @@ export const PriceRangeWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 20px;
   width: 100%;
+  padding: 20px;
 `;
 
 export const NumberInputsWrapperStyle: string = css`

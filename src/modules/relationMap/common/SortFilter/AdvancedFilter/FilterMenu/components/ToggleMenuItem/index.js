@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { ToggleButton } from '..';
+import { ToggleButton } from 'modules/relationMap/common/SortFilter/AdvancedFilter/components';
 import { ToggleMenuItemWrapperStyle, ToggleMenuIconStyle, ToggleMenuLabelStyle } from './style';
 
 type Props = {
