@@ -66,4 +66,12 @@ export default defineMessages({
     id: 'modules.SideBar.tags',
     defaultMessage: 'TAGS',
   },
+  metadata: {
+    id: 'modules.SideBar.metadata',
+    defaultMessage: 'CUSTOM FIELDS',
+  },
+  template: {
+    id: 'modules.SideBar.template',
+    defaultMessage: 'TEMPLATE',
+  },
 });
