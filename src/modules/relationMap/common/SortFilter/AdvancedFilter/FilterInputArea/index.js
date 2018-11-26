@@ -7,6 +7,7 @@ import {
   DayRange,
   MiniSelector,
   MiniSelectorItem,
+  Origin,
   Packaging,
   Ports,
   PriceRange,
@@ -19,8 +20,6 @@ type Props = {
   selectedEntityType: EntityTypes,
   selectedFilterItem: string,
 };
-
-const Placeholder = () => <div>Not done</div>;
 
 const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem: string) => {
   switch (selectedEntityType) {
@@ -70,7 +69,7 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'supplier':
           return MiniSelector;
         case 'origin':
-          return Placeholder;
+          return Origin;
         case 'specifications':
           return Specifications;
         case 'productionLeadTime':

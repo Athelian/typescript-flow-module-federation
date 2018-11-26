@@ -4,6 +4,7 @@ import DayRange from './DayRange';
 import EnumArrayInput from './EnumArrayInput';
 import MiniSelector from './MiniSelector';
 import MiniSelectorItem from './MiniSelectorItem';
+import Origin from './Origin';
 import Packaging from './Packaging';
 import Ports from './Ports';
 import PriceRange from './PriceRange';
@@ -16,6 +17,7 @@ export {
   EnumArrayInput,
   MiniSelector,
   MiniSelectorItem,
+  Origin,
   Packaging,
   Ports,
   PriceRange,

@@ -64,6 +64,9 @@ export default defineMessages({
   packageWeight: {
     id: 'modules.ProductProviders.pkgWeight',
   },
+  origin: {
+    id: 'modules.ProductProviders.countryOfOrigin',
+  },
   addPort: {
     id: 'modules.RelationMaps.filter.addPort',
     defaultMessage: 'ADD PORT',
