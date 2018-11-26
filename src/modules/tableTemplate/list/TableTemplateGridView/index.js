@@ -1,13 +1,11 @@
 // @flow
 import * as React from 'react';
-import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { TableTemplateCard } from 'components/Cards';
-import TableTemplateForm from 'modules/tableTemplate/form';
-import TemplateFormContainer from 'modules/tableTemplate/form/container';
+import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
 
 type Props = {
   items: Array<Object>,
@@ -33,21 +31,7 @@ const defaultRenderItem = (item: Object) => (
           onRequestClose={() => toggle(false)}
           options={{ width: '1030px' }}
         >
-          <Subscribe to={[TemplateFormContainer]}>
-            {({ initDetailValues, onCleanUp }) => (
-              <TableTemplateForm
-                onFormReady={() => {
-                  if (isOpen) {
-                    initDetailValues(item);
-                  } else {
-                    onCleanUp();
-                  }
-                }}
-                template={item}
-                onCancel={() => toggle(false)}
-              />
-            )}
-          </Subscribe>
+          {isOpen && <TemplateFormWrapper template={item} onCancel={() => toggle(false)} />}
         </SlideView>
       </>
     )}

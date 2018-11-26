@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import SlideView from 'components/SlideView';
 import { UIConsumer } from 'modules/ui';
-import TableTemplateForm from 'modules/tableTemplate/form';
+import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
 import Layout from 'components/Layout';
 import Icon from 'components/Icon';
 import FilterToolBar from 'components/common/FilterToolBar';
@@ -91,7 +91,13 @@ class TableTemplateModule extends React.Component<Props, State> {
                           onRequestClose={() => toggle(false)}
                           options={{ width: '1030px' }}
                         >
-                          <TableTemplateForm isNew onCancel={() => toggle(false)} />
+                          {isOpen && (
+                            <TemplateFormWrapper
+                              template={{}}
+                              isNew
+                              onCancel={() => toggle(false)}
+                            />
+                          )}
                         </SlideView>
                       </>
                     )}

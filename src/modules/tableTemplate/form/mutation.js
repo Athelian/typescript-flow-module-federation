@@ -7,7 +7,7 @@ export const maskEditCreateMutation = gql`
   mutation maskEditCreate($input: MaskEditCreateInput!) {
     maskEditCreate(input: $input) {
       maskEdit {
-        id
+        ...tableTemplateCardFragment
       }
       violations {
         ...violationFragment
@@ -16,6 +16,8 @@ export const maskEditCreateMutation = gql`
   }
 
   ${violationFragment}
+  ${userAvatarFragment}
+  ${tableTemplateCardFragment}
 `;
 
 export const maskEditUpdateMutation = gql`
