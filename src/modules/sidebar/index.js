@@ -120,6 +120,20 @@ class SideBar extends React.Component<Props, State> {
                         label={<FormattedMessage {...messages.tags} />}
                         onClick={() => this.setExpandedSubMenu(null)}
                       />
+                      <MenuItem
+                        path="/metadata"
+                        isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
+                        icon="METADATA"
+                        label={<FormattedMessage {...messages.metadata} />}
+                        onClick={() => this.setExpandedSubMenu(null)}
+                      />
+                      <MenuItem
+                        path="/template"
+                        isActive={`/${location.pathname.split('/')[1]}` === '/template'}
+                        icon="TEMPLATE"
+                        label={<FormattedMessage {...messages.template} />}
+                        onClick={() => this.setExpandedSubMenu(null)}
+                      />
                     </SubMenu>
                   </div>
                 </div>

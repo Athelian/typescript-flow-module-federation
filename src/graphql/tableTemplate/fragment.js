@@ -8,6 +8,10 @@ export const tableTemplateCardFragment = gql`
     type
     memo
     fields
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
   }
 `;
 
