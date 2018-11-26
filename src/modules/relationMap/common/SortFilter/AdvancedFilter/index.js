@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -16,6 +17,7 @@ import {
   FilterToggleBadgeStyle,
   AdvancedFilterBodyWrapperStyle,
   AdvancedFilterNavbarStyle,
+  AdvancedFilterNavbarButtonsWrapperStyle,
   AdvancedFilterBodyStyle,
 } from './style';
 
@@ -93,11 +95,8 @@ class AdvanceFilterInput extends React.Component<Props, State> {
 
   render() {
     const { selectedEntityType, selectedFilterItem, activeFilters } = this.state;
-    const isActive =
-      activeFilters.order.length > 0 ||
-      activeFilters.item.length > 0 ||
-      activeFilters.batch.length > 0 ||
-      activeFilters.shipment.length > 0;
+    const isActive = false;
+    const isDirty = true;
 
     return (
       <UIConsumer>
@@ -136,6 +135,26 @@ class AdvanceFilterInput extends React.Component<Props, State> {
                           defaultMessage="FILTER BY"
                         />
                       </Label>
+                      {isDirty && (
+                        <div className={AdvancedFilterNavbarButtonsWrapperStyle}>
+                          <CancelButton
+                            label={
+                              <FormattedMessage
+                                id="modules.RelationMaps.filter.reset"
+                                defaultMessage="RESET"
+                              />
+                            }
+                          />
+                          <SaveButton
+                            label={
+                              <FormattedMessage
+                                id="modules.RelationMaps.filter.apply"
+                                defaultMessage="APPLY"
+                              />
+                            }
+                          />
+                        </div>
+                      )}
                     </div>
                     <div className={AdvancedFilterBodyStyle}>
                       <EntityTypesMenu

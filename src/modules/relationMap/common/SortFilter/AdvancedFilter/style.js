@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, shadows, borderRadiuses } from 'styles/common';
+import { presets, colors, shadows, borderRadiuses, layout } from 'styles/common';
 
 export const AdvancedFilterWrapperStyle: string = css`
   position: relative;
@@ -55,7 +55,13 @@ export const AdvancedFilterNavbarStyle: string = css`
   align-items: center;
   height: 50px;
   padding: 0 10px;
-  border-bottom: 1px solid ${colors.GRAY_VERY_LIGHT};
+  ${shadows.HEADER};
+`;
+
+export const AdvancedFilterNavbarButtonsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 10px;
+  margin-left: auto;
 `;
 
 export const AdvancedFilterBodyStyle: string = css`

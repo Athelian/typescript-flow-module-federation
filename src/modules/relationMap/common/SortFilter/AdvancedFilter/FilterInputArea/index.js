@@ -91,7 +91,7 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'updatedAt':
           return DateRange;
         default:
-          return null;
+          return () => <div />;
       }
     }
     case 'item':
@@ -145,7 +145,7 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'packaging':
           return Packaging;
         default:
-          return null;
+          return () => <div />;
       }
     case 'batch':
       switch (selectedFilterItem) {
@@ -164,7 +164,7 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'updatedAt':
           return DateRange;
         default:
-          return null;
+          return () => <div />;
       }
     case 'shipment':
       switch (selectedFilterItem) {
@@ -238,19 +238,15 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
         case 'updatedAt':
           return DateRange;
         default:
-          return null;
+          return () => <div />;
       }
     default:
-      return null;
+      return () => <div />;
   }
 };
 
 export default function FilterInputArea({ selectedEntityType, selectedFilterItem }: Props) {
   const SelectedFilterInputArea = getFilterInputArea(selectedEntityType, selectedFilterItem);
 
-  return (
-    <div className={FilterInputAreaWrapperStyle}>
-      <SelectedFilterInputArea />
-    </div>
-  );
+  return <div className={FilterInputAreaWrapperStyle}>{SelectedFilterInputArea()}</div>;
 }
