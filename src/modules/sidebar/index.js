@@ -108,7 +108,11 @@ class SideBar extends React.Component<Props, State> {
                     <SubMenu
                       id="settings"
                       isExpanded={expandedSubMenu === 'settings'}
-                      hasActiveChild={`/${location.pathname.split('/')[1]}` === '/tags'}
+                      hasActiveChild={
+                        `/${location.pathname.split('/')[1]}` === '/tags' ||
+                        `/${location.pathname.split('/')[1]}` === '/metadata' ||
+                        `/${location.pathname.split('/')[1]}` === '/template'
+                      }
                       icon="SETTINGS"
                       label={<FormattedMessage {...messages.settings} />}
                       onClick={(id: ?string) => this.setExpandedSubMenu(id)}
@@ -127,13 +131,13 @@ class SideBar extends React.Component<Props, State> {
                         label={<FormattedMessage {...messages.metadata} />}
                         onClick={() => this.setExpandedSubMenu(null)}
                       />
-                      <MenuItem
+                      {/* <MenuItem
                         path="/template"
                         isActive={`/${location.pathname.split('/')[1]}` === '/template'}
                         icon="TEMPLATE"
                         label={<FormattedMessage {...messages.template} />}
                         onClick={() => this.setExpandedSubMenu(null)}
-                      />
+                      /> */}
                     </SubMenu>
                   </div>
                 </div>
