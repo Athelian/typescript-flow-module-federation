@@ -234,9 +234,6 @@ const ActionSubscribe = ({ filter }: Props) => (
                   {!error && currentAction === 'connect' && (
                     <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
                   )}
-                  {isHighlighted() && (
-                    <HighlightPanel item={focusedItem} onCancel={resetFocusedItem} />
-                  )}
                   {isSelectSomeItem(targetedItem) && disabledSplit && (
                     <ConstrainPanel type="split" />
                   )}
@@ -258,6 +255,7 @@ const ActionSubscribe = ({ filter }: Props) => (
                   </OutsideClickHandler>
                 </>
               )}
+              {isHighlighted() && <HighlightPanel item={focusedItem} onCancel={resetFocusedItem} />}
             </>
           );
         }}
