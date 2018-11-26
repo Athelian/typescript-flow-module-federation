@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-import { shadows, colors } from 'styles/common';
+import { shadows, colors, scrollbars } from 'styles/common';
 
 export const WrapperStyle: string = css`
   height: calc(100vh - 50px);
@@ -17,5 +17,7 @@ export const HeaderStyle: string = css`
 export const ContainerWrapperStyle: string = css`
   background-color: ${colors.WHITE};
   height: 100%;
-  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: overlay;
+  ${scrollbars.MAIN};
 `;
