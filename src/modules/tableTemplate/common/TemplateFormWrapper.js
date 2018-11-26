@@ -13,6 +13,7 @@ import {
   maskEditCreateMutation,
 } from 'modules/tableTemplate/form/mutation';
 import query from 'modules/tableTemplate/list/query';
+import emitter from 'utils/emitter';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -74,10 +75,13 @@ class TemplateFormWrapper extends React.Component<Props> {
           });
           collections.maskEdits.nodes.unshift(maskEditCreate.maskEdit);
           collections.maskEdits.totalCount += 1;
-          if (collections.maskEdits.totalCount % collections.maskEdits.perPageo === 1) {
+          if (collections.maskEdits.totalCount % collections.maskEdits.perPage === 1) {
             collections.maskEdits.totalPage += 1;
           }
           store.writeQuery({ query, data: collections });
+          // This is open issue on apollo client repo https://github.com/apollographql/apollo-client/issues/2415
+          // workaround is sending a message to force render
+          emitter.emit('REALOAD_TEMPLATE');
         },
       });
       const {

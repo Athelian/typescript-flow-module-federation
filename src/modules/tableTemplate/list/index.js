@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
+import emitter from 'utils/emitter';
 import TableTemplateGridView from './TableTemplateGridView';
 import { tableTemplateQuery } from './query';
 
@@ -35,7 +36,7 @@ class TableTemplateList extends React.Component<Props> {
         }}
         fetchPolicy="network-only"
       >
-        {({ loading, data, fetchMore, error }) => {
+        {({ loading, data, fetchMore, error, refetch }) => {
           if (error) {
             return error.message;
           }
@@ -43,6 +44,10 @@ class TableTemplateList extends React.Component<Props> {
           const nextPage = getByPathWithDefault(1, `maskEdits.page`, data) + 1;
           const totalPage = getByPathWithDefault(1, `maskEdits.totalPage`, data);
           const hasMore = nextPage <= totalPage;
+
+          emitter.once('REALOAD_TEMPLATE', () => {
+            refetch();
+          });
 
           return (
             <TableTemplateGridView
