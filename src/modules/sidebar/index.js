@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
+import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle, BetaTagWrapperStyle, BetaTagStyle } from './style';
 import messages from './messages';
@@ -131,13 +132,15 @@ class SideBar extends React.Component<Props, State> {
                         label={<FormattedMessage {...messages.metadata} />}
                         onClick={() => this.setExpandedSubMenu(null)}
                       />
-                      {/* <MenuItem
-                        path="/template"
-                        isActive={`/${location.pathname.split('/')[1]}` === '/template'}
-                        icon="TEMPLATE"
-                        label={<FormattedMessage {...messages.template} />}
-                        onClick={() => this.setExpandedSubMenu(null)}
-                      /> */}
+                      {isEnableBetaFeature && (
+                        <MenuItem
+                          path="/template"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/template'}
+                          icon="TEMPLATE"
+                          label={<FormattedMessage {...messages.template} />}
+                          onClick={() => this.setExpandedSubMenu(null)}
+                        />
+                      )}
                     </SubMenu>
                   </div>
                 </div>

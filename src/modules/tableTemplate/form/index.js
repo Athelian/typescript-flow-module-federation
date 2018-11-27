@@ -3,7 +3,7 @@
 import React, { memo, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
-import { TemplateSection } from './components';
+import { TemplateSection, SelectFieldsSection } from './components';
 import { TemplateFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -42,6 +42,15 @@ function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
           )}
         </SectionHeader>
         <TemplateSection isNew={isNew} />
+      </SectionWrapper>
+      <SectionWrapper id="editFieldsSection">
+        <SectionHeader
+          icon="METADATA"
+          title={
+            <FormattedMessage id="modules.TableTemplates.editFields" defaultMessage="EDIT FIELDS" />
+          }
+        />
+        <SelectFieldsSection isNew={isNew} />
       </SectionWrapper>
     </div>
   );

@@ -18,14 +18,6 @@ import { formatOrderData } from 'modules/relationMap/util';
 import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
-import TableRow from './components/TableRow';
-import LineNumber from './components/LineNumber';
-import TableHeader from './components/TableHeader';
-import TableItem from './components/TableItem';
-import TableEmptyItem from './components/TableEmptyItem';
-import { entitiesUpdateManyMutation } from './mutation';
-import { findAllPossibleOrders, totalLinePerOrder, parseChangedData } from './helpers';
-import normalize from './normalize';
 import {
   orderColumnFields,
   orderItemColumnFields,
@@ -35,7 +27,15 @@ import {
   orderItemColumns,
   batchColumns,
   shipmentColumns,
-} from './constants';
+} from 'modules/tableTemplate/constants';
+import TableRow from './components/TableRow';
+import LineNumber from './components/LineNumber';
+import TableHeader from './components/TableHeader';
+import TableItem from './components/TableItem';
+import TableEmptyItem from './components/TableEmptyItem';
+import { entitiesUpdateManyMutation } from './mutation';
+import { findAllPossibleOrders, totalLinePerOrder, parseChangedData } from './helpers';
+import normalize from './normalize';
 import {
   EditTableViewWrapperStyle,
   HeaderWrapperStyle,
