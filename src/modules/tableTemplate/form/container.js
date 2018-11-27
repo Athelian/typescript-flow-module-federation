@@ -45,7 +45,18 @@ export default class TemplateFormContainer extends Container<FormState> {
     this.originalValues = Object.assign({}, parsedValues);
   };
 
-  hasSelectField = () => false;
+  hasSelectField = (selectedField: string) => this.state.fields.includes(selectedField);
 
-  toggleSelectField = () => {};
+  toggleSelectField = (selectedField: string) => {
+    const { fields } = this.state;
+    if (fields.includes(selectedField)) {
+      this.setState({
+        fields: fields.filter(item => item !== selectedField),
+      });
+    } else {
+      this.setState({
+        fields: [...fields, selectedField],
+      });
+    }
+  };
 }

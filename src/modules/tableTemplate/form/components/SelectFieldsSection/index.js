@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { ToggleInput } from 'components/Form';
 import TemplateFormContainer from 'modules/tableTemplate/form/container';
+import { FormField } from 'modules/form';
 import {
   orderColumns,
   orderItemColumns,
@@ -29,15 +30,31 @@ const renderGroup = ({
       <h3> {group} </h3>
       {columns.map((column, position) => (
         <div style={{ display: 'flex' }} key={uuid()}>
-          <ToggleInput
-            toggled={hasSelectField()}
-            onToggle={() =>
-              toggleSelectField(
-                `${type}-${index > 0 ? groups[index - 1].columns.length + position : position}`
-              )
-            }
-          />
-          {column}
+          <FormField
+            name={column}
+            initValue={`${type}-${
+              index > 0 ? groups[index - 1].columns.length + position : position
+            }`}
+          >
+            {({ name, onBlur }) => (
+              <>
+                <ToggleInput
+                  toggled={hasSelectField(
+                    `${type}-${index > 0 ? groups[index - 1].columns.length + position : position}`
+                  )}
+                  onToggle={() => {
+                    onBlur();
+                    toggleSelectField(
+                      `${type}-${
+                        index > 0 ? groups[index - 1].columns.length + position : position
+                      }`
+                    );
+                  }}
+                />
+                {name}
+              </>
+            )}
+          </FormField>
         </div>
       ))}
     </React.Fragment>
