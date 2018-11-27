@@ -5,7 +5,7 @@ import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import logger from 'utils/logger';
-import { isEmpty } from 'utils/fp';
+import { isEmpty, getByPathWithDefault as get } from 'utils/fp';
 // components
 import { BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -85,18 +85,43 @@ const isDisabledMoveToShipment = targetedItem => {
   return !selectedBatch;
 };
 
+const getExporterFromOrderItem = orderItem => {
+  if (!orderItem) {
+    return '';
+  }
+  const firstId = Object.keys(orderItem)[0];
+  const firstItem = orderItem[firstId];
+  return get('', 'productProvider.exporter.id', firstItem);
+};
+
+const getExporterFromBatch = batch => {
+  if (!batch) {
+    return '';
+  }
+  const firstId = Object.keys(batch)[0];
+  const firstItem = batch[firstId];
+  return get('', 'orderItem.productProvider.exporter.id', firstItem);
+};
+
+const isDisabledMoveToOrder = targetedItem => {
+  const { orderItem, batch } = targetedItem;
+  const exportId = getExporterFromOrderItem(orderItem) || getExporterFromBatch(batch);
+  const orderItemHasDifferentExporter = (Object.entries(orderItem || {}): any).some(
+    item => get('', 'productProvider.exporter.id', item[1]) !== exportId
+  );
+  const batchHasDifferentExporter = (Object.entries(batch || {}): any)
+    .filter(item => {
+      const orderItemId = get(false, 'orderItem.id', item[1]) || item[1].parentId;
+      return !(orderItem && orderItem[orderItemId]);
+    })
+    .some(item => get('', 'orderItem.productProvider.exporter.id', item[1]) !== exportId);
+  return orderItemHasDifferentExporter || batchHasDifferentExporter;
+};
+
 const ActionSubscribe = ({ filter }: Props) => (
   <ApolloConsumer>
     {client => (
-      <Subscribe
-        to={[
-          RelationMapContainer,
-          ActionContainer,
-          CloneContainer,
-          SplitContainer,
-          ConnectContainer,
-        ]}
-      >
+      <Subscribe to={[RelationMapContainer, ActionContainer, CloneContainer, SplitContainer]}>
         {(
           {
             state: { focusedItem, focusMode, targetedItem },
@@ -117,8 +142,7 @@ const ActionSubscribe = ({ filter }: Props) => (
             state: { currentAction, loading, error },
           },
           { clone },
-          { split },
-          connectContainer
+          { split }
         ) => {
           const onClickClone = () => {
             const action = async () => {
@@ -174,6 +198,8 @@ const ActionSubscribe = ({ filter }: Props) => (
           };
           const disabledSplit = isDisabledSplit(targetedItem);
           const disabledMoveToShipment = isDisabledMoveToShipment(targetedItem);
+          const disabledMoveToOrder = isDisabledMoveToOrder(targetedItem);
+          const selectedSomeItem = isSelectSomeItem(targetedItem);
           return (
             <>
               {isTargetAnyItem() && (
@@ -195,37 +221,46 @@ const ActionSubscribe = ({ filter }: Props) => (
                         active={currentAction === 'split'}
                         onClick={() => setAction(currentAction !== 'split' ? 'split' : null)}
                       />
-                      <TabItem
-                        className={TabItemStyled}
-                        label={
-                          <div className={MoveToWrapper}>
-                            <FormattedMessage {...messages.moveTo} />
-                            <Icon icon="ORDER" />
-                          </div>
-                        }
-                        icon="EXCHANGE"
-                        active={currentAction === 'connect'}
-                        onClick={() => {
-                          setAction('connect');
-                          connectContainer.setConnectType('ORDER');
-                        }}
-                      />
-                      <TabItem
-                        className={TabItemStyled}
-                        label={
-                          <div className={MoveToWrapper}>
-                            <FormattedMessage {...messages.moveTo} />
-                            <Icon icon="SHIPMENT" />
-                          </div>
-                        }
-                        icon="EXCHANGE"
-                        disabled={disabledMoveToShipment}
-                        active={currentAction === 'connect'}
-                        onClick={() => {
-                          setAction('connect');
-                          connectContainer.setConnectType('SHIPMENT');
-                        }}
-                      />
+                      <Subscribe to={[ConnectContainer]}>
+                        {({ state: { connectType }, setConnectType }) => (
+                          <TabItem
+                            className={TabItemStyled}
+                            label={
+                              <div className={MoveToWrapper}>
+                                <FormattedMessage {...messages.moveTo} />
+                                <Icon icon="ORDER" />
+                              </div>
+                            }
+                            icon="EXCHANGE"
+                            disabled={disabledMoveToOrder}
+                            active={currentAction === 'connect' && connectType === 'ORDER'}
+                            onClick={() => {
+                              setAction('connect');
+                              setConnectType('ORDER');
+                            }}
+                          />
+                        )}
+                      </Subscribe>
+                      <Subscribe to={[ConnectContainer]}>
+                        {({ state: { connectType }, setConnectType }) => (
+                          <TabItem
+                            className={TabItemStyled}
+                            label={
+                              <div className={MoveToWrapper}>
+                                <FormattedMessage {...messages.moveTo} />
+                                <Icon icon="SHIPMENT" />
+                              </div>
+                            }
+                            icon="EXCHANGE"
+                            disabled={disabledMoveToShipment}
+                            active={currentAction === 'connect' && connectType === 'SHIPMENT'}
+                            onClick={() => {
+                              setAction('connect');
+                              setConnectType('SHIPMENT');
+                            }}
+                          />
+                        )}
+                      </Subscribe>
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) => (
                           <>
@@ -260,10 +295,15 @@ const ActionSubscribe = ({ filter }: Props) => (
                     <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
                   )}
                   {!error && currentAction === 'connect' && (
-                    <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
+                    <Subscribe to={[ConnectContainer]}>
+                      {connectContainer => (
+                        <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
+                      )}
+                    </Subscribe>
                   )}
-                  {isSelectSomeItem(targetedItem) && disabledSplit && (
-                    <ConstrainPanel type="split" />
+                  {selectedSomeItem && disabledSplit && <ConstrainPanel type="split" />}
+                  {selectedSomeItem && disabledMoveToShipment && (
+                    <ConstrainPanel type="connect_shipment" />
                   )}
                   {error && (
                     <ErrorPanel onClickCancel={onCancelTarget} onClickRefresh={actionFunc} />

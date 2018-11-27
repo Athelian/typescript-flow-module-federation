@@ -88,7 +88,7 @@ const OrderFocused = ({
                 return null;
               }
               return (
-                <BooleanValue defaultValue key={newShipment.id}>
+                <BooleanValue defaultValue key={`new-${newShipment.id}`}>
                   {({ value: isCollapsed, toggle }) => (
                     <Item
                       key={newShipment.id}
@@ -99,33 +99,41 @@ const OrderFocused = ({
                         id: newShipment.id,
                         isNew: newShipment.actionType,
                       }}
-                      itemData={{ data: newShipment }}
+                      itemData={{ data: newShipment, relation: {} }}
                       itemType="shipment"
                     />
                   )}
                 </BooleanValue>
               );
             })}
-          {Object.keys(shipment).map(shipmentId => {
-            const currentShipment = shipment[shipmentId];
-            return (
-              <BooleanValue defaultValue key={shipmentId}>
-                {({ value: isCollapsed, toggle }) => (
-                  <Item
-                    key={shipmentId}
-                    onToggle={toggle}
-                    isCollapsed={isCollapsed}
-                    relation={{
-                      type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
-                      id: shipmentId,
-                    }}
-                    itemData={currentShipment}
-                    itemType="shipment"
-                  />
-                )}
-              </BooleanValue>
-            );
-          })}
+          {Object.keys(shipment)
+            .filter(shipmentId => {
+              const hasShipmentResult =
+                result.shipment &&
+                result.shipment.length > 0 &&
+                result.shipment.some(shipmentData => shipmentData.id === shipmentId);
+              return !hasShipmentResult;
+            })
+            .map(shipmentId => {
+              const currentShipment = shipment[shipmentId];
+              return (
+                <BooleanValue defaultValue key={shipmentId}>
+                  {({ value: isCollapsed, toggle }) => (
+                    <Item
+                      key={shipmentId}
+                      onToggle={toggle}
+                      isCollapsed={isCollapsed}
+                      relation={{
+                        type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
+                        id: shipmentId,
+                      }}
+                      itemData={currentShipment}
+                      itemType="shipment"
+                    />
+                  )}
+                </BooleanValue>
+              );
+            })}
         </div>
       )}
     </Subscribe>

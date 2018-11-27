@@ -11,7 +11,10 @@ import {
   LabelConnectStyle,
 } from './style';
 
-const SuccessPanel = () => (
+type Props = {
+  onClick: Function,
+};
+const SuccessPanel = ({ onClick }: Props) => (
   <SuccessPanelWrapper>
     <Label className={LabelConnectStyle}>
       <FormattedMessage {...messages.connect} />
@@ -20,7 +23,7 @@ const SuccessPanel = () => (
     <Label className={GroupLabelButtonStyle}>
       <FormattedMessage {...messages.connectSuccess} />
     </Label>
-    <button className={SuccessPanelButtonCloseStyle} type="button" onClick={() => {}}>
+    <button className={SuccessPanelButtonCloseStyle} type="button" onClick={onClick}>
       <Icon icon="CANCEL" />
     </button>
   </SuccessPanelWrapper>

@@ -38,6 +38,7 @@ export const CenteredOrderStyle = css`
   width: 100%;
   height: 100%;
 
+  ${borderRadiuses.MAIN};
   background-color: ${colors.TEAL};
 `;
 export default null;

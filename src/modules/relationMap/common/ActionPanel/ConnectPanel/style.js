@@ -36,9 +36,8 @@ export const SelectedPanelWrapper = styled('div')`
 
 export const SuccessPanelWrapper = styled('div')`
   ${PanelWrapperStyle};
-  display: grid;
-  grid-auto-columns: auto;
-  grid-auto-flow: column;
+  display: flex;
+  justify-content: space-between;
   background-color: ${colors.TEAL};
   color: ${colors.WHITE};
 `;

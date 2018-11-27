@@ -1,30 +1,28 @@
 // @flow
 import React from 'react';
 import SelectedPanel from './SelectedPanel';
-import ConnectTypePanel from './ConnectTypePanel';
+// import ConnectTypePanel from './ConnectTypePanel';
 import ApplyPanel from './ApplyPanel';
 import SuccessPanel from './SuccessPanel';
 
 type Props = {
   connect: Object,
-  refetch: Function,
-  targetedItem: Object,
 };
-const ConnectPanel = ({ connect, refetch, targetedItem }: Props) => {
+const ConnectPanel = ({ connect }: Props) => {
   const {
-    state: { currentStep },
+    state: { connectType, success },
+    isSelectedItem,
+    reset,
   } = connect;
-  switch (currentStep) {
-    default:
-    case 1:
-      return <ConnectTypePanel onClick={connect.setConnectType} targetedItem={targetedItem} />;
-    case 2:
-      return <SelectedPanel connect={connect} refetch={refetch} />;
-    case 3:
-      return <ApplyPanel />;
-    case 4:
-      return <SuccessPanel />;
+  if (success) {
+    return <SuccessPanel onClick={reset} />;
   }
+  if (isSelectedItem()) {
+    return <ApplyPanel />;
+  }
+  if (connectType) {
+    return <SelectedPanel connectType={connectType} />;
+  }
+  return null;
 };
-
 export default ConnectPanel;

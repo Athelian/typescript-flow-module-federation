@@ -87,7 +87,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         toggleHighlight,
         toggleTargetTree,
         toggleTarget,
-        overrideTarget,
+        // overrideTarget,
         isTargetedLine,
         isParentTargeted,
         isTargeted: isTargetedItem,
@@ -152,7 +152,12 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
                       <Subscribe to={[ConnectContainer, ActionContainer]}>
-                        {({ state: { connectType } }) => (
+                        {({
+                          setSelectedItem,
+                          resetSelectedItem,
+                          isSelectedItem,
+                          state: { connectType },
+                        }) => (
                           <BooleanValue>
                             {({ value: hovered, set: setToggle }) => (
                               <WrapperCard
@@ -160,9 +165,9 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                 onMouseLeave={() => setToggle(false)}
                               >
                                 <OrderCard order={data} />
-                                {isTargeted && connectType === 'ORDER' ? (
+                                {connectType === 'ORDER' && isSelectedItem(id) ? (
                                   <ActionCard show>
-                                    {() => <SelectedOrder onClick={onClickTarget} />}
+                                    {() => <SelectedOrder onClick={resetSelectedItem} />}
                                   </ActionCard>
                                 ) : (
                                   <ActionCard show={hovered}>
@@ -191,7 +196,12 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                           icon="CHECKED"
                                           targetted={isTargeted ? 'CHECKED' : targetted}
                                           toggle={toggle}
-                                          onClick={onClickTarget}
+                                          onClick={() => {
+                                            if (connectType === 'ORDER') {
+                                              return setSelectedItem(data);
+                                            }
+                                            return onClickTarget();
+                                          }}
                                         />
                                       </>
                                     )}
@@ -360,7 +370,12 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                     <ToggleSlide>
                       {({ assign: setSlide }) => (
                         <Subscribe to={[ConnectContainer, ActionContainer]}>
-                          {({ setCurrentStep, state: { connectType } }) => (
+                          {({
+                            setSelectedItem,
+                            resetSelectedItem,
+                            isSelectedItem,
+                            state: { connectType },
+                          }) => (
                             <BooleanValue>
                               {({ value: hovered, set: setToggle }) => (
                                 <WrapperCard
@@ -368,9 +383,9 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   onMouseLeave={() => setToggle(false)}
                                 >
                                   <ShipmentCard shipment={data} />
-                                  {isTargeted && connectType === 'SHIPMENT' ? (
+                                  {connectType === 'SHIPMENT' && isSelectedItem(id) ? (
                                     <ActionCard show>
-                                      {() => <SelectedShipment onClick={onClickTarget} />}
+                                      {() => <SelectedShipment onClick={resetSelectedItem} />}
                                     </ActionCard>
                                   ) : (
                                     <ActionCard show={hovered}>
@@ -394,9 +409,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                             toggle={toggle}
                                             onClick={() => {
                                               if (connectType === 'SHIPMENT') {
-                                                const target = { shipment: { [id]: data } };
-                                                setCurrentStep(3);
-                                                return overrideTarget(target);
+                                                return setSelectedItem(data);
                                               }
                                               return onClickTarget();
                                             }}
