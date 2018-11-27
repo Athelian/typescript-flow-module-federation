@@ -73,15 +73,9 @@ export const deleteItem = async (client: any, target: Object) => {
       return !orderItem[orderItemId];
     })
     .reduce((obj, batchId) => {
-      const currentOrderItem = get(false, 'orderItem', batch[batchId]);
-      const currentBatches =
-        get(false, `${currentOrderItem.id}.batches`, obj) || currentOrderItem.batches;
-      const batchesInput = currentBatches.filter(currentBatch => !batch[currentBatch.id]);
+      const orderItemId = get(false, 'orderItem.id', batch[batchId]);
       return Object.assign(obj, {
-        [currentOrderItem.id]: {
-          ...currentOrderItem,
-          batches: batchesInput,
-        },
+        [orderItemId]: true,
       });
     }, {});
 
@@ -89,7 +83,18 @@ export const deleteItem = async (client: any, target: Object) => {
     map(order => {
       const orderItems =
         order.orderItems &&
-        order.orderItems.map(({ id: itemId }) => orderItemObj[itemId] || { id: itemId });
+        order.orderItems.map(item => {
+          const { id: itemId, batches } = item;
+          if (orderItemObj[itemId]) {
+            return {
+              id: itemId,
+              batches: batches
+                .filter(({ id: batchId }) => !batch[batchId])
+                .map(({ id: batchId }) => ({ id: batchId })),
+            };
+          }
+          return { id: itemId };
+        });
       return client.mutate({
         mutation: updateOrderMutation,
         variables: {
