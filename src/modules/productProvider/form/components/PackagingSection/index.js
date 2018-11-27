@@ -82,7 +82,7 @@ const PackagingSection = ({ isNew }: Props) => (
                   originalValue: getByPath('packageGrossWeight', originalValues),
                   label: (
                     <FormattedMessage
-                      id="modules.ProductProviders.pkgWeight"
+                      id="modules.ProductProviders.pkgCrossWeight"
                       defaultMessage="PKG GROSS WEIGHT"
                     />
                   ),

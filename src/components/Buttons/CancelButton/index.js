@@ -6,7 +6,6 @@ import { BaseButton } from 'components/Buttons';
 type OptionalProps = {
   disabled: boolean,
   onClick: Function,
-  label: React.Node,
 };
 
 type Props = OptionalProps;
@@ -14,12 +13,11 @@ type Props = OptionalProps;
 const defaultProps = {
   disabled: false,
   onClick: () => {},
-  label: <FormattedMessage id="components.button.cancel" defaultMessage="CANCEL" />,
 };
 
-const CancelButton = ({ disabled, onClick, label }: Props): React.Node => (
+const CancelButton = ({ disabled, onClick }: Props): React.Node => (
   <BaseButton
-    label={label}
+    label={<FormattedMessage id="components.button.cancel" defaultMessage="CANCEL" />}
     textColor="GRAY_DARK"
     hoverTextColor="WHITE"
     backgroundColor="GRAY_SUPER_LIGHT"
