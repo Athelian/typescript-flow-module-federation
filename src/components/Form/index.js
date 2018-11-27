@@ -1,7 +1,6 @@
 import {
   DateInput,
   EmailInput,
-  MetricInput,
   NumberInput,
   PasswordInput,
   SearchSelectInput,
@@ -39,7 +38,6 @@ import SectionWrapper from './SectionWrapper';
 export {
   DateInput,
   EmailInput,
-  MetricInput,
   NumberInput,
   PasswordInput,
   SearchSelectInput,

@@ -7,12 +7,9 @@ import Actions from './Actions';
 import CornerIcon from './CornerIcon';
 
 type OptionalProps = {
-  icon: string,
-  color: string,
   actions: Array<React.Node>,
   showActionsOnHover: boolean,
   selectable: boolean,
-  isArchived: boolean,
   disabled: boolean,
   readOnly: boolean,
   selected: boolean,
@@ -23,6 +20,8 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  icon: string,
+  color: string,
   children: React.Node,
 };
 
@@ -31,12 +30,9 @@ type State = {
 };
 
 const defaultProps = {
-  icon: null,
-  color: '',
   actions: [],
   showActionsOnHover: false,
   selectable: false,
-  isArchived: false,
   disabled: false,
   readOnly: false,
   selected: false,
@@ -81,7 +77,6 @@ export default class BaseCard extends React.Component<Props, State> {
       actions,
       showActionsOnHover,
       selectable,
-      isArchived,
       disabled,
       readOnly,
       selected,
@@ -95,7 +90,7 @@ export default class BaseCard extends React.Component<Props, State> {
 
     const { actionsAreShown } = this.state;
 
-    const cardStyle = CardStyle({ disabled, readOnly, isArchived });
+    const cardStyle = CardStyle(disabled, readOnly);
     return (
       <div
         id={id}
@@ -135,7 +130,7 @@ export default class BaseCard extends React.Component<Props, State> {
             </Actions>
           </OutsideClickHandler>
         )}
-        {icon && (
+        {icon && icon.length && (
           <CornerIcon
             ref={this.cornerIcon}
             icon={icon}

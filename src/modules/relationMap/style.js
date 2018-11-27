@@ -128,8 +128,7 @@ export const FunctionWrapperStyle = css`
   grid-column: span 4;
   display: flex;
   background-color: ${colors.WHITE};
-  padding: 0 10px;
-  align-items: center;
+  padding: 10px 10px;
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;

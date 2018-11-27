@@ -24,13 +24,14 @@ export const WrapperStyle = (focused: boolean, disabled: boolean, readonly: bool
 `;
 
 export const SelectionWrapperStyle: string = css`
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
   align-items: center;
   width: 100%;
   & > *:not(:last-child) {
     margin: 6px 10px 6px 0;
-  }
+  } */
+  ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
 `;
 
@@ -64,6 +65,7 @@ export const ArrowDownStyle = (isOpen: boolean): string => css`
 
 export const InputStyle = (isHover: boolean): string => css`
   ${layout.HORIZONTAL};
+  flex: auto;
   position: relative;
   ${borderRadiuses.MAIN};
   ${isHover && shadows.DROPDOWN};
