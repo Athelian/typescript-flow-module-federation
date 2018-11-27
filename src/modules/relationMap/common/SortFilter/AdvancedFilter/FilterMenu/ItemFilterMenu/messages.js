@@ -20,29 +20,38 @@ export default defineMessages({
   },
   product: {
     id: 'modules.Products.product',
+    defaultMessage: 'PRODUCT',
   },
   tags: {
     id: 'modules.Products.tags',
+    defaultMessage: 'TAGS',
   },
   endProduct: {
     id: 'modules.Products.provider',
+    defaultMessage: 'END PRODUCT',
   },
   exporter: {
     id: 'modules.ProductProviders.exporter',
+    defaultMessage: 'EXPORTER',
   },
   supplier: {
     id: 'modules.ProductProviders.supplier',
+    defaultMessage: 'SUPPLIER',
   },
   origin: {
     id: 'modules.ProductProviders.countryOfOrigin',
+    defaultMessage: 'COUNTRY OF ORIGIN',
   },
   specifications: {
     id: 'modules.ProductProviders.specifications',
+    defaultMessage: 'SPECIFICATIONS',
   },
   productionLeadTime: {
     id: 'modules.ProductProviders.productionLeadTime',
+    defaultMessage: 'PRODUCTION LEAD TIME',
   },
   packaging: {
     id: 'modules.ProductProviders.packaging',
+    defaultMessage: 'PACKAGING',
   },
 });
