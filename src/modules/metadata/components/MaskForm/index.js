@@ -8,7 +8,7 @@ import GridColumn from 'components/GridColumn';
 import { FormContainer, FormField } from 'modules/form';
 import { textInputFactory, textAreaFactory } from 'modules/form/helpers';
 import validator from 'modules/metadata/components/MaskFormWrapper/validator';
-import FieldDefinitionContainer from 'modules/metadata/components/FieldDefinitionsFormWrapper/container';
+
 import MaskContainer from 'modules/metadata/components/MaskForm/container';
 import FieldItem from './components/FieldItem';
 import { TemplateFormWrapperStyle, FormFieldsStyle, DescriptionLabelWrapperStyle } from './style';
@@ -16,6 +16,7 @@ import { TemplateFormWrapperStyle, FormFieldsStyle, DescriptionLabelWrapperStyle
 type OptionalProps = {
   isNew: boolean,
   onFormReady: Function,
+  fieldDefinitions: Array<Object>,
 };
 
 type Props = OptionalProps & {};
@@ -23,6 +24,7 @@ type Props = OptionalProps & {};
 const defaultProps = {
   isNew: false,
   onFormReady: () => {},
+  fieldDefinitions: [],
 };
 
 const formContainer = new FormContainer();
@@ -40,12 +42,12 @@ class MaskForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew } = this.props;
+    const { isNew, fieldDefinitions } = this.props;
 
     return (
       <Provider inject={[formContainer]}>
-        <Subscribe to={[MaskContainer, FieldDefinitionContainer]}>
-          {({ originalValues, state, setFieldValue }, { originalValues: { fieldDefinitions } }) => {
+        <Subscribe to={[MaskContainer]}>
+          {({ originalValues, state, setFieldValue }) => {
             const values = { ...originalValues, ...state };
             return (
               <div className={TemplateFormWrapperStyle}>
