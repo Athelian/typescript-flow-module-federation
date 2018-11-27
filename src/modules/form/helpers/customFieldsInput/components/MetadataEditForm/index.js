@@ -97,7 +97,7 @@ class MetadataEditForm extends React.Component<Props> {
                 </SectionWrapper>
                 <div className={MetadataSectionWrapperStyle}>
                   <div>
-                    <Label required>
+                    <Label>
                       <FormattedMessage id="modules.form.template" defaultMessage="TEMPLATE" />
                     </Label>
                     <BooleanValue>
@@ -129,16 +129,24 @@ class MetadataEditForm extends React.Component<Props> {
                                 selected={mask}
                                 onCancel={() => slideToggle(false)}
                                 onSave={item => {
-                                  setFieldArrayValue('mask', item);
-                                  setFieldArrayValue('fieldDefinitions', item.fieldDefinitions);
-                                  setFieldArrayValue(
-                                    'fieldValues',
-                                    item.fieldDefinitions.map(fieldDefinition => ({
-                                      value: {},
-                                      fieldDefinition,
-                                      entityType,
-                                    }))
-                                  );
+                                  if (item) {
+                                    setFieldArrayValue('mask', item);
+                                    setFieldArrayValue('fieldDefinitions', item.fieldDefinitions);
+                                    setFieldArrayValue(
+                                      'fieldValues',
+                                      item.fieldDefinitions.map(fieldDefinition => ({
+                                        value: {},
+                                        fieldDefinition,
+                                        entityType,
+                                      }))
+                                    );
+                                  } else {
+                                    setFieldArrayValue('mask', null);
+                                    // TODO: all custom fields
+                                    setFieldArrayValue('fieldDefinitions', []);
+                                    setFieldArrayValue('fieldValues', []);
+                                  }
+
                                   slideToggle(false);
                                 }}
                               />

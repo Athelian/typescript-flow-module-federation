@@ -75,7 +75,13 @@ const SelectMask = ({ entityType, selected, onCancel, onSave }: Props) => (
                   <MaskCard
                     key={mask.id}
                     mask={mask}
-                    onSelect={() => set(mask)}
+                    onSelect={() => {
+                      if (value && mask.id === value.id) {
+                        set(null);
+                      } else {
+                        set(mask);
+                      }
+                    }}
                     selectable
                     selected={value && mask.id === value.id}
                   />
