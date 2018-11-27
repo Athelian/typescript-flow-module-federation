@@ -11,6 +11,7 @@ type FormState = {
 };
 
 const initValues = {
+  mask: null,
   fieldValues: [],
   fieldDefinitions: [],
 };
