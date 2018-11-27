@@ -14,6 +14,10 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   partnerCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const batchFormQuery = gql`
@@ -36,6 +40,10 @@ export const batchFormQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default batchFormQuery;

@@ -22,6 +22,7 @@ const AsyncBatch = lazy(() => import('./modules/batch'));
 const AsyncRelationMap = lazy(() => import('./modules/relationMap'));
 const AsyncNotifications = lazy(() => import('./modules/notifications'));
 const AsyncMetadata = lazy(() => import('./modules/metadata'));
+const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
 
 const Routes = () => (
   <>
@@ -41,6 +42,7 @@ const Routes = () => (
           <AsyncRelationMap path="relation-map/*" />
           <AsyncNotifications path="notifications/*" />
           <AsyncMetadata path="metadata/*" />
+          <AsyncTableTemplate path="template/*" />
           <PageNotFound default />
         </Authorized>
         <Login path="/login" redirectUrl="/order" />

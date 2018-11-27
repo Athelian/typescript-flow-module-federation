@@ -62,6 +62,18 @@ export default defineMessages({
     id: 'global.quantity',
     defaultMessage: 'Quantity',
   },
+  newItem: {
+    id: 'modules.RelationMaps.label.newItem',
+    defaultMessage: 'New',
+  },
+  clone: {
+    id: 'modules.RelationMaps.label.clone',
+    defaultMessage: 'Clone',
+  },
+  split: {
+    id: 'modules.RelationMaps.label.split',
+    defaultMessage: 'Split',
+  },
   splitType: {
     id: 'modules.RelationMaps.label.splitType',
     defaultMessage: 'Split Type',
@@ -93,6 +105,10 @@ export default defineMessages({
   selected: {
     id: 'modules.Shipments.picked',
     defaultMessage: 'selected',
+  },
+  highlighted: {
+    id: 'modules.Shipments.highlighted',
+    defaultMessage: 'highlighted',
   },
   connect: {
     id: 'modules.RelationMaps.label.connect',
@@ -149,5 +165,49 @@ export default defineMessages({
   toConnectToTheList: {
     id: 'modules.RelationMaps.label.toConnectToTheList',
     defaultMessage: 'to connect on the list',
+  },
+  waiting: {
+    id: 'modules.RelationMaps.label.waiting',
+    defaultMessage: 'Please wait for a moment',
+  },
+  cloning: {
+    id: 'modules.RelationMaps.label.cloning',
+    defaultMessage: 'Cloning',
+  },
+  spliting: {
+    id: 'modules.RelationMaps.label.spliting',
+    defaultMessage: 'Spliting',
+  },
+  connecting: {
+    id: 'modules.RelationMaps.label.connecting',
+    defaultMessage: 'Connecting',
+  },
+  tryAgain: {
+    id: 'modules.RelationMaps.label.tryAgain',
+    defaultMessage: 'Something went wrong Please try again',
+  },
+  expressionOr: {
+    id: 'modules.RelationMaps.expression.or',
+    defaultMessage: 'Or',
+  },
+  expressionAnd: {
+    id: 'modules.RelationMaps.expression.and',
+    defaultMessage: 'And',
+  },
+  expressionAndOr: {
+    id: 'modules.RelationMaps.expression.andOr',
+    defaultMessage: 'And / Or',
+  },
+  actionAvailable: {
+    id: 'modules.RelationMaps.action.actionAvailable',
+    defaultMessage: 'action is only available for a selection of',
+  },
+  atLeast: {
+    id: 'modules.RelationMaps.action.atLeast',
+    defaultMessage: 'at least',
+  },
+  shareSameExport: {
+    id: 'modules.RelationMaps.action.shareSameExprot',
+    defaultMessage: 'That share the same export',
   },
 });

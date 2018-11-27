@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
+import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle, BetaTagWrapperStyle, BetaTagStyle } from './style';
 import messages from './messages';
@@ -108,7 +109,11 @@ class SideBar extends React.Component<Props, State> {
                     <SubMenu
                       id="settings"
                       isExpanded={expandedSubMenu === 'settings'}
-                      hasActiveChild={`/${location.pathname.split('/')[1]}` === '/tags'}
+                      hasActiveChild={
+                        `/${location.pathname.split('/')[1]}` === '/tags' ||
+                        `/${location.pathname.split('/')[1]}` === '/metadata' ||
+                        `/${location.pathname.split('/')[1]}` === '/template'
+                      }
                       icon="SETTINGS"
                       label={<FormattedMessage {...messages.settings} />}
                       onClick={(id: ?string) => this.setExpandedSubMenu(id)}
@@ -120,6 +125,22 @@ class SideBar extends React.Component<Props, State> {
                         label={<FormattedMessage {...messages.tags} />}
                         onClick={() => this.setExpandedSubMenu(null)}
                       />
+                      <MenuItem
+                        path="/metadata"
+                        isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
+                        icon="METADATA"
+                        label={<FormattedMessage {...messages.metadata} />}
+                        onClick={() => this.setExpandedSubMenu(null)}
+                      />
+                      {isEnableBetaFeature && (
+                        <MenuItem
+                          path="/template"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/template'}
+                          icon="TEMPLATE"
+                          label={<FormattedMessage {...messages.template} />}
+                          onClick={() => this.setExpandedSubMenu(null)}
+                        />
+                      )}
                     </SubMenu>
                   </div>
                 </div>

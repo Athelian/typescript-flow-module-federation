@@ -14,9 +14,8 @@ export const productFormFragment = gql`
     hsCode
     janCode
     material
-    metadata {
-      key
-      value
+    customFields {
+      ...customFieldsFragment
     }
     tags {
       ...tagFragment

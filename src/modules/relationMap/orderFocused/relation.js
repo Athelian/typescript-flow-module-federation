@@ -11,10 +11,20 @@ import {
   LINK4,
 } from 'modules/relationMap/constants';
 
+const isRelationLine = type => /LINK-[0-4]-(\w+)/.test(type);
+
 export const getItemData = ({ order, orderItem, batch }: Object, relation: Object) => {
   let itemData;
-  switch (relation.type) {
+  let type = relation.type || '';
+  const isLine = isRelationLine(relation.type);
+  if (isLine) {
+    const [, , relationType] = relation.type.split('-') || [];
+    type = relationType;
+  }
+  switch (type) {
     case ORDER_ITEM_ALL:
+      itemData = orderItem[relation.id] || order[relation.id];
+      break;
     case BATCH_ALL:
     case ORDER:
       itemData = order[relation.id];
@@ -61,24 +71,24 @@ const getRelatedIds = (items: Array<Object>, currentIndex: number) => {
 };
 
 const createBatchRelation = (relations: Array<Object>, data: Object) => {
-  const { orderItems, orderItemIndex, relatedOrderItem, numberOfBatch } = data;
-  const generateFirstBatch = ({ id, isNew, relatedIds, isLast }) => {
+  const { orderItems, orderItemIndex, relatedOrderItem } = data;
+  const generateFirstBatch = ({ id, isNew, relatedIds, previousIds }) => {
     relations.push({
       id,
       type: `${LINK1}-${BATCH}`,
       relatedIds,
     });
-    relations.push({ type: BATCH, id, isNew, isLast });
+    relations.push({ type: BATCH, id, isNew, relatedIds, previousIds });
   };
-  const generateOtherBatch = ({ id, isNew, relatedIds, isLast }) => {
+  const generateOtherBatch = ({ id, isNew, relatedIds, previousIds }) => {
     const isLastOrderItem = orderItemIndex === orderItems.length - 1;
     relations.push({ type: '' });
     if (isLastOrderItem) {
       relations.push({ type: '' });
     } else {
       relations.push({
-        type: `${LINK2}-${BATCH}`,
-        id: orderItems[orderItemIndex].id,
+        type: `${LINK2}-${ORDER_ITEM}`,
+        id: orderItems[orderItemIndex + 1].id,
         relatedIds: relatedOrderItem,
       });
     }
@@ -88,18 +98,17 @@ const createBatchRelation = (relations: Array<Object>, data: Object) => {
       type: `${LINK4}-${BATCH}`,
       relatedIds,
     });
-    relations.push({ type: BATCH, id, isNew, isLast });
+    relations.push({ type: BATCH, id, isNew, relatedIds, previousIds });
   };
   return {
     generateFirstBatch,
     generateOtherBatch,
-    generateBatchRelation: (batchData, relatedIds, index) => {
+    generateBatchRelation: ({ batchData, relatedIds, index, previousIds }) => {
       const { id, isNew = false } = batchData;
-      const isLast = index === numberOfBatch - 1;
       if (index === 0) {
-        generateFirstBatch({ id, isNew, relatedIds, isLast });
+        generateFirstBatch({ id, isNew, relatedIds, previousIds });
       } else {
-        generateOtherBatch({ id, isNew, relatedIds, isLast });
+        generateOtherBatch({ id, isNew, relatedIds, previousIds });
       }
     },
   };
@@ -115,7 +124,7 @@ const generateCollapsedRelation = (order: Object, option: Object) => {
   relations.push({ type: '' });
   relations.push({ type: '' });
   relations.push({ type: '' });
-  relations.push({ type: ORDER, id: order.id, isNew: order.isNew });
+  relations.push({ type: ORDER, id: order.id, isNew: order.isNew, previousIds: [] });
   if (numberOfProduct === 0) {
     relations.push({ type: '' });
     relations.push({ type: '' });
@@ -124,9 +133,12 @@ const generateCollapsedRelation = (order: Object, option: Object) => {
     return relations;
   }
   const relatedOrderIds = [order.id];
+  const hasOrderItem = order.orderItems[0];
   relations.push({
-    type: isCollapsed ? `${LINK1}-${ORDER}` : `${LINK1}-${ORDER_ITEM_ALL}`,
-    id: order.id,
+    type: isCollapsed
+      ? `${LINK1}-${hasOrderItem ? ORDER_ITEM : ORDER}`
+      : `${LINK1}-${ORDER_ITEM_ALL}`,
+    id: hasOrderItem ? order.orderItems[0].id : order.id,
     relatedIds: relatedOrderIds,
   });
   relations.push({ type: ORDER_ITEM_ALL, id: order.id });
@@ -146,9 +158,10 @@ const generateRelation = (order: Object, option: Object) => {
     return relations;
   }
   const { orderItems } = order;
-  const lastOrderItem = orderItems.length - 1;
+  const previousOrderItemIds = [];
   orderItems.forEach((orderItem, orderItemIndex) => {
     const relatedProductIds = getRelatedIds(orderItems, orderItemIndex);
+    previousOrderItemIds.push(orderItem.id);
     const { batches } = orderItem;
     const noBatch = batches.length === 0;
     relations.push({ type: '' });
@@ -161,7 +174,8 @@ const generateRelation = (order: Object, option: Object) => {
       type: ORDER_ITEM,
       id: orderItem.id,
       isNew: orderItem.isNew,
-      isLast: lastOrderItem === orderItemIndex,
+      relatedIds: relatedProductIds,
+      previousIds: previousOrderItemIds,
     });
     if (noBatch) {
       relations.push({ type: '' });
@@ -172,11 +186,17 @@ const generateRelation = (order: Object, option: Object) => {
       orderItems,
       orderItemIndex,
       relatedOrderItem: relatedProductIds.filter(id => id !== orderItem.id),
-      numberOfBatch: batches.length,
     });
+    const previousBatchIds = [];
     batches.forEach((batch, batchIndex) => {
       const relatedBatchIds = getRelatedIds(batches, batchIndex);
-      batchRelation.generateBatchRelation(batch, relatedBatchIds, batchIndex);
+      previousBatchIds.push(batch.id);
+      batchRelation.generateBatchRelation({
+        batchData: batch,
+        index: batchIndex,
+        relatedIds: relatedBatchIds,
+        previousIds: previousBatchIds,
+      });
     });
   });
   return relations;

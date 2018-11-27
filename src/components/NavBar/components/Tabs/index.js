@@ -47,6 +47,7 @@ class Tabs extends React.Component<Props, State> {
             onClick={() => this.handleChange(index)}
             {...tab}
             {...rest}
+            {...(tab.disabled ? { disabled: tab.disabled } : {})}
           />
         ))}
       </div>

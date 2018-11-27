@@ -9,9 +9,14 @@ import {
   priceFragment,
   metricFragment,
   sizeFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
   productProviderFormFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import type { ProductCreate, ProductUpdate } from '../type.js.flow';
 
 export const createProductMutation: Object = gql`
@@ -25,6 +30,7 @@ export const createProductMutation: Object = gql`
       }
     }
   }
+  ${violationFragment}
   ${productFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
@@ -34,8 +40,10 @@ export const createProductMutation: Object = gql`
   ${metricFragment}
   ${sizeFragment}
   ${productProviderFormFragment}
-
-  ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareCreateProductInput = ({
@@ -44,7 +52,7 @@ export const prepareCreateProductInput = ({
   janCode,
   hsCode,
   material,
-  metadata,
+  customFields,
   tags = [],
   files = [],
   productProviders = [],
@@ -54,16 +62,26 @@ export const prepareCreateProductInput = ({
   janCode,
   hsCode,
   material,
-  metadata,
+  customFields: prepareCustomFieldsData(customFields),
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
-    ({ isNew, id, updatedAt, exporter, supplier, origin, ...productProvider }) => ({
+    ({
+      isNew,
+      id,
+      updatedAt,
+      exporter,
+      supplier,
+      origin,
+      customFields: productProviderCustomFields,
+      ...productProvider
+    }) => ({
       ...productProvider,
       ...(isNew ? {} : { id }),
       origin: origin && origin.length > 0 ? origin : null,
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
+      customFields: prepareCustomFieldsData(productProviderCustomFields),
     })
   ),
 });
@@ -79,6 +97,7 @@ export const updateProductMutation: Object = gql`
       }
     }
   }
+  ${violationFragment}
   ${productFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
@@ -88,8 +107,10 @@ export const updateProductMutation: Object = gql`
   ${metricFragment}
   ${sizeFragment}
   ${productProviderFormFragment}
-
-  ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareUpdateProductInput = ({
@@ -98,7 +119,7 @@ export const prepareUpdateProductInput = ({
   janCode,
   hsCode,
   material,
-  metadata,
+  customFields,
   tags = [],
   files = [],
   productProviders = [],
@@ -108,7 +129,7 @@ export const prepareUpdateProductInput = ({
   janCode,
   hsCode,
   material,
-  metadata,
+  customFields: prepareCustomFieldsData(customFields),
   files: files.map(({ id, name: fileName, type, memo }) => ({ id, name: fileName, type, memo })),
   tagIds: tags.map(({ id }) => id),
   productProviders: productProviders.map(
@@ -121,6 +142,7 @@ export const prepareUpdateProductInput = ({
       sort,
       exporter,
       supplier,
+      customFields: productProviderCustomFields,
       ...productProvider
     }) => ({
       ...productProvider,
@@ -128,6 +150,7 @@ export const prepareUpdateProductInput = ({
       origin: origin && origin.length > 0 ? origin : null,
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
+      customFields: prepareCustomFieldsData(productProviderCustomFields),
     })
   ),
 });

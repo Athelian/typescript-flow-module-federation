@@ -1,7 +1,17 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, transitions } from 'styles/common';
+import { colors, transitions, fontSizes } from 'styles/common';
 
+export const HighlightBarWrapper: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 50px;
+  padding: 0 10px;
+  background-color: ${colors.HIGHLIGHT};
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  ${transitions.EXPAND};
+`;
 export const ActionSection1WrapperStyle: string = css`
   display: flex;
   align-items: center;
@@ -23,7 +33,7 @@ export const ActionSection2WrapperStyle: string = css`
   height: 50px;
   background: ${colors.GRAY_SUPER_LIGHT};
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  z-index: 2;
+  padding: 0 10px;
   ${transitions.EXPAND};
 `;
 
@@ -60,10 +70,54 @@ export const TabItemWrapperStyle = css`
 `;
 
 export const CancelButtonStyle = css`
+  margin-right: 5px;
+
+  ${fontSizes.HUGE};
   cursor: pointer;
   user-select: none;
   color: ${colors.TEAL_QUITE_DARK};
   &:hover {
     color: ${colors.TEAL};
   }
+`;
+
+export const HighlightLabelStyle: string = css`
+  margin-right: 50px;
+  padding: 0;
+  color: ${colors.ORDER_ITEM_VERY_DARK};
+  font-weight: bold;
+`;
+
+export const CancelHighlightButton = css`
+  margin-right: 5px;
+
+  ${fontSizes.HUGE};
+  cursor: pointer;
+  user-select: none;
+  color: ${colors.ORDER_ITEM_VERY_DARK};
+  &:hover {
+    color: ${colors.HIGHLIGHT_DARK};
+  }
+`;
+
+const getHighlightColor = (active: boolean) =>
+  active ? colors.ORDER_ITEM_VERY_DARK : colors.GRAY_DARK;
+const getItemColor = (active: boolean) => (active ? colors.TEAL_VERY_DARK : colors.GRAY_DARK);
+
+export const ItemHighlightWrapper = (active: boolean) => css`
+  color: ${getHighlightColor(active)};
+`;
+
+export const IconHighlightWrapper = (active: boolean) => css`
+  margin-right: 20px;
+  color: ${getHighlightColor(active)};
+`;
+
+export const ItemWrapper = (active: boolean) => css`
+  color: ${getItemColor(active)};
+`;
+
+export const IconWrapper = (active: boolean) => css`
+  margin-right: 20px;
+  color: ${getItemColor(active)};
 `;

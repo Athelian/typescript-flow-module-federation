@@ -68,7 +68,7 @@ export const RelationLine2Style = (isFocus: boolean, isTargeted: boolean) => css
     content: '';
     position: absolute;
     left: 50%;
-    bottom: -20px;
+    bottom: 15px;
     top: -40px;
     border-right: 3px solid ${getborderbackground(isFocus, isTargeted)};
   }

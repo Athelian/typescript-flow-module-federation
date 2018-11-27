@@ -11,7 +11,6 @@ type OptionalProps = {
 };
 type Props = OptionalProps & {
   label: string | React.Node,
-  disabled?: boolean,
   active: boolean,
   onClick: Function,
 };

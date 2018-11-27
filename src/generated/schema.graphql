@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Nov 14 2018 14:37:01 GMT+0900 (JST)
+# timestamp: Fri Nov 23 2018 08:22:28 GMT+0700 (Indochina Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -26886,7 +26886,7 @@ enum Airport {
 """Any scalar"""
 scalar Any
 
-type Batch implements Model & Owned & Package & Tagged {
+type Batch implements Model & Owned & Package & Tagged & Customizable {
   archived: Boolean!
   orderItem: OrderItem!
   shipment: Shipment
@@ -26913,6 +26913,7 @@ type Batch implements Model & Owned & Package & Tagged {
   packageSize: Size
   packageCapacity: Float
   tags: [Tag!]!
+  customFields: CustomFields!
 }
 
 type BatchAdjustment implements Model & Owned & Sortable {
@@ -26998,6 +26999,7 @@ input BatchCreateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   orderItemId: ID!
   shipmentId: ID
   batchAssignments: [BatchAssignmentCreateInput!]
@@ -27019,8 +27021,8 @@ input BatchFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  exporterId: ID
+  supplierId: ID
   producedAt: DateRangeInput
   deliveredAt: DateRangeInput
   expiredAt: DateRangeInput
@@ -27077,6 +27079,7 @@ input BatchUpdateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   orderItemId: ID
   shipmentId: ID
   batchAssignments: [BatchAssignmentUpdateInput!]
@@ -27086,6 +27089,10 @@ input BatchUpdateInput {
 input BatchUpdateWrapperInput {
   id: ID!
   input: BatchUpdateInput!
+}
+
+type BooleanValue {
+  boolean: Boolean!
 }
 
 type ContainerGroup implements Model & Owned & Sortable {
@@ -28374,6 +28381,31 @@ enum Currency {
   ZWL
 }
 
+type CustomFields {
+  mask: Mask
+  fieldValues: [FieldValue!]!
+  fieldDefinitions: [FieldDefinition!]!
+}
+
+input CustomFieldsInput {
+  maskId: ID
+  fieldValues: [FieldValueInput!]
+}
+
+interface Customizable {
+  customFields: CustomFields!
+}
+
+enum CustomizableEntityType {
+  Product
+  ProductProvider
+  Order
+  OrderItem
+  Batch
+  Shipment
+  Warehouse
+}
+
 input DateRangeInput {
   after: DateTime
   before: DateTime
@@ -28501,6 +28533,46 @@ enum ExportType {
   Products
 }
 
+type FieldDefinition implements Model & Owned & Sortable {
+  name: String!
+  entityType: CustomizableEntityType!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+  sort: Int!
+}
+
+input FieldDefinitionInput {
+  id: ID
+  name: String
+}
+
+input FieldDefinitionsInput {
+  entityType: CustomizableEntityType!
+  fieldDefinitions: [FieldDefinitionInput!]!
+}
+
+type FieldDefinitionsMutated {
+  fieldDefinitions: [FieldDefinition!]
+  violations: [Violation!]
+}
+
+type FieldValue {
+  value: Value!
+  fieldDefinition: FieldDefinition!
+  entity: Entity!
+}
+
+input FieldValueInput {
+  value: ValueInput
+  fieldDefinitionId: ID!
+}
+
 type File implements Model & Owned {
   name: String!
   type: FileType!
@@ -28566,6 +28638,10 @@ enum FileType {
 
   """ProductOriginCert"""
   ProductOriginCert
+}
+
+type FloatValue {
+  float: Float!
 }
 
 type Group implements Model {
@@ -28730,6 +28806,10 @@ type IntegrationPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+type IntValue {
+  int: Int!
 }
 
 enum Language {
@@ -29300,6 +29380,113 @@ Long can represent values between -(2^63) and 2^63 - 1.
 """
 scalar Long
 
+type Mask implements Model & Owned {
+  name: String!
+  entityType: CustomizableEntityType!
+  memo: String
+  fieldDefinitions: [FieldDefinition!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+input MaskCreateInput {
+  name: String!
+  entityType: CustomizableEntityType!
+  memo: String
+  fieldDefinitionIDs: [ID!]!
+}
+
+type MaskEdit implements Model & Owned {
+  name: String!
+  type: MaskEditType!
+  memo: String
+  fields: [String!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+input MaskEditCreateInput {
+  name: String!
+  type: MaskEditType!
+  memo: String
+  fields: [String!]!
+}
+
+input MaskEditFilterInput {
+  query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  type: MaskEditType
+}
+
+type MaskEditMutated {
+  maskEdit: MaskEdit
+  violations: [Violation!]
+}
+
+type MaskEditPagination {
+  nodes: [MaskEdit!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input MaskEditSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+enum MaskEditType {
+  """Order"""
+  Order
+}
+
+input MaskEditUpdateInput {
+  name: String
+  type: MaskEditType
+  memo: String
+  fields: [String!]
+}
+
+input MaskFilterInput {
+  entityTypes: [CustomizableEntityType!]
+}
+
+type MaskMutated {
+  mask: Mask
+  violations: [Violation!]
+}
+
+type MaskPagination {
+  nodes: [Mask!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input MaskUpdateInput {
+  name: String
+  entityType: CustomizableEntityType
+  memo: String
+  fieldDefinitionIDs: [ID!]
+}
+
 interface Metadata {
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
@@ -29441,6 +29628,13 @@ type Mutation {
   entitiesUpdateMany(orders: [OrderUpdateWrapperInput!], shipments: [ShipmentUpdateWrapperInput!], products: [ProductUpdateWrapperInput!], batches: [BatchUpdateWrapperInput!], warehouses: [WarehouseUpdateWrapperInput!]): EntitiesMutatedMany!
   tagCreate(input: TagCreateInput!): TagMutated!
   tagUpdate(id: ID!, input: TagUpdateInput!): TagMutated!
+  fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsMutated!
+  maskCreate(input: MaskCreateInput!): MaskMutated!
+  maskUpdate(id: ID!, input: MaskUpdateInput!): MaskMutated!
+  maskDelete(id: ID!): Boolean!
+  maskEditCreate(input: MaskEditCreateInput!): MaskEditMutated!
+  maskEditUpdate(id: ID!, input: MaskEditUpdateInput!): MaskEditMutated!
+  maskEditDelete(id: ID!): Boolean!
   eventCommentCreate(input: EventCommentCreateInput!): EventCommentMutated!
   eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): EventCommentMutated!
   eventCommentDelete(id: ID!): Boolean!
@@ -29566,7 +29760,7 @@ enum NotificationType {
   NewComment
 }
 
-type Order implements Model & Owned & Tagged & Supervised & Documented & Metadata {
+type Order implements Model & Owned & Tagged & Supervised & Documented & Metadata & Customizable {
   archived: Boolean!
   exporter: Group!
   poNo: String!
@@ -29592,6 +29786,7 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Metadat
   files: [File!]!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input OrderCreateInput {
@@ -29609,6 +29804,7 @@ input OrderCreateInput {
   memo: String
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input OrderFilterInput {
@@ -29616,12 +29812,21 @@ input OrderFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  poNos: [String!]
+  inChargeIds: [ID!]
+  exporterIds: [ID!]
   tagIds: [ID!]
+  orderItemPrice: PriceRangeInput
+  orderItemCreatedAt: DateRangeInput
+  orderItemUpdatedAt: DateRangeInput
+  productProviderExporterIds: [ID!]
+  productProviderSupplierIds: [ID!]
+  productTagIds: [ID!]
+  batchTagIds: [ID!]
+  shipmentTagIds: [ID!]
 }
 
-type OrderItem implements Model & Owned & Sortable {
+type OrderItem implements Model & Owned & Sortable & Customizable {
   order: Order!
   productProvider: ProductProvider!
   price: Price!
@@ -29636,6 +29841,7 @@ type OrderItem implements Model & Owned & Sortable {
   deletedBy: User
   ownedBy: Group!
   sort: Int!
+  customFields: CustomFields!
 }
 
 input OrderItemBatchAdjustmentCreateInput {
@@ -29678,6 +29884,7 @@ input OrderItemBatchCreateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   shipmentId: ID
   batchAssignments: [OrderItemBatchAssignmentCreateInput!]
   batchAdjustments: [OrderItemBatchAdjustmentCreateInput!]
@@ -29697,6 +29904,7 @@ input OrderItemBatchUpdateInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   id: ID
   shipmentId: ID
   batchAssignments: [OrderItemBatchAssignmentUpdateInput!]
@@ -29708,6 +29916,7 @@ input OrderItemCreateInput {
   price: PriceInput!
   quantity: Float!
   batches: [OrderItemBatchCreateInput!]
+  customFields: CustomFieldsInput
 }
 
 input OrderItemFilterInput {
@@ -29715,8 +29924,8 @@ input OrderItemFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  exporterId: ID
+  supplierId: ID
 }
 
 type OrderItemPagination {
@@ -29739,6 +29948,7 @@ input OrderItemUpdateInput {
   price: PriceInput
   quantity: Float
   batches: [OrderItemBatchUpdateInput!]
+  customFields: CustomFieldsInput
 }
 
 type OrderMutated {
@@ -29781,6 +29991,8 @@ input OrderUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
+  metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input OrderUpdateWrapperInput {
@@ -29889,7 +30101,13 @@ input PriceInput {
   currency: Currency!
 }
 
-type Product implements Model & Owned & Tagged & Documented & Metadata {
+input PriceRangeInput {
+  min: Float
+  max: Float
+  currency: Currency
+}
+
+type Product implements Model & Owned & Tagged & Documented & Metadata & Customizable {
   archived: Boolean!
   name: String!
   serial: String!
@@ -29898,7 +30116,10 @@ type Product implements Model & Owned & Tagged & Documented & Metadata {
   material: String
   productProviders: [ProductProvider!]!
   timeline: Timeline!
+  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPagination!
+  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPagination!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
+  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPagination!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -29911,6 +30132,7 @@ type Product implements Model & Owned & Tagged & Documented & Metadata {
   files: [File!]!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input ProductCreateInput {
@@ -29924,6 +30146,7 @@ input ProductCreateInput {
   files: [FileInput!]
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ProductFilterInput {
@@ -29931,8 +30154,8 @@ input ProductFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  exporterId: ID
+  supplierId: ID
   tagIds: [ID!]
 }
 
@@ -29955,8 +30178,13 @@ type ProductPagination {
   totalCount: Int!
 }
 
-type ProductProvider implements Model & Owned & Sortable & Package & Documented & Metadata {
+type ProductProvider implements Model & Owned & Sortable & Package & Documented & Metadata & Customizable {
   archived: Boolean!
+
+  """
+  Determined if the ProductProvider is referenced by at least one OrderItem or not
+  """
+  referenced: Boolean!
   product: Product!
   exporter: Group!
   supplier: Group
@@ -29987,6 +30215,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   files: [File!]!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input ProductProviderCreateInput {
@@ -30009,6 +30238,7 @@ input ProductProviderCreateInput {
   memo: String
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ProductProviderFilterInput {
@@ -30016,8 +30246,8 @@ input ProductProviderFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
-  exporterId: String
-  supplierId: String
+  exporterId: ID
+  supplierId: ID
   tagIds: [ID!]
 }
 
@@ -30058,6 +30288,8 @@ input ProductProviderUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
+  metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ProductSortInput {
@@ -30078,6 +30310,8 @@ input ProductUpdateInput {
   productProviders: [ProductProviderUpdateInput!]
   files: [FileInput!]
   metadata: [MetadatumInput!]
+  metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ProductUpdateWrapperInput {
@@ -30118,7 +30352,13 @@ type Query {
   metadataTemplate(id: ID!): MetadataTemplate
   metadataTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: MetadataTemplateFilterInput, sortBy: MetadataTemplateSortInput): MetadataTemplatePagination!
   tag(id: ID!): Tag
-  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput): TagPagination!
+  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPagination!
+  fieldDefinition(id: ID!): FieldDefinition
+  fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinition!]!
+  mask(id: ID!): Mask
+  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput): MaskPagination!
+  maskEdit(id: ID!): MaskEdit
+  maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPagination!
   integration(id: ID!): Integration
   integrations(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
   integrationsOfPartners(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
@@ -35026,7 +35266,7 @@ enum Seaport {
   ZWUTA
 }
 
-type Shipment implements Model & Owned & Tagged & Supervised & Documented & Metadata {
+type Shipment implements Model & Owned & Tagged & Supervised & Documented & Metadata & Customizable {
   archived: Boolean!
   no: String!
   blNo: String
@@ -35059,6 +35299,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Meta
   files: [File!]!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input ShipmentBatchAdjustmentInput {
@@ -35089,6 +35330,7 @@ input ShipmentBatchInput {
   packageCapacity: Float
   memo: String
   tagIds: [ID!]
+  customFields: CustomFieldsInput
   id: ID
   orderItemId: ID
   batchAssignments: [ShipmentBatchAssignmentInput!]
@@ -35132,6 +35374,7 @@ input ShipmentCreateInput {
   memo: String
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ShipmentFilterInput {
@@ -35217,6 +35460,8 @@ input ShipmentUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
+  metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input ShipmentUpdateWrapperInput {
@@ -35262,6 +35507,10 @@ interface Sortable {
 enum SortOrder {
   ASCENDING
   DESCENDING
+}
+
+type StringValue {
+  string: String!
 }
 
 type Subscription {
@@ -35312,6 +35561,9 @@ enum TagEntityType {
 }
 
 input TagFilterInput {
+  query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
   entityTypes: [TagEntityType!]
 }
 
@@ -35331,6 +35583,12 @@ type TagPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+input TagSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
 }
 
 input TagUpdateInput {
@@ -35473,6 +35731,15 @@ input UserUpdateInput {
   tagIds: [ID!]
 }
 
+union Value = StringValue | IntValue | FloatValue | BooleanValue
+
+input ValueInput {
+  string: String
+  int: Int
+  float: Float
+  boolean: Boolean
+}
+
 type Viewer {
   user: User!
   notifications(page: Int! = 1, perPage: Int! = 10): NotificationPagination!
@@ -35513,7 +35780,7 @@ type Voyage implements Model & Owned & Sortable {
   sort: Int!
 }
 
-type Warehouse implements Model & Owned & Metadata {
+type Warehouse implements Model & Owned & Metadata & Customizable {
   archived: Boolean!
   name: String!
   surface: MetricValue
@@ -35532,6 +35799,7 @@ type Warehouse implements Model & Owned & Metadata {
   ownedBy: Group!
   metadata: [Metadatum!]!
   metadataTemplate: MetadataTemplate
+  customFields: CustomFields!
 }
 
 input WarehouseCreateInput {
@@ -35544,6 +35812,7 @@ input WarehouseCreateInput {
   country: Country
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input WarehouseFilterInput {
@@ -35588,6 +35857,7 @@ input WarehouseUpdateInput {
   country: Country
   metadata: [MetadatumInput!]
   metadataTemplateId: ID
+  customFields: CustomFieldsInput
 }
 
 input WarehouseUpdateWrapperInput {

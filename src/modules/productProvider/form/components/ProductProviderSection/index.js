@@ -8,6 +8,7 @@ import {
   selectSearchEnumInputFactory,
   priceInputFactory,
   numberInputFactory,
+  customFieldsInputFactory,
 } from 'modules/form/helpers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import SelectExporters from 'modules/order/common/SelectExporters';
@@ -265,6 +266,11 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
                 })
               }
             </FormField>
+            {customFieldsInputFactory({
+              entityType: 'ProductProvider',
+              customFields: values.customFields,
+              setFieldValue,
+            })}
             <div className={DividerStyle} />
           </GridColumn>
         </div>

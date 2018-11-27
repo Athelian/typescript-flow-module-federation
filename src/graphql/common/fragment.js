@@ -112,9 +112,53 @@ export const portFragment = gql`
   }
 `;
 
-export const metadataFragment = gql`
-  fragment metadataFragment on Metadatum {
-    key
-    value
+export const customFieldsFragment = gql`
+  fragment customFieldsFragment on CustomFields {
+    mask {
+      ...maskFragment
+    }
+    fieldValues {
+      ...fieldValuesFragment
+    }
+    fieldDefinitions {
+      ...fieldDefinitionFragment
+    }
+  }
+`;
+
+export const maskFragment = gql`
+  fragment maskFragment on Mask {
+    id
+    name
+    memo
+    fieldDefinitions {
+      ...fieldDefinitionFragment
+    }
+    entityType
+  }
+`;
+
+export const fieldValuesFragment = gql`
+  fragment fieldValuesFragment on FieldValue {
+    value {
+      ... on StringValue {
+        string
+      }
+    }
+    fieldDefinition {
+      ...fieldDefinitionFragment
+    }
+    entity {
+      __typename
+    }
+  }
+`;
+
+export const fieldDefinitionFragment = gql`
+  fragment fieldDefinitionFragment on FieldDefinition {
+    id
+    name
+    entityType
+    sort
   }
 `;

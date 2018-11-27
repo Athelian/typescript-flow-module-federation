@@ -3,6 +3,19 @@
     "types": [
       {
         "kind": "INTERFACE",
+        "name": "Customizable",
+        "possibleTypes": [
+          { "name": "Batch" },
+          { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Shipment" },
+          { "name": "Warehouse" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
         "name": "Documented",
         "possibleTypes": [
           { "name": "Order" },
@@ -64,11 +77,14 @@
           { "name": "EventChange" },
           { "name": "EventComment" },
           { "name": "ExportTemplate" },
+          { "name": "FieldDefinition" },
           { "name": "File" },
           { "name": "Group" },
           { "name": "Integration" },
           { "name": "IntegrationConfiguration" },
           { "name": "IntegrationLink" },
+          { "name": "Mask" },
+          { "name": "MaskEdit" },
           { "name": "MetadataTemplate" },
           { "name": "Order" },
           { "name": "OrderItem" },
@@ -95,10 +111,13 @@
           { "name": "ContainerGroup" },
           { "name": "EventChange" },
           { "name": "EventComment" },
+          { "name": "FieldDefinition" },
           { "name": "File" },
           { "name": "Integration" },
           { "name": "IntegrationConfiguration" },
           { "name": "IntegrationLink" },
+          { "name": "Mask" },
+          { "name": "MaskEdit" },
           { "name": "MetadataTemplate" },
           { "name": "Order" },
           { "name": "OrderItem" },
@@ -124,6 +143,7 @@
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
           { "name": "ContainerGroup" },
+          { "name": "FieldDefinition" },
           { "name": "OrderItem" },
           { "name": "ProductProvider" },
           { "name": "TimelineDateRevision" },
@@ -144,6 +164,16 @@
           { "name": "Product" },
           { "name": "Shipment" },
           { "name": "User" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Value",
+        "possibleTypes": [
+          { "name": "StringValue" },
+          { "name": "IntValue" },
+          { "name": "FloatValue" },
+          { "name": "BooleanValue" }
         ]
       }
     ]

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { FormField } from 'modules/form';
-import { textInputFactory, metadataInputFactory } from 'modules/form/helpers';
+import { textInputFactory, customFieldsInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import {
   ProductInfoContainer,
@@ -216,8 +216,11 @@ const ProductSection = ({ isNew }: Props) => (
                 })
               }
             </FormField>
-            {metadataInputFactory({ metadata: values.metadata, setFieldValue })}
-
+            {customFieldsInputFactory({
+              entityType: 'Product',
+              customFields: values.customFields,
+              setFieldValue,
+            })}
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>
                 {({ state: { tags }, setFieldValue: changeTags }) => (

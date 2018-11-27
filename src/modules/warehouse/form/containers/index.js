@@ -17,6 +17,7 @@ export type FormState = {
   postalCode?: string,
   country?: string,
   surface: Metric,
+  customFields: Object,
 };
 
 const initValues = {

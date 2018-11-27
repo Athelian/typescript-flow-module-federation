@@ -1,24 +1,23 @@
 // @flow
 import React from 'react';
 import { Subscribe } from 'unstated';
-// import { getByPathWithDefault as get } from 'utils/fp';
+import { getByPathWithDefault as get } from 'utils/fp';
 import { cx } from 'react-emotion';
 import { BooleanValue } from 'react-values';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import SelectedShipment from 'modules/relationMap/common/SelectedShipment';
+import NewItemBadge from 'modules/relationMap/common/NewItemBadge';
 import {
   ItemWrapperStyle,
   ShipmentCardStyle,
   ShipmentCardTotalStyle,
-  IsNewItemStyle,
 } from 'modules/relationMap/common/RelationItem/style';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import RelationMapContainer from 'modules/relationMap/container';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import BaseCard from 'components/Cards';
-import Icon from 'components/Icon';
 import {
   RelationLine,
   OrderCard,
@@ -84,13 +83,13 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
   return (
     <Subscribe to={[RelationMapContainer]}>
       {({
-        state: { focusedItem, focusMode, focusedId },
+        state: { focusedItem, focusMode, focusedId, targetedItem },
         toggleHighlight,
         toggleTargetTree,
         toggleTarget,
         overrideTarget,
         isTargetedLine,
-        isRelatedLine,
+        isParentTargeted,
         isTargeted: isTargetedItem,
         isCurrentTree,
         isFocused: isFocusedItem,
@@ -98,13 +97,20 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         if (isRelationLine(type)) {
           const [, linkType, relationType] = relation.type.split('-') || [];
           const lineItemType = getItemType(relationType);
+          // @TODO need refactor for more clear logic
           const isAllOrderItemLine = relationType === ORDER_ITEM_ALL && !isCollapsed;
           const isAllBatchLine = relationType === BATCH_ALL && !isCollapsed;
           const isFocused = isAllBatchLine
             ? false
             : isFocusedLink(focusedItem[lineItemType], relatedIds);
-          const isTargeted = isAllBatchLine ? false : isTargetedLine(id);
-          const hasRelation = isAllOrderItemLine ? false : isRelatedLine(id);
+
+          const isTargeted = isAllBatchLine
+            ? false
+            : isParentTargeted(data, relationType) && isTargetedLine(id);
+          const isRelated =
+            get(false, `${lineItemType}.${id}`, focusedItem) ||
+            get(false, `${lineItemType}.${id}`, targetedItem);
+          const hasRelation = isAllOrderItemLine ? false : isRelated;
           return (
             <RelationLine
               type={linkType}
@@ -116,7 +122,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         }
         const onClickHighlight = toggleHighlight(itemRelation, id);
         const onClickTargetTree = toggleTargetTree(itemData, relation);
-        const onClickTarget = toggleTarget(itemType, relation, data);
+        const onClickTarget = toggleTarget(itemData, relation, itemType);
         const isFocused = isFocusedItem(itemType, id);
         const isCurrentFocused = focusedId && focusedId === id;
         const isTargeted = isTargetedItem(itemType, id);
@@ -142,11 +148,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 wrapperClassName={cardWrapperClass}
               >
                 <>
-                  {isNew && (
-                    <div className={IsNewItemStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  )}
+                  {isNew && <NewItemBadge label={isNew} />}
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
                       <BooleanValue>
@@ -208,11 +210,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 wrapperClassName={cardWrapperClass}
               >
                 <>
-                  {isNew && (
-                    <div className={IsNewItemStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  )}
+                  {isNew && <NewItemBadge label={isNew} />}
                   <BooleanValue>
                     {({ value: hovered, set: setToggle }) => (
                       <WrapperCard
@@ -262,11 +260,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 wrapperClassName={cardWrapperClass}
               >
                 <>
-                  {isNew && (
-                    <div className={IsNewItemStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  )}
+                  {isNew && <NewItemBadge label={isNew} />}
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
                       <BooleanValue>
@@ -350,11 +344,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   wrapperClassName={cx(cardWrapperClass, ShipmentCardStyle)}
                 >
                   <>
-                    {isNew && (
-                      <div className={IsNewItemStyle}>
-                        <Icon icon="CHECKED" />
-                      </div>
-                    )}
+                    {isNew && <NewItemBadge label={isNew} />}
                     <ToggleSlide>
                       {({ assign: setSlide }) => (
                         <Subscribe to={[ConnectContainer, ActionContainer]}>
@@ -438,6 +428,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   wrapperClassName={cx(cardWrapperClass, ShipmentCardTotalStyle)}
                 >
                   <WrapperCard onClick={onToggle}>
+                    {isNew && <NewItemBadge label={isNew} />}
                     <ShipmentCollapsed shipment={data} />
                     <TagValue>
                       {({ value: isToggle }) => (isToggle ? <Tags dataSource={data.tags} /> : null)}

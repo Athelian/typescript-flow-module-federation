@@ -9,7 +9,7 @@ const filterOutNewData = (newData: Array<Object>) => (data: Object) =>
 const createFilterData = (newData: Array<Object> = []) =>
   pipe(
     filter(filterOutNewData(newData || [])),
-    prependArray(newData.map(d => Object.assign(d, { isNew: true })))
+    prependArray(newData.map(d => Object.assign(d, { isNew: d.actionType || 'newItem' })))
   );
 const getIsNew = (item: Object) => item.isNew || false;
 
@@ -38,16 +38,19 @@ export const formatNodes = (orders: Array<Object>, result: Object) => {
     const orderItems = filterOrderItem(order.orderItems || []).map(orderItem => {
       const filterBatch = createFilterData(newBatch[orderItem.id]);
       const batches = filterBatch(orderItem.batches || []).map(batch => ({
+        ...batch,
         id: batch.id,
         isNew: getIsNew(batch),
       }));
       return {
+        ...orderItem,
         id: orderItem.id,
         isNew: getIsNew(orderItem),
         batches,
       };
     });
     return {
+      ...order,
       id: order.id,
       isNew: getIsNew(order),
       isCollapsed: getIsCollapsed({ newOrderItem, newBatch }, order),
@@ -57,12 +60,28 @@ export const formatNodes = (orders: Array<Object>, result: Object) => {
   return nodes;
 };
 
-export const removeAdditionBatchFields: Function = omit(['volumeLabel', 'orderId', 'orderItemId']);
+export const removeAdditionBatchFields: Function = omit([
+  'index',
+  'rootId',
+  'parentId',
+  'volumeLabel',
+  'orderId',
+  'orderItemId',
+  'actionType',
+  '__typename',
+]);
 export const removeAdditionOrderItemFields: Function = omit([
   'name',
   'orderedQuantity',
   'batchedQuantity',
   'shippedQuantity',
   'orderId',
+  'order',
+  'parentId',
+  'index',
+  'actionType',
+  '__typename',
 ]);
+
+export const removeAdditionShipmentFields: Function = omit(['actionType', 'isNew']);
 export default null;

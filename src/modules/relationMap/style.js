@@ -127,14 +127,12 @@ export const OrderMapWrapperStyle = css`
 export const FunctionWrapperStyle = css`
   grid-column: span 4;
   display: flex;
-  //grid-template-columns: 1fr 3.8fr;
   background-color: ${colors.WHITE};
   padding: 10px 10px;
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
-  z-index: 2;
   position: relative;
 `;
 

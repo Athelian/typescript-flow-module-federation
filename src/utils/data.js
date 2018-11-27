@@ -41,6 +41,14 @@ export const removeTypename: Function = when(
   )
 );
 
+export const removeId: Function = when(
+  either(is(Array), is(Object)),
+  pipe(
+    x => (is(Object, x) && !is(Array, x) ? omit(['id'], x) : x),
+    map(a => removeId(a))
+  )
+);
+
 export const cleanUpData: Function = pipe(
   removeTypename,
   removeNulls

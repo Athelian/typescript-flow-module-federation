@@ -4,11 +4,17 @@ import { IntlProvider } from 'react-intl';
 import { storiesOf } from '@storybook/react';
 import { translationMessages } from 'i18n';
 import SplitPanel from './SplitPanel';
+import ClonePanel from './ClonePanel';
 import ActionSelector from './ActionSelector';
 import { SelectedPanel, ApplyPanel, SuccessPanel, ConnectTypePanel } from './ConnectPanel';
 import 'styles/reset.css';
 
 storiesOf('RelationMap/ActionPanel', module)
+  .add('ClonePanel', () => (
+    <IntlProvider locale="en" messages={translationMessages.en}>
+      <ClonePanel />
+    </IntlProvider>
+  ))
   .add('SplitPanel', () => (
     <IntlProvider locale="en" messages={translationMessages.en}>
       <SplitPanel />

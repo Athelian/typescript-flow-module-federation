@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
@@ -47,7 +48,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
   ) => {
     const { warehouseId } = this.props;
 
-    const { name, street, locality, region, postalCode, country, surface } = formData;
+    const { name, street, locality, region, postalCode, country, surface, customFields } = formData;
     const input = {
       name,
       street,
@@ -56,6 +57,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
       region,
       postalCode,
       surface,
+      customFields: prepareCustomFieldsData(customFields),
     };
     if (this.isNewOrClone()) {
       const { data } = await saveWarehouse({ variables: { input } });

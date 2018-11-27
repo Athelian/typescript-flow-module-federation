@@ -17,8 +17,13 @@ import {
   portFragment,
   documentFragment,
   partnerCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
 import type {
@@ -29,7 +34,7 @@ import type {
   ShipmentUpdate,
 } from '../type.js.flow';
 
-const formatTimeline = (timeline: Object): ?CargoReady => {
+export const formatTimeline = (timeline: Object): ?CargoReady => {
   if (!timeline) return null;
 
   const { assignedTo = [], memo, approvedBy, date, timelineDateRevisions = [] } = timeline;
@@ -50,7 +55,7 @@ const formatTimeline = (timeline: Object): ?CargoReady => {
   };
 };
 
-const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
+export const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
   voyages.map(({ id, departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
     ...(id && id.includes('-') ? {} : { id }),
     vesselCode,
@@ -71,7 +76,7 @@ const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
     arrival: !arrival ? null : formatTimeline(arrival),
   }));
 
-const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGroups> =>
+export const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGroups> =>
   voyages.map(({ id, warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
     ...(id && id.includes('-') ? {} : { id }),
     warehouseId: warehouse && warehouse.id,
@@ -122,6 +127,10 @@ export const createShipmentWithReturnDataMutation: Object = gql`
   ${portFragment}
   ${documentFragment}
   ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareCreateShipmentInput = ({
@@ -135,6 +144,7 @@ export const prepareCreateShipmentInput = ({
   transportType,
   incoterm,
   carrier,
+  customFields,
   memo,
   cargoReady,
   voyages = [],
@@ -156,6 +166,7 @@ export const prepareCreateShipmentInput = ({
   transportType: transportType && transportType.length > 0 ? transportType : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   carrier,
+  customFields: prepareCustomFieldsData(customFields),
   cargoReady: formatTimeline(cargoReady),
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
@@ -200,6 +211,10 @@ export const updateShipmentMutation: Object = gql`
   ${documentFragment}
   ${partnerCardFragment}
   ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareUpdateShipmentInput = ({
@@ -214,6 +229,7 @@ export const prepareUpdateShipmentInput = ({
   transportType,
   incoterm,
   carrier,
+  customFields,
   cargoReady,
   voyages = [],
   containerGroups = [],
@@ -234,6 +250,7 @@ export const prepareUpdateShipmentInput = ({
   transportType: transportType && transportType.length > 0 ? transportType : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   carrier,
+  customFields: prepareCustomFieldsData(customFields),
   cargoReady: formatTimeline(cargoReady),
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),

@@ -17,8 +17,13 @@ import {
   metricFragment,
   sizeFragment,
   orderCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 import { prepareUpdateBatchInput, prepareCreateBatchInput } from 'modules/batch/form/mutation';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import type { OrderForm } from '../type.js.flow';
 
 export const createOrderMutation = gql`
@@ -47,6 +52,7 @@ export const createOrderWithReturnDataMutation = gql`
     }
   }
   ${violationFragment}
+
   ${orderFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
@@ -63,6 +69,10 @@ export const createOrderWithReturnDataMutation = gql`
   ${sizeFragment}
   ${orderCardFragment}
   ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const prepareCreateOrderInput = ({
@@ -75,6 +85,7 @@ export const prepareCreateOrderInput = ({
   poNo,
   currency,
   deliveryPlace,
+  customFields,
   piNo,
   memo,
   incoterm,
@@ -84,6 +95,7 @@ export const prepareCreateOrderInput = ({
   currency: currency && currency.length > 0 ? currency : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   deliveryPlace,
+  customFields: prepareCustomFieldsData(customFields),
   memo,
   exporterId: exporter.id,
   issuedAt: issuedAt ? new Date(issuedAt) : null,
@@ -133,6 +145,10 @@ export const updateOrderMutation = gql`
   ${sizeFragment}
   ${orderCardFragment}
   ${violationFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const updateOrderItemMutation = gql`
@@ -166,6 +182,7 @@ export const prepareUpdateOrderInput = ({
   poNo,
   currency,
   deliveryPlace,
+  customFields,
   piNo,
   memo,
   incoterm,
@@ -175,6 +192,7 @@ export const prepareUpdateOrderInput = ({
   currency: currency && currency.length > 0 ? currency : null,
   incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
   deliveryPlace,
+  customFields: prepareCustomFieldsData(customFields),
   piNo,
   memo,
   archived,

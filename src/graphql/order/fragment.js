@@ -16,6 +16,9 @@ export const orderFormFragment = gql`
     piNo
     incoterm
     deliveryPlace
+    customFields {
+      ...customFieldsFragment
+    }
     exporter {
       ...partnerCardFragment
     }
@@ -70,6 +73,7 @@ export const orderCardFragment = gql`
     id
     archived
     poNo
+    issuedAt
     currency
     exporter {
       ...partnerNameFragment

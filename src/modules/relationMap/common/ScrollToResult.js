@@ -13,16 +13,18 @@ type Props = {
 class ScrollToResult extends React.Component<Props> {
   scroll = () => {
     const { id, result, scrolled, setScroll } = this.props;
-    const { orderItem = {}, batch = {} } = result;
-    if (!scrolled && (!isEmpty(orderItem) || !isEmpty(batch))) {
+    const { order = [], orderItem = {}, batch = {} } = result;
+    if (!scrolled && (order.length > 0 || !isEmpty(orderItem) || !isEmpty(batch))) {
       const orderIds = Object.keys(orderItem);
       const orderItemIds = Object.keys(batch);
+      const scrollItemId = order && order.length > 0 ? order[0] : '';
       const scrollOrderId = orderIds && orderIds.length > 0 ? orderIds[0] : '';
       const scrollOrderItemId = orderItemIds && orderItemIds.length > 0 ? orderItemIds[0] : '';
+      const scrollEl = document.getElementById(`item-${scrollItemId}`);
       const scrollOrderEl = document.getElementById(`item-${scrollOrderId}`);
       const scrollOrderItemEl = document.getElementById(`item-${scrollOrderItemId}`);
-      if (scrollOrderEl || scrollOrderItemEl) {
-        const scollId = scrollOrderId || scrollOrderItemId || '';
+      if (scrollEl || scrollOrderEl || scrollOrderItemEl) {
+        const scollId = scrollItemId || scrollOrderId || scrollOrderItemId || '';
         setTimeout(() => {
           setScroll(true);
           scrollIntoView({ targetId: `item-${scollId}`, boundaryId: id });

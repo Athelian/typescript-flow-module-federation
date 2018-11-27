@@ -135,135 +135,134 @@ storiesOf('RelationMap/Layout', module)
       <IntlProvider locale="en" messages={translationMessages.en}>
         <Style.RelationMapGrid>
           <div className={Style.ScrollWrapperStyle}>{items}</div>
-          <div className={Style.MapWrapperStyle}>
-            <BaseCard
-              icon="ORDER_ITEM"
-              color="ORDER_ITEM"
-              actions={[]}
-              wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
-            >
-              <OrderItemCard
-                info="data.poNo"
-                orderedQuantity={200}
-                batchedQuantity={50}
-                shippedQuantity={80}
-              />
-            </BaseCard>
-            <RelationLine type={0} isFocus={false} />
-            <BaseCard
-              icon="BATCH"
-              color="BATCH"
-              actions={[]}
-              wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
-            >
-              <BatchCard title="Batch 00123" quantity={1000} volume={40} />
-            </BaseCard>
-            <RelationLine type={0} isFocus={false} />
-            <BaseCard
-              icon="SHIPMENT"
-              color="SHIPMENT"
-              actions={[]}
-              wrapperClassName={cx(ItemStyle.ItemWrapperStyle(false), ItemStyle.ShipmentCardStyle)}
-            >
-              <ShipmentCard shipment={shipment} />
-            </BaseCard>
-            <BaseCard
-              icon="ORDER_ITEM"
-              color="ORDER_ITEM"
-              actions={[]}
-              wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
-            >
-              <OrderItemCard
-                info="data.poNo"
-                orderedQuantity={200}
-                batchedQuantity={50}
-                shippedQuantity={80}
-              />
-            </BaseCard>
-            <RelationLine type={0} isFocus={false} />
-            <BaseCard
-              icon="BATCH"
-              color="BATCH"
-              actions={[]}
-              wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
-            >
-              <BatchCard title="Batch 00123" quantity={1000} volume={40} />
-            </BaseCard>
-            <div />
-            <BaseCard
-              icon="ORDER_ITEM"
-              color="ORDER_ITEM"
-              actions={[]}
-              wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
-            >
-              <OrderItemCard
-                info="data.poNo"
-                orderedQuantity={200}
-                batchedQuantity={50}
-                shippedQuantity={80}
-              />
-            </BaseCard>
-            <RelationLine type={0} isFocus={false} />
-            <BaseCard
-              icon="BATCH"
-              color="BATCH"
-              actions={[]}
-              wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
-            >
-              <BatchCard title="Batch 00123" quantity={1000} volume={40} />
-            </BaseCard>
-            <div />
-            <BaseCard
-              icon="ORDER_ITEM"
-              color="ORDER_ITEM"
-              actions={[]}
-              wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
-            >
-              <OrderItemCard
-                info="data.poNo"
-                orderedQuantity={200}
-                batchedQuantity={50}
-                shippedQuantity={80}
-              />
-            </BaseCard>
-            <RelationLine type={0} isFocus={false} />
-            <BaseCard
-              icon="ORDER_ITEM"
-              color="ORDER_ITEM"
-              actions={[]}
-              wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
-            >
-              <OrderItemCard
-                info="data.poNo"
-                orderedQuantity={200}
-                batchedQuantity={50}
-                shippedQuantity={80}
-              />
-            </BaseCard>
-            <RelationLine type={0} isFocus={false} />
-            <BaseCard
-              icon="SHIPMENT"
-              color="SHIPMENT"
-              actions={[]}
-              wrapperClassName={cx(ItemStyle.ItemWrapperStyle(false), ItemStyle.ShipmentCardStyle)}
-            >
-              <ShipmentCard shipment={shipment} />
-            </BaseCard>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-            <div>x</div>
-          </div>
+
+          <BaseCard
+            icon="ORDER_ITEM"
+            color="ORDER_ITEM"
+            actions={[]}
+            wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
+          >
+            <OrderItemCard
+              info="data.poNo"
+              orderedQuantity={200}
+              batchedQuantity={50}
+              shippedQuantity={80}
+            />
+          </BaseCard>
+          <RelationLine type={0} isFocus={false} />
+          <BaseCard
+            icon="BATCH"
+            color="BATCH"
+            actions={[]}
+            wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
+          >
+            <BatchCard title="Batch 00123" quantity={1000} volume={40} />
+          </BaseCard>
+          <RelationLine type={0} isFocus={false} />
+          <BaseCard
+            icon="SHIPMENT"
+            color="SHIPMENT"
+            actions={[]}
+            wrapperClassName={cx(ItemStyle.ItemWrapperStyle(false), ItemStyle.ShipmentCardStyle)}
+          >
+            <ShipmentCard shipment={shipment} />
+          </BaseCard>
+          <BaseCard
+            icon="ORDER_ITEM"
+            color="ORDER_ITEM"
+            actions={[]}
+            wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
+          >
+            <OrderItemCard
+              info="data.poNo"
+              orderedQuantity={200}
+              batchedQuantity={50}
+              shippedQuantity={80}
+            />
+          </BaseCard>
+          <RelationLine type={0} isFocus={false} />
+          <BaseCard
+            icon="BATCH"
+            color="BATCH"
+            actions={[]}
+            wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
+          >
+            <BatchCard title="Batch 00123" quantity={1000} volume={40} />
+          </BaseCard>
+          <div />
+          <BaseCard
+            icon="ORDER_ITEM"
+            color="ORDER_ITEM"
+            actions={[]}
+            wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
+          >
+            <OrderItemCard
+              info="data.poNo"
+              orderedQuantity={200}
+              batchedQuantity={50}
+              shippedQuantity={80}
+            />
+          </BaseCard>
+          <RelationLine type={0} isFocus={false} />
+          <BaseCard
+            icon="BATCH"
+            color="BATCH"
+            actions={[]}
+            wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
+          >
+            <BatchCard title="Batch 00123" quantity={1000} volume={40} />
+          </BaseCard>
+          <div />
+          <BaseCard
+            icon="ORDER_ITEM"
+            color="ORDER_ITEM"
+            actions={[]}
+            wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
+          >
+            <OrderItemCard
+              info="data.poNo"
+              orderedQuantity={200}
+              batchedQuantity={50}
+              shippedQuantity={80}
+            />
+          </BaseCard>
+          <RelationLine type={0} isFocus={false} />
+          <BaseCard
+            icon="ORDER_ITEM"
+            color="ORDER_ITEM"
+            actions={[]}
+            wrapperClassName={ItemStyle.ItemWrapperStyle(false)}
+          >
+            <OrderItemCard
+              info="data.poNo"
+              orderedQuantity={200}
+              batchedQuantity={50}
+              shippedQuantity={80}
+            />
+          </BaseCard>
+          <RelationLine type={0} isFocus={false} />
+          <BaseCard
+            icon="SHIPMENT"
+            color="SHIPMENT"
+            actions={[]}
+            wrapperClassName={cx(ItemStyle.ItemWrapperStyle(false), ItemStyle.ShipmentCardStyle)}
+          >
+            <ShipmentCard shipment={shipment} />
+          </BaseCard>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
+          <div>x</div>
         </Style.RelationMapGrid>
       </IntlProvider>
     );

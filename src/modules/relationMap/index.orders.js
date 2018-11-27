@@ -31,50 +31,54 @@ const Order = () => (
         return (
           <Query query={query} variables={filterVariables} fetchPolicy="network-only">
             {({ loading, data, fetchMore, error }) => (
-              <QueryHandler
-                model="orders"
-                filter={{ perPage }}
-                data={data}
-                fetchMore={fetchMore}
-                error={error}
-              >
-                {({ nodes, hasMore, loadMore }) => {
-                  const order = formatOrderData(nodes || []);
-                  return (
-                    <>
-                      <ActionSubscribe />
-                      <Subscribe to={[ActionContainer]}>
-                        {({ clearResult }) => (
-                          <SortFilter
-                            sort={sort}
-                            filter={filter}
-                            onChange={newFilter => {
-                              onChangeSortFilter(newFilter);
-                              clearResult();
-                            }}
-                            className={FunctionWrapperStyle}
-                          />
-                        )}
-                      </Subscribe>
-
-                      {loading ? (
-                        <LoadingIcon />
-                      ) : (
-                        <RelationMapGrid>
-                          <Subscribe to={[RelationMapContainer]}>
-                            {({ selectAll, unSelectAll, state: { targetedItem } }) => (
-                              <div className={BadgeWrapperStyle}>
-                                <SummaryBadge
-                                  summary={order}
-                                  targetedItem={targetedItem}
-                                  unSelectAll={unSelectAll}
-                                  selectAll={selectAll(order)}
-                                />
-                              </div>
+              <Subscribe to={[ActionContainer]}>
+                {({ state: { result, scrolled }, setScroll }) => (
+                  <QueryHandler
+                    model="orders"
+                    filter={{ perPage }}
+                    data={data}
+                    fetchMore={fetchMore}
+                    error={error}
+                  >
+                    {({ nodes, hasMore, loadMore }) => {
+                      const formatedNodes =
+                        isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result);
+                      const order = formatOrderData(formatedNodes || []);
+                      // console.log('formatedNodes', formatedNodes, order);
+                      return (
+                        <>
+                          <ActionSubscribe filter={filterVariables} />
+                          <Subscribe to={[ActionContainer]}>
+                            {({ clearResult }) => (
+                              <SortFilter
+                                sort={sort}
+                                filter={filter}
+                                onChange={newFilter => {
+                                  onChangeSortFilter(newFilter);
+                                  clearResult();
+                                }}
+                                className={FunctionWrapperStyle}
+                              />
                             )}
                           </Subscribe>
-                          <Subscribe to={[ActionContainer]}>
-                            {({ state: { result, scrolled }, setScroll }) => (
+
+                          {loading ? (
+                            <LoadingIcon />
+                          ) : (
+                            <RelationMapGrid>
+                              <Subscribe to={[RelationMapContainer]}>
+                                {({ selectAll, unSelectAll, state: { targetedItem } }) => (
+                                  <div className={BadgeWrapperStyle}>
+                                    <SummaryBadge
+                                      summary={order}
+                                      targetedItem={targetedItem}
+                                      unSelectAll={unSelectAll}
+                                      selectAll={selectAll(order)}
+                                    />
+                                  </div>
+                                )}
+                              </Subscribe>
+
                               <ScrollToResult
                                 id="OrderMapWrapper"
                                 result={result}
@@ -87,20 +91,18 @@ const Order = () => (
                                     order={order}
                                     hasMore={hasMore}
                                     loadMore={loadMore}
-                                    nodes={
-                                      isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result)
-                                    }
+                                    nodes={formatedNodes}
                                   />
                                 )}
                               </ScrollToResult>
-                            )}
-                          </Subscribe>
-                        </RelationMapGrid>
-                      )}
-                    </>
-                  );
-                }}
-              </QueryHandler>
+                            </RelationMapGrid>
+                          )}
+                        </>
+                      );
+                    }}
+                  </QueryHandler>
+                )}
+              </Subscribe>
             )}
           </Query>
         );

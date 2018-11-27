@@ -3,14 +3,27 @@ import React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
+import { FormattedMessage } from 'react-intl';
+import logger from 'utils/logger';
 // components
 import { BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
+import Dialog from 'components/Dialog';
+import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
+import OutsideClickHandler from 'components/OutsideClickHandler';
+import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 // commons
 import TableInlineEdit from 'modules/relationMap/common/TableInlineEdit';
-import { ActionSelector, SplitPanel, ConnectPanel } from 'modules/relationMap/common/ActionPanel';
-import logger from 'utils/logger';
+import {
+  ActionSelector,
+  SplitPanel,
+  ConnectPanel,
+  ClonePanel,
+  ErrorPanel,
+  HighlightPanel,
+  ConstrainPanel,
+} from 'modules/relationMap/common/ActionPanel';
 // containers
 import {
   ActionContainer,
@@ -19,23 +32,52 @@ import {
   ConnectContainer,
 } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
-import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
-import { TabItemStyled } from './style';
+import messages from 'modules/relationMap/messages';
+import { TabItemStyled, LoadingContainerStyle } from './style';
+
+type Props = {
+  filter: Object,
+};
+
+type LoadingProps = {
+  type: string,
+};
+
+const LoadingMessage = ({ type }: LoadingProps) => {
+  switch (type) {
+    default:
+      return null;
+    case 'clone':
+      return <FormattedMessage {...messages.cloning} />;
+    case 'split':
+      return <FormattedMessage {...messages.spliting} />;
+    case 'connect':
+      return <FormattedMessage {...messages.connecting} />;
+  }
+};
+
+const isSelectSomeItem = targetedItem => {
+  const { orderItem = {}, batch = {} } = targetedItem;
+  const numberOfOrderItem = Object.keys(orderItem).length;
+  const numberOfBatch = Object.keys(batch).length;
+  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
+  return selectSomeItem;
+};
 
 const isDisabledSplit = targetedItem => {
   const { orderItem = {}, batch = {} } = targetedItem;
   const numberOfOrderItem = Object.keys(orderItem).length;
   const numberOfBatch = Object.keys(batch).length;
-  if (numberOfOrderItem === 1 && numberOfBatch === 0) {
-    return false;
-  }
-  if (numberOfBatch === 1 && numberOfOrderItem === 0) {
+  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
+  const selctedOrderItem = numberOfOrderItem === 1 && numberOfBatch === 0;
+  const selectedBatch = numberOfBatch === 1 && numberOfOrderItem === 0;
+  if (selectSomeItem && (selctedOrderItem || selectedBatch)) {
     return false;
   }
   return true;
 };
 
-const ActionSubscribe = () => (
+const ActionSubscribe = ({ filter }: Props) => (
   <ApolloConsumer>
     {client => (
       <Subscribe
@@ -48,139 +90,168 @@ const ActionSubscribe = () => (
         ]}
       >
         {(
-          { state: { focusMode, targetedItem }, isTargetAnyItem, selectTargetItem, cancelTarget },
-          { setResult, setAction, state: { currentAction } },
+          {
+            state: { focusedItem, focusMode, targetedItem },
+            isTargetAnyItem,
+            isHighlighted,
+            resetFocusedItem,
+            addNewResult,
+            cancelTarget,
+          },
+          {
+            actionFunc,
+            setResult,
+            setAction,
+            setLoading,
+            setCurrentAction,
+            setError,
+            overrideState: setActionState,
+            state: { currentAction, loading, error },
+          },
           { clone },
           { split },
           connectContainer
         ) => {
-          logger.warn('currentAction', currentAction);
-
-          const renderActionSelector = (actionKey: ?string) => (
-            <>
-              <TabItem
-                className={TabItemStyled}
-                label="CLONE"
-                icon="CLONE"
-                active={actionKey === 'clone'}
-                onClick={async () => {
-                  const [newResult, newFocus] = await clone({
-                    client,
-                    target: targetedItem,
-                    focusMode,
-                  });
-                  // await refetch();
-                  setResult(newResult);
-                  selectTargetItem(newFocus);
-                  setAction('cloned');
-                }}
-              />
-              <TabItem
-                className={TabItemStyled}
-                label="SPLIT"
-                icon="SPLIT"
-                disabled={isDisabledSplit(targetedItem)}
-                active={actionKey === 'split'}
-                onClick={() => setAction(currentAction !== 'split' ? 'split' : null)}
-              />
-              <TabItem
-                className={TabItemStyled}
-                label="CONNECT"
-                icon="CONNECT"
-                active={actionKey === 'connect'}
-                onClick={() => setAction('connect')}
-              />
-              <BooleanValue>
-                {({ value: opened, set: slideToggle }) => (
-                  <>
-                    <BaseButton
-                      icon="EDIT"
-                      label="EDIT"
-                      backgroundColor="TEAL"
-                      hoverBackgroundColor="TEAL_DARK"
-                      onClick={() => slideToggle(true)}
-                    />
-                    <SlideView
-                      isOpen={opened}
-                      onRequestClose={() => slideToggle(false)}
-                      options={{ width: '1030px' }}
-                    >
-                      {opened && (
-                        <TableInlineEdit
-                          selected={targetedItem}
-                          onSave={() => {}}
-                          onCancel={() => slideToggle(false)}
-                          type="orders"
-                        />
-                      )}
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
-            </>
-          );
-
+          const onClickClone = () => {
+            const action = async () => {
+              setLoading(true);
+              try {
+                const [newResult, newFocus] = await clone({
+                  client,
+                  target: targetedItem,
+                  focusMode,
+                  filter,
+                });
+                addNewResult(newResult, newFocus);
+                setActionState({
+                  result: newResult,
+                  action: '',
+                  loading: false,
+                  error: false,
+                });
+              } catch (err) {
+                setLoading(false);
+                setError(!!err);
+                logger.error(err);
+              }
+            };
+            setCurrentAction(action);
+            action();
+          };
+          const onClickSplit = splitData => {
+            const action = async () => {
+              try {
+                setLoading(true);
+                const [splitResult, splitFocus] = await split(client, targetedItem, splitData);
+                addNewResult(splitResult, splitFocus);
+                setResult(splitResult);
+                setActionState({
+                  result: splitResult,
+                  action: '',
+                  loading: false,
+                  error: false,
+                });
+              } catch (err) {
+                setLoading(false);
+                setError(!!err);
+              }
+            };
+            setCurrentAction(action);
+            action();
+          };
+          const onCancelTarget = () => {
+            cancelTarget();
+            setAction('');
+            setError(false);
+          };
+          const disabledSplit = isDisabledSplit(targetedItem);
           return (
-            isTargetAnyItem() && (
-              <>
-                <ActionSelector
-                  target={targetedItem}
-                  onCancelTarget={() => {
-                    cancelTarget();
-                    setAction('');
-                  }}
-                >
-                  {(function renderPanel() {
-                    switch (currentAction) {
-                      default:
-                        return renderActionSelector();
-                      case 'split':
-                        return renderActionSelector('split');
-                      case 'cloned':
-                        return (
+            <>
+              {isTargetAnyItem() && (
+                <>
+                  <ActionSelector target={targetedItem} onCancelTarget={onCancelTarget}>
+                    <>
+                      <TabItem
+                        className={TabItemStyled}
+                        label="CLONE"
+                        icon="CLONE"
+                        active={currentAction === 'clone'}
+                        onClick={() => setAction(currentAction !== 'clone' ? 'clone' : null)}
+                      />
+                      <TabItem
+                        className={TabItemStyled}
+                        label="SPLIT"
+                        icon="SPLIT"
+                        disabled={disabledSplit}
+                        active={currentAction === 'split'}
+                        onClick={() => setAction(currentAction !== 'split' ? 'split' : null)}
+                      />
+                      <TabItem
+                        className={TabItemStyled}
+                        label="CONNECT"
+                        icon="CONNECT"
+                        active={currentAction === 'connect'}
+                        onClick={() => setAction('connect')}
+                      />
+                      <BooleanValue>
+                        {({ value: opened, set: slideToggle }) => (
                           <>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                cancelTarget();
-                                setAction('');
-                              }}
-                            >
-                              <Label>Clear All</Label>
-                            </button>
                             <BaseButton
-                              icon="CHECKED"
-                              label="SELECTED ALL CLONE"
-                              backgroundColor="TEAL_DARK"
+                              icon="EDIT"
+                              label="EDIT"
+                              backgroundColor="TEAL"
                               hoverBackgroundColor="TEAL_DARK"
+                              onClick={() => slideToggle(true)}
                             />
+                            <SlideView
+                              isOpen={opened}
+                              onRequestClose={() => slideToggle(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {opened && (
+                                <TableInlineEdit
+                                  selected={targetedItem}
+                                  onSave={() => {}}
+                                  onCancel={() => slideToggle(false)}
+                                  type="orders"
+                                />
+                              )}
+                            </SlideView>
                           </>
-                        );
-                      case 'connect':
-                        return renderActionSelector('connect');
-                    }
-                  })()}
-                </ActionSelector>
-                {currentAction === 'split' && (
-                  <SplitPanel
-                    targetedItem={targetedItem}
-                    onApply={async splitData => {
-                      const [splitResult, splitFocus] = await split(
-                        client,
-                        targetedItem,
-                        splitData
-                      );
-                      // await refetch();
-                      setResult(splitResult);
-                      selectTargetItem(splitFocus);
-                    }}
-                  />
-                )}
-                {currentAction === 'connect' && (
-                  <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
-                )}
-              </>
-            )
+                        )}
+                      </BooleanValue>
+                    </>
+                  </ActionSelector>
+                  {!error && currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
+                  {!error && !disabledSplit && currentAction === 'split' && (
+                    <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
+                  )}
+                  {!error && currentAction === 'connect' && (
+                    <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
+                  )}
+                  {isSelectSomeItem(targetedItem) && disabledSplit && (
+                    <ConstrainPanel type="split" />
+                  )}
+                  {error && (
+                    <ErrorPanel onClickCancel={onCancelTarget} onClickRefresh={actionFunc} />
+                  )}
+                  <OutsideClickHandler ignoreClick onOutsideClick={() => {}}>
+                    <Dialog isOpen={loading} options={{ width: 300 }} onRequestClose={() => {}}>
+                      <div className={LoadingContainerStyle}>
+                        <LoadingIcon />
+                        <Label align="center">
+                          <LoadingMessage type={currentAction} />
+                        </Label>
+                        <Label align="center">
+                          <FormattedMessage {...messages.waiting} />
+                        </Label>
+                      </div>
+                    </Dialog>
+                  </OutsideClickHandler>
+                </>
+              )}
+              {isHighlighted() && <HighlightPanel item={focusedItem} onCancel={resetFocusedItem} />}
+            </>
           );
         }}
       </Subscribe>

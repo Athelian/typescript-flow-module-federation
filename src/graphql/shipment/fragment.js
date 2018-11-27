@@ -20,6 +20,9 @@ export const shipmentFormFragment = gql`
     loadType
     transportType
     carrier
+    customFields {
+      ...customFieldsFragment
+    }
     forwarders {
       ...partnerCardFragment
     }

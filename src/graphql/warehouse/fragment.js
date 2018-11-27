@@ -18,6 +18,9 @@ export const warehouseFormFragment = gql`
     surface {
       ...metricFragment
     }
+    customFields {
+      ...customFieldsFragment
+    }
   }
 `;
 

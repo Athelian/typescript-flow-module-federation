@@ -3,9 +3,9 @@ import * as React from 'react';
 import MetricInputFactory from './index';
 import { type MetricInputProps } from './type';
 
-const metrics = ['g', 'kg', 'ton'];
+export const metrics = ['g', 'kg', 'ton'];
 
-const convert = (value: number, metric: string, newMetric: string) => {
+export const convert = (value: number, metric: string, newMetric: string) => {
   if ((metric === 'g' && newMetric === 'kg') || (metric === 'kg' && newMetric === 'ton'))
     return value / 1e3;
   if ((metric === 'kg' && newMetric === 'g') || (metric === 'ton' && newMetric === 'kg'))
