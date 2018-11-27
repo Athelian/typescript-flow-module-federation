@@ -396,6 +396,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     ...cloneInfo,
                                     no: `[cloned] ${no}`,
                                   });
+                                  shipmentFileState.initDetailValues([]);
                                 } else {
                                   shipmentInfoState.initDetailValues(info);
                                   shipmentBatchesState.initDetailValues(batches);
@@ -404,10 +405,10 @@ class ShipmentFormModule extends React.Component<Props> {
                                     voyages,
                                     containerGroups,
                                   });
+                                  shipmentFileState.initDetailValues(files);
                                 }
                                 shipmentTagsState.initDetailValues(tags);
                                 shipmentTransportTypeState.initDetailValues(transportType);
-                                shipmentFileState.initDetailValues(files);
                               }}
                             />
                           )}
