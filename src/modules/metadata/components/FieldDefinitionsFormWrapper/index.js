@@ -9,12 +9,11 @@ import { SaveButton } from 'components/Buttons';
 import FieldDefinitionsForm from 'modules/metadata/components/FieldDefinitionsForm';
 import { FormContainer } from 'modules/form';
 import { getByPathWithDefault } from 'utils/fp';
-import MetadataContainer from 'modules/metadata/container';
 import { fieldDefinitionsQuery } from 'modules/metadata/query';
 import { updateFieldDefinitionsMutation } from 'modules/metadata/mutation';
 
 import FormHeader from '../FormHeader';
-
+import FieldDefinitionsContainer from './container';
 import { WrapperStyle, HeaderStyle, ContainerWrapperStyle } from './style';
 
 type Props = {
@@ -72,7 +71,7 @@ class FieldDefinitionsFormWrapper extends React.Component<Props> {
                 const fieldDefinitions = getByPathWithDefault([], 'fieldDefinitions', data);
 
                 return (
-                  <Subscribe to={[MetadataContainer, FormContainer]}>
+                  <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
                     {(
                       {
                         initDetailValues,

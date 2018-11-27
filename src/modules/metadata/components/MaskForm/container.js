@@ -16,7 +16,7 @@ const initValues = {
   fieldDefinitionIDs: [],
 };
 
-export default class MetadataContainer extends Container<FormState> {
+export default class MaskContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;
