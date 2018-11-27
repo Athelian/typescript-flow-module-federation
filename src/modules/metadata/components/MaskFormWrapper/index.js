@@ -100,7 +100,10 @@ class MaskFormWrapper extends React.Component<Props> {
           if (loading) return <LoadingIcon />;
           const allFieldDefinitions = getByPathWithDefault([], 'fieldDefinitions', data);
           return (
-            <Mutation mutation={isNew ? createMaskMutation : updateMaskMutation}>
+            <Mutation
+              mutation={isNew ? createMaskMutation : updateMaskMutation}
+              onCompleted={() => onSave()}
+            >
               {(saveMask, { loading: isLoading, error: apiError }) => (
                 <>
                   {isLoading && <LoadingIcon />}
@@ -146,7 +149,6 @@ class MaskFormWrapper extends React.Component<Props> {
                                   },
                                   form.onErrors
                                 );
-                                onSave();
                               }}
                             />
                           )}
