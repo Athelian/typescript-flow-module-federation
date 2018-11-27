@@ -2,7 +2,12 @@
 import { Container } from 'unstated';
 import ApolloClient from 'apollo-client';
 import { isEmpty } from 'utils/fp';
-import { connectNewShipment, connectExistingShipment } from './connect';
+import {
+  connectNewShipment,
+  connectExistingShipment,
+  disconnectShipment,
+  deleteItem,
+} from './connect';
 
 type State = {
   connectType: string,
@@ -45,8 +50,18 @@ export default class ConnectContainer extends Container<State> {
     return newTarget;
   };
 
-  connectExistingShipment = async (client: ApolloClient<any>, target?: Object) => {
+  connectExistingShipment = async (client: ApolloClient<any>, target: Object) => {
     const newTarget = await connectExistingShipment(client, target);
+    return newTarget;
+  };
+
+  disconnectShipment = async (client: ApolloClient<any>, target: Object) => {
+    const newTarget = await disconnectShipment(client, target);
+    return newTarget;
+  };
+
+  deleteItem = async (client: ApolloClient<any>, target: Object) => {
+    const newTarget = await deleteItem(client, target);
     return newTarget;
   };
 }

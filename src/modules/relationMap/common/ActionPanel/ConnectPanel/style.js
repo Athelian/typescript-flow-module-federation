@@ -126,3 +126,14 @@ export const CancelPanel = flex => css`
 export const PanelButtonStyle = css`
   min-width: unset;
 `;
+
+export const ConfirmMessageContainer = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ConfirmActionStyle = css`
+  color: ${colors.TEAL};
+`;

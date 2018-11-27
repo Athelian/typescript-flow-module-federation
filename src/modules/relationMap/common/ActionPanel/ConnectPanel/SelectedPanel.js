@@ -2,12 +2,14 @@
 import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import { getByPathWithDefault as get, omit, compose } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
@@ -54,6 +56,53 @@ const isSameCurrency = (currency: string) => (item: Object) => {
   return compareCurrency === currency;
 };
 
+const ConfirmMessage = ({ connectType }: Props) => {
+  switch (connectType) {
+    default:
+    case 'ORDER':
+      return (
+        <div className={style.ConfirmMessageContainer}>
+          <div>
+            <FormattedMessage {...messages.confirmMessage} />{' '}
+            <span className={style.ConfirmActionStyle}>
+              <FormattedMessage {...messages.delete} />
+            </span>{' '}
+            <FormattedMessage {...messages.confirmDelete} />
+          </div>
+          <Label>
+            <FormattedMessage {...messages.confirmSubMessage} />
+          </Label>
+        </div>
+      );
+
+    case 'SHIPMENT':
+      return (
+        <div className={style.ConfirmMessageContainer}>
+          <div>
+            <FormattedMessage {...messages.confirmMessage} />
+          </div>{' '}
+          <span className={style.ConfirmActionStyle}>
+            <FormattedMessage {...messages.disconnect} />
+          </span>{' '}
+          <FormattedMessage {...messages.confirmDisconnect} />
+          <Label>
+            <FormattedMessage {...messages.confirmSubMessage} />
+          </Label>
+        </div>
+      );
+  }
+};
+
+const ClearMessage = ({ connectType }: Props) => {
+  switch (connectType) {
+    default:
+    case 'ORDER':
+      return <FormattedMessage {...messages.delete} />;
+    case 'SHIPMENT':
+      return <FormattedMessage {...messages.disconnect} />;
+  }
+};
+
 const SelectedPanel = ({ connectType }: Props) => (
   <SelectedPanelWrapper>
     <div className={style.SubPanel}>
@@ -70,7 +119,6 @@ const SelectedPanel = ({ connectType }: Props) => (
         <FormattedMessage {...messages.toConnectToTheList} />
       </Label>
     </div>
-
     <div className={style.SubPanel}>
       <Label className={style.GroupLabelButtonStyle}>
         <FormattedMessage {...messages.connectTo} />
@@ -96,121 +144,125 @@ const SelectedPanel = ({ connectType }: Props) => (
                     orderInfoContainer,
                     { setSuccess }
                   ) => (
-                    <BaseButton
-                      icon="ADD"
-                      label={
-                        <FormattedMessage
-                          {...getNewConnectTypeMessage(connectType)}
-                          className={style.PanelButtonStyle}
-                        />
-                      }
-                      onClick={() => {
-                        const { batch, orderItem } = targetedItem;
-                        const batchIds = Object.keys(batch || {});
-                        const orderItemIds = Object.keys(orderItem || {});
-                        if (connectType === 'SHIPMENT') {
-                          const batches = batchIds.map(batchId =>
-                            removeAdditionBatchFields(batch[batchId])
-                          );
-                          batchContainer.initDetailValues(batches);
+                    <>
+                      <BaseButton
+                        icon="ADD"
+                        label={
+                          <FormattedMessage
+                            {...getNewConnectTypeMessage(connectType)}
+                            className={style.PanelButtonStyle}
+                          />
                         }
-                        if (connectType === 'ORDER') {
-                          const orderItemObj = batchIds
-                            .filter(batchId => {
-                              const orderItemId = get(false, 'orderItem.id', batch[batchId]);
-                              return !orderItem[orderItemId];
-                            })
-                            .reduce((obj, batchId) => {
-                              const currentOrderItem = get(false, 'orderItem', batch[batchId]);
-                              return Object.assign(obj, {
-                                [currentOrderItem.id]: {
-                                  ...currentOrderItem,
-                                  batches: [
-                                    ...get([], `${currentOrderItem.id}.batches`, obj),
-                                    batch[batchId],
-                                  ],
-                                },
-                              });
-                            }, {});
-                          const filteredOrderItemIds = Object.keys(orderItemObj);
-                          const filteredOrderItems = filteredOrderItemIds.map(
-                            orderItemId => orderItemObj[orderItemId]
-                          );
-                          const orderItems = orderItemIds.map(
-                            orderItemId => orderItem[orderItemId]
-                          );
-                          const allOrderItem = orderItems.concat(filteredOrderItems);
-
-                          const firstItem = allOrderItem[0]; // orderItem[head(orderItemIds)];
-                          const firstCurrency = get('', 'order.currency', firstItem);
-                          const exporter = get('', 'order.exporter', firstItem);
-                          const sameCurrency = allOrderItem.every(isSameCurrency(firstCurrency));
-                          const currency = sameCurrency ? firstCurrency : null;
-                          const formatedOrderItem = allOrderItem.map(currentOrderItem => {
-                            const orderItemInput = removeAdditionOrderItemFields(currentOrderItem);
-                            const batches = currentOrderItem.batches.map(
-                              compose(
-                                removeAdditionBatchFields,
-                                omit(['updatedBy', 'updatedAt', 'archived']),
-                                cleanUpData
-                              )
+                        onClick={() => {
+                          const { batch, orderItem } = targetedItem;
+                          const batchIds = Object.keys(batch || {});
+                          const orderItemIds = Object.keys(orderItem || {});
+                          if (connectType === 'SHIPMENT') {
+                            const batches = batchIds.map(batchId =>
+                              removeAdditionBatchFields(batch[batchId])
                             );
-                            return isSameCurrency
-                              ? { ...orderItemInput, batches }
-                              : Object.assign(orderItemInput, {
-                                  price: { amount: 0, currency: 'ALL' },
-                                  batches,
-                                });
-                          });
-                          orderItemContainer.initDetailValues(formatedOrderItem);
-                          orderInfoContainer.initDetailValues({
-                            exporter,
-                            currency,
-                          });
-                        }
-                        setSlide({
-                          show: true,
-                          type: `NEW_${connectType}`,
-                          onSuccess: async data => {
-                            let result = null;
-                            const itemType = getItemType(connectType);
-                            if (connectType === 'ORDER') {
-                              // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
-                              const { data: orderData } = await client.query({
-                                query: orderFormQuery,
-                                variables: {
-                                  id: get(null, 'orderCreate.order.id', data),
-                                },
-                              });
-                              result = { ...orderData.order, actionType: 'newItem' };
-                            }
-                            if (connectType === 'SHIPMENT') {
-                              // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
-                              const { data: shipmentData } = await client.query({
-                                query: shipmentFormQuery,
-                                variables: {
-                                  id: get('', 'shipmentCreate.shipment.id', data),
-                                },
-                              });
-                              result = { ...shipmentData.shipment, actionType: 'newItem' };
-                            }
-                            addTarget(
-                              { data: result, relation: {} },
-                              { id: result && result.id, type: connectType },
-                              itemType
-                            );
-                            setResult(prevState =>
-                              Object.assign(prevState, {
-                                result: Object.assign(prevState.result, {
-                                  [itemType]: [result],
-                                }),
+                            batchContainer.initDetailValues(batches);
+                          }
+                          if (connectType === 'ORDER') {
+                            const orderItemObj = batchIds
+                              .filter(batchId => {
+                                const orderItemId = get(false, 'orderItem.id', batch[batchId]);
+                                return !orderItem[orderItemId];
                               })
+                              .reduce((obj, batchId) => {
+                                const currentOrderItem = get(false, 'orderItem', batch[batchId]);
+                                return Object.assign(obj, {
+                                  [currentOrderItem.id]: {
+                                    ...currentOrderItem,
+                                    batches: [
+                                      ...get([], `${currentOrderItem.id}.batches`, obj),
+                                      batch[batchId],
+                                    ],
+                                  },
+                                });
+                              }, {});
+                            const filteredOrderItemIds = Object.keys(orderItemObj);
+                            const filteredOrderItems = filteredOrderItemIds.map(
+                              orderItemId => orderItemObj[orderItemId]
                             );
-                            setSuccess(true);
-                          },
-                        });
-                      }}
-                    />
+                            const orderItems = orderItemIds.map(
+                              orderItemId => orderItem[orderItemId]
+                            );
+                            const allOrderItem = orderItems.concat(filteredOrderItems);
+
+                            const firstItem = allOrderItem[0]; // orderItem[head(orderItemIds)];
+                            const firstCurrency = get('', 'order.currency', firstItem);
+                            const exporter = get('', 'order.exporter', firstItem);
+                            const sameCurrency = allOrderItem.every(isSameCurrency(firstCurrency));
+                            const currency = sameCurrency ? firstCurrency : null;
+                            const formatedOrderItem = allOrderItem.map(currentOrderItem => {
+                              const orderItemInput = removeAdditionOrderItemFields(
+                                currentOrderItem
+                              );
+                              const batches = currentOrderItem.batches.map(
+                                compose(
+                                  removeAdditionBatchFields,
+                                  omit(['updatedBy', 'updatedAt', 'archived']),
+                                  cleanUpData
+                                )
+                              );
+                              return isSameCurrency
+                                ? { ...orderItemInput, batches }
+                                : Object.assign(orderItemInput, {
+                                    price: { amount: 0, currency: 'ALL' },
+                                    batches,
+                                  });
+                            });
+                            orderItemContainer.initDetailValues(formatedOrderItem);
+                            orderInfoContainer.initDetailValues({
+                              exporter,
+                              currency,
+                            });
+                          }
+                          setSlide({
+                            show: true,
+                            type: `NEW_${connectType}`,
+                            onSuccess: async data => {
+                              let result = null;
+                              const itemType = getItemType(connectType);
+                              if (connectType === 'ORDER') {
+                                // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
+                                const { data: orderData } = await client.query({
+                                  query: orderFormQuery,
+                                  variables: {
+                                    id: get(null, 'orderCreate.order.id', data),
+                                  },
+                                });
+                                result = { ...orderData.order, actionType: 'newItem' };
+                              }
+                              if (connectType === 'SHIPMENT') {
+                                // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
+                                const { data: shipmentData } = await client.query({
+                                  query: shipmentFormQuery,
+                                  variables: {
+                                    id: get('', 'shipmentCreate.shipment.id', data),
+                                  },
+                                });
+                                result = { ...shipmentData.shipment, actionType: 'newItem' };
+                              }
+                              addTarget(
+                                { data: result, relation: {} },
+                                { id: result && result.id, type: connectType },
+                                itemType
+                              );
+                              setResult(prevState =>
+                                Object.assign(prevState, {
+                                  result: Object.assign(prevState.result, {
+                                    [itemType]: [result],
+                                  }),
+                                })
+                              );
+                              setSuccess(true);
+                            },
+                          });
+                        }}
+                      />
+                    </>
                   )}
                 </Subscribe>
               )}
@@ -219,9 +271,43 @@ const SelectedPanel = ({ connectType }: Props) => (
         </ToggleSlide>
       </Label>
     </div>
-    <Label className={style.GroupLabelButtonStyle}>
-      <BaseButton icon="CLEAR" label="Disconnect" className={style.PanelButtonStyle} />
-    </Label>
+    <BooleanValue>
+      {({ value: isOpen, set: dialogToggle }) => (
+        <>
+          <Label className={style.GroupLabelButtonStyle}>
+            <BaseButton
+              icon="CLEAR"
+              label={<ClearMessage connectType={connectType} />}
+              className={style.PanelButtonStyle}
+              onClick={() => dialogToggle(true)}
+            />
+          </Label>
+          <ApolloConsumer>
+            {client => (
+              <Subscribe to={[RelationMapContainer, ConnectContainer]}>
+                {({ state: { targetedItem } }, { disconnectShipment, deleteItem }) => (
+                  <ConfirmDialog
+                    onRequestClose={() => dialogToggle(false)}
+                    onCancel={() => dialogToggle(false)}
+                    isOpen={isOpen}
+                    message={<ConfirmMessage connectType={connectType} />}
+                    width={300}
+                    onConfirm={async () => {
+                      if (connectType === 'SHIPMENT') {
+                        await disconnectShipment(client, targetedItem);
+                      } else if (connectType === 'ORDER') {
+                        await deleteItem(client, targetedItem);
+                      }
+                      dialogToggle(false);
+                    }}
+                  />
+                )}
+              </Subscribe>
+            )}
+          </ApolloConsumer>
+        </>
+      )}
+    </BooleanValue>
   </SelectedPanelWrapper>
 );
 

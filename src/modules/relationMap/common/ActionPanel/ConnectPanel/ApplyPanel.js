@@ -12,12 +12,12 @@ import RelationMapContainer from 'modules/relationMap/container';
 import { LabelConnectStyle, GroupLabelButtonStyle, Panel, FlatButtonStyle } from './style';
 
 type Props = {
-  type: 'SHIPMENT' | 'ORDER',
+  connectType: 'SHIPMENT' | 'ORDER',
 };
 
-const ApplyPanel = ({ type }: Props) => {
+const ApplyPanel = ({ connectType }: Props) => {
   let text;
-  switch (type) {
+  switch (connectType) {
     default:
     case 'SHIPMENT':
       text = <FormattedMessage {...messages.askConnectToShipment} />;
@@ -43,9 +43,10 @@ const ApplyPanel = ({ type }: Props) => {
                   icon="CONFIRM"
                   label="APPLY"
                   onClick={async () => {
-                    const { connectExistingShipment, setCurrentStep } = connect;
-                    await connectExistingShipment(client, targetedItem);
-                    setCurrentStep(4);
+                    if (connectType === 'SHIPMENT') {
+                      const { connectExistingShipment } = connect;
+                      await connectExistingShipment(client, targetedItem);
+                    }
                   }}
                 />
               </Label>
@@ -55,10 +56,6 @@ const ApplyPanel = ({ type }: Props) => {
       )}
     </ApolloConsumer>
   );
-};
-
-ApplyPanel.defaultProps = {
-  type: 'SHIPMENT',
 };
 
 export default ApplyPanel;

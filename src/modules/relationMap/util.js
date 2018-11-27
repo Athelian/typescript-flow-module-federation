@@ -319,7 +319,11 @@ export const formatOrderData = (orders: Array<Object> = []) => {
     orderItems.forEach((orderItem, orderItemId) => {
       const { batches } = orderItem;
       if (!orderItemObj[orderItem.id]) {
-        orderRelation.orderItem[orderItem.id] = { parentId: orderId, index: orderItemId };
+        orderRelation.orderItem[orderItem.id] = {
+          ...orderItem,
+          parentId: orderId,
+          index: orderItemId,
+        };
         orderItemObj[orderItem.id] = initOrderItemObj(orderItem, orderId);
       }
       const { relation: orderItemRelation, data: orderItemData } = orderItemObj[orderItem.id];
@@ -331,7 +335,12 @@ export const formatOrderData = (orders: Array<Object> = []) => {
         const { shipment } = batch;
         let batchedQuantity = batch.quantity;
         if (!batchObj[batch.id]) {
-          const batchRelation = { rootId: order.id, parentId: orderItem.id, index: batchIndex };
+          const batchRelation = {
+            ...batch,
+            rootId: order.id,
+            parentId: orderItem.id,
+            index: batchIndex,
+          };
           orderRelation.batch[batch.id] = batchRelation;
           orderItemRelation.batch[batch.id] = batchRelation;
           batchObj[batch.id] = initBatchObj(batch, order.id, orderItem.id);

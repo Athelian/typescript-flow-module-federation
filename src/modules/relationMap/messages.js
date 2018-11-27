@@ -138,6 +138,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.disconnect',
     defaultMessage: 'Disconnect',
   },
+  delete: {
+    id: 'modules.RelationMaps.label.delete',
+    defaultMessage: 'Delete',
+  },
   newShipment: {
     id: 'modules.RelationMaps.label.newShipment',
     defaultMessage: 'New Shipment',
@@ -221,5 +225,21 @@ export default defineMessages({
   shareSameExport: {
     id: 'modules.RelationMaps.action.shareSameExprot',
     defaultMessage: 'That share the same export',
+  },
+  confirmMessage: {
+    id: 'modules.RelationMaps.action.confirmMessage',
+    defaultMessage: 'Are you sure you want to',
+  },
+  confirmDelete: {
+    id: 'modules.RelationMaps.action.confirmDelete',
+    defaultMessage: 'the selected item or batches',
+  },
+  confirmDisconnect: {
+    id: 'modules.RelationMaps.action.confirmDisconnect',
+    defaultMessage: 'to the shipment',
+  },
+  confirmSubMessage: {
+    id: 'modules.RelationMaps.action.confirmSubMessage',
+    defaultMessage: "You can't redo it if you confirm this action",
   },
 });

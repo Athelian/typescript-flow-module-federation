@@ -18,7 +18,7 @@ const ConnectPanel = ({ connect }: Props) => {
     return <SuccessPanel onClick={reset} />;
   }
   if (isSelectedItem()) {
-    return <ApplyPanel />;
+    return <ApplyPanel connectType={connectType} />;
   }
   if (connectType) {
     return <SelectedPanel connectType={connectType} />;
