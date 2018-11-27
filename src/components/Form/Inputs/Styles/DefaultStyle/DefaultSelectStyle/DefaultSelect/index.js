@@ -14,7 +14,7 @@ type OptionalProps = {
   width: string,
   height: string,
   align: 'left' | 'right' | 'center',
-  hideChevron: boolean,
+  hideDropdownArrow: boolean,
 };
 
 type Props = OptionalProps &
@@ -31,7 +31,7 @@ const defaultProps = {
   width: '100%',
   height: '30px',
   align: 'right',
-  hideChevron: false,
+  hideDropdownArrow: false,
 };
 
 function DefaultSelect({
@@ -49,7 +49,7 @@ function DefaultSelect({
   selectedItem,
   getInputProps,
   itemToString,
-  hideChevron,
+  hideDropdownArrow,
   ...rest
 }: Props) {
   return (
@@ -70,7 +70,7 @@ function DefaultSelect({
           <Icon icon="CLEAR" />
         </button>
       )}
-      {align === 'right' && !selectedItem && !hideChevron && (
+      {align === 'right' && !selectedItem && !hideDropdownArrow && (
         <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
           <Icon icon="CHEVRON_DOWN" />
         </button>
@@ -90,7 +90,7 @@ function DefaultSelect({
           <Icon icon="CLEAR" />
         </button>
       )}
-      {align === 'left' && !selectedItem && !hideChevron && (
+      {align === 'left' && !selectedItem && !hideDropdownArrow && (
         <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
           <Icon icon="CHEVRON_DOWN" />
         </button>

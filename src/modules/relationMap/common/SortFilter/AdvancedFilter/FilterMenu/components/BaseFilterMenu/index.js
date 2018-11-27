@@ -28,7 +28,7 @@ type Props = OptionalProps & {
   changeSelectedFilterItem: string => void,
 };
 
-export default function ItemFilterMenu({
+export default function BaseFilterMenu({
   filtersMap,
   togglesMap,
   entityType,
@@ -44,7 +44,7 @@ export default function ItemFilterMenu({
           const { label, icon, filters } = filterSection;
 
           return (
-            <>
+            <React.Fragment key={icon}>
               <SectionHeader label={label} icon={icon} />
               <div className={FiltersBodyStyle}>
                 {filters.map(filter => {
@@ -54,6 +54,7 @@ export default function ItemFilterMenu({
 
                   return (
                     <FilterMenuItem
+                      key={name}
                       name={name}
                       label={filterLabel}
                       isSelected={isSelected}
@@ -67,7 +68,7 @@ export default function ItemFilterMenu({
                   );
                 })}
               </div>
-            </>
+            </React.Fragment>
           );
         })}
 
@@ -79,6 +80,7 @@ export default function ItemFilterMenu({
 
             return (
               <ToggleMenuItem
+                key={name}
                 name={name}
                 label={toggleLabel}
                 icon={icon}

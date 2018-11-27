@@ -19,7 +19,7 @@ import messages from '../messages';
 import { MiniSelectorItem } from '..';
 
 type OptionalProps = {
-  hideToggles?: boolean,
+  hideToggles: boolean,
 };
 
 type Props = OptionalProps & {
@@ -50,7 +50,7 @@ export default function MiniSelector({
   return (
     <div className={MiniSelectorWrapperStyle}>
       <div className={MiniSelectorSearchWrapperStyle}>
-      {!hideToggles && (
+        {!hideToggles && (
           <>
             <div className={MiniSelectorStatusTogglesWrapperStyle}>
               <Icon icon="ACTIVE" />

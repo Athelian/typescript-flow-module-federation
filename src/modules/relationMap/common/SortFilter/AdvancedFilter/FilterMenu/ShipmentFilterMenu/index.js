@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { FilterMenu } from '../components';
+import { BaseFilterMenu } from '../components';
 import messages from './messages';
 
 type Props = {
@@ -68,7 +68,7 @@ export default function ShipmentFilterMenu({
   ];
 
   return (
-    <FilterMenu
+    <BaseFilterMenu
       filtersMap={filtersMap}
       togglesMap={togglesMap}
       entityType="shipment"

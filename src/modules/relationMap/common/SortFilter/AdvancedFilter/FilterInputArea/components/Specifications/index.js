@@ -54,7 +54,7 @@ export default function Specifications() {
                 align="left"
                 forceHoverStyle
                 required
-                hideChevron
+                hideDropdownArrow
                 width="60px"
               />
             )}
@@ -83,7 +83,7 @@ export default function Specifications() {
                 align="left"
                 forceHoverStyle
                 required
-                hideChevron
+                hideDropdownArrow
                 width="60px"
               />
             )}
@@ -112,7 +112,7 @@ export default function Specifications() {
                 align="left"
                 forceHoverStyle
                 required
-                hideChevron
+                hideDropdownArrow
                 width="60px"
               />
             )}
@@ -141,7 +141,7 @@ export default function Specifications() {
                 align="left"
                 forceHoverStyle
                 required
-                hideChevron
+                hideDropdownArrow
                 width="60px"
               />
             )}
@@ -170,7 +170,7 @@ export default function Specifications() {
                 align="left"
                 forceHoverStyle
                 required
-                hideChevron
+                hideDropdownArrow
                 width="60px"
               />
             )}

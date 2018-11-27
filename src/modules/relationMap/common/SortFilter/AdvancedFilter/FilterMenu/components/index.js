@@ -1,7 +1,7 @@
 // @flow
-import FilterMenu from './FilterMenu';
+import BaseFilterMenu from './BaseFilterMenu';
 import FilterMenuItem from './FilterMenuItem';
 import SectionHeader from './SectionHeader';
 import ToggleMenuItem from './ToggleMenuItem';
 
-export { FilterMenu, FilterMenuItem, SectionHeader, ToggleMenuItem };
+export { BaseFilterMenu, FilterMenuItem, SectionHeader, ToggleMenuItem };
