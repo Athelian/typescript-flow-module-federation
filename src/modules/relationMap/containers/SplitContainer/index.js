@@ -11,11 +11,11 @@ export default class SplitContainer extends Container {
     return [
       {
         ...getDefaultResult(),
-        batch: getSplitResult(results, splitType),
+        batch: getSplitResult(results, splitType, target),
       },
       {
         ...getDefaultFocus(),
-        batch: getSplitFocus(results, splitType),
+        batch: getSplitFocus(results, splitType, target),
       },
     ];
   };

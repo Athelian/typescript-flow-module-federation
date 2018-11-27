@@ -4,7 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { cx } from 'react-emotion';
 import Tabs from 'components/NavBar/components/Tabs';
-import { TextInput, SelectInput, DefaultSelect, DefaultOptions, Label } from 'components/Form';
+import { TextInput, Label } from 'components/Form';
 import { DefaultStyleWrapperStyle } from 'components/Form/Inputs/Styles/DefaultStyle/style';
 import { CardAction } from 'components/Cards/BaseCard';
 import messages from 'modules/relationMap/messages';
@@ -64,11 +64,6 @@ class SplitPanel extends React.Component<Props, State> {
   onChangeQuantity = e => {
     const quantity = e.target.value;
     this.setState({ quantity });
-  };
-
-  onChangeQuantityType = e => {
-    const quantityType = e.value;
-    this.setState({ quantityType });
   };
 
   onApply = () => {
@@ -133,23 +128,6 @@ class SplitPanel extends React.Component<Props, State> {
               <Label width="80px">
                 <FormattedMessage {...messages.splitTo} />
               </Label>
-              <div className={splitStyle.SplitInputWrapperStyle}>
-                <SelectInput
-                  onChange={this.onChangeQuantityType}
-                  items={[
-                    { title: 'Integer', value: 'integer' },
-                    { title: 'Double', value: 'double' },
-                  ]}
-                  itemToString={v => (v ? v.title : '')}
-                  itemToValue={v => (v ? v.value : null)}
-                  renderSelect={({ ...rest }) => (
-                    <DefaultSelect {...rest} required align="left" width="120px" height="20px" />
-                  )}
-                  renderOptions={({ ...rest }) => (
-                    <DefaultOptions {...rest} align="left" width="120px" height="20px" />
-                  )}
-                />
-              </div>
               <div
                 className={cx(
                   DefaultStyleWrapperStyle(defaultInputOption),

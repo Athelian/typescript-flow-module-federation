@@ -95,8 +95,6 @@ const ActionSubscribe = ({ filter }: Props) => (
             isTargetAnyItem,
             isHighlighted,
             resetFocusedItem,
-            selectTargetItem,
-            // overrideState: setRelationState,
             addNewResult,
             cancelTarget,
           },
@@ -124,11 +122,6 @@ const ActionSubscribe = ({ filter }: Props) => (
                   focusMode,
                   filter,
                 });
-                // setRelationState({
-                //   targetedItem: newFocus,
-                //   tress: [],
-                //   lines: {},
-                // });
                 addNewResult(newResult, newFocus);
                 setActionState({
                   result: newResult,
@@ -150,12 +143,14 @@ const ActionSubscribe = ({ filter }: Props) => (
               try {
                 setLoading(true);
                 const [splitResult, splitFocus] = await split(client, targetedItem, splitData);
+                addNewResult(splitResult, splitFocus);
                 setResult(splitResult);
-                selectTargetItem(splitFocus);
-                setLoading(false);
-                if (error) {
-                  setError(false);
-                }
+                setActionState({
+                  result: splitResult,
+                  action: '',
+                  loading: false,
+                  error: false,
+                });
               } catch (err) {
                 setLoading(false);
                 setError(!!err);
@@ -234,7 +229,7 @@ const ActionSubscribe = ({ filter }: Props) => (
                   {!error && currentAction === 'connect' && (
                     <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
                   )}
-                  {isSelectSomeItem(targetedItem) && disabledSplit && currentAction !== 'split' && (
+                  {isSelectSomeItem(targetedItem) && disabledSplit && (
                     <ConstrainPanel type="split" />
                   )}
                   {error && (
