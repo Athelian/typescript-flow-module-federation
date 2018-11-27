@@ -15,11 +15,9 @@ export const GroupFilterWrapperStyle = css`
 
 export const GroupFilterStyle = css`
   float: left;
-  width: 26.3%;
-
   ${layout.HORIZONTAL};
   justify-content: flex-end;
-
+  align-items: center;
   > div:nth-child(2) {
     width: calc(100% - 30px);
   }
