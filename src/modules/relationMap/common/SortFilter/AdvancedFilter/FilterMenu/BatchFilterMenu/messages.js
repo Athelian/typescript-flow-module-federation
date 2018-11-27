@@ -4,18 +4,23 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   batch: {
     id: 'modules.Batches.batch',
+    defaultMessage: 'BATCH',
   },
   deliveredAt: {
     id: 'modules.Batches.deliveredAt',
+    defaultMessage: 'BATCH',
   },
   expiredAt: {
     id: 'modules.Batches.expiredAt',
+    defaultMessage: 'DELIVERY DATE',
   },
   producedAt: {
     id: 'modules.Batches.producedAt',
+    defaultMessage: 'PRODUCTION DATE',
   },
   packaging: {
     id: 'modules.Batches.packaging',
+    defaultMessage: 'PACKAGING',
   },
   tags: {
     id: 'modules.Batches.tags',

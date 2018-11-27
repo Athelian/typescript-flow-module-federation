@@ -36,36 +36,47 @@ export default defineMessages({
   },
   length: {
     id: 'modules.ProductProviders.unitLength',
+    defaultMessage: 'UNIT LENGTH',
   },
   width: {
     id: 'modules.ProductProviders.unitWidth',
+    defaultMessage: 'UNIT WIDTH',
   },
   height: {
     id: 'modules.ProductProviders.unitHeight',
+    defaultMessage: 'UNIT HEIGHT',
   },
   volume: {
     id: 'modules.ProductProviders.unitVolume',
+    defaultMessage: 'UNIT VOLUME',
   },
   weight: {
     id: 'modules.ProductProviders.unitWeight',
+    defaultMessage: 'UNIT WEIGHT',
   },
   packageLength: {
     id: 'modules.ProductProviders.pkgLength',
+    defaultMessage: 'PKG LENGTH',
   },
   packageWidth: {
     id: 'modules.ProductProviders.pkgWidth',
+    defaultMessage: 'PKG WIDTH',
   },
   packageHeight: {
     id: 'modules.ProductProviders.pkgHeight',
+    defaultMessage: 'PKG HEIGHT',
   },
   packageVolume: {
     id: 'modules.ProductProviders.pkgVolume',
+    defaultMessage: 'PKG VOLUME',
   },
   packageWeight: {
     id: 'modules.ProductProviders.pkgWeight',
+    defaultMessage: 'PKG WEIGHT',
   },
   origin: {
     id: 'modules.ProductProviders.countryOfOrigin',
+    defaultMessage: 'COUNTRY OF ORIGIN',
   },
   add: {
     id: 'modules.RelationMaps.filter.add',
