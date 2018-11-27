@@ -3,7 +3,8 @@ import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { getByPathWithDefault as get } from 'utils/fp';
+import { getByPathWithDefault as get, omit, compose } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
@@ -11,6 +12,7 @@ import messages from 'modules/relationMap/messages';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import { shipmentFormQuery } from 'modules/shipment/form/query';
+import { orderFormQuery } from 'modules/order/form/query';
 import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
 import RelationMapContainer from 'modules/relationMap/container';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
@@ -146,10 +148,18 @@ const SelectedPanel = ({ connectType }: Props) => (
                           const currency = sameCurrency ? firstCurrency : null;
                           const formatedOrderItem = allOrderItem.map(currentOrderItem => {
                             const orderItemInput = removeAdditionOrderItemFields(currentOrderItem);
+                            const batches = currentOrderItem.batches.map(
+                              compose(
+                                removeAdditionBatchFields,
+                                omit(['updatedBy', 'updatedAt', 'archived']),
+                                cleanUpData
+                              )
+                            );
                             return isSameCurrency
-                              ? orderItemInput
+                              ? { ...orderItemInput, batches }
                               : Object.assign(orderItemInput, {
                                   price: { amount: 0, currency: 'ALL' },
+                                  batches,
                                 });
                           });
                           orderItemContainer.initDetailValues(formatedOrderItem);
@@ -163,8 +173,16 @@ const SelectedPanel = ({ connectType }: Props) => (
                           type: `NEW_${connectType}`,
                           onSuccess: async data => {
                             let result = null;
+                            const itemType = getItemType(connectType);
                             if (connectType === 'ORDER') {
-                              result = get(null, 'orderCreate.order', data);
+                              // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
+                              const { data: orderData } = await client.query({
+                                query: orderFormQuery,
+                                variables: {
+                                  id: get(null, 'orderCreate.order.id', data),
+                                },
+                              });
+                              result = { ...orderData.order, actionType: 'newItem' };
                             }
                             if (connectType === 'SHIPMENT') {
                               // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
@@ -175,16 +193,16 @@ const SelectedPanel = ({ connectType }: Props) => (
                                 },
                               });
                               result = { ...shipmentData.shipment, actionType: 'newItem' };
-                              addTarget(
-                                { data: result, relation: {} },
-                                { id: result.id, type: 'SHIPMENT' },
-                                getItemType(connectType)
-                              );
                             }
+                            addTarget(
+                              { data: result, relation: {} },
+                              { id: result && result.id, type: connectType },
+                              itemType
+                            );
                             setResult(prevState =>
                               Object.assign(prevState, {
                                 result: Object.assign(prevState.result, {
-                                  [getItemType(connectType)]: [result],
+                                  [itemType]: [result],
                                 }),
                               })
                             );
