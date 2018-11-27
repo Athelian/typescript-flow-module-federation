@@ -6,7 +6,7 @@ import { cx } from 'react-emotion';
 import { BooleanValue } from 'react-values';
 import { TagValue } from 'modules/relationMap/common/ToggleTag';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
-import SelectedShipment from 'modules/relationMap/common/SelectedShipment';
+import { SelectedShipment, SelectedOrder } from 'modules/relationMap/common/SelectedConnect';
 import NewItemBadge from 'modules/relationMap/common/NewItemBadge';
 import {
   ItemWrapperStyle,
@@ -151,50 +151,62 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                   {isNew && <NewItemBadge label={isNew} />}
                   <ToggleSlide>
                     {({ assign: setSlide }) => (
-                      <BooleanValue>
-                        {({ value: hovered, set: setToggle }) => (
-                          <WrapperCard
-                            onMouseEnter={() => setToggle(true)}
-                            onMouseLeave={() => setToggle(false)}
-                          >
-                            <OrderCard order={data} />
-                            <ActionCard show={hovered}>
-                              {({ targetted, toggle }) => (
-                                <>
-                                  <Action
-                                    icon="MAGIC"
-                                    targetted={targetted}
-                                    toggle={toggle}
-                                    onClick={onClickHighlight}
-                                  />
-                                  <Action
-                                    icon="DOCUMENT"
-                                    targetted={targetted}
-                                    toggle={toggle}
-                                    onClick={() => setSlide({ show: true, type, id })}
-                                  />
-                                  <Action
-                                    icon="BRANCH"
-                                    targetted={isCurrentTarget ? 'BRANCH' : targetted}
-                                    toggle={toggle}
-                                    onClick={onClickTargetTree}
-                                    className={RotateIcon}
-                                  />
-                                  <Action
-                                    icon="CHECKED"
-                                    targetted={isTargeted ? 'CHECKED' : targetted}
-                                    toggle={toggle}
-                                    onClick={onClickTarget}
-                                  />
-                                </>
-                              )}
-                            </ActionCard>
-                            <TagValue>
-                              {({ value: isToggle }) => isToggle && <Tags dataSource={data.tags} />}
-                            </TagValue>
-                          </WrapperCard>
+                      <Subscribe to={[ConnectContainer, ActionContainer]}>
+                        {({ state: { connectType } }) => (
+                          <BooleanValue>
+                            {({ value: hovered, set: setToggle }) => (
+                              <WrapperCard
+                                onMouseEnter={() => setToggle(true)}
+                                onMouseLeave={() => setToggle(false)}
+                              >
+                                <OrderCard order={data} />
+                                {isTargeted && connectType === 'ORDER' ? (
+                                  <ActionCard show>
+                                    {() => <SelectedOrder onClick={onClickTarget} />}
+                                  </ActionCard>
+                                ) : (
+                                  <ActionCard show={hovered}>
+                                    {({ targetted, toggle }) => (
+                                      <>
+                                        <Action
+                                          icon="MAGIC"
+                                          targetted={targetted}
+                                          toggle={toggle}
+                                          onClick={onClickHighlight}
+                                        />
+                                        <Action
+                                          icon="DOCUMENT"
+                                          targetted={targetted}
+                                          toggle={toggle}
+                                          onClick={() => setSlide({ show: true, type, id })}
+                                        />
+                                        <Action
+                                          icon="BRANCH"
+                                          targetted={isCurrentTarget ? 'BRANCH' : targetted}
+                                          toggle={toggle}
+                                          onClick={onClickTargetTree}
+                                          className={RotateIcon}
+                                        />
+                                        <Action
+                                          icon="CHECKED"
+                                          targetted={isTargeted ? 'CHECKED' : targetted}
+                                          toggle={toggle}
+                                          onClick={onClickTarget}
+                                        />
+                                      </>
+                                    )}
+                                  </ActionCard>
+                                )}
+                                <TagValue>
+                                  {({ value: isToggle }) =>
+                                    isToggle && <Tags dataSource={data.tags} />
+                                  }
+                                </TagValue>
+                              </WrapperCard>
+                            )}
+                          </BooleanValue>
                         )}
-                      </BooleanValue>
+                      </Subscribe>
                     )}
                   </ToggleSlide>
                 </>
@@ -348,7 +360,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                     <ToggleSlide>
                       {({ assign: setSlide }) => (
                         <Subscribe to={[ConnectContainer, ActionContainer]}>
-                          {({ state: { connectType } }) => (
+                          {({ setCurrentStep, state: { connectType } }) => (
                             <BooleanValue>
                               {({ value: hovered, set: setToggle }) => (
                                 <WrapperCard
@@ -383,6 +395,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                             onClick={() => {
                                               if (connectType === 'SHIPMENT') {
                                                 const target = { shipment: { [id]: data } };
+                                                setCurrentStep(3);
                                                 return overrideTarget(target);
                                               }
                                               return onClickTarget();

@@ -37,6 +37,7 @@ export const cloneOrder = async (client: any, orders: Array<Object>, filter: Obj
             orderItems,
             poNo: `[cloned] ${currentOrder.poNo}`,
             currency: currentOrder.currency === 'All' ? 'ALL' : currentOrder.currency,
+            files: [],
           })
         ),
       },
@@ -318,6 +319,7 @@ export const cloneShipment = async (client: any, shipment: Object) => {
             no: `[cloned] ${currentShipment.no}`,
             containerGroups: removeId(currentShipment.containerGroups),
             voyages: removeId(currentShipment.voyages),
+            files: [],
           })
         ),
       },

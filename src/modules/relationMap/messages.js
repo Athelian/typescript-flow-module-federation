@@ -118,6 +118,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.connectTo',
     defaultMessage: 'CONNECT TO',
   },
+  moveTo: {
+    id: 'modules.RelationMaps.label.moveTo',
+    defaultMessage: 'MOVE TO',
+  },
   askConnectToOrder: {
     id: 'modules.RelationMaps.label.askConnectToOrder',
     defaultMessage: 'Do you want to connect to this order',
@@ -141,6 +145,14 @@ export default defineMessages({
   newOrder: {
     id: 'modules.RelationMaps.label.newOrder',
     defaultMessage: 'New Order',
+  },
+  selectedOrder: {
+    id: 'modules.RelationMaps.label.selectedOrder',
+    defaultMessage: 'Selected Order',
+  },
+  selectedShipment: {
+    id: 'modules.RelationMaps.label.selectedShipment',
+    defaultMessage: 'Selected Shipment',
   },
   confirmDeleteBatch: {
     id: 'modules.RelationMaps.label.confirmDeleteBatch',

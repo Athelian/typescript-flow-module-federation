@@ -5,11 +5,13 @@ import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import logger from 'utils/logger';
+import { isEmpty } from 'utils/fp';
 // components
 import { BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
+import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
@@ -33,7 +35,7 @@ import {
 } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
 import messages from 'modules/relationMap/messages';
-import { TabItemStyled, LoadingContainerStyle } from './style';
+import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
 
 type Props = {
   filter: Object,
@@ -75,6 +77,12 @@ const isDisabledSplit = targetedItem => {
     return false;
   }
   return true;
+};
+
+const isDisabledMoveToShipment = targetedItem => {
+  const { batch } = targetedItem;
+  const selectedBatch = batch && !isEmpty(batch);
+  return !selectedBatch;
 };
 
 const ActionSubscribe = ({ filter }: Props) => (
@@ -165,6 +173,7 @@ const ActionSubscribe = ({ filter }: Props) => (
             setError(false);
           };
           const disabledSplit = isDisabledSplit(targetedItem);
+          const disabledMoveToShipment = isDisabledMoveToShipment(targetedItem);
           return (
             <>
               {isTargetAnyItem() && (
@@ -188,10 +197,34 @@ const ActionSubscribe = ({ filter }: Props) => (
                       />
                       <TabItem
                         className={TabItemStyled}
-                        label="CONNECT"
-                        icon="CONNECT"
+                        label={
+                          <div className={MoveToWrapper}>
+                            <FormattedMessage {...messages.moveTo} />
+                            <Icon icon="ORDER" />
+                          </div>
+                        }
+                        icon="EXCHANGE"
                         active={currentAction === 'connect'}
-                        onClick={() => setAction('connect')}
+                        onClick={() => {
+                          setAction('connect');
+                          connectContainer.setConnectType('ORDER');
+                        }}
+                      />
+                      <TabItem
+                        className={TabItemStyled}
+                        label={
+                          <div className={MoveToWrapper}>
+                            <FormattedMessage {...messages.moveTo} />
+                            <Icon icon="SHIPMENT" />
+                          </div>
+                        }
+                        icon="EXCHANGE"
+                        disabled={disabledMoveToShipment}
+                        active={currentAction === 'connect'}
+                        onClick={() => {
+                          setAction('connect');
+                          connectContainer.setConnectType('SHIPMENT');
+                        }}
                       />
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) => (
