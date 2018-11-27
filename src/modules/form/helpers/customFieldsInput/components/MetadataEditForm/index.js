@@ -26,6 +26,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   entityType: string,
+  fieldDefinitions: Array<Object>,
   onCancel: Function,
   onSave: Function,
 };
@@ -44,7 +45,7 @@ class MetadataEditForm extends React.Component<Props> {
   }
 
   render() {
-    const { entityType, onCancel, onSave } = this.props;
+    const { entityType, fieldDefinitions, onCancel, onSave } = this.props;
 
     return (
       <Subscribe to={[CustomFieldsContainer]}>
@@ -142,9 +143,15 @@ class MetadataEditForm extends React.Component<Props> {
                                     );
                                   } else {
                                     setFieldArrayValue('mask', null);
-                                    // TODO: all custom fields
-                                    setFieldArrayValue('fieldDefinitions', []);
-                                    setFieldArrayValue('fieldValues', []);
+                                    setFieldArrayValue('fieldDefinitions', fieldDefinitions);
+                                    setFieldArrayValue(
+                                      'fieldValues',
+                                      fieldDefinitions.map(fieldDefinition => ({
+                                        value: {},
+                                        fieldDefinition,
+                                        entityType,
+                                      }))
+                                    );
                                   }
 
                                   slideToggle(false);

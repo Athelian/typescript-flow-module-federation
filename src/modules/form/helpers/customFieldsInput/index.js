@@ -58,6 +58,7 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
                     return (
                       <MetadataEditForm
                         entityType={entityType}
+                        fieldDefinitions={(customFields && customFields.fieldDefinitions) || []}
                         onCancel={() => slideToggle(false)}
                         onSave={() => {
                           slideToggle(false);
