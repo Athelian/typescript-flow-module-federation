@@ -270,6 +270,7 @@ const ShipmentSection = ({ isNew }: Props) => (
                 }
               </FormField>
               {customFieldsInputFactory({
+                isNew,
                 entityType: 'Shipment',
                 customFields: values.customFields,
                 setFieldValue,

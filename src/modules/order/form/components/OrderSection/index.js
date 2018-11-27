@@ -162,6 +162,7 @@ const OrderSection = ({ isNew }: Props) => (
                   }
                 </FormField>
                 {customFieldsInputFactory({
+                  isNew,
                   entityType: 'Order',
                   customFields: values.customFields,
                   setFieldValue,

@@ -1,18 +1,24 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
+import { Query } from 'react-apollo';
+import { getByPathWithDefault } from 'utils/fp';
 import FormattedNumber from 'components/FormattedNumber';
+import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
 import { FieldItem, Label } from 'components/Form';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
+import { fieldDefinitionsQuery } from 'modules/metadata/query';
 import MetadataEditForm from './components/MetadataEditForm';
 import CustomFieldsContainer from './container';
 import { ShowAllButtonStyle, MetadataIconStyle } from './style';
 
 type Props = {
   entityType: string,
+  isNew: boolean,
   customFields: ?{
     mask: Object,
     fieldValues: Array<Object>,
@@ -21,7 +27,7 @@ type Props = {
   setFieldValue: Function,
 };
 
-const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: Props) => (
+const customFieldsInputFactory = ({ entityType, isNew, customFields, setFieldValue }: Props) => (
   <FieldItem
     label={
       <Label>
@@ -51,26 +57,79 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
               options={{ width: '1030px' }}
             >
               {isOpen && (
-                <Subscribe to={[CustomFieldsContainer]}>
-                  {({ initDetailValues, originalValues, state }) => {
-                    const values = { ...originalValues, ...state };
+                <>
+                  {isNew ? (
+                    <Query
+                      query={fieldDefinitionsQuery}
+                      variables={{ entityType }}
+                      fetchPolicy="network-only"
+                    >
+                      {({ loading, data, error }) => {
+                        if (error) {
+                          if (error.message && error.message.includes('403')) {
+                            navigate('/403');
+                          }
+                          return error.message;
+                        }
 
-                    return (
-                      <MetadataEditForm
-                        entityType={entityType}
-                        fieldDefinitions={(customFields && customFields.fieldDefinitions) || []}
-                        onCancel={() => slideToggle(false)}
-                        onSave={() => {
-                          slideToggle(false);
-                          setFieldValue('customFields', values);
-                        }}
-                        onFormReady={() => {
-                          initDetailValues(customFields);
-                        }}
-                      />
-                    );
-                  }}
-                </Subscribe>
+                        if (loading) return <LoadingIcon />;
+                        const fieldDefinitions = getByPathWithDefault([], 'fieldDefinitions', data);
+                        return (
+                          <Subscribe to={[CustomFieldsContainer]}>
+                            {({ initDetailValues, originalValues, state }) => {
+                              const values = { ...originalValues, ...state };
+
+                              return (
+                                <MetadataEditForm
+                                  entityType={entityType}
+                                  fieldDefinitions={fieldDefinitions}
+                                  onCancel={() => slideToggle(false)}
+                                  onSave={() => {
+                                    slideToggle(false);
+                                    setFieldValue('customFields', values);
+                                  }}
+                                  onFormReady={() => {
+                                    initDetailValues({
+                                      mask: null,
+                                      fieldDefinitions,
+                                      // FIXME: has issue when new entity
+                                      fieldValues: fieldDefinitions.map(fieldDefinition => ({
+                                        value: {},
+                                        fieldDefinition,
+                                        entityType,
+                                      })),
+                                    });
+                                  }}
+                                />
+                              );
+                            }}
+                          </Subscribe>
+                        );
+                      }}
+                    </Query>
+                  ) : (
+                    <Subscribe to={[CustomFieldsContainer]}>
+                      {({ initDetailValues, originalValues, state }) => {
+                        const values = { ...originalValues, ...state };
+
+                        return (
+                          <MetadataEditForm
+                            entityType={entityType}
+                            fieldDefinitions={(customFields && customFields.fieldDefinitions) || []}
+                            onCancel={() => slideToggle(false)}
+                            onSave={() => {
+                              slideToggle(false);
+                              setFieldValue('customFields', values);
+                            }}
+                            onFormReady={() => {
+                              initDetailValues(customFields);
+                            }}
+                          />
+                        );
+                      }}
+                    </Subscribe>
+                  )}
+                </>
               )}
             </SlideView>
           </>
