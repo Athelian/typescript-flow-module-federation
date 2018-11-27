@@ -2,13 +2,22 @@
 import * as React from 'react';
 import { RadioButtonWrapperStyle, RadioButtonStyle } from './style';
 
-type Props = {
-  selected: boolean,
+type OptionalProps = {
   onToggle: Function,
+};
+
+type Props = OptionalProps & {
+  selected: boolean,
   children: React.Node,
 };
 
+const defaultProps = {
+  onToggle: () => {},
+};
+
 export default class RadioInput extends React.PureComponent<Props> {
+  static defaultProps = defaultProps;
+
   render() {
     const { selected, onToggle, children, ...rest } = this.props;
 

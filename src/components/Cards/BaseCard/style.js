@@ -2,13 +2,20 @@
 import { css } from 'react-emotion';
 import { colors, presets, transitions, borderRadiuses } from 'styles/common';
 
-export const CardStyle = (disabled: boolean, readOnly: boolean): string => css`
+type CardProps = {
+  disabled: boolean,
+  readOnly: boolean,
+  isArchived: boolean,
+};
+
+export const CardStyle = ({ disabled, readOnly, isArchived }: CardProps): string => css`
   width: min-content;
   height: min-content;
   ${presets.BOX};
   ${transitions.EXPAND};
   position: relative;
   cursor: pointer;
+  ${isArchived && 'opacity: 0.6'};
   ${readOnly && 'cursor: default'};
   ${disabled && 'cursor: not-allowed'};
   ${!(readOnly || disabled) &&

@@ -30,7 +30,7 @@ const defaultProps = {
   onBlur: () => {},
   align: 'right',
   metricSelectWidth: '30px',
-  metricOptionWidth: '40px',
+  metricOptionWidth: '35px',
 };
 
 export default class MetricInput extends React.Component<Props> {
@@ -85,7 +85,6 @@ export default class MetricInput extends React.Component<Props> {
         <SelectInput
           {...rest}
           value={metric}
-          selectItem={metric}
           onChange={newMetric =>
             this.onChange({
               target: {
