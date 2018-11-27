@@ -321,11 +321,12 @@ class OrderFormModule extends React.PureComponent<Props> {
                                   orderItemState.initDetailValues(
                                     orderItems.map(item => ({ ...item, batches: [] }))
                                   );
+                                  orderFilesState.initDetailValues([]);
                                 } else {
                                   orderItemState.initDetailValues(orderItems);
                                   orderInfoState.initDetailValues(info);
+                                  orderFilesState.initDetailValues(files);
                                 }
-                                orderFilesState.initDetailValues(files);
                                 orderTagsState.initDetailValues(tags);
                               }}
                             />
