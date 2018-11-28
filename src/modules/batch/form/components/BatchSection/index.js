@@ -144,7 +144,6 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                   }
                 </FormField>
                 {customFieldsInputFactory({
-                  isNew,
                   entityType: 'Batch',
                   customFields: values.customFields,
                   setFieldValue,

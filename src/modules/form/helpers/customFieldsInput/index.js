@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isEmpty } from 'utils/fp';
 import FormattedNumber from 'components/FormattedNumber';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -18,8 +18,7 @@ import { ShowAllButtonStyle, MetadataIconStyle } from './style';
 
 type Props = {
   entityType: string,
-  isNew: boolean,
-  customFields: ?{
+  customFields: {
     mask: Object,
     fieldValues: Array<Object>,
     fieldDefinitions: Array<Object>,
@@ -27,14 +26,14 @@ type Props = {
   setFieldValue: Function,
 };
 
-const customFieldsInputFactory = ({ entityType, isNew, customFields, setFieldValue }: Props) => (
+const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: Props) => (
   <FieldItem
     label={
       <Label>
         <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />
         {' ('}
         <FormattedNumber
-          value={(customFields && customFields.fieldValues && customFields.fieldValues.length) || 0}
+          value={(customFields.fieldValues && customFields.fieldValues.length) || 0}
         />
         {')'}
       </Label>
@@ -58,7 +57,7 @@ const customFieldsInputFactory = ({ entityType, isNew, customFields, setFieldVal
             >
               {isOpen && (
                 <>
-                  {isNew ? (
+                  {customFields.mask == null && isEmpty(customFields.fieldValues) ? (
                     <Query
                       query={fieldDefinitionsQuery}
                       variables={{ entityType }}
@@ -92,7 +91,6 @@ const customFieldsInputFactory = ({ entityType, isNew, customFields, setFieldVal
                                     initDetailValues({
                                       mask: null,
                                       fieldDefinitions,
-                                      // FIXME: has issue when new entity
                                       fieldValues: fieldDefinitions.map(fieldDefinition => ({
                                         value: {},
                                         fieldDefinition,
@@ -115,7 +113,7 @@ const customFieldsInputFactory = ({ entityType, isNew, customFields, setFieldVal
                         return (
                           <MetadataEditForm
                             entityType={entityType}
-                            fieldDefinitions={(customFields && customFields.fieldDefinitions) || []}
+                            fieldDefinitions={customFields.fieldDefinitions || []}
                             onCancel={() => slideToggle(false)}
                             onSave={() => {
                               slideToggle(false);

@@ -267,7 +267,6 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
               }
             </FormField>
             {customFieldsInputFactory({
-              isNew,
               entityType: 'ProductProvider',
               customFields: values.customFields,
               setFieldValue,

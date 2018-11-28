@@ -152,7 +152,6 @@ const WarehouseSection = ({ isNew }: Props) => (
             </FormField>
 
             {customFieldsInputFactory({
-              isNew,
               entityType: 'Warehouse',
               customFields: values.customFields,
               setFieldValue,

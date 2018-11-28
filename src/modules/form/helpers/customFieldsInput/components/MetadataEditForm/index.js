@@ -132,7 +132,6 @@ class MetadataEditForm extends React.Component<Props> {
                                 onSave={item => {
                                   if (item) {
                                     setFieldArrayValue('mask', item);
-                                    setFieldArrayValue('fieldDefinitions', item.fieldDefinitions);
                                     setFieldArrayValue(
                                       'fieldValues',
                                       item.fieldDefinitions.map(fieldDefinition => ({
@@ -143,7 +142,6 @@ class MetadataEditForm extends React.Component<Props> {
                                     );
                                   } else {
                                     setFieldArrayValue('mask', null);
-                                    setFieldArrayValue('fieldDefinitions', fieldDefinitions);
                                     setFieldArrayValue(
                                       'fieldValues',
                                       fieldDefinitions.map(fieldDefinition => ({

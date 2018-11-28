@@ -21,6 +21,11 @@ type FormState = {
 const initValues = {
   forwarders: [],
   inCharges: [],
+  customFields: {
+    mask: null,
+    fieldValues: [],
+    fieldDefinitions: [],
+  },
 };
 
 export default class ShipmentInfoContainer extends Container<FormState> {
