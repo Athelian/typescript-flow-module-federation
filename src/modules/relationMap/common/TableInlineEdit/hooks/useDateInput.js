@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 import { useState, useCallback } from 'react';
 import { date } from 'yup';
 import type { ValidationObject } from './type.js.flow';
@@ -13,7 +13,7 @@ function useDateInput(initialValue: string, schema: ValidationObject) {
         .isValidSync(value)
     : false;
   const onChange = useCallback(event => {
-    setValue(new Date(event.currentTarget.value));
+    if (event && event.currentTarget) setValue(new Date(event.currentTarget.value));
   }, []);
   const onFocus = useCallback(() => {
     setFocus(true);

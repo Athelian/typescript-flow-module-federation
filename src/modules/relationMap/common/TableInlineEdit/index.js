@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
@@ -72,11 +72,13 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
   const onToggle = useCallback(
     selectedColumn => {
-      setHideColumns(
-        hideColumns.includes(selectedColumn)
-          ? hideColumns.filter(item => item !== selectedColumn)
-          : [...hideColumns, selectedColumn]
-      );
+      if (hideColumns && selectedColumn) {
+        setHideColumns(
+          hideColumns.includes(selectedColumn)
+            ? hideColumns.filter(item => item !== selectedColumn)
+            : [...hideColumns, selectedColumn]
+        );
+      }
     },
     [hideColumns]
   );
@@ -124,13 +126,17 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
   useEffect(() => {
     const handleScroll = () => {
-      headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
-      sidebarRef.current.scrollTop = bodyRef.current.scrollTop;
+      if (headerRef.current && bodyRef.current && sidebarRef.current) {
+        headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
+        sidebarRef.current.scrollTop = bodyRef.current.scrollTop;
+        bodyRef.current.addEventListener('scroll', handleScroll);
+      }
     };
 
-    bodyRef.current.addEventListener('scroll', handleScroll);
     return () => {
-      bodyRef.current.removeEventListener('scroll', handleScroll);
+      if (bodyRef.current) {
+        bodyRef.current.removeEventListener('scroll', handleScroll);
+      }
     };
   });
 
@@ -197,31 +203,31 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                         result.data.entitiesUpdateMany.orders.violations &&
                         result.data.entitiesUpdateMany.orders.violations.length
                       ) {
-                        const errorMesages = result.data.entitiesUpdateMany.orders.violations.filter(
+                        const errorMessages = result.data.entitiesUpdateMany.orders.violations.filter(
                           item => !!item
                         );
-                        logger.warn({ errorMesages });
-                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
+                        logger.warn({ errorMessages });
+                        if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
                       }
                       if (
                         result.data.entitiesUpdateMany.shipments.violations &&
                         result.data.entitiesUpdateMany.shipments.violations.length
                       ) {
-                        const errorMesages = result.data.entitiesUpdateMany.shipments.violations.filter(
+                        const errorMessages = result.data.entitiesUpdateMany.shipments.violations.filter(
                           item => !!item
                         );
-                        logger.warn({ errorMesages });
-                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
+                        logger.warn({ errorMessages });
+                        if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
                       }
                       if (
                         result.data.entitiesUpdateMany.batches.violations &&
                         result.data.entitiesUpdateMany.batches.violations.length
                       ) {
-                        const errorMesages = result.data.entitiesUpdateMany.batches.violations.filter(
+                        const errorMessages = result.data.entitiesUpdateMany.batches.violations.filter(
                           item => !!item
                         );
-                        logger.warn({ errorMesages });
-                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
+                        logger.warn({ errorMessages });
+                        if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
                       }
                     }
                     setTouched({});

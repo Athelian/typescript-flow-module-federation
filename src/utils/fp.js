@@ -76,8 +76,8 @@ export const isValuables = (...arr: Array<any>) => arr.every(val => val != null)
 
 export const setIn = (propPath: string, value: any, onObject: any): any => {
   const pathToArray = propPath.split('.');
-  const proplens = lens(path(pathToArray), assocPath(pathToArray));
-  return set(proplens, value, onObject);
+  const propLens = lens(path(pathToArray), assocPath(pathToArray));
+  return set(propLens, value, onObject);
 };
 
 export const arrayToObject = (inputArray: Array<Object>, keyField: string) =>

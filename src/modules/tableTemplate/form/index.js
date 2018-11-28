@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 import React, { memo, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
@@ -58,4 +58,5 @@ function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
 
 TableTemplateForm.defaultProps = defaultProps;
 
+// $FlowFixMe: flow type is not supported yet
 export default memo(TableTemplateForm);

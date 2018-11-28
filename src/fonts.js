@@ -10,14 +10,12 @@ const loadFonts = () => {
 
   // Load EN font and change font family
   sourceSansObserver.load(null, FONT_LOAD_TIMEOUT).then(() => {
-    // $FlowFixMe body to be accessed after ready state
-    document.body.classList.add('ssp');
+    if (document.body) document.body.classList.add('ssp');
   });
 
   // Load JP font and change font family
   notoSansObserver.load(null, FONT_LOAD_TIMEOUT).then(() => {
-    // $FlowFixMe body to be accessed after ready state
-    document.body.classList.add('sspnsjp');
+    if (document.body) document.body.classList.add('sspnsjp');
   });
 };
 

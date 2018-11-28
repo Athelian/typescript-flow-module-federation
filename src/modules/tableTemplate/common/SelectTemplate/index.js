@@ -12,11 +12,22 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { TableTemplateCard } from 'components/Cards';
 
 type Props = {
+  selected?: ?{
+    id: string,
+    name: string,
+  },
   onSelect: (item: Object) => void,
   onCancel: Function,
 };
 
-const SelectTemplate = ({ onCancel, onSelect }: Props) => (
+const defaultProps = {
+  selected: {
+    id: '',
+    name: '',
+  },
+};
+
+const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => (
   <Query
     query={tableTemplateQuery}
     variables={{
@@ -37,7 +48,7 @@ const SelectTemplate = ({ onCancel, onSelect }: Props) => (
       const totalPage = getByPathWithDefault(1, `maskEdits.totalPage`, data);
       const hasMore = nextPage <= totalPage;
       return (
-        <ObjectValue>
+        <ObjectValue defaultValue={selected}>
           {({ value, set }) => (
             <Layout
               navBar={
@@ -64,6 +75,8 @@ const SelectTemplate = ({ onCancel, onSelect }: Props) => (
                     template={item}
                     actions={[]}
                     showActionsOnHover
+                    selected={value.id === item.id}
+                    selectable
                   />
                 )}
               />
@@ -74,5 +87,7 @@ const SelectTemplate = ({ onCancel, onSelect }: Props) => (
     }}
   </Query>
 );
+
+SelectTemplate.defaultProps = defaultProps;
 
 export default SelectTemplate;

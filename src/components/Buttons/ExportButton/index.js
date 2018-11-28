@@ -66,11 +66,11 @@ class ExportButton extends React.Component<Props, State> {
         .then(({ data }) => {
           const link = document.createElement('a');
           link.href = data[exportQuery.definitions[0].selectionSet.selections[0].name.value].path;
-          // $FlowFixMe: flow says body can be null and quite stubborn
-          document.body.appendChild(link);
-          link.click();
-          // $FlowFixMe: flow says body can be null and quite stubborn
-          document.body.removeChild(link);
+          if (document.body) {
+            document.body.appendChild(link);
+            link.click();
+          }
+          if (document.body) document.body.removeChild(link);
         })
         .catch(reason => {
           logger.error(reason);
