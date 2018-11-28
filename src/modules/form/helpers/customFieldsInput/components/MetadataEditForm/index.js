@@ -27,7 +27,6 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   entityType: string,
-  // fieldDefinitions: Array<Object>,
   onCancel: Function,
   onSave: Function,
 };
