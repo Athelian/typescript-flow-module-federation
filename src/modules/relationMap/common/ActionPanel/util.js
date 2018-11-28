@@ -19,6 +19,12 @@ const getExporterFromBatch = batch => {
   return get('', 'orderItem.productProvider.exporter.id', firstItem);
 };
 
+export const getExportId = (target: Object) => {
+  const { orderItem, batch } = target;
+  const exportId = getExporterFromOrderItem(orderItem) || getExporterFromBatch(batch);
+  return exportId;
+};
+
 const isOrderItemSameExporter = (exportId: string, targetItem: Object) => {
   const { orderItem } = targetItem;
   const sameExporter = (Object.entries(orderItem || {}): Array<any>).every(
@@ -49,6 +55,9 @@ export const isDisabledMoveToOrder = (targetItem: Object) => {
 
 export const isDisabledChooseOrder = (order: Object, targetItem: Object) => {
   const exportId = get(null, 'exporter.id', order);
+  if (!exportId) {
+    return false;
+  }
   return isDifferentExporter(exportId, targetItem);
 };
 
@@ -77,4 +86,44 @@ export const isDisabledMoveToShipment = (targetedItem: Object) => {
   const { batch } = targetedItem;
   const selectedBatch = batch && !isEmpty(batch);
   return !selectedBatch;
+};
+
+export const isSelectAllBatch = (targetItem: Object) => {
+  const { orderItem, batch } = targetItem;
+  const orderItems: Array<any> = Object.entries(orderItem);
+  const selectedAllBatchInItem = orderItems.every(item => {
+    const selectedAllBatch =
+      item.batches && item.batches.every(({ id: batchId }) => batch[batchId]);
+    return selectedAllBatch;
+  });
+  return selectedAllBatchInItem;
+};
+
+export const findDiffCurrency = (targetItem: Object, selectedItem: Object) => {
+  const { batch, orderItem } = targetItem;
+  const { currency } = selectedItem;
+  const batches: Array<any> = Object.entries(batch);
+  const orderItems: Array<any> = Object.entries(orderItem);
+  const filteredItems = orderItems
+    .filter(item => {
+      const itemCurrency = get('', 'order.currency', item[1]);
+      return itemCurrency !== currency;
+    })
+    .map(item => get('', 'order.currency', item[1]));
+
+  const filteredBatches = batches
+    .filter(item => {
+      const orderItemId = get('', 'orderItem.id', item[1]);
+      const itemCurrency = get('', 'orderItem.order.currency', item[1]);
+      return !orderItem[orderItemId] && itemCurrency !== currency;
+    })
+    .map(item => get('', 'orderItem.order.currency', item[1]));
+
+  const currencies = [...filteredItems, ...filteredBatches];
+  // const diffCurrency = filteredItems.length + filteredBatches.length
+  return {
+    totalDiff: currencies.length,
+    baseCurrency: currency,
+    diffCurrency: currencies[0],
+  };
 };

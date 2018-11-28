@@ -127,6 +127,20 @@ export const PanelButtonStyle = css`
   min-width: unset;
 `;
 
+export const ConfirmLabelStyle = css`
+  white-space: normal;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const CurrencyLabelStyle = css`
+  margin: 1px 0;
+  font-weight: bold;
+  color: ${colors.TEAL};
+`;
+
 export const ConfirmMessageContainer = css`
   display: flex;
   flex-direction: column;

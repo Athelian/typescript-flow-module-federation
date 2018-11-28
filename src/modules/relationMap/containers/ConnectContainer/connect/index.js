@@ -2,8 +2,32 @@
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
 import { updateBatchMutation } from 'modules/batch/form/mutation';
 import { cloneOrderItemMutation as updateOrderMutation } from 'modules/relationMap/orderFocused/mutation';
-import { getByPathWithDefault as get, compose } from 'utils/fp';
+import {
+  removeAdditionBatchFields,
+  removeAdditionOrderItemFields,
+} from 'modules/relationMap/orderFocused/formatter';
+import { getExportId } from 'modules/relationMap/common/ActionPanel/util';
+import { getByPathWithDefault as get, compose, omit } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
 import { uniqBy, map, filter } from 'lodash/fp';
+
+const cleanOrderItem = compose(
+  removeAdditionOrderItemFields,
+  cleanUpData
+);
+const cleanBatch = compose(
+  cleanUpData,
+  batch => {
+    const batchAdjustments =
+      batch.batchAdjustments &&
+      batch.batchAdjustments.map(batchAdjustment =>
+        omit(['updatedBy', 'id', 'sort'], batchAdjustment)
+      );
+    return Object.assign(batch, { batchAdjustments });
+  },
+  omit(['archived', 'updatedBy', 'updatedAt', 'batchedQuantity']),
+  removeAdditionBatchFields
+);
 
 const connectShipmentInBatch = (client: any, batch: Object, shipmentId: ?string) => {
   const batchIds = Object.keys(batch);
@@ -50,10 +74,53 @@ export const connectNewShipment = async (client: any, target: Object) => {
   return [result, focus];
 };
 
-export const connectExistingShipment = async (client: any, target: Object) => {
-  const shipmentIds = Object.keys(target.shipment || {});
-  const connectedShipmentId = shipmentIds.length > 0 ? shipmentIds[0] : '';
+export const connectExistingShipment = async (
+  client: any,
+  target: Object,
+  selectedItem: Object
+) => {
+  const connectedShipmentId = selectedItem.id;
   await Promise.all(connectShipmentInBatch(client, target.batch || {}, connectedShipmentId));
+  return target;
+};
+
+export const connectExistingOrder = async (client: any, target: Object, selectedItem: Object) => {
+  const { orderItem: targetItem, batch: targetBatch } = target;
+  const exportId = get(null, 'exporter.id', selectedItem);
+  const itemFromBatches = (Object.entries(targetBatch): Array<any>).map(data => {
+    const [, item] = data;
+    const price = get(0, 'orderItem.price', item);
+    const quantity =
+      get(0, 'orderItem.quantity', item) +
+      item.batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, 0);
+    const batch = cleanBatch(item);
+    return {
+      price,
+      quantity,
+      batches: [batch],
+    };
+  });
+  const items = (Object.entries(targetItem): Array<any>).map(data => {
+    const [, item] = data;
+    const batches = item.batches.filter(batch => targetBatch[batch.id]).map(cleanBatch);
+    return {
+      ...cleanOrderItem(item),
+      batches,
+    };
+  });
+  await client.mutate({
+    mutation: updateOrderMutation,
+    variables: {
+      id: selectedItem.id,
+      exportId: exportId || getExportId(targetItem),
+      input: {
+        orderItems: (selectedItem.orderItems || [])
+          .map(item => ({ id: item.id }))
+          .concat(itemFromBatches)
+          .concat(items),
+      },
+    },
+  });
   return target;
 };
 

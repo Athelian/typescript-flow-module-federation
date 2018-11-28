@@ -5,6 +5,7 @@ import { isEmpty } from 'utils/fp';
 import {
   connectNewShipment,
   connectExistingShipment,
+  connectExistingOrder,
   disconnectShipment,
   deleteItem,
 } from './connect';
@@ -50,8 +51,21 @@ export default class ConnectContainer extends Container<State> {
     return newTarget;
   };
 
-  connectExistingShipment = async (client: ApolloClient<any>, target: Object) => {
-    const newTarget = await connectExistingShipment(client, target);
+  connectExistingShipment = async (
+    client: ApolloClient<any>,
+    target: Object,
+    selectedItem: Object
+  ) => {
+    const newTarget = await connectExistingShipment(client, target, selectedItem);
+    return newTarget;
+  };
+
+  connectExistingOrder = async (
+    client: ApolloClient<any>,
+    target: Object,
+    selectedItem: Object
+  ) => {
+    const newTarget = await connectExistingOrder(client, target, selectedItem);
     return newTarget;
   };
 

@@ -242,4 +242,30 @@ export default defineMessages({
     id: 'modules.RelationMaps.action.confirmSubMessage',
     defaultMessage: "You can't redo it if you confirm this action",
   },
+  areYouSure: {
+    id: 'modules.RelationMaps.action.areYouSure',
+    defaultMessage: 'Are you sure?',
+  },
+  deleteUnSelectBatch: {
+    id: 'modules.RelationMaps.action.deleteUnSelectBatch',
+    defaultMessage:
+      'You are about to move an Item but some of its Batches are not selected. These Batches will become deleted.',
+  },
+  diffCurrency: {
+    id: 'modules.RelationMaps.action.diffCurrency',
+    defaultMessage: 'The order you want to move to has a currency of',
+  },
+  diffSingleCurrency: {
+    id: 'modules.RelationMaps.action.diffSingleCurrency',
+    defaultMessage: 'but your selection has a currency of',
+  },
+  diffMultipleCurrency: {
+    id: 'modules.RelationMaps.action.diffMultipleCurrency',
+    defaultMessage: 'but your selection has multiple different currencies.',
+  },
+  diffCurrencyAction: {
+    id: 'modules.RelationMaps.action.diffCurrencyAction',
+    defaultMessage:
+      'If you want to move your selection,  the prices of the items in your selection will be reset to 0',
+  },
 });

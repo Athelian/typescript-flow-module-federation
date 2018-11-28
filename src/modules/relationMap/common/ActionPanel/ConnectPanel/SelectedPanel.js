@@ -284,8 +284,12 @@ const SelectedPanel = ({ connectType }: Props) => (
           </Label>
           <ApolloConsumer>
             {client => (
-              <Subscribe to={[RelationMapContainer, ConnectContainer]}>
-                {({ state: { targetedItem } }, { disconnectShipment, deleteItem }) => (
+              <Subscribe to={[RelationMapContainer, ConnectContainer, ActionContainer]}>
+                {(
+                  { state: { targetedItem } },
+                  { disconnectShipment, deleteItem },
+                  { setLoading }
+                ) => (
                   <ConfirmDialog
                     onRequestClose={() => dialogToggle(false)}
                     onCancel={() => dialogToggle(false)}
@@ -293,11 +297,13 @@ const SelectedPanel = ({ connectType }: Props) => (
                     message={<ConfirmMessage connectType={connectType} />}
                     width={300}
                     onConfirm={async () => {
+                      setLoading(true);
                       if (connectType === 'SHIPMENT') {
                         await disconnectShipment(client, targetedItem);
                       } else if (connectType === 'ORDER') {
                         await deleteItem(client, targetedItem);
                       }
+                      setLoading(false);
                       dialogToggle(false);
                     }}
                   />

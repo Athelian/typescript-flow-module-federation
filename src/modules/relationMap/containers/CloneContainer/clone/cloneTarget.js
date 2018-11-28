@@ -265,9 +265,11 @@ export const cloneBatch = async (client: any, batches: Object) => {
     const inputBatch = compose(
       cleanUpData,
       batch => {
-        const batchAdjustments = batch.batchAdjustments.map(batchAdjustment =>
-          omit(['updatedBy', 'id', 'sort'], batchAdjustment)
-        );
+        const batchAdjustments =
+          batch.batchAdjustments &&
+          batch.batchAdjustments.map(batchAdjustment =>
+            omit(['updatedBy', 'id', 'sort'], batchAdjustment)
+          );
         return Object.assign(batch, { batchAdjustments });
       },
       omit(['archived', 'updatedBy', 'updatedAt', 'batchedQuantity']),
