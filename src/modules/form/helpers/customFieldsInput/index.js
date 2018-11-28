@@ -92,7 +92,7 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
                                       mask: null,
                                       fieldDefinitions,
                                       fieldValues: fieldDefinitions.map(fieldDefinition => ({
-                                        value: {},
+                                        value: { string: '' },
                                         fieldDefinition,
                                         entityType,
                                       })),

@@ -49,7 +49,7 @@ class MetadataEditForm extends React.Component<Props> {
 
     return (
       <Subscribe to={[CustomFieldsContainer]}>
-        {({ originalValues, state, setFieldArrayValue }) => {
+        {({ originalValues, state, setFieldArrayValue, isDirty }) => {
           const values = { ...originalValues, ...state };
           const { mask, fieldValues } = values;
           return (
@@ -75,7 +75,7 @@ class MetadataEditForm extends React.Component<Props> {
                     />
                   </JumpToSection>
                   <CancelButton onClick={onCancel} />
-                  <SaveButton onClick={onSave} />
+                  <SaveButton disabled={!isDirty()} onClick={onSave} />
                 </SlideViewNavBar>
               }
             >
@@ -135,7 +135,7 @@ class MetadataEditForm extends React.Component<Props> {
                                     setFieldArrayValue(
                                       'fieldValues',
                                       item.fieldDefinitions.map(fieldDefinition => ({
-                                        value: {},
+                                        value: { string: '' },
                                         fieldDefinition,
                                         entityType,
                                       }))
@@ -145,7 +145,7 @@ class MetadataEditForm extends React.Component<Props> {
                                     setFieldArrayValue(
                                       'fieldValues',
                                       fieldDefinitions.map(fieldDefinition => ({
-                                        value: {},
+                                        value: { string: '' },
                                         fieldDefinition,
                                         entityType,
                                       }))
