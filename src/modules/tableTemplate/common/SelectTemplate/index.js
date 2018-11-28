@@ -36,6 +36,9 @@ const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => (
       filterBy: {
         type: 'Order',
       },
+      sortBy: {
+        updatedAt: 'DESCENDING',
+      },
     }}
     fetchPolicy="network-only"
   >
