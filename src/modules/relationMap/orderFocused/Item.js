@@ -16,7 +16,8 @@ import {
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import RelationMapContainer from 'modules/relationMap/container';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
-import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
+import ActionCard, { Action, DisabledAction } from 'modules/relationMap/common/ActionCard';
+import { isDisabledChooseOrder } from 'modules/relationMap/common/ActionPanel/util';
 import BaseCard from 'components/Cards';
 import {
   RelationLine,
@@ -165,48 +166,73 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                 onMouseLeave={() => setToggle(false)}
                               >
                                 <OrderCard order={data} />
-                                {connectType === 'ORDER' && isSelectedItem(id) ? (
-                                  <ActionCard show>
-                                    {() => <SelectedOrder onClick={resetSelectedItem} />}
-                                  </ActionCard>
-                                ) : (
-                                  <ActionCard show={hovered}>
-                                    {({ targetted, toggle }) => (
-                                      <>
-                                        <Action
-                                          icon="MAGIC"
-                                          targetted={targetted}
-                                          toggle={toggle}
-                                          onClick={onClickHighlight}
-                                        />
-                                        <Action
-                                          icon="DOCUMENT"
-                                          targetted={targetted}
-                                          toggle={toggle}
-                                          onClick={() => setSlide({ show: true, type, id })}
-                                        />
-                                        <Action
-                                          icon="BRANCH"
-                                          targetted={isCurrentTarget ? 'BRANCH' : targetted}
-                                          toggle={toggle}
-                                          onClick={onClickTargetTree}
-                                          className={RotateIcon}
-                                        />
-                                        <Action
-                                          icon="CHECKED"
-                                          targetted={isTargeted ? 'CHECKED' : targetted}
-                                          toggle={toggle}
-                                          onClick={() => {
-                                            if (connectType === 'ORDER') {
-                                              return setSelectedItem(data);
-                                            }
-                                            return onClickTarget();
-                                          }}
-                                        />
-                                      </>
-                                    )}
-                                  </ActionCard>
-                                )}
+                                {(function renderAction() {
+                                  if (connectType === 'ORDER') {
+                                    if (isDisabledChooseOrder(data, targetedItem)) {
+                                      return (
+                                        <ActionCard show>{() => <DisabledAction />}</ActionCard>
+                                      );
+                                    }
+                                    if (isSelectedItem(id)) {
+                                      return (
+                                        <ActionCard show>
+                                          {() => <SelectedOrder onClick={resetSelectedItem} />}
+                                        </ActionCard>
+                                      );
+                                    }
+                                    return (
+                                      <ActionCard show={hovered}>
+                                        {() => (
+                                          <Action
+                                            icon="CHECKED"
+                                            onClick={() => setSelectedItem(data)}
+                                          />
+                                        )}
+                                      </ActionCard>
+                                    );
+                                  }
+                                  return (
+                                    <ActionCard show={hovered}>
+                                      {({ targetted, toggle }) => (
+                                        <>
+                                          <Action
+                                            icon="MAGIC"
+                                            targetted={targetted}
+                                            toggle={toggle}
+                                            onClick={onClickHighlight}
+                                          />
+                                          <Action
+                                            icon="DOCUMENT"
+                                            targetted={targetted}
+                                            toggle={toggle}
+                                            onClick={() => setSlide({ show: true, type, id })}
+                                          />
+                                          <Action
+                                            icon="BRANCH"
+                                            targetted={isCurrentTarget ? 'BRANCH' : targetted}
+                                            toggle={toggle}
+                                            onClick={onClickTargetTree}
+                                            className={RotateIcon}
+                                          />
+                                          <Action
+                                            icon="CHECKED"
+                                            targetted={isTargeted ? 'CHECKED' : targetted}
+                                            toggle={toggle}
+                                            onClick={() => {
+                                              if (connectType === 'ORDER') {
+                                                if (!isDisabledChooseOrder(data, targetedItem)) {
+                                                  return setSelectedItem(data);
+                                                }
+                                                return null;
+                                              }
+                                              return onClickTarget();
+                                            }}
+                                          />
+                                        </>
+                                      )}
+                                    </ActionCard>
+                                  );
+                                })()}
                                 <TagValue>
                                   {({ value: isToggle }) =>
                                     isToggle && <Tags dataSource={data.tags} />

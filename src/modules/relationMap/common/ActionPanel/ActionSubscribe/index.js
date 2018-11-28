@@ -5,7 +5,6 @@ import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import logger from 'utils/logger';
-import { isEmpty, getByPathWithDefault as get } from 'utils/fp';
 // components
 import { BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -36,6 +35,12 @@ import {
 import RelationMapContainer from 'modules/relationMap/container';
 import messages from 'modules/relationMap/messages';
 import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
+import {
+  isSelectSomeItem,
+  isDisabledSplit,
+  isDisabledMoveToShipment,
+  isDisabledMoveToOrder,
+} from '../util';
 
 type Props = {
   filter: Object,
@@ -56,66 +61,6 @@ const LoadingMessage = ({ type }: LoadingProps) => {
     case 'connect':
       return <FormattedMessage {...messages.connecting} />;
   }
-};
-
-const isSelectSomeItem = targetedItem => {
-  const { orderItem = {}, batch = {} } = targetedItem;
-  const numberOfOrderItem = Object.keys(orderItem).length;
-  const numberOfBatch = Object.keys(batch).length;
-  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
-  return selectSomeItem;
-};
-
-const isDisabledSplit = targetedItem => {
-  const { orderItem = {}, batch = {} } = targetedItem;
-  const numberOfOrderItem = Object.keys(orderItem).length;
-  const numberOfBatch = Object.keys(batch).length;
-  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
-  const selctedOrderItem = numberOfOrderItem === 1 && numberOfBatch === 0;
-  const selectedBatch = numberOfBatch === 1 && numberOfOrderItem === 0;
-  if (selectSomeItem && (selctedOrderItem || selectedBatch)) {
-    return false;
-  }
-  return true;
-};
-
-const isDisabledMoveToShipment = targetedItem => {
-  const { batch } = targetedItem;
-  const selectedBatch = batch && !isEmpty(batch);
-  return !selectedBatch;
-};
-
-const getExporterFromOrderItem = orderItem => {
-  if (!orderItem) {
-    return '';
-  }
-  const firstId = Object.keys(orderItem)[0];
-  const firstItem = orderItem[firstId];
-  return get('', 'productProvider.exporter.id', firstItem);
-};
-
-const getExporterFromBatch = batch => {
-  if (!batch) {
-    return '';
-  }
-  const firstId = Object.keys(batch)[0];
-  const firstItem = batch[firstId];
-  return get('', 'orderItem.productProvider.exporter.id', firstItem);
-};
-
-const isDisabledMoveToOrder = targetedItem => {
-  const { orderItem, batch } = targetedItem;
-  const exportId = getExporterFromOrderItem(orderItem) || getExporterFromBatch(batch);
-  const orderItemHasDifferentExporter = (Object.entries(orderItem || {}): any).some(
-    item => get('', 'productProvider.exporter.id', item[1]) !== exportId
-  );
-  const batchHasDifferentExporter = (Object.entries(batch || {}): any)
-    .filter(item => {
-      const orderItemId = get(false, 'orderItem.id', item[1]) || item[1].parentId;
-      return !(orderItem && orderItem[orderItemId]);
-    })
-    .some(item => get('', 'orderItem.productProvider.exporter.id', item[1]) !== exportId);
-  return orderItemHasDifferentExporter || batchHasDifferentExporter;
 };
 
 const ActionSubscribe = ({ filter }: Props) => (
