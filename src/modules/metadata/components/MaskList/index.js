@@ -76,9 +76,9 @@ const MaskList = ({ entityType }: Props) => (
               hasMore={hasMore}
               isLoading={loading}
               renderItem={mask => (
-                <BooleanValue>
+                <BooleanValue key={mask.id}>
                   {({ value: isOpen, set: toggle }) => (
-                    <div key={mask.id}>
+                    <>
                       <MaskCard
                         mask={mask}
                         onClick={() => {
@@ -100,7 +100,7 @@ const MaskList = ({ entityType }: Props) => (
                           onCancel={() => toggle(false)}
                         />
                       </SlideView>
-                    </div>
+                    </>
                   )}
                 </BooleanValue>
               )}

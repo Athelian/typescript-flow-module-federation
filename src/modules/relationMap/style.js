@@ -128,12 +128,14 @@ export const FunctionWrapperStyle = css`
   grid-column: span 4;
   display: flex;
   background-color: ${colors.WHITE};
-  padding: 10px 10px;
+  padding: 0 10px;
+  align-items: center;
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
   position: relative;
+  z-index: 2;
 `;
 
 export const BadgeWrapperStyle = css`

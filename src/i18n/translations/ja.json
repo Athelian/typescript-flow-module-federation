@@ -443,7 +443,7 @@
   "modules.Products.downloadCSV": "商品一覧表",
   "modules.ProductProviders.packageName": "梱包形態",
   "modules.ProductProviders.packageCapacity": "入り数",
-  "modules.ProductProviders.pkgCrossWeight": "総重量",
+  "modules.ProductProviders.pkgWeight": "総重量",
   "modules.ProductProviders.pkgVolume": "梱包あたりの容積",
   "modules.ProductProviders.pkgLength": "梱包サイズ (縦)",
   "modules.ProductProviders.pkgWidth": "梱包サイズ (横)",

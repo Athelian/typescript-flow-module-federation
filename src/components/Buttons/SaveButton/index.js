@@ -7,6 +7,7 @@ type OptionalProps = {
   disabled: boolean,
   isLoading: boolean,
   onClick: Function,
+  label: React.Node,
 };
 
 type Props = OptionalProps;
@@ -15,12 +16,13 @@ const defaultProps = {
   disabled: false,
   isLoading: false,
   onClick: () => {},
+  label: <FormattedMessage id="components.button.save" defaultMessage="SAVE" />,
 };
 
-const SaveButton = ({ disabled, isLoading, onClick, ...rest }: Props): React.Node => (
+const SaveButton = ({ disabled, isLoading, onClick, label, ...rest }: Props): React.Node => (
   <BaseButton
     icon="CHECKED"
-    label={<FormattedMessage id="components.button.save" defaultMessage="SAVE" />}
+    label={label}
     backgroundColor="TEAL"
     hoverBackgroundColor="TEAL_DARK"
     disabled={disabled}
