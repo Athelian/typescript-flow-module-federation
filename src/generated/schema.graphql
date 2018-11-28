@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Nov 23 2018 08:22:28 GMT+0700 (Indochina Time)
+# timestamp: Wed Nov 28 2018 07:47:21 GMT+0200 (Israel Standard Time)
 
 enum Airport {
   """Andorra la Vella Heliport"""
@@ -29580,6 +29580,12 @@ input MetadatumInput {
   value: String!
 }
 
+input MetricRangeInput {
+  min: Float
+  max: Float
+  metric: String!
+}
+
 type MetricValue {
   value: Float!
   metric: String!
@@ -29816,13 +29822,30 @@ input OrderFilterInput {
   inChargeIds: [ID!]
   exporterIds: [ID!]
   tagIds: [ID!]
+  completelyBatched: Boolean
+  completelyShipped: Boolean
   orderItemPrice: PriceRangeInput
   orderItemCreatedAt: DateRangeInput
   orderItemUpdatedAt: DateRangeInput
   productProviderExporterIds: [ID!]
   productProviderSupplierIds: [ID!]
+  productProviderOrigins: [Country!]
+  productProviderProductionLeadTime: ValueRangeInput
+  productProviderUnitSize: SizeRangeInput
+  productProviderUnitVolume: MetricRangeInput
+  productProviderUnitWeight: MetricRangeInput
+  productProviderPackageSize: SizeRangeInput
+  productProviderPackageVolume: MetricRangeInput
+  productProviderPackageWeight: MetricRangeInput
   productTagIds: [ID!]
   batchTagIds: [ID!]
+  batchDeliveredAt: DateRangeInput
+  batchExpiredAt: DateRangeInput
+  batchProducedAt: DateRangeInput
+  batchQuantity: ValueRangeInput
+  batchPackageSize: SizeRangeInput
+  batchPackageVolume: MetricRangeInput
+  batchPackageWeight: MetricRangeInput
   shipmentTagIds: [ID!]
 }
 
@@ -35500,6 +35523,12 @@ input SizeInput {
   height: MetricValueInput!
 }
 
+input SizeRangeInput {
+  length: MetricRangeInput
+  width: MetricRangeInput
+  height: MetricRangeInput
+}
+
 interface Sortable {
   sort: Int!
 }
@@ -35738,6 +35767,11 @@ input ValueInput {
   int: Int
   float: Float
   boolean: Boolean
+}
+
+input ValueRangeInput {
+  min: Float
+  max: Float
 }
 
 type Viewer {
