@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 import React, { lazy, Suspense } from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
@@ -35,9 +35,13 @@ const defaultProps = {
   anchor: '',
 };
 
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 
 class ShipmentForm extends React.Component<Props> {

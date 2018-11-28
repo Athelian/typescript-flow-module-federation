@@ -38,3 +38,9 @@ export const BodyWrapperStyle: string = css`
   overflow: overlay;
   padding: 55px 5px 5px 35px;
 `;
+
+export const ButtonToolbarStyle: string = css`
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+`;

@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 import { useState, useCallback } from 'react';
 import { number } from 'yup';
 import type { ValidationObject } from './type.js.flow';
@@ -13,7 +13,9 @@ function useNumberInput(initialValue: number, schema: ValidationObject) {
         .isValidSync(value)
     : false;
   const onChange = useCallback(event => {
-    setValue(Number(event.currentTarget.value));
+    if (event && event.currentTarget) {
+      setValue(Number(event.currentTarget.value));
+    }
   }, []);
   const onFocus = useCallback(() => {
     setFocus(true);
