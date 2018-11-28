@@ -135,6 +135,7 @@ export const FunctionWrapperStyle = css`
   border-bottom-right-radius: 0;
   box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
   position: relative;
+  z-index: 2;
 `;
 
 export const BadgeWrapperStyle = css`
