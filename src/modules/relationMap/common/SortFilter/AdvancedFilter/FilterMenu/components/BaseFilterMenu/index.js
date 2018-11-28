@@ -11,6 +11,7 @@ type OptionalProps = {
     filters: Array<{
       name: string,
       label: React.Node,
+      data: Array<any>,
     }>,
   }>,
   togglesMap?: Array<{
@@ -22,8 +23,10 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   entityType: EntityTypes,
-  activeFilters: Array<string>,
+  parsedActiveFilters: Array<string>,
   toggleActiveFilter: (string, string) => void,
+  parsedFilterToggles: Object,
+  toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
   changeSelectedFilterItem: string => void,
 };
@@ -32,8 +35,10 @@ export default function BaseFilterMenu({
   filtersMap,
   togglesMap,
   entityType,
-  activeFilters,
+  parsedActiveFilters,
   toggleActiveFilter,
+  parsedFilterToggles,
+  toggleFilterToggle,
   selectedFilterItem,
   changeSelectedFilterItem,
 }: Props) {
@@ -48,22 +53,22 @@ export default function BaseFilterMenu({
               <SectionHeader label={label} icon={icon} />
               <div className={FiltersBodyStyle}>
                 {filters.map(filter => {
-                  const { name, label: filterLabel } = filter;
+                  const { name, label: filterLabel, data } = filter;
                   const isSelected = selectedFilterItem === name;
-                  const isActive = activeFilters.some(activeFilter => activeFilter === name);
+                  const isActive = parsedActiveFilters.some(activeFilter => activeFilter === name);
 
                   return (
                     <FilterMenuItem
                       key={name}
                       name={name}
                       label={filterLabel}
+                      data={data}
                       isSelected={isSelected}
                       changeSelectedFilterItem={changeSelectedFilterItem}
                       isActive={isActive}
                       toggleActiveFilter={(fieldName: string) =>
                         toggleActiveFilter(entityType, fieldName)
                       }
-                      data={[]}
                     />
                   );
                 })}
@@ -76,7 +81,7 @@ export default function BaseFilterMenu({
         <div className={TogglesBodyStyle}>
           {togglesMap.map(toggle => {
             const { name, label: toggleLabel, icon } = toggle;
-            const isActive = activeFilters.some(activeFilter => activeFilter === name);
+            const isActive = parsedFilterToggles[name];
 
             return (
               <ToggleMenuItem
@@ -85,8 +90,8 @@ export default function BaseFilterMenu({
                 label={toggleLabel}
                 icon={icon}
                 isActive={isActive}
-                toggleActiveFilter={(fieldName: string) =>
-                  toggleActiveFilter(entityType, fieldName)
+                toggleFilterToggle={(fieldName: string) =>
+                  toggleFilterToggle(entityType, fieldName)
                 }
               />
             );

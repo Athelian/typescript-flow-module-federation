@@ -36,7 +36,11 @@ export default function FilterMenuItem({
       type="button"
     >
       <div className={FilterMenuItemStyle}>
-        <ToggleButton isOn={isActive} onClick={() => toggleActiveFilter(name)} />
+        <ToggleButton
+          isOn={isActive}
+          hideToggle={!(data.length > 0)}
+          onClick={() => toggleActiveFilter(name)}
+        />
         <div className={FilterMenuLabelStyle}>{label}</div>
       </div>
 
