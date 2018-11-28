@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import MaskGridView from 'modules/metadata/components/MaskGridView';
 import { MaskCard } from 'components/Cards';
@@ -12,13 +13,13 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import { masksQuery } from 'modules/metadata/query';
 
 type OptionalProps = {
-  entityType: string,
   selected: {
     id: string,
   },
 };
 
 type Props = OptionalProps & {
+  entityType: string,
   onCancel: Function,
   onSave: Function,
 };
@@ -68,7 +69,9 @@ const SelectMask = ({ entityType, selected, onCancel, onSave }: Props) => (
               <MaskGridView
                 entityType={entityType}
                 items={getByPathWithDefault([], 'masks.nodes', data)}
-                onLoadMore={() => loadMore({ fetchMore, data }, { filterBy: entityType }, 'masks')}
+                onLoadMore={() =>
+                  loadMore({ fetchMore, data }, { filter: { entityTypes: entityType } }, 'masks')
+                }
                 hasMore={hasMore}
                 isLoading={loading}
                 renderItem={mask => (
@@ -79,7 +82,7 @@ const SelectMask = ({ entityType, selected, onCancel, onSave }: Props) => (
                       if (value && mask.id === value.id) {
                         set(null);
                       } else {
-                        set(mask);
+                        set(removeTypename(mask));
                       }
                     }}
                     selectable

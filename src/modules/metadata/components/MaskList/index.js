@@ -72,7 +72,9 @@ const MaskList = ({ entityType }: Props) => (
             <MaskGridView
               entityType={entityType}
               items={getByPathWithDefault([], 'masks.nodes', data)}
-              onLoadMore={() => loadMore({ fetchMore, data }, { filterBy: entityType }, 'masks')}
+              onLoadMore={() =>
+                loadMore({ fetchMore, data }, { filter: { entityTypes: entityType } }, 'masks')
+              }
               hasMore={hasMore}
               isLoading={loading}
               renderItem={mask => (

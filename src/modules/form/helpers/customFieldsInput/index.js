@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault, isEmpty } from 'utils/fp';
+import { getByPathWithDefault, contains } from 'utils/fp';
 import FormattedNumber from 'components/FormattedNumber';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -24,6 +24,14 @@ type Props = {
     fieldDefinitions: Array<Object>,
   },
   setFieldValue: Function,
+};
+
+const list2Map = (list: Array<Object>): Map<string, Object> => {
+  const map = new Map();
+  list.forEach(({ fieldDefinition, ...rest }) => {
+    map.set(fieldDefinition.id, { fieldDefinition, ...rest });
+  });
+  return map;
 };
 
 const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: Props) => (
@@ -56,78 +64,72 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
               options={{ width: '1030px' }}
             >
               {isOpen && (
-                <>
-                  {customFields.mask == null && isEmpty(customFields.fieldValues) ? (
-                    <Query
-                      query={fieldDefinitionsQuery}
-                      variables={{ entityType }}
-                      fetchPolicy="network-only"
-                    >
-                      {({ loading, data, error }) => {
-                        if (error) {
-                          if (error.message && error.message.includes('403')) {
-                            navigate('/403');
+                <Query
+                  query={fieldDefinitionsQuery}
+                  variables={{ entityType }}
+                  fetchPolicy="network-only"
+                >
+                  {({ loading, data, error }) => {
+                    if (error) {
+                      if (error.message && error.message.includes('403')) {
+                        navigate('/403');
+                      }
+                      return error.message;
+                    }
+                    if (loading) return <LoadingIcon />;
+                    const fieldDefinitions = getByPathWithDefault([], 'fieldDefinitions', data);
+                    const {
+                      // fieldDefinitions: originalFieldDefinitions,
+                      fieldValues: originalFieldValues,
+                    } = customFields;
+
+                    const fieldValueMap = list2Map(originalFieldValues);
+                    const fieldValues = fieldDefinitions.map(fieldDefinition =>
+                      fieldValueMap.get(fieldDefinition.id)
+                        ? fieldValueMap.get(fieldDefinition.id)
+                        : {
+                            value: { string: '' },
+                            fieldDefinition,
+                            entity: entityType,
                           }
-                          return error.message;
-                        }
+                    );
 
-                        if (loading) return <LoadingIcon />;
-                        const fieldDefinitions = getByPathWithDefault([], 'fieldDefinitions', data);
-                        return (
-                          <Subscribe to={[CustomFieldsContainer]}>
-                            {({ initDetailValues, originalValues, state }) => {
-                              const values = { ...originalValues, ...state };
-
-                              return (
-                                <MetadataEditForm
-                                  entityType={entityType}
-                                  fieldDefinitions={fieldDefinitions}
-                                  onCancel={() => slideToggle(false)}
-                                  onSave={() => {
-                                    slideToggle(false);
-                                    setFieldValue('customFields', values);
-                                  }}
-                                  onFormReady={() => {
-                                    initDetailValues({
-                                      mask: null,
-                                      fieldDefinitions,
-                                      fieldValues: fieldDefinitions.map(fieldDefinition => ({
-                                        value: { string: '' },
-                                        fieldDefinition,
-                                        entityType,
-                                      })),
-                                    });
-                                  }}
-                                />
-                              );
-                            }}
-                          </Subscribe>
-                        );
-                      }}
-                    </Query>
-                  ) : (
-                    <Subscribe to={[CustomFieldsContainer]}>
-                      {({ initDetailValues, originalValues, state }) => {
-                        const values = { ...originalValues, ...state };
-
-                        return (
-                          <MetadataEditForm
-                            entityType={entityType}
-                            fieldDefinitions={customFields.fieldDefinitions || []}
-                            onCancel={() => slideToggle(false)}
-                            onSave={() => {
-                              slideToggle(false);
-                              setFieldValue('customFields', values);
-                            }}
-                            onFormReady={() => {
-                              initDetailValues(customFields);
-                            }}
-                          />
-                        );
-                      }}
-                    </Subscribe>
-                  )}
-                </>
+                    return (
+                      <Subscribe to={[CustomFieldsContainer]}>
+                        {({ initDetailValues, originalValues, state }) => {
+                          const values = { ...originalValues, ...state };
+                          return (
+                            <MetadataEditForm
+                              entityType={entityType}
+                              fieldDefinitions={fieldDefinitions}
+                              onCancel={() => slideToggle(false)}
+                              onSave={() => {
+                                slideToggle(false);
+                                setFieldValue('customFields', {
+                                  mask: values.mask,
+                                  fieldDefinitions: values.fieldDefinitions,
+                                  fieldValues: values.fieldValues.filter(fieldValue =>
+                                    contains(
+                                      fieldValue.fieldDefinition,
+                                      values.mask.fieldDefinitions
+                                    )
+                                  ),
+                                });
+                              }}
+                              onFormReady={() => {
+                                initDetailValues({
+                                  mask: customFields.mask,
+                                  fieldDefinitions,
+                                  fieldValues,
+                                });
+                              }}
+                            />
+                          );
+                        }}
+                      </Subscribe>
+                    );
+                  }}
+                </Query>
               )}
             </SlideView>
           </>

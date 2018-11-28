@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { contains } from 'utils/fp';
 import { BooleanValue } from 'react-values';
 import { MaskCard } from 'components/Cards';
 import Divider from 'components/Divider';
@@ -26,7 +27,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   entityType: string,
-  fieldDefinitions: Array<Object>,
+  // fieldDefinitions: Array<Object>,
   onCancel: Function,
   onSave: Function,
 };
@@ -45,7 +46,7 @@ class MetadataEditForm extends React.Component<Props> {
   }
 
   render() {
-    const { entityType, fieldDefinitions, onCancel, onSave } = this.props;
+    const { entityType, onCancel, onSave } = this.props;
 
     return (
       <Subscribe to={[CustomFieldsContainer]}>
@@ -130,28 +131,7 @@ class MetadataEditForm extends React.Component<Props> {
                                 selected={mask}
                                 onCancel={() => slideToggle(false)}
                                 onSave={item => {
-                                  if (item) {
-                                    setFieldArrayValue('mask', item);
-                                    setFieldArrayValue(
-                                      'fieldValues',
-                                      item.fieldDefinitions.map(fieldDefinition => ({
-                                        value: { string: '' },
-                                        fieldDefinition,
-                                        entityType,
-                                      }))
-                                    );
-                                  } else {
-                                    setFieldArrayValue('mask', null);
-                                    setFieldArrayValue(
-                                      'fieldValues',
-                                      fieldDefinitions.map(fieldDefinition => ({
-                                        value: { string: '' },
-                                        fieldDefinition,
-                                        entityType,
-                                      }))
-                                    );
-                                  }
-
+                                  setFieldArrayValue('mask', item);
                                   slideToggle(false);
                                 }}
                               />
@@ -165,16 +145,18 @@ class MetadataEditForm extends React.Component<Props> {
                   <Divider />
                   <GridColumn gap="10px">
                     {fieldValues &&
-                      fieldValues.map(({ value, fieldDefinition }, index) => (
-                        <DefaultCustomFieldStyle
-                          key={fieldDefinition.id}
-                          isKeyReadOnly
-                          targetName={`fieldValues.${index}`}
-                          fieldName={fieldDefinition.name}
-                          value={value}
-                          setFieldArrayValue={setFieldArrayValue}
-                        />
-                      ))}
+                      fieldValues.map(({ value, fieldDefinition }, index) =>
+                        mask == null || contains(fieldDefinition, mask.fieldDefinitions) ? (
+                          <DefaultCustomFieldStyle
+                            key={fieldDefinition.id}
+                            isKeyReadOnly
+                            targetName={`fieldValues.${index}`}
+                            fieldName={fieldDefinition.name}
+                            value={value}
+                            setFieldArrayValue={setFieldArrayValue}
+                          />
+                        ) : null
+                      )}
                   </GridColumn>
                 </div>
               </div>
