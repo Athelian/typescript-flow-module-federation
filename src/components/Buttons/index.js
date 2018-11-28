@@ -12,6 +12,7 @@ import SaveButton from './SaveButton';
 import ExportButton from './ExportButton';
 import SyncButton from './SyncButton';
 import YesButton from './YesButton';
+import SelectTemplateButton from './SelectTemplateButton';
 
 export {
   ActivateButton,
@@ -27,4 +28,5 @@ export {
   ExportButton,
   SyncButton,
   YesButton,
+  SelectTemplateButton,
 };

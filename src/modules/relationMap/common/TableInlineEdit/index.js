@@ -9,8 +9,9 @@ import { setConfig } from 'react-hot-loader';
 import { range, set, cloneDeep, isEqual } from 'lodash';
 import emitter from 'utils/emitter';
 import Layout from 'components/Layout';
+import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, SelectTemplateButton } from 'components/Buttons';
 import { ToggleInput } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
@@ -18,6 +19,7 @@ import { formatOrderData } from 'modules/relationMap/util';
 import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
+import SelectTemplate from 'modules/tableTemplate/common/SelectTemplate';
 import {
   orderColumnFields,
   orderItemColumnFields,
@@ -41,6 +43,7 @@ import {
   HeaderWrapperStyle,
   SidebarWrapperStyle,
   BodyWrapperStyle,
+  ButtonToolbarStyle,
 } from './style';
 
 type Props = {
@@ -58,6 +61,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const [hideColumns, setHideColumns] = useState([]);
   const [showAll, setShowAll] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [showTemplate, setShowTemplate] = useState(false);
   const [touched, setTouched] = useState({});
   const [editData, setEditData] = useState({
     orders: {},
@@ -239,7 +243,18 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
             </SlideViewNavBar>
           }
         >
-          <div>
+          <div className={ButtonToolbarStyle}>
+            <SelectTemplateButton onClick={() => setShowTemplate(true)} />
+            <SlideView
+              isOpen={showTemplate}
+              onRequestClose={() => setShowTemplate(false)}
+              options={{ width: '980px' }}
+            >
+              <SelectTemplate
+                onSelect={() => setShowTemplate(false)}
+                onCancel={() => setShowTemplate(false)}
+              />
+            </SlideView>
             <ToggleInput
               toggled={showAll}
               onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
