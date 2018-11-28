@@ -41,4 +41,6 @@ export const BodyWrapperStyle: string = css`
 
 export const ButtonToolbarStyle: string = css`
   display: flex;
+  width: 100%;
+  justify-content: space-around;
 `;

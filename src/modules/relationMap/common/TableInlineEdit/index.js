@@ -297,42 +297,44 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                 return (
                   <>
                     {lastUsedTemplate && (
-                      <p>
+                      <div>
                         <FormattedMessage
                           id="modules.RelationMaps.lastUsed"
                           defaultMessage="LAST USED TEMPLATE:"
-                        />{' '}
-                        {lastUsedTemplate}{' '}
-                      </p>
+                        />
+                        {lastUsedTemplate}
+                      </div>
                     )}
-                    <SelectTemplateButton onClick={() => setShowTemplate(true)} />
-                    <SlideView
-                      isOpen={showTemplate}
-                      onRequestClose={() => setShowTemplate(false)}
-                      options={{ width: '980px' }}
-                    >
-                      <SelectTemplate
-                        onSelect={template => {
-                          setShowTemplate(false);
-                          window.localStorage.setItem(`${user.id}-table-template`, template.name);
-                          window.localStorage.setItem(
-                            `${user.id}-table-template-fields`,
-                            template.fields
-                          );
-                          setTemplateColumns(template.fields);
-                        }}
-                        onCancel={() => setShowTemplate(false)}
-                      />
-                    </SlideView>
-                    <ToggleInput
-                      toggled={showAll}
-                      onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
-                    >
-                      <FormattedMessage
-                        id="modules.RelationMaps.showAll"
-                        defaultMessage="SHOW ALL"
-                      />
-                    </ToggleInput>
+                    <div style={{ display: 'flex' }}>
+                      <SelectTemplateButton onClick={() => setShowTemplate(true)} />
+                      <SlideView
+                        isOpen={showTemplate}
+                        onRequestClose={() => setShowTemplate(false)}
+                        options={{ width: '980px' }}
+                      >
+                        <SelectTemplate
+                          onSelect={template => {
+                            setShowTemplate(false);
+                            window.localStorage.setItem(`${user.id}-table-template`, template.name);
+                            window.localStorage.setItem(
+                              `${user.id}-table-template-fields`,
+                              template.fields
+                            );
+                            setTemplateColumns(template.fields);
+                          }}
+                          onCancel={() => setShowTemplate(false)}
+                        />
+                      </SlideView>
+                      <ToggleInput
+                        toggled={showAll}
+                        onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
+                      >
+                        <FormattedMessage
+                          id="modules.RelationMaps.showAll"
+                          defaultMessage="SHOW ALL"
+                        />
+                      </ToggleInput>
+                    </div>
                   </>
                 );
               }}
