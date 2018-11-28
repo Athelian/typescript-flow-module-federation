@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { ObjectValue } from 'react-values';
-import { getByPathWithDefault } from 'utils/fp';
-import loadMore from 'utils/loadMore';
 import { Query } from 'react-apollo';
+import { ObjectValue } from 'react-values';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
+import loadMore from 'utils/loadMore';
 import Layout from 'components/Layout';
 import { tableTemplateQuery } from 'modules/tableTemplate/list/query';
 import TableTemplateGridView from 'modules/tableTemplate/list/TableTemplateGridView';
@@ -56,7 +56,7 @@ const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => (
                   <EntityIcon icon="TEMPLATE" color="TEMPLATE" />
                   <CancelButton onClick={onCancel} />
                   <SaveButton
-                    disabled={Object.keys(value).length === 0}
+                    disabled={isEquals(value, selected)}
                     onClick={() => onSelect(value)}
                     data-testid="saveButtonOnSelectTemplate"
                   />
@@ -70,13 +70,13 @@ const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => (
                 isLoading={loading}
                 renderItem={item => (
                   <TableTemplateCard
-                    onClick={() => set(item)}
+                    onSelect={() => set(item)}
                     key={item.id}
                     template={item}
                     actions={[]}
                     showActionsOnHover
-                    selected={value.id === item.id}
                     selectable
+                    selected={value && value.id === item.id}
                   />
                 )}
               />
