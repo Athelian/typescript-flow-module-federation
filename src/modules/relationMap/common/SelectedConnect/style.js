@@ -44,4 +44,3 @@ export const CenteredOrderStyle = css`
   ${borderRadiuses.MAIN};
   background-color: ${colors.TEAL};
 `;
-export default null;
