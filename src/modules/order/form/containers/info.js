@@ -21,6 +21,11 @@ type FormState = {
 const initValues = {
   shipments: [],
   inCharges: [],
+  customFields: {
+    mask: null,
+    fieldValues: [],
+    fieldDefinitions: [],
+  },
 };
 
 export default class OrderInfoContainer extends Container<FormState> {
