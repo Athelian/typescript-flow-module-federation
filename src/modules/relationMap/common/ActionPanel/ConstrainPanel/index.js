@@ -31,7 +31,7 @@ const ConstrainPanel = ({ type }: Props) => (
         </Label>
       </div>
     )}
-    {type === 'connect_shipment' && (
+    {type === 'connectShipment' && (
       <div>
         <Label>
           <FormattedMessage {...messages.actionAvailable} />

@@ -21,4 +21,3 @@ export const MoveToWrapper: string = css`
   display: flex;
   align-items: center;
 `;
-export default null;

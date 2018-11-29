@@ -37,36 +37,25 @@ const ConfirmMessage = ({ condition }: ConfirmMessageProps) => {
     notSelectAllBatch,
     diffCurrency: { totalDiff, baseCurrency, diffCurrency },
   } = condition;
-  const confirmMessages = [];
-  if (notSelectAllBatch) {
-    confirmMessages.push(<FormattedMessage {...messages.deleteUnSelectBatch} />);
-  }
-  confirmMessages.push(<br />);
-  if (totalDiff === 1) {
-    confirmMessages.push(
-      <>
-        <FormattedMessage {...messages.diffCurrency} />
-        <Label className={CurrencyLabelStyle}>{baseCurrency}</Label>
-      </>
-    );
-    confirmMessages.push(
-      <>
-        <FormattedMessage {...messages.diffSingleCurrency} />
-        <Label className={CurrencyLabelStyle}>{diffCurrency}</Label>
-      </>
-    );
-    confirmMessages.push(<FormattedMessage {...messages.diffCurrencyAction} />);
-  } else if (totalDiff > 1) {
-    confirmMessages.push(
-      <>
-        <FormattedMessage {...messages.diffCurrency} />
-        <Label className={CurrencyLabelStyle}>{baseCurrency}</Label>
-      </>
-    );
-    confirmMessages.push(<FormattedMessage {...messages.diffMultipleCurrency} />);
-    confirmMessages.push(<FormattedMessage {...messages.diffCurrencyAction} />);
-  }
-  return <Label className={ConfirmLabelStyle}>{confirmMessages}</Label>;
+  return (
+    <Label className={ConfirmLabelStyle}>
+      {notSelectAllBatch && <FormattedMessage {...messages.deleteUnSelectBatch} />}
+      {totalDiff && (
+        <>
+          <FormattedMessage {...messages.diffCurrency} />
+          <Label className={CurrencyLabelStyle}>{baseCurrency}</Label>
+          {totalDiff === 1 && (
+            <>
+              <FormattedMessage {...messages.diffSingleCurrency} />
+              <Label className={CurrencyLabelStyle}>{diffCurrency}</Label>
+            </>
+          )}
+          {totalDiff > 1 && <FormattedMessage {...messages.diffMultipleCurrency} />}
+          <FormattedMessage {...messages.diffCurrencyAction} />
+        </>
+      )}
+    </Label>
+  );
 };
 
 const ApplyPanel = ({ connectType }: Props) => {

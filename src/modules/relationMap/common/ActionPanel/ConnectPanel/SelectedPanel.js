@@ -64,9 +64,9 @@ const ConfirmMessage = ({ connectType }: Props) => {
         <div className={style.ConfirmMessageContainer}>
           <div>
             <FormattedMessage {...messages.confirmMessage} />{' '}
-            <span className={style.ConfirmActionStyle}>
+            <div className={style.ConfirmActionStyle}>
               <FormattedMessage {...messages.delete} />
-            </span>{' '}
+            </div>{' '}
             <FormattedMessage {...messages.confirmDelete} />
           </div>
           <Label className={style.LabelConfirmDeleteStyle}>
