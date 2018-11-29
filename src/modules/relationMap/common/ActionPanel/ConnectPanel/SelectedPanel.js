@@ -190,7 +190,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                             );
                             const allOrderItem = orderItems.concat(filteredOrderItems);
 
-                            const firstItem = allOrderItem[0];
+                            const [firstItem] = allOrderItem || [];
                             const firstCurrency = get('', 'order.currency', firstItem);
                             const exporter = get('', 'order.exporter', firstItem);
                             const sameCurrency = allOrderItem.every(isSameCurrency(firstCurrency));
