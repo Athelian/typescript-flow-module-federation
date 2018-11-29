@@ -12,6 +12,9 @@ export const OverlayStyle = css`
   background-color: ${colors.TRANSPARENT};
 `;
 
+export const ButtonStyle = css`
+  cursor: pointer;
+`;
 export const CenteredStyle = css`
   ${layout.LAYOUT};
   ${layout.JUSTIFIED_CENTER};

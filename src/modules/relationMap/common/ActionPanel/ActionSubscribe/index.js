@@ -66,7 +66,15 @@ const LoadingMessage = ({ type }: LoadingProps) => {
 const ActionSubscribe = ({ filter }: Props) => (
   <ApolloConsumer>
     {client => (
-      <Subscribe to={[RelationMapContainer, ActionContainer, CloneContainer, SplitContainer]}>
+      <Subscribe
+        to={[
+          RelationMapContainer,
+          ActionContainer,
+          CloneContainer,
+          SplitContainer,
+          ConnectContainer,
+        ]}
+      >
         {(
           {
             state: { focusedItem, focusMode, targetedItem },
@@ -87,7 +95,8 @@ const ActionSubscribe = ({ filter }: Props) => (
             state: { currentAction, loading, error },
           },
           { clone },
-          { split }
+          { split },
+          { reset: resetConnectAction }
         ) => {
           const onClickClone = () => {
             const action = async () => {
@@ -140,6 +149,7 @@ const ActionSubscribe = ({ filter }: Props) => (
             cancelTarget();
             setAction('');
             setError(false);
+            resetConnectAction();
           };
           const disabledSplit = isDisabledSplit(targetedItem);
           const disabledMoveToShipment = isDisabledMoveToShipment(targetedItem);
@@ -242,7 +252,11 @@ const ActionSubscribe = ({ filter }: Props) => (
                   {!error && currentAction === 'connect' && (
                     <Subscribe to={[ConnectContainer]}>
                       {connectContainer => (
-                        <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
+                        <ConnectPanel
+                          connect={connectContainer}
+                          targetedItem={targetedItem}
+                          filter={filter}
+                        />
                       )}
                     </Subscribe>
                   )}

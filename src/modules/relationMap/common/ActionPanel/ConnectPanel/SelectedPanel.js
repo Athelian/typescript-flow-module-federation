@@ -69,7 +69,7 @@ const ConfirmMessage = ({ connectType }: Props) => {
             </span>{' '}
             <FormattedMessage {...messages.confirmDelete} />
           </div>
-          <Label>
+          <Label className={style.LabelConfirmDeleteStyle}>
             <FormattedMessage {...messages.confirmSubMessage} />
           </Label>
         </div>
@@ -190,7 +190,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                             );
                             const allOrderItem = orderItems.concat(filteredOrderItems);
 
-                            const firstItem = allOrderItem[0]; // orderItem[head(orderItemIds)];
+                            const firstItem = allOrderItem[0];
                             const firstCurrency = get('', 'order.currency', firstItem);
                             const exporter = get('', 'order.exporter', firstItem);
                             const sameCurrency = allOrderItem.every(isSameCurrency(firstCurrency));
@@ -286,7 +286,7 @@ const SelectedPanel = ({ connectType }: Props) => (
             {client => (
               <Subscribe to={[RelationMapContainer, ConnectContainer, ActionContainer]}>
                 {(
-                  { state: { targetedItem } },
+                  { state: { targetedItem }, isHighlighted, selectFocusItem },
                   { disconnectShipment, deleteItem },
                   { setLoading }
                 ) => (
@@ -300,6 +300,16 @@ const SelectedPanel = ({ connectType }: Props) => (
                       setLoading(true);
                       if (connectType === 'SHIPMENT') {
                         await disconnectShipment(client, targetedItem);
+                        const { batch = {} } = targetedItem;
+                        const isFocus = Object.keys(batch).some(batchId =>
+                          isHighlighted(batchId, 'batch')
+                        );
+                        if (isFocus) {
+                          selectFocusItem(prevFocus => ({
+                            ...prevFocus,
+                            shipment: {},
+                          }));
+                        }
                       } else if (connectType === 'ORDER') {
                         await deleteItem(client, targetedItem);
                       }

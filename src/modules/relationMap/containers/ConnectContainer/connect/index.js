@@ -1,11 +1,14 @@
 // @flow
 import { createShipmentWithReturnDataMutation } from 'modules/shipment/form/mutation';
-import { updateBatchMutation } from 'modules/batch/form/mutation';
-import { cloneOrderItemMutation as updateOrderMutation } from 'modules/relationMap/orderFocused/mutation';
+import {
+  cloneOrderItemMutation as updateOrderMutation,
+  updateBatchWithReturnDataMutation,
+} from 'modules/relationMap/orderFocused/mutation';
 import {
   removeAdditionBatchFields,
   removeAdditionOrderItemFields,
 } from 'modules/relationMap/orderFocused/formatter';
+// import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import { getExportId } from 'modules/relationMap/common/ActionPanel/util';
 import { getByPathWithDefault as get, compose, omit } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
@@ -25,7 +28,15 @@ const cleanBatch = compose(
       );
     return Object.assign(batch, { batchAdjustments });
   },
-  omit(['archived', 'updatedBy', 'updatedAt', 'batchedQuantity']),
+  omit([
+    'archived',
+    'updatedBy',
+    'updatedAt',
+    'batchedQuantity',
+    'orderItem',
+    'customFields',
+    'tags',
+  ]),
   removeAdditionBatchFields
 );
 
@@ -33,7 +44,7 @@ const connectShipmentInBatch = (client: any, batch: Object, shipmentId: ?string)
   const batchIds = Object.keys(batch);
   const requests = batchIds.map(batchId => {
     const request = client.mutate({
-      mutation: updateBatchMutation,
+      mutation: updateBatchWithReturnDataMutation,
       variables: {
         id: batchId,
         input: {
@@ -89,7 +100,8 @@ export const connectExistingOrder = async (client: any, target: Object, selected
   const exportId = get(null, 'exporter.id', selectedItem);
   const itemFromBatches = (Object.entries(targetBatch): Array<any>).map(data => {
     const [, item] = data;
-    const price = get(0, 'orderItem.price', item);
+    const price = cleanUpData(get(0, 'orderItem.price', item));
+    const productProviderId = get('', 'orderItem.productProvider.id', item);
     const quantity =
       get(0, 'orderItem.quantity', item) +
       item.batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, 0);
@@ -97,6 +109,7 @@ export const connectExistingOrder = async (client: any, target: Object, selected
     return {
       price,
       quantity,
+      productProviderId,
       batches: [batch],
     };
   });
@@ -112,8 +125,8 @@ export const connectExistingOrder = async (client: any, target: Object, selected
     mutation: updateOrderMutation,
     variables: {
       id: selectedItem.id,
-      exportId: exportId || getExportId(targetItem),
       input: {
+        exporterId: exportId || getExportId(targetItem),
         orderItems: (selectedItem.orderItems || [])
           .map(item => ({ id: item.id }))
           .concat(itemFromBatches)

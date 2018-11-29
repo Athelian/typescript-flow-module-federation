@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import { ApolloConsumer } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { Label } from 'components/Form';
+import { isEmpty } from 'utils/fp';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
@@ -29,6 +30,9 @@ type ConfirmMessageProps = {
   condition: Object,
 };
 const ConfirmMessage = ({ condition }: ConfirmMessageProps) => {
+  if (!condition || isEmpty(condition)) {
+    return null;
+  }
   const {
     notSelectAllBatch,
     diffCurrency: { totalDiff, baseCurrency, diffCurrency },
@@ -81,9 +85,15 @@ const ApplyPanel = ({ connectType }: Props) => {
       {client => (
         <Subscribe to={[ConnectContainer, ActionContainer, RelationMapContainer]}>
           {(
-            { connectExistingShipment, connectExistingOrder, state: { selectedItem } },
-            action,
-            { state: { targetedItem } }
+            {
+              connectExistingShipment,
+              connectExistingOrder,
+              setSuccess,
+              reset,
+              state: { selectedItem },
+            },
+            { setLoading },
+            { state: { targetedItem }, isHighlighted, selectFocusItem }
           ) => (
             <Panel>
               <Label className={LabelConnectStyle}>
@@ -92,7 +102,7 @@ const ApplyPanel = ({ connectType }: Props) => {
               </Label>
               <Label className={GroupLabelButtonStyle}>
                 {text}
-                <BaseButton label="CLEAR" className={FlatButtonStyle} />
+                <BaseButton label="CLEAR" className={FlatButtonStyle} onClick={reset} />
                 <ObjectValue>
                   {({ value, assign: setDialog, set }) => (
                     <>
@@ -101,7 +111,20 @@ const ApplyPanel = ({ connectType }: Props) => {
                         label="APPLY"
                         onClick={async () => {
                           if (connectType === 'SHIPMENT') {
+                            setLoading(true);
                             await connectExistingShipment(client, targetedItem, selectedItem);
+                            const { batch = {} } = targetedItem;
+                            const isFocus = Object.keys(batch).some(batchId =>
+                              isHighlighted(batchId, 'batch')
+                            );
+                            if (isFocus) {
+                              selectFocusItem(prevFocus => ({
+                                ...prevFocus,
+                                shipment: { [selectedItem.id]: true },
+                              }));
+                            }
+                            setSuccess(true);
+                            setLoading(false);
                           } else if (connectType === 'ORDER') {
                             const notSelectAllBatch = !isSelectAllBatch(targetedItem);
                             const diffCurrency = findDiffCurrency(targetedItem, selectedItem);

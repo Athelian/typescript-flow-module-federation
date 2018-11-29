@@ -409,42 +409,53 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   onMouseLeave={() => setToggle(false)}
                                 >
                                   <ShipmentCard shipment={data} />
-                                  {connectType === 'SHIPMENT' && isSelectedItem(id) ? (
-                                    <ActionCard show>
-                                      {() => <SelectedShipment onClick={resetSelectedItem} />}
-                                    </ActionCard>
-                                  ) : (
-                                    <ActionCard show={hovered}>
-                                      {({ targetted, toggle }) => (
-                                        <>
-                                          <Action
-                                            icon="MAGIC"
-                                            targetted={targetted}
-                                            toggle={toggle}
-                                            onClick={onClickHighlight}
-                                          />
-                                          <Action
-                                            icon="DOCUMENT"
-                                            targetted={targetted}
-                                            toggle={toggle}
-                                            onClick={() => setSlide({ show: true, type, id })}
-                                          />
-                                          <Action
-                                            icon="CHECKED"
-                                            targetted={targetted}
-                                            toggle={toggle}
-                                            onClick={() => {
-                                              if (connectType === 'SHIPMENT') {
-                                                return setSelectedItem(data);
-                                              }
-                                              return onClickTarget();
-                                            }}
-                                          />
-                                        </>
-                                      )}
-                                    </ActionCard>
-                                  )}
-
+                                  {(() => {
+                                    if (connectType === SHIPMENT) {
+                                      if (isSelectedItem(id)) {
+                                        return (
+                                          <ActionCard show>
+                                            {() => <SelectedShipment onClick={resetSelectedItem} />}
+                                          </ActionCard>
+                                        );
+                                      }
+                                      return (
+                                        <ActionCard show={hovered}>
+                                          {() => (
+                                            <Action
+                                              icon="CHECKED"
+                                              onClick={() => setSelectedItem(data)}
+                                            />
+                                          )}
+                                        </ActionCard>
+                                      );
+                                    }
+                                    return (
+                                      <ActionCard show={hovered}>
+                                        {({ targetted, toggle }) => (
+                                          <>
+                                            <Action
+                                              icon="MAGIC"
+                                              targetted={targetted}
+                                              toggle={toggle}
+                                              onClick={onClickHighlight}
+                                            />
+                                            <Action
+                                              icon="DOCUMENT"
+                                              targetted={targetted}
+                                              toggle={toggle}
+                                              onClick={() => setSlide({ show: true, type, id })}
+                                            />
+                                            <Action
+                                              icon="CHECKED"
+                                              targetted={targetted}
+                                              toggle={toggle}
+                                              onClick={onClickTarget}
+                                            />
+                                          </>
+                                        )}
+                                      </ActionCard>
+                                    );
+                                  })()}
                                   <TagValue>
                                     {({ value: isToggle }) =>
                                       isToggle ? <Tags dataSource={data.tags} /> : null

@@ -25,7 +25,7 @@ import {
   fieldDefinitionFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
-import { orderItemRmFragment } from './query';
+import { orderItemRmFragment, shipmentRMFragment } from './query';
 
 export const cloneOrderMutation: Object = gql`
   mutation orderCreate($input: OrderCreateInput!) {
@@ -168,4 +168,33 @@ export const cloneShipmentMutation: Object = gql`
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
+`;
+
+export const updateBatchWithReturnDataMutation = gql`
+  mutation batchUpdate($id: ID!, $input: BatchUpdateInput!) {
+    batchUpdate(id: $id, input: $input) {
+      batch {
+        ...batchCardFragment
+        shipment {
+          ...shipmentRMFragment
+        }
+      }
+      violations {
+        ...violationFragment
+      }
+    }
+  }
+  ${violationFragment}
+  ${batchCardFragment}
+  ${metricFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${partnerCardFragment}
+  ${shipmentRMFragment}
+  ${timelineDateFullFragment}
+  ${userAvatarFragment}
+  ${portFragment}
 `;

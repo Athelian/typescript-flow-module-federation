@@ -158,10 +158,18 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     });
   };
 
-  selectFocusItem = (focusedItem: Object) => {
-    this.setState({
-      focusedItem,
-    });
+  selectFocusItem = (focusedItem: Object | Function) => {
+    const isFunc = typeof focusedItem === 'function';
+    this.setState(
+      isFunc
+        ? prevState => ({
+            ...prevState,
+            focusedItem: typeof focusedItem === 'function' && focusedItem(prevState.focusedItem),
+          })
+        : {
+            focusedItem,
+          }
+    );
   };
 
   selectTargetItem = (targetedItem: Object) => {
@@ -214,12 +222,18 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }));
   };
 
-  isHighlighted = () => {
+  isHighlighted = (id?: string, type?: string) => {
     const { focusedItem } = this.state;
     if (isEmpty(focusedItem)) {
       return false;
     }
     const { order = {}, orderItem = {}, batch = {}, shipment = {} } = focusedItem;
+    if (type) {
+      return focusedItem[type] && focusedItem[type][id];
+    }
+    if (id) {
+      return order[id] || orderItem[id] || batch[id] || shipment[id];
+    }
     return !isEmpty(order) || !isEmpty(orderItem) || !isEmpty(batch) || !isEmpty(shipment);
   };
 

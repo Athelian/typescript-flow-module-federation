@@ -58,6 +58,10 @@ export const ConnectLogoStyle = css`
   align-items: center;
 `;
 
+export const LabelConfirmDeleteStyle = css`
+  white-space: normal;
+  text-align: center;
+`;
 export const LabelConnectStyle = css`
   width: min-content;
   min-width: 120px;

@@ -7,8 +7,9 @@ import SuccessPanel from './SuccessPanel';
 
 type Props = {
   connect: Object,
+  filter: Object,
 };
-const ConnectPanel = ({ connect }: Props) => {
+const ConnectPanel = ({ connect, filter }: Props) => {
   const {
     state: { connectType, success },
     isSelectedItem,
@@ -18,10 +19,10 @@ const ConnectPanel = ({ connect }: Props) => {
     return <SuccessPanel onClick={reset} />;
   }
   if (isSelectedItem()) {
-    return <ApplyPanel connectType={connectType} />;
+    return <ApplyPanel connectType={connectType} filter={filter} />;
   }
   if (connectType) {
-    return <SelectedPanel connectType={connectType} />;
+    return <SelectedPanel connectType={connectType} filter={filter} />;
   }
   return null;
 };

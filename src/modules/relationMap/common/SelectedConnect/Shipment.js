@@ -12,7 +12,7 @@ type Props = {
 const SelectedShipment = ({ onClick }: Props) => (
   <div className={cx(style.OverlayStyle, style.CenteredStyle)}>
     <button type="button" onClick={onClick}>
-      <div className={style.CenteredStyle}>
+      <div className={cx(style.CenteredStyle, style.ButtonStyle)}>
         <Label className={style.LabelShipmentStyle}>
           <FormattedMessage {...messages.selectedShipment} />
         </Label>
