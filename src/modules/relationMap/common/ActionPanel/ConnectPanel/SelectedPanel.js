@@ -166,7 +166,9 @@ const SelectedPanel = ({ connectType }: Props) => (
                           if (connectType === 'ORDER') {
                             const orderItemObj = batchIds
                               .filter(batchId => {
-                                const orderItemId = get(false, 'orderItem.id', batch[batchId]);
+                                const currentBatch = batch[batchId];
+                                const orderItemId =
+                                  get(false, 'orderItem.id', currentBatch) || currentBatch.parentId;
                                 return !orderItem[orderItemId];
                               })
                               .reduce((obj, batchId) => {

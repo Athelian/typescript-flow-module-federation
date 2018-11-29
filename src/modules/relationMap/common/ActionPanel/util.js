@@ -123,6 +123,7 @@ export const findDiffCurrency = (targetItem: Object, selectedItem: Object) => {
   // const diffCurrency = filteredItems.length + filteredBatches.length
   return {
     totalDiff: currencies.length,
+    hasDiffCurrency: currencies.length > 0,
     baseCurrency: currency,
     diffCurrency: currencies[0],
   };
