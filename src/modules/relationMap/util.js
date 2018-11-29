@@ -359,6 +359,11 @@ export const formatOrderData = (orders: Array<Object> = []) => {
               shipmentObj[shipment.id] = initShipmentObj(shipment);
             }
             const { relation: shipmentRelation } = shipmentObj[shipment.id];
+            shipmentObj[shipment.id].data.metric = getByPathWithDefault(
+              '',
+              'packageVolume.metric',
+              batch
+            );
             shipmentRelation.order[order.id] = true;
             shipmentRelation.orderItem[orderItem.id] = true;
             shipmentRelation.batch[batch.id] = true;

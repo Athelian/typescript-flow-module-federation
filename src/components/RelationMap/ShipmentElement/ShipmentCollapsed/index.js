@@ -10,12 +10,11 @@ type Props = {
 
 const ShipmentCollapsed = ({ shipment }: Props) => {
   const { batches = [] } = shipment;
-
   const totalPackageGrossWeight = calculateTotalPackageGrossWeight(batches);
 
   return (
     <div className={ShipmentCardWrapperStyle}>
-      <ShipmentLabel name={shipment.no} vol={totalPackageGrossWeight} metric="cm³" />
+      <ShipmentLabel name={shipment.no} vol={totalPackageGrossWeight} metric={shipment.metric} />
       <div className={ShipmentBlankContent} />
     </div>
   );
