@@ -262,7 +262,7 @@ const ActionSubscribe = ({ filter }: Props) => (
                   )}
                   {selectedSomeItem && disabledSplit && <ConstrainPanel type="split" />}
                   {selectedSomeItem && disabledMoveToShipment && (
-                    <ConstrainPanel type="connect_shipment" />
+                    <ConstrainPanel type="connectShipment" />
                   )}
                   {error && (
                     <ErrorPanel onClickCancel={onCancelTarget} onClickRefresh={actionFunc} />
