@@ -53,15 +53,17 @@ const MaskList = ({ entityType }: Props) => (
                       onRequestClose={() => toggle(false)}
                       options={{ width: '1030px' }}
                     >
-                      <MaskFormWrapper
-                        entityType={entityType}
-                        isNew
-                        onSave={() => {
-                          toggle(false);
-                          refetch();
-                        }}
-                        onCancel={() => toggle(false)}
-                      />
+                      {isOpen && (
+                        <MaskFormWrapper
+                          entityType={entityType}
+                          isNew
+                          onSave={() => {
+                            toggle(false);
+                            refetch();
+                          }}
+                          onCancel={() => toggle(false)}
+                        />
+                      )}
                     </SlideView>
                   </>
                 )}
@@ -92,15 +94,17 @@ const MaskList = ({ entityType }: Props) => (
                         onRequestClose={() => toggle(false)}
                         options={{ width: '1030px' }}
                       >
-                        <MaskFormWrapper
-                          entityType={entityType}
-                          id={mask.id}
-                          onSave={() => {
-                            toggle(false);
-                            refetch();
-                          }}
-                          onCancel={() => toggle(false)}
-                        />
+                        {isOpen && (
+                          <MaskFormWrapper
+                            entityType={entityType}
+                            id={mask.id}
+                            onSave={() => {
+                              toggle(false);
+                              refetch();
+                            }}
+                            onCancel={() => toggle(false)}
+                          />
+                        )}
                       </SlideView>
                     </>
                   )}
