@@ -10,6 +10,14 @@ export default defineMessages({
     id: 'global.shipments',
     defaultMessage: 'SHIPMENTS',
   },
+  shipment: {
+    id: 'modules.Shipments.shipment',
+    defaultMessage: 'SHIPMENT',
+  },
+  order: {
+    id: 'modules.Orders.order',
+    defaultMessage: 'ORDER',
+  },
   productsTab: {
     id: 'global.products',
     defaultMessage: 'PRODUCTS',
