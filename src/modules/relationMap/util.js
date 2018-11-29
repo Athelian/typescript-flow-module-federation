@@ -26,6 +26,20 @@ const getRelatedIds = (items, currentIndex, resultIds) => {
   return ids;
 };
 
+const calculateBatchVolume = batch => {
+  const { packageVolume, packageQuantity = 0 } = batch;
+  const { metric, value } = packageVolume || {};
+  const addingValue = (packageVolume && value) || 0;
+  switch (metric) {
+    case 'cm³':
+      return packageQuantity * addingValue;
+    case 'm³':
+      return packageQuantity * addingValue * 1000;
+    default:
+      return packageQuantity;
+  }
+};
+
 export const generateOrderRelation = (order: Object, option: Object = {}): Array<Object> => {
   const { isCollapsed, result, resultId } = option;
   const orderRelations = [];
@@ -269,13 +283,13 @@ const initOrderItemObj = (orderItem, orderId) => ({
 });
 
 const initBatchObj = (batch, orderId, orderItemId) => {
-  const volume = getByPathWithDefault(0, 'packageVolume.value', batch);
+  // const volume = getByPathWithDefault(0, 'packageVolume.value', batch);
   const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
-  const packageQuantity = batch.packageQuantity || 0;
+  // const {packageQuantity = 0} = batch
   return {
     data: {
       ...batch,
-      volumeLabel: volume * packageQuantity,
+      volumeLabel: calculateBatchVolume(batch), // volume * packageQuantity,
       metric,
       batchedQuantity: 0,
       orderId,
