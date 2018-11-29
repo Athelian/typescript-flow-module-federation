@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
@@ -7,10 +7,12 @@ import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
 import { range, set, cloneDeep, isEqual } from 'lodash';
+import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
 import Layout from 'components/Layout';
+import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, SelectTemplateButton } from 'components/Buttons';
 import { ToggleInput } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
@@ -18,6 +20,7 @@ import { formatOrderData } from 'modules/relationMap/util';
 import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
+import SelectTemplate from 'modules/tableTemplate/common/SelectTemplate';
 import {
   orderColumnFields,
   orderItemColumnFields,
@@ -41,6 +44,7 @@ import {
   HeaderWrapperStyle,
   SidebarWrapperStyle,
   BodyWrapperStyle,
+  ButtonToolbarStyle,
 } from './style';
 
 type Props = {
@@ -51,13 +55,40 @@ type Props = {
 
 setConfig({ pureSFC: true });
 
+function findColumns({
+  entity,
+  fields,
+  templateColumns,
+  showAll,
+  hideColumns,
+}: {
+  entity: string,
+  fields: Array<Object>,
+  templateColumns: Array<string>,
+  showAll: boolean,
+  hideColumns: Array<string>,
+}) {
+  if (templateColumns.length) {
+    return showAll
+      ? fields.filter((item, idx) => templateColumns.includes(`${entity}-${idx}`))
+      : fields.filter(
+          (item, idx) =>
+            !hideColumns.includes(`${entity}-${idx}`) &&
+            templateColumns.includes(`${entity}-${idx}`)
+        );
+  }
+  return showAll ? fields : fields.filter((item, idx) => !hideColumns.includes(`${entity}-${idx}`));
+}
+
 export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const [data] = useIdb(type, []);
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [hideColumns, setHideColumns] = useState([]);
+  const [templateColumns, setTemplateColumns] = useState([]);
   const [showAll, setShowAll] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [showTemplate, setShowTemplate] = useState(false);
   const [touched, setTouched] = useState({});
   const [editData, setEditData] = useState({
     orders: {},
@@ -68,11 +99,13 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
   const onToggle = useCallback(
     selectedColumn => {
-      setHideColumns(
-        hideColumns.includes(selectedColumn)
-          ? hideColumns.filter(item => item !== selectedColumn)
-          : [...hideColumns, selectedColumn]
-      );
+      if (hideColumns && selectedColumn) {
+        setHideColumns(
+          hideColumns.includes(selectedColumn)
+            ? hideColumns.filter(item => item !== selectedColumn)
+            : [...hideColumns, selectedColumn]
+        );
+      }
     },
     [hideColumns]
   );
@@ -120,13 +153,15 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
   useEffect(() => {
     const handleScroll = () => {
-      headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
-      sidebarRef.current.scrollTop = bodyRef.current.scrollTop;
+      if (bodyRef.current) {
+        if (headerRef.current) headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
+        if (sidebarRef.current) sidebarRef.current.scrollTop = bodyRef.current.scrollTop;
+      }
     };
+    if (bodyRef.current) bodyRef.current.addEventListener('scroll', handleScroll);
 
-    bodyRef.current.addEventListener('scroll', handleScroll);
     return () => {
-      bodyRef.current.removeEventListener('scroll', handleScroll);
+      if (bodyRef.current) bodyRef.current.removeEventListener('scroll', handleScroll);
     };
   });
 
@@ -142,18 +177,34 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   logger.warn({ selected, mappingObjects });
   logger.warn({ orderIds, orderItemsIds, batchIds, shipmentIds });
   const { entities } = normalize({ orders: data });
-  const orderColumnFieldsFilter = showAll
-    ? orderColumnFields
-    : orderColumnFields.filter((item, idx) => !hideColumns.includes(`ORDER-${idx}`));
-  const orderItemColumnFieldsFilter = showAll
-    ? orderItemColumnFields
-    : orderItemColumnFields.filter((item, idx) => !hideColumns.includes(`ORDER_ITEM-${idx}`));
-  const batchColumnFieldsFilter = showAll
-    ? batchColumnFields
-    : batchColumnFields.filter((item, idx) => !hideColumns.includes(`BATCH-${idx}`));
-  const shipmentColumnFieldsFilter = showAll
-    ? shipmentColumnFields
-    : shipmentColumnFields.filter((item, idx) => !hideColumns.includes(`SHIPMENT-${idx}`));
+  const orderColumnFieldsFilter = findColumns({
+    showAll,
+    hideColumns,
+    templateColumns,
+    fields: orderColumnFields,
+    entity: 'ORDER',
+  });
+  const orderItemColumnFieldsFilter = findColumns({
+    showAll,
+    hideColumns,
+    templateColumns,
+    fields: orderItemColumnFields,
+    entity: 'ORDER_ITEM',
+  });
+  const batchColumnFieldsFilter = findColumns({
+    showAll,
+    hideColumns,
+    templateColumns,
+    fields: batchColumnFields,
+    entity: 'BATCH',
+  });
+  const shipmentColumnFieldsFilter = findColumns({
+    showAll,
+    hideColumns,
+    templateColumns,
+    fields: shipmentColumnFields,
+    entity: 'SHIPMENT',
+  });
   return (
     <ApolloConsumer>
       {client => (
@@ -193,31 +244,31 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                         result.data.entitiesUpdateMany.orders.violations &&
                         result.data.entitiesUpdateMany.orders.violations.length
                       ) {
-                        const errorMesages = result.data.entitiesUpdateMany.orders.violations.filter(
+                        const errorMessages = result.data.entitiesUpdateMany.orders.violations.filter(
                           item => !!item
                         );
-                        logger.warn({ errorMesages });
-                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
+                        logger.warn({ errorMessages });
+                        if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
                       }
                       if (
                         result.data.entitiesUpdateMany.shipments.violations &&
                         result.data.entitiesUpdateMany.shipments.violations.length
                       ) {
-                        const errorMesages = result.data.entitiesUpdateMany.shipments.violations.filter(
+                        const errorMessages = result.data.entitiesUpdateMany.shipments.violations.filter(
                           item => !!item
                         );
-                        logger.warn({ errorMesages });
-                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
+                        logger.warn({ errorMessages });
+                        if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
                       }
                       if (
                         result.data.entitiesUpdateMany.batches.violations &&
                         result.data.entitiesUpdateMany.batches.violations.length
                       ) {
-                        const errorMesages = result.data.entitiesUpdateMany.batches.violations.filter(
+                        const errorMessages = result.data.entitiesUpdateMany.batches.violations.filter(
                           item => !!item
                         );
-                        logger.warn({ errorMesages });
-                        if (errorMesages.length) setErrorMessage(errorMesages[0][0].message);
+                        logger.warn({ errorMessages });
+                        if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
                       }
                     }
                     setTouched({});
@@ -239,13 +290,55 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
             </SlideViewNavBar>
           }
         >
-          <div>
-            <ToggleInput
-              toggled={showAll}
-              onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
-            >
-              <FormattedMessage id="modules.RelationMaps.showAll" defaultMessage="SHOW ALL" />
-            </ToggleInput>
+          <div className={ButtonToolbarStyle}>
+            <UserConsumer>
+              {({ user }) => {
+                const lastUsedTemplate = window.localStorage.getItem(`${user.id}-table-template`);
+                return (
+                  <>
+                    {lastUsedTemplate && (
+                      <div>
+                        <FormattedMessage
+                          id="modules.RelationMaps.lastUsed"
+                          defaultMessage="LAST USED TEMPLATE:"
+                        />
+                        {lastUsedTemplate}
+                      </div>
+                    )}
+                    <div style={{ display: 'flex' }}>
+                      <SelectTemplateButton onClick={() => setShowTemplate(true)} />
+                      <SlideView
+                        isOpen={showTemplate}
+                        onRequestClose={() => setShowTemplate(false)}
+                        options={{ width: '980px' }}
+                      >
+                        <SelectTemplate
+                          onSelect={template => {
+                            setShowTemplate(false);
+                            window.localStorage.setItem(`${user.id}-table-template`, template.name);
+                            window.localStorage.setItem(
+                              `${user.id}-table-template-fields`,
+                              template.fields
+                            );
+                            setTemplateColumns(template.fields);
+                          }}
+                          onCancel={() => setShowTemplate(false)}
+                        />
+                      </SlideView>
+                      <ToggleInput
+                        toggled={showAll}
+                        onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
+                      >
+                        <FormattedMessage
+                          id="modules.RelationMaps.showAll"
+                          defaultMessage="SHOW ALL"
+                        />
+                      </ToggleInput>
+                    </div>
+                  </>
+                );
+              }}
+            </UserConsumer>
           </div>
           <div className={EditTableViewWrapperStyle}>
             <div className={BodyWrapperStyle} ref={bodyRef}>
@@ -445,6 +538,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   showAll={showAll}
                   info={orderColumns}
                   hideColumns={hideColumns}
+                  templateColumns={templateColumns}
                   onToggle={onToggle}
                 />
                 <TableHeader
@@ -452,6 +546,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   showAll={showAll}
                   info={orderItemColumns}
                   hideColumns={hideColumns}
+                  templateColumns={templateColumns}
                   onToggle={onToggle}
                 />
                 <TableHeader
@@ -459,6 +554,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   showAll={showAll}
                   info={batchColumns}
                   hideColumns={hideColumns}
+                  templateColumns={templateColumns}
                   onToggle={onToggle}
                 />
                 <TableHeader
@@ -466,6 +562,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   showAll={showAll}
                   info={shipmentColumns}
                   hideColumns={hideColumns}
+                  templateColumns={templateColumns}
                   onToggle={onToggle}
                 />
               </TableRow>

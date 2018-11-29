@@ -21,6 +21,7 @@ Array [
   Object {
     "id": "1",
     "isNew": undefined,
+    "previousIds": Array [],
     "type": "ORDER",
   },
   Object {
@@ -28,7 +29,7 @@ Array [
     "relatedIds": Array [
       "1",
     ],
-    "type": "LINK-1-ORDER",
+    "type": "LINK-1-ORDER_ITEM",
   },
   Object {
     "id": "1",
@@ -69,6 +70,7 @@ Array [
   Object {
     "id": "1",
     "isNew": undefined,
+    "previousIds": Array [],
     "type": "ORDER",
   },
   Object {
@@ -107,6 +109,7 @@ Array [
   Object {
     "id": "1",
     "isNew": undefined,
+    "previousIds": Array [],
     "type": "ORDER",
   },
   Object {
@@ -144,8 +147,15 @@ Array [
   },
   Object {
     "id": "1",
-    "isLast": false,
     "isNew": undefined,
+    "previousIds": Array [
+      "1",
+      "2",
+    ],
+    "relatedIds": Array [
+      "2",
+      "1",
+    ],
     "type": "ORDER_ITEM",
   },
   Object {
@@ -158,19 +168,26 @@ Array [
   },
   Object {
     "id": "1",
-    "isLast": false,
     "isNew": false,
+    "previousIds": Array [
+      "1",
+      "2",
+    ],
+    "relatedIds": Array [
+      "2",
+      "1",
+    ],
     "type": "BATCH",
   },
   Object {
     "type": "",
   },
   Object {
-    "id": "1",
+    "id": "2",
     "relatedIds": Array [
       "2",
     ],
-    "type": "LINK-2-BATCH",
+    "type": "LINK-2-ORDER_ITEM",
   },
   Object {
     "type": "",
@@ -184,8 +201,14 @@ Array [
   },
   Object {
     "id": "2",
-    "isLast": true,
     "isNew": false,
+    "previousIds": Array [
+      "1",
+      "2",
+    ],
+    "relatedIds": Array [
+      "2",
+    ],
     "type": "BATCH",
   },
   Object {
@@ -200,8 +223,14 @@ Array [
   },
   Object {
     "id": "2",
-    "isLast": true,
     "isNew": undefined,
+    "previousIds": Array [
+      "1",
+      "2",
+    ],
+    "relatedIds": Array [
+      "2",
+    ],
     "type": "ORDER_ITEM",
   },
   Object {

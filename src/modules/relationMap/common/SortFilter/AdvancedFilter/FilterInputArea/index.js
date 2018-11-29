@@ -32,7 +32,7 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
       switch (selectedFilterItem) {
         case 'poNo':
           return () =>
-            /* $FlowFixMe */
+            /* $FlowFixMe: need to fix later when Kenvin is done */
             MiniSelector({
               entityType: 'orders',
               query: orderListQuery,

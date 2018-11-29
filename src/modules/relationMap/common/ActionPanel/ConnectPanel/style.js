@@ -36,9 +36,8 @@ export const SelectedPanelWrapper = styled('div')`
 
 export const SuccessPanelWrapper = styled('div')`
   ${PanelWrapperStyle};
-  display: grid;
-  grid-auto-columns: auto;
-  grid-auto-flow: column;
+  display: flex;
+  justify-content: space-between;
   background-color: ${colors.TEAL};
   color: ${colors.WHITE};
 `;
@@ -59,6 +58,10 @@ export const ConnectLogoStyle = css`
   align-items: center;
 `;
 
+export const LabelConfirmDeleteStyle = css`
+  white-space: normal;
+  text-align: center;
+`;
 export const LabelConnectStyle = css`
   width: min-content;
   min-width: 120px;
@@ -126,4 +129,29 @@ export const CancelPanel = flex => css`
 
 export const PanelButtonStyle = css`
   min-width: unset;
+`;
+
+export const ConfirmLabelStyle = css`
+  white-space: normal;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const CurrencyLabelStyle = css`
+  margin: 1px 0;
+  font-weight: bold;
+  color: ${colors.TEAL};
+`;
+
+export const ConfirmMessageContainer = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ConfirmActionStyle = css`
+  color: ${colors.TEAL};
 `;

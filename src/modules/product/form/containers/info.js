@@ -13,7 +13,13 @@ type FormState = {
   customFields?: Object,
 };
 
-const initValues = {};
+const initValues = {
+  customFields: {
+    mask: null,
+    fieldValues: [],
+    fieldDefinitions: [],
+  },
+};
 
 export default class ProductInfoContainer extends Container<FormState> {
   state = initValues;

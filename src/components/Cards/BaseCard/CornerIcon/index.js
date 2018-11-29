@@ -32,7 +32,7 @@ const getIcon = (disabled, selectable, selected, icon) => {
   return icon;
 };
 
-// $FlowFixMe it is an open issue on flow repo https://github.com/facebook/flow/issues/6103
+// $FlowFixMe it is an open issue on flow https://github.com/facebook/flow/issues/6103
 const CornerIcon = React.forwardRef(
   ({ icon, color, disabled, readOnly, selectable, selected, onClick, invert }: Props, ref) => {
     const iconToShow = getIcon(disabled, selectable, selected, icon);

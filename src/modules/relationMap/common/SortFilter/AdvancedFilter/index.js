@@ -10,7 +10,7 @@ import { UIConsumer } from 'modules/ui';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';
 import FilterInputArea from './FilterInputArea';
-import { type EntityTypes } from './type';
+import type { EntityTypes, ActiveFilters, FilterToggles } from './type';
 import {
   AdvancedFilterWrapperStyle,
   FilterToggleButtonStyle,
@@ -24,14 +24,11 @@ import {
 type Props = {};
 
 type State = {
+  filterIsApplied: boolean,
   selectedEntityType: EntityTypes,
   selectedFilterItem: string,
-  activeFilters: {
-    order: Array<string>,
-    item: Array<string>,
-    batch: Array<string>,
-    shipment: Array<string>,
-  },
+  activeFilters: ActiveFilters,
+  filterToggles: FilterToggles,
 };
 
 class AdvanceFilterInput extends React.Component<Props, State> {
@@ -39,6 +36,7 @@ class AdvanceFilterInput extends React.Component<Props, State> {
     super(props);
 
     this.state = {
+      filterIsApplied: false,
       selectedEntityType: 'order',
       selectedFilterItem: 'poNo',
       activeFilters: {
@@ -46,6 +44,23 @@ class AdvanceFilterInput extends React.Component<Props, State> {
         item: [],
         batch: [],
         shipment: [],
+      },
+      filterToggles: {
+        order: {
+          completelyBatched: false,
+          completelyShipped: false,
+          showActive: true,
+          showArchived: true,
+        },
+        item: {},
+        batch: {
+          showActive: true,
+          showArchived: true,
+        },
+        shipment: {
+          showActive: true,
+          showArchived: true,
+        },
       },
     };
 
@@ -91,11 +106,25 @@ class AdvanceFilterInput extends React.Component<Props, State> {
     }
   };
 
+  toggleFilterToggle = (entityType: string, toggle: string) => {
+    const { filterToggles } = this.state;
+
+    const newFilterToggles = { ...filterToggles };
+    newFilterToggles[entityType][toggle] = !newFilterToggles[entityType][toggle];
+
+    this.setState({ filterToggles: newFilterToggles });
+  };
+
   filterButtonRef: any;
 
   render() {
-    const { selectedEntityType, selectedFilterItem, activeFilters } = this.state;
-    const isActive = false;
+    const {
+      filterIsApplied,
+      selectedEntityType,
+      selectedFilterItem,
+      activeFilters,
+      filterToggles,
+    } = this.state;
     const isDirty = true;
 
     return (
@@ -110,7 +139,7 @@ class AdvanceFilterInput extends React.Component<Props, State> {
                   type="button"
                   ref={this.filterButtonRef}
                 >
-                  {isActive && <div className={FilterToggleBadgeStyle} />}
+                  {filterIsApplied && <div className={FilterToggleBadgeStyle} />}
                   <Icon icon="FILTER" />
                 </button>
                 <OutsideClickHandler
@@ -166,6 +195,8 @@ class AdvanceFilterInput extends React.Component<Props, State> {
                         selectedEntityType={selectedEntityType}
                         activeFilters={activeFilters}
                         toggleActiveFilter={this.toggleActiveFilter}
+                        filterToggles={filterToggles}
+                        toggleFilterToggle={this.toggleFilterToggle}
                         selectedFilterItem={selectedFilterItem}
                         changeSelectedFilterItem={this.changeSelectedFilterItem}
                       />

@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { Label } from 'components/Form';
-import { BaseButton } from 'components/Buttons';
 import { FormattedMessage } from 'react-intl';
 import messages from 'modules/relationMap/messages';
 import Icon from 'components/Icon';
@@ -12,18 +11,19 @@ import {
   LabelConnectStyle,
 } from './style';
 
-const SuccessPanel = () => (
+type Props = {
+  onClick: Function,
+};
+const SuccessPanel = ({ onClick }: Props) => (
   <SuccessPanelWrapper>
     <Label className={LabelConnectStyle}>
       <FormattedMessage {...messages.connect} />
       <Icon icon="CONNECT" />
     </Label>
     <Label className={GroupLabelButtonStyle}>
-      <FormattedMessage {...messages.connectType} />
-      <BaseButton icon="ORDER" label="ORDER" />
-      <BaseButton icon="SHIPMENT" label="SHIPMENT" />
+      <FormattedMessage {...messages.connectSuccess} />
     </Label>
-    <button className={SuccessPanelButtonCloseStyle} type="button" onClick={() => {}}>
+    <button className={SuccessPanelButtonCloseStyle} type="button" onClick={onClick}>
       <Icon icon="CANCEL" />
     </button>
   </SuccessPanelWrapper>

@@ -53,15 +53,17 @@ const MaskList = ({ entityType }: Props) => (
                       onRequestClose={() => toggle(false)}
                       options={{ width: '1030px' }}
                     >
-                      <MaskFormWrapper
-                        entityType={entityType}
-                        isNew
-                        onSave={() => {
-                          toggle(false);
-                          refetch();
-                        }}
-                        onCancel={() => toggle(false)}
-                      />
+                      {isOpen && (
+                        <MaskFormWrapper
+                          entityType={entityType}
+                          isNew
+                          onSave={() => {
+                            toggle(false);
+                            refetch();
+                          }}
+                          onCancel={() => toggle(false)}
+                        />
+                      )}
                     </SlideView>
                   </>
                 )}
@@ -72,7 +74,9 @@ const MaskList = ({ entityType }: Props) => (
             <MaskGridView
               entityType={entityType}
               items={getByPathWithDefault([], 'masks.nodes', data)}
-              onLoadMore={() => loadMore({ fetchMore, data }, { filterBy: entityType }, 'masks')}
+              onLoadMore={() =>
+                loadMore({ fetchMore, data }, { filter: { entityTypes: entityType } }, 'masks')
+              }
               hasMore={hasMore}
               isLoading={loading}
               renderItem={mask => (
@@ -90,15 +94,17 @@ const MaskList = ({ entityType }: Props) => (
                         onRequestClose={() => toggle(false)}
                         options={{ width: '1030px' }}
                       >
-                        <MaskFormWrapper
-                          entityType={entityType}
-                          id={mask.id}
-                          onSave={() => {
-                            toggle(false);
-                            refetch();
-                          }}
-                          onCancel={() => toggle(false)}
-                        />
+                        {isOpen && (
+                          <MaskFormWrapper
+                            entityType={entityType}
+                            id={mask.id}
+                            onSave={() => {
+                              toggle(false);
+                              refetch();
+                            }}
+                            onCancel={() => toggle(false)}
+                          />
+                        )}
                       </SlideView>
                     </>
                   )}

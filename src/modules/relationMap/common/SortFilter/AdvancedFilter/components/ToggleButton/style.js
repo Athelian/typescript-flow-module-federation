@@ -2,12 +2,13 @@
 import { css } from 'react-emotion';
 import { presets, colors, fontSizes } from 'styles/common';
 
-export const ToggleButtonStyle = (isActive: boolean): string => css`
+export const ToggleButtonStyle = (isActive: boolean, isHidden: boolean): string => css`
   ${presets.BUTTON};
   ${fontSizes.HUGE};
   width: 40px;
   height: 40px;
   flex-shrink: 0;
+  visibility: ${isHidden ? 'hidden' : 'visible'};
   ${isActive
     ? `
       color: ${colors.TEAL};

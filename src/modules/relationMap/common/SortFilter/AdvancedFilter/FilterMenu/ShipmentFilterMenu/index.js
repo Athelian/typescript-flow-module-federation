@@ -5,15 +5,19 @@ import { BaseFilterMenu } from '../components';
 import messages from './messages';
 
 type Props = {
-  activeFilters: Array<string>,
+  parsedActiveFilters: Array<string>,
   toggleActiveFilter: (string, string) => void,
+  parsedFilterToggles: Object,
+  toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
   changeSelectedFilterItem: string => void,
 };
 
 export default function ShipmentFilterMenu({
-  activeFilters,
+  parsedActiveFilters,
   toggleActiveFilter,
+  parsedFilterToggles,
+  toggleFilterToggle,
   selectedFilterItem,
   changeSelectedFilterItem,
 }: Props) {
@@ -22,38 +26,59 @@ export default function ShipmentFilterMenu({
       label: <FormattedMessage {...messages.shipment} />,
       icon: 'SHIPMENT',
       filters: [
-        { name: 'forwarder', label: <FormattedMessage {...messages.forwarder} /> },
-        { name: 'inCharge', label: <FormattedMessage {...messages.inCharge} /> },
-        { name: 'seaports', label: <FormattedMessage {...messages.seaports} /> },
-        { name: 'airports', label: <FormattedMessage {...messages.airports} /> },
-        { name: 'cargoReady', label: <FormattedMessage {...messages.cargoReady} /> },
-        { name: 'loadPortDeparture', label: <FormattedMessage {...messages.loadPortDeparture} /> },
+        { name: 'forwarder', label: <FormattedMessage {...messages.forwarder} />, data: [] },
+        { name: 'inCharge', label: <FormattedMessage {...messages.inCharge} />, data: [] },
+        { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
+        { name: 'airports', label: <FormattedMessage {...messages.airports} />, data: [] },
+        { name: 'cargoReady', label: <FormattedMessage {...messages.cargoReady} />, data: [] },
+        {
+          name: 'loadPortDeparture',
+          label: <FormattedMessage {...messages.loadPortDeparture} />,
+          data: [],
+        },
         {
           name: 'firstTransitPortArrival',
           label: <FormattedMessage {...messages.firstTransitPortArrival} />,
+          data: [],
         },
         {
           name: 'firstTransitPortDeparture',
           label: <FormattedMessage {...messages.firstTransitPortDeparture} />,
+          data: [],
         },
         {
           name: 'secondTransitPortArrival',
           label: <FormattedMessage {...messages.secondTransitPortArrival} />,
+          data: [],
         },
         {
           name: 'secondTransitPortDeparture',
           label: <FormattedMessage {...messages.secondTransitPortDeparture} />,
+          data: [],
         },
         {
           name: 'dischargePortArrival',
           label: <FormattedMessage {...messages.dischargePortArrival} />,
+          data: [],
         },
-        { name: 'customClearance', label: <FormattedMessage {...messages.customClearance} /> },
-        { name: 'warehouseArrival', label: <FormattedMessage {...messages.warehouseArrival} /> },
-        { name: 'deliveryReady', label: <FormattedMessage {...messages.deliveryReady} /> },
-        { name: 'tags', label: <FormattedMessage {...messages.tags} /> },
-        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} /> },
-        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} /> },
+        {
+          name: 'customClearance',
+          label: <FormattedMessage {...messages.customClearance} />,
+          data: [],
+        },
+        {
+          name: 'warehouseArrival',
+          label: <FormattedMessage {...messages.warehouseArrival} />,
+          data: [],
+        },
+        {
+          name: 'deliveryReady',
+          label: <FormattedMessage {...messages.deliveryReady} />,
+          data: [],
+        },
+        { name: 'tags', label: <FormattedMessage {...messages.tags} />, data: [] },
+        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
+        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
       ],
     },
   ];
@@ -72,8 +97,10 @@ export default function ShipmentFilterMenu({
       filtersMap={filtersMap}
       togglesMap={togglesMap}
       entityType="shipment"
-      activeFilters={activeFilters}
+      parsedActiveFilters={parsedActiveFilters}
       toggleActiveFilter={toggleActiveFilter}
+      parsedFilterToggles={parsedFilterToggles}
+      toggleFilterToggle={toggleFilterToggle}
       selectedFilterItem={selectedFilterItem}
       changeSelectedFilterItem={changeSelectedFilterItem}
     />

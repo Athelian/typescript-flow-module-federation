@@ -25,6 +25,11 @@ const initValues = {
     value: 0,
     metric: 'm²',
   },
+  customFields: {
+    mask: null,
+    fieldValues: [],
+    fieldDefinitions: [],
+  },
 };
 
 export default class WarehouseContainer extends Container<FormState> {

@@ -9,10 +9,10 @@ type Props = {
   label: React.Node,
   icon: string,
   isActive: boolean,
-  toggleActiveFilter: (filter: string) => void,
+  toggleFilterToggle: (filter: string) => void,
 };
 
-export default function ToggleMenuItem({ name, label, icon, isActive, toggleActiveFilter }: Props) {
+export default function ToggleMenuItem({ name, label, icon, isActive, toggleFilterToggle }: Props) {
   return (
     <div className={ToggleMenuItemWrapperStyle}>
       <div className={ToggleMenuIconStyle}>
@@ -21,7 +21,7 @@ export default function ToggleMenuItem({ name, label, icon, isActive, toggleActi
 
       <div className={ToggleMenuLabelStyle}>{label}</div>
 
-      <ToggleButton isOn={isActive} onClick={() => toggleActiveFilter(name)} />
+      <ToggleButton isOn={isActive} onClick={() => toggleFilterToggle(name)} />
     </div>
   );
 }

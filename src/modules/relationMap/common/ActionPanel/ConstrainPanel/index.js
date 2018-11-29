@@ -7,42 +7,44 @@ import messages from 'modules/relationMap/messages';
 import * as style from './style';
 
 type Props = {
-  type: string,
+  disable: {
+    disabledSplit: boolean,
+    disabledMoveToShipment: boolean,
+    disabledMoveToOrder: boolean,
+  },
 };
-const ConstrainPanel = ({ type }: Props) => (
-  <div className={style.ContainerWrapper}>
-    {type === 'split' && (
-      <div>
-        <Label>
+const ConstrainPanel = ({ disable }: Props) => {
+  const { disabledSplit, disabledMoveToOrder, disabledMoveToShipment } = disable;
+  if (!disabledSplit && !disabledMoveToOrder && !disabledMoveToShipment) {
+    return null;
+  }
+  return (
+    <div className={style.ContainerWrapper}>
+      {disabledSplit && (
+        <Label className={style.LabelStyle} align="center">
           <FormattedMessage {...messages.split} />{' '}
           <FormattedMessage {...messages.actionAvailable} /> 1 <Icon icon="ORDER_ITEM" />{' '}
           <FormattedMessage {...messages.expressionOr} /> 1 <Icon icon="BATCH" />
         </Label>
-      </div>
-    )}
-    {type === 'connect_order' && (
-      <div>
-        <Label>
-          <FormattedMessage {...messages.actionAvailable} />
-          <Icon icon="ORDER_ITEM" />
-          <FormattedMessage {...messages.expressionAndOr} />
-          <Icon icon="BATCH" />
+      )}
+      {disabledMoveToOrder && (
+        <Label className={style.LabelStyle} align="center">
+          <FormattedMessage {...messages.moveTo} /> <FormattedMessage {...messages.order} />{' '}
+          <FormattedMessage {...messages.actionAvailable} /> <Icon icon="ORDER_ITEM" />{' '}
+          <FormattedMessage {...messages.expressionAndOr} /> <Icon icon="BATCH" />{' '}
           <FormattedMessage {...messages.shareSameExport} />
         </Label>
-      </div>
-    )}
-    {type === 'connect_shipment' && (
-      <div>
-        <Label>
-          <FormattedMessage {...messages.actionAvailable} />
-          <FormattedMessage {...messages.atLeast} />
-          1 <Icon icon="ORDER_ITEM" />
-          <FormattedMessage {...messages.expressionAnd} />
-          0 <Icon icon="BATCH" />
+      )}
+      {disabledMoveToShipment && (
+        <Label className={style.LabelStyle} align="center">
+          <FormattedMessage {...messages.moveTo} /> <FormattedMessage {...messages.shipment} />{' '}
+          <FormattedMessage {...messages.actionAvailable} />{' '}
+          <FormattedMessage {...messages.atLeast} /> 1 <Icon icon="ORDER_ITEM" />{' '}
+          <FormattedMessage {...messages.expressionAnd} /> 0 <Icon icon="BATCH" />
         </Label>
-      </div>
-    )}
-  </div>
-);
+      )}
+    </div>
+  );
+};
 
 export default ConstrainPanel;

@@ -5,15 +5,19 @@ import { BaseFilterMenu } from '../components';
 import messages from './messages';
 
 type Props = {
-  activeFilters: Array<string>,
+  parsedActiveFilters: Array<string>,
   toggleActiveFilter: (string, string) => void,
+  parsedFilterToggles: Object,
+  toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
   changeSelectedFilterItem: string => void,
 };
 
 export default function BatchFilterMenu({
-  activeFilters,
+  parsedActiveFilters,
   toggleActiveFilter,
+  parsedFilterToggles,
+  toggleFilterToggle,
   selectedFilterItem,
   changeSelectedFilterItem,
 }: Props) {
@@ -22,13 +26,13 @@ export default function BatchFilterMenu({
       label: <FormattedMessage {...messages.batch} />,
       icon: 'BATCH',
       filters: [
-        { name: 'deliveredAt', label: <FormattedMessage {...messages.deliveredAt} /> },
-        { name: 'expiredAt', label: <FormattedMessage {...messages.expiredAt} /> },
-        { name: 'producedAt', label: <FormattedMessage {...messages.producedAt} /> },
-        { name: 'packaging', label: <FormattedMessage {...messages.packaging} /> },
-        { name: 'tags', label: <FormattedMessage {...messages.tags} /> },
-        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} /> },
-        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} /> },
+        { name: 'deliveredAt', label: <FormattedMessage {...messages.deliveredAt} />, data: [] },
+        { name: 'expiredAt', label: <FormattedMessage {...messages.expiredAt} />, data: [] },
+        { name: 'producedAt', label: <FormattedMessage {...messages.producedAt} />, data: [] },
+        { name: 'packaging', label: <FormattedMessage {...messages.packaging} />, data: [] },
+        { name: 'tags', label: <FormattedMessage {...messages.tags} />, data: [] },
+        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
+        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
       ],
     },
   ];
@@ -47,8 +51,10 @@ export default function BatchFilterMenu({
       filtersMap={filtersMap}
       togglesMap={togglesMap}
       entityType="batch"
-      activeFilters={activeFilters}
+      parsedActiveFilters={parsedActiveFilters}
       toggleActiveFilter={toggleActiveFilter}
+      parsedFilterToggles={parsedFilterToggles}
+      toggleFilterToggle={toggleFilterToggle}
       selectedFilterItem={selectedFilterItem}
       changeSelectedFilterItem={changeSelectedFilterItem}
     />

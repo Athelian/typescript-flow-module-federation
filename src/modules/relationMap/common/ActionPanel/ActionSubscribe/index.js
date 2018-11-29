@@ -10,6 +10,7 @@ import { BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
+import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
@@ -33,7 +34,13 @@ import {
 } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
 import messages from 'modules/relationMap/messages';
-import { TabItemStyled, LoadingContainerStyle } from './style';
+import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
+import {
+  isSelectSomeItem,
+  isDisabledSplit,
+  isDisabledMoveToShipment,
+  isDisabledMoveToOrder,
+} from '../util';
 
 type Props = {
   filter: Object,
@@ -54,27 +61,6 @@ const LoadingMessage = ({ type }: LoadingProps) => {
     case 'connect':
       return <FormattedMessage {...messages.connecting} />;
   }
-};
-
-const isSelectSomeItem = targetedItem => {
-  const { orderItem = {}, batch = {} } = targetedItem;
-  const numberOfOrderItem = Object.keys(orderItem).length;
-  const numberOfBatch = Object.keys(batch).length;
-  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
-  return selectSomeItem;
-};
-
-const isDisabledSplit = targetedItem => {
-  const { orderItem = {}, batch = {} } = targetedItem;
-  const numberOfOrderItem = Object.keys(orderItem).length;
-  const numberOfBatch = Object.keys(batch).length;
-  const selectSomeItem = numberOfOrderItem > 0 || numberOfBatch > 0;
-  const selctedOrderItem = numberOfOrderItem === 1 && numberOfBatch === 0;
-  const selectedBatch = numberOfBatch === 1 && numberOfOrderItem === 0;
-  if (selectSomeItem && (selctedOrderItem || selectedBatch)) {
-    return false;
-  }
-  return true;
 };
 
 const ActionSubscribe = ({ filter }: Props) => (
@@ -110,7 +96,7 @@ const ActionSubscribe = ({ filter }: Props) => (
           },
           { clone },
           { split },
-          connectContainer
+          { reset: resetConnectAction }
         ) => {
           const onClickClone = () => {
             const action = async () => {
@@ -163,8 +149,12 @@ const ActionSubscribe = ({ filter }: Props) => (
             cancelTarget();
             setAction('');
             setError(false);
+            resetConnectAction();
           };
           const disabledSplit = isDisabledSplit(targetedItem);
+          const disabledMoveToShipment = isDisabledMoveToShipment(targetedItem);
+          const disabledMoveToOrder = isDisabledMoveToOrder(targetedItem);
+          const selectedSomeItem = isSelectSomeItem(targetedItem);
           return (
             <>
               {isTargetAnyItem() && (
@@ -186,13 +176,46 @@ const ActionSubscribe = ({ filter }: Props) => (
                         active={currentAction === 'split'}
                         onClick={() => setAction(currentAction !== 'split' ? 'split' : null)}
                       />
-                      <TabItem
-                        className={TabItemStyled}
-                        label="CONNECT"
-                        icon="CONNECT"
-                        active={currentAction === 'connect'}
-                        onClick={() => setAction('connect')}
-                      />
+                      <Subscribe to={[ConnectContainer]}>
+                        {({ state: { connectType }, setConnectType }) => (
+                          <TabItem
+                            className={TabItemStyled}
+                            label={
+                              <div className={MoveToWrapper}>
+                                <FormattedMessage {...messages.moveTo} />
+                                <Icon icon="ORDER" />
+                              </div>
+                            }
+                            icon="EXCHANGE"
+                            disabled={disabledMoveToOrder}
+                            active={currentAction === 'connect' && connectType === 'ORDER'}
+                            onClick={() => {
+                              setAction('connect');
+                              setConnectType('ORDER');
+                            }}
+                          />
+                        )}
+                      </Subscribe>
+                      <Subscribe to={[ConnectContainer]}>
+                        {({ state: { connectType }, setConnectType }) => (
+                          <TabItem
+                            className={TabItemStyled}
+                            label={
+                              <div className={MoveToWrapper}>
+                                <FormattedMessage {...messages.moveTo} />
+                                <Icon icon="SHIPMENT" />
+                              </div>
+                            }
+                            icon="EXCHANGE"
+                            disabled={disabledMoveToShipment}
+                            active={currentAction === 'connect' && connectType === 'SHIPMENT'}
+                            onClick={() => {
+                              setAction('connect');
+                              setConnectType('SHIPMENT');
+                            }}
+                          />
+                        )}
+                      </Subscribe>
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) => (
                           <>
@@ -227,10 +250,24 @@ const ActionSubscribe = ({ filter }: Props) => (
                     <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
                   )}
                   {!error && currentAction === 'connect' && (
-                    <ConnectPanel connect={connectContainer} targetedItem={targetedItem} />
+                    <Subscribe to={[ConnectContainer]}>
+                      {connectContainer => (
+                        <ConnectPanel
+                          connect={connectContainer}
+                          targetedItem={targetedItem}
+                          filter={filter}
+                        />
+                      )}
+                    </Subscribe>
                   )}
-                  {isSelectSomeItem(targetedItem) && disabledSplit && (
-                    <ConstrainPanel type="split" />
+                  {selectedSomeItem && (
+                    <ConstrainPanel
+                      disable={{
+                        disabledSplit,
+                        disabledMoveToShipment,
+                        disabledMoveToOrder,
+                      }}
+                    />
                   )}
                   {error && (
                     <ErrorPanel onClickCancel={onCancelTarget} onClickRefresh={actionFunc} />

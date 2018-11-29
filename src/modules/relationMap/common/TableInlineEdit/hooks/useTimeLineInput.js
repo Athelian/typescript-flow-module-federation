@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
+// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 import { useState, useCallback } from 'react';
 import * as Yup from 'yup';
 import differenceInDays from 'date-fns/differenceInDays';
@@ -12,6 +12,7 @@ type TimeLineProps = {
   date: ?Date,
   timelineDateRevisions?: Array<{
     date: ?Date,
+    id: string,
   }>,
 };
 
@@ -46,15 +47,30 @@ const findDelay = (timelineDateRevisions: Array<Object>, date: ?Date) => {
   return delayAmount;
 };
 
-function useTimeLineInput(initialValue: TimeLineProps) {
+function useTimeLineInput(
+  initialValue: TimeLineProps
+): {
+  hasApproved: boolean,
+  value: ?Object,
+  onChange: Function,
+  onFocus: Function,
+  onBlur: Function,
+  handleApprove: (Object, Function) => void,
+  handleUnapprove: Function => void,
+  getTimeLine: (?Date) => any,
+  isFocused: boolean,
+  delayDays: number,
+} {
   const [info, setInfo] = useState(initialValue);
   const [value, setValue] = useState(findLatestDate(initialValue));
   const hasApproved = initialValue.approvedBy && Object.keys(initialValue.approvedBy).length > 0;
   const [focus, setFocus] = useState(false);
 
   const onChange = useCallback(event => {
-    const newDate = new Date(event.currentTarget.value);
-    if (Yup.date().isValidSync(newDate)) setValue(newDate);
+    if (event && event.currentTarget) {
+      const newDate = new Date(event.currentTarget.value);
+      if (Yup.date().isValidSync(newDate)) setValue(newDate);
+    }
   }, []);
 
   const onFocus = useCallback(() => {
@@ -71,11 +87,13 @@ function useTimeLineInput(initialValue: TimeLineProps) {
       approvedAt: new Date(),
       approvedBy: user,
     });
-    cb({
-      ...info,
-      approvedAt: new Date(),
-      approvedBy: user,
-    });
+    if (cb) {
+      cb({
+        ...info,
+        approvedAt: new Date(),
+        approvedBy: user,
+      });
+    }
   }, []);
 
   const handleUnapprove = useCallback(cb => {
@@ -84,29 +102,30 @@ function useTimeLineInput(initialValue: TimeLineProps) {
       approvedAt: null,
       approvedBy: null,
     });
-    cb({
-      ...info,
-      approvedAt: null,
-      approvedBy: null,
-    });
+    if (cb) {
+      cb({
+        ...info,
+        approvedAt: null,
+        approvedBy: null,
+      });
+    }
   }, []);
 
-  const getTimeLine = useCallback(
-    date => ({
-      ...info,
-      timelineDateRevisions: [
-        ...info.timelineDateRevisions.filter(item => !!item.id),
-        {
-          date,
-          type: 'Other',
-        },
-      ],
-    }),
-    []
-  );
+  const getTimeLine = date => ({
+    ...info,
+    timelineDateRevisions: [
+      ...(info && info.timelineDateRevisions
+        ? info.timelineDateRevisions.filter(item => !!item.id)
+        : []),
+      {
+        date,
+        type: 'Other',
+      },
+    ],
+  });
 
   return {
-    hasApproved,
+    hasApproved: !!hasApproved,
     value,
     onChange,
     onFocus,
@@ -115,7 +134,7 @@ function useTimeLineInput(initialValue: TimeLineProps) {
     handleUnapprove,
     getTimeLine,
     isFocused: focus,
-    delayDays: findDelay(info.timelineDateRevisions, info.date),
+    delayDays: findDelay(info.timelineDateRevisions || [], info.date),
   };
 }
 
