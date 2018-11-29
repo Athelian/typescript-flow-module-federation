@@ -86,6 +86,9 @@ describe('Product', () => {
           .get('input[name="hsCode"]')
           .clear()
           .type(clonedHsCode)
+          .get('input[name="material"]')
+          .clear()
+          .type(material)
           .blur();
 
         cy.getByTestId('saveButton')
