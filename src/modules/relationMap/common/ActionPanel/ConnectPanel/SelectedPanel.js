@@ -2,18 +2,22 @@
 import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
-import { head, getByPathWithDefault as get } from 'utils/fp';
+import { getByPathWithDefault as get, omit, compose } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import { shipmentFormQuery } from 'modules/shipment/form/query';
+import { orderFormQuery } from 'modules/order/form/query';
 import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
 import RelationMapContainer from 'modules/relationMap/container';
-import { ActionContainer } from 'modules/relationMap/containers';
+import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import {
   removeAdditionBatchFields,
   removeAdditionOrderItemFields,
@@ -24,8 +28,7 @@ import * as style from './style';
 const { SelectedPanelWrapper } = style;
 
 type Props = {
-  connect: Object,
-  // refetch: Function,
+  connectType: string,
 };
 
 const getConnectTypeMessage = (type: string) => {
@@ -53,51 +56,95 @@ const isSameCurrency = (currency: string) => (item: Object) => {
   return compareCurrency === currency;
 };
 
-const SelectedPanel = ({ connect }: Props) => {
-  const {
-    state: { connectType },
-    setCurrentStep,
-  } = connect;
-  return (
-    <SelectedPanelWrapper>
-      <div className={style.SubPanel}>
-        <Label className={style.LabelConnectStyle}>
-          <FormattedMessage {...messages.connect} />
-          <Icon icon="CONNECT" />
-        </Label>
-        <Label className={style.GroupLabelButtonLeftStyle}>
-          <FormattedMessage {...messages.select} />
-          <Label color={connectType} className={style.GroupLabelButtonStyle}>
-            <Icon icon={connectType} />
-            <FormattedMessage {...getConnectTypeMessage(connectType)} />
+const ConfirmMessage = ({ connectType }: Props) => {
+  switch (connectType) {
+    default:
+    case 'ORDER':
+      return (
+        <div className={style.ConfirmMessageContainer}>
+          <div>
+            <FormattedMessage {...messages.confirmMessage} />{' '}
+            <div className={style.ConfirmActionStyle}>
+              <FormattedMessage {...messages.delete} />
+            </div>{' '}
+            <FormattedMessage {...messages.confirmDelete} />
+          </div>
+          <Label className={style.LabelConfirmDeleteStyle}>
+            <FormattedMessage {...messages.confirmSubMessage} />
           </Label>
-          <FormattedMessage {...messages.toConnectToTheList} />
-        </Label>
-      </div>
+        </div>
+      );
 
-      <div className={style.SubPanel}>
-        <Label className={style.GroupLabelButtonStyle}>
-          <FormattedMessage {...messages.connectTo} />
-          <ToggleSlide>
-            {({ assign: setSlide }) => (
-              <ApolloConsumer>
-                {client => (
-                  <Subscribe
-                    to={[
-                      RelationMapContainer,
-                      ActionContainer,
-                      ShipmentBatchesContainer,
-                      OrderItemsContainer,
-                      OrderInfoContainer,
-                    ]}
-                  >
-                    {(
-                      { state: { targetedItem } },
-                      { setResult },
-                      batchContainer,
-                      orderItemContainer,
-                      orderInfoContainer
-                    ) => (
+    case 'SHIPMENT':
+      return (
+        <div className={style.ConfirmMessageContainer}>
+          <div>
+            <FormattedMessage {...messages.confirmMessage} />
+          </div>{' '}
+          <span className={style.ConfirmActionStyle}>
+            <FormattedMessage {...messages.disconnect} />
+          </span>{' '}
+          <FormattedMessage {...messages.confirmDisconnect} />
+          <Label>
+            <FormattedMessage {...messages.confirmSubMessage} />
+          </Label>
+        </div>
+      );
+  }
+};
+
+const ClearMessage = ({ connectType }: Props) => {
+  switch (connectType) {
+    default:
+    case 'ORDER':
+      return <FormattedMessage {...messages.delete} />;
+    case 'SHIPMENT':
+      return <FormattedMessage {...messages.disconnect} />;
+  }
+};
+
+const SelectedPanel = ({ connectType }: Props) => (
+  <SelectedPanelWrapper>
+    <div className={style.SubPanel}>
+      <Label className={style.LabelConnectStyle}>
+        <FormattedMessage {...messages.connect} />
+        <Icon icon="CONNECT" />
+      </Label>
+      <Label className={style.GroupLabelButtonLeftStyle}>
+        <FormattedMessage {...messages.select} />
+        <Label color={connectType} className={style.GroupLabelButtonStyle}>
+          <Icon icon={connectType} />
+          <FormattedMessage {...getConnectTypeMessage(connectType)} />
+        </Label>
+        <FormattedMessage {...messages.toConnectToTheList} />
+      </Label>
+    </div>
+    <div className={style.SubPanel}>
+      <Label className={style.GroupLabelButtonStyle}>
+        <FormattedMessage {...messages.connectTo} />
+        <ToggleSlide>
+          {({ assign: setSlide }) => (
+            <ApolloConsumer>
+              {client => (
+                <Subscribe
+                  to={[
+                    RelationMapContainer,
+                    ActionContainer,
+                    ShipmentBatchesContainer,
+                    OrderItemsContainer,
+                    OrderInfoContainer,
+                    ConnectContainer,
+                  ]}
+                >
+                  {(
+                    { state: { targetedItem }, addTarget },
+                    { setResult },
+                    batchContainer,
+                    orderItemContainer,
+                    orderInfoContainer,
+                    { setSuccess }
+                  ) => (
+                    <>
                       <BaseButton
                         icon="ADD"
                         label={
@@ -135,26 +182,37 @@ const SelectedPanel = ({ connect }: Props) => {
                                 });
                               }, {});
                             const filteredOrderItemIds = Object.keys(orderItemObj);
-                            const filteredOrderItems = filteredOrderItemIds.map(orderItemId =>
-                              removeAdditionOrderItemFields(orderItemObj[orderItemId])
+                            const filteredOrderItems = filteredOrderItemIds.map(
+                              orderItemId => orderItemObj[orderItemId]
                             );
-                            const orderItems = orderItemIds.map(orderItemId =>
-                              removeAdditionOrderItemFields(orderItem[orderItemId])
+                            const orderItems = orderItemIds.map(
+                              orderItemId => orderItem[orderItemId]
                             );
                             const allOrderItem = orderItems.concat(filteredOrderItems);
 
-                            const firstItem = orderItem[head(orderItemIds)];
+                            const [firstItem] = allOrderItem || [];
                             const firstCurrency = get('', 'order.currency', firstItem);
                             const exporter = get('', 'order.exporter', firstItem);
                             const sameCurrency = allOrderItem.every(isSameCurrency(firstCurrency));
                             const currency = sameCurrency ? firstCurrency : null;
-                            const formatedOrderItem = allOrderItem.map(currentOrderItem =>
-                              isSameCurrency
-                                ? currentOrderItem
-                                : Object.assign(currentOrderItem, {
+                            const formatedOrderItem = allOrderItem.map(currentOrderItem => {
+                              const orderItemInput = removeAdditionOrderItemFields(
+                                currentOrderItem
+                              );
+                              const batches = currentOrderItem.batches.map(
+                                compose(
+                                  removeAdditionBatchFields,
+                                  omit(['updatedBy', 'updatedAt', 'archived']),
+                                  cleanUpData
+                                )
+                              );
+                              return isSameCurrency
+                                ? { ...orderItemInput, batches }
+                                : Object.assign(orderItemInput, {
                                     price: { amount: 0, currency: 'ALL' },
-                                  })
-                            );
+                                    batches,
+                                  });
+                            });
                             orderItemContainer.initDetailValues(formatedOrderItem);
                             orderInfoContainer.initDetailValues({
                               exporter,
@@ -166,9 +224,16 @@ const SelectedPanel = ({ connect }: Props) => {
                             type: `NEW_${connectType}`,
                             onSuccess: async data => {
                               let result = null;
+                              const itemType = getItemType(connectType);
                               if (connectType === 'ORDER') {
-                                result = get(null, 'orderCreate.order', data);
-                                // await refetch();
+                                // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
+                                const { data: orderData } = await client.query({
+                                  query: orderFormQuery,
+                                  variables: {
+                                    id: get(null, 'orderCreate.order.id', data),
+                                  },
+                                });
+                                result = { ...orderData.order, actionType: 'newItem' };
                               }
                               if (connectType === 'SHIPMENT') {
                                 // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
@@ -178,33 +243,88 @@ const SelectedPanel = ({ connect }: Props) => {
                                     id: get('', 'shipmentCreate.shipment.id', data),
                                   },
                                 });
-                                result = shipmentData;
+                                result = { ...shipmentData.shipment, actionType: 'newItem' };
                               }
+                              addTarget(
+                                { data: result, relation: {} },
+                                { id: result && result.id, type: connectType },
+                                itemType
+                              );
                               setResult(prevState =>
                                 Object.assign(prevState, {
                                   result: Object.assign(prevState.result, {
-                                    [getItemType(connectType)]: [result],
+                                    [itemType]: [result],
                                   }),
                                 })
                               );
-                              setCurrentStep(4);
+                              setSuccess(true);
                             },
                           });
                         }}
                       />
-                    )}
-                  </Subscribe>
-                )}
-              </ApolloConsumer>
-            )}
-          </ToggleSlide>
-        </Label>
-      </div>
-      <Label className={style.GroupLabelButtonStyle}>
-        <BaseButton icon="CLEAR" label="Disconnect" className={style.PanelButtonStyle} />
+                    </>
+                  )}
+                </Subscribe>
+              )}
+            </ApolloConsumer>
+          )}
+        </ToggleSlide>
       </Label>
-    </SelectedPanelWrapper>
-  );
-};
+    </div>
+    <BooleanValue>
+      {({ value: isOpen, set: dialogToggle }) => (
+        <>
+          <Label className={style.GroupLabelButtonStyle}>
+            <BaseButton
+              icon="CLEAR"
+              label={<ClearMessage connectType={connectType} />}
+              className={style.PanelButtonStyle}
+              onClick={() => dialogToggle(true)}
+            />
+          </Label>
+          <ApolloConsumer>
+            {client => (
+              <Subscribe to={[RelationMapContainer, ConnectContainer, ActionContainer]}>
+                {(
+                  { state: { targetedItem }, isHighlighted, selectFocusItem },
+                  { disconnectShipment, deleteItem },
+                  { setLoading }
+                ) => (
+                  <ConfirmDialog
+                    onRequestClose={() => dialogToggle(false)}
+                    onCancel={() => dialogToggle(false)}
+                    isOpen={isOpen}
+                    message={<ConfirmMessage connectType={connectType} />}
+                    width={300}
+                    onConfirm={async () => {
+                      setLoading(true);
+                      if (connectType === 'SHIPMENT') {
+                        await disconnectShipment(client, targetedItem);
+                        const { batch = {} } = targetedItem;
+                        const isFocus = Object.keys(batch).some(batchId =>
+                          isHighlighted(batchId, 'batch')
+                        );
+                        if (isFocus) {
+                          selectFocusItem(prevFocus => ({
+                            ...prevFocus,
+                            shipment: {},
+                          }));
+                        }
+                      } else if (connectType === 'ORDER') {
+                        await deleteItem(client, targetedItem);
+                      }
+                      setLoading(false);
+                      dialogToggle(false);
+                    }}
+                  />
+                )}
+              </Subscribe>
+            )}
+          </ApolloConsumer>
+        </>
+      )}
+    </BooleanValue>
+  </SelectedPanelWrapper>
+);
 
 export default SelectedPanel;

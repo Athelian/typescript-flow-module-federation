@@ -18,6 +18,15 @@ export const CardWrapperStyle = css`
   background-color: rgba(255, 255, 255, 0.8);
 `;
 
+export const DisabledWrapper = css`
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: ${colors.WHITE};
+  opacity: 0.3;
+`;
 export const ActionWrapperStyle = targetted => css`
   flex: 1;
   z-index: 2;

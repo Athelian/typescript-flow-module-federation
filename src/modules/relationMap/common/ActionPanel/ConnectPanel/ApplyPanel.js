@@ -2,22 +2,65 @@
 import React from 'react';
 import { Subscribe } from 'unstated';
 import { ApolloConsumer } from 'react-apollo';
+import { ObjectValue } from 'react-values';
 import { Label } from 'components/Form';
+import { isEmpty } from 'utils/fp';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
-import { LabelConnectStyle, GroupLabelButtonStyle, Panel, FlatButtonStyle } from './style';
+import {
+  LabelConnectStyle,
+  GroupLabelButtonStyle,
+  Panel,
+  FlatButtonStyle,
+  ConfirmLabelStyle,
+  CurrencyLabelStyle,
+} from './style';
+import { isSelectAllBatch, findDiffCurrency } from '../util';
 
 type Props = {
-  type: 'SHIPMENT' | 'ORDER',
+  connectType: 'SHIPMENT' | 'ORDER',
 };
 
-const ApplyPanel = ({ type }: Props) => {
+type ConfirmMessageProps = {
+  condition: Object,
+};
+const ConfirmMessage = ({ condition }: ConfirmMessageProps) => {
+  if (!condition || isEmpty(condition)) {
+    return null;
+  }
+  const {
+    notSelectAllBatch,
+    diffCurrency: { totalDiff, baseCurrency, diffCurrency },
+  } = condition;
+  return (
+    <Label className={ConfirmLabelStyle}>
+      {notSelectAllBatch && <FormattedMessage {...messages.deleteUnSelectBatch} />}
+      {totalDiff && (
+        <>
+          <FormattedMessage {...messages.diffCurrency} />
+          <Label className={CurrencyLabelStyle}>{baseCurrency}</Label>
+          {totalDiff === 1 && (
+            <>
+              <FormattedMessage {...messages.diffSingleCurrency} />
+              <Label className={CurrencyLabelStyle}>{diffCurrency}</Label>
+            </>
+          )}
+          {totalDiff > 1 && <FormattedMessage {...messages.diffMultipleCurrency} />}
+          <FormattedMessage {...messages.diffCurrencyAction} />
+        </>
+      )}
+    </Label>
+  );
+};
+
+const ApplyPanel = ({ connectType }: Props) => {
   let text;
-  switch (type) {
+  switch (connectType) {
     default:
     case 'SHIPMENT':
       text = <FormattedMessage {...messages.askConnectToShipment} />;
@@ -30,7 +73,17 @@ const ApplyPanel = ({ type }: Props) => {
     <ApolloConsumer>
       {client => (
         <Subscribe to={[ConnectContainer, ActionContainer, RelationMapContainer]}>
-          {(connect, action, { state: { targetedItem } }) => (
+          {(
+            {
+              connectExistingShipment,
+              connectExistingOrder,
+              setSuccess,
+              reset,
+              state: { selectedItem },
+            },
+            { setLoading },
+            { state: { targetedItem }, isHighlighted, selectFocusItem }
+          ) => (
             <Panel>
               <Label className={LabelConnectStyle}>
                 <FormattedMessage {...messages.connect} />
@@ -38,16 +91,58 @@ const ApplyPanel = ({ type }: Props) => {
               </Label>
               <Label className={GroupLabelButtonStyle}>
                 {text}
-                <BaseButton label="CLEAR" className={FlatButtonStyle} />
-                <BaseButton
-                  icon="CONFIRM"
-                  label="APPLY"
-                  onClick={async () => {
-                    const { connectExistingShipment, setCurrentStep } = connect;
-                    await connectExistingShipment(client, targetedItem);
-                    setCurrentStep(4);
-                  }}
-                />
+                <BaseButton label="CLEAR" className={FlatButtonStyle} onClick={reset} />
+                <ObjectValue>
+                  {({ value, assign: setDialog, set }) => (
+                    <>
+                      <BaseButton
+                        icon="CONFIRM"
+                        label="APPLY"
+                        onClick={async () => {
+                          if (connectType === 'SHIPMENT') {
+                            setLoading(true);
+                            await connectExistingShipment(client, targetedItem, selectedItem);
+                            const { batch = {} } = targetedItem;
+                            const isFocus = Object.keys(batch).some(batchId =>
+                              isHighlighted(batchId, 'batch')
+                            );
+                            if (isFocus) {
+                              selectFocusItem(prevFocus => ({
+                                ...prevFocus,
+                                shipment: { [selectedItem.id]: true },
+                              }));
+                            }
+                            setSuccess(true);
+                            setLoading(false);
+                          } else if (connectType === 'ORDER') {
+                            const notSelectAllBatch = !isSelectAllBatch(targetedItem);
+                            const diffCurrency = findDiffCurrency(targetedItem, selectedItem);
+                            if (notSelectAllBatch || diffCurrency) {
+                              setDialog({
+                                isOpen: true,
+                                notSelectAllBatch,
+                                diffCurrency,
+                              });
+                            } else {
+                              connectExistingOrder(client, targetedItem, selectedItem);
+                            }
+                          }
+                        }}
+                      />
+                      <ConfirmDialog
+                        width={400}
+                        isOpen={value.isOpen}
+                        onRequestClose={() => set('isOpen', false)}
+                        onCancel={() => set('isOpen', false)}
+                        message={<ConfirmMessage condition={value} />}
+                        onConfirm={async () => {
+                          await connectExistingOrder(client, targetedItem, selectedItem, value);
+                          set('isOpen', false);
+                        }}
+                      />
+                    </>
+                  )}
+                </ObjectValue>
               </Label>
             </Panel>
           )}
@@ -55,10 +150,6 @@ const ApplyPanel = ({ type }: Props) => {
       )}
     </ApolloConsumer>
   );
-};
-
-ApplyPanel.defaultProps = {
-  type: 'SHIPMENT',
 };
 
 export default ApplyPanel;

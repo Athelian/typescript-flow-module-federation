@@ -1,28 +1,49 @@
 // @flow
 import { Container } from 'unstated';
 import ApolloClient from 'apollo-client';
-import { connectNewShipment, connectExistingShipment } from './connect';
+import { isEmpty } from 'utils/fp';
+import {
+  connectNewShipment,
+  connectExistingShipment,
+  connectExistingOrder,
+  disconnectShipment,
+  deleteItem,
+} from './connect';
 
 type State = {
   connectType: string,
-  currentStep: number,
+  selectedItem: Object,
+  success: boolean,
 };
+
+const getInitialState = () => ({ connectType: '', selectedItem: {}, success: false });
 export default class ConnectContainer extends Container<State> {
-  state = {
-    connectType: '',
-    currentStep: 1,
-  };
+  state = getInitialState();
 
   setConnectType = (connectType: string) => {
-    this.setState({ connectType, currentStep: 2 });
+    this.setState({ connectType });
   };
 
-  setCurrentStep = (currentStep: number) => {
-    this.setState({ currentStep });
+  setSelectedItem = (selectedItem: Object) => {
+    this.setState({ selectedItem });
   };
 
-  nextStep = () => {
-    this.setState(prevState => prevState.currentStep + 1);
+  reset = () => {
+    this.setState(getInitialState);
+  };
+
+  resetSelectedItem = () => {
+    this.setState({ selectedItem: {} });
+  };
+
+  isSelectedItem = (id?: string) => {
+    const { selectedItem } = this.state;
+    const isSameId = id ? selectedItem.id === id : true;
+    return isSameId && selectedItem && !isEmpty(selectedItem);
+  };
+
+  setSuccess = (success: boolean) => {
+    this.setState({ ...getInitialState(), success });
   };
 
   connectNewShipment = async (client: any, target: Object) => {
@@ -30,8 +51,31 @@ export default class ConnectContainer extends Container<State> {
     return newTarget;
   };
 
-  connectExistingShipment = async (client: ApolloClient<any>, target?: Object) => {
-    const newTarget = await connectExistingShipment(client, target);
+  connectExistingShipment = async (
+    client: ApolloClient<any>,
+    target: Object,
+    selectedItem: Object
+  ) => {
+    const newTarget = await connectExistingShipment(client, target, selectedItem);
+    return newTarget;
+  };
+
+  connectExistingOrder = async (
+    client: ApolloClient<any>,
+    target: Object,
+    selectedItem: Object
+  ) => {
+    const newTarget = await connectExistingOrder(client, target, selectedItem);
+    return newTarget;
+  };
+
+  disconnectShipment = async (client: ApolloClient<any>, target: Object) => {
+    const newTarget = await disconnectShipment(client, target);
+    return newTarget;
+  };
+
+  deleteItem = async (client: ApolloClient<any>, target: Object) => {
+    const newTarget = await deleteItem(client, target);
     return newTarget;
   };
 }

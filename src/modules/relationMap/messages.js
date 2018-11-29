@@ -10,6 +10,14 @@ export default defineMessages({
     id: 'global.shipments',
     defaultMessage: 'SHIPMENTS',
   },
+  shipment: {
+    id: 'modules.Shipments.shipment',
+    defaultMessage: 'SHIPMENT',
+  },
+  order: {
+    id: 'modules.Orders.order',
+    defaultMessage: 'ORDER',
+  },
   productsTab: {
     id: 'global.products',
     defaultMessage: 'PRODUCTS',
@@ -118,6 +126,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.connectTo',
     defaultMessage: 'CONNECT TO',
   },
+  moveTo: {
+    id: 'modules.RelationMaps.label.moveTo',
+    defaultMessage: 'MOVE TO',
+  },
   askConnectToOrder: {
     id: 'modules.RelationMaps.label.askConnectToOrder',
     defaultMessage: 'Do you want to connect to this order',
@@ -134,6 +146,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.disconnect',
     defaultMessage: 'Disconnect',
   },
+  delete: {
+    id: 'modules.RelationMaps.label.delete',
+    defaultMessage: 'Delete',
+  },
   newShipment: {
     id: 'modules.RelationMaps.label.newShipment',
     defaultMessage: 'New Shipment',
@@ -141,6 +157,14 @@ export default defineMessages({
   newOrder: {
     id: 'modules.RelationMaps.label.newOrder',
     defaultMessage: 'New Order',
+  },
+  selectedOrder: {
+    id: 'modules.RelationMaps.label.selectedOrder',
+    defaultMessage: 'Selected Order',
+  },
+  selectedShipment: {
+    id: 'modules.RelationMaps.label.selectedShipment',
+    defaultMessage: 'Selected Shipment',
   },
   confirmDeleteBatch: {
     id: 'modules.RelationMaps.label.confirmDeleteBatch',
@@ -209,5 +233,47 @@ export default defineMessages({
   shareSameExport: {
     id: 'modules.RelationMaps.action.shareSameExprot',
     defaultMessage: 'That share the same export',
+  },
+  confirmMessage: {
+    id: 'modules.RelationMaps.action.confirmMessage',
+    defaultMessage: 'Are you sure you want to',
+  },
+  confirmDelete: {
+    id: 'modules.RelationMaps.action.confirmDelete',
+    defaultMessage: 'the selected item or batches',
+  },
+  confirmDisconnect: {
+    id: 'modules.RelationMaps.action.confirmDisconnect',
+    defaultMessage: 'to the shipment',
+  },
+  confirmSubMessage: {
+    id: 'modules.RelationMaps.action.confirmSubMessage',
+    defaultMessage: "You can't redo it if you confirm this action",
+  },
+  areYouSure: {
+    id: 'modules.RelationMaps.action.areYouSure',
+    defaultMessage: 'Are you sure?',
+  },
+  deleteUnSelectBatch: {
+    id: 'modules.RelationMaps.action.deleteUnSelectBatch',
+    defaultMessage:
+      'You are about to move an Item but some of its Batches are not selected. These Batches will become deleted.',
+  },
+  diffCurrency: {
+    id: 'modules.RelationMaps.action.diffCurrency',
+    defaultMessage: 'The order you want to move to has a currency of',
+  },
+  diffSingleCurrency: {
+    id: 'modules.RelationMaps.action.diffSingleCurrency',
+    defaultMessage: 'but your selection has a currency of',
+  },
+  diffMultipleCurrency: {
+    id: 'modules.RelationMaps.action.diffMultipleCurrency',
+    defaultMessage: 'but your selection has multiple different currencies.',
+  },
+  diffCurrencyAction: {
+    id: 'modules.RelationMaps.action.diffCurrencyAction',
+    defaultMessage:
+      'If you want to move your selection,  the prices of the items in your selection will be reset to 0',
   },
 });

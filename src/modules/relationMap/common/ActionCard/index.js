@@ -12,14 +12,16 @@ type ActionCardProps = {
 
 type OptionalActionProps = {
   className: string,
-  onClick: Function,
-  toggle: Function,
+  onClick?: Function,
+  toggle?: Function,
+  targetted?: string,
 };
 
 type ActionProps = OptionalActionProps & {
   icon: string,
-  targetted: string,
 };
+
+const DisabledAction = () => <div className={style.DisabledWrapper} />;
 
 const Action = ({ icon, targetted, className, onClick, toggle }: ActionProps) => (
   <div
@@ -59,5 +61,5 @@ const ActionCard = ({ children, show }: ActionCardProps) => (
   </StringValue>
 );
 
-export { Action };
+export { Action, DisabledAction };
 export default ActionCard;

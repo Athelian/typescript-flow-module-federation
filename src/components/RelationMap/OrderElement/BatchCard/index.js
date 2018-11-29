@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
+import FormattedNumber from 'components/FormattedNumber';
 import { BatchInfoStyle } from '../Card/style';
 import { CardWrapperStyle, BatchCardVisualizeStyle, CardTitleStyle } from '../style';
 import messages from './messages';
@@ -12,6 +13,7 @@ type Props = {
     no: string | React.Node,
     batchedQuantity: number,
     volumeLabel: number,
+    metric: string,
     deliveredAt: ?string,
   },
 };
@@ -21,7 +23,7 @@ const volumeTitle = <FormattedMessage {...messages.volumeTitle} />;
 export default class BatchCard extends React.PureComponent<Props> {
   render() {
     const {
-      batch: { no, batchedQuantity: quantity, volumeLabel, deliveredAt },
+      batch: { no, batchedQuantity: quantity, volumeLabel, deliveredAt, metric },
     } = this.props;
     return (
       <div className={CardWrapperStyle}>
@@ -38,8 +40,11 @@ export default class BatchCard extends React.PureComponent<Props> {
             <div>{quantity}</div>
           </div>
           <div className={BatchInfoStyle}>
-            <div>{volumeTitle}</div>
-            <div>{volumeLabel}</div>
+            <div>{volumeTitle} </div>
+            <div>
+              <FormattedNumber value={volumeLabel} />
+              {metric}
+            </div>
           </div>
         </div>
       </div>

@@ -158,10 +158,18 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     });
   };
 
-  selectFocusItem = (focusedItem: Object) => {
-    this.setState({
-      focusedItem,
-    });
+  selectFocusItem = (focusedItem: Object | Function) => {
+    const isFunc = typeof focusedItem === 'function';
+    this.setState(
+      isFunc
+        ? prevState => ({
+            ...prevState,
+            focusedItem: typeof focusedItem === 'function' && focusedItem(prevState.focusedItem),
+          })
+        : {
+            focusedItem,
+          }
+    );
   };
 
   selectTargetItem = (targetedItem: Object) => {
@@ -214,12 +222,18 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }));
   };
 
-  isHighlighted = () => {
+  isHighlighted = (id?: string, type?: string) => {
     const { focusedItem } = this.state;
     if (isEmpty(focusedItem)) {
       return false;
     }
     const { order = {}, orderItem = {}, batch = {}, shipment = {} } = focusedItem;
+    if (type) {
+      return focusedItem[type] && focusedItem[type][id];
+    }
+    if (id) {
+      return order[id] || orderItem[id] || batch[id] || shipment[id];
+    }
     return !isEmpty(order) || !isEmpty(orderItem) || !isEmpty(batch) || !isEmpty(shipment);
   };
 
@@ -451,7 +465,7 @@ export default class RelationMapContainer extends Container<RelationMapState> {
   };
 
   removeTarget = (itemData: Object, relation: Object, itemType: string) => {
-    const { data, relation: itemRelation } = itemData;
+    const { data, relation: itemRelation = {} } = itemData;
     const { id, type } = relation;
     const allRelationIds = getAllRelationIds(itemRelation);
     const parentId = getParentId(data, type);
@@ -466,8 +480,8 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         const currentTree = prevState.trees.find(
           tree => tree[id] || allRelationIds.some(relationId => tree[relationId])
         );
-        const parents = currentTree[parentId] ? currentTree[parentId].children : [];
-        const children = currentTree[id] ? currentTree[id].children : [];
+        const parents = currentTree && currentTree[parentId] ? currentTree[parentId].children : [];
+        const children = currentTree && currentTree[id] ? currentTree[id].children : [];
         const allTargetIds = getAllRelationIds(newTargetItem);
         const parentLines = reduceNewLine(parents, allTargetIds);
         const childrenLines = children.reduce(
