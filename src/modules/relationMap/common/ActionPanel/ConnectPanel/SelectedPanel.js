@@ -299,8 +299,8 @@ const SelectedPanel = ({ connectType }: Props) => (
             {client => (
               <Subscribe to={[RelationMapContainer, ConnectContainer, ActionContainer]}>
                 {(
-                  { state: { targetedItem }, isHighlighted, selectFocusItem },
-                  { disconnectShipment, deleteItem },
+                  { state: { targetedItem }, isHighlighted, selectFocusItem, cancelTarget },
+                  { disconnectShipment, deleteItemAndBatchInOrder },
                   { setLoading }
                 ) => (
                   <ConfirmDialog
@@ -324,8 +324,9 @@ const SelectedPanel = ({ connectType }: Props) => (
                           }));
                         }
                       } else if (connectType === 'ORDER') {
-                        await deleteItem(client, targetedItem);
+                        await deleteItemAndBatchInOrder(client, targetedItem);
                       }
+                      cancelTarget();
                       setLoading(false);
                       dialogToggle(false);
                     }}
