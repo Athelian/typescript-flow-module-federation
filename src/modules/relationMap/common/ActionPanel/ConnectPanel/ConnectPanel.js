@@ -8,14 +8,18 @@ import SuccessPanel from './SuccessPanel';
 type Props = {
   connect: Object,
   onCancel: Function,
+  show: boolean,
 };
-const ConnectPanel = ({ connect, onCancel }: Props) => {
+const ConnectPanel = ({ connect, onCancel, show }: Props) => {
   const {
     state: { connectType, success },
     isSelectedItem,
   } = connect;
   if (success) {
     return <SuccessPanel onClick={onCancel} />;
+  }
+  if (!show) {
+    return null;
   }
   if (isSelectedItem()) {
     return <ApplyPanel connectType={connectType} />;

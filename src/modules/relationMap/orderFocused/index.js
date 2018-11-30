@@ -30,7 +30,7 @@ const defaultProps = {
   id: '',
 };
 
-const ToggleCollpased = createObjectValue({});
+export const ToggleCollpased = createObjectValue({});
 
 const OrderFocused = ({
   order: { order, orderItem, batch, shipment },

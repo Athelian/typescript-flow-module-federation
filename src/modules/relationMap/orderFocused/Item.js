@@ -156,8 +156,8 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                         {({
                           setSelectedItem,
                           resetSelectedItem,
-                          isSelectedItem,
-                          state: { connectType },
+                          isSelected,
+                          state: { connectType, selectedItem },
                         }) => (
                           <BooleanValue>
                             {({ value: hovered, set: setToggle }) => (
@@ -173,7 +173,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                         <ActionCard show>{() => <DisabledAction />}</ActionCard>
                                       );
                                     }
-                                    if (isSelectedItem(id)) {
+                                    if (isSelected(id, selectedItem)) {
                                       return (
                                         <ActionCard show>
                                           {() => <SelectedOrder onClick={resetSelectedItem} />}

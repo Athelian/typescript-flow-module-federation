@@ -89,8 +89,11 @@ export const isDisabledMoveToShipment = (targetedItem: Object) => {
 };
 
 export const isSelectAllBatch = (targetItem: Object) => {
-  const { orderItem, batch } = targetItem;
-  const orderItems: Array<any> = Object.entries(orderItem);
+  const { orderItem, batch = {} } = targetItem;
+  if (!orderItem) {
+    return true;
+  }
+  const orderItems: Array<any> = Object.values(orderItem);
   const selectedAllBatchInItem = orderItems.every(item => {
     const selectedAllBatch =
       item.batches && item.batches.every(({ id: batchId }) => batch[batchId]);
@@ -100,7 +103,7 @@ export const isSelectAllBatch = (targetItem: Object) => {
 };
 
 export const findDiffCurrency = (targetItem: Object, selectedItem: Object) => {
-  const { batch, orderItem } = targetItem;
+  const { batch = {}, orderItem = {} } = targetItem;
   const { currency } = selectedItem;
   const batches: Array<any> = Object.entries(batch);
   const orderItems: Array<any> = Object.entries(orderItem);

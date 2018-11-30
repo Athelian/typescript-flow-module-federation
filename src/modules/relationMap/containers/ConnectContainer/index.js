@@ -37,14 +37,20 @@ export default class ConnectContainer extends Container<State> {
     this.setState({ selectedItem: {} });
   };
 
+  isSelected = (id: string, selectedItem: Object) => id === selectedItem.id;
+
   isSelectedItem = (id?: string) => {
     const { selectedItem } = this.state;
-    const isSameId = id ? selectedItem.id === id : true;
-    return isSameId && selectedItem && !isEmpty(selectedItem);
+    const isSelected = selectedItem && !isEmpty(selectedItem);
+    if (!id) {
+      return isSelected;
+    }
+    const isSameId = selectedItem.id === id;
+    return isSameId && isSelected;
   };
 
   setSuccess = (success: boolean) => {
-    this.setState({ selectedItem: {}, success });
+    this.setState({ ...getInitialState(), success });
   };
 
   connectNewShipment = async (client: any, target: Object) => {
