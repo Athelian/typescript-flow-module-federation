@@ -263,7 +263,7 @@ const ActionSubscribe = ({ filter }: Props) => (
                             <ConnectPanel
                               connect={connectContainer}
                               targetedItem={targetedItem}
-                              filter={filter}
+                              onCancel={onCancelTarget}
                             />
                           )
                         );
