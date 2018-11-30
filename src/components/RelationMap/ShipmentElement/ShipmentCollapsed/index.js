@@ -14,7 +14,7 @@ const ShipmentCollapsed = ({ shipment }: Props) => {
 
   return (
     <div className={ShipmentCardWrapperStyle}>
-      <ShipmentLabel name={shipment.no} vol={totalPackageGrossWeight} metric={shipment.metric} />
+      <ShipmentLabel name={shipment.no} value={totalPackageGrossWeight} metric={shipment.metric} />
       <div className={ShipmentBlankContent} />
     </div>
   );

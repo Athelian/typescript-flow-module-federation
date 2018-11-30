@@ -1,5 +1,6 @@
 // @flow
 import { getByPathWithDefault } from 'utils/fp';
+import { calculateVolume } from 'modules/batch/form/container';
 
 const getBatchLinkType = (itemNo, numberOfItem, haveNewItem) => {
   let linkType = 'LINK-0';
@@ -24,20 +25,6 @@ const getRelatedIds = (items, currentIndex, resultIds) => {
     }
   }
   return ids;
-};
-
-const calculateBatchVolume = batch => {
-  const { packageVolume, packageQuantity = 0 } = batch;
-  const { metric, value } = packageVolume || {};
-  const addingValue = (packageVolume && value) || 0;
-  switch (metric) {
-    case 'cm³':
-      return packageQuantity * addingValue;
-    case 'm³':
-      return packageQuantity * addingValue * 1000;
-    default:
-      return packageQuantity;
-  }
 };
 
 export const generateOrderRelation = (order: Object, option: Object = {}): Array<Object> => {
@@ -283,13 +270,20 @@ const initOrderItemObj = (orderItem, orderId) => ({
 });
 
 const initBatchObj = (batch, orderId, orderItemId) => {
-  // const volume = getByPathWithDefault(0, 'packageVolume.value', batch);
   const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
-  // const {packageQuantity = 0} = batch
+  const { packageVolume = {}, packageSize = {} } = batch;
   return {
     data: {
       ...batch,
-      volumeLabel: calculateBatchVolume(batch), // volume * packageQuantity,
+      volumeLabel:
+        !packageVolume || !packageSize
+          ? 0
+          : calculateVolume(
+              packageVolume.metric,
+              packageSize.height,
+              packageSize.width,
+              packageSize.length
+            ), // volume * packageQuantity,
       metric,
       batchedQuantity: 0,
       orderId,
