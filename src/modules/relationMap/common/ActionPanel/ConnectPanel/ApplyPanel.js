@@ -91,7 +91,7 @@ const ApplyPanel = ({ connectType }: Props) => {
               state: { selectedItem },
             },
             { setLoading },
-            { state: { targetedItem }, isHighlighted, selectFocusItem }
+            { state: { targetedItem }, isHighlighted, selectFocusItem, addNewResult }
           ) => (
             <Panel>
               <Label className={LabelConnectStyle}>
@@ -148,6 +148,19 @@ const ApplyPanel = ({ connectType }: Props) => {
                           set('isOpen', false);
                           setLoading(true);
                           await connectExistingOrder(client, targetedItem, selectedItem, value);
+                          addNewResult(
+                            {
+                              order: [selectedItem],
+                              orderItem: {},
+                              batch: {},
+                            },
+                            {
+                              order: { [selectedItem.id]: selectedItem },
+                              orderItem: {},
+                              batch: {},
+                            }
+                          );
+                          setSuccess(true);
                           setLoading(false);
                         }}
                       />

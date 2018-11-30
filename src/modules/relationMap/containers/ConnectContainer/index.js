@@ -8,6 +8,7 @@ import {
   connectExistingOrder,
   disconnectShipment,
   deleteItem,
+  deleteItemAndBatchInOrder,
 } from './connect';
 
 type State = {
@@ -43,7 +44,7 @@ export default class ConnectContainer extends Container<State> {
   };
 
   setSuccess = (success: boolean) => {
-    this.setState({ ...getInitialState(), success });
+    this.setState({ selectedItem: {}, success });
   };
 
   connectNewShipment = async (client: any, target: Object) => {
@@ -66,6 +67,7 @@ export default class ConnectContainer extends Container<State> {
     selectedItem: Object
   ) => {
     const newTarget = await connectExistingOrder(client, target, selectedItem);
+    await deleteItemAndBatchInOrder(client, target);
     return newTarget;
   };
 
@@ -76,6 +78,11 @@ export default class ConnectContainer extends Container<State> {
 
   deleteItem = async (client: ApolloClient<any>, target: Object) => {
     const newTarget = await deleteItem(client, target);
+    return newTarget;
+  };
+
+  deleteItemAndBatchInOrder = async (client: ApolloClient<any>, target: Object) => {
+    const newTarget = await deleteItemAndBatchInOrder(client, target);
     return newTarget;
   };
 }

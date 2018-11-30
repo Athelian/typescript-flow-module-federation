@@ -142,7 +142,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                     batchContainer,
                     orderItemContainer,
                     orderInfoContainer,
-                    { setSuccess }
+                    { setSuccess, deleteItemAndBatchInOrder }
                   ) => (
                     <>
                       <BaseButton
@@ -228,6 +228,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                               let result = null;
                               const itemType = getItemType(connectType);
                               if (connectType === 'ORDER') {
+                                await deleteItemAndBatchInOrder(client, targetedItem);
                                 // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
                                 const { data: orderData } = await client.query({
                                   query: orderFormQuery,

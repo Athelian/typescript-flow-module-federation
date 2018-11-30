@@ -1,5 +1,5 @@
 // @flow
-import { isEmpty, getByPathWithDefault as get } from 'utils/fp';
+import { isEmpty, getByPathWithDefault as get, uniq } from 'utils/fp';
 
 const getExporterFromOrderItem = orderItem => {
   if (!orderItem) {
@@ -119,7 +119,7 @@ export const findDiffCurrency = (targetItem: Object, selectedItem: Object) => {
     })
     .map(item => get('', 'orderItem.order.currency', item[1]));
 
-  const currencies = [...filteredItems, ...filteredBatches];
+  const currencies = uniq([...filteredItems, ...filteredBatches]);
   // const diffCurrency = filteredItems.length + filteredBatches.length
   return {
     totalDiff: currencies.length,
