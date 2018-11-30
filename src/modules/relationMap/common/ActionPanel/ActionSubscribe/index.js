@@ -246,18 +246,28 @@ const ActionSubscribe = ({ filter }: Props) => (
                     </>
                   </ActionSelector>
                   {!error && currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
-                  {!error && !disabledSplit && currentAction === 'split' && (
+                  {!error && currentAction === 'split' && !disabledSplit && (
                     <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
                   )}
                   {!error && currentAction === 'connect' && (
                     <Subscribe to={[ConnectContainer]}>
-                      {connectContainer => (
-                        <ConnectPanel
-                          connect={connectContainer}
-                          targetedItem={targetedItem}
-                          filter={filter}
-                        />
-                      )}
+                      {connectContainer => {
+                        const {
+                          state: { connectType },
+                        } = connectContainer;
+                        const showMoveToShipment =
+                          connectType === 'SHIPMENT' && !disabledMoveToShipment;
+                        const showMoveToOrder = connectType === 'ORDER' && !disabledMoveToOrder;
+                        return (
+                          (showMoveToShipment || showMoveToOrder) && (
+                            <ConnectPanel
+                              connect={connectContainer}
+                              targetedItem={targetedItem}
+                              filter={filter}
+                            />
+                          )
+                        );
+                      }}
                     </Subscribe>
                   )}
                   {selectedSomeItem && (

@@ -15,6 +15,7 @@ import { cleanUpData } from 'utils/data';
 import { uniqBy, map, filter } from 'lodash/fp';
 
 const cleanOrderItem = compose(
+  omit(['productProvider', 'id']),
   removeAdditionOrderItemFields,
   cleanUpData
 );
@@ -24,11 +25,13 @@ const cleanBatch = compose(
     const batchAdjustments =
       batch.batchAdjustments &&
       batch.batchAdjustments.map(batchAdjustment =>
-        omit(['updatedBy', 'id', 'sort'], batchAdjustment)
+        omit(['updatedAt', 'updatedBy', 'id', 'sort'], batchAdjustment)
       );
     return Object.assign(batch, { batchAdjustments });
   },
   omit([
+    'id',
+    'shipment',
     'archived',
     'updatedBy',
     'updatedAt',
@@ -97,27 +100,45 @@ export const connectExistingShipment = async (
 
 export const connectExistingOrder = async (client: any, target: Object, selectedItem: Object) => {
   const { orderItem: targetItem, batch: targetBatch } = target;
+  const { currency: orderCurrency } = selectedItem;
   const exportId = get(null, 'exporter.id', selectedItem);
-  const itemFromBatches = (Object.entries(targetBatch): Array<any>).map(data => {
-    const [, item] = data;
-    const price = cleanUpData(get(0, 'orderItem.price', item));
-    const productProviderId = get('', 'orderItem.productProvider.id', item);
-    const quantity =
-      get(0, 'orderItem.quantity', item) +
-      item.batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, 0);
-    const batch = cleanBatch(item);
-    return {
-      price,
-      quantity,
-      productProviderId,
-      batches: [batch],
-    };
-  });
+  const itemFromBatches = (Object.entries(targetBatch): Array<any>)
+    .filter(data => {
+      const [, item] = data;
+      const itemId = item.parentId || item.orderItem.id || item.orderItemId;
+      return !targetItem[itemId];
+    })
+    .map(data => {
+      const [, item] = data;
+      const amount = cleanUpData(get(0, 'orderItem.price.amount', item));
+      const currency = get('', 'orderItem.order.currency', item);
+      const productProviderId = get('', 'orderItem.productProvider.id', item);
+      const quantity =
+        get(0, 'orderItem.quantity', item) +
+        item.batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, 0);
+      const batch = { ...cleanBatch(item), shipmentId: get(null, 'shipment.id', item) };
+      return {
+        price: {
+          currency: orderCurrency,
+          amount: orderCurrency !== currency ? 0 : amount,
+        },
+        quantity,
+        productProviderId,
+        batches: [batch],
+      };
+    });
   const items = (Object.entries(targetItem): Array<any>).map(data => {
     const [, item] = data;
+    const amount = cleanUpData(get(0, 'price.amount', item));
+    const currency = get('', 'order.currency', item);
     const batches = item.batches.filter(batch => targetBatch[batch.id]).map(cleanBatch);
     return {
       ...cleanOrderItem(item),
+      productProviderId: get('', 'productProvider.id', item),
+      price: {
+        currency: orderCurrency,
+        amount: orderCurrency !== currency ? 0 : amount,
+      },
       batches,
     };
   });

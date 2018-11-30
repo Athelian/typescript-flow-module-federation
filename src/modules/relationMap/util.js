@@ -1,5 +1,6 @@
 // @flow
 import { getByPathWithDefault } from 'utils/fp';
+import { calculateVolume } from 'modules/batch/form/container';
 
 const getBatchLinkType = (itemNo, numberOfItem, haveNewItem) => {
   let linkType = 'LINK-0';
@@ -269,13 +270,20 @@ const initOrderItemObj = (orderItem, orderId) => ({
 });
 
 const initBatchObj = (batch, orderId, orderItemId) => {
-  const volume = getByPathWithDefault(0, 'packageVolume.value', batch);
   const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
-  const packageQuantity = batch.packageQuantity || 0;
+  const { packageVolume = {}, packageSize = {} } = batch;
   return {
     data: {
       ...batch,
-      volumeLabel: volume * packageQuantity,
+      volumeLabel:
+        !packageVolume || !packageSize
+          ? 0
+          : calculateVolume(
+              packageVolume.metric,
+              packageSize.height,
+              packageSize.width,
+              packageSize.length
+            ), // volume * packageQuantity,
       metric,
       batchedQuantity: 0,
       orderId,
@@ -359,6 +367,11 @@ export const formatOrderData = (orders: Array<Object> = []) => {
               shipmentObj[shipment.id] = initShipmentObj(shipment);
             }
             const { relation: shipmentRelation } = shipmentObj[shipment.id];
+            shipmentObj[shipment.id].data.metric = getByPathWithDefault(
+              '',
+              'packageVolume.metric',
+              batch
+            );
             shipmentRelation.order[order.id] = true;
             shipmentRelation.orderItem[orderItem.id] = true;
             shipmentRelation.batch[batch.id] = true;

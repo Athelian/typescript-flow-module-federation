@@ -38,23 +38,32 @@ const ConfirmMessage = ({ condition }: ConfirmMessageProps) => {
     diffCurrency: { totalDiff, baseCurrency, diffCurrency },
   } = condition;
   return (
-    <Label className={ConfirmLabelStyle}>
-      {notSelectAllBatch && <FormattedMessage {...messages.deleteUnSelectBatch} />}
+    <div>
+      {notSelectAllBatch && (
+        <Label className={ConfirmLabelStyle} align="center">
+          <FormattedMessage {...messages.deleteUnSelectBatch} />
+        </Label>
+      )}
       {totalDiff && (
-        <>
+        <Label className={ConfirmLabelStyle} align="center">
           <FormattedMessage {...messages.diffCurrency} />
-          <Label className={CurrencyLabelStyle}>{baseCurrency}</Label>
+          <Label className={CurrencyLabelStyle} align="center">
+            {baseCurrency}
+          </Label>
           {totalDiff === 1 && (
-            <>
+            <Label align="center">
               <FormattedMessage {...messages.diffSingleCurrency} />
-              <Label className={CurrencyLabelStyle}>{diffCurrency}</Label>
-            </>
+              <Label className={CurrencyLabelStyle} align="center">
+                {diffCurrency}
+              </Label>
+            </Label>
           )}
           {totalDiff > 1 && <FormattedMessage {...messages.diffMultipleCurrency} />}
           <FormattedMessage {...messages.diffCurrencyAction} />
-        </>
+          <FormattedMessage {...messages.areYouSure} />
+        </Label>
       )}
-    </Label>
+    </div>
   );
 };
 
@@ -136,8 +145,10 @@ const ApplyPanel = ({ connectType }: Props) => {
                         onCancel={() => set('isOpen', false)}
                         message={<ConfirmMessage condition={value} />}
                         onConfirm={async () => {
-                          await connectExistingOrder(client, targetedItem, selectedItem, value);
                           set('isOpen', false);
+                          setLoading(true);
+                          await connectExistingOrder(client, targetedItem, selectedItem, value);
+                          setLoading(false);
                         }}
                       />
                     </>
