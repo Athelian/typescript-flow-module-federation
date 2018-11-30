@@ -137,7 +137,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                   ]}
                 >
                   {(
-                    { state: { targetedItem }, addTarget },
+                    { state: { targetedItem }, addTarget, isHighlighted, selectFocusItem },
                     { setResult },
                     batchContainer,
                     orderItemContainer,
@@ -238,14 +238,24 @@ const SelectedPanel = ({ connectType }: Props) => (
                                 result = { ...orderData.order, actionType: 'newItem' };
                               }
                               if (connectType === 'SHIPMENT') {
+                                const shipmentId = get('', 'shipmentCreate.shipment.id', data);
                                 // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
                                 const { data: shipmentData } = await client.query({
                                   query: shipmentFormQuery,
                                   variables: {
-                                    id: get('', 'shipmentCreate.shipment.id', data),
+                                    id: shipmentId,
                                   },
                                 });
                                 result = { ...shipmentData.shipment, actionType: 'newItem' };
+                                const isFocus = batchIds.some(batchId =>
+                                  isHighlighted(batchId, 'batch')
+                                );
+                                if (isFocus) {
+                                  selectFocusItem(prevFocus => ({
+                                    ...prevFocus,
+                                    shipment: { [shipmentId]: true },
+                                  }));
+                                }
                               }
                               addTarget(
                                 { data: result, relation: {} },
