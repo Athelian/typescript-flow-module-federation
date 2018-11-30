@@ -230,10 +230,10 @@ export const connectExistingOrder = async (client: any, target: Object, selected
   const orderItemFocus = {};
   const batchFocus = {};
   diffOrderItems.forEach(orderItem => {
-    orderItemFocus[orderItem.id] = orderItem;
+    orderItemFocus[orderItem.id] = { ...orderItem, isNew: 'newItem', actionType: 'newItem' };
     if (orderItem.batches) {
       orderItem.batches.forEach(batch => {
-        batchFocus[batch.id] = batch;
+        batchFocus[batch.id] = { ...batch, isNew: 'newItem', actionType: 'newItem' };
       });
     }
   });

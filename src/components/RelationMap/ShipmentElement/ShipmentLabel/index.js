@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import FormattedNumber from 'components/FormattedNumber';
 import { ShipmentLabelStyle } from './style';
 
 type Props = {
@@ -15,7 +16,7 @@ type cbmType = {
 
 const cbmElement = ({ value, metric }: cbmType) => (
   <span>
-    {value} {metric}
+    <FormattedNumber value={value} /> {metric}
   </span>
 );
 

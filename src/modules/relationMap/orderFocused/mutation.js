@@ -175,6 +175,9 @@ export const updateBatchWithReturnDataMutation = gql`
     batchUpdate(id: $id, input: $input) {
       batch {
         ...batchCardFragment
+        packageSize {
+          ...sizeFragment
+        }
         shipment {
           ...shipmentRMFragment
         }
@@ -187,6 +190,7 @@ export const updateBatchWithReturnDataMutation = gql`
   ${violationFragment}
   ${batchCardFragment}
   ${metricFragment}
+  ${sizeFragment}
   ${tagFragment}
   ${priceFragment}
   ${orderCardFragment}
