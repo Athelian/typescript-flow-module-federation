@@ -218,6 +218,20 @@ export const formatOrderFromShipment = (shipments: Array<Object>) => {
   return orderObj;
 };
 
+export const calculateVolumeWeight = (batch: Object) => {
+  const { packageSize, packageVolume, packageQuantity = 0 } = batch;
+  const volume =
+    !packageVolume || !packageSize
+      ? 0
+      : calculateVolume(
+          packageVolume.metric,
+          packageSize.height,
+          packageSize.width,
+          packageSize.length
+        );
+  return packageQuantity * volume;
+};
+
 const initOrderObj = order => {
   const { orderItems, id: orderId } = order;
   return {
@@ -271,19 +285,10 @@ const initOrderItemObj = (orderItem, orderId) => ({
 
 const initBatchObj = (batch, orderId, orderItemId) => {
   const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
-  const { packageVolume = {}, packageSize = {} } = batch;
   return {
     data: {
       ...batch,
-      volumeLabel:
-        !packageVolume || !packageSize
-          ? 0
-          : calculateVolume(
-              packageVolume.metric,
-              packageSize.height,
-              packageSize.width,
-              packageSize.length
-            ), // volume * packageQuantity,
+      volumeLabel: calculateVolumeWeight(batch),
       metric,
       batchedQuantity: 0,
       orderId,

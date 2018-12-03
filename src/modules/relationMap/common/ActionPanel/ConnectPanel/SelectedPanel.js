@@ -137,12 +137,12 @@ const SelectedPanel = ({ connectType }: Props) => (
                   ]}
                 >
                   {(
-                    { state: { targetedItem }, addTarget },
+                    { state: { targetedItem }, addTarget, isHighlighted, selectFocusItem },
                     { setResult },
                     batchContainer,
                     orderItemContainer,
                     orderInfoContainer,
-                    { setSuccess }
+                    { setSuccess, deleteItemAndBatchInOrder }
                   ) => (
                     <>
                       <BaseButton
@@ -228,6 +228,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                               let result = null;
                               const itemType = getItemType(connectType);
                               if (connectType === 'ORDER') {
+                                await deleteItemAndBatchInOrder(client, targetedItem);
                                 // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
                                 const { data: orderData } = await client.query({
                                   query: orderFormQuery,
@@ -238,14 +239,24 @@ const SelectedPanel = ({ connectType }: Props) => (
                                 result = { ...orderData.order, actionType: 'newItem' };
                               }
                               if (connectType === 'SHIPMENT') {
+                                const shipmentId = get('', 'shipmentCreate.shipment.id', data);
                                 // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
                                 const { data: shipmentData } = await client.query({
                                   query: shipmentFormQuery,
                                   variables: {
-                                    id: get('', 'shipmentCreate.shipment.id', data),
+                                    id: shipmentId,
                                   },
                                 });
                                 result = { ...shipmentData.shipment, actionType: 'newItem' };
+                                const isFocus = batchIds.some(batchId =>
+                                  isHighlighted(batchId, 'batch')
+                                );
+                                if (isFocus) {
+                                  selectFocusItem(prevFocus => ({
+                                    ...prevFocus,
+                                    shipment: { [shipmentId]: true },
+                                  }));
+                                }
                               }
                               addTarget(
                                 { data: result, relation: {} },
@@ -288,8 +299,8 @@ const SelectedPanel = ({ connectType }: Props) => (
             {client => (
               <Subscribe to={[RelationMapContainer, ConnectContainer, ActionContainer]}>
                 {(
-                  { state: { targetedItem }, isHighlighted, selectFocusItem },
-                  { disconnectShipment, deleteItem },
+                  { state: { targetedItem }, isHighlighted, selectFocusItem, cancelTarget },
+                  { disconnectShipment, deleteItemAndBatchInOrder },
                   { setLoading }
                 ) => (
                   <ConfirmDialog
@@ -313,8 +324,9 @@ const SelectedPanel = ({ connectType }: Props) => (
                           }));
                         }
                       } else if (connectType === 'ORDER') {
-                        await deleteItem(client, targetedItem);
+                        await deleteItemAndBatchInOrder(client, targetedItem);
                       }
+                      cancelTarget();
                       setLoading(false);
                       dialogToggle(false);
                     }}

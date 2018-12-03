@@ -420,7 +420,8 @@ export default class RelationMapContainer extends Container<RelationMapState> {
       });
       trees.push(tree);
     });
-    this.setState({ targetedItem: target, trees, lines });
+    const relatedIds = getAllRelationIds(target);
+    this.setState({ targetedItem: target, trees, lines: reduceNewLine(lines, relatedIds) });
   };
 
   addTarget = (itemData: Object, relation: Object, itemType: string) => {

@@ -12,6 +12,7 @@ import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
+import { ToggleCollpased } from 'modules/relationMap/orderFocused';
 import {
   LabelConnectStyle,
   GroupLabelButtonStyle,
@@ -35,8 +36,15 @@ const ConfirmMessage = ({ condition }: ConfirmMessageProps) => {
   }
   const {
     notSelectAllBatch,
-    diffCurrency: { totalDiff, baseCurrency, diffCurrency },
+    diffCurrency: { hasDiffCurrency, totalDiff, baseCurrency, diffCurrency },
   } = condition;
+  if (!notSelectAllBatch && !hasDiffCurrency) {
+    return (
+      <Label className={ConfirmLabelStyle} align="center">
+        <FormattedMessage {...messages.areYouSure} />
+      </Label>
+    );
+  }
   return (
     <div>
       {notSelectAllBatch && (
@@ -44,7 +52,7 @@ const ConfirmMessage = ({ condition }: ConfirmMessageProps) => {
           <FormattedMessage {...messages.deleteUnSelectBatch} />
         </Label>
       )}
-      {totalDiff && (
+      {hasDiffCurrency && (
         <Label className={ConfirmLabelStyle} align="center">
           <FormattedMessage {...messages.diffCurrency} />
           <Label className={CurrencyLabelStyle} align="center">
@@ -91,7 +99,7 @@ const ApplyPanel = ({ connectType }: Props) => {
               state: { selectedItem },
             },
             { setLoading },
-            { state: { targetedItem }, isHighlighted, selectFocusItem }
+            { state: { targetedItem }, isHighlighted, selectFocusItem, addNewResult }
           ) => (
             <Panel>
               <Label className={LabelConnectStyle}>
@@ -138,19 +146,31 @@ const ApplyPanel = ({ connectType }: Props) => {
                           }
                         }}
                       />
-                      <ConfirmDialog
-                        width={400}
-                        isOpen={value.isOpen}
-                        onRequestClose={() => set('isOpen', false)}
-                        onCancel={() => set('isOpen', false)}
-                        message={<ConfirmMessage condition={value} />}
-                        onConfirm={async () => {
-                          set('isOpen', false);
-                          setLoading(true);
-                          await connectExistingOrder(client, targetedItem, selectedItem, value);
-                          setLoading(false);
-                        }}
-                      />
+                      <ToggleCollpased>
+                        {({ set: setCollapsed }) => (
+                          <ConfirmDialog
+                            width={400}
+                            isOpen={value.isOpen}
+                            onRequestClose={() => set('isOpen', false)}
+                            onCancel={() => set('isOpen', false)}
+                            message={<ConfirmMessage condition={value} />}
+                            onConfirm={async () => {
+                              set('isOpen', false);
+                              setLoading(true);
+                              const results = await connectExistingOrder(
+                                client,
+                                targetedItem,
+                                selectedItem,
+                                value
+                              );
+                              setSuccess(true);
+                              setCollapsed(selectedItem.id, false);
+                              addNewResult(...results);
+                              setLoading(false);
+                            }}
+                          />
+                        )}
+                      </ToggleCollpased>
                     </>
                   )}
                 </ObjectValue>

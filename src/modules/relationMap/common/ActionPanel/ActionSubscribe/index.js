@@ -259,13 +259,12 @@ const ActionSubscribe = ({ filter }: Props) => (
                           connectType === 'SHIPMENT' && !disabledMoveToShipment;
                         const showMoveToOrder = connectType === 'ORDER' && !disabledMoveToOrder;
                         return (
-                          (showMoveToShipment || showMoveToOrder) && (
-                            <ConnectPanel
-                              connect={connectContainer}
-                              targetedItem={targetedItem}
-                              filter={filter}
-                            />
-                          )
+                          <ConnectPanel
+                            show={showMoveToShipment || showMoveToOrder}
+                            connect={connectContainer}
+                            targetedItem={targetedItem}
+                            onCancel={onCancelTarget}
+                          />
                         );
                       }}
                     </Subscribe>
