@@ -1,13 +1,14 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { createObjectValue } from 'react-values';
 import Icon from 'components/Icon';
+import { Label } from 'components/Form';
 import messages from 'modules/relationMap/messages';
 import { ToggleButtonStyle } from 'modules/relationMap/common/ToggleTag/style';
 import Badge from './Badge';
-import { ShipmentBadgeContainerStyle } from './style';
+import { ShipmentBadgeContainerStyle, ShipmentToggleContainerStyle } from './style';
 
 type SummaryBadgeProps = {
   intl: IntlShape,
@@ -102,20 +103,27 @@ const SummaryBadge = ({
                 }
               }}
             />
-            <div>
-              <button
-                type="button"
-                className={ToggleButtonStyle(isToggle)}
-                tabIndex={-1}
-                onClick={() =>
-                  assign({
-                    isToggle: !isToggle,
-                    total: 0,
-                  })
-                }
-              >
-                <Icon icon={isToggle ? 'TOGGLE_ON' : 'TOGGLE_OFF'} />
-              </button>
+            <div className={ShipmentToggleContainerStyle}>
+              <Icon icon="SHIPMENT" />
+              <Label color="TEAL">
+                <FormattedMessage id="modules.RelationMaps.label.all" defaultMessage="All" />{' '}
+                <FormattedMessage {...messages.shipmentsLabel} />
+              </Label>
+              <div>
+                <button
+                  type="button"
+                  className={ToggleButtonStyle(isToggle)}
+                  tabIndex={-1}
+                  onClick={() =>
+                    assign({
+                      isToggle: !isToggle,
+                      total: 0,
+                    })
+                  }
+                >
+                  <Icon icon={isToggle ? 'TOGGLE_ON' : 'TOGGLE_OFF'} />
+                </button>
+              </div>
             </div>
           </div>
         )}

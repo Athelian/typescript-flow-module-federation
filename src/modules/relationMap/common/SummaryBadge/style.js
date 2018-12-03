@@ -8,6 +8,13 @@ export const ShipmentBadgeContainerStyle = css`
   align-items: center;
 `;
 
+export const ShipmentToggleContainerStyle = css`
+  display: flex;
+  color: ${colors.TEAL};
+  justify-content: flex-end;
+  align-items: center;
+`;
+
 export const IconStyle = (color: string, hoverColor: ?string) => css`
   background: ${colors[color]};
   color: ${colors.WHITE};
