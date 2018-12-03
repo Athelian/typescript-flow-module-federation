@@ -6,7 +6,6 @@ import loadMore from 'utils/loadMore';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import Icon from 'components/Icon';
-import { orderListQuery } from 'modules/order/list/query';
 import { SearchInput } from 'components/NavBar';
 import { ToggleButton } from 'modules/relationMap/common/SortFilter/AdvancedFilter/components';
 import {
@@ -16,7 +15,6 @@ import {
   MiniSelectorBodyWrapperStyle,
 } from './style';
 import messages from '../messages';
-import { MiniSelectorItem } from '..';
 
 type OptionalProps = {
   hideToggles: boolean,
@@ -30,13 +28,6 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  renderItem: (item: Object) => <MiniSelectorItem item={item}>CHANGE ME</MiniSelectorItem>,
-  entityType: 'orders',
-  query: orderListQuery,
-  filterBy: {
-    query: '',
-    archived: false,
-  },
   hideToggles: false,
 };
 
