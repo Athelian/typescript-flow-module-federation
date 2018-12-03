@@ -142,7 +142,15 @@ const OrderFocused = ({
                                             type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
                                             id: shipmentNode.id,
                                           }}
-                                          itemData={{ data: shipmentNode }}
+                                          itemData={{
+                                            data: shipmentNode,
+                                            relation: {
+                                              order: {},
+                                              orderItem: {},
+                                              batch: {},
+                                              shipment: {},
+                                            },
+                                          }}
                                           itemType="shipment"
                                         />
                                       )}
