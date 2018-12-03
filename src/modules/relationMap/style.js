@@ -66,6 +66,11 @@ export const ContentWrapperStyle = css`
   z-index: 0;
 `;
 
+export const RelationMapGridStyle = css`
+  display: grid;
+  ${GridColumn};
+`;
+
 export const RelationMapGrid = styled('div')`
   /* width: 100%; */
   display: grid;

@@ -46,7 +46,7 @@ const QueryHandler = ({
   const loadMore = () => {
     loadMoreUtil({ fetchMore, data }, filter || {}, model);
     if (onChangePage) {
-      onChangePage();
+      onChangePage({ nodes });
     }
   };
   return children({ nodes, hasMore, loadMore, currentPage });

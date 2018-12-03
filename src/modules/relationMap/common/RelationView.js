@@ -8,6 +8,7 @@ type OptionalProps = {
   isLoading: boolean,
   spacing: number,
   id: string,
+  className?: string,
   customRender?: () => React.Node,
   render?: (item: Object) => React.Node,
 };
@@ -18,13 +19,13 @@ type Props = OptionalProps & {
   onLoadMore: Function,
   hasMore: boolean,
   items?: Array<Object>,
-  className: string,
 };
 
 const defaultProps = {
   isLoading: false,
   id: '',
   spacing: 0,
+  className: '',
 };
 
 class RelationView extends React.PureComponent<Props> {

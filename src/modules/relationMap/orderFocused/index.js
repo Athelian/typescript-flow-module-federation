@@ -1,17 +1,21 @@
 // @flow
 import React from 'react';
-import { BooleanValue, createObjectValue } from 'react-values';
+import { createObjectValue, BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import { Query } from 'react-apollo';
 import { Subscribe } from 'unstated';
 import {
   OrderFocusedShipmentScrollWrapperStyle,
   OrderMapWrapperStyle,
 } from 'modules/relationMap/style';
+import { shipmentListQuery } from 'modules/relationMap/orderFocused/query';
 import { ActionContainer } from 'modules/relationMap/containers';
-import { isEmpty } from 'lodash';
 import RelationView from '../common/RelationView';
 import SlideForm from '../common/SlideForm';
 import DeleteDialog from '../common/Dialog/DeleteDialog';
+import ShipmentList from '../common/ShipmentList';
+import QueryHandler from '../common/QueryHandler';
+import { ShipmentToggleValue } from '../common/SummaryBadge';
 import generateRelation, { getItemData, getItemType } from './relation';
 import Item from './Item';
 
@@ -82,61 +86,84 @@ const OrderFocused = ({
     <Subscribe to={[ActionContainer]}>
       {({ state: { result } }) => (
         <div className={OrderFocusedShipmentScrollWrapperStyle}>
-          {result.shipment &&
-            result.shipment.map(newShipment => {
-              if (isEmpty(newShipment)) {
-                return null;
+          <ShipmentToggleValue>
+            {({ value: { isToggle: isToggleShipment, total }, set: setShipmentToggle }) => {
+              if (isToggleShipment) {
+                return (
+                  <Query
+                    query={shipmentListQuery}
+                    variables={{
+                      page: 1,
+                      perPage: 10,
+                    }}
+                  >
+                    {({ loading, data, error, fetchMore }) => (
+                      <QueryHandler
+                        model="shipments"
+                        loading={loading}
+                        data={data}
+                        fetchMore={fetchMore}
+                        error={error}
+                        onChangePage={({ nodes: shipmentItems }) => {
+                          const totalShipment = shipmentItems.length;
+                          if (totalShipment !== total) {
+                            setShipmentToggle('total', totalShipment);
+                          }
+                        }}
+                      >
+                        {({
+                          nodes: shipmentNodes,
+                          hasMore: hasMoreShipment,
+                          loadMore: loadMoreShipment,
+                        }) => (
+                          <>
+                            <ShipmentList shipment={shipment} result={result.shipment} />
+                            <RelationView
+                              isEmpty={shipmentNodes ? shipmentNodes.length === 0 : true}
+                              spacing={0}
+                              hasMore={hasMoreShipment}
+                              onLoadMore={loadMoreShipment}
+                              emptyMessage={
+                                <FormattedMessage
+                                  id="modules.Orders.noOrderFound"
+                                  defaultMessage="No Shipment found"
+                                />
+                              }
+                              customRender={() =>
+                                shipmentNodes
+                                  .filter(({ id: shipmentId }) => !shipment[shipmentId])
+                                  .map(shipmentNode => (
+                                    <BooleanValue defaultValue key={shipmentNode.id}>
+                                      {({ value: isCollapsed, toggle }) => (
+                                        <Item
+                                          onToggle={toggle}
+                                          isCollapsed={isCollapsed}
+                                          relation={{
+                                            type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
+                                            id: shipmentNode.id,
+                                          }}
+                                          itemData={{ data: shipmentNode }}
+                                          itemType="shipment"
+                                        />
+                                      )}
+                                    </BooleanValue>
+                                  ))
+                              }
+                            />
+                          </>
+                        )}
+                      </QueryHandler>
+                    )}
+                  </Query>
+                );
               }
-              return (
-                <BooleanValue defaultValue key={`new-${newShipment.id}`}>
-                  {({ value: isCollapsed, toggle }) => (
-                    <Item
-                      key={newShipment.id}
-                      onToggle={toggle}
-                      isCollapsed={isCollapsed}
-                      relation={{
-                        type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
-                        id: newShipment.id,
-                        isNew: newShipment.actionType,
-                      }}
-                      itemData={{ data: newShipment, relation: {} }}
-                      itemType="shipment"
-                    />
-                  )}
-                </BooleanValue>
-              );
-            })}
-          {Object.keys(shipment)
-            .filter(shipmentId => {
-              const hasShipmentResult =
-                result.shipment &&
-                result.shipment.length > 0 &&
-                result.shipment.some(shipmentData => shipmentData.id === shipmentId);
-              return !hasShipmentResult;
-            })
-            .map(shipmentId => {
-              const currentShipment = shipment[shipmentId];
-              return (
-                <BooleanValue defaultValue key={shipmentId}>
-                  {({ value: isCollapsed, toggle }) => (
-                    <Item
-                      key={shipmentId}
-                      onToggle={toggle}
-                      isCollapsed={isCollapsed}
-                      relation={{
-                        type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
-                        id: shipmentId,
-                      }}
-                      itemData={currentShipment}
-                      itemType="shipment"
-                    />
-                  )}
-                </BooleanValue>
-              );
-            })}
+              return <ShipmentList shipment={shipment} result={result.shipment} />;
+            }}
+          </ShipmentToggleValue>
         </div>
       )}
     </Subscribe>
+
     <SlideForm />
     <DeleteDialog />
   </>

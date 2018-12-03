@@ -2,6 +2,12 @@
 import { css } from 'react-emotion';
 import { colors, layout, fontSizes } from 'styles/common';
 
+export const ShipmentBadgeContainerStyle = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const IconStyle = (color: string, hoverColor: ?string) => css`
   background: ${colors[color]};
   color: ${colors.WHITE};
