@@ -9,12 +9,12 @@ type Props = {
   metric: 'cm³' | 'm³',
 };
 
-type cbmType = {
+type TotalVolumeProps = {
   value: number,
   metric: 'cm³' | 'm³',
 };
 
-const cbmElement = ({ value, metric }: cbmType) => (
+const TotalVolume = ({ value, metric }: TotalVolumeProps) => (
   <span>
     <FormattedNumber value={value} /> {metric}
   </span>
@@ -24,7 +24,7 @@ export default function ShipmentLabel({ name = '', value = 0, metric = 'cm³' }:
   return (
     <div className={ShipmentLabelStyle}>
       <span>{name}</span>
-      {value && cbmElement({ value, metric })}
+      {value && <TotalVolume value={value} metric={metric} />}
     </div>
   );
 }
