@@ -46,10 +46,6 @@ type OptionalProps = {
 type Props = OptionalProps & {
   batch: ?Object,
   currency: string,
-  price: ?{
-    amount: number,
-    currency: string,
-  },
   saveOnBlur: Function,
 };
 
@@ -67,7 +63,6 @@ const ShipmentBatchCard = ({
   onClone,
   saveOnBlur,
   currency,
-  price,
   selectable,
   ...rest
 }: Props) => {
@@ -90,6 +85,7 @@ const ShipmentBatchCard = ({
     packageQuantity,
     tags,
     orderItem: {
+      price,
       productProvider: { product, supplier, exporter },
       order,
     },
