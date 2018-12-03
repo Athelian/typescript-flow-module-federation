@@ -30,10 +30,10 @@ export default function FilterMenuItem({
   data,
 }: Props) {
   return (
-    <button
+    <div
       className={FilterMenuItemWrapperStyle(isSelected)}
       onClick={() => changeSelectedFilterItem(name)}
-      type="button"
+      role="presentation"
     >
       <div className={FilterMenuItemStyle}>
         <ToggleButton
@@ -47,13 +47,13 @@ export default function FilterMenuItem({
       {data.length > 0 && (
         <div className={FilterDataWrapperStyle}>
           {data.map(datum => (
-            <button className={FilterDataStyle} type="button">
+            <button key={datum} className={FilterDataStyle} type="button">
               {datum}
               <Icon icon="CLEAR" />
             </button>
           ))}
         </div>
       )}
-    </button>
+    </div>
   );
 }
