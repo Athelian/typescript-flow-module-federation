@@ -32,40 +32,36 @@ type State = {
 };
 
 class AdvanceFilterInput extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      filterIsApplied: false,
-      selectedEntityType: 'order',
-      selectedFilterItem: 'poNo',
-      activeFilters: {
-        order: [],
-        item: [],
-        batch: [],
-        shipment: [],
+  state = {
+    filterIsApplied: false,
+    selectedEntityType: 'order',
+    selectedFilterItem: 'poNo',
+    activeFilters: {
+      order: [],
+      item: [],
+      batch: [],
+      shipment: [],
+    },
+    filterToggles: {
+      order: {
+        completelyBatched: false,
+        completelyShipped: false,
+        showActive: true,
+        showArchived: true,
       },
-      filterToggles: {
-        order: {
-          completelyBatched: false,
-          completelyShipped: false,
-          showActive: true,
-          showArchived: true,
-        },
-        item: {},
-        batch: {
-          showActive: true,
-          showArchived: true,
-        },
-        shipment: {
-          showActive: true,
-          showArchived: true,
-        },
+      item: {},
+      batch: {
+        showActive: true,
+        showArchived: true,
       },
-    };
+      shipment: {
+        showActive: true,
+        showArchived: true,
+      },
+    },
+  };
 
-    this.filterButtonRef = React.createRef();
-  }
+  filterButtonRef = React.createRef();
 
   changeSelectedEntityType = (entityType: EntityTypes) => {
     const defaultFilterMenuItemMap = {
