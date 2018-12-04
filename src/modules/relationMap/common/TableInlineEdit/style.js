@@ -40,7 +40,7 @@ export const BodyWrapperStyle: string = css`
 `;
 
 export const ButtonToolbarStyle: string = css`
-  display: flex;
+  display: block;
   width: 100%;
   justify-content: space-around;
 `;
