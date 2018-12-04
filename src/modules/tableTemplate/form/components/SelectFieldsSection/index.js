@@ -66,24 +66,43 @@ const renderGroup = ({
     </React.Fragment>
   ));
 
-const renderCustomFields = ({ customFields }: { customFields: Array<Object> }) => (
+const renderCustomFields = ({
+  type,
+  customFields,
+  hasSelectField,
+  toggleSelectField,
+}: {
+  type: string,
+  customFields: Array<Object>,
+  hasSelectField: Function,
+  toggleSelectField: Function,
+}) => (
   <div>
     <h3>
       <FormattedMessage id="modules.tableTemplate.customFields" defaultMessage="CUSTOM FIELDS" />
     </h3>
 
-    {customFields.map(({ id, name: text }) => (
-      <div style={{ display: 'flex' }} key={id}>
-        <FormField name="custom fields field name" initValue={false}>
-          {() => (
-            <>
-              <ToggleInput toggled={false} onToggle={() => {}} />
-              {text}
-            </>
-          )}
-        </FormField>
-      </div>
-    ))}
+    {customFields.map(({ id, name: text }, index) => {
+      const fieldName = `${type}-customFields-${index}`;
+      return (
+        <div style={{ display: 'flex' }} key={id}>
+          <FormField name={fieldName} initValue={hasSelectField(fieldName)}>
+            {({ onBlur }) => (
+              <>
+                <ToggleInput
+                  toggled={hasSelectField(fieldName)}
+                  onToggle={() => {
+                    onBlur();
+                    toggleSelectField(fieldName);
+                  }}
+                />
+                {text}
+              </>
+            )}
+          </FormField>
+        </div>
+      );
+    })}
   </div>
 );
 
@@ -116,7 +135,10 @@ const TableTemplateSection = () => (
                     toggleSelectField,
                   })}
                   {renderCustomFields({
+                    type: 'ORDER',
                     customFields: orderCustomFields,
+                    hasSelectField,
+                    toggleSelectField,
                   })}
                 </GridColumn>
                 <GridColumn>
@@ -127,7 +149,10 @@ const TableTemplateSection = () => (
                     toggleSelectField,
                   })}
                   {renderCustomFields({
+                    type: 'ORDER_ITEM',
                     customFields: orderItemCustomFields,
+                    hasSelectField,
+                    toggleSelectField,
                   })}
                 </GridColumn>
                 <GridColumn>
@@ -138,7 +163,10 @@ const TableTemplateSection = () => (
                     toggleSelectField,
                   })}
                   {renderCustomFields({
+                    type: 'BATCH',
                     customFields: batchCustomFields,
+                    hasSelectField,
+                    toggleSelectField,
                   })}
                 </GridColumn>
                 <GridColumn>
@@ -149,7 +177,10 @@ const TableTemplateSection = () => (
                     toggleSelectField,
                   })}
                   {renderCustomFields({
+                    type: 'SHIPMENT',
                     customFields: shipmentCustomFields,
+                    hasSelectField,
+                    toggleSelectField,
                   })}
                 </GridColumn>
               </>
