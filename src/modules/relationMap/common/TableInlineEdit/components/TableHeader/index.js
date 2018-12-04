@@ -16,7 +16,7 @@ type Props = {
   }>,
 };
 
-function isHidenColumn({
+function isHiddenColumn({
   showAll,
   hideColumns,
   entity,
@@ -77,7 +77,7 @@ function shouldShowGroup({
 }) {
   return columns.some(
     (column, position) =>
-      !isHidenColumn({
+      !isHiddenColumn({
         showAll,
         hideColumns,
         entity,
@@ -113,7 +113,7 @@ export default function TableHeader({
             <h3 className={TitleStyle}> {group} </h3>
             <div className={WrapperHeaderStyle}>
               {columns.map((column, position) =>
-                isHidenColumn({
+                isHiddenColumn({
                   showAll,
                   hideColumns,
                   entity,
