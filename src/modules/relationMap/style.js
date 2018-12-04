@@ -105,6 +105,12 @@ export const OrderFocusedShipmentScrollWrapperStyle = css`
   padding: 20px 10px;
 `;
 
+export const ShipmentScrollWrapperStyle = css`
+  height: calc(100vh - 150px);
+  overflow-y: hidden;
+  background-color: ${colors.ALMOST_WHITE};
+  padding: 20px 10px;
+`;
 export const LeftScrollWrapperStyle = css`
   background-color: ${colors.ALMOST_WHITE};
   padding: 0 10px;

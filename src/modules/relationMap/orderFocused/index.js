@@ -7,6 +7,7 @@ import { Subscribe } from 'unstated';
 import {
   OrderFocusedShipmentScrollWrapperStyle,
   OrderMapWrapperStyle,
+  ShipmentScrollWrapperStyle,
 } from 'modules/relationMap/style';
 import { shipmentListQuery } from 'modules/relationMap/orderFocused/query';
 import { ActionContainer } from 'modules/relationMap/containers';
@@ -85,52 +86,52 @@ const OrderFocused = ({
     />
     <Subscribe to={[ActionContainer]}>
       {({ state: { result } }) => (
-        <div className={OrderFocusedShipmentScrollWrapperStyle}>
-          <ShipmentToggleValue>
-            {({ value: { isToggle: isToggleShipment, total }, set: setShipmentToggle }) => {
-              if (isToggleShipment) {
-                return (
-                  <Query
-                    query={shipmentListQuery}
-                    variables={{
-                      page: 1,
-                      perPage: 10,
-                    }}
-                  >
-                    {({ loading, data, error, fetchMore }) => (
-                      <QueryHandler
-                        model="shipments"
-                        loading={loading}
-                        data={data}
-                        fetchMore={fetchMore}
-                        error={error}
-                        onChangePage={({ nodes: shipmentItems }) => {
-                          const totalShipment = shipmentItems.length;
-                          if (totalShipment !== total) {
-                            setShipmentToggle('total', totalShipment);
-                          }
-                        }}
-                      >
-                        {({
-                          nodes: shipmentNodes,
-                          hasMore: hasMoreShipment,
-                          loadMore: loadMoreShipment,
-                        }) => (
-                          <>
-                            <ShipmentList shipment={shipment} result={result.shipment} />
-                            <RelationView
-                              isEmpty={shipmentNodes ? shipmentNodes.length === 0 : true}
-                              spacing={0}
-                              hasMore={hasMoreShipment}
-                              onLoadMore={loadMoreShipment}
-                              emptyMessage={
-                                <FormattedMessage
-                                  id="modules.Orders.noOrderFound"
-                                  defaultMessage="No Shipment found"
-                                />
-                              }
-                              customRender={() =>
-                                shipmentNodes
+        <ShipmentToggleValue>
+          {({ value: { isToggle: isToggleShipment, total }, set: setShipmentToggle }) => {
+            if (isToggleShipment) {
+              return (
+                <Query
+                  query={shipmentListQuery}
+                  variables={{
+                    page: 1,
+                    perPage: 10,
+                  }}
+                >
+                  {({ loading, data, error, fetchMore }) => (
+                    <QueryHandler
+                      model="shipments"
+                      loading={loading}
+                      data={data}
+                      fetchMore={fetchMore}
+                      error={error}
+                      onChangePage={({ nodes: shipmentItems }) => {
+                        const totalShipment = shipmentItems.length;
+                        if (totalShipment !== total) {
+                          setShipmentToggle('total', totalShipment);
+                        }
+                      }}
+                    >
+                      {({
+                        nodes: shipmentNodes,
+                        hasMore: hasMoreShipment,
+                        loadMore: loadMoreShipment,
+                      }) => (
+                        <div className={ShipmentScrollWrapperStyle}>
+                          <RelationView
+                            isEmpty={shipmentNodes ? shipmentNodes.length === 0 : true}
+                            spacing={50}
+                            hasMore={hasMoreShipment}
+                            onLoadMore={loadMoreShipment}
+                            emptyMessage={
+                              <FormattedMessage
+                                id="modules.Orders.noShipmentFound"
+                                defaultMessage="No Shipment found"
+                              />
+                            }
+                            customRender={() => (
+                              <>
+                                <ShipmentList shipment={shipment} result={result.shipment} />
+                                {shipmentNodes
                                   .filter(({ id: shipmentId }) => !shipment[shipmentId])
                                   .map(shipmentNode => (
                                     <BooleanValue defaultValue key={shipmentNode.id}>
@@ -155,20 +156,24 @@ const OrderFocused = ({
                                         />
                                       )}
                                     </BooleanValue>
-                                  ))
-                              }
-                            />
-                          </>
-                        )}
-                      </QueryHandler>
-                    )}
-                  </Query>
-                );
-              }
-              return <ShipmentList shipment={shipment} result={result.shipment} />;
-            }}
-          </ShipmentToggleValue>
-        </div>
+                                  ))}
+                              </>
+                            )}
+                          />
+                        </div>
+                      )}
+                    </QueryHandler>
+                  )}
+                </Query>
+              );
+            }
+            return (
+              <div className={OrderFocusedShipmentScrollWrapperStyle}>
+                <ShipmentList shipment={shipment} result={result.shipment} />
+              </div>
+            );
+          }}
+        </ShipmentToggleValue>
       )}
     </Subscribe>
 
