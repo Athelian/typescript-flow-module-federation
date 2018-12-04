@@ -66,6 +66,11 @@ export const ContentWrapperStyle = css`
   z-index: 0;
 `;
 
+export const RelationMapGridStyle = css`
+  display: grid;
+  ${GridColumn};
+`;
+
 export const RelationMapGrid = styled('div')`
   /* width: 100%; */
   display: grid;
@@ -100,6 +105,12 @@ export const OrderFocusedShipmentScrollWrapperStyle = css`
   padding: 20px 10px;
 `;
 
+export const ShipmentScrollWrapperStyle = css`
+  height: calc(100vh - 150px);
+  overflow-y: hidden;
+  background-color: ${colors.ALMOST_WHITE};
+  padding: 20px 10px;
+`;
 export const LeftScrollWrapperStyle = css`
   background-color: ${colors.ALMOST_WHITE};
   padding: 0 10px;

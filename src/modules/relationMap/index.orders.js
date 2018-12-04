@@ -16,7 +16,7 @@ import ScrollToResult from './common/ScrollToResult';
 import SummaryBadge from './common/SummaryBadge';
 import { ActionSubscribe } from './common/ActionPanel';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
-import { FunctionWrapperStyle, BadgeWrapperStyle, RelationMapGrid } from './style';
+import { FunctionWrapperStyle, BadgeWrapperStyle, RelationMapGridStyle } from './style';
 
 const Order = () => (
   <Layout>
@@ -65,7 +65,7 @@ const Order = () => (
                           {loading ? (
                             <LoadingIcon />
                           ) : (
-                            <RelationMapGrid>
+                            <div className={RelationMapGridStyle}>
                               <Subscribe to={[RelationMapContainer]}>
                                 {({ selectAll, unSelectAll, state: { targetedItem } }) => (
                                   <div className={BadgeWrapperStyle}>
@@ -95,7 +95,7 @@ const Order = () => (
                                   />
                                 )}
                               </ScrollToResult>
-                            </RelationMapGrid>
+                            </div>
                           )}
                         </>
                       );

@@ -174,4 +174,29 @@ export const orderListQuery = gql`
   ${fieldDefinitionFragment}
 `;
 
+export const shipmentListQuery = gql`
+  query($page: Int!, $perPage: Int!, $filter: ShipmentFilterInput, $sort: ShipmentSortInput) {
+    shipments(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
+      nodes {
+        ...shipmentRMFragment
+      }
+      page
+      totalPage
+    }
+  }
+  ${shipmentRMFragment}
+  ${userAvatarFragment}
+  ${partnerCardFragment}
+  ${partnerNameFragment}
+  ${timelineDateFullFragment}
+  ${batchCardFragment}
+  ${tagFragment}
+  ${portFragment}
+  ${sizeFragment}
+  ${metricFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${imageFragment}
+`;
+
 export default orderListQuery;
