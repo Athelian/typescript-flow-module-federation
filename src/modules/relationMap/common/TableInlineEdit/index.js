@@ -1,12 +1,14 @@
 // @flow
 // $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { ApolloConsumer } from 'react-apollo';
+import { ApolloConsumer, Query } from 'react-apollo';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
 import { range, set, cloneDeep, isEqual } from 'lodash';
+import { getByPathWithDefault } from 'utils/fp';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
 import Layout from 'components/Layout';
@@ -21,6 +23,7 @@ import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
 import SelectTemplate from 'modules/tableTemplate/common/SelectTemplate';
+import { allFieldDefinitionsQuery } from 'modules/tableTemplate/form/components/SelectFieldsSection/query';
 import {
   orderColumnFields,
   orderItemColumnFields,
@@ -34,8 +37,10 @@ import {
 import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
 import TableHeader from './components/TableHeader';
+import TableHeaderForCustomFields from './components/TableHeaderForCustomFields';
 import TableItem from './components/TableItem';
 import TableEmptyItem from './components/TableEmptyItem';
+
 import { entitiesUpdateManyMutation } from './mutation';
 import { findAllPossibleOrders, totalLinePerOrder, parseChangedData } from './helpers';
 import normalize from './normalize';
@@ -206,370 +211,437 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     entity: 'SHIPMENT',
   });
   return (
-    <ApolloConsumer>
-      {client => (
-        <Layout
-          navBar={
-            <SlideViewNavBar>
-              <EntityIcon icon="EDIT" color="EDIT" />
-              <CancelButton onClick={onCancel} />
-              <SaveButton
-                isLoading={loading}
-                onClick={async () => {
-                  const changedData = diff(entities, editData);
-                  setLoading(true);
-                  try {
-                    const result: {
-                      data: ?{
-                        entitiesUpdateMany: {
-                          orders: {
-                            violations?: Array<{ message: string }>,
-                          },
-                          shipments: {
-                            violations?: Array<{ message: string }>,
-                          },
-                          batches: {
-                            violations?: Array<{ message: string }>,
-                          },
-                        },
-                      },
-                    } = await client.mutate({
-                      mutation: entitiesUpdateManyMutation,
-                      variables: parseChangedData(changedData, editData),
-                    });
-                    setLoading(false);
-                    logger.warn({ result });
-                    if (result && result.data && result.data.entitiesUpdateMany) {
-                      if (
-                        result.data.entitiesUpdateMany.orders.violations &&
-                        result.data.entitiesUpdateMany.orders.violations.length
-                      ) {
-                        const errorMessages = result.data.entitiesUpdateMany.orders.violations.filter(
-                          item => !!item
-                        );
-                        logger.warn({ errorMessages });
-                        if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
-                      }
-                      if (
-                        result.data.entitiesUpdateMany.shipments.violations &&
-                        result.data.entitiesUpdateMany.shipments.violations.length
-                      ) {
-                        const errorMessages = result.data.entitiesUpdateMany.shipments.violations.filter(
-                          item => !!item
-                        );
-                        logger.warn({ errorMessages });
-                        if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
-                      }
-                      if (
-                        result.data.entitiesUpdateMany.batches.violations &&
-                        result.data.entitiesUpdateMany.batches.violations.length
-                      ) {
-                        const errorMessages = result.data.entitiesUpdateMany.batches.violations.filter(
-                          item => !!item
-                        );
-                        logger.warn({ errorMessages });
-                        if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
-                      }
-                    }
-                    setTouched({});
-                  } catch (error) {
-                    setLoading(false);
-                  }
-                }}
-                disabled={
-                  !(
-                    !isEqual(entities, editData) &&
-                    Object.keys(touched).length > 0 &&
-                    Object.keys(errors).length === 0
-                  )
-                }
-              />
-              {errorMessage && errorMessage.length > 0 && (
-                <div style={{ width: 400 }}> Error: {errorMessage} </div>
-              )}
-            </SlideViewNavBar>
+    <Query query={allFieldDefinitionsQuery} fetchPolicy="network-only">
+      {({ loading: customFieldLoading, error: customFieldError, data: customFieldData }) => {
+        if (customFieldError) {
+          if (customFieldError.message && customFieldError.message.includes('403')) {
+            navigate('/403');
           }
-        >
-          <div className={ButtonToolbarStyle}>
-            <UserConsumer>
-              {({ user }) => {
-                const lastUsedTemplate = window.localStorage.getItem(`${user.id}-table-template`);
-                return (
-                  <>
-                    {lastUsedTemplate && (
-                      <div>
-                        <FormattedMessage
-                          id="modules.RelationMaps.lastUsed"
-                          defaultMessage="LAST USED TEMPLATE:"
-                        />
-                        {lastUsedTemplate}
-                      </div>
+          return customFieldError.message;
+        }
+
+        if (customFieldLoading) return <LoadingIcon />;
+
+        const orderCustomFields = getByPathWithDefault([], 'order', customFieldData);
+        const orderItemCustomFields = getByPathWithDefault([], 'orderItem', customFieldData);
+        const batchCustomFields = getByPathWithDefault([], 'batch', customFieldData);
+        const shipmentCustomFields = getByPathWithDefault([], 'shipment', customFieldData);
+
+        return (
+          <ApolloConsumer>
+            {client => (
+              <Layout
+                navBar={
+                  <SlideViewNavBar>
+                    <EntityIcon icon="EDIT" color="EDIT" />
+                    <CancelButton onClick={onCancel} />
+                    <SaveButton
+                      isLoading={loading}
+                      onClick={async () => {
+                        const changedData = diff(entities, editData);
+                        setLoading(true);
+                        try {
+                          const result: {
+                            data: ?{
+                              entitiesUpdateMany: {
+                                orders: {
+                                  violations?: Array<{ message: string }>,
+                                },
+                                shipments: {
+                                  violations?: Array<{ message: string }>,
+                                },
+                                batches: {
+                                  violations?: Array<{ message: string }>,
+                                },
+                              },
+                            },
+                          } = await client.mutate({
+                            mutation: entitiesUpdateManyMutation,
+                            variables: parseChangedData(changedData, editData),
+                          });
+                          setLoading(false);
+                          logger.warn({ result });
+                          if (result && result.data && result.data.entitiesUpdateMany) {
+                            if (
+                              result.data.entitiesUpdateMany.orders.violations &&
+                              result.data.entitiesUpdateMany.orders.violations.length
+                            ) {
+                              const errorMessages = result.data.entitiesUpdateMany.orders.violations.filter(
+                                item => !!item
+                              );
+                              logger.warn({ errorMessages });
+                              if (errorMessages.length)
+                                setErrorMessage(errorMessages[0][0].message);
+                            }
+                            if (
+                              result.data.entitiesUpdateMany.shipments.violations &&
+                              result.data.entitiesUpdateMany.shipments.violations.length
+                            ) {
+                              const errorMessages = result.data.entitiesUpdateMany.shipments.violations.filter(
+                                item => !!item
+                              );
+                              logger.warn({ errorMessages });
+                              if (errorMessages.length)
+                                setErrorMessage(errorMessages[0][0].message);
+                            }
+                            if (
+                              result.data.entitiesUpdateMany.batches.violations &&
+                              result.data.entitiesUpdateMany.batches.violations.length
+                            ) {
+                              const errorMessages = result.data.entitiesUpdateMany.batches.violations.filter(
+                                item => !!item
+                              );
+                              logger.warn({ errorMessages });
+                              if (errorMessages.length)
+                                setErrorMessage(errorMessages[0][0].message);
+                            }
+                          }
+                          setTouched({});
+                        } catch (error) {
+                          setLoading(false);
+                        }
+                      }}
+                      disabled={
+                        !(
+                          !isEqual(entities, editData) &&
+                          Object.keys(touched).length > 0 &&
+                          Object.keys(errors).length === 0
+                        )
+                      }
+                    />
+                    {errorMessage && errorMessage.length > 0 && (
+                      <div style={{ width: 400 }}> Error: {errorMessage} </div>
                     )}
-                    <div style={{ display: 'flex' }}>
-                      <SelectTemplateButton onClick={() => setShowTemplate(true)} />
-                      <SlideView
-                        isOpen={showTemplate}
-                        onRequestClose={() => setShowTemplate(false)}
-                        options={{ width: '980px' }}
-                      >
-                        <SelectTemplate
-                          onSelect={template => {
-                            setShowTemplate(false);
-                            window.localStorage.setItem(`${user.id}-table-template`, template.name);
-                            window.localStorage.setItem(
-                              `${user.id}-table-template-fields`,
-                              template.fields
-                            );
-                            setTemplateColumns(template.fields);
-                          }}
-                          onCancel={() => setShowTemplate(false)}
-                        />
-                      </SlideView>
-                      <ToggleInput
-                        toggled={showAll}
-                        onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
-                      >
-                        <FormattedMessage
-                          id="modules.RelationMaps.showAll"
-                          defaultMessage="SHOW ALL"
-                        />
-                      </ToggleInput>
-                    </div>
-                  </>
-                );
-              }}
-            </UserConsumer>
-          </div>
-          <div className={EditTableViewWrapperStyle}>
-            <div className={BodyWrapperStyle} ref={bodyRef}>
-              {Object.keys(editData.orders).length === 0 && <LoadingIcon />}
-              {orderIds.map((orderId, counter) => {
-                const order = mappingObjects.order[orderId];
-                if (!order) return null;
-                // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
-                const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
-                  item =>
-                    order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
-                );
-                const batches = (Object.values(mappingObjects.batch): any).filter(
-                  item => order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
-                );
-                const totalLines = totalLinePerOrder(orderItems, batchIds);
-                return (
-                  <TableRow key={orderId}>
-                    <div>
-                      {orderItems.length === 0 ? (
-                        <TableItem
-                          cell={`orders.${order.data.id}`}
-                          fields={orderColumnFieldsFilter}
-                          values={editData.orders[orderId]}
-                          validator={orderValidator}
-                        />
-                      ) : (
-                        orderItems.map(orderItem =>
-                          Object.keys(orderItem.relation.batch).length === 0 ? (
-                            <TableItem
-                              key={`order.${order.data.id}.${counter + 1}.duplication.${
-                                orderItem.data.id
-                              }`}
-                              cell={`orders.${order.data.id}`}
-                              fields={orderColumnFieldsFilter}
-                              values={editData.orders[orderId]}
-                              validator={orderValidator}
-                            />
-                          ) : (
-                            <React.Fragment
-                              key={`order.${order.data.id}.${counter + 1}.duplication.${
-                                orderItem.data.id
-                              }`}
+                  </SlideViewNavBar>
+                }
+              >
+                <div className={ButtonToolbarStyle}>
+                  <UserConsumer>
+                    {({ user }) => {
+                      const lastUsedTemplate = window.localStorage.getItem(
+                        `${user.id}-table-template`
+                      );
+                      return (
+                        <>
+                          {lastUsedTemplate && (
+                            <div>
+                              <FormattedMessage
+                                id="modules.RelationMaps.lastUsed"
+                                defaultMessage="LAST USED TEMPLATE:"
+                              />
+                              {lastUsedTemplate}
+                            </div>
+                          )}
+                          <div style={{ display: 'flex' }}>
+                            <SelectTemplateButton onClick={() => setShowTemplate(true)} />
+                            <SlideView
+                              isOpen={showTemplate}
+                              onRequestClose={() => setShowTemplate(false)}
+                              options={{ width: '980px' }}
                             >
-                              {Object.keys(orderItem.relation.batch)
-                                .filter(batchId => batchIds.includes(batchId))
-                                .map(batchId => (
+                              <SelectTemplate
+                                onSelect={template => {
+                                  setShowTemplate(false);
+                                  window.localStorage.setItem(
+                                    `${user.id}-table-template`,
+                                    template.name
+                                  );
+                                  window.localStorage.setItem(
+                                    `${user.id}-table-template-fields`,
+                                    template.fields
+                                  );
+                                  setTemplateColumns(template.fields);
+                                }}
+                                onCancel={() => setShowTemplate(false)}
+                              />
+                            </SlideView>
+                            <ToggleInput
+                              toggled={showAll}
+                              onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
+                            >
+                              <FormattedMessage
+                                id="modules.RelationMaps.showAll"
+                                defaultMessage="SHOW ALL"
+                              />
+                            </ToggleInput>
+                          </div>
+                        </>
+                      );
+                    }}
+                  </UserConsumer>
+                </div>
+                <div className={EditTableViewWrapperStyle}>
+                  <div className={BodyWrapperStyle} ref={bodyRef}>
+                    {Object.keys(editData.orders).length === 0 && <LoadingIcon />}
+                    {orderIds.map((orderId, counter) => {
+                      const order = mappingObjects.order[orderId];
+                      if (!order) return null;
+                      // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
+                      const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+                        item =>
+                          order.relation.orderItem[item.data.id] &&
+                          orderItemsIds.includes(item.data.id)
+                      );
+                      const batches = (Object.values(mappingObjects.batch): any).filter(
+                        item =>
+                          order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
+                      );
+                      const totalLines = totalLinePerOrder(orderItems, batchIds);
+                      return (
+                        <TableRow key={orderId}>
+                          <div>
+                            {orderItems.length === 0 ? (
+                              <TableItem
+                                cell={`orders.${order.data.id}`}
+                                fields={orderColumnFieldsFilter}
+                                values={editData.orders[orderId]}
+                                validator={orderValidator}
+                              />
+                            ) : (
+                              orderItems.map(orderItem =>
+                                Object.keys(orderItem.relation.batch).length === 0 ? (
                                   <TableItem
                                     key={`order.${order.data.id}.${counter + 1}.duplication.${
                                       orderItem.data.id
-                                    }.batch.${batchId}`}
+                                    }`}
                                     cell={`orders.${order.data.id}`}
                                     fields={orderColumnFieldsFilter}
                                     values={editData.orders[orderId]}
                                     validator={orderValidator}
                                   />
-                                ))}
-                              {Object.keys(orderItem.relation.batch).filter(
-                                batchId => !batchIds.includes(batchId)
-                              ).length < totalLines &&
-                                Object.keys(orderItem.relation.batch)
-                                  .filter(batchId => !batchIds.includes(batchId))
-                                  .map(batchId => (
-                                    <TableEmptyItem
-                                      key={`order.${counter + 1}.hidden.${
-                                        orderItem.data.id
-                                      }.batch.${batchId}`}
-                                      fields={orderColumnFieldsFilter}
-                                    />
-                                  ))}
-                            </React.Fragment>
-                          )
-                        )
-                      )}
-                    </div>
-                    <div>
-                      {orderItems.length ? (
-                        orderItems.map(orderItem =>
-                          Object.keys(orderItem.relation.batch).length === 0 ? (
-                            <TableItem
-                              cell={`orderItems.${orderItem.data.id}`}
-                              key={`orderItem.${counter + 1}.${orderItem.data.id}`}
-                              fields={orderItemColumnFieldsFilter}
-                              values={editData.orderItems[orderItem.data.id]}
-                              validator={orderValidator}
-                            />
-                          ) : (
-                            <React.Fragment key={`orderItem.${counter + 1}.${orderItem.data.id}`}>
-                              {Object.keys(orderItem.relation.batch)
-                                .filter(batchId => batchIds.includes(batchId))
-                                .map(batchId => (
+                                ) : (
+                                  <React.Fragment
+                                    key={`order.${order.data.id}.${counter + 1}.duplication.${
+                                      orderItem.data.id
+                                    }`}
+                                  >
+                                    {Object.keys(orderItem.relation.batch)
+                                      .filter(batchId => batchIds.includes(batchId))
+                                      .map(batchId => (
+                                        <TableItem
+                                          key={`order.${order.data.id}.${counter + 1}.duplication.${
+                                            orderItem.data.id
+                                          }.batch.${batchId}`}
+                                          cell={`orders.${order.data.id}`}
+                                          fields={orderColumnFieldsFilter}
+                                          values={editData.orders[orderId]}
+                                          validator={orderValidator}
+                                        />
+                                      ))}
+                                    {Object.keys(orderItem.relation.batch).filter(
+                                      batchId => !batchIds.includes(batchId)
+                                    ).length < totalLines &&
+                                      Object.keys(orderItem.relation.batch)
+                                        .filter(batchId => !batchIds.includes(batchId))
+                                        .map(batchId => (
+                                          <TableEmptyItem
+                                            key={`order.${counter + 1}.hidden.${
+                                              orderItem.data.id
+                                            }.batch.${batchId}`}
+                                            fields={orderColumnFieldsFilter}
+                                          />
+                                        ))}
+                                  </React.Fragment>
+                                )
+                              )
+                            )}
+                          </div>
+                          <div>
+                            {orderItems.length ? (
+                              orderItems.map(orderItem =>
+                                Object.keys(orderItem.relation.batch).length === 0 ? (
                                   <TableItem
                                     cell={`orderItems.${orderItem.data.id}`}
-                                    key={`orderItem.${counter + 1}.duplication.${batchId}`}
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
                                     fields={orderItemColumnFieldsFilter}
                                     values={editData.orderItems[orderItem.data.id]}
                                     validator={orderValidator}
                                   />
+                                ) : (
+                                  <React.Fragment
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                                  >
+                                    {Object.keys(orderItem.relation.batch)
+                                      .filter(batchId => batchIds.includes(batchId))
+                                      .map(batchId => (
+                                        <TableItem
+                                          cell={`orderItems.${orderItem.data.id}`}
+                                          key={`orderItem.${counter + 1}.duplication.${batchId}`}
+                                          fields={orderItemColumnFieldsFilter}
+                                          values={editData.orderItems[orderItem.data.id]}
+                                          validator={orderValidator}
+                                        />
+                                      ))}
+                                    {Object.keys(orderItem.relation.batch).filter(
+                                      batchId => !batchIds.includes(batchId)
+                                    ).length < totalLines &&
+                                      Object.keys(orderItem.relation.batch)
+                                        .filter(batchId => !batchIds.includes(batchId))
+                                        .map(batchId => (
+                                          <TableEmptyItem
+                                            key={`orderItem.${counter + 1}.hidden.${batchId}`}
+                                            fields={orderItemColumnFieldsFilter}
+                                          />
+                                        ))}
+                                  </React.Fragment>
+                                )
+                              )
+                            ) : (
+                              <TableEmptyItem fields={orderItemColumnFieldsFilter} />
+                            )}
+                          </div>
+                          <div>
+                            {batchIds.length ? (
+                              <>
+                                {orderItems.map(orderItem =>
+                                  orderItem.data.batches
+                                    .filter(batch => batchIds.includes(batch.id))
+                                    .map(batch => (
+                                      <TableItem
+                                        cell={`batches.${batch.id}`}
+                                        key={batch.id}
+                                        fields={batchColumnFieldsFilter}
+                                        values={editData.batches[batch.id]}
+                                        validator={batchValidator}
+                                      />
+                                    ))
+                                )}
+                                {range(totalLines - batches.length).map(index => (
+                                  <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
                                 ))}
-                              {Object.keys(orderItem.relation.batch).filter(
-                                batchId => !batchIds.includes(batchId)
-                              ).length < totalLines &&
-                                Object.keys(orderItem.relation.batch)
-                                  .filter(batchId => !batchIds.includes(batchId))
-                                  .map(batchId => (
-                                    <TableEmptyItem
-                                      key={`orderItem.${counter + 1}.hidden.${batchId}`}
-                                      fields={orderItemColumnFieldsFilter}
-                                    />
-                                  ))}
-                            </React.Fragment>
-                          )
-                        )
-                      ) : (
-                        <TableEmptyItem fields={orderItemColumnFieldsFilter} />
-                      )}
-                    </div>
-                    <div>
-                      {batchIds.length ? (
-                        <>
-                          {orderItems.map(orderItem =>
-                            orderItem.data.batches
-                              .filter(batch => batchIds.includes(batch.id))
-                              .map(batch => (
-                                <TableItem
-                                  cell={`batches.${batch.id}`}
-                                  key={batch.id}
-                                  fields={batchColumnFieldsFilter}
-                                  values={editData.batches[batch.id]}
-                                  validator={batchValidator}
-                                />
+                              </>
+                            ) : (
+                              range(totalLines).map(index => (
+                                <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
                               ))
-                          )}
-                          {range(totalLines - batches.length).map(index => (
-                            <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
-                          ))}
-                        </>
-                      ) : (
-                        range(totalLines).map(index => (
-                          <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
-                        ))
-                      )}
-                    </div>
-                    <div>
-                      {shipmentIds
-                        .filter(shipmentId => !!order.relation.shipment[shipmentId])
-                        .map(shipmentId => {
-                          const shipment = mappingObjects.shipment[shipmentId];
-                          return (
-                            <TableItem
-                              key={`shipment.${counter + 1}.${shipmentId}`}
-                              cell={`shipments.${shipment.data.id}`}
-                              fields={shipmentColumnFieldsFilter}
-                              values={editData.shipments[shipment.data.id]}
-                              validator={shipmentValidator}
-                            />
-                          );
-                        })}
-                      {range(
-                        totalLines -
-                          shipmentIds.filter(shipmentId => !!order.relation.shipment[shipmentId])
-                            .length
-                      ).map(index => (
-                        <TableEmptyItem key={index} fields={shipmentColumnFieldsFilter} />
-                      ))}
-                    </div>
-                  </TableRow>
-                );
-              })}
-            </div>
+                            )}
+                          </div>
+                          <div>
+                            {shipmentIds
+                              .filter(shipmentId => !!order.relation.shipment[shipmentId])
+                              .map(shipmentId => {
+                                const shipment = mappingObjects.shipment[shipmentId];
+                                return (
+                                  <TableItem
+                                    key={`shipment.${counter + 1}.${shipmentId}`}
+                                    cell={`shipments.${shipment.data.id}`}
+                                    fields={shipmentColumnFieldsFilter}
+                                    values={editData.shipments[shipment.data.id]}
+                                    validator={shipmentValidator}
+                                  />
+                                );
+                              })}
+                            {range(
+                              totalLines -
+                                shipmentIds.filter(
+                                  shipmentId => !!order.relation.shipment[shipmentId]
+                                ).length
+                            ).map(index => (
+                              <TableEmptyItem key={index} fields={shipmentColumnFieldsFilter} />
+                            ))}
+                          </div>
+                        </TableRow>
+                      );
+                    })}
+                  </div>
 
-            <div className={SidebarWrapperStyle} ref={sidebarRef}>
-              {orderIds.map((orderId, counter) => {
-                const order = mappingObjects.order[orderId];
-                if (!order) return null;
-                // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
-                const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
-                  item =>
-                    order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
-                );
-                const totalLines = totalLinePerOrder(orderItems, batchIds);
-                // TODO: handle vertical scroll for line
-                return (
-                  <LineNumber
-                    height={totalLines * 43}
-                    line={counter + 1}
-                    key={`line-for-${orderId}`}
-                  />
-                );
-              })}
-            </div>
+                  <div className={SidebarWrapperStyle} ref={sidebarRef}>
+                    {orderIds.map((orderId, counter) => {
+                      const order = mappingObjects.order[orderId];
+                      if (!order) return null;
+                      // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
+                      const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+                        item =>
+                          order.relation.orderItem[item.data.id] &&
+                          orderItemsIds.includes(item.data.id)
+                      );
+                      const totalLines = totalLinePerOrder(orderItems, batchIds);
+                      // TODO: handle vertical scroll for line
+                      return (
+                        <LineNumber
+                          height={totalLines * 43}
+                          line={counter + 1}
+                          key={`line-for-${orderId}`}
+                        />
+                      );
+                    })}
+                  </div>
 
-            <div className={HeaderWrapperStyle} ref={headerRef}>
-              <TableRow>
-                <TableHeader
-                  entity="ORDER"
-                  showAll={showAll}
-                  info={orderColumns}
-                  hideColumns={hideColumns}
-                  templateColumns={templateColumns}
-                  onToggle={onToggle}
-                />
-                <TableHeader
-                  entity="ORDER_ITEM"
-                  showAll={showAll}
-                  info={orderItemColumns}
-                  hideColumns={hideColumns}
-                  templateColumns={templateColumns}
-                  onToggle={onToggle}
-                />
-                <TableHeader
-                  entity="BATCH"
-                  showAll={showAll}
-                  info={batchColumns}
-                  hideColumns={hideColumns}
-                  templateColumns={templateColumns}
-                  onToggle={onToggle}
-                />
-                <TableHeader
-                  entity="SHIPMENT"
-                  showAll={showAll}
-                  info={shipmentColumns}
-                  hideColumns={hideColumns}
-                  templateColumns={templateColumns}
-                  onToggle={onToggle}
-                />
-              </TableRow>
-            </div>
-          </div>
-        </Layout>
-      )}
-    </ApolloConsumer>
+                  <div className={HeaderWrapperStyle} ref={headerRef}>
+                    <TableRow>
+                      <TableHeader
+                        entity="ORDER"
+                        showAll={showAll}
+                        info={orderColumns}
+                        hideColumns={hideColumns}
+                        templateColumns={templateColumns}
+                        onToggle={onToggle}
+                      />
+
+                      <TableHeaderForCustomFields
+                        entity="ORDER"
+                        customFields={orderCustomFields}
+                        onToggle={onToggle}
+                        hideColumns={hideColumns}
+                        showAll={showAll}
+                        templateColumns={templateColumns}
+                      />
+                      <TableHeader
+                        entity="ORDER_ITEM"
+                        showAll={showAll}
+                        info={orderItemColumns}
+                        hideColumns={hideColumns}
+                        templateColumns={templateColumns}
+                        onToggle={onToggle}
+                      />
+                      <TableHeaderForCustomFields
+                        entity="ORDER_ITEM"
+                        customFields={orderItemCustomFields}
+                        onToggle={onToggle}
+                        hideColumns={hideColumns}
+                        showAll={showAll}
+                        templateColumns={templateColumns}
+                      />
+                      <TableHeader
+                        entity="BATCH"
+                        showAll={showAll}
+                        info={batchColumns}
+                        hideColumns={hideColumns}
+                        templateColumns={templateColumns}
+                        onToggle={onToggle}
+                      />
+                      <TableHeaderForCustomFields
+                        entity="BATCH"
+                        customFields={batchCustomFields}
+                        onToggle={onToggle}
+                        hideColumns={hideColumns}
+                        showAll={showAll}
+                        templateColumns={templateColumns}
+                      />
+                      <TableHeader
+                        entity="SHIPMENT"
+                        showAll={showAll}
+                        info={shipmentColumns}
+                        hideColumns={hideColumns}
+                        templateColumns={templateColumns}
+                        onToggle={onToggle}
+                      />
+                      <TableHeaderForCustomFields
+                        entity="SHIPMENT"
+                        customFields={shipmentCustomFields}
+                        onToggle={onToggle}
+                        hideColumns={hideColumns}
+                        showAll={showAll}
+                        templateColumns={templateColumns}
+                      />
+                    </TableRow>
+                  </div>
+                </div>
+              </Layout>
+            )}
+          </ApolloConsumer>
+        );
+      }}
+    </Query>
   );
 }
