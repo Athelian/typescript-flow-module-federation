@@ -85,5 +85,10 @@ export const removeAdditionOrderItemFields: Function = omit([
   '__typename',
 ]);
 
-export const removeAdditionShipmentFields: Function = omit(['actionType', 'isNew']);
+export const removeAdditionShipmentFields: Function = omit([
+  'actionType',
+  'isNew',
+  'totalOrder',
+  'totalBatch',
+]);
 export default null;

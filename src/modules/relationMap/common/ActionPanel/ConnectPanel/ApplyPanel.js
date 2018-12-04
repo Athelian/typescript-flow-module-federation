@@ -12,6 +12,7 @@ import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
+import { ToggleCollpased } from 'modules/relationMap/orderFocused';
 import {
   LabelConnectStyle,
   GroupLabelButtonStyle,
@@ -35,26 +36,42 @@ const ConfirmMessage = ({ condition }: ConfirmMessageProps) => {
   }
   const {
     notSelectAllBatch,
-    diffCurrency: { totalDiff, baseCurrency, diffCurrency },
+    diffCurrency: { hasDiffCurrency, totalDiff, baseCurrency, diffCurrency },
   } = condition;
+  if (!notSelectAllBatch && !hasDiffCurrency) {
+    return (
+      <Label className={ConfirmLabelStyle} align="center">
+        <FormattedMessage {...messages.areYouSure} />
+      </Label>
+    );
+  }
   return (
-    <Label className={ConfirmLabelStyle}>
-      {notSelectAllBatch && <FormattedMessage {...messages.deleteUnSelectBatch} />}
-      {totalDiff && (
-        <>
+    <div>
+      {notSelectAllBatch && (
+        <Label className={ConfirmLabelStyle} align="center">
+          <FormattedMessage {...messages.deleteUnSelectBatch} />
+        </Label>
+      )}
+      {hasDiffCurrency && (
+        <Label className={ConfirmLabelStyle} align="center">
           <FormattedMessage {...messages.diffCurrency} />
-          <Label className={CurrencyLabelStyle}>{baseCurrency}</Label>
+          <Label className={CurrencyLabelStyle} align="center">
+            {baseCurrency}
+          </Label>
           {totalDiff === 1 && (
-            <>
+            <Label align="center">
               <FormattedMessage {...messages.diffSingleCurrency} />
-              <Label className={CurrencyLabelStyle}>{diffCurrency}</Label>
-            </>
+              <Label className={CurrencyLabelStyle} align="center">
+                {diffCurrency}
+              </Label>
+            </Label>
           )}
           {totalDiff > 1 && <FormattedMessage {...messages.diffMultipleCurrency} />}
           <FormattedMessage {...messages.diffCurrencyAction} />
-        </>
+          <FormattedMessage {...messages.areYouSure} />
+        </Label>
       )}
-    </Label>
+    </div>
   );
 };
 
@@ -82,7 +99,7 @@ const ApplyPanel = ({ connectType }: Props) => {
               state: { selectedItem },
             },
             { setLoading },
-            { state: { targetedItem }, isHighlighted, selectFocusItem }
+            { state: { targetedItem }, isHighlighted, selectFocusItem, addNewResult }
           ) => (
             <Panel>
               <Label className={LabelConnectStyle}>
@@ -129,17 +146,31 @@ const ApplyPanel = ({ connectType }: Props) => {
                           }
                         }}
                       />
-                      <ConfirmDialog
-                        width={400}
-                        isOpen={value.isOpen}
-                        onRequestClose={() => set('isOpen', false)}
-                        onCancel={() => set('isOpen', false)}
-                        message={<ConfirmMessage condition={value} />}
-                        onConfirm={async () => {
-                          await connectExistingOrder(client, targetedItem, selectedItem, value);
-                          set('isOpen', false);
-                        }}
-                      />
+                      <ToggleCollpased>
+                        {({ set: setCollapsed }) => (
+                          <ConfirmDialog
+                            width={400}
+                            isOpen={value.isOpen}
+                            onRequestClose={() => set('isOpen', false)}
+                            onCancel={() => set('isOpen', false)}
+                            message={<ConfirmMessage condition={value} />}
+                            onConfirm={async () => {
+                              set('isOpen', false);
+                              setLoading(true);
+                              const results = await connectExistingOrder(
+                                client,
+                                targetedItem,
+                                selectedItem,
+                                value
+                              );
+                              setSuccess(true);
+                              setCollapsed(selectedItem.id, false);
+                              addNewResult(...results);
+                              setLoading(false);
+                            }}
+                          />
+                        )}
+                      </ToggleCollpased>
                     </>
                   )}
                 </ObjectValue>

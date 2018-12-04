@@ -12,9 +12,11 @@ import {
 import { getExportId } from 'modules/relationMap/common/ActionPanel/util';
 import { getByPathWithDefault as get, compose, omit } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
+import { differenceBy } from 'lodash';
 import { uniqBy, map, filter } from 'lodash/fp';
 
 const cleanOrderItem = compose(
+  omit(['productProvider', 'id']),
   removeAdditionOrderItemFields,
   cleanUpData
 );
@@ -24,11 +26,13 @@ const cleanBatch = compose(
     const batchAdjustments =
       batch.batchAdjustments &&
       batch.batchAdjustments.map(batchAdjustment =>
-        omit(['updatedBy', 'id', 'sort'], batchAdjustment)
+        omit(['updatedAt', 'updatedBy', 'id', 'sort'], batchAdjustment)
       );
     return Object.assign(batch, { batchAdjustments });
   },
   omit([
+    'id',
+    'shipment',
     'archived',
     'updatedBy',
     'updatedAt',
@@ -95,33 +99,111 @@ export const connectExistingShipment = async (
   return target;
 };
 
-export const connectExistingOrder = async (client: any, target: Object, selectedItem: Object) => {
-  const { orderItem: targetItem, batch: targetBatch } = target;
-  const exportId = get(null, 'exporter.id', selectedItem);
-  const itemFromBatches = (Object.entries(targetBatch): Array<any>).map(data => {
-    const [, item] = data;
-    const price = cleanUpData(get(0, 'orderItem.price', item));
-    const productProviderId = get('', 'orderItem.productProvider.id', item);
-    const quantity =
-      get(0, 'orderItem.quantity', item) +
-      item.batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, 0);
-    const batch = cleanBatch(item);
-    return {
-      price,
-      quantity,
-      productProviderId,
-      batches: [batch],
-    };
+export const deleteItemAndBatchInOrder = async (client: any, target: Object) => {
+  const { orderItem: targetItem = {}, batch: targetBatch = {} } = target;
+  const batchesWithoutItem = (Object.values(targetBatch): Array<any>).filter(item => {
+    const itemId = item.parentId || item.orderItem.id || item.orderItemId;
+    return !targetItem[itemId];
   });
-  const items = (Object.entries(targetItem): Array<any>).map(data => {
-    const [, item] = data;
+  const deleteBatchesOrder = batchesWithoutItem.reduce((result, batch) => {
+    const { id, orderItems } = get('', 'orderItem.order', batch);
+    return Object.assign(result, {
+      [id]: { id, orderItems },
+    });
+  }, {});
+
+  const deleteItemsOrder = (Object.values(targetItem): Array<any>).reduce((result, item) => {
+    const {
+      order: { id, orderItems },
+    } = item;
+    return Object.assign(result, {
+      [id]: { id, orderItems },
+    });
+  }, {});
+  const orderUpdateInputs: Array<any> = Object.values({
+    ...deleteBatchesOrder,
+    ...deleteItemsOrder,
+  });
+  const orderUpdateRequests = orderUpdateInputs.map(input => {
+    const { id: inputId, orderItems } = input;
+    const orderItemInputs = orderItems
+      .filter(({ id: itemId }) => !targetItem[itemId])
+      .map(item => {
+        const removeBatch = item.batches.some(({ id: batchId }) => targetBatch[batchId]);
+        if (!removeBatch) {
+          return { id: item.id };
+        }
+        const batches = item.batches
+          .filter(({ id: batchId }) => !targetBatch[batchId])
+          .map(({ id: batchId }) => ({ id: batchId }));
+        return { id: item.id, batches };
+      });
+    return client.mutate({
+      mutation: updateOrderMutation,
+      variables: {
+        id: inputId,
+        input: { orderItems: orderItemInputs },
+      },
+    });
+  });
+  const result = await Promise.all(orderUpdateRequests);
+  return result;
+};
+
+export const connectExistingOrder = async (client: any, target: Object, selectedItem: Object) => {
+  const { orderItem: targetItem = {}, batch: targetBatch = {} } = target;
+  const { currency: orderCurrency } = selectedItem;
+  const exportId = get(null, 'exporter.id', selectedItem);
+
+  const itemGroupFromBatches = (Object.values(targetBatch): Array<any>)
+    .filter(item => {
+      const itemId = item.parentId || item.orderItem.id || item.orderItemId;
+      return !targetItem[itemId];
+    })
+    .reduce((result, item) => {
+      const { orderItem } = item;
+      const batch = { ...cleanBatch(item), shipmentId: get(null, 'shipment.id', item) };
+      const batches = [...get([], `${orderItem.id}.batches`, result), batch];
+      let orderItemData = result[orderItem.id];
+      if (!orderItemData) {
+        const amount = cleanUpData(get(0, 'orderItem.price.amount', item));
+        const currency = get('', 'orderItem.order.currency', item);
+        const productProviderId = get('', 'orderItem.productProvider.id', item);
+        const quantity =
+          get(0, 'orderItem.quantity', item) +
+          item.batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, 0);
+        orderItemData = {
+          price: {
+            currency: orderCurrency,
+            amount: orderCurrency !== currency ? 0 : amount,
+          },
+          quantity,
+          productProviderId,
+        };
+      }
+      return Object.assign(result, {
+        [orderItem.id]: {
+          ...orderItemData,
+          batches,
+        },
+      });
+    }, {});
+  const itemFromBatches: Array<any> = Object.values(itemGroupFromBatches);
+  const items = (Object.values(targetItem): Array<any>).map(item => {
+    const amount = cleanUpData(get(0, 'price.amount', item));
+    const currency = get('', 'order.currency', item);
     const batches = item.batches.filter(batch => targetBatch[batch.id]).map(cleanBatch);
     return {
       ...cleanOrderItem(item),
+      productProviderId: get('', 'productProvider.id', item),
+      price: {
+        currency: orderCurrency,
+        amount: orderCurrency !== currency ? 0 : amount,
+      },
       batches,
     };
   });
-  await client.mutate({
+  const result = await client.mutate({
     mutation: updateOrderMutation,
     variables: {
       id: selectedItem.id,
@@ -134,7 +216,41 @@ export const connectExistingOrder = async (client: any, target: Object, selected
       },
     },
   });
-  return target;
+  const orderResult = get({}, 'data.orderUpdate.order', result);
+  const diffOrderItems = differenceBy(orderResult.orderItems, selectedItem.orderItems, 'id');
+  const batchResult = diffOrderItems.reduce((itemResult, item) => {
+    if (!item.batches) {
+      return itemResult;
+    }
+    return Object.assign(itemResult, {
+      [item.id]: item.batches,
+    });
+  }, {});
+
+  const orderItemFocus = {};
+  const batchFocus = {};
+  diffOrderItems.forEach(orderItem => {
+    orderItemFocus[orderItem.id] = { ...orderItem, isNew: 'newItem', actionType: 'newItem' };
+    if (orderItem.batches) {
+      orderItem.batches.forEach(batch => {
+        batchFocus[batch.id] = { ...batch, isNew: 'newItem', actionType: 'newItem' };
+      });
+    }
+  });
+  const itemResult = {
+    order: [orderResult],
+    orderItem: {
+      [selectedItem.id]: diffOrderItems,
+    },
+    batch: batchResult,
+  };
+  const focus = {
+    order: { [selectedItem.id]: orderResult },
+    batch: batchFocus,
+    shipment: {},
+    orderItem: orderItemFocus,
+  };
+  return [itemResult, focus];
 };
 
 export const disconnectShipment = async (client: any, target: Object) => {

@@ -37,7 +37,9 @@ export default class BatchCard extends React.PureComponent<Props> {
         <div className={BatchCardVisualizeStyle}>
           <div className={BatchInfoStyle}>
             <div>{quantityTitle}</div>
-            <div>{quantity}</div>
+            <div>
+              <FormattedNumber value={quantity} />
+            </div>
           </div>
           <div className={BatchInfoStyle}>
             <div>{volumeTitle} </div>
