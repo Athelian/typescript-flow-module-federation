@@ -85,6 +85,31 @@ function findColumns({
   return showAll ? fields : fields.filter((item, idx) => !hideColumns.includes(`${entity}-${idx}`));
 }
 
+function findColumnsForCustomFields({
+  showAll,
+  hideColumns,
+  fields: orderCustomFields,
+  templateColumns,
+  entity,
+}) {
+  if (templateColumns && templateColumns.length > 0) {
+    return showAll
+      ? orderCustomFields.filter((field, index) =>
+          templateColumns.includes(`${entity}-customFields-${index}`)
+        )
+      : orderCustomFields.filter(
+          (field, index) =>
+            templateColumns.includes(`${entity}-customFields-${index}`) &&
+            !hideColumns.includes(`${entity}-customFields-${index}`)
+        );
+  }
+  return showAll
+    ? orderCustomFields
+    : orderCustomFields.filter(
+        (field, index) => !hideColumns.includes(`${entity}-customFields-${index}`)
+      );
+}
+
 export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const [data] = useIdb(type, []);
   const [errors, setErrors] = useState({});
@@ -189,6 +214,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     fields: orderColumnFields,
     entity: 'ORDER',
   });
+
   const orderItemColumnFieldsFilter = findColumns({
     showAll,
     hideColumns,
@@ -226,6 +252,41 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
         const orderItemCustomFields = getByPathWithDefault([], 'orderItem', customFieldData);
         const batchCustomFields = getByPathWithDefault([], 'batch', customFieldData);
         const shipmentCustomFields = getByPathWithDefault([], 'shipment', customFieldData);
+
+        const orderCustomFieldsFilter = findColumnsForCustomFields({
+          showAll,
+          hideColumns,
+          fields: orderCustomFields,
+          templateColumns,
+          entity: 'ORDER',
+        });
+
+        const orderItemCustomFieldsFilter = findColumnsForCustomFields({
+          showAll,
+          hideColumns,
+          fields: orderItemCustomFields,
+          templateColumns,
+          entity: 'ORDER_ITEM',
+        });
+        const batchCustomFieldsFilter = findColumnsForCustomFields({
+          showAll,
+          hideColumns,
+          fields: batchCustomFields,
+          templateColumns,
+          entity: 'BATCH',
+        });
+        const shipmentCustomFieldsFilter = findColumnsForCustomFields({
+          showAll,
+          hideColumns,
+          fields: shipmentCustomFields,
+          templateColumns,
+          entity: 'SHIPMENT',
+        });
+
+        console.log(orderCustomFieldsFilter);
+        console.log(orderItemCustomFieldsFilter);
+        console.log(batchCustomFieldsFilter);
+        console.log(shipmentCustomFieldsFilter);
 
         return (
           <ApolloConsumer>
@@ -387,6 +448,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                           order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
                       );
                       const totalLines = totalLinePerOrder(orderItems, batchIds);
+                      console.log(orderItems);
                       return (
                         <TableRow key={orderId}>
                           <div>

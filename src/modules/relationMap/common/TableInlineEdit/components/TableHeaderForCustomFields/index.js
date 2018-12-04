@@ -44,9 +44,6 @@ function shouldShowCustomFields({
   hideColumns: Array<string>,
   templateColumns: Array<string>,
 }) {
-  console.log(templateColumns);
-  console.log(customFields);
-
   return customFields.some(
     (field, index) =>
       !isHiddenColumn({
