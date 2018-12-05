@@ -613,12 +613,12 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                     ))
                                 )}
                                 {range(totalLines - batches.length).map(index => (
-                                  <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
+                                  <TableEmptyItem key={index} fields={batchCustomFieldsFilter} />
                                 ))}
                               </>
                             ) : (
                               range(totalLines).map(index => (
-                                <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
+                                <TableEmptyItem key={index} fields={batchCustomFieldsFilter} />
                               ))
                             )}
                           </div>
@@ -668,7 +668,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                   shipmentId => !!order.relation.shipment[shipmentId]
                                 ).length
                             ).map(index => (
-                              <TableEmptyItem key={index} fields={shipmentColumnFieldsFilter} />
+                              <TableEmptyItem key={index} fields={shipmentCustomFieldsFilter} />
                             ))}
                           </div>
                         </TableRow>
