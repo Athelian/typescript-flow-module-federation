@@ -19,12 +19,15 @@ const TotalVolume = ({ value, metric }: TotalVolumeProps) => (
     <FormattedNumber value={value} /> {metric}
   </span>
 );
+TotalVolume.defaultProps = {
+  value: 0,
+};
 
 export default function ShipmentLabel({ name = '', value = 0, metric = 'cm³' }: Props) {
   return (
     <div className={ShipmentLabelStyle}>
       <span>{name}</span>
-      {value && <TotalVolume value={value} metric={metric} />}
+      <TotalVolume value={value} metric={metric} />
     </div>
   );
 }

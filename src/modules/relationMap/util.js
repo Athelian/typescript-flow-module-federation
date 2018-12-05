@@ -219,20 +219,34 @@ export const formatOrderFromShipment = (shipments: Array<Object>) => {
 };
 
 export const calculateVolumeWeight = (batch: Object) => {
-  const { packageSize, packageVolume, packageQuantity = 0 } = batch;
-  const volume =
-    !packageVolume || !packageSize
-      ? 0
-      : calculateVolume(
-          packageVolume.metric,
-          packageSize.height,
-          packageSize.width,
-          packageSize.length
-        );
+  const { packageSize = {}, packageVolume = {}, packageQuantity = 0 } = batch;
+  const volume = packageVolume
+    ? packageVolume.value
+    : calculateVolume(
+        packageVolume ? packageVolume.metric : 'm³',
+        packageSize
+          ? packageSize.height
+          : {
+              metric: 'm³',
+              value: 0,
+            },
+        packageSize
+          ? packageSize.width
+          : {
+              metric: 'm³',
+              value: 0,
+            },
+        packageSize
+          ? packageSize.length
+          : {
+              metric: 'm³',
+              value: 0,
+            }
+      );
   return packageQuantity * volume;
 };
 
-const initOrderObj = order => {
+export const initOrderObj = (order: Object) => {
   const { orderItems, id: orderId } = order;
   return {
     data: {
@@ -252,7 +266,7 @@ const initOrderObj = order => {
   };
 };
 
-const initShipmentObj = shipment => ({
+export const initShipmentObj = (shipment: Object) => ({
   data: {
     ...shipment,
     totalOrder: 0,
@@ -266,7 +280,7 @@ const initShipmentObj = shipment => ({
   },
 });
 
-const initOrderItemObj = (orderItem, orderId) => ({
+export const initOrderItemObj = (orderItem: Object, orderId: string) => ({
   data: {
     ...orderItem,
     name: getByPathWithDefault('', 'productProvider.product.name', orderItem),
@@ -283,8 +297,8 @@ const initOrderItemObj = (orderItem, orderId) => ({
   },
 });
 
-const initBatchObj = (batch, orderId, orderItemId) => {
-  const metric = getByPathWithDefault('', 'packageVolume.metric', batch);
+export const initBatchObj = (batch: Object, orderId: string, orderItemId: string) => {
+  const metric = getByPathWithDefault('m³', 'packageVolume.metric', batch);
   return {
     data: {
       ...batch,

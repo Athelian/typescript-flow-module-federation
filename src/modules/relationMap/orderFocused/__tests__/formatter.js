@@ -1,4 +1,4 @@
-import { formatNodes, getIsCollapsed } from '../formatter';
+import { formatNodes, getIsCollapsed, formatOrders } from '../formatter';
 
 describe('_formatNodes', () => {
   it('format order', () => {
@@ -84,7 +84,7 @@ describe('_formatNodes', () => {
   });
 });
 
-describe.only('getIsCollapsed', () => {
+describe('getIsCollapsed', () => {
   it('no orderItem', () => {
     const order = {
       id: 1,
@@ -176,4 +176,18 @@ describe.only('getIsCollapsed', () => {
     const result = getIsCollapsed(newResult, order);
     expect(result).toEqual(true);
   });
+});
+
+describe('formatOrders', () => {
+  const orders = [
+    {
+      orderItems: [
+        {
+          batches: ['1', '2', '3', '4', '5', '6'],
+        },
+      ],
+    },
+  ];
+  const result = formatOrders(orders);
+  expect(result).toMatchSnapshot();
 });
