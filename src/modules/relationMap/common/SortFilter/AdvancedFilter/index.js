@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { useRef, useState, useReducer } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { CancelButton, SaveButton } from 'components/Buttons';
@@ -10,7 +10,6 @@ import { UIConsumer } from 'modules/ui';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';
 import FilterInputArea from './FilterInputArea';
-import type { EntityTypes, ActiveFilters, FilterToggles } from './type';
 import {
   AdvancedFilterWrapperStyle,
   FilterToggleButtonStyle,
@@ -20,200 +19,220 @@ import {
   AdvancedFilterNavbarButtonsWrapperStyle,
   AdvancedFilterBodyStyle,
 } from './style';
-
-type Props = {};
+import type { EntityTypes, ActiveFilters, FilterToggles } from './type';
 
 type State = {
-  filterIsApplied: boolean,
   selectedEntityType: EntityTypes,
   selectedFilterItem: string,
   activeFilters: ActiveFilters,
   filterToggles: FilterToggles,
 };
 
-class AdvanceFilterInput extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+const initialState: State = {
+  selectedEntityType: 'order',
+  selectedFilterItem: 'poNo',
+  activeFilters: {
+    order: [],
+    item: [],
+    batch: [],
+    shipment: [],
+  },
+  filterToggles: {
+    order: {
+      completelyBatched: false,
+      completelyShipped: false,
+      showActive: true,
+      showArchived: true,
+    },
+    item: {},
+    batch: {
+      showActive: true,
+      showArchived: true,
+    },
+    shipment: {
+      showActive: true,
+      showArchived: true,
+    },
+  },
+};
 
-    this.state = {
-      filterIsApplied: false,
-      selectedEntityType: 'order',
-      selectedFilterItem: 'poNo',
-      activeFilters: {
-        order: [],
-        item: [],
-        batch: [],
-        shipment: [],
-      },
-      filterToggles: {
-        order: {
-          completelyBatched: false,
-          completelyShipped: false,
-          showActive: true,
-          showArchived: true,
-        },
-        item: {},
-        batch: {
-          showActive: true,
-          showArchived: true,
-        },
-        shipment: {
-          showActive: true,
-          showArchived: true,
-        },
-      },
-    };
+const defaultFilterMenuItemMap = {
+  order: 'poNo',
+  item: 'price',
+  batch: 'deliveredAt',
+  shipment: 'forwarder',
+};
 
-    this.filterButtonRef = React.createRef();
-  }
+function reducer(state, action) {
+  switch (action.type) {
+    case 'RESET':
+      return initialState;
 
-  changeSelectedEntityType = (entityType: EntityTypes) => {
-    const defaultFilterMenuItemMap = {
-      order: 'poNo',
-      item: 'price',
-      batch: 'deliveredAt',
-      shipment: 'forwarder',
-    };
+    case 'CHANGE_ENTITY': {
+      const { entityType } = action;
 
-    this.setState({
-      selectedEntityType: entityType,
-      selectedFilterItem: defaultFilterMenuItemMap[entityType],
-    });
-  };
-
-  changeSelectedFilterItem = (filterItem: string) => {
-    this.setState({ selectedFilterItem: filterItem });
-  };
-
-  toggleActiveFilter = (entityType: string, filter: string) => {
-    const { activeFilters } = this.state;
-
-    // Add
-    if (!activeFilters[entityType].some(activeFilter => activeFilter === filter)) {
-      const newActiveFilters = { ...activeFilters };
-      newActiveFilters[entityType] = [...newActiveFilters[entityType], filter];
-
-      this.setState({ activeFilters: newActiveFilters });
+      return {
+        ...state,
+        selectedEntityType: entityType,
+        selectedFilterItem: defaultFilterMenuItemMap[entityType],
+      };
     }
-    // Remove
-    else {
-      const newActiveFilters = { ...activeFilters };
-      newActiveFilters[entityType] = newActiveFilters[entityType].filter(
-        activeFilter => activeFilter !== filter
-      );
 
-      this.setState({ activeFilters: newActiveFilters });
+    case 'TOGGLE_FILTER_TOGGLE': {
+      const { entityType, toggle } = action;
+      const { filterToggles } = state;
+
+      const newFilterToggles = { ...filterToggles };
+      newFilterToggles[entityType][toggle] = !newFilterToggles[entityType][toggle];
+
+      return {
+        ...state,
+        filterToggles: newFilterToggles,
+      };
     }
-  };
 
-  toggleFilterToggle = (entityType: string, toggle: string) => {
-    const { filterToggles } = this.state;
+    case 'TOGGLE_ACTIVE_FILTER': {
+      const { entityType, filter } = action;
+      const { activeFilters } = state;
+      const newActiveFilters = { ...activeFilters };
 
-    const newFilterToggles = { ...filterToggles };
-    newFilterToggles[entityType][toggle] = !newFilterToggles[entityType][toggle];
+      if (!activeFilters[entityType].some(activeFilter => activeFilter === filter)) {
+        newActiveFilters[entityType] = [...newActiveFilters[entityType], filter];
+      } else {
+        newActiveFilters[entityType] = newActiveFilters[entityType].filter(
+          activeFilter => activeFilter !== filter
+        );
+      }
 
-    this.setState({ filterToggles: newFilterToggles });
-  };
+      return {
+        ...state,
+        activeFilters: newActiveFilters,
+      };
+    }
 
-  filterButtonRef: any;
+    case 'FILTER_ITEM': {
+      const { selectedFilterItem } = action;
 
-  render() {
-    const {
-      filterIsApplied,
-      selectedEntityType,
-      selectedFilterItem,
-      activeFilters,
-      filterToggles,
-    } = this.state;
-    const isDirty = true;
+      return {
+        ...state,
+        selectedFilterItem,
+      };
+    }
 
-    return (
-      <UIConsumer>
-        {uiState => (
-          <BooleanValue>
-            {({ value: isOpen, set: toggleFilter }) => (
-              <div className={AdvancedFilterWrapperStyle}>
-                <button
-                  className={FilterToggleButtonStyle}
-                  onClick={() => toggleFilter(!isOpen)}
-                  type="button"
-                  ref={this.filterButtonRef}
-                >
-                  {filterIsApplied && <div className={FilterToggleBadgeStyle} />}
-                  <Icon icon="FILTER" />
-                </button>
-                <OutsideClickHandler
-                  onOutsideClick={() => toggleFilter(false)}
-                  ignoreClick={false}
-                  ignoreElements={
-                    this.filterButtonRef && this.filterButtonRef.current
-                      ? [this.filterButtonRef.current]
-                      : []
-                  }
-                >
-                  <div
-                    className={AdvancedFilterBodyWrapperStyle({
-                      isOpen,
-                      isSideBarExpanded: uiState.isSideBarExpanded,
-                    })}
-                  >
-                    <div className={AdvancedFilterNavbarStyle}>
-                      <Label>
-                        <FormattedMessage
-                          id="modules.RelationMaps.filter.filterBy"
-                          defaultMessage="FILTER BY"
-                        />
-                      </Label>
-                      {isDirty && (
-                        <div className={AdvancedFilterNavbarButtonsWrapperStyle}>
-                          <CancelButton
-                            label={
-                              <FormattedMessage
-                                id="modules.RelationMaps.filter.reset"
-                                defaultMessage="RESET"
-                              />
-                            }
-                          />
-                          <SaveButton
-                            label={
-                              <FormattedMessage
-                                id="modules.RelationMaps.filter.apply"
-                                defaultMessage="APPLY"
-                              />
-                            }
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <div className={AdvancedFilterBodyStyle}>
-                      <EntityTypesMenu
-                        selectedEntityType={selectedEntityType}
-                        changeSelectedEntityType={this.changeSelectedEntityType}
-                        activeFilters={activeFilters}
-                      />
-                      <FilterMenu
-                        selectedEntityType={selectedEntityType}
-                        activeFilters={activeFilters}
-                        toggleActiveFilter={this.toggleActiveFilter}
-                        filterToggles={filterToggles}
-                        toggleFilterToggle={this.toggleFilterToggle}
-                        selectedFilterItem={selectedFilterItem}
-                        changeSelectedFilterItem={this.changeSelectedFilterItem}
-                      />
-                      <FilterInputArea
-                        selectedEntityType={selectedEntityType}
-                        selectedFilterItem={selectedFilterItem}
-                      />
-                    </div>
-                  </div>
-                </OutsideClickHandler>
-              </div>
-            )}
-          </BooleanValue>
-        )}
-      </UIConsumer>
-    );
+    default:
+      return state;
   }
 }
 
-export default AdvanceFilterInput;
+function AdvanceFilter() {
+  const filterButtonRef = useRef(null);
+  const [filterIsApplied] = useState(false);
+  const [isDirty] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <UIConsumer>
+      {uiState => (
+        <BooleanValue>
+          {({ value: isOpen, set: toggleFilter }) => (
+            <div className={AdvancedFilterWrapperStyle}>
+              <button
+                className={FilterToggleButtonStyle}
+                onClick={() => toggleFilter(!isOpen)}
+                type="button"
+                ref={filterButtonRef}
+              >
+                {filterIsApplied && <div className={FilterToggleBadgeStyle} />}
+                <Icon icon="FILTER" />
+              </button>
+              <OutsideClickHandler
+                onOutsideClick={() => toggleFilter(false)}
+                ignoreClick={false}
+                ignoreElements={
+                  filterButtonRef && filterButtonRef.current ? [filterButtonRef.current] : []
+                }
+              >
+                <div
+                  className={AdvancedFilterBodyWrapperStyle({
+                    isOpen,
+                    isSideBarExpanded: uiState.isSideBarExpanded,
+                  })}
+                >
+                  <div className={AdvancedFilterNavbarStyle}>
+                    <Label>
+                      <FormattedMessage
+                        id="modules.RelationMaps.filter.filterBy"
+                        defaultMessage="FILTER BY"
+                      />
+                    </Label>
+                    {isDirty && (
+                      <div className={AdvancedFilterNavbarButtonsWrapperStyle}>
+                        <CancelButton
+                          label={
+                            <FormattedMessage
+                              id="modules.RelationMaps.filter.reset"
+                              defaultMessage="RESET"
+                            />
+                          }
+                        />
+                        <SaveButton
+                          label={
+                            <FormattedMessage
+                              id="modules.RelationMaps.filter.apply"
+                              defaultMessage="APPLY"
+                            />
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className={AdvancedFilterBodyStyle}>
+                    <EntityTypesMenu
+                      selectedEntityType={state.selectedEntityType}
+                      activeFilters={state.activeFilters}
+                      changeSelectedEntityType={entityType =>
+                        dispatch({ type: 'CHANGE_ENTITY', entityType })
+                      }
+                    />
+                    <FilterMenu
+                      selectedEntityType={state.selectedEntityType}
+                      activeFilters={state.activeFilters}
+                      filterToggles={state.filterToggles}
+                      selectedFilterItem={state.selectedFilterItem}
+                      toggleActiveFilter={(entityType, filter) =>
+                        dispatch({
+                          type: 'TOGGLE_ACTIVE_FILTER',
+                          entityType,
+                          filter,
+                        })
+                      }
+                      toggleFilterToggle={(entityType, toggle) =>
+                        dispatch({
+                          type: 'TOGGLE_FILTER_TOGGLE',
+                          entityType,
+                          toggle,
+                        })
+                      }
+                      changeSelectedFilterItem={selectedFilterItem =>
+                        dispatch({
+                          type: 'FILTER_ITEM',
+                          selectedFilterItem,
+                        })
+                      }
+                    />
+                    <FilterInputArea
+                      selectedEntityType={state.selectedEntityType}
+                      selectedFilterItem={state.selectedFilterItem}
+                    />
+                  </div>
+                </div>
+              </OutsideClickHandler>
+            </div>
+          )}
+        </BooleanValue>
+      )}
+    </UIConsumer>
+  );
+}
+
+export default AdvanceFilter;

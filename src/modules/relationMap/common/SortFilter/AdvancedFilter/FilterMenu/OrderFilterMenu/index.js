@@ -26,7 +26,7 @@ export default function OrderFilterMenu({
       label: <FormattedMessage {...messages.order} />,
       icon: 'ORDER',
       filters: [
-        { name: 'poNo', label: <FormattedMessage {...messages.poNo} />, data: ['Example'] },
+        { name: 'poNo', label: <FormattedMessage {...messages.poNo} />, data: ['Example 1'] },
         { name: 'exporter', label: <FormattedMessage {...messages.exporter} />, data: [] },
         { name: 'inCharge', label: <FormattedMessage {...messages.inCharge} />, data: [] },
         { name: 'tags', label: <FormattedMessage {...messages.tags} />, data: [] },

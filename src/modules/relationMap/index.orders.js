@@ -1,11 +1,14 @@
 // @flow
 import * as React from 'react';
+import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { Query } from 'react-apollo';
 import { isEmpty } from 'utils/fp';
 import { formatOrderData } from 'modules/relationMap/util';
 import { ActionContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
+import orderMessages from 'modules/order/messages';
 import LoadingIcon from 'components/LoadingIcon';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
@@ -18,7 +21,11 @@ import { ActionSubscribe } from './common/ActionPanel';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
 import { FunctionWrapperStyle, BadgeWrapperStyle, RelationMapGridStyle } from './style';
 
-const Order = () => (
+type Props = {
+  intl: IntlShape,
+};
+
+const Order = ({ intl }: Props) => (
   <Layout>
     <SortFilterHandler>
       {({ sort, filter, onChangeSortFilter, page, perPage }) => {
@@ -44,7 +51,6 @@ const Order = () => (
                       const formatedNodes =
                         isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result);
                       const order = formatOrderData(formatedNodes || []);
-                      // console.log('formatedNodes', formatedNodes, order);
                       return (
                         <>
                           <ActionSubscribe filter={filterVariables} />
@@ -52,6 +58,16 @@ const Order = () => (
                             {({ clearResult }) => (
                               <SortFilter
                                 sort={sort}
+                                sortInputs={[
+                                  {
+                                    title: intl.formatMessage(orderMessages.updatedAtSort),
+                                    value: 'updatedAt',
+                                  },
+                                  {
+                                    title: intl.formatMessage(orderMessages.createdAtSort),
+                                    value: 'createdAt',
+                                  },
+                                ]}
                                 filter={filter}
                                 onChange={newFilter => {
                                   onChangeSortFilter(newFilter);
@@ -111,4 +127,4 @@ const Order = () => (
   </Layout>
 );
 
-export default Order;
+export default injectIntl(Order);
