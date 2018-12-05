@@ -1,5 +1,10 @@
 import { batchFormFragment, batchCardFragment } from './batch/fragment';
-import { orderFormFragment, orderCardFragment } from './order/fragment';
+import {
+  orderFormFragment,
+  orderCardFragment,
+  orderBasicFragment,
+  orderFragmentForRM,
+} from './order/fragment';
 import { partnerFormFragment, partnerCardFragment } from './partner/fragment';
 import { productFormFragment, productCardFragment } from './product/fragment';
 import { productProviderFormFragment } from './productProvider/fragment';
@@ -31,6 +36,8 @@ export {
   batchCardFragment,
   orderFormFragment,
   orderCardFragment,
+  orderBasicFragment,
+  orderFragmentForRM,
   partnerFormFragment,
   partnerCardFragment,
   productFormFragment,
