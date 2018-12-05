@@ -47,6 +47,9 @@ const Product = ({ page, perPage, intl }: Props) => {
               sortBy: {
                 [sort.field]: sort.direction,
               },
+              batchSort: {
+                deliveredAt: 'DESCENDING',
+              },
             }}
             fetchPolicy="network-only"
           >
