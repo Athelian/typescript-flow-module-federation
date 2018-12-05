@@ -1,6 +1,13 @@
 // @flow
 import { pipe, filter, isEmpty, omit } from 'ramda';
-import { initOrderObj } from 'modules/relationMap/util';
+import { getByPathWithDefault } from 'utils/fp';
+import {
+  initOrderObj,
+  initOrderItemObj,
+  initBatchObj,
+  initShipmentObj,
+} from 'modules/relationMap/util';
+import { generateCollapsedRelation, getRelatedIds, createBatchRelation } from './relation';
 
 const prependArray = (arr: Array<any>) => (newArr: Array<any>) => [...arr, ...newArr];
 
@@ -85,7 +92,6 @@ export const removeAdditionOrderItemFields: Function = omit([
   'actionType',
   '__typename',
 ]);
-
 export const removeAdditionShipmentFields: Function = omit([
   'actionType',
   'isNew',
@@ -150,12 +156,22 @@ const getBatchedQuantity = (batch: Object) => {
   return batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, quantity || 0);
 };
 
+const getBatchRelation = (batch: Object, info: Object) => {
+  const { orderId, orderItemId, index } = info;
+  return {
+    ...batch,
+    rootId: orderId,
+    parentId: orderItemId,
+    index,
+  };
+};
+
 export const createOrderObj = () => {
   const orderObj = {};
   let orderId = '';
   let orderItemId = '';
   let batchId = '';
-  const getOrderObj = () => orderObj;
+  const getOrderObj = () => ({ orderObj });
   const formatOrderObj = (entity: Object) => {
     const { type, data, index } = entity;
     const { id } = data;
@@ -181,14 +197,12 @@ export const createOrderObj = () => {
       const { shipment } = data;
       const batchedQuantity = getBatchedQuantity(data);
       batchId = id;
-      const batchRelation = {
-        ...data,
-        rootId: orderId,
-        parentId: orderItemId,
-        index,
-      };
       orderData.batchedQuantity += batchedQuantity;
-      orderRelation.batch[batchId] = batchRelation;
+      orderRelation.batch[batchId] = getBatchRelation(data, {
+        orderId,
+        orderItemId,
+        index,
+      });
       if (shipment) {
         orderData.shippedQuantity += batchedQuantity;
         orderRelation.shipment[shipment.id] = true;
@@ -200,15 +214,187 @@ export const createOrderObj = () => {
     getOrderObj,
   };
 };
+
+const createOrderItemObj = () => {
+  let orderId = '';
+  let orderItemId = '';
+  const orderItemObj = {};
+  const getOrderItemObj = () => ({ orderItemObj });
+  const formatOrderItemObj = entity => {
+    const { type, data, index } = entity;
+    const { id } = data;
+    if (type === 'ORDER') {
+      orderId = id;
+    }
+    if (type === 'ORDER_ITEM') {
+      orderItemId = id;
+      if (!orderItemObj[id]) {
+        orderItemObj[id] = initOrderItemObj(data, orderId);
+      }
+    }
+    if (type === 'BATCH') {
+      const { shipment } = data;
+      const batchedQuantity = getBatchedQuantity(data);
+      const { relation: orderItemRelation, data: orderItemData } = orderItemObj[orderItemId];
+      orderItemRelation.batch[id] = getBatchRelation(data, {
+        orderId,
+        orderItemId,
+        index,
+      });
+      orderItemData.batchedQuantity += batchedQuantity;
+      if (shipment) {
+        orderItemData.shippedQuantity += batchedQuantity;
+        orderItemRelation.shipment[shipment.id] = true;
+      }
+    }
+  };
+  return {
+    formatOrderItemObj,
+    getOrderItemObj,
+  };
+};
+
+const createBatchObj = () => {
+  let orderId = '';
+  let orderItemId = '';
+  const batchObj = {};
+  const getBatchObj = () => ({ batchObj });
+  const formatBatchObj = entity => {
+    const { type, data } = entity;
+    const { id } = data;
+    if (type === 'ORDER') {
+      orderId = id;
+    }
+    if (type === 'ORDER_ITEM') {
+      orderItemId = id;
+    }
+    if (type === 'BATCH') {
+      if (!batchObj[id]) {
+        batchObj[id] = initBatchObj(data, orderId, orderItemId);
+      }
+      const { data: batchData } = batchObj[id];
+      batchData.batchedQuantity = getBatchedQuantity(data);
+    }
+  };
+  return {
+    getBatchObj,
+    formatBatchObj,
+  };
+};
+
+const createShipmentObj = () => {
+  const shipmentObj = {};
+  let orderId = '';
+  let orderItemId = '';
+  const getShipmentObj = () => ({ shipmentObj });
+  const formatShipmentObj = entity => {
+    const { type, data } = entity;
+    const { id } = data;
+    if (type === 'ORDER') {
+      orderId = id;
+    }
+    if (type === 'ORDER_ITEM') {
+      orderItemId = id;
+    }
+    if (type === 'SHIPMENT') {
+      if (!shipmentObj[id]) {
+        shipmentObj[id] = initShipmentObj(data);
+      }
+      const { data: shipmentData, relation: shipmentRelation } = shipmentObj[id];
+      shipmentData.totalOrder += 1;
+      shipmentRelation.order[orderId] = true;
+    }
+    if (type === 'BATCH') {
+      const { shipment } = data;
+      if (!shipmentObj[id]) {
+        shipmentObj[id] = initShipmentObj(shipment);
+      }
+      const { data: shipmentData, relation: shipmentRelation } = shipmentObj[id];
+      shipmentData.metric = getByPathWithDefault('', 'packageVolume.metric', data);
+      shipmentRelation.order[orderId] = true;
+      shipmentRelation.orderItem[orderItemId] = true;
+      shipmentRelation.batch[id] = true;
+    }
+  };
+  return {
+    getShipmentObj,
+    formatShipmentObj,
+  };
+};
+
+const createRelation = () => {
+  let orderId = '';
+  let orderItems = [];
+  let batches = [];
+  let noBatch = false;
+  let batchRelation = {};
+  const collpasedRelation = {};
+  const expandRelation = {};
+  const getRelationObj = () => ({ collpasedRelation, expandRelation });
+  const formatRelationObj = entity => {
+    const { type, data, index } = entity;
+    const { id } = data;
+    if (!collpasedRelation[id]) {
+      collpasedRelation[id] = generateCollapsedRelation(data, { isCollapsed: true });
+    }
+    if (!expandRelation[id]) {
+      expandRelation[id] = generateCollapsedRelation(data, { isCollapsed: false });
+    }
+    if (type === 'ORDER') {
+      const { orderItems: currentOrderItems } = data;
+      orderId = id;
+      orderItems = currentOrderItems;
+    }
+    if (type === 'ORDER_ITEM') {
+      const relations = expandRelation[orderId];
+      const relatedIds = getRelatedIds(orderItems, index);
+      batches = data.batches || [];
+      noBatch = batches.length === 0;
+      batchRelation = createBatchRelation(relations, {
+        orderItems,
+        orderItemIndex: index,
+        relatedOrderItem: relatedIds.filter(relatedId => relatedId !== id),
+      });
+    }
+    if (!noBatch && type === 'BATCH') {
+      const relatedIds = getRelatedIds(batches, index);
+      batchRelation.generateBatchRelation({
+        batchData: data,
+        index,
+        relatedIds,
+        previousIds: [],
+      });
+    }
+  };
+  return {
+    formatRelationObj,
+    getRelationObj,
+  };
+};
 export const formatOrders = (orders: Array<Object>) => {
   const orderGenerator = iterateOrders(orders);
   const summaryData = summary(orders);
+  const orderData = createOrderObj();
+  const itemData = createOrderItemObj();
+  const batchData = createBatchObj();
+  const shipmentData = createShipmentObj();
+  const relationData = createRelation();
   let result = orderGenerator.next();
   while (!result.done) {
     summaryData.findSummary(result.value);
+    orderData.formatOrderObj(result.value);
+    itemData.formatOrderItemObj(result.value);
+    batchData.formatBatchObj(result.value);
+    shipmentData.formatShipmentObj(result.value);
+    relationData.formatRelationObj(result.value);
     result = orderGenerator.next();
   }
   return {
     ...summaryData.getSummary(),
+    ...orderData.getOrderObj(),
+    ...itemData.getOrderItemObj(),
+    ...batchData.getBatchObj(),
+    ...shipmentData.getShipmentObj(),
+    ...relationData.getRelationObj(),
   };
 };

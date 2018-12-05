@@ -61,7 +61,7 @@ export const getItemType = (type: string) => {
   }
 };
 
-const getRelatedIds = (items: Array<Object>, currentIndex: number) => {
+export const getRelatedIds = (items: Array<Object>, currentIndex: number) => {
   const ids = [];
   for (let index = items.length - 1; index >= currentIndex; index -= 1) {
     const { id } = items[index];
@@ -70,9 +70,15 @@ const getRelatedIds = (items: Array<Object>, currentIndex: number) => {
   return ids;
 };
 
-const createBatchRelation = (relations: Array<Object>, data: Object) => {
+type generateBatch = {
+  id: string,
+  isNew: string | boolean,
+  relatedIds: Array<string>,
+  previousIds: Array<string>,
+};
+export const createBatchRelation = (relations: Array<Object>, data: Object) => {
   const { orderItems, orderItemIndex, relatedOrderItem } = data;
-  const generateFirstBatch = ({ id, isNew, relatedIds, previousIds }) => {
+  const generateFirstBatch = ({ id, isNew, relatedIds, previousIds }: generateBatch) => {
     relations.push({
       id,
       type: `${LINK1}-${BATCH}`,
@@ -80,7 +86,7 @@ const createBatchRelation = (relations: Array<Object>, data: Object) => {
     });
     relations.push({ type: BATCH, id, isNew, relatedIds, previousIds });
   };
-  const generateOtherBatch = ({ id, isNew, relatedIds, previousIds }) => {
+  const generateOtherBatch = ({ id, isNew, relatedIds, previousIds }: generateBatch) => {
     const isLastOrderItem = orderItemIndex === orderItems.length - 1;
     relations.push({ type: '' });
     if (isLastOrderItem) {
@@ -103,7 +109,17 @@ const createBatchRelation = (relations: Array<Object>, data: Object) => {
   return {
     generateFirstBatch,
     generateOtherBatch,
-    generateBatchRelation: ({ batchData, relatedIds, index, previousIds }) => {
+    generateBatchRelation: ({
+      batchData,
+      relatedIds,
+      index,
+      previousIds,
+    }: {
+      batchData: Object,
+      relatedIds: Array<string>,
+      index: number,
+      previousIds: Array<string>,
+    }) => {
       const { id, isNew = false } = batchData;
       if (index === 0) {
         generateFirstBatch({ id, isNew, relatedIds, previousIds });
@@ -114,7 +130,7 @@ const createBatchRelation = (relations: Array<Object>, data: Object) => {
   };
 };
 
-const generateCollapsedRelation = (order: Object, option: Object) => {
+export const generateCollapsedRelation = (order: Object, option: Object) => {
   const { isCollapsed } = option;
   const relations = [];
   const { orderItems } = order;
