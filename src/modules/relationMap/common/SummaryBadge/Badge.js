@@ -8,7 +8,7 @@ type BadgeProps = {
   color: string,
   hoverColor?: string,
   label: string | React.Node,
-  no: number,
+  no: number | React.Node,
   onClick?: Function,
 };
 
