@@ -209,6 +209,10 @@ export const parseChangedData = (
             break;
           }
 
+          case 'customFields':
+            changedShipment[key] = prepareCustomFieldsData(updateValue);
+            break;
+
           default:
             changedShipment[key] = updateValue;
         }
@@ -332,6 +336,10 @@ export const parseChangedData = (
 
           case 'tags':
             changedBatch.tagIds = updateValue.map(({ id: tagId }) => tagId);
+            break;
+
+          case 'customFields':
+            changedBatch[key] = prepareCustomFieldsData(updateValue);
             break;
 
           default:
