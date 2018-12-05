@@ -26,7 +26,7 @@ type Props = {
   setFieldValue: Function,
 };
 
-const list2Map = (list: Array<Object>): Map<string, Object> => {
+export const list2Map = (list: Array<Object>): Map<string, Object> => {
   const map = new Map();
   list.forEach(({ fieldDefinition, ...rest }) => {
     map.set(fieldDefinition.id, { fieldDefinition, ...rest });
@@ -104,17 +104,21 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
                               fieldDefinitions={fieldDefinitions}
                               onCancel={() => slideToggle(false)}
                               onSave={() => {
+                                if (values.mask) {
+                                  setFieldValue('customFields', {
+                                    mask: values.mask,
+                                    fieldDefinitions: values.fieldDefinitions,
+                                    fieldValues: values.fieldValues.filter(fieldValue =>
+                                      contains(
+                                        fieldValue.fieldDefinition,
+                                        values.mask.fieldDefinitions
+                                      )
+                                    ),
+                                  });
+                                } else {
+                                  setFieldValue('customFields', values);
+                                }
                                 slideToggle(false);
-                                setFieldValue('customFields', {
-                                  mask: values.mask,
-                                  fieldDefinitions: values.fieldDefinitions,
-                                  fieldValues: values.fieldValues.filter(fieldValue =>
-                                    contains(
-                                      fieldValue.fieldDefinition,
-                                      values.mask.fieldDefinitions
-                                    )
-                                  ),
-                                });
                               }}
                               onFormReady={() => {
                                 initDetailValues({
