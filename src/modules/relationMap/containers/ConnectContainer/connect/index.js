@@ -8,7 +8,6 @@ import {
   removeAdditionBatchFields,
   removeAdditionOrderItemFields,
 } from 'modules/relationMap/orderFocused/formatter';
-// import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import { getExportId } from 'modules/relationMap/common/ActionPanel/util';
 import { getByPathWithDefault as get, compose, omit } from 'utils/fp';
 import { cleanUpData } from 'utils/data';

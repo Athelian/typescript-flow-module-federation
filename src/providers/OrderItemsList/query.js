@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 
 import { metricFragment, sizeFragment, imageFragment, partnerCardFragment } from 'graphql';
 
-export const orderListQuery = gql`
+export const orderItemsListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: OrderItemSortInput) {
     orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       page
@@ -83,4 +83,4 @@ export const orderListQuery = gql`
   ${partnerCardFragment}
 `;
 
-export default orderListQuery;
+export default orderItemsListQuery;

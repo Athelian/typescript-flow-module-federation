@@ -9,7 +9,7 @@ import { orderListQuery } from './query';
 
 type Props = {
   viewType: string,
-  filter: {
+  filterBy: {
     query: string,
     archived: boolean,
   },
