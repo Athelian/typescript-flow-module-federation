@@ -8,6 +8,7 @@ export const productListQuery = gql`
     $sortBy: ProductSortInput
     $batchPage: Int!
     $batchPerPage: Int!
+    $batchSort: BatchSortInput
   ) {
     products(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
@@ -26,7 +27,7 @@ export const productListQuery = gql`
             name
           }
         }
-        batches(page: $batchPage, perPage: $batchPerPage) {
+        batches(page: $batchPage, perPage: $batchPerPage, sortBy: $batchSort) {
           nodes {
             id
             no
