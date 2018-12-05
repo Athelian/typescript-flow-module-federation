@@ -166,24 +166,24 @@ const getBatchRelation = (batch: Object, info: Object) => {
   };
 };
 
-export const createOrderObj = () => {
+const createOrderObj = () => {
   const orderObj = {};
   let orderId = '';
   let orderItemId = '';
   let batchId = '';
-  const getOrderObj = () => ({ orderObj });
+  const getOrderObj = () => ({ order: orderObj });
   const formatOrderObj = (entity: Object) => {
     const { type, data, index } = entity;
     const { id } = data;
-    if (!orderObj[id]) {
-      orderObj[id] = initOrderObj(data);
-    }
-    const { relation: orderRelation, data: orderData } = orderObj[orderId];
     if (type === 'ORDER') {
+      if (!orderObj[id]) {
+        orderObj[id] = initOrderObj(data);
+      }
       orderId = id;
     }
     if (type === 'ORDER_ITEM') {
       const { batches = [] } = data;
+      const { relation: orderRelation, data: orderData } = orderObj[orderId];
       orderItemId = id;
       orderRelation.orderItem[orderItemId] = {
         ...data,
@@ -195,6 +195,7 @@ export const createOrderObj = () => {
     }
     if (type === 'BATCH') {
       const { shipment } = data;
+      const { relation: orderRelation, data: orderData } = orderObj[orderId];
       const batchedQuantity = getBatchedQuantity(data);
       batchId = id;
       orderData.batchedQuantity += batchedQuantity;
@@ -219,7 +220,7 @@ const createOrderItemObj = () => {
   let orderId = '';
   let orderItemId = '';
   const orderItemObj = {};
-  const getOrderItemObj = () => ({ orderItemObj });
+  const getOrderItemObj = () => ({ orderItem: orderItemObj });
   const formatOrderItemObj = entity => {
     const { type, data, index } = entity;
     const { id } = data;
@@ -258,7 +259,7 @@ const createBatchObj = () => {
   let orderId = '';
   let orderItemId = '';
   const batchObj = {};
-  const getBatchObj = () => ({ batchObj });
+  const getBatchObj = () => ({ batch: batchObj });
   const formatBatchObj = entity => {
     const { type, data } = entity;
     const { id } = data;
@@ -286,7 +287,7 @@ const createShipmentObj = () => {
   const shipmentObj = {};
   let orderId = '';
   let orderItemId = '';
-  const getShipmentObj = () => ({ shipmentObj });
+  const getShipmentObj = () => ({ shipment: shipmentObj });
   const formatShipmentObj = entity => {
     const { type, data } = entity;
     const { id } = data;
@@ -306,14 +307,16 @@ const createShipmentObj = () => {
     }
     if (type === 'BATCH') {
       const { shipment } = data;
-      if (!shipmentObj[id]) {
+      if (shipment && !shipmentObj[id]) {
         shipmentObj[id] = initShipmentObj(shipment);
       }
-      const { data: shipmentData, relation: shipmentRelation } = shipmentObj[id];
-      shipmentData.metric = getByPathWithDefault('', 'packageVolume.metric', data);
-      shipmentRelation.order[orderId] = true;
-      shipmentRelation.orderItem[orderItemId] = true;
-      shipmentRelation.batch[id] = true;
+      if (shipment) {
+        const { data: shipmentData, relation: shipmentRelation } = shipmentObj[shipment.id];
+        shipmentData.metric = getByPathWithDefault('', 'packageVolume.metric', data);
+        shipmentRelation.order[orderId] = true;
+        shipmentRelation.orderItem[orderItemId] = true;
+        shipmentRelation.batch[id] = true;
+      }
     }
   };
   return {
@@ -328,19 +331,20 @@ const createRelation = () => {
   let batches = [];
   let noBatch = false;
   let batchRelation = {};
-  const collpasedRelation = {};
+  const collapsedRelation = {};
   const expandRelation = {};
-  const getRelationObj = () => ({ collpasedRelation, expandRelation });
+  const getRelationObj = () => ({ collapsedRelation, expandRelation });
   const formatRelationObj = entity => {
     const { type, data, index } = entity;
     const { id } = data;
-    if (!collpasedRelation[id]) {
-      collpasedRelation[id] = generateCollapsedRelation(data, { isCollapsed: true });
-    }
-    if (!expandRelation[id]) {
-      expandRelation[id] = generateCollapsedRelation(data, { isCollapsed: false });
-    }
+
     if (type === 'ORDER') {
+      if (!collapsedRelation[id]) {
+        collapsedRelation[id] = generateCollapsedRelation(data, { isCollapsed: true });
+      }
+      if (!expandRelation[id]) {
+        expandRelation[id] = generateCollapsedRelation(data, { isCollapsed: false });
+      }
       const { orderItems: currentOrderItems } = data;
       orderId = id;
       orderItems = currentOrderItems;
@@ -348,8 +352,25 @@ const createRelation = () => {
     if (type === 'ORDER_ITEM') {
       const relations = expandRelation[orderId];
       const relatedIds = getRelatedIds(orderItems, index);
+      relations.push({ type: '' });
+      relations.push({
+        id,
+        type: `LINK-4-ORDER_ITEM`,
+        relatedIds,
+      });
+      relations.push({
+        type: 'ORDER_ITEM',
+        id,
+        isNew: data.isNew,
+        relatedIds,
+      });
+
       batches = data.batches || [];
       noBatch = batches.length === 0;
+      if (noBatch) {
+        relations.push({ type: '' });
+        relations.push({ type: '' });
+      }
       batchRelation = createBatchRelation(relations, {
         orderItems,
         orderItemIndex: index,
@@ -371,6 +392,7 @@ const createRelation = () => {
     getRelationObj,
   };
 };
+
 export const formatOrders = (orders: Array<Object>) => {
   const orderGenerator = iterateOrders(orders);
   const summaryData = summary(orders);
