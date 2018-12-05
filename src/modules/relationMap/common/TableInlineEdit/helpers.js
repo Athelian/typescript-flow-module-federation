@@ -2,6 +2,7 @@
 import { intersection } from 'lodash';
 import { removeTypename } from 'utils/data';
 import logger from 'utils/logger';
+import { prepareCustomFieldsData } from 'utils/customFields';
 import {
   formatTimeline,
   formatContainerGroups,
@@ -150,6 +151,9 @@ export const parseChangedData = (
             changedOrder[key] = updateValue && updateValue.length > 0 ? updateValue : null;
             break;
           }
+          case 'customFields':
+            changedOrder[key] = prepareCustomFieldsData(updateValue);
+            break;
 
           default:
             changedOrder[key] = updateValue;
