@@ -127,9 +127,13 @@ function reducer(state, action) {
 function AdvanceFilter() {
   const filterButtonRef = useRef(null);
   const [filterIsApplied] = useState(false);
-  const [isDirty] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const isDirty =
+    state.activeFilters.batch.length > 0 ||
+    state.activeFilters.item.length > 0 ||
+    state.activeFilters.order.length > 0 ||
+    state.activeFilters.shipment.length > 0;
   return (
     <UIConsumer>
       {uiState => (
