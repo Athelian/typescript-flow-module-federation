@@ -87,45 +87,45 @@ const SummaryBadge = ({
       />
       <ShipmentToggleValue>
         {({ value: { isToggle, total }, assign }) => (
-          <div className={ShipmentBadgeContainerStyle}>
-            <Badge
-              icon="SHIPMENT"
-              color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
-              hoverColor="SHIPMENT_DARK"
-              label={intl.formatMessage(messages.shipmentsLabel)}
-              no={sumShipments + total}
-              onClick={() => {
-                if (!shipmentSelected && selectAll) {
-                  selectAll('shipment');
-                }
-                if (shipmentSelected && unSelectAll) {
-                  unSelectAll('shipment');
-                }
-              }}
-            />
-            <div className={ShipmentToggleContainerStyle}>
-              <Icon icon="SHIPMENT" />
-              <Label color="TEAL">
-                <FormattedMessage id="modules.RelationMaps.label.all" defaultMessage="All" />{' '}
-                <FormattedMessage {...messages.shipmentsLabel} />
-              </Label>
-              <div>
-                <button
-                  type="button"
-                  className={ToggleButtonStyle(isToggle)}
-                  tabIndex={-1}
-                  onClick={() =>
-                    assign({
-                      isToggle: !isToggle,
-                      total: 0,
-                    })
+            <div className={ShipmentBadgeContainerStyle}>
+              <Badge
+                icon="SHIPMENT"
+                color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
+                hoverColor="SHIPMENT_DARK"
+                label={intl.formatMessage(messages.shipmentsLabel)}
+                no={sumShipments + total}
+                onClick={() => {
+                  if (!shipmentSelected && selectAll) {
+                    selectAll('shipment');
                   }
-                >
-                  <Icon icon={isToggle ? 'TOGGLE_ON' : 'TOGGLE_OFF'} />
-                </button>
+                  if (shipmentSelected && unSelectAll) {
+                    unSelectAll('shipment');
+                  }
+                }}
+              />
+              <div className={ShipmentToggleContainerStyle}>
+                <Icon icon="SHIPMENT" />
+                <Label color="TEAL">
+                  <FormattedMessage id="modules.RelationMaps.label.all" defaultMessage="All" />{' '}
+                  <FormattedMessage {...messages.shipmentsLabel} />
+                </Label>
+                <div>
+                  <button
+                    type="button"
+                    className={ToggleButtonStyle(isToggle)}
+                    tabIndex={-1}
+                    onClick={() =>
+                      assign({
+                        isToggle: !isToggle,
+                        total: 0,
+                      })
+                    }
+                  >
+                    <Icon icon={isToggle ? 'TOGGLE_ON' : 'TOGGLE_OFF'} />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
         )}
       </ShipmentToggleValue>
     </>

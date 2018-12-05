@@ -92,6 +92,7 @@ const OrderFocused = ({
               return (
                 <Query
                   query={shipmentListQuery}
+                  fetchPolicy="network-only"
                   variables={{
                     page: 1,
                     perPage: 10,
