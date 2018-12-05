@@ -35,11 +35,11 @@ export default function TableItemForCustomFields({ cell, fields, values, validat
   const fieldValueMap = list2Map(fieldValues);
   return (
     <div className={WrapperStyle}>
-      {fields.map(({ id, name }) => {
+      {fields.map(({ id }) => {
         const fieldValue = fieldValueMap.get(id);
 
         return (
-          <div className={ItemStyle} key={name}>
+          <div className={ItemStyle} key={id}>
             {fieldValue ? (
               <FormField
                 name={`${cell}.customFields.fieldValues[${fieldValue.index}].value.string`}
