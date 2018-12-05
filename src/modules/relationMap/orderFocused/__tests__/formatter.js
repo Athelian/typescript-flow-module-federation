@@ -189,5 +189,5 @@ describe('formatOrders', () => {
     },
   ];
   const result = formatOrders(orders);
-  console.log(result);
+  expect(result).toMatchSnapshot();
 });

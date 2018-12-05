@@ -6,19 +6,22 @@ import { ShipmentLabelStyle } from './style';
 type Props = {
   name: string,
   value: number,
-  metric: 'cm³' | 'm³' | 'm',
+  metric: 'cm³' | 'm³',
 };
 
 type TotalVolumeProps = {
   value: number,
-  metric: 'cm³' | 'm³' | 'm',
+  metric: 'cm³' | 'm³',
 };
 
 const TotalVolume = ({ value, metric }: TotalVolumeProps) => (
   <span>
-    <FormattedNumber value={value || 0} /> {metric}
+    <FormattedNumber value={value} /> {metric}
   </span>
 );
+TotalVolume.defaultProps = {
+  value: 0,
+};
 
 export default function ShipmentLabel({ name = '', value = 0, metric = 'cm³' }: Props) {
   return (
