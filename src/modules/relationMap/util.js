@@ -227,19 +227,19 @@ export const calculateVolumeWeight = (batch: Object) => {
         packageSize
           ? packageSize.height
           : {
-              metric: 'm',
+              metric: 'm³',
               value: 0,
             },
         packageSize
           ? packageSize.width
           : {
-              metric: 'm',
+              metric: 'm³',
               value: 0,
             },
         packageSize
           ? packageSize.length
           : {
-              metric: 'm',
+              metric: 'm³',
               value: 0,
             }
       );
