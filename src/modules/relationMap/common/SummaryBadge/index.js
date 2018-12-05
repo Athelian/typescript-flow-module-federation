@@ -5,6 +5,7 @@ import type { IntlShape } from 'react-intl';
 import { createObjectValue } from 'react-values';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
 import messages from 'modules/relationMap/messages';
 import { ToggleButtonStyle } from 'modules/relationMap/common/ToggleTag/style';
 import Badge from './Badge';
@@ -44,7 +45,7 @@ const SummaryBadge = ({
         color={orderSelected ? 'ORDER_DARK' : 'ORDER'}
         hoverColor="ORDER_DARK"
         label={intl.formatMessage(messages.ordersLabel)}
-        no={sumOrders}
+        no={<FormattedNumber value={sumOrders} />}
         onClick={() => {
           if (!orderSelected && selectAll) {
             selectAll('order');
@@ -59,7 +60,7 @@ const SummaryBadge = ({
         color={orderItemSelected ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'}
         hoverColor="ORDER_ITEM_DARK"
         label={intl.formatMessage(messages.itemsLabel)}
-        no={sumOrderItems}
+        no={<FormattedNumber value={sumOrderItems} />}
         onClick={() => {
           if (!orderItemSelected && selectAll) {
             selectAll('orderItem');
@@ -75,7 +76,7 @@ const SummaryBadge = ({
         color={batchSelected ? 'BATCH_DARK' : 'BATCH'}
         hoverColor="BATCH_DARK"
         label={intl.formatMessage(messages.batchesLabel)}
-        no={sumBatches}
+        no={<FormattedNumber value={sumBatches} />}
         onClick={() => {
           if (!batchSelected && selectAll) {
             selectAll('batch');
@@ -87,45 +88,45 @@ const SummaryBadge = ({
       />
       <ShipmentToggleValue>
         {({ value: { isToggle, total }, assign }) => (
-            <div className={ShipmentBadgeContainerStyle}>
-              <Badge
-                icon="SHIPMENT"
-                color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
-                hoverColor="SHIPMENT_DARK"
-                label={intl.formatMessage(messages.shipmentsLabel)}
-                no={sumShipments + total}
-                onClick={() => {
-                  if (!shipmentSelected && selectAll) {
-                    selectAll('shipment');
+          <div className={ShipmentBadgeContainerStyle}>
+            <Badge
+              icon="SHIPMENT"
+              color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
+              hoverColor="SHIPMENT_DARK"
+              label={intl.formatMessage(messages.shipmentsLabel)}
+              no={<FormattedNumber value={sumShipments + total} />}
+              onClick={() => {
+                if (!shipmentSelected && selectAll) {
+                  selectAll('shipment');
+                }
+                if (shipmentSelected && unSelectAll) {
+                  unSelectAll('shipment');
+                }
+              }}
+            />
+            <div className={ShipmentToggleContainerStyle}>
+              <Icon icon="SHIPMENT" />
+              <Label color="TEAL">
+                <FormattedMessage id="modules.RelationMaps.label.all" defaultMessage="All" />{' '}
+                <FormattedMessage {...messages.shipmentsLabel} />
+              </Label>
+              <div>
+                <button
+                  type="button"
+                  className={ToggleButtonStyle(isToggle)}
+                  tabIndex={-1}
+                  onClick={() =>
+                    assign({
+                      isToggle: !isToggle,
+                      total: 0,
+                    })
                   }
-                  if (shipmentSelected && unSelectAll) {
-                    unSelectAll('shipment');
-                  }
-                }}
-              />
-              <div className={ShipmentToggleContainerStyle}>
-                <Icon icon="SHIPMENT" />
-                <Label color="TEAL">
-                  <FormattedMessage id="modules.RelationMaps.label.all" defaultMessage="All" />{' '}
-                  <FormattedMessage {...messages.shipmentsLabel} />
-                </Label>
-                <div>
-                  <button
-                    type="button"
-                    className={ToggleButtonStyle(isToggle)}
-                    tabIndex={-1}
-                    onClick={() =>
-                      assign({
-                        isToggle: !isToggle,
-                        total: 0,
-                      })
-                    }
-                  >
-                    <Icon icon={isToggle ? 'TOGGLE_ON' : 'TOGGLE_OFF'} />
-                  </button>
-                </div>
+                >
+                  <Icon icon={isToggle ? 'TOGGLE_ON' : 'TOGGLE_OFF'} />
+                </button>
               </div>
             </div>
+          </div>
         )}
       </ShipmentToggleValue>
     </>
