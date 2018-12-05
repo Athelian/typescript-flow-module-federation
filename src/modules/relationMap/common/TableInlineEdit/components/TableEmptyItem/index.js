@@ -4,6 +4,7 @@ import { WrapperStyle, EmptyItemStyle } from './style';
 
 type Props = {
   fields: Array<{
+    id?: string,
     name: string,
     type: string,
     meta?: Object,
@@ -13,8 +14,8 @@ type Props = {
 export default function TableEmptyItem({ fields }: Props) {
   return (
     <div className={WrapperStyle}>
-      {fields.map(({ name, type }) => (
-        <div key={`${name}-${type}`} className={EmptyItemStyle} />
+      {fields.map(({ name, type, id }) => (
+        <div key={`${name}-${type || id || ''}`} className={EmptyItemStyle} />
       ))}
     </div>
   );
