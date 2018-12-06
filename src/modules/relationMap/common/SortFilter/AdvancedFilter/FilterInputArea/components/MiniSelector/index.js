@@ -31,6 +31,20 @@ const defaultProps = {
   hideToggles: false,
 };
 
+const filterByStatus = (isActive: boolean, isArchive: boolean) => {
+  if (isActive && isArchive) {
+    return {};
+  }
+  if (!isActive && !isArchive) {
+    return {
+      query: 'FAKE QUERY FOR RETURN NULL DATA',
+    };
+  }
+  return {
+    archived: isArchive,
+  };
+};
+
 export default function MiniSelector({
   renderItem,
   entityType,
@@ -39,6 +53,8 @@ export default function MiniSelector({
   hideToggles,
 }: Props) {
   const [searchText, setSearchText] = React.useState('');
+  const [isActive, setIsActive] = React.useState(true);
+  const [isArchive, setIsArchive] = React.useState(true);
 
   return (
     <div className={MiniSelectorWrapperStyle}>
@@ -47,11 +63,17 @@ export default function MiniSelector({
           <>
             <div className={MiniSelectorStatusTogglesWrapperStyle}>
               <Icon icon="ACTIVE" />
-              <ToggleButton isOn />
+              <ToggleButton
+                isOn={isActive}
+                onClick={() => (isActive ? setIsActive(false) : setIsActive(true))}
+              />
             </div>
             <div className={MiniSelectorStatusTogglesWrapperStyle}>
               <Icon icon="ARCHIVE" />
-              <ToggleButton isOn />
+              <ToggleButton
+                isOn={isArchive}
+                onClick={() => (isArchive ? setIsArchive(false) : setIsArchive(true))}
+              />
             </div>
           </>
         )}
@@ -69,8 +91,9 @@ export default function MiniSelector({
             page: 1,
             perPage: 10,
             filterBy: {
-              ...filterBy,
               query: searchText,
+              ...filterBy,
+              ...filterByStatus(isActive, isArchive),
             },
           }}
           fetchPolicy="network-only"
