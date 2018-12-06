@@ -18,7 +18,7 @@ type Props = {
 
 type State = {
   viewType: string,
-  filter: {
+  filterBy: {
     query: string,
     archived: boolean,
   },
@@ -33,7 +33,7 @@ type State = {
 class OrderModule extends React.Component<Props, State> {
   state = {
     viewType: 'grid',
-    filter: {
+    filterBy: {
       query: '',
       archived: false,
     },
@@ -46,12 +46,13 @@ class OrderModule extends React.Component<Props, State> {
   };
 
   onChangeFilter = (newValue: any) => {
-    this.setState(prevState => ({ ...prevState, ...newValue }));
+    const { filter, sort } = newValue;
+    this.setState(prevState => ({ ...prevState, sort, filterBy: filter }));
   };
 
   render() {
     const { intl } = this.props;
-    const { filter, sort } = this.state;
+    const { filterBy, sort, page, perPage } = this.state;
 
     const sortFields = [
       { title: intl.formatMessage(messages.poSort), value: 'poNo' },
@@ -69,17 +70,17 @@ class OrderModule extends React.Component<Props, State> {
                 <FilterToolBar
                   icon="ORDER"
                   sortFields={sortFields}
-                  filtersAndSort={this.state}
+                  filtersAndSort={{ page, perPage, sort, filter: filterBy }}
                   onChange={this.onChangeFilter}
                 />
                 <ExportButton
                   type="Orders"
                   exportQuery={ordersExportQuery}
                   variables={{
+                    filterBy,
                     sortBy: {
                       [sort.field]: sort.direction,
                     },
-                    filterBy: filter,
                   }}
                 />
                 <Link to="new">

@@ -127,9 +127,13 @@ function reducer(state, action) {
 function AdvanceFilter() {
   const filterButtonRef = useRef(null);
   const [filterIsApplied] = useState(false);
-  const [isDirty] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const isDirty =
+    state.activeFilters.batch.length > 0 ||
+    state.activeFilters.item.length > 0 ||
+    state.activeFilters.order.length > 0 ||
+    state.activeFilters.shipment.length > 0;
   return (
     <UIConsumer>
       {uiState => (
@@ -145,88 +149,90 @@ function AdvanceFilter() {
                 {filterIsApplied && <div className={FilterToggleBadgeStyle} />}
                 <Icon icon="FILTER" />
               </button>
-              <OutsideClickHandler
-                onOutsideClick={() => toggleFilter(false)}
-                ignoreClick={false}
-                ignoreElements={
-                  filterButtonRef && filterButtonRef.current ? [filterButtonRef.current] : []
-                }
-              >
-                <div
-                  className={AdvancedFilterBodyWrapperStyle({
-                    isOpen,
-                    isSideBarExpanded: uiState.isSideBarExpanded,
-                  })}
+              {isOpen && (
+                <OutsideClickHandler
+                  onOutsideClick={() => toggleFilter(false)}
+                  ignoreClick={false}
+                  ignoreElements={
+                    filterButtonRef && filterButtonRef.current ? [filterButtonRef.current] : []
+                  }
                 >
-                  <div className={AdvancedFilterNavbarStyle}>
-                    <Label>
-                      <FormattedMessage
-                        id="modules.RelationMaps.filter.filterBy"
-                        defaultMessage="FILTER BY"
+                  <div
+                    className={AdvancedFilterBodyWrapperStyle({
+                      isOpen,
+                      isSideBarExpanded: uiState.isSideBarExpanded,
+                    })}
+                  >
+                    <div className={AdvancedFilterNavbarStyle}>
+                      <Label>
+                        <FormattedMessage
+                          id="modules.RelationMaps.filter.filterBy"
+                          defaultMessage="FILTER BY"
+                        />
+                      </Label>
+                      {isDirty && (
+                        <div className={AdvancedFilterNavbarButtonsWrapperStyle}>
+                          <CancelButton
+                            label={
+                              <FormattedMessage
+                                id="modules.RelationMaps.filter.reset"
+                                defaultMessage="RESET"
+                              />
+                            }
+                          />
+                          <SaveButton
+                            label={
+                              <FormattedMessage
+                                id="modules.RelationMaps.filter.apply"
+                                defaultMessage="APPLY"
+                              />
+                            }
+                          />
+                        </div>
+                      )}
+                    </div>
+                    <div className={AdvancedFilterBodyStyle}>
+                      <EntityTypesMenu
+                        selectedEntityType={state.selectedEntityType}
+                        activeFilters={state.activeFilters}
+                        changeSelectedEntityType={entityType =>
+                          dispatch({ type: 'CHANGE_ENTITY', entityType })
+                        }
                       />
-                    </Label>
-                    {isDirty && (
-                      <div className={AdvancedFilterNavbarButtonsWrapperStyle}>
-                        <CancelButton
-                          label={
-                            <FormattedMessage
-                              id="modules.RelationMaps.filter.reset"
-                              defaultMessage="RESET"
-                            />
-                          }
-                        />
-                        <SaveButton
-                          label={
-                            <FormattedMessage
-                              id="modules.RelationMaps.filter.apply"
-                              defaultMessage="APPLY"
-                            />
-                          }
-                        />
-                      </div>
-                    )}
+                      <FilterMenu
+                        selectedEntityType={state.selectedEntityType}
+                        activeFilters={state.activeFilters}
+                        filterToggles={state.filterToggles}
+                        selectedFilterItem={state.selectedFilterItem}
+                        toggleActiveFilter={(entityType, filter) =>
+                          dispatch({
+                            type: 'TOGGLE_ACTIVE_FILTER',
+                            entityType,
+                            filter,
+                          })
+                        }
+                        toggleFilterToggle={(entityType, toggle) =>
+                          dispatch({
+                            type: 'TOGGLE_FILTER_TOGGLE',
+                            entityType,
+                            toggle,
+                          })
+                        }
+                        changeSelectedFilterItem={selectedFilterItem =>
+                          dispatch({
+                            type: 'FILTER_ITEM',
+                            selectedFilterItem,
+                          })
+                        }
+                      />
+                      <FilterInputArea
+                        selectedEntityType={state.selectedEntityType}
+                        selectedFilterItem={state.selectedFilterItem}
+                      />
+                    </div>
                   </div>
-                  <div className={AdvancedFilterBodyStyle}>
-                    <EntityTypesMenu
-                      selectedEntityType={state.selectedEntityType}
-                      activeFilters={state.activeFilters}
-                      changeSelectedEntityType={entityType =>
-                        dispatch({ type: 'CHANGE_ENTITY', entityType })
-                      }
-                    />
-                    <FilterMenu
-                      selectedEntityType={state.selectedEntityType}
-                      activeFilters={state.activeFilters}
-                      filterToggles={state.filterToggles}
-                      selectedFilterItem={state.selectedFilterItem}
-                      toggleActiveFilter={(entityType, filter) =>
-                        dispatch({
-                          type: 'TOGGLE_ACTIVE_FILTER',
-                          entityType,
-                          filter,
-                        })
-                      }
-                      toggleFilterToggle={(entityType, toggle) =>
-                        dispatch({
-                          type: 'TOGGLE_FILTER_TOGGLE',
-                          entityType,
-                          toggle,
-                        })
-                      }
-                      changeSelectedFilterItem={selectedFilterItem =>
-                        dispatch({
-                          type: 'FILTER_ITEM',
-                          selectedFilterItem,
-                        })
-                      }
-                    />
-                    <FilterInputArea
-                      selectedEntityType={state.selectedEntityType}
-                      selectedFilterItem={state.selectedFilterItem}
-                    />
-                  </div>
-                </div>
-              </OutsideClickHandler>
+                </OutsideClickHandler>
+              )}
             </div>
           )}
         </BooleanValue>

@@ -163,14 +163,24 @@ const ActionSubscribe = ({ filter }: Props) => (
                     <>
                       <TabItem
                         className={TabItemStyled}
-                        label="CLONE"
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMaps.label.clone"
+                            defaultMessage="CLONE"
+                          />
+                        }
                         icon="CLONE"
                         active={currentAction === 'clone'}
                         onClick={() => setAction(currentAction !== 'clone' ? 'clone' : null)}
                       />
                       <TabItem
                         className={TabItemStyled}
-                        label="SPLIT"
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMaps.label.split"
+                            defaultMessage="SPLIT"
+                          />
+                        }
                         icon="SPLIT"
                         disabled={disabledSplit}
                         active={currentAction === 'split'}
@@ -221,7 +231,12 @@ const ActionSubscribe = ({ filter }: Props) => (
                           <>
                             <BaseButton
                               icon="EDIT"
-                              label="EDIT"
+                              label={
+                                <FormattedMessage
+                                  id="modules.RelationMaps.label.edit"
+                                  defaultMessage="EDIT"
+                                />
+                              }
                               backgroundColor="TEAL"
                               hoverBackgroundColor="TEAL_DARK"
                               onClick={() => slideToggle(true)}

@@ -38,6 +38,8 @@ export default function MiniSelector({
   filterBy,
   hideToggles,
 }: Props) {
+  const [searchText, setSearchText] = React.useState('');
+
   return (
     <div className={MiniSelectorWrapperStyle}>
       <div className={MiniSelectorSearchWrapperStyle}>
@@ -53,7 +55,12 @@ export default function MiniSelector({
             </div>
           </>
         )}
-        <SearchInput name="hardcoded" value="" onChange={() => {}} onClear={() => {}} />
+        <SearchInput
+          name="query"
+          value={searchText}
+          onChange={setSearchText}
+          onClear={() => setSearchText('')}
+        />
       </div>
       <div className={MiniSelectorBodyWrapperStyle}>
         <Query
@@ -61,7 +68,10 @@ export default function MiniSelector({
           variables={{
             page: 1,
             perPage: 10,
-            filterBy,
+            filterBy: {
+              ...filterBy,
+              query: searchText,
+            },
           }}
           fetchPolicy="network-only"
         >
