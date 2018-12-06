@@ -45,6 +45,14 @@ const filterByStatus = (isActive: boolean, isArchive: boolean) => {
   };
 };
 
+function usePrevious(value) {
+  const ref = React.useRef();
+  React.useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 export default function MiniSelector({
   renderItem,
   entityType,
@@ -52,10 +60,18 @@ export default function MiniSelector({
   filterBy,
   hideToggles,
 }: Props) {
-  const [searchText, setSearchText] = React.useState('');
+  const [searchText, setSearchText] = React.useState(filterBy.query);
   const [isActive, setIsActive] = React.useState(true);
   const [isArchive, setIsArchive] = React.useState(true);
-
+  const prevEntity = usePrevious(entityType);
+  React.useEffect(() => {
+    // reset state when change the entity
+    if (prevEntity && prevEntity !== entityType) {
+      setSearchText('');
+      setIsActive(true);
+      setIsArchive(true);
+    }
+  });
   return (
     <div className={MiniSelectorWrapperStyle}>
       <div className={MiniSelectorSearchWrapperStyle}>
@@ -91,9 +107,9 @@ export default function MiniSelector({
             page: 1,
             perPage: 10,
             filterBy: {
-              query: searchText,
               ...filterBy,
-              ...filterByStatus(isActive, isArchive),
+              query: searchText,
+              ...(!hideToggles ? filterByStatus(isActive, isArchive) : {}),
             },
           }}
           fetchPolicy="network-only"
