@@ -8,7 +8,6 @@ import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
 import { range, set, cloneDeep, isEqual } from 'lodash';
-import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
@@ -517,19 +516,27 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                               orderItems.map(orderItem =>
                                 Object.keys(orderItem.relation.batch).length === 0 ? (
                                   <TableItemForCustomFields
-                                    key={uuid()}
+                                    key={`order.${order.data.id}.${counter + 1}.duplication.${
+                                      orderItem.data.id
+                                    }`}
                                     cell={`orders.${order.data.id}`}
                                     fields={orderCustomFieldsFilter}
                                     values={editData.orders[orderId]}
                                     validator={orderValidator}
                                   />
                                 ) : (
-                                  <React.Fragment key={uuid()}>
+                                  <React.Fragment
+                                    key={`order.${order.data.id}.${counter + 1}.duplication.${
+                                      orderItem.data.id
+                                    }`}
+                                  >
                                     {Object.keys(orderItem.relation.batch)
                                       .filter(batchId => batchIds.includes(batchId))
-                                      .map(() => (
+                                      .map(batchId => (
                                         <TableItemForCustomFields
-                                          key={uuid()}
+                                          key={`order.${order.data.id}.${counter + 1}.duplication.${
+                                            orderItem.data.id
+                                          }.batch.${batchId}`}
                                           cell={`orders.${order.data.id}`}
                                           fields={orderCustomFieldsFilter}
                                           values={editData.orders[orderId]}
@@ -541,9 +548,11 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                     ).length < totalLines &&
                                       Object.keys(orderItem.relation.batch)
                                         .filter(batchId => !batchIds.includes(batchId))
-                                        .map(() => (
+                                        .map(batchId => (
                                           <TableEmptyItem
-                                            key={uuid()}
+                                            key={`order.${counter + 1}.hidden.${
+                                              orderItem.data.id
+                                            }.batch.${batchId}`}
                                             fields={orderCustomFieldsFilter}
                                           />
                                         ))}
@@ -602,19 +611,21 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                               orderItems.map(orderItem =>
                                 Object.keys(orderItem.relation.batch).length === 0 ? (
                                   <TableItemForCustomFields
-                                    key={uuid()}
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
                                     cell={`orderItems.${orderItem.data.id}`}
                                     fields={orderItemCustomFieldsFilter}
                                     values={editData.orderItems[orderItem.data.id]}
                                     validator={orderValidator}
                                   />
                                 ) : (
-                                  <React.Fragment key={uuid()}>
+                                  <React.Fragment
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                                  >
                                     {Object.keys(orderItem.relation.batch)
                                       .filter(batchId => batchIds.includes(batchId))
-                                      .map(() => (
+                                      .map(batchId => (
                                         <TableItemForCustomFields
-                                          key={uuid()}
+                                          key={`orderItem.${counter + 1}.duplication.${batchId}`}
                                           cell={`orders.${order.data.id}`}
                                           fields={orderItemCustomFieldsFilter}
                                           values={editData.orderItems[orderItem.data.id]}
@@ -626,9 +637,9 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                     ).length < totalLines &&
                                       Object.keys(orderItem.relation.batch)
                                         .filter(batchId => !batchIds.includes(batchId))
-                                        .map(() => (
+                                        .map(batchId => (
                                           <TableEmptyItem
-                                            key={uuid()}
+                                            key={`orderItem.${counter + 1}.hidden.${batchId}`}
                                             fields={orderItemCustomFieldsFilter}
                                           />
                                         ))}
