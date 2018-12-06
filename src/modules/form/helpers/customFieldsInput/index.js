@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault, contains } from 'utils/fp';
+import { list2Map } from 'utils/customFields';
 import FormattedNumber from 'components/FormattedNumber';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -24,14 +25,6 @@ type Props = {
     fieldDefinitions: Array<Object>,
   },
   setFieldValue: Function,
-};
-
-const list2Map = (list: Array<Object>): Map<string, Object> => {
-  const map = new Map();
-  list.forEach(({ fieldDefinition, ...rest }) => {
-    map.set(fieldDefinition.id, { fieldDefinition, ...rest });
-  });
-  return map;
 };
 
 const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: Props) => (
@@ -78,10 +71,7 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
                     }
                     if (loading) return <LoadingIcon />;
                     const fieldDefinitions = getByPathWithDefault([], 'fieldDefinitions', data);
-                    const {
-                      // fieldDefinitions: originalFieldDefinitions,
-                      fieldValues: originalFieldValues,
-                    } = customFields;
+                    const { fieldValues: originalFieldValues } = customFields;
 
                     const fieldValueMap = list2Map(originalFieldValues);
                     const fieldValues = fieldDefinitions.map(fieldDefinition =>
@@ -104,17 +94,21 @@ const customFieldsInputFactory = ({ entityType, customFields, setFieldValue }: P
                               fieldDefinitions={fieldDefinitions}
                               onCancel={() => slideToggle(false)}
                               onSave={() => {
+                                if (values.mask) {
+                                  setFieldValue('customFields', {
+                                    mask: values.mask,
+                                    fieldDefinitions: values.fieldDefinitions,
+                                    fieldValues: values.fieldValues.filter(fieldValue =>
+                                      contains(
+                                        fieldValue.fieldDefinition,
+                                        values.mask.fieldDefinitions
+                                      )
+                                    ),
+                                  });
+                                } else {
+                                  setFieldValue('customFields', values);
+                                }
                                 slideToggle(false);
-                                setFieldValue('customFields', {
-                                  mask: values.mask,
-                                  fieldDefinitions: values.fieldDefinitions,
-                                  fieldValues: values.fieldValues.filter(fieldValue =>
-                                    contains(
-                                      fieldValue.fieldDefinition,
-                                      values.mask.fieldDefinitions
-                                    )
-                                  ),
-                                });
                               }}
                               onFormReady={() => {
                                 initDetailValues({

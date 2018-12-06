@@ -65,6 +65,7 @@ export default function EntityTypesMenu({
             className={EntityTypeMenuItemStyle(isSelected)}
             onClick={() => changeSelectedEntityType(name)}
             type="button"
+            key={name}
           >
             <div className={EntityTypeLayoutStyle}>
               <div className={EntityTypeIconStyle(isSelected)}>

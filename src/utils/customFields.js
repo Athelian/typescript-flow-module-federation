@@ -10,4 +10,10 @@ export const prepareCustomFieldsData = (customFields: Object) =>
       }
     : null;
 
-export default prepareCustomFieldsData;
+export const list2Map = (list: Array<Object>): Map<string, Object> => {
+  const map = new Map();
+  list.forEach(({ fieldDefinition, ...rest }, index) => {
+    map.set(fieldDefinition.id, { fieldDefinition, ...rest, index });
+  });
+  return map;
+};
