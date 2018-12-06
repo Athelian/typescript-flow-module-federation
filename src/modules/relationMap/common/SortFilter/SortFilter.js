@@ -7,23 +7,16 @@ import { GroupFilterStyle, SortWrapperStyle, GroupFilterWrapperStyle } from './s
 
 type OptionalProps = {
   className: string,
-  sortInputs: Array<Object>,
 };
 
 type Props = OptionalProps & {
+  sortInputs: Array<Object>,
   filter: Object,
   sort: {
     field: string,
     direction: string,
   },
   onChange: Function,
-};
-
-const defaultProps = {
-  sortInputs: [
-    { title: 'Updated At', value: 'updatedAt' },
-    { title: 'Created At', value: 'createdAt' },
-  ],
 };
 
 const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) => (
@@ -62,6 +55,5 @@ const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) =>
     <ToggleTag />
   </div>
 );
-SortFilter.defaultProps = defaultProps;
 
 export default SortFilter;

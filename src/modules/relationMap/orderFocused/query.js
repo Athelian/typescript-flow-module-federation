@@ -8,8 +8,10 @@ import {
   imageFragment,
   partnerNameFragment,
   partnerCardFragment,
-  orderFormFragment,
   orderCardFragment,
+  orderBasicFragment,
+  orderFragmentForRM,
+  shipmentFormFragment,
   userAvatarFragment,
   documentFragment,
   batchFormFragment,
@@ -131,7 +133,7 @@ export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...orderFormFragment
+        ...orderFragmentForRM
         orderItems {
           ...orderItemRmFragment
         }
@@ -143,6 +145,9 @@ export const orderListQuery = gql`
       totalPage
     }
   }
+  ${orderBasicFragment}
+  ${orderFragmentForRM}
+  ${shipmentFormFragment}
   ${userAvatarFragment}
   ${sizeFragment}
   ${metricFragment}
@@ -154,7 +159,6 @@ export const orderListQuery = gql`
   ${partnerNameFragment}
   ${partnerCardFragment}
   ${documentFragment}
-  ${orderFormFragment}
   ${orderCardFragment}
   ${orderItemRmFragment}
   ${shipmentRMFragment}
