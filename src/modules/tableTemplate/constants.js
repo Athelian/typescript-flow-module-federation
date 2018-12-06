@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
-import { FormattedMessage } from 'react-intl';
 
 import {
   metrics as weightMetrics,
@@ -20,7 +20,7 @@ import {
 
 export const orderColumns = [
   {
-    group: 'ORDER',
+    group: <FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />,
     columns: [
       <FormattedMessage {...orderMessages.PO} />,
       <FormattedMessage {...orderMessages.PI} />,
@@ -37,7 +37,7 @@ export const orderColumns = [
 
 export const orderItemColumns = [
   {
-    group: 'ORDER ITEM',
+    group: <FormattedMessage id="components.BatchItem.orderItem" defaultMessage="ORDER ITEM" />,
     columns: [
       <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
       <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
@@ -55,7 +55,7 @@ export const orderItemColumns = [
 
 export const batchColumns = [
   {
-    group: 'BATCH',
+    group: <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />,
     columns: [
       <FormattedMessage {...batchMessages.batchNo} />,
       <FormattedMessage {...batchMessages.quantity} />,
@@ -66,7 +66,7 @@ export const batchColumns = [
     ],
   },
   {
-    group: 'PACKING',
+    group: <FormattedMessage id="modules.Batches.packing" defaultMessage="PACKING" />,
     columns: [
       <FormattedMessage {...batchMessages.packageName} />,
       <FormattedMessage {...batchMessages.packageQuantity} />,
@@ -81,7 +81,7 @@ export const batchColumns = [
 
 export const shipmentColumns = [
   {
-    group: 'SHIPMENT',
+    group: <FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />,
     columns: [
       <FormattedMessage {...shipmentMessages.shipmentId} />,
       <FormattedMessage {...shipmentMessages.blNo} />,
@@ -99,7 +99,7 @@ export const shipmentColumns = [
     ],
   },
   {
-    group: 'TIMELINE',
+    group: <FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />,
     columns: [
       <FormattedMessage {...shipmentMessages.cargoReady} />,
       <FormattedMessage

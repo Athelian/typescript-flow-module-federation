@@ -11,7 +11,7 @@ type Props = {
   templateColumns: Array<string>,
   onToggle: string => void,
   info: Array<{
-    group: string,
+    group: string | React.Node,
     columns: Array<string | React.Node>,
   }>,
 };
@@ -30,7 +30,7 @@ function isHiddenColumn({
   entity: string,
   index: number,
   info: Array<{
-    group: string,
+    group: string | React.Node,
     columns: Array<string | React.Node>,
   }>,
   position: number,
@@ -70,7 +70,7 @@ function shouldShowGroup({
   entity: string,
   index: number,
   info: Array<{
-    group: string,
+    group: string | React.Node,
     columns: Array<string | React.Node>,
   }>,
   templateColumns: Array<string>,
@@ -109,7 +109,7 @@ export default function TableHeader({
           info,
           templateColumns,
         }) ? (
-          <div key={group}>
+          <div key={uuid()}>
             <h3 className={TitleStyle}> {group} </h3>
             <div className={WrapperHeaderStyle}>
               {columns.map((column, position) =>
