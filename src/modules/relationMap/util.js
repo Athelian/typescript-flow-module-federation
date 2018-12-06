@@ -1,6 +1,5 @@
 // @flow
 import { getByPathWithDefault } from 'utils/fp';
-import { calculateVolume } from 'modules/batch/form/container';
 
 const getBatchLinkType = (itemNo, numberOfItem, haveNewItem) => {
   let linkType = 'LINK-0';
@@ -219,30 +218,8 @@ export const formatOrderFromShipment = (shipments: Array<Object>) => {
 };
 
 export const calculateVolumeWeight = (batch: Object) => {
-  const { packageSize = {}, packageVolume = {}, packageQuantity = 0 } = batch;
-  const volume = packageVolume
-    ? packageVolume.value
-    : calculateVolume(
-        packageVolume ? packageVolume.metric : 'm³',
-        packageSize
-          ? packageSize.height
-          : {
-              metric: 'm³',
-              value: 0,
-            },
-        packageSize
-          ? packageSize.width
-          : {
-              metric: 'm³',
-              value: 0,
-            },
-        packageSize
-          ? packageSize.length
-          : {
-              metric: 'm³',
-              value: 0,
-            }
-      );
+  const { packageVolume = {}, packageQuantity = 0 } = batch;
+  const volume = packageVolume && packageVolume.value;
   return packageQuantity * volume;
 };
 

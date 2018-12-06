@@ -5,7 +5,7 @@ import { fontSizes, colors, borderRadiuses } from 'styles/common';
 
 export const TagsWrapperStyle = css`
   position: absolute;
-  bottom: -30px;
+  bottom: -25px;
   height: initial;
   display: flex;
   flex-direction: row;
@@ -21,7 +21,7 @@ export const TagLabelStyle = (color: string) => css`
   ${fontSizes.SMALL};
   font-weight: lighter;
   padding: 2px 3px;
-  margin: 2px;
+  margin: 0 2px;
 `;
 
 export const MoreTags: string = css`
