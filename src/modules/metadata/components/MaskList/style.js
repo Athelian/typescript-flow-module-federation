@@ -2,12 +2,12 @@
 import { css } from 'react-emotion';
 import { shadows, scrollbars, transitions } from 'styles/common';
 
-export const CustomFieldsFormHeaderStyle: string = css`
+export const MaskListHeaderStyle: string = css`
   padding: 0 20px;
   ${shadows.HEADER};
 `;
 
-export const CustomFieldsEditFormWrapperStyle: string = css`
+export const MaskListWrapperStyle: string = css`
   height: calc(100vh - 100px);
   min-width: min-content;
   overflow-x: hidden;
@@ -16,5 +16,3 @@ export const CustomFieldsEditFormWrapperStyle: string = css`
   align-items: center;
   ${transitions.EXPAND};
 `;
-
-export default CustomFieldsEditFormWrapperStyle;

@@ -13,7 +13,7 @@ import MaskFormWrapper from 'modules/metadata/components/MaskFormWrapper';
 import { masksQuery } from 'modules/metadata/query';
 import { MaskCard } from 'components/Cards';
 
-import { CustomFieldsEditFormWrapperStyle, CustomFieldsFormHeaderStyle } from './style';
+import { MaskListHeaderStyle, MaskListWrapperStyle } from './style';
 
 type Props = {
   entityType: string,
@@ -40,7 +40,7 @@ const MaskList = ({ entityType }: Props) => (
 
       return (
         <BooleanValue>
-          <div className={CustomFieldsFormHeaderStyle}>
+          <div className={MaskListHeaderStyle}>
             <FormHeader
               name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
             >
@@ -70,47 +70,49 @@ const MaskList = ({ entityType }: Props) => (
               </BooleanValue>
             </FormHeader>
           </div>
-          <BooleanValue className={CustomFieldsEditFormWrapperStyle}>
-            <MaskGridView
-              entityType={entityType}
-              items={getByPathWithDefault([], 'masks.nodes', data)}
-              onLoadMore={() =>
-                loadMore({ fetchMore, data }, { filter: { entityTypes: entityType } }, 'masks')
-              }
-              hasMore={hasMore}
-              isLoading={loading}
-              renderItem={mask => (
-                <BooleanValue key={mask.id}>
-                  {({ value: isOpen, set: toggle }) => (
-                    <>
-                      <MaskCard
-                        mask={mask}
-                        onClick={() => {
-                          toggle(true);
-                        }}
-                      />
-                      <SlideView
-                        isOpen={isOpen}
-                        onRequestClose={() => toggle(false)}
-                        options={{ width: '1030px' }}
-                      >
-                        {isOpen && (
-                          <MaskFormWrapper
-                            entityType={entityType}
-                            id={mask.id}
-                            onSave={() => {
-                              toggle(false);
-                              refetch();
-                            }}
-                            onCancel={() => toggle(false)}
-                          />
-                        )}
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
-              )}
-            />
+          <BooleanValue>
+            <div className={MaskListWrapperStyle}>
+              <MaskGridView
+                entityType={entityType}
+                items={getByPathWithDefault([], 'masks.nodes', data)}
+                onLoadMore={() =>
+                  loadMore({ fetchMore, data }, { filter: { entityTypes: entityType } }, 'masks')
+                }
+                hasMore={hasMore}
+                isLoading={loading}
+                renderItem={mask => (
+                  <BooleanValue key={mask.id}>
+                    {({ value: isOpen, set: toggle }) => (
+                      <>
+                        <MaskCard
+                          mask={mask}
+                          onClick={() => {
+                            toggle(true);
+                          }}
+                        />
+                        <SlideView
+                          isOpen={isOpen}
+                          onRequestClose={() => toggle(false)}
+                          options={{ width: '1030px' }}
+                        >
+                          {isOpen && (
+                            <MaskFormWrapper
+                              entityType={entityType}
+                              id={mask.id}
+                              onSave={() => {
+                                toggle(false);
+                                refetch();
+                              }}
+                              onCancel={() => toggle(false)}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                )}
+              />
+            </div>
           </BooleanValue>
         </BooleanValue>
       );
