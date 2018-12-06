@@ -1,6 +1,5 @@
 // @flow
 import { getByPathWithDefault } from 'utils/fp';
-// import { calculateVolume } from 'modules/batch/form/container';
 
 const getBatchLinkType = (itemNo, numberOfItem, haveNewItem) => {
   let linkType = 'LINK-0';
