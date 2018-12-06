@@ -5,7 +5,6 @@ import type { IntlShape } from 'react-intl';
 import { createObjectValue } from 'react-values';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
-import FormattedNumber from 'components/FormattedNumber';
 import messages from 'modules/relationMap/messages';
 import { ToggleButtonStyle } from 'modules/relationMap/common/ToggleTag/style';
 import Badge from './Badge';
@@ -45,7 +44,7 @@ const SummaryBadge = ({
         color={orderSelected ? 'ORDER_DARK' : 'ORDER'}
         hoverColor="ORDER_DARK"
         label={intl.formatMessage(messages.ordersLabel)}
-        no={<FormattedNumber value={sumOrders} />}
+        no={sumOrders}
         onClick={() => {
           if (!orderSelected && selectAll) {
             selectAll('order');
@@ -60,7 +59,7 @@ const SummaryBadge = ({
         color={orderItemSelected ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'}
         hoverColor="ORDER_ITEM_DARK"
         label={intl.formatMessage(messages.itemsLabel)}
-        no={<FormattedNumber value={sumOrderItems} />}
+        no={sumOrderItems}
         onClick={() => {
           if (!orderItemSelected && selectAll) {
             selectAll('orderItem');
@@ -76,7 +75,7 @@ const SummaryBadge = ({
         color={batchSelected ? 'BATCH_DARK' : 'BATCH'}
         hoverColor="BATCH_DARK"
         label={intl.formatMessage(messages.batchesLabel)}
-        no={<FormattedNumber value={sumBatches} />}
+        no={sumBatches}
         onClick={() => {
           if (!batchSelected && selectAll) {
             selectAll('batch');
@@ -94,7 +93,7 @@ const SummaryBadge = ({
               color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
               hoverColor="SHIPMENT_DARK"
               label={intl.formatMessage(messages.shipmentsLabel)}
-              no={<FormattedNumber value={sumShipments + total} />}
+              no={sumShipments + total}
               onClick={() => {
                 if (!shipmentSelected && selectAll) {
                   selectAll('shipment');

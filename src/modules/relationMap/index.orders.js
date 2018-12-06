@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { Query } from 'react-apollo';
 import { isEmpty } from 'utils/fp';
-// import { formatOrderData } from 'modules/relationMap/util';
 import { ActionContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
 import LoadingIcon from 'components/LoadingIcon';

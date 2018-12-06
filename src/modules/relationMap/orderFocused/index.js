@@ -63,7 +63,6 @@ const OrderFocused = ({
                 ? collapsed[item.id]
                 : true;
               const toggle = () => set(item.id, !isCollapsed);
-              // const relations = generateRelation(item, { isCollapsed });
               const relations = isCollapsed ? collapsedRelation[item.id] : expandRelation[item.id];
               return relations.map((relation, relationIndex) => {
                 const key = `relation-${relationIndex}`;
