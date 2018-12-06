@@ -8,6 +8,7 @@ import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
 import { range, set, cloneDeep, isEqual } from 'lodash';
+import { uuid } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
@@ -505,12 +506,51 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             )}
                           </div>
                           <div>
-                            <TableItemForCustomFields
-                              cell={`orders.${order.data.id}`}
-                              fields={orderCustomFieldsFilter}
-                              values={editData.orders[orderId]}
-                              validator={orderValidator}
-                            />
+                            {orderItems.length === 0 ? (
+                              <TableItemForCustomFields
+                                cell={`orders.${order.data.id}`}
+                                fields={orderCustomFieldsFilter}
+                                values={editData.orders[orderId]}
+                                validator={orderValidator}
+                              />
+                            ) : (
+                              orderItems.map(orderItem =>
+                                Object.keys(orderItem.relation.batch).length === 0 ? (
+                                  <TableItemForCustomFields
+                                    key={uuid()}
+                                    cell={`orders.${order.data.id}`}
+                                    fields={orderCustomFieldsFilter}
+                                    values={editData.orders[orderId]}
+                                    validator={orderValidator}
+                                  />
+                                ) : (
+                                  <React.Fragment key={uuid()}>
+                                    {Object.keys(orderItem.relation.batch)
+                                      .filter(batchId => batchIds.includes(batchId))
+                                      .map(() => (
+                                        <TableItemForCustomFields
+                                          key={uuid()}
+                                          cell={`orders.${order.data.id}`}
+                                          fields={orderCustomFieldsFilter}
+                                          values={editData.orders[orderId]}
+                                          validator={orderValidator}
+                                        />
+                                      ))}
+                                    {Object.keys(orderItem.relation.batch).filter(
+                                      batchId => !batchIds.includes(batchId)
+                                    ).length < totalLines &&
+                                      Object.keys(orderItem.relation.batch)
+                                        .filter(batchId => !batchIds.includes(batchId))
+                                        .map(() => (
+                                          <TableEmptyItem
+                                            key={uuid()}
+                                            fields={orderCustomFieldsFilter}
+                                          />
+                                        ))}
+                                  </React.Fragment>
+                                )
+                              )
+                            )}
                           </div>
 
                           <div>
@@ -559,12 +599,42 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                           </div>
                           <div>
                             {orderItems.length ? (
-                              <TableItemForCustomFields
-                                cell={`orders.${order.data.id}`}
-                                fields={orderItemCustomFieldsFilter}
-                                values={editData.orders[orderId]}
-                                validator={orderValidator}
-                              />
+                              orderItems.map(orderItem =>
+                                Object.keys(orderItem.relation.batch).length === 0 ? (
+                                  <TableItemForCustomFields
+                                    key={uuid()}
+                                    cell={`orderItems.${orderItem.data.id}`}
+                                    fields={orderItemCustomFieldsFilter}
+                                    values={editData.orderItems[orderItem.data.id]}
+                                    validator={orderValidator}
+                                  />
+                                ) : (
+                                  <React.Fragment key={uuid()}>
+                                    {Object.keys(orderItem.relation.batch)
+                                      .filter(batchId => batchIds.includes(batchId))
+                                      .map(() => (
+                                        <TableItemForCustomFields
+                                          key={uuid()}
+                                          cell={`orders.${order.data.id}`}
+                                          fields={orderItemCustomFieldsFilter}
+                                          values={editData.orderItems[orderItem.data.id]}
+                                          validator={orderValidator}
+                                        />
+                                      ))}
+                                    {Object.keys(orderItem.relation.batch).filter(
+                                      batchId => !batchIds.includes(batchId)
+                                    ).length < totalLines &&
+                                      Object.keys(orderItem.relation.batch)
+                                        .filter(batchId => !batchIds.includes(batchId))
+                                        .map(() => (
+                                          <TableEmptyItem
+                                            key={uuid()}
+                                            fields={orderItemCustomFieldsFilter}
+                                          />
+                                        ))}
+                                  </React.Fragment>
+                                )
+                              )
                             ) : (
                               <TableEmptyItem fields={orderItemCustomFieldsFilter} />
                             )}
