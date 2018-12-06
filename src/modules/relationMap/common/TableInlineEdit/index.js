@@ -1,14 +1,12 @@
 // @flow
 // $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { ApolloConsumer, Query } from 'react-apollo';
-import { navigate } from '@reach/router';
+import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
 import { setConfig } from 'react-hot-loader';
 import { range, set, cloneDeep, isEqual } from 'lodash';
-import { getByPathWithDefault } from 'utils/fp';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
 import Layout from 'components/Layout';
@@ -23,7 +21,7 @@ import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
 import SelectTemplate from 'modules/tableTemplate/common/SelectTemplate';
-import { allFieldDefinitionsQuery } from 'modules/tableTemplate/form/components/SelectFieldsSection/query';
+
 import {
   orderColumnFields,
   orderItemColumnFields,
@@ -34,6 +32,7 @@ import {
   batchColumns,
   shipmentColumns,
 } from 'modules/tableTemplate/constants';
+import QueryForAllCustomFields from 'modules/tableTemplate/common/QueryForAllCustomFields';
 import TableRow from './components/TableRow';
 import LineNumber from './components/LineNumber';
 import TableHeader from './components/TableHeader';
@@ -128,6 +127,25 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     shipments: {},
   });
 
+  const headerRef = useRef();
+  const sidebarRef = useRef();
+  const bodyRef = useRef();
+
+  const handleScroll = () => {
+    if (bodyRef.current) {
+      if (headerRef.current) headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
+      if (sidebarRef.current) sidebarRef.current.scrollTop = bodyRef.current.scrollTop;
+    }
+  };
+
+  useEffect(() => {
+    if (bodyRef.current) bodyRef.current.addEventListener('scroll', handleScroll);
+
+    return () => {
+      if (bodyRef.current) bodyRef.current.removeEventListener('scroll', handleScroll);
+    };
+  });
+
   const onToggle = useCallback(
     selectedColumn => {
       if (hideColumns && selectedColumn) {
@@ -178,24 +196,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     return () => {};
   });
 
-  const headerRef = useRef();
-  const sidebarRef = useRef();
-  const bodyRef = useRef();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (bodyRef.current) {
-        if (headerRef.current) headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
-        if (sidebarRef.current) sidebarRef.current.scrollTop = bodyRef.current.scrollTop;
-      }
-    };
-    if (bodyRef.current) bodyRef.current.addEventListener('scroll', handleScroll);
-
-    return () => {
-      if (bodyRef.current) bodyRef.current.removeEventListener('scroll', handleScroll);
-    };
-  });
-
   const { sumShipments, sumOrders, sumOrderItems, sumBatches, ...mappingObjects } = formatOrderData(
     data
   );
@@ -238,22 +238,13 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     entity: 'SHIPMENT',
   });
   return (
-    <Query query={allFieldDefinitionsQuery} fetchPolicy="network-only">
-      {({ loading: customFieldLoading, error: customFieldError, data: customFieldData }) => {
-        if (customFieldError) {
-          if (customFieldError.message && customFieldError.message.includes('403')) {
-            navigate('/403');
-          }
-          return customFieldError.message;
-        }
-
-        if (customFieldLoading) return <LoadingIcon />;
-
-        const orderCustomFields = getByPathWithDefault([], 'order', customFieldData);
-        const orderItemCustomFields = getByPathWithDefault([], 'orderItem', customFieldData);
-        const batchCustomFields = getByPathWithDefault([], 'batch', customFieldData);
-        const shipmentCustomFields = getByPathWithDefault([], 'shipment', customFieldData);
-
+    <QueryForAllCustomFields
+      render={({
+        orderCustomFields,
+        orderItemCustomFields,
+        batchCustomFields,
+        shipmentCustomFields,
+      }) => {
         const orderCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           hideColumns,
@@ -854,6 +845,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
           </ApolloConsumer>
         );
       }}
-    </Query>
+    />
   );
 }
