@@ -25,7 +25,17 @@ export const cloneOrder = async (client: any, orders: Array<Object>, filter: Obj
     const orderItems = currentOrder.orderItems.map(orderItem => {
       const batches =
         orderItem.batches &&
-        orderItem.batches.map(batch => omit(['archived', 'updatedBy', 'updatedAt'], batch));
+        orderItem.batches.map(batch => {
+          const batchAdjustments = batch.batchAdjustments
+            ? batch.batchAdjustments.map(adjustment =>
+                omit(['sort', 'updatedBy', 'updatedAt', 'id'], adjustment)
+              )
+            : [];
+          return {
+            ...omit(['archived', 'updatedBy', 'updatedAt', 'batchedQuantity'], batch),
+            batchAdjustments,
+          };
+        });
       return Object.assign(orderItem, { batches });
     });
     const request = mutationRequest({
