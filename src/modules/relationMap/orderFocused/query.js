@@ -89,9 +89,6 @@ export const shipmentRMFragment = gql`
     }
     batches {
       ...batchCardFragment
-      packageSize {
-        ...sizeFragment
-      }
     }
   }
 `;
@@ -126,9 +123,6 @@ export const orderItemRmFragment = gql`
     }
     batches {
       ...batchCardFragment
-      packageSize {
-        ...sizeFragment
-      }
     }
   }
 `;
