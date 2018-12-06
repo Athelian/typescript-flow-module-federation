@@ -5,14 +5,13 @@ import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { Query } from 'react-apollo';
 import { isEmpty } from 'utils/fp';
-import { formatOrderData } from 'modules/relationMap/util';
 import { ActionContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
 import orderMessages from 'modules/order/messages';
 import LoadingIcon from 'components/LoadingIcon';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
-import { formatNodes } from './orderFocused/formatter';
+import { formatNodes, formatOrders as formatOrderData } from './orderFocused/formatter';
 import Layout from './common/Layout';
 import QueryHandler from './common/QueryHandler';
 import ScrollToResult from './common/ScrollToResult';
@@ -51,6 +50,7 @@ const Order = ({ intl }: Props) => (
                       const formatedNodes =
                         isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result);
                       const order = formatOrderData(formatedNodes || []);
+                      // console.log('formatedNodes', formatedNodes, order);
                       return (
                         <>
                           <ActionSubscribe filter={filterVariables} />

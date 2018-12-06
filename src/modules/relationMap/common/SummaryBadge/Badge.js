@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
+import FormattedNumber from 'components/FormattedNumber';
 import { IconStyle, SummaryBadgeWrapper, SummaryBadgeLabel } from './style';
 
 type BadgeProps = {
@@ -22,7 +23,7 @@ const Badge = (props: BadgeProps) => {
         </div>
       </button>
       <span className={SummaryBadgeLabel}>
-        {label} ({no})
+        {label} (<FormattedNumber value={no} />)
       </span>
     </div>
   );

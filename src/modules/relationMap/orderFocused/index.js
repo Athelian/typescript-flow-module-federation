@@ -17,7 +17,7 @@ import DeleteDialog from '../common/Dialog/DeleteDialog';
 import ShipmentList from '../common/ShipmentList';
 import QueryHandler from '../common/QueryHandler';
 import { ShipmentToggleValue } from '../common/SummaryBadge';
-import generateRelation, { getItemData, getItemType } from './relation';
+import { getItemData, getItemType } from './relation';
 import Item from './Item';
 
 type OptionalProps = {
@@ -38,7 +38,7 @@ const defaultProps = {
 export const ToggleCollpased = createObjectValue({});
 
 const OrderFocused = ({
-  order: { order, orderItem, batch, shipment },
+  order: { order, orderItem, batch, shipment, collapsedRelation, expandRelation },
   nodes,
   hasMore,
   loadMore,
@@ -63,7 +63,7 @@ const OrderFocused = ({
                 ? collapsed[item.id]
                 : true;
               const toggle = () => set(item.id, !isCollapsed);
-              const relations = generateRelation(item, { isCollapsed });
+              const relations = isCollapsed ? collapsedRelation[item.id] : expandRelation[item.id];
               return relations.map((relation, relationIndex) => {
                 const key = `relation-${relationIndex}`;
                 const itemData = getItemData({ order, orderItem, batch }, relation) || {};

@@ -1,4 +1,5 @@
 import { formatNodes, getIsCollapsed, formatOrders } from '../formatter';
+import ordersData from './data.json';
 
 describe('_formatNodes', () => {
   it('format order', () => {
@@ -135,7 +136,7 @@ describe('getIsCollapsed', () => {
     expect(result).toEqual(false);
   });
 
-  it.only('has new orderItem with batch', () => {
+  it('has new orderItem with batch', () => {
     const order = {
       id: '1',
       orderItems: [
@@ -179,15 +180,8 @@ describe('getIsCollapsed', () => {
 });
 
 describe('formatOrders', () => {
-  const orders = [
-    {
-      orderItems: [
-        {
-          batches: ['1', '2', '3', '4', '5', '6'],
-        },
-      ],
-    },
-  ];
-  const result = formatOrders(orders);
-  expect(result).toMatchSnapshot();
+  it.only('test format order data', () => {
+    const result = formatOrders(ordersData);
+    expect(result).toMatchSnapshot();
+  });
 });
