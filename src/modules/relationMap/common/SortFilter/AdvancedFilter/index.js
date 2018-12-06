@@ -26,6 +26,12 @@ type State = {
   selectedFilterItem: string,
   activeFilters: ActiveFilters,
   filterToggles: FilterToggles,
+  selectedItems: {
+    order: Object,
+    item: Object,
+    batch: Object,
+    shipment: Object,
+  },
 };
 
 const initialState: State = {
@@ -36,6 +42,12 @@ const initialState: State = {
     item: [],
     batch: [],
     shipment: [],
+  },
+  selectedItems: {
+    order: {},
+    item: {},
+    batch: {},
+    shipment: {},
   },
   filterToggles: {
     order: {
@@ -64,6 +76,10 @@ const defaultFilterMenuItemMap = {
 };
 
 function reducer(state, action) {
+  console.warn({
+    state,
+    action,
+  });
   switch (action.type) {
     case 'RESET':
       return initialState;
@@ -116,6 +132,30 @@ function reducer(state, action) {
       return {
         ...state,
         selectedFilterItem,
+      };
+    }
+
+    case 'TOGGLE_SELECT_ITEM': {
+      const { selectItem } = action;
+
+      const selected =
+        state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || [];
+
+      if (!selected.includes(selectItem)) {
+        selected.push(selectItem);
+      } else {
+        selected.splice(selected.indexOf(selectItem), 1);
+      }
+
+      return {
+        ...state,
+        selectedItems: {
+          ...state.selectedItems,
+          [state.selectedEntityType]: {
+            ...state.selectedItems[state.selectedEntityType],
+            [state.selectedFilterItem]: selected,
+          },
+        },
       };
     }
 
@@ -228,6 +268,16 @@ function AdvanceFilter() {
                       <FilterInputArea
                         selectedEntityType={state.selectedEntityType}
                         selectedFilterItem={state.selectedFilterItem}
+                        onToggleSelect={selectItem =>
+                          dispatch({
+                            type: 'TOGGLE_SELECT_ITEM',
+                            selectItem,
+                          })
+                        }
+                        selectedItems={
+                          state.selectedItems[state.selectedEntityType][state.selectedFilterItem] ||
+                          []
+                        }
                       />
                     </div>
                   </div>

@@ -24,9 +24,16 @@ import { FilterInputAreaWrapperStyle } from './style';
 type Props = {
   selectedEntityType: EntityTypes,
   selectedFilterItem: string,
+  selectedItems: Array<Object>,
+  onToggleSelect: Object => void,
 };
 
-const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem: string) => {
+const getFilterInputArea = ({
+  selectedEntityType,
+  selectedFilterItem,
+  selectedItems,
+  onToggleSelect,
+}: Props) => {
   switch (selectedEntityType) {
     case 'order': {
       switch (selectedFilterItem) {
@@ -41,7 +48,13 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
                 archived: null,
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id} isArchived={item.archived}>
+                <MiniSelectorItem
+                  onClick={() => onToggleSelect(item)}
+                  selectable
+                  selected={selectedItems.includes(item)}
+                  key={item.id}
+                  isArchived={item.archived}
+                >
                   <Display align="left">{item.poNo}</Display>
                 </MiniSelectorItem>
               ),
@@ -246,8 +259,18 @@ const getFilterInputArea = (selectedEntityType: EntityTypes, selectedFilterItem:
   }
 };
 
-export default function FilterInputArea({ selectedEntityType, selectedFilterItem }: Props) {
-  const SelectedFilterInputArea = getFilterInputArea(selectedEntityType, selectedFilterItem);
+export default function FilterInputArea({
+  selectedEntityType,
+  selectedFilterItem,
+  selectedItems,
+  onToggleSelect,
+}: Props) {
+  const SelectedFilterInputArea = getFilterInputArea({
+    selectedEntityType,
+    selectedFilterItem,
+    selectedItems,
+    onToggleSelect,
+  });
 
   return <div className={FilterInputAreaWrapperStyle}>{SelectedFilterInputArea()}</div>;
 }
