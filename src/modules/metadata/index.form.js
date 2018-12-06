@@ -48,13 +48,13 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                   active={entityType === 'Order'}
                   label={<FormattedMessage id="modules.metadata.orders" defaultMessage="ORDERS" />}
                   icon="ORDER"
-                  onClick={() => navigate('/metadata/order')}
+                  onClick={entityType === 'Order' ? () => {} : () => navigate('/metadata/order')}
                 />
                 <TabItem
                   active={entityType === 'OrderItem'}
                   label={<FormattedMessage id="modules.metadata.items" defaultMessage="ITEMS" />}
                   icon="ORDER_ITEM"
-                  onClick={() => navigate('/metadata/item')}
+                  onClick={entityType === 'OrderItem' ? () => {} : () => navigate('/metadata/item')}
                 />
                 <TabItem
                   active={entityType === 'Batch'}
@@ -62,7 +62,7 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                     <FormattedMessage id="modules.metadata.batches" defaultMessage="BATCHES" />
                   }
                   icon="BATCH"
-                  onClick={() => navigate('/metadata/batch')}
+                  onClick={entityType === 'Batch' ? () => {} : () => navigate('/metadata/batch')}
                 />
                 <TabItem
                   active={entityType === 'Shipment'}
@@ -70,7 +70,9 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                     <FormattedMessage id="modules.metadata.shipments" defaultMessage="SHIPMENTS" />
                   }
                   icon="SHIPMENT"
-                  onClick={() => navigate('/metadata/shipment')}
+                  onClick={
+                    entityType === 'Shipment' ? () => {} : () => navigate('/metadata/shipment')
+                  }
                 />
                 <TabItem
                   active={entityType === 'Product'}
@@ -78,7 +80,9 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                     <FormattedMessage id="modules.metadata.products" defaultMessage="PRODUCTS" />
                   }
                   icon="PRODUCT"
-                  onClick={() => navigate('/metadata/product')}
+                  onClick={
+                    entityType === 'Product' ? () => {} : () => navigate('/metadata/product')
+                  }
                 />
                 <TabItem
                   active={entityType === 'ProductProvider'}
@@ -89,7 +93,11 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                     />
                   }
                   icon="PROVIDER"
-                  onClick={() => navigate('/metadata/end_product')}
+                  onClick={
+                    entityType === 'ProductProvider'
+                      ? () => {}
+                      : () => navigate('/metadata/end_product')
+                  }
                 />
                 <TabItem
                   active={entityType === 'Warehouse'}
@@ -97,7 +105,9 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                     <FormattedMessage id="modules.metadata.warehouse" defaultMessage="WAREHOUSE" />
                   }
                   icon="WAREHOUSE"
-                  onClick={() => navigate('/metadata/warehouse')}
+                  onClick={
+                    entityType === 'Warehouse' ? () => {} : () => navigate('/metadata/warehouse')
+                  }
                 />
               </NavBar>
             }
