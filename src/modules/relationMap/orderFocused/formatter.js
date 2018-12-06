@@ -307,11 +307,12 @@ const createShipmentObj = () => {
     }
     if (type === 'BATCH') {
       const { shipment } = data;
-      if (shipment && !shipmentObj[id]) {
-        shipmentObj[id] = initShipmentObj(shipment);
-      }
       if (shipment) {
-        const { data: shipmentData, relation: shipmentRelation } = shipmentObj[shipment.id];
+        const { id: shipmentId } = shipment;
+        if (shipment && !shipmentObj[shipmentId]) {
+          shipmentObj[shipmentId] = initShipmentObj(shipment);
+        }
+        const { data: shipmentData, relation: shipmentRelation } = shipmentObj[shipmentId];
         shipmentData.metric = getByPathWithDefault('', 'packageVolume.metric', data);
         shipmentRelation.order[orderId] = true;
         shipmentRelation.orderItem[orderItemId] = true;

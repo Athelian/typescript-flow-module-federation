@@ -43,7 +43,7 @@ const Order = () => (
                       const formatedNodes =
                         isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result);
                       const order = formatOrderData(formatedNodes || []);
-                      // console.log('formatedNodes', formatedNodes, order);
+                      console.log('formatedNodes', formatedNodes, order);
                       return (
                         <>
                           <ActionSubscribe filter={filterVariables} />
