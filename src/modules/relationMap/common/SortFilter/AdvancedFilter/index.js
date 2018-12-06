@@ -240,6 +240,7 @@ function AdvanceFilter() {
                         }
                       />
                       <FilterMenu
+                        selectedItems={state.selectedItems}
                         selectedEntityType={state.selectedEntityType}
                         activeFilters={state.activeFilters}
                         filterToggles={state.filterToggles}

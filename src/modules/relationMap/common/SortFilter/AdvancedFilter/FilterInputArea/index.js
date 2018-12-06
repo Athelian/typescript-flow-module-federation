@@ -69,7 +69,12 @@ const getFilterInputArea = ({
                 types: ['Exporter'],
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>
+                <MiniSelectorItem
+                  onClick={() => onToggleSelect(item)}
+                  selectable
+                  selected={selectedItems.includes(item)}
+                  key={item.id}
+                >
                   <Display align="left">{item.group.name}</Display>
                 </MiniSelectorItem>
               ),
@@ -84,7 +89,12 @@ const getFilterInputArea = ({
                 query: '',
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>
+                <MiniSelectorItem
+                  onClick={() => onToggleSelect(item)}
+                  selectable
+                  selected={selectedItems.includes(item)}
+                  key={item.id}
+                >
                   <UserAvatar
                     firstName={item.firstName}
                     lastName={item.lastName}

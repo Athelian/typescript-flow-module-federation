@@ -12,6 +12,12 @@ import ShipmentFilterMenu from './ShipmentFilterMenu';
 import { FilterMenuWrapperStyle } from './style';
 
 type Props = {
+  selectedItems: {
+    order: Object,
+    item: Object,
+    batch: Object,
+    shipment: Object,
+  },
   selectedEntityType: EntityTypes,
   activeFilters: ActiveFilters,
   toggleActiveFilter: (string, string) => void,
@@ -44,6 +50,7 @@ export default function FilterMenu({
   toggleFilterToggle,
   selectedFilterItem,
   changeSelectedFilterItem,
+  selectedItems,
 }: Props) {
   const SelectedFilterMenu = getFilterMenu(selectedEntityType);
   const parsedActiveFilters = activeFilters[selectedEntityType];
@@ -52,6 +59,7 @@ export default function FilterMenu({
   return (
     <div className={FilterMenuWrapperStyle}>
       <SelectedFilterMenu
+        selectedItems={selectedItems}
         parsedActiveFilters={parsedActiveFilters}
         toggleActiveFilter={toggleActiveFilter}
         parsedFilterToggles={parsedFilterToggles}

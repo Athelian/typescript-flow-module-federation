@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { get } from 'lodash/fp';
 import Icon from 'components/Icon';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
 import {
@@ -12,6 +13,7 @@ import {
 
 type Props = {
   name: string,
+  field?: string,
   label: React.Node,
   isSelected: boolean,
   changeSelectedFilterItem: (filter: string) => void,
@@ -23,6 +25,7 @@ type Props = {
 export default function FilterMenuItem({
   name,
   label,
+  field,
   isSelected,
   changeSelectedFilterItem,
   isActive,
@@ -47,8 +50,8 @@ export default function FilterMenuItem({
       {data.length > 0 && (
         <div className={FilterDataWrapperStyle}>
           {data.map(datum => (
-            <button key={datum} className={FilterDataStyle} type="button">
-              {datum}
+            <button key={datum.id} className={FilterDataStyle} type="button">
+              {field && get(field, datum)}
               <Icon icon="CLEAR" />
             </button>
           ))}

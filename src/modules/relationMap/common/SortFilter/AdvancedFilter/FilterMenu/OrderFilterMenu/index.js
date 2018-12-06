@@ -11,6 +11,25 @@ type Props = {
   toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
   changeSelectedFilterItem: string => void,
+  selectedItems: {
+    order: Object,
+    item: Object,
+    batch: Object,
+    shipment: Object,
+  },
+};
+
+const getSelectData = (
+  selectedItems: {
+    order: Object,
+    item: Object,
+    batch: Object,
+    shipment: Object,
+  },
+  field: string
+) => {
+  const result = selectedItems.order[field] || [];
+  return result;
 };
 
 export default function OrderFilterMenu({
@@ -20,18 +39,44 @@ export default function OrderFilterMenu({
   toggleFilterToggle,
   selectedFilterItem,
   changeSelectedFilterItem,
+  selectedItems,
 }: Props) {
   const filtersMap = [
     {
       label: <FormattedMessage {...messages.order} />,
       icon: 'ORDER',
       filters: [
-        { name: 'poNo', label: <FormattedMessage {...messages.poNo} />, data: ['Example 1'] },
-        { name: 'exporter', label: <FormattedMessage {...messages.exporter} />, data: [] },
-        { name: 'inCharge', label: <FormattedMessage {...messages.inCharge} />, data: [] },
-        { name: 'tags', label: <FormattedMessage {...messages.tags} />, data: [] },
-        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
-        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
+        {
+          name: 'poNo',
+          field: 'poNo',
+          label: <FormattedMessage {...messages.poNo} />,
+          data: getSelectData(selectedItems, 'poNo'),
+        },
+        {
+          name: 'exporter',
+          field: 'group.name',
+          label: <FormattedMessage {...messages.exporter} />,
+          data: getSelectData(selectedItems, 'exporter'),
+        },
+        {
+          name: 'inCharge',
+          field: 'firstName',
+          label: <FormattedMessage {...messages.inCharge} />,
+          data: getSelectData(selectedItems, 'inCharge'),
+        },
+        { name: 'tags', field: 'name', label: <FormattedMessage {...messages.tags} />, data: [] },
+        {
+          name: 'createdAt',
+          field: 'createdAt',
+          label: <FormattedMessage {...messages.createdAt} />,
+          data: [],
+        },
+        {
+          name: 'updatedAt',
+          field: 'updatedAt',
+          label: <FormattedMessage {...messages.updatedAt} />,
+          data: [],
+        },
       ],
     },
   ];

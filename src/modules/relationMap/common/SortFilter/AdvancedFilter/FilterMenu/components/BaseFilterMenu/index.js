@@ -12,6 +12,7 @@ type OptionalProps = {
       name: string,
       label: React.Node,
       data: Array<any>,
+      field?: string,
     }>,
   }>,
   togglesMap?: Array<{
@@ -53,7 +54,7 @@ export default function BaseFilterMenu({
               <SectionHeader label={label} icon={icon} />
               <div className={FiltersBodyStyle}>
                 {filters.map(filter => {
-                  const { name, label: filterLabel, data } = filter;
+                  const { name, label: filterLabel, data, field } = filter;
                   const isSelected = selectedFilterItem === name;
                   const isActive = parsedActiveFilters.some(activeFilter => activeFilter === name);
 
@@ -61,6 +62,7 @@ export default function BaseFilterMenu({
                     <FilterMenuItem
                       key={name}
                       name={name}
+                      field={field}
                       label={filterLabel}
                       data={data}
                       isSelected={isSelected}
