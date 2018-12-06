@@ -114,7 +114,12 @@ const ApplyPanel = ({ connectType }: Props) => {
                     <>
                       <BaseButton
                         icon="CONFIRM"
-                        label="APPLY"
+                        label={
+                          <FormattedMessage
+                            id="components.NavBar.filter.apply"
+                            defaultMessage="APPLY"
+                          />
+                        }
                         onClick={async () => {
                           if (connectType === 'SHIPMENT') {
                             setLoading(true);

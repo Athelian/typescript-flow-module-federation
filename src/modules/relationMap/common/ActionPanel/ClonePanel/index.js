@@ -19,7 +19,11 @@ const ClonePanel = ({ onClick }: Props) => (
         <FormattedMessage {...messages.clone} />
       </Label>
     </div>
-    <BaseButton icon="CONFIRM" label="APPLY" onClick={onClick} />
+    <BaseButton
+      icon="CONFIRM"
+      label={<FormattedMessage id="components.NavBar.filter.apply" defaultMessage="APPLY" />}
+      onClick={onClick}
+    />
   </div>
 );
 
