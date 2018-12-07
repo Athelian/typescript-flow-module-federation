@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
+import { DefaultStyle, Display } from 'components/Form';
 import SelectProduct from 'modules/productProvider/common/SelectProduct';
 import SlideView from 'components/SlideView';
 import emitter from 'utils/emitter';
@@ -16,13 +17,15 @@ export default function InlineProductProvider({ name, exporter, value }: Props) 
     <BooleanValue>
       {({ value: opened, set: slideToggle }) => (
         <>
-          <div role="presentation" onClick={() => slideToggle(true)}>
-            {value.product.name}{' '}
-          </div>
+          <button type="button" onClick={() => slideToggle(true)}>
+            <DefaultStyle width="200px" type="button">
+              <Display align="left">{value.product.name}</Display>
+            </DefaultStyle>
+          </button>
           <SlideView
             isOpen={opened}
             onRequestClose={() => slideToggle(false)}
-            options={{ width: '1030px' }}
+            options={{ width: '980px' }}
           >
             {opened && (
               <SelectProduct

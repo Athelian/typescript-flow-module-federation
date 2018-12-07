@@ -1,20 +1,32 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, shadows } from 'styles/common';
+import { colors, shadows, transitions, layout, scrollbars } from 'styles/common';
 
 export const EditTableViewWrapperStyle: string = css`
   position: relative;
   width: 1030px;
-  height: 100%;
+  height: calc(100% - 50px);
+`;
+
+export const NavbarWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  padding: 0 20px;
+  grid-gap: 20px;
+  align-items: center;
+  justify-content: end;
+  width: 100%;
+  height: 50px;
+  ${transitions.EXPAND};
 `;
 
 export const HeaderWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
   height: 50px;
-  width: 100%;
-  padding: 0 5px 0 35px;
+  width: calc(100% - 30px);
+  padding: 0 5px;
   position: absolute;
   top: 0;
-  left: 0;
+  left: 30px;
   background: ${colors.WHITE};
   ${shadows.HEADER};
   overflow: hidden;
@@ -22,25 +34,30 @@ export const HeaderWrapperStyle: string = css`
 
 export const SidebarWrapperStyle: string = css`
   width: 30px;
-  height: calc(100% - 50px);
+  height: 100%;
   position: absolute;
-  top: 50px;
+  top: 0;
   left: 0;
-  padding: 5px 0;
+  padding: 55px 0 5px 0;
   background: ${colors.WHITE};
   ${shadows.HEADER};
   overflow: hidden;
 `;
 
-export const BodyWrapperStyle: string = css`
-  width: 100%;
-  height: 100%;
-  overflow: overlay;
-  padding: 55px 5px 5px 35px;
+export const SidebarFadeStyle: string = css`
+  width: 30px;
+  height: 62px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(to bottom, ${colors.WHITE} 80%, ${colors.TRANSPARENT});
 `;
 
-export const ButtonToolbarStyle: string = css`
-  display: block;
-  width: 100%;
-  justify-content: space-around;
+export const BodyWrapperStyle: string = css`
+  width: calc(100% - 30px);
+  height: calc(100% - 50px);
+  overflow: auto;
+  padding: 5px;
+  margin: 50px 0 0 30px;
+  ${scrollbars.MAIN};
 `;

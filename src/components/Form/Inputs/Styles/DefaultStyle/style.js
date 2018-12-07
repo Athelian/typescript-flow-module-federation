@@ -32,24 +32,26 @@ export const DefaultStyleWrapperStyle = ({
   ${isFocused && `border-color: ${hasError ? colors.RED : colors.TEAL}`};
   ${borderRadiuses.MAIN};
   background-color: ${transparent ? colors.TRANSPARENT : colors.WHITE};
-  background-color: ${disabled && colors.GRAY_SUPER_LIGHT};
+  background-color: ${disabled && 'rgba(0, 0, 0, 0.1)'};
   height: ${height};
   width: ${width};
   min-width: ${width};
   cursor: text;
+  ${type === 'button' && 'cursor: pointer'};
   ${transitions.MAIN};
-  ${forceHoverStyle || isFocused
-    ? `${shadows.INPUT};
+  ${!disabled &&
+    (forceHoverStyle || isFocused
+      ? `${shadows.INPUT};
       & > button {
         opacity: 1;
       }
     `
-    : `&:hover {
+      : `&:hover {
       ${shadows.INPUT};
       & > button {
         opacity: 1;
       }
-    }`};
+    }`)};
   & > input {
     ${presets.ELLIPSIS};
   }

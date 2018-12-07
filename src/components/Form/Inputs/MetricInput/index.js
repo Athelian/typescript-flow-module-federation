@@ -81,6 +81,7 @@ export default class MetricInput extends React.Component<Props> {
               },
             })
           }
+          align={align}
         />
         <SelectInput
           {...rest}

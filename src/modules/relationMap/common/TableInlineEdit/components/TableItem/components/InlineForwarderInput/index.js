@@ -3,6 +3,7 @@ import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
+import UserAvatar from 'components/UserAvatar';
 import SelectForwarders from 'modules/shipment/form/components/SelectForwarders';
 import {
   AssignmentWrapperStyle,
@@ -46,7 +47,7 @@ export default function InlineForwarderInput({ name, values, max }: Props) {
           >
             <Icon icon="REMOVE" />
           </button>
-          <span>{forwarderName}</span>
+          <UserAvatar firstName={forwarderName} lastName={forwarderName} />
         </div>
       ))}
       {isRemain && (

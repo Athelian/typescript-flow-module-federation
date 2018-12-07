@@ -20,7 +20,7 @@ const defaultProps = {
 export default function InlineDateInput({ name, value, isRequired }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useDateInput(value, { isRequired });
   return (
-    <DefaultStyle type="date" isFocused={isFocused} hasError={hasError} forceHoverStyle>
+    <DefaultStyle type="date" isFocused={isFocused} hasError={hasError}>
       <DateInput
         name={name}
         {...inputHandlers}
@@ -32,6 +32,7 @@ export default function InlineDateInput({ name, value, isRequired }: Props) {
             value: inputHandlers.value,
           });
         }}
+        align="left"
       />
     </DefaultStyle>
   );

@@ -38,7 +38,7 @@ export default function InlineMetricInput({
 }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useMetricInput(value, { isRequired });
   return (
-    <DefaultMetricStyle isFocused={isFocused} hasError={hasError} forceHoverStyle>
+    <DefaultMetricStyle isFocused={isFocused} hasError={hasError}>
       <MetricInput
         {...inputHandlers}
         name={name}
@@ -60,6 +60,7 @@ export default function InlineMetricInput({
         }}
         metrics={metrics}
         convert={convert}
+        align="left"
       />
     </DefaultMetricStyle>
   );

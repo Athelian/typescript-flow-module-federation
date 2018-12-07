@@ -1,8 +1,14 @@
 // @flow
 import * as React from 'react';
-import { ToggleInput } from 'components/Form';
+import { CheckboxInput } from 'components/Form';
 import { uuid } from 'utils/id';
-import { WrapperHeaderStyle, TitleStyle, HeaderStyle } from './style';
+import {
+  TableHeaderWrapperStyle,
+  TableHeaderTitleStyle,
+  TableHeaderGroupStyle,
+  TableColumnHeaderStyle,
+  TableColumnStyle,
+} from './style';
 
 type Props = {
   entity: string,
@@ -98,7 +104,7 @@ export default function TableHeader({
   showAll,
 }: Props) {
   return (
-    <div className={WrapperHeaderStyle}>
+    <>
       {info.map(({ group, columns }, index) =>
         shouldShowGroup({
           columns,
@@ -109,9 +115,9 @@ export default function TableHeader({
           info,
           templateColumns,
         }) ? (
-          <div key={uuid()}>
-            <h3 className={TitleStyle}> {group} </h3>
-            <div className={WrapperHeaderStyle}>
+          <div key={uuid()} className={TableHeaderWrapperStyle}>
+            <div className={TableHeaderTitleStyle(entity)}>{group}</div>
+            <div className={TableHeaderGroupStyle}>
               {columns.map((column, position) =>
                 isHiddenColumn({
                   showAll,
@@ -122,32 +128,33 @@ export default function TableHeader({
                   position,
                   templateColumns,
                 }) ? null : (
-                  <p key={uuid()} className={HeaderStyle}>
-                    <ToggleInput
-                      toggled={
-                        !hideColumns.includes(
-                          `${entity}-${
-                            index > 0 ? info[index - 1].columns.length + position : position
-                          }`
-                        )
-                      }
-                      onToggle={() =>
-                        onToggle(
-                          `${entity}-${
-                            index > 0 ? info[index - 1].columns.length + position : position
-                          }`
-                        )
-                      }
-                    >
-                      {column}
-                    </ToggleInput>
-                  </p>
+                  <div key={uuid()} className={TableColumnHeaderStyle(entity)}>
+                    {showAll && (
+                      <CheckboxInput
+                        checked={
+                          !hideColumns.includes(
+                            `${entity}-${
+                              index > 0 ? info[index - 1].columns.length + position : position
+                            }`
+                          )
+                        }
+                        onToggle={() =>
+                          onToggle(
+                            `${entity}-${
+                              index > 0 ? info[index - 1].columns.length + position : position
+                            }`
+                          )
+                        }
+                      />
+                    )}
+                    <div className={TableColumnStyle}>{column}</div>
+                  </div>
                 )
               )}
             </div>
           </div>
         ) : null
       )}
-    </div>
+    </>
   );
 }

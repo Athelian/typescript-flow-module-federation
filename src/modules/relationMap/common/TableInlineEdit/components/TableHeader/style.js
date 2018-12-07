@@ -1,29 +1,41 @@
 // @flow
 import { css } from 'react-emotion';
+import { colors, fontSizesWithHeights, borderRadiuses, layout, presets } from 'styles/common';
 
-export const WrapperHeaderStyle: string = css`
+export const TableHeaderWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  width: 100%;
+`;
+
+export const TableHeaderTitleStyle = (entity: string): string => css`
+  ${presets.ELLIPSIS};
+  font-weight: bold;
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors[entity]};
+  letter-spacing: 2px;
+  padding: 0 0 0 5px;
+`;
+
+export const TableHeaderGroupStyle: string = css`
   display: flex;
   width: 100%;
 `;
 
-export const TitleStyle: string = css`
+export const TableColumnHeaderStyle = (entity: string): string => css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
   width: 200px;
-  height: 10px;
-  font-weight: bold;
-  line-height: normal;
-  font-size: 11px;
-  color: #eb5724;
+  height: 26px;
+  background-color: ${colors[entity]};
+  ${borderRadiuses.MAIN};
+  margin: 0 5px;
+  align-items: center;
+  padding: 0 0 0 3px;
 `;
 
-export const HeaderStyle: string = css`
-  width: 200px;
-  height: 25px;
-  background: #eb5724;
-  opacity: 0.5;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  padding: 5px;
-  margin: 5px;
-  font-size: 11px;
-  color: #fff;
+export const TableColumnStyle: string = css`
+  ${presets.ELLIPSIS};
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.WHITE};
+  letter-spacing: 2px;
 `;

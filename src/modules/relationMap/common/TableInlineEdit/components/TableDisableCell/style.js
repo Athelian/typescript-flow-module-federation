@@ -1,17 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-
-import { colors } from 'styles/common';
+import { borderRadiuses } from 'styles/common';
 
 export const DisabledCellStyle: string = css`
-  width: 190px;
-  height: 25px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 11px;
-  color: #fff;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  border: 1px solid #000;
+  width: 200px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.1);
+  ${borderRadiuses.MAIN};
 `;
 
 export default DisabledCellStyle;
