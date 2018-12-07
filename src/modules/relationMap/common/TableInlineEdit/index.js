@@ -134,10 +134,12 @@ function findAllFieldsFilter({
     ...orderItemColumnFieldsFilter.map(item => `orderItems.${item.name}`),
     ...batchColumnFieldsFilter.map(item => `orderItems.batches.${item.name}`),
     ...shipmentColumnFieldsFilter.map(item => `orderItems.batches.shipment.${item.name}`),
-    ...orderCustomFieldsFilter.map(item => `order.customFields.${item.id}`),
-    ...orderItemCustomFieldsFilter.map(item => `orderItem.customFields.${item.id}`),
-    ...batchCustomFieldsFilter.map(item => `batch.customFields.${item.id}`),
-    ...shipmentCustomFieldsFilter.map(item => `shipment.customFields.${item.id}`),
+    ...orderCustomFieldsFilter.map(item => `customFields.${item.id}`),
+    ...orderItemCustomFieldsFilter.map(item => `orderItems.customFields.${item.id}`),
+    ...batchCustomFieldsFilter.map(item => `orderItems.batches.customFields.${item.id}`),
+    ...shipmentCustomFieldsFilter.map(
+      item => `orderItems.batches.shipment.customFields.${item.id}`
+    ),
   ];
 }
 
