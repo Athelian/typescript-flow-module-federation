@@ -64,7 +64,12 @@ export default function OrderFilterMenu({
           label: <FormattedMessage {...messages.inCharge} />,
           data: getSelectData(selectedItems, 'inCharge'),
         },
-        { name: 'tags', field: 'name', label: <FormattedMessage {...messages.tags} />, data: [] },
+        {
+          name: 'tags',
+          field: 'name',
+          label: <FormattedMessage {...messages.tags} />,
+          data: getSelectData(selectedItems, 'tags'),
+        },
         {
           name: 'createdAt',
           field: 'createdAt',
@@ -82,22 +87,23 @@ export default function OrderFilterMenu({
   ];
 
   const togglesMap = [
-    {
-      name: 'completelyBatched',
-      label: <FormattedMessage {...messages.completelyBatched} />,
-      icon: 'BATCH',
-    },
-    {
-      name: 'completelyShipped',
-      label: <FormattedMessage {...messages.completelyShipped} />,
-      icon: 'SHIPMENT',
-    },
-    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-    {
-      name: 'showArchived',
-      label: <FormattedMessage {...messages.showArchived} />,
-      icon: 'ARCHIVE',
-    },
+    // temporary hide
+    // {
+    //   name: 'completelyBatched',
+    //   label: <FormattedMessage {...messages.completelyBatched} />,
+    //   icon: 'BATCH',
+    // },
+    // {
+    //   name: 'completelyShipped',
+    //   label: <FormattedMessage {...messages.completelyShipped} />,
+    //   icon: 'SHIPMENT',
+    // },
+    // { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+    // {
+    //   name: 'showArchived',
+    //   label: <FormattedMessage {...messages.showArchived} />,
+    //   icon: 'ARCHIVE',
+    // },
   ];
 
   return (

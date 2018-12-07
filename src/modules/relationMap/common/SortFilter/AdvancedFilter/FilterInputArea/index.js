@@ -109,7 +109,13 @@ const getFilterInputArea = ({
               hideToggles: true,
             });
         case 'tags':
-          return Tags;
+          return () => (
+            <Tags
+              values={selectedItems}
+              tagType="Order"
+              onChange={(name, tags) => onToggleSelect(tags)}
+            />
+          );
         case 'createdAt':
         case 'updatedAt':
           return () => (
@@ -139,7 +145,13 @@ const getFilterInputArea = ({
             />
           );
         case 'tags':
-          return Tags;
+          return () => (
+            <Tags
+              values={selectedItems}
+              tagType="Product"
+              onChange={(name, tags) => onToggleSelect(tags)}
+            />
+          );
         case 'exporter':
           return () =>
             MiniSelector({
@@ -209,7 +221,13 @@ const getFilterInputArea = ({
         case 'packaging':
           return Packaging;
         case 'tags':
-          return Tags;
+          return () => (
+            <Tags
+              values={selectedItems}
+              tagType="Batch"
+              onChange={(name, tags) => onToggleSelect(tags)}
+            />
+          );
         case 'createdAt':
         case 'updatedAt':
         default:
@@ -289,7 +307,13 @@ const getFilterInputArea = ({
             />
           );
         case 'tags':
-          return Tags;
+          return () => (
+            <Tags
+              values={selectedItems}
+              tagType="Shipment"
+              onChange={(name, tags) => onToggleSelect(tags)}
+            />
+          );
         case 'createdAt':
         case 'updatedAt':
         default:

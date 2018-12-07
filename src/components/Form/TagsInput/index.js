@@ -7,7 +7,7 @@ import type { TagsQueryType } from 'providers/TagListProvider/type.js.flow';
 import type { Props as TagsInputProps } from './type.js.flow';
 import BaseTagsInput from './BaseTagsInput';
 
-type Props = PermissionProps & TagsInputProps & { tagType: TagsQueryType };
+type Props = PermissionProps & TagsInputProps & { tagType: TagsQueryType, onChange: Function };
 
 export default function TagsInput(props: Props) {
   const { permissions, tagType, ...rest } = props;

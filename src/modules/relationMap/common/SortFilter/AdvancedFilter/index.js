@@ -82,8 +82,8 @@ const defaultFilterMenuItemMap = {
 
 const FILTER = {
   order: {
-    completelyBatched: 'completelyBatched',
-    completelyShipped: 'completelyShipped',
+    completelyBatched: null,
+    completelyShipped: null,
     showActive: null,
     showArchived: null,
     createdAt: 'createdAt',
@@ -91,6 +91,7 @@ const FILTER = {
     poNo: 'poNos',
     inCharge: 'inChargeIds',
     exporter: 'exporterIds',
+    tags: 'tagIds',
   },
   item: {
     createdAt: 'orderItemCreatedAt',
@@ -123,8 +124,11 @@ const getFilterValue = (name: string, data: any) => {
   switch (name) {
     default:
       return data;
+    case 'showArchived':
+      return { ...(data ? {} : { archived: false }) };
     case 'poNo':
       return data.map(d => d.poNo);
+    case 'tags':
     case 'inCharge':
     case 'exporter':
     case 'supplier':
@@ -152,15 +156,14 @@ const getFilterValue = (name: string, data: any) => {
   }
 };
 
-const convertToggleFilter = (state: Object, type: string) => {
+export const convertToggleFilter = (state: Object, type: string) => {
   const toggleFilter = get({}, `filterToggles.${type}`, state);
   const filters: Array<any> = Object.entries(toggleFilter);
   const query = filters.reduce((currentQuery, filter) => {
-    const [filterName, filterValue] = filter;
+    const [filterName, rawValue] = filter;
     if (FILTER[type] && FILTER[type][filterName]) {
-      return Object.assign(currentQuery, {
-        [FILTER[type][filterName]]: filterValue,
-      });
+      const formatedFilter = getFilterValue(filterName, rawValue);
+      return Object.assign(currentQuery, formatedFilter);
     }
     return currentQuery;
   }, {});
@@ -186,7 +189,6 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'item'),
   ...convertActiveFilter(state, 'batch'),
   ...convertActiveFilter(state, 'shipment'),
-  ...convertToggleFilter(state, 'order'),
 });
 function reducer(state, action) {
   console.warn({
@@ -270,10 +272,10 @@ function reducer(state, action) {
     case 'TOGGLE_SELECT_ITEM': {
       const { selectItem } = action;
 
-      const selected =
-        state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || [];
-
-      if (!selected.includes(selectItem)) {
+      let selected = state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || [];
+      if (Array.isArray(selectItem)) {
+        selected = [...selectItem];
+      } else if (!selected.includes(selectItem)) {
         selected.push(selectItem);
       } else {
         selected.splice(selected.indexOf(selectItem), 1);
@@ -306,7 +308,6 @@ function AdvanceFilter({ onApply }: Props) {
     state.activeFilters.item.length > 0 ||
     state.activeFilters.order.length > 0 ||
     state.activeFilters.shipment.length > 0;
-  console.log(state);
   return (
     <UIConsumer>
       {uiState => (

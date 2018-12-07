@@ -5,15 +5,32 @@ import { FieldItem, Label, TagsInput } from 'components/Form';
 import { TagsWrapperStyle } from './style';
 import messages from '../messages';
 
-export default function Tags() {
+type Props = {
+  values: any,
+  onChange: Function,
+  tagType: string,
+};
+export default function Tags({ values, onChange, tagType }: Props) {
   const isFocused = false;
 
   return (
     <div className={TagsWrapperStyle}>
       <FieldItem
         vertical
-        label={<Label><FormattedMessage {...messages.tags} /></Label>}
-        input={<TagsInput isFocused={isFocused} tagType="Order" />}
+        label={
+          <Label>
+            <FormattedMessage {...messages.tags} />
+          </Label>
+        }
+        input={
+          <TagsInput
+            isFocused={isFocused}
+            tagType={tagType}
+            name={tagType}
+            values={values}
+            onChange={onChange}
+          />
+        }
       />
     </div>
   );

@@ -61,7 +61,7 @@ export default function BatchFilterMenu({
           label: <FormattedMessage {...messages.producedAt} />,
           data: getSelectData(selectedItems, 'producedAt'),
         },
-        { name: 'packaging', label: <FormattedMessage {...messages.packaging} />, data: [] },
+        // { name: 'packaging', label: <FormattedMessage {...messages.packaging} />, data: [] },
         { name: 'tags', label: <FormattedMessage {...messages.tags} />, data: [] },
         // { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
         // { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
@@ -70,12 +70,12 @@ export default function BatchFilterMenu({
   ];
 
   const togglesMap = [
-    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-    {
-      name: 'showArchived',
-      label: <FormattedMessage {...messages.showArchived} />,
-      icon: 'ARCHIVE',
-    },
+    // { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+    // {
+    //   name: 'showArchived',
+    //   label: <FormattedMessage {...messages.showArchived} />,
+    //   icon: 'ARCHIVE',
+    // },
   ];
 
   return (
