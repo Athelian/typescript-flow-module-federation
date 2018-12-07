@@ -87,23 +87,22 @@ export default function OrderFilterMenu({
   ];
 
   const togglesMap = [
-    // temporary hide
-    // {
-    //   name: 'completelyBatched',
-    //   label: <FormattedMessage {...messages.completelyBatched} />,
-    //   icon: 'BATCH',
-    // },
-    // {
-    //   name: 'completelyShipped',
-    //   label: <FormattedMessage {...messages.completelyShipped} />,
-    //   icon: 'SHIPMENT',
-    // },
-    // { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-    // {
-    //   name: 'showArchived',
-    //   label: <FormattedMessage {...messages.showArchived} />,
-    //   icon: 'ARCHIVE',
-    // },
+    {
+      name: 'completelyBatched',
+      label: <FormattedMessage {...messages.completelyBatched} />,
+      icon: 'BATCH',
+    },
+    {
+      name: 'completelyShipped',
+      label: <FormattedMessage {...messages.completelyShipped} />,
+      icon: 'SHIPMENT',
+    },
+    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+    {
+      name: 'showArchived',
+      label: <FormattedMessage {...messages.showArchived} />,
+      icon: 'ARCHIVE',
+    },
   ];
 
   return (

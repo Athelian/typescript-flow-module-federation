@@ -31,7 +31,7 @@ const defaultProps = {
   hideToggles: false,
 };
 
-const filterByStatus = (isActive: boolean, isArchive: boolean) => {
+export const filterByStatus = (isActive: boolean, isArchive: boolean) => {
   if (isActive && isArchive) {
     return {};
   }

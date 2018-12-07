@@ -58,9 +58,8 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.inCharge} />,
           data: getSelectData(selectedItems, 'inCharge'),
         },
-        // temporary hide
-        // { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
-        // { name: 'airports', label: <FormattedMessage {...messages.airports} />, data: [] },
+        { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
+        { name: 'airports', label: <FormattedMessage {...messages.airports} />, data: [] },
         {
           name: 'cargoReady',
           label: <FormattedMessage {...messages.cargoReady} />,
@@ -113,19 +112,19 @@ export default function ShipmentFilterMenu({
         },
         { name: 'tags', label: <FormattedMessage {...messages.tags} />, data: [] },
         // temporary hide, not yet has this filter from graphql
-        // { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
-        // { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
+        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
+        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
       ],
     },
   ];
 
   const togglesMap = [
-    // { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-    // {
-    //   name: 'showArchived',
-    //   label: <FormattedMessage {...messages.showArchived} />,
-    //   icon: 'ARCHIVE',
-    // },
+    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+    {
+      name: 'showArchived',
+      label: <FormattedMessage {...messages.showArchived} />,
+      icon: 'ARCHIVE',
+    },
   ];
 
   return (
