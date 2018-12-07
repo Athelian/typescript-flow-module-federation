@@ -120,12 +120,12 @@ export default function ShipmentFilterMenu({
   ];
 
   const togglesMap = [
-    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-    {
-      name: 'showArchived',
-      label: <FormattedMessage {...messages.showArchived} />,
-      icon: 'ARCHIVE',
-    },
+    // { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+    // {
+    //   name: 'showArchived',
+    //   label: <FormattedMessage {...messages.showArchived} />,
+    //   icon: 'ARCHIVE',
+    // },
   ];
 
   return (
