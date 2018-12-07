@@ -361,7 +361,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       type="Orders"
                       exportQuery={ordersByIDsExportQuery}
                       variables={{
-                        ids: orderIds.map(orderId => orderId),
+                        ids: orderIds,
                       }}
                     />
                     {errorMessage && errorMessage.length > 0 && (
