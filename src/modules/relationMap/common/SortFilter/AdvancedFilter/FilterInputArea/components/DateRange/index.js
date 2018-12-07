@@ -5,7 +5,17 @@ import { FieldItem, Label, DefaultStyle, DateInput } from 'components/Form';
 import { DateRangeWrapperStyle } from './style';
 import messages from '../messages';
 
-export default function DateRange() {
+type Props = {
+  onChangeFromDate: Function,
+  onChangeToDate: Function,
+  fromDate?: Date,
+  toDate?: Date,
+};
+const defaultProps = {
+  onChangeFromDate: () => {},
+  onChangeToDate: () => {},
+};
+function DateRange({ onChangeFromDate, onChangeToDate, fromDate, toDate }: Props) {
   return (
     <div className={DateRangeWrapperStyle}>
       <FieldItem
@@ -17,7 +27,7 @@ export default function DateRange() {
         }
         input={
           <DefaultStyle type="date" forceHoverStyle>
-            <DateInput align="left" />
+            <DateInput align="left" onChange={onChangeFromDate} value={fromDate} />
           </DefaultStyle>
         }
       />
@@ -30,10 +40,13 @@ export default function DateRange() {
         }
         input={
           <DefaultStyle type="date" forceHoverStyle>
-            <DateInput align="left" />
+            <DateInput align="left" onChange={onChangeToDate} value={toDate} />
           </DefaultStyle>
         }
       />
     </div>
   );
 }
+
+DateRange.defaultProps = defaultProps;
+export default DateRange;

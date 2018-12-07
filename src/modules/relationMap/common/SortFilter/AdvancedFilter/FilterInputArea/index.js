@@ -24,8 +24,8 @@ import { FilterInputAreaWrapperStyle } from './style';
 type Props = {
   selectedEntityType: EntityTypes,
   selectedFilterItem: string,
-  selectedItems: Array<Object>,
-  onToggleSelect: Object => void,
+  selectedItems: any, // Array<Object> | Object,
+  onToggleSelect: Function,
 };
 
 const getFilterInputArea = ({
@@ -111,9 +111,15 @@ const getFilterInputArea = ({
         case 'tags':
           return Tags;
         case 'createdAt':
-          return DateRange;
         case 'updatedAt':
-          return DateRange;
+          return () => (
+            <DateRange
+              fromDate={new Date(selectedItems.after)}
+              toDate={new Date(selectedItems.before)}
+              onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
+              onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
+            />
+          );
         default:
           return () => <div />;
       }
@@ -123,9 +129,9 @@ const getFilterInputArea = ({
         case 'price':
           return PriceRange;
         case 'createdAt':
-          return DateRange;
+          return () => <DateRange />;
         case 'updatedAt':
-          return DateRange;
+          return () => <DateRange />;
         case 'tags':
           return Tags;
         case 'exporter':
@@ -174,19 +180,19 @@ const getFilterInputArea = ({
     case 'batch':
       switch (selectedFilterItem) {
         case 'deliveredAt':
-          return DateRange;
+          return () => <DateRange />;
         case 'expiredAt':
-          return DateRange;
+          return () => <DateRange />;
         case 'producedAt':
-          return DateRange;
+          return () => <DateRange />;
         case 'packaging':
           return Packaging;
         case 'tags':
           return Tags;
         case 'createdAt':
-          return DateRange;
+          return () => <DateRange />;
         case 'updatedAt':
-          return DateRange;
+          return () => <DateRange />;
         default:
           return () => <div />;
       }
@@ -236,31 +242,31 @@ const getFilterInputArea = ({
         case 'airports':
           return () => Ports({ portType: 'Airport' });
         case 'cargoReady':
-          return DateRange;
+          return () => <DateRange />;
         case 'loadPortDeparture':
-          return DateRange;
+          return () => <DateRange />;
         case 'firstTransitPortArrival':
-          return DateRange;
+          return () => <DateRange />;
         case 'firstTransitPortDeparture':
-          return DateRange;
+          return () => <DateRange />;
         case 'secondTransitPortArrival':
-          return DateRange;
+          return () => <DateRange />;
         case 'secondTransitPortDeparture':
-          return DateRange;
+          return () => <DateRange />;
         case 'dischargePortArrival':
-          return DateRange;
+          return () => <DateRange />;
         case 'customClearance':
-          return DateRange;
+          return () => <DateRange />;
         case 'warehouseArrival':
-          return DateRange;
+          return () => <DateRange />;
         case 'deliveryReady':
-          return DateRange;
+          return () => <DateRange />;
         case 'tags':
           return Tags;
         case 'createdAt':
-          return DateRange;
+          return () => <DateRange />;
         case 'updatedAt':
-          return DateRange;
+          return () => <DateRange />;
         default:
           return () => <div />;
       }

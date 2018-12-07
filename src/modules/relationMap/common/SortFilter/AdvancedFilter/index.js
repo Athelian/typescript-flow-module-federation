@@ -2,6 +2,8 @@
 import React, { useRef, useState, useReducer } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import { getByPathWithDefault as get } from 'utils/fp';
+import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
@@ -21,6 +23,9 @@ import {
 } from './style';
 import type { EntityTypes, ActiveFilters, FilterToggles } from './type';
 
+type Props = {
+  onApply: Function,
+};
 type State = {
   selectedEntityType: EntityTypes,
   selectedFilterItem: string,
@@ -75,6 +80,69 @@ const defaultFilterMenuItemMap = {
   shipment: 'forwarder',
 };
 
+const FILTER = {
+  completelyBatched: 'completelyBatched',
+  completelyShipped: 'completelyShipped',
+  showActive: null,
+  showArchived: null,
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  poNo: 'poNos',
+  inCharge: 'inChargeIds',
+  exporter: 'exporterIds',
+};
+
+const getFilterValue = (name: string, data: any) => {
+  switch (name) {
+    default:
+      return data;
+    case 'poNo':
+      return data.map(d => d.poNo);
+    case 'inCharge':
+    case 'exporter':
+      return data.map(d => d.id);
+    case 'createdAt':
+    case 'updatedAt':
+      return {
+        ...(data.after && { after: formatToDateTimeGraphql(new Date(data.after)) }),
+        ...(data.before && { before: formatToDateTimeGraphql(new Date(data.before)) }),
+      };
+  }
+};
+
+const convertToggleFilter = (state: Object, type: string) => {
+  const toggleFilter = get({}, `filterToggles.${type}`, state);
+  const filters: Array<any> = Object.entries(toggleFilter);
+  const query = filters.reduce((currentQuery, filter) => {
+    const [filterName, filterValue] = filter;
+    if (FILTER[filterName]) {
+      return Object.assign(currentQuery, {
+        [FILTER[filterName]]: filterValue,
+      });
+    }
+    return currentQuery;
+  }, {});
+  return query;
+};
+
+const convertActiveFilter = (state: Object, type: string) => {
+  const filters = get({}, `activeFilters.${type}`, state);
+  const query = filters.reduce((currentQuery, filterName) => {
+    if (FILTER[filterName]) {
+      const rawValue = get({}, `selectedItems.${type}.${filterName}`, state);
+      const filterValue = getFilterValue(filterName, rawValue);
+      return Object.assign(currentQuery, {
+        [FILTER[filterName]]: filterValue,
+      });
+    }
+    return currentQuery;
+  }, {});
+  return query;
+};
+const convertToFilterQuery = (state: Object) => ({
+  ...convertActiveFilter(state, 'order'),
+  ...convertToggleFilter(state, 'order'),
+});
 function reducer(state, action) {
   console.warn({
     state,
@@ -135,6 +203,25 @@ function reducer(state, action) {
       };
     }
 
+    case 'SET_SELECT_ITEM': {
+      const { selectItem, field } = action;
+
+      const selected =
+        state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
+      const newSelected = { ...selected, [field]: selectItem };
+
+      return {
+        ...state,
+        selectedItems: {
+          ...state.selectedItems,
+          [state.selectedEntityType]: {
+            ...state.selectedItems[state.selectedEntityType],
+            [state.selectedFilterItem]: newSelected,
+          },
+        },
+      };
+    }
+
     case 'TOGGLE_SELECT_ITEM': {
       const { selectItem } = action;
 
@@ -164,7 +251,7 @@ function reducer(state, action) {
   }
 }
 
-function AdvanceFilter() {
+function AdvanceFilter({ onApply }: Props) {
   const filterButtonRef = useRef(null);
   const [filterIsApplied] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -174,6 +261,7 @@ function AdvanceFilter() {
     state.activeFilters.item.length > 0 ||
     state.activeFilters.order.length > 0 ||
     state.activeFilters.shipment.length > 0;
+  console.log(state);
   return (
     <UIConsumer>
       {uiState => (
@@ -213,6 +301,10 @@ function AdvanceFilter() {
                       {isDirty && (
                         <div className={AdvancedFilterNavbarButtonsWrapperStyle}>
                           <CancelButton
+                            onClick={() => {
+                              dispatch({ type: 'RESET' });
+                              onApply({ filter: {} });
+                            }}
                             label={
                               <FormattedMessage
                                 id="modules.RelationMaps.filter.reset"
@@ -221,6 +313,10 @@ function AdvanceFilter() {
                             }
                           />
                           <SaveButton
+                            onClick={() => {
+                              const filter = convertToFilterQuery(state);
+                              onApply({ filter });
+                            }}
                             label={
                               <FormattedMessage
                                 id="modules.RelationMaps.filter.apply"
@@ -269,12 +365,13 @@ function AdvanceFilter() {
                       <FilterInputArea
                         selectedEntityType={state.selectedEntityType}
                         selectedFilterItem={state.selectedFilterItem}
-                        onToggleSelect={selectItem =>
+                        onToggleSelect={(selectItem: any, field?: string) => {
                           dispatch({
-                            type: 'TOGGLE_SELECT_ITEM',
+                            type: field ? 'SET_SELECT_ITEM' : 'TOGGLE_SELECT_ITEM',
                             selectItem,
-                          })
-                        }
+                            ...(field ? { field } : {}),
+                          });
+                        }}
                         selectedItems={
                           state.selectedItems[state.selectedEntityType][state.selectedFilterItem] ||
                           []

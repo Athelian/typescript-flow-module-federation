@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { get } from 'lodash/fp';
+import { get, isObject } from 'lodash/fp';
 import Icon from 'components/Icon';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
 import {
@@ -19,7 +19,7 @@ type Props = {
   changeSelectedFilterItem: (filter: string) => void,
   isActive: boolean,
   toggleActiveFilter: (filter: string) => void,
-  data: Array<any>,
+  data: any,
 };
 
 export default function FilterMenuItem({
@@ -41,7 +41,7 @@ export default function FilterMenuItem({
       <div className={FilterMenuItemStyle}>
         <ToggleButton
           isOn={isActive}
-          hideToggle={!(data.length > 0)}
+          hideToggle={!((isObject(data) ? Object.keys(data) : data).length > 0)}
           onClick={() => toggleActiveFilter(name)}
         />
         <div className={FilterMenuLabelStyle}>{label}</div>
