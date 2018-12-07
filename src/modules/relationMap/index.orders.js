@@ -7,7 +7,6 @@ import { Query } from 'react-apollo';
 import { isEmpty } from 'utils/fp';
 import { ActionContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
-import orderMessages from 'modules/order/messages';
 import LoadingIcon from 'components/LoadingIcon';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
@@ -19,6 +18,7 @@ import SummaryBadge from './common/SummaryBadge';
 import { ActionSubscribe } from './common/ActionPanel';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
 import { FunctionWrapperStyle, BadgeWrapperStyle, RelationMapGridStyle } from './style';
+import messages from './messages';
 
 type Props = {
   intl: IntlShape,
@@ -60,11 +60,39 @@ const Order = ({ intl }: Props) => (
                                 sort={sort}
                                 sortInputs={[
                                   {
-                                    title: intl.formatMessage(orderMessages.updatedAtSort),
+                                    title: intl.formatMessage(messages.poNoSort),
+                                    value: 'poNo',
+                                  },
+                                  {
+                                    title: intl.formatMessage(messages.piNoSort),
+                                    value: 'piNo',
+                                  },
+                                  {
+                                    title: intl.formatMessage(messages.issuedAtSort),
+                                    value: 'issuedAt',
+                                  },
+                                  {
+                                    title: intl.formatMessage(messages.exporterSort),
+                                    value: 'exporter',
+                                  },
+                                  {
+                                    title: intl.formatMessage(messages.currencySort),
+                                    value: 'currency',
+                                  },
+                                  {
+                                    title: intl.formatMessage(messages.incotermSort),
+                                    value: 'incoterm',
+                                  },
+                                  {
+                                    title: intl.formatMessage(messages.deliveryPlaceSort),
+                                    value: 'deliveryPlace',
+                                  },
+                                  {
+                                    title: intl.formatMessage(messages.updatedAtSort),
                                     value: 'updatedAt',
                                   },
                                   {
-                                    title: intl.formatMessage(orderMessages.createdAtSort),
+                                    title: intl.formatMessage(messages.createdAtSort),
                                     value: 'createdAt',
                                   },
                                 ]}

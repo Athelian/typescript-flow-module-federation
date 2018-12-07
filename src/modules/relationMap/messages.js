@@ -38,9 +38,33 @@ export default defineMessages({
     id: 'global.items',
     defaultMessage: 'ITEMS',
   },
-  poSort: {
-    id: 'modules.RelationMaps.sort.po',
+  poNoSort: {
+    id: 'modules.RelationMaps.sort.poNo',
     defaultMessage: 'PO No',
+  },
+  piNoSort: {
+    id: 'modules.RelationMaps.sort.piNo',
+    defaultMessage: 'PI No',
+  },
+  issuedAtSort: {
+    id: 'modules.RelationMaps.sort.issuedAt',
+    defaultMessage: 'PO Issuance Date',
+  },
+  exporterSort: {
+    id: 'modules.RelationMaps.sort.exporter',
+    defaultMessage: 'Exporter',
+  },
+  currencySort: {
+    id: 'modules.RelationMaps.sort.currency',
+    defaultMessage: 'Currency',
+  },
+  incotermSort: {
+    id: 'modules.RelationMaps.sort.incoterm',
+    defaultMessage: 'Incoterm',
+  },
+  deliveryPlaceSort: {
+    id: 'modules.RelationMaps.sort.deliveryPlace',
+    defaultMessage: 'Place of Delivery',
   },
   updatedAtSort: {
     id: 'modules.RelationMaps.sort.updatedAt',
