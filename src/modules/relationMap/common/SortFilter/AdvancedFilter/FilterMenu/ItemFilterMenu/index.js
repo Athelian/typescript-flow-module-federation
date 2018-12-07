@@ -11,6 +11,25 @@ type Props = {
   toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
   changeSelectedFilterItem: string => void,
+  selectedItems: {
+    order: Object,
+    item: Object,
+    batch: Object,
+    shipment: Object,
+  },
+};
+
+const getSelectData = (
+  selectedItems: {
+    order: Object,
+    item: Object,
+    batch: Object,
+    shipment: Object,
+  },
+  field: string
+) => {
+  const result = selectedItems.item[field] || [];
+  return result;
 };
 
 export default function ItemFilterMenu({
@@ -20,6 +39,7 @@ export default function ItemFilterMenu({
   toggleFilterToggle,
   selectedFilterItem,
   changeSelectedFilterItem,
+  selectedItems,
 }: Props) {
   const filtersMap = [
     {
@@ -27,8 +47,16 @@ export default function ItemFilterMenu({
       icon: 'ORDER_ITEM',
       filters: [
         { name: 'price', label: <FormattedMessage {...messages.price} />, data: [] },
-        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
-        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
+        {
+          name: 'createdAt',
+          label: <FormattedMessage {...messages.createdAt} />,
+          data: getSelectData(selectedItems, 'createdAt'),
+        },
+        {
+          name: 'updatedAt',
+          label: <FormattedMessage {...messages.updatedAt} />,
+          data: getSelectData(selectedItems, 'updatedAt'),
+        },
       ],
     },
     {
@@ -40,8 +68,18 @@ export default function ItemFilterMenu({
       label: <FormattedMessage {...messages.endProduct} />,
       icon: 'PROVIDER',
       filters: [
-        { name: 'exporter', label: <FormattedMessage {...messages.exporter} />, data: [] },
-        { name: 'supplier', label: <FormattedMessage {...messages.supplier} />, data: [] },
+        {
+          name: 'exporter',
+          field: 'group.name',
+          label: <FormattedMessage {...messages.exporter} />,
+          data: getSelectData(selectedItems, 'exporter'),
+        },
+        {
+          name: 'supplier',
+          field: 'group.name',
+          label: <FormattedMessage {...messages.supplier} />,
+          data: getSelectData(selectedItems, 'supplier'),
+        },
         { name: 'origin', label: <FormattedMessage {...messages.origin} />, data: [] },
         {
           name: 'specifications',

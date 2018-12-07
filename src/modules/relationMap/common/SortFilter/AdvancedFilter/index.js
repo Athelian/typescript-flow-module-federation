@@ -81,15 +81,42 @@ const defaultFilterMenuItemMap = {
 };
 
 const FILTER = {
-  completelyBatched: 'completelyBatched',
-  completelyShipped: 'completelyShipped',
-  showActive: null,
-  showArchived: null,
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  poNo: 'poNos',
-  inCharge: 'inChargeIds',
-  exporter: 'exporterIds',
+  order: {
+    completelyBatched: 'completelyBatched',
+    completelyShipped: 'completelyShipped',
+    showActive: null,
+    showArchived: null,
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    poNo: 'poNos',
+    inCharge: 'inChargeIds',
+    exporter: 'exporterIds',
+  },
+  item: {
+    createdAt: 'orderItemCreatedAt',
+    updatedAt: 'orderItemUpdatedAt',
+    exporter: 'productProviderExporterIds',
+    supplier: 'productProviderSupplierIds',
+  },
+  batch: {
+    deliveredAt: 'batchDeliveredAt',
+    expiredAt: 'batchExpiredAt',
+    producedAt: 'batchProducedAt',
+  },
+  shipment: {
+    cargoReady: 'shipmentCargoReady',
+    loadPortDeparture: 'shipmentLoadPortDeparture',
+    firstTransitPortArrival: 'shipmentFirstTransitPortArrival',
+    firstTransitPortDeparture: 'shipmentFirstTransitPortDeparturel',
+    secondTransitPortArrival: 'shipmentSecondTransitPortArrival',
+    secondTransitPortDeparture: 'shipmentSecondTransitPortDeparture',
+    dischargePortArrival: 'shipmentDischargePortArrival',
+    customClearance: 'shipmentCustomClearance',
+    warehouseArrival: 'shipmentWarehouseArrival',
+    deliveryReady: 'shipmentDeliveryReady',
+    forwarder: 'shipmentForwarderIds',
+    inCharge: 'shipmentInChargeIds',
+  },
 };
 
 const getFilterValue = (name: string, data: any) => {
@@ -100,9 +127,24 @@ const getFilterValue = (name: string, data: any) => {
       return data.map(d => d.poNo);
     case 'inCharge':
     case 'exporter':
+    case 'supplier':
+    case 'forwarder':
       return data.map(d => d.id);
     case 'createdAt':
     case 'updatedAt':
+    case 'deliveredAt':
+    case 'expiredAt':
+    case 'producedAt':
+    case 'cargoReady':
+    case 'loadPortDeparture':
+    case 'firstTransitPortArrival':
+    case 'firstTransitPortDeparture':
+    case 'secondTransitPortArrival':
+    case 'secondTransitPortDeparture':
+    case 'dischargePortArrival':
+    case 'customClearance':
+    case 'warehouseArrival':
+    case 'deliveryReady':
       return {
         ...(data.after && { after: formatToDateTimeGraphql(new Date(data.after)) }),
         ...(data.before && { before: formatToDateTimeGraphql(new Date(data.before)) }),
@@ -115,9 +157,9 @@ const convertToggleFilter = (state: Object, type: string) => {
   const filters: Array<any> = Object.entries(toggleFilter);
   const query = filters.reduce((currentQuery, filter) => {
     const [filterName, filterValue] = filter;
-    if (FILTER[filterName]) {
+    if (FILTER[type] && FILTER[type][filterName]) {
       return Object.assign(currentQuery, {
-        [FILTER[filterName]]: filterValue,
+        [FILTER[type][filterName]]: filterValue,
       });
     }
     return currentQuery;
@@ -128,11 +170,11 @@ const convertToggleFilter = (state: Object, type: string) => {
 const convertActiveFilter = (state: Object, type: string) => {
   const filters = get({}, `activeFilters.${type}`, state);
   const query = filters.reduce((currentQuery, filterName) => {
-    if (FILTER[filterName]) {
+    if (FILTER[type] && FILTER[type][filterName]) {
       const rawValue = get({}, `selectedItems.${type}.${filterName}`, state);
       const filterValue = getFilterValue(filterName, rawValue);
       return Object.assign(currentQuery, {
-        [FILTER[filterName]]: filterValue,
+        [FILTER[type][filterName]]: filterValue,
       });
     }
     return currentQuery;
@@ -141,6 +183,9 @@ const convertActiveFilter = (state: Object, type: string) => {
 };
 const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'order'),
+  ...convertActiveFilter(state, 'item'),
+  ...convertActiveFilter(state, 'batch'),
+  ...convertActiveFilter(state, 'shipment'),
   ...convertToggleFilter(state, 'order'),
 });
 function reducer(state, action) {

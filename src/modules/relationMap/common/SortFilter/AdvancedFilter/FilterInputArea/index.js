@@ -129,9 +129,15 @@ const getFilterInputArea = ({
         case 'price':
           return PriceRange;
         case 'createdAt':
-          return () => <DateRange />;
         case 'updatedAt':
-          return () => <DateRange />;
+          return () => (
+            <DateRange
+              fromDate={new Date(selectedItems.after)}
+              toDate={new Date(selectedItems.before)}
+              onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
+              onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
+            />
+          );
         case 'tags':
           return Tags;
         case 'exporter':
@@ -144,7 +150,12 @@ const getFilterInputArea = ({
                 types: ['Exporter'],
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>
+                <MiniSelectorItem
+                  onClick={() => onToggleSelect(item)}
+                  selectable
+                  selected={selectedItems.includes(item)}
+                  key={item.id}
+                >
                   <Display align="left">{item.group.name}</Display>
                 </MiniSelectorItem>
               ),
@@ -160,7 +171,12 @@ const getFilterInputArea = ({
                 types: ['Supplier'],
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>
+                <MiniSelectorItem
+                  onClick={() => onToggleSelect(item)}
+                  selectable
+                  selected={selectedItems.includes(item)}
+                  key={item.id}
+                >
                   <Display align="left">{item.group.name}</Display>
                 </MiniSelectorItem>
               ),
@@ -180,19 +196,22 @@ const getFilterInputArea = ({
     case 'batch':
       switch (selectedFilterItem) {
         case 'deliveredAt':
-          return () => <DateRange />;
         case 'expiredAt':
-          return () => <DateRange />;
         case 'producedAt':
-          return () => <DateRange />;
+          return () => (
+            <DateRange
+              fromDate={new Date(selectedItems.after)}
+              toDate={new Date(selectedItems.before)}
+              onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
+              onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
+            />
+          );
         case 'packaging':
           return Packaging;
         case 'tags':
           return Tags;
         case 'createdAt':
-          return () => <DateRange />;
         case 'updatedAt':
-          return () => <DateRange />;
         default:
           return () => <div />;
       }
@@ -208,7 +227,12 @@ const getFilterInputArea = ({
                 types: ['Forwarder'],
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>
+                <MiniSelectorItem
+                  onClick={() => onToggleSelect(item)}
+                  selectable
+                  selected={selectedItems.includes(item)}
+                  key={item.id}
+                >
                   <Display align="left">{item.group.name}</Display>
                 </MiniSelectorItem>
               ),
@@ -223,7 +247,12 @@ const getFilterInputArea = ({
                 query: '',
               },
               renderItem: (item: Object) => (
-                <MiniSelectorItem key={item.id}>
+                <MiniSelectorItem
+                  onClick={() => onToggleSelect(item)}
+                  selectable
+                  selected={selectedItems.includes(item)}
+                  key={item.id}
+                >
                   <UserAvatar
                     firstName={item.firstName}
                     lastName={item.lastName}
@@ -242,31 +271,27 @@ const getFilterInputArea = ({
         case 'airports':
           return () => Ports({ portType: 'Airport' });
         case 'cargoReady':
-          return () => <DateRange />;
         case 'loadPortDeparture':
-          return () => <DateRange />;
         case 'firstTransitPortArrival':
-          return () => <DateRange />;
         case 'firstTransitPortDeparture':
-          return () => <DateRange />;
         case 'secondTransitPortArrival':
-          return () => <DateRange />;
         case 'secondTransitPortDeparture':
-          return () => <DateRange />;
         case 'dischargePortArrival':
-          return () => <DateRange />;
         case 'customClearance':
-          return () => <DateRange />;
         case 'warehouseArrival':
-          return () => <DateRange />;
         case 'deliveryReady':
-          return () => <DateRange />;
+          return () => (
+            <DateRange
+              fromDate={new Date(selectedItems.after)}
+              toDate={new Date(selectedItems.before)}
+              onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
+              onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
+            />
+          );
         case 'tags':
           return Tags;
         case 'createdAt':
-          return () => <DateRange />;
         case 'updatedAt':
-          return () => <DateRange />;
         default:
           return () => <div />;
       }

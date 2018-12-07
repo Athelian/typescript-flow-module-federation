@@ -11,6 +11,25 @@ type Props = {
   toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
   changeSelectedFilterItem: string => void,
+  selectedItems: {
+    order: Object,
+    item: Object,
+    batch: Object,
+    shipment: Object,
+  },
+};
+
+const getSelectData = (
+  selectedItems: {
+    order: Object,
+    item: Object,
+    batch: Object,
+    shipment: Object,
+  },
+  field: string
+) => {
+  const result = selectedItems.shipment[field] || [];
+  return result;
 };
 
 export default function ShipmentFilterMenu({
@@ -20,65 +39,82 @@ export default function ShipmentFilterMenu({
   toggleFilterToggle,
   selectedFilterItem,
   changeSelectedFilterItem,
+  selectedItems,
 }: Props) {
   const filtersMap = [
     {
       label: <FormattedMessage {...messages.shipment} />,
       icon: 'SHIPMENT',
       filters: [
-        { name: 'forwarder', label: <FormattedMessage {...messages.forwarder} />, data: [] },
-        { name: 'inCharge', label: <FormattedMessage {...messages.inCharge} />, data: [] },
-        { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
-        { name: 'airports', label: <FormattedMessage {...messages.airports} />, data: [] },
-        { name: 'cargoReady', label: <FormattedMessage {...messages.cargoReady} />, data: [] },
+        {
+          name: 'forwarder',
+          field: 'group.name',
+          label: <FormattedMessage {...messages.forwarder} />,
+          data: getSelectData(selectedItems, 'forwarder'),
+        },
+        {
+          name: 'inCharge',
+          field: 'group.name',
+          label: <FormattedMessage {...messages.inCharge} />,
+          data: getSelectData(selectedItems, 'inCharge'),
+        },
+        // temporary hide
+        // { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
+        // { name: 'airports', label: <FormattedMessage {...messages.airports} />, data: [] },
+        {
+          name: 'cargoReady',
+          label: <FormattedMessage {...messages.cargoReady} />,
+          data: getSelectData(selectedItems, 'cargoReady'),
+        },
         {
           name: 'loadPortDeparture',
           label: <FormattedMessage {...messages.loadPortDeparture} />,
-          data: [],
+          data: getSelectData(selectedItems, 'loadPortDeparture'),
         },
         {
           name: 'firstTransitPortArrival',
           label: <FormattedMessage {...messages.firstTransitPortArrival} />,
-          data: [],
+          data: getSelectData(selectedItems, 'firstTransitPortArrival'),
         },
         {
           name: 'firstTransitPortDeparture',
           label: <FormattedMessage {...messages.firstTransitPortDeparture} />,
-          data: [],
+          data: getSelectData(selectedItems, 'firstTransitPortDeparture'),
         },
         {
           name: 'secondTransitPortArrival',
           label: <FormattedMessage {...messages.secondTransitPortArrival} />,
-          data: [],
+          data: getSelectData(selectedItems, 'cargoReady'),
         },
         {
           name: 'secondTransitPortDeparture',
           label: <FormattedMessage {...messages.secondTransitPortDeparture} />,
-          data: [],
+          data: getSelectData(selectedItems, 'secondTransitPortDeparture'),
         },
         {
           name: 'dischargePortArrival',
           label: <FormattedMessage {...messages.dischargePortArrival} />,
-          data: [],
+          data: getSelectData(selectedItems, 'dischargePortArrival'),
         },
         {
           name: 'customClearance',
           label: <FormattedMessage {...messages.customClearance} />,
-          data: [],
+          data: getSelectData(selectedItems, 'customClearance'),
         },
         {
           name: 'warehouseArrival',
           label: <FormattedMessage {...messages.warehouseArrival} />,
-          data: [],
+          data: getSelectData(selectedItems, 'warehouseArrival'),
         },
         {
           name: 'deliveryReady',
           label: <FormattedMessage {...messages.deliveryReady} />,
-          data: [],
+          data: getSelectData(selectedItems, 'deliveryReady'),
         },
         { name: 'tags', label: <FormattedMessage {...messages.tags} />, data: [] },
-        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
-        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
+        // temporary hide, not yet has this filter from graphql
+        // { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
+        // { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
       ],
     },
   ];
