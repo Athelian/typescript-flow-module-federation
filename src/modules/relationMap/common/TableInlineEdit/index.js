@@ -12,7 +12,7 @@ import emitter from 'utils/emitter';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton, SelectTemplateButton } from 'components/Buttons';
+import { SaveButton, CancelButton, SelectTemplateButton, ExportButton } from 'components/Buttons';
 import { ToggleInput } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
@@ -357,6 +357,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                         )
                       }
                     />
+                    <ExportButton type="" exportQuery={{}} variables={{}} />
                     {errorMessage && errorMessage.length > 0 && (
                       <div style={{ width: 400 }}> Error: {errorMessage} </div>
                     )}
