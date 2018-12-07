@@ -21,7 +21,6 @@ import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
 import SelectTemplate from 'modules/tableTemplate/common/SelectTemplate';
-
 import {
   orderColumnFields,
   orderItemColumnFields,
@@ -44,6 +43,7 @@ import TableItemForCustomFields from './components/TableItem/index.customFields'
 import { entitiesUpdateManyMutation } from './mutation';
 import { findAllPossibleOrders, totalLinePerOrder, parseChangedData } from './helpers';
 import normalize from './normalize';
+import { ordersByIDsExportQuery } from './query';
 import {
   EditTableViewWrapperStyle,
   HeaderWrapperStyle,
@@ -357,7 +357,13 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                         )
                       }
                     />
-                    <ExportButton type="" exportQuery={{}} variables={{}} />
+                    <ExportButton
+                      type="Orders"
+                      exportQuery={ordersByIDsExportQuery}
+                      variables={{
+                        ids: orderIds.map(orderId => orderId),
+                      }}
+                    />
                     {errorMessage && errorMessage.length > 0 && (
                       <div style={{ width: 400 }}> Error: {errorMessage} </div>
                     )}
