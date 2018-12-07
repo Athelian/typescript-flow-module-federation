@@ -51,10 +51,11 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                 renderSelect={({ ...selectProps }) => (
                   <DefaultSearchSelect
                     {...selectProps}
-                    forceHoverStyle
                     hasError={hasError}
                     isOpen={isFocused}
                     itemToString={item => (item ? item.description || item.name : '')}
+                    width="200px"
+                    align="left"
                   />
                 )}
                 renderOptions={({ ...optionProps }) => (
@@ -64,6 +65,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                     itemToString={item => (item ? item.description || item.name : '')}
                     itemToValue={item => (item ? item.name : '')}
                     width="200px"
+                    align="left"
                   />
                 )}
                 afterClearSelection={() => {

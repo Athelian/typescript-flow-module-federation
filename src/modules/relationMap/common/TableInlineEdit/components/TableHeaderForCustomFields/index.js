@@ -1,9 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ToggleInput } from 'components/Form';
+import { CheckboxInput } from 'components/Form';
 import { uuid } from 'utils/id';
-import { WrapperHeaderStyle, TitleStyle, HeaderStyle } from './style';
+import {
+  TableHeaderWrapperStyle,
+  TableHeaderTitleStyle,
+  TableHeaderGroupStyle,
+  TableColumnHeaderStyle,
+  TableColumnStyle,
+} from '../TableHeader/style';
 
 type Props = {
   entity: string,
@@ -64,41 +70,42 @@ export default function TableHeader({
   templateColumns,
 }: Props) {
   return (
-    <div className={WrapperHeaderStyle}>
+    <div className={TableHeaderWrapperStyle}>
       {shouldShowCustomFields({ entity, customFields, hideColumns, showAll, templateColumns }) && (
-        <div>
-          <h3 className={TitleStyle}>
+        <>
+          <div className={TableHeaderTitleStyle(entity)}>
             <FormattedMessage
               id="modules.tableTemplate.customFields"
               defaultMessage="CUSTOM FIELDS"
             />
-          </h3>
-          <div className={WrapperHeaderStyle}>
+          </div>
+          <div className={TableHeaderGroupStyle}>
             {customFields.map(({ name: text }, index) => {
               const fieldName = `${entity}-customFields-${index}`;
 
               return (
                 <>
-                  {!isHiddenColumn({
+                  {isHiddenColumn({
                     showAll,
                     hideColumns,
                     fieldName,
                     templateColumns,
-                  }) && (
-                    <p key={uuid()} className={HeaderStyle}>
-                      <ToggleInput
-                        toggled={!hideColumns.includes(fieldName)}
-                        onToggle={() => onToggle(fieldName)}
-                      >
-                        {text}
-                      </ToggleInput>
-                    </p>
+                  }) ? null : (
+                    <div key={uuid()} className={TableColumnHeaderStyle(entity)}>
+                      {showAll && (
+                        <CheckboxInput
+                          checked={!hideColumns.includes(fieldName)}
+                          onToggle={() => onToggle(fieldName)}
+                        />
+                      )}
+                      <div className={TableColumnStyle}>{text}</div>
+                    </div>
                   )}
                 </>
               );
             })}
           </div>
-        </div>
+        </>
       )}
     </div>
   );

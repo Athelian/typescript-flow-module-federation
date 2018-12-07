@@ -22,13 +22,7 @@ const defaultProps = {
 export default function InlineTextInput({ name, value, isRequired, disabled }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
   return (
-    <DefaultStyle
-      disabled={disabled}
-      type="text"
-      isFocused={isFocused}
-      hasError={hasError}
-      forceHoverStyle
-    >
+    <DefaultStyle disabled={disabled} type="text" isFocused={isFocused} hasError={hasError}>
       <TextInput
         name={name}
         disabled={disabled}
@@ -41,6 +35,7 @@ export default function InlineTextInput({ name, value, isRequired, disabled }: P
             value: inputHandlers.value,
           });
         }}
+        align="left"
       />
     </DefaultStyle>
   );

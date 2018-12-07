@@ -21,7 +21,6 @@ import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
 import SelectTemplate from 'modules/tableTemplate/common/SelectTemplate';
-
 import {
   orderColumnFields,
   orderItemColumnFields,
@@ -33,23 +32,25 @@ import {
   shipmentColumns,
 } from 'modules/tableTemplate/constants';
 import QueryForAllCustomFields from 'modules/tableTemplate/common/QueryForAllCustomFields';
-import TableRow from './components/TableRow';
-import LineNumber from './components/LineNumber';
-import TableHeader from './components/TableHeader';
-import TableHeaderForCustomFields from './components/TableHeaderForCustomFields';
-import TableItem from './components/TableItem';
-import TableEmptyItem from './components/TableEmptyItem';
+import {
+  TableRow,
+  LineNumber,
+  TableHeader,
+  TableHeaderForCustomFields,
+  TableItem,
+  TableEmptyItem,
+} from './components';
 import TableItemForCustomFields from './components/TableItem/index.customFields';
-
 import { entitiesUpdateManyMutation } from './mutation';
 import { findAllPossibleOrders, totalLinePerOrder, parseChangedData } from './helpers';
 import normalize from './normalize';
 import {
   EditTableViewWrapperStyle,
+  NavbarWrapperStyle,
   HeaderWrapperStyle,
   SidebarWrapperStyle,
+  SidebarFadeStyle,
   BodyWrapperStyle,
-  ButtonToolbarStyle,
 } from './style';
 
 type Props = {
@@ -363,7 +364,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                   </SlideViewNavBar>
                 }
               >
-                <div className={ButtonToolbarStyle}>
+                <div className={NavbarWrapperStyle}>
                   <UserConsumer>
                     {({ user }) => {
                       const lastUsedTemplate = window.localStorage.getItem(
@@ -380,39 +381,37 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                               {lastUsedTemplate}
                             </div>
                           )}
-                          <div style={{ display: 'flex' }}>
-                            <SelectTemplateButton onClick={() => setShowTemplate(true)} />
-                            <SlideView
-                              isOpen={showTemplate}
-                              onRequestClose={() => setShowTemplate(false)}
-                              options={{ width: '980px' }}
-                            >
-                              <SelectTemplate
-                                onSelect={template => {
-                                  setShowTemplate(false);
-                                  window.localStorage.setItem(
-                                    `${user.id}-table-template`,
-                                    template.name
-                                  );
-                                  window.localStorage.setItem(
-                                    `${user.id}-table-template-fields`,
-                                    template.fields
-                                  );
-                                  setTemplateColumns(template.fields);
-                                }}
-                                onCancel={() => setShowTemplate(false)}
-                              />
-                            </SlideView>
-                            <ToggleInput
-                              toggled={showAll}
-                              onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
-                            >
-                              <FormattedMessage
-                                id="modules.RelationMaps.showAll"
-                                defaultMessage="SHOW ALL"
-                              />
-                            </ToggleInput>
-                          </div>
+                          <SelectTemplateButton onClick={() => setShowTemplate(true)} />
+                          <SlideView
+                            isOpen={showTemplate}
+                            onRequestClose={() => setShowTemplate(false)}
+                            options={{ width: '980px' }}
+                          >
+                            <SelectTemplate
+                              onSelect={template => {
+                                setShowTemplate(false);
+                                window.localStorage.setItem(
+                                  `${user.id}-table-template`,
+                                  template.name
+                                );
+                                window.localStorage.setItem(
+                                  `${user.id}-table-template-fields`,
+                                  template.fields
+                                );
+                                setTemplateColumns(template.fields);
+                              }}
+                              onCancel={() => setShowTemplate(false)}
+                            />
+                          </SlideView>
+                          <ToggleInput
+                            toggled={showAll}
+                            onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
+                          >
+                            <FormattedMessage
+                              id="modules.RelationMaps.showAll"
+                              defaultMessage="SHOW ALL"
+                            />
+                          </ToggleInput>
                         </>
                       );
                     }}
@@ -748,6 +747,73 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                     })}
                   </div>
 
+                  <div className={HeaderWrapperStyle} ref={headerRef}>
+                    <TableHeader
+                      entity="ORDER"
+                      showAll={showAll}
+                      info={orderColumns}
+                      hideColumns={hideColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
+                    <TableHeaderForCustomFields
+                      entity="ORDER"
+                      customFields={orderCustomFields}
+                      onToggle={onToggle}
+                      hideColumns={hideColumns}
+                      showAll={showAll}
+                      templateColumns={templateColumns}
+                    />
+                    <TableHeader
+                      entity="ORDER_ITEM"
+                      showAll={showAll}
+                      info={orderItemColumns}
+                      hideColumns={hideColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
+                    <TableHeaderForCustomFields
+                      entity="ORDER_ITEM"
+                      customFields={orderItemCustomFields}
+                      onToggle={onToggle}
+                      hideColumns={hideColumns}
+                      showAll={showAll}
+                      templateColumns={templateColumns}
+                    />
+                    <TableHeader
+                      entity="BATCH"
+                      showAll={showAll}
+                      info={batchColumns}
+                      hideColumns={hideColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
+                    <TableHeaderForCustomFields
+                      entity="BATCH"
+                      customFields={batchCustomFields}
+                      onToggle={onToggle}
+                      hideColumns={hideColumns}
+                      showAll={showAll}
+                      templateColumns={templateColumns}
+                    />
+                    <TableHeader
+                      entity="SHIPMENT"
+                      showAll={showAll}
+                      info={shipmentColumns}
+                      hideColumns={hideColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
+                    <TableHeaderForCustomFields
+                      entity="SHIPMENT"
+                      customFields={shipmentCustomFields}
+                      onToggle={onToggle}
+                      hideColumns={hideColumns}
+                      showAll={showAll}
+                      templateColumns={templateColumns}
+                    />
+                  </div>
+
                   <div className={SidebarWrapperStyle} ref={sidebarRef}>
                     {orderIds.map((orderId, counter) => {
                       const order = mappingObjects.order[orderId];
@@ -759,10 +825,10 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                           orderItemsIds.includes(item.data.id)
                       );
                       const totalLines = totalLinePerOrder(orderItems, batchIds);
-                      // TODO: handle vertical scroll for line
+
                       return (
                         <LineNumber
-                          height={totalLines * 43}
+                          height={`${totalLines * 40}px`}
                           line={counter + 1}
                           key={`line-for-${orderId}`}
                         />
@@ -770,75 +836,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                     })}
                   </div>
 
-                  <div className={HeaderWrapperStyle} ref={headerRef}>
-                    <TableRow>
-                      <TableHeader
-                        entity="ORDER"
-                        showAll={showAll}
-                        info={orderColumns}
-                        hideColumns={hideColumns}
-                        templateColumns={templateColumns}
-                        onToggle={onToggle}
-                      />
-
-                      <TableHeaderForCustomFields
-                        entity="ORDER"
-                        customFields={orderCustomFields}
-                        onToggle={onToggle}
-                        hideColumns={hideColumns}
-                        showAll={showAll}
-                        templateColumns={templateColumns}
-                      />
-                      <TableHeader
-                        entity="ORDER_ITEM"
-                        showAll={showAll}
-                        info={orderItemColumns}
-                        hideColumns={hideColumns}
-                        templateColumns={templateColumns}
-                        onToggle={onToggle}
-                      />
-                      <TableHeaderForCustomFields
-                        entity="ORDER_ITEM"
-                        customFields={orderItemCustomFields}
-                        onToggle={onToggle}
-                        hideColumns={hideColumns}
-                        showAll={showAll}
-                        templateColumns={templateColumns}
-                      />
-                      <TableHeader
-                        entity="BATCH"
-                        showAll={showAll}
-                        info={batchColumns}
-                        hideColumns={hideColumns}
-                        templateColumns={templateColumns}
-                        onToggle={onToggle}
-                      />
-                      <TableHeaderForCustomFields
-                        entity="BATCH"
-                        customFields={batchCustomFields}
-                        onToggle={onToggle}
-                        hideColumns={hideColumns}
-                        showAll={showAll}
-                        templateColumns={templateColumns}
-                      />
-                      <TableHeader
-                        entity="SHIPMENT"
-                        showAll={showAll}
-                        info={shipmentColumns}
-                        hideColumns={hideColumns}
-                        templateColumns={templateColumns}
-                        onToggle={onToggle}
-                      />
-                      <TableHeaderForCustomFields
-                        entity="SHIPMENT"
-                        customFields={shipmentCustomFields}
-                        onToggle={onToggle}
-                        hideColumns={hideColumns}
-                        showAll={showAll}
-                        templateColumns={templateColumns}
-                      />
-                    </TableRow>
-                  </div>
+                  <div className={SidebarFadeStyle} />
                 </div>
               </Layout>
             )}

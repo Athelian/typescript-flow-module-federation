@@ -5,6 +5,7 @@ import { compact } from 'lodash';
 import differenceInDays from 'date-fns/differenceInDays';
 import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';
+import FormattedNumber from 'components/FormattedNumber';
 import {
   TimelineDateWrapperStyle,
   PrefixIconStyle,
@@ -70,7 +71,12 @@ const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
         )}
       </div>
       <div className={DelayStyle({ delayAmount, vertical })}>
-        {delayAmount !== 0 && `${delayAmount > 0 ? '+' : ''}${delayAmount}`}
+        {delayAmount !== 0 && (
+          <>
+            {delayAmount > 0 ? '+' : ''}
+            <FormattedNumber value={delayAmount} />
+          </>
+        )}
       </div>
 
       <div className={ApprovedIconStyle({ approved: !!approvedAt, vertical })}>

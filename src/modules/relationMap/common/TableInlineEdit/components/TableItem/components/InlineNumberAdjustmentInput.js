@@ -24,7 +24,7 @@ export default function InlineNumberInput({ name, value, adjustment, isRequired 
     isRequired,
   });
   return (
-    <DefaultStyle type="number" isFocused={isFocused} hasError={hasError} forceHoverStyle>
+    <DefaultStyle type="number" isFocused={isFocused} hasError={hasError}>
       <NumberInput
         name={name}
         {...inputHandlers}
@@ -36,6 +36,7 @@ export default function InlineNumberInput({ name, value, adjustment, isRequired 
             value: inputHandlers.value - adjustment,
           });
         }}
+        align="left"
       />
     </DefaultStyle>
   );

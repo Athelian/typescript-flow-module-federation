@@ -37,7 +37,7 @@ export const orderColumns = [
 
 export const orderItemColumns = [
   {
-    group: <FormattedMessage id="components.BatchItem.orderItem" defaultMessage="ORDER ITEM" />,
+    group: <FormattedMessage id="modules.Items.item" defaultMessage="ITEM" />,
     columns: [
       <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
       <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
@@ -66,7 +66,7 @@ export const batchColumns = [
     ],
   },
   {
-    group: <FormattedMessage id="modules.Batches.packing" defaultMessage="PACKING" />,
+    group: <FormattedMessage id="modules.Batches.packing" defaultMessage="PACKAGING" />,
     columns: [
       <FormattedMessage {...batchMessages.packageName} />,
       <FormattedMessage {...batchMessages.packageQuantity} />,

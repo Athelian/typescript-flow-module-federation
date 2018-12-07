@@ -20,7 +20,7 @@ const defaultProps = {
 export default function InlineNumberInput({ name, value, isRequired }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useNumberInput(value, { isRequired });
   return (
-    <DefaultStyle type="number" isFocused={isFocused} hasError={hasError} forceHoverStyle>
+    <DefaultStyle type="number" isFocused={isFocused} hasError={hasError}>
       <NumberInput
         name={name}
         {...inputHandlers}
@@ -32,6 +32,7 @@ export default function InlineNumberInput({ name, value, isRequired }: Props) {
             value: inputHandlers.value,
           });
         }}
+        align="left"
       />
     </DefaultStyle>
   );

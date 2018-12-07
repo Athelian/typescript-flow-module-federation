@@ -2,18 +2,21 @@
 import * as React from 'react';
 import { FormField } from 'modules/form';
 import { getByPath } from 'utils/fp';
-import { WrapperStyle, ItemStyle, DisableCellStyle } from './style';
-import InlineTextInput from './components/InlineTextInput';
-import InlineNumberInput from './components/InlineNumberInput';
-import InlineNumberAdjustmentInput from './components/InlineNumberAdjustmentInput';
-import InlineDateInput from './components/InlineDateInput';
-import InlineSearchEnumInput from './components/InlineSearchEnumInput';
-import InlineInChargeInput from './components/InlineInChargeInput';
-import InlineTagInput from './components/InlineTagInput';
-import InlineProductProvider from './components/InlineProductProvider';
-import InlineMetricInput from './components/InlineMetricInput';
-import InlineForwarderInput from './components/InlineForwarderInput';
-import InlineTimeLineInput from './components/InlineTimeLineInput';
+import { TableDisableCell } from '..';
+import { WrapperStyle, ItemStyle } from './style';
+import {
+  InlineTextInput,
+  InlineNumberInput,
+  InlineNumberAdjustmentInput,
+  InlineDateInput,
+  InlineSearchEnumInput,
+  InlineInChargeInput,
+  InlineTagInput,
+  InlineProductProvider,
+  InlineMetricInput,
+  InlineForwarderInput,
+  InlineTimeLineInput,
+} from './components';
 
 type Props = {
   cell: string,
@@ -62,7 +65,7 @@ function renderItem({
       return <InlineDateInput name={name} value={value} {...meta} />;
 
     case 'timeline': {
-      if (!value) return <div className={DisableCellStyle} />;
+      if (!value) return <TableDisableCell />;
       return <InlineTimeLineInput name={name} value={value} {...meta} />;
     }
 

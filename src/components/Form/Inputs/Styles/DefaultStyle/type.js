@@ -1,7 +1,7 @@
 // @flow
 
 export type OptionalProps = {
-  type: 'standard' | 'date' | 'number' | 'textarea' | 'max-textarea' | 'label',
+  type: 'standard' | 'date' | 'number' | 'textarea' | 'max-textarea' | 'label' | 'button',
   isFocused: boolean,
   hasError: boolean,
   disabled: boolean,

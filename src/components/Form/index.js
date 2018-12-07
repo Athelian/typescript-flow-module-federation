@@ -19,6 +19,7 @@ import {
   DefaultSearchSelect,
   DefaultSelect,
 } from './Inputs';
+import CheckboxInput from './CheckboxInput';
 import ColorInput from './ColorInput';
 import RadioInput from './RadioInput';
 import RadioInputFilterForm from './RadioInputFilterForm';
@@ -61,6 +62,7 @@ export {
   FormTooltip,
   Display,
   DashedPlusButton,
+  CheckboxInput,
   ColorInput,
   RadioInput,
   RadioInputFilterForm,

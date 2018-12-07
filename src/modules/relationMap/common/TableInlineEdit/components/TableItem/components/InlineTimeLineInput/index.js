@@ -1,11 +1,17 @@
 // @flow
 import * as React from 'react';
 import { UserConsumer } from 'modules/user';
-import { ApproveIconButton } from 'components/Buttons';
 import { DefaultStyle, DateInput } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
+import Icon from 'components/Icon';
 import emitter from 'utils/emitter';
 import { useTimeLineInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
-import { ApprovalWrapperStyle, DateInputWrapperStyle } from './style';
+import {
+  InlineTimeLineInputWrapperStyle,
+  DelayStyle,
+  ApproveButtonStyle,
+  DateInputWrapperStyle,
+} from './style';
 
 type Props = {
   name: string,
@@ -23,14 +29,8 @@ export default function InlineTimeLineInput({ name, value }: Props) {
     ...inputHandlers
   } = useTimeLineInput(value);
   return (
-    <div className={ApprovalWrapperStyle}>
-      <DefaultStyle
-        width="150px"
-        type="date"
-        isFocused={isFocused}
-        hasError={false}
-        forceHoverStyle
-      >
+    <div className={InlineTimeLineInputWrapperStyle}>
+      <DefaultStyle width="120px" type="date" isFocused={isFocused} hasError={false}>
         <DateInput
           align="left"
           className={DateInputWrapperStyle}
@@ -46,11 +46,21 @@ export default function InlineTimeLineInput({ name, value }: Props) {
           }}
         />
       </DefaultStyle>
-      {delayDays}
+
+      <div className={DelayStyle(delayDays)}>
+        {delayDays !== 0 && (
+          <>
+            {delayDays > 0 ? '+' : ''}
+            <FormattedNumber value={delayDays} />
+          </>
+        )}
+      </div>
+
       <UserConsumer>
         {({ user }) => (
-          <ApproveIconButton
-            hasApproved={hasApproved}
+          <button
+            className={ApproveButtonStyle(hasApproved)}
+            type="button"
             onClick={() => {
               if (hasApproved) {
                 handleUnapprove(result => {
@@ -70,7 +80,9 @@ export default function InlineTimeLineInput({ name, value }: Props) {
                 });
               }
             }}
-          />
+          >
+            <Icon icon="CHECKED" />
+          </button>
         )}
       </UserConsumer>
     </div>

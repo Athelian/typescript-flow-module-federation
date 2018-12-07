@@ -108,6 +108,7 @@ export const shadows = {
 
 export const borderRadiuses = {
   MAIN: 'border-radius: 5px',
+  MAIN_INSIDE: 'border-radius: 4px',
   CIRCLE: 'border-radius: 50%',
   BUTTON: 'border-radius: 999px',
 };
@@ -172,6 +173,9 @@ export const scrollbars = {
     &::-webkit-scrollbar-track {
       background: transparent;
     }
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
   `,
   SMALL: `
     &::-webkit-scrollbar {
@@ -190,6 +194,9 @@ export const scrollbars = {
     &::-webkit-scrollbar-track {
       background: transparent;
     }
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
   `,
   SMALL_WHITE: `
     &::-webkit-scrollbar {
@@ -203,6 +210,9 @@ export const scrollbars = {
       background-clip: content-box;
     }
     &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-corner {
       background: transparent;
     }
   `,

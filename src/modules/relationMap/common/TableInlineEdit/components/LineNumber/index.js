@@ -8,7 +8,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  height: number,
+  height: string,
 };
 
 const defaultProps = {
@@ -17,7 +17,7 @@ const defaultProps = {
 
 export default function LineNumber({ line, height }: Props) {
   return (
-    <div className={LineNumberStyle} style={{ height }}>
+    <div className={LineNumberStyle(height)}>
       <FormattedNumber value={line} />
     </div>
   );
