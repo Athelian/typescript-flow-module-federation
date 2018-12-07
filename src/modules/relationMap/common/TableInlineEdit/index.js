@@ -110,6 +110,39 @@ function findColumnsForCustomFields({
       );
 }
 
+function findAllFieldsFilter({
+  orderColumnFieldsFilter,
+  orderItemColumnFieldsFilter,
+  batchColumnFieldsFilter,
+  shipmentColumnFieldsFilter,
+  orderCustomFieldsFilter,
+  orderItemCustomFieldsFilter,
+  batchCustomFieldsFilter,
+  shipmentCustomFieldsFilter,
+}: {
+  orderColumnFieldsFilter: Array<Object>,
+  orderItemColumnFieldsFilter: Array<Object>,
+  batchColumnFieldsFilter: Array<Object>,
+  shipmentColumnFieldsFilter: Array<Object>,
+  orderCustomFieldsFilter: Array<Object>,
+  orderItemCustomFieldsFilter: Array<Object>,
+  batchCustomFieldsFilter: Array<Object>,
+  shipmentCustomFieldsFilter: Array<Object>,
+}): Array<string> {
+  return [
+    ...orderColumnFieldsFilter.map(item => `${item.name}`),
+    ...orderItemColumnFieldsFilter.map(item => `orderItems.${item.name}`),
+    ...batchColumnFieldsFilter.map(item => `orderItems.batches.${item.name}`),
+    ...shipmentColumnFieldsFilter.map(item => `orderItems.batches.shipment.${item.name}`),
+    ...orderCustomFieldsFilter.map(item => `customFields.${item.id}`),
+    ...orderItemCustomFieldsFilter.map(item => `orderItems.customFields.${item.id}`),
+    ...batchCustomFieldsFilter.map(item => `orderItems.batches.customFields.${item.id}`),
+    ...shipmentCustomFieldsFilter.map(
+      item => `orderItems.batches.shipment.customFields.${item.id}`
+    ),
+  ];
+}
+
 export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const [data] = useIdb(type, []);
   const [errors, setErrors] = useState({});
@@ -361,6 +394,16 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       type="Orders"
                       exportQuery={ordersByIDsExportQuery}
                       variables={{
+                        fields: findAllFieldsFilter({
+                          orderColumnFieldsFilter,
+                          orderItemColumnFieldsFilter,
+                          batchColumnFieldsFilter,
+                          shipmentColumnFieldsFilter,
+                          orderCustomFieldsFilter,
+                          orderItemCustomFieldsFilter,
+                          batchCustomFieldsFilter,
+                          shipmentCustomFieldsFilter,
+                        }),
                         ids: orderIds,
                       }}
                     />
