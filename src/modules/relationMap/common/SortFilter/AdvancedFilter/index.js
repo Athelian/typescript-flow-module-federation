@@ -99,6 +99,7 @@ const FILTER = {
     updatedAt: 'orderItemUpdatedAt',
     exporter: 'productProviderExporterIds',
     supplier: 'productProviderSupplierIds',
+    tags: 'productTagIds',
   },
   batch: {
     deliveredAt: 'batchDeliveredAt',
