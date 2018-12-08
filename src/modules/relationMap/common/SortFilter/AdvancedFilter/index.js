@@ -12,6 +12,7 @@ import { UIConsumer } from 'modules/ui';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';
 import FilterInputArea from './FilterInputArea';
+import { filterByStatus } from './FilterInputArea/components/MiniSelector';
 import {
   AdvancedFilterWrapperStyle,
   FilterToggleButtonStyle,
@@ -184,11 +185,19 @@ const convertActiveFilter = (state: Object, type: string) => {
   }, {});
   return query;
 };
+
+const convertStatusFilter = (state: Object, type: string) => {
+  const filterToggle = get({}, `filterToggles.${type}`, state);
+  const { showActive, showArchived } = filterToggle;
+  return filterByStatus(showActive, showArchived);
+};
+
 const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'order'),
   ...convertActiveFilter(state, 'item'),
   ...convertActiveFilter(state, 'batch'),
   ...convertActiveFilter(state, 'shipment'),
+  ...convertStatusFilter(state, 'order'),
 });
 function reducer(state, action) {
   console.warn({
@@ -307,7 +316,8 @@ function AdvanceFilter({ onApply }: Props) {
     state.activeFilters.batch.length > 0 ||
     state.activeFilters.item.length > 0 ||
     state.activeFilters.order.length > 0 ||
-    state.activeFilters.shipment.length > 0;
+    state.activeFilters.shipment.length > 0 ||
+    (!state.filterToggles.order.showActive || !state.filterToggles.order.showArchived);
   return (
     <UIConsumer>
       {uiState => (
