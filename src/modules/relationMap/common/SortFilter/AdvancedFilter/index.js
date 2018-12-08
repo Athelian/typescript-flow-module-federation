@@ -157,20 +157,6 @@ const getFilterValue = (name: string, data: any) => {
   }
 };
 
-export const convertToggleFilter = (state: Object, type: string) => {
-  const toggleFilter = getByPathWithDefault({}, `filterToggles.${type}`, state);
-  const filters: Array<any> = Object.entries(toggleFilter);
-  const query = filters.reduce((currentQuery, filter) => {
-    const [filterName, rawValue] = filter;
-    if (FILTER[type] && FILTER[type][filterName]) {
-      const formatedFilter = getFilterValue(filterName, rawValue);
-      return Object.assign(currentQuery, formatedFilter);
-    }
-    return currentQuery;
-  }, {});
-  return query;
-};
-
 const convertActiveFilter = (state: Object, type: string) => {
   const filters = getByPathWithDefault({}, `activeFilters.${type}`, state);
   const query = filters.reduce((currentQuery, filterName) => {
@@ -198,9 +184,11 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'batch'),
   ...convertActiveFilter(state, 'shipment'),
   ...convertStatusFilter(state, 'order'),
+  completelyBatched: getByPathWithDefault(false, 'filterToggles.order.completelyBatched', state),
+  completelyShipped: getByPathWithDefault(false, 'filterToggles.order.completelyShipped', state),
 });
 function reducer(state, action) {
-  console.warn({
+  console.debug({
     state,
     action,
   });
@@ -307,6 +295,11 @@ function reducer(state, action) {
   }
 }
 
+const isDirtyOfOrderFilterToggles = filterToggles => {
+  const { completelyBatched, completelyShipped, showActive, showArchived } = filterToggles;
+  return completelyBatched || completelyShipped || !showActive || !showArchived;
+};
+
 function AdvanceFilter({ onApply }: Props) {
   const filterButtonRef = useRef(null);
   const [filterIsApplied] = useState(false);
@@ -317,7 +310,7 @@ function AdvanceFilter({ onApply }: Props) {
     state.activeFilters.item.length > 0 ||
     state.activeFilters.order.length > 0 ||
     state.activeFilters.shipment.length > 0 ||
-    (!state.filterToggles.order.showActive || !state.filterToggles.order.showArchived);
+    isDirtyOfOrderFilterToggles(state.filterToggles.order);
   return (
     <UIConsumer>
       {uiState => (
