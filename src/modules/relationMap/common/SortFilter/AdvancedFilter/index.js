@@ -2,7 +2,7 @@
 import React, { useRef, useState, useReducer } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { getByPathWithDefault as get } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -158,7 +158,7 @@ const getFilterValue = (name: string, data: any) => {
 };
 
 export const convertToggleFilter = (state: Object, type: string) => {
-  const toggleFilter = get({}, `filterToggles.${type}`, state);
+  const toggleFilter = getByPathWithDefault({}, `filterToggles.${type}`, state);
   const filters: Array<any> = Object.entries(toggleFilter);
   const query = filters.reduce((currentQuery, filter) => {
     const [filterName, rawValue] = filter;
@@ -172,10 +172,10 @@ export const convertToggleFilter = (state: Object, type: string) => {
 };
 
 const convertActiveFilter = (state: Object, type: string) => {
-  const filters = get({}, `activeFilters.${type}`, state);
+  const filters = getByPathWithDefault({}, `activeFilters.${type}`, state);
   const query = filters.reduce((currentQuery, filterName) => {
     if (FILTER[type] && FILTER[type][filterName]) {
-      const rawValue = get({}, `selectedItems.${type}.${filterName}`, state);
+      const rawValue = getByPathWithDefault({}, `selectedItems.${type}.${filterName}`, state);
       const filterValue = getFilterValue(filterName, rawValue);
       return Object.assign(currentQuery, {
         [FILTER[type][filterName]]: filterValue,
@@ -187,7 +187,7 @@ const convertActiveFilter = (state: Object, type: string) => {
 };
 
 const convertStatusFilter = (state: Object, type: string) => {
-  const filterToggle = get({}, `filterToggles.${type}`, state);
+  const filterToggle = getByPathWithDefault({}, `filterToggles.${type}`, state);
   const { showActive, showArchived } = filterToggle;
   return filterByStatus(showActive, showArchived);
 };
