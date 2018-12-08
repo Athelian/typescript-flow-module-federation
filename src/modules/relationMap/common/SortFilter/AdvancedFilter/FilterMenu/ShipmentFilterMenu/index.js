@@ -110,7 +110,12 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.deliveryReady} />,
           data: getSelectData(selectedItems, 'deliveryReady'),
         },
-        { name: 'tags', label: <FormattedMessage {...messages.tags} />, data: [] },
+        {
+          name: 'tags',
+          field: 'name',
+          label: <FormattedMessage {...messages.tags} />,
+          data: getSelectData(selectedItems, 'tags'),
+        },
         // temporary hide, not yet has this filter from graphql
         { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
         { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },

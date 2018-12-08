@@ -119,6 +119,7 @@ const FILTER = {
     deliveryReady: 'shipmentDeliveryReady',
     forwarder: 'shipmentForwarderIds',
     inCharge: 'shipmentInChargeIds',
+    tags: 'shipmentTagIds',
   },
 };
 
