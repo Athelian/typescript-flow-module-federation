@@ -2,7 +2,7 @@
 import React, { useRef, useState, useReducer } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { getByPathWithDefault as get } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -157,25 +157,11 @@ const getFilterValue = (name: string, data: any) => {
   }
 };
 
-export const convertToggleFilter = (state: Object, type: string) => {
-  const toggleFilter = get({}, `filterToggles.${type}`, state);
-  const filters: Array<any> = Object.entries(toggleFilter);
-  const query = filters.reduce((currentQuery, filter) => {
-    const [filterName, rawValue] = filter;
-    if (FILTER[type] && FILTER[type][filterName]) {
-      const formatedFilter = getFilterValue(filterName, rawValue);
-      return Object.assign(currentQuery, formatedFilter);
-    }
-    return currentQuery;
-  }, {});
-  return query;
-};
-
 const convertActiveFilter = (state: Object, type: string) => {
-  const filters = get({}, `activeFilters.${type}`, state);
+  const filters = getByPathWithDefault({}, `activeFilters.${type}`, state);
   const query = filters.reduce((currentQuery, filterName) => {
     if (FILTER[type] && FILTER[type][filterName]) {
-      const rawValue = get({}, `selectedItems.${type}.${filterName}`, state);
+      const rawValue = getByPathWithDefault({}, `selectedItems.${type}.${filterName}`, state);
       const filterValue = getFilterValue(filterName, rawValue);
       return Object.assign(currentQuery, {
         [FILTER[type][filterName]]: filterValue,
@@ -187,7 +173,7 @@ const convertActiveFilter = (state: Object, type: string) => {
 };
 
 const convertStatusFilter = (state: Object, type: string) => {
-  const filterToggle = get({}, `filterToggles.${type}`, state);
+  const filterToggle = getByPathWithDefault({}, `filterToggles.${type}`, state);
   const { showActive, showArchived } = filterToggle;
   return filterByStatus(showActive, showArchived);
 };
@@ -198,9 +184,11 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'batch'),
   ...convertActiveFilter(state, 'shipment'),
   ...convertStatusFilter(state, 'order'),
+  completelyBatched: getByPathWithDefault(false, 'filterToggles.order.completelyBatched', state),
+  completelyShipped: getByPathWithDefault(false, 'filterToggles.order.completelyShipped', state),
 });
 function reducer(state, action) {
-  console.warn({
+  console.debug({
     state,
     action,
   });
@@ -307,6 +295,11 @@ function reducer(state, action) {
   }
 }
 
+const isDirtyOfOrderFilterToggles = filterToggles => {
+  const { completelyBatched, completelyShipped, showActive, showArchived } = filterToggles;
+  return completelyBatched || completelyShipped || !showActive || !showArchived;
+};
+
 function AdvanceFilter({ onApply }: Props) {
   const filterButtonRef = useRef(null);
   const [filterIsApplied] = useState(false);
@@ -317,7 +310,7 @@ function AdvanceFilter({ onApply }: Props) {
     state.activeFilters.item.length > 0 ||
     state.activeFilters.order.length > 0 ||
     state.activeFilters.shipment.length > 0 ||
-    (!state.filterToggles.order.showActive || !state.filterToggles.order.showArchived);
+    isDirtyOfOrderFilterToggles(state.filterToggles.order);
   return (
     <UIConsumer>
       {uiState => (
