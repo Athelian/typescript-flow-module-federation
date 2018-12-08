@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { getByPathWithDefault as get, isDataType } from 'utils/fp';
+import { getByPath, isDataType } from 'utils/fp';
 import Icon from 'components/Icon';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
 import {
@@ -51,7 +51,7 @@ export default function FilterMenuItem({
         <div className={FilterDataWrapperStyle}>
           {data.map(datum => (
             <button key={datum.id} className={FilterDataStyle} type="button">
-              {field && get(field, datum)}
+              {field && getByPath(field, datum)}
               <Icon icon="CLEAR" />
             </button>
           ))}
