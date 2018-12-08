@@ -99,11 +99,13 @@ const FILTER = {
     updatedAt: 'orderItemUpdatedAt',
     exporter: 'productProviderExporterIds',
     supplier: 'productProviderSupplierIds',
+    tags: 'productTagIds',
   },
   batch: {
     deliveredAt: 'batchDeliveredAt',
     expiredAt: 'batchExpiredAt',
     producedAt: 'batchProducedAt',
+    tags: 'batchTagIds',
   },
   shipment: {
     cargoReady: 'shipmentCargoReady',
@@ -118,6 +120,7 @@ const FILTER = {
     deliveryReady: 'shipmentDeliveryReady',
     forwarder: 'shipmentForwarderIds',
     inCharge: 'shipmentInChargeIds',
+    tags: 'shipmentTagIds',
   },
 };
 

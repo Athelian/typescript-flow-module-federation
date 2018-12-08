@@ -62,7 +62,14 @@ export default function ItemFilterMenu({
     {
       label: <FormattedMessage {...messages.product} />,
       icon: 'PRODUCT',
-      filters: [{ name: 'tags', label: <FormattedMessage {...messages.tags} />, data: [] }],
+      filters: [
+        {
+          name: 'tags',
+          field: 'name',
+          label: <FormattedMessage {...messages.tags} />,
+          data: getSelectData(selectedItems, 'tags'),
+        },
+      ],
     },
     {
       label: <FormattedMessage {...messages.endProduct} />,
