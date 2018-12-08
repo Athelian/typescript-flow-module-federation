@@ -190,7 +190,6 @@ export const shipmentListQuery = gql`
   ${batchCardFragment}
   ${tagFragment}
   ${portFragment}
-  ${sizeFragment}
   ${metricFragment}
   ${priceFragment}
   ${orderCardFragment}
