@@ -196,7 +196,9 @@ const getFilterInputArea = ({
             });
         case 'origin':
           // TODO:
-          return () => <Origin values={selectedItems} />;
+          return () => (
+            <Origin values={selectedItems} onChange={origins => onToggleSelect(origins)} />
+          );
         case 'specifications':
           return Specifications;
         case 'productionLeadTime':

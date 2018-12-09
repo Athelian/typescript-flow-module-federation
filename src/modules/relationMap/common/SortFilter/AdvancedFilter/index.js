@@ -100,6 +100,7 @@ const FILTER = {
     exporter: 'productProviderExporterIds',
     supplier: 'productProviderSupplierIds',
     tags: 'productTagIds',
+    origin: 'productProviderOrigins',
   },
   batch: {
     deliveredAt: 'batchDeliveredAt',
@@ -138,6 +139,8 @@ const getFilterValue = (name: string, data: any) => {
     case 'supplier':
     case 'forwarder':
       return data.map(d => d.id);
+    case 'origin':
+      return data.map(d => d.name);
     case 'createdAt':
     case 'updatedAt':
     case 'deliveredAt':

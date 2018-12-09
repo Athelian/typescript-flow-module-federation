@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import EnumProvider from 'providers/enum';
@@ -9,7 +9,8 @@ import EnumInput from './components/EnumInput';
 import { EnumArrayInputWrapperStyle } from './style';
 
 type OptionalProps = {
-  values: Array<string>,
+  values: Array<Object>,
+  onChange: Function,
 };
 
 type Props = OptionalProps & {
@@ -18,12 +19,10 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   values: [],
+  onChange: () => {},
 };
 
-export default function EnumArrayInput({ enumType, values }: Props) {
-  const [currentValues, setValues] = useState(values);
-
-  // TODO:
+export default function EnumArrayInput({ enumType, values, onChange }: Props) {
   return (
     <div className={EnumArrayInputWrapperStyle}>
       <EnumProvider enumType={enumType}>
@@ -31,12 +30,28 @@ export default function EnumArrayInput({ enumType, values }: Props) {
           if (loading) return null;
           if (error) return `Error!: ${error}`;
 
-          return currentValues.map(value => <EnumInput data={data} value={value} />);
+          return values.map((value, index) => (
+            <EnumInput
+              data={data}
+              value={value}
+              onChange={inputValue => {
+                const newValues = [...values];
+                newValues.splice(index, 1, inputValue);
+                onChange(newValues);
+              }}
+              onRemove={() => {
+                const newValues = [...values];
+                newValues.splice(index, 1);
+                onChange(newValues);
+              }}
+            />
+          ));
         }}
       </EnumProvider>
+
       <NewButton
         label={<FormattedMessage {...messages.add} />}
-        onClick={() => setValues([...currentValues, ''])}
+        onClick={() => onChange([...values, { name: '', description: '' }])}
       />
     </div>
   );

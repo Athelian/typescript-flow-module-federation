@@ -7,10 +7,11 @@ import messages from '../messages';
 import { EnumArrayInput } from '..';
 
 type Props = {
-  values: Array<string>,
+  values: Array<Object>,
+  onChange: Function,
 };
 
-export default function Origin({ values }: Props) {
+export default function Origin({ values, onChange }: Props) {
   return (
     <div className={OriginWrapperStyle}>
       <FieldItem
@@ -20,7 +21,7 @@ export default function Origin({ values }: Props) {
             <FormattedMessage {...messages.origin} />
           </Label>
         }
-        input={<EnumArrayInput enumType="Country" values={values} />}
+        input={<EnumArrayInput enumType="Country" values={values} onChange={onChange} />}
       />
     </div>
   );

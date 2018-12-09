@@ -87,7 +87,12 @@ export default function ItemFilterMenu({
           label: <FormattedMessage {...messages.supplier} />,
           data: getSelectData(selectedItems, 'supplier'),
         },
-        { name: 'origin', label: <FormattedMessage {...messages.origin} />, data: [] },
+        {
+          name: 'origin',
+          field: 'name',
+          label: <FormattedMessage {...messages.origin} />,
+          data: getSelectData(selectedItems, 'origin'),
+        },
         {
           name: 'specifications',
           label: <FormattedMessage {...messages.specifications} />,
@@ -102,7 +107,6 @@ export default function ItemFilterMenu({
       ],
     },
   ];
-
   return (
     <BaseFilterMenu
       filtersMap={filtersMap}
