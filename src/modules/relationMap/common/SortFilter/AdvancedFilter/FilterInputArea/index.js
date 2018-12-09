@@ -195,7 +195,8 @@ const getFilterInputArea = ({
               hideToggles: true,
             });
         case 'origin':
-          return Origin;
+          // TODO:
+          return () => <Origin values={selectedItems} />;
         case 'specifications':
           return Specifications;
         case 'productionLeadTime':

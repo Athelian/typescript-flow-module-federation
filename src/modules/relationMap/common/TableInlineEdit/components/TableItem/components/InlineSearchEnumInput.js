@@ -31,6 +31,7 @@ const defaultProps = {
 };
 
 export default function InlineSearchEnumInput({ name, value, enumType, isRequired }: Props) {
+  // FIXME:
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
   return (
     <EnumProvider enumType={enumType}>
