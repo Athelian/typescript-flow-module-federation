@@ -2,11 +2,19 @@
 import { css } from 'react-emotion';
 import { colors, fontSizesWithHeights, presets, borderRadiuses } from 'styles/common';
 
-export const DisplayWrapperStyle = (
+type DisplayWrapperType = {
   align: 'left' | 'right' | 'center',
+  width: string,
   color: string,
-  fontSize: string
-): string => css`
+  fontSize: string,
+};
+
+export const DisplayWrapperStyle = ({
+  align,
+  width,
+  color,
+  fontSize,
+}: DisplayWrapperType): string => css`
   ${fontSizesWithHeights[fontSize]};
   font-weight: bold;
   color: ${colors[color]};
@@ -14,7 +22,7 @@ export const DisplayWrapperStyle = (
   ${borderRadiuses.MAIN};
   text-align: ${align};
   min-width: 0;
-  width: 100%;
+  width: ${width};
   padding: 0 5px;
 `;
 

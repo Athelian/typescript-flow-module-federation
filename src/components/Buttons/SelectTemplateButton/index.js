@@ -16,7 +16,7 @@ const defaultProps = {
   disabled: false,
   isLoading: false,
   onClick: () => {},
-  label: <FormattedMessage id="components.button.showTemplate" defaultMessage="SHOW TEMPLATE" />,
+  label: <FormattedMessage id="components.button.showTemplate" defaultMessage="USE TEMPLATE" />,
 };
 
 const SelectTemplateButton = ({

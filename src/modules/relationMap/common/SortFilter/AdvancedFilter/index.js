@@ -203,10 +203,6 @@ const convertToFilterQuery = (state: Object) => ({
   ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
 });
 function reducer(state, action) {
-  console.debug({
-    state,
-    action,
-  });
   switch (action.type) {
     case 'RESET':
       return initialState;

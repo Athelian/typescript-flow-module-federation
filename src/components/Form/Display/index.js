@@ -4,6 +4,7 @@ import { DisplayWrapperStyle } from './style';
 
 type OptionalProps = {
   align: 'left' | 'right' | 'center',
+  width: string,
   color: string,
   fontSize: string,
 };
@@ -14,12 +15,13 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   align: 'right',
+  width: '100%',
   color: 'BLACK',
   fontSize: 'MAIN',
 };
 
-const Display = ({ align, color, fontSize, children }: Props) => (
-  <div className={DisplayWrapperStyle(align, color, fontSize)}>{children}</div>
+const Display = ({ align, width, color, fontSize, children }: Props) => (
+  <div className={DisplayWrapperStyle({ align, width, color, fontSize })}>{children}</div>
 );
 
 Display.defaultProps = defaultProps;
