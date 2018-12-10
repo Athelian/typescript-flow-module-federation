@@ -12,7 +12,7 @@ import {
   AddAssignmentButtonStyle,
 } from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import emitter from 'utils/emitter';
-import { useInChargeInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
+import { useInChargeInput } from 'modules/form/hooks';
 
 type OptionalProps = {
   max: number,

@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { getByPath, isDataType } from 'utils/fp';
+import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
 import {
@@ -50,7 +51,7 @@ export default function FilterMenuItem({
       {data.length > 0 && (
         <div className={FilterDataWrapperStyle}>
           {data.map(datum => (
-            <button key={datum.id} className={FilterDataStyle} type="button">
+            <button key={datum.id ? datum.id : uuid()} className={FilterDataStyle} type="button">
               {field && getByPath(field, datum)}
               <Icon icon="CLEAR" />
             </button>

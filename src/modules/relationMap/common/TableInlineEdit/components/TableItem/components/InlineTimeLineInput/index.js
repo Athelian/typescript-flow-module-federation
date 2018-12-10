@@ -5,7 +5,7 @@ import { DefaultStyle, DateInput } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
 import emitter from 'utils/emitter';
-import { useTimeLineInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
+import { useTimeLineInput } from 'modules/form/hooks';
 import {
   InlineTimeLineInputWrapperStyle,
   DelayStyle,

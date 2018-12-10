@@ -4,7 +4,7 @@ import matchSorter from 'match-sorter';
 import EnumProvider from 'providers/enum';
 import { FieldItem, SearchSelectInput, DefaultSearchSelect, DefaultOptions } from 'components/Form';
 import emitter from 'utils/emitter';
-import { useTextInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
+import { useTextInput } from 'modules/form/hooks';
 import logger from 'utils/logger';
 
 const filterItems = (query: string, items: Array<any>) => {

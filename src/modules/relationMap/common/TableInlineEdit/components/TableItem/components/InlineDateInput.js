@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { DefaultStyle, DateInput } from 'components/Form';
 import emitter from 'utils/emitter';
-import { useDateInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
+import { useDateInput } from 'modules/form/hooks';
 
 type OptionalProps = {
   isRequired: boolean,
