@@ -1,16 +1,9 @@
 // @flow
 import * as React from 'react';
-import { getByPath, isDataType } from 'utils/fp';
-import { uuid } from 'utils/id';
-import Icon from 'components/Icon';
+import { isDataType } from 'utils/fp';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
-import {
-  FilterMenuItemWrapperStyle,
-  FilterMenuItemStyle,
-  FilterMenuLabelStyle,
-  FilterDataWrapperStyle,
-  FilterDataStyle,
-} from './style';
+import { FilterMenuItemWrapperStyle, FilterMenuItemStyle, FilterMenuLabelStyle } from './style';
+import FilterData from '../FilterData';
 
 type Props = {
   name: string,
@@ -36,12 +29,14 @@ export default function FilterMenuItem({
   onToggleSelect,
 }: Props) {
   return (
-    <div
-      className={FilterMenuItemWrapperStyle(isSelected)}
-      onClick={() => changeSelectedFilterItem(name)}
-      role="presentation"
-    >
-      <div className={FilterMenuItemStyle}>
+    <div className={FilterMenuItemWrapperStyle(isSelected)}>
+      <div
+        className={FilterMenuItemStyle}
+        role="presentation"
+        onClick={() => {
+          changeSelectedFilterItem(name);
+        }}
+      >
         <ToggleButton
           isOn={isActive}
           hideToggle={!((isDataType(Object, data) ? Object.keys(data) : data).length > 0)}
@@ -50,23 +45,16 @@ export default function FilterMenuItem({
         <div className={FilterMenuLabelStyle}>{label}</div>
       </div>
 
-      {data.length > 0 && (
-        <div className={FilterDataWrapperStyle}>
-          {data.map(datum => (
-            <button
-              key={datum.id ? datum.id : uuid()}
-              className={FilterDataStyle}
-              type="button"
-              onClick={() => {
-                toggleActiveFilter(name);
-                onToggleSelect(datum);
-              }}
-            >
-              {field && getByPath(field, datum)}
-              <Icon icon="CLEAR" />
-            </button>
-          ))}
-        </div>
+      {Object.keys(data).length > 0 && (
+        <FilterData
+          field={field}
+          data={data}
+          onClick={(datum, fieldAttr) => {
+            toggleActiveFilter(name);
+            onToggleSelect(datum, fieldAttr);
+            toggleActiveFilter(name);
+          }}
+        />
       )}
     </div>
   );

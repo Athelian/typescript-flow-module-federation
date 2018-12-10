@@ -2,7 +2,7 @@
 import React, { useRef, useState, useReducer } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, omit } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -263,7 +263,12 @@ function reducer(state, action) {
 
       const selected =
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
-      const newSelected = { ...selected, [field]: selectItem };
+      let newSelected = {};
+      if (!selectItem && selected[field]) {
+        newSelected = omit([field], newSelected);
+      } else {
+        newSelected = { ...selected, [field]: selectItem };
+      }
 
       return {
         ...state,
@@ -409,10 +414,11 @@ function AdvanceFilter({ onApply }: Props) {
                         activeFilters={state.activeFilters}
                         filterToggles={state.filterToggles}
                         selectedFilterItem={state.selectedFilterItem}
-                        onToggleSelect={(selectItem: any) =>
+                        onToggleSelect={(selectItem: any, field?: string) =>
                           dispatch({
-                            type: 'TOGGLE_SELECT_ITEM',
+                            type: field ? 'SET_SELECT_ITEM' : 'TOGGLE_SELECT_ITEM',
                             selectItem,
+                            ...(field ? { field } : {}),
                           })
                         }
                         toggleActiveFilter={(entityType, filter) =>
