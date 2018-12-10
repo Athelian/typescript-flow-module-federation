@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-
+import { uuid } from 'utils/id';
 import EnumProvider from 'providers/enum';
 import { NewButton } from 'components/Buttons';
 import messages from '../messages';
@@ -32,6 +32,7 @@ export default function EnumArrayInput({ enumType, values, onChange }: Props) {
 
           return values.map((value, index) => (
             <EnumInput
+              key={uuid()}
               data={data}
               value={value}
               onChange={inputValue => {

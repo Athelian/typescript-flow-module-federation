@@ -3,7 +3,7 @@ import * as React from 'react';
 import matchSorter from 'match-sorter';
 import Icon from 'components/Icon';
 import { SearchSelectInput, DefaultSearchSelect, DefaultOptions } from 'components/Form';
-import { useTextInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
+import { useTextInput } from 'modules/form/hooks';
 
 import { EnumInputStyle, DeleteButtonStyle } from './style';
 

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import DefaultMetricStyle from 'components/Form/Inputs/MetricInput/DefaultMetricStyle';
 import MetricInput from 'components/Form/Inputs/MetricInput';
-import { useMetricInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
+import { useMetricInput } from 'modules/form/hooks';
 import { getByPath } from 'utils/fp';
 import emitter from 'utils/emitter';
 

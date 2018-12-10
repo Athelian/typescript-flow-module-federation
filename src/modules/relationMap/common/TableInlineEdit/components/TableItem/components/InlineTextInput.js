@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { DefaultStyle, TextInput } from 'components/Form';
 import emitter from 'utils/emitter';
-import { useTextInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
+import { useTextInput } from 'modules/form/hooks';
 
 type OptionalProps = {
   isRequired: boolean,

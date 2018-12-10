@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { TagsInput } from 'components/Form';
-import { useTagInput } from 'modules/relationMap/common/TableInlineEdit/hooks';
+import { useTagInput } from 'modules/form/hooks';
 import emitter from 'utils/emitter';
 
 type Props = {
