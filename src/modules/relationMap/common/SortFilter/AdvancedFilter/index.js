@@ -184,14 +184,23 @@ const convertStatusFilter = (state: Object, type: string) => {
   return filterByStatus(showActive, showArchived);
 };
 
+const booleanFilterQuery = (state: Object, filterName: string, path: string) => {
+  const filterValue = getByPathWithDefault(false, path, state);
+  const filterQuery = {};
+  if (filterValue) {
+    filterQuery[filterName] = filterValue;
+  }
+  return filterQuery;
+};
+
 const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'order'),
   ...convertActiveFilter(state, 'item'),
   ...convertActiveFilter(state, 'batch'),
   ...convertActiveFilter(state, 'shipment'),
   ...convertStatusFilter(state, 'order'),
-  completelyBatched: getByPathWithDefault(false, 'filterToggles.order.completelyBatched', state),
-  completelyShipped: getByPathWithDefault(false, 'filterToggles.order.completelyShipped', state),
+  ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
+  ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
 });
 function reducer(state, action) {
   console.debug({
