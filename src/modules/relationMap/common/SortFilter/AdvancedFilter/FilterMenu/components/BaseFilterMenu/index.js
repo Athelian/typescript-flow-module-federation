@@ -30,6 +30,7 @@ type Props = OptionalProps & {
   toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
   changeSelectedFilterItem: string => void,
+  onToggleSelect: Function,
 };
 
 export default function BaseFilterMenu({
@@ -42,6 +43,7 @@ export default function BaseFilterMenu({
   toggleFilterToggle,
   selectedFilterItem,
   changeSelectedFilterItem,
+  onToggleSelect,
 }: Props) {
   return (
     <div className={FilterMenuWrapperStyle}>
@@ -68,6 +70,7 @@ export default function BaseFilterMenu({
                       isSelected={isSelected}
                       changeSelectedFilterItem={changeSelectedFilterItem}
                       isActive={isActive}
+                      onToggleSelect={onToggleSelect}
                       toggleActiveFilter={(fieldName: string) =>
                         toggleActiveFilter(entityType, fieldName)
                       }

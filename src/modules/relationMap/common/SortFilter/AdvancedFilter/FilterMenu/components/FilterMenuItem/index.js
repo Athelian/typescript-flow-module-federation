@@ -20,6 +20,7 @@ type Props = {
   changeSelectedFilterItem: (filter: string) => void,
   isActive: boolean,
   toggleActiveFilter: (filter: string) => void,
+  onToggleSelect: Function,
   data: any,
 };
 
@@ -32,6 +33,7 @@ export default function FilterMenuItem({
   isActive,
   toggleActiveFilter,
   data,
+  onToggleSelect,
 }: Props) {
   return (
     <div
@@ -51,7 +53,7 @@ export default function FilterMenuItem({
       {data.length > 0 && (
         <div className={FilterDataWrapperStyle}>
           {data.map(datum => (
-            <button key={datum.id ? datum.id : uuid()} className={FilterDataStyle} type="button">
+            <button key={datum.id ? datum.id : uuid()} className={FilterDataStyle} type="button" onClick={() => onToggleSelect(datum)}>
               {field && getByPath(field, datum)}
               <Icon icon="CLEAR" />
             </button>

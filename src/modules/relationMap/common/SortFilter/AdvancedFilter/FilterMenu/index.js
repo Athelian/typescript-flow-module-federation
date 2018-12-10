@@ -25,6 +25,7 @@ type Props = {
   toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
   changeSelectedFilterItem: string => void,
+  onToggleSelect: Function,
 };
 
 const getFilterMenu = (selectedEntityType: EntityTypes) => {
@@ -51,6 +52,7 @@ export default function FilterMenu({
   selectedFilterItem,
   changeSelectedFilterItem,
   selectedItems,
+  onToggleSelect,
 }: Props) {
   const SelectedFilterMenu = getFilterMenu(selectedEntityType);
   const parsedActiveFilters = activeFilters[selectedEntityType];
@@ -66,6 +68,7 @@ export default function FilterMenu({
         toggleFilterToggle={toggleFilterToggle}
         selectedFilterItem={selectedFilterItem}
         changeSelectedFilterItem={changeSelectedFilterItem}
+        onToggleSelect={onToggleSelect}
       />
     </div>
   );

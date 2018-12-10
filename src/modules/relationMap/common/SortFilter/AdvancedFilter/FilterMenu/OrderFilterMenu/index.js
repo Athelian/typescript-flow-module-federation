@@ -11,6 +11,7 @@ type Props = {
   toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
   changeSelectedFilterItem: string => void,
+  onToggleSelect: Function,
   selectedItems: {
     order: Object,
     item: Object,
@@ -40,6 +41,7 @@ export default function OrderFilterMenu({
   selectedFilterItem,
   changeSelectedFilterItem,
   selectedItems,
+  onToggleSelect,
 }: Props) {
   const filtersMap = [
     {
@@ -116,6 +118,7 @@ export default function OrderFilterMenu({
       toggleFilterToggle={toggleFilterToggle}
       selectedFilterItem={selectedFilterItem}
       changeSelectedFilterItem={changeSelectedFilterItem}
+      onToggleSelect={onToggleSelect}
     />
   );
 }
