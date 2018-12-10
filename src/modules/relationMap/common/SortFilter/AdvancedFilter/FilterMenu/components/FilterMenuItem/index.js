@@ -53,7 +53,15 @@ export default function FilterMenuItem({
       {data.length > 0 && (
         <div className={FilterDataWrapperStyle}>
           {data.map(datum => (
-            <button key={datum.id ? datum.id : uuid()} className={FilterDataStyle} type="button" onClick={() => onToggleSelect(datum)}>
+            <button
+              key={datum.id ? datum.id : uuid()}
+              className={FilterDataStyle}
+              type="button"
+              onClick={() => {
+                toggleActiveFilter(name);
+                onToggleSelect(datum);
+              }}
+            >
               {field && getByPath(field, datum)}
               <Icon icon="CLEAR" />
             </button>

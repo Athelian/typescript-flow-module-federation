@@ -409,10 +409,12 @@ function AdvanceFilter({ onApply }: Props) {
                         activeFilters={state.activeFilters}
                         filterToggles={state.filterToggles}
                         selectedFilterItem={state.selectedFilterItem}
-                        onToggleSelect={(selectItem: any) => dispatch({
-                          type: 'TOGGLE_SELECT_ITEM',
-                          selectItem,
-                        })}
+                        onToggleSelect={(selectItem: any) =>
+                          dispatch({
+                            type: 'TOGGLE_SELECT_ITEM',
+                            selectItem,
+                          })
+                        }
                         toggleActiveFilter={(entityType, filter) =>
                           dispatch({
                             type: 'TOGGLE_ACTIVE_FILTER',
