@@ -289,16 +289,16 @@ function reducer(state, action) {
       const selectItemIsArray = Array.isArray(selectItem);
       if (selectItemIsArray) {
         selected = [...selectItem];
-      }
-      const alreadySelected =
-        typeof selectItem === 'object' && !selectItemIsArray
-          ? !selected.find(selectedData => selectedData.id === selectItem.id)
-          : !selected.includes(selectItem);
-      if (!selectItemIsArray && alreadySelected) {
-        selected.push(selectItem);
-      }
-      if (!selectItemIsArray && !alreadySelected) {
-        selected.splice(selected.indexOf(selectItem), 1);
+      } else {
+        const alreadySelected =
+          typeof selectItem === 'object' && !selectItemIsArray
+            ? !selected.find(selectedData => selectedData.id === selectItem.id)
+            : !selected.includes(selectItem);
+        if (alreadySelected) {
+          selected.push(selectItem);
+        } else {
+          selected.splice(selected.indexOf(selectItem), 1);
+        }
       }
 
       return {
