@@ -316,7 +316,7 @@ function reducer(state, action) {
 
 const isDirtyOfOrderFilterToggles = filterToggles => {
   const { completelyBatched, completelyShipped, showActive, showArchived } = filterToggles;
-  return completelyBatched || completelyShipped || !showActive || !showArchived;
+  return completelyBatched || completelyShipped || !showActive || showArchived;
 };
 
 function AdvanceFilter({ onApply }: Props) {

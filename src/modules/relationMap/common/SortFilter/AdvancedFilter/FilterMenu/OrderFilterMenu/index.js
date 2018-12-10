@@ -87,16 +87,16 @@ export default function OrderFilterMenu({
   ];
 
   const togglesMap = [
-    {
-      name: 'completelyBatched',
-      label: <FormattedMessage {...messages.completelyBatched} />,
-      icon: 'BATCH',
-    },
-    {
-      name: 'completelyShipped',
-      label: <FormattedMessage {...messages.completelyShipped} />,
-      icon: 'SHIPMENT',
-    },
+    // {
+    //   name: 'completelyBatched',
+    //   label: <FormattedMessage {...messages.completelyBatched} />,
+    //   icon: 'BATCH',
+    // },
+    // {
+    //   name: 'completelyShipped',
+    //   label: <FormattedMessage {...messages.completelyShipped} />,
+    //   icon: 'SHIPMENT',
+    // },
     { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
     {
       name: 'showArchived',
