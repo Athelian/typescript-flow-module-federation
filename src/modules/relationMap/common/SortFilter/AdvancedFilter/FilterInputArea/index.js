@@ -47,20 +47,17 @@ const getFilterInputArea = ({
                 query: '',
                 archived: null,
               },
-              renderItem: (item: Object) => {
-                console.log('item', item);
-                return (
-                  <MiniSelectorItem
-                    onClick={() => onToggleSelect(item)}
-                    selectable
-                    selected={selectedItems.some(selectedItem => selectedItem.id === item.id)}
-                    key={item.id}
-                    isArchived={item.archived}
-                  >
-                    <Display align="left">{item.poNo}</Display>
-                  </MiniSelectorItem>
-                );
-              },
+              renderItem: (item: Object) => (
+                <MiniSelectorItem
+                  onClick={() => onToggleSelect(item)}
+                  selectable
+                  selected={selectedItems.some(selectedItem => selectedItem.id === item.id)}
+                  key={item.id}
+                  isArchived={item.archived}
+                >
+                  <Display align="left">{item.poNo}</Display>
+                </MiniSelectorItem>
+              ),
             });
         case 'exporter':
           return () =>
