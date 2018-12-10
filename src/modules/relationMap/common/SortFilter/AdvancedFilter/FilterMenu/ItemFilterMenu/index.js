@@ -46,7 +46,7 @@ export default function ItemFilterMenu({
       label: <FormattedMessage {...messages.item} />,
       icon: 'ORDER_ITEM',
       filters: [
-        { name: 'price', label: <FormattedMessage {...messages.price} />, data: [] },
+        // { name: 'price', label: <FormattedMessage {...messages.price} />, data: [] },
         {
           name: 'createdAt',
           label: <FormattedMessage {...messages.createdAt} />,
@@ -93,17 +93,17 @@ export default function ItemFilterMenu({
           label: <FormattedMessage {...messages.origin} />,
           data: getSelectData(selectedItems, 'origin').filter(item => item.name !== ''),
         },
-        {
-          name: 'specifications',
-          label: <FormattedMessage {...messages.specifications} />,
-          data: [],
-        },
-        {
-          name: 'productionLeadTime',
-          label: <FormattedMessage {...messages.productionLeadTime} />,
-          data: [],
-        },
-        { name: 'packaging', label: <FormattedMessage {...messages.packaging} />, data: [] },
+        // {
+        //   name: 'specifications',
+        //   label: <FormattedMessage {...messages.specifications} />,
+        //   data: [],
+        // },
+        // {
+        //   name: 'productionLeadTime',
+        //   label: <FormattedMessage {...messages.productionLeadTime} />,
+        //   data: [],
+        // },
+        // { name: 'packaging', label: <FormattedMessage {...messages.packaging} />, data: [] },
       ],
     },
   ];
