@@ -149,6 +149,11 @@ export const FunctionWrapperStyle = css`
   z-index: 2;
 `;
 
+export const ProductFunctionWrapperStyle = css`
+  ${FunctionWrapperStyle}
+  padding: 5px 10px;
+`;
+
 export const BadgeWrapperStyle = css`
   grid-column: span 4;
   padding: 10px 0;

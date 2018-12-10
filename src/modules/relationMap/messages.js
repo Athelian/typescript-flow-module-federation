@@ -300,4 +300,12 @@ export default defineMessages({
     defaultMessage:
       'If you want to move your selection,  the prices of the items in your selection will be reset to 0',
   },
+  productName: {
+    id: 'modules.RelationMaps.sortFilter.productName',
+    defaultMessage: 'name',
+  },
+  productSerial: {
+    id: 'modules.RelationMaps.sortFilter.productSerial',
+    defaultMessage: 'serial',
+  },
 });
