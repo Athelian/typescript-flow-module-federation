@@ -60,16 +60,16 @@ const initialState: State = {
       completelyBatched: false,
       completelyShipped: false,
       showActive: true,
-      showArchived: true,
+      showArchived: false,
     },
     item: {},
     batch: {
       showActive: true,
-      showArchived: true,
+      showArchived: false,
     },
     shipment: {
       showActive: true,
-      showArchived: true,
+      showArchived: false,
     },
   },
 };
