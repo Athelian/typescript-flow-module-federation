@@ -32,17 +32,7 @@ export const productListQuery = gql`
             id
             no
             quantity
-            shipment {
-              id
-              no
-              containerGroups {
-                id
-                warehouseArrival {
-                  id
-                  date
-                }
-              }
-            }
+            deliveredAt
             batchAdjustments {
               id
               reason
