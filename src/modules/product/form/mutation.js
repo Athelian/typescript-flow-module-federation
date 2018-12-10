@@ -139,6 +139,7 @@ export const prepareUpdateProductInput = ({
       origin,
       updatedAt,
       updatedBy,
+      referenced,
       sort,
       exporter,
       supplier,

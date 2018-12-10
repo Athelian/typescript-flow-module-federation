@@ -9,6 +9,7 @@ export const productProviderFormFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    referenced
     origin
     productionLeadTime
     exporter {
