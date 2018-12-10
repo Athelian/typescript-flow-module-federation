@@ -8,11 +8,11 @@ export default defineMessages({
   },
   deliveredAt: {
     id: 'modules.Batches.deliveredAt',
-    defaultMessage: 'BATCH',
+    defaultMessage: 'DELIVERY DATE',
   },
   expiredAt: {
     id: 'modules.Batches.expiredAt',
-    defaultMessage: 'DELIVERY DATE',
+    defaultMessage: 'EXPIRY',
   },
   producedAt: {
     id: 'modules.Batches.producedAt',
