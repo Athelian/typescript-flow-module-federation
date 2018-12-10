@@ -333,7 +333,6 @@ function AdvanceFilter({ onApply }: Props) {
     state.activeFilters.order.length > 0 ||
     state.activeFilters.shipment.length > 0 ||
     isDirtyOfOrderFilterToggles(state.filterToggles.order);
-  console.log(state);
   return (
     <UIConsumer>
       {uiState => (
