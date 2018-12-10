@@ -91,7 +91,7 @@ export default function ItemFilterMenu({
           name: 'origin',
           field: 'name',
           label: <FormattedMessage {...messages.origin} />,
-          data: getSelectData(selectedItems, 'origin'),
+          data: getSelectData(selectedItems, 'origin').filter(item => item.name !== ''),
         },
         {
           name: 'specifications',

@@ -140,7 +140,7 @@ const getFilterValue = (name: string, data: any) => {
     case 'forwarder':
       return data.map(d => d.id);
     case 'origin':
-      return data.map(d => d.name);
+      return data.filter(d => d.name !== '').map(d => d.name);
     case 'createdAt':
     case 'updatedAt':
     case 'deliveredAt':
