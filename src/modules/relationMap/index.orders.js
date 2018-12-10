@@ -17,6 +17,7 @@ import ScrollToResult from './common/ScrollToResult';
 import SummaryBadge from './common/SummaryBadge';
 import { ActionSubscribe } from './common/ActionPanel';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
+import AdvancedFilter from './common/SortFilter/AdvancedFilter';
 import { FunctionWrapperStyle, BadgeWrapperStyle, RelationMapGridStyle } from './style';
 import messages from './messages';
 
@@ -100,6 +101,14 @@ const Order = ({ intl }: Props) => (
                                   onChangeSortFilter(newFilter);
                                   clearResult();
                                 }}
+                                renderAdvanceFilter={({ onChange: onApplyFilter }) => (
+                                  <AdvancedFilter
+                                    initialFilter={{
+                                      query: '',
+                                    }}
+                                    onApply={onApplyFilter}
+                                  />
+                                )}
                                 className={FunctionWrapperStyle}
                               />
                             )}

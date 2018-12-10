@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { SortInput, SearchInput } from 'components/NavBar';
 import ToggleTag from 'modules/relationMap/common/ToggleTag';
-import AdvancedFilter from './AdvancedFilter';
 import { GroupFilterStyle, SortWrapperStyle, GroupFilterWrapperStyle } from './style';
 
 type OptionalProps = {
   className: string,
+  renderAdvanceFilter: Function,
+  showTags: boolean,
 };
 
 type Props = OptionalProps & {
@@ -19,7 +20,19 @@ type Props = OptionalProps & {
   onChange: Function,
 };
 
-const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) => (
+const defaultProps = {
+  renderAdvanceFilter: () => null,
+  showTags: true,
+};
+const SortFilter = ({
+  className,
+  sortInputs,
+  filter,
+  sort,
+  onChange,
+  renderAdvanceFilter,
+  showTags,
+}: Props) => (
   <div className={className}>
     <div className={SortWrapperStyle}>
       <SortInput
@@ -38,12 +51,7 @@ const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) =>
     </div>
     <div className={GroupFilterWrapperStyle}>
       <div className={GroupFilterStyle}>
-        <AdvancedFilter
-          initialFilter={{
-            query: '',
-          }}
-          onApply={newFilter => onChange(newFilter)}
-        />
+        {renderAdvanceFilter({ onChange })}
         <SearchInput
           name="filter"
           value={filter.query}
@@ -52,8 +60,9 @@ const SortFilter = ({ className, sortInputs, filter, sort, onChange }: Props) =>
         />
       </div>
     </div>
-    <ToggleTag />
+    {showTags && <ToggleTag />}
   </div>
 );
 
+SortFilter.defaultProps = defaultProps;
 export default SortFilter;
