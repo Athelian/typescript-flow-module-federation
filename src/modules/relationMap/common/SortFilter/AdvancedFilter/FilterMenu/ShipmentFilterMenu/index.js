@@ -58,8 +58,8 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.inCharge} />,
           data: getSelectData(selectedItems, 'inCharge'),
         },
-        { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
-        { name: 'airports', label: <FormattedMessage {...messages.airports} />, data: [] },
+        // { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
+        // { name: 'airports', label: <FormattedMessage {...messages.airports} />, data: [] },
         {
           name: 'cargoReady',
           label: <FormattedMessage {...messages.cargoReady} />,
@@ -116,9 +116,8 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.tags} />,
           data: getSelectData(selectedItems, 'tags'),
         },
-        // temporary hide, not yet has this filter from graphql
-        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
-        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
+        // { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
+        // { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
       ],
     },
   ];
