@@ -59,18 +59,18 @@ export default function ItemFilterMenu({
         },
       ],
     },
-    // {
-    //   label: <FormattedMessage {...messages.product} />,
-    //   icon: 'PRODUCT',
-    //   filters: [
-    //     {
-    //       name: 'tags',
-    //       field: 'name',
-    //       label: <FormattedMessage {...messages.tags} />,
-    //       data: getSelectData(selectedItems, 'tags'),
-    //     },
-    //   ],
-    // },
+    {
+      label: <FormattedMessage {...messages.product} />,
+      icon: 'PRODUCT',
+      filters: [
+        {
+          name: 'tags',
+          field: 'name',
+          label: <FormattedMessage {...messages.tags} />,
+          data: getSelectData(selectedItems, 'tags'),
+        },
+      ],
+    },
     {
       label: <FormattedMessage {...messages.endProduct} />,
       icon: 'PROVIDER',
@@ -87,12 +87,12 @@ export default function ItemFilterMenu({
           label: <FormattedMessage {...messages.supplier} />,
           data: getSelectData(selectedItems, 'supplier'),
         },
-        // {
-        //   name: 'origin',
-        //   field: 'name',
-        //   label: <FormattedMessage {...messages.origin} />,
-        //   data: getSelectData(selectedItems, 'origin').filter(item => item.name !== ''),
-        // },
+        {
+          name: 'origin',
+          field: 'name',
+          label: <FormattedMessage {...messages.origin} />,
+          data: getSelectData(selectedItems, 'origin').filter(item => item.name !== ''),
+        },
         // {
         //   name: 'specifications',
         //   label: <FormattedMessage {...messages.specifications} />,
