@@ -285,9 +285,16 @@ function reducer(state, action) {
       const { selectItem } = action;
 
       let selected = state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || [];
-      if (Array.isArray(selectItem)) {
+
+      const selectItemIsArray = Array.isArray(selectItem);
+      if (selectItemIsArray) {
         selected = [...selectItem];
-      } else if (!selected.includes(selectItem)) {
+      }
+      const alreadySelected =
+        typeof selectItem === 'object' && !selectItemIsArray
+          ? !selected.find(selectedData => selectedData.id === selectItem.id)
+          : !selected.includes(selectItem);
+      if (alreadySelected) {
         selected.push(selectItem);
       } else {
         selected.splice(selected.indexOf(selectItem), 1);

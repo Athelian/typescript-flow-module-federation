@@ -51,7 +51,7 @@ const getFilterInputArea = ({
                 <MiniSelectorItem
                   onClick={() => onToggleSelect(item)}
                   selectable
-                  selected={selectedItems.includes(item)}
+                  selected={selectedItems.some(selectedItem => selectedItem.id === item.id)}
                   key={item.id}
                   isArchived={item.archived}
                 >
