@@ -64,12 +64,12 @@ export default function OrderFilterMenu({
           label: <FormattedMessage {...messages.inCharge} />,
           data: getSelectData(selectedItems, 'inCharge'),
         },
-        // {
-        //   name: 'tags',
-        //   field: 'name',
-        //   label: <FormattedMessage {...messages.tags} />,
-        //   data: getSelectData(selectedItems, 'tags'),
-        // },
+        {
+          name: 'tags',
+          field: 'name',
+          label: <FormattedMessage {...messages.tags} />,
+          data: getSelectData(selectedItems, 'tags'),
+        },
         {
           name: 'createdAt',
           field: 'createdAt',

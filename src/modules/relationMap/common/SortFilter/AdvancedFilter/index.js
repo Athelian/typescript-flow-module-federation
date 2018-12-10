@@ -294,9 +294,10 @@ function reducer(state, action) {
         typeof selectItem === 'object' && !selectItemIsArray
           ? !selected.find(selectedData => selectedData.id === selectItem.id)
           : !selected.includes(selectItem);
-      if (alreadySelected) {
+      if (!selectItemIsArray && alreadySelected) {
         selected.push(selectItem);
-      } else {
+      }
+      if (!selectItemIsArray && !alreadySelected) {
         selected.splice(selected.indexOf(selectItem), 1);
       }
 
