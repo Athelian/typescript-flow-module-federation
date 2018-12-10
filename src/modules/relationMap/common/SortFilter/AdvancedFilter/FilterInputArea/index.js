@@ -195,7 +195,6 @@ const getFilterInputArea = ({
               hideToggles: true,
             });
         case 'origin':
-          // TODO:
           return () => (
             <Origin values={selectedItems} onChange={origins => onToggleSelect(origins)} />
           );
