@@ -11,9 +11,7 @@ type Props = {
   batch: Object,
 };
 const BatchCard = ({ batch }: Props) => {
-  const { tags, shipment } = batch;
-  const containerGroups = (shipment && shipment.containerGroups) || [];
-  const { warehouseArrival } = containerGroups[0] || { warehouseArrival: { date: '' } };
+  const { tags, deliveredAt } = batch;
   return (
     <BaseCard icon="BATCH" color="BATCH">
       <div className={Style.CardWrapper}>
@@ -41,7 +39,7 @@ const BatchCard = ({ batch }: Props) => {
           </div>
           <div className={Style.SecondaryTitle}>ARRIVAL</div>
           <div>
-            <FormattedDate value={warehouseArrival.date} mode="date" />
+            <FormattedDate value={deliveredAt} mode="date" />
           </div>
         </div>
         <div className={Style.TagWrapper}>

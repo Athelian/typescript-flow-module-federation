@@ -43,6 +43,7 @@ export const productListQuery = gql`
                 }
               }
             }
+            deliveredAt
             batchAdjustments {
               id
               reason
