@@ -36,15 +36,22 @@ const ProductProviderCard = ({
   ...rest
 }: Props) => {
   if (!productProvider) return '';
+  const { exporter, supplier, referenced } = productProvider;
 
   const actions = selectable
     ? []
     : [
         <CardAction icon="CLONE" onClick={() => onClone(productProvider)} />,
-        <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(productProvider)} />,
+        ...(!referenced
+          ? [
+              <CardAction
+                icon="REMOVE"
+                hoverColor="RED"
+                onClick={() => onRemove(productProvider)}
+              />,
+            ]
+          : []),
       ];
-
-  const { exporter, supplier } = productProvider;
 
   return (
     <BaseCard icon="PROVIDER" color="PROVIDER" selectable={selectable} actions={actions} {...rest}>
