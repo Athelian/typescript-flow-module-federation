@@ -13,7 +13,7 @@ import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, SelectTemplateButton, ExportButton } from 'components/Buttons';
-import { ToggleInput } from 'components/Form';
+import { ToggleInput, Label, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
 import { formatOrderData } from 'modules/relationMap/util';
@@ -52,6 +52,7 @@ import {
   SidebarWrapperStyle,
   SidebarFadeStyle,
   BodyWrapperStyle,
+  LastTemplateUsedStyle,
 } from './style';
 
 type Props = {
@@ -424,12 +425,16 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       return (
                         <>
                           {lastUsedTemplate && (
-                            <div>
-                              <FormattedMessage
-                                id="modules.RelationMaps.lastUsed"
-                                defaultMessage="LAST USED TEMPLATE:"
-                              />
-                              {lastUsedTemplate}
+                            <div className={LastTemplateUsedStyle}>
+                              <Label>
+                                <FormattedMessage
+                                  id="modules.RelationMaps.lastUsed"
+                                  defaultMessage="LAST USED TEMPLATE:"
+                                />
+                              </Label>
+                              <Display width="400px" align="left">
+                                {lastUsedTemplate}
+                              </Display>
                             </div>
                           )}
                           <SelectTemplateButton onClick={() => setShowTemplate(true)} />
@@ -458,10 +463,12 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             toggled={showAll}
                             onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
                           >
-                            <FormattedMessage
-                              id="modules.RelationMaps.showAll"
-                              defaultMessage="SHOW ALL"
-                            />
+                            <Label>
+                              <FormattedMessage
+                                id="modules.RelationMaps.showAll"
+                                defaultMessage="SHOW ALL"
+                              />
+                            </Label>
                           </ToggleInput>
                         </>
                       );

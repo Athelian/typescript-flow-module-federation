@@ -9,7 +9,8 @@ export const EditTableViewWrapperStyle: string = css`
 `;
 
 export const NavbarWrapperStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
+  display: grid;
+  grid-template-columns: 1fr min-content min-content;
   padding: 0 20px;
   grid-gap: 20px;
   align-items: center;
@@ -60,4 +61,9 @@ export const BodyWrapperStyle: string = css`
   padding: 5px;
   margin: 50px 0 0 30px;
   ${scrollbars.MAIN};
+`;
+
+export const LastTemplateUsedStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  align-items: center;
 `;
