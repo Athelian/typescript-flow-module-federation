@@ -58,8 +58,8 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.inCharge} />,
           data: getSelectData(selectedItems, 'inCharge'),
         },
-        { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
-        { name: 'airports', label: <FormattedMessage {...messages.airports} />, data: [] },
+        // { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
+        // { name: 'airports', label: <FormattedMessage {...messages.airports} />, data: [] },
         {
           name: 'cargoReady',
           label: <FormattedMessage {...messages.cargoReady} />,
@@ -110,32 +110,31 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.deliveryReady} />,
           data: getSelectData(selectedItems, 'deliveryReady'),
         },
-        {
-          name: 'tags',
-          field: 'name',
-          label: <FormattedMessage {...messages.tags} />,
-          data: getSelectData(selectedItems, 'tags'),
-        },
-        // temporary hide, not yet has this filter from graphql
-        { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
-        { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
+        // {
+        //   name: 'tags',
+        //   field: 'name',
+        //   label: <FormattedMessage {...messages.tags} />,
+        //   data: getSelectData(selectedItems, 'tags'),
+        // },
+        // { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
+        // { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
       ],
     },
   ];
 
-  const togglesMap = [
-    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-    {
-      name: 'showArchived',
-      label: <FormattedMessage {...messages.showArchived} />,
-      icon: 'ARCHIVE',
-    },
-  ];
+  // const togglesMap = [
+  //   { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+  //   {
+  //     name: 'showArchived',
+  //     label: <FormattedMessage {...messages.showArchived} />,
+  //     icon: 'ARCHIVE',
+  //   },
+  // ];
 
   return (
     <BaseFilterMenu
       filtersMap={filtersMap}
-      togglesMap={togglesMap}
+      // togglesMap={togglesMap}
       entityType="shipment"
       parsedActiveFilters={parsedActiveFilters}
       toggleActiveFilter={toggleActiveFilter}

@@ -46,7 +46,7 @@ export default function ItemFilterMenu({
       label: <FormattedMessage {...messages.item} />,
       icon: 'ORDER_ITEM',
       filters: [
-        { name: 'price', label: <FormattedMessage {...messages.price} />, data: [] },
+        // { name: 'price', label: <FormattedMessage {...messages.price} />, data: [] },
         {
           name: 'createdAt',
           label: <FormattedMessage {...messages.createdAt} />,
@@ -59,18 +59,18 @@ export default function ItemFilterMenu({
         },
       ],
     },
-    {
-      label: <FormattedMessage {...messages.product} />,
-      icon: 'PRODUCT',
-      filters: [
-        {
-          name: 'tags',
-          field: 'name',
-          label: <FormattedMessage {...messages.tags} />,
-          data: getSelectData(selectedItems, 'tags'),
-        },
-      ],
-    },
+    // {
+    //   label: <FormattedMessage {...messages.product} />,
+    //   icon: 'PRODUCT',
+    //   filters: [
+    //     {
+    //       name: 'tags',
+    //       field: 'name',
+    //       label: <FormattedMessage {...messages.tags} />,
+    //       data: getSelectData(selectedItems, 'tags'),
+    //     },
+    //   ],
+    // },
     {
       label: <FormattedMessage {...messages.endProduct} />,
       icon: 'PROVIDER',
@@ -87,23 +87,23 @@ export default function ItemFilterMenu({
           label: <FormattedMessage {...messages.supplier} />,
           data: getSelectData(selectedItems, 'supplier'),
         },
-        {
-          name: 'origin',
-          field: 'name',
-          label: <FormattedMessage {...messages.origin} />,
-          data: getSelectData(selectedItems, 'origin').filter(item => item.name !== ''),
-        },
-        {
-          name: 'specifications',
-          label: <FormattedMessage {...messages.specifications} />,
-          data: [],
-        },
-        {
-          name: 'productionLeadTime',
-          label: <FormattedMessage {...messages.productionLeadTime} />,
-          data: [],
-        },
-        { name: 'packaging', label: <FormattedMessage {...messages.packaging} />, data: [] },
+        // {
+        //   name: 'origin',
+        //   field: 'name',
+        //   label: <FormattedMessage {...messages.origin} />,
+        //   data: getSelectData(selectedItems, 'origin').filter(item => item.name !== ''),
+        // },
+        // {
+        //   name: 'specifications',
+        //   label: <FormattedMessage {...messages.specifications} />,
+        //   data: [],
+        // },
+        // {
+        //   name: 'productionLeadTime',
+        //   label: <FormattedMessage {...messages.productionLeadTime} />,
+        //   data: [],
+        // },
+        // { name: 'packaging', label: <FormattedMessage {...messages.packaging} />, data: [] },
       ],
     },
   ];
