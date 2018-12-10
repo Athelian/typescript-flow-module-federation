@@ -96,7 +96,7 @@ export const cloneOrderItem = async (client: any, target: Object, filter: Object
     const orderId = getByPathWithDefault('', 'order.id', currentOrderItem);
     const oldBatches = currentOrderItem.batches.map(batch => ({ id: batch.id }));
     const newBatches = currentOrderItem.batches
-      .filter(batch => !!targetedBatch[batch.id])
+      .filter(batch => targetedBatch && !!targetedBatch[batch.id])
       .map(
         compose(
           prepareUpdateBatchInput,
