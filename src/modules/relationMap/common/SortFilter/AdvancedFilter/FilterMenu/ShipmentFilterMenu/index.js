@@ -110,12 +110,12 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.deliveryReady} />,
           data: getSelectData(selectedItems, 'deliveryReady'),
         },
-        {
-          name: 'tags',
-          field: 'name',
-          label: <FormattedMessage {...messages.tags} />,
-          data: getSelectData(selectedItems, 'tags'),
-        },
+        // {
+        //   name: 'tags',
+        //   field: 'name',
+        //   label: <FormattedMessage {...messages.tags} />,
+        //   data: getSelectData(selectedItems, 'tags'),
+        // },
         // { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
         // { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
       ],
