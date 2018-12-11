@@ -430,7 +430,10 @@ export const cloneTarget = async ({
   const targetedBatch = filterTargetedBatch(target);
   // TODO: should run in parallel
   const [orderResults, orderFocus] = await cloneOrder(client, targetedOrder, filter);
-  const [shipmentResults, shipmentFocus] = await cloneShipment(client, target.shipment);
+  const [shipmentResults, shipmentFocus] = await cloneShipment(
+    client,
+    Object.keys(target.shipment || {})
+  );
   const [orderItemResult, orderItemFocus] = await cloneOrderItem(
     client,
     { orderItems: targetedOrderItem, batch: target.batch },
