@@ -133,10 +133,10 @@ const getFilterValue = (name: string, data: any) => {
       return { ...(data ? {} : { archived: false }) };
     case 'poNo':
       return data.map(d => d.poNo);
-    case 'tags':
-    case 'inCharge':
     case 'exporter':
       return data.map(d => d.group && d.group.id);
+    case 'tags':
+    case 'inCharge':
     case 'supplier':
     case 'forwarder':
       return data.map(d => d.id);
