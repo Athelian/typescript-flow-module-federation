@@ -51,7 +51,6 @@ const Order = ({ intl }: Props) => (
                       const formatedNodes =
                         isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result);
                       const order = formatOrderData(formatedNodes || []);
-                      console.log('formatedNodes', nodes, order);
                       return (
                         <>
                           <ActionSubscribe filter={filterVariables} />
