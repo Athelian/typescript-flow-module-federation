@@ -7,11 +7,14 @@ import { useTextInput } from 'modules/form/hooks';
 
 import { EnumInputStyle, DeleteButtonStyle } from './style';
 
-type Props = {
-  data: Array<Object>,
+type OptionalProps = {
   value: Object,
+  onRemove?: Function,
+};
+
+type Props = OptionalProps & {
+  data: Array<Object>,
   onChange: Function,
-  onRemove: Function,
 };
 
 const filterItems = (query: string, items: Array<any>) => {
@@ -19,6 +22,10 @@ const filterItems = (query: string, items: Array<any>) => {
   return matchSorter(items, query, {
     keys: ['name', 'description'],
   });
+};
+
+const defaultProps = {
+  value: { name: '' },
 };
 
 export default function EnumInput({ data, value, onChange, onRemove }: Props) {
@@ -106,9 +113,13 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
           });
         }}
       />
-      <button className={DeleteButtonStyle} type="button" onClick={onRemove}>
-        <Icon icon="REMOVE" />
-      </button>
+      {!!onRemove && (
+        <button className={DeleteButtonStyle} type="button" onClick={onRemove}>
+          <Icon icon="REMOVE" />
+        </button>
+      )}
     </div>
   );
 }
+
+EnumInput.defaultProps = defaultProps;

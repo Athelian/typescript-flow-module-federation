@@ -36,6 +36,7 @@ import SectionHeader from './SectionHeader';
 import LastModified from './SectionHeader/LastModified';
 import StatusToggle from './SectionHeader/StatusToggle';
 import SectionWrapper from './SectionWrapper';
+import NumberRangeInput from './NumberRangeInput';
 
 export {
   DateInput,
@@ -74,4 +75,5 @@ export {
   StatusToggle,
   SectionWrapper,
   ImagesUploadInput,
+  NumberRangeInput,
 };

@@ -3,6 +3,7 @@ import React from 'react';
 import { getByPath } from 'utils/fp';
 import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
+import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { FilterDataWrapperStyle, FilterDataStyle } from './style';
 
@@ -17,22 +18,6 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
     return null;
   }
   switch (name) {
-    default:
-      return (
-        <div className={FilterDataWrapperStyle}>
-          {data.map(datum => (
-            <button
-              key={datum.id ? datum.id : uuid()}
-              className={FilterDataStyle}
-              type="button"
-              onClick={() => onClick(datum)}
-            >
-              {field && getByPath(field, datum)}
-              <Icon icon="CLEAR" />
-            </button>
-          ))}
-        </div>
-      );
     case 'createdAt':
     case 'updatedAt':
     case 'deliveredAt':
@@ -77,6 +62,40 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
         </div>
       );
     }
+    case 'price': {
+      const {
+        currency: { name: currencyName },
+        min,
+        max,
+      } = data;
+      if (currencyName === '' || (!min && !max)) return null;
+      return (
+        <div className={FilterDataWrapperStyle}>
+          <button key={uuid()} className={FilterDataStyle} type="button">
+            {min && <FormattedNumber value={min} suffix={currencyName} />}
+            {' ~ '}
+            {max && <FormattedNumber value={max} suffix={currencyName} />}
+            <Icon icon="CLEAR" />
+          </button>
+        </div>
+      );
+    }
+    default:
+      return (
+        <div className={FilterDataWrapperStyle}>
+          {data.map(datum => (
+            <button
+              key={datum.id ? datum.id : uuid()}
+              className={FilterDataStyle}
+              type="button"
+              onClick={() => onClick(datum)}
+            >
+              {field && getByPath(field, datum)}
+              <Icon icon="CLEAR" />
+            </button>
+          ))}
+        </div>
+      );
   }
 };
 

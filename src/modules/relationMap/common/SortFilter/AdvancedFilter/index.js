@@ -94,6 +94,7 @@ const FILTER = {
     tags: 'tagIds',
   },
   item: {
+    price: 'orderItemPrice',
     createdAt: 'orderItemCreatedAt',
     updatedAt: 'orderItemUpdatedAt',
     exporter: 'productProviderExporterIds',
@@ -160,6 +161,12 @@ const getFilterValue = (name: string, data: any) => {
       return {
         ...(data.after && { after: formatToDateTimeGraphql(new Date(data.after)) }),
         ...(data.before && { before: formatToDateTimeGraphql(new Date(data.before)) }),
+      };
+    case 'price':
+      return {
+        ...(data.currency && { currency: data.currency.name }),
+        ...(data.min && { min: data.min }),
+        ...(data.max && { max: data.max }),
       };
     default:
       return data;
