@@ -68,7 +68,9 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
             }}
           >
             {after && <FormattedDate value={after} />}
+            {after && !before && ' > '}
             {after && before && ' - '}
+            {!after && before && ' < '}
             {before && <FormattedDate value={before} />}
             <Icon icon="CLEAR" />
           </button>
