@@ -51,7 +51,7 @@ export default function OrderFilterMenu({
         {
           name: 'poNo',
           field: 'poNo',
-          label: <FormattedMessage {...messages.poNo} />,
+          label: <FormattedMessage {...messages.order} />,
           data: getSelectData(selectedItems, 'poNo'),
         },
         {
