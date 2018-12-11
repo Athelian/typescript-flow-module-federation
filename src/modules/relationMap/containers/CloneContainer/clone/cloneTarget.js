@@ -331,7 +331,7 @@ export const cloneShipment = async (client: any, shipmentIds: Array<string>) => 
         },
       })
       .then(({ data }) => {
-        const currentShipment = getByPathWithDefault({}, 'data.shipment', data);
+        const currentShipment = getByPathWithDefault({}, 'shipment', data);
 
         return client.mutate({
           mutation: cloneShipmentMutation,
