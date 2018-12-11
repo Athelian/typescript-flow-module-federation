@@ -18,6 +18,8 @@ export const SerialWrapperStyle = css`
 
 export const ProductNameWrapperStyle = css`
   align-self: center;
+  min-width: 63px;
+  flex: 1;
 `;
 
 export const ProgressIconStyle = css`
