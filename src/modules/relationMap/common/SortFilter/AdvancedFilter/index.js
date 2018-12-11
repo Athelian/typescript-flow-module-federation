@@ -302,11 +302,11 @@ function reducer(state, action) {
       if (selectItemIsArray) {
         selected = [...selectItem];
       } else {
-        const alreadySelected =
+        const itemIsNotSelected =
           typeof selectItem === 'object' && !selectItemIsArray
             ? !selected.find(selectedData => selectedData.id === selectItem.id)
             : !selected.includes(selectItem);
-        if (alreadySelected) {
+        if (itemIsNotSelected) {
           selected.push(selectItem);
         } else {
           selected.splice(selected.indexOf(selectItem), 1);
