@@ -125,6 +125,9 @@ export const orderItemRmFragment = gql`
     }
     order {
       ...orderCardFragment
+      orderItems {
+        id
+      }
     }
     batches {
       ...batchCardFragment
