@@ -59,7 +59,7 @@ export default function FilterMenuItem({
           name={name}
           field={field}
           data={data}
-          onClick={(datum, fieldAttr) => {
+          onRemove={(datum, fieldAttr) => {
             changeSelectedFilterItem(name);
             onToggleSelect(datum, fieldAttr);
           }}

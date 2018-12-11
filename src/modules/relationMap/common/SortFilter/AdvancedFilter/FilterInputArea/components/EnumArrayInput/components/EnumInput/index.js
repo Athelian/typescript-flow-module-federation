@@ -30,12 +30,13 @@ const defaultProps = {
 
 export default function EnumInput({ data, value, onChange, onRemove }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value.name, { isRequired: true });
+
   return (
     <div className={EnumInputStyle}>
       <SearchSelectInput
         {...inputHandlers}
         items={filterItems(inputHandlers.value, data)}
-        itemToString={item => (item ? item.description || item.name : '')}
+        itemToString={item => (item ? item.name || item.description : '')}
         itemToValue={item => (item ? item.name : '')}
         inputValue={inputHandlers.value}
         renderSelect={({ ...selectProps }) => (
@@ -45,7 +46,7 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
             isOpen={isFocused}
             width="200px"
             align="left"
-            itemToString={item => (item ? item.description || item.name : '')}
+            itemToString={item => (item ? item.name || item.description : '')}
           />
         )}
         renderOptions={({ ...optionProps }) => (

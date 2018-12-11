@@ -8,12 +8,12 @@ import FormattedDate from 'components/FormattedDate';
 import { FilterDataWrapperStyle, FilterDataStyle } from './style';
 
 type Props = {
-  onClick: Function,
+  onRemove: Function,
   field: ?string,
   name: string,
   data: any,
 };
-const FilterData = ({ onClick, field, data, name }: Props) => {
+const FilterData = ({ onRemove, field, data, name }: Props) => {
   if (!name) {
     return null;
   }
@@ -45,10 +45,10 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
             type="button"
             onClick={() => {
               if (fromDate) {
-                onClick(null, 'after');
+                onRemove(null, 'after');
               }
               if (toDate) {
-                onClick(null, 'before');
+                onRemove(null, 'before');
               }
             }}
           >
@@ -71,7 +71,19 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
       if (currencyName === '' || (!min && !max)) return null;
       return (
         <div className={FilterDataWrapperStyle}>
-          <button key={uuid()} className={FilterDataStyle} type="button">
+          <button
+            key={uuid()}
+            className={FilterDataStyle}
+            type="button"
+            onClick={() => {
+              if (min) {
+                onRemove(null, 'min');
+              }
+              if (max) {
+                onRemove(null, 'max');
+              }
+            }}
+          >
             {min && <FormattedNumber value={min} suffix={currencyName} />}
             {' ~ '}
             {max && <FormattedNumber value={max} suffix={currencyName} />}
@@ -88,7 +100,7 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
               key={datum.id ? datum.id : uuid()}
               className={FilterDataStyle}
               type="button"
-              onClick={() => onClick(datum)}
+              onClick={() => onRemove(datum)}
             >
               {field && getByPath(field, datum)}
               <Icon icon="CLEAR" />
