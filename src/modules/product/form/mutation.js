@@ -69,6 +69,7 @@ export const prepareCreateProductInput = ({
     ({
       isNew,
       id,
+      referenced,
       updatedAt,
       exporter,
       supplier,
