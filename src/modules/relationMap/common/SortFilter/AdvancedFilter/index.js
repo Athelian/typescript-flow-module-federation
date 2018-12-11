@@ -2,7 +2,7 @@
 import React, { useRef, useReducer, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { getByPathWithDefault, omit } from 'utils/fp';
+import { getByPathWithDefault, omit, isEmpty } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -202,6 +202,16 @@ const convertToFilterQuery = (state: Object) => ({
   ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
   ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
 });
+
+const removeActiveFilter = state => ({
+  activeFilters: {
+    ...state.activeFilters,
+    [state.selectedEntityType]: state.activeFilters[state.selectedEntityType].filter(
+      activeFilter => activeFilter !== state.selectedFilterItem
+    ),
+  },
+});
+
 function reducer(state, action) {
   switch (action.type) {
     case 'RESET':
@@ -269,7 +279,6 @@ function reducer(state, action) {
       } else {
         newSelected = { ...selected, [field]: selectItem };
       }
-
       return {
         ...state,
         selectedItems: {
@@ -279,6 +288,7 @@ function reducer(state, action) {
             [state.selectedFilterItem]: newSelected,
           },
         },
+        ...(isEmpty(newSelected) ? removeActiveFilter(state) : {}),
       };
     }
 
@@ -291,11 +301,11 @@ function reducer(state, action) {
       if (selectItemIsArray) {
         selected = [...selectItem];
       } else {
-        const alreadySelected =
+        const itemIsNotSelected =
           typeof selectItem === 'object' && !selectItemIsArray
             ? !selected.find(selectedData => selectedData.id === selectItem.id)
             : !selected.includes(selectItem);
-        if (alreadySelected) {
+        if (itemIsNotSelected) {
           selected.push(selectItem);
         } else {
           selected.splice(selected.indexOf(selectItem), 1);
@@ -311,6 +321,7 @@ function reducer(state, action) {
             [state.selectedFilterItem]: selected,
           },
         },
+        ...(isEmpty(selected) ? removeActiveFilter(state) : {}),
       };
     }
 
