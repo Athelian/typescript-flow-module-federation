@@ -37,45 +37,20 @@ const defaultProps = {
 const OrderCard = ({ order, actions, ...rest }: Props) => {
   if (!order) return '';
 
-  const { id, poNo, issuedAt: poDate, orderItems, currency, exporter, inCharges } = order;
-
-  const totalItems = orderItems.length;
-
-  let totalPrice = 0;
-  orderItems.forEach(item => {
-    totalPrice += item.price ? item.price.amount * item.quantity : 0;
-  });
-
-  let orderedQuantity = 0;
-  let batchedQuantity = 0;
-  let shippedQuantity = 0;
-  let numOfBatched = 0;
-  let numOfShipped = 0;
-
-  orderItems.forEach(item => {
-    orderedQuantity += item.quantity || 0;
-
-    if (item.batches) {
-      item.batches.forEach(batch => {
-        batchedQuantity += batch.quantity;
-        numOfBatched += 1;
-
-        let currentQuantity = batch.quantity;
-
-        if (batch.batchAdjustments) {
-          batch.batchAdjustments.forEach(batchAdjustment => {
-            batchedQuantity += batchAdjustment.quantity;
-            currentQuantity += batchAdjustment.quantity;
-          });
-        }
-
-        if (batch.shipment) {
-          shippedQuantity += currentQuantity;
-          numOfShipped += 1;
-        }
-      });
-    }
-  });
+  const {
+    id,
+    poNo,
+    issuedAt,
+    totalPrice,
+    totalOrdered,
+    totalBatched,
+    totalShipped,
+    batchCount,
+    batchShippedCount,
+    orderItemCount,
+    exporter,
+    inCharges,
+  } = order;
 
   return (
     <BaseCard icon="ORDER" color="ORDER" actions={actions} {...rest}>
@@ -96,7 +71,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
             }
             input={
               <Display>
-                <FormattedNumber value={totalPrice} suffix={currency} />
+                <FormattedNumber value={totalPrice.amount} suffix={totalPrice.currency} />
               </Display>
             }
           />
@@ -108,7 +83,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
             }
             input={
               <Display>
-                <FormattedNumber value={totalItems} />
+                <FormattedNumber value={orderItemCount} />
               </Display>
             }
           />
@@ -120,7 +95,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
             }
             input={
               <Display>
-                <FormattedDate value={poDate} />
+                <FormattedDate value={issuedAt} />
               </Display>
             }
           />
@@ -128,11 +103,11 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
           <div className={ChartWrapperStyle}>
             <QuantityChart
               hasLabel={false}
-              orderedQuantity={orderedQuantity}
-              batchedQuantity={batchedQuantity}
-              shippedQuantity={shippedQuantity}
-              batched={numOfBatched}
-              shipped={numOfShipped}
+              orderedQuantity={totalOrdered}
+              batchedQuantity={totalBatched}
+              shippedQuantity={totalShipped}
+              batched={batchCount}
+              shipped={batchShippedCount}
             />
           </div>
           <div className={InChargeWrapperStyle}>

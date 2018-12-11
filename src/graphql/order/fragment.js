@@ -146,30 +146,20 @@ export const orderCardFragment = gql`
     archived
     poNo
     issuedAt
-    currency
+    totalPrice {
+      ...priceFragment
+    }
+    totalOrdered
+    totalBatched
+    totalShipped
+    orderItemCount
+    batchCount
+    batchShippedCount
     exporter {
       ...partnerNameFragment
     }
     tags {
       ...tagFragment
-    }
-    orderItems {
-      id
-      quantity
-      price {
-        ...priceFragment
-      }
-      batches {
-        id
-        quantity
-        batchAdjustments {
-          id
-          quantity
-        }
-        shipment {
-          id
-        }
-      }
     }
     inCharges {
       ...userAvatarFragment
