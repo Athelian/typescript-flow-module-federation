@@ -320,22 +320,24 @@ function reducer(state, action) {
   }
 }
 
-const isDirtyOfOrderFilterToggles = filterToggles => {
-  const { completelyBatched, completelyShipped, showActive, showArchived } = filterToggles;
+const isFilterTogglesDirty = filterToggles => {
+  const {
+    order: { completelyBatched, completelyShipped, showActive, showArchived },
+  } = filterToggles;
   return completelyBatched || completelyShipped || !showActive || showArchived;
+};
+
+const isActiveFilterDirty = activeFilters => {
+  const { order, item, batch, shipment } = activeFilters;
+  return order.length > 0 || item.length > 0 || batch.length > 0 || shipment.length > 0;
 };
 
 function AdvanceFilter({ onApply }: Props) {
   const filterButtonRef = useRef(null);
   const [filterIsApplied, setAppliedFilter] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const isActiveFilterDirty =
-    state.activeFilters.batch.length > 0 ||
-    state.activeFilters.item.length > 0 ||
-    state.activeFilters.order.length > 0 ||
-    state.activeFilters.shipment.length > 0;
-  const isOrderFilterToggleDirty = isDirtyOfOrderFilterToggles(state.filterToggles.order);
-  const isDirty = isActiveFilterDirty || isOrderFilterToggleDirty;
+  const isDirty =
+    isActiveFilterDirty(state.activeFilters) || isFilterTogglesDirty(state.filterToggles);
   return (
     <UIConsumer>
       {uiState => (
