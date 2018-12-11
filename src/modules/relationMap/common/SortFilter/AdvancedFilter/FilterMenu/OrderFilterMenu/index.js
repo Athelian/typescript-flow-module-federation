@@ -49,10 +49,10 @@ export default function OrderFilterMenu({
       icon: 'ORDER',
       filters: [
         {
-          name: 'poNo',
+          name: 'ids',
           field: 'poNo',
-          label: <FormattedMessage {...messages.poNo} />,
-          data: getSelectData(selectedItems, 'poNo'),
+          label: <FormattedMessage {...messages.order} />,
+          data: getSelectData(selectedItems, 'ids'),
         },
         {
           name: 'exporter',

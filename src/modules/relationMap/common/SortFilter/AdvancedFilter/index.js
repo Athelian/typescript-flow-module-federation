@@ -42,7 +42,7 @@ type State = {
 
 const initialState: State = {
   selectedEntityType: 'order',
-  selectedFilterItem: 'poNo',
+  selectedFilterItem: 'ids',
   activeFilters: {
     order: [],
     item: [],
@@ -75,7 +75,7 @@ const initialState: State = {
 };
 
 const defaultFilterMenuItemMap = {
-  order: 'poNo',
+  order: 'ids',
   item: 'createdAt',
   batch: 'deliveredAt',
   shipment: 'forwarder',
@@ -89,7 +89,7 @@ const FILTER = {
     showArchived: null,
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    poNo: 'poNos',
+    ids: 'ids',
     inCharge: 'inChargeIds',
     exporter: 'exporterIds',
     tags: 'tagIds',
@@ -131,10 +131,9 @@ const getFilterValue = (name: string, data: any) => {
       return data;
     case 'showArchived':
       return { ...(data ? {} : { archived: false }) };
-    case 'poNo':
-      return data.map(d => d.poNo);
     case 'exporter':
       return data.map(d => d.group && d.group.id);
+    case 'ids':
     case 'tags':
     case 'inCharge':
     case 'supplier':

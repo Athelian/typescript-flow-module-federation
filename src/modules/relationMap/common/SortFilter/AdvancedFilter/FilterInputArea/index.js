@@ -37,7 +37,7 @@ const getFilterInputArea = ({
   switch (selectedEntityType) {
     case 'order': {
       switch (selectedFilterItem) {
-        case 'poNo':
+        case 'ids':
           return () =>
             MiniSelector({
               entityType: 'orders',
