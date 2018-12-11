@@ -136,6 +136,7 @@ const getFilterValue = (name: string, data: any) => {
     case 'tags':
     case 'inCharge':
     case 'exporter':
+      return data.map(d => d.group && d.group.id);
     case 'supplier':
     case 'forwarder':
       return data.map(d => d.id);
@@ -265,7 +266,7 @@ function reducer(state, action) {
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
       let newSelected = {};
       if (!selectItem && selected[field]) {
-        newSelected = omit([field], newSelected);
+        newSelected = omit([field], selected);
       } else {
         newSelected = { ...selected, [field]: selectItem };
       }
