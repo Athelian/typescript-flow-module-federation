@@ -35,6 +35,8 @@ describe('Product', () => {
         .click()
         .wait(1000);
 
+      cy.getByTestId('saveButton').should('be.disabled');
+
       cy.get('input[name="name"]')
         .should('have.value', name)
         .get('input[name="serial"]')
@@ -61,6 +63,8 @@ describe('Product', () => {
       cy.getByTestId('saveButton')
         .click()
         .wait(1000);
+
+      cy.getByTestId('saveButton').should('be.disabled');
 
       cy.get('input[name="name"]').should('have.value', updatedName);
     });
@@ -94,6 +98,8 @@ describe('Product', () => {
         cy.getByTestId('saveButton')
           .click()
           .wait(1000);
+
+        cy.getByTestId('saveButton').should('be.disabled');
 
         cy.get('input[name="name"]')
           .should('have.value', clonedName)
