@@ -121,5 +121,8 @@ export const shipmentCardFragment = gql`
         name
       }
     }
+    batches {
+      id
+    }
   }
 `;
