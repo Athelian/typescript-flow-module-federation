@@ -13,7 +13,7 @@ storiesOf('RelationMap/ProductFocused', module).add('ProductFocusedView', () => 
     tags: [],
     orderItem: {
       order: {
-        poNo: 'pono',
+        poNo: 'ids',
       },
     },
     shipment: {
