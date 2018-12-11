@@ -87,9 +87,6 @@ export const shipmentCardFragment = gql`
     cargoReady {
       ...timelineDateMinimalFragment
     }
-    batches {
-      id
-    }
     tags {
       ...tagFragment
     }

@@ -180,28 +180,6 @@ export const generateShipmentRelation = (shipment: Object, option: Object) => {
   return relations;
 };
 
-export const formatShipmentFromOrder = (orders: Array<Object>) => {
-  const shipmentObj = {};
-  orders.forEach(order => {
-    const { shipments, id: orderId } = order;
-    shipments.forEach(shipment => {
-      if (!shipmentObj[shipment.id]) {
-        shipmentObj[shipment.id] = {
-          data: {
-            ...shipment,
-            totalOrder: 0,
-            totalBatch: shipment.batches.length,
-          },
-          refs: {},
-        };
-      }
-      shipmentObj[shipment.id].data.totalOrder += 1;
-      shipmentObj[shipment.id].refs[orderId] = true;
-    });
-  });
-  return shipmentObj;
-};
-
 export const formatOrderFromShipment = (shipments: Array<Object>) => {
   const orderObj = {};
   shipments.forEach(shipment => {
@@ -246,8 +224,6 @@ export const initOrderObj = (order: Object) => {
 export const initShipmentObj = (shipment: Object) => ({
   data: {
     ...shipment,
-    totalOrder: 0,
-    totalBatch: getByPathWithDefault(0, 'batches.length', shipment),
   },
   relation: {
     order: {},
@@ -317,7 +293,6 @@ export const formatOrderData = (orders: Array<Object> = []) => {
       if (!shipmentObj[shipment.id]) {
         shipmentObj[shipment.id] = initShipmentObj(shipment);
       }
-      shipmentObj[shipment.id].data.totalOrder += 1;
       shipmentObj[shipment.id].relation.order[orderId] = true;
     });
 
@@ -363,11 +338,6 @@ export const formatOrderData = (orders: Array<Object> = []) => {
               shipmentObj[shipment.id] = initShipmentObj(shipment);
             }
             const { relation: shipmentRelation } = shipmentObj[shipment.id];
-            shipmentObj[shipment.id].data.metric = getByPathWithDefault(
-              '',
-              'packageVolume.metric',
-              batch
-            );
             shipmentRelation.order[order.id] = true;
             shipmentRelation.orderItem[orderItem.id] = true;
             shipmentRelation.batch[batch.id] = true;

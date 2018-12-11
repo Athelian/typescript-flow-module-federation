@@ -2,6 +2,7 @@
 import { differenceBy } from 'lodash';
 import { getByPathWithDefault, compose, omit } from 'utils/fp';
 import { cleanUpData, removeId } from 'utils/data';
+import { shipmentFormQuery } from 'modules/shipment/form/query';
 import { prepareCreateOrderInput } from 'modules/order/form/mutation';
 import { prepareCreateShipmentInput } from 'modules/shipment/form/mutation';
 import { prepareCreateBatchInput, prepareUpdateBatchInput } from 'modules/batch/form/mutation';
@@ -15,7 +16,6 @@ import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import {
   removeAdditionOrderItemFields,
   removeAdditionBatchFields,
-  removeAdditionShipmentFields,
 } from 'modules/relationMap/orderFocused/formatter';
 import { createMutationRequest } from './index';
 
@@ -318,29 +318,41 @@ export const cloneBatch = async (client: any, batches: Object) => {
   return [batchResult, batchFocus];
 };
 
-export const cloneShipment = async (client: any, shipment: Object) => {
-  const shipmentIds = Object.keys(shipment || {});
-  const shipmentRequests = shipmentIds.map(shipmentId => {
-    const currentShipment = shipment[shipmentId];
-    const request = client.mutate({
-      mutation: cloneShipmentMutation,
-      variables: {
-        input: prepareCreateShipmentInput(
-          cleanUpData({
-            ...removeAdditionShipmentFields(currentShipment),
-            no: `[cloned] ${currentShipment.no}`,
-            containerGroups: removeId(currentShipment.containerGroups),
-            voyages: removeId(currentShipment.voyages),
-            files: [],
-          })
-        ),
-      },
-      onError: err => {
-        throw err;
-      },
-    });
-    return request;
-  });
+export const cloneShipment = async (client: any, shipmentIds: Array<string>) => {
+  const shipmentRequests = shipmentIds.map(shipmentId =>
+    client
+      .query({
+        query: shipmentFormQuery,
+        variables: {
+          id: shipmentId,
+        },
+        onError: err => {
+          throw err;
+        },
+      })
+      .then(({ data }) => {
+        const currentShipment = getByPathWithDefault({}, 'data.shipment', data);
+
+        return client.mutate({
+          mutation: cloneShipmentMutation,
+          variables: {
+            input: prepareCreateShipmentInput(
+              cleanUpData({
+                ...currentShipment,
+                no: `[cloned] ${currentShipment.no}`,
+                containerGroups: removeId(currentShipment.containerGroups),
+                voyages: removeId(currentShipment.voyages),
+                files: [],
+              })
+            ),
+          },
+          onError: err => {
+            throw err;
+          },
+        });
+      })
+  );
+
   const newShipments = await Promise.all(shipmentRequests);
   const shipmentResults: Array<Object> = newShipments.map(newShipment => {
     const result = getByPathWithDefault({}, 'data.shipmentCreate.shipment', newShipment);

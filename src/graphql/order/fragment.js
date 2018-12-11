@@ -131,14 +131,6 @@ export const orderBasicFragment = gql`
     }
   }
 `;
-export const orderFragmentForRM = gql`
-  fragment orderFragmentForRM on Order {
-    ...orderBasicFragment
-    shipments {
-      ...shipmentFormFragment
-    }
-  }
-`;
 
 export const orderCardFragment = gql`
   fragment orderCardFragment on Order {
