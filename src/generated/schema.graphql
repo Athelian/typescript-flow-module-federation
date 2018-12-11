@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Dec 03 2018 19:23:19 GMT+0700 (Indochina Time)
+# timestamp: Tue Dec 11 2018 14:44:33 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Garissa Airport"""
@@ -26897,6 +26897,7 @@ type Batch implements Model & Owned & Package & Tagged & Customizable {
   deliveredAt: DateTime
   expiredAt: DateTime
   memo: String
+  totalAdjusted: Float
   batchAssignments: [BatchAssignment!]!
   batchAdjustments: [BatchAdjustment!]!
   id: ID!
@@ -29489,85 +29490,6 @@ input MaskUpdateInput {
 
 interface Metadata {
   metadata: [Metadatum!]!
-  metadataTemplate: MetadataTemplate
-}
-
-type MetadataTemplate implements Model & Owned {
-  archived: Boolean!
-  name: String!
-  metadata: [Metadatum!]!
-  entityType: MetadataTemplateEntityType!
-  default: Boolean!
-  memo: String
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
-}
-
-input MetadataTemplateCreateInput {
-  name: String!
-  metadata: [MetadatumInput!]!
-  entityType: MetadataTemplateEntityType!
-  default: Boolean!
-  memo: String
-}
-
-enum MetadataTemplateEntityType {
-  """Product"""
-  Product
-
-  """ProductProvider"""
-  ProductProvider
-
-  """Order"""
-  Order
-
-  """Shipment"""
-  Shipment
-
-  """Warehouse"""
-  Warehouse
-}
-
-input MetadataTemplateFilterInput {
-  query: String
-  createdAt: DateRangeInput
-  updatedAt: DateRangeInput
-  archived: Boolean
-}
-
-type MetadataTemplateMutated {
-  metadataTemplate: MetadataTemplate
-  violations: [Violation!]
-}
-
-type MetadataTemplatePagination {
-  nodes: [MetadataTemplate!]!
-  page: Int!
-  perPage: Int!
-  totalPage: Int!
-  count: Int!
-  totalCount: Int!
-}
-
-input MetadataTemplateSortInput {
-  createdAt: SortOrder
-  updatedAt: SortOrder
-  name: SortOrder
-}
-
-input MetadataTemplateUpdateInput {
-  archived: Boolean
-  name: String
-  metadata: [MetadatumInput!]
-  entityType: MetadataTemplateEntityType
-  default: Boolean
-  memo: String
 }
 
 type Metadatum {
@@ -29629,8 +29551,6 @@ type Mutation {
   warehouseCreate(input: WarehouseCreateInput!): WarehouseMutated!
   warehouseUpdate(id: ID!, input: WarehouseUpdateInput!): WarehouseMutated!
   warehouseUpdateMany(warehouses: [WarehouseUpdateWrapperInput!]!): WarehouseMutatedMany!
-  metadataTemplateCreate(input: MetadataTemplateCreateInput!): MetadataTemplateMutated!
-  metadataTemplateUpdate(id: ID!, input: MetadataTemplateUpdateInput!): MetadataTemplateMutated!
   entitiesUpdateMany(orders: [OrderUpdateWrapperInput!], shipments: [ShipmentUpdateWrapperInput!], products: [ProductUpdateWrapperInput!], batches: [BatchUpdateWrapperInput!], warehouses: [WarehouseUpdateWrapperInput!]): EntitiesMutatedMany!
   tagCreate(input: TagCreateInput!): TagMutated!
   tagUpdate(id: ID!, input: TagUpdateInput!): TagMutated!
@@ -29775,6 +29695,13 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Metadat
   piNo: String
   incoterm: Incoterm
   deliveryPlace: String
+  totalPrice: Price
+  totalOrdered: Float
+  totalBatched: Float
+  totalShipped: Float
+  orderItemCount: Int
+  batchCount: Int
+  shipmentCount: Int
   orderItems: [OrderItem!]!
   timeline: Timeline!
   memo: String
@@ -29791,7 +29718,6 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Metadat
   inCharges: [User!]!
   files: [File!]!
   metadata: [Metadatum!]!
-  metadataTemplate: MetadataTemplate
   customFields: CustomFields!
 }
 
@@ -29809,7 +29735,6 @@ input OrderCreateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 
@@ -29818,6 +29743,7 @@ input OrderFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
+  ids: [ID!]
   poNos: [String!]
   inChargeIds: [ID!]
   exporterIds: [ID!]
@@ -29847,6 +29773,22 @@ input OrderFilterInput {
   batchPackageVolume: MetricRangeInput
   batchPackageWeight: MetricRangeInput
   shipmentTagIds: [ID!]
+  shipmentForwarderIds: [ID!]
+  shipmentInChargeIds: [ID!]
+  shipmentLoadPorts: [PortInput!]
+  shipmentFirstTransitPorts: [PortInput!]
+  shipmentSecondTransitPorts: [PortInput!]
+  shipmentDischargePorts: [PortInput!]
+  shipmentCargoReady: DateRangeInput
+  shipmentLoadPortDeparture: DateRangeInput
+  shipmentFirstTransitPortArrival: DateRangeInput
+  shipmentFirstTransitPortDeparture: DateRangeInput
+  shipmentSecondTransitPortArrival: DateRangeInput
+  shipmentSecondTransitPortDeparture: DateRangeInput
+  shipmentDischargePortArrival: DateRangeInput
+  shipmentCustomClearance: DateRangeInput
+  shipmentWarehouseArrival: DateRangeInput
+  shipmentDeliveryReady: DateRangeInput
 }
 
 type OrderItem implements Model & Owned & Sortable & Customizable {
@@ -29997,6 +29939,12 @@ input OrderSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
   poNo: SortOrder
+  piNo: SortOrder
+  issuedAt: SortOrder
+  exporter: SortOrder
+  currency: SortOrder
+  incoterm: SortOrder
+  deliveryPlace: SortOrder
 }
 
 input OrderUpdateInput {
@@ -30014,7 +29962,6 @@ input OrderUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 
@@ -30154,7 +30101,6 @@ type Product implements Model & Owned & Tagged & Documented & Metadata & Customi
   tags: [Tag!]!
   files: [File!]!
   metadata: [Metadatum!]!
-  metadataTemplate: MetadataTemplate
   customFields: CustomFields!
 }
 
@@ -30168,7 +30114,6 @@ input ProductCreateInput {
   productProviders: [ProductProviderCreateInput!]!
   files: [FileInput!]
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 
@@ -30237,7 +30182,6 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   packageCapacity: Float
   files: [File!]!
   metadata: [Metadatum!]!
-  metadataTemplate: MetadataTemplate
   customFields: CustomFields!
 }
 
@@ -30260,7 +30204,6 @@ input ProductProviderCreateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 
@@ -30311,7 +30254,6 @@ input ProductProviderUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 
@@ -30333,7 +30275,6 @@ input ProductUpdateInput {
   productProviders: [ProductProviderUpdateInput!]
   files: [FileInput!]
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 
@@ -30372,8 +30313,6 @@ type Query {
   shipmentsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): File
   warehouse(id: ID!): Warehouse
   warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePagination!
-  metadataTemplate(id: ID!): MetadataTemplate
-  metadataTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: MetadataTemplateFilterInput, sortBy: MetadataTemplateSortInput): MetadataTemplatePagination!
   tag(id: ID!): Tag
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPagination!
   fieldDefinition(id: ID!): FieldDefinition
@@ -35306,6 +35245,9 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Meta
   containerGroups: [ContainerGroup!]!
   forwarders: [Group!]!
   memo: String
+  totalVolume: MetricValue
+  orderCount: Int
+  batchCount: Int
   timeline: Timeline!
   batches: [Batch!]!
   integrationLinks: [IntegrationLink!]!
@@ -35321,7 +35263,6 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Meta
   inCharges: [User!]!
   files: [File!]!
   metadata: [Metadatum!]!
-  metadataTemplate: MetadataTemplate
   customFields: CustomFields!
 }
 
@@ -35396,7 +35337,6 @@ input ShipmentCreateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 
@@ -35406,6 +35346,22 @@ input ShipmentFilterInput {
   updatedAt: DateRangeInput
   archived: Boolean
   tagIds: [ID!]
+  forwarderIds: [ID!]
+  inChargeIds: [ID!]
+  loadPorts: [PortInput!]
+  firstTransitPorts: [PortInput!]
+  secondTransitPorts: [PortInput!]
+  dischargePorts: [PortInput!]
+  cargoReady: DateRangeInput
+  loadPortDeparture: DateRangeInput
+  firstTransitPortArrival: DateRangeInput
+  firstTransitPortDeparture: DateRangeInput
+  secondTransitPortArrival: DateRangeInput
+  secondTransitPortDeparture: DateRangeInput
+  dischargePortArrival: DateRangeInput
+  customClearance: DateRangeInput
+  warehouseArrival: DateRangeInput
+  deliveryReady: DateRangeInput
 }
 
 type ShipmentMutated {
@@ -35483,7 +35439,6 @@ input ShipmentUpdateInput {
   files: [FileInput!]
   memo: String
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 
@@ -35832,7 +35787,6 @@ type Warehouse implements Model & Owned & Metadata & Customizable {
   deletedBy: User
   ownedBy: Group!
   metadata: [Metadatum!]!
-  metadataTemplate: MetadataTemplate
   customFields: CustomFields!
 }
 
@@ -35845,7 +35799,6 @@ input WarehouseCreateInput {
   postalCode: String
   country: Country
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 
@@ -35890,7 +35843,6 @@ input WarehouseUpdateInput {
   postalCode: String
   country: Country
   metadata: [MetadatumInput!]
-  metadataTemplateId: ID
   customFields: CustomFieldsInput
 }
 

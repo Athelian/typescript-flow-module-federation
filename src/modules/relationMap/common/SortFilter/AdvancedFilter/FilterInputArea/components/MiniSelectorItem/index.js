@@ -10,9 +10,7 @@ type Props = {
 export default function MiniSelector({ children, ...rest }: Props) {
   return (
     <BaseCard selectable {...rest}>
-      <div className={MiniSelectorItemStyle}>
-        {children}
-      </div>
+      <div className={MiniSelectorItemStyle}>{children}</div>
     </BaseCard>
   );
 }

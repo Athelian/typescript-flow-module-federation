@@ -1,6 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, fontSizesWithHeights, fontSizes, borderRadiuses, shadows } from 'styles/common';
+import {
+  presets,
+  colors,
+  fontSizesWithHeights,
+  fontSizes,
+  borderRadiuses,
+  shadows,
+} from 'styles/common';
 
 export const FilterMenuItemWrapperStyle = (isActive: boolean): string => css`
   ${presets.BUTTON};
