@@ -154,7 +154,7 @@ export const orderCardFragment = gql`
     totalShipped
     orderItemCount
     batchCount
-    shipmentCount
+    batchShippedCount
     exporter {
       ...partnerNameFragment
     }

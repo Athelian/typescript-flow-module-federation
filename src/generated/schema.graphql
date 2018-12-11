@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Dec 11 2018 14:44:33 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Dec 11 2018 16:51:13 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Garissa Airport"""
@@ -29701,6 +29701,7 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Metadat
   totalShipped: Float
   orderItemCount: Int
   batchCount: Int
+  batchShippedCount: Int
   shipmentCount: Int
   orderItems: [OrderItem!]!
   timeline: Timeline!
@@ -29768,6 +29769,9 @@ input OrderFilterInput {
   batchDeliveredAt: DateRangeInput
   batchExpiredAt: DateRangeInput
   batchProducedAt: DateRangeInput
+  batchCreatedAt: DateRangeInput
+  batchUpdatedAt: DateRangeInput
+  batchArchived: Boolean
   batchQuantity: ValueRangeInput
   batchPackageSize: SizeRangeInput
   batchPackageVolume: MetricRangeInput
@@ -29789,6 +29793,9 @@ input OrderFilterInput {
   shipmentCustomClearance: DateRangeInput
   shipmentWarehouseArrival: DateRangeInput
   shipmentDeliveryReady: DateRangeInput
+  shipmentCreatedAt: DateRangeInput
+  shipmentUpdatedAt: DateRangeInput
+  shipmentArchived: Boolean
 }
 
 type OrderItem implements Model & Owned & Sortable & Customizable {

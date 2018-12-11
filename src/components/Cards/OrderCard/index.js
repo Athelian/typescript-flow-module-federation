@@ -46,8 +46,8 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
     totalBatched,
     totalShipped,
     batchCount,
+    batchShippedCount,
     orderItemCount,
-    shipmentCount,
     exporter,
     inCharges,
   } = order;
@@ -107,7 +107,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
               batchedQuantity={totalBatched}
               shippedQuantity={totalShipped}
               batched={batchCount}
-              shipped={shipmentCount}
+              shipped={batchShippedCount}
             />
           </div>
           <div className={InChargeWrapperStyle}>
