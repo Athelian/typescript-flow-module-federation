@@ -1,7 +1,10 @@
 // @flow
 import * as React from 'react';
 
-type Props = {
+type OptionalProps = {
+  filter: Object,
+};
+type Props = OptionalProps & {
   children: Function,
 };
 
@@ -16,17 +19,24 @@ type State = {
 };
 
 class SortFilterHandler extends React.Component<Props, State> {
-  state = {
-    page: 1,
-    perPage: 10,
-    filter: {
-      query: '',
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
+  static defaultProps = {
+    filter: {},
   };
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      page: 1,
+      perPage: 10,
+      filter: {
+        ...props.filter,
+      },
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+    };
+  }
 
   onChangeSortFilter = (newValue: any) => {
     this.setState(prevState => ({ ...prevState, ...newValue }));

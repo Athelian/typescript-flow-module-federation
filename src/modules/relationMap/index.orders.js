@@ -27,7 +27,7 @@ type Props = {
 
 const Order = ({ intl }: Props) => (
   <Layout>
-    <SortFilterHandler>
+    <SortFilterHandler filter={{ archived: false }}>
       {({ sort, filter, onChangeSortFilter, page, perPage }) => {
         const filterVariables = {
           page,
