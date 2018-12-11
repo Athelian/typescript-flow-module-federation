@@ -1,8 +1,8 @@
 // @flow
-import React, { useRef, useState, useReducer } from 'react';
+import React, { useRef, useReducer, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, omit } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -133,9 +133,10 @@ const getFilterValue = (name: string, data: any) => {
       return { ...(data ? {} : { archived: false }) };
     case 'poNo':
       return data.map(d => d.poNo);
+    case 'exporter':
+      return data.map(d => d.group && d.group.id);
     case 'tags':
     case 'inCharge':
-    case 'exporter':
     case 'supplier':
     case 'forwarder':
       return data.map(d => d.id);
@@ -263,7 +264,12 @@ function reducer(state, action) {
 
       const selected =
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
-      const newSelected = { ...selected, [field]: selectItem };
+      let newSelected = {};
+      if (!selectItem && selected[field]) {
+        newSelected = omit([field], selected);
+      } else {
+        newSelected = { ...selected, [field]: selectItem };
+      }
 
       return {
         ...state,
@@ -314,22 +320,24 @@ function reducer(state, action) {
   }
 }
 
-const isDirtyOfOrderFilterToggles = filterToggles => {
-  const { completelyBatched, completelyShipped, showActive, showArchived } = filterToggles;
+const isFilterTogglesDirty = filterToggles => {
+  const {
+    order: { completelyBatched, completelyShipped, showActive, showArchived },
+  } = filterToggles;
   return completelyBatched || completelyShipped || !showActive || showArchived;
+};
+
+const isActiveFilterDirty = activeFilters => {
+  const { order, item, batch, shipment } = activeFilters;
+  return order.length > 0 || item.length > 0 || batch.length > 0 || shipment.length > 0;
 };
 
 function AdvanceFilter({ onApply }: Props) {
   const filterButtonRef = useRef(null);
-  const [filterIsApplied] = useState(false);
+  const [filterIsApplied, setAppliedFilter] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-
   const isDirty =
-    state.activeFilters.batch.length > 0 ||
-    state.activeFilters.item.length > 0 ||
-    state.activeFilters.order.length > 0 ||
-    state.activeFilters.shipment.length > 0 ||
-    isDirtyOfOrderFilterToggles(state.filterToggles.order);
+    isActiveFilterDirty(state.activeFilters) || isFilterTogglesDirty(state.filterToggles);
   return (
     <UIConsumer>
       {uiState => (
@@ -372,6 +380,7 @@ function AdvanceFilter({ onApply }: Props) {
                             onClick={() => {
                               dispatch({ type: 'RESET' });
                               onApply({ filter: {} });
+                              setAppliedFilter(false);
                             }}
                             label={
                               <FormattedMessage
@@ -384,6 +393,7 @@ function AdvanceFilter({ onApply }: Props) {
                             onClick={() => {
                               const filter = convertToFilterQuery(state);
                               onApply({ filter });
+                              setAppliedFilter(true);
                             }}
                             label={
                               <FormattedMessage
@@ -409,6 +419,13 @@ function AdvanceFilter({ onApply }: Props) {
                         activeFilters={state.activeFilters}
                         filterToggles={state.filterToggles}
                         selectedFilterItem={state.selectedFilterItem}
+                        onToggleSelect={(selectItem: any, field?: string) =>
+                          dispatch({
+                            type: field ? 'SET_SELECT_ITEM' : 'TOGGLE_SELECT_ITEM',
+                            selectItem,
+                            ...(field ? { field } : {}),
+                          })
+                        }
                         toggleActiveFilter={(entityType, filter) =>
                           dispatch({
                             type: 'TOGGLE_ACTIVE_FILTER',
