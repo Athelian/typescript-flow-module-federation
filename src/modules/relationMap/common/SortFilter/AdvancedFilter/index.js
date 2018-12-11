@@ -335,7 +335,6 @@ function AdvanceFilter({ onApply }: Props) {
     state.activeFilters.shipment.length > 0;
   const isOrderFilterToggleDirty = isDirtyOfOrderFilterToggles(state.filterToggles.order);
   const isDirty = isActiveFilterDirty || isOrderFilterToggleDirty;
-  console.log('state', state);
   return (
     <UIConsumer>
       {uiState => (
