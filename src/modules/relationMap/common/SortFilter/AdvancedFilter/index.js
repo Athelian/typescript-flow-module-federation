@@ -378,7 +378,7 @@ function AdvanceFilter({ onApply }: Props) {
                           <CancelButton
                             onClick={() => {
                               dispatch({ type: 'RESET' });
-                              onApply({ filter: {} });
+                              onApply({ filter: { archived: false } });
                               setAppliedFilter(false);
                             }}
                             label={
