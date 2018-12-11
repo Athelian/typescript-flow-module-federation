@@ -89,7 +89,7 @@ const FILTER = {
     showArchived: null,
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    poNo: 'poNos',
+    poNo: 'ids',
     inCharge: 'inChargeIds',
     exporter: 'exporterIds',
     tags: 'tagIds',
@@ -131,10 +131,9 @@ const getFilterValue = (name: string, data: any) => {
       return data;
     case 'showArchived':
       return { ...(data ? {} : { archived: false }) };
-    case 'poNo':
-      return data.map(d => d.poNo);
     case 'exporter':
       return data.map(d => d.group && d.group.id);
+    case 'poNo':
     case 'tags':
     case 'inCharge':
     case 'supplier':
