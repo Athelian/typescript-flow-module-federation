@@ -1,5 +1,5 @@
 // @flow
-import React, { useRef, useState, useReducer } from 'react';
+import React, { useRef, useReducer } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { getByPathWithDefault, omit } from 'utils/fp';
@@ -327,15 +327,15 @@ const isDirtyOfOrderFilterToggles = filterToggles => {
 
 function AdvanceFilter({ onApply }: Props) {
   const filterButtonRef = useRef(null);
-  const [filterIsApplied] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const isDirty =
+  const isActiveFilterDirty =
     state.activeFilters.batch.length > 0 ||
     state.activeFilters.item.length > 0 ||
     state.activeFilters.order.length > 0 ||
-    state.activeFilters.shipment.length > 0 ||
-    isDirtyOfOrderFilterToggles(state.filterToggles.order);
+    state.activeFilters.shipment.length > 0;
+  const isOrderFilterToggleDirty = isDirtyOfOrderFilterToggles(state.filterToggles.order);
+  const isDirty = isActiveFilterDirty || isOrderFilterToggleDirty;
+  console.log('state', state);
   return (
     <UIConsumer>
       {uiState => (
@@ -348,7 +348,7 @@ function AdvanceFilter({ onApply }: Props) {
                 type="button"
                 ref={filterButtonRef}
               >
-                {filterIsApplied && <div className={FilterToggleBadgeStyle} />}
+                {isDirty && <div className={FilterToggleBadgeStyle} />}
                 <Icon icon="FILTER" />
               </button>
               {isOpen && (
