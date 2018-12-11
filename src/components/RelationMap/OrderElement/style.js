@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, colors } from 'styles/common';
+import { fontSizes, colors, presets } from 'styles/common';
 
 const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
 
@@ -52,11 +52,9 @@ export const CardWrapperStyle = css`
   overflow-y: hidden;
 `;
 export const CardTitleStyle = css`
+  ${presets.ELLIPSIS};
   ${fontSizes.SMALL};
-  overflow: hidden;
-  text-overflow: ellipsis;
   padding-right: 2px;
-  word-break: break-all;
   flex: 1;
 `;
 export const CardVisualizeStyle = css`
