@@ -1,5 +1,5 @@
 // @flow
-import React, { useRef, useReducer } from 'react';
+import React, { useRef, useReducer, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { getByPathWithDefault, omit } from 'utils/fp';
@@ -327,6 +327,7 @@ const isDirtyOfOrderFilterToggles = filterToggles => {
 
 function AdvanceFilter({ onApply }: Props) {
   const filterButtonRef = useRef(null);
+  const [filterIsApplied, setAppliedFilter] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const isActiveFilterDirty =
     state.activeFilters.batch.length > 0 ||
@@ -347,7 +348,7 @@ function AdvanceFilter({ onApply }: Props) {
                 type="button"
                 ref={filterButtonRef}
               >
-                {isDirty && <div className={FilterToggleBadgeStyle} />}
+                {filterIsApplied && <div className={FilterToggleBadgeStyle} />}
                 <Icon icon="FILTER" />
               </button>
               {isOpen && (
@@ -377,6 +378,7 @@ function AdvanceFilter({ onApply }: Props) {
                             onClick={() => {
                               dispatch({ type: 'RESET' });
                               onApply({ filter: {} });
+                              setAppliedFilter(false);
                             }}
                             label={
                               <FormattedMessage
@@ -389,6 +391,7 @@ function AdvanceFilter({ onApply }: Props) {
                             onClick={() => {
                               const filter = convertToFilterQuery(state);
                               onApply({ filter });
+                              setAppliedFilter(true);
                             }}
                             label={
                               <FormattedMessage
