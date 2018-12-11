@@ -51,9 +51,10 @@ export default function FilterMenuItem({
           field={field}
           data={data}
           onClick={(datum, fieldAttr) => {
-            toggleActiveFilter(name);
+            // toggleActiveFilter(name);
+            changeSelectedFilterItem(name);
             onToggleSelect(datum, fieldAttr);
-            toggleActiveFilter(name);
+            // toggleActiveFilter(name);
           }}
         />
       )}
