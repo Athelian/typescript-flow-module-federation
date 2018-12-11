@@ -48,8 +48,8 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
     case 'customClearance':
     case 'warehouseArrival':
     case 'deliveryReady': {
-      const { after, before } = data;
-      if (!after && !before) {
+      const { after: fromDate, before: toDate } = data;
+      if (!fromDate && !toDate) {
         return null;
       }
       return (
@@ -59,19 +59,19 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
             className={FilterDataStyle}
             type="button"
             onClick={() => {
-              if (after) {
+              if (fromDate) {
                 onClick(null, 'after');
               }
-              if (before) {
+              if (toDate) {
                 onClick(null, 'before');
               }
             }}
           >
-            {after && <FormattedDate value={after} />}
-            {after && !before && ' > '}
-            {after && before && ' - '}
-            {!after && before && ' < '}
-            {before && <FormattedDate value={before} />}
+            {fromDate && <FormattedDate value={fromDate} />}
+            {fromDate && !toDate && ' > '}
+            {fromDate && toDate && ' - '}
+            {!fromDate && toDate && ' < '}
+            {toDate && <FormattedDate value={toDate} />}
             <Icon icon="CLEAR" />
           </button>
         </div>
