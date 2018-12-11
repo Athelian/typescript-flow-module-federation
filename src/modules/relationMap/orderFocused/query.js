@@ -10,8 +10,6 @@ import {
   partnerCardFragment,
   orderCardFragment,
   orderBasicFragment,
-  orderFragmentForRM,
-  shipmentFormFragment,
   userAvatarFragment,
   documentFragment,
   batchFormFragment,
@@ -44,6 +42,11 @@ export const shipmentRMFragment = gql`
     loadType
     transportType
     carrier
+    totalVolume {
+      ...metricFragment
+    }
+    batchCount
+    orderCount
     forwarders {
       ...partnerCardFragment
     }
@@ -90,7 +93,7 @@ export const shipmentRMFragment = gql`
       }
     }
     batches {
-      ...batchCardFragment
+      id
     }
   }
 `;
@@ -133,7 +136,7 @@ export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...orderFragmentForRM
+        ...orderBasicFragment
         orderItems {
           ...orderItemRmFragment
         }
@@ -146,8 +149,6 @@ export const orderListQuery = gql`
     }
   }
   ${orderBasicFragment}
-  ${orderFragmentForRM}
-  ${shipmentFormFragment}
   ${userAvatarFragment}
   ${sizeFragment}
   ${metricFragment}

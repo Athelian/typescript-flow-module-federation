@@ -147,8 +147,8 @@ const Item = (props: Props) => {
           <ShipmentHeader
             label={`SHIPMENT ${data.id}`}
             isChecked
-            ordersNo={data.totalOrder}
-            batchesNo={data.totalBatch}
+            ordersNo={data.orderCount}
+            batchesNo={data.batchCount}
             onToggle={onClick}
             isCollapsed={isCollapsed}
           />
@@ -175,8 +175,8 @@ const Item = (props: Props) => {
           <ShipmentHeader
             label={`SHIPMENT ${data.id}`}
             isChecked
-            ordersNo={data.totalOrder}
-            batchesNo={data.totalBatch}
+            ordersNo={data.orderCount}
+            batchesNo={data.batchCount}
             onToggle={onClick}
             isCollapsed={isCollapsed}
           />

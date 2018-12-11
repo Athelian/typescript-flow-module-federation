@@ -1,6 +1,5 @@
 // @flow
 import { pipe, filter, isEmpty, omit } from 'ramda';
-import { getByPathWithDefault } from 'utils/fp';
 import {
   initOrderObj,
   initOrderItemObj,
@@ -91,12 +90,6 @@ export const removeAdditionOrderItemFields: Function = omit([
   'index',
   'actionType',
   '__typename',
-]);
-export const removeAdditionShipmentFields: Function = omit([
-  'actionType',
-  'isNew',
-  'totalOrder',
-  'totalBatch',
 ]);
 
 function* iterateOrders(orders: Array<Object>) {
@@ -301,8 +294,7 @@ const createShipmentObj = () => {
       if (!shipmentObj[id]) {
         shipmentObj[id] = initShipmentObj(data);
       }
-      const { data: shipmentData, relation: shipmentRelation } = shipmentObj[id];
-      shipmentData.totalOrder += 1;
+      const { relation: shipmentRelation } = shipmentObj[id];
       shipmentRelation.order[orderId] = true;
     }
     if (type === 'BATCH') {
@@ -312,8 +304,7 @@ const createShipmentObj = () => {
         if (shipment && !shipmentObj[shipmentId]) {
           shipmentObj[shipmentId] = initShipmentObj(shipment);
         }
-        const { data: shipmentData, relation: shipmentRelation } = shipmentObj[shipmentId];
-        shipmentData.metric = getByPathWithDefault('', 'packageVolume.metric', data);
+        const { relation: shipmentRelation } = shipmentObj[shipmentId];
         shipmentRelation.order[orderId] = true;
         shipmentRelation.orderItem[orderItemId] = true;
         shipmentRelation.batch[id] = true;

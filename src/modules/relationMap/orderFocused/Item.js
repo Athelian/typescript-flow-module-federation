@@ -378,8 +378,8 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                 <ShipmentHeader
                   label={`SHIPMENT ${data.id}`}
                   isChecked
-                  ordersNo={data.totalOrder}
-                  batchesNo={data.totalBatch}
+                  ordersNo={data.orderCount}
+                  batchesNo={data.batchCount}
                   onToggle={onToggle}
                   isCollapsed={isCollapsed}
                 />
@@ -477,10 +477,10 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             return (
               <>
                 <ShipmentHeader
-                  label={`SHIPMENT ${data.id}`}
+                  label="SHIPMENT"
                   isChecked
-                  ordersNo={data.totalOrder}
-                  batchesNo={data.totalBatch}
+                  ordersNo={data.orderCount}
+                  batchesNo={data.batchCount}
                   onToggle={onToggle}
                   isCollapsed={isCollapsed}
                 />
