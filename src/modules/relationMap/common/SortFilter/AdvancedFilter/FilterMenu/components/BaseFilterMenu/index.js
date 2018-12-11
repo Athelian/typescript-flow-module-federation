@@ -59,7 +59,6 @@ export default function BaseFilterMenu({
                   const { name, label: filterLabel, data, field } = filter;
                   const isSelected = selectedFilterItem === name;
                   const isActive = parsedActiveFilters.some(activeFilter => activeFilter === name);
-
                   return (
                     <FilterMenuItem
                       key={name}

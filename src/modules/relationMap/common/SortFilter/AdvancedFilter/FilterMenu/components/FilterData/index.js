@@ -3,18 +3,20 @@ import React from 'react';
 import { getByPath } from 'utils/fp';
 import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
+import FormattedDate from 'components/FormattedDate';
 import { FilterDataWrapperStyle, FilterDataStyle } from './style';
 
 type Props = {
   onClick: Function,
   field: ?string,
+  name: string,
   data: any,
 };
-const FilterData = ({ onClick, field, data }: Props) => {
-  if (!field) {
+const FilterData = ({ onClick, field, data, name }: Props) => {
+  if (!name) {
     return null;
   }
-  switch (field) {
+  switch (name) {
     default:
       return (
         <div className={FilterDataWrapperStyle}>
@@ -45,25 +47,34 @@ const FilterData = ({ onClick, field, data }: Props) => {
     case 'dischargePortArrival':
     case 'customClearance':
     case 'warehouseArrival':
-    case 'deliveryReady':
+    case 'deliveryReady': {
+      const { after, before } = data;
+      if (!after && !before) {
+        return null;
+      }
       return (
         <div className={FilterDataWrapperStyle}>
-          {(Object.entries(data): Array<any>).map(datumArr => {
-            const [attr, datum] = datumArr;
-            return (
-              <button
-                key={datum.id ? datum.id : uuid()}
-                className={FilterDataStyle}
-                type="button"
-                onClick={() => onClick(null, attr)}
-              >
-                {datum}
-                <Icon icon="CLEAR" />
-              </button>
-            );
-          })}
+          <button
+            key={uuid()}
+            className={FilterDataStyle}
+            type="button"
+            onClick={() => {
+              if (after) {
+                onClick(null, 'after');
+              }
+              if (before) {
+                onClick(null, 'before');
+              }
+            }}
+          >
+            {after && <FormattedDate value={after} />}
+            {after && before && ' - '}
+            {before && <FormattedDate value={before} />}
+            <Icon icon="CLEAR" />
+          </button>
         </div>
       );
+    }
   }
 };
 

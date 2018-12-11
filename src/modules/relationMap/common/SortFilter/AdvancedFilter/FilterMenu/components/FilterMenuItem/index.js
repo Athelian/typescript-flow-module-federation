@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { isDataType } from 'utils/fp';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
 import { FilterMenuItemWrapperStyle, FilterMenuItemStyle, FilterMenuLabelStyle } from './style';
 import FilterData from '../FilterData';
@@ -28,6 +27,7 @@ export default function FilterMenuItem({
   data,
   onToggleSelect,
 }: Props) {
+  const haveFilterData = Object.keys(data).length > 0;
   return (
     <div className={FilterMenuItemWrapperStyle(isSelected)}>
       <div
@@ -39,14 +39,15 @@ export default function FilterMenuItem({
       >
         <ToggleButton
           isOn={isActive}
-          hideToggle={!((isDataType(Object, data) ? Object.keys(data) : data).length > 0)}
+          hideToggle={!haveFilterData}
           onClick={() => toggleActiveFilter(name)}
         />
         <div className={FilterMenuLabelStyle}>{label}</div>
       </div>
 
-      {Object.keys(data).length > 0 && (
+      {haveFilterData && (
         <FilterData
+          name={name}
           field={field}
           data={data}
           onClick={(datum, fieldAttr) => {
