@@ -3,15 +3,18 @@ import * as React from 'react';
 import matchSorter from 'match-sorter';
 import Icon from 'components/Icon';
 import { SearchSelectInput, DefaultSearchSelect, DefaultOptions } from 'components/Form';
-import { useTextInput } from 'modules/form/hooks';
+import { useTextInput, usePrevious } from 'modules/form/hooks';
 
 import { EnumInputStyle, DeleteButtonStyle } from './style';
 
-type Props = {
-  data: Array<Object>,
+type OptionalProps = {
   value: Object,
+  onRemove?: Function,
+};
+
+type Props = OptionalProps & {
+  data: Array<Object>,
   onChange: Function,
-  onRemove: Function,
 };
 
 const filterItems = (query: string, items: Array<any>) => {
@@ -21,14 +24,28 @@ const filterItems = (query: string, items: Array<any>) => {
   });
 };
 
+const defaultProps = {
+  value: { name: '' },
+};
+
 export default function EnumInput({ data, value, onChange, onRemove }: Props) {
-  const { hasError, isFocused, ...inputHandlers } = useTextInput(value.name, { isRequired: true });
+  const { hasError, isFocused, setValue, ...inputHandlers } = useTextInput(value.name, {
+    isRequired: false,
+  });
+
+  const prevValue = usePrevious(value.name);
+  React.useEffect(() => {
+    if (prevValue && value.name === '') {
+      setValue('');
+    }
+  });
+
   return (
     <div className={EnumInputStyle}>
       <SearchSelectInput
         {...inputHandlers}
         items={filterItems(inputHandlers.value, data)}
-        itemToString={item => (item ? item.description || item.name : '')}
+        itemToString={item => (item ? item.name || item.description : '')}
         itemToValue={item => (item ? item.name : '')}
         inputValue={inputHandlers.value}
         renderSelect={({ ...selectProps }) => (
@@ -38,7 +55,7 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
             isOpen={isFocused}
             width="200px"
             align="left"
-            itemToString={item => (item ? item.description || item.name : '')}
+            itemToString={item => (item ? item.name || item.description : '')}
           />
         )}
         renderOptions={({ ...optionProps }) => (
@@ -106,9 +123,13 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
           });
         }}
       />
-      <button className={DeleteButtonStyle} type="button" onClick={onRemove}>
-        <Icon icon="REMOVE" />
-      </button>
+      {!!onRemove && (
+        <button className={DeleteButtonStyle} type="button" onClick={onRemove}>
+          <Icon icon="REMOVE" />
+        </button>
+      )}
     </div>
   );
 }
+
+EnumInput.defaultProps = defaultProps;

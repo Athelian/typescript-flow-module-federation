@@ -16,6 +16,10 @@ type Props = {
   data: any,
 };
 
+function isValid(name: string, data: any): boolean {
+  return Object.keys(data).length > 0;
+}
+
 export default function FilterMenuItem({
   name,
   label,
@@ -27,7 +31,7 @@ export default function FilterMenuItem({
   data,
   onToggleSelect,
 }: Props) {
-  const haveFilterData = Object.keys(data).length > 0;
+  const isValidOfFilterData = isValid(name, data);
   return (
     <div className={FilterMenuItemWrapperStyle(isSelected)}>
       <div
@@ -39,18 +43,18 @@ export default function FilterMenuItem({
       >
         <ToggleButton
           isOn={isActive}
-          hideToggle={!haveFilterData}
+          hideToggle={!isValidOfFilterData}
           onClick={() => toggleActiveFilter(name)}
         />
         <div className={FilterMenuLabelStyle}>{label}</div>
       </div>
 
-      {haveFilterData && (
+      {isValidOfFilterData && (
         <FilterData
           name={name}
           field={field}
           data={data}
-          onClick={(datum, fieldAttr) => {
+          onRemove={(datum, fieldAttr) => {
             changeSelectedFilterItem(name);
             onToggleSelect(datum, fieldAttr);
           }}

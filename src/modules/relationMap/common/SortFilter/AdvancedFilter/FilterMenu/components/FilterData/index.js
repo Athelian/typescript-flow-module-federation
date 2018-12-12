@@ -3,36 +3,21 @@ import React from 'react';
 import { getByPath } from 'utils/fp';
 import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
+import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { FilterDataWrapperStyle, FilterDataStyle } from './style';
 
 type Props = {
-  onClick: Function,
+  onRemove: Function,
   field: ?string,
   name: string,
   data: any,
 };
-const FilterData = ({ onClick, field, data, name }: Props) => {
+const FilterData = ({ onRemove, field, data, name }: Props) => {
   if (!name) {
     return null;
   }
   switch (name) {
-    default:
-      return (
-        <div className={FilterDataWrapperStyle}>
-          {data.map(datum => (
-            <button
-              key={datum.id ? datum.id : uuid()}
-              className={FilterDataStyle}
-              type="button"
-              onClick={() => onClick(datum)}
-            >
-              {field && getByPath(field, datum)}
-              <Icon icon="CLEAR" />
-            </button>
-          ))}
-        </div>
-      );
     case 'createdAt':
     case 'updatedAt':
     case 'deliveredAt':
@@ -60,10 +45,10 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
             type="button"
             onClick={() => {
               if (fromDate) {
-                onClick(null, 'after');
+                onRemove(null, 'after');
               }
               if (toDate) {
-                onClick(null, 'before');
+                onRemove(null, 'before');
               }
             }}
           >
@@ -77,6 +62,54 @@ const FilterData = ({ onClick, field, data, name }: Props) => {
         </div>
       );
     }
+    case 'price': {
+      const { currency, min, max } = data;
+      if (!currency && !min && !max) return null;
+      return (
+        <div className={FilterDataWrapperStyle}>
+          <button
+            key={uuid()}
+            className={FilterDataStyle}
+            type="button"
+            onClick={() => {
+              if (currency) {
+                onRemove(null, 'currency');
+              }
+              if (min) {
+                onRemove(null, 'min');
+              }
+              if (max) {
+                onRemove(null, 'max');
+              }
+            }}
+          >
+            {!min && !max && currency && `${currency.name}`}
+            {min && <FormattedNumber value={min} suffix={currency ? currency.name : ''} />}
+            {min && !max && ' > '}
+            {min && max && ' - '}
+            {!min && max && ' < '}
+            {max && <FormattedNumber value={max} suffix={currency ? currency.name : ''} />}
+            <Icon icon="CLEAR" />
+          </button>
+        </div>
+      );
+    }
+    default:
+      return (
+        <div className={FilterDataWrapperStyle}>
+          {data.map(datum => (
+            <button
+              key={datum.id ? datum.id : uuid()}
+              className={FilterDataStyle}
+              type="button"
+              onClick={() => onRemove(datum)}
+            >
+              {field && getByPath(field, datum)}
+              <Icon icon="CLEAR" />
+            </button>
+          ))}
+        </div>
+      );
   }
 };
 

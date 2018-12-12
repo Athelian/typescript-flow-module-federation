@@ -1,5 +1,6 @@
 // @flow
 import useTextInput from './useTextInput';
+import usePrevious from './usePrevious';
 import useNumberInput from './useNumberInput';
 import useDateInput from './useDateInput';
 import useInChargeInput from './useInChargeInput';
@@ -9,6 +10,7 @@ import useTimeLineInput from './useTimeLineInput';
 
 export {
   useTextInput,
+  usePrevious,
   useNumberInput,
   useDateInput,
   useInChargeInput,
