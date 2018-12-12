@@ -29,7 +29,9 @@ const defaultProps = {
 };
 
 export default function EnumInput({ data, value, onChange, onRemove }: Props) {
-  const { setValue, ...inputHandlers } = useTextInput(value.name, { isRequired: false });
+  const { hasError, isFocused, setValue, ...inputHandlers } = useTextInput(value.name, {
+    isRequired: false,
+  });
 
   const prevValue = usePrevious(value.name);
   React.useEffect(() => {
@@ -49,6 +51,8 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
         renderSelect={({ ...selectProps }) => (
           <DefaultSearchSelect
             {...selectProps}
+            hasError={hasError}
+            isOpen={isFocused}
             width="200px"
             align="left"
             itemToString={item => (item ? item.name || item.description : '')}

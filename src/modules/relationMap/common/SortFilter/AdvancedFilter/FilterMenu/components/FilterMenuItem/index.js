@@ -17,11 +17,6 @@ type Props = {
 };
 
 function isValid(name: string, data: any): boolean {
-  if (name === 'price') {
-    if (Array.isArray(data) || data.length === 0) return false;
-    const { currency, min, max } = data;
-    return currency ? currency.name !== '' && (min || max) : false;
-  }
   return Object.keys(data).length > 0;
 }
 

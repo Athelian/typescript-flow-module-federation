@@ -5,13 +5,13 @@ import { FieldItem, Label, DefaultStyle, NumberInput } from 'components/Form';
 import { NumberInputsWrapperStyle } from './style';
 
 type OptionalProps = {
-  min: number,
-  max: number,
-  onChangeMin: Function,
-  onChangeMax: Function,
+  min?: number,
+  max?: number,
+  onChangeMin?: Function,
+  onChangeMax?: Function,
 };
 
-type Props = OptionalProps;
+type Props = OptionalProps & {};
 
 export default function NumberRangeInput({ min, max, onChangeMin, onChangeMax }: Props) {
   return (

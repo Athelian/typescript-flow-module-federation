@@ -2,7 +2,7 @@
 import React, { useRef, useReducer, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { getByPathWithDefault, omit, isEmpty } from 'utils/fp';
+import { getByPath, getByPathWithDefault, omit, isEmpty } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -162,12 +162,15 @@ const getFilterValue = (name: string, data: any) => {
         ...(data.after && { after: formatToDateTimeGraphql(new Date(data.after)) }),
         ...(data.before && { before: formatToDateTimeGraphql(new Date(data.before)) }),
       };
-    case 'price':
+    case 'price': {
+      const currency = getByPath('data.currency.name', data);
       return {
-        ...(data.currency && { currency: data.currency.name }),
+        ...(currency && { currency }),
         ...(data.min && { min: data.min }),
         ...(data.max && { max: data.max }),
       };
+    }
+
     default:
       return data;
   }
