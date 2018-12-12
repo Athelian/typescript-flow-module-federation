@@ -205,15 +205,10 @@ export const shipmentListQuery = gql`
   ${shipmentRMFragment}
   ${userAvatarFragment}
   ${partnerCardFragment}
-  ${partnerNameFragment}
   ${timelineDateFullFragment}
-  ${batchCardFragment}
   ${tagFragment}
   ${portFragment}
   ${metricFragment}
-  ${priceFragment}
-  ${orderCardFragment}
-  ${imageFragment}
 `;
 
 export default orderListQuery;
