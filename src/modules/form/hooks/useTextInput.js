@@ -13,7 +13,7 @@ function useTextInput(initialValue: string = '', schema: ValidationObject) {
         .required()
         .isValidSync(value)
     : false;
-  const onChange = useCallback(event => {
+  const onChange = useCallback((event: Object) => {
     if (event && event.currentTarget) setValue(event.currentTarget.value);
   }, []);
   const onFocus = useCallback(() => {

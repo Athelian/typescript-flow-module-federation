@@ -66,7 +66,7 @@ function useTimeLineInput(
   const hasApproved = initialValue.approvedBy && Object.keys(initialValue.approvedBy).length > 0;
   const [focus, setFocus] = useState(false);
 
-  const onChange = useCallback(event => {
+  const onChange = useCallback((event: Object) => {
     if (event && event.currentTarget) {
       const newDate = new Date(event.currentTarget.value);
       if (Yup.date().isValidSync(newDate)) setValue(newDate);

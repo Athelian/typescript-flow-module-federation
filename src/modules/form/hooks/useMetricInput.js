@@ -14,7 +14,7 @@ function useMetricInput(initialValue: ?MetricValue, schema: ValidationObject) {
         .required()
         .isValidSync(metric.value)
     : false;
-  const onChange = useCallback(newData => {
+  const onChange = useCallback((newData: Object) => {
     if (newData && newData.target) {
       const {
         target: { value },

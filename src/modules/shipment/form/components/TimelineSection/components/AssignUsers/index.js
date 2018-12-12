@@ -19,11 +19,13 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  onSelect: (item: {
-    id: string,
-    firstName: string,
-    lastName: string,
-  }) => void,
+  onSelect: (
+    item: Array<{
+      id: string,
+      firstName: string,
+      lastName: string,
+    }>
+  ) => void,
   onCancel: () => void,
 };
 

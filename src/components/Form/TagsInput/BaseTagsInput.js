@@ -134,7 +134,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
         {isEditable => (
           <HoverWrapper>
             {isHover => (
-              <div className={HoverStyle(isHover && isWrite)}>
+              <div className={HoverStyle(!!isHover && !!isWrite)}>
                 <Downshift
                   itemCount={tags.length}
                   itemToString={i => (i ? i.id : '')}
