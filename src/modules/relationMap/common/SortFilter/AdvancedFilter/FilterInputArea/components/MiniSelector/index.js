@@ -8,6 +8,7 @@ import GridView from 'components/GridView';
 import Icon from 'components/Icon';
 import { SearchInput } from 'components/NavBar';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
+import { convertArchivedQuery } from 'modules/relationMap/common/SortFilter/AdvancedFilter';
 import {
   MiniSelectorWrapperStyle,
   MiniSelectorSearchWrapperStyle,
@@ -29,20 +30,6 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   hideToggles: false,
-};
-
-export const filterByStatus = (isActive: boolean, isArchive: boolean) => {
-  if (isActive && isArchive) {
-    return {};
-  }
-  if (!isActive && !isArchive) {
-    return {
-      query: 'FAKE QUERY FOR RETURN NULL DATA',
-    };
-  }
-  return {
-    archived: isArchive,
-  };
 };
 
 function usePrevious(value) {
@@ -109,7 +96,7 @@ export default function MiniSelector({
             filterBy: {
               ...filterBy,
               query: searchText,
-              ...(!hideToggles ? filterByStatus(isActive, isArchive) : {}),
+              ...(!hideToggles ? convertArchivedQuery(isActive, isArchive, 'archived') : {}),
             },
           }}
           fetchPolicy="network-only"
