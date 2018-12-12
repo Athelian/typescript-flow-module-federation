@@ -75,7 +75,7 @@ const initialState: State = {
 
 const defaultFilterMenuItemMap = {
   order: 'ids',
-  item: 'price',
+  item: 'createdAt',
   batch: 'deliveredAt',
   shipment: 'forwarder',
 };
