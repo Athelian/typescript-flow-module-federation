@@ -233,24 +233,25 @@ export const initShipmentObj = (shipment: Object) => ({
   },
 });
 
-export const initOrderItemObj = (orderItem: Object, orderId: string) => ({
+export const initOrderItemObj = (orderItem: Object, order: Object) => ({
   data: {
     ...orderItem,
     name: getByPathWithDefault('', 'productProvider.product.name', orderItem),
     orderedQuantity: orderItem.quantity,
     batchedQuantity: 0,
     shippedQuantity: 0,
-    orderId,
+    orderId: order.id,
+    order,
   },
   relation: {
-    order: { [orderId]: true },
+    order: { [order.id]: true },
     orderItem: { [orderItem.id]: true },
     batch: {},
     shipment: {},
   },
 });
 
-export const initBatchObj = (batch: Object, orderId: string, orderItemId: string) => {
+export const initBatchObj = (batch: Object, orderId: string, orderItem: Object) => {
   const metric = getByPathWithDefault('m³', 'packageVolume.metric', batch);
   return {
     data: {
@@ -259,11 +260,12 @@ export const initBatchObj = (batch: Object, orderId: string, orderItemId: string
       metric,
       batchedQuantity: 0,
       orderId,
-      orderItemId,
+      orderItemId: orderItem.id,
+      orderItem,
     },
     relation: {
       order: { [orderId]: true },
-      orderItem: { [orderItemId]: true },
+      orderItem: { [orderItem.id]: true },
       batch: { [batch.id]: true },
       shipment: batch.shipment ? { [batch.shipment.id]: true } : {},
     },

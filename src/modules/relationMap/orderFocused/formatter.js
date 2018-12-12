@@ -211,6 +211,7 @@ const createOrderObj = () => {
 
 const createOrderItemObj = () => {
   let orderId = '';
+  let order = {};
   let orderItemId = '';
   const orderItemObj = {};
   const getOrderItemObj = () => ({ orderItem: orderItemObj });
@@ -219,11 +220,12 @@ const createOrderItemObj = () => {
     const { id } = data;
     if (type === 'ORDER') {
       orderId = id;
+      order = data;
     }
     if (type === 'ORDER_ITEM') {
       orderItemId = id;
       if (!orderItemObj[id]) {
-        orderItemObj[id] = initOrderItemObj(data, orderId);
+        orderItemObj[id] = initOrderItemObj(data, order);
       }
     }
     if (type === 'BATCH') {
@@ -249,8 +251,9 @@ const createOrderItemObj = () => {
 };
 
 const createBatchObj = () => {
+  let order = {};
+  let orderItem = {};
   let orderId = '';
-  let orderItemId = '';
   const batchObj = {};
   const getBatchObj = () => ({ batch: batchObj });
   const formatBatchObj = entity => {
@@ -258,13 +261,14 @@ const createBatchObj = () => {
     const { id } = data;
     if (type === 'ORDER') {
       orderId = id;
+      order = data;
     }
     if (type === 'ORDER_ITEM') {
-      orderItemId = id;
+      orderItem = { ...data, order };
     }
     if (type === 'BATCH') {
       if (!batchObj[id]) {
-        batchObj[id] = initBatchObj(data, orderId, orderItemId);
+        batchObj[id] = initBatchObj(data, orderId, orderItem);
       }
       const { data: batchData } = batchObj[id];
       batchData.batchedQuantity = getBatchedQuantity(data);
