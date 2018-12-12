@@ -98,6 +98,9 @@ export const orderBasicFragment = gql`
     files {
       ...documentFragment
     }
+    totalPrice {
+      ...priceFragment
+    }
     orderItems {
       id
       quantity

@@ -71,7 +71,9 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
             }
             input={
               <Display>
-                <FormattedNumber value={totalPrice.amount} suffix={totalPrice.currency} />
+                {totalPrice && (
+                  <FormattedNumber value={totalPrice.amount} suffix={totalPrice.currency} />
+                )}
               </Display>
             }
           />
