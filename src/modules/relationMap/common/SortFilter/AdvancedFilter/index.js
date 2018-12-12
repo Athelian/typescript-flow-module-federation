@@ -12,7 +12,6 @@ import { UIConsumer } from 'modules/ui';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';
 import FilterInputArea from './FilterInputArea';
-import { filterByStatus } from './FilterInputArea/components/MiniSelector';
 import {
   AdvancedFilterWrapperStyle,
   FilterToggleButtonStyle,
@@ -107,6 +106,10 @@ const FILTER = {
     expiredAt: 'batchExpiredAt',
     producedAt: 'batchProducedAt',
     tags: 'batchTagIds',
+    createdAt: 'batchCreatedAt',
+    updatedAt: 'batchUpdatedAt',
+    showActive: null,
+    showArchived: null,
   },
   shipment: {
     cargoReady: 'shipmentCargoReady',
@@ -122,15 +125,13 @@ const FILTER = {
     forwarder: 'shipmentForwarderIds',
     inCharge: 'shipmentInChargeIds',
     tags: 'shipmentTagIds',
+    createdAt: 'shipmentCreatedAt',
+    updatedAt: 'shipmentUpdatedAt',
   },
 };
 
 const getFilterValue = (name: string, data: any) => {
   switch (name) {
-    default:
-      return data;
-    case 'showArchived':
-      return { ...(data ? {} : { archived: false }) };
     case 'exporter':
       return data.map(d => d.group && d.group.id);
     case 'ids':
@@ -160,6 +161,8 @@ const getFilterValue = (name: string, data: any) => {
         ...(data.after && { after: formatToDateTimeGraphql(new Date(data.after)) }),
         ...(data.before && { before: formatToDateTimeGraphql(new Date(data.before)) }),
       };
+    default:
+      return data;
   }
 };
 
@@ -178,10 +181,23 @@ const convertActiveFilter = (state: Object, type: string) => {
   return query;
 };
 
-const convertStatusFilter = (state: Object, type: string) => {
-  const filterToggle = getByPathWithDefault({}, `filterToggles.${type}`, state);
-  const { showActive, showArchived } = filterToggle;
-  return filterByStatus(showActive, showArchived);
+export const convertArchivedQuery = (isActive: boolean, isArchive: boolean, key: string) => {
+  if (isActive && isArchive) {
+    return {};
+  }
+  if (!isActive && !isArchive) {
+    return {
+      query: 'FAKE QUERY FOR RETURN NULL DATA',
+    };
+  }
+  const query = {};
+  query[key] = isArchive;
+  return query;
+};
+
+const convertArchivedFilter = (state: Object, type: string, key: string) => {
+  const { showActive, showArchived } = getByPathWithDefault({}, `filterToggles.${type}`, state);
+  return convertArchivedQuery(showActive, showArchived, key);
 };
 
 const booleanFilterQuery = (state: Object, filterName: string, path: string) => {
@@ -198,7 +214,11 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'item'),
   ...convertActiveFilter(state, 'batch'),
   ...convertActiveFilter(state, 'shipment'),
-  ...convertStatusFilter(state, 'order'),
+
+  ...convertArchivedFilter(state, 'order', 'archived'),
+  ...convertArchivedFilter(state, 'batch', 'batchArchived'),
+  ...convertArchivedFilter(state, 'shipment', 'shipmentArchived'),
+
   ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
   ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
 });
@@ -331,10 +351,17 @@ function reducer(state, action) {
 }
 
 const isFilterTogglesDirty = filterToggles => {
-  const {
-    order: { completelyBatched, completelyShipped, showActive, showArchived },
-  } = filterToggles;
-  return completelyBatched || completelyShipped || !showActive || showArchived;
+  const { order, batch, shipment } = filterToggles;
+  return (
+    order.completelyBatched ||
+    order.completelyShipped ||
+    !order.showActive ||
+    order.showArchived ||
+    !batch.showActive ||
+    batch.showArchived ||
+    !shipment.showActive ||
+    shipment.showArchived
+  );
 };
 
 const isActiveFilterDirty = activeFilters => {

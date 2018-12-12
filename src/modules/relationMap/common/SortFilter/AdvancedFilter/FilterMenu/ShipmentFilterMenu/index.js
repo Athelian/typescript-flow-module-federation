@@ -118,25 +118,33 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.tags} />,
           data: getSelectData(selectedItems, 'tags'),
         },
-        // { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
-        // { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
+        {
+          name: 'createdAt',
+          label: <FormattedMessage {...messages.createdAt} />,
+          data: getSelectData(selectedItems, 'createdAt'),
+        },
+        {
+          name: 'updatedAt',
+          label: <FormattedMessage {...messages.updatedAt} />,
+          data: getSelectData(selectedItems, 'updatedAt'),
+        },
       ],
     },
   ];
 
-  // const togglesMap = [
-  //   { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-  //   {
-  //     name: 'showArchived',
-  //     label: <FormattedMessage {...messages.showArchived} />,
-  //     icon: 'ARCHIVE',
-  //   },
-  // ];
+  const togglesMap = [
+    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+    {
+      name: 'showArchived',
+      label: <FormattedMessage {...messages.showArchived} />,
+      icon: 'ARCHIVE',
+    },
+  ];
 
   return (
     <BaseFilterMenu
       filtersMap={filtersMap}
-      // togglesMap={togglesMap}
+      togglesMap={togglesMap}
       entityType="shipment"
       parsedActiveFilters={parsedActiveFilters}
       toggleActiveFilter={toggleActiveFilter}
