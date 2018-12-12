@@ -132,19 +132,19 @@ export default function ShipmentFilterMenu({
     },
   ];
 
-  // const togglesMap = [
-  //   { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-  //   {
-  //     name: 'showArchived',
-  //     label: <FormattedMessage {...messages.showArchived} />,
-  //     icon: 'ARCHIVE',
-  //   },
-  // ];
+  const togglesMap = [
+    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+    {
+      name: 'showArchived',
+      label: <FormattedMessage {...messages.showArchived} />,
+      icon: 'ARCHIVE',
+    },
+  ];
 
   return (
     <BaseFilterMenu
       filtersMap={filtersMap}
-      // togglesMap={togglesMap}
+      togglesMap={togglesMap}
       entityType="shipment"
       parsedActiveFilters={parsedActiveFilters}
       toggleActiveFilter={toggleActiveFilter}

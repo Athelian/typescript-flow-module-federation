@@ -217,6 +217,7 @@ const convertToFilterQuery = (state: Object) => ({
 
   ...convertArchivedFilter(state, 'order', 'archived'),
   ...convertArchivedFilter(state, 'batch', 'batchArchived'),
+  ...convertArchivedFilter(state, 'shipment', 'shipmentArchived'),
 
   ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
   ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
@@ -350,14 +351,16 @@ function reducer(state, action) {
 }
 
 const isFilterTogglesDirty = filterToggles => {
-  const { order, batch } = filterToggles;
+  const { order, batch, shipment } = filterToggles;
   return (
     order.completelyBatched ||
     order.completelyShipped ||
     !order.showActive ||
     order.showArchived ||
     !batch.showActive ||
-    batch.showArchived
+    batch.showArchived ||
+    !shipment.showActive ||
+    shipment.showArchived
   );
 };
 
