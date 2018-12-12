@@ -10,12 +10,11 @@ import {
   imageFragment,
   partnerNameFragment,
   partnerCardFragment,
-  orderFormFragment,
+  orderBasicFragment,
   orderCardFragment,
   userAvatarFragment,
   documentFragment,
   shipmentCardFragment,
-  shipmentFormFragment,
   timelineDateMinimalFragment,
   timelineDateFullFragment,
   portFragment,
@@ -31,9 +30,12 @@ export const cloneOrderMutation: Object = gql`
   mutation orderCreate($input: OrderCreateInput!) {
     orderCreate(input: $input) {
       order {
-        ...orderFormFragment
+        ...orderBasicFragment
         orderItems {
           ...orderItemRmFragment
+        }
+        shipments {
+          ...shipmentRMFragment
         }
       }
       violations {
@@ -42,24 +44,25 @@ export const cloneOrderMutation: Object = gql`
     }
   }
   ${violationFragment}
-  ${orderFormFragment}
+  ${orderBasicFragment}
   ${userAvatarFragment}
+  ${sizeFragment}
+  ${metricFragment}
+  ${batchCardFragment}
   ${tagFragment}
-  ${partnerCardFragment}
-  ${documentFragment}
-  ${shipmentCardFragment}
   ${priceFragment}
+  ${portFragment}
   ${imageFragment}
   ${partnerNameFragment}
-  ${timelineDateMinimalFragment}
-  ${portFragment}
-  ${batchFormFragment}
-  ${metricFragment}
-  ${sizeFragment}
+  ${partnerCardFragment}
+  ${documentFragment}
   ${orderCardFragment}
-  ${violationFragment}
-  ${batchCardFragment}
   ${orderItemRmFragment}
+  ${shipmentRMFragment}
+  ${batchFormFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${timelineDateFullFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -70,9 +73,12 @@ export const cloneOrderItemMutation: Object = gql`
   mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
     orderUpdate(id: $id, input: $input) {
       order {
-        ...orderFormFragment
+        ...orderBasicFragment
         orderItems {
           ...orderItemRmFragment
+        }
+        shipments {
+          ...shipmentRMFragment
         }
       }
       violations {
@@ -81,24 +87,25 @@ export const cloneOrderItemMutation: Object = gql`
     }
   }
   ${violationFragment}
-  ${orderFormFragment}
+  ${orderBasicFragment}
   ${userAvatarFragment}
+  ${sizeFragment}
+  ${metricFragment}
+  ${batchCardFragment}
   ${tagFragment}
-  ${partnerCardFragment}
-  ${documentFragment}
-  ${shipmentCardFragment}
   ${priceFragment}
+  ${portFragment}
   ${imageFragment}
   ${partnerNameFragment}
-  ${timelineDateMinimalFragment}
-  ${portFragment}
-  ${batchFormFragment}
-  ${metricFragment}
-  ${sizeFragment}
+  ${partnerCardFragment}
+  ${documentFragment}
   ${orderCardFragment}
-  ${violationFragment}
-  ${batchCardFragment}
   ${orderItemRmFragment}
+  ${shipmentRMFragment}
+  ${batchFormFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${timelineDateFullFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -140,7 +147,7 @@ export const cloneShipmentMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
     shipmentCreate(input: $input) {
       shipment {
-        ...shipmentFormFragment
+        ...shipmentRMFragment
       }
       violations {
         ...violationFragment
@@ -148,26 +155,13 @@ export const cloneShipmentMutation: Object = gql`
     }
   }
   ${violationFragment}
-  ${shipmentFormFragment}
+  ${shipmentRMFragment}
   ${timelineDateFullFragment}
-  ${batchFormFragment}
   ${userAvatarFragment}
   ${metricFragment}
-  ${sizeFragment}
   ${tagFragment}
-  ${priceFragment}
-  ${orderCardFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${shipmentCardFragment}
-  ${timelineDateMinimalFragment}
   ${portFragment}
-  ${documentFragment}
   ${partnerCardFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
 `;
 
 export const updateBatchWithReturnDataMutation = gql`

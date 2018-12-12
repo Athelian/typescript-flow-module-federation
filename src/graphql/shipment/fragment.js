@@ -125,10 +125,6 @@ export const shipmentCardFragment = gql`
         name
       }
     }
-    totalVolume {
-      value
-      metric
-    }
     batches {
       id
     }

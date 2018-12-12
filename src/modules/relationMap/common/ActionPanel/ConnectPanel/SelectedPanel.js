@@ -13,7 +13,7 @@ import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
-import { shipmentFormQuery } from 'modules/shipment/form/query';
+import { shipmentRMCardQuery } from 'modules/relationMap/orderFocused/query';
 import { orderFormQuery } from 'modules/order/form/query';
 import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
 import RelationMapContainer from 'modules/relationMap/container';
@@ -242,7 +242,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                                 const shipmentId = get('', 'shipmentCreate.shipment.id', data);
                                 // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
                                 const { data: shipmentData } = await client.query({
-                                  query: shipmentFormQuery,
+                                  query: shipmentRMCardQuery,
                                   variables: {
                                     id: shipmentId,
                                   },
