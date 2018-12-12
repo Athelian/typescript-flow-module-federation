@@ -84,7 +84,7 @@ export default function TableHeader({
               const fieldName = `${entity}-customFields-${index}`;
 
               return (
-                <>
+                <React.Fragment key={fieldName}>
                   {isHiddenColumn({
                     showAll,
                     hideColumns,
@@ -101,7 +101,7 @@ export default function TableHeader({
                       <div className={TableColumnStyle}>{text}</div>
                     </div>
                   )}
-                </>
+                </React.Fragment>
               );
             })}
           </div>

@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
+
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
@@ -735,6 +735,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                     .map(batch => (
                                       <TableItemForCustomFields
                                         cell={`batches.${batch.id}`}
+                                        key={`batches.customFields.${batch.id}`}
                                         fields={batchCustomFieldsFilter}
                                         values={editData.batches[batch.id]}
                                         validator={batchValidator}
