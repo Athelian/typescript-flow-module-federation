@@ -8,7 +8,6 @@ import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
 import Tabs from 'components/NavBar/components/Tabs';
 import { EntityIcon, RelationMapNavBar } from 'components/NavBar';
-import { ContentWrapperStyle } from 'modules/relationMap/style';
 import messages from 'modules/relationMap/messages';
 
 type Props = {
@@ -59,7 +58,7 @@ const RelationMapLayout = ({ intl, children }: Props) => {
               </RelationMapNavBar>
             }
           >
-            <div className={ContentWrapperStyle}>{children}</div>
+            {children}
           </Layout>
         )}
       </UIConsumer>

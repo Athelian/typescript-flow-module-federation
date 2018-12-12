@@ -1,8 +1,51 @@
 // @flow
 import styled, { css } from 'react-emotion';
-import { colors, presets, layout, fontSizes, borderRadiuses } from 'styles/common';
+import { colors, presets, layout, fontSizes, borderRadiuses, scrollbars, shadows } from 'styles/common';
 
 const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
+
+export const OrderFocusGridWrapperStyle: string = css`
+  display: grid;
+  /* grid-template-columns: 320px 20px 320px 20px 320px 1fr; */
+  grid-template-columns: 320px 320px 320px minmax(900px, 1fr);
+  grid-template-rows: 50px 700px;
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: auto;
+  flex: 1;
+  ${scrollbars.MAIN};
+`;
+
+export const OrderFocusEntityHeaderWrapperStyle: string = css`
+  grid-column: span 4;
+  height: 50px;
+  display: grid;
+  grid-template-columns: 320px 320px 320px minmax(900px, 1fr);
+  background-color: ${colors.WHITE};
+  ${shadows.HEADER};
+  z-index: 0;
+`;
+
+export const OrderFocusLeftWrapperStyle: string = css`
+  grid-column: span 3;
+  overflow-x: hidden;
+  overflow-y: auto;
+  ${scrollbars.MAIN};
+`;
+
+export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`
+  grid-column: span 3;
+  overflow: auto;
+  height: calc(100vh - 80px - ${spacing}px);
+`;
+
+export const OrderFocusedShipmentScrollWrapperStyle = css`
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: ${colors.ALMOST_WHITE};
+  padding: 20px 10px;
+  ${scrollbars.MAIN};
+`;
 
 export const BaseCardWrapperStyle = (isFocused: boolean) => css`
   box-shadow: none !important;
@@ -85,24 +128,11 @@ export const EmptyMessageStyle = css`
   color: ${colors.BLACK};
 `;
 
-export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`
-  grid-column: span 3;
-  overflow: auto;
-  height: calc(100vh - 80px - ${spacing}px);
-`;
-
 export const ScrollWrapperStyle = css`
   height: calc(100vh - 220px);
   overflow-y: auto;
   background-color: ${colors.ALMOST_WHITE};
   padding: 10px 10px;
-`;
-
-export const OrderFocusedShipmentScrollWrapperStyle = css`
-  height: calc(100vh - 150px);
-  overflow-y: auto;
-  background-color: ${colors.ALMOST_WHITE};
-  padding: 20px 10px;
 `;
 
 export const ShipmentScrollWrapperStyle = css`
@@ -131,10 +161,11 @@ export const ShipmentMapWrapperStyle = css`
 export const OrderMapWrapperStyle = css`
   grid-column: span 3;
   display: grid;
-  grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 1fr;
+  grid-template-columns: 0.9fr 0.1fr 0.9fr 0.1fr 0.9fr;
   background-color: ${colors.WHITE};
   padding: 15px 10px;
 `;
+
 export const FunctionWrapperStyle = css`
   grid-column: span 4;
   display: flex;

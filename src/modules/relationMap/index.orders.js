@@ -20,7 +20,7 @@ import { ActionSubscribe } from './common/ActionPanel';
 import ActionEffect from './common/ActionEffect';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
 import AdvancedFilter from './common/SortFilter/AdvancedFilter';
-import { FunctionWrapperStyle, BadgeWrapperStyle, RelationMapGridStyle } from './style';
+import { OrderFocusGridWrapperStyle, OrderFocusEntityHeaderWrapperStyle, FunctionWrapperStyle } from './style';
 import messages from './messages';
 
 type Props = {
@@ -118,36 +118,18 @@ const Order = ({ intl }: Props) => (
                               )}
                             </Subscribe>
 
-                            {loading ? (
-                              <LoadingIcon />
-                            ) : (
-                              <div className={RelationMapGridStyle}>
-                                <Subscribe to={[RelationMapContainer]}>
-                                  {({ selectAll, unSelectAll, state: { targetedItem } }) => (
-                                    <div className={BadgeWrapperStyle}>
-                                      <SummaryBadge
-                                        summary={order}
-                                        targetedItem={targetedItem}
-                                        unSelectAll={unSelectAll}
-                                        selectAll={selectAll(order)}
-                                      />
-                                    </div>
-                                  )}
-                                </Subscribe>
-
-                                <ScrollToResult
-                                  id="OrderMapWrapper"
-                                  result={result}
-                                  scrolled={scrolled}
-                                  setScroll={setScroll}
-                                >
-                                  {({ id }) => (
-                                    <OrderFocused
-                                      id={id}
-                                      order={order}
-                                      hasMore={hasMore}
-                                      loadMore={loadMore}
-                                      nodes={formatedNodes}
+                          {loading ? (
+                            <LoadingIcon />
+                          ) : (
+                            <div className={OrderFocusGridWrapperStyle}>
+                              <Subscribe to={[RelationMapContainer]}>
+                                {({ selectAll, unSelectAll, state: { targetedItem } }) => (
+                                  <div className={OrderFocusEntityHeaderWrapperStyle}>
+                                    <SummaryBadge
+                                      summary={order}
+                                      targetedItem={targetedItem}
+                                      unSelectAll={unSelectAll}
+                                      selectAll={selectAll(order)}
                                     />
                                   )}
                                 </ScrollToResult>

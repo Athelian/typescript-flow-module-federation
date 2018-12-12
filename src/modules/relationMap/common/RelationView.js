@@ -2,11 +2,10 @@
 import * as React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import LoadingIcon from 'components/LoadingIcon';
-import { EmptyMessageStyle, InfiniteScrollWrapperStyle } from '../style';
+import { EmptyMessageStyle, OrderFocusLeftWrapperStyle } from '../style';
 
 type OptionalProps = {
   isLoading: boolean,
-  spacing: number,
   id: string,
   className?: string,
   customRender?: () => React.Node,
@@ -41,7 +40,6 @@ class RelationView extends React.PureComponent<Props> {
       items,
       render,
       className,
-      spacing,
       customRender,
       id,
     } = this.props;
@@ -52,7 +50,7 @@ class RelationView extends React.PureComponent<Props> {
       return <div className={EmptyMessageStyle}>{emptyMessage}</div>;
     }
     return (
-      <div id={id} className={InfiniteScrollWrapperStyle(spacing)}>
+      <div id={id} className={OrderFocusLeftWrapperStyle}>
         <InfiniteScroll
           className={className}
           loadMore={onLoadMore}
