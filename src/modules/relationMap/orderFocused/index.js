@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
 import { Subscribe } from 'unstated';
 import {
-  OrderFocusedShipmentScrollWrapperStyle,
+  OrderFocusRightWrapperStyle,
   OrderMapWrapperStyle,
   ShipmentScrollWrapperStyle,
 } from 'modules/relationMap/style';
@@ -169,7 +169,7 @@ const OrderFocused = ({
               );
             }
             return (
-              <div className={OrderFocusedShipmentScrollWrapperStyle}>
+              <div className={OrderFocusRightWrapperStyle}>
                 <ShipmentList shipment={shipment} result={result.shipment} />
               </div>
             );

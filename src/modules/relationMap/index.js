@@ -9,6 +9,7 @@ import Layout from 'components/Layout';
 import Order from './index.orders';
 import Products from './index.products';
 import messages from './messages';
+import { ResetContentWrapperStyle } from './style';
 
 const RelationMap = () => {
   const tabs = [
@@ -54,7 +55,7 @@ const RelationMap = () => {
             }
           >
             {/* $FlowFixMe override Router's div style */}
-            <Router primary={false} style={{ width: '100%', height: '100%' }}>
+            <Router primary={false} className={ResetContentWrapperStyle}>
               <Order path="/orders" default />
               <Products path="/products" />
             </Router>

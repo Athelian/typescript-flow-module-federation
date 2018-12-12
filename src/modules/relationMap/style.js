@@ -1,22 +1,21 @@
 // @flow
 import styled, { css } from 'react-emotion';
-import {
-  colors,
-  presets,
-  layout,
-  fontSizes,
-  borderRadiuses,
-  scrollbars,
-  shadows,
-} from 'styles/common';
+import { colors, presets, layout, fontSizes, borderRadiuses, scrollbars, shadows } from 'styles/common';
 
 const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
+
+export const ResetContentWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`;
 
 export const OrderFocusGridWrapperStyle: string = css`
   display: grid;
   /* grid-template-columns: 320px 20px 320px 20px 320px 1fr; */
   grid-template-columns: 320px 320px 320px minmax(900px, 1fr);
-  grid-template-rows: 50px 700px;
+  grid-template-rows: 50px 1fr;
   width: 100%;
   overflow-y: hidden;
   overflow-x: auto;
@@ -26,7 +25,6 @@ export const OrderFocusGridWrapperStyle: string = css`
 
 export const OrderFocusEntityHeaderWrapperStyle: string = css`
   grid-column: span 4;
-  height: 50px;
   display: grid;
   grid-template-columns: 320px 320px 320px minmax(900px, 1fr);
   background-color: ${colors.WHITE};
@@ -39,6 +37,14 @@ export const OrderFocusLeftWrapperStyle: string = css`
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.MAIN};
+  min-height: 0;
+`;
+
+export const OrderFocusRightWrapperStyle: string = css`
+  overflow-x: hidden;
+  overflow-y: auto;
+  ${scrollbars.MAIN};
+  min-height: 0;
 `;
 
 export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`
@@ -109,12 +115,21 @@ const GridColumn = css`
   grid-template-columns: 1fr 1fr 1fr 1.8fr;
 `;
 
+export const ContentWrapperStyle = css`
+  height: calc(100vh - 50px);
+  padding: 0 0;
+  width: 100%;
+  overflow-y: hidden;
+  z-index: 0;
+`;
+
 export const RelationMapGridStyle = css`
   display: grid;
   ${GridColumn};
 `;
 
 export const RelationMapGrid = styled('div')`
+  /* width: 100%; */
   display: grid;
   ${GridColumn};
 `;
