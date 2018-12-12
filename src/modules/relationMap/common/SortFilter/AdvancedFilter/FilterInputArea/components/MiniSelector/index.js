@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import Icon from 'components/Icon';
 import { SearchInput } from 'components/NavBar';
+import { usePrevious } from 'modules/form/hooks';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
 import { convertArchivedQuery } from 'modules/relationMap/common/SortFilter/AdvancedFilter';
 import {
@@ -32,14 +33,6 @@ const defaultProps = {
   hideToggles: false,
 };
 
-function usePrevious(value) {
-  const ref = React.useRef();
-  React.useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
-
 export default function MiniSelector({
   renderItem,
   entityType,
@@ -58,6 +51,7 @@ export default function MiniSelector({
       setIsActive(true);
       setIsArchive(true);
     }
+    return null;
   });
   return (
     <div className={MiniSelectorWrapperStyle}>

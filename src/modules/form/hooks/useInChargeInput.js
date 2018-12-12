@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
+
 import { useState, useCallback } from 'react';
 import type { ValidationObject } from './type.js.flow';
 

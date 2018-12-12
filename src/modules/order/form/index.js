@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
+
 import React, { lazy, Suspense } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
@@ -16,11 +16,10 @@ import OrderSection from './components/OrderSection';
 import OrderFormWrapperStyle from './style';
 import { OrderItemsContainer, OrderInfoContainer, OrderFilesContainer } from './containers';
 
-// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
 const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
-// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
+
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
-// $FlowFixMe: it is open issue on flow https://github.com/facebook/flow/issues/7093
+
 const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));
 
 type OptionalProps = {
