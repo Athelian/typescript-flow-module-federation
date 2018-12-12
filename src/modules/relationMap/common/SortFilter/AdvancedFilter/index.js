@@ -107,6 +107,8 @@ const FILTER = {
     expiredAt: 'batchExpiredAt',
     producedAt: 'batchProducedAt',
     tags: 'batchTagIds',
+    createdAt: 'batchCreatedAt',
+    updatedAt: 'batchUpdatedAt',
   },
   shipment: {
     cargoReady: 'shipmentCargoReady',

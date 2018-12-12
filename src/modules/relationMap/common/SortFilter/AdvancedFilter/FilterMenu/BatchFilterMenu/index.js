@@ -70,8 +70,16 @@ export default function BatchFilterMenu({
           label: <FormattedMessage {...messages.tags} />,
           data: getSelectData(selectedItems, 'tags'),
         },
-        // { name: 'createdAt', label: <FormattedMessage {...messages.createdAt} />, data: [] },
-        // { name: 'updatedAt', label: <FormattedMessage {...messages.updatedAt} />, data: [] },
+        {
+          name: 'createdAt',
+          label: <FormattedMessage {...messages.createdAt} />,
+          data: getSelectData(selectedItems, 'createdAt'),
+        },
+        {
+          name: 'updatedAt',
+          label: <FormattedMessage {...messages.updatedAt} />,
+          data: getSelectData(selectedItems, 'updatedAt'),
+        },
       ],
     },
   ];
