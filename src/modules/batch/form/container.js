@@ -55,6 +55,7 @@ export type BatchFormState = {
 };
 
 const initValues = {
+  memo: '',
   packageName: '',
   packageCapacity: 0,
   packageQuantity: 0,
