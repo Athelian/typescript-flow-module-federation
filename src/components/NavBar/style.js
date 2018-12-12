@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { transitions, shadows, colors } from 'styles/common';
+import { transitions, shadows, colors, layout } from 'styles/common';
 
 export const NavBarStyle: string = css`
   display: flex;
@@ -12,24 +12,12 @@ export const NavBarStyle: string = css`
   height: 50px;
   background: ${colors.WHITE};
   ${shadows.HEADER};
-  z-index: 2;
+  z-index: 3;
   ${transitions.EXPAND};
 `;
 
 export const ChildrenWrapperStyle: string = css`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: min-content;
-  grid-template-rows: 50px;
-  grid-gap: 20px;
-  align-items: center;
-`;
-
-export const RelationMapNavBarChildrenWrapperStyle: string = css`
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-columns: min-content min-content 1fr;
-  width: 100%;
+  ${layout.GRID_HORIZONTAL};
   grid-template-rows: 50px;
   grid-gap: 20px;
   align-items: center;

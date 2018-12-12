@@ -2,25 +2,23 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { createBooleanValue } from 'react-values';
+import { Label, ToggleInput } from 'components/Form';
 import Icon from 'components/Icon';
-import { ToggleButtonStyle, StatusStyle } from './style';
+import { ToggleTagWrapperStyle, ToggleTagIconStyle } from './style';
 
 const TagValue = createBooleanValue(false);
 
 const ToggleTag = () => (
   <TagValue>
     {({ value: isToggle, toggle }) => (
-      <div className={StatusStyle(isToggle)}>
-        <Icon icon="TAGS" />
-        <FormattedMessage id="modules.RelationMaps.filter.tags" defaultMessage="TAGS" />
-        <button
-          type="button"
-          className={ToggleButtonStyle(isToggle)}
-          tabIndex={-1}
-          onClick={toggle}
-        >
-          {isToggle ? <Icon icon="TOGGLE_ON" /> : <Icon icon="TOGGLE_OFF" />}
-        </button>
+      <div className={ToggleTagWrapperStyle}>
+        <div className={ToggleTagIconStyle}>
+          <Icon icon="TAG" />
+        </div>
+        <Label>
+          <FormattedMessage id="modules.RelationMaps.filter.tags" defaultMessage="TAGS" />
+        </Label>
+        <ToggleInput toggled={isToggle} onToggle={toggle} />
       </div>
     )}
   </TagValue>

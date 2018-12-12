@@ -1,7 +1,14 @@
+// @flow
 import { css } from 'react-emotion';
 import { layout } from 'styles/common';
 
-export const SortWrapperStyle = css`
+export const SortFilterWrapperStyle: string = css`
+  display: flex;
+  width: 100%;
+  z-index: 2;
+`;
+
+export const SortWrapperStyle: string = css`
   flex: 0.96;
 
   > div:first-child > div:first-child {
@@ -9,11 +16,11 @@ export const SortWrapperStyle = css`
   }
 `;
 
-export const GroupFilterWrapperStyle = css`
+export const GroupFilterWrapperStyle: string = css`
   flex: 3.8;
 `;
 
-export const GroupFilterStyle = css`
+export const GroupFilterStyle: string = css`
   float: left;
   ${layout.HORIZONTAL};
   justify-content: flex-end;
@@ -22,5 +29,3 @@ export const GroupFilterStyle = css`
     width: calc(100% - 30px);
   }
 `;
-
-export default null;

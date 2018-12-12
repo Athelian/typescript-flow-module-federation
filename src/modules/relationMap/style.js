@@ -1,6 +1,14 @@
 // @flow
 import styled, { css } from 'react-emotion';
-import { colors, presets, layout, fontSizes, borderRadiuses, scrollbars, shadows } from 'styles/common';
+import {
+  colors,
+  presets,
+  layout,
+  fontSizes,
+  borderRadiuses,
+  scrollbars,
+  shadows,
+} from 'styles/common';
 
 const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
 
@@ -101,21 +109,12 @@ const GridColumn = css`
   grid-template-columns: 1fr 1fr 1fr 1.8fr;
 `;
 
-export const ContentWrapperStyle = css`
-  height: calc(100vh - 50px);
-  padding: 0 0;
-  width: 100%;
-  overflow-y: hidden;
-  z-index: 0;
-`;
-
 export const RelationMapGridStyle = css`
   display: grid;
   ${GridColumn};
 `;
 
 export const RelationMapGrid = styled('div')`
-  /* width: 100%; */
   display: grid;
   ${GridColumn};
 `;
