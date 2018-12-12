@@ -76,6 +76,9 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
             className={FilterDataStyle}
             type="button"
             onClick={() => {
+              if (currencyName) {
+                onRemove(null, 'currency');
+              }
               if (min) {
                 onRemove(null, 'min');
               }

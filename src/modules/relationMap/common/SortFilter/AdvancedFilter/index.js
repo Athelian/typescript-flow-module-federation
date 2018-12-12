@@ -323,7 +323,7 @@ function reducer(state, action) {
       const { selectItem } = action;
 
       let selected = state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || [];
-
+      // FIXME: https://zenport.slack.com/archives/C2JTDSRJ6/p1544522179024700?thread_ts=1544517194.016100&cid=C2JTDSRJ6
       const selectItemIsArray = Array.isArray(selectItem);
       if (selectItemIsArray) {
         selected = [...selectItem];
