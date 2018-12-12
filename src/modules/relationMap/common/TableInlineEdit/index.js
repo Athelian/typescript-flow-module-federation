@@ -556,6 +556,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             {orderItems.length === 0 ? (
                               <TableItemForCustomFields
                                 cell={`orders.${order.data.id}`}
+                                key={`orders.customField.${order.data.id}`}
                                 fields={orderCustomFieldsFilter}
                                 values={editData.orders[orderId]}
                                 validator={orderValidator}
@@ -786,6 +787,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                 return (
                                   <TableItemForCustomFields
                                     cell={`shipments.${shipment.data.id}`}
+                                    key={`shipments.customFields.${shipment.data.id}`}
                                     fields={shipmentCustomFieldsFilter}
                                     values={editData.shipments[shipment.data.id]}
                                     validator={shipmentValidator}
