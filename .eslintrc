@@ -44,7 +44,7 @@
       }
     },
     "react": {
-      "flowVersion": "0.82"
+      "flowVersion": "0.88"
     }
   }
 }

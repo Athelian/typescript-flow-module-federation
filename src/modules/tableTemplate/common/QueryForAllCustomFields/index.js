@@ -7,12 +7,20 @@ import LoadingIcon from 'components/LoadingIcon';
 
 import { allCustomFieldDefinitionsQuery } from './query';
 
-type Props = {
+type OptionalProps = {
+  onCompleted: Function,
+};
+
+type Props = OptionalProps & {
   render: Function,
 };
 
-const QueryForAllCustomFieldDefinitions = ({ render }: Props) => (
-  <Query query={allCustomFieldDefinitionsQuery} fetchPolicy="network-only">
+const QueryForAllCustomFieldDefinitions = ({ render, onCompleted }: Props) => (
+  <Query
+    query={allCustomFieldDefinitionsQuery}
+    fetchPolicy="network-only"
+    onCompleted={onCompleted}
+  >
     {({ error, data, loading }) => {
       if (error) {
         if (error.message && error.message.includes('403')) {
@@ -39,5 +47,9 @@ const QueryForAllCustomFieldDefinitions = ({ render }: Props) => (
     }}
   </Query>
 );
+
+QueryForAllCustomFieldDefinitions.defaultProps = {
+  onCompleted: () => {},
+};
 
 export default QueryForAllCustomFieldDefinitions;

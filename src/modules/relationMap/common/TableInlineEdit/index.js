@@ -152,6 +152,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const [errorMessage, setErrorMessage] = useState('');
   const [hideColumns, setHideColumns] = useState([]);
   const [templateColumns, setTemplateColumns] = useState([]);
+  const [isReady, setIsReady] = useState(false);
   const [showAll, setShowAll] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showTemplate, setShowTemplate] = useState(false);
@@ -275,6 +276,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   });
   return (
     <QueryForAllCustomFields
+      onCompleted={() => (!isReady ? setIsReady(true) : null)}
       render={({
         orderCustomFields,
         orderItemCustomFields,
