@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { getByPathWithDefault } from 'utils/fp';
 import { ShipmentCardWrapperStyle, ShipmentBlankContent } from '../style';
 import ShipmentLabel from '../ShipmentLabel';
 
@@ -11,8 +12,8 @@ const ShipmentCollapsed = ({ shipment }: Props) => (
   <div className={ShipmentCardWrapperStyle}>
     <ShipmentLabel
       name={shipment.no}
-      value={shipment.totalVolume.value}
-      metric={shipment.totalVolume.metric}
+      value={getByPathWithDefault(0, 'totalVolume.value', shipment)}
+      metric={getByPathWithDefault('m³', 'totalVolume.metric', shipment)}
     />
     <div className={ShipmentBlankContent} />
   </div>

@@ -71,6 +71,10 @@ export const shipmentFormFragment = gql`
         ...timelineDateFullFragment
       }
     }
+    totalVolume {
+      value
+      metric
+    }
     batches {
       ...batchFormFragment
     }
