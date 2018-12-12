@@ -326,6 +326,14 @@ const getFilterInputArea = ({
           );
         case 'createdAt':
         case 'updatedAt':
+          return () => (
+            <DateRange
+              fromDate={new Date(selectedItems.after)}
+              toDate={new Date(selectedItems.before)}
+              onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
+              onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
+            />
+          );
         default:
           return () => <div />;
       }

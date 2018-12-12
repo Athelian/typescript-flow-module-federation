@@ -124,6 +124,8 @@ const FILTER = {
     forwarder: 'shipmentForwarderIds',
     inCharge: 'shipmentInChargeIds',
     tags: 'shipmentTagIds',
+    createdAt: 'shipmentCreatedAt',
+    updatedAt: 'shipmentUpdatedAt',
   },
 };
 
