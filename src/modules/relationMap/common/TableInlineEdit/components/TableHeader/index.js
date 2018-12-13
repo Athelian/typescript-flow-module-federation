@@ -42,6 +42,9 @@ function isHiddenColumn({
   position: number,
   templateColumns: Array<string>,
 }) {
+  if (showAll) {
+    return false;
+  }
   if (templateColumns && templateColumns.length) {
     return (
       (!showAll &&

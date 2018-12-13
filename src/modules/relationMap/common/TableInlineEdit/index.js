@@ -78,7 +78,7 @@ function findColumns({
 }) {
   if (templateColumns.length) {
     return showAll
-      ? fields.filter((item, idx) => templateColumns.includes(`${entity}-${idx}`))
+      ? fields
       : fields.filter(
           (item, idx) =>
             !hideColumns.includes(`${entity}-${idx}`) &&
@@ -97,9 +97,7 @@ function findColumnsForCustomFields({
 }) {
   if (templateColumns && templateColumns.length > 0) {
     return showAll
-      ? customFields.filter((field, index) =>
-          templateColumns.includes(`${entity}-customFields-${index}`)
-        )
+      ? customFields
       : customFields.filter(
           (field, index) =>
             templateColumns.includes(`${entity}-customFields-${index}`) &&
@@ -167,6 +165,8 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const headerRef = useRef();
   const sidebarRef = useRef();
   const bodyRef = useRef();
+
+  logger.warn({ hideColumns });
 
   const handleScroll = () => {
     if (bodyRef.current) {
