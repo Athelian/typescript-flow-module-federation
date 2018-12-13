@@ -16,7 +16,7 @@ import { SaveButton, CancelButton, SelectTemplateButton, ExportButton } from 'co
 import { ToggleInput, Label, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
-import { formatOrderData } from 'modules/relationMap/util';
+import { formatOrders as formatOrderData } from 'modules/relationMap/orderFocused/formatter';
 import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
@@ -233,9 +233,15 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     return () => {};
   });
 
-  const { sumShipments, sumOrders, sumOrderItems, sumBatches, ...mappingObjects } = formatOrderData(
-    data
-  );
+  const {
+    sumShipments,
+    sumOrders,
+    sumOrderItems,
+    sumBatches,
+    collapsedRelation,
+    expandRelation,
+    ...mappingObjects
+  } = formatOrderData(data);
 
   const { orderIds, orderItemsIds, batchIds, shipmentIds } = findAllPossibleOrders(
     selected,
@@ -244,6 +250,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
   logger.warn({ selected, mappingObjects });
   logger.warn({ orderIds, orderItemsIds, batchIds, shipmentIds });
+  const ids = orderIds.filter(id => !!id);
   const { entities } = normalize({ orders: data });
   const orderColumnFieldsFilter = findColumns({
     showAll,
@@ -409,7 +416,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                           batchCustomFieldsFilter,
                           shipmentCustomFieldsFilter,
                         }),
-                        ids: orderIds,
+                        ids,
                       }}
                     />
                     {errorMessage && errorMessage.length > 0 && (
