@@ -306,6 +306,7 @@ function reducer(state, action) {
       const selected =
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
       let newSelected = {};
+      console.log({ selectItem, field, selected });
       if (selectItem == null) {
         newSelected = omit([field], selected);
       } else {

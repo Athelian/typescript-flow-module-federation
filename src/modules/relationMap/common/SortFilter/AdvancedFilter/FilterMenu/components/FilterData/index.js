@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { getByPath } from 'utils/fp';
+import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
@@ -16,6 +16,9 @@ type Props = {
 const FilterData = ({ onRemove, field, data, name }: Props) => {
   if (!name) {
     return null;
+  }
+  if (name === 'origin') {
+    console.log({ field, data, name });
   }
   switch (name) {
     case 'createdAt':
@@ -97,17 +100,19 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
     default:
       return (
         <div className={FilterDataWrapperStyle}>
-          {data.map(datum => (
-            <button
-              key={datum.id ? datum.id : uuid()}
-              className={FilterDataStyle}
-              type="button"
-              onClick={() => onRemove(datum)}
-            >
-              {field && getByPath(field, datum)}
-              <Icon icon="CLEAR" />
-            </button>
-          ))}
+          {data.map(datum =>
+            isNullOrUndefined(datum) ? null : (
+              <button
+                key={{}.hasOwnProperty.call(datum, 'id') ? datum.id : uuid()}
+                className={FilterDataStyle}
+                type="button"
+                onClick={() => onRemove(datum)}
+              >
+                {field && getByPath(field, datum)}
+                <Icon icon="CLEAR" />
+              </button>
+            )
+          )}
         </div>
       );
   }
