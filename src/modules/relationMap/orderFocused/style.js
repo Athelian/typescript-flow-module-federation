@@ -11,6 +11,7 @@ export const OrderListWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 300px 20px 300px 20px 300px;
   background-color: ${colors.WHITE};
+  padding: 20px 20px 100px 20px;
 `;
 
 export const ShipmentListWrapperStyle: string = css`
@@ -18,4 +19,5 @@ export const ShipmentListWrapperStyle: string = css`
   overflow-y: auto;
   ${scrollbars.MAIN};
   min-height: 0;
+  padding: 20px 20px 100px 20px;
 `;

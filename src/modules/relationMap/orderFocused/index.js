@@ -10,7 +10,6 @@ import SlideForm from '../common/SlideForm';
 import DeleteDialog from '../common/Dialog/DeleteDialog';
 import ShipmentList from '../common/ShipmentList';
 import { QueryHandler, RelationView } from '../common';
-import { ShipmentToggleValue } from '../common/SummaryBadge';
 import { getItemData, getItemType } from './relation';
 import Item from './Item';
 import { OrderListWrapperStyle, ShipmentListWrapperStyle } from './style';
@@ -24,13 +23,14 @@ type Props = OptionalProps & {
   hasMore: boolean,
   loadMore: Function,
   nodes: Array<Object>,
+  ShipmentToggleValue: any,
 };
 
 const defaultProps = {
   id: '',
 };
 
-export const ToggleCollpased = createObjectValue({});
+export const ToggleCollapsed = createObjectValue({});
 
 const OrderFocused = ({
   order: { order, orderItem, batch, shipment, collapsedRelation, expandRelation },
@@ -38,6 +38,7 @@ const OrderFocused = ({
   hasMore,
   loadMore,
   id,
+  ShipmentToggleValue,
 }: Props) => (
   <>
     <RelationView
@@ -52,7 +53,7 @@ const OrderFocused = ({
       onLoadMore={loadMore}
       customRender={() =>
         nodes.map(item => (
-          <ToggleCollpased key={item.id}>
+          <ToggleCollapsed key={item.id}>
             {({ value: collapsed, set }) => {
               const isCollapsed = Object.prototype.hasOwnProperty.call(collapsed, item.id)
                 ? collapsed[item.id]
@@ -63,7 +64,7 @@ const OrderFocused = ({
                 const key = `relation-${relationIndex}`;
                 const itemData = getItemData({ order, orderItem, batch }, relation) || {};
                 const itemType = getItemType(relation.type);
-                console.log(relation);
+
                 return (
                   <Item
                     key={key}
@@ -76,7 +77,7 @@ const OrderFocused = ({
                 );
               });
             }}
-          </ToggleCollpased>
+          </ToggleCollapsed>
         ))
       }
     />

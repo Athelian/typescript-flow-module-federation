@@ -12,8 +12,7 @@ import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
-import { ToggleCollpased } from 'modules/relationMap/orderFocused';
-import { FilterContext } from 'modules/relationMap/common/ActionPanel/ActionSubscribe';
+import { ToggleCollapsed } from 'modules/relationMap/orderFocused';
 import {
   LabelConnectStyle,
   GroupLabelButtonStyle,
@@ -123,65 +122,49 @@ const ApplyPanel = ({ connectType }: Props) => {
                                 defaultMessage="APPLY"
                               />
                             }
-                            onClick={async () => {
-                              if (connectType === 'SHIPMENT') {
-                                setLoading(true);
-                                await connectExistingShipment(client, targetedItem, selectedItem);
-                                const { batch = {} } = targetedItem;
-                                const isFocus = Object.keys(batch).some(batchId =>
-                                  isHighlighted(batchId, 'batch')
-                                );
-                                if (isFocus) {
-                                  selectFocusItem(prevFocus => ({
-                                    ...prevFocus,
-                                    shipment: { [selectedItem.id]: true },
-                                  }));
-                                }
-                                setSuccess(true);
-                                setLoading(false);
-                              } else if (connectType === 'ORDER') {
-                                const notSelectAllBatch = !isSelectAllBatch(targetedItem);
-                                const diffCurrency = findDiffCurrency(targetedItem, selectedItem);
-                                if (notSelectAllBatch || diffCurrency) {
-                                  setDialog({
-                                    isOpen: true,
-                                    notSelectAllBatch,
-                                    diffCurrency,
-                                  });
-                                } else {
-                                  connectExistingOrder(client, targetedItem, selectedItem, filter);
-                                }
-                              }
+                            setSuccess(true);
+                            setLoading(false);
+                          } else if (connectType === 'ORDER') {
+                            const notSelectAllBatch = !isSelectAllBatch(targetedItem);
+                            const diffCurrency = findDiffCurrency(targetedItem, selectedItem);
+                            if (notSelectAllBatch || diffCurrency) {
+                              setDialog({
+                                isOpen: true,
+                                notSelectAllBatch,
+                                diffCurrency,
+                              });
+                            } else {
+                              connectExistingOrder(client, targetedItem, selectedItem);
+                            }
+                          }
+                        }}
+                      />
+                      <ToggleCollapsed>
+                        {({ set: setCollapsed }) => (
+                          <ConfirmDialog
+                            width={400}
+                            isOpen={value.isOpen}
+                            onRequestClose={() => set('isOpen', false)}
+                            onCancel={() => set('isOpen', false)}
+                            message={<ConfirmMessage condition={value} />}
+                            onConfirm={async () => {
+                              set('isOpen', false);
+                              setLoading(true);
+                              const results = await connectExistingOrder(
+                                client,
+                                targetedItem,
+                                selectedItem,
+                                value
+                              );
+                              setSuccess(true);
+                              setCollapsed(selectedItem.id, false);
+                              addNewResult(...results);
+                              setLoading(false);
                             }}
                           />
-                          <ToggleCollpased>
-                            {({ set: setCollapsed }) => (
-                              <ConfirmDialog
-                                width={400}
-                                isOpen={value.isOpen}
-                                onRequestClose={() => set('isOpen', false)}
-                                onCancel={() => set('isOpen', false)}
-                                message={<ConfirmMessage condition={value} />}
-                                onConfirm={async () => {
-                                  set('isOpen', false);
-                                  setLoading(true);
-                                  const results = await connectExistingOrder(
-                                    client,
-                                    targetedItem,
-                                    selectedItem,
-                                    filter
-                                  );
-                                  setSuccess(true);
-                                  setCollapsed(selectedItem.id, false);
-                                  addNewResult(...results);
-                                  setLoading(false);
-                                }}
-                              />
-                            )}
-                          </ToggleCollpased>
-                        </>
-                      )}
-                    </ObjectValue>
+                        )}
+                      </ToggleCollapsed>
+                    </>
                   )}
                 </FilterContext.Consumer>
               </Label>

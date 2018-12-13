@@ -13,7 +13,7 @@ export const ResetContentWrapperStyle: string = css`
 
 export const OrderFocusGridWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 320px 320px 320px minmax(900px, 1fr);
+  grid-template-columns: 320px 320px 360px minmax(900px, 1fr);
   grid-template-rows: 50px 1fr;
   width: 100%;
   overflow-y: hidden;
@@ -25,10 +25,20 @@ export const OrderFocusGridWrapperStyle: string = css`
 export const OrderFocusEntityHeaderWrapperStyle: string = css`
   grid-column: span 4;
   display: grid;
-  grid-template-columns: 320px 320px 320px minmax(900px, 1fr);
+  grid-template-columns: 320px 320px 360px minmax(900px, 1fr);
   background-color: ${colors.WHITE};
   ${shadows.HEADER};
   z-index: 0;
+`;
+
+export const ShipmentBadgeContainerStyle = css`
+  display: flex;
+`;
+
+export const ShipmentToggleContainerStyle = css`
+  display: flex;
+  color: ${colors.GRAY_DARK};
+  align-items: center;
 `;
 
 export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`
