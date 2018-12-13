@@ -51,6 +51,7 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
         inputValue={inputHandlers.value}
         renderSelect={({ ...selectProps }) => (
           <DefaultSearchSelect
+            forceHoverStyle
             {...selectProps}
             hasError={hasError}
             isOpen={isFocused}
