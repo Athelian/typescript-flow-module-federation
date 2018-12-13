@@ -454,6 +454,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             <SelectTemplate
                               onSelect={template => {
                                 setShowTemplate(false);
+                                setShowAll(false);
                                 window.localStorage.setItem(
                                   `${user.id}-table-template`,
                                   template.name
