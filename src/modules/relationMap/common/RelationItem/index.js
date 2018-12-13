@@ -3,10 +3,9 @@ import * as React from 'react';
 import BaseCard from 'components/Cards';
 import { cx } from 'react-emotion';
 // @TODO need to find other solution to manage tag
-import { TagValue } from 'modules/relationMap/common/ToggleTag';
+import { TagValue } from 'modules/relationMap/common/SortFilter/ToggleTag';
 import {
   ORDER,
-  ORDER_HEADER,
   ORDER_ITEM,
   ORDER_ITEM_ALL,
   BATCH,
@@ -20,7 +19,6 @@ import OrderItemCard from 'components/RelationMap/OrderElement/OrderItemCard';
 import BatchCard from 'components/RelationMap/OrderElement/BatchCard';
 import TotalCard from 'components/RelationMap/OrderElement/TotalCard';
 import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
-import OrderHeader from 'components/RelationMap/OrderElement/OrderHeader';
 import Tags from 'components/RelationMap/OrderElement/Tags';
 import ShipmentCard from 'components/RelationMap/ShipmentElement';
 import ShipmentHeader from 'components/RelationMap/ShipmentElement/ShipmentHeader';
@@ -72,9 +70,6 @@ const Item = (props: Props) => {
   }
 
   switch (type) {
-    case ORDER_HEADER: {
-      return <OrderHeader label={`ORDER ${data.id}`} isChecked />;
-    }
     case ORDER: {
       return (
         <BaseCard

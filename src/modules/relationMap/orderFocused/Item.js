@@ -26,16 +26,13 @@ import {
   BatchCard,
   TotalCard,
   WrapperCard,
-  OrderHeader,
   Tags,
   ShipmentCard,
-  ShipmentHeader,
   ShipmentCollapsed,
 } from 'components/RelationMap';
 import {
   ORDER_ITEM_ALL,
   BATCH_ALL,
-  ORDER_HEADER,
   ORDER,
   ORDER_ALL,
   ORDER_ITEM,
@@ -61,7 +58,6 @@ export const getItemType = (type: string) => {
     case ORDER_ALL:
     case ORDER:
       return 'order';
-    case ORDER_HEADER:
     case ORDER_ITEM:
       return 'orderItem';
     case BATCH:
@@ -137,9 +133,6 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
         switch (type) {
           default: {
             return <div />;
-          }
-          case ORDER_HEADER: {
-            return <OrderHeader label={`ORDER ${data.id || ''}`} isChecked />;
           }
           case ORDER: {
             return (
@@ -376,15 +369,6 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           case SHIPMENT: {
             return (
               <>
-                <ShipmentHeader
-                  label={`SHIPMENT ${data.id}`}
-                  isChecked
-                  ordersNo={data.orderCount}
-                  batchesNo={data.batchCount}
-                  onToggle={onToggle}
-                  isCollapsed={isCollapsed}
-                />
-
                 <BaseCard
                   id={id}
                   showActionsOnHover
@@ -477,14 +461,6 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           case SHIPMENT_ALL: {
             return (
               <>
-                <ShipmentHeader
-                  label="SHIPMENT"
-                  isChecked
-                  ordersNo={data.orderCount}
-                  batchesNo={data.batchCount}
-                  onToggle={onToggle}
-                  isCollapsed={isCollapsed}
-                />
                 <BaseCard
                   showActionsOnHover
                   icon="SHIPMENT"
