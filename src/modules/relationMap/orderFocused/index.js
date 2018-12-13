@@ -12,7 +12,12 @@ import ShipmentList from '../common/ShipmentList';
 import { QueryHandler, RelationView } from '../common';
 import { getItemData, getItemType } from './relation';
 import Item from './Item';
-import { OrderListWrapperStyle, ShipmentListWrapperStyle } from './style';
+import {
+  OrderListWrapperStyle,
+  OrderListBodyStyle,
+  ShipmentListWrapperStyle,
+  ShipmentListBodyStyle,
+} from './style';
 
 type OptionalProps = {
   id: string,
@@ -41,46 +46,49 @@ const OrderFocused = ({
   ShipmentToggleValue,
 }: Props) => (
   <>
-    <RelationView
-      id={id}
-      className={OrderListWrapperStyle}
-      isEmpty={nodes ? nodes.length === 0 : true}
-      spacing={70}
-      emptyMessage={
-        <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
-      }
-      hasMore={hasMore}
-      onLoadMore={loadMore}
-      customRender={() =>
-        nodes.map(item => (
-          <ToggleCollapsed key={item.id}>
-            {({ value: collapsed, set }) => {
-              const isCollapsed = Object.prototype.hasOwnProperty.call(collapsed, item.id)
-                ? collapsed[item.id]
-                : true;
-              const toggle = () => set(item.id, !isCollapsed);
-              const relations = isCollapsed ? collapsedRelation[item.id] : expandRelation[item.id];
-              return relations.map((relation, relationIndex) => {
-                const key = `relation-${relationIndex}`;
-                const itemData = getItemData({ order, orderItem, batch }, relation) || {};
-                const itemType = getItemType(relation.type);
+    <div className={OrderListWrapperStyle}>
+      <RelationView
+        id={id}
+        className={OrderListBodyStyle}
+        isEmpty={nodes ? nodes.length === 0 : true}
+        emptyMessage={
+          <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
+        }
+        hasMore={hasMore}
+        onLoadMore={loadMore}
+        customRender={() =>
+          nodes.map(item => (
+            <ToggleCollapsed key={item.id}>
+              {({ value: collapsed, set }) => {
+                const isCollapsed = Object.prototype.hasOwnProperty.call(collapsed, item.id)
+                  ? collapsed[item.id]
+                  : true;
+                const toggle = () => set(item.id, !isCollapsed);
+                const relations = isCollapsed
+                  ? collapsedRelation[item.id]
+                  : expandRelation[item.id];
+                return relations.map((relation, relationIndex) => {
+                  const key = `relation-${relationIndex}`;
+                  const itemData = getItemData({ order, orderItem, batch }, relation) || {};
+                  const itemType = getItemType(relation.type);
 
-                return (
-                  <Item
-                    key={key}
-                    onToggle={toggle}
-                    isCollapsed={isCollapsed}
-                    relation={relation}
-                    itemData={itemData}
-                    itemType={itemType}
-                  />
-                );
-              });
-            }}
-          </ToggleCollapsed>
-        ))
-      }
-    />
+                  return (
+                    <Item
+                      key={key}
+                      onToggle={toggle}
+                      isCollapsed={isCollapsed}
+                      relation={relation}
+                      itemData={itemData}
+                      itemType={itemType}
+                    />
+                  );
+                });
+              }}
+            </ToggleCollapsed>
+          ))
+        }
+      />
+    </div>
     <Subscribe to={[ActionContainer]}>
       {({ state: { result } }) => (
         <ShipmentToggleValue>
@@ -114,50 +122,46 @@ const OrderFocused = ({
                         hasMore: hasMoreShipment,
                         loadMore: loadMoreShipment,
                       }) => (
+                        <div className={ShipmentListWrapperStyle}>
                           <RelationView
-                          className={ShipmentListWrapperStyle}
+                            className={ShipmentListBodyStyle}
                             isEmpty={shipmentNodes ? shipmentNodes.length === 0 : true}
-                            spacing={50}
-                            hasMore={hasMoreShipment}
-                            onLoadMore={loadMoreShipment}
                             emptyMessage={
                               <FormattedMessage
                                 id="modules.Orders.noShipmentFound"
-                                defaultMessage="No Shipment found"
+                                defaultMessage="No shipments found"
                               />
                             }
-                            customRender={() => (
-                              <>
-                                <ShipmentList shipment={shipment} result={result.shipment} />
-                                {shipmentNodes
-                                  .filter(({ id: shipmentId }) => !shipment[shipmentId])
-                                  .map(shipmentNode => (
-                                    <BooleanValue defaultValue key={shipmentNode.id}>
-                                      {({ value: isCollapsed, toggle }) => (
-                                        <Item
-                                          onToggle={toggle}
-                                          isCollapsed={isCollapsed}
-                                          relation={{
-                                            type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
-                                            id: shipmentNode.id,
-                                          }}
-                                          itemData={{
-                                            data: shipmentNode,
-                                            relation: {
-                                              order: {},
-                                              orderItem: {},
-                                              batch: {},
-                                              shipment: {},
-                                            },
-                                          }}
-                                          itemType="shipment"
-                                        />
-                                      )}
-                                    </BooleanValue>
-                                  ))}
-                              </>
-                            )}
+                            hasMore={hasMoreShipment}
+                            onLoadMore={loadMoreShipment}
+                            customRender={() =>
+                              shipmentNodes.map(shipmentNode => (
+                                <BooleanValue defaultValue key={shipmentNode.id}>
+                                  {({ value: isCollapsed, toggle }) => (
+                                    <Item
+                                      onToggle={toggle}
+                                      isCollapsed={isCollapsed}
+                                      relation={{
+                                        type: isCollapsed ? 'SHIPMENT_ALL' : 'SHIPMENT',
+                                        id: shipmentNode.id,
+                                      }}
+                                      itemData={{
+                                        data: shipmentNode,
+                                        relation: {
+                                          order: {},
+                                          orderItem: {},
+                                          batch: {},
+                                          shipment: {},
+                                        },
+                                      }}
+                                      itemType="shipment"
+                                    />
+                                  )}
+                                </BooleanValue>
+                              ))
+                            }
                           />
+                        </div>
                       )}
                     </QueryHandler>
                   )}
@@ -166,7 +170,9 @@ const OrderFocused = ({
             }
             return (
               <div className={ShipmentListWrapperStyle}>
-                <ShipmentList shipment={shipment} result={result.shipment} />
+                <div className={ShipmentListBodyStyle}>
+                  <ShipmentList shipment={shipment} result={result.shipment} />
+                </div>
               </div>
             );
           }}

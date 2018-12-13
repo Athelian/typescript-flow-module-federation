@@ -8,6 +8,9 @@ export const OrderListWrapperStyle: string = css`
   overflow-y: auto;
   ${scrollbars.MAIN};
   min-height: 0;
+`;
+
+export const OrderListBodyStyle: string = css`
   display: grid;
   grid-template-columns: 300px 20px 300px 20px 300px;
   padding: 20px 20px 100px 20px;
@@ -18,5 +21,11 @@ export const ShipmentListWrapperStyle: string = css`
   overflow-y: auto;
   ${scrollbars.MAIN};
   min-height: 0;
+`;
+
+export const ShipmentListBodyStyle: string = css`
+  display: grid;
+  grid-template-columns: minmax(860px, 1fr);
+  grid-auto-rows: min-content;
   padding: 20px 20px 100px 20px;
 `;

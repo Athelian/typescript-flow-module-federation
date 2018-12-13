@@ -1,6 +1,14 @@
 // @flow
 import styled, { css } from 'react-emotion';
-import { colors, presets, layout, fontSizes, borderRadiuses, scrollbars, shadows } from 'styles/common';
+import {
+  colors,
+  presets,
+  layout,
+  fontSizes,
+  borderRadiuses,
+  scrollbars,
+  shadows,
+} from 'styles/common';
 
 const getBorderColor = (isFocused: boolean) => (isFocused ? colors.TEAL : colors.GRAY_QUITE_LIGHT);
 
@@ -13,7 +21,7 @@ export const ResetContentWrapperStyle: string = css`
 
 export const OrderFocusGridWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 320px 320px 360px minmax(900px, 1fr);
+  grid-template-columns: 320px 320px 360px minmax(920px, 1fr);
   grid-template-rows: 50px 1fr;
   width: 100%;
   overflow-y: hidden;
@@ -25,7 +33,7 @@ export const OrderFocusGridWrapperStyle: string = css`
 export const OrderFocusEntityHeaderWrapperStyle: string = css`
   grid-column: span 4;
   display: grid;
-  grid-template-columns: 320px 320px 360px minmax(900px, 1fr);
+  grid-template-columns: 320px 320px 360px minmax(920px, 1fr);
   background-color: ${colors.WHITE};
   ${shadows.HEADER};
   z-index: 0;
@@ -42,8 +50,6 @@ export const AllShipmentsIconStyle = css`
   ${fontSizes.SMALL};
   margin: 0 5px 0 0;
 `;
-
-
 
 export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`
   grid-column: span 3;

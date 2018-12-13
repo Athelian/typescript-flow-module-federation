@@ -23,7 +23,6 @@ type Props = OptionalProps & {
 const defaultProps = {
   isLoading: false,
   id: '',
-  spacing: 0,
   className: '',
 };
 
@@ -49,7 +48,7 @@ class RelationView extends React.PureComponent<Props> {
     }
 
     if (isEmpty) {
-      return <Display>{emptyMessage}</Display>;
+      return <Display align="left">{emptyMessage}</Display>;
     }
 
     return (
@@ -60,6 +59,7 @@ class RelationView extends React.PureComponent<Props> {
         loader={<LoadingIcon key="loading" />}
         useWindow={false}
         id={id}
+        threshold={500}
       >
         {customRender && customRender()}
         {!customRender && items && render && items.map((item, index) => render({ item, index }))}
