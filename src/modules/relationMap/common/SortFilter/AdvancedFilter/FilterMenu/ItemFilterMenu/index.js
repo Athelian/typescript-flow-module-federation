@@ -48,11 +48,11 @@ export default function ItemFilterMenu({
       label: <FormattedMessage {...messages.item} />,
       icon: 'ORDER_ITEM',
       filters: [
-        // {
-        //   name: 'price',
-        //   label: <FormattedMessage {...messages.price} />,
-        //   data: getSelectData(selectedItems, 'price'),
-        // },
+        {
+          name: 'price',
+          label: <FormattedMessage {...messages.price} />,
+          data: getSelectData(selectedItems, 'price'),
+        },
         {
           name: 'createdAt',
           label: <FormattedMessage {...messages.createdAt} />,

@@ -75,7 +75,7 @@ const initialState: State = {
 
 const defaultFilterMenuItemMap = {
   order: 'ids',
-  item: 'createdAt',
+  item: 'price',
   batch: 'deliveredAt',
   shipment: 'forwarder',
 };
@@ -304,10 +304,10 @@ function reducer(state, action) {
       const selected =
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
       let newSelected = {};
-      if (!selectItem && selected[field]) {
-        newSelected = omit([field], selected);
-      } else {
+      if (!!selectItem && !selected[field]) {
         newSelected = { ...selected, [field]: selectItem };
+      } else {
+        newSelected = omit([field], selected);
       }
       return {
         ...state,
