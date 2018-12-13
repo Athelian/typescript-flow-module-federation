@@ -167,9 +167,9 @@ const getFilterValue = (name: string, data: any) => {
       const min = getByPath('min', data);
       const max = getByPath('max', data);
       return {
-        ...(currency == null ? {} : { currency }),
-        ...(min == null ? {} : { min }),
-        ...(max == null ? {} : { max }),
+        ...(isNullOrUndefined(currency) ? {} : { currency }),
+        ...(isNullOrUndefined(min) ? {} : { min }),
+        ...(isNullOrUndefined(max) ? {} : { max }),
       };
     }
 
@@ -306,7 +306,7 @@ function reducer(state, action) {
       const selected =
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
       let newSelected = {};
-      if (selectItem == null) {
+      if (isNullOrUndefined(selectItem)) {
         newSelected = omit([field], selected);
       } else {
         newSelected = { ...selected, [field]: selectItem };

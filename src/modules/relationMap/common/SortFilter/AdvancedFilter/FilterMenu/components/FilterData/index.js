@@ -64,7 +64,8 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
     }
     case 'price': {
       const { currency, min, max } = data;
-      if (currency == null && min == null && max == null) return null;
+      if (isNullOrUndefined(currency) && isNullOrUndefined(min) && isNullOrUndefined(max))
+        return null;
       return (
         <div className={FilterDataWrapperStyle}>
           <button
@@ -83,12 +84,25 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
               }
             }}
           >
-            {min == null && max == null && currency && `${currency.name}`}
-            {min != null && <FormattedNumber value={min} suffix={currency ? currency.name : ''} />}
-            {min != null && max == null && ' > '}
-            {min != null && max != null && ' - '}
-            {min == null && max != null && ' < '}
-            {max != null && <FormattedNumber value={max} suffix={currency ? currency.name : ''} />}
+            {isNullOrUndefined(min) &&
+              isNullOrUndefined(max) &&
+              !isNullOrUndefined(currency) &&
+              `${currency.name}`}
+            {!isNullOrUndefined(min) && (
+              <FormattedNumber
+                value={min}
+                suffix={!isNullOrUndefined(currency) ? currency.name : ''}
+              />
+            )}
+            {!isNullOrUndefined(min) && isNullOrUndefined(max) && ' > '}
+            {!isNullOrUndefined(min) && !isNullOrUndefined(max) && ' - '}
+            {isNullOrUndefined(min) && !isNullOrUndefined(max) && ' < '}
+            {!isNullOrUndefined(max) && (
+              <FormattedNumber
+                value={max}
+                suffix={!isNullOrUndefined(currency) ? currency.name : ''}
+              />
+            )}
             <Icon icon="CLEAR" />
           </button>
         </div>
