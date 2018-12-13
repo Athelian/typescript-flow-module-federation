@@ -163,11 +163,13 @@ const getFilterValue = (name: string, data: any) => {
         ...(data.before && { before: formatToDateTimeGraphql(new Date(data.before)) }),
       };
     case 'price': {
-      const currency = getByPath('data.currency.name', data);
+      const currency = getByPath('currency.name', data);
+      const min = getByPath('min', data);
+      const max = getByPath('max', data);
       return {
-        ...(currency && { currency }),
-        ...(data.min && { min: data.min }),
-        ...(data.max && { max: data.max }),
+        ...(currency == null ? {} : { currency }),
+        ...(min == null ? {} : { min }),
+        ...(max == null ? {} : { max }),
       };
     }
 

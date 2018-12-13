@@ -9,8 +9,13 @@ type OptionalProps = {
 
 type Props = OptionalProps & InputProps;
 
+const defaultProps = {
+  ...defaultInputProps,
+  nullable: false,
+};
+
 class NumberInput extends React.Component<Props> {
-  static defaultProps = defaultInputProps;
+  static defaultProps = defaultProps;
 
   handleChange = (evt: any) => {
     const { onChange, nullable } = this.props;
