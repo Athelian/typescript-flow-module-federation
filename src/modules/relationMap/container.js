@@ -134,6 +134,17 @@ const reduceNewLine = (lines: Array<string>, ids: Array<string>) =>
     return Object.assign(result, { [childId]: isSelected });
   }, {});
 
+const updateTargetData = (target: Object, data: Object) =>
+  Object.keys(target).reduce(
+    (result, id) =>
+      Object.assign(result, {
+        [id]: {
+          ...get({}, `${id}.data`, data),
+          ...(target[id].isNew ? { isNew: target[id].isNew } : {}),
+        },
+      }),
+    {}
+  );
 export default class RelationMapContainer extends Container<RelationMapState> {
   state = initState();
 
@@ -161,52 +172,12 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         shipment: shipmentData,
       } = data;
       const { order = {}, orderItem = {}, batch = {}, shipment = {} } = prevState.targetedItem;
-      const targetOrder = Object.keys(order).reduce(
-        (target, id) =>
-          Object.assign(target, {
-            [id]: {
-              ...get({}, `${id}.data`, orderData),
-              ...(order[id].isNew ? { isNew: order[id].isNew } : {}),
-            },
-          }),
-        {}
-      );
-      const targetOrderItem = Object.keys(orderItem).reduce(
-        (target, id) =>
-          Object.assign(target, {
-            [id]: {
-              ...get({}, `${id}.data`, orderItemData),
-              ...(orderItem[id].isNew ? { isNew: orderItem[id].isNew } : {}),
-            },
-          }),
-        {}
-      );
-      const targetBatch = Object.keys(batch).reduce(
-        (target, id) =>
-          Object.assign(target, {
-            [id]: {
-              ...get({}, `${id}.data`, batchData),
-              ...(batch[id].isNew ? { isNew: batch[id].isNew } : {}),
-            },
-          }),
-        {}
-      );
-      const targetShipment = Object.keys(shipment).reduce(
-        (target, id) =>
-          Object.assign(target, {
-            [id]: {
-              ...get({}, `${id}.data`, shipmentData),
-              ...(shipment[id].isNew ? { isNew: shipment[id].isNew } : {}),
-            },
-          }),
-        {}
-      );
       return {
         targetedItem: {
-          order: targetOrder,
-          orderItem: targetOrderItem,
-          batch: targetBatch,
-          shipment: targetShipment,
+          order: updateTargetData(order, orderData),
+          orderItem: updateTargetData(orderItem, orderItemData),
+          batch: updateTargetData(batch, batchData),
+          shipment: updateTargetData(shipment, shipmentData),
         },
       };
     });

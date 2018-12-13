@@ -5,6 +5,7 @@ import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { Query } from 'react-apollo';
 import { isEmpty } from 'utils/fp';
+import logger from 'utils/logger';
 import { ActionContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
 import LoadingIcon from 'components/LoadingIcon';
@@ -52,7 +53,7 @@ const Order = ({ intl }: Props) => (
                       const formatedNodes =
                         isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result);
                       const order = formatOrderData(formatedNodes || []);
-                      console.log('order', order);
+                      logger.info('rerender list', nodes, order);
                       return (
                         <ActionEffect data={order}>
                           <>

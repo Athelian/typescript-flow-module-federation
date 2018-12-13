@@ -21,7 +21,6 @@ const Effect = ({ children, data, updateTargetData, haveTarget }: EffectProps) =
   useEffect(
     () => {
       if (haveTarget) {
-        console.log('updateTargetData');
         updateTargetData(data);
       }
     },
