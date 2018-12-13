@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { string } from 'yup';
 import type { ValidationObject } from './type.js.flow';
 
-function useTextInput(initialValue: string = '', schema: ValidationObject) {
+function useEnumInput(initialValue: string = '', schema: ValidationObject) {
   // $FlowFixMe: Missing type annotation.
   const [value, setValue] = useState(initialValue || '');
   const [focus, setFocus] = useState(false);
@@ -24,6 +24,7 @@ function useTextInput(initialValue: string = '', schema: ValidationObject) {
 
   return {
     value,
+    setValue,
     onChange,
     onFocus,
     onBlur,
@@ -32,4 +33,4 @@ function useTextInput(initialValue: string = '', schema: ValidationObject) {
   };
 }
 
-export default useTextInput;
+export default useEnumInput;

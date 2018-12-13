@@ -3,7 +3,7 @@ import * as React from 'react';
 import matchSorter from 'match-sorter';
 import Icon from 'components/Icon';
 import { SearchSelectInput, DefaultSearchSelect, DefaultOptions } from 'components/Form';
-import { useTextInput, usePrevious } from 'modules/form/hooks';
+import { useEnumInput, usePrevious } from 'modules/form/hooks';
 
 import { EnumInputStyle, DeleteButtonStyle } from './style';
 
@@ -29,7 +29,7 @@ const defaultProps = {
 };
 
 export default function EnumInput({ data, value, onChange, onRemove }: Props) {
-  const { hasError, isFocused, setValue, ...inputHandlers } = useTextInput(value.name, {
+  const { hasError, isFocused, setValue, ...inputHandlers } = useEnumInput(value.name, {
     isRequired: false,
   });
 
