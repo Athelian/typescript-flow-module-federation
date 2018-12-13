@@ -6,7 +6,6 @@ import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { Query } from 'react-apollo';
 import { isEmpty } from 'utils/fp';
-import logger from 'utils/logger';
 import { ActionContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
 import Icon from 'components/Icon';
@@ -65,7 +64,7 @@ const Order = ({ intl }: Props) => (
                     });
 
                     return (
-                      <>
+                      <ActionEffect data={order}>
                         <Subscribe to={[ActionContainer]}>
                           {({ clearResult }) => (
                             <SortFilter
@@ -261,7 +260,7 @@ const Order = ({ intl }: Props) => (
                             )}
                           </ScrollToResult>
                         </div>
-                      </>
+                      </ActionEffect>
                     );
                   }}
                 </QueryHandler>
