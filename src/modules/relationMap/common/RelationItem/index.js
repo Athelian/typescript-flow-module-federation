@@ -21,16 +21,13 @@ import TotalCard from 'components/RelationMap/OrderElement/TotalCard';
 import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
 import Tags from 'components/RelationMap/OrderElement/Tags';
 import ShipmentCard from 'components/RelationMap/ShipmentElement';
-import ShipmentHeader from 'components/RelationMap/ShipmentElement/ShipmentHeader';
 import ShipmentCollapsed from 'components/RelationMap/ShipmentElement/ShipmentCollapsed';
 
 import { ItemWrapperStyle, ShipmentCardStyle, ShipmentCardTotalStyle } from './style';
 
 type OptionalProps = {
   data: Object,
-  isCollapsed: boolean,
   isFocused: boolean,
-  // hasRelation?: boolean,
   focusMode?: boolean,
   onClick: Function,
   onDoubleClick?: Function,
@@ -39,7 +36,6 @@ type OptionalProps = {
 
 const defaultProps = {
   data: {},
-  isCollapsed: false,
   isFocused: false,
   focusMode: false,
   onClick: () => {},
@@ -51,17 +47,7 @@ type Props = OptionalProps & {
 };
 
 const Item = (props: Props) => {
-  const {
-    type,
-    data,
-    onClick,
-    isFocused,
-    // hasRelation,
-    isCollapsed,
-    onDoubleClick,
-    focusMode,
-    actions,
-  } = props;
+  const { type, data, onClick, isFocused, onDoubleClick, focusMode, actions } = props;
   if (typeof type === 'string' && /LINK-[0-4]/.test(type)) {
     const [, linkType] = type.split('-') || [];
     return (
@@ -139,14 +125,6 @@ const Item = (props: Props) => {
     case SHIPMENT: {
       return (
         <>
-          <ShipmentHeader
-            label={`SHIPMENT ${data.id}`}
-            isChecked
-            ordersNo={data.orderCount}
-            batchesNo={data.batchCount}
-            onToggle={onClick}
-            isCollapsed={isCollapsed}
-          />
           <BaseCard
             showActionsOnHover
             icon={type}
@@ -167,14 +145,6 @@ const Item = (props: Props) => {
     case SHIPMENT_ALL: {
       return (
         <>
-          <ShipmentHeader
-            label={`SHIPMENT ${data.id}`}
-            isChecked
-            ordersNo={data.orderCount}
-            batchesNo={data.batchCount}
-            onToggle={onClick}
-            isCollapsed={isCollapsed}
-          />
           <BaseCard
             showActionsOnHover
             icon="SHIPMENT"

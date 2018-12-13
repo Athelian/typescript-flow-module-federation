@@ -62,9 +62,7 @@ export const ItemWrapperStyle = (
 ) => {
   const focused = getHighlightColor(isFocused, isTargeted, isCurrentFocused);
   return css`
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    border-radius: 10px;
     border: 5px solid ${focused};
     display: flex;
     flex-direction: column;
@@ -74,7 +72,7 @@ export const ItemWrapperStyle = (
     height: fit-content;
     min-height: 50px;
     max-height: 200px;
-    margin-bottom: 15px;
+    margin: 0 0 15px 0;
     ${fontSizes.MAIN};
     font-weight: bold;
     color: ${colors.BLACK};
@@ -86,10 +84,10 @@ export const ShipmentCardStyle = css`
   width: 100%;
   height: 160px;
   grid-row: span 3;
-  margin-bottom: 35px;
+  margin: 0 0 15px 0;
   min-width: 370px;
 `;
 
 export const ShipmentCardTotalStyle = css`
-  margin-bottom: 30px;
+  margin: 0 0 15px 0;
 `;

@@ -11,7 +11,7 @@ type Props = {
   label: string | React.Node,
   no: number,
   onClick?: Function,
-  children: React.Node,
+  children?: React.Node,
 };
 
 const EntityHeader = ({ icon, color, label, no, onClick, children }: Props) => (

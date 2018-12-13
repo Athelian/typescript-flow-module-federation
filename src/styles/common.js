@@ -16,7 +16,7 @@ export const colors = {
   GRAY_DARK_1: '#555555',
   GRAY_LIGHT: '#ccc',
   GRAY_VERY_LIGHT: '#ddd',
-  GRAY_QUITE_LIGHT: '#f2f2f2',
+  GRAY_QUITE_LIGHT: '#ddd',
   GRAY_SUPER_LIGHT: '#eeeeee',
   ALMOST_WHITE: '#f3f3f3',
   WHITE: '#ffffff',

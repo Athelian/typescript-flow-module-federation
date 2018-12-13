@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { scrollbars, colors } from 'styles/common';
+import { scrollbars } from 'styles/common';
 
 export const OrderListWrapperStyle: string = css`
   grid-column: span 3;
@@ -10,7 +10,6 @@ export const OrderListWrapperStyle: string = css`
   min-height: 0;
   display: grid;
   grid-template-columns: 300px 20px 300px 20px 300px;
-  background-color: ${colors.WHITE};
   padding: 20px 20px 100px 20px;
 `;
 

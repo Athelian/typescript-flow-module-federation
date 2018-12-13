@@ -3,29 +3,20 @@ import { css } from 'react-emotion';
 import { layout } from 'styles/common';
 
 export const SortFilterWrapperStyle: string = css`
-  display: flex;
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 20px;
+  align-items: center;
+  padding: 0 20px;
   width: 100%;
-  z-index: 2;
+  z-index: 3;
 `;
 
 export const SortWrapperStyle: string = css`
-  flex: 0.96;
-
-  > div:first-child > div:first-child {
-    width: calc(100% - 20px);
-  }
+  display: flex;
+  align-items: center;
 `;
 
 export const GroupFilterWrapperStyle: string = css`
-  flex: 3.8;
-`;
-
-export const GroupFilterStyle: string = css`
-  float: left;
-  ${layout.HORIZONTAL};
-  justify-content: flex-end;
+  display: flex;
   align-items: center;
-  > div:nth-child(2) {
-    width: calc(100% - 30px);
-  }
 `;
