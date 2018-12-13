@@ -70,10 +70,11 @@ export default class ConnectContainer extends Container<State> {
   connectExistingOrder = async (
     client: ApolloClient<any>,
     target: Object,
-    selectedItem: Object
+    selectedItem: Object,
+    filter: Object
   ) => {
     const newTarget = await connectExistingOrder(client, target, selectedItem);
-    await deleteItemAndBatchInOrder(client, target);
+    await deleteItemAndBatchInOrder(client, target, filter);
     return newTarget;
   };
 
