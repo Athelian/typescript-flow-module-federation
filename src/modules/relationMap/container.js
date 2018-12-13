@@ -152,6 +152,66 @@ export default class RelationMapContainer extends Container<RelationMapState> {
     }));
   };
 
+  updateTargetData = (data: Object) => {
+    this.setState(prevState => {
+      const {
+        order: orderData,
+        orderItem: orderItemData,
+        batch: batchData,
+        shipment: shipmentData,
+      } = data;
+      const { order = {}, orderItem = {}, batch = {}, shipment = {} } = prevState.targetedItem;
+      const targetOrder = Object.keys(order).reduce(
+        (target, id) =>
+          Object.assign(target, {
+            [id]: {
+              ...get({}, `${id}.data`, orderData),
+              ...(order[id].isNew ? { isNew: order[id].isNew } : {}),
+            },
+          }),
+        {}
+      );
+      const targetOrderItem = Object.keys(orderItem).reduce(
+        (target, id) =>
+          Object.assign(target, {
+            [id]: {
+              ...get({}, `${id}.data`, orderItemData),
+              ...(orderItem[id].isNew ? { isNew: orderItem[id].isNew } : {}),
+            },
+          }),
+        {}
+      );
+      const targetBatch = Object.keys(batch).reduce(
+        (target, id) =>
+          Object.assign(target, {
+            [id]: {
+              ...get({}, `${id}.data`, batchData),
+              ...(batch[id].isNew ? { isNew: batch[id].isNew } : {}),
+            },
+          }),
+        {}
+      );
+      const targetShipment = Object.keys(shipment).reduce(
+        (target, id) =>
+          Object.assign(target, {
+            [id]: {
+              ...get({}, `${id}.data`, shipmentData),
+              ...(shipment[id].isNew ? { isNew: shipment[id].isNew } : {}),
+            },
+          }),
+        {}
+      );
+      return {
+        targetedItem: {
+          order: targetOrder,
+          orderItem: targetOrderItem,
+          batch: targetBatch,
+          shipment: targetShipment,
+        },
+      };
+    });
+  };
+
   changeMode = (focusMode: string) => {
     this.setState({
       focusMode,

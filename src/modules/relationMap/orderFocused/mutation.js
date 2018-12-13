@@ -76,15 +76,6 @@ export const cloneOrderItemMutation: Object = gql`
         ...orderBasicFragment
         orderItems {
           ...orderItemRmFragment
-          order {
-            ...orderCardFragment
-            orderItems {
-              id
-              batches {
-                id
-              }
-            }
-          }
         }
         shipments {
           ...shipmentRMFragment
@@ -126,35 +117,6 @@ export const cloneBatchMutation: Object = gql`
     batchCreate(input: $input) {
       batch {
         ...batchFormFragment
-        orderItem {
-          id
-          price {
-            ...priceFragment
-          }
-          order {
-            ...orderCardFragment
-            orderItems {
-              id
-              batches {
-                id
-              }
-            }
-          }
-          productProvider {
-            id
-            product {
-              id
-              name
-              serial
-            }
-            exporter {
-              ...partnerNameFragment
-            }
-            supplier {
-              ...partnerNameFragment
-            }
-          }
-        }
       }
       violations {
         ...violationFragment
