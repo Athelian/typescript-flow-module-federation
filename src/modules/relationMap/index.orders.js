@@ -23,8 +23,8 @@ import AdvancedFilter from './common/SortFilter/AdvancedFilter';
 import {
   OrderFocusGridWrapperStyle,
   OrderFocusEntityHeaderWrapperStyle,
-  ShipmentBadgeContainerStyle,
-  ShipmentToggleContainerStyle,
+  AllShipmentsToggleWrapperStyle,
+  AllShipmentsIconStyle,
 } from './style';
 import messages from './messages';
 
@@ -129,7 +129,11 @@ const Order = ({ intl }: Props) => (
 
                         <div className={OrderFocusGridWrapperStyle}>
                           <Subscribe to={[RelationMapContainer]}>
-                            {({ selectAll: selectAllNative, unSelectAll, state: { targetedItem } }) => {
+                            {({
+                              selectAll: selectAllNative,
+                              unSelectAll,
+                              state: { targetedItem },
+                            }) => {
                               const {
                                 order: targetedOrders,
                                 orderItem: targetedItems,
@@ -196,23 +200,24 @@ const Order = ({ intl }: Props) => (
                                   />
                                   <ShipmentToggleValue>
                                     {({ value: { isToggle, total }, assign }) => (
-                                      <div className={ShipmentBadgeContainerStyle}>
-                                        <EntityHeader
-                                          icon="SHIPMENT"
-                                          color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
-                                          label={intl.formatMessage(messages.shipmentsLabel)}
-                                          no={sumShipments + total}
-                                          onClick={() => {
-                                            if (!shipmentSelected && selectAll) {
-                                              selectAll('shipment');
-                                            }
-                                            if (shipmentSelected && unSelectAll) {
-                                              unSelectAll('shipment');
-                                            }
-                                          }}
-                                        />
-                                        <div className={ShipmentToggleContainerStyle}>
-                                          <Icon icon="SHIPMENT" />
+                                      <EntityHeader
+                                        icon="SHIPMENT"
+                                        color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
+                                        label={intl.formatMessage(messages.shipmentsLabel)}
+                                        no={sumShipments + total}
+                                        onClick={() => {
+                                          if (!shipmentSelected && selectAll) {
+                                            selectAll('shipment');
+                                          }
+                                          if (shipmentSelected && unSelectAll) {
+                                            unSelectAll('shipment');
+                                          }
+                                        }}
+                                      >
+                                        <div className={AllShipmentsToggleWrapperStyle}>
+                                          <div className={AllShipmentsIconStyle}>
+                                            <Icon icon="SHIPMENT" />
+                                          </div>
                                           <Label>
                                             <FormattedMessage
                                               id="modules.RelationMaps.label.all"
@@ -220,17 +225,17 @@ const Order = ({ intl }: Props) => (
                                             />{' '}
                                             <FormattedMessage {...messages.shipmentsLabel} />
                                           </Label>
-                                            <ToggleInput
-                                              toggled={isToggle}
-                                              onToggle={() =>
-                                                assign({
-                                                  isToggle: !isToggle,
-                                                  total: 0,
-                                                })
-                                              }
-                                            />
+                                          <ToggleInput
+                                            toggled={isToggle}
+                                            onToggle={() =>
+                                              assign({
+                                                isToggle: !isToggle,
+                                                total: 0,
+                                              })
+                                            }
+                                          />
                                         </div>
-                                      </div>
+                                      </EntityHeader>
                                     )}
                                   </ShipmentToggleValue>
                                 </div>

@@ -31,15 +31,19 @@ export const OrderFocusEntityHeaderWrapperStyle: string = css`
   z-index: 0;
 `;
 
-export const ShipmentBadgeContainerStyle = css`
-  display: flex;
-`;
-
-export const ShipmentToggleContainerStyle = css`
-  display: flex;
+export const AllShipmentsToggleWrapperStyle = css`
+  ${layout.GRID_HORIZONTAL};
   color: ${colors.GRAY_DARK};
   align-items: center;
 `;
+
+export const AllShipmentsIconStyle = css`
+  color: ${colors.GRAY_LIGHT};
+  ${fontSizes.SMALL};
+  margin: 0 5px 0 0;
+`;
+
+
 
 export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`
   grid-column: span 3;

@@ -6,8 +6,7 @@ import BatchCard from 'components/RelationMap/ProductElement/BatchCard';
 import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
 import DetailFocused, { ToggleSlide } from '../common/SlideForm';
 import RelationView from '../common/RelationView';
-
-import { Row, BatchListWrapperStyle, ProductFocusContent, BatchListStyle } from './style';
+import { ProductListWrapperStyle, Row, BatchListWrapperStyle, BatchListStyle } from './style';
 
 type Props = {
   items: Array<Object>,
@@ -19,7 +18,7 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => (
     <RelationView
       items={items}
       hasMore={hasMore}
-      className={ProductFocusContent}
+      className={ProductListWrapperStyle}
       onLoadMore={loadMore}
       itemWidth={200}
       isEmpty={items.length === 0}

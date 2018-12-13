@@ -7,6 +7,7 @@ export const GenericNavBarStyle: string = css`
   align-items: center;
   width: 100%;
   height: 50px;
+  flex-shrink: 0;
   background: ${colors.WHITE};
   ${shadows.HEADER};
   ${transitions.EXPAND};
