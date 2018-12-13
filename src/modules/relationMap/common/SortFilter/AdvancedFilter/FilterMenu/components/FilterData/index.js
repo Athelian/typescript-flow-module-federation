@@ -17,9 +17,6 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
   if (!name) {
     return null;
   }
-  if (name === 'origin') {
-    console.log({ field, data, name });
-  }
   switch (name) {
     case 'createdAt':
     case 'updatedAt':

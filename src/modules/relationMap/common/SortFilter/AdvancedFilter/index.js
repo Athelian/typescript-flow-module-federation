@@ -2,7 +2,7 @@
 import React, { useRef, useReducer, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { getByPath, getByPathWithDefault, omit, isEmpty } from 'utils/fp';
+import { getByPath, getByPathWithDefault, omit, isEmpty, isNullOrUndefined } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -142,7 +142,7 @@ const getFilterValue = (name: string, data: any) => {
     case 'forwarder':
       return data.map(d => d.id);
     case 'origin':
-      return data.filter(d => d.name !== '').map(d => d.name);
+      return data.filter(d => !isNullOrUndefined(d)).map(d => d.name);
     case 'createdAt':
     case 'updatedAt':
     case 'deliveredAt':
@@ -306,7 +306,6 @@ function reducer(state, action) {
       const selected =
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
       let newSelected = {};
-      console.log({ selectItem, field, selected });
       if (selectItem == null) {
         newSelected = omit([field], selected);
       } else {
