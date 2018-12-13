@@ -77,6 +77,7 @@ export const removeAdditionBatchFields: Function = omit([
   'orderItemId',
   'actionType',
   'batchedQuantity',
+  'isNew',
   '__typename',
 ]);
 export const removeAdditionOrderItemFields: Function = omit([
