@@ -250,7 +250,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
   logger.warn({ selected, mappingObjects });
   logger.warn({ orderIds, orderItemsIds, batchIds, shipmentIds });
-  const ids = orderIds.filter(id => !!id);
   const { entities } = normalize({ orders: data });
   const orderColumnFieldsFilter = findColumns({
     showAll,
@@ -416,7 +415,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                           batchCustomFieldsFilter,
                           shipmentCustomFieldsFilter,
                         }),
-                        ids,
+                        ids: orderIds,
                       }}
                     />
                     {errorMessage && errorMessage.length > 0 && (
