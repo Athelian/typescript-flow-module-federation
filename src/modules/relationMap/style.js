@@ -13,7 +13,6 @@ export const ResetContentWrapperStyle: string = css`
 
 export const OrderFocusGridWrapperStyle: string = css`
   display: grid;
-  /* grid-template-columns: 320px 20px 320px 20px 320px 1fr; */
   grid-template-columns: 320px 320px 320px minmax(900px, 1fr);
   grid-template-rows: 50px 1fr;
   width: 100%;
@@ -30,21 +29,6 @@ export const OrderFocusEntityHeaderWrapperStyle: string = css`
   background-color: ${colors.WHITE};
   ${shadows.HEADER};
   z-index: 0;
-`;
-
-export const OrderFocusLeftWrapperStyle: string = css`
-  grid-column: span 3;
-  overflow-x: hidden;
-  overflow-y: auto;
-  ${scrollbars.MAIN};
-  min-height: 0;
-`;
-
-export const OrderFocusRightWrapperStyle: string = css`
-  overflow-x: hidden;
-  overflow-y: auto;
-  ${scrollbars.MAIN};
-  min-height: 0;
 `;
 
 export const InfiniteScrollWrapperStyle = (spacing: number = 0) => css`

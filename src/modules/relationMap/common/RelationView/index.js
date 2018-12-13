@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+import { Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
-import { EmptyMessageStyle, OrderFocusLeftWrapperStyle } from '../style';
 
 type OptionalProps = {
   isLoading: boolean,
@@ -43,25 +43,27 @@ class RelationView extends React.PureComponent<Props> {
       customRender,
       id,
     } = this.props;
+
     if (isLoading) {
       return <LoadingIcon />;
     }
+
     if (isEmpty) {
-      return <div className={EmptyMessageStyle}>{emptyMessage}</div>;
+      return <Display>{emptyMessage}</Display>;
     }
+
     return (
-      <div id={id} className={OrderFocusLeftWrapperStyle}>
-        <InfiniteScroll
-          className={className}
-          loadMore={onLoadMore}
-          hasMore={hasMore}
-          loader={<LoadingIcon key="loading" />}
-          useWindow={false}
-        >
-          {customRender && customRender()}
-          {!customRender && items && render && items.map((item, index) => render({ item, index }))}
-        </InfiniteScroll>
-      </div>
+      <InfiniteScroll
+        className={className}
+        loadMore={onLoadMore}
+        hasMore={hasMore}
+        loader={<LoadingIcon key="loading" />}
+        useWindow={false}
+        id={id}
+      >
+        {customRender && customRender()}
+        {!customRender && items && render && items.map((item, index) => render({ item, index }))}
+      </InfiniteScroll>
     );
   }
 }

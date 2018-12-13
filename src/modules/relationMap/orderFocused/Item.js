@@ -4,7 +4,7 @@ import { Subscribe } from 'unstated';
 import { getByPathWithDefault as get } from 'utils/fp';
 import { cx } from 'react-emotion';
 import { BooleanValue } from 'react-values';
-import { TagValue } from 'modules/relationMap/common/ToggleTag';
+import { TagValue } from 'modules/relationMap/common/SortFilter/ToggleTag';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import { SelectedShipment, SelectedOrder } from 'modules/relationMap/common/SelectedConnect';
 import NewItemBadge from 'modules/relationMap/common/NewItemBadge';
@@ -133,6 +133,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           !isCollapsed || focusMode === 'TARGET'
             ? ItemWrapperStyle(false)
             : ItemWrapperStyle(isFocused, isTargeted);
+        
         switch (type) {
           default: {
             return <div />;

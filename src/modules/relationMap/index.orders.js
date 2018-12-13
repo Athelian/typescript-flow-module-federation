@@ -8,11 +8,10 @@ import { isEmpty } from 'utils/fp';
 import logger from 'utils/logger';
 import { ActionContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
-import LoadingIcon from 'components/LoadingIcon';
 import OrderFocused from './orderFocused';
 import query from './orderFocused/query';
 import { formatNodes, formatOrders as formatOrderData } from './orderFocused/formatter';
-import QueryHandler from './common/QueryHandler';
+import { QueryHandler } from './common';
 import ScrollToResult from './common/ScrollToResult';
 import SummaryBadge from './common/SummaryBadge';
 import { ActionSubscribe } from './common/ActionPanel';
@@ -42,6 +41,7 @@ const Order = ({ intl }: Props) => (
               {({ state: { result, scrolled }, setScroll }) => (
                 <QueryHandler
                   model="orders"
+                  loading={loading}
                   filter={{ perPage }}
                   data={data}
                   fetchMore={fetchMore}
@@ -51,6 +51,7 @@ const Order = ({ intl }: Props) => (
                     const formatedNodes =
                       isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result);
                     const order = formatOrderData(formatedNodes || []);
+
                     return (
                       <>
                         <ActionSubscribe filter={filterVariables} />
@@ -112,42 +113,37 @@ const Order = ({ intl }: Props) => (
                             />
                           )}
                         </Subscribe>
-
-                        {loading ? (
-                          <LoadingIcon />
-                        ) : (
-                          <div className={OrderFocusGridWrapperStyle}>
-                            <Subscribe to={[RelationMapContainer]}>
-                              {({ selectAll, unSelectAll, state: { targetedItem } }) => (
-                                <div className={OrderFocusEntityHeaderWrapperStyle}>
-                                  <SummaryBadge
-                                    summary={order}
-                                    targetedItem={targetedItem}
-                                    unSelectAll={unSelectAll}
-                                    selectAll={selectAll(order)}
-                                  />
-                                </div>
-                              )}
-                            </Subscribe>
-
-                            <ScrollToResult
-                              id="OrderMapWrapper"
-                              result={result}
-                              scrolled={scrolled}
-                              setScroll={setScroll}
-                            >
-                              {({ id }) => (
-                                <OrderFocused
-                                  id={id}
-                                  order={order}
-                                  hasMore={hasMore}
-                                  loadMore={loadMore}
-                                  nodes={formatedNodes}
+                        <div className={OrderFocusGridWrapperStyle}>
+                          <Subscribe to={[RelationMapContainer]}>
+                            {({ selectAll, unSelectAll, state: { targetedItem } }) => (
+                              <div className={OrderFocusEntityHeaderWrapperStyle}>
+                                <SummaryBadge
+                                  summary={order}
+                                  targetedItem={targetedItem}
+                                  unSelectAll={unSelectAll}
+                                  selectAll={selectAll(order)}
                                 />
-                              )}
-                            </ScrollToResult>
-                          </div>
-                        )}
+                              </div>
+                            )}
+                          </Subscribe>
+
+                          <ScrollToResult
+                            id="OrderMapWrapper"
+                            result={result}
+                            scrolled={scrolled}
+                            setScroll={setScroll}
+                          >
+                            {({ id }) => (
+                              <OrderFocused
+                                id={id}
+                                order={order}
+                                hasMore={hasMore}
+                                loadMore={loadMore}
+                                nodes={formatedNodes}
+                              />
+                            )}
+                          </ScrollToResult>
+                        </div>
                       </>
                     );
                   }}

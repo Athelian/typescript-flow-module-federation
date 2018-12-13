@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import ProductFocused from './productFocused';
 import query from './productFocused/query';
-import QueryHandler from './common/QueryHandler';
+import { QueryHandler } from './common';
 import { SortFilter, SortFilterHandler } from './common/SortFilter';
 import messages from './messages';
 

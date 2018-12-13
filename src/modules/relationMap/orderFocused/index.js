@@ -4,21 +4,16 @@ import { createObjectValue, BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
 import { Subscribe } from 'unstated';
-import {
-  OrderFocusRightWrapperStyle,
-  OrderMapWrapperStyle,
-  ShipmentScrollWrapperStyle,
-} from 'modules/relationMap/style';
 import { shipmentListQuery } from 'modules/relationMap/orderFocused/query';
 import { ActionContainer } from 'modules/relationMap/containers';
-import RelationView from '../common/RelationView';
 import SlideForm from '../common/SlideForm';
 import DeleteDialog from '../common/Dialog/DeleteDialog';
 import ShipmentList from '../common/ShipmentList';
-import QueryHandler from '../common/QueryHandler';
+import { QueryHandler, RelationView } from '../common';
 import { ShipmentToggleValue } from '../common/SummaryBadge';
 import { getItemData, getItemType } from './relation';
 import Item from './Item';
+import { OrderListWrapperStyle, ShipmentListWrapperStyle } from './style';
 
 type OptionalProps = {
   id: string,
@@ -47,7 +42,7 @@ const OrderFocused = ({
   <>
     <RelationView
       id={id}
-      className={OrderMapWrapperStyle}
+      className={OrderListWrapperStyle}
       isEmpty={nodes ? nodes.length === 0 : true}
       spacing={70}
       emptyMessage={
@@ -68,6 +63,7 @@ const OrderFocused = ({
                 const key = `relation-${relationIndex}`;
                 const itemData = getItemData({ order, orderItem, batch }, relation) || {};
                 const itemType = getItemType(relation.type);
+                console.log(relation);
                 return (
                   <Item
                     key={key}
@@ -117,8 +113,8 @@ const OrderFocused = ({
                         hasMore: hasMoreShipment,
                         loadMore: loadMoreShipment,
                       }) => (
-                        <div className={ShipmentScrollWrapperStyle}>
                           <RelationView
+                          className={ShipmentListWrapperStyle}
                             isEmpty={shipmentNodes ? shipmentNodes.length === 0 : true}
                             spacing={50}
                             hasMore={hasMoreShipment}
@@ -161,7 +157,6 @@ const OrderFocused = ({
                               </>
                             )}
                           />
-                        </div>
                       )}
                     </QueryHandler>
                   )}
@@ -169,7 +164,7 @@ const OrderFocused = ({
               );
             }
             return (
-              <div className={OrderFocusRightWrapperStyle}>
+              <div className={ShipmentListWrapperStyle}>
                 <ShipmentList shipment={shipment} result={result.shipment} />
               </div>
             );

@@ -1,18 +1,21 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes } from 'styles/common';
+import { scrollbars, colors } from 'styles/common';
 
-export const OrderListWrapperStyle = (itemWidth: number, spacing: number) => css`
+export const OrderListWrapperStyle: string = css`
+  grid-column: span 3;
+  overflow-x: hidden;
+  overflow-y: auto;
+  ${scrollbars.MAIN};
+  min-height: 0;
   display: grid;
-  grid-template-columns: ${itemWidth}px auto ${itemWidth}px auto ${itemWidth}px;
-  grid-auto-rows: min-content;
-  grid-column-gap: ${spacing}px;
-  grid-row-gap: 20px;
-  padding: 50px 20px;
+  grid-template-columns: 300px 20px 300px 20px 300px;
+  background-color: ${colors.WHITE};
 `;
 
-export const EmptyMessageStyle = css`
-  ${fontSizes.MAIN};
-  font-weight: bold;
-  color: ${colors.BLACK};
+export const ShipmentListWrapperStyle: string = css`
+  overflow-x: hidden;
+  overflow-y: auto;
+  ${scrollbars.MAIN};
+  min-height: 0;
 `;

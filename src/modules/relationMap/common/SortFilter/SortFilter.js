@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { SortInput, SearchInput, GenericNavBar } from 'components/NavBar';
-import ToggleTag from 'modules/relationMap/common/ToggleTag';
+import ToggleTag from './ToggleTag';
 import {
   SortFilterWrapperStyle,
   GroupFilterStyle,
