@@ -76,6 +76,15 @@ export const cloneOrderItemMutation: Object = gql`
         ...orderBasicFragment
         orderItems {
           ...orderItemRmFragment
+          order {
+            ...orderCardFragment
+            orderItems {
+              id
+              batches {
+                id
+              }
+            }
+          }
         }
         shipments {
           ...shipmentRMFragment

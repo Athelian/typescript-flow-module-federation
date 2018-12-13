@@ -182,7 +182,7 @@ export const connectExistingOrder = async (client: any, target: Object, selected
       }
       return Object.assign(result, {
         [orderItem.id]: {
-          ...orderItemData,
+          ...cleanOrderItem(orderItemData),
           batches,
         },
       });

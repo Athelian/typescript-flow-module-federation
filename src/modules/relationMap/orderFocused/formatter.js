@@ -88,6 +88,7 @@ export const removeAdditionOrderItemFields: Function = omit([
   'order',
   'parentId',
   'index',
+  'isNew',
   'actionType',
   '__typename',
 ]);
