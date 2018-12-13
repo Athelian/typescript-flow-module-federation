@@ -63,261 +63,267 @@ const LoadingMessage = ({ type }: LoadingProps) => {
   }
 };
 
+export const FilterContext = React.createContext<Object>({});
+
 const ActionSubscribe = ({ filter }: Props) => (
-  <ApolloConsumer>
-    {client => (
-      <Subscribe
-        to={[
-          RelationMapContainer,
-          ActionContainer,
-          CloneContainer,
-          SplitContainer,
-          ConnectContainer,
-        ]}
-      >
-        {(
-          {
-            state: { focusedItem, focusMode, targetedItem },
-            isTargetAnyItem,
-            isHighlighted,
-            resetFocusedItem,
-            addNewResult,
-            cancelTarget,
-          },
-          {
-            actionFunc,
-            setResult,
-            setAction,
-            setLoading,
-            setCurrentAction,
-            setError,
-            overrideState: setActionState,
-            state: { currentAction, loading, error },
-          },
-          { clone },
-          { split },
-          { reset: resetConnectAction }
-        ) => {
-          const onClickClone = () => {
-            const action = async () => {
-              setLoading(true);
-              try {
-                const [newResult, newFocus] = await clone({
-                  client,
-                  target: targetedItem,
-                  focusMode,
-                  filter,
-                });
-                addNewResult(newResult, newFocus);
-                setActionState({
-                  result: newResult,
-                  action: '',
-                  loading: false,
-                  error: false,
-                });
-              } catch (err) {
-                setLoading(false);
-                setError(!!err);
-                logger.error(err);
-              }
-            };
-            setCurrentAction(action);
-            action();
-          };
-          const onClickSplit = splitData => {
-            const action = async () => {
-              try {
+  <FilterContext.Provider value={filter}>
+    <ApolloConsumer>
+      {client => (
+        <Subscribe
+          to={[
+            RelationMapContainer,
+            ActionContainer,
+            CloneContainer,
+            SplitContainer,
+            ConnectContainer,
+          ]}
+        >
+          {(
+            {
+              state: { focusedItem, focusMode, targetedItem },
+              isTargetAnyItem,
+              isHighlighted,
+              resetFocusedItem,
+              addNewResult,
+              cancelTarget,
+            },
+            {
+              actionFunc,
+              setResult,
+              setAction,
+              setLoading,
+              setCurrentAction,
+              setError,
+              overrideState: setActionState,
+              state: { currentAction, loading, error },
+            },
+            { clone },
+            { split },
+            { reset: resetConnectAction }
+          ) => {
+            const onClickClone = () => {
+              const action = async () => {
                 setLoading(true);
-                const [splitResult, splitFocus] = await split(client, targetedItem, splitData);
-                addNewResult(splitResult, splitFocus);
-                setResult(splitResult);
-                setActionState({
-                  result: splitResult,
-                  action: '',
-                  loading: false,
-                  error: false,
-                });
-              } catch (err) {
-                setLoading(false);
-                setError(!!err);
-              }
+                try {
+                  const [newResult, newFocus] = await clone({
+                    client,
+                    target: targetedItem,
+                    focusMode,
+                    filter,
+                  });
+                  addNewResult(newResult, newFocus);
+                  setActionState({
+                    result: newResult,
+                    action: '',
+                    loading: false,
+                    error: false,
+                  });
+                } catch (err) {
+                  setLoading(false);
+                  setError(!!err);
+                  logger.error(err);
+                }
+              };
+              setCurrentAction(action);
+              action();
             };
-            setCurrentAction(action);
-            action();
-          };
-          const onCancelTarget = () => {
-            cancelTarget();
-            setAction('');
-            setError(false);
-            resetConnectAction();
-          };
-          const disabledSplit = isDisabledSplit(targetedItem);
-          const disabledMoveToShipment = isDisabledMoveToShipment(targetedItem);
-          const disabledMoveToOrder = isDisabledMoveToOrder(targetedItem);
-          const selectedSomeItem = isSelectSomeItem(targetedItem);
-          return (
-            <>
-              {isTargetAnyItem() && (
-                <>
-                  <ActionSelector target={targetedItem} onCancelTarget={onCancelTarget}>
-                    <>
-                      <TabItem
-                        className={TabItemStyled}
-                        label={
-                          <FormattedMessage
-                            id="modules.RelationMaps.label.clone"
-                            defaultMessage="CLONE"
-                          />
-                        }
-                        icon="CLONE"
-                        active={currentAction === 'clone'}
-                        onClick={() => setAction(currentAction !== 'clone' ? 'clone' : null)}
-                      />
-                      <TabItem
-                        className={TabItemStyled}
-                        label={
-                          <FormattedMessage
-                            id="modules.RelationMaps.label.split"
-                            defaultMessage="SPLIT"
-                          />
-                        }
-                        icon="SPLIT"
-                        disabled={disabledSplit}
-                        active={currentAction === 'split'}
-                        onClick={() => setAction(currentAction !== 'split' ? 'split' : null)}
-                      />
-                      <Subscribe to={[ConnectContainer]}>
-                        {({ state: { connectType }, setConnectType }) => (
-                          <TabItem
-                            className={TabItemStyled}
-                            label={
-                              <div className={MoveToWrapper}>
-                                <FormattedMessage {...messages.moveTo} />
-                                <Icon icon="ORDER" />
-                              </div>
-                            }
-                            icon="EXCHANGE"
-                            disabled={disabledMoveToOrder}
-                            active={currentAction === 'connect' && connectType === 'ORDER'}
-                            onClick={() => {
-                              setAction('connect');
-                              setConnectType('ORDER');
-                            }}
-                          />
-                        )}
-                      </Subscribe>
-                      <Subscribe to={[ConnectContainer]}>
-                        {({ state: { connectType }, setConnectType }) => (
-                          <TabItem
-                            className={TabItemStyled}
-                            label={
-                              <div className={MoveToWrapper}>
-                                <FormattedMessage {...messages.moveTo} />
-                                <Icon icon="SHIPMENT" />
-                              </div>
-                            }
-                            icon="EXCHANGE"
-                            disabled={disabledMoveToShipment}
-                            active={currentAction === 'connect' && connectType === 'SHIPMENT'}
-                            onClick={() => {
-                              setAction('connect');
-                              setConnectType('SHIPMENT');
-                            }}
-                          />
-                        )}
-                      </Subscribe>
-                      <BooleanValue>
-                        {({ value: opened, set: slideToggle }) => (
-                          <>
-                            <BaseButton
-                              icon="EDIT"
-                              label={
-                                <FormattedMessage
-                                  id="modules.RelationMaps.label.edit"
-                                  defaultMessage="EDIT"
-                                />
-                              }
-                              backgroundColor="TEAL"
-                              hoverBackgroundColor="TEAL_DARK"
-                              onClick={() => slideToggle(true)}
+            const onClickSplit = splitData => {
+              const action = async () => {
+                try {
+                  setLoading(true);
+                  const [splitResult, splitFocus] = await split(client, targetedItem, splitData);
+                  addNewResult(splitResult, splitFocus);
+                  setResult(splitResult);
+                  setActionState({
+                    result: splitResult,
+                    action: '',
+                    loading: false,
+                    error: false,
+                  });
+                } catch (err) {
+                  setLoading(false);
+                  setError(!!err);
+                }
+              };
+              setCurrentAction(action);
+              action();
+            };
+            const onCancelTarget = () => {
+              cancelTarget();
+              setAction('');
+              setError(false);
+              resetConnectAction();
+            };
+            const disabledSplit = isDisabledSplit(targetedItem);
+            const disabledMoveToShipment = isDisabledMoveToShipment(targetedItem);
+            const disabledMoveToOrder = isDisabledMoveToOrder(targetedItem);
+            const selectedSomeItem = isSelectSomeItem(targetedItem);
+            return (
+              <>
+                {isTargetAnyItem() && (
+                  <>
+                    <ActionSelector target={targetedItem} onCancelTarget={onCancelTarget}>
+                      <>
+                        <TabItem
+                          className={TabItemStyled}
+                          label={
+                            <FormattedMessage
+                              id="modules.RelationMaps.label.clone"
+                              defaultMessage="CLONE"
                             />
-                            <SlideView
-                              isOpen={opened}
-                              onRequestClose={() => slideToggle(false)}
-                              options={{ width: '1030px' }}
-                            >
-                              {opened && (
-                                <TableInlineEdit
-                                  selected={targetedItem}
-                                  onSave={() => {}}
-                                  onCancel={() => slideToggle(false)}
-                                  type="orders"
-                                />
-                              )}
-                            </SlideView>
-                          </>
-                        )}
-                      </BooleanValue>
-                    </>
-                  </ActionSelector>
-                  {!error && currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
-                  {!error && currentAction === 'split' && !disabledSplit && (
-                    <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
-                  )}
-                  {!error && currentAction === 'connect' && (
-                    <Subscribe to={[ConnectContainer]}>
-                      {connectContainer => {
-                        const {
-                          state: { connectType },
-                        } = connectContainer;
-                        const showMoveToShipment =
-                          connectType === 'SHIPMENT' && !disabledMoveToShipment;
-                        const showMoveToOrder = connectType === 'ORDER' && !disabledMoveToOrder;
-                        return (
-                          <ConnectPanel
-                            show={showMoveToShipment || showMoveToOrder}
-                            connect={connectContainer}
-                            targetedItem={targetedItem}
-                            onCancel={onCancelTarget}
-                          />
-                        );
-                      }}
-                    </Subscribe>
-                  )}
-                  {selectedSomeItem && (
-                    <ConstrainPanel
-                      disable={{
-                        disabledSplit,
-                        disabledMoveToShipment,
-                        disabledMoveToOrder,
-                      }}
-                    />
-                  )}
-                  {error && (
-                    <ErrorPanel onClickCancel={onCancelTarget} onClickRefresh={actionFunc} />
-                  )}
-                  <OutsideClickHandler ignoreClick onOutsideClick={() => {}}>
-                    <Dialog isOpen={loading} options={{ width: 300 }} onRequestClose={() => {}}>
-                      <div className={LoadingContainerStyle}>
-                        <LoadingIcon />
-                        <Label align="center">
-                          <LoadingMessage type={currentAction} />
-                        </Label>
-                        <Label align="center">
-                          <FormattedMessage {...messages.waiting} />
-                        </Label>
-                      </div>
-                    </Dialog>
-                  </OutsideClickHandler>
-                </>
-              )}
-              {isHighlighted() && <HighlightPanel item={focusedItem} onCancel={resetFocusedItem} />}
-            </>
-          );
-        }}
-      </Subscribe>
-    )}
-  </ApolloConsumer>
+                          }
+                          icon="CLONE"
+                          active={currentAction === 'clone'}
+                          onClick={() => setAction(currentAction !== 'clone' ? 'clone' : null)}
+                        />
+                        <TabItem
+                          className={TabItemStyled}
+                          label={
+                            <FormattedMessage
+                              id="modules.RelationMaps.label.split"
+                              defaultMessage="SPLIT"
+                            />
+                          }
+                          icon="SPLIT"
+                          disabled={disabledSplit}
+                          active={currentAction === 'split'}
+                          onClick={() => setAction(currentAction !== 'split' ? 'split' : null)}
+                        />
+                        <Subscribe to={[ConnectContainer]}>
+                          {({ state: { connectType }, setConnectType }) => (
+                            <TabItem
+                              className={TabItemStyled}
+                              label={
+                                <div className={MoveToWrapper}>
+                                  <FormattedMessage {...messages.moveTo} />
+                                  <Icon icon="ORDER" />
+                                </div>
+                              }
+                              icon="EXCHANGE"
+                              disabled={disabledMoveToOrder}
+                              active={currentAction === 'connect' && connectType === 'ORDER'}
+                              onClick={() => {
+                                setAction('connect');
+                                setConnectType('ORDER');
+                              }}
+                            />
+                          )}
+                        </Subscribe>
+                        <Subscribe to={[ConnectContainer]}>
+                          {({ state: { connectType }, setConnectType }) => (
+                            <TabItem
+                              className={TabItemStyled}
+                              label={
+                                <div className={MoveToWrapper}>
+                                  <FormattedMessage {...messages.moveTo} />
+                                  <Icon icon="SHIPMENT" />
+                                </div>
+                              }
+                              icon="EXCHANGE"
+                              disabled={disabledMoveToShipment}
+                              active={currentAction === 'connect' && connectType === 'SHIPMENT'}
+                              onClick={() => {
+                                setAction('connect');
+                                setConnectType('SHIPMENT');
+                              }}
+                            />
+                          )}
+                        </Subscribe>
+                        <BooleanValue>
+                          {({ value: opened, set: slideToggle }) => (
+                            <>
+                              <BaseButton
+                                icon="EDIT"
+                                label={
+                                  <FormattedMessage
+                                    id="modules.RelationMaps.label.edit"
+                                    defaultMessage="EDIT"
+                                  />
+                                }
+                                backgroundColor="TEAL"
+                                hoverBackgroundColor="TEAL_DARK"
+                                onClick={() => slideToggle(true)}
+                              />
+                              <SlideView
+                                isOpen={opened}
+                                onRequestClose={() => slideToggle(false)}
+                                options={{ width: '1030px' }}
+                              >
+                                {opened && (
+                                  <TableInlineEdit
+                                    selected={targetedItem}
+                                    onSave={() => {}}
+                                    onCancel={() => slideToggle(false)}
+                                    type="orders"
+                                  />
+                                )}
+                              </SlideView>
+                            </>
+                          )}
+                        </BooleanValue>
+                      </>
+                    </ActionSelector>
+                    {!error && currentAction === 'clone' && <ClonePanel onClick={onClickClone} />}
+                    {!error && currentAction === 'split' && !disabledSplit && (
+                      <SplitPanel targetedItem={targetedItem} onApply={onClickSplit} />
+                    )}
+                    {!error && currentAction === 'connect' && (
+                      <Subscribe to={[ConnectContainer]}>
+                        {connectContainer => {
+                          const {
+                            state: { connectType },
+                          } = connectContainer;
+                          const showMoveToShipment =
+                            connectType === 'SHIPMENT' && !disabledMoveToShipment;
+                          const showMoveToOrder = connectType === 'ORDER' && !disabledMoveToOrder;
+                          return (
+                            <ConnectPanel
+                              show={showMoveToShipment || showMoveToOrder}
+                              connect={connectContainer}
+                              targetedItem={targetedItem}
+                              onCancel={onCancelTarget}
+                            />
+                          );
+                        }}
+                      </Subscribe>
+                    )}
+                    {selectedSomeItem && (
+                      <ConstrainPanel
+                        disable={{
+                          disabledSplit,
+                          disabledMoveToShipment,
+                          disabledMoveToOrder,
+                        }}
+                      />
+                    )}
+                    {error && (
+                      <ErrorPanel onClickCancel={onCancelTarget} onClickRefresh={actionFunc} />
+                    )}
+                    <OutsideClickHandler ignoreClick onOutsideClick={() => {}}>
+                      <Dialog isOpen={loading} options={{ width: 300 }} onRequestClose={() => {}}>
+                        <div className={LoadingContainerStyle}>
+                          <LoadingIcon />
+                          <Label align="center">
+                            <LoadingMessage type={currentAction} />
+                          </Label>
+                          <Label align="center">
+                            <FormattedMessage {...messages.waiting} />
+                          </Label>
+                        </div>
+                      </Dialog>
+                    </OutsideClickHandler>
+                  </>
+                )}
+                {isHighlighted() && (
+                  <HighlightPanel item={focusedItem} onCancel={resetFocusedItem} />
+                )}
+              </>
+            );
+          }}
+        </Subscribe>
+      )}
+    </ApolloConsumer>
+  </FilterContext.Provider>
 );
 
 export default ActionSubscribe;

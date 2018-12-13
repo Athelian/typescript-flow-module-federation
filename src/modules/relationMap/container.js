@@ -134,6 +134,17 @@ const reduceNewLine = (lines: Array<string>, ids: Array<string>) =>
     return Object.assign(result, { [childId]: isSelected });
   }, {});
 
+const updateTargetData = (target: Object, data: Object) =>
+  Object.keys(target).reduce(
+    (result, id) =>
+      Object.assign(result, {
+        [id]: {
+          ...get({}, `${id}.data`, data),
+          ...(target[id].isNew ? { isNew: target[id].isNew } : {}),
+        },
+      }),
+    {}
+  );
 export default class RelationMapContainer extends Container<RelationMapState> {
   state = initState();
 
@@ -150,6 +161,26 @@ export default class RelationMapContainer extends Container<RelationMapState> {
         ...item,
       },
     }));
+  };
+
+  updateTargetData = (data: Object) => {
+    this.setState(prevState => {
+      const {
+        order: orderData,
+        orderItem: orderItemData,
+        batch: batchData,
+        shipment: shipmentData,
+      } = data;
+      const { order = {}, orderItem = {}, batch = {}, shipment = {} } = prevState.targetedItem;
+      return {
+        targetedItem: {
+          order: updateTargetData(order, orderData),
+          orderItem: updateTargetData(orderItem, orderItemData),
+          batch: updateTargetData(batch, batchData),
+          shipment: updateTargetData(shipment, shipmentData),
+        },
+      };
+    });
   };
 
   changeMode = (focusMode: string) => {

@@ -13,6 +13,7 @@ import messages from 'modules/relationMap/messages';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
 import { ToggleCollpased } from 'modules/relationMap/orderFocused';
+import { FilterContext } from 'modules/relationMap/common/ActionPanel/ActionSubscribe';
 import {
   LabelConnectStyle,
   GroupLabelButtonStyle,
@@ -109,76 +110,80 @@ const ApplyPanel = ({ connectType }: Props) => {
               <Label className={GroupLabelButtonStyle}>
                 {text}
                 <BaseButton label="CLEAR" className={FlatButtonStyle} onClick={reset} />
-                <ObjectValue>
-                  {({ value, assign: setDialog, set }) => (
-                    <>
-                      <BaseButton
-                        icon="CONFIRM"
-                        label={
-                          <FormattedMessage
-                            id="components.NavBar.filter.apply"
-                            defaultMessage="APPLY"
-                          />
-                        }
-                        onClick={async () => {
-                          if (connectType === 'SHIPMENT') {
-                            setLoading(true);
-                            await connectExistingShipment(client, targetedItem, selectedItem);
-                            const { batch = {} } = targetedItem;
-                            const isFocus = Object.keys(batch).some(batchId =>
-                              isHighlighted(batchId, 'batch')
-                            );
-                            if (isFocus) {
-                              selectFocusItem(prevFocus => ({
-                                ...prevFocus,
-                                shipment: { [selectedItem.id]: true },
-                              }));
+                <FilterContext.Consumer>
+                  {filter => (
+                    <ObjectValue>
+                      {({ value, assign: setDialog, set }) => (
+                        <>
+                          <BaseButton
+                            icon="CONFIRM"
+                            label={
+                              <FormattedMessage
+                                id="components.NavBar.filter.apply"
+                                defaultMessage="APPLY"
+                              />
                             }
-                            setSuccess(true);
-                            setLoading(false);
-                          } else if (connectType === 'ORDER') {
-                            const notSelectAllBatch = !isSelectAllBatch(targetedItem);
-                            const diffCurrency = findDiffCurrency(targetedItem, selectedItem);
-                            if (notSelectAllBatch || diffCurrency) {
-                              setDialog({
-                                isOpen: true,
-                                notSelectAllBatch,
-                                diffCurrency,
-                              });
-                            } else {
-                              connectExistingOrder(client, targetedItem, selectedItem);
-                            }
-                          }
-                        }}
-                      />
-                      <ToggleCollpased>
-                        {({ set: setCollapsed }) => (
-                          <ConfirmDialog
-                            width={400}
-                            isOpen={value.isOpen}
-                            onRequestClose={() => set('isOpen', false)}
-                            onCancel={() => set('isOpen', false)}
-                            message={<ConfirmMessage condition={value} />}
-                            onConfirm={async () => {
-                              set('isOpen', false);
-                              setLoading(true);
-                              const results = await connectExistingOrder(
-                                client,
-                                targetedItem,
-                                selectedItem,
-                                value
-                              );
-                              setSuccess(true);
-                              setCollapsed(selectedItem.id, false);
-                              addNewResult(...results);
-                              setLoading(false);
+                            onClick={async () => {
+                              if (connectType === 'SHIPMENT') {
+                                setLoading(true);
+                                await connectExistingShipment(client, targetedItem, selectedItem);
+                                const { batch = {} } = targetedItem;
+                                const isFocus = Object.keys(batch).some(batchId =>
+                                  isHighlighted(batchId, 'batch')
+                                );
+                                if (isFocus) {
+                                  selectFocusItem(prevFocus => ({
+                                    ...prevFocus,
+                                    shipment: { [selectedItem.id]: true },
+                                  }));
+                                }
+                                setSuccess(true);
+                                setLoading(false);
+                              } else if (connectType === 'ORDER') {
+                                const notSelectAllBatch = !isSelectAllBatch(targetedItem);
+                                const diffCurrency = findDiffCurrency(targetedItem, selectedItem);
+                                if (notSelectAllBatch || diffCurrency) {
+                                  setDialog({
+                                    isOpen: true,
+                                    notSelectAllBatch,
+                                    diffCurrency,
+                                  });
+                                } else {
+                                  connectExistingOrder(client, targetedItem, selectedItem, filter);
+                                }
+                              }
                             }}
                           />
-                        )}
-                      </ToggleCollpased>
-                    </>
+                          <ToggleCollpased>
+                            {({ set: setCollapsed }) => (
+                              <ConfirmDialog
+                                width={400}
+                                isOpen={value.isOpen}
+                                onRequestClose={() => set('isOpen', false)}
+                                onCancel={() => set('isOpen', false)}
+                                message={<ConfirmMessage condition={value} />}
+                                onConfirm={async () => {
+                                  set('isOpen', false);
+                                  setLoading(true);
+                                  const results = await connectExistingOrder(
+                                    client,
+                                    targetedItem,
+                                    selectedItem,
+                                    filter
+                                  );
+                                  setSuccess(true);
+                                  setCollapsed(selectedItem.id, false);
+                                  addNewResult(...results);
+                                  setLoading(false);
+                                }}
+                              />
+                            )}
+                          </ToggleCollpased>
+                        </>
+                      )}
+                    </ObjectValue>
                   )}
-                </ObjectValue>
+                </FilterContext.Consumer>
               </Label>
             </Panel>
           )}

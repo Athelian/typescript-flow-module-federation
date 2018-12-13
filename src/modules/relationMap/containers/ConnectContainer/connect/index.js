@@ -8,6 +8,7 @@ import {
   removeAdditionBatchFields,
   removeAdditionOrderItemFields,
 } from 'modules/relationMap/orderFocused/formatter';
+import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import { getExportId } from 'modules/relationMap/common/ActionPanel/util';
 import { getByPathWithDefault as get, compose, omit } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
@@ -98,7 +99,11 @@ export const connectExistingShipment = async (
   return target;
 };
 
-export const deleteItemAndBatchInOrder = async (client: any, target: Object) => {
+export const deleteItemAndBatchInOrder = async (
+  client: any,
+  target: Object,
+  filterVariables?: Object
+) => {
   const { orderItem: targetItem = {}, batch: targetBatch = {} } = target;
   const batchesWithoutItem = (Object.values(targetBatch): Array<any>).filter(item => {
     const itemId = item.parentId || item.orderItem.id || item.orderItemId;
@@ -143,6 +148,18 @@ export const deleteItemAndBatchInOrder = async (client: any, target: Object) => 
         id: inputId,
         input: { orderItems: orderItemInputs },
       },
+      update: (store, { data }) => {
+        if (filterVariables) {
+          const query = { query: orderListQuery, variables: filterVariables };
+          const orderList = store.readQuery(query);
+          const updateData = data.orderUpdate.order;
+          orderList.orders.nodes.forEach((order, orderIndex) => {
+            if (order.id === updateData.id) {
+              orderList.orders.nodes[orderIndex] = updateData;
+            }
+          });
+        }
+      },
     });
   });
   const result = await Promise.all(orderUpdateRequests);
@@ -182,7 +199,7 @@ export const connectExistingOrder = async (client: any, target: Object, selected
       }
       return Object.assign(result, {
         [orderItem.id]: {
-          ...orderItemData,
+          ...cleanOrderItem(orderItemData),
           batches,
         },
       });
