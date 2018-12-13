@@ -54,7 +54,12 @@ export default function PriceRange({
         }
       />
 
-      <NumberRangeInput min={min} max={max} onChangeMin={onChangeMin} onChangeMax={onChangeMax} />
+      <NumberRangeInput
+        min={min}
+        max={max}
+        onChangeMin={e => onChangeMin(e.target.value)}
+        onChangeMax={e => onChangeMax(e.target.value)}
+      />
     </div>
   );
 }

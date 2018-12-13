@@ -52,7 +52,7 @@ export default function EnumArrayInput({ enumType, values, onChange }: Props) {
 
       <NewButton
         label={<FormattedMessage {...messages.add} />}
-        onClick={() => onChange([...values, { name: '', description: '' }])}
+        onClick={() => onChange([...values, undefined])}
       />
     </div>
   );

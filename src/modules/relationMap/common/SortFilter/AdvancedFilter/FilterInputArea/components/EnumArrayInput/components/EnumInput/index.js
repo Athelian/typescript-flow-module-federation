@@ -51,6 +51,7 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
         inputValue={inputHandlers.value}
         renderSelect={({ ...selectProps }) => (
           <DefaultSearchSelect
+            forceHoverStyle
             {...selectProps}
             hasError={hasError}
             isOpen={isFocused}
@@ -77,7 +78,7 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
           });
           setTimeout(() => {
             inputHandlers.onBlur();
-            onChange({ name: '', description: '' });
+            onChange();
             inputHandlers.onFocus();
           }, 0);
         }}
@@ -94,10 +95,8 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
               },
             });
             setTimeout(() => {
-              onChange({
-                name: '',
-              });
               inputHandlers.onBlur();
+              onChange();
             }, 0);
           }
         }}

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { getByPath } from 'utils/fp';
+import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
@@ -64,7 +64,8 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
     }
     case 'price': {
       const { currency, min, max } = data;
-      if (!currency && !min && !max) return null;
+      if (isNullOrUndefined(currency) && isNullOrUndefined(min) && isNullOrUndefined(max))
+        return null;
       return (
         <div className={FilterDataWrapperStyle}>
           <button
@@ -83,12 +84,25 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
               }
             }}
           >
-            {!min && !max && currency && `${currency.name}`}
-            {min && <FormattedNumber value={min} suffix={currency ? currency.name : ''} />}
-            {min && !max && ' > '}
-            {min && max && ' - '}
-            {!min && max && ' < '}
-            {max && <FormattedNumber value={max} suffix={currency ? currency.name : ''} />}
+            {isNullOrUndefined(min) &&
+              isNullOrUndefined(max) &&
+              !isNullOrUndefined(currency) &&
+              `${currency.name}`}
+            {!isNullOrUndefined(min) && (
+              <FormattedNumber
+                value={min}
+                suffix={!isNullOrUndefined(currency) ? currency.name : ''}
+              />
+            )}
+            {!isNullOrUndefined(min) && isNullOrUndefined(max) && ' > '}
+            {!isNullOrUndefined(min) && !isNullOrUndefined(max) && ' - '}
+            {isNullOrUndefined(min) && !isNullOrUndefined(max) && ' < '}
+            {!isNullOrUndefined(max) && (
+              <FormattedNumber
+                value={max}
+                suffix={!isNullOrUndefined(currency) ? currency.name : ''}
+              />
+            )}
             <Icon icon="CLEAR" />
           </button>
         </div>
@@ -97,17 +111,19 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
     default:
       return (
         <div className={FilterDataWrapperStyle}>
-          {data.map(datum => (
-            <button
-              key={datum.id ? datum.id : uuid()}
-              className={FilterDataStyle}
-              type="button"
-              onClick={() => onRemove(datum)}
-            >
-              {field && getByPath(field, datum)}
-              <Icon icon="CLEAR" />
-            </button>
-          ))}
+          {data.map(datum =>
+            isNullOrUndefined(datum) ? null : (
+              <button
+                key={{}.hasOwnProperty.call(datum, 'id') ? datum.id : uuid()}
+                className={FilterDataStyle}
+                type="button"
+                onClick={() => onRemove(datum)}
+              >
+                {field && getByPath(field, datum)}
+                <Icon icon="CLEAR" />
+              </button>
+            )
+          )}
         </div>
       );
   }

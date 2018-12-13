@@ -25,7 +25,7 @@ export default function NumberRangeInput({ min, max, onChangeMin, onChangeMax }:
         }
         input={
           <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" value={min} onChange={onChangeMin} />
+            <NumberInput align="left" nullable value={min} onChange={onChangeMin} />
           </DefaultStyle>
         }
       />
@@ -38,7 +38,7 @@ export default function NumberRangeInput({ min, max, onChangeMin, onChangeMax }:
         }
         input={
           <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" value={max} onChange={onChangeMax} />
+            <NumberInput align="left" nullable value={max} onChange={onChangeMax} />
           </DefaultStyle>
         }
       />

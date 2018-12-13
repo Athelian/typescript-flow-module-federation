@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { isNullOrUndefined } from 'utils/fp';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
 import { FilterMenuItemWrapperStyle, FilterMenuItemStyle, FilterMenuLabelStyle } from './style';
 import FilterData from '../FilterData';
@@ -17,6 +18,9 @@ type Props = {
 };
 
 function isValid(name: string, data: any): boolean {
+  if (Array.isArray(data)) {
+    return data.filter(item => !isNullOrUndefined(item)).length > 0;
+  }
   return Object.keys(data).length > 0;
 }
 

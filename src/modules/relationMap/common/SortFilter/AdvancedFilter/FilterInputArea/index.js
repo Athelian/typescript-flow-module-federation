@@ -139,8 +139,8 @@ const getFilterInputArea = ({
               min={selectedItems.min}
               max={selectedItems.max}
               onChangeCurrency={currency => onToggleSelect(currency, 'currency')}
-              onChangeMin={e => onToggleSelect(e.target.value, 'min')}
-              onChangeMax={e => onToggleSelect(e.target.value, 'max')}
+              onChangeMin={min => onToggleSelect(min, 'min')}
+              onChangeMax={max => onToggleSelect(max, 'max')}
             />
           );
         case 'createdAt':

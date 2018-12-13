@@ -1,16 +1,30 @@
 // @flow
 import * as React from 'react';
-import { type InputProps as Props, defaultInputProps } from 'components/Form/Inputs/type';
-import { toFloat } from 'utils/number';
+import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
+import { toFloat, toFloatNullable } from 'utils/number';
+
+type OptionalProps = {
+  nullable: ?boolean,
+};
+
+type Props = OptionalProps & InputProps;
+
+const defaultProps = {
+  ...defaultInputProps,
+  nullable: false,
+};
 
 class NumberInput extends React.Component<Props> {
-  static defaultProps = defaultInputProps;
+  static defaultProps = defaultProps;
 
   handleChange = (evt: any) => {
-    const { onChange } = this.props;
+    const { onChange, nullable } = this.props;
 
     if (onChange) {
-      const intEvent = { ...evt, target: { value: toFloat(evt.target.value) } };
+      const intEvent = {
+        ...evt,
+        target: { value: nullable ? toFloatNullable(evt.target.value) : toFloat(evt.target.value) },
+      };
       onChange(intEvent);
     }
   };

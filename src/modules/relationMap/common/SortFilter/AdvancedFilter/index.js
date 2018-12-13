@@ -2,7 +2,7 @@
 import React, { useRef, useReducer, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { getByPath, getByPathWithDefault, omit, isEmpty } from 'utils/fp';
+import { getByPath, getByPathWithDefault, omit, isEmpty, isNullOrUndefined } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -75,7 +75,7 @@ const initialState: State = {
 
 const defaultFilterMenuItemMap = {
   order: 'ids',
-  item: 'createdAt',
+  item: 'price',
   batch: 'deliveredAt',
   shipment: 'forwarder',
 };
@@ -142,7 +142,7 @@ const getFilterValue = (name: string, data: any) => {
     case 'forwarder':
       return data.map(d => d.id);
     case 'origin':
-      return data.filter(d => d.name !== '').map(d => d.name);
+      return data.filter(d => !isNullOrUndefined(d)).map(d => d.name);
     case 'createdAt':
     case 'updatedAt':
     case 'deliveredAt':
@@ -163,11 +163,13 @@ const getFilterValue = (name: string, data: any) => {
         ...(data.before && { before: formatToDateTimeGraphql(new Date(data.before)) }),
       };
     case 'price': {
-      const currency = getByPath('data.currency.name', data);
+      const currency = getByPath('currency.name', data);
+      const min = getByPath('min', data);
+      const max = getByPath('max', data);
       return {
-        ...(currency && { currency }),
-        ...(data.min && { min: data.min }),
-        ...(data.max && { max: data.max }),
+        ...(isNullOrUndefined(currency) ? {} : { currency }),
+        ...(isNullOrUndefined(min) ? {} : { min }),
+        ...(isNullOrUndefined(max) ? {} : { max }),
       };
     }
 
@@ -304,7 +306,7 @@ function reducer(state, action) {
       const selected =
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
       let newSelected = {};
-      if (!selectItem && selected[field]) {
+      if (isNullOrUndefined(selectItem)) {
         newSelected = omit([field], selected);
       } else {
         newSelected = { ...selected, [field]: selectItem };

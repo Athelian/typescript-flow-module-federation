@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { isNullOrUndefined } from 'utils/fp';
 import { BaseFilterMenu } from '../components';
 import messages from './messages';
 
@@ -48,11 +49,11 @@ export default function ItemFilterMenu({
       label: <FormattedMessage {...messages.item} />,
       icon: 'ORDER_ITEM',
       filters: [
-        // {
-        //   name: 'price',
-        //   label: <FormattedMessage {...messages.price} />,
-        //   data: getSelectData(selectedItems, 'price'),
-        // },
+        {
+          name: 'price',
+          label: <FormattedMessage {...messages.price} />,
+          data: getSelectData(selectedItems, 'price'),
+        },
         {
           name: 'createdAt',
           label: <FormattedMessage {...messages.createdAt} />,
@@ -97,7 +98,7 @@ export default function ItemFilterMenu({
           name: 'origin',
           field: 'name',
           label: <FormattedMessage {...messages.origin} />,
-          data: getSelectData(selectedItems, 'origin').filter(item => item.name !== ''),
+          data: getSelectData(selectedItems, 'origin').filter(item => !isNullOrUndefined(item)),
         },
         // {
         //   name: 'specifications',
