@@ -1,6 +1,5 @@
 // @flow
 import {
-  ORDER_HEADER,
   ORDER_ITEM_ALL,
   BATCH_ALL,
   ORDER,
@@ -29,9 +28,6 @@ export const getItemData = ({ order, orderItem, batch }: Object, relation: Objec
     case ORDER:
       itemData = order[relation.id];
       break;
-    case ORDER_HEADER:
-      itemData = { data: { id: relation.id } };
-      break;
     case ORDER_ITEM:
       itemData = orderItem[relation.id];
       break;
@@ -51,7 +47,6 @@ export const getItemType = (type: string) => {
     case BATCH_ALL:
     case ORDER:
       return 'order';
-    case ORDER_HEADER:
     case ORDER_ITEM:
       return 'orderItem';
     case BATCH:
@@ -135,12 +130,9 @@ export const generateCollapsedRelation = (order: Object, option: Object) => {
   const relations = [];
   const { orderItems } = order;
   const numberOfProduct = orderItems.length;
-  relations.push({ type: ORDER_HEADER, id: order.id });
-  relations.push({ type: '' });
-  relations.push({ type: '' });
-  relations.push({ type: '' });
-  relations.push({ type: '' });
+
   relations.push({ type: ORDER, id: order.id, isNew: order.isNew, previousIds: [] });
+  
   if (numberOfProduct === 0) {
     relations.push({ type: '' });
     relations.push({ type: '' });

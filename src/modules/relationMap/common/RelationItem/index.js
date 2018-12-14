@@ -3,10 +3,9 @@ import * as React from 'react';
 import BaseCard from 'components/Cards';
 import { cx } from 'react-emotion';
 // @TODO need to find other solution to manage tag
-import { TagValue } from 'modules/relationMap/common/ToggleTag';
+import { TagValue } from 'modules/relationMap/common/SortFilter/ToggleTag';
 import {
   ORDER,
-  ORDER_HEADER,
   ORDER_ITEM,
   ORDER_ITEM_ALL,
   BATCH,
@@ -20,19 +19,15 @@ import OrderItemCard from 'components/RelationMap/OrderElement/OrderItemCard';
 import BatchCard from 'components/RelationMap/OrderElement/BatchCard';
 import TotalCard from 'components/RelationMap/OrderElement/TotalCard';
 import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
-import OrderHeader from 'components/RelationMap/OrderElement/OrderHeader';
 import Tags from 'components/RelationMap/OrderElement/Tags';
 import ShipmentCard from 'components/RelationMap/ShipmentElement';
-import ShipmentHeader from 'components/RelationMap/ShipmentElement/ShipmentHeader';
 import ShipmentCollapsed from 'components/RelationMap/ShipmentElement/ShipmentCollapsed';
 
 import { ItemWrapperStyle, ShipmentCardStyle, ShipmentCardTotalStyle } from './style';
 
 type OptionalProps = {
   data: Object,
-  isCollapsed: boolean,
   isFocused: boolean,
-  // hasRelation?: boolean,
   focusMode?: boolean,
   onClick: Function,
   onDoubleClick?: Function,
@@ -41,7 +36,6 @@ type OptionalProps = {
 
 const defaultProps = {
   data: {},
-  isCollapsed: false,
   isFocused: false,
   focusMode: false,
   onClick: () => {},
@@ -53,17 +47,7 @@ type Props = OptionalProps & {
 };
 
 const Item = (props: Props) => {
-  const {
-    type,
-    data,
-    onClick,
-    isFocused,
-    // hasRelation,
-    isCollapsed,
-    onDoubleClick,
-    focusMode,
-    actions,
-  } = props;
+  const { type, data, onClick, isFocused, onDoubleClick, focusMode, actions } = props;
   if (typeof type === 'string' && /LINK-[0-4]/.test(type)) {
     const [, linkType] = type.split('-') || [];
     return (
@@ -72,9 +56,6 @@ const Item = (props: Props) => {
   }
 
   switch (type) {
-    case ORDER_HEADER: {
-      return <OrderHeader label={`ORDER ${data.id}`} isChecked />;
-    }
     case ORDER: {
       return (
         <BaseCard
@@ -144,14 +125,6 @@ const Item = (props: Props) => {
     case SHIPMENT: {
       return (
         <>
-          <ShipmentHeader
-            label={`SHIPMENT ${data.id}`}
-            isChecked
-            ordersNo={data.orderCount}
-            batchesNo={data.batchCount}
-            onToggle={onClick}
-            isCollapsed={isCollapsed}
-          />
           <BaseCard
             showActionsOnHover
             icon={type}
@@ -172,14 +145,6 @@ const Item = (props: Props) => {
     case SHIPMENT_ALL: {
       return (
         <>
-          <ShipmentHeader
-            label={`SHIPMENT ${data.id}`}
-            isChecked
-            ordersNo={data.orderCount}
-            batchesNo={data.batchCount}
-            onToggle={onClick}
-            isCollapsed={isCollapsed}
-          />
           <BaseCard
             showActionsOnHover
             icon="SHIPMENT"

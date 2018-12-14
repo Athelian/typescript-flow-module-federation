@@ -12,7 +12,7 @@ import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import { ActionContainer, ConnectContainer } from 'modules/relationMap/containers';
 import RelationMapContainer from 'modules/relationMap/container';
-import { ToggleCollpased } from 'modules/relationMap/orderFocused';
+import { ToggleCollapsed } from 'modules/relationMap/orderFocused';
 import { FilterContext } from 'modules/relationMap/common/ActionPanel/ActionSubscribe';
 import {
   LabelConnectStyle,
@@ -154,7 +154,7 @@ const ApplyPanel = ({ connectType }: Props) => {
                               }
                             }}
                           />
-                          <ToggleCollpased>
+                          <ToggleCollapsed>
                             {({ set: setCollapsed }) => (
                               <ConfirmDialog
                                 width={400}
@@ -169,7 +169,7 @@ const ApplyPanel = ({ connectType }: Props) => {
                                     client,
                                     targetedItem,
                                     selectedItem,
-                                    filter
+                                    value
                                   );
                                   setSuccess(true);
                                   setCollapsed(selectedItem.id, false);
@@ -178,7 +178,7 @@ const ApplyPanel = ({ connectType }: Props) => {
                                 }}
                               />
                             )}
-                          </ToggleCollpased>
+                          </ToggleCollapsed>
                         </>
                       )}
                     </ObjectValue>

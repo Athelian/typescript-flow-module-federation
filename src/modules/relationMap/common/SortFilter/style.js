@@ -1,26 +1,22 @@
+// @flow
 import { css } from 'react-emotion';
 import { layout } from 'styles/common';
 
-export const SortWrapperStyle = css`
-  flex: 0.96;
-
-  > div:first-child > div:first-child {
-    width: calc(100% - 20px);
-  }
-`;
-
-export const GroupFilterWrapperStyle = css`
-  flex: 3.8;
-`;
-
-export const GroupFilterStyle = css`
-  float: left;
-  ${layout.HORIZONTAL};
-  justify-content: flex-end;
+export const SortFilterWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 20px;
   align-items: center;
-  > div:nth-child(2) {
-    width: calc(100% - 30px);
-  }
+  padding: 0 20px;
+  width: 100%;
+  z-index: 3;
 `;
 
-export default null;
+export const SortWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+`;
+
+export const GroupFilterWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+`;

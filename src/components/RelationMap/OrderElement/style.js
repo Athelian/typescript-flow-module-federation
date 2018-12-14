@@ -82,9 +82,7 @@ export const ResetBaseCardStyle = css`
 export const ItemWrapperStyle = (isFocused: boolean) => {
   const focused = getBorderColor(isFocused);
   return css`
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    border-radius: 10px;
     border: 5px solid ${focused};
     display: flex;
     flex-direction: column;
@@ -94,7 +92,6 @@ export const ItemWrapperStyle = (isFocused: boolean) => {
     height: fit-content;
     min-height: 50px;
     max-height: 200px;
-    margin-bottom: 15px;
     ${fontSizes.MAIN};
     font-weight: bold;
     color: ${colors.BLACK};

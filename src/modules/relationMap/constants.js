@@ -1,4 +1,3 @@
-export const ORDER_HEADER = 'ORDER_HEADER';
 export const ORDER = 'ORDER';
 export const ORDER_ITEM = 'ORDER_ITEM';
 export const ORDER_ITEM_ALL = 'ORDER_ITEM_ALL';

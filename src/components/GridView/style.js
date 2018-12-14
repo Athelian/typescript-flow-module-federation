@@ -1,6 +1,5 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, colors } from 'styles/common';
 
 type GridViewWrapperProps = {
   itemWidth: string,
@@ -25,8 +24,4 @@ export const GridViewWrapperStyle = ({
   justify-content: center;
 `;
 
-export const EmptyMessageStyle: string = css`
-  ${fontSizes.MAIN};
-  font-weight: bold;
-  color: ${colors.BLACK};
-`;
+export default GridViewWrapperStyle;
