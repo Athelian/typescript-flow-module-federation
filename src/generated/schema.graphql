@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Dec 11 2018 16:51:13 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Dec 14 2018 09:13:46 GMT+0700 (Indochina Time)
 
 enum Airport {
   """Garissa Airport"""
@@ -28579,7 +28579,7 @@ type File implements Model & Owned {
   type: FileType!
   size: Int!
   mimetype: String!
-  path: String!
+  path(width: Int, height: Int): String!
   pathExpiredAt: DateTime!
   memo: String
   entity: Entity
@@ -29592,98 +29592,122 @@ type NotificationPagination {
 }
 
 enum NotificationType {
-  """NewBatchItemInventory"""
-  NewBatchItemInventory
+  """ShipmentCreate"""
+  ShipmentCreate
 
-  """AddShipmentBatchItem"""
-  AddShipmentBatchItem
+  """ShipmentUpdate"""
+  ShipmentUpdate
 
-  """RemoveShipmentBatchItem"""
-  RemoveShipmentBatchItem
+  """ShipmentArchived"""
+  ShipmentArchived
 
-  """NewBatchItemAssignment"""
-  NewBatchItemAssignment
+  """ShipmentUnarchived"""
+  ShipmentUnarchived
 
-  """UpdateBatchItemAssignmentQuantity"""
-  UpdateBatchItemAssignmentQuantity
+  """ShipmentSetDate"""
+  ShipmentSetDate
 
-  """DeleteBatchItemAssignment"""
-  DeleteBatchItemAssignment
+  """ShipmentUpdateDate"""
+  ShipmentUpdateDate
 
-  """UpdateShipmentContainerGroupWarehouseArrival"""
-  UpdateShipmentContainerGroupWarehouseArrival
+  """ShipmentAddBatch"""
+  ShipmentAddBatch
 
-  """UpdateShipmentContainerGroupCustomClearance"""
-  UpdateShipmentContainerGroupCustomClearance
+  """ShipmentRemoveBatch"""
+  ShipmentRemoveBatch
 
-  """NewOrder"""
-  NewOrder
+  """ShipmentSetDateRevision"""
+  ShipmentSetDateRevision
 
-  """FinishedOrder"""
-  FinishedOrder
+  """ShipmentUpdateDateRevision"""
+  ShipmentUpdateDateRevision
 
-  """NewOrderItem"""
-  NewOrderItem
+  """ProductCreate"""
+  ProductCreate
 
-  """UpdateOrderItemQuantity"""
-  UpdateOrderItemQuantity
+  """ProductUpdate"""
+  ProductUpdate
 
-  """NewPes"""
-  NewPes
+  """ProductArchived"""
+  ProductArchived
 
-  """NewProduct"""
-  NewProduct
+  """ProductUnarchived"""
+  ProductUnarchived
 
-  """EditProduct"""
-  EditProduct
+  """ProductCreateProvider"""
+  ProductCreateProvider
 
-  """DeactivateProduct"""
-  DeactivateProduct
+  """OrderCreate"""
+  OrderCreate
 
-  """NewShipment"""
-  NewShipment
+  """OrderUpdate"""
+  OrderUpdate
 
-  """FinishedShipment"""
-  FinishedShipment
+  """OrderArchived"""
+  OrderArchived
 
-  """UpdateShipmentCargoReady"""
-  UpdateShipmentCargoReady
+  """OrderUnarchived"""
+  OrderUnarchived
 
-  """UpdateShipmentVoyageAtd"""
-  UpdateShipmentVoyageAtd
+  """OrderCreateItem"""
+  OrderCreateItem
 
-  """UpdateShipmentVoyageAta"""
-  UpdateShipmentVoyageAta
+  """OrderUpdateItemQuantity"""
+  OrderUpdateItemQuantity
 
-  """NewWarehouse"""
-  NewWarehouse
+  """BatchCreate"""
+  BatchCreate
 
-  """EditWarehouse"""
-  EditWarehouse
+  """BatchUpdate"""
+  BatchUpdate
 
-  """DeactivateWarehouse"""
-  DeactivateWarehouse
+  """BatchArchived"""
+  BatchArchived
 
-  """ApproveTimelineDateCargoReady"""
-  ApproveTimelineDateCargoReady
+  """BatchUnarchived"""
+  BatchUnarchived
 
-  """ApproveTimelineDateCustomClearance"""
-  ApproveTimelineDateCustomClearance
+  """BatchCreateAssignment"""
+  BatchCreateAssignment
 
-  """ApproveTimelineDateWarehouseArrival"""
-  ApproveTimelineDateWarehouseArrival
+  """BatchUpdateAssignmentQuantity"""
+  BatchUpdateAssignmentQuantity
 
-  """ApproveTimelineDateDeliveryReady"""
-  ApproveTimelineDateDeliveryReady
+  """BatchDeleteAssignment"""
+  BatchDeleteAssignment
 
-  """ApproveTimelineDateAtd"""
-  ApproveTimelineDateAtd
+  """BatchUpdateQuantityOffBoard"""
+  BatchUpdateQuantityOffBoard
 
-  """ApproveTimelineDateAta"""
-  ApproveTimelineDateAta
+  """BatchUpdateQuantityOnBoard"""
+  BatchUpdateQuantityOnBoard
 
-  """NewComment"""
-  NewComment
+  """BatchCreateAdjustmentOffBoard"""
+  BatchCreateAdjustmentOffBoard
+
+  """BatchCreateAdjustmentOnBoard"""
+  BatchCreateAdjustmentOnBoard
+
+  """BatchUpdateAdjustmentQuantityOffBoard"""
+  BatchUpdateAdjustmentQuantityOffBoard
+
+  """BatchUpdateAdjustmentQuantityOnBoard"""
+  BatchUpdateAdjustmentQuantityOnBoard
+
+  """WarehouseCreate"""
+  WarehouseCreate
+
+  """WarehouseUpdate"""
+  WarehouseUpdate
+
+  """WarehouseArchived"""
+  WarehouseArchived
+
+  """WarehouseUnarchived"""
+  WarehouseUnarchived
+
+  """CommentCreate"""
+  CommentCreate
 }
 
 type Order implements Model & Owned & Tagged & Supervised & Documented & Metadata & Customizable {
