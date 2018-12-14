@@ -383,9 +383,14 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
 
   const filterQuery = convertToFilterQuery(state);
   const defaultInitialFilter = isDefaultFilter(initialFilter);
+  const defaultFilterQuery = isDefaultFilter(filterQuery);
   const sameFilter = isEquals(initialFilter, filterQuery);
   const showApplyButton = !defaultInitialFilter || !sameFilter;
-  const showCancelButton = (!defaultInitialFilter && sameFilter) || !sameFilter;
+
+  const selectedSomeFilter = defaultInitialFilter && !defaultFilterQuery;
+  const appliedSomeFilter = sameFilter && !defaultInitialFilter;
+  const changeSomeFilter = !sameFilter && !defaultFilterQuery;
+  const showCancelButton = selectedSomeFilter || appliedSomeFilter || changeSomeFilter;
   return (
     <UIConsumer>
       {uiState => (
@@ -427,7 +432,6 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
                           <CancelButton
                             onClick={() => {
                               dispatch({ type: 'RESET' });
-                              onApply({ filter: { archived: false } });
                               setAppliedFilter(false);
                             }}
                             label={
