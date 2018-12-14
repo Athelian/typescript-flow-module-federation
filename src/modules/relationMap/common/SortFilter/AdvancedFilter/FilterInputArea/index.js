@@ -212,7 +212,12 @@ const getFilterInputArea = ({
         case 'productionLeadTime':
           return DayRange;
         case 'packaging':
-          return Packaging;
+          return () => (
+            <Packaging
+              packageVolume={selectedItems.packageVolume}
+              onChangePackageVolume={volume => onToggleSelect(volume, 'packageVolume')}
+            />
+          );
         default:
           return () => <div />;
       }
@@ -229,8 +234,8 @@ const getFilterInputArea = ({
               onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
             />
           );
-        case 'packaging':
-          return Packaging;
+        // case 'packaging':
+        //   return Packaging;
         case 'tags':
           return () => (
             <Tags

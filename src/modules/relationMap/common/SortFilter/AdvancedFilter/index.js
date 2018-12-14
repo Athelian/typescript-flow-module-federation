@@ -390,6 +390,7 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
   const appliedSomeFilter = sameFilter && !defaultInitialFilter;
   const changeSomeFilter = !sameFilter && !defaultFilterQuery;
   const showCancelButton = appliedSomeFilter || changeSomeFilter;
+
   return (
     <UIConsumer>
       {uiState => (

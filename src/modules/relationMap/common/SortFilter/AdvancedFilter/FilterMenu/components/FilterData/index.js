@@ -108,6 +108,19 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
         </div>
       );
     }
+    case 'packaging': {
+      // const { packageSize, packageVolume, packageWeight } = data;
+      console.log(data);
+      return (
+        <div className={FilterDataWrapperStyle}>
+          <button className={FilterDataStyle} type="button" onClick={() => console.log(data)}>
+            test
+            <Icon icon="CLEAR" />
+          </button>
+          )
+        </div>
+      );
+    }
     default:
       return (
         <div className={FilterDataWrapperStyle}>

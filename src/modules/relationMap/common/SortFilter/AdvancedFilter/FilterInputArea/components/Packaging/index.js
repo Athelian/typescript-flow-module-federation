@@ -1,14 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import {
-  Label,
-  DefaultStyle,
-  NumberInput,
-  SelectInput,
-  DefaultSelect,
-  DefaultOptions,
-} from 'components/Form';
+import { Label } from 'components/Form';
+import NumberRangeWithMetricInput from './components/NumberRangeWithMetricInput';
 import {
   PackagingWrapperStyle,
   LabelsWrapperStyle,
@@ -37,145 +31,35 @@ export default function Packaging() {
           <Label>
             <FormattedMessage {...messages.packageLength} />
           </Label>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <SelectInput
-            value="m"
-            items={['cm', 'm']}
-            itemToValue={v => v || null}
-            itemToString={v => v || ''}
-            renderSelect={({ ...rest }) => (
-              <DefaultSelect
-                {...rest}
-                align="left"
-                forceHoverStyle
-                required
-                hideDropdownArrow
-                width="60px"
-              />
-            )}
-            renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="60px" />}
-          />
+          <NumberRangeWithMetricInput metrics={['cm', 'm']} metric="m" />
         </div>
 
         <div className={MetricInputsWrapperStyle}>
           <Label>
             <FormattedMessage {...messages.packageWidth} />
           </Label>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <SelectInput
-            value="m"
-            items={['cm', 'm']}
-            itemToValue={v => v || null}
-            itemToString={v => v || ''}
-            renderSelect={({ ...rest }) => (
-              <DefaultSelect
-                {...rest}
-                align="left"
-                forceHoverStyle
-                required
-                hideDropdownArrow
-                width="60px"
-              />
-            )}
-            renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="60px" />}
-          />
+          <NumberRangeWithMetricInput metrics={['cm', 'm']} metric="m" />
         </div>
 
         <div className={MetricInputsWrapperStyle}>
           <Label>
             <FormattedMessage {...messages.packageHeight} />
           </Label>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <SelectInput
-            value="m"
-            items={['cm', 'm']}
-            itemToValue={v => v || null}
-            itemToString={v => v || ''}
-            renderSelect={({ ...rest }) => (
-              <DefaultSelect
-                {...rest}
-                align="left"
-                forceHoverStyle
-                required
-                hideDropdownArrow
-                width="60px"
-              />
-            )}
-            renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="60px" />}
-          />
+          <NumberRangeWithMetricInput metrics={['cm', 'm']} metric="m" />
         </div>
 
         <div className={MetricInputsWrapperStyle}>
           <Label>
             <FormattedMessage {...messages.packageVolume} />
           </Label>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <SelectInput
-            value="m³"
-            items={['cm³', 'm³']}
-            itemToValue={v => v || null}
-            itemToString={v => v || ''}
-            renderSelect={({ ...rest }) => (
-              <DefaultSelect
-                {...rest}
-                align="left"
-                forceHoverStyle
-                required
-                hideDropdownArrow
-                width="60px"
-              />
-            )}
-            renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="60px" />}
-          />
+          <NumberRangeWithMetricInput metrics={['cm³', 'm³']} metric="m³" />
         </div>
 
         <div className={MetricInputsWrapperStyle}>
           <Label>
             <FormattedMessage {...messages.packageWeight} />
           </Label>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <DefaultStyle type="number" forceHoverStyle>
-            <NumberInput align="left" />
-          </DefaultStyle>
-          <SelectInput
-            value="kg"
-            items={['g', 'kg', 'ton']}
-            itemToValue={v => v || null}
-            itemToString={v => v || ''}
-            renderSelect={({ ...rest }) => (
-              <DefaultSelect
-                {...rest}
-                align="left"
-                forceHoverStyle
-                required
-                hideDropdownArrow
-                width="60px"
-              />
-            )}
-            renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="60px" />}
-          />
+          <NumberRangeWithMetricInput metrics={['g', 'kg', 'ton']} metric="kg" />
         </div>
       </div>
     </div>

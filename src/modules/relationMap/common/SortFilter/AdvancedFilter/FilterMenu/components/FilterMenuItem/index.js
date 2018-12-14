@@ -18,10 +18,21 @@ type Props = {
 };
 
 function isValid(name: string, data: any): boolean {
-  if (Array.isArray(data)) {
-    return data.filter(item => !isNullOrUndefined(item)).length > 0;
+  switch (name) {
+    case 'tags':
+    case 'origin':
+      return data.filter(item => !isNullOrUndefined(item)).length > 0;
+
+    case 'packaging': {
+      const { packageVolume } = data;
+      return (
+        packageVolume &&
+        (!isNullOrUndefined(packageVolume.min) || !isNullOrUndefined(packageVolume.max))
+      );
+    }
+    default:
+      return Object.keys(data).length > 0;
   }
-  return Object.keys(data).length > 0;
 }
 
 export default function FilterMenuItem({
