@@ -33,7 +33,7 @@ type Props = {
 };
 
 const Order = ({ intl }: Props) => (
-  <SortFilterHandler filter={{ archived: false }}>
+  <SortFilterHandler filter={{ archived: false, shipmentArchived: false, batchArchived: false }}>
     {({ sort, filter, onChangeSortFilter, page, perPage }) => {
       const filterVariables = {
         page,

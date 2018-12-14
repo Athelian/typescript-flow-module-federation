@@ -2,7 +2,14 @@
 import React, { useRef, useReducer, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { getByPath, getByPathWithDefault, omit, isEmpty, isNullOrUndefined } from 'utils/fp';
+import {
+  getByPath,
+  getByPathWithDefault,
+  omit,
+  isEmpty,
+  isNullOrUndefined,
+  isEquals,
+} from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -25,6 +32,7 @@ import type { EntityTypes, ActiveFilters, FilterToggles } from './type';
 
 type Props = {
   onApply: Function,
+  initialFilter: Object,
 };
 type State = {
   selectedEntityType: EntityTypes,
@@ -362,31 +370,26 @@ function reducer(state, action) {
   }
 }
 
-const isFilterTogglesDirty = filterToggles => {
-  const { order, batch, shipment } = filterToggles;
-  return (
-    order.completelyBatched ||
-    order.completelyShipped ||
-    !order.showActive ||
-    order.showArchived ||
-    !batch.showActive ||
-    batch.showArchived ||
-    !shipment.showActive ||
-    shipment.showArchived
-  );
-};
+const isDefaultFilter = isEquals({
+  archived: false,
+  shipmentArchived: false,
+  batchArchived: false,
+});
 
-const isActiveFilterDirty = activeFilters => {
-  const { order, item, batch, shipment } = activeFilters;
-  return order.length > 0 || item.length > 0 || batch.length > 0 || shipment.length > 0;
-};
-
-function AdvanceFilter({ onApply }: Props) {
+function AdvanceFilter({ onApply, initialFilter }: Props) {
   const filterButtonRef = useRef(null);
   const [filterIsApplied, setAppliedFilter] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const isDirty =
-    isActiveFilterDirty(state.activeFilters) || isFilterTogglesDirty(state.filterToggles);
+
+  const filterQuery = convertToFilterQuery(state);
+  const defaultInitialFilter = isDefaultFilter(initialFilter);
+  const defaultFilterQuery = isDefaultFilter(filterQuery);
+  const sameFilter = isEquals(initialFilter, filterQuery);
+  const showApplyButton = !defaultInitialFilter || !sameFilter;
+
+  const appliedSomeFilter = sameFilter && !defaultInitialFilter;
+  const changeSomeFilter = !sameFilter && !defaultFilterQuery;
+  const showCancelButton = appliedSomeFilter || changeSomeFilter;
   return (
     <UIConsumer>
       {uiState => (
@@ -423,12 +426,11 @@ function AdvanceFilter({ onApply }: Props) {
                           defaultMessage="FILTER BY"
                         />
                       </Label>
-                      {isDirty && (
-                        <div className={AdvancedFilterNavbarButtonsWrapperStyle}>
+                      <div className={AdvancedFilterNavbarButtonsWrapperStyle}>
+                        {showCancelButton && (
                           <CancelButton
                             onClick={() => {
                               dispatch({ type: 'RESET' });
-                              onApply({ filter: { archived: false } });
                               setAppliedFilter(false);
                             }}
                             label={
@@ -438,7 +440,10 @@ function AdvanceFilter({ onApply }: Props) {
                               />
                             }
                           />
+                        )}
+                        {showApplyButton && (
                           <SaveButton
+                            disabled={sameFilter}
                             onClick={() => {
                               const filter = convertToFilterQuery(state);
                               onApply({ filter });
@@ -451,8 +456,8 @@ function AdvanceFilter({ onApply }: Props) {
                               />
                             }
                           />
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                     <div className={AdvancedFilterBodyStyle}>
                       <EntityTypesMenu
