@@ -387,10 +387,9 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
   const sameFilter = isEquals(initialFilter, filterQuery);
   const showApplyButton = !defaultInitialFilter || !sameFilter;
 
-  const selectedSomeFilter = defaultInitialFilter && !defaultFilterQuery;
   const appliedSomeFilter = sameFilter && !defaultInitialFilter;
   const changeSomeFilter = !sameFilter && !defaultFilterQuery;
-  const showCancelButton = selectedSomeFilter || appliedSomeFilter || changeSomeFilter;
+  const showCancelButton = appliedSomeFilter || changeSomeFilter;
   return (
     <UIConsumer>
       {uiState => (
