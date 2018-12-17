@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Dec 14 2018 09:13:46 GMT+0700 (Indochina Time)
+# timestamp: Mon Dec 17 2018 18:37:21 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """Garissa Airport"""
@@ -28579,7 +28579,7 @@ type File implements Model & Owned {
   type: FileType!
   size: Int!
   mimetype: String!
-  path(width: Int, height: Int): String!
+  path(preset: ResizePreset, width: Int, height: Int): String!
   pathExpiredAt: DateTime!
   memo: String
   entity: Entity
@@ -30359,6 +30359,20 @@ type Query {
   integrationConfigurations(page: Int! = 1, perPage: Int! = 10): IntegrationConfigurationPagination!
   integrationLink(id: ID!): IntegrationLink
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplate!]!
+}
+
+enum ResizePreset {
+  """Original"""
+  Original
+
+  """Small 40x40"""
+  Small
+
+  """Medium 200x200"""
+  Medium
+
+  """Large 880x880"""
+  Large
 }
 
 enum Seaport {
@@ -35279,6 +35293,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Meta
   totalVolume: MetricValue
   orderCount: Int
   batchCount: Int
+  orderItemCount: Int
   timeline: Timeline!
   batches: [Batch!]!
   integrationLinks: [IntegrationLink!]!
