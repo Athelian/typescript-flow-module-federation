@@ -110,7 +110,11 @@ export default function ItemFilterMenu({
         //   label: <FormattedMessage {...messages.productionLeadTime} />,
         //   data: [],
         // },
-        // { name: 'packaging', label: <FormattedMessage {...messages.packaging} />, data: [] },
+        {
+          name: 'packaging',
+          label: <FormattedMessage {...messages.packaging} />,
+          data: getSelectData(selectedItems, 'packaging'),
+        },
       ],
     },
   ];

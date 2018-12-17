@@ -212,7 +212,20 @@ const getFilterInputArea = ({
         case 'productionLeadTime':
           return DayRange;
         case 'packaging':
-          return Packaging;
+          return () => (
+            <Packaging
+              packageLength={selectedItems.packageLength}
+              packageWidth={selectedItems.packageWidth}
+              packageHeight={selectedItems.packageHeight}
+              packageVolume={selectedItems.packageVolume}
+              packageWeight={selectedItems.packageWeight}
+              onChangePackageLength={length => onToggleSelect(length, 'packageLength')}
+              onChangePackageWidth={width => onToggleSelect(width, 'packageWidth')}
+              onChangePackageHeight={height => onToggleSelect(height, 'packageHeight')}
+              onChangePackageVolume={volume => onToggleSelect(volume, 'packageVolume')}
+              onChangePackageWeight={weight => onToggleSelect(weight, 'packageWeight')}
+            />
+          );
         default:
           return () => <div />;
       }
@@ -230,7 +243,20 @@ const getFilterInputArea = ({
             />
           );
         case 'packaging':
-          return Packaging;
+          return () => (
+            <Packaging
+              packageLength={selectedItems.packageLength}
+              packageWidth={selectedItems.packageWidth}
+              packageHeight={selectedItems.packageHeight}
+              packageVolume={selectedItems.packageVolume}
+              packageWeight={selectedItems.packageWeight}
+              onChangePackageLength={length => onToggleSelect(length, 'packageLength')}
+              onChangePackageWidth={width => onToggleSelect(width, 'packageWidth')}
+              onChangePackageHeight={height => onToggleSelect(height, 'packageHeight')}
+              onChangePackageVolume={volume => onToggleSelect(volume, 'packageVolume')}
+              onChangePackageWeight={weight => onToggleSelect(weight, 'packageWeight')}
+            />
+          );
         case 'tags':
           return () => (
             <Tags

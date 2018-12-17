@@ -5,6 +5,8 @@ import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
+import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
+import MetricInputItem from './components/MetricInputItem';
 import { FilterDataWrapperStyle, FilterDataStyle } from './style';
 
 type Props = {
@@ -105,6 +107,52 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
             )}
             <Icon icon="CLEAR" />
           </button>
+        </div>
+      );
+    }
+    case 'packaging': {
+      return (
+        <div className={FilterDataWrapperStyle}>
+          {isValidOfMetricRangeInput(data.packageLength) && (
+            <MetricInputItem
+              {...data.packageLength}
+              onRemove={onRemove}
+              name="packageLength"
+              label="PKG LENGTH"
+            />
+          )}
+          {isValidOfMetricRangeInput(data.packageWidth) && (
+            <MetricInputItem
+              {...data.packageWidth}
+              onRemove={onRemove}
+              name="packageWidth"
+              label="PKG WIDTH"
+            />
+          )}
+          {isValidOfMetricRangeInput(data.packageHeight) && (
+            <MetricInputItem
+              {...data.packageHeight}
+              onRemove={onRemove}
+              name="packageHeight"
+              label="PKG HEIGHT"
+            />
+          )}
+          {isValidOfMetricRangeInput(data.packageVolume) && (
+            <MetricInputItem
+              {...data.packageVolume}
+              onRemove={onRemove}
+              name="packageVolume"
+              label="PKG VOLUME"
+            />
+          )}
+          {isValidOfMetricRangeInput(data.packageWeight) && (
+            <MetricInputItem
+              {...data.packageWeight}
+              onRemove={onRemove}
+              name="packageWeight"
+              label="PKG WEIGHT"
+            />
+          )}
         </div>
       );
     }
