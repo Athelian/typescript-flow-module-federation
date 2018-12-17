@@ -242,8 +242,21 @@ const getFilterInputArea = ({
               onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
             />
           );
-        // case 'packaging':
-        //   return Packaging;
+        case 'packaging':
+          return () => (
+            <Packaging
+              packageLength={selectedItems.packageLength}
+              packageWidth={selectedItems.packageWidth}
+              packageHeight={selectedItems.packageHeight}
+              packageVolume={selectedItems.packageVolume}
+              packageWeight={selectedItems.packageWeight}
+              onChangePackageLength={length => onToggleSelect(length, 'packageLength')}
+              onChangePackageWidth={width => onToggleSelect(width, 'packageWidth')}
+              onChangePackageHeight={height => onToggleSelect(height, 'packageHeight')}
+              onChangePackageVolume={volume => onToggleSelect(volume, 'packageVolume')}
+              onChangePackageWeight={weight => onToggleSelect(weight, 'packageWeight')}
+            />
+          );
         case 'tags':
           return () => (
             <Tags

@@ -9,7 +9,6 @@ import {
   isEmpty,
   isNullOrUndefined,
   isEquals,
-  // setIn,
 } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
@@ -304,6 +303,7 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertArchivedFilter(state, 'shipment', 'shipmentArchived'),
 
   ...convertPackagingQuery(state, 'item', 'productProvider'),
+  ...convertPackagingQuery(state, 'batch', 'batch'),
 
   ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
   ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),

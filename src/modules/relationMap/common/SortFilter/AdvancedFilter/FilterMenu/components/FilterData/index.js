@@ -114,19 +114,44 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
       return (
         <div className={FilterDataWrapperStyle}>
           {isValidOfMetricRangeInput(data.packageLength) && (
-            <MetricInputItem {...data.packageLength} onRemove={onRemove} field="packageLength" />
+            <MetricInputItem
+              {...data.packageLength}
+              onRemove={onRemove}
+              name="packageLength"
+              label="PKG LENGTH"
+            />
           )}
           {isValidOfMetricRangeInput(data.packageWidth) && (
-            <MetricInputItem {...data.packageWidth} onRemove={onRemove} field="packageWidth" />
+            <MetricInputItem
+              {...data.packageWidth}
+              onRemove={onRemove}
+              name="packageWidth"
+              label="PKG WIDTH"
+            />
           )}
           {isValidOfMetricRangeInput(data.packageHeight) && (
-            <MetricInputItem {...data.packageHeight} onRemove={onRemove} field="packageHeight" />
+            <MetricInputItem
+              {...data.packageHeight}
+              onRemove={onRemove}
+              name="packageHeight"
+              label="PKG HEIGHT"
+            />
           )}
           {isValidOfMetricRangeInput(data.packageVolume) && (
-            <MetricInputItem {...data.packageVolume} onRemove={onRemove} field="packageVolume" />
+            <MetricInputItem
+              {...data.packageVolume}
+              onRemove={onRemove}
+              name="packageVolume"
+              label="PKG VOLUME"
+            />
           )}
           {isValidOfMetricRangeInput(data.packageWeight) && (
-            <MetricInputItem {...data.packageWeight} onRemove={onRemove} field="packageWeight" />
+            <MetricInputItem
+              {...data.packageWeight}
+              onRemove={onRemove}
+              name="packageWeight"
+              label="PKG WEIGHT"
+            />
           )}
         </div>
       );

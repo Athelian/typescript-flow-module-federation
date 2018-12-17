@@ -10,12 +10,24 @@ import MetricInputItem from './index';
 storiesOf('Metric Input Item', module)
   .add('only min', () => (
     <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
-      <MetricInputItem min={1} metric="cm" onRemove={action('remove')} field="packageLength" />
+      <MetricInputItem
+        min={1}
+        metric="cm"
+        onRemove={action('remove')}
+        name="packageLength"
+        label="PKG LENGTH"
+      />
     </IntlProvider>
   ))
   .add('only max', () => (
     <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
-      <MetricInputItem max={100000} metric="m" onRemove={action('remove')} field="packageLength" />
+      <MetricInputItem
+        max={100000}
+        metric="m"
+        onRemove={action('remove')}
+        name="packageLength"
+        label="PKG LENGTH"
+      />
     </IntlProvider>
   ))
   .add('min, max', () => (
@@ -25,7 +37,8 @@ storiesOf('Metric Input Item', module)
         max={9999}
         metric="cm"
         onRemove={action('remove')}
-        field="packageLength"
+        name="packageLength"
+        label="PKG LENGTH"
       />
     </IntlProvider>
   ));
