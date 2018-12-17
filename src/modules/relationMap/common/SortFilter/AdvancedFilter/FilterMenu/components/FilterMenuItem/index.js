@@ -17,6 +17,11 @@ type Props = {
   data: any,
 };
 
+const isValidOfMetricRangeInput = input =>
+  input &&
+  !isNullOrUndefined(input.metric) &&
+  (!isNullOrUndefined(input.min) || !isNullOrUndefined(input.max));
+
 function isValid(name: string, data: any): boolean {
   switch (name) {
     case 'tags':
@@ -24,10 +29,13 @@ function isValid(name: string, data: any): boolean {
       return data.filter(item => !isNullOrUndefined(item)).length > 0;
 
     case 'packaging': {
-      const { packageVolume } = data;
+      const { packageLength, packageWidth, packageHeight, packageVolume, packageWeight } = data;
       return (
-        packageVolume &&
-        (!isNullOrUndefined(packageVolume.min) || !isNullOrUndefined(packageVolume.max))
+        isValidOfMetricRangeInput(packageLength) ||
+        isValidOfMetricRangeInput(packageWidth) ||
+        isValidOfMetricRangeInput(packageHeight) ||
+        isValidOfMetricRangeInput(packageVolume) ||
+        isValidOfMetricRangeInput(packageWeight)
       );
     }
     default:

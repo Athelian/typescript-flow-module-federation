@@ -310,6 +310,7 @@ function reducer(state, action) {
 
     case 'SET_SELECT_ITEM': {
       const { selectItem, field } = action;
+      console.log({ selectItem, field });
 
       const selected =
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};

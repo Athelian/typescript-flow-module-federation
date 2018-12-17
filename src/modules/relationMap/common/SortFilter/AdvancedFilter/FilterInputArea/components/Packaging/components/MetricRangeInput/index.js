@@ -24,7 +24,7 @@ const defaultProps = {
   onChange: () => {},
 };
 
-export default function NumberRangeWithMetricInput({
+export default function MetricRangeInput({
   min,
   max,
   metric,
@@ -89,4 +89,4 @@ export default function NumberRangeWithMetricInput({
   );
 }
 
-NumberRangeWithMetricInput.defaultProps = defaultProps;
+MetricRangeInput.defaultProps = defaultProps;

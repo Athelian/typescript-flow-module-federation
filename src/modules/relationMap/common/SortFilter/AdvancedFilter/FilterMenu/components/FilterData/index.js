@@ -109,7 +109,6 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
       );
     }
     case 'packaging': {
-      // const { packageSize, packageVolume, packageWeight } = data;
       console.log(data);
       return (
         <div className={FilterDataWrapperStyle}>
@@ -117,7 +116,6 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
             test
             <Icon icon="CLEAR" />
           </button>
-          )
         </div>
       );
     }

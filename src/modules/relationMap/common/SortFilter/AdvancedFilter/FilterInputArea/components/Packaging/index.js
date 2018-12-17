@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Label } from 'components/Form';
-import NumberRangeWithMetricInput from './components/NumberRangeWithMetricInput';
+import MetricRangeInput from './components/MetricRangeInput';
 import {
   PackagingWrapperStyle,
   LabelsWrapperStyle,
@@ -11,7 +11,34 @@ import {
 } from './style';
 import messages from '../messages';
 
-export default function Packaging() {
+type OptionalProps = {
+  packageLength?: Object,
+  packageWidth?: Object,
+  packageHeight?: Object,
+  packageVolume?: Object,
+  packageWeight?: Object,
+};
+
+type Props = OptionalProps & {
+  onChangePackageLength: Function,
+  onChangePackageWidth: Function,
+  onChangePackageHeight: Function,
+  onChangePackageVolume: Function,
+  onChangePackageWeight: Function,
+};
+
+export default function Packaging({
+  packageLength,
+  packageWidth,
+  packageHeight,
+  packageVolume,
+  packageWeight,
+  onChangePackageLength,
+  onChangePackageWidth,
+  onChangePackageHeight,
+  onChangePackageVolume,
+  onChangePackageWeight,
+}: Props) {
   return (
     <div className={PackagingWrapperStyle}>
       <div className={LabelsWrapperStyle}>
@@ -31,35 +58,65 @@ export default function Packaging() {
           <Label>
             <FormattedMessage {...messages.packageLength} />
           </Label>
-          <NumberRangeWithMetricInput metrics={['cm', 'm']} metric="m" />
+          <MetricRangeInput
+            metrics={['cm', 'm']}
+            metric="m"
+            min={packageLength && packageLength.min}
+            max={packageLength && packageLength.max}
+            onChange={length => onChangePackageLength(length)}
+          />
         </div>
 
         <div className={MetricInputsWrapperStyle}>
           <Label>
             <FormattedMessage {...messages.packageWidth} />
           </Label>
-          <NumberRangeWithMetricInput metrics={['cm', 'm']} metric="m" />
+          <MetricRangeInput
+            metrics={['cm', 'm']}
+            metric="m"
+            min={packageWidth && packageWidth.min}
+            max={packageWidth && packageWidth.max}
+            onChange={width => onChangePackageWidth(width)}
+          />
         </div>
 
         <div className={MetricInputsWrapperStyle}>
           <Label>
             <FormattedMessage {...messages.packageHeight} />
           </Label>
-          <NumberRangeWithMetricInput metrics={['cm', 'm']} metric="m" />
+          <MetricRangeInput
+            metrics={['cm', 'm']}
+            metric="m"
+            min={packageHeight && packageHeight.min}
+            max={packageHeight && packageHeight.max}
+            onChange={height => onChangePackageHeight(height)}
+          />
         </div>
 
         <div className={MetricInputsWrapperStyle}>
           <Label>
             <FormattedMessage {...messages.packageVolume} />
           </Label>
-          <NumberRangeWithMetricInput metrics={['cm³', 'm³']} metric="m³" />
+          <MetricRangeInput
+            metrics={['cm³', 'm³']}
+            metric="m³"
+            min={packageVolume && packageVolume.min}
+            max={packageVolume && packageVolume.max}
+            onChange={volume => onChangePackageVolume(volume)}
+          />
         </div>
 
         <div className={MetricInputsWrapperStyle}>
           <Label>
             <FormattedMessage {...messages.packageWeight} />
           </Label>
-          <NumberRangeWithMetricInput metrics={['g', 'kg', 'ton']} metric="kg" />
+          <MetricRangeInput
+            metrics={['g', 'kg', 'ton']}
+            metric="kg"
+            min={packageWeight && packageWeight.min}
+            max={packageWeight && packageWeight.max}
+            onChange={weight => onChangePackageWeight(weight)}
+          />
         </div>
       </div>
     </div>
