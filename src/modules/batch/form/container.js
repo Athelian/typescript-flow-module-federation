@@ -14,6 +14,11 @@ type ProductProvider = {
   packageCapacity: number,
   packageGrossWeight: Metric,
   packageVolume: Metric,
+  packageSize: {
+    width: Metric,
+    height: Metric,
+    length: Metric,
+  },
 };
 
 export function calculateVolume(
@@ -135,6 +140,20 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       packageCapacity = 0,
       packageGrossWeight = { value: 0, metric: 'kg' },
       packageVolume = { value: 0, metric: 'm³' },
+      packageSize = {
+        width: {
+          metric: 'm',
+          value: 0,
+        },
+        height: {
+          metric: 'm',
+          value: 0,
+        },
+        length: {
+          metric: 'm',
+          value: 0,
+        },
+      },
     } = productProvider;
 
     this.setState({
@@ -142,6 +161,7 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       packageGrossWeight,
       packageName,
       packageVolume,
+      packageSize,
     });
   };
 

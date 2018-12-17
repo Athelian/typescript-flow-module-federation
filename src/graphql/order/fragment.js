@@ -39,6 +39,17 @@ export const orderFormFragment = gql`
       }
       productProvider {
         id
+        packageName
+        packageCapacity
+        packageGrossWeight {
+          ...metricFragment
+        }
+        packageVolume {
+          ...metricFragment
+        }
+        packageSize {
+          ...sizeFragment
+        }
         unitPrice {
           currency
           amount
