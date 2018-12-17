@@ -5,6 +5,8 @@ import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
+import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
+import MetricInputItem from './components/MetricInputItem';
 import { FilterDataWrapperStyle, FilterDataStyle } from './style';
 
 type Props = {
@@ -112,10 +114,21 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
       console.log(data);
       return (
         <div className={FilterDataWrapperStyle}>
-          <button className={FilterDataStyle} type="button" onClick={() => console.log(data)}>
-            test
-            <Icon icon="CLEAR" />
-          </button>
+          {isValidOfMetricRangeInput(data.packageLength) && (
+            <MetricInputItem {...data.packageLength} onRemove={onRemove} field="packageLength" />
+          )}
+          {isValidOfMetricRangeInput(data.packageWidth) && (
+            <MetricInputItem {...data.packageWidth} onRemove={onRemove} field="packageWidth" />
+          )}
+          {isValidOfMetricRangeInput(data.packageHeight) && (
+            <MetricInputItem {...data.packageHeight} onRemove={onRemove} field="packageHeight" />
+          )}
+          {isValidOfMetricRangeInput(data.packageVolume) && (
+            <MetricInputItem {...data.packageVolume} onRemove={onRemove} field="packageVolume" />
+          )}
+          {isValidOfMetricRangeInput(data.packageWeight) && (
+            <MetricInputItem {...data.packageWeight} onRemove={onRemove} field="packageWeight" />
+          )}
         </div>
       );
     }

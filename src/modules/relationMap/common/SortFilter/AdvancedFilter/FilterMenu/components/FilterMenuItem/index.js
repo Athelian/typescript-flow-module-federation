@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { isNullOrUndefined } from 'utils/fp';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
+import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
 import { FilterMenuItemWrapperStyle, FilterMenuItemStyle, FilterMenuLabelStyle } from './style';
 import FilterData from '../FilterData';
 
@@ -16,11 +17,6 @@ type Props = {
   onToggleSelect: Function,
   data: any,
 };
-
-const isValidOfMetricRangeInput = input =>
-  input &&
-  !isNullOrUndefined(input.metric) &&
-  (!isNullOrUndefined(input.min) || !isNullOrUndefined(input.max));
 
 function isValid(name: string, data: any): boolean {
   switch (name) {
