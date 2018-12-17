@@ -111,7 +111,6 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
       );
     }
     case 'packaging': {
-      console.log(data);
       return (
         <div className={FilterDataWrapperStyle}>
           {isValidOfMetricRangeInput(data.packageLength) && (

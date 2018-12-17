@@ -9,6 +9,7 @@ import {
   isEmpty,
   isNullOrUndefined,
   isEquals,
+  // setIn,
 } from 'utils/fp';
 import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
@@ -16,6 +17,7 @@ import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { UIConsumer } from 'modules/ui';
+import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';
 import FilterInputArea from './FilterInputArea';
@@ -220,6 +222,68 @@ const convertArchivedFilter = (state: Object, type: string, key: string) => {
   return convertArchivedQuery(showActive, showArchived, key);
 };
 
+const convertMetricRangeQuery = ({
+  min,
+  max,
+  metric,
+}: {
+  min: number,
+  max: number,
+  metric: string,
+  key: string,
+}) =>
+  isNullOrUndefined(min) && isNullOrUndefined(max)
+    ? {}
+    : {
+        ...(isNullOrUndefined(min) ? {} : { min }),
+        ...(isNullOrUndefined(max) ? {} : { max }),
+        metric,
+      };
+
+const convertPackagingQuery = (state: Object, type: string, prevKey: string) => {
+  const activeFilters = getByPathWithDefault([], `activeFilters.${type}`, state);
+  if (!activeFilters.includes('packaging')) return {};
+  const {
+    packageLength,
+    packageWidth,
+    packageHeight,
+    packageVolume,
+    packageWeight,
+  } = getByPathWithDefault({}, `selectedItems.${type}.packaging`, state);
+
+  const packageLengthQuery = isValidOfMetricRangeInput(packageLength)
+    ? convertMetricRangeQuery({ ...packageLength })
+    : {};
+  const packageWidthQuery = isValidOfMetricRangeInput(packageWidth)
+    ? convertMetricRangeQuery({ ...packageWidth })
+    : {};
+  const packageHeightQuery = isValidOfMetricRangeInput(packageHeight)
+    ? convertMetricRangeQuery({ ...packageHeight })
+    : {};
+  const packageVolumeQuery = isValidOfMetricRangeInput(packageVolume)
+    ? convertMetricRangeQuery({ ...packageVolume })
+    : {};
+  const packageWeightQuery = isValidOfMetricRangeInput(packageWeight)
+    ? convertMetricRangeQuery({ ...packageWeight })
+    : {};
+
+  const packagingQuery = {};
+  if (!isEmpty(packageLengthQuery) || !isEmpty(packageWidthQuery) || !isEmpty(packageHeightQuery)) {
+    packagingQuery[`${prevKey}PackageSize`] = {
+      ...(isEmpty(packageLengthQuery) ? {} : { length: { ...packageLengthQuery } }),
+      ...(isEmpty(packageWidthQuery) ? {} : { width: { ...packageWidthQuery } }),
+      ...(isEmpty(packageHeightQuery) ? {} : { height: { ...packageHeightQuery } }),
+    };
+  }
+  if (!isEmpty(packageVolumeQuery)) {
+    packagingQuery[`${prevKey}PackageVolume`] = packageVolumeQuery;
+  }
+  if (!isEmpty(packageWeightQuery)) {
+    packagingQuery[`${prevKey}PackageWeight`] = packageWeightQuery;
+  }
+  return packagingQuery;
+};
+
 const booleanFilterQuery = (state: Object, filterName: string, path: string) => {
   const filterValue = getByPathWithDefault(false, path, state);
   const filterQuery = {};
@@ -238,6 +302,8 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertArchivedFilter(state, 'order', 'archived'),
   ...convertArchivedFilter(state, 'batch', 'batchArchived'),
   ...convertArchivedFilter(state, 'shipment', 'shipmentArchived'),
+
+  ...convertPackagingQuery(state, 'item', 'productProvider'),
 
   ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
   ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
@@ -310,7 +376,6 @@ function reducer(state, action) {
 
     case 'SET_SELECT_ITEM': {
       const { selectItem, field } = action;
-      console.log({ selectItem, field });
 
       const selected =
         state.selectedItems[state.selectedEntityType][state.selectedFilterItem] || {};
@@ -381,7 +446,6 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
   const filterButtonRef = useRef(null);
   const [filterIsApplied, setAppliedFilter] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-
   const filterQuery = convertToFilterQuery(state);
   const defaultInitialFilter = isDefaultFilter(initialFilter);
   const defaultFilterQuery = isDefaultFilter(filterQuery);
@@ -447,8 +511,7 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
                           <SaveButton
                             disabled={sameFilter}
                             onClick={() => {
-                              const filter = convertToFilterQuery(state);
-                              onApply({ filter });
+                              onApply({ filter: filterQuery });
                               setAppliedFilter(true);
                             }}
                             label={
