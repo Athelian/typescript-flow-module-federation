@@ -5,6 +5,8 @@ import {
   timelineDateMinimalFragment,
   tagFragment,
   portFragment,
+  userAvatarFragment,
+  metricFragment,
 } from 'graphql';
 
 export const shipmentListQuery = gql`
@@ -22,6 +24,8 @@ export const shipmentListQuery = gql`
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
 `;
 
 export default shipmentListQuery;

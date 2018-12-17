@@ -1,8 +1,13 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
+import UserAvatar from 'components/UserAvatar';
+import Icon from 'components/Icon';
+import FormattedNumber from 'components/FormattedNumber';
+import { Label } from 'components/Form';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
 import BaseCard from '../BaseCard';
 import {
@@ -13,6 +18,11 @@ import {
   ShipmentBLStyle,
   ShipmentRightWrapperStyle,
   ShipmentTagsWrapperStyle,
+  ShipmentDataWrapperStyle,
+  ShipmentInChargeWrapperStyle,
+  ShipmentBadgeWrapperStyle,
+  ShipmentBadgeIconStyle,
+  ShipmentBadgeStyle,
   DividerStyle,
 } from './style';
 
@@ -31,7 +41,7 @@ const defaultProps = {
 const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
   if (!shipment) return '';
 
-  const { id } = shipment;
+  const { id, no, blNo, tags, inCharges, batchCount, orderItemCount, totalVolume } = shipment;
 
   return (
     <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions} {...rest}>
@@ -42,14 +52,55 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
       >
         <div className={ShipmentInfoWrapperStyle}>
           <div className={ShipmentLeftWrapperStyle}>
-            <div className={ShipmentNoStyle}>{shipment.no}</div>
-            <div className={ShipmentBLStyle}>{shipment.blNo}</div>
+            <div className={ShipmentNoStyle}>{no}</div>
+            <div className={ShipmentBLStyle}>{blNo}</div>
           </div>
           <div className={ShipmentRightWrapperStyle}>
             <div className={ShipmentTagsWrapperStyle}>
-              {shipment.tags &&
-                shipment.tags.length > 0 &&
-                shipment.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+            <div className={ShipmentDataWrapperStyle}>
+              <div className={ShipmentInChargeWrapperStyle}>
+                {inCharges &&
+                  inCharges.length > 0 &&
+                  inCharges.map(inCharge => (
+                    <UserAvatar
+                      key={inCharge.id}
+                      firstName={inCharge.firstName}
+                      lastName={inCharge.lastName}
+                      width="20px"
+                      height="20px"
+                    />
+                  ))}
+              </div>
+
+              <div className={ShipmentBadgeWrapperStyle}>
+                <Label>
+                  <FormattedMessage id="components.cards.ttlVol" defaultValue="TTL VOL" />
+                </Label>
+                <div className={ShipmentBadgeStyle}>
+                  <FormattedNumber value={totalVolume.value} />
+                  {totalVolume.metric}
+                </div>
+              </div>
+
+              <div className={ShipmentBadgeWrapperStyle}>
+                <div className={ShipmentBadgeIconStyle}>
+                  <Icon icon="ORDER_ITEM" />
+                </div>
+                <div className={ShipmentBadgeStyle}>
+                  <FormattedNumber value={orderItemCount} />
+                </div>
+              </div>
+
+              <div className={ShipmentBadgeWrapperStyle}>
+                <div className={ShipmentBadgeIconStyle}>
+                  <Icon icon="BATCH" />
+                </div>
+                <div className={ShipmentBadgeStyle}>
+                  <FormattedNumber value={batchCount} />
+                </div>
+              </div>
             </div>
           </div>
         </div>

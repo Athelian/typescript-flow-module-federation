@@ -72,8 +72,7 @@ export const shipmentFormFragment = gql`
       }
     }
     totalVolume {
-      value
-      metric
+      ...metricFragment
     }
     batches {
       ...batchFormFragment
@@ -88,11 +87,19 @@ export const shipmentCardFragment = gql`
     no
     blNo
     transportType
+    batchCount
+    orderItemCount
+    totalVolume {
+      ...metricFragment
+    }
     cargoReady {
       ...timelineDateMinimalFragment
     }
     tags {
       ...tagFragment
+    }
+    inCharges {
+      ...userAvatarFragment
     }
     voyages {
       id
