@@ -56,7 +56,7 @@ export default function ShipmentFilterMenu({
         },
         {
           name: 'inCharge',
-          field: 'firstName',
+          field: 'id',
           label: <FormattedMessage {...messages.inCharge} />,
           data: getSelectData(selectedItems, 'inCharge'),
         },

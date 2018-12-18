@@ -4,6 +4,7 @@ import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
+import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
 import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
 import MetricInputItem from './components/MetricInputItem';
@@ -156,6 +157,22 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
         </div>
       );
     }
+    case 'inCharge':
+      return (
+        <div className={FilterDataWrapperStyle}>
+          {data.map(user => (
+            <button
+              key={user.id}
+              className={FilterDataStyle}
+              type="button"
+              onClick={() => onRemove(user)}
+            >
+              <FormattedName firstName={user.firstName} lastName={user.lastName} />
+              <Icon icon="CLEAR" />
+            </button>
+          ))}
+        </div>
+      );
     default:
       return (
         <div className={FilterDataWrapperStyle}>
