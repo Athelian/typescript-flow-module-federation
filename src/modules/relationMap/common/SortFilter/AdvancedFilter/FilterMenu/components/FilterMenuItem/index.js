@@ -2,7 +2,10 @@
 import * as React from 'react';
 import { isNullOrUndefined } from 'utils/fp';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
-import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
+import {
+  isValidOfMetricRangeInput,
+  isValidOfPortsInput,
+} from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
 import { FilterMenuItemWrapperStyle, FilterMenuItemStyle, FilterMenuLabelStyle } from './style';
 import FilterData from '../FilterData';
 
@@ -32,6 +35,15 @@ function isValid(name: string, data: any): boolean {
         isValidOfMetricRangeInput(packageHeight) ||
         isValidOfMetricRangeInput(packageVolume) ||
         isValidOfMetricRangeInput(packageWeight)
+      );
+    }
+    case 'airports': {
+      const { loadPorts, dischargePorts, firstTransitPorts, secondTransitPorts } = data;
+      return (
+        isValidOfPortsInput(loadPorts) ||
+        isValidOfPortsInput(dischargePorts) ||
+        isValidOfPortsInput(firstTransitPorts) ||
+        isValidOfPortsInput(secondTransitPorts)
       );
     }
     default:

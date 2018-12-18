@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
@@ -113,7 +114,95 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
     }
     case 'airports': {
       console.log(data);
-      return <div className={FilterDataWrapperStyle} />;
+      return (
+        <div className={FilterDataWrapperStyle}>
+          {data.loadPorts && (
+            <>
+              {/* FIXME: styling */}
+              <FormattedMessage id="modules.relationMap.loadPort" defaultMessage="LOAD PORT" />
+              {data.loadPorts.map(port =>
+                isNullOrUndefined(port) ? null : (
+                  <button
+                    key={uuid()}
+                    className={FilterDataStyle}
+                    type="button"
+                    onClick={() => console.log(port)}
+                  >
+                    {port.name}
+                    <Icon icon="CLEAR" />
+                  </button>
+                )
+              )}
+            </>
+          )}
+          {data.dischargePorts && (
+            <>
+              {/* FIXME: styling */}
+              <FormattedMessage
+                id="modules.relationMap.dischargePort"
+                defaultMessage="DISCHARGE PORT"
+              />
+              {data.dischargePorts.map(port =>
+                isNullOrUndefined(port) ? null : (
+                  <button
+                    key={uuid()}
+                    className={FilterDataStyle}
+                    type="button"
+                    onClick={() => console.log(port)}
+                  >
+                    {port.name}
+                    <Icon icon="CLEAR" />
+                  </button>
+                )
+              )}
+            </>
+          )}
+          {data.firstTransitPorts && (
+            <>
+              {/* FIXME: styling */}
+              <FormattedMessage
+                id="modules.relationMap.firstTransitPort"
+                defaultMessage="FIRST TRANSIT PORT"
+              />
+              {data.firstTransitPorts.map(port =>
+                isNullOrUndefined(port) ? null : (
+                  <button
+                    key={uuid()}
+                    className={FilterDataStyle}
+                    type="button"
+                    onClick={() => console.log(port)}
+                  >
+                    {port.name}
+                    <Icon icon="CLEAR" />
+                  </button>
+                )
+              )}
+            </>
+          )}
+          {data.secondTransitPorts && (
+            <>
+              {/* FIXME: styling */}
+              <FormattedMessage
+                id="modules.relationMap.secondTransitPort"
+                defaultMessage="SECOND TRANSIT PORT"
+              />
+              {data.secondTransitPorts.map(port =>
+                isNullOrUndefined(port) ? null : (
+                  <button
+                    key={uuid()}
+                    className={FilterDataStyle}
+                    type="button"
+                    onClick={() => console.log(port)}
+                  >
+                    {port.name}
+                    <Icon icon="CLEAR" />
+                  </button>
+                )
+              )}
+            </>
+          )}
+        </div>
+      );
     }
     case 'packaging': {
       return (
