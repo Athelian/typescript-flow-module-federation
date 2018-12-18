@@ -62,7 +62,7 @@ export default function OrderFilterMenu({
         },
         {
           name: 'inCharge',
-          field: 'firstName',
+          field: 'id',
           label: <FormattedMessage {...messages.inCharge} />,
           data: getSelectData(selectedItems, 'inCharge'),
         },

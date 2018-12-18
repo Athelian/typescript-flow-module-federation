@@ -305,7 +305,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             EMAIL
           </div>
           <div
-            class="css-1b8yj6f"
+            class="css-ri1ip4"
           >
             <input
               data-testid="email"
@@ -330,7 +330,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             PASSWORD
           </div>
           <div
-            class="css-1b8yj6f"
+            class="css-ri1ip4"
           >
             <input
               data-testid="password"

@@ -4,22 +4,6 @@ exports[`collapse view have orderItem 1`] = `
 Array [
   Object {
     "id": "1",
-    "type": "ORDER_HEADER",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "id": "1",
     "isNew": undefined,
     "previousIds": Array [],
     "type": "ORDER",
@@ -53,22 +37,6 @@ exports[`collapse view no orderItem 1`] = `
 Array [
   Object {
     "id": "1",
-    "type": "ORDER_HEADER",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "id": "1",
     "isNew": undefined,
     "previousIds": Array [],
     "type": "ORDER",
@@ -90,22 +58,6 @@ Array [
 
 exports[`normal view normal data 1`] = `
 Array [
-  Object {
-    "id": "1",
-    "type": "ORDER_HEADER",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
-  Object {
-    "type": "",
-  },
   Object {
     "id": "1",
     "isNew": undefined,
