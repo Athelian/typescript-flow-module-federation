@@ -1,11 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import {
-  productCardFragment,
-  partnerNameFragment,
-  tagFragment,
-  imageMediumFragment,
-} from 'graphql';
+import { productCardFragment, partnerNameFragment, tagFragment, imageFragment } from 'graphql';
 
 export const productListQuery = gql`
   query products(
@@ -26,7 +21,7 @@ export const productListQuery = gql`
   ${productCardFragment}
   ${partnerNameFragment}
   ${tagFragment}
-  ${imageMediumFragment}
+  ${imageFragment}
 `;
 
 export const productProvidersQuery = gql`

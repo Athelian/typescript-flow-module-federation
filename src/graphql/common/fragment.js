@@ -37,35 +37,14 @@ export const tagFragment = gql`
   }
 `;
 
-// original
+// path = original
 export const imageFragment = gql`
   fragment imageFragment on File {
     id
     path
-  }
-`;
-
-// 880
-export const imageLargeFragment = gql`
-  fragment imageLargeFragment on File {
-    id
-    path(preset: Large)
-  }
-`;
-
-// 200
-export const imageMediumFragment = gql`
-  fragment imageMediumFragment on File {
-    id
-    path(preset: Medium)
-  }
-`;
-
-// 40
-export const imageSmallFragment = gql`
-  fragment imageSmallFragment on File {
-    id
-    path(preset: Small)
+    pathSmall: path(preset: Small)
+    pathMedium: path(preset: Medium)
+    pathLarge: path(preset: Large)
   }
 `;
 

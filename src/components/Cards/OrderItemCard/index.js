@@ -185,7 +185,7 @@ const OrderItemCard = ({
   } = item;
 
   const productImage =
-    product.files && product.files.length > 0 ? product.files[0].path : FALLBACK_IMAGE;
+    product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
 
   return (
     <ObjectValue

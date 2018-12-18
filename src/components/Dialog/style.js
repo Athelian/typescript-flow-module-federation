@@ -16,6 +16,8 @@ const BackdropStyle: string = css`
   align-items: center;
   ${scrollbars.MAIN};
   z-index: 10000;
+  height: 100vh;
+  width: 100vw;
 `;
 
 export const BackdropFadeInStyle: string = css`

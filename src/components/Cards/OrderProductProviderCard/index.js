@@ -70,7 +70,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
       product: { name, serial, tags, files },
     } = productProvider;
 
-    const productImage = files && files.length > 0 ? files[activeImage].path : FALLBACK_IMAGE;
+    const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
 
     return (
       <BaseCard

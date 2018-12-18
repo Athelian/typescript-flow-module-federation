@@ -1,15 +1,18 @@
 // @flow
 import { css } from 'react-emotion';
+import { borderRadiuses } from 'styles/common';
 
 export const DialogStyle: string = css`
-  padding: 0px;
-  min-width: calc(100vw - 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: min-content;
   height: min-content;
 `;
 
 export const ImageStyle: string = css`
-  padding: 0px;
+  ${borderRadiuses.MAIN};
+  max-width: calc(100vw - 200px);
 `;
 
 export default DialogStyle;
