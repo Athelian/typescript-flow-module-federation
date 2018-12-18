@@ -67,3 +67,7 @@ export const LastTemplateUsedStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   align-items: center;
 `;
+
+export const TableHeaderClearFixStyle: string = css`
+  width: 20px;
+`;

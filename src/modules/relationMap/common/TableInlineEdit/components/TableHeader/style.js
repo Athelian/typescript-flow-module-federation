@@ -38,4 +38,5 @@ export const TableColumnStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   letter-spacing: 2px;
+  margin: 0 0 0 5px;
 `;

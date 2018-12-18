@@ -53,6 +53,7 @@ import {
   SidebarFadeStyle,
   BodyWrapperStyle,
   LastTemplateUsedStyle,
+  TableHeaderClearFixStyle,
 } from './style';
 
 type Props = {
@@ -882,6 +883,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       showAll={showAll}
                       templateColumns={templateColumns}
                     />
+                    <div className={TableHeaderClearFixStyle} />
                   </div>
 
                   <div className={SidebarWrapperStyle} ref={sidebarRef}>
