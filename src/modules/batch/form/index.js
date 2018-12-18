@@ -141,7 +141,6 @@ export default class BatchForm extends React.Component<Props> {
                               defaultMessage="Are you sure sync the packaging?"
                             />
                           }
-                          width={400}
                         />
                       </>
                     )}

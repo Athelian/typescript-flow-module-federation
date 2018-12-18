@@ -55,9 +55,13 @@ const ProductSection = ({ isNew }: Props) => (
                     <BooleanValue>
                       {({ value: isOpen, set: dialogToggle }) => (
                         <>
-                          {files.map(({ path, name, id }, index) => (
+                          {files.map(({ path, pathMedium, name, id }, index) => (
                             <div className={ProductImageWrapperStyle} key={id}>
-                              <img className={ProductImageStyle} src={path} alt={name} />
+                              <img
+                                className={ProductImageStyle}
+                                src={pathMedium || path}
+                                alt={name}
+                              />
                               <button
                                 className={ViewImageButtonStyle}
                                 type="button"
@@ -104,7 +108,6 @@ const ProductSection = ({ isNew }: Props) => (
                           <ImagePreviewDialog
                             isOpen={isOpen}
                             onRequestClose={() => dialogToggle(false)}
-                            width={800}
                             image={selectedImage}
                           />
                           <ImagesUploadInput

@@ -15,7 +15,7 @@ type Props = {
 
 function LogoutDialog({ isOpen, onRequestClose, onCancel, onConfirm }: Props) {
   return (
-    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} options={{ width: 300 }}>
+    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} width="300px">
       <div className={DialogStyle}>
         <div className={ConfirmMessageStyle}>
           <FormattedMessage {...messages.confirm} />

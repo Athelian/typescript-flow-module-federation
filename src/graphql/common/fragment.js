@@ -37,10 +37,14 @@ export const tagFragment = gql`
   }
 `;
 
+// path = original
 export const imageFragment = gql`
   fragment imageFragment on File {
     id
     path
+    pathSmall: path(preset: Small)
+    pathMedium: path(preset: Medium)
+    pathLarge: path(preset: Large)
   }
 `;
 

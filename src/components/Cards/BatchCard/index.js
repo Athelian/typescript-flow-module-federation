@@ -62,7 +62,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
   } = orderItem;
 
   const productImage =
-    product.files && product.files.length > 0 ? product.files[0].path : FALLBACK_IMAGE;
+    product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
 
   const totalAdjustment = batchAdjustments
     ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)

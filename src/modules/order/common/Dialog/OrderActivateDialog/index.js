@@ -39,7 +39,6 @@ const OrderActivateDialog = ({ isOpen, onRequestClose, order, onConfirm }: Order
             onRequestClose();
             onConfirm();
           }}
-          width={360}
           message={
             <div className={MessageStyle}>
               <div>

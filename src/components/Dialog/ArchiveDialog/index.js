@@ -10,11 +10,10 @@ function ArchiveDialog({
   onRequestClose,
   onCancel,
   onConfirm,
-  width,
   message,
 }: ConfirmDialogProps) {
   return (
-    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} options={{ width }}>
+    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} width="400px">
       <div className={ModalStyle}>
         <div className={ConfirmMessageStyle}>{message}</div>
 

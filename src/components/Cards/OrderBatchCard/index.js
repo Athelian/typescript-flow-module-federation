@@ -74,7 +74,6 @@ const OrderBatchCard = ({
               onRemove(batch);
               dialogToggle(false);
             }}
-            width={400}
             message={
               <div>
                 <div>
@@ -117,6 +116,7 @@ const OrderBatchCard = ({
     batchAdjustments,
     shipment,
   } = batch;
+
   const warehouseArrivalApproved = !!(
     batch &&
     batch.shipment &&
@@ -133,10 +133,12 @@ const OrderBatchCard = ({
     no: `batch.${batch.id}.no`,
     quantity: `batch.${batch.id}.quantity`,
   });
+
   const values = {
     [`batch.${batch.id}.no`]: no,
     [`batch.${batch.id}.quantity`]: quantity + totalAdjustment,
   };
+
   return (
     <BaseCard icon="BATCH" color="BATCH" showActionsOnHover actions={actions} {...rest}>
       <div

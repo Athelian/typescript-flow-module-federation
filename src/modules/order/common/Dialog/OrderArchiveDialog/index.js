@@ -41,7 +41,6 @@ const OrderArchiveDialog = ({ isOpen, onRequestClose, order, onConfirm }: OrderD
             onRequestClose();
             onConfirm();
           }}
-          width={360}
           message={
             <div className={MessageStyle}>
               <div>

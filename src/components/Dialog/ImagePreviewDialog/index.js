@@ -5,7 +5,6 @@ import { DialogStyle, ImageStyle } from './style';
 
 type Props = {
   isOpen: boolean,
-  width: number,
   image: {
     path: string,
     name: string,
@@ -13,9 +12,9 @@ type Props = {
   onRequestClose: () => void,
 };
 
-function ImagePreviewDialog({ image: { path, name }, isOpen, onRequestClose, width }: Props) {
+function ImagePreviewDialog({ image: { path, name }, isOpen, onRequestClose }: Props) {
   return (
-    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} options={{ width }}>
+    <Dialog isOpen={isOpen} onRequestClose={onRequestClose}>
       <div className={DialogStyle}>
         <img src={path} alt={name} className={ImageStyle} />
       </div>

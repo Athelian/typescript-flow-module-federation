@@ -11,10 +11,9 @@ function ConfirmDialog({
   onCancel,
   onConfirm,
   message,
-  width,
 }: ConfirmDialogProps) {
   return (
-    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} options={{ width }}>
+    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} width="400px">
       <div className={DialogStyle}>
         <div className={ConfirmMessageStyle}>{message}</div>
         <div className={ButtonsStyle}>

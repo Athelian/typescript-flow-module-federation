@@ -6,16 +6,9 @@ import Dialog from '../index';
 import messages from './messages';
 import { DialogStyle, RemoveMessageStyle, ButtonsStyle } from './style';
 
-function RemoveDialog({
-  isOpen,
-  onRequestClose,
-  onCancel,
-  onRemove,
-  message,
-  width,
-}: RemoveDialogProps) {
+function RemoveDialog({ isOpen, onRequestClose, onCancel, onRemove, message }: RemoveDialogProps) {
   return (
-    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} options={{ width }}>
+    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} width="400px">
       <div className={DialogStyle}>
         <div className={RemoveMessageStyle}>{message}</div>
         <div className={ButtonsStyle}>

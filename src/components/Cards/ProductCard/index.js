@@ -68,7 +68,7 @@ class ProductCard extends React.PureComponent<Props, State> {
 
     const { id, name, serial, tags, files, productProviders } = product;
 
-    const productImage = files && files.length > 0 ? files[activeImage].path : FALLBACK_IMAGE;
+    const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
 
     return (
       <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} {...rest}>

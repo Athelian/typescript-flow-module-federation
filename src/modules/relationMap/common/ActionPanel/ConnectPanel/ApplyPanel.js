@@ -157,7 +157,6 @@ const ApplyPanel = ({ connectType }: Props) => {
                           <ToggleCollapsed>
                             {({ set: setCollapsed }) => (
                               <ConfirmDialog
-                                width={400}
                                 isOpen={value.isOpen}
                                 onRequestClose={() => set('isOpen', false)}
                                 onCancel={() => set('isOpen', false)}

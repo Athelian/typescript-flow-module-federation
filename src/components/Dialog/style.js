@@ -16,6 +16,8 @@ const BackdropStyle: string = css`
   align-items: center;
   ${scrollbars.MAIN};
   z-index: 10000;
+  height: 100vh;
+  width: 100vw;
 `;
 
 export const BackdropFadeInStyle: string = css`
@@ -51,9 +53,9 @@ export const BackdropFadeOutStyle: string = css`
   animation-fill-mode: forwards;
 `;
 
-export const DialogFadeInStyle = (width: number): string => css`
+export const DialogFadeInStyle = (width: string): string => css`
   ${presets.BOX};
-  width: ${width}px;
+  width: ${width};
   z-index: 10001;
 
   @keyframes fadeIn {
@@ -68,9 +70,9 @@ export const DialogFadeInStyle = (width: number): string => css`
   animation-fill-mode: forwards;
 `;
 
-export const DialogFadeOutStyle = (width: number): string => css`
+export const DialogFadeOutStyle = (width: string): string => css`
   ${presets.BOX};
-  width: ${width}px;
+  width: ${width};
 
   @keyframes fadeAway {
     to {

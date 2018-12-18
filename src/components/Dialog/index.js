@@ -10,12 +10,15 @@ import {
   DialogFadeOutStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  rootElementId: string,
+  width: string,
+};
+
+type Props = OptionalProps & {
   isOpen: boolean,
   onRequestClose: (evt: Event) => void,
   children: React.Node,
-  options: { width: number },
-  rootElementId?: string,
 };
 
 const ANIMATION_FINISHED = 500;
@@ -23,6 +26,7 @@ const ANIMATION_FINISHED = 500;
 export default class Dialog extends React.Component<Props> {
   static defaultProps = {
     rootElementId: 'dialog-root',
+    width: 'min-content',
   };
 
   constructor() {
@@ -57,12 +61,7 @@ export default class Dialog extends React.Component<Props> {
   dialogContainer: HTMLDivElement;
 
   render() {
-    const {
-      children,
-      isOpen,
-      onRequestClose,
-      options: { width },
-    } = this.props;
+    const { children, isOpen, onRequestClose, width } = this.props;
 
     return (
       <PreventInitialAnimation isChildrenVisible>
