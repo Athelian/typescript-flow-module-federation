@@ -14,7 +14,7 @@ export const ProductCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 197px;
+  height: 202px;
   &:hover {
     button {
       opacity: 1;
