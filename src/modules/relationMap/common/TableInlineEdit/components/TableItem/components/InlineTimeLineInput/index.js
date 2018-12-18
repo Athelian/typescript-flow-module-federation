@@ -16,9 +16,10 @@ import {
 type Props = {
   name: string,
   value: Object,
+  id: string,
 };
 
-export default function InlineTimeLineInput({ name, value }: Props) {
+export default function InlineTimeLineInput({ name, value, id }: Props) {
   const {
     isFocused,
     hasApproved,
@@ -30,9 +31,16 @@ export default function InlineTimeLineInput({ name, value }: Props) {
   } = useTimeLineInput(value);
   return (
     <div className={InlineTimeLineInputWrapperStyle}>
-      <DefaultStyle width="120px" type="date" isFocused={isFocused} hasError={false}>
+      <DefaultStyle
+        width="120px"
+        type="date"
+        isFocused={isFocused}
+        hasError={false}
+        id={`input-wrapper-${id}`}
+      >
         <DateInput
           align="left"
+          id={`input-${id}`}
           className={DateInputWrapperStyle}
           name={name}
           {...inputHandlers}

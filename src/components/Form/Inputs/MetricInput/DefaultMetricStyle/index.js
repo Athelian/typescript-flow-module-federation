@@ -13,6 +13,8 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   children: React.Node,
+  id?: string,
+  tabindex?: string,
 };
 
 const defaultProps = {
@@ -32,8 +34,12 @@ const DefaultMetricStyle = ({
   width,
   height,
   children,
+  id,
+  tabindex,
 }: Props): React.Node => (
   <div
+    {...(id ? { id } : {})}
+    {...(tabindex ? { tabindex } : {})}
     className={DefaultStyleWrapperStyle({
       type: 'number',
       isFocused,

@@ -37,6 +37,9 @@ export const DefaultStyleWrapperStyle = ({
   width: ${width};
   min-width: ${width};
   cursor: text;
+  &:focus {
+    border-color: ${hasError ? colors.RED : colors.TEAL};
+  }
   ${type === 'button' && 'cursor: pointer'};
   ${transitions.MAIN};
   ${!disabled &&
@@ -79,6 +82,7 @@ export const DefaultStyleWrapperStyle = ({
     `};
     &:focus {
       outline: none;
+      border-color: ${hasError ? colors.RED : colors.TEAL};
     }
     &::placeholder {
       color: ${colors.GRAY_LIGHT};

@@ -12,6 +12,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   name: string,
   value: number,
+  id: string,
 };
 
 const defaultProps = {
@@ -19,14 +20,20 @@ const defaultProps = {
   adjustment: 0,
 };
 
-export default function InlineNumberInput({ name, value, adjustment, isRequired }: Props) {
+export default function InlineNumberInput({ name, value, adjustment, isRequired, id }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useNumberInput(value + adjustment, {
     isRequired,
   });
   return (
-    <DefaultStyle type="number" isFocused={isFocused} hasError={hasError}>
+    <DefaultStyle
+      type="number"
+      isFocused={isFocused}
+      hasError={hasError}
+      id={`input-wrapper-${id}`}
+    >
       <NumberInput
         name={name}
+        id={`input-${id}`}
         {...inputHandlers}
         onBlur={() => {
           inputHandlers.onBlur();

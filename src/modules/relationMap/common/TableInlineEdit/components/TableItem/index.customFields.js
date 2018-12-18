@@ -15,11 +15,18 @@ type Props = {
     entityType: string,
     sort: Object,
   }>,
+  rowNo: number,
   values: ?Object,
   validator: Object,
 };
 
-export default function TableItemForCustomFields({ cell, fields, values, validator }: Props) {
+export default function TableItemForCustomFields({
+  cell,
+  fields,
+  values,
+  validator,
+  rowNo,
+}: Props) {
   if (!values) return null;
 
   const customFields = getByPathWithDefault(
@@ -35,7 +42,7 @@ export default function TableItemForCustomFields({ cell, fields, values, validat
   const fieldValueMap = list2Map(fieldValues);
   return (
     <div className={WrapperStyle}>
-      {fields.map(({ id }) => {
+      {fields.map(({ id }, fieldCounter) => {
         const fieldValue = fieldValueMap.get(id);
 
         return (
@@ -48,7 +55,11 @@ export default function TableItemForCustomFields({ cell, fields, values, validat
                 values={values}
               >
                 {({ name: fieldName }) => (
-                  <InlineTextInput name={fieldName} value={fieldValue.value.string} />
+                  <InlineTextInput
+                    name={fieldName}
+                    value={fieldValue.value.string}
+                    id={`${rowNo}-${fieldCounter}`}
+                  />
                 )}
               </FormField>
             ) : (

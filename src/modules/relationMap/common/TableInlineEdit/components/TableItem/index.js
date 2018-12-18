@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
-import { FormField } from 'modules/form';
+import { Subscribe } from 'unstated';
+import { HotKeys } from 'react-hotkeys';
+import { FormField, FormContainer } from 'modules/form';
 import { getByPath } from 'utils/fp';
 import { TableDisableCell } from '..';
 import { WrapperStyle, ItemStyle } from './style';
@@ -20,6 +22,7 @@ import {
 
 type Props = {
   cell: string,
+  rowNo: number,
   fields: Array<{
     name: string,
     type: string,
@@ -29,22 +32,36 @@ type Props = {
   validator: Object,
 };
 
+const handler = (activeField, setActiveField) => ({
+  firstRight: () => {
+    console.log('active', activeField, setActiveField);
+    setActiveField('orders.589.piNo');
+  },
+});
 function renderItem({
+  id,
   type,
   value,
   name,
   meta,
   values,
+  isFocused,
+  onFocus,
+  onBlur,
 }: {
+  id: string,
   value: any,
   type: string,
   name: string,
   values: Object,
   meta?: Object,
+  isFocused: boolean,
+  onFocus: boolean,
+  onBlur: boolean,
 }) {
   switch (type) {
     case 'number':
-      return <InlineNumberInput name={name} value={value} {...meta} />;
+      return <InlineNumberInput name={name} value={value} {...meta} id={id} />;
 
     case 'numberAdjustment': {
       const adjustments = getByPath('batchAdjustments', values) || [];
@@ -57,60 +74,93 @@ function renderItem({
           value={value}
           {...meta}
           adjustment={totalAdjustment}
+          id={id}
         />
       );
     }
 
     case 'date':
-      return <InlineDateInput name={name} value={value} {...meta} />;
+      return <InlineDateInput name={name} value={value} {...meta} id={id} />;
 
     case 'timeline': {
       if (!value) return <TableDisableCell />;
-      return <InlineTimeLineInput name={name} value={value} {...meta} />;
+      return <InlineTimeLineInput name={name} value={value} {...meta} id={id} />;
     }
 
     case 'metric':
-      return <InlineMetricInput name={name} value={value} values={values} {...meta} />;
+      return <InlineMetricInput name={name} value={value} values={values} {...meta} id={id} />;
 
     case 'enum':
-      return <InlineSearchEnumInput name={name} value={value} {...meta} />;
+      return <InlineSearchEnumInput name={name} value={value} {...meta} id={id} />;
 
     case 'inCharges':
-      return <InlineInChargeInput name={name} values={value} {...meta} />;
+      return <InlineInChargeInput name={name} values={value} {...meta} id={id} />;
 
     case 'forwarders':
-      return <InlineForwarderInput name={name} values={value} {...meta} />;
+      return <InlineForwarderInput name={name} values={value} {...meta} id={id} />;
 
     case 'tags':
-      return <InlineTagInput name={name} values={value} {...meta} />;
+      return <InlineTagInput name={name} values={value} {...meta} id={id} />;
 
     case 'productProvider':
       return (
-        <InlineProductProvider name={name} value={value} exporter={value.exporter.id} {...meta} />
+        <InlineProductProvider
+          name={name}
+          value={value}
+          exporter={value.exporter.id}
+          {...meta}
+          id={id}
+        />
       );
 
     default:
-      return <InlineTextInput name={name} value={value} {...meta} />;
+      return (
+        <InlineTextInput
+          id={id}
+          name={name}
+          value={value}
+          {...meta}
+          isFocused={isFocused}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />
+      );
   }
 }
 
-export default function TableItem({ cell, fields, values, validator }: Props) {
+export default function TableItem({ cell, fields, values, validator, rowNo }: Props) {
   if (!values) return null;
 
   return (
     <div className={WrapperStyle}>
-      {fields.map(({ name, type, meta }) => (
+      {fields.map(({ name, type, meta }, fieldCounter) => (
         <div className={ItemStyle} key={name}>
-          <FormField
-            name={`${cell}.${name}`}
-            initValue={getByPath(name, values)}
-            validator={validator}
-            values={values}
-          >
-            {({ name: fieldName }) =>
-              renderItem({ name: fieldName, type, meta, value: getByPath(name, values), values })
-            }
-          </FormField>
+          <Subscribe to={[FormContainer]}>
+            {({ state, setActiveField }) => (
+              <HotKeys handlers={handler(state, setActiveField)}>
+                <FormField
+                  name={`${cell}.${name}`}
+                  initValue={getByPath(name, values)}
+                  validator={validator}
+                  values={values}
+                >
+                  {({ name: fieldName, isFocused, onFocus, onBlur }) =>
+                    renderItem({
+                      id: `${rowNo}-${fieldCounter + 1}`,
+                      name: fieldName,
+                      type,
+                      meta,
+                      value: getByPath(name, values),
+                      values,
+                      isFocused,
+                      onFocus,
+                      onBlur,
+                    })
+                  }
+                </FormField>
+              </HotKeys>
+            )}
+          </Subscribe>
         </div>
       ))}
     </div>
