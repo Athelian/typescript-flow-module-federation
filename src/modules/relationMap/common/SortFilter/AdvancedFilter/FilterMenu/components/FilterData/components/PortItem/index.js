@@ -7,17 +7,23 @@ import { FilterDataStyle } from 'modules/relationMap/common/SortFilter/AdvancedF
 type Props = {
   ports: Array<Object>,
   label: React.Node,
+  name: string,
+  onRemove: Function,
 };
 
-const PortItem = ({ ports, label }: Props): Array<React.Node> =>
+const PortItem = ({ ports, name, label, onRemove }: Props): Array<React.Node> =>
   ports.map(
-    port =>
+    (port, index) =>
       port && (
         <button
           key={uuid()}
           className={FilterDataStyle}
           type="button"
-          onClick={() => console.log(port)}
+          onClick={() => {
+            const newPorts = [...ports];
+            newPorts.splice(index, 1);
+            onRemove(newPorts, name);
+          }}
         >
           {label} : {port.name}
           <Icon icon="CLEAR" />

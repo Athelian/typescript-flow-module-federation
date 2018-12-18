@@ -119,6 +119,8 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
         <div className={FilterDataWrapperStyle}>
           {data.loadPorts && (
             <PortItem
+              name="loadPorts"
+              onRemove={onRemove}
               ports={data.loadPorts}
               label={
                 <FormattedMessage id="modules.relationMap.loadPort" defaultMessage="LOAD PORT" />
@@ -127,6 +129,8 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
           )}
           {data.dischargePorts && (
             <PortItem
+              name="dischargePorts"
+              onRemove={onRemove}
               ports={data.dischargePorts}
               label={
                 <FormattedMessage
@@ -138,6 +142,8 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
           )}
           {data.firstTransitPorts && (
             <PortItem
+              name="secondTransitPorts"
+              onRemove={onRemove}
               ports={data.firstTransitPorts}
               label={
                 <FormattedMessage
@@ -149,6 +155,8 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
           )}
           {data.secondTransitPorts && (
             <PortItem
+              name="secondTransitPorts"
+              onRemove={onRemove}
               ports={data.secondTransitPorts}
               label={
                 <FormattedMessage
