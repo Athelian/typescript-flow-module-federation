@@ -6,7 +6,6 @@ export type ConfirmDialogProps = {
   onRequestClose: () => void,
   onCancel: () => void,
   onConfirm: () => Promise<any> | void,
-  width: number,
   message: React.Node,
 };
 
@@ -15,6 +14,5 @@ export type RemoveDialogProps = {
   onRequestClose: () => void,
   onCancel: () => void,
   onRemove: () => Promise<any> | void,
-  width: number,
   message: React.Node,
 };

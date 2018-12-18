@@ -46,7 +46,6 @@ const ShipmentActivateDialog = ({
             onRequestClose();
             onConfirm();
           }}
-          width={360}
           message={
             <div className={MessageStyle}>
               <div>

@@ -74,7 +74,6 @@ const OrderBatchCard = ({
               onRemove(batch);
               dialogToggle(false);
             }}
-            width={400}
             message={
               <div>
                 <div>

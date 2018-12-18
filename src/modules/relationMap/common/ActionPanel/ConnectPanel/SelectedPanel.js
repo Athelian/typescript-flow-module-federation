@@ -324,7 +324,6 @@ const SelectedPanel = ({ connectType }: Props) => (
                     onCancel={() => dialogToggle(false)}
                     isOpen={isOpen}
                     message={<ConfirmMessage connectType={connectType} />}
-                    width={300}
                     onConfirm={async () => {
                       setLoading(true);
                       if (connectType === 'SHIPMENT') {

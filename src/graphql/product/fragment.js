@@ -21,7 +21,7 @@ export const productFormFragment = gql`
       ...tagFragment
     }
     files {
-      ...imageFragment
+      ...imageMediumFragment
     }
     productProviders {
       ...productProviderFormFragment
@@ -48,7 +48,7 @@ export const productCardFragment = gql`
       ...tagFragment
     }
     files {
-      ...imageFragment
+      ...imageMediumFragment
     }
   }
 `;

@@ -4,7 +4,7 @@ import {
   productFormFragment,
   userAvatarFragment,
   tagFragment,
-  imageFragment,
+  imageMediumFragment,
   partnerCardFragment,
   priceFragment,
   metricFragment,
@@ -26,7 +26,7 @@ export const productFormQuery = gql`
   ${productFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
-  ${imageFragment}
+  ${imageMediumFragment}
   ${partnerCardFragment}
   ${priceFragment}
   ${metricFragment}

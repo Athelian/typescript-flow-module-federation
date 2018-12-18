@@ -104,7 +104,6 @@ const ProductSection = ({ isNew }: Props) => (
                           <ImagePreviewDialog
                             isOpen={isOpen}
                             onRequestClose={() => dialogToggle(false)}
-                            width={800}
                             image={selectedImage}
                           />
                           <ImagesUploadInput

@@ -40,7 +40,6 @@ const ProductActivateDialog = ({
             onRequestClose();
             onConfirm();
           }}
-          width={360}
           message={
             <div data-testid="productActivateDialog" className={MessageStyle}>
               <div>

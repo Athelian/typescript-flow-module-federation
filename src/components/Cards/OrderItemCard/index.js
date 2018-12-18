@@ -129,7 +129,6 @@ const OrderItemCard = ({
                       onRemove(item);
                       dialogToggle(false);
                     }}
-                    width={400}
                     message={
                       <div>
                         <div>
