@@ -243,6 +243,15 @@ const convertMetricRangeQuery = ({
         metric,
       };
 
+const mergeAirportsAndSeaports = (airports: Array<Object>, seaports: Array<Object>) => [
+  ...(isValidOfPortsInput(airports)
+    ? filterPorts(airports).map(port => ({ airport: port.name }))
+    : []),
+  ...(isValidOfPortsInput(seaports)
+    ? filterPorts(seaports).map(port => ({ seaport: port.name }))
+    : []),
+];
+
 const convertPortsQuery = (state: Object) => {
   const activeFilters = getByPathWithDefault([], `activeFilters.shipment`, state);
   if (!activeFilters.includes('airports') && !activeFilters.includes('seaports')) return {};
@@ -252,52 +261,33 @@ const convertPortsQuery = (state: Object) => {
   const result = {
     ...(isValidOfPortsInput(airports.loadPorts) || isValidOfPortsInput(seaports.loadPorts)
       ? {
-          shipmentLoadPorts: [
-            ...(isValidOfPortsInput(airports.loadPorts)
-              ? filterPorts(airports.loadPorts).map(port => ({ airport: port.name }))
-              : []),
-            ...(isValidOfPortsInput(seaports.loadPorts)
-              ? filterPorts(seaports.loadPorts).map(port => ({ seaport: port.name }))
-              : []),
-          ],
+          shipmentLoadPorts: mergeAirportsAndSeaports(airports.loadPorts, seaports.loadPorts),
         }
       : {}),
     ...(isValidOfPortsInput(airports.dischargePorts) || isValidOfPortsInput(seaports.dischargePorts)
       ? {
-          shipmentDischargePorts: [
-            ...(isValidOfPortsInput(airports.dischargePorts)
-              ? filterPorts(airports.dischargePorts).map(port => ({ airport: port.name }))
-              : []),
-            ...(isValidOfPortsInput(seaports.dischargePorts)
-              ? filterPorts(seaports.dischargePorts).map(port => ({ seaport: port.name }))
-              : []),
-          ],
+          shipmentDischargePorts: mergeAirportsAndSeaports(
+            airports.dischargePorts,
+            seaports.dischargePorts
+          ),
         }
       : {}),
     ...(isValidOfPortsInput(airports.firstTransitPorts) ||
     isValidOfPortsInput(seaports.firstTransitPorts)
       ? {
-          shipmentFirstTransitPorts: [
-            ...(isValidOfPortsInput(airports.firstTransitPorts)
-              ? filterPorts(airports.firstTransitPorts).map(port => ({ airport: port.name }))
-              : []),
-            ...(isValidOfPortsInput(seaports.firstTransitPorts)
-              ? filterPorts(seaports.firstTransitPorts).map(port => ({ seaport: port.name }))
-              : []),
-          ],
+          shipmentFirstTransitPorts: mergeAirportsAndSeaports(
+            airports.firstTransitPorts,
+            seaports.firstTransitPorts
+          ),
         }
       : {}),
     ...(isValidOfPortsInput(airports.secondTransitPorts) ||
     isValidOfPortsInput(seaports.secondTransitPorts)
       ? {
-          shipmentSecondTransitPorts: [
-            ...(isValidOfPortsInput(airports.secondTransitPorts)
-              ? filterPorts(airports.secondTransitPorts).map(port => ({ airport: port.name }))
-              : []),
-            ...(isValidOfPortsInput(seaports.secondTransitPorts)
-              ? filterPorts(seaports.secondTransitPorts).map(port => ({ seaport: port.name }))
-              : []),
-          ],
+          shipmentSecondTransitPorts: mergeAirportsAndSeaports(
+            airports.secondTransitPorts,
+            seaports.secondTransitPorts
+          ),
         }
       : {}),
   };

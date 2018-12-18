@@ -117,62 +117,47 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
     case 'airports': {
       return (
         <div className={FilterDataWrapperStyle}>
-          {data.loadPorts &&
-            data.loadPorts.map(port =>
-              isNullOrUndefined(port) ? null : (
-                <PortItem
-                  port={port}
-                  label={
-                    <FormattedMessage
-                      id="modules.relationMap.loadPort"
-                      defaultMessage="LOAD PORT"
-                    />
-                  }
+          {data.loadPorts && (
+            <PortItem
+              ports={data.loadPorts}
+              label={
+                <FormattedMessage id="modules.relationMap.loadPort" defaultMessage="LOAD PORT" />
+              }
+            />
+          )}
+          {data.dischargePorts && (
+            <PortItem
+              ports={data.dischargePorts}
+              label={
+                <FormattedMessage
+                  id="modules.relationMap.dischargePort"
+                  defaultMessage="DISCHARGE PORT"
                 />
-              )
-            )}
-          {data.dischargePorts &&
-            data.dischargePorts.map(port =>
-              isNullOrUndefined(port) ? null : (
-                <PortItem
-                  port={port}
-                  label={
-                    <FormattedMessage
-                      id="modules.relationMap.dischargePort"
-                      defaultMessage="DISCHARGE PORT"
-                    />
-                  }
+              }
+            />
+          )}
+          {data.firstTransitPorts && (
+            <PortItem
+              ports={data.firstTransitPorts}
+              label={
+                <FormattedMessage
+                  id="modules.relationMap.firstTransitPort"
+                  defaultMessage="FIRST TRANSIT PORT"
                 />
-              )
-            )}
-          {data.firstTransitPorts &&
-            data.firstTransitPorts.map(port =>
-              isNullOrUndefined(port) ? null : (
-                <PortItem
-                  port={port}
-                  label={
-                    <FormattedMessage
-                      id="modules.relationMap.firstTransitPort"
-                      defaultMessage="FIRST TRANSIT PORT"
-                    />
-                  }
+              }
+            />
+          )}
+          {data.secondTransitPorts && (
+            <PortItem
+              ports={data.secondTransitPorts}
+              label={
+                <FormattedMessage
+                  id="modules.relationMap.secondTransitPort"
+                  defaultMessage="SECOND TRANSIT PORT"
                 />
-              )
-            )}
-          {data.secondTransitPorts &&
-            data.secondTransitPorts.map(port =>
-              isNullOrUndefined(port) ? null : (
-                <PortItem
-                  port={port}
-                  label={
-                    <FormattedMessage
-                      id="modules.relationMap.secondTransitPort"
-                      defaultMessage="SECOND TRANSIT PORT"
-                    />
-                  }
-                />
-              )
-            )}
+              }
+            />
+          )}
         </div>
       );
     }
