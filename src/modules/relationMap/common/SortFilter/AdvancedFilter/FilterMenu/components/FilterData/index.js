@@ -111,6 +111,10 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
         </div>
       );
     }
+    case 'airports': {
+      console.log(data);
+      return <div className={FilterDataWrapperStyle} />;
+    }
     case 'packaging': {
       return (
         <div className={FilterDataWrapperStyle}>

@@ -330,9 +330,33 @@ const getFilterInputArea = ({
               hideToggles: true,
             });
         case 'seaports':
-          return () => Ports({ portType: 'Seaport' });
+          return () => (
+            <Ports
+              portType="Seaport"
+              loadPorts={selectedItems.loadPorts}
+              dischargePorts={selectedItems.dischargePorts}
+              firstTransitPorts={selectedItems.firstTransitPorts}
+              secondTransitPorts={selectedItems.secondTransitPorts}
+              onChangeLoadPorts={ports => onToggleSelect(ports, 'loadPorts')}
+              onChangeDischargePorts={ports => onToggleSelect(ports, 'dischargePorts')}
+              onChangeFirstTransitPorts={ports => onToggleSelect(ports, 'firstTransitPorts')}
+              onChangeSecondTransitPorts={ports => onToggleSelect(ports, 'secondTransitPorts')}
+            />
+          );
         case 'airports':
-          return () => Ports({ portType: 'Airport' });
+          return () => (
+            <Ports
+              portType="Airport"
+              loadPorts={selectedItems.loadPorts}
+              dischargePorts={selectedItems.dischargePorts}
+              firstTransitPorts={selectedItems.firstTransitPorts}
+              secondTransitPorts={selectedItems.secondTransitPorts}
+              onChangeLoadPorts={ports => onToggleSelect(ports, 'loadPorts')}
+              onChangeDischargePorts={ports => onToggleSelect(ports, 'dischargePorts')}
+              onChangeFirstTransitPorts={ports => onToggleSelect(ports, 'firstTransitPorts')}
+              onChangeSecondTransitPorts={ports => onToggleSelect(ports, 'secondTransitPorts')}
+            />
+          );
         case 'cargoReady':
         case 'loadPortDeparture':
         case 'firstTransitPortArrival':
