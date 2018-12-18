@@ -16,7 +16,11 @@ import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { UIConsumer } from 'modules/ui';
-import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
+import {
+  isValidOfMetricRangeInput,
+  isValidOfPortsInput,
+  filterPorts,
+} from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';
 import FilterInputArea from './FilterInputArea';
@@ -239,6 +243,68 @@ const convertMetricRangeQuery = ({
         metric,
       };
 
+const convertPortsQuery = (state: Object) => {
+  const activeFilters = getByPathWithDefault([], `activeFilters.shipment`, state);
+  if (!activeFilters.includes('airports') && !activeFilters.includes('seaports')) return {};
+  const airports = getByPathWithDefault({}, `selectedItems.shipment.airports`, state);
+  const seaports = getByPathWithDefault({}, 'selectedItems.shipment.seaports', state);
+
+  const result = {
+    ...(isValidOfPortsInput(airports.loadPorts) || isValidOfPortsInput(seaports.loadPorts)
+      ? {
+          shipmentLoadPorts: [
+            ...(isValidOfPortsInput(airports.loadPorts)
+              ? filterPorts(airports.loadPorts).map(port => ({ airport: port.name }))
+              : []),
+            ...(isValidOfPortsInput(seaports.loadPorts)
+              ? filterPorts(seaports.loadPorts).map(port => ({ seaport: port.name }))
+              : []),
+          ],
+        }
+      : {}),
+    ...(isValidOfPortsInput(airports.dischargePorts) || isValidOfPortsInput(seaports.dischargePorts)
+      ? {
+          shipmentDischargePorts: [
+            ...(isValidOfPortsInput(airports.dischargePorts)
+              ? filterPorts(airports.dischargePorts).map(port => ({ airport: port.name }))
+              : []),
+            ...(isValidOfPortsInput(seaports.dischargePorts)
+              ? filterPorts(seaports.dischargePorts).map(port => ({ seaport: port.name }))
+              : []),
+          ],
+        }
+      : {}),
+    ...(isValidOfPortsInput(airports.firstTransitPorts) ||
+    isValidOfPortsInput(seaports.firstTransitPorts)
+      ? {
+          shipmentFirstTransitPorts: [
+            ...(isValidOfPortsInput(airports.firstTransitPorts)
+              ? filterPorts(airports.firstTransitPorts).map(port => ({ airport: port.name }))
+              : []),
+            ...(isValidOfPortsInput(seaports.firstTransitPorts)
+              ? filterPorts(seaports.firstTransitPorts).map(port => ({ seaport: port.name }))
+              : []),
+          ],
+        }
+      : {}),
+    ...(isValidOfPortsInput(airports.secondTransitPorts) ||
+    isValidOfPortsInput(seaports.secondTransitPorts)
+      ? {
+          shipmentSecondTransitPorts: [
+            ...(isValidOfPortsInput(airports.secondTransitPorts)
+              ? filterPorts(airports.secondTransitPorts).map(port => ({ airport: port.name }))
+              : []),
+            ...(isValidOfPortsInput(seaports.secondTransitPorts)
+              ? filterPorts(seaports.secondTransitPorts).map(port => ({ seaport: port.name }))
+              : []),
+          ],
+        }
+      : {}),
+  };
+
+  return result;
+};
+
 const convertPackagingQuery = (state: Object, type: string, prevKey: string) => {
   const activeFilters = getByPathWithDefault([], `activeFilters.${type}`, state);
   if (!activeFilters.includes('packaging')) return {};
@@ -304,6 +370,7 @@ const convertToFilterQuery = (state: Object) => ({
 
   ...convertPackagingQuery(state, 'item', 'productProvider'),
   ...convertPackagingQuery(state, 'batch', 'batch'),
+  ...convertPortsQuery(state),
 
   ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
   ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),

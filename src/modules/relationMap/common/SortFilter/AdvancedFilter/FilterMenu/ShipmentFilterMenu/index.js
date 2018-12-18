@@ -60,7 +60,11 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.inCharge} />,
           data: getSelectData(selectedItems, 'inCharge'),
         },
-        // { name: 'seaports', label: <FormattedMessage {...messages.seaports} />, data: [] },
+        {
+          name: 'seaports',
+          label: <FormattedMessage {...messages.seaports} />,
+          data: getSelectData(selectedItems, 'seaports'),
+        },
         {
           name: 'airports',
           label: <FormattedMessage {...messages.airports} />,

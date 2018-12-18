@@ -37,6 +37,7 @@ function isValid(name: string, data: any): boolean {
         isValidOfMetricRangeInput(packageWeight)
       );
     }
+    case 'seaports':
     case 'airports': {
       const { loadPorts, dischargePorts, firstTransitPorts, secondTransitPorts } = data;
       return (

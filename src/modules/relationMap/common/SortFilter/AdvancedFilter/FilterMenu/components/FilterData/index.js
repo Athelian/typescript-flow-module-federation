@@ -9,6 +9,7 @@ import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
 import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
 import MetricInputItem from './components/MetricInputItem';
+import PortItem from './components/PortItem';
 import { FilterDataWrapperStyle, FilterDataStyle } from './style';
 
 type Props = {
@@ -112,95 +113,66 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
         </div>
       );
     }
+    case 'seaports':
     case 'airports': {
-      console.log(data);
       return (
         <div className={FilterDataWrapperStyle}>
-          {data.loadPorts && (
-            <>
-              {/* FIXME: styling */}
-              <FormattedMessage id="modules.relationMap.loadPort" defaultMessage="LOAD PORT" />
-              {data.loadPorts.map(port =>
-                isNullOrUndefined(port) ? null : (
-                  <button
-                    key={uuid()}
-                    className={FilterDataStyle}
-                    type="button"
-                    onClick={() => console.log(port)}
-                  >
-                    {port.name}
-                    <Icon icon="CLEAR" />
-                  </button>
-                )
-              )}
-            </>
-          )}
-          {data.dischargePorts && (
-            <>
-              {/* FIXME: styling */}
-              <FormattedMessage
-                id="modules.relationMap.dischargePort"
-                defaultMessage="DISCHARGE PORT"
-              />
-              {data.dischargePorts.map(port =>
-                isNullOrUndefined(port) ? null : (
-                  <button
-                    key={uuid()}
-                    className={FilterDataStyle}
-                    type="button"
-                    onClick={() => console.log(port)}
-                  >
-                    {port.name}
-                    <Icon icon="CLEAR" />
-                  </button>
-                )
-              )}
-            </>
-          )}
-          {data.firstTransitPorts && (
-            <>
-              {/* FIXME: styling */}
-              <FormattedMessage
-                id="modules.relationMap.firstTransitPort"
-                defaultMessage="FIRST TRANSIT PORT"
-              />
-              {data.firstTransitPorts.map(port =>
-                isNullOrUndefined(port) ? null : (
-                  <button
-                    key={uuid()}
-                    className={FilterDataStyle}
-                    type="button"
-                    onClick={() => console.log(port)}
-                  >
-                    {port.name}
-                    <Icon icon="CLEAR" />
-                  </button>
-                )
-              )}
-            </>
-          )}
-          {data.secondTransitPorts && (
-            <>
-              {/* FIXME: styling */}
-              <FormattedMessage
-                id="modules.relationMap.secondTransitPort"
-                defaultMessage="SECOND TRANSIT PORT"
-              />
-              {data.secondTransitPorts.map(port =>
-                isNullOrUndefined(port) ? null : (
-                  <button
-                    key={uuid()}
-                    className={FilterDataStyle}
-                    type="button"
-                    onClick={() => console.log(port)}
-                  >
-                    {port.name}
-                    <Icon icon="CLEAR" />
-                  </button>
-                )
-              )}
-            </>
-          )}
+          {data.loadPorts &&
+            data.loadPorts.map(port =>
+              isNullOrUndefined(port) ? null : (
+                <PortItem
+                  port={port}
+                  label={
+                    <FormattedMessage
+                      id="modules.relationMap.loadPort"
+                      defaultMessage="LOAD PORT"
+                    />
+                  }
+                />
+              )
+            )}
+          {data.dischargePorts &&
+            data.dischargePorts.map(port =>
+              isNullOrUndefined(port) ? null : (
+                <PortItem
+                  port={port}
+                  label={
+                    <FormattedMessage
+                      id="modules.relationMap.dischargePort"
+                      defaultMessage="DISCHARGE PORT"
+                    />
+                  }
+                />
+              )
+            )}
+          {data.firstTransitPorts &&
+            data.firstTransitPorts.map(port =>
+              isNullOrUndefined(port) ? null : (
+                <PortItem
+                  port={port}
+                  label={
+                    <FormattedMessage
+                      id="modules.relationMap.firstTransitPort"
+                      defaultMessage="FIRST TRANSIT PORT"
+                    />
+                  }
+                />
+              )
+            )}
+          {data.secondTransitPorts &&
+            data.secondTransitPorts.map(port =>
+              isNullOrUndefined(port) ? null : (
+                <PortItem
+                  port={port}
+                  label={
+                    <FormattedMessage
+                      id="modules.relationMap.secondTransitPort"
+                      defaultMessage="SECOND TRANSIT PORT"
+                    />
+                  }
+                />
+              )
+            )}
         </div>
       );
     }

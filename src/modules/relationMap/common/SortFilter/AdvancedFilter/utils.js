@@ -18,3 +18,6 @@ export const isValidOfMetricRangeInput = (input: MetricInputType) =>
 
 export const isValidOfPortsInput = (ports: Array<PortType>) =>
   ports && ports.filter(port => !isNullOrUndefined(port)).length > 0;
+
+export const filterPorts = (ports: Array<PortType>): Array<PortType> =>
+  ports && ports.filter(port => !isNullOrUndefined(port));
