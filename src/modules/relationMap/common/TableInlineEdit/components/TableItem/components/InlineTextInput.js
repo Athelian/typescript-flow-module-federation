@@ -31,7 +31,6 @@ export default function InlineTextInput({ id, name, value, isRequired, disabled 
       hasError={hasError}
       id={`input-wrapper-${id}`}
     >
-      {id}
       <TextInput
         id={`input-${id}`}
         name={name}
