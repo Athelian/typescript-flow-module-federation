@@ -40,12 +40,7 @@ export default function InlineMetricInput({
 }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useMetricInput(value, { isRequired });
   return (
-    <DefaultMetricStyle
-      isFocused={isFocused}
-      hasError={hasError}
-      id={`input-wrapper-${id}`}
-      tabIndex="0"
-    >
+    <DefaultMetricStyle isFocused={isFocused} hasError={hasError} id={`input-wrapper-${id}`}>
       <MetricInput
         {...inputHandlers}
         id={`input-${id}`}

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { getByPathWithDefault } from 'utils/fp';
 import { list2Map } from 'utils/customFields';
 import { FormField } from 'modules/form';
-// import TableDisableCell from 'modules/relationMap/common/TableInlineEdit/components/TableDisableCell';
 import { WrapperStyle, ItemStyle } from './style';
 import InlineTextInput from './components/InlineTextInput';
 

@@ -82,6 +82,7 @@ export const DefaultStyleWrapperStyle = ({
     `};
     &:focus {
       outline: none;
+      border-color: ${hasError ? colors.RED : colors.TEAL};
     }
     &::placeholder {
       color: ${colors.GRAY_LIGHT};

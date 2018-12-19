@@ -65,23 +65,15 @@ type Props = {
 setConfig({ pureSFC: true });
 
 const keyMap = {
-  firstRight: ['command+right'],
-  firstLeft: ['command+left'],
-  firstTop: ['command+up'],
-  firstBottom: ['command+down'],
+  firstRight: ['command+right', 'ctrl+right'],
+  firstLeft: ['command+left', 'ctrl+left'],
+  firstTop: ['command+up', 'ctrl+up'],
+  firstBottom: ['command+down', 'ctrl+down'],
 };
 
 const focusNewCell = (currentId, newCellId) => {
   const newCell = document.getElementById(`input-${newCellId}`);
   if (newCell) {
-    const currentCell = document.getElementById(currentId);
-    const wrapperCell = document.getElementById(`input-wrapper-${newCellId}`);
-    if (currentCell) {
-      currentCell.blur();
-    }
-    if (wrapperCell) {
-      wrapperCell.focus();
-    }
     newCell.focus();
   }
 };
