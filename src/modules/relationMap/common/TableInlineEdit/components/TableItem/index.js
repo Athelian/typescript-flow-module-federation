@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
-import { Subscribe } from 'unstated';
 import { HotKeys } from 'react-hotkeys';
-import { FormField, FormContainer } from 'modules/form';
+import { FormField } from 'modules/form';
 import { getByPath } from 'utils/fp';
 import { TableDisableCell } from '..';
 import { WrapperStyle, ItemStyle } from './style';
@@ -32,12 +31,45 @@ type Props = {
   validator: Object,
 };
 
-const handler = (activeField, setActiveField) => ({
-  firstRight: () => {
-    console.log('active', activeField, setActiveField);
-    setActiveField('orders.589.piNo');
+const focusNewCell = (currentId, newCellId) => {
+  const newCell = document.getElementById(`input-${newCellId}`);
+  if (newCell) {
+    const currentCell = document.getElementById(currentId);
+    const wrapperCell = document.getElementById(`input-wrapper-${newCellId}`);
+    if (currentCell) {
+      currentCell.blur();
+    }
+    if (wrapperCell) {
+      wrapperCell.focus();
+    }
+    newCell.focus();
+  }
+};
+
+const getCellById = id => id && id.match(/\d+/g);
+
+const handler = {
+  firstRight: e => {
+    const [row, column] = getCellById(e.target.id);
+    const newCellId = `${row}-${+column + 1}`;
+    focusNewCell(e.target.id, newCellId);
   },
-});
+  firstLeft: e => {
+    const [row, column] = getCellById(e.target.id);
+    const newCellId = `${row}-${+column - 1}`;
+    focusNewCell(e.target.id, newCellId);
+  },
+  firstTop: e => {
+    const [row, column] = getCellById(e.target.id);
+    const newCellId = `${+row - 1}-${column}`;
+    focusNewCell(e.target.id, newCellId);
+  },
+  firstBottom: e => {
+    const [row, column] = getCellById(e.target.id);
+    const newCellId = `${+row + 1}-${column}`;
+    focusNewCell(e.target.id, newCellId);
+  },
+};
 function renderItem({
   id,
   type,
@@ -135,32 +167,28 @@ export default function TableItem({ cell, fields, values, validator, rowNo }: Pr
     <div className={WrapperStyle}>
       {fields.map(({ name, type, meta }, fieldCounter) => (
         <div className={ItemStyle} key={name}>
-          <Subscribe to={[FormContainer]}>
-            {({ state, setActiveField }) => (
-              <HotKeys handlers={handler(state, setActiveField)}>
-                <FormField
-                  name={`${cell}.${name}`}
-                  initValue={getByPath(name, values)}
-                  validator={validator}
-                  values={values}
-                >
-                  {({ name: fieldName, isFocused, onFocus, onBlur }) =>
-                    renderItem({
-                      id: `${rowNo}-${fieldCounter + 1}`,
-                      name: fieldName,
-                      type,
-                      meta,
-                      value: getByPath(name, values),
-                      values,
-                      isFocused,
-                      onFocus,
-                      onBlur,
-                    })
-                  }
-                </FormField>
-              </HotKeys>
-            )}
-          </Subscribe>
+          <HotKeys handlers={handler}>
+            <FormField
+              name={`${cell}.${name}`}
+              initValue={getByPath(name, values)}
+              validator={validator}
+              values={values}
+            >
+              {({ name: fieldName, isFocused, onFocus, onBlur }) =>
+                renderItem({
+                  id: `${rowNo}-${fieldCounter + 1}`,
+                  name: fieldName,
+                  type,
+                  meta,
+                  value: getByPath(name, values),
+                  values,
+                  isFocused,
+                  onFocus,
+                  onBlur,
+                })
+              }
+            </FormField>
+          </HotKeys>
         </div>
       ))}
     </div>

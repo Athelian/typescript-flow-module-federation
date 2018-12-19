@@ -66,7 +66,10 @@ type Props = {
 setConfig({ pureSFC: true });
 
 const keyMap = {
-  firstRight: ['command+right'],
+  firstRight: ['command+right', 'ctrl+right'],
+  firstLeft: ['command+left', 'ctrl+left'],
+  firstTop: ['command+up', 'ctrl+up'],
+  firstBottom: ['command+down', 'ctrl+down'],
 };
 
 function findColumns({
