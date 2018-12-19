@@ -3,7 +3,7 @@ import * as React from 'react';
 import { isNullOrUndefined } from 'utils/fp';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
-import { FilterDataStyle } from './style';
+import { FilterDataStyle } from 'modules/relationMap/common/SortFilter/AdvancedFilter/FilterMenu/components/FilterData/style';
 
 type OptionalProps = {
   min?: number,

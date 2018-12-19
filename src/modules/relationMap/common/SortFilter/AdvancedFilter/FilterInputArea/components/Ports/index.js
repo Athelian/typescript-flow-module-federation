@@ -6,11 +6,32 @@ import { PortsWrapperStyle } from './style';
 import messages from '../messages';
 import { EnumArrayInput } from '..';
 
-type Props = {
-  portType: 'Seaport' | 'Airport',
+type OptionalProps = {
+  loadPorts?: Array<Object>,
+  dischargePorts?: Array<Object>,
+  firstTransitPorts?: Array<Object>,
+  secondTransitPorts?: Array<Object>,
 };
 
-export default function Ports({ portType }: Props) {
+type Props = OptionalProps & {
+  portType: 'Seaport' | 'Airport',
+  onChangeLoadPorts: Function,
+  onChangeDischargePorts: Function,
+  onChangeFirstTransitPorts: Function,
+  onChangeSecondTransitPorts: Function,
+};
+
+export default function Ports({
+  portType,
+  loadPorts,
+  dischargePorts,
+  firstTransitPorts,
+  secondTransitPorts,
+  onChangeLoadPorts,
+  onChangeDischargePorts,
+  onChangeFirstTransitPorts,
+  onChangeSecondTransitPorts,
+}: Props) {
   return (
     <div className={PortsWrapperStyle}>
       <FieldItem
@@ -20,7 +41,9 @@ export default function Ports({ portType }: Props) {
             <FormattedMessage {...messages.loadPort} />
           </Label>
         }
-        input={<EnumArrayInput enumType={portType} />}
+        input={
+          <EnumArrayInput enumType={portType} values={loadPorts} onChange={onChangeLoadPorts} />
+        }
       />
 
       <FieldItem
@@ -30,7 +53,13 @@ export default function Ports({ portType }: Props) {
             <FormattedMessage {...messages.dischargePort} />
           </Label>
         }
-        input={<EnumArrayInput enumType={portType} />}
+        input={
+          <EnumArrayInput
+            enumType={portType}
+            values={dischargePorts}
+            onChange={onChangeDischargePorts}
+          />
+        }
       />
 
       <FieldItem
@@ -40,7 +69,13 @@ export default function Ports({ portType }: Props) {
             <FormattedMessage {...messages.firstTransitPort} />
           </Label>
         }
-        input={<EnumArrayInput enumType={portType} />}
+        input={
+          <EnumArrayInput
+            enumType={portType}
+            values={firstTransitPorts}
+            onChange={onChangeFirstTransitPorts}
+          />
+        }
       />
 
       <FieldItem
@@ -50,7 +85,13 @@ export default function Ports({ portType }: Props) {
             <FormattedMessage {...messages.secondTransitPort} />
           </Label>
         }
-        input={<EnumArrayInput enumType={portType} />}
+        input={
+          <EnumArrayInput
+            enumType={portType}
+            values={secondTransitPorts}
+            onChange={onChangeSecondTransitPorts}
+          />
+        }
       />
     </div>
   );

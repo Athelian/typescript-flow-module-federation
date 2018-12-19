@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { uuid } from 'utils/id';
 import Icon from 'components/Icon';
@@ -8,6 +9,7 @@ import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
 import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
 import MetricInputItem from './components/MetricInputItem';
+import PortItem from './components/PortItem';
 import { FilterDataWrapperStyle, FilterDataStyle } from './style';
 
 type Props = {
@@ -108,6 +110,62 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
             )}
             <Icon icon="CLEAR" />
           </button>
+        </div>
+      );
+    }
+    case 'seaports':
+    case 'airports': {
+      return (
+        <div className={FilterDataWrapperStyle}>
+          {data.loadPorts && (
+            <PortItem
+              name="loadPorts"
+              onRemove={onRemove}
+              ports={data.loadPorts}
+              label={
+                <FormattedMessage id="modules.relationMap.loadPort" defaultMessage="LOAD PORT" />
+              }
+            />
+          )}
+          {data.dischargePorts && (
+            <PortItem
+              name="dischargePorts"
+              onRemove={onRemove}
+              ports={data.dischargePorts}
+              label={
+                <FormattedMessage
+                  id="modules.relationMap.dischargePort"
+                  defaultMessage="DISCHARGE PORT"
+                />
+              }
+            />
+          )}
+          {data.firstTransitPorts && (
+            <PortItem
+              name="secondTransitPorts"
+              onRemove={onRemove}
+              ports={data.firstTransitPorts}
+              label={
+                <FormattedMessage
+                  id="modules.relationMap.firstTransitPort"
+                  defaultMessage="FIRST TRANSIT PORT"
+                />
+              }
+            />
+          )}
+          {data.secondTransitPorts && (
+            <PortItem
+              name="secondTransitPorts"
+              onRemove={onRemove}
+              ports={data.secondTransitPorts}
+              label={
+                <FormattedMessage
+                  id="modules.relationMap.secondTransitPort"
+                  defaultMessage="SECOND TRANSIT PORT"
+                />
+              }
+            />
+          )}
         </div>
       );
     }

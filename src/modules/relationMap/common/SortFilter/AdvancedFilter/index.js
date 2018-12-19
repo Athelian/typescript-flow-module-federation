@@ -16,7 +16,11 @@ import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { UIConsumer } from 'modules/ui';
-import { isValidOfMetricRangeInput } from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
+import {
+  isValidOfMetricRangeInput,
+  isValidOfPortsInput,
+  filterPorts,
+} from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';
 import FilterInputArea from './FilterInputArea';
@@ -239,6 +243,58 @@ const convertMetricRangeQuery = ({
         metric,
       };
 
+const mergeAirportsAndSeaports = (airports: Array<Object>, seaports: Array<Object>) => [
+  ...(isValidOfPortsInput(airports)
+    ? filterPorts(airports).map(port => ({ airport: port.name }))
+    : []),
+  ...(isValidOfPortsInput(seaports)
+    ? filterPorts(seaports).map(port => ({ seaport: port.name }))
+    : []),
+];
+
+const convertPortsQuery = (state: Object) => {
+  const activeFilters = getByPathWithDefault([], `activeFilters.shipment`, state);
+  if (!activeFilters.includes('airports') && !activeFilters.includes('seaports')) return {};
+  const airports = getByPathWithDefault({}, `selectedItems.shipment.airports`, state);
+  const seaports = getByPathWithDefault({}, 'selectedItems.shipment.seaports', state);
+
+  const result = {
+    ...(isValidOfPortsInput(airports.loadPorts) || isValidOfPortsInput(seaports.loadPorts)
+      ? {
+          shipmentLoadPorts: mergeAirportsAndSeaports(airports.loadPorts, seaports.loadPorts),
+        }
+      : {}),
+    ...(isValidOfPortsInput(airports.dischargePorts) || isValidOfPortsInput(seaports.dischargePorts)
+      ? {
+          shipmentDischargePorts: mergeAirportsAndSeaports(
+            airports.dischargePorts,
+            seaports.dischargePorts
+          ),
+        }
+      : {}),
+    ...(isValidOfPortsInput(airports.firstTransitPorts) ||
+    isValidOfPortsInput(seaports.firstTransitPorts)
+      ? {
+          shipmentFirstTransitPorts: mergeAirportsAndSeaports(
+            airports.firstTransitPorts,
+            seaports.firstTransitPorts
+          ),
+        }
+      : {}),
+    ...(isValidOfPortsInput(airports.secondTransitPorts) ||
+    isValidOfPortsInput(seaports.secondTransitPorts)
+      ? {
+          shipmentSecondTransitPorts: mergeAirportsAndSeaports(
+            airports.secondTransitPorts,
+            seaports.secondTransitPorts
+          ),
+        }
+      : {}),
+  };
+
+  return result;
+};
+
 const convertPackagingQuery = (state: Object, type: string, prevKey: string) => {
   const activeFilters = getByPathWithDefault([], `activeFilters.${type}`, state);
   if (!activeFilters.includes('packaging')) return {};
@@ -304,6 +360,7 @@ const convertToFilterQuery = (state: Object) => ({
 
   ...convertPackagingQuery(state, 'item', 'productProvider'),
   ...convertPackagingQuery(state, 'batch', 'batch'),
+  ...convertPortsQuery(state),
 
   ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
   ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
