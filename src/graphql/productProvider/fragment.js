@@ -48,6 +48,9 @@ export const productProviderFormFragment = gql`
     customFields {
       ...customFieldsFragment
     }
+    files {
+      ...documentFragment
+    }
   }
 `;
 
