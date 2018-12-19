@@ -11,6 +11,7 @@ type OptionalProps = {
   onFocus: ?Function,
   onSearch: string => void,
   afterClearSelection: ?() => void,
+  id?: string,
 };
 
 export type RenderSearchSelectProps = {

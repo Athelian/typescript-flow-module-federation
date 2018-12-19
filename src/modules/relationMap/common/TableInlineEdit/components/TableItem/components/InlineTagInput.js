@@ -7,13 +7,15 @@ import emitter from 'utils/emitter';
 type Props = {
   name: string,
   tagType: string,
+  id: string,
   values: Array<Object>,
 };
 
-export default function InlineTagInput({ name, tagType, values }: Props) {
+export default function InlineTagInput({ name, tagType, values, id }: Props) {
   const { onChange } = useTagInput(values);
   return (
     <TagsInput
+      id={`input-${id}`}
       editable={false}
       name={name}
       tagType={tagType}

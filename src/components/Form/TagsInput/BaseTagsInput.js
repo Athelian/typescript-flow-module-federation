@@ -125,6 +125,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
       tags,
       multiSelect,
       name,
+      id,
     } = this.props;
     const { focused } = this.state;
     if (!isRead) return null;
@@ -211,6 +212,7 @@ export default class BaseTagsInput extends React.Component<Props, State> {
                                     reset();
                                     clearSelection();
                                   },
+                                  ...(id ? { id } : {}),
                                 })}
                               />
                             )}

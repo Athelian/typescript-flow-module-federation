@@ -10,14 +10,15 @@ type Props = {
   name: string,
   value: Object,
   exporter: string,
+  id: string,
 };
 
-export default function InlineProductProvider({ name, exporter, value }: Props) {
+export default function InlineProductProvider({ name, exporter, value, id }: Props) {
   return (
     <BooleanValue>
       {({ value: opened, set: slideToggle }) => (
         <>
-          <button type="button" onClick={() => slideToggle(true)}>
+          <button id={`input-${id}`} type="button" onClick={() => slideToggle(true)}>
             <DefaultStyle width="200px" type="button">
               <Display align="left">{value.product.name}</Display>
             </DefaultStyle>
