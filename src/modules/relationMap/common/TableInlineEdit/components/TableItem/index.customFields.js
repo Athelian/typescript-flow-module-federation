@@ -3,11 +3,14 @@ import * as React from 'react';
 import { getByPathWithDefault } from 'utils/fp';
 import { list2Map } from 'utils/customFields';
 import { FormField } from 'modules/form';
-import TableDisableCell from 'modules/relationMap/common/TableInlineEdit/components/TableDisableCell';
+// import TableDisableCell from 'modules/relationMap/common/TableInlineEdit/components/TableDisableCell';
 import { WrapperStyle, ItemStyle } from './style';
 import InlineTextInput from './components/InlineTextInput';
 
-type Props = {
+type OptionalProps = {
+  columnNo: number,
+};
+type Props = OptionalProps & {
   cell: string,
   fields: Array<{
     id: string,
@@ -20,13 +23,10 @@ type Props = {
   validator: Object,
 };
 
-export default function TableItemForCustomFields({
-  cell,
-  fields,
-  values,
-  validator,
-  rowNo,
-}: Props) {
+const defaultProps = {
+  columnNo: 0,
+};
+function TableItemForCustomFields({ cell, fields, values, validator, rowNo, columnNo }: Props) {
   if (!values) return null;
 
   const customFields = getByPathWithDefault(
@@ -44,30 +44,29 @@ export default function TableItemForCustomFields({
     <div className={WrapperStyle}>
       {fields.map(({ id }, fieldCounter) => {
         const fieldValue = fieldValueMap.get(id);
-
+        const inputId = `${rowNo}-${fieldCounter + columnNo + 1}`;
         return (
           <div className={ItemStyle} key={id}>
-            {fieldValue ? (
-              <FormField
-                name={`${cell}.customFields.fieldValues[${fieldValue.index}].value.string`}
-                initValue={fieldValue.value.string}
-                validator={validator}
-                values={values}
-              >
-                {({ name: fieldName }) => (
-                  <InlineTextInput
-                    name={fieldName}
-                    value={fieldValue.value.string}
-                    id={`${rowNo}-${fieldCounter}`}
-                  />
-                )}
-              </FormField>
-            ) : (
-              <TableDisableCell />
-            )}
+            <FormField
+              name={`${cell}.customFields.fieldValues[${inputId}].value.string`}
+              initValue={fieldValue ? fieldValue.value.string : ''}
+              validator={validator}
+              values={values}
+            >
+              {({ name: fieldName }) => (
+                <InlineTextInput
+                  name={fieldName}
+                  value={fieldValue ? fieldValue.value.string : ''}
+                  disabled={!fieldValue}
+                  id={inputId}
+                />
+              )}
+            </FormField>
           </div>
         );
       })}
     </div>
   );
 }
+TableItemForCustomFields.defaultProps = defaultProps;
+export default TableItemForCustomFields;

@@ -44,7 +44,7 @@ export default function InlineMetricInput({
       isFocused={isFocused}
       hasError={hasError}
       id={`input-wrapper-${id}`}
-      tabindex="0"
+      tabIndex="0"
     >
       <MetricInput
         {...inputHandlers}

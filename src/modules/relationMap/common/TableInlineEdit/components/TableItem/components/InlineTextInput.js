@@ -26,7 +26,7 @@ export default function InlineTextInput({ id, name, value, isRequired, disabled 
     <DefaultStyle
       disabled={disabled}
       type="text"
-      tabindex="0"
+      tabIndex="0"
       isFocused={isFocused}
       hasError={hasError}
       id={`input-wrapper-${id}`}

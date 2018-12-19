@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { HotKeys } from 'react-hotkeys';
 import { FormField } from 'modules/form';
 import { getByPath } from 'utils/fp';
 import { TableDisableCell } from '..';
@@ -19,7 +18,10 @@ import {
   InlineTimeLineInput,
 } from './components';
 
-type Props = {
+type OptionalProps = {
+  columnNo: number,
+};
+type Props = OptionalProps & {
   cell: string,
   rowNo: number,
   fields: Array<{
@@ -31,45 +33,10 @@ type Props = {
   validator: Object,
 };
 
-const focusNewCell = (currentId, newCellId) => {
-  const newCell = document.getElementById(`input-${newCellId}`);
-  if (newCell) {
-    const currentCell = document.getElementById(currentId);
-    const wrapperCell = document.getElementById(`input-wrapper-${newCellId}`);
-    if (currentCell) {
-      currentCell.blur();
-    }
-    if (wrapperCell) {
-      wrapperCell.focus();
-    }
-    newCell.focus();
-  }
+const defaultProps = {
+  columnNo: 0,
 };
 
-const getCellById = id => id && id.match(/\d+/g);
-
-const handler = {
-  firstRight: e => {
-    const [row, column] = getCellById(e.target.id);
-    const newCellId = `${row}-${+column + 1}`;
-    focusNewCell(e.target.id, newCellId);
-  },
-  firstLeft: e => {
-    const [row, column] = getCellById(e.target.id);
-    const newCellId = `${row}-${+column - 1}`;
-    focusNewCell(e.target.id, newCellId);
-  },
-  firstTop: e => {
-    const [row, column] = getCellById(e.target.id);
-    const newCellId = `${+row - 1}-${column}`;
-    focusNewCell(e.target.id, newCellId);
-  },
-  firstBottom: e => {
-    const [row, column] = getCellById(e.target.id);
-    const newCellId = `${+row + 1}-${column}`;
-    focusNewCell(e.target.id, newCellId);
-  },
-};
 function renderItem({
   id,
   type,
@@ -160,37 +127,39 @@ function renderItem({
   }
 }
 
-export default function TableItem({ cell, fields, values, validator, rowNo }: Props) {
+function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) {
   if (!values) return null;
 
   return (
     <div className={WrapperStyle}>
       {fields.map(({ name, type, meta }, fieldCounter) => (
         <div className={ItemStyle} key={name}>
-          <HotKeys handlers={handler}>
-            <FormField
-              name={`${cell}.${name}`}
-              initValue={getByPath(name, values)}
-              validator={validator}
-              values={values}
-            >
-              {({ name: fieldName, isFocused, onFocus, onBlur }) =>
-                renderItem({
-                  id: `${rowNo}-${fieldCounter + 1}`,
-                  name: fieldName,
-                  type,
-                  meta,
-                  value: getByPath(name, values),
-                  values,
-                  isFocused,
-                  onFocus,
-                  onBlur,
-                })
-              }
-            </FormField>
-          </HotKeys>
+          <FormField
+            name={`${cell}.${name}`}
+            initValue={getByPath(name, values)}
+            validator={validator}
+            values={values}
+          >
+            {({ name: fieldName, isFocused, onFocus, onBlur }) =>
+              renderItem({
+                id: `${rowNo}-${fieldCounter + columnNo + 1}`,
+                name: fieldName,
+                type,
+                meta,
+                value: getByPath(name, values),
+                values,
+                isFocused,
+                onFocus,
+                onBlur,
+              })
+            }
+          </FormField>
         </div>
       ))}
     </div>
   );
 }
+
+TableItem.defaultProps = defaultProps;
+
+export default TableItem;

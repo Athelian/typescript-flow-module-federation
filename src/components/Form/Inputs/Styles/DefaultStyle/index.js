@@ -8,7 +8,7 @@ import { DefaultStyleWrapperStyle } from './style';
 
 type OptionalProps = CommonOptionalProps & {
   transparent: boolean,
-  tabindex?: string,
+  tabIndex?: string,
   id?: string,
 };
 
@@ -31,11 +31,11 @@ const DefaultStyle = ({
   transparent,
   children,
   id,
-  tabindex,
+  tabIndex,
 }: Props): React.Node => (
   <div
     {...(id ? { id } : {})}
-    {...(tabindex ? { tabindex } : {})}
+    {...(tabIndex ? { tabIndex } : {})}
     className={DefaultStyleWrapperStyle({
       type,
       isFocused,
