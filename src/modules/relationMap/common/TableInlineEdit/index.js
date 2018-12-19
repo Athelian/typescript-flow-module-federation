@@ -620,6 +620,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                           .filter(batchId => !batchIds.includes(batchId))
                                           .map(batchId => (
                                             <TableEmptyItem
+                                              rowNo={getRowCounter(rowCounter, 'order')}
                                               key={`order.${counter + 1}.hidden.${
                                                 orderItem.data.id
                                               }.batch.${batchId}`}
@@ -683,6 +684,8 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                           .filter(batchId => !batchIds.includes(batchId))
                                           .map(batchId => (
                                             <TableEmptyItem
+                                              rowNo={getRowCounter(rowCounter, 'order')}
+                                              columnNo={orderColumnFieldsFilter.length}
                                               key={`order.${counter + 1}.hidden.${
                                                 orderItem.data.id
                                               }.batch.${batchId}`}
@@ -738,6 +741,11 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                           .filter(batchId => !batchIds.includes(batchId))
                                           .map(batchId => (
                                             <TableEmptyItem
+                                              rowNo={getRowCounter(rowCounter, 'orderItem')}
+                                              columnNo={
+                                                orderColumnFieldsFilter.length +
+                                                orderCustomFieldsFilter.length
+                                              }
                                               key={`orderItem.${counter + 1}.hidden.${batchId}`}
                                               fields={orderItemColumnFieldsFilter}
                                             />
@@ -746,7 +754,13 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                   )
                                 )
                               ) : (
-                                <TableEmptyItem fields={orderItemColumnFieldsFilter} />
+                                <TableEmptyItem
+                                  fields={orderItemColumnFieldsFilter}
+                                  rowNo={getRowCounter(rowCounter, 'orderItem')}
+                                  columnNo={
+                                    orderColumnFieldsFilter.length + orderCustomFieldsFilter.length
+                                  }
+                                />
                               )}
                             </div>
                             <div>
@@ -794,6 +808,12 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                           .filter(batchId => !batchIds.includes(batchId))
                                           .map(batchId => (
                                             <TableEmptyItem
+                                              rowNo={getRowCounter(rowCounter, 'orderItemCustom')}
+                                              columnNo={
+                                                orderColumnFieldsFilter.length +
+                                                orderCustomFieldsFilter.length +
+                                                orderItemColumnFieldsFilter.length
+                                              }
                                               key={`orderItem.${counter + 1}.hidden.${batchId}`}
                                               fields={orderItemCustomFieldsFilter}
                                             />
@@ -802,7 +822,15 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                   )
                                 )
                               ) : (
-                                <TableEmptyItem fields={orderItemCustomFieldsFilter} />
+                                <TableEmptyItem
+                                  fields={orderItemCustomFieldsFilter}
+                                  rowNo={getRowCounter(rowCounter, 'orderItemCustom')}
+                                  columnNo={
+                                    orderColumnFieldsFilter.length +
+                                    orderCustomFieldsFilter.length +
+                                    orderItemColumnFieldsFilter.length
+                                  }
+                                />
                               )}
                             </div>
 
@@ -830,12 +858,32 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                       ))
                                   )}
                                   {range(totalLines - batches.length).map(index => (
-                                    <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
+                                    <TableEmptyItem
+                                      key={index}
+                                      fields={batchColumnFieldsFilter}
+                                      rowNo={getRowCounter(rowCounter, 'batch')}
+                                      columnNo={
+                                        orderColumnFieldsFilter.length +
+                                        orderCustomFieldsFilter.length +
+                                        orderItemColumnFieldsFilter.length +
+                                        orderItemCustomFieldsFilter.length
+                                      }
+                                    />
                                   ))}
                                 </>
                               ) : (
                                 range(totalLines).map(index => (
-                                  <TableEmptyItem key={index} fields={batchColumnFieldsFilter} />
+                                  <TableEmptyItem
+                                    key={index}
+                                    fields={batchColumnFieldsFilter}
+                                    rowNo={getRowCounter(rowCounter, 'batch')}
+                                    columnNo={
+                                      orderColumnFieldsFilter.length +
+                                      orderCustomFieldsFilter.length +
+                                      orderItemColumnFieldsFilter.length +
+                                      orderItemCustomFieldsFilter.length
+                                    }
+                                  />
                                 ))
                               )}
                             </div>
@@ -865,12 +913,34 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                       ))
                                   )}
                                   {range(totalLines - batches.length).map(index => (
-                                    <TableEmptyItem key={index} fields={batchCustomFieldsFilter} />
+                                    <TableEmptyItem
+                                      key={index}
+                                      fields={batchCustomFieldsFilter}
+                                      rowNo={getRowCounter(rowCounter, 'batchCustom')}
+                                      columnNo={
+                                        orderColumnFieldsFilter.length +
+                                        orderCustomFieldsFilter.length +
+                                        orderItemColumnFieldsFilter.length +
+                                        orderItemCustomFieldsFilter.length +
+                                        batchColumnFieldsFilter.length
+                                      }
+                                    />
                                   ))}
                                 </>
                               ) : (
                                 range(totalLines).map(index => (
-                                  <TableEmptyItem key={index} fields={batchCustomFieldsFilter} />
+                                  <TableEmptyItem
+                                    key={index}
+                                    fields={batchCustomFieldsFilter}
+                                    rowNo={getRowCounter(rowCounter, 'batchCustom')}
+                                    columnNo={
+                                      orderColumnFieldsFilter.length +
+                                      orderCustomFieldsFilter.length +
+                                      orderItemColumnFieldsFilter.length +
+                                      orderItemCustomFieldsFilter.length +
+                                      batchColumnFieldsFilter.length
+                                    }
+                                  />
                                 ))
                               )}
                             </div>
@@ -905,7 +975,19 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                     shipmentId => !!order.relation.shipment[shipmentId]
                                   ).length
                               ).map(index => (
-                                <TableEmptyItem key={index} fields={shipmentColumnFieldsFilter} />
+                                <TableEmptyItem
+                                  key={index}
+                                  fields={shipmentColumnFieldsFilter}
+                                  rowNo={getRowCounter(rowCounter, 'shipment')}
+                                  columnNo={
+                                    orderColumnFieldsFilter.length +
+                                    orderCustomFieldsFilter.length +
+                                    orderItemColumnFieldsFilter.length +
+                                    orderItemCustomFieldsFilter.length +
+                                    batchColumnFieldsFilter.length +
+                                    batchCustomFieldsFilter.length
+                                  }
+                                />
                               ))}
                             </div>
 
@@ -940,7 +1022,20 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                     shipmentId => !!order.relation.shipment[shipmentId]
                                   ).length
                               ).map(index => (
-                                <TableEmptyItem key={index} fields={shipmentCustomFieldsFilter} />
+                                <TableEmptyItem
+                                  key={index}
+                                  fields={shipmentCustomFieldsFilter}
+                                  rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
+                                  columnNo={
+                                    orderColumnFieldsFilter.length +
+                                    orderCustomFieldsFilter.length +
+                                    orderItemColumnFieldsFilter.length +
+                                    orderItemCustomFieldsFilter.length +
+                                    batchColumnFieldsFilter.length +
+                                    batchCustomFieldsFilter.length +
+                                    shipmentColumnFieldsFilter.length
+                                  }
+                                />
                               ))}
                             </div>
                           </TableRow>
