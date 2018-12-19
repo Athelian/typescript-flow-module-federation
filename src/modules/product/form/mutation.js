@@ -14,6 +14,7 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   productProviderFormFragment,
+  documentFragment,
 } from 'graphql';
 import { violationFragment } from 'graphql/violations/fragment';
 import { prepareCustomFieldsData } from 'utils/customFields';
@@ -40,6 +41,7 @@ export const createProductMutation: Object = gql`
   ${metricFragment}
   ${sizeFragment}
   ${productProviderFormFragment}
+  ${documentFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -75,6 +77,7 @@ export const prepareCreateProductInput = ({
       supplier,
       origin,
       customFields: productProviderCustomFields,
+      files: productProviderFiles,
       ...productProvider
     }) => ({
       ...productProvider,
@@ -83,6 +86,12 @@ export const prepareCreateProductInput = ({
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
       customFields: prepareCustomFieldsData(productProviderCustomFields),
+      files: productProviderFiles.map(({ id: fileId, name: fileName, type, memo }) => ({
+        id: fileId,
+        name: fileName,
+        type,
+        memo,
+      })),
     })
   ),
 });
@@ -108,6 +117,7 @@ export const updateProductMutation: Object = gql`
   ${metricFragment}
   ${sizeFragment}
   ${productProviderFormFragment}
+  ${documentFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -145,6 +155,7 @@ export const prepareUpdateProductInput = ({
       exporter,
       supplier,
       customFields: productProviderCustomFields,
+      files: productProviderFiles,
       ...productProvider
     }) => ({
       ...productProvider,
@@ -153,6 +164,12 @@ export const prepareUpdateProductInput = ({
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
       customFields: prepareCustomFieldsData(productProviderCustomFields),
+      files: productProviderFiles.map(({ id: fileId, name: fileName, type, memo }) => ({
+        id: fileId,
+        name: fileName,
+        type,
+        memo,
+      })),
     })
   ),
 });
