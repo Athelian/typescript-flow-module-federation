@@ -110,6 +110,16 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       }
                       icon="PACKAGING"
                     />
+                    <SectionTabs
+                      link="documentsSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Products.documents"
+                          defaultMessage="DOCUMENTS"
+                        />
+                      }
+                      icon="DOCUMENT"
+                    />
                   </JumpToSection>
                   <CancelButton onClick={onCancel} />
                   <SaveButton

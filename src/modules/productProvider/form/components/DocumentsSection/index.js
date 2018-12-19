@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { DocumentsInput } from 'components/Form';
-import ProviderFilesContainer from 'modules/productProvider/form/files';
+import ProductProviderContainer from 'modules/productProvider/form/container';
 import { DocumentSectionStyle } from './style';
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 function DocumentsSection({ intl }: Props) {
   return (
     <div className={DocumentSectionStyle}>
-      <Subscribe to={[ProviderFilesContainer]}>
+      <Subscribe to={[ProductProviderContainer]}>
         {({ state: { files }, setFieldValue: changeFiles }) => (
           <DocumentsInput
             id="files"

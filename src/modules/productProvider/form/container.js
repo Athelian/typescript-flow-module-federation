@@ -40,6 +40,7 @@ type FormState = {
     length: Metric,
   },
   customFields: Object,
+  files?: Array<Document>,
 };
 
 const initValues = {
@@ -107,6 +108,7 @@ const initValues = {
     fieldValues: [],
     fieldDefinitions: [],
   },
+  files: [],
 };
 
 export default class ProductProviderContainer extends Container<FormState> {

@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
-import ProviderFilesContainer from './files';
+import ProductProviderContainer from './container';
 import { PackagingSection, ProductProviderSection, SpecificationsSection } from './components';
 import { ProductProviderFormWrapperStyle } from './style';
 
@@ -68,14 +68,17 @@ const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
         <PackagingSection isNew={isNew} />
       </SectionWrapper>
       <SectionWrapper id="documentsSection">
-        <Subscribe to={[ProviderFilesContainer]}>
-          {({ state: values }) => (
+        <Subscribe to={[ProductProviderContainer]}>
+          {({ state: { files } }) => (
             <SectionHeader
               icon="DOCUMENT"
               title={
                 <>
-                  <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" /> (
-                  {values.files.length})
+                  <FormattedMessage
+                    id="modules.productProvider.documents"
+                    defaultMessage="DOCUMENTS"
+                  />{' '}
+                  ({files.length})
                 </>
               }
             />
