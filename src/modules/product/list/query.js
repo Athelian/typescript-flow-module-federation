@@ -24,45 +24,4 @@ export const productListQuery = gql`
   ${imageFragment}
 `;
 
-export const productProvidersQuery = gql`
-  query productProviders(
-    $page: Int!
-    $perPage: Int!
-    $filter: ProductProviderFilterInput
-    $sort: ProductProviderSortInput
-  ) {
-    productProviders(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
-      nodes {
-        id
-        exporter {
-          id
-          name
-        }
-        supplier {
-          id
-          name
-        }
-        product {
-          id
-          name
-          serial
-          tags {
-            id
-            name
-            color
-          }
-          files {
-            id
-            path
-          }
-        }
-        unitPrice {
-          amount
-          currency
-        }
-      }
-      page
-      totalPage
-    }
-  }
-`;
+export default productListQuery;

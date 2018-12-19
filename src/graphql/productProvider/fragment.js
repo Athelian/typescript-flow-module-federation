@@ -51,4 +51,28 @@ export const productProviderFormFragment = gql`
   }
 `;
 
-export default productProviderFormFragment;
+export const productProviderCardFragment = gql`
+  fragment productProviderCardFragment on ProductProvider {
+    id
+    exporter {
+      ...partnerNameFragment
+    }
+    supplier {
+      ...partnerNameFragment
+    }
+    product {
+      id
+      name
+      serial
+      tags {
+        ...tagFragment
+      }
+      files {
+        ...imageFragment
+      }
+    }
+    unitPrice {
+      ...priceFragment
+    }
+  }
+`;
