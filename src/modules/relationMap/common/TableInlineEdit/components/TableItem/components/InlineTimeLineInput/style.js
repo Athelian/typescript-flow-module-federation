@@ -23,12 +23,12 @@ export const ApproveButtonStyle = (isApproved: boolean): string => css`
   width: 30px;
   flex-shrink: 0;
   ${borderRadiuses.CIRCLE};
-  background-color: ${isApproved ? colors.GRAY_LIGHT : colors.BLUE};
+  background-color: ${isApproved ? colors.BLUE : colors.GRAY_LIGHT};
   color: ${colors.WHITE};
   ${fontSizes.MAIN};
   &:hover,
   :focus {
-    background-color: ${isApproved ? colors.BLUE : colors.GRAY_LIGHT};
+    background-color: ${isApproved ? colors.BLUE_DARK : colors.GRAY};
   }
 `;
 
