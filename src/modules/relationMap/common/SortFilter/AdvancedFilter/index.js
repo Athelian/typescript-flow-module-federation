@@ -355,8 +355,6 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'shipment'),
 
   ...convertArchivedFilter(state, 'order', 'archived'),
-  ...convertArchivedFilter(state, 'batch', 'batchArchived'),
-  ...convertArchivedFilter(state, 'shipment', 'shipmentArchived'),
 
   ...convertPackagingQuery(state, 'item', 'productProvider'),
   ...convertPackagingQuery(state, 'batch', 'batch'),
@@ -495,8 +493,6 @@ function reducer(state, action) {
 
 const isDefaultFilter = isEquals({
   archived: false,
-  shipmentArchived: false,
-  batchArchived: false,
 });
 
 function AdvanceFilter({ onApply, initialFilter }: Props) {
