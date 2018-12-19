@@ -72,7 +72,7 @@ const Order = ({ intl }: Props) => (
                               sortInputs={[
                                 {
                                   title: intl.formatMessage(messages.poNoSort),
-                                  value: 'ids',
+                                  value: 'poNo',
                                 },
                                 {
                                   title: intl.formatMessage(messages.piNoSort),
