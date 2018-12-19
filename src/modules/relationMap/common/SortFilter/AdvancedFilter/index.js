@@ -495,8 +495,6 @@ function reducer(state, action) {
 
 const isDefaultFilter = isEquals({
   archived: false,
-  shipmentArchived: false,
-  batchArchived: false,
 });
 
 function AdvanceFilter({ onApply, initialFilter }: Props) {
