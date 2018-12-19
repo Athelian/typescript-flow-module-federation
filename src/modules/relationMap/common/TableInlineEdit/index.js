@@ -71,7 +71,7 @@ const keyMap = {
   firstBottom: ['command+down', 'ctrl+down'],
 };
 
-const focusNewCell = (currentId, newCellId) => {
+const focusNewCell = newCellId => {
   const newCell = document.getElementById(`input-${newCellId}`);
   if (newCell) {
     newCell.focus();
@@ -85,25 +85,25 @@ const handlers = {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id);
     const newCellId = `${row}-${+column + 1}`;
-    focusNewCell(e.target.id, newCellId);
+    focusNewCell(newCellId);
   },
   firstLeft: e => {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id);
     const newCellId = `${row}-${+column - 1}`;
-    focusNewCell(e.target.id, newCellId);
+    focusNewCell(newCellId);
   },
   firstTop: e => {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id);
     const newCellId = `${+row - 1}-${column}`;
-    focusNewCell(e.target.id, newCellId);
+    focusNewCell(newCellId);
   },
   firstBottom: e => {
     e.preventDefault();
     const [row, column] = getCellById(e.target.id);
     const newCellId = `${+row + 1}-${column}`;
-    focusNewCell(e.target.id, newCellId);
+    focusNewCell(newCellId);
   },
 };
 
