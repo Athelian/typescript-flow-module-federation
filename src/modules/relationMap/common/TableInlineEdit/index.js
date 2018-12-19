@@ -71,10 +71,29 @@ const keyMap = {
   firstBottom: ['command+down', 'ctrl+down'],
 };
 
-const focusNewCell = newCellId => {
-  const newCell = document.getElementById(`input-${newCellId}`);
-  if (newCell) {
-    newCell.focus();
+const calculatePosition = (position, type) => {
+  const [row, column] = position;
+  switch (type) {
+    default:
+      return position;
+    case 'right':
+      return [row, +column + 1];
+    case 'left':
+      return [row, +column - 1];
+    case 'top':
+      return [+row - 1, column];
+    case 'bottom':
+      return [+row + 1, column];
+  }
+};
+
+const focusCell = (position, type) => {
+  const [row, column] = calculatePosition(position, type);
+  const cell = document.getElementById(`input-${row}-${column}`);
+  if (cell && cell.hasAttribute('disabled')) {
+    focusCell([row, column], type);
+  } else if (cell && !cell.hasAttribute('disabled')) {
+    cell.focus();
   }
 };
 
@@ -83,27 +102,23 @@ const getCellById = id => id && id.match(/\d+/g);
 const handlers = {
   firstRight: e => {
     e.preventDefault();
-    const [row, column] = getCellById(e.target.id);
-    const newCellId = `${row}-${+column + 1}`;
-    focusNewCell(newCellId);
+    const position = getCellById(e.target.id);
+    focusCell(position, 'right');
   },
   firstLeft: e => {
     e.preventDefault();
-    const [row, column] = getCellById(e.target.id);
-    const newCellId = `${row}-${+column - 1}`;
-    focusNewCell(newCellId);
+    const position = getCellById(e.target.id);
+    focusCell(position, 'left');
   },
   firstTop: e => {
     e.preventDefault();
-    const [row, column] = getCellById(e.target.id);
-    const newCellId = `${+row - 1}-${column}`;
-    focusNewCell(newCellId);
+    const position = getCellById(e.target.id);
+    focusCell(position, 'top');
   },
   firstBottom: e => {
     e.preventDefault();
-    const [row, column] = getCellById(e.target.id);
-    const newCellId = `${+row + 1}-${column}`;
-    focusNewCell(newCellId);
+    const position = getCellById(e.target.id);
+    focusCell(position, 'bottom');
   },
 };
 

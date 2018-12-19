@@ -26,10 +26,12 @@ export default function InlineTextInput({ id, name, value, isRequired, disabled 
     <DefaultStyle
       disabled={disabled}
       type="text"
+      tabIndex="-1"
       isFocused={isFocused}
       hasError={hasError}
       id={`input-wrapper-${id}`}
     >
+      {id}
       <TextInput
         id={`input-${id}`}
         name={name}
