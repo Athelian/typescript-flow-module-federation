@@ -133,9 +133,41 @@ function findAllFieldsFilter({
 }): Array<string> {
   return [
     ...orderColumnFieldsFilter.map(item => `${item.name}`),
-    ...orderItemColumnFieldsFilter.map(item => `orderItems.${item.name}`),
+    ...orderItemColumnFieldsFilter.map(item => {
+      switch (item.name) {
+        case 'productProvider':
+          return `orderItems.productProvider.product.name`;
+        default:
+          return `orderItems.${item.name}`;
+      }
+    }),
     ...batchColumnFieldsFilter.map(item => `orderItems.batches.${item.name}`),
-    ...shipmentColumnFieldsFilter.map(item => `orderItems.batches.shipment.${item.name}`),
+    ...shipmentColumnFieldsFilter.map(item => {
+      switch (item.name) {
+        case 'cargoReady':
+          return `orderItems.batches.shipment.cargoReady.date`;
+        case 'voyages.0.departure':
+          return `orderItems.batches.shipment.voyage_1.departure.date`;
+        case 'voyages.0.arrival':
+          return `orderItems.batches.shipment.voyage_1.arrival.date`;
+        case 'voyages.1.departure':
+          return `orderItems.batches.shipment.voyage_2.departure.date`;
+        case 'voyages.1.arrival':
+          return `orderItems.batches.shipment.voyage_2.arrival.date`;
+        case 'voyages.2.departure':
+          return `orderItems.batches.shipment.voyage_3.departure.date`;
+        case 'voyages.2.arrival':
+          return `orderItems.batches.shipment.voyage_3.arrival.date`;
+        case 'containerGroups.0.customClearance':
+          return `orderItems.batches.shipment.containerGroup.customClearance.date`;
+        case 'containerGroups.0.warehouseArrival':
+          return `orderItems.batches.shipment.containerGroup.warehouseArrival.date`;
+        case 'containerGroups.0.deliveryReady':
+          return `orderItems.batches.shipment.containerGroup.deliveryReady.date`;
+        default:
+          return `orderItems.batches.shipment.${item.name}`;
+      }
+    }),
     ...orderCustomFieldsFilter.map(item => `customFields.${item.id}`),
     ...orderItemCustomFieldsFilter.map(item => `orderItems.customFields.${item.id}`),
     ...batchCustomFieldsFilter.map(item => `orderItems.batches.customFields.${item.id}`),
