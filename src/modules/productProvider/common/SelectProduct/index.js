@@ -10,7 +10,7 @@ import Layout from 'components/Layout';
 import { OrderProductProviderCard } from 'components/Cards';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import { productProvidersQuery } from 'modules/product/list/query';
+import { productProvidersListQuery } from 'modules/productProvider/list/query';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
@@ -59,7 +59,7 @@ function SelectProduct({ intl, onCancel, onSelect, exporter, selected }: Props) 
     >
       {({ value: filtersAndSort, set: onChange }) => (
         <Query
-          query={productProvidersQuery}
+          query={productProvidersListQuery}
           variables={{
             page: 1,
             perPage: filtersAndSort.perPage,
