@@ -68,7 +68,7 @@ setConfig({ pureSFC: true });
 const keyMap = {
   firstRight: ['command+right', 'ctrl+right'],
   firstLeft: ['command+left', 'ctrl+left'],
-  firstTop: ['command+up', 'ctrl+up'],
+  firstTop: ['command+up', 'ctrl+up', 'shift+enter'],
   firstBottom: ['command+down', 'ctrl+down'],
 };
 
