@@ -25,17 +25,17 @@ const filterItems = (query: string, items: Array<any>) => {
 };
 
 const defaultProps = {
-  value: { name: '' },
+  value: { description: '' },
 };
 
 export default function EnumInput({ data, value, onChange, onRemove }: Props) {
-  const { hasError, isFocused, setValue, ...inputHandlers } = useEnumInput(value.name, {
+  const { hasError, isFocused, setValue, ...inputHandlers } = useEnumInput(value.description, {
     isRequired: false,
   });
 
-  const prevValue = usePrevious(value.name);
+  const prevValue = usePrevious(value.description);
   React.useEffect(() => {
-    if (prevValue && value.name === '') {
+    if (prevValue && value.description === '') {
       setValue('');
     }
     return null;
@@ -46,8 +46,8 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
       <SearchSelectInput
         {...inputHandlers}
         items={filterItems(inputHandlers.value, data)}
-        itemToString={item => (item ? item.name || item.description : '')}
-        itemToValue={item => (item ? item.name : '')}
+        itemToString={item => (item ? item.description || item.name : '')}
+        itemToValue={item => (item ? item.description : '')}
         inputValue={inputHandlers.value}
         renderSelect={({ ...selectProps }) => (
           <DefaultSearchSelect
@@ -57,7 +57,7 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
             isOpen={isFocused}
             width="200px"
             align="left"
-            itemToString={item => (item ? item.name || item.description : '')}
+            itemToString={item => (item ? item.description || item.name : '')}
           />
         )}
         renderOptions={({ ...optionProps }) => (
@@ -65,7 +65,7 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
             {...optionProps}
             items={filterItems(inputHandlers.value, data)}
             itemToString={item => (item ? item.description || item.name : '')}
-            itemToValue={item => (item ? item.name : '')}
+            itemToValue={item => (item ? item.description : '')}
             width="200px"
             align="left"
           />
@@ -83,10 +83,11 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
           }, 0);
         }}
         onBlur={() => {
-          if (data.find(item => item.name === inputHandlers.value)) {
+          const currentItem = data.find(item => item.description === inputHandlers.value);
+          if (currentItem) {
             inputHandlers.onBlur();
             onChange({
-              name: inputHandlers.value,
+              ...currentItem,
             });
           } else {
             inputHandlers.onChange({
@@ -110,7 +111,7 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
           } else {
             inputHandlers.onChange({
               currentTarget: {
-                value: item.name,
+                value: item.description,
               },
             });
           }
