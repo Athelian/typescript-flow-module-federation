@@ -51,7 +51,7 @@ export const generateOrderRelation = (order: Object, option: Object = {}): Array
   orderRelations.push({ type: 'ORDER_ITEM_ALL', id: order.id });
   orderRelations.push({ type: 'LINK-0', id: order.id, relatedIds: [order.id], itemType: 'order' });
   orderRelations.push({ type: 'BATCH_ALL', id: order.id });
-  
+
   if (!isCollapsed) {
     orderItems.forEach((product, index) => {
       const relatedProductIds = getRelatedIds(orderItems, index);

@@ -129,7 +129,7 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
           !isCollapsed || focusMode === 'TARGET'
             ? ItemWrapperStyle(false)
             : ItemWrapperStyle(isFocused, isTargeted);
-        
+
         switch (type) {
           default: {
             return <div />;
