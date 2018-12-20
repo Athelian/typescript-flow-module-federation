@@ -4,6 +4,7 @@ export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
+        id
         poNo
         totalOrdered
         totalBatched
@@ -19,10 +20,7 @@ export const orderListQuery = gql`
             id
             no
             quantity
-            batchAdjustments {
-              id
-              quantity
-            }
+            totalAdjusted
           }
         }
         shipments {
