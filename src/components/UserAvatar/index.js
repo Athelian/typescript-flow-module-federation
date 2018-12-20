@@ -35,39 +35,32 @@ function UserAvatar({
   lastName,
   showBothInitials,
   hideTooltip,
+  ...rest
 }: Props) {
   let content = '';
 
   if (image) {
-    content = (
-      <div className={AvatarWrapperStyle({ width, height })}>
-        <img alt="user_avatar" src={image} width={width} height={height} />
-      </div>
-    );
+    content = <img alt="user_avatar" src={image} width={width} height={height} />;
   } else if (firstName === '' || lastName === '') {
-    content = (
-      <div className={AvatarWrapperStyle({ width, height })}>
-        <Icon icon="USER" />
-      </div>
-    );
+    content = <Icon icon="USER" />;
   } else
     content = (
-      <div className={AvatarWrapperStyle({ width, height })}>
-        <FormattedName
-          firstName={firstName.charAt(0)}
-          lastName={lastName.charAt(0)}
-          showOnlyOneName={!showBothInitials}
-        />
-      </div>
+      <FormattedName
+        firstName={firstName.charAt(0)}
+        lastName={lastName.charAt(0)}
+        showOnlyOneName={!showBothInitials}
+      />
     );
 
   if (hideTooltip) {
-    return content;
+    return <div className={AvatarWrapperStyle({ width, height })}>{content}</div>;
   }
 
   return (
-    <Tooltip message={<FormattedName firstName={firstName} lastName={lastName} />}>
-      {content}
+    <Tooltip message={<FormattedName firstName={firstName} lastName={lastName} {...rest} />}>
+      <div className={AvatarWrapperStyle({ width, height })} tabIndex="-1">
+        {content}
+      </div>
     </Tooltip>
   );
 }

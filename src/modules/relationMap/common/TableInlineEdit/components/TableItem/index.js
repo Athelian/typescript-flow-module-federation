@@ -44,9 +44,6 @@ function renderItem({
   name,
   meta,
   values,
-  isFocused,
-  onFocus,
-  onBlur,
 }: {
   id: string,
   value: any,
@@ -54,9 +51,6 @@ function renderItem({
   name: string,
   values: Object,
   meta?: Object,
-  isFocused: boolean,
-  onFocus: boolean,
-  onBlur: boolean,
 }) {
   switch (type) {
     case 'number':
@@ -113,17 +107,7 @@ function renderItem({
       );
 
     default:
-      return (
-        <InlineTextInput
-          id={id}
-          name={name}
-          value={value}
-          {...meta}
-          isFocused={isFocused}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        />
-      );
+      return <InlineTextInput id={id} name={name} value={value} {...meta} />;
   }
 }
 
@@ -140,7 +124,7 @@ function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) 
             validator={validator}
             values={values}
           >
-            {({ name: fieldName, isFocused, onFocus, onBlur }) =>
+            {({ name: fieldName }) =>
               renderItem({
                 id: `${rowNo}-${fieldCounter + columnNo + 1}`,
                 name: fieldName,
@@ -148,9 +132,6 @@ function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) 
                 meta,
                 value: getByPath(name, values),
                 values,
-                isFocused,
-                onFocus,
-                onBlur,
               })
             }
           </FormField>

@@ -48,7 +48,7 @@ export default function InlineInChargeInput({ name, values, max, id: inputId }: 
           >
             <Icon icon="REMOVE" />
           </button>
-          <UserAvatar firstName={firstName} lastName={lastName} />
+          <UserAvatar firstName={firstName} lastName={lastName} a11y={false} />
         </div>
       ))}
       {isRemain && (

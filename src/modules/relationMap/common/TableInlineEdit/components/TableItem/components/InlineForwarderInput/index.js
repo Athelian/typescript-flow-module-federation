@@ -48,7 +48,7 @@ export default function InlineForwarderInput({ name, values, max, id: inputId }:
           >
             <Icon icon="REMOVE" />
           </button>
-          <UserAvatar firstName={forwarderName} lastName={forwarderName} />
+          <UserAvatar firstName={forwarderName} lastName={forwarderName} a11y={false} />
         </div>
       ))}
       {isRemain && (
