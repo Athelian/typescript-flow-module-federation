@@ -31,13 +31,7 @@ export default function InlineTimeLineInput({ name, value, id }: Props) {
   } = useTimeLineInput(value);
   return (
     <div className={InlineTimeLineInputWrapperStyle}>
-      <DefaultStyle
-        width="120px"
-        type="date"
-        isFocused={isFocused}
-        hasError={false}
-        id={`input-wrapper-${id}`}
-      >
+      <DefaultStyle width="120px" type="date" isFocused={isFocused} hasError={false}>
         <DateInput
           align="left"
           id={`input-${id}`}

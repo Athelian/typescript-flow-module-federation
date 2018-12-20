@@ -25,12 +25,7 @@ export default function InlineNumberInput({ name, value, adjustment, isRequired,
     isRequired,
   });
   return (
-    <DefaultStyle
-      type="number"
-      isFocused={isFocused}
-      hasError={hasError}
-      id={`input-wrapper-${id}`}
-    >
+    <DefaultStyle type="number" isFocused={isFocused} hasError={hasError}>
       <NumberInput
         name={name}
         id={`input-${id}`}
