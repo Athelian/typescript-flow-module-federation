@@ -81,7 +81,7 @@ class TemplateFormWrapper extends React.Component<Props> {
           store.writeQuery({ query, data: collections });
           // This is open issue on apollo client repo https://github.com/apollographql/apollo-client/issues/2415
           // workaround is sending a message to force render
-          emitter.emit('REALOAD_TEMPLATE');
+          // emitter.emit('RELOAD_TEMPLATE');
         },
       });
       const {
@@ -90,6 +90,7 @@ class TemplateFormWrapper extends React.Component<Props> {
       if (violations && violations.length) {
         onErrors(violations);
       } else {
+        emitter.emit('RELOAD_TEMPLATE');
         closeSlideView();
         onSuccess();
       }
