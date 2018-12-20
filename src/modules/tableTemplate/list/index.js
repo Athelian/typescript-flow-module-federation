@@ -45,7 +45,7 @@ class TableTemplateList extends React.Component<Props> {
           const totalPage = getByPathWithDefault(1, `maskEdits.totalPage`, data);
           const hasMore = nextPage <= totalPage;
 
-          emitter.once('REALOAD_TEMPLATE', () => {
+          emitter.once('RELOAD_TEMPLATE', () => {
             refetch();
           });
 
