@@ -18,6 +18,7 @@ type Props = OptionalProps & {
   metrics: Array<string>,
   convert: Function,
   values: Object,
+  id: string,
 };
 
 const defaultProps = {
@@ -35,12 +36,14 @@ export default function InlineMetricInput({
   isRequired,
   metrics,
   convert,
+  id,
 }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useMetricInput(value, { isRequired });
   return (
-    <DefaultMetricStyle isFocused={isFocused} hasError={hasError}>
+    <DefaultMetricStyle isFocused={isFocused} hasError={hasError} tabIndex="-1">
       <MetricInput
         {...inputHandlers}
+        id={`input-${id}`}
         name={name}
         onBlur={() => {
           inputHandlers.onBlur();

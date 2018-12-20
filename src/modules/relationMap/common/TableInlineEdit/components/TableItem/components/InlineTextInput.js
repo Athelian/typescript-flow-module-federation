@@ -10,6 +10,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  id: string,
   name: string,
   value: string,
 };
@@ -19,11 +20,18 @@ const defaultProps = {
   disabled: false,
 };
 
-export default function InlineTextInput({ name, value, isRequired, disabled }: Props) {
+export default function InlineTextInput({ id, name, value, isRequired, disabled }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
   return (
-    <DefaultStyle disabled={disabled} type="text" isFocused={isFocused} hasError={hasError}>
+    <DefaultStyle
+      disabled={disabled}
+      type="text"
+      tabIndex="-1"
+      isFocused={isFocused}
+      hasError={hasError}
+    >
       <TextInput
+        id={`input-${id}`}
         name={name}
         disabled={disabled}
         {...inputHandlers}

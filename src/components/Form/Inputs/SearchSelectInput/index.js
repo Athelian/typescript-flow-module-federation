@@ -63,6 +63,7 @@ class SearchSelectInput extends React.Component<Props, State> {
       renderSelect,
       renderOptions,
       afterClearSelection,
+      id,
     } = this.props;
 
     const { selectedItem } = this.state;
@@ -75,6 +76,7 @@ class SearchSelectInput extends React.Component<Props, State> {
         itemToString={itemToString}
         itemToValue={itemToValue}
         labelId={`${name}SearchSelectInput`}
+        id={id}
       >
         {({
           getInputProps,

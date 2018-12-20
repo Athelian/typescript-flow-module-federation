@@ -21,13 +21,14 @@ type OptionalProps = {
 type Props = OptionalProps & {
   name: string,
   values: Array<Object>,
+  id: string,
 };
 
 const defaultProps = {
   max: 4,
 };
 
-export default function InlineForwarderInput({ name, values, max }: Props) {
+export default function InlineForwarderInput({ name, values, max, id: inputId }: Props) {
   const { isRemain, onChange } = useInChargeInput(values, { max });
   return (
     <div className={AssignmentWrapperStyle}>
@@ -47,7 +48,7 @@ export default function InlineForwarderInput({ name, values, max }: Props) {
           >
             <Icon icon="REMOVE" />
           </button>
-          <UserAvatar firstName={forwarderName} lastName={forwarderName} />
+          <UserAvatar firstName={forwarderName} lastName={forwarderName} a11y={false} />
         </div>
       ))}
       {isRemain && (
@@ -55,6 +56,7 @@ export default function InlineForwarderInput({ name, values, max }: Props) {
           {({ value: isOpen, set: slideToggle }) => (
             <>
               <button
+                id={`input-${inputId}`}
                 data-testid="addAssignerButton"
                 className={AddAssignmentButtonStyle}
                 type="button"

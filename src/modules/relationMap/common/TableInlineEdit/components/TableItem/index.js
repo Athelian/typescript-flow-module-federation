@@ -18,8 +18,12 @@ import {
   InlineTimeLineInput,
 } from './components';
 
-type Props = {
+type OptionalProps = {
+  columnNo: number,
+};
+type Props = OptionalProps & {
   cell: string,
+  rowNo: number,
   fields: Array<{
     name: string,
     type: string,
@@ -29,13 +33,19 @@ type Props = {
   validator: Object,
 };
 
+const defaultProps = {
+  columnNo: 0,
+};
+
 function renderItem({
+  id,
   type,
   value,
   name,
   meta,
   values,
 }: {
+  id: string,
   value: any,
   type: string,
   name: string,
@@ -44,7 +54,7 @@ function renderItem({
 }) {
   switch (type) {
     case 'number':
-      return <InlineNumberInput name={name} value={value} {...meta} />;
+      return <InlineNumberInput name={name} value={value} {...meta} id={id} />;
 
     case 'numberAdjustment': {
       const adjustments = getByPath('batchAdjustments', values) || [];
@@ -57,49 +67,56 @@ function renderItem({
           value={value}
           {...meta}
           adjustment={totalAdjustment}
+          id={id}
         />
       );
     }
 
     case 'date':
-      return <InlineDateInput name={name} value={value} {...meta} />;
+      return <InlineDateInput name={name} value={value} {...meta} id={id} />;
 
     case 'timeline': {
       if (!value) return <TableDisableCell />;
-      return <InlineTimeLineInput name={name} value={value} {...meta} />;
+      return <InlineTimeLineInput name={name} value={value} {...meta} id={id} />;
     }
 
     case 'metric':
-      return <InlineMetricInput name={name} value={value} values={values} {...meta} />;
+      return <InlineMetricInput name={name} value={value} values={values} {...meta} id={id} />;
 
     case 'enum':
-      return <InlineSearchEnumInput name={name} value={value} {...meta} />;
+      return <InlineSearchEnumInput name={name} value={value} {...meta} id={id} />;
 
     case 'inCharges':
-      return <InlineInChargeInput name={name} values={value} {...meta} />;
+      return <InlineInChargeInput name={name} values={value} {...meta} id={id} />;
 
     case 'forwarders':
-      return <InlineForwarderInput name={name} values={value} {...meta} />;
+      return <InlineForwarderInput name={name} values={value} {...meta} id={id} />;
 
     case 'tags':
-      return <InlineTagInput name={name} values={value} {...meta} />;
+      return <InlineTagInput name={name} values={value} {...meta} id={id} />;
 
     case 'productProvider':
       return (
-        <InlineProductProvider name={name} value={value} exporter={value.exporter.id} {...meta} />
+        <InlineProductProvider
+          name={name}
+          value={value}
+          exporter={value.exporter.id}
+          {...meta}
+          id={id}
+        />
       );
 
     default:
-      return <InlineTextInput name={name} value={value} {...meta} />;
+      return <InlineTextInput id={id} name={name} value={value} {...meta} />;
   }
 }
 
-export default function TableItem({ cell, fields, values, validator }: Props) {
+function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) {
   if (!values) return null;
 
   return (
     <div className={WrapperStyle}>
-      {fields.map(({ name, type, meta }) => (
+      {fields.map(({ name, type, meta }, fieldCounter) => (
         <div className={ItemStyle} key={name}>
           <FormField
             name={`${cell}.${name}`}
@@ -108,7 +125,14 @@ export default function TableItem({ cell, fields, values, validator }: Props) {
             values={values}
           >
             {({ name: fieldName }) =>
-              renderItem({ name: fieldName, type, meta, value: getByPath(name, values), values })
+              renderItem({
+                id: `${rowNo}-${fieldCounter + columnNo + 1}`,
+                name: fieldName,
+                type,
+                meta,
+                value: getByPath(name, values),
+                values,
+              })
             }
           </FormField>
         </div>
@@ -116,3 +140,7 @@ export default function TableItem({ cell, fields, values, validator }: Props) {
     </div>
   );
 }
+
+TableItem.defaultProps = defaultProps;
+
+export default TableItem;

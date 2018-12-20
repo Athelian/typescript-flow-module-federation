@@ -2,6 +2,11 @@
 import * as React from 'react';
 import { DisabledCellStyle } from './style';
 
-const TableDisabledCell = () => <div className={DisabledCellStyle} />;
+type Props = {
+  id?: string,
+};
+const TableDisabledCell = ({ id }: Props) => (
+  <div {...(id ? { id } : {})} className={DisabledCellStyle} />
+);
 
 export default TableDisabledCell;
