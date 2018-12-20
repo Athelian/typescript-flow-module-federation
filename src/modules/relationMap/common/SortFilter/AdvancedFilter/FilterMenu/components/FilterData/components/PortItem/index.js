@@ -25,7 +25,7 @@ const PortItem = ({ ports, name, label, onRemove }: Props): Array<React.Node> =>
             onRemove(newPorts, name);
           }}
         >
-          {label} : {port.name}
+          {label} : {port.description}
           <Icon icon="CLEAR" />
         </button>
       )
