@@ -69,7 +69,7 @@ const keyMap = {
   firstRight: ['command+right', 'ctrl+right'],
   firstLeft: ['command+left', 'ctrl+left'],
   firstTop: ['command+up', 'ctrl+up', 'shift+enter'],
-  firstBottom: ['command+down', 'ctrl+down'],
+  firstBottom: ['command+down', 'ctrl+down', 'enter'],
 };
 
 const calculatePosition = (position, type) => {
