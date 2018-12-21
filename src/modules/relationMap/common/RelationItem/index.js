@@ -46,7 +46,8 @@ type Props = OptionalProps & {
   type: string,
 };
 
-const Item = (props: Props) => {
+// FIXME: never called
+const RelationItem = (props: Props) => {
   const { type, data, onClick, isFocused, onDoubleClick, focusMode, actions } = props;
   if (typeof type === 'string' && /LINK-[0-4]/.test(type)) {
     const [, linkType] = type.split('-') || [];
@@ -168,6 +169,6 @@ const Item = (props: Props) => {
   }
 };
 
-Item.defaultProps = defaultProps;
+RelationItem.defaultProps = defaultProps;
 
-export default Item;
+export default RelationItem;
