@@ -51,6 +51,7 @@ export type BatchFormState = {
     length: Metric,
   },
   deliveredAt?: ?Date | string,
+  desiredAt?: ?Date | string,
   expiredAt?: ?Date | string,
   customFields: ?Object,
   producedAt?: ?Date | string,
@@ -66,6 +67,7 @@ const initValues = {
   packageQuantity: 0,
   quantity: 0,
   deliveredAt: '',
+  desiredAt: '',
   expiredAt: '',
   customFields: {
     mask: null,
