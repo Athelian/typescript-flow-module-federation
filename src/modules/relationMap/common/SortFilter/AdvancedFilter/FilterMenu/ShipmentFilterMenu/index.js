@@ -54,12 +54,12 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.forwarder} />,
           data: getSelectData(selectedItems, 'forwarder'),
         },
-        {
-          name: 'inCharge',
-          field: 'id',
-          label: <FormattedMessage {...messages.inCharge} />,
-          data: getSelectData(selectedItems, 'inCharge'),
-        },
+        // {
+        //   name: 'inCharge',
+        //   field: 'id',
+        //   label: <FormattedMessage {...messages.inCharge} />,
+        //   data: getSelectData(selectedItems, 'inCharge'),
+        // },
         {
           name: 'seaports',
           label: <FormattedMessage {...messages.seaports} />,
