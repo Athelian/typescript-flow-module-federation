@@ -21,27 +21,37 @@ type Props = {
   }>,
 };
 
+const getFieldId = ({ entity, info, index, position }) =>
+  `${entity}-${index > 0 ? info[index - 1].columns.length + position : position}`;
+
 function isHiddenColumn({
   showAll,
-  fieldName,
+  fieldId,
   templateColumns,
 }: {
   showAll: boolean,
-  fieldName: string,
+  fieldId: string,
   templateColumns: Array<string>,
 }) {
-  return !showAll && !templateColumns.includes(fieldName);
+  return !showAll && !templateColumns.includes(fieldId);
 }
 
 function shouldShowGroup({
   columns,
   showAll,
   entity,
+  info,
+  index,
   templateColumns,
 }: {
   showAll: boolean,
   columns: Array<string | React.Node>,
   entity: string,
+  index: number,
+  info: Array<{
+    group: string | React.Node,
+    columns: Array<string | React.Node>,
+  }>,
   templateColumns: Array<string>,
 }) {
   return columns.some(
@@ -49,7 +59,12 @@ function shouldShowGroup({
       !isHiddenColumn({
         showAll,
         templateColumns,
-        fieldName: `${entity}-customFields-${position}`,
+        fieldId: getFieldId({
+          entity,
+          info,
+          index,
+          position,
+        }),
       })
   );
 }
@@ -70,19 +85,24 @@ export default function TableHeader({ entity, info, onToggle, templateColumns, s
             <div className={TableHeaderTitleStyle(entity)}>{group}</div>
             <div className={TableHeaderGroupStyle}>
               {columns.map((column, position) => {
-                const fieldName = `${entity}-${position}`;
+                const fieldId = getFieldId({
+                  entity,
+                  info,
+                  index,
+                  position,
+                });
                 return isHiddenColumn({
                   showAll,
-                  fieldName,
+                  fieldId,
                   templateColumns,
                 }) ? null : (
                   <div key={uuid()} className={TableColumnHeaderStyle(entity)}>
                     {showAll && (
                       <CheckboxInput
                         checked={
-                          templateColumns.length === 0 ? true : templateColumns.includes(fieldName)
+                          templateColumns.length === 0 ? true : templateColumns.includes(fieldId)
                         }
-                        onToggle={() => onToggle(fieldName)}
+                        onToggle={() => onToggle(fieldId)}
                       />
                     )}
                     <div className={TableColumnStyle}>{column}</div>
