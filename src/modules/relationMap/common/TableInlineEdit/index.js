@@ -141,7 +141,7 @@ function findColumns({
       ? fields
       : fields.filter((item, idx) => templateColumns.includes(`${entity}-${idx}`));
   }
-  return fields; // showAll ? fields : fields.filter((item, idx) => !hideColumns.includes(`${entity}-${idx}`));
+  return fields;
 }
 
 function findColumnsForCustomFields({ showAll, fields: customFields, templateColumns, entity }) {
@@ -152,11 +152,7 @@ function findColumnsForCustomFields({ showAll, fields: customFields, templateCol
           templateColumns.includes(`${entity}-customFields-${index}`)
         );
   }
-  return customFields; // showAll
-  // ? customFields
-  // : customFields.filter(
-  //     (field, index) => !hideColumns.includes(`${entity}-customFields-${index}`)
-  //   );
+  return customFields;
 }
 
 function findAllFieldsFilter({
