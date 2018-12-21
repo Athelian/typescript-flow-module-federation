@@ -101,7 +101,7 @@ export default defineMessages({
   },
   desiredAt: {
     id: 'components.BatchItem.desiredAt',
-    defaultMessage: 'DESIRE DATE',
+    defaultMessage: 'DESIRED DATE',
   },
   shortDeliveryAt: {
     id: 'components.BatchItem.shortDeliveryAt',
