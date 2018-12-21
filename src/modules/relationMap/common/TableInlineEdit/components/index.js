@@ -7,7 +7,6 @@ import TableHeader from './TableHeader';
 import TableHeaderForCustomFields from './TableHeaderForCustomFields';
 import TableItem from './TableItem';
 import TableRow from './TableRow';
-import UpdateTemplateColumn from './UpdateTemplateColumn';
 
 export {
   HeaderSection,
@@ -18,5 +17,4 @@ export {
   TableHeaderForCustomFields,
   TableItem,
   TableRow,
-  UpdateTemplateColumn,
 };
