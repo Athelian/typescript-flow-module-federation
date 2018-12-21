@@ -18,7 +18,7 @@ import {
   OrderBatchCardWrapperStyle,
   BatchNoWrapperStyle,
   QuantityWrapperStyle,
-  DeliveryDateWrapperStyle,
+  DateInputWrapperStyle,
   DividerStyle,
   TotalPriceWrapperStyle,
   VolumeWrapperStyle,
@@ -111,6 +111,7 @@ const OrderBatchCard = ({
     no,
     quantity,
     deliveredAt,
+    desiredAt,
     packageVolume,
     packageQuantity,
     batchAdjustments,
@@ -143,7 +144,7 @@ const OrderBatchCard = ({
     <BaseCard icon="BATCH" color="BATCH" showActionsOnHover actions={actions} {...rest}>
       <div
         className={OrderBatchCardWrapperStyle}
-        onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
+        onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
         role="presentation"
       >
         <div
@@ -214,7 +215,7 @@ const OrderBatchCard = ({
         </div>
 
         <div
-          className={DeliveryDateWrapperStyle}
+          className={DateInputWrapperStyle}
           onClick={evt => evt.stopPropagation()}
           role="presentation"
         >
@@ -236,6 +237,37 @@ const OrderBatchCard = ({
                     saveOnBlur({
                       ...batch,
                       deliveredAt: inputHandlers.value ? inputHandlers.value : null,
+                    });
+                  },
+                },
+              })
+            }
+          </FormField>
+        </div>
+
+        <div
+          className={DateInputWrapperStyle}
+          onClick={evt => evt.stopPropagation()}
+          role="presentation"
+        >
+          <Label>
+            <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
+          </Label>
+          <FormField name={`batch.${batch.id}.desiredAt`} initValue={desiredAt}>
+            {({ name, ...inputHandlers }) =>
+              dateInputFactory({
+                width: '120px',
+                height: '20px',
+                name,
+                isNew: false,
+                originalValue: desiredAt,
+                inputHandlers: {
+                  ...inputHandlers,
+                  onBlur: evt => {
+                    inputHandlers.onBlur(evt);
+                    saveOnBlur({
+                      ...batch,
+                      desiredAt: inputHandlers.value ? inputHandlers.value : null,
                     });
                   },
                 },

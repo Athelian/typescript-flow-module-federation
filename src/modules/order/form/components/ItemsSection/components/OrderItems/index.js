@@ -159,6 +159,7 @@ class OrderItems extends React.Component<Props> {
                                   onClone={({
                                     id,
                                     deliveredAt,
+                                    desiredAt,
                                     expiredAt,
                                     producedAt,
                                     no,
