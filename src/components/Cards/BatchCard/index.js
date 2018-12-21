@@ -49,6 +49,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
     no,
     quantity,
     deliveredAt,
+    desiredAt,
     packageVolume,
     packageQuantity,
     orderItem,
@@ -128,6 +129,19 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             input={
               <Display>
                 <FormattedDate value={deliveredAt} />
+              </Display>
+            }
+          />
+
+          <FieldItem
+            label={
+              <Label>
+                <FormattedMessage id="components.cards.desiredAt" defaultMessage="DESIRED" />
+              </Label>
+            }
+            input={
+              <Display>
+                <FormattedDate value={desiredAt} />
               </Display>
             }
           />
