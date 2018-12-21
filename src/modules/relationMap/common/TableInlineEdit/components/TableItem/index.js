@@ -28,6 +28,7 @@ type Props = OptionalProps & {
     name: string,
     type: string,
     meta?: Object,
+    getFieldValue?: Function,
   }>,
   values: ?Object,
   validator: Object,
@@ -116,11 +117,11 @@ function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) 
 
   return (
     <div className={WrapperStyle}>
-      {fields.map(({ name, type, meta }, fieldCounter) => (
+      {fields.map(({ name, type, meta, getFieldValue }, fieldCounter) => (
         <div className={ItemStyle} key={name}>
           <FormField
             name={`${cell}.${name}`}
-            initValue={getByPath(name, values)}
+            initValue={getFieldValue ? getFieldValue(values) : getByPath(name, values)}
             validator={validator}
             values={values}
           >
@@ -130,7 +131,7 @@ function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) 
                 name: fieldName,
                 type,
                 meta,
-                value: getByPath(name, values),
+                value: getFieldValue ? getFieldValue(values) : getByPath(name, values),
                 values,
               })
             }

@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { getByPath } from 'utils/fp';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
@@ -421,6 +422,8 @@ export const shipmentColumnFields = [
     type: 'timeline',
   },
   {
+    getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
+      getByPath(`${voyages && voyages.length > 1 ? '0' : ''}.arrival`, voyages),
     name: 'voyages.0.arrival',
     type: 'timeline',
   },
@@ -437,6 +440,10 @@ export const shipmentColumnFields = [
     type: 'timeline',
   },
   {
+    getFieldValue: ({ voyages }: { voyages: Array<Object> }) => {
+      const index = voyages ? voyages.length - 1 : 0;
+      return getByPath(`${index}.arrival`, voyages);
+    },
     name: 'voyages.2.arrival',
     type: 'timeline',
   },
