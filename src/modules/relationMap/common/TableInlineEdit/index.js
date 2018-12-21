@@ -10,6 +10,7 @@ import { HotKeys } from 'react-hotkeys';
 import { range, set, cloneDeep, isEqual } from 'lodash';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
+import { getByPathWithDefault } from 'utils/fp';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -41,7 +42,6 @@ import {
   TableHeaderForCustomFields,
   TableItem,
   TableEmptyItem,
-  UpdateTemplateColumn,
 } from './components';
 import TableItemForCustomFields from './components/TableItem/index.customFields';
 import { entitiesUpdateManyMutation } from './mutation';
@@ -363,18 +363,38 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   });
   return (
     <QueryForAllCustomFields
-      onCompleted={() => (!isReady ? setIsReady(true) : null)}
+      onCompleted={customFields => {
+        if (!isReady) {
+          setIsReady(true);
+        }
+        const orderCustomFieldIds = getByPathWithDefault([], 'order', customFields).map(
+          mapCustomField('ORDER')
+        );
+        const orderItemCustomFieldIds = getByPathWithDefault([], 'orderItem', customFields).map(
+          mapCustomField('ORDER_ITEM')
+        );
+        const batchCustomFieldIds = getByPathWithDefault([], 'batch', customFields).map(
+          mapCustomField('BATCH')
+        );
+        const shipmentCustomFieldIds = getByPathWithDefault([], 'shipment', customFields).map(
+          mapCustomField('SHIPMENT')
+        );
+        const allCustomColumnIds = [
+          ...orderCustomFieldIds,
+          ...orderItemCustomFieldIds,
+          ...batchCustomFieldIds,
+          ...shipmentCustomFieldIds,
+        ];
+        if (templateColumns.length === allColumnIds.length) {
+          setTemplateColumns([...new Set([...templateColumns, ...allCustomColumnIds])]);
+        }
+      }}
       render={({
         orderCustomFields,
         orderItemCustomFields,
         batchCustomFields,
         shipmentCustomFields,
       }) => {
-        const orderCustomFieldIds = orderCustomFields.map(mapCustomField('ORDER'));
-        const orderItemCustomFieldIds = orderItemCustomFields.map(mapCustomField('ORDER_ITEM'));
-        const batchCustomFieldIds = batchCustomFields.map(mapCustomField('BATCH'));
-        const shipmentCustomFieldIds = shipmentCustomFields.map(mapCustomField('SHIPMENT'));
-
         const orderCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: orderCustomFields,
@@ -974,76 +994,65 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       );
                     })}
                   </div>
-                  <UpdateTemplateColumn
-                    templateColumns={templateColumns}
-                    setTemplateColumns={setTemplateColumns}
-                    columns={[
-                      ...orderCustomFieldIds,
-                      ...orderItemCustomFieldIds,
-                      ...batchCustomFieldIds,
-                      ...shipmentCustomFieldIds,
-                    ]}
-                  >
-                    <div className={HeaderWrapperStyle} ref={headerRef}>
-                      <TableHeader
-                        entity="ORDER"
-                        showAll={showAll}
-                        info={orderColumns}
-                        templateColumns={templateColumns}
-                        onToggle={onToggle}
-                      />
-                      <TableHeaderForCustomFields
-                        entity="ORDER"
-                        customFields={orderCustomFields}
-                        onToggle={onToggle}
-                        showAll={showAll}
-                        templateColumns={templateColumns}
-                      />
-                      <TableHeader
-                        entity="ORDER_ITEM"
-                        showAll={showAll}
-                        info={orderItemColumns}
-                        templateColumns={templateColumns}
-                        onToggle={onToggle}
-                      />
-                      <TableHeaderForCustomFields
-                        entity="ORDER_ITEM"
-                        customFields={orderItemCustomFields}
-                        onToggle={onToggle}
-                        showAll={showAll}
-                        templateColumns={templateColumns}
-                      />
-                      <TableHeader
-                        entity="BATCH"
-                        showAll={showAll}
-                        info={batchColumns}
-                        templateColumns={templateColumns}
-                        onToggle={onToggle}
-                      />
-                      <TableHeaderForCustomFields
-                        entity="BATCH"
-                        customFields={batchCustomFields}
-                        onToggle={onToggle}
-                        showAll={showAll}
-                        templateColumns={templateColumns}
-                      />
-                      <TableHeader
-                        entity="SHIPMENT"
-                        showAll={showAll}
-                        info={shipmentColumns}
-                        templateColumns={templateColumns}
-                        onToggle={onToggle}
-                      />
-                      <TableHeaderForCustomFields
-                        entity="SHIPMENT"
-                        customFields={shipmentCustomFields}
-                        onToggle={onToggle}
-                        showAll={showAll}
-                        templateColumns={templateColumns}
-                      />
-                      <div className={TableHeaderClearFixStyle} />
-                    </div>
-                  </UpdateTemplateColumn>
+                  <div className={HeaderWrapperStyle} ref={headerRef}>
+                    <TableHeader
+                      entity="ORDER"
+                      showAll={showAll}
+                      info={orderColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
+                    <TableHeaderForCustomFields
+                      entity="ORDER"
+                      customFields={orderCustomFields}
+                      onToggle={onToggle}
+                      showAll={showAll}
+                      templateColumns={templateColumns}
+                    />
+                    <TableHeader
+                      entity="ORDER_ITEM"
+                      showAll={showAll}
+                      info={orderItemColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
+                    <TableHeaderForCustomFields
+                      entity="ORDER_ITEM"
+                      customFields={orderItemCustomFields}
+                      onToggle={onToggle}
+                      showAll={showAll}
+                      templateColumns={templateColumns}
+                    />
+                    <TableHeader
+                      entity="BATCH"
+                      showAll={showAll}
+                      info={batchColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
+                    <TableHeaderForCustomFields
+                      entity="BATCH"
+                      customFields={batchCustomFields}
+                      onToggle={onToggle}
+                      showAll={showAll}
+                      templateColumns={templateColumns}
+                    />
+                    <TableHeader
+                      entity="SHIPMENT"
+                      showAll={showAll}
+                      info={shipmentColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
+                    <TableHeaderForCustomFields
+                      entity="SHIPMENT"
+                      customFields={shipmentCustomFields}
+                      onToggle={onToggle}
+                      showAll={showAll}
+                      templateColumns={templateColumns}
+                    />
+                    <div className={TableHeaderClearFixStyle} />
+                  </div>
                   <div className={SidebarWrapperStyle} ref={sidebarRef}>
                     {orderIds.map((orderId, counter) => {
                       const order = mappingObjects.order[orderId];
