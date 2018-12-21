@@ -420,13 +420,14 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
           entity: 'SHIPMENT',
         });
         const rowCounter = {};
+
         const columnOrderCustomNo = orderColumnFieldsFilter.length;
         const columnOrderItemNo = columnOrderCustomNo + orderCustomFieldsFilter.length;
-        const columnOrderItemCustomNo = columnOrderItemNo + orderItemCustomFieldsFilter.length;
-        const columnBatchNo = columnOrderItemCustomNo + batchColumnFieldsFilter.length;
-        const columnBatchCustomNo = columnBatchNo + batchCustomFieldsFilter.length;
-        const columnShipmentNo = columnBatchCustomNo + shipmentColumnFieldsFilter.length;
-        const columnShipmentCustomNo = columnShipmentNo + shipmentCustomFieldsFilter.length;
+        const columnOrderItemCustomNo = columnOrderItemNo + orderItemColumnFieldsFilter.length;
+        const columnBatchNo = columnOrderItemCustomNo + orderItemCustomFieldsFilter.length;
+        const columnBatchCustomNo = columnBatchNo + batchColumnFieldsFilter.length;
+        const columnShipmentNo = columnBatchCustomNo + batchCustomFieldsFilter.length;
+        const columnShipmentCustomNo = columnShipmentNo + shipmentColumnFieldsFilter.length;
         return (
           <ApolloConsumer>
             {client => (
