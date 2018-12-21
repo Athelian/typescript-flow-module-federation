@@ -25,7 +25,7 @@ import {
   BatchInfoWrapperStyle,
   BatchNoWrapperStyle,
   QuantityWrapperStyle,
-  DeliveryDateWrapperStyle,
+  DateInputWrapperStyle,
   DividerStyle,
   TotalPriceWrapperStyle,
   VolumeWrapperStyle,
@@ -80,6 +80,7 @@ const ShipmentBatchCard = ({
     no,
     quantity,
     deliveredAt,
+    desiredAt,
     batchAdjustments,
     packageVolume,
     packageQuantity,
@@ -117,12 +118,12 @@ const ShipmentBatchCard = ({
     >
       <div
         className={ShipmentBatchCardWrapperStyle}
-        onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
+        onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
         role="presentation"
       >
         <div
           className={ProductWrapperStyle}
-          onClick={() => onClick({ ...batch, no, quantity, deliveredAt })}
+          onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
           role="presentation"
         >
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
@@ -219,7 +220,7 @@ const ShipmentBatchCard = ({
           </div>
 
           <div
-            className={DeliveryDateWrapperStyle}
+            className={DateInputWrapperStyle}
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
@@ -241,6 +242,37 @@ const ShipmentBatchCard = ({
                       saveOnBlur({
                         ...batch,
                         deliveredAt: inputHandlers.value ? inputHandlers.value : null,
+                      });
+                    },
+                  },
+                })
+              }
+            </FormField>
+          </div>
+
+          <div
+            className={DateInputWrapperStyle}
+            onClick={evt => evt.stopPropagation()}
+            role="presentation"
+          >
+            <Label>
+              <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
+            </Label>
+            <FormField name={`batch.${id}.desiredAt`} initValue={desiredAt}>
+              {({ name: fieldName, ...inputHandlers }) =>
+                dateInputFactory({
+                  width: '120px',
+                  height: '20px',
+                  name: fieldName,
+                  isNew: false,
+                  originalValue: desiredAt,
+                  inputHandlers: {
+                    ...inputHandlers,
+                    onBlur: evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({
+                        ...batch,
+                        desiredAt: inputHandlers.value ? inputHandlers.value : null,
                       });
                     },
                   },
