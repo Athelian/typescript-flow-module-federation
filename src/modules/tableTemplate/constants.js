@@ -17,6 +17,7 @@ import {
   metrics as distanceMetrics,
   convert as distanceConvert,
 } from 'modules/form/helpers/metricInput/distanceInput';
+import { mapColumnId } from './helpers';
 
 export const orderColumns = [
   {
@@ -453,9 +454,6 @@ export const shipmentColumnFields = [
   },
 ];
 
-const mapColumnId: Function = (entity: string) => (_: any, index: number): string =>
-  `${entity}-${index}`;
-
 export const orderColumnIds: Array<string> = orderColumnFields.map(mapColumnId('ORDER'));
 
 export const orderItemColumnIds: Array<string> = orderItemColumnFields.map(
@@ -466,7 +464,7 @@ export const batchColumnIds: Array<string> = batchColumnFields.map(mapColumnId('
 
 export const shipmentColumnIds: Array<string> = shipmentColumnFields.map(mapColumnId('SHIPMENT'));
 
-export const allIds = [
+export const allColumnIds = [
   ...orderColumnIds,
   ...orderItemColumnIds,
   ...batchColumnIds,

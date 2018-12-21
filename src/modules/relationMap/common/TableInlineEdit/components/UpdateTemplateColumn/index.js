@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 
-const { Component } = React;
+const { PureComponent } = React;
 type Props = {
   setTemplateColumns: Function,
   templateColumns: Array<string>,
@@ -9,7 +9,7 @@ type Props = {
   children: React.Node,
 };
 
-export default class UpdateTemplateColumn extends Component<Props> {
+export default class UpdateTemplateColumn extends PureComponent<Props> {
   componentDidMount() {
     const { columns, setTemplateColumns, templateColumns } = this.props;
     setTemplateColumns(templateColumns.concat(columns));
