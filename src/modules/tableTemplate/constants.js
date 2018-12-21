@@ -452,3 +452,23 @@ export const shipmentColumnFields = [
     type: 'timeline',
   },
 ];
+
+const mapColumnId: Function = (entity: string) => (_: any, index: number): string =>
+  `${entity}-${index}`;
+
+export const orderColumnIds: Array<string> = orderColumnFields.map(mapColumnId('ORDER'));
+
+export const orderItemColumnIds: Array<string> = orderItemColumnFields.map(
+  mapColumnId('ORDER_ITEM')
+);
+
+export const batchColumnIds: Array<string> = batchColumnFields.map(mapColumnId('BATCH'));
+
+export const shipmentColumnIds: Array<string> = shipmentColumnFields.map(mapColumnId('SHIPMENT'));
+
+export const allIds = [
+  ...orderColumnIds,
+  ...orderItemColumnIds,
+  ...batchColumnIds,
+  ...shipmentColumnIds,
+];

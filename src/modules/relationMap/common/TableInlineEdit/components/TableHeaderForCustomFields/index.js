@@ -94,7 +94,11 @@ export default function TableHeader({
                     <div key={uuid()} className={TableColumnHeaderStyle(entity)}>
                       {showAll && (
                         <CheckboxInput
-                          checked={!hideColumns.includes(fieldName)}
+                          checked={
+                            templateColumns.length === 0
+                              ? true
+                              : templateColumns.includes(fieldName)
+                          }
                           onToggle={() => onToggle(fieldName)}
                         />
                       )}

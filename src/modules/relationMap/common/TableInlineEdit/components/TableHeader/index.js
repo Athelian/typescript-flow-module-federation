@@ -135,11 +135,13 @@ export default function TableHeader({
                     {showAll && (
                       <CheckboxInput
                         checked={
-                          !hideColumns.includes(
-                            `${entity}-${
-                              index > 0 ? info[index - 1].columns.length + position : position
-                            }`
-                          )
+                          templateColumns.length === 0
+                            ? true
+                            : templateColumns.includes(
+                                `${entity}-${
+                                  index > 0 ? info[index - 1].columns.length + position : position
+                                }`
+                              )
                         }
                         onToggle={() =>
                           onToggle(
