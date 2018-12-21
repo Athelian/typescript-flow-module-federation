@@ -14,6 +14,7 @@ export const batchFormFragment = gql`
     quantity
     producedAt
     deliveredAt
+    desiredAt
     expiredAt
     customFields {
       ...customFieldsFragment
@@ -95,6 +96,7 @@ export const batchCardFragment = gql`
     archived
     quantity
     deliveredAt
+    desiredAt
     packageVolume {
       ...metricFragment
     }

@@ -109,6 +109,24 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                 </FormField>
 
                 <FormField
+                  name="desiredAt"
+                  initValue={values.desiredAt}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                >
+                  {({ name, ...inputHandlers }) =>
+                    dateInputFactory({
+                      name,
+                      inputHandlers,
+                      isNew,
+                      originalValue: initialValues[name],
+                      label: <FormattedMessage {...messages.desiredAt} />,
+                    })
+                  }
+                </FormField>
+
+                <FormField
                   name="expiredAt"
                   initValue={values.expiredAt}
                   setFieldValue={setFieldValue}
