@@ -14,7 +14,8 @@ import {
   AllShipmentsToggleWrapperStyle,
   AllShipmentsIconStyle,
 } from 'modules/relationMap/style';
-
+import loadMore from 'utils/loadMore';
+import { getByPathWithDefault } from 'utils/fp';
 import { Label, ToggleInput } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -22,9 +23,16 @@ import { OrderListWrapperStyle, OrderListBodyStyle } from 'modules/relationMap/o
 import query from './query';
 import normalize from './normalize';
 import { useFilter } from '../hooks';
+import OrderItem from './components/OrderItem';
 
 type Props = {
   intl: IntlShape,
+};
+
+const hasMoreItems = data => {
+  const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
+  const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
+  return nextPage <= totalPage;
 };
 
 const Order = ({ intl }: Props) => {
@@ -42,7 +50,10 @@ const Order = ({ intl }: Props) => {
   console.warn({ filterAndSort });
   return (
     <Query query={query} variables={queryVariables} fetchPolicy="network-only">
-      {({ loading, data }) => {
+      {({ loading, data, fetchMore, error }) => {
+        if (error) {
+          return error.message;
+        }
         const {
           entities: { orders, orderItems, batches, shipments },
         } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
@@ -193,13 +204,15 @@ const Order = ({ intl }: Props) => {
                 <div className={OrderListWrapperStyle}>
                   <InfiniteScroll
                     className={OrderListBodyStyle}
-                    loadMore={() => {}}
-                    hasMore={false}
+                    loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'orders')}
+                    hasMore={hasMoreItems(data)}
                     loader={<LoadingIcon key="loading" />}
                     useWindow={false}
                     threshold={500}
                   >
-                    {Object.entries(orders).map(item => JSON.stringify(item, null, 2))}
+                    {Object.entries(orders).map(([orderId, item]) => (
+                      <OrderItem key={orderId} item={item} />
+                    ))}
                   </InfiniteScroll>
                 </div>
               </div>
