@@ -16,7 +16,7 @@ import {
 } from 'modules/relationMap/style';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
-import { Label, ToggleInput } from 'components/Form';
+import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
 import { OrderListWrapperStyle, OrderListBodyStyle } from 'modules/relationMap/orderFocused/style';
@@ -119,7 +119,7 @@ const Order = ({ intl }: Props) => {
                     // color={orderSelected ? 'ORDER_DARK' : 'ORDER'}
                     color="ORDER"
                     label={intl.formatMessage(messages.ordersLabel)}
-                    no={Object.keys(orders).length}
+                    no={Object.keys(orders || []).length}
                     onClick={() => {
                       // if (!orderSelected && selectAll) {
                       //   selectAll('order');
@@ -134,7 +134,7 @@ const Order = ({ intl }: Props) => {
                     color="ORDER_ITEM"
                     // color={orderItemSelected ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'}
                     label={intl.formatMessage(messages.itemsLabel)}
-                    no={Object.keys(orderItems).length}
+                    no={Object.keys(orderItems || []).length}
                     // no={sumOrderItems}
                     onClick={() => {
                       // if (!orderItemSelected && selectAll) {
@@ -150,7 +150,7 @@ const Order = ({ intl }: Props) => {
                     color="BATCH"
                     // color={batchSelected ? 'BATCH_DARK' : 'BATCH'}
                     label={intl.formatMessage(messages.batchesLabel)}
-                    no={Object.keys(batches).length}
+                    no={Object.keys(batches || []).length}
                     onClick={() => {
                       // if (!batchSelected && selectAll) {
                       //   selectAll('batch');
@@ -166,7 +166,7 @@ const Order = ({ intl }: Props) => {
                     // color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
                     label={intl.formatMessage(messages.shipmentsLabel)}
                     // no={sumShipments + total}
-                    no={Object.keys(shipments).length}
+                    no={Object.keys(shipments || []).length}
                     onClick={() => {
                       // if (!shipmentSelected && selectAll) {
                       //   selectAll('shipment');
@@ -200,18 +200,27 @@ const Order = ({ intl }: Props) => {
                   </EntityHeader>
                 </div>
                 <div className={OrderListWrapperStyle}>
-                  <InfiniteScroll
-                    className={OrderListBodyStyle}
-                    loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'orders')}
-                    hasMore={hasMoreItems(data)}
-                    loader={<LoadingIcon key="loading" />}
-                    useWindow={false}
-                    threshold={500}
-                  >
-                    {Object.entries(orders).map(([orderId, item]) => (
-                      <OrderItem key={orderId} item={item} />
-                    ))}
-                  </InfiniteScroll>
+                  {orders ? (
+                    <InfiniteScroll
+                      className={OrderListBodyStyle}
+                      loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'orders')}
+                      hasMore={hasMoreItems(data)}
+                      loader={<LoadingIcon key="loading" />}
+                      useWindow={false}
+                      threshold={500}
+                    >
+                      {Object.entries(orders).map(([orderId, item]) => (
+                        <OrderItem key={orderId} item={item} />
+                      ))}
+                    </InfiniteScroll>
+                  ) : (
+                    <Display>
+                      <FormattedMessage
+                        id="modules.Orders.noOrderFound"
+                        defaultMessage="No orders found"
+                      />
+                    </Display>
+                  )}
                 </div>
               </div>
             )}
