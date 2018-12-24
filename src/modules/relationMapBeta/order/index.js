@@ -47,7 +47,6 @@ const Order = ({ intl }: Props) => {
       direction: 'DESCENDING',
     },
   });
-  console.warn({ filterAndSort });
   return (
     <Query query={query} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, fetchMore, error }) => {
@@ -57,7 +56,6 @@ const Order = ({ intl }: Props) => {
         const {
           entities: { orders, orderItems, batches, shipments },
         } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
-        console.warn({ orders, orderItems, batches, shipments });
         return (
           <>
             <SortFilter

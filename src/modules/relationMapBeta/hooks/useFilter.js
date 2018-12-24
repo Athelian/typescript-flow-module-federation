@@ -20,7 +20,6 @@ function useFilter({ filter, sort, page = 1, perPage = 10 }: State) {
   });
 
   const onChange = useCallback((newFilter: Object) => {
-    console.warn({ newFilter });
     changeFilterAndSort({
       ...filterAndSort,
       ...newFilter,
@@ -32,8 +31,8 @@ function useFilter({ filter, sort, page = 1, perPage = 10 }: State) {
     queryVariables: {
       page: filterAndSort.page,
       perPage: filterAndSort.perPage,
-      filterBy: { ...filter },
-      sortBy: { [sort.field]: sort.direction },
+      filterBy: filterAndSort.filter,
+      sortBy: { [filterAndSort.sort.field]: filterAndSort.sort.direction },
     },
     onChange,
   };
