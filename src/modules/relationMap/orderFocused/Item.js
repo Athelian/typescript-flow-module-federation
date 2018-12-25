@@ -117,10 +117,6 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
             />
           );
         }
-        // console.log('#$%#$%', relation,itemData, itemType)
-        // if (type === SHIPMENT_ALL) {
-        //   console.log('itemRelation', itemRelation, itemData)
-        // }
 
         const onClickHighlight = toggleHighlight(itemRelation, id);
         const onClickTargetTree = toggleTargetTree(itemData, relation);
