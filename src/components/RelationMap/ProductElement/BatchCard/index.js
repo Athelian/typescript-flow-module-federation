@@ -25,6 +25,18 @@ type Props = {
 };
 const BatchCard = ({ batch }: Props) => {
   const { tags } = batch;
+
+  const arrivalDates = getByPathWithDefault(
+    [],
+    'shipment.containerGroups.0.warehouseArrival.timelineDateRevisions',
+    batch
+  );
+
+  const arrivalDate =
+    arrivalDates.length > 0
+      ? arrivalDates[arrivalDates.length - 1].date
+      : getByPathWithDefault('', 'shipment.containerGroups.0.warehouseArrival.date', batch);
+
   return (
     <BaseCard icon="BATCH" color="BATCH">
       <div className={CardWrapper}>
@@ -64,14 +76,7 @@ const BatchCard = ({ batch }: Props) => {
           )}
           <div className={GrayLabel}>ARRIVAL</div>
           <div>
-            <FormattedDate
-              value={getByPathWithDefault(
-                '',
-                'shipment.containerGroups.0.warehouseArrival.approvedAt',
-                batch
-              )}
-              mode="date"
-            />
+            <FormattedDate value={arrivalDate} mode="date" />
           </div>
         </div>
         <div className={TagWrapper}>
