@@ -57,7 +57,6 @@ const Order = ({ intl }: Props) => (
                     const formatedNodes =
                       isEmpty(result) || !nodes ? nodes : formatNodes(nodes, result);
                     const order = formatOrderData(formatedNodes || []);
-
                     const ShipmentToggleValue = createObjectValue({
                       isToggle: false,
                       total: 0,
