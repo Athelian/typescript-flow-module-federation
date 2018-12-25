@@ -59,6 +59,11 @@ export const IconWrapper = css`
   margin-right: 5px;
 `;
 
+export const GrayIconWrapper = css`
+  ${IconWrapper};
+  background-color: ${colors.GRAY_LIGHT};
+`;
+
 export const SecondaryIconWrapper = css`
   ${borderRadiuses.CIRCLE};
   border: 1px solid ${colors.GRAY_VERY_LIGHT};
