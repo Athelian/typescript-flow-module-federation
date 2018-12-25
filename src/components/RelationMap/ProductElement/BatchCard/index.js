@@ -8,6 +8,7 @@ import { getByPathWithDefault, getByPath } from 'utils/fp';
 import {
   CardWrapper,
   BatchRow,
+  BaseText,
   QuantityRow,
   QuantityInput,
   Divider,
@@ -37,7 +38,7 @@ const BatchCard = ({ batch }: Props) => {
           <div className={LightIconWrapper}>
             <Icon icon="ORDER" />
           </div>
-          {getByPathWithDefault('', 'orderItem.order.poNo', batch)}
+          <div className={BaseText}>{getByPathWithDefault('', 'orderItem.order.poNo', batch)}</div>
         </div>
         <div className={DetailWrapper}>
           {getByPath('shipment', batch) ? (
@@ -49,7 +50,7 @@ const BatchCard = ({ batch }: Props) => {
               <Icon icon="SHIPMENT" />
             </div>
           )}
-          {getByPathWithDefault('', 'shipment.no', batch)}
+          <div className={BaseText}> {getByPathWithDefault('', 'shipment.no', batch)}</div>
         </div>
         <div className={DetailWrapper}>
           {getByPath('shipment.containerGroups.0.warehouseArrival.approvedAt', batch) ? (

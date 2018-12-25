@@ -1,8 +1,12 @@
 import { css } from 'react-emotion';
-import { borderRadiuses, layout, colors, fontSizes, shadows } from 'styles/common';
+import { borderRadiuses, layout, colors, fontSizes, shadows, presets } from 'styles/common';
 
-const Row = css`
+const BaseRow = css`
   padding: 0 10px 5px 10px;
+`;
+
+export const BaseText = css`
+  ${presets.ELLIPSIS};
 `;
 
 export const CardWrapper = css`
@@ -15,18 +19,19 @@ export const CardWrapper = css`
 `;
 
 export const BatchRow = css`
-  ${Row};
+  ${BaseRow};
+  ${BaseText};
 `;
 
 export const QuantityRow = css`
-  ${Row};
+  ${BaseRow};
   padding-right: 5px;
   ${layout.HORIZONTAL};
   justify-content: space-between;
 `;
 
 export const OrderRow = css`
-  ${Row};
+  ${BaseRow};
   ${layout.HORIZONTAL};
 `;
 
@@ -35,12 +40,12 @@ export const TagWrapper = css`
   grid-gap: 5px;
   padding: 0 10px;
   overflow: hidden;
-  ${Row};
+  ${BaseRow};
 `;
 
 export const DetailWrapper = css`
   ${layout.HORIZONTAL};
-  ${Row};
+  ${BaseRow};
 `;
 
 const IconWrapper = css`
