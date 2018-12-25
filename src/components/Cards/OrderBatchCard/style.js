@@ -22,7 +22,7 @@ export const QuantityWrapperStyle: string = css`
   padding: 0 5px;
 `;
 
-export const DeliveryDateWrapperStyle: string = css`
+export const DateInputWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 65px 120px;
   width: 100%;

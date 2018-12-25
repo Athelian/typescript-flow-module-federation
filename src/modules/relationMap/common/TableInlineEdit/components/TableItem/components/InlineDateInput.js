@@ -11,17 +11,19 @@ type OptionalProps = {
 type Props = OptionalProps & {
   name: string,
   value: string,
+  id: string,
 };
 
 const defaultProps = {
   isRequired: false,
 };
 
-export default function InlineDateInput({ name, value, isRequired }: Props) {
+export default function InlineDateInput({ name, value, isRequired, id }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useDateInput(value, { isRequired });
   return (
     <DefaultStyle type="date" isFocused={isFocused} hasError={hasError}>
       <DateInput
+        id={`input-${id}`}
         name={name}
         {...inputHandlers}
         onBlur={() => {

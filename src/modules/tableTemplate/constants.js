@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { getByPath } from 'utils/fp';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
@@ -17,6 +18,7 @@ import {
   metrics as distanceMetrics,
   convert as distanceConvert,
 } from 'modules/form/helpers/metricInput/distanceInput';
+import { mapColumnId } from './helpers';
 
 export const orderColumns = [
   {
@@ -420,6 +422,8 @@ export const shipmentColumnFields = [
     type: 'timeline',
   },
   {
+    getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
+      getByPath(`${voyages && voyages.length > 1 ? '0' : ''}.arrival`, voyages),
     name: 'voyages.0.arrival',
     type: 'timeline',
   },
@@ -436,6 +440,10 @@ export const shipmentColumnFields = [
     type: 'timeline',
   },
   {
+    getFieldValue: ({ voyages }: { voyages: Array<Object> }) => {
+      const index = voyages ? voyages.length - 1 : 0;
+      return getByPath(`${index}.arrival`, voyages);
+    },
     name: 'voyages.2.arrival',
     type: 'timeline',
   },
@@ -451,4 +459,21 @@ export const shipmentColumnFields = [
     name: 'containerGroups.0.deliveryReady',
     type: 'timeline',
   },
+];
+
+export const orderColumnIds: Array<string> = orderColumnFields.map(mapColumnId('ORDER'));
+
+export const orderItemColumnIds: Array<string> = orderItemColumnFields.map(
+  mapColumnId('ORDER_ITEM')
+);
+
+export const batchColumnIds: Array<string> = batchColumnFields.map(mapColumnId('BATCH'));
+
+export const shipmentColumnIds: Array<string> = shipmentColumnFields.map(mapColumnId('SHIPMENT'));
+
+export const allColumnIds = [
+  ...orderColumnIds,
+  ...orderItemColumnIds,
+  ...batchColumnIds,
+  ...shipmentColumnIds,
 ];

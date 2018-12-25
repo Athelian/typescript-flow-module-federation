@@ -132,7 +132,7 @@ export const generateCollapsedRelation = (order: Object, option: Object) => {
   const numberOfProduct = orderItems.length;
 
   relations.push({ type: ORDER, id: order.id, isNew: order.isNew, previousIds: [] });
-  
+
   if (numberOfProduct === 0) {
     relations.push({ type: '' });
     relations.push({ type: '' });

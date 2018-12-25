@@ -110,7 +110,7 @@ class ProductForm extends React.Component<Props> {
               const errorMessage: ?string | ?Object = errors.productProviders;
               if (errorMessage && touched.productProviders) {
                 if (isDataType(Object, errorMessage)) {
-                  const [topErrorMessage]: Array<string> = Object.values(errorMessage);
+                  const [topErrorMessage]: Array<any> = Object.values(errorMessage);
                   return <p>{topErrorMessage}</p>;
                 }
 

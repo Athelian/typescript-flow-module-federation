@@ -1,14 +1,12 @@
 import { css } from 'react-emotion';
-import { borderRadiuses, layout, colors, fontSizes, shadows } from 'styles/common';
+import { borderRadiuses, layout, colors, fontSizes, shadows, presets } from 'styles/common';
 
-const Row = css`
+const BaseRow = css`
   padding: 0 10px 5px 10px;
 `;
 
-const Label = css`
-  font-style: normal;
-  letter-spacing: 2px;
-  color: ${colors.GRAY_DARK};
+export const BaseText = css`
+  ${presets.ELLIPSIS};
 `;
 
 export const CardWrapper = css`
@@ -21,18 +19,19 @@ export const CardWrapper = css`
 `;
 
 export const BatchRow = css`
-  ${Row};
+  ${BaseRow};
+  ${BaseText};
 `;
 
 export const QuantityRow = css`
-  ${Row};
+  ${BaseRow};
   padding-right: 5px;
   ${layout.HORIZONTAL};
   justify-content: space-between;
 `;
 
 export const OrderRow = css`
-  ${Row};
+  ${BaseRow};
   ${layout.HORIZONTAL};
 `;
 
@@ -41,41 +40,48 @@ export const TagWrapper = css`
   grid-gap: 5px;
   padding: 0 10px;
   overflow: hidden;
-  ${Row};
+  ${BaseRow};
 `;
 
 export const DetailWrapper = css`
   ${layout.HORIZONTAL};
-  ${Row};
+  ${BaseRow};
 `;
 
-export const IconWrapper = css`
+const IconWrapper = css`
   ${borderRadiuses.CIRCLE};
-  background-color: ${colors.TEAL};
   color: ${colors.WHITE};
-  ${fontSizes.LITTLE};
-  width: min-content;
-  padding: 3px;
-  margin-right: 5px;
-`;
-
-export const SecondaryIconWrapper = css`
-  ${borderRadiuses.CIRCLE};
-  border: 1px solid ${colors.GRAY_VERY_LIGHT};
-  color: ${colors.GRAY_VERY_LIGHT};
   ${fontSizes.LITTLE};
   width: min-content;
   padding: 2px;
   margin-right: 5px;
 `;
 
+export const LightIconWrapper = css`
+  ${IconWrapper};
+  background-color: ${colors.TEAL};
+`;
+
+export const GrayIconWrapper = css`
+  ${IconWrapper};
+  background-color: ${colors.GRAY_LIGHT};
+`;
+
+export const GrayCircleIconWrapper = css`
+  ${IconWrapper};
+  border: 1px solid ${colors.GRAY_VERY_LIGHT};
+  color: ${colors.GRAY_VERY_LIGHT};
+`;
+
+export const GrayLabel = css`
+  font-style: normal;
+  letter-spacing: 2px;
+  color: ${colors.GRAY_DARK};
+`;
+
 export const QuantityWrapper = css`
   ${layout.HORIZONTAL};
   justify-content: space-between;
-`;
-
-export const SecondaryTitle = css`
-  ${Label};
 `;
 
 export const QuantityInput = css`

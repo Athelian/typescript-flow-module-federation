@@ -12,7 +12,7 @@ export const NavBarStyle: string = css`
   height: 50px;
   background: ${colors.WHITE};
   ${shadows.HEADER};
-  z-index: 3;
+  z-index: 4;
   ${transitions.EXPAND};
 `;
 

@@ -23,6 +23,7 @@ type Props = OptionalProps & {
   name: string,
   value: string,
   enumType: string,
+  id: string,
 };
 
 const defaultProps = {
@@ -30,7 +31,7 @@ const defaultProps = {
   disabled: false,
 };
 
-export default function InlineSearchEnumInput({ name, value, enumType, isRequired }: Props) {
+export default function InlineSearchEnumInput({ name, value, enumType, isRequired, id }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
   return (
     <EnumProvider enumType={enumType}>
@@ -51,6 +52,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                 renderSelect={({ ...selectProps }) => (
                   <DefaultSearchSelect
                     {...selectProps}
+                    id={`input-${id}`}
                     hasError={hasError}
                     isOpen={isFocused}
                     itemToString={item => (item ? item.description || item.name : '')}

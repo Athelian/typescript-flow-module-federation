@@ -2,7 +2,11 @@
 import * as React from 'react';
 import { WrapperStyle, EmptyItemStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  columnNo: number,
+};
+type Props = OptionalProps & {
+  rowNo: number,
   fields: Array<{
     id?: string,
     name: string,
@@ -10,13 +14,23 @@ type Props = {
     meta?: Object,
   }>,
 };
-
-export default function TableEmptyItem({ fields }: Props) {
+const defaultProps = {
+  columnNo: 0,
+};
+function TableEmptyItem({ fields, rowNo, columnNo }: Props) {
   return (
     <div className={WrapperStyle}>
-      {fields.map(({ name, type, id }) => (
-        <div key={`${name}-${type || id || ''}`} className={EmptyItemStyle} />
+      {fields.map(({ name, type, id }, fieldCounter) => (
+        <div
+          key={`${name}-${type || id || ''}`}
+          className={EmptyItemStyle}
+          id={`input-${rowNo}-${fieldCounter + columnNo + 1}`}
+          role="button"
+          disabled
+        />
       ))}
     </div>
   );
 }
+TableEmptyItem.defaultProps = defaultProps;
+export default TableEmptyItem;

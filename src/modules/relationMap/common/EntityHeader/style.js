@@ -16,7 +16,8 @@ export const EntityHeaderIconStyle = (color: string) => css`
   background-color: ${colors[color]};
   color: ${colors.WHITE};
   ${fontSizes.LARGE};
-  &:hover, :focus {
+  &:hover,
+  :focus {
     background-color: ${colors[`${color}_DARK`]};
   }
 `;

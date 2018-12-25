@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { timelineDateMinimalFragment } from 'graphql';
 
 export const productListQuery = gql`
   query(
@@ -33,6 +34,16 @@ export const productListQuery = gql`
             no
             quantity
             deliveredAt
+            shipment {
+              id
+              no
+              containerGroups {
+                id
+                warehouseArrival {
+                  ...timelineDateMinimalFragment
+                }
+              }
+            }
             batchAdjustments {
               id
               reason
@@ -80,6 +91,8 @@ export const productListQuery = gql`
       totalPage
     }
   }
+
+  ${timelineDateMinimalFragment}
 `;
 
 export default productListQuery;
