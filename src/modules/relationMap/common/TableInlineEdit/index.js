@@ -72,6 +72,8 @@ const keyMap = {
   firstLeft: ['command+left', 'ctrl+left'],
   firstTop: ['command+up', 'ctrl+up', 'shift+enter'],
   firstBottom: ['command+down', 'ctrl+down', 'enter'],
+  tab: ['tab'],
+  reverseTab: ['shift+tab'],
 };
 
 const calculatePosition = (position, type) => {
@@ -79,14 +81,20 @@ const calculatePosition = (position, type) => {
   switch (type) {
     default:
       return position;
+    case 'tab':
     case 'right':
       return [row, +column + 1];
+    case 'reverseTab':
     case 'left':
       return [row, +column - 1];
     case 'top':
       return [+row - 1, column];
     case 'bottom':
       return [+row + 1, column];
+    case 'newLine':
+      return [+row + 1, 1];
+    case 'previousLine':
+      return [+row - 1, 1];
   }
 };
 
@@ -97,12 +105,26 @@ const focusCell = (position, type) => {
     focusCell([row, column], type);
   } else if (cell && !cell.hasAttribute('disabled')) {
     cell.focus();
+  } else if (!cell && type === 'tab') {
+    focusCell([row, column], 'newLine');
+  } else if (!cell && type === 'reverseTab') {
+    focusCell([row, column], 'previousLine');
   }
 };
 
 const getCellById = id => id && id.match(/\d+/g);
 
 const handlers = {
+  tab: e => {
+    e.preventDefault();
+    const position = getCellById(e.target.id);
+    focusCell(position, 'tab');
+  },
+  reverseTab: e => {
+    e.preventDefault();
+    const position = getCellById(e.target.id);
+    focusCell(position, 'reverseTab');
+  },
   firstRight: e => {
     e.preventDefault();
     const position = getCellById(e.target.id);
