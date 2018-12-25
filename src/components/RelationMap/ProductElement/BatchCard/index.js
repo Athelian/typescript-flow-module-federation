@@ -9,13 +9,13 @@ import {
   CardWrapper,
   BatchRow,
   QuantityRow,
-  SecondaryTitle,
   QuantityInput,
   Divider,
   DetailWrapper,
-  IconWrapper,
+  LightIconWrapper,
   GrayIconWrapper,
-  SecondaryIconWrapper,
+  GrayCircleIconWrapper,
+  GrayLabel,
   TagWrapper,
 } from './style';
 
@@ -29,19 +29,19 @@ const BatchCard = ({ batch }: Props) => {
       <div className={CardWrapper}>
         <div className={BatchRow}>{batch.no}</div>
         <div className={QuantityRow}>
-          <div className={SecondaryTitle}>QUANTITY</div>
+          <div className={GrayLabel}>QUANTITY</div>
           <div className={QuantityInput}>{batch.quantity}</div>
         </div>
         <div className={Divider} />
         <div className={DetailWrapper}>
-          <div className={IconWrapper}>
+          <div className={LightIconWrapper}>
             <Icon icon="ORDER" />
           </div>
           {getByPathWithDefault('', 'orderItem.order.poNo', batch)}
         </div>
         <div className={DetailWrapper}>
           {getByPath('shipment', batch) ? (
-            <div className={IconWrapper}>
+            <div className={LightIconWrapper}>
               <Icon icon="SHIPMENT" />
             </div>
           ) : (
@@ -52,10 +52,16 @@ const BatchCard = ({ batch }: Props) => {
           {getByPathWithDefault('', 'shipment.no', batch)}
         </div>
         <div className={DetailWrapper}>
-          <div className={SecondaryIconWrapper}>
-            <Icon icon="WAREHOUSE" />
-          </div>
-          <div className={SecondaryTitle}>ARRIVAL</div>
+          {getByPath('shipment.containerGroups.0.warehouseArrival.approvedAt', batch) ? (
+            <div className={LightIconWrapper}>
+              <Icon icon="WAREHOUSE" />
+            </div>
+          ) : (
+            <div className={GrayCircleIconWrapper}>
+              <Icon icon="WAREHOUSE" />
+            </div>
+          )}
+          <div className={GrayLabel}>ARRIVAL</div>
           <div>
             <FormattedDate value={deliveredAt} mode="date" />
           </div>

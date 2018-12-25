@@ -5,12 +5,6 @@ const Row = css`
   padding: 0 10px 5px 10px;
 `;
 
-const Label = css`
-  font-style: normal;
-  letter-spacing: 2px;
-  color: ${colors.GRAY_DARK};
-`;
-
 export const CardWrapper = css`
   ${borderRadiuses.MAIN};
   color: ${colors.GRAY_DARK_1};
@@ -49,14 +43,18 @@ export const DetailWrapper = css`
   ${Row};
 `;
 
-export const IconWrapper = css`
+const IconWrapper = css`
   ${borderRadiuses.CIRCLE};
-  background-color: ${colors.TEAL};
   color: ${colors.WHITE};
   ${fontSizes.LITTLE};
   width: min-content;
-  padding: 3px;
+  padding: 2px;
   margin-right: 5px;
+`;
+
+export const LightIconWrapper = css`
+  ${IconWrapper};
+  background-color: ${colors.TEAL};
 `;
 
 export const GrayIconWrapper = css`
@@ -64,23 +62,21 @@ export const GrayIconWrapper = css`
   background-color: ${colors.GRAY_LIGHT};
 `;
 
-export const SecondaryIconWrapper = css`
-  ${borderRadiuses.CIRCLE};
+export const GrayCircleIconWrapper = css`
+  ${IconWrapper};
   border: 1px solid ${colors.GRAY_VERY_LIGHT};
   color: ${colors.GRAY_VERY_LIGHT};
-  ${fontSizes.LITTLE};
-  width: min-content;
-  padding: 2px;
-  margin-right: 5px;
+`;
+
+export const GrayLabel = css`
+  font-style: normal;
+  letter-spacing: 2px;
+  color: ${colors.GRAY_DARK};
 `;
 
 export const QuantityWrapper = css`
   ${layout.HORIZONTAL};
   justify-content: space-between;
-`;
-
-export const SecondaryTitle = css`
-  ${Label};
 `;
 
 export const QuantityInput = css`
