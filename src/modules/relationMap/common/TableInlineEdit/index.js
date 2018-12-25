@@ -10,6 +10,7 @@ import { HotKeys } from 'react-hotkeys';
 import { range, set, cloneDeep, isEqual } from 'lodash';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
+import { getByPathWithDefault } from 'utils/fp';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -31,6 +32,7 @@ import {
   orderItemColumns,
   batchColumns,
   shipmentColumns,
+  allColumnIds,
 } from 'modules/tableTemplate/constants';
 import QueryForAllCustomFields from 'modules/tableTemplate/common/QueryForAllCustomFields';
 import {
@@ -128,47 +130,29 @@ function findColumns({
   fields,
   templateColumns,
   showAll,
-  hideColumns,
 }: {
   entity: string,
   fields: Array<Object>,
   templateColumns: Array<string>,
   showAll: boolean,
-  hideColumns: Array<string>,
 }) {
   if (templateColumns.length) {
     return showAll
       ? fields
-      : fields.filter(
-          (item, idx) =>
-            !hideColumns.includes(`${entity}-${idx}`) &&
-            templateColumns.includes(`${entity}-${idx}`)
-        );
+      : fields.filter((item, idx) => templateColumns.includes(`${entity}-${idx}`));
   }
-  return showAll ? fields : fields.filter((item, idx) => !hideColumns.includes(`${entity}-${idx}`));
+  return fields;
 }
 
-function findColumnsForCustomFields({
-  showAll,
-  hideColumns,
-  fields: customFields,
-  templateColumns,
-  entity,
-}) {
+function findColumnsForCustomFields({ showAll, fields: customFields, templateColumns, entity }) {
   if (templateColumns && templateColumns.length > 0) {
     return showAll
       ? customFields
-      : customFields.filter(
-          (field, index) =>
-            templateColumns.includes(`${entity}-customFields-${index}`) &&
-            !hideColumns.includes(`${entity}-customFields-${index}`)
+      : customFields.filter((field, index) =>
+          templateColumns.includes(`${entity}-customFields-${index}`)
         );
   }
-  return showAll
-    ? customFields
-    : customFields.filter(
-        (field, index) => !hideColumns.includes(`${entity}-customFields-${index}`)
-      );
+  return customFields;
 }
 
 function findAllFieldsFilter({
@@ -246,12 +230,13 @@ const getRowCounter = (counter, type) => {
   return counter[type];
 };
 
+const mapCustomField = entity => (_, index) => `${entity}-customFields-${index}`;
+
 export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const [data] = useIdb(type, []);
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
-  const [hideColumns, setHideColumns] = useState([]);
-  const [templateColumns, setTemplateColumns] = useState([]);
+  const [templateColumns, setTemplateColumns] = useState([...allColumnIds]);
   const [isReady, setIsReady] = useState(false);
   const [showAll, setShowAll] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -267,8 +252,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const headerRef = useRef();
   const sidebarRef = useRef();
   const bodyRef = useRef();
-
-  logger.warn({ hideColumns });
 
   const handleScroll = () => {
     if (bodyRef.current) {
@@ -287,15 +270,15 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
   const onToggle = useCallback(
     selectedColumn => {
-      if (hideColumns && selectedColumn) {
-        setHideColumns(
-          hideColumns.includes(selectedColumn)
-            ? hideColumns.filter(item => item !== selectedColumn)
-            : [...hideColumns, selectedColumn]
+      if (templateColumns && selectedColumn) {
+        setTemplateColumns(
+          templateColumns.includes(selectedColumn)
+            ? templateColumns.filter(item => item !== selectedColumn)
+            : [...templateColumns, selectedColumn]
         );
       }
     },
-    [hideColumns]
+    [templateColumns]
   );
 
   useEffect(() => {
@@ -355,7 +338,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const { entities } = normalize({ orders: data });
   const orderColumnFieldsFilter = findColumns({
     showAll,
-    hideColumns,
     templateColumns,
     fields: orderColumnFields,
     entity: 'ORDER',
@@ -363,28 +345,50 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
   const orderItemColumnFieldsFilter = findColumns({
     showAll,
-    hideColumns,
     templateColumns,
     fields: orderItemColumnFields,
     entity: 'ORDER_ITEM',
   });
   const batchColumnFieldsFilter = findColumns({
     showAll,
-    hideColumns,
     templateColumns,
     fields: batchColumnFields,
     entity: 'BATCH',
   });
   const shipmentColumnFieldsFilter = findColumns({
     showAll,
-    hideColumns,
     templateColumns,
     fields: shipmentColumnFields,
     entity: 'SHIPMENT',
   });
   return (
     <QueryForAllCustomFields
-      onCompleted={() => (!isReady ? setIsReady(true) : null)}
+      onCompleted={customFields => {
+        if (!isReady) {
+          setIsReady(true);
+        }
+        const orderCustomFieldIds = getByPathWithDefault([], 'order', customFields).map(
+          mapCustomField('ORDER')
+        );
+        const orderItemCustomFieldIds = getByPathWithDefault([], 'orderItem', customFields).map(
+          mapCustomField('ORDER_ITEM')
+        );
+        const batchCustomFieldIds = getByPathWithDefault([], 'batch', customFields).map(
+          mapCustomField('BATCH')
+        );
+        const shipmentCustomFieldIds = getByPathWithDefault([], 'shipment', customFields).map(
+          mapCustomField('SHIPMENT')
+        );
+        const allCustomColumnIds = [
+          ...orderCustomFieldIds,
+          ...orderItemCustomFieldIds,
+          ...batchCustomFieldIds,
+          ...shipmentCustomFieldIds,
+        ];
+        if (templateColumns.length === allColumnIds.length) {
+          setTemplateColumns([...new Set([...templateColumns, ...allCustomColumnIds])]);
+        }
+      }}
       render={({
         orderCustomFields,
         orderItemCustomFields,
@@ -393,28 +397,24 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
       }) => {
         const orderCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
-          hideColumns,
           fields: orderCustomFields,
           templateColumns,
           entity: 'ORDER',
         });
         const orderItemCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
-          hideColumns,
           fields: orderItemCustomFields,
           templateColumns,
           entity: 'ORDER_ITEM',
         });
         const batchCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
-          hideColumns,
           fields: batchCustomFields,
           templateColumns,
           entity: 'BATCH',
         });
         const shipmentCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
-          hideColumns,
           fields: shipmentCustomFields,
           templateColumns,
           entity: 'SHIPMENT',
@@ -994,13 +994,11 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       );
                     })}
                   </div>
-
                   <div className={HeaderWrapperStyle} ref={headerRef}>
                     <TableHeader
                       entity="ORDER"
                       showAll={showAll}
                       info={orderColumns}
-                      hideColumns={hideColumns}
                       templateColumns={templateColumns}
                       onToggle={onToggle}
                     />
@@ -1008,7 +1006,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       entity="ORDER"
                       customFields={orderCustomFields}
                       onToggle={onToggle}
-                      hideColumns={hideColumns}
                       showAll={showAll}
                       templateColumns={templateColumns}
                     />
@@ -1016,7 +1013,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       entity="ORDER_ITEM"
                       showAll={showAll}
                       info={orderItemColumns}
-                      hideColumns={hideColumns}
                       templateColumns={templateColumns}
                       onToggle={onToggle}
                     />
@@ -1024,7 +1020,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       entity="ORDER_ITEM"
                       customFields={orderItemCustomFields}
                       onToggle={onToggle}
-                      hideColumns={hideColumns}
                       showAll={showAll}
                       templateColumns={templateColumns}
                     />
@@ -1032,7 +1027,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       entity="BATCH"
                       showAll={showAll}
                       info={batchColumns}
-                      hideColumns={hideColumns}
                       templateColumns={templateColumns}
                       onToggle={onToggle}
                     />
@@ -1040,7 +1034,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       entity="BATCH"
                       customFields={batchCustomFields}
                       onToggle={onToggle}
-                      hideColumns={hideColumns}
                       showAll={showAll}
                       templateColumns={templateColumns}
                     />
@@ -1048,7 +1041,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       entity="SHIPMENT"
                       showAll={showAll}
                       info={shipmentColumns}
-                      hideColumns={hideColumns}
                       templateColumns={templateColumns}
                       onToggle={onToggle}
                     />
@@ -1056,13 +1048,11 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       entity="SHIPMENT"
                       customFields={shipmentCustomFields}
                       onToggle={onToggle}
-                      hideColumns={hideColumns}
                       showAll={showAll}
                       templateColumns={templateColumns}
                     />
                     <div className={TableHeaderClearFixStyle} />
                   </div>
-
                   <div className={SidebarWrapperStyle} ref={sidebarRef}>
                     {orderIds.map((orderId, counter) => {
                       const order = mappingObjects.order[orderId];

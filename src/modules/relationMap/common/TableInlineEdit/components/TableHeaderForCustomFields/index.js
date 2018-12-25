@@ -15,46 +15,37 @@ type Props = {
   entity: string,
   customFields: Array<Object>,
   onToggle: string => void,
-  hideColumns: Array<string>,
   showAll: boolean,
   templateColumns: Array<string>,
 };
 
 function isHiddenColumn({
   showAll,
-  hideColumns,
   fieldName,
   templateColumns,
 }: {
   showAll: boolean,
-  hideColumns: Array<string>,
   fieldName: string,
   templateColumns: Array<string>,
 }) {
-  if (templateColumns && templateColumns.length) {
-    return (!showAll && hideColumns.includes(fieldName)) || !templateColumns.includes(fieldName);
-  }
-  return !showAll && hideColumns.includes(fieldName);
+  return !showAll && !templateColumns.includes(fieldName);
 }
 
 function shouldShowCustomFields({
   entity,
   customFields,
   showAll,
-  hideColumns,
   templateColumns,
 }: {
   entity: string,
   customFields: Array<Object>,
   showAll: boolean,
-  hideColumns: Array<string>,
   templateColumns: Array<string>,
 }) {
   return customFields.some(
     (field, index) =>
       !isHiddenColumn({
         showAll,
-        hideColumns,
         fieldName: `${entity}-customFields-${index}`,
         templateColumns,
       })
@@ -65,13 +56,12 @@ export default function TableHeader({
   entity,
   customFields,
   onToggle,
-  hideColumns,
   showAll,
   templateColumns,
 }: Props) {
   return (
     <div className={TableHeaderWrapperStyle}>
-      {shouldShowCustomFields({ entity, customFields, hideColumns, showAll, templateColumns }) && (
+      {shouldShowCustomFields({ entity, customFields, showAll, templateColumns }) && (
         <>
           <div className={TableHeaderTitleStyle(entity)}>
             <FormattedMessage
@@ -87,14 +77,17 @@ export default function TableHeader({
                 <React.Fragment key={fieldName}>
                   {isHiddenColumn({
                     showAll,
-                    hideColumns,
                     fieldName,
                     templateColumns,
                   }) ? null : (
                     <div key={uuid()} className={TableColumnHeaderStyle(entity)}>
                       {showAll && (
                         <CheckboxInput
-                          checked={!hideColumns.includes(fieldName)}
+                          checked={
+                            templateColumns.length === 0
+                              ? true
+                              : templateColumns.includes(fieldName)
+                          }
                           onToggle={() => onToggle(fieldName)}
                         />
                       )}

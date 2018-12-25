@@ -13,7 +13,6 @@ import {
 type Props = {
   entity: string,
   showAll: boolean,
-  hideColumns: Array<string>,
   templateColumns: Array<string>,
   onToggle: string => void,
   info: Array<{
@@ -22,59 +21,30 @@ type Props = {
   }>,
 };
 
+const getFieldId = ({ entity, info, index, position }) =>
+  `${entity}-${index > 0 ? info[index - 1].columns.length + position : position}`;
+
 function isHiddenColumn({
   showAll,
-  hideColumns,
-  entity,
-  index,
-  info,
-  position,
+  fieldId,
   templateColumns,
 }: {
   showAll: boolean,
-  hideColumns: Array<string>,
-  entity: string,
-  index: number,
-  info: Array<{
-    group: string | React.Node,
-    columns: Array<string | React.Node>,
-  }>,
-  position: number,
+  fieldId: string,
   templateColumns: Array<string>,
 }) {
-  if (showAll) {
-    return false;
-  }
-  if (templateColumns && templateColumns.length) {
-    return (
-      (!showAll &&
-        hideColumns.includes(
-          `${entity}-${index > 0 ? info[index - 1].columns.length + position : position}`
-        )) ||
-      !templateColumns.includes(
-        `${entity}-${index > 0 ? info[index - 1].columns.length + position : position}`
-      )
-    );
-  }
-  return (
-    !showAll &&
-    hideColumns.includes(
-      `${entity}-${index > 0 ? info[index - 1].columns.length + position : position}`
-    )
-  );
+  return !showAll && !templateColumns.includes(fieldId);
 }
 
 function shouldShowGroup({
   columns,
   showAll,
-  hideColumns,
   entity,
-  index,
   info,
+  index,
   templateColumns,
 }: {
   showAll: boolean,
-  hideColumns: Array<string>,
   columns: Array<string | React.Node>,
   entity: string,
   index: number,
@@ -88,31 +58,24 @@ function shouldShowGroup({
     (column, position) =>
       !isHiddenColumn({
         showAll,
-        hideColumns,
-        entity,
-        index,
-        info,
-        position,
         templateColumns,
+        fieldId: getFieldId({
+          entity,
+          info,
+          index,
+          position,
+        }),
       })
   );
 }
 
-export default function TableHeader({
-  entity,
-  info,
-  onToggle,
-  hideColumns,
-  templateColumns,
-  showAll,
-}: Props) {
+export default function TableHeader({ entity, info, onToggle, templateColumns, showAll }: Props) {
   return (
     <>
       {info.map(({ group, columns }, index) =>
         shouldShowGroup({
           columns,
           showAll,
-          hideColumns,
           entity,
           index,
           info,
@@ -121,39 +84,31 @@ export default function TableHeader({
           <div key={uuid()} className={TableHeaderWrapperStyle}>
             <div className={TableHeaderTitleStyle(entity)}>{group}</div>
             <div className={TableHeaderGroupStyle}>
-              {columns.map((column, position) =>
-                isHiddenColumn({
-                  showAll,
-                  hideColumns,
+              {columns.map((column, position) => {
+                const fieldId = getFieldId({
                   entity,
-                  index,
                   info,
+                  index,
                   position,
+                });
+                return isHiddenColumn({
+                  showAll,
+                  fieldId,
                   templateColumns,
                 }) ? null : (
                   <div key={uuid()} className={TableColumnHeaderStyle(entity)}>
                     {showAll && (
                       <CheckboxInput
                         checked={
-                          !hideColumns.includes(
-                            `${entity}-${
-                              index > 0 ? info[index - 1].columns.length + position : position
-                            }`
-                          )
+                          templateColumns.length === 0 ? true : templateColumns.includes(fieldId)
                         }
-                        onToggle={() =>
-                          onToggle(
-                            `${entity}-${
-                              index > 0 ? info[index - 1].columns.length + position : position
-                            }`
-                          )
-                        }
+                        onToggle={() => onToggle(fieldId)}
                       />
                     )}
                     <div className={TableColumnStyle}>{column}</div>
                   </div>
-                )
-              )}
+                );
+              })}
             </div>
           </div>
         ) : null
