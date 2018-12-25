@@ -4,7 +4,7 @@ import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
-import { getByPathWithDefault as get, omit, compose } from 'utils/fp';
+import { getByPathWithDefault, omit, compose } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
@@ -53,7 +53,7 @@ const getNewConnectTypeMessage = (type: string) => {
 };
 
 const isSameCurrency = (currency: string) => (item: Object) => {
-  const compareCurrency = get(null, `order.currency`, item);
+  const compareCurrency = getByPathWithDefault(null, `order.currency`, item);
   return compareCurrency === currency;
 };
 
@@ -171,12 +171,12 @@ const SelectedPanel = ({ connectType }: Props) => (
                                   .filter(batchId => {
                                     const currentBatch = batch[batchId];
                                     const orderItemId =
-                                      get(false, 'orderItem.id', currentBatch) ||
+                                      getByPathWithDefault(false, 'orderItem.id', currentBatch) ||
                                       currentBatch.parentId;
                                     return !orderItem[orderItemId];
                                   })
                                   .reduce((obj, batchId) => {
-                                    const currentOrderItem = get(
+                                    const currentOrderItem = getByPathWithDefault(
                                       false,
                                       'orderItem',
                                       batch[batchId]
@@ -185,7 +185,11 @@ const SelectedPanel = ({ connectType }: Props) => (
                                       [currentOrderItem.id]: {
                                         ...currentOrderItem,
                                         batches: [
-                                          ...get([], `${currentOrderItem.id}.batches`, obj),
+                                          ...getByPathWithDefault(
+                                            [],
+                                            `${currentOrderItem.id}.batches`,
+                                            obj
+                                          ),
                                           batch[batchId],
                                         ],
                                       },
@@ -201,8 +205,16 @@ const SelectedPanel = ({ connectType }: Props) => (
                                 const allOrderItem = orderItems.concat(filteredOrderItems);
 
                                 const [firstItem] = allOrderItem || [];
-                                const firstCurrency = get('', 'order.currency', firstItem);
-                                const exporter = get('', 'order.exporter', firstItem);
+                                const firstCurrency = getByPathWithDefault(
+                                  '',
+                                  'order.currency',
+                                  firstItem
+                                );
+                                const exporter = getByPathWithDefault(
+                                  '',
+                                  'order.exporter',
+                                  firstItem
+                                );
                                 const sameCurrency = allOrderItem.every(
                                   isSameCurrency(firstCurrency)
                                 );
@@ -247,13 +259,21 @@ const SelectedPanel = ({ connectType }: Props) => (
                                     const { data: orderData } = await client.query({
                                       query: orderFormQuery,
                                       variables: {
-                                        id: get(null, 'orderCreate.order.id', data),
+                                        id: getByPathWithDefault(
+                                          null,
+                                          'orderCreate.order.id',
+                                          data
+                                        ),
                                       },
                                     });
                                     result = { ...orderData.order, actionType: 'newItem' };
                                   }
                                   if (connectType === 'SHIPMENT') {
-                                    const shipmentId = get('', 'shipmentCreate.shipment.id', data);
+                                    const shipmentId = getByPathWithDefault(
+                                      '',
+                                      'shipmentCreate.shipment.id',
+                                      data
+                                    );
                                     // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233
                                     const { data: shipmentData } = await client.query({
                                       query: shipmentRMCardQuery,
@@ -265,14 +285,16 @@ const SelectedPanel = ({ connectType }: Props) => (
                                       query: orderListQuery,
                                       variables: filterVariables,
                                     });
-                                    if (
-                                      orderList &&
-                                      get(false, 'orders.nodes.length', orderList) > 0
-                                    ) {
-                                      orderList.orders.nodes.forEach((orderNode, orderIndex) => {
+                                    const orderNodes = getByPathWithDefault(
+                                      false,
+                                      'orders.nodes',
+                                      orderList
+                                    );
+                                    if (orderNodes) {
+                                      orderNodes.forEach((orderNode, orderIndex) => {
                                         orderNode.orderItems.forEach((itemNode, itemIndex) => {
                                           itemNode.batches.forEach((batchNode, batchIndex) => {
-                                            if (batch[batchNode.id]) {
+                                            if (batch[batchNode.id] && orderList) {
                                               orderList.orders.nodes[orderIndex].shipments.push(
                                                 shipmentData.shipment
                                               );
