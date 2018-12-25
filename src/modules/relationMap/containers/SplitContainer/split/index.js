@@ -2,6 +2,7 @@
 import { getByPathWithDefault as get } from 'utils/fp';
 import { SIMPLE, EQUALLY, BALANCE } from 'modules/relationMap/constants';
 import { createMutationRequest } from 'modules/relationMap/containers/action';
+import { orderListQuery } from 'modules/relationMap/orderFocused/query';
 import {
   batchSimpleSplitMutation,
   batchBalanceSplitMutaion,
@@ -38,8 +39,35 @@ type SplitType = {
   client: any,
   target: Object,
   data: Object,
+  filter: Object,
 };
-export const simpleSplit = async ({ client, target, data }: SplitType) => {
+
+const updateBatchCache = (filter, type) => (store, { data: splitData }) => {
+  const splitBatches = splitData[type].batches.reduce(
+    (splitBatch, batchData) => Object.assign(splitBatch, { [batchData.id]: batchData }),
+    {}
+  );
+  const query = { query: orderListQuery, variables: filter };
+  const orderList = store.readQuery(query);
+  const orders = get([], 'orders.nodes', orderList);
+  const newOrders = orders.map(order => {
+    const orderItems = order.orderItems.map(item => {
+      const batches = item.batches.some(batchData => splitBatches[batchData.id])
+        ? item.batches
+            .filter(batchData => !splitBatches[batchData.id])
+            .concat(splitData[type].batches)
+        : item.batches;
+      return { ...item, batches };
+    });
+    return { ...order, orderItems };
+  });
+  store.writeQuery({
+    query: orderListQuery,
+    variables: filter,
+    data: { orders: { ...orderList.orders, nodes: newOrders } },
+  });
+};
+export const simpleSplit = async ({ client, target, data, filter }: SplitType) => {
   const mutationRequest = createMutationRequest(client);
   const { batch } = target;
   const batchIds = Object.keys(batch);
@@ -54,6 +82,7 @@ export const simpleSplit = async ({ client, target, data }: SplitType) => {
             quantity: +data.quantity,
           },
         },
+        update: updateBatchCache(filter, 'batchSimpleSplit'),
       },
       get('', 'orderItem.id', currentBatch)
     );
@@ -63,7 +92,7 @@ export const simpleSplit = async ({ client, target, data }: SplitType) => {
   return results;
 };
 
-export const equallySplit = async ({ client, target, data }: SplitType) => {
+export const equallySplit = async ({ client, target, data, filter }: SplitType) => {
   const mutationRequest = createMutationRequest(client);
   const { batch } = target;
   const batchIds = Object.keys(batch);
@@ -79,6 +108,7 @@ export const equallySplit = async ({ client, target, data }: SplitType) => {
             divideBy: +data.quantity,
           },
         },
+        update: updateBatchCache(filter, 'batchEqualSplit'),
       },
       get('', 'orderItem.id', currentBatch)
     );
@@ -88,7 +118,15 @@ export const equallySplit = async ({ client, target, data }: SplitType) => {
   return results;
 };
 
-export const balanceSplit = async ({ client, target }: { client: any, target: Object }) => {
+export const balanceSplit = async ({
+  client,
+  target,
+  filter,
+}: {
+  client: any,
+  target: Object,
+  filter: Object,
+}) => {
   const mutationRequest = createMutationRequest(client);
   const { orderItem } = target;
   const orderItemIds = Object.keys(orderItem);
@@ -97,6 +135,7 @@ export const balanceSplit = async ({ client, target }: { client: any, target: Ob
       {
         mutation: batchBalanceSplitMutaion,
         variables: { orderItemId },
+        update: updateBatchCache(filter, 'batchBalanceSplit'),
       },
       orderItemId
     );

@@ -131,7 +131,12 @@ const ActionSubscribe = ({ filter }: Props) => (
               const action = async () => {
                 try {
                   setLoading(true);
-                  const [splitResult, splitFocus] = await split(client, targetedItem, splitData);
+                  const [splitResult, splitFocus] = await split({
+                    client,
+                    target: targetedItem,
+                    data: splitData,
+                    filter,
+                  });
                   addNewResult(splitResult, splitFocus);
                   setResult(splitResult);
                   setActionState({
@@ -141,6 +146,7 @@ const ActionSubscribe = ({ filter }: Props) => (
                     error: false,
                   });
                 } catch (err) {
+                  console.log(err);
                   setLoading(false);
                   setError(!!err);
                 }
