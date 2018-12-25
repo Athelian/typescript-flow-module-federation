@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { OrderFocusProps } from 'modules/relationMapBeta/order/type.js.flow';
-import SingleOrderItem from './SingleOrderItem';
+import SingleOrder from './SingleOrder';
 // import {
 //   RelationLine,
 //   OrderCard,
@@ -29,6 +29,6 @@ type Props = {
 };
 
 export default function OrderFocusView({ item }: Props) {
-  if (item.orderItems.length === 0) return <SingleOrderItem {...item} />;
+  if (item.orderItems.length === 0) return <SingleOrder {...item} />;
   return <h1>{item.id}</h1>;
 }
