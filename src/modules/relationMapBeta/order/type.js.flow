@@ -1,0 +1,14 @@
+// @flow
+export type OrderFocusProps = {
+  batchCount: number,
+  batchShippedCount: number,
+  id: string,
+  orderItemCount: number,
+  orderItems: Array<Object>,
+  poNo: string,
+  shipmentCount: number,
+  shipments: Array<Object>,
+  totalBatched: number,
+  totalOrdered: number,
+  totalShipped: number,
+};

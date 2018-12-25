@@ -23,7 +23,8 @@ import { OrderListWrapperStyle, OrderListBodyStyle } from 'modules/relationMap/o
 import query from './query';
 import normalize from './normalize';
 import { useFilter } from '../hooks';
-import OrderItem from './components/OrderItem';
+import OrderFocusView from './components/OrderFocusView';
+import type { OrderFocusProps } from './type.js.flow';
 
 type Props = {
   intl: IntlShape,
@@ -209,9 +210,11 @@ const Order = ({ intl }: Props) => {
                       useWindow={false}
                       threshold={500}
                     >
-                      {Object.entries(orders).map(([orderId, item]) => (
-                        <OrderItem key={orderId} item={item} />
-                      ))}
+                      {(Object.entries(orders): Array<any>).map(
+                        ([orderId, item]: [string, OrderFocusProps]) => (
+                          <OrderFocusView key={orderId} item={item} />
+                        )
+                      )}
                     </InfiniteScroll>
                   ) : (
                     <Display>
