@@ -54,12 +54,11 @@ const RelationMap = () => {
               </NavBar>
             }
           >
-            <div className={ResetContentWrapperStyle}>
-              <Router primary={false}>
-                <Order path="/orders" default />
-                <Product path="/products" />
-              </Router>
-            </div>
+            {/* $FlowFixMe override Router's div style */}
+            <Router primary={false} className={ResetContentWrapperStyle} k>
+              <Order path="/orders" default />
+              <Product path="/products" />
+            </Router>
           </Layout>
         )}
       </UIConsumer>
