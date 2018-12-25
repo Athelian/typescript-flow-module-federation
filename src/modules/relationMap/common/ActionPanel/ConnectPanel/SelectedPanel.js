@@ -291,20 +291,41 @@ const SelectedPanel = ({ connectType }: Props) => (
                                       orderList
                                     );
                                     if (orderNodes) {
-                                      orderNodes.forEach((orderNode, orderIndex) => {
-                                        orderNode.orderItems.forEach((itemNode, itemIndex) => {
-                                          itemNode.batches.forEach((batchNode, batchIndex) => {
-                                            if (batch[batchNode.id] && orderList) {
-                                              orderList.orders.nodes[orderIndex].shipments.push(
-                                                shipmentData.shipment
-                                              );
-                                              orderList.orders.nodes[orderIndex].orderItems[
-                                                itemIndex
-                                              ].batches[batchIndex].shipment =
-                                                shipmentData.shipment;
+                                      const newOrders = orderNodes.map(orderNode => {
+                                        const newOrderItems = orderNode.orderItems.map(itemNode => {
+                                          const newBatches = itemNode.batches.map(batchNode => {
+                                            if (batch[batchNode.id]) {
+                                              return {
+                                                ...batchNode,
+                                                shipment: shipmentData.shipment,
+                                              };
                                             }
+                                            return batchNode;
                                           });
+                                          return { ...itemNode, batches: newBatches };
                                         });
+                                        if (
+                                          orderNode.orderItems.some(itemNode =>
+                                            itemNode.batches.some(batchNode => batch[batchNode.id])
+                                          )
+                                        ) {
+                                          orderNode.shipments.push(shipmentData.shipment);
+                                        }
+                                        return {
+                                          ...orderNode,
+                                          orderItems: newOrderItems,
+                                          shipments: orderNode.shipments,
+                                        };
+                                      });
+                                      client.writeQuery({
+                                        query: orderListQuery,
+                                        variables: filterVariables,
+                                        data: {
+                                          orders: {
+                                            ...(orderList ? { ...orderList.orders } : {}),
+                                            nodes: newOrders,
+                                          },
+                                        },
                                       });
                                     }
                                     result = { ...shipmentData.shipment, actionType: 'newItem' };

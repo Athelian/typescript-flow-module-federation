@@ -47,6 +47,7 @@ export const shipmentRMFragment = gql`
     }
     batchCount
     orderCount
+    orderItemCount
     forwarders {
       ...partnerCardFragment
     }
