@@ -13,7 +13,7 @@ import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import { ToggleSlide } from 'modules/relationMap/common/SlideForm';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
-import { shipmentRMCardQuery } from 'modules/relationMap/orderFocused/query';
+import { shipmentRMCardQuery, orderListQuery } from 'modules/relationMap/orderFocused/query';
 import { orderFormQuery } from 'modules/order/form/query';
 import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
 import RelationMapContainer from 'modules/relationMap/container';
@@ -261,6 +261,30 @@ const SelectedPanel = ({ connectType }: Props) => (
                                         id: shipmentId,
                                       },
                                     });
+                                    const orderList = client.readQuery({
+                                      query: orderListQuery,
+                                      variables: filterVariables,
+                                    });
+                                    if (
+                                      orderList &&
+                                      get(false, 'orders.nodes.length', orderList) > 0
+                                    ) {
+                                      orderList.orders.nodes.forEach((orderNode, orderIndex) => {
+                                        orderNode.orderItems.forEach((itemNode, itemIndex) => {
+                                          itemNode.batches.forEach((batchNode, batchIndex) => {
+                                            if (batch[batchNode.id]) {
+                                              orderList.orders.nodes[orderIndex].shipments.push(
+                                                shipmentData.shipment
+                                              );
+                                              orderList.orders.nodes[orderIndex].orderItems[
+                                                itemIndex
+                                              ].batches[batchIndex].shipment =
+                                                shipmentData.shipment;
+                                            }
+                                          });
+                                        });
+                                      });
+                                    }
                                     result = { ...shipmentData.shipment, actionType: 'newItem' };
                                     const isFocus = batchIds.some(batchId =>
                                       isHighlighted(batchId, 'batch')
