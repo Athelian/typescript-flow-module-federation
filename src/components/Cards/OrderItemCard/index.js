@@ -187,7 +187,122 @@ const OrderItemCard = ({
   const productImage =
     product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
 
-  return (
+  return readOnly ? (
+    <BaseCard
+      icon="ORDER_ITEM"
+      color="ORDER_ITEM"
+      selectable={selectable}
+      showActionsOnHover
+      actions={actions}
+      {...rest}
+    >
+      <div
+        className={OrderItemCardWrapperStyle}
+        onClick={!selectable ? onClick : () => {}}
+        role="presentation"
+      >
+        <div className={ProductWrapperStyle}>
+          <img className={ProductImageStyle} src={productImage} alt="product_image" />
+
+          <div className={ProductInfoWrapperStyle}>
+            <div className={ProductNameStyle}>{product.name}</div>
+            <div className={ProductSerialStyle}>{product.serial}</div>
+            <div className={ProductSupplierStyle}>
+              <Icon icon="SUPPLIER" />
+              {supplier && supplier.name}
+            </div>
+            <div className={ProductTagsWrapperStyle}>
+              {product.tags &&
+                product.tags.length > 0 &&
+                product.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+          </div>
+
+          <button className={ProductIconLinkStyle} type="button">
+            <Icon icon="PRODUCT" />
+          </button>
+          <Link
+            className={ProductIconLinkStyle}
+            to={`/product/${encodeId(product.id)}`}
+            onClick={evt => {
+              evt.stopPropagation();
+            }}
+          >
+            <Icon icon="PRODUCT" />
+          </Link>
+        </div>
+
+        <div className={BodyWrapperStyle}>
+          <div
+            className={QuantityWrapperStyle}
+            onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
+            role="presentation"
+          >
+            <FieldItem
+              label={
+                <Label required>
+                  <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
+                </Label>
+              }
+              input={
+                <Display>
+                  <FormattedNumber value={item.quantity} />
+                </Display>
+              }
+            />
+          </div>
+
+          <div
+            className={UnitPriceWrapperStyle}
+            role="presentation"
+            onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
+          >
+            <FieldItem
+              label={
+                <Label required>
+                  <FormattedMessage id="components.cards.price" defaultMessage="PRICE" />
+                </Label>
+              }
+              input={
+                <Display>
+                  <FormattedNumber value={item.price.amount} />{' '}
+                  {item.currency || item.price.currency}
+                </Display>
+              }
+            />
+          </div>
+          <div className={DividerStyle} />
+          <div className={ChartWrapperStyle}>
+            <QuantityChart
+              hasLabel={false}
+              orderedQuantity={chartDetail.orderedQuantity}
+              batchedQuantity={chartDetail.batchedQuantity}
+              shippedQuantity={chartDetail.shippedQuantity}
+              batched={chartDetail.numOfBatched}
+              shipped={chartDetail.numOfShipped}
+            />
+          </div>
+          <div className={TotalPriceWrapperStyle}>
+            <FieldItem
+              label={
+                <Label>
+                  <FormattedMessage id="components.cards.total" defaultMessage="TOTAL" />
+                </Label>
+              }
+              input={
+                <Display>
+                  <FormattedNumber
+                    value={item.price.amount * item.quantity}
+                    suffix={item.currency || item.price.currency}
+                  />
+                </Display>
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </BaseCard>
+  ) : (
     <ObjectValue
       defaultValue={{
         quantity: item.quantity,
