@@ -76,7 +76,7 @@
   "modules.Batches.noOrderItemsFound": "商品が見つかりません",
   "modules.Batches.noOrderFound": "発注情報がありません",
   "modules.Batches.packageName": "梱包形態",
-  "modules.Batches.packageCapacity": "容量",
+  "modules.Batches.packageCapacity": "入数",
   "modules.Batches.packageQuantity": "梱包数",
   "modules.Batches.pkgGrossWeight": "総重量(kg)",
   "modules.Batches.pkgVolume": "容量",
