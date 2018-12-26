@@ -565,7 +565,7 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
                             disabled={sameFilter}
                             onClick={() => {
                               onApply({ filter: filterQuery });
-                              setAppliedFilter(!isDefaultFilter(filterQuery));
+                              setAppliedFilter(!defaultFilterQuery);
                             }}
                             label={
                               <FormattedMessage
