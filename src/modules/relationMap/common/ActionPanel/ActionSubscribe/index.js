@@ -146,7 +146,6 @@ const ActionSubscribe = ({ filter }: Props) => (
                     error: false,
                   });
                 } catch (err) {
-                  console.log(err);
                   setLoading(false);
                   setError(!!err);
                 }
