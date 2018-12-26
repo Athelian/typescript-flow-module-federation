@@ -404,7 +404,12 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
           ...batchCustomFieldIds,
           ...shipmentCustomFieldIds,
         ];
-        if (templateColumns.length === allColumnIds.length) {
+        const haveCustomFields =
+          orderCustomFieldIds.length > 0 ||
+          orderItemCustomFieldIds.length > 0 ||
+          batchCustomFieldIds.length > 0 ||
+          shipmentCustomFieldIds.length > 0;
+        if (haveCustomFields && templateColumns.length === allColumnIds.length) {
           setTemplateColumns([...new Set([...templateColumns, ...allCustomColumnIds])]);
         }
       }}
