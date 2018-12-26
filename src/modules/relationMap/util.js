@@ -483,25 +483,9 @@ export const getBatchArrivalDate = (batch: Object) => {
 };
 
 export const sortBatchByArrivalDate = (batchA: Object, batchB: Object) => {
-  const arrivalDatesA = getByPathWithDefault(
-    [],
-    'shipment.containerGroups.0.warehouseArrival.timelineDateRevisions',
-    batchA
-  );
-  const arrivalDateA =
-    arrivalDatesA.length > 0
-      ? arrivalDatesA[arrivalDatesA.length - 1].date
-      : getByPathWithDefault('', 'shipment.containerGroups.0.warehouseArrival.date', batchA);
+  const arrivalDateA = getBatchArrivalDate(batchA);
+  const arrivalDateB = getBatchArrivalDate(batchB);
 
-  const arrivalDatesB = getByPathWithDefault(
-    [],
-    'shipment.containerGroups.0.warehouseArrival.timelineDateRevisions',
-    batchB
-  );
-  const arrivalDateB =
-    arrivalDatesB.length > 0
-      ? arrivalDatesB[arrivalDatesB.length - 1].date
-      : getByPathWithDefault('', 'shipment.containerGroups.0.warehouseArrival.date', batchB);
   if (arrivalDateA < arrivalDateB) {
     return 1;
   }
