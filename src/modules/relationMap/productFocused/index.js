@@ -4,6 +4,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import ProductCard from 'components/RelationMap/ProductElement/ProductCard';
 import BatchCard from 'components/RelationMap/ProductElement/BatchCard';
 import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
+import { sortBatchByArrivalDate } from 'modules/relationMap/util';
 import DetailFocused, { ToggleSlide } from '../common/SlideForm';
 import RelationView from '../common/RelationView';
 import { ProductListWrapperStyle, Row, BatchListWrapperStyle, BatchListStyle } from './style';
@@ -13,6 +14,7 @@ type Props = {
   hasMore: boolean,
   loadMore: Function,
 };
+
 const ProductFocused = ({ items, hasMore, loadMore }: Props) => (
   <>
     <RelationView
@@ -26,7 +28,7 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => (
       emptyMessage="No Product found"
       render={({ item }) => {
         const batches = getByPathWithDefault([], 'batches.nodes', item);
-
+        batches.sort(sortBatchByArrivalDate);
         return (
           <Row key={item.id}>
             <ToggleSlide>
@@ -60,7 +62,7 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => (
                             })
                           }
                         >
-                          <BatchCard key={batch.id} batch={batch} product={item} />
+                          <BatchCard batch={batch} product={item} />
                         </WrapperCard>
                       )}
                     </ToggleSlide>
