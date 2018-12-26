@@ -1,18 +1,20 @@
 // @flow
 import * as React from 'react';
 import type { OrderFocusProps } from 'modules/relationMapBeta/order/type.js.flow';
-import SingleOrder from './SingleOrder';
-// import {
-//   RelationLine,
-//   OrderCard,
-//   OrderItemCard,
-//   BatchCard,
-//   TotalCard,
-//   WrapperCard,
-//   Tags,
-//   ShipmentCard,
-//   ShipmentCollapsed,
-// } from 'components/RelationMap';
+import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
+import {
+  RelationLine,
+  // OrderCard,
+  // OrderItemCard,
+  // BatchCard,
+  // TotalCard,
+  // WrapperCard,
+  // Tags,
+  // ShipmentCard,
+  // ShipmentCollapsed,
+} from 'components/RelationMap';
+import Order from './Order';
+import TotalItems from './TotalItems';
 // import {
 //   ORDER_ITEM_ALL,
 //   BATCH_ALL,
@@ -29,6 +31,34 @@ type Props = {
 };
 
 export default function OrderFocusView({ item }: Props) {
-  if (item.orderItems.length === 0) return <SingleOrder {...item} />;
-  return <h1>{item.id}</h1>;
+  if (item.orderItems.length === 0)
+    return (
+      <>
+        <Order {...item} />
+        <div />
+        <div />
+        <div />
+        <div />
+      </>
+    );
+  return (
+    <>
+      <Order wrapperClassName={ItemWrapperStyle(false)} {...item} />
+      <RelationLine type={1} />
+      <TotalItems
+        wrapperClassName={ItemWrapperStyle(false)}
+        j
+        type="ITEMS"
+        total={item.orderItems.length}
+        onToggle={console.warn}
+      />
+      <RelationLine type={1} />
+      <TotalItems
+        wrapperClassName={ItemWrapperStyle(false)}
+        type="BATCHES"
+        total={0}
+        onToggle={console.warn}
+      />
+    </>
+  );
 }
