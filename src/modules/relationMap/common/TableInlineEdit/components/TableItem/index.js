@@ -29,6 +29,7 @@ type Props = OptionalProps & {
     type: string,
     meta?: Object,
     getFieldValue?: Function,
+    getFieldName?: Function,
   }>,
   values: ?Object,
   validator: Object,
@@ -117,27 +118,27 @@ function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) 
 
   return (
     <div className={WrapperStyle}>
-      {fields.map(({ name, type, meta, getFieldValue }, fieldCounter) => (
-        <div className={ItemStyle} key={name}>
-          <FormField
-            name={`${cell}.${name}`}
-            initValue={getFieldValue ? getFieldValue(values) : getByPath(name, values)}
-            validator={validator}
-            values={values}
-          >
-            {({ name: fieldName }) =>
-              renderItem({
-                id: `${rowNo}-${fieldCounter + columnNo + 1}`,
-                name: fieldName,
-                type,
-                meta,
-                value: getFieldValue ? getFieldValue(values) : getByPath(name, values),
-                values,
-              })
-            }
-          </FormField>
-        </div>
-      ))}
+      {fields.map(({ name, type, meta, getFieldValue, getFieldName }, fieldCounter) => {
+        const value = getFieldValue ? getFieldValue(values) : getByPath(name, values);
+        const fieldName = getFieldName ? getFieldName(values) : name;
+        const cellName = `${cell}.${fieldName}`;
+        return (
+          <div className={ItemStyle} key={name}>
+            <FormField name={cellName} initValue={value} validator={validator} values={values}>
+              {() =>
+                renderItem({
+                  id: `${rowNo}-${fieldCounter + columnNo + 1}`,
+                  name: cellName,
+                  type,
+                  meta,
+                  value,
+                  values,
+                })
+              }
+            </FormField>
+          </div>
+        );
+      })}
     </div>
   );
 }

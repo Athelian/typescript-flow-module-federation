@@ -432,6 +432,8 @@ export const shipmentColumnFields = [
     type: 'timeline',
   },
   {
+    getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
+      getByPath(`${voyages && voyages.length > 2 ? '1' : ''}.arrival`, voyages),
     name: 'voyages.1.arrival',
     type: 'timeline',
   },
@@ -444,6 +446,8 @@ export const shipmentColumnFields = [
       const index = voyages ? voyages.length - 1 : 0;
       return getByPath(`${index}.arrival`, voyages);
     },
+    getFieldName: ({ voyages }: { voyages: Array<Object> }) =>
+      `voyages.${voyages ? voyages.length - 1 : 0}.arrival`,
     name: 'voyages.2.arrival',
     type: 'timeline',
   },
