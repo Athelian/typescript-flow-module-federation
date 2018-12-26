@@ -4,7 +4,7 @@ import { Subscribe } from 'unstated';
 import { ApolloConsumer } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { Label } from 'components/Form';
-import { isEmpty } from 'utils/fp';
+import { isEmpty, getByPath } from 'utils/fp';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { BaseButton } from 'components/Buttons';
@@ -131,10 +131,22 @@ const ApplyPanel = ({ connectType }: Props) => {
                                 const isFocus = Object.keys(batch).some(batchId =>
                                   isHighlighted(batchId, 'batch')
                                 );
-                                if (isFocus) {
+                                if (isFocus || isHighlighted(selectedItem.id, 'shipment')) {
+                                  const relation = { batch: {}, orderItem: {}, order: {} };
+                                  const batchValues: Array<any> = Object.values(batch);
+                                  batchValues.forEach(batchObj => {
+                                    relation.batch[batchObj.id] = true;
+                                    relation.orderItem[getByPath('orderItem.id', batchObj)] = true;
+                                    relation.order[
+                                      getByPath('orderItem.order.id', batchObj)
+                                    ] = true;
+                                  });
                                   selectFocusItem(prevFocus => ({
                                     ...prevFocus,
                                     shipment: { [selectedItem.id]: true },
+                                    batch: { ...prevFocus.batch, ...relation.batch },
+                                    orderItem: { ...prevFocus.orderItem, ...relation.orderItem },
+                                    order: { ...prevFocus.order, ...relation.order },
                                   }));
                                 }
                                 setSuccess(true);

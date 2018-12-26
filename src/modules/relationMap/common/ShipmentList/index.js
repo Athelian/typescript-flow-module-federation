@@ -2,7 +2,7 @@
 import React from 'react';
 import { BooleanValue } from 'react-values';
 import Item from 'modules/relationMap/orderFocused/Item';
-import { isEmpty } from 'utils/fp';
+import { isEmpty, getByPathWithDefault } from 'utils/fp';
 
 type Props = {
   shipment: Object,
@@ -27,7 +27,10 @@ const ShipmentList = ({ shipment, result }: Props) => (
                   id: newShipment.id,
                   isNew: newShipment.actionType,
                 }}
-                itemData={{ data: newShipment, relation: {} }}
+                itemData={{
+                  data: newShipment,
+                  relation: getByPathWithDefault({}, `${newShipment.id}.relation`, shipment),
+                }}
                 itemType="shipment"
               />
             )}
