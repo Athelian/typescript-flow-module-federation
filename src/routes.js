@@ -1,6 +1,7 @@
 // @flow
 
 import React, { lazy, Suspense } from 'react';
+import type { ComponentType, StatelessFunctionalComponent } from 'react';
 import { hot } from 'react-hot-loader';
 import { Router } from '@reach/router';
 import LoadingIcon from './components/LoadingIcon';
@@ -34,7 +35,7 @@ const AsyncMetadata = lazy(() => import('./modules/metadata'));
 
 const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
 
-const Routes = () => (
+const Routes: StatelessFunctionalComponent<{}> = () => (
   <>
     <SideBar />
     <Suspense fallback={<LoadingIcon />}>
@@ -63,4 +64,5 @@ const Routes = () => (
   </>
 );
 
-export default hot(module)(Routes);
+const HotReloadRoutes: ComponentType<any> = hot(module)(Routes);
+export default HotReloadRoutes;

@@ -5,7 +5,6 @@ import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
-import { setConfig } from 'react-hot-loader';
 import { HotKeys } from 'react-hotkeys';
 import { range, set, cloneDeep, isEqual } from 'lodash';
 import { UserConsumer } from 'modules/user';
@@ -64,8 +63,6 @@ type Props = {
   type: string,
   selected: Object,
 };
-
-setConfig({ pureSFC: true });
 
 const keyMap = {
   firstRight: ['command+right', 'ctrl+right'],
