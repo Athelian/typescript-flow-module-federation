@@ -469,3 +469,44 @@ export const calculateTotalPackageGrossWeight = (batches: Array<Object>) => {
     }
   }, 0);
 };
+
+export const getBatchArrivalDate = (batch: Object) => {
+  const arrivalDates = getByPathWithDefault(
+    [],
+    'shipment.containerGroups.0.warehouseArrival.timelineDateRevisions',
+    batch
+  );
+
+  return arrivalDates.length > 0
+    ? arrivalDates[arrivalDates.length - 1].date
+    : getByPathWithDefault('', 'shipment.containerGroups.0.warehouseArrival.date', batch);
+};
+
+export const sortBatchByArrivalDate = (batchA: Object, batchB: Object) => {
+  const arrivalDatesA = getByPathWithDefault(
+    [],
+    'shipment.containerGroups.0.warehouseArrival.timelineDateRevisions',
+    batchA
+  );
+  const arrivalDateA =
+    arrivalDatesA.length > 0
+      ? arrivalDatesA[arrivalDatesA.length - 1].date
+      : getByPathWithDefault('', 'shipment.containerGroups.0.warehouseArrival.date', batchA);
+
+  const arrivalDatesB = getByPathWithDefault(
+    [],
+    'shipment.containerGroups.0.warehouseArrival.timelineDateRevisions',
+    batchB
+  );
+  const arrivalDateB =
+    arrivalDatesB.length > 0
+      ? arrivalDatesB[arrivalDatesB.length - 1].date
+      : getByPathWithDefault('', 'shipment.containerGroups.0.warehouseArrival.date', batchB);
+  if (arrivalDateA < arrivalDateB) {
+    return 1;
+  }
+  if (arrivalDateA > arrivalDateB) {
+    return -1;
+  }
+  return 0;
+};

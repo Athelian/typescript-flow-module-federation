@@ -5,6 +5,7 @@ import Tag from 'components/Tag';
 import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
+import { getBatchArrivalDate } from 'modules/relationMap/util';
 import {
   CardWrapper,
   BatchRow,
@@ -26,16 +27,7 @@ type Props = {
 const BatchCard = ({ batch }: Props) => {
   const { tags } = batch;
 
-  const arrivalDates = getByPathWithDefault(
-    [],
-    'shipment.containerGroups.0.warehouseArrival.timelineDateRevisions',
-    batch
-  );
-
-  const arrivalDate =
-    arrivalDates.length > 0
-      ? arrivalDates[arrivalDates.length - 1].date
-      : getByPathWithDefault('', 'shipment.containerGroups.0.warehouseArrival.date', batch);
+  const arrivalDate = getBatchArrivalDate(batch);
 
   return (
     <BaseCard icon="BATCH" color="BATCH">
