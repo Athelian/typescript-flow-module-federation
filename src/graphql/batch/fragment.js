@@ -54,12 +54,12 @@ export const batchFormFragment = gql`
       batches {
         id
         quantity
+        batchAdjustments {
+          id
+          quantity
+        }
         shipment {
           id
-          batches {
-            id
-            quantity
-          }
         }
       }
       order {
