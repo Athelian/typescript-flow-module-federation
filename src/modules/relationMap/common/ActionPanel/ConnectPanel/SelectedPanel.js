@@ -4,7 +4,7 @@ import { ApolloConsumer } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
-import { getByPathWithDefault, omit, compose } from 'utils/fp';
+import { getByPathWithDefault, getByPath, omit, compose } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
@@ -285,11 +285,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                                       query: orderListQuery,
                                       variables: filterVariables,
                                     });
-                                    const orderNodes = getByPathWithDefault(
-                                      false,
-                                      'orders.nodes',
-                                      orderList
-                                    );
+                                    const orderNodes = getByPath('orders.nodes', orderList);
                                     if (orderNodes) {
                                       const newOrders = orderNodes.map(orderNode => {
                                         const newOrderItems = orderNode.orderItems.map(itemNode => {
