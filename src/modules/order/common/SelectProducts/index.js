@@ -11,11 +11,11 @@ import Layout from 'components/Layout';
 import { OrderProductProviderCard } from 'components/Cards';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import { orderItemListQuery } from 'modules/productProvider/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
+import { productProvidersListQuery } from './query';
 import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -89,7 +89,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
     >
       {({ value: filtersAndSort, set: onChange }) => (
         <Query
-          query={orderItemListQuery}
+          query={productProvidersListQuery}
           variables={{
             page: 1,
             perPage: filtersAndSort.perPage,

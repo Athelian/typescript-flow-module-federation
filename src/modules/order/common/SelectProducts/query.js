@@ -1,11 +1,19 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  productProviderCardFragment,
+  productProviderFormFragment,
+  userAvatarFragment,
   tagFragment,
   imageFragment,
+  partnerCardFragment,
   priceFragment,
-  partnerNameFragment,
+  metricFragment,
+  sizeFragment,
+  documentFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const productProvidersListQuery = gql`
@@ -17,18 +25,26 @@ export const productProvidersListQuery = gql`
   ) {
     productProviders(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
-        ...productProviderCardFragment
+        ...productProviderFormFragment
       }
       page
       totalPage
     }
   }
 
-  ${productProviderCardFragment}
-  ${partnerNameFragment}
+  ${productProviderFormFragment}
+  ${userAvatarFragment}
+  ${partnerCardFragment}
   ${tagFragment}
   ${imageFragment}
   ${priceFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
+  ${documentFragment}
 `;
 
 export default productProvidersListQuery;
