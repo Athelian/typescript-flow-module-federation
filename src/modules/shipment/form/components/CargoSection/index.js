@@ -10,10 +10,10 @@ import { ShipmentBatchCard } from 'components/Cards';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import messages from 'modules/shipment/messages';
-import SelectOrderItems from 'modules/batch/common/SelectOrderItems';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import BatchFormContainer from 'modules/batch/form/container';
+import SelectOrderItems from './components/SelectOrderItems';
 import {
   ItemsSectionWrapperStyle,
   ItemsSectionBodyStyle,

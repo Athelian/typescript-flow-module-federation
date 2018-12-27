@@ -51,6 +51,17 @@ export const batchFormFragment = gql`
       price {
         ...priceFragment
       }
+      batches {
+        id
+        quantity
+        batchAdjustments {
+          id
+          quantity
+        }
+        shipment {
+          id
+        }
+      }
       order {
         ...orderCardFragment
       }

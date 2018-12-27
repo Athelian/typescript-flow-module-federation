@@ -96,7 +96,7 @@ export const prepareUpdateBatchInput = (
     archived,
     ...rest
   }: Object,
-  inShipmentOrBatchForm: boolean = false,
+  inShipmentOrBatchForm: boolean = true,
   inBatchForm: boolean = true
 ): BatchUpdate => ({
   ...rest,
