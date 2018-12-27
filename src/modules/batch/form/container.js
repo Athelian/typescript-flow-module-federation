@@ -38,11 +38,11 @@ export function calculateVolume(
 export type BatchFormState = {
   id?: ?string,
   no?: ?string,
+  quantity: number,
+  batchAdjustments: Array<any>,
   packageName?: ?string,
   packageCapacity: number,
   packageQuantity: number,
-  quantity: number,
-  batchAdjustments: Array<any>,
   packageGrossWeight: Metric,
   packageVolume: Metric,
   packageSize: {
@@ -65,17 +65,6 @@ const initValues = {
   packageName: '',
   packageCapacity: 0,
   packageQuantity: 0,
-  quantity: 0,
-  deliveredAt: '',
-  desiredAt: '',
-  expiredAt: '',
-  customFields: {
-    mask: null,
-    fieldValues: [],
-    fieldDefinitions: [],
-  },
-  producedAt: '',
-  batchAdjustments: [],
   packageGrossWeight: { value: 0, metric: 'kg' },
   packageVolume: {
     metric: 'm³',
@@ -95,6 +84,17 @@ const initValues = {
       value: 0,
     },
   },
+  quantity: 0,
+  deliveredAt: '',
+  desiredAt: '',
+  expiredAt: '',
+  customFields: {
+    mask: null,
+    fieldValues: [],
+    fieldDefinitions: [],
+  },
+  producedAt: '',
+  batchAdjustments: [],
 };
 
 export default class BatchFormContainer extends Container<BatchFormState> {

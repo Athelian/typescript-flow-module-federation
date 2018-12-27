@@ -52,6 +52,8 @@ export const orderItemsListQuery = gql`
         }
         productProvider {
           id
+          packageName
+          packageCapacity
           packageGrossWeight {
             ...metricFragment
           }
