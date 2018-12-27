@@ -678,20 +678,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                           validator={orderValidator}
                                         />
                                       ))}
-                                    {Object.keys(orderItem.relation.batch).filter(
-                                      batchId => !batchIds.includes(batchId)
-                                    ).length < totalLines &&
-                                      Object.keys(orderItem.relation.batch)
-                                        .filter(batchId => !batchIds.includes(batchId))
-                                        .map(batchId => (
-                                          <TableEmptyItem
-                                            rowNo={getRowCounter(rowCounter, 'order')}
-                                            key={`order.${counter + 1}.hidden.${
-                                              orderItem.data.id
-                                            }.batch.${batchId}`}
-                                            fields={orderColumnFieldsFilter}
-                                          />
-                                        ))}
                                   </React.Fragment>
                                 )
                               )
@@ -743,21 +729,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                           validator={orderValidator}
                                         />
                                       ))}
-                                    {Object.keys(orderItem.relation.batch).filter(
-                                      batchId => !batchIds.includes(batchId)
-                                    ).length < totalLines &&
-                                      Object.keys(orderItem.relation.batch)
-                                        .filter(batchId => !batchIds.includes(batchId))
-                                        .map(batchId => (
-                                          <TableEmptyItem
-                                            rowNo={getRowCounter(rowCounter, 'order')}
-                                            columnNo={columnOrderCustomNo}
-                                            key={`order.${counter + 1}.hidden.${
-                                              orderItem.data.id
-                                            }.batch.${batchId}`}
-                                            fields={orderCustomFieldsFilter}
-                                          />
-                                        ))}
                                   </React.Fragment>
                                 )
                               )
@@ -794,19 +765,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                           validator={orderValidator}
                                         />
                                       ))}
-                                    {Object.keys(orderItem.relation.batch).filter(
-                                      batchId => !batchIds.includes(batchId)
-                                    ).length < totalLines &&
-                                      Object.keys(orderItem.relation.batch)
-                                        .filter(batchId => !batchIds.includes(batchId))
-                                        .map(batchId => (
-                                          <TableEmptyItem
-                                            rowNo={getRowCounter(rowCounter, 'orderItem')}
-                                            columnNo={columnOrderItemNo}
-                                            key={`orderItem.${counter + 1}.hidden.${batchId}`}
-                                            fields={orderItemColumnFieldsFilter}
-                                          />
-                                        ))}
                                   </React.Fragment>
                                 )
                               )
@@ -848,19 +806,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                           validator={orderValidator}
                                         />
                                       ))}
-                                    {Object.keys(orderItem.relation.batch).filter(
-                                      batchId => !batchIds.includes(batchId)
-                                    ).length < totalLines &&
-                                      Object.keys(orderItem.relation.batch)
-                                        .filter(batchId => !batchIds.includes(batchId))
-                                        .map(batchId => (
-                                          <TableEmptyItem
-                                            rowNo={getRowCounter(rowCounter, 'orderItemCustom')}
-                                            columnNo={columnOrderItemCustomNo}
-                                            key={`orderItem.${counter + 1}.hidden.${batchId}`}
-                                            fields={orderItemCustomFieldsFilter}
-                                          />
-                                        ))}
                                   </React.Fragment>
                                 )
                               )
