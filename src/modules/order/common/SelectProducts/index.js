@@ -15,7 +15,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
-import { productProvidersListQuery } from './query';
+import { productProvidersListQuery } from 'modules/productProvider/list/query';
 import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
