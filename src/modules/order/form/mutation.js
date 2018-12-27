@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
+import { removeTypename } from 'utils/data';
 import {
   orderFormFragment,
   userAvatarFragment,
@@ -106,7 +107,7 @@ export const prepareCreateOrderInput = ({
       ...orderItem,
       price: { ...price, currency },
       productProviderId: productProvider.id,
-      batches: batches.map(batch => prepareCreateBatchInput(batch, false)),
+      batches: batches.map(batch => prepareCreateBatchInput(removeTypename(batch), false)),
     })
   ),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({
@@ -206,7 +207,7 @@ export const prepareUpdateOrderInput = ({
       ...(isNew ? {} : { id: itemId }),
       productProviderId: productProvider.id,
       price: { ...price, currency },
-      batches: batches.map(batch => prepareUpdateBatchInput(batch, false, false)),
+      batches: batches.map(batch => prepareUpdateBatchInput(removeTypename(batch), false, false)),
     })
   ),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({

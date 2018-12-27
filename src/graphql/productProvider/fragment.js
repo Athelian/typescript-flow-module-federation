@@ -18,6 +18,17 @@ export const productProviderFormFragment = gql`
     supplier {
       ...partnerCardFragment
     }
+    product {
+      id
+      name
+      serial
+      tags {
+        ...tagFragment
+      }
+      files {
+        ...imageFragment
+      }
+    }
     inspectionFee {
       ...priceFragment
     }
