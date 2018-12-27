@@ -58,9 +58,11 @@ export type BatchFormState = {
   orderItem?: Object,
   tags?: Array<Object>,
   memo?: string,
+  autoCalculatePackageQuantity: boolean,
 };
 
 const initValues = {
+  autoCalculatePackageQuantity: true,
   memo: '',
   packageName: '',
   packageCapacity: 0,
@@ -123,7 +125,10 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     });
   };
 
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+  isDirty = () => {
+    const { autoCalculatePackageQuantity, ...originalValues } = this.originalValues;
+    return !isEquals(cleanFalsy(this.state), cleanFalsy(originalValues));
+  };
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
@@ -165,6 +170,12 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       packageVolume,
       packageSize,
     });
+  };
+
+  toggleCalculatePackageQuantity = () => {
+    this.setState(prevState => ({
+      autoCalculatePackageQuantity: !prevState.autoCalculatePackageQuantity,
+    }));
   };
 
   calculatePackageQuantity = () => {

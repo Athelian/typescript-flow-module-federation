@@ -12,6 +12,7 @@ import {
   volumeInputFactory,
 } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
+import { ToggleInput } from 'components/Form';
 import { getByPath } from 'utils/fp';
 import { PackagingSectionWrapperStyle } from './style';
 
@@ -31,7 +32,6 @@ const PackagingSection = ({ isNew }: Props) => (
         calculatePackageQuantity,
       }) => {
         const values = { ...originalValues, ...state };
-
         return (
           <GridColumn>
             <FormField
@@ -94,6 +94,19 @@ const PackagingSection = ({ isNew }: Props) => (
                     />
                   ),
                   calculate: calculatePackageQuantity,
+                  renderCalculate: () => (
+                    <Subscribe to={[BatchFormContainer]}>
+                      {({
+                        state: { autoCalculatePackageQuantity },
+                        toggleCalculatePackageQuantity,
+                      }) => (
+                        <ToggleInput
+                          toggled={autoCalculatePackageQuantity}
+                          onToggle={toggleCalculatePackageQuantity}
+                        />
+                      )}
+                    </Subscribe>
+                  ),
                 })
               }
             </FormField>
