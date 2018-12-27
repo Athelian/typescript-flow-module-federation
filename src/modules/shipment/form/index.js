@@ -62,12 +62,6 @@ class ShipmentForm extends React.Component<Props> {
     return !isEquals(shipment, nextProps.shipment);
   }
 
-  componentDidUpdate() {
-    const { onFormReady } = this.props;
-
-    if (onFormReady) onFormReady();
-  }
-
   onClone = () => {
     const { shipment } = this.props;
     navigate(`/shipment/clone/${encodeId(shipment.id)}`);
