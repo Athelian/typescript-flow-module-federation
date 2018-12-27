@@ -18,6 +18,7 @@ type Props = {
   onCancel: Function,
   onSelect: Function,
   intl: IntlShape,
+  selectedBatches: Array<Object>,
 };
 
 function onSelectBatch({
@@ -38,7 +39,14 @@ function onSelectBatch({
   }
 }
 
-function SelectBatches({ intl, onCancel, onSelect }: Props) {
+function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
+  const removedBatches = selectedBatches.reduce(
+    (removedBatch, batch) =>
+      Object.assign(removedBatch, {
+        [batch.id]: true,
+      }),
+    {}
+  );
   const fields = [
     { title: intl.formatMessage(messages.batchNo), value: 'no' },
     { title: intl.formatMessage(messages.PO), value: 'poNo' },
@@ -149,7 +157,9 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
                     }
                   >
                     <BatchGridView
-                      items={getByPathWithDefault([], 'batches.nodes', data)}
+                      items={getByPathWithDefault([], 'batches.nodes', data).filter(
+                        item => !removedBatches[item.id]
+                      )}
                       onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
                       hasMore={hasMore}
                       isLoading={loading}

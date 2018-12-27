@@ -48,6 +48,7 @@ function CargoSection({ intl }: Props) {
                   <Subscribe to={[ShipmentBatchesContainer]}>
                     {({ state: { batches }, setFieldValue }) => (
                       <SelectBatches
+                        selectedBatches={batches}
                         onSelect={selected => {
                           setFieldValue('batches', [...batches, ...selected]);
                           selectBatchesSlideToggle(false);
