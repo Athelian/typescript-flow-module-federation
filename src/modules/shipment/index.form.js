@@ -143,14 +143,21 @@ class ShipmentFormModule extends React.Component<Props> {
     }
   };
 
-  onFormReady = (
+  onFormReady = ({
+    shipmentBatchesState,
+    shipmentInfoState,
+    shipmentTagsState,
+    shipmentTimelineState,
+    shipmentTransportTypeState,
+    shipmentFileState,
+  }: {
     shipmentBatchesState: Object,
     shipmentInfoState: Object,
     shipmentTagsState: Object,
     shipmentTimelineState: Object,
     shipmentTransportTypeState: Object,
-    shipmentFileState: Object
-  ) => (shipment: Object) => {
+    shipmentFileState: Object,
+  }) => (shipment: Object) => {
     const {
       batches,
       tags,
@@ -182,14 +189,21 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentTransportTypeState.initDetailValues(transportType);
   };
 
-  onMutationCompleted = (
+  onMutationCompleted = ({
+    shipmentBatchesState,
+    shipmentInfoState,
+    shipmentTagsState,
+    shipmentTimelineState,
+    shipmentTransportTypeState,
+    shipmentFileState,
+  }: {
     shipmentBatchesState: Object,
     shipmentInfoState: Object,
     shipmentTagsState: Object,
     shipmentTimelineState: Object,
     shipmentTransportTypeState: Object,
-    shipmentFileState: Object
-  ) => (result: CreateShipmentResponse | UpdateShipmentResponse) => {
+    shipmentFileState: Object,
+  }) => (result: CreateShipmentResponse | UpdateShipmentResponse) => {
     const isNewOrClone = this.isNewOrClone();
     const { redirectAfterSuccess } = this.props;
 
@@ -208,14 +222,14 @@ class ShipmentFormModule extends React.Component<Props> {
       const {
         shipmentUpdate: { shipment },
       } = result;
-      this.onFormReady(
+      this.onFormReady({
         shipmentBatchesState,
         shipmentInfoState,
         shipmentTagsState,
         shipmentTimelineState,
         shipmentTransportTypeState,
-        shipmentFileState
-      )(shipment);
+        shipmentFileState,
+      })(shipment);
     }
   };
 
@@ -253,14 +267,14 @@ class ShipmentFormModule extends React.Component<Props> {
               ) => (
                 <Mutation
                   mutation={isNewOrClone ? createShipmentMutation : updateShipmentMutation}
-                  onCompleted={this.onMutationCompleted(
+                  onCompleted={this.onMutationCompleted({
                     shipmentBatchesState,
                     shipmentInfoState,
                     shipmentTagsState,
                     shipmentTimelineState,
                     shipmentTransportTypeState,
-                    shipmentFileState
-                  )}
+                    shipmentFileState,
+                  })}
                   {...mutationKey}
                 >
                   {(saveShipment, { loading: isLoading, error: apiError }) => (
@@ -432,14 +446,14 @@ class ShipmentFormModule extends React.Component<Props> {
                               shipment={shipment}
                               anchor={anchor}
                               onFormReady={() => {
-                                this.onFormReady(
+                                this.onFormReady({
                                   shipmentBatchesState,
                                   shipmentInfoState,
                                   shipmentTagsState,
                                   shipmentTimelineState,
                                   shipmentTransportTypeState,
-                                  shipmentFileState
-                                )(shipment);
+                                  shipmentFileState,
+                                })(shipment);
                               }}
                             />
                           )}
