@@ -9,10 +9,10 @@ import BatchGridView from 'modules/batch/list/BatchGridView';
 import { ShipmentBatchCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import { batchListQuery } from 'modules/batch/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/batch/messages';
+import { selectBatchListQuery } from './query';
 
 type Props = {
   onCancel: Function,
@@ -81,7 +81,7 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
     >
       {({ value: filtersAndSort, set: onChange }) => (
         <Query
-          query={batchListQuery}
+          query={selectBatchListQuery}
           variables={{
             page: 1,
             perPage: filtersAndSort.perPage,
