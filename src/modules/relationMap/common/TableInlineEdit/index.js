@@ -895,69 +895,110 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                               ))
                             )}
                           </div>
-
                           <div>
-                            {shipmentIds
-                              .filter(shipmentId => !!order.relation.shipment[shipmentId])
-                              .map(shipmentId => {
-                                const shipment = mappingObjects.shipment[shipmentId];
-                                return (
-                                  <TableItem
+                            {shipmentIds.length ? (
+                              <>
+                                {orderItems.map(orderItem =>
+                                  orderItem.data.batches
+                                    .filter(batch => batchIds.includes(batch.id))
+                                    .map(batch => {
+                                      const shipmentId = batch.shipment && batch.shipment.id;
+                                      if (!shipmentId) {
+                                        return (
+                                          <TableEmptyItem
+                                            key={`empty-shipment-${order.id}-${batch.id}`}
+                                            fields={shipmentColumnFieldsFilter}
+                                            rowNo={getRowCounter(rowCounter, 'shipment')}
+                                            columnNo={columnShipmentNo}
+                                          />
+                                        );
+                                      }
+                                      const shipment = mappingObjects.shipment[batch.shipment.id];
+                                      return (
+                                        <TableItem
+                                          rowNo={getRowCounter(rowCounter, 'shipment')}
+                                          columnNo={columnShipmentNo}
+                                          key={`shipment.${counter + 1}.${shipmentId}`}
+                                          cell={`shipments.${shipment.data.id}`}
+                                          fields={shipmentColumnFieldsFilter}
+                                          values={editData.shipments[shipment.data.id]}
+                                          validator={shipmentValidator}
+                                        />
+                                      );
+                                    })
+                                )}
+                                {range(totalLines - batches.length).map(index => (
+                                  <TableEmptyItem
+                                    key={index}
+                                    fields={shipmentColumnFieldsFilter}
                                     rowNo={getRowCounter(rowCounter, 'shipment')}
                                     columnNo={columnShipmentNo}
-                                    key={`shipment.${counter + 1}.${shipmentId}`}
-                                    cell={`shipments.${shipment.data.id}`}
-                                    fields={shipmentColumnFieldsFilter}
-                                    values={editData.shipments[shipment.data.id]}
-                                    validator={shipmentValidator}
                                   />
-                                );
-                              })}
-                            {range(
-                              totalLines -
-                                shipmentIds.filter(
-                                  shipmentId => !!order.relation.shipment[shipmentId]
-                                ).length
-                            ).map(index => (
-                              <TableEmptyItem
-                                key={index}
-                                fields={shipmentColumnFieldsFilter}
-                                rowNo={getRowCounter(rowCounter, 'shipment')}
-                                columnNo={columnShipmentNo}
-                              />
-                            ))}
+                                ))}
+                              </>
+                            ) : (
+                              range(totalLines).map(index => (
+                                <TableEmptyItem
+                                  key={index}
+                                  fields={batchCustomFieldsFilter}
+                                  rowNo={getRowCounter(rowCounter, 'shipment')}
+                                  columnNo={columnBatchCustomNo}
+                                />
+                              ))
+                            )}
                           </div>
 
                           <div>
-                            {shipmentIds
-                              .filter(shipmentId => !!order.relation.shipment[shipmentId])
-                              .map(shipmentId => {
-                                const shipment = mappingObjects.shipment[shipmentId];
-                                return (
-                                  <TableItemForCustomFields
+                            {shipmentIds.length ? (
+                              <>
+                                {orderItems.map(orderItem =>
+                                  orderItem.data.batches
+                                    .filter(batch => batchIds.includes(batch.id))
+                                    .map(batch => {
+                                      const shipmentId = batch.shipment && batch.shipment.id;
+                                      if (!shipmentId) {
+                                        return (
+                                          <TableEmptyItem
+                                            key={`empty-shipment-custom-${order.id}-${batch.id}`}
+                                            fields={shipmentColumnFieldsFilter}
+                                            rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
+                                            columnNo={columnShipmentNo}
+                                          />
+                                        );
+                                      }
+                                      const shipment = mappingObjects.shipment[batch.shipment.id];
+                                      return (
+                                        <TableItemForCustomFields
+                                          rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
+                                          columnNo={columnShipmentCustomNo}
+                                          cell={`shipments.${shipment.data.id}`}
+                                          key={`shipments.customFields.${shipment.data.id}`}
+                                          fields={shipmentCustomFieldsFilter}
+                                          values={editData.shipments[shipment.data.id]}
+                                          validator={shipmentValidator}
+                                        />
+                                      );
+                                    })
+                                )}
+                                {range(totalLines - batches.length).map(index => (
+                                  <TableEmptyItem
+                                    key={index}
+                                    fields={shipmentCustomFieldsFilter}
                                     rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
                                     columnNo={columnShipmentCustomNo}
-                                    cell={`shipments.${shipment.data.id}`}
-                                    key={`shipments.customFields.${shipment.data.id}`}
-                                    fields={shipmentCustomFieldsFilter}
-                                    values={editData.shipments[shipment.data.id]}
-                                    validator={shipmentValidator}
                                   />
-                                );
-                              })}
-                            {range(
-                              totalLines -
-                                shipmentIds.filter(
-                                  shipmentId => !!order.relation.shipment[shipmentId]
-                                ).length
-                            ).map(index => (
-                              <TableEmptyItem
-                                key={index}
-                                fields={shipmentCustomFieldsFilter}
-                                rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
-                                columnNo={columnShipmentCustomNo}
-                              />
-                            ))}
+                                ))}
+                              </>
+                            ) : (
+                              range(totalLines).map(index => (
+                                <TableEmptyItem
+                                  key={index}
+                                  fields={shipmentCustomFieldsFilter}
+                                  rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
+                                  columnNo={columnShipmentCustomNo}
+                                />
+                              ))
+                            )}
                           </div>
                         </TableRow>
                       );
