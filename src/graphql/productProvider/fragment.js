@@ -74,6 +74,17 @@ export const productProviderCardFragment = gql`
         ...imageFragment
       }
     }
+    packageName
+    packageCapacity
+    packageGrossWeight {
+      ...metricFragment
+    }
+    packageVolume {
+      ...metricFragment
+    }
+    packageSize {
+      ...sizeFragment
+    }
     unitPrice {
       ...priceFragment
     }

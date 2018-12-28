@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { Location } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
@@ -182,18 +181,12 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                           onClick={() => slideToggle(true)}
                         />
                       ) : (
-                        <Location>
-                          {({ location }) => (
-                            <>
-                              <OrderItemCard
-                                selectable={location.pathname.includes('/batch')}
-                                item={values.orderItem}
-                                onSelect={selectable ? () => slideToggle(true) : null}
-                                readOnly
-                              />
-                            </>
-                          )}
-                        </Location>
+                        <OrderItemCard
+                          selectable
+                          item={values.orderItem}
+                          onSelect={selectable ? () => slideToggle(true) : null}
+                          readOnly
+                        />
                       )}
 
                       <SlideView
@@ -208,6 +201,20 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                             onSelect={newValue => {
                               slideToggle(false);
                               setFieldValue('orderItem', newValue);
+                              const {
+                                productProvider: {
+                                  packageName,
+                                  packageCapacity,
+                                  packageGrossWeight,
+                                  packageVolume,
+                                  packageSize,
+                                },
+                              } = newValue;
+                              setFieldValue('packageName', packageName);
+                              setFieldValue('packageCapacity', packageCapacity);
+                              setFieldValue('packageGrossWeight', packageGrossWeight);
+                              setFieldValue('packageVolume', packageVolume);
+                              setFieldValue('packageSize', packageSize);
                             }}
                           />
                         )}

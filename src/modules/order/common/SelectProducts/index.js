@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue, NumberValue } from 'react-values';
+import { removeTypename } from 'utils/data';
 import GridView from 'components/GridView';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
@@ -11,11 +12,11 @@ import Layout from 'components/Layout';
 import { OrderProductProviderCard } from 'components/Cards';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import { productProvidersListQuery } from 'modules/productProvider/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
+import { productProvidersListQuery } from 'modules/productProvider/list/query';
 import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -124,7 +125,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                         <CancelButton onClick={onCancel} />
                         <SaveButton
                           disabled={selected.length === 0}
-                          onClick={() => onSelect(selected)}
+                          onClick={() => onSelect(removeTypename(selected))}
                         />
                       </SlideViewNavBar>
                     }

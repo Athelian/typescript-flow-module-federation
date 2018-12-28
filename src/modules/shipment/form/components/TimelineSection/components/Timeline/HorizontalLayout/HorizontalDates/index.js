@@ -17,7 +17,6 @@ type Props = {
 const HorizontalDates = ({ shipment }: Props) => {
   const { cargoReady, voyages, containerGroups } = shipment;
   const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
-
   if (voyages.length > 1) {
     return (
       <div className={HorizontalDatesWrapperStyle}>
@@ -37,9 +36,9 @@ const HorizontalDates = ({ shipment }: Props) => {
         </div>
 
         {voyages.length > 1 &&
-          voyages.slice(1).map(voyage => (
+          voyages.slice(1).map((voyage, voyageIndex) => (
             <div className={DoubleDatesWrapperStyle} key={voyage.id}>
-              <TimelineDate timelineDate={voyage.arrival} />
+              <TimelineDate timelineDate={voyages[voyageIndex].arrival} />
               <TimelineDate timelineDate={voyage.departure} />
             </div>
           ))}

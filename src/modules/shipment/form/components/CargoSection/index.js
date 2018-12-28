@@ -10,10 +10,10 @@ import { ShipmentBatchCard } from 'components/Cards';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import messages from 'modules/shipment/messages';
-import SelectOrderItems from 'modules/batch/common/SelectOrderItems';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import BatchFormContainer from 'modules/batch/form/container';
+import SelectOrderItems from './components/SelectOrderItems';
 import {
   ItemsSectionWrapperStyle,
   ItemsSectionBodyStyle,
@@ -48,6 +48,7 @@ function CargoSection({ intl }: Props) {
                   <Subscribe to={[ShipmentBatchesContainer]}>
                     {({ state: { batches }, setFieldValue }) => (
                       <SelectBatches
+                        selectedBatches={batches}
                         onSelect={selected => {
                           setFieldValue('batches', [...batches, ...selected]);
                           selectBatchesSlideToggle(false);
@@ -77,17 +78,31 @@ function CargoSection({ intl }: Props) {
                   <Subscribe to={[ShipmentBatchesContainer]}>
                     {({ state: { batches }, setFieldValue }) => (
                       <SelectOrderItems
-                        onSelect={selectedBatches => {
-                          const result = selectedBatches.map((orderItem, counter) =>
-                            injectUid({
+                        onSelect={selectedOrderItems => {
+                          const result = selectedOrderItems.map((orderItem, counter) => {
+                            const {
+                              productProvider: {
+                                packageName,
+                                packageCapacity,
+                                packageGrossWeight,
+                                packageVolume,
+                                packageSize,
+                              },
+                            } = orderItem;
+                            return injectUid({
                               orderItem,
                               tags: [],
+                              packageName,
+                              packageCapacity,
+                              packageGrossWeight,
+                              packageVolume,
+                              packageSize,
                               quantity: 0,
                               isNew: true,
                               batchAdjustments: [],
                               no: `batch no ${batches.length + counter + 1}`,
-                            })
-                          );
+                            });
+                          });
                           setFieldValue('batches', [...batches, ...result]);
                           createBatchesSlideToggle(false);
                         }}

@@ -14,7 +14,7 @@ import {
 } from 'modules/tableTemplate/form/mutation';
 import query from 'modules/tableTemplate/list/query';
 import emitter from 'utils/emitter';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -125,8 +125,17 @@ class TemplateFormWrapper extends React.Component<Props> {
     }
   };
 
+  handleCancel = (formState: Object) => {
+    const { isNew, onCancel } = this.props;
+    if (isNew) {
+      onCancel();
+    } else {
+      resetFormState(formState);
+    }
+  };
+
   render() {
-    const { isNew, template, onCancel } = this.props;
+    const { isNew, template } = this.props;
     let mutationKey = {};
     if (!isNew) {
       mutationKey = { key: template.id };
@@ -134,7 +143,7 @@ class TemplateFormWrapper extends React.Component<Props> {
     return (
       <Provider inject={[formContainer]}>
         <Subscribe to={[TemplateFormContainer]}>
-          {({ state, isDirty, initDetailValues, onSuccess }) => (
+          {formState => (
             <Mutation
               mutation={isNew ? maskEditCreateMutation : maskEditUpdateMutation}
               {...mutationKey}
@@ -166,17 +175,19 @@ class TemplateFormWrapper extends React.Component<Props> {
                           icon="METADATA"
                         />
                       </JumpToSection>
-                      <CancelButton onClick={onCancel} />
+                      <CancelButton onClick={() => this.handleCancel(formState)} />
                       <SaveButton
-                        disabled={!isDirty() || !formContainer.isReady(state, validator)}
+                        disabled={
+                          !formState.isDirty() || !formContainer.isReady(formState.state, validator)
+                        }
                         isLoading={isLoading}
                         data-testid="saveButtonOnTemplate"
                         onClick={() =>
                           this.onSave(
-                            state,
+                            formState.state,
                             saveTemplate,
                             () => {
-                              onSuccess();
+                              formState.onSuccess();
                               formContainer.onReset();
                             },
                             formContainer.onErrors
@@ -188,7 +199,7 @@ class TemplateFormWrapper extends React.Component<Props> {
                 >
                   {apiError && <p>Error: Please try again.</p>}
                   <TemplateForm
-                    initDetailValues={initDetailValues}
+                    initDetailValues={formState.initDetailValues}
                     template={template}
                     isNew={isNew}
                   />

@@ -9,15 +9,16 @@ import BatchGridView from 'modules/batch/list/BatchGridView';
 import { ShipmentBatchCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import { batchListQuery } from 'modules/batch/list/query';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/batch/messages';
+import { selectBatchListQuery } from './query';
 
 type Props = {
   onCancel: Function,
   onSelect: Function,
   intl: IntlShape,
+  selectedBatches: Array<Object>,
 };
 
 function onSelectBatch({
@@ -38,7 +39,14 @@ function onSelectBatch({
   }
 }
 
-function SelectBatches({ intl, onCancel, onSelect }: Props) {
+function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
+  const removedBatches = selectedBatches.reduce(
+    (removedBatch, batch) =>
+      Object.assign(removedBatch, {
+        [batch.id]: true,
+      }),
+    {}
+  );
   const fields = [
     { title: intl.formatMessage(messages.batchNo), value: 'no' },
     { title: intl.formatMessage(messages.PO), value: 'poNo' },
@@ -81,7 +89,7 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
     >
       {({ value: filtersAndSort, set: onChange }) => (
         <Query
-          query={batchListQuery}
+          query={selectBatchListQuery}
           variables={{
             page: 1,
             perPage: filtersAndSort.perPage,
@@ -149,7 +157,9 @@ function SelectBatches({ intl, onCancel, onSelect }: Props) {
                     }
                   >
                     <BatchGridView
-                      items={getByPathWithDefault([], 'batches.nodes', data)}
+                      items={getByPathWithDefault([], 'batches.nodes', data).filter(
+                        item => !removedBatches[item.id]
+                      )}
                       onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
                       hasMore={hasMore}
                       isLoading={loading}

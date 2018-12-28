@@ -6,7 +6,7 @@ import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
@@ -72,11 +72,30 @@ const cleanUpCloneProductInput = (product: Object) => ({
   ),
 });
 
+type ProductFormState = {
+  productInfoState: Object,
+  productProvidersState: Object,
+  productTagsState: Object,
+  productFilesState: Object,
+};
+
 class ProductFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
-  onCancel = () => {
-    navigate(`/product`);
+  onCancel = ({
+    productInfoState,
+    productTagsState,
+    productFilesState,
+    productProvidersState,
+  }: ProductFormState) => {
+    if (this.isNewOrClone()) {
+      navigate(`/product`);
+    } else {
+      resetFormState(productInfoState);
+      resetFormState(productTagsState, 'tags');
+      resetFormState(productFilesState, 'files');
+      resetFormState(productProvidersState, 'productProviders');
+    }
   };
 
   onSave = async (
@@ -220,7 +239,16 @@ class ProductFormModule extends React.Component<Props> {
                             productTagsState.isDirty() ||
                             productFilesState.isDirty()) && (
                             <>
-                              <CancelButton onClick={this.onCancel} />
+                              <CancelButton
+                                onClick={() =>
+                                  this.onCancel({
+                                    productInfoState,
+                                    productProvidersState,
+                                    productTagsState,
+                                    productFilesState,
+                                  })
+                                }
+                              />
                               <SaveButton
                                 disabled={
                                   !form.isReady(

@@ -38,9 +38,24 @@ type Props = {
   onSave: Function,
 };
 
-export function generateBatchItem(batches: Array<Object>) {
+export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
+  const {
+    productProvider: {
+      packageName,
+      packageCapacity,
+      packageGrossWeight,
+      packageVolume,
+      packageSize,
+    },
+  } = orderItem;
   return injectUid({
+    orderItem,
     tags: [],
+    packageName,
+    packageCapacity,
+    packageGrossWeight,
+    packageVolume,
+    packageSize,
     quantity: 0,
     isNew: true,
     batchAdjustments: [],
@@ -115,7 +130,7 @@ class OrderItems extends React.Component<Props> {
                               defaultMessage="NEW BATCH"
                             />
                           }
-                          onClick={() => addNewBatch(generateBatchItem(batches))}
+                          onClick={() => addNewBatch(generateBatchItem(item, batches))}
                         />
                       </div>
 

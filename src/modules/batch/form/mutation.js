@@ -23,8 +23,6 @@ export const prepareCreateBatchInput = (
   {
     id,
     isNew,
-    no,
-    quantity,
     shipment = {},
     tags = [],
     batchAdjustments = [],
@@ -39,15 +37,13 @@ export const prepareCreateBatchInput = (
   inShipmentOrBatchForm: boolean = true
 ): BatchCreate => ({
   ...rest,
-  no,
-  quantity,
+  ...(shipment ? { shipmentId: shipment.id } : {}),
+  ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
   desiredAt: desiredAt ? new Date(desiredAt) : null,
   expiredAt: expiredAt ? new Date(expiredAt) : null,
   producedAt: producedAt ? new Date(producedAt) : null,
   customFields: prepareCustomFieldsData(customFields),
-  ...(shipment ? { shipmentId: shipment.id } : {}),
-  ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   tagIds: tags.map(({ id: tagId }) => tagId),
   batchAdjustments: batchAdjustments.map(
     ({
@@ -96,7 +92,7 @@ export const prepareUpdateBatchInput = (
     archived,
     ...rest
   }: Object,
-  inShipmentOrBatchForm: boolean = false,
+  inShipmentOrBatchForm: boolean = true,
   inBatchForm: boolean = true
 ): BatchUpdate => ({
   ...rest,
