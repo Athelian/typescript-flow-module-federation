@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ObjectValue, ArrayValue, NumberValue } from 'react-values';
+import { removeTypename } from 'utils/data';
 import GridView from 'components/GridView';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
@@ -124,7 +125,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                         <CancelButton onClick={onCancel} />
                         <SaveButton
                           disabled={selected.length === 0}
-                          onClick={() => onSelect(selected)}
+                          onClick={() => onSelect(removeTypename(selected))}
                         />
                       </SlideViewNavBar>
                     }
