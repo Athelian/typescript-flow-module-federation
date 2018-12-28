@@ -19,12 +19,18 @@ import { getByPathWithDefault } from 'utils/fp';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
-import { OrderListWrapperStyle, OrderListBodyStyle } from 'modules/relationMap/orderFocused/style';
+import {
+  OrderListWrapperStyle,
+  OrderListBodyStyle,
+  ShipmentListWrapperStyle,
+  ShipmentListBodyStyle,
+} from 'modules/relationMap/orderFocused/style';
 import query from './query';
 import normalize from './normalize';
 import { hasMoreItems } from './helpers';
 import { useFilter } from '../hooks';
 import OrderFocusView from './components/OrderFocusView';
+import Shipment from './components/Shipment';
 
 type Props = {
   intl: IntlShape,
@@ -215,6 +221,13 @@ const Order = ({ intl }: Props) => {
                       </Display>
                     )}
                   </InfiniteScroll>
+                </div>
+                <div className={ShipmentListWrapperStyle}>
+                  <div className={ShipmentListBodyStyle}>
+                    {Object.entries(shipments || []).map(([shipmentId, shipment]) => (
+                      <Shipment key={shipmentId} {...shipment} onToggle={console.warn} />
+                    ))}
+                  </div>
                 </div>
               </div>
             )}

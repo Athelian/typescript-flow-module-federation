@@ -12,3 +12,11 @@ export type OrderFocusProps = {
   totalOrdered: number,
   totalShipped: number,
 };
+
+export type ShipmentProps = {
+  no: string,
+  totalVolume: {
+    value: number,
+    metric: string,
+  },
+};
