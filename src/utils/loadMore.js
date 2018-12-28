@@ -9,12 +9,12 @@ const loadMore = (
 ) => {
   const { data, fetchMore } = clientData;
   logger.warn('loadMore', data);
-  if (!data) return;
+  if (!data) return Promise.resolve({});
   const nextPage = get(`${selectedField}.page`, data) + 1;
   const totalPage = get(`${selectedField}.totalPage`, data);
-  if (nextPage > totalPage) return;
+  if (nextPage > totalPage) return Promise.resolve({});
   logger.warn('loadMore nextPage', nextPage);
-  fetchMore({
+  return fetchMore({
     variables: {
       ...filtersAndSort,
       filter: filtersAndSort.filter,
