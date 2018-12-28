@@ -960,7 +960,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                                         return (
                                           <TableEmptyItem
                                             key={`empty-shipment-custom-${order.id}-${batch.id}`}
-                                            fields={shipmentColumnFieldsFilter}
+                                            fields={shipmentCustomFieldsFilter}
                                             rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
                                             columnNo={columnShipmentNo}
                                           />
