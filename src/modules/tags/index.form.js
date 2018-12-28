@@ -9,7 +9,7 @@ import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { UIConsumer } from 'modules/ui';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
@@ -31,12 +31,21 @@ const defaultProps = {
   path: '',
   tagId: '',
 };
+type TagFormState = {
+  tagState: Object,
+  entityTypesState: Object,
+};
 
 export default class TagFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
-  onCancel = () => {
-    navigate('/tags');
+  onCancel = ({ tagState, entityTypesState }: TagFormState) => {
+    if (this.isNewOrClone()) {
+      navigate('/tags');
+    } else {
+      resetFormState(tagState);
+      resetFormState(entityTypesState, 'entityTypes');
+    }
   };
 
   onSave = async (
@@ -136,7 +145,14 @@ export default class TagFormModule extends React.PureComponent<Props> {
                         {(tagState, entityTypesState, form) =>
                           (isNewOrClone || tagState.isDirty() || entityTypesState.isDirty()) && (
                             <>
-                              <CancelButton onClick={this.onCancel} />
+                              <CancelButton
+                                onClick={() =>
+                                  this.onCancel({
+                                    tagState,
+                                    entityTypesState,
+                                  })
+                                }
+                              />
                               <SaveButton
                                 data-testid="saveButton"
                                 disabled={
