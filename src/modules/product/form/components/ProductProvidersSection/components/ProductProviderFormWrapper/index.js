@@ -7,7 +7,7 @@ import validator from 'modules/productProvider/form/validator';
 import ProductProviderForm from 'modules/productProvider/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -68,13 +68,22 @@ class ProductProviderFormWrapper extends React.Component<Props> {
     formContainer.onReset();
   }
 
+  handleCancel = (state: Object) => {
+    const { isNew, onCancel } = this.props;
+    if (isNew) {
+      onCancel();
+    } else {
+      resetFormState(state);
+    }
+  };
+
   render() {
-    const { isNew, onSave, onCancel, productProviders, isAddedProvider } = this.props;
+    const { isNew, onSave, productProviders, isAddedProvider } = this.props;
 
     return (
       <Provider inject={[formContainer]}>
         <Subscribe to={[ProductProviderContainer]}>
-          {({ state, isDirty }) => (
+          {formState => (
             <Layout
               navBar={
                 <SlideViewNavBar>
@@ -121,22 +130,22 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       icon="DOCUMENT"
                     />
                   </JumpToSection>
-                  <CancelButton onClick={onCancel} />
+                  <CancelButton onClick={() => this.handleCancel(formState)} />
                   <SaveButton
                     disabled={
-                      !isDirty() ||
-                      !formContainer.isReady(state, validator) ||
-                      isExist(state, productProviders, isAddedProvider)
+                      !formState.isDirty() ||
+                      !formContainer.isReady(formState.state, validator) ||
+                      isExist(formState.state, productProviders, isAddedProvider)
                     }
-                    onClick={() => onSave(state)}
+                    onClick={() => onSave(formState.state)}
                     data-testid="saveProviderButton"
                   />
                 </SlideViewNavBar>
               }
             >
               <ProductProviderForm
-                productProvider={state}
-                isExist={isExist(state, productProviders, isAddedProvider)}
+                productProvider={formState.state}
+                isExist={isExist(formState.state, productProviders, isAddedProvider)}
                 isNew={isNew}
               />
             </Layout>
