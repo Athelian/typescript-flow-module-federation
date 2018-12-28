@@ -30,6 +30,7 @@ const PackagingSection = ({ isNew }: Props) => (
         setFieldArrayValue,
         calculatePackageVolume,
         calculatePackageQuantity,
+        getPackageQuantity,
       }) => {
         const values = { ...originalValues, ...state };
         return (
@@ -78,7 +79,9 @@ const PackagingSection = ({ isNew }: Props) => (
 
             <FormField
               name="packageQuantity"
-              initValue={values.packageQuantity}
+              initValue={
+                state.autoCalculatePackageQuantity ? getPackageQuantity() : values.packageQuantity
+              }
               setFieldValue={setFieldValue}
             >
               {({ name, ...inputHandlers }) =>

@@ -99,6 +99,17 @@ const initValues = {
   batchAdjustments: [],
 };
 
+const calculatePackageQuantity = (prevState: Object) =>
+  prevState.packageCapacity > 0 &&
+  prevState.batchAdjustments.reduce(
+    (total, adjustment) => adjustment.quantity + total,
+    prevState.quantity
+  ) > 0
+    ? prevState.batchAdjustments.reduce(
+        (total, adjustment) => adjustment.quantity + total,
+        prevState.quantity
+      ) / prevState.packageCapacity
+    : 0;
 export default class BatchFormContainer extends Container<BatchFormState> {
   state = initValues;
 
@@ -178,19 +189,11 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     }));
   };
 
+  getPackageQuantity = () => calculatePackageQuantity(this.state);
+
   calculatePackageQuantity = () => {
     this.setState(prevState => ({
-      packageQuantity:
-        prevState.packageCapacity > 0 &&
-        prevState.batchAdjustments.reduce(
-          (total, adjustment) => adjustment.quantity + total,
-          prevState.quantity
-        ) > 0
-          ? prevState.batchAdjustments.reduce(
-              (total, adjustment) => adjustment.quantity + total,
-              prevState.quantity
-            ) / prevState.packageCapacity
-          : 0,
+      packageQuantity: calculatePackageQuantity(prevState),
     }));
   };
 
