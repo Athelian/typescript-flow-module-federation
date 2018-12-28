@@ -55,9 +55,9 @@ const defaultProps = {
 
 type OrderFormState = {
   orderInfoState: Object,
-  orderItemState: Array<Object>,
-  orderTagsState: Array<Object>,
-  orderFilesState: Array<Object>,
+  orderItemState: Object,
+  orderTagsState: Object,
+  orderFilesState: Object,
 };
 
 class OrderFormModule extends React.PureComponent<Props> {
