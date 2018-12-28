@@ -8,7 +8,7 @@ import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
 import { QueryForm } from 'components/common';
 import { UIConsumer } from 'modules/ui';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import { cloneOrderItemMutation as orderUpdateFromSlideView } from 'modules/relationMap/orderFocused/mutation';
 import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
@@ -53,6 +53,13 @@ const defaultProps = {
   redirectAfterSuccess: true,
 };
 
+type OrderFormState = {
+  orderInfoState: Object,
+  orderItemState: Array<Object>,
+  orderTagsState: Array<Object>,
+  orderFilesState: Array<Object>,
+};
+
 class OrderFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
@@ -68,8 +75,20 @@ class OrderFormModule extends React.PureComponent<Props> {
 
   isNewOrClone = () => this.isNew() || this.isClone();
 
-  onCancel = () => {
-    navigate(`/order`);
+  onCancel = ({
+    orderInfoState,
+    orderItemState,
+    orderTagsState,
+    orderFilesState,
+  }: OrderFormState) => {
+    if (this.isNewOrClone()) {
+      navigate('/order');
+    } else {
+      resetFormState(orderInfoState);
+      resetFormState(orderItemState, 'orderItems');
+      resetFormState(orderTagsState, 'tags');
+      resetFormState(orderFilesState, 'files');
+    }
   };
 
   onSave = async (
@@ -288,7 +307,16 @@ class OrderFormModule extends React.PureComponent<Props> {
                               orderTagsState.isDirty() ||
                               orderFilesState.isDirty()) && (
                               <>
-                                <CancelButton onClick={this.onCancel} />
+                                <CancelButton
+                                  onClick={() =>
+                                    this.onCancel({
+                                      orderItemState,
+                                      orderInfoState,
+                                      orderTagsState,
+                                      orderFilesState,
+                                    })
+                                  }
+                                />
                                 <SaveButton
                                   disabled={
                                     !form.isReady(
