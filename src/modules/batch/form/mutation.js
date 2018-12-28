@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import { violationFragment } from 'graphql/violations/fragment';
 import { prepareCustomFieldsData } from 'utils/customFields';
+import { calculatePackageQuantity } from './container';
 import type { BatchCreate, BatchUpdate } from '../type.js.flow';
 
 export const createBatchMutation = gql`
@@ -18,6 +19,16 @@ export const createBatchMutation = gql`
 
   ${violationFragment}
 `;
+
+export const formatBatchInput = (state: Object, option?: Object) => {
+  const { autoCalculatePackageQuantity } = option || {};
+  return {
+    ...state,
+    packageQuantity: autoCalculatePackageQuantity
+      ? calculatePackageQuantity(state)
+      : state.packageQuantity,
+  };
+};
 
 export const prepareCreateBatchInput = (
   {

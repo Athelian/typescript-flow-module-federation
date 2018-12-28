@@ -16,6 +16,7 @@ import GridColumn from 'components/GridColumn';
 import { ToggleInput } from 'components/Form';
 import { getByPath } from 'utils/fp';
 import { PackagingSectionWrapperStyle } from './style';
+import { ToggleCalculatePackageQuantity } from '..';
 
 type Props = {
   isNew: boolean,
@@ -78,44 +79,45 @@ const PackagingSection = ({ isNew }: Props) => (
               }
             </FormField>
 
-            <FormField
-              name="packageQuantity"
-              initValue={
-                state.autoCalculatePackageQuantity ? getPackageQuantity() : values.packageQuantity
-              }
-              setFieldValue={setFieldValue}
-            >
-              {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
-                  inputHandlers,
-                  isNew,
-                  originalValue: originalValues[name],
-                  label: (
-                    <FormattedMessage
-                      id="modules.Batches.packageQuantity"
-                      defaultMessage="PACKAGE QUANTITY"
-                    />
-                  ),
-                  calculate: calculatePackageQuantity,
-                  renderCalculate: () => (
-                    <Subscribe to={[BatchFormContainer]}>
-                      {({
-                        state: { autoCalculatePackageQuantity },
-                        toggleCalculatePackageQuantity,
-                      }) => (
-                        <div className={CalculatorButtonStyle}>
-                          <ToggleInput
-                            toggled={autoCalculatePackageQuantity}
-                            onToggle={toggleCalculatePackageQuantity}
-                          />
-                        </div>
-                      )}
-                    </Subscribe>
-                  ),
-                })
-              }
-            </FormField>
+            <ToggleCalculatePackageQuantity>
+              {({ value: autoCalculatePackageQuantity }) => (
+                <FormField
+                  name="packageQuantity"
+                  initValue={
+                    autoCalculatePackageQuantity ? getPackageQuantity() : values.packageQuantity
+                  }
+                  setFieldValue={setFieldValue}
+                >
+                  {({ name, ...inputHandlers }) =>
+                    numberInputFactory({
+                      name,
+                      inputHandlers,
+                      isNew,
+                      originalValue: originalValues[name],
+                      label: (
+                        <FormattedMessage
+                          id="modules.Batches.packageQuantity"
+                          defaultMessage="PACKAGE QUANTITY"
+                        />
+                      ),
+                      calculate: calculatePackageQuantity,
+                      renderCalculate: () => (
+                        <ToggleCalculatePackageQuantity>
+                          {({ value: isToggledCalculatedPackageQuantity, toggle }) => (
+                            <div className={CalculatorButtonStyle}>
+                              <ToggleInput
+                                toggled={isToggledCalculatedPackageQuantity}
+                                onToggle={toggle}
+                              />
+                            </div>
+                          )}
+                        </ToggleCalculatePackageQuantity>
+                      ),
+                    })
+                  }
+                </FormField>
+              )}
+            </ToggleCalculatePackageQuantity>
 
             <FormField
               name="packageGrossWeight"

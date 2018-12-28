@@ -14,6 +14,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import BatchForm from './form';
+import { ToggleCalculatePackageQuantity } from './form/components';
 import BatchFormContainer from './form/container';
 import validator from './form/validator';
 import { batchFormQuery } from './form/query';
@@ -22,6 +23,7 @@ import {
   prepareCreateBatchInput,
   updateBatchMutation,
   prepareUpdateBatchInput,
+  formatBatchInput,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -186,22 +188,27 @@ class BatchFormModule extends React.PureComponent<Props> {
                               ) : (
                                 <ResetButton onClick={() => this.onReset(formState)} />
                               )}
-
-                              <SaveButton
-                                disabled={!form.isReady(formState.state, validator)}
-                                isLoading={isLoading}
-                                onClick={() =>
-                                  this.onSave(
-                                    formState.state,
-                                    saveBatch,
-                                    () => {
-                                      formState.onSuccess();
-                                      form.onReset();
-                                    },
-                                    form.onErrors
-                                  )
-                                }
-                              />
+                              <ToggleCalculatePackageQuantity>
+                                {({ value: autoCalculatePackageQuantity }) => (
+                                  <SaveButton
+                                    disabled={!form.isReady(formState.state, validator)}
+                                    isLoading={isLoading}
+                                    onClick={() =>
+                                      this.onSave(
+                                        formatBatchInput(formState.state, {
+                                          autoCalculatePackageQuantity,
+                                        }),
+                                        saveBatch,
+                                        () => {
+                                          formState.onSuccess();
+                                          form.onReset();
+                                        },
+                                        form.onErrors
+                                      )
+                                    }
+                                  />
+                                )}
+                              </ToggleCalculatePackageQuantity>
                             </>
                           )
                         }
@@ -223,9 +230,6 @@ class BatchFormModule extends React.PureComponent<Props> {
                             <BatchForm
                               isClone={this.isClone()}
                               batch={batch}
-                              onChangeStatus={(formData, onSuccess) =>
-                                this.onSave(formData, saveBatch, onSuccess)
-                              }
                               onFormReady={() => {
                                 if (this.isClone()) {
                                   const {

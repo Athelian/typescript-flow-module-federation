@@ -35,6 +35,18 @@ export function calculateVolume(
   return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
 }
 
+export const calculatePackageQuantity = (prevState: Object) =>
+  prevState.packageCapacity > 0 &&
+  prevState.batchAdjustments.reduce(
+    (total, adjustment) => adjustment.quantity + total,
+    prevState.quantity
+  ) > 0
+    ? prevState.batchAdjustments.reduce(
+        (total, adjustment) => adjustment.quantity + total,
+        prevState.quantity
+      ) / prevState.packageCapacity
+    : 0;
+
 export type BatchFormState = {
   id?: ?string,
   no?: ?string,
@@ -58,11 +70,9 @@ export type BatchFormState = {
   orderItem?: Object,
   tags?: Array<Object>,
   memo?: string,
-  autoCalculatePackageQuantity: boolean,
 };
 
 const initValues = {
-  autoCalculatePackageQuantity: true,
   memo: '',
   packageName: '',
   packageCapacity: 0,
@@ -99,17 +109,6 @@ const initValues = {
   batchAdjustments: [],
 };
 
-const calculatePackageQuantity = (prevState: Object) =>
-  prevState.packageCapacity > 0 &&
-  prevState.batchAdjustments.reduce(
-    (total, adjustment) => adjustment.quantity + total,
-    prevState.quantity
-  ) > 0
-    ? prevState.batchAdjustments.reduce(
-        (total, adjustment) => adjustment.quantity + total,
-        prevState.quantity
-      ) / prevState.packageCapacity
-    : 0;
 export default class BatchFormContainer extends Container<BatchFormState> {
   state = initValues;
 
@@ -136,10 +135,7 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     });
   };
 
-  isDirty = () => {
-    const { autoCalculatePackageQuantity, ...originalValues } = this.originalValues;
-    return !isEquals(cleanFalsy(this.state), cleanFalsy(originalValues));
-  };
+  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
@@ -181,12 +177,6 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       packageVolume,
       packageSize,
     });
-  };
-
-  toggleCalculatePackageQuantity = () => {
-    this.setState(prevState => ({
-      autoCalculatePackageQuantity: !prevState.autoCalculatePackageQuantity,
-    }));
   };
 
   getPackageQuantity = () => calculatePackageQuantity(this.state);
