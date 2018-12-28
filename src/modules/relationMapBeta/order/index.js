@@ -22,17 +22,12 @@ import Icon from 'components/Icon';
 import { OrderListWrapperStyle, OrderListBodyStyle } from 'modules/relationMap/orderFocused/style';
 import query from './query';
 import normalize from './normalize';
+import { hasMoreItems } from './helpers';
 import { useFilter } from '../hooks';
 import OrderFocusView from './components/OrderFocusView';
 
 type Props = {
   intl: IntlShape,
-};
-
-const hasMoreItems = data => {
-  const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
-  const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
-  return nextPage <= totalPage;
 };
 
 const Order = ({ intl }: Props) => {

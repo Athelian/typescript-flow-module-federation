@@ -47,16 +47,15 @@ export default function OrderFocusView({ item }: Props) {
       <RelationLine type={1} />
       <TotalItems
         wrapperClassName={ItemWrapperStyle(false)}
-        j
         type="ITEMS"
-        total={item.orderItems.length}
+        total={item.orderItemCount}
         onToggle={console.warn}
       />
       <RelationLine type={1} />
       <TotalItems
         wrapperClassName={ItemWrapperStyle(false)}
         type="BATCHES"
-        total={0}
+        total={item.batchCount}
         onToggle={console.warn}
       />
     </>
