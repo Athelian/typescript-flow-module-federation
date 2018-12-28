@@ -30,7 +30,7 @@ class NumberInput extends React.Component<Props> {
   };
 
   render() {
-    const { align, onChange, ...rest } = this.props;
+    const { align, onChange, nullable, ...rest } = this.props;
     return (
       <input
         style={{ textAlign: align }}
