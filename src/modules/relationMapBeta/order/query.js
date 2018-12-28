@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { tagFragment } from 'graphql';
 
 export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
@@ -13,6 +14,9 @@ export const orderListQuery = gql`
         batchCount
         batchShippedCount
         shipmentCount
+        tags {
+          ...tagFragment
+        }
         orderItems {
           id
           quantity
@@ -21,6 +25,9 @@ export const orderListQuery = gql`
             no
             quantity
             totalAdjusted
+            tags {
+              ...tagFragment
+            }
           }
         }
         shipments {
@@ -30,12 +37,17 @@ export const orderListQuery = gql`
             value
             metric
           }
+          tags {
+            ...tagFragment
+          }
         }
       }
       page
       totalPage
     }
   }
+
+  ${tagFragment}
 `;
 
 export default orderListQuery;
