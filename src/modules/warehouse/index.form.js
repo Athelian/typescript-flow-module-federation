@@ -8,7 +8,7 @@ import { prepareCustomFieldsData } from 'utils/customFields';
 import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -36,8 +36,12 @@ const defaultProps = {
 class WarehouseFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
-  onCancel = () => {
-    navigate(`/warehouse`);
+  onCancel = (formState: Object) => {
+    if (this.isNewOrClone()) {
+      navigate(`/warehouse`);
+    } else {
+      resetFormState(formState);
+    }
   };
 
   onSave = async (
@@ -144,7 +148,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                         {(formState, form) =>
                           (isNewOrClone || formState.isDirty()) && (
                             <>
-                              <CancelButton onClick={this.onCancel} />
+                              <CancelButton onClick={() => this.onCancel(formState)} />
                               <SaveButton
                                 data-testid="saveButton"
                                 disabled={!form.isReady(formState.state, validator)}
