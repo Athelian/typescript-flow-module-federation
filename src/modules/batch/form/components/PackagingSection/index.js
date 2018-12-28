@@ -11,6 +11,7 @@ import {
   weightInputFactory,
   volumeInputFactory,
 } from 'modules/form/helpers';
+import { CalculatorButtonStyle } from 'modules/form/helpers/numberInput/style';
 import GridColumn from 'components/GridColumn';
 import { ToggleInput } from 'components/Form';
 import { getByPath } from 'utils/fp';
@@ -103,10 +104,12 @@ const PackagingSection = ({ isNew }: Props) => (
                         state: { autoCalculatePackageQuantity },
                         toggleCalculatePackageQuantity,
                       }) => (
-                        <ToggleInput
-                          toggled={autoCalculatePackageQuantity}
-                          onToggle={toggleCalculatePackageQuantity}
-                        />
+                        <div className={CalculatorButtonStyle}>
+                          <ToggleInput
+                            toggled={autoCalculatePackageQuantity}
+                            onToggle={toggleCalculatePackageQuantity}
+                          />
+                        </div>
                       )}
                     </Subscribe>
                   ),
