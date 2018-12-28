@@ -7,7 +7,7 @@ import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
@@ -73,6 +73,15 @@ type UpdateShipmentResponse = {|
   },
 |};
 
+type ShipmentFormState = {
+  shipmentInfoState: Object,
+  shipmentBatchesState: Object,
+  shipmentTagsState: Object,
+  shipmentTimelineState: Object,
+  shipmentTransportTypeState: Object,
+  shipmentFileState: Object,
+};
+
 class ShipmentFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -88,8 +97,24 @@ class ShipmentFormModule extends React.Component<Props> {
 
   isNewOrClone = () => this.isNew() || this.isClone();
 
-  onCancel = () => {
-    navigate(`/shipment`);
+  onCancel = ({
+    shipmentInfoState,
+    shipmentBatchesState,
+    shipmentTagsState,
+    shipmentTimelineState,
+    shipmentTransportTypeState,
+    shipmentFileState,
+  }: ShipmentFormState) => {
+    if (this.isNewOrClone()) {
+      navigate(`/shipment`);
+    } else {
+      resetFormState(shipmentInfoState);
+      resetFormState(shipmentBatchesState, 'batches');
+      resetFormState(shipmentTagsState, 'tags');
+      resetFormState(shipmentTimelineState);
+      resetFormState(shipmentTransportTypeState, 'transportType');
+      resetFormState(shipmentFileState, 'files');
+    }
   };
 
   onSave = async (
@@ -373,7 +398,18 @@ class ShipmentFormModule extends React.Component<Props> {
                               shipmentTransportTypeState.isDirty() ||
                               shipmentFileState.isDirty()) && (
                               <>
-                                <CancelButton onClick={this.onCancel} />
+                                <CancelButton
+                                  onClick={() =>
+                                    this.onCancel({
+                                      shipmentBatchesState,
+                                      shipmentInfoState,
+                                      shipmentTagsState,
+                                      shipmentTimelineState,
+                                      shipmentTransportTypeState,
+                                      shipmentFileState,
+                                    })
+                                  }
+                                />
                                 <SaveButton
                                   disabled={
                                     !form.isReady(

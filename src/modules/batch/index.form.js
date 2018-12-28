@@ -9,7 +9,7 @@ import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
@@ -54,8 +54,12 @@ class BatchFormModule extends React.PureComponent<Props> {
 
   isNewOrClone = () => this.isNew() || this.isClone();
 
-  onCancel = () => {
-    navigate(`/batch`);
+  onCancel = (formState: Object) => {
+    if (this.isNewOrClone()) {
+      navigate(`/batch`);
+    } else {
+      resetFormState(formState);
+    }
   };
 
   onSave = async (
@@ -179,7 +183,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                         {(formState, form) =>
                           (isNewOrClone || formState.isDirty()) && (
                             <>
-                              <CancelButton onClick={this.onCancel} />
+                              <CancelButton onClick={() => this.onCancel(formState)} />
                               <SaveButton
                                 disabled={!form.isReady(formState.state, validator)}
                                 isLoading={isLoading}

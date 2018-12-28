@@ -12,7 +12,7 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import MaskForm from 'modules/metadata/components/MaskForm';
 import MaskContainer from 'modules/metadata/components/MaskForm/container';
 import { fieldDefinitionsQuery } from 'modules/metadata/query';
@@ -84,8 +84,17 @@ class MaskFormWrapper extends React.Component<Props> {
     }
   };
 
+  handleCancel = (formState: Object) => {
+    const { isNew, onCancel } = this.props;
+    if (isNew) {
+      onCancel();
+    } else {
+      resetFormState(formState);
+    }
+  };
+
   render() {
-    const { entityType, isNew, id, onCancel, onSave } = this.props;
+    const { entityType, isNew, id, onSave } = this.props;
 
     return (
       <Query query={fieldDefinitionsQuery} variables={{ entityType }} fetchPolicy="network-only">
@@ -134,23 +143,28 @@ class MaskFormWrapper extends React.Component<Props> {
                             icon="METADATA"
                           />
                         </JumpToSection>
-                        <CancelButton onClick={onCancel} />
+
                         <Subscribe to={[MaskContainer, FormContainer]}>
-                          {({ state, isDirty, onSuccess }, form) => (
-                            <SaveButton
-                              disabled={!isDirty() || !form.isReady(state, validator)}
-                              onClick={() => {
-                                this.onSave(
-                                  state,
-                                  saveMask,
-                                  () => {
-                                    onSuccess();
-                                    form.onReset();
-                                  },
-                                  form.onErrors
-                                );
-                              }}
-                            />
+                          {(formState, form) => (
+                            <>
+                              <CancelButton onClick={() => this.handleCancel(formState)} />
+                              <SaveButton
+                                disabled={
+                                  !formState.isDirty() || !form.isReady(formState.state, validator)
+                                }
+                                onClick={() => {
+                                  this.onSave(
+                                    formState.state,
+                                    saveMask,
+                                    () => {
+                                      formState.onSuccess();
+                                      form.onReset();
+                                    },
+                                    form.onErrors
+                                  );
+                                }}
+                              />
+                            </>
                           )}
                         </Subscribe>
                       </SlideViewNavBar>

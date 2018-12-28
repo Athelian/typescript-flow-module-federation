@@ -62,12 +62,12 @@ class MaskForm extends React.Component<Props> {
                     <GridColumn>
                       <FormField
                         name="name"
-                        initValue={originalValues.name}
+                        initValue={values.name}
                         validator={validator}
                         values={values}
                         setFieldValue={setFieldValue}
                       >
-                        {({ name: fieldName, ...inputHandlers }) =>
+                        {({ name, ...inputHandlers }) =>
                           textInputFactory({
                             label: (
                               <FormattedMessage
@@ -77,21 +77,21 @@ class MaskForm extends React.Component<Props> {
                             ),
                             required: true,
                             isNew,
-                            name: fieldName,
+                            name,
                             inputHandlers,
-                            originalValue: originalValues.name,
+                            originalValue: originalValues[name],
                           })
                         }
                       </FormField>
 
                       <FormField
                         name="memo"
-                        initValue={originalValues.memo}
+                        initValue={values.memo}
                         validator={validator}
                         values={values}
                         setFieldValue={setFieldValue}
                       >
-                        {({ name: fieldName, ...inputHandlers }) =>
+                        {({ name, ...inputHandlers }) =>
                           textAreaFactory({
                             label: (
                               <div className={DescriptionLabelWrapperStyle}>
@@ -104,9 +104,9 @@ class MaskForm extends React.Component<Props> {
                             isNew,
                             height: '100px',
                             align: 'right',
-                            name: fieldName,
+                            name,
                             inputHandlers,
-                            originalValue: originalValues.memo,
+                            originalValue: originalValues[name],
                           })
                         }
                       </FormField>
