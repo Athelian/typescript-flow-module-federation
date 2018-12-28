@@ -78,17 +78,31 @@ function CargoSection({ intl }: Props) {
                   <Subscribe to={[ShipmentBatchesContainer]}>
                     {({ state: { batches }, setFieldValue }) => (
                       <SelectOrderItems
-                        onSelect={selectedBatches => {
-                          const result = selectedBatches.map((orderItem, counter) =>
-                            injectUid({
+                        onSelect={selectedOrderItems => {
+                          const result = selectedOrderItems.map((orderItem, counter) => {
+                            const {
+                              productProvider: {
+                                packageName,
+                                packageCapacity,
+                                packageGrossWeight,
+                                packageVolume,
+                                packageSize,
+                              },
+                            } = orderItem;
+                            return injectUid({
                               orderItem,
                               tags: [],
+                              packageName,
+                              packageCapacity,
+                              packageGrossWeight,
+                              packageVolume,
+                              packageSize,
                               quantity: 0,
                               isNew: true,
                               batchAdjustments: [],
                               no: `batch no ${batches.length + counter + 1}`,
-                            })
-                          );
+                            });
+                          });
                           setFieldValue('batches', [...batches, ...result]);
                           createBatchesSlideToggle(false);
                         }}

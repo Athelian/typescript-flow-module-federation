@@ -201,6 +201,20 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                             onSelect={newValue => {
                               slideToggle(false);
                               setFieldValue('orderItem', newValue);
+                              const {
+                                productProvider: {
+                                  packageName,
+                                  packageCapacity,
+                                  packageGrossWeight,
+                                  packageVolume,
+                                  packageSize,
+                                },
+                              } = newValue;
+                              setFieldValue('packageName', packageName);
+                              setFieldValue('packageCapacity', packageCapacity);
+                              setFieldValue('packageGrossWeight', packageGrossWeight);
+                              setFieldValue('packageVolume', packageVolume);
+                              setFieldValue('packageSize', packageSize);
                             }}
                           />
                         )}
