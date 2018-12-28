@@ -55,7 +55,7 @@ const RelationMap = () => {
             }
           >
             {/* $FlowFixMe override Router's div style */}
-            <Router primary={false} className={ResetContentWrapperStyle} k>
+            <Router primary={false} className={ResetContentWrapperStyle}>
               <Order path="/orders" default />
               <Product path="/products" />
             </Router>

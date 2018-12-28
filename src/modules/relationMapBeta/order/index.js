@@ -24,7 +24,6 @@ import query from './query';
 import normalize from './normalize';
 import { useFilter } from '../hooks';
 import OrderFocusView from './components/OrderFocusView';
-import type { OrderFocusProps } from './type.js.flow';
 
 type Props = {
   intl: IntlShape,
@@ -201,29 +200,26 @@ const Order = ({ intl }: Props) => {
                   </EntityHeader>
                 </div>
                 <div className={OrderListWrapperStyle}>
-                  {orders ? (
-                    <InfiniteScroll
-                      className={OrderListBodyStyle}
-                      loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'orders')}
-                      hasMore={hasMoreItems(data)}
-                      loader={<LoadingIcon key="loading" />}
-                      useWindow={false}
-                      threshold={500}
-                    >
-                      {(Object.entries(orders): Array<any>).map(
-                        ([orderId, item]: [string, OrderFocusProps]) => (
-                          <OrderFocusView key={orderId} item={item} />
-                        )
-                      )}
-                    </InfiniteScroll>
-                  ) : (
-                    <Display>
-                      <FormattedMessage
-                        id="modules.Orders.noOrderFound"
-                        defaultMessage="No orders found"
-                      />
-                    </Display>
-                  )}
+                  <InfiniteScroll
+                    className={OrderListBodyStyle}
+                    loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'orders')}
+                    hasMore={hasMoreItems(data)}
+                    loader={<LoadingIcon key="loading" />}
+                    useWindow={false}
+                    threshold={500}
+                  >
+                    {getByPathWithDefault([], 'orders.nodes', data).map(order => (
+                      <OrderFocusView key={order.id} item={orders[order.id]} />
+                    ))}
+                    {Object.entries(orders || []).length === 0 && (
+                      <Display>
+                        <FormattedMessage
+                          id="modules.Orders.noOrderFound"
+                          defaultMessage="No orders found"
+                        />
+                      </Display>
+                    )}
+                  </InfiniteScroll>
                 </div>
               </div>
             )}
