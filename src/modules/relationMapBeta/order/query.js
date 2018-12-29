@@ -25,9 +25,6 @@ export const orderListQuery = gql`
             no
             quantity
             totalAdjusted
-            tags {
-              ...tagFragment
-            }
           }
         }
         shipments {

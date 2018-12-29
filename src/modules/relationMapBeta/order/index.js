@@ -31,6 +31,7 @@ import { hasMoreItems } from './helpers';
 import { useFilter } from '../hooks';
 import OrderFocusView from './components/OrderFocusView';
 import Shipment from './components/Shipment';
+import { uiInitState, uiReducer, actionCreators, selectors } from './store';
 
 type Props = {
   intl: IntlShape,
@@ -48,6 +49,9 @@ const Order = ({ intl }: Props) => {
       direction: 'DESCENDING',
     },
   });
+  const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
+  const actions = actionCreators(dispatch);
+  const uiSelectors = selectors(state);
   return (
     <Query query={query} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, fetchMore, error }) => {
@@ -101,6 +105,7 @@ const Order = ({ intl }: Props) => {
               ]}
               filter={filterAndSort.filter}
               onChange={onChange}
+              onToggle={actions.toggleTag}
               renderAdvanceFilter={({ onChange: onApplyFilter }) => (
                 <AdvancedFilter
                   initialFilter={{
@@ -117,65 +122,34 @@ const Order = ({ intl }: Props) => {
                 <div className={OrderFocusEntityHeaderWrapperStyle}>
                   <EntityHeader
                     icon="ORDER"
-                    // color={orderSelected ? 'ORDER_DARK' : 'ORDER'}
-                    color="ORDER"
+                    color={uiSelectors.isSelectEntity('ORDER') ? 'ORDER_DARK' : 'ORDER'}
                     label={intl.formatMessage(messages.ordersLabel)}
                     no={Object.keys(orders || []).length}
-                    onClick={() => {
-                      // if (!orderSelected && selectAll) {
-                      //   selectAll('order');
-                      // }
-                      // if (orderSelected && unSelectAll) {
-                      //   unSelectAll('order');
-                      // }
-                    }}
+                    onClick={() => actions.toggleSelectAll('ORDER')}
                   />
                   <EntityHeader
                     icon="ORDER_ITEM"
-                    color="ORDER_ITEM"
-                    // color={orderItemSelected ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'}
+                    color={
+                      uiSelectors.isSelectEntity('ORDER_ITEM') ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'
+                    }
                     label={intl.formatMessage(messages.itemsLabel)}
                     no={Object.keys(orderItems || []).length}
-                    // no={sumOrderItems}
-                    onClick={() => {
-                      // if (!orderItemSelected && selectAll) {
-                      //   selectAll('orderItem');
-                      // }
-                      // if (orderItemSelected && unSelectAll) {
-                      //   unSelectAll('orderItem');
-                      // }
-                    }}
+                    onClick={() => actions.toggleSelectAll('ORDER_ITEM')}
                   />
                   <EntityHeader
                     icon="BATCH"
-                    color="BATCH"
-                    // color={batchSelected ? 'BATCH_DARK' : 'BATCH'}
+                    color={uiSelectors.isSelectEntity('BATCH') ? 'BATCH_DARK' : 'BATCH'}
                     label={intl.formatMessage(messages.batchesLabel)}
                     no={Object.keys(batches || []).length}
-                    onClick={() => {
-                      // if (!batchSelected && selectAll) {
-                      //   selectAll('batch');
-                      // }
-                      // if (batchSelected && unSelectAll) {
-                      //   unSelectAll('batch');
-                      // }
-                    }}
+                    onClick={() => actions.toggleSelectAll('BATCH')}
                   />
                   <EntityHeader
                     icon="SHIPMENT"
-                    color="SHIPMENT"
-                    // color={shipmentSelected ? 'SHIPMENT_DARK' : 'SHIPMENT'}
+                    color={uiSelectors.isSelectEntity('SHIPMENT') ? 'SHIPMENT_DARK' : 'SHIPMENT'}
                     label={intl.formatMessage(messages.shipmentsLabel)}
                     // no={sumShipments + total}
                     no={Object.keys(shipments || []).length}
-                    onClick={() => {
-                      // if (!shipmentSelected && selectAll) {
-                      //   selectAll('shipment');
-                      // }
-                      // if (shipmentSelected && unSelectAll) {
-                      //   unSelectAll('shipment');
-                      // }
-                    }}
+                    onClick={() => actions.toggleSelectAll('SHIPMENT')}
                   >
                     <div className={AllShipmentsToggleWrapperStyle}>
                       <div className={AllShipmentsIconStyle}>
@@ -189,13 +163,8 @@ const Order = ({ intl }: Props) => {
                         <FormattedMessage {...messages.shipmentsLabel} />
                       </Label>
                       <ToggleInput
-                        toggled={false}
-                        onToggle={() => {
-                          // assign({
-                          //   isToggle: !isToggle,
-                          //   total: 0,
-                          // })
-                        }}
+                        toggled={state.toggleShipmentList}
+                        onToggle={actions.toggleShipmentList}
                       />
                     </div>
                   </EntityHeader>
