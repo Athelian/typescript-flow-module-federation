@@ -7,6 +7,7 @@ type UIState = {
     mode: 'SINGLE' | 'ALL',
     entities: Array<string>,
   },
+  totalShipment: number,
 };
 
 export const uiInitState: UIState = {
@@ -16,6 +17,7 @@ export const uiInitState: UIState = {
     mode: 'SINGLE',
     entities: [],
   },
+  totalShipment: 0,
 };
 
 export function uiReducer(state: UIState, action: { type: string, payload?: Object }) {
@@ -47,7 +49,12 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       };
     }
     case 'TOGGLE_SHIPMENT_LIST':
-      return { ...state, toggleShipmentList: !state.toggleShipmentList };
+      return { ...state, totalShipment: 0, toggleShipmentList: !state.toggleShipmentList };
+    case 'TOTAL_SHIPMENT': {
+      const { payload } = action;
+      const total = payload && payload.total ? payload.total : 0;
+      return { ...state, totalShipment: total };
+    }
     default:
       return state;
   }
@@ -68,6 +75,13 @@ export function actionCreators(dispatch: Function) {
         type: 'TOGGLE_SELECT_ALL',
         payload: {
           entity,
+        },
+      }),
+    countShipment: (total: number) =>
+      dispatch({
+        type: 'TOTAL_SHIPMENT',
+        payload: {
+          total,
         },
       }),
   };

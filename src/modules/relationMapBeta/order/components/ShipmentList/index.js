@@ -13,7 +13,11 @@ import { hasMoreItems } from 'modules/relationMapBeta/order/helpers';
 import { useFilter } from 'modules/relationMapBeta/hooks';
 import Shipment from '../Shipment';
 
-function ShipmentList() {
+type Props = {
+  onCountShipment: number => any,
+};
+
+function ShipmentList({ onCountShipment }: Props) {
   const { queryVariables } = useFilter({
     page: 1,
     perPage: 10,
@@ -26,7 +30,12 @@ function ShipmentList() {
     },
   });
   return (
-    <Query query={shipmentListQuery} variables={queryVariables} fetchPolicy="network-only">
+    <Query
+      query={shipmentListQuery}
+      variables={queryVariables}
+      onCompleted={result => onCountShipment(result.shipments.nodes.length)}
+      fetchPolicy="network-only"
+    >
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;

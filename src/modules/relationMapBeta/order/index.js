@@ -148,8 +148,11 @@ const Order = ({ intl }: Props) => {
                     icon="SHIPMENT"
                     color={uiSelectors.isSelectEntity('SHIPMENT') ? 'SHIPMENT_DARK' : 'SHIPMENT'}
                     label={intl.formatMessage(messages.shipmentsLabel)}
-                    // no={sumShipments + total}
-                    no={Object.keys(shipments || []).length}
+                    no={
+                      state.toggleShipmentList
+                        ? state.totalShipment
+                        : Object.keys(shipments || []).length
+                    }
                     onClick={() => actions.toggleSelectAll('SHIPMENT')}
                   >
                     <div className={AllShipmentsToggleWrapperStyle}>
@@ -194,7 +197,11 @@ const Order = ({ intl }: Props) => {
                 </div>
                 <div className={ShipmentListWrapperStyle}>
                   {state.toggleShipmentList ? (
-                    <ShipmentList />
+                    <ShipmentList
+                      onCountShipment={total =>
+                        total !== state.totalShipment ? actions.countShipment(total) : null
+                      }
+                    />
                   ) : (
                     <div className={ShipmentListBodyStyle}>
                       {Object.entries(shipments || []).map(([shipmentId, shipment]) => (
