@@ -8,7 +8,9 @@ type OptionalProps = {
   align: 'left' | 'right' | 'center',
   toggle: () => void,
   selectedItem: any,
+  isOpen: boolean,
   getInputProps: Function,
+  clearSelection: Function,
 };
 
 type Props = OptionalProps & {
