@@ -5638,8 +5638,8 @@ eslint-plugin-json@^1.3.2:
 
 eslint-plugin-jsx-a11y@^6.1.2:
   version "6.1.2"
-  resolved "http://registry.npm.taobao.org/eslint-plugin-jsx-a11y/download/eslint-plugin-jsx-a11y-6.1.2.tgz#69bca4890b36dcf0fe16dd2129d2d88b98f33f88"
-  integrity sha1-abykiQs23PD+Ft0hKdLYi5jzP4g=
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsx-a11y/-/eslint-plugin-jsx-a11y-6.1.2.tgz#69bca4890b36dcf0fe16dd2129d2d88b98f33f88"
+  integrity sha512-7gSSmwb3A+fQwtw0arguwMdOdzmKUgnUcbSNlo+GjKLAQFuC2EZxWqG9XHRI8VscBJD5a8raz3RuxQNFW+XJbw==
   dependencies:
     aria-query "^3.0.0"
     array-includes "^3.0.3"
@@ -12394,10 +12394,15 @@ react-intl@^2.7.2:
     intl-relativeformat "^2.1.0"
     invariant "^2.1.1"
 
-react-is@^16.3.2, react-is@^16.5.2, react-is@^16.6.0, react-is@^16.6.3:
+react-is@^16.3.2, react-is@^16.5.2, react-is@^16.6.0:
   version "16.6.3"
   resolved "http://registry.npm.taobao.org/react-is/download/react-is-16.6.3.tgz#d2d7462fcfcbe6ec0da56ad69047e47e56e7eac0"
   integrity sha1-0tdGL8/L5uwNpWrWkEfkflbn6sA=
+
+react-is@^16.7.0:
+  version "16.7.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.7.0.tgz#c1bd21c64f1f1364c6f70695ec02d69392f41bfa"
+  integrity sha512-Z0VRQdF4NPDoI0tsXVMLkJLiwEBa+RP66g0xDHxgxysxSoCUccSten4RTF/UFvZF1dZvZ9Zu1sx+MDXwcOR34g==
 
 react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -12535,15 +12540,15 @@ react-styleguidist@^8.0.6:
     webpack-dev-server "^3.1.10"
     webpack-merge "^4.1.4"
 
-react-test-renderer@^16.6.3:
-  version "16.6.3"
-  resolved "http://registry.npm.taobao.org/react-test-renderer/download/react-test-renderer-16.6.3.tgz#5f3a1a7d5c3379d46f7052b848b4b72e47c89f38"
-  integrity sha1-XzoafVwzedRvcFK4SLS3LkfInzg=
+react-test-renderer@^16.7.0:
+  version "16.7.0"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.7.0.tgz#1ca96c2b450ab47c36ba92cd8c03fcefc52ea01c"
+  integrity sha512-tFbhSjknSQ6+ttzmuGdv+SjQfmvGcq3PFKyPItohwhhOBmRoTf1We3Mlt3rJtIn85mjPXOkKV+TaKK4irvk9Yg==
   dependencies:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    react-is "^16.6.3"
-    scheduler "^0.11.2"
+    react-is "^16.7.0"
+    scheduler "^0.12.0"
 
 react-testing-library@^5.4.2:
   version "5.4.2"
@@ -13340,15 +13345,7 @@ sax@^1.2.4, sax@~1.2.4:
   resolved "http://registry.npm.taobao.org/sax/download/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha1-KBYjTiN4vdxOU1T6tcqold9xANk=
 
-scheduler@^0.11.2:
-  version "0.11.3"
-  resolved "http://registry.npm.taobao.org/scheduler/download/scheduler-0.11.3.tgz#b5769b90cf8b1464f3f3cfcafe8e3cd7555a2d6b"
-  integrity sha1-tXabkM+LFGTz88/K/o4811VaLWs=
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-
-scheduler@^0.12.0-alpha.2:
+scheduler@^0.12.0, scheduler@^0.12.0-alpha.2:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.12.0.tgz#8ab17699939c0aedc5a196a657743c496538647b"
   integrity sha512-t7MBR28Akcp4Jm+QoR63XgAi9YgCUmgvDHqf5otgAj4QvdoBE4ImCX0ffehefePPG+aitiYHp0g/mW6s4Tp+dw==
@@ -15353,10 +15350,10 @@ webpack-sources@^1.1.0, webpack-sources@^1.3.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@4.28.2:
-  version "4.28.2"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.28.2.tgz#6b534a8bc91a45787ed631dc2e87aec94e9e4db7"
-  integrity sha512-PK3uVg3/NuNVOjPfYleFI6JF7khO7c2kIlksH7mivQm+QDcwiqV1x6+q89dDeOioh5FNxJHr3LKbDu3oSAhl9g==
+webpack@4.28.3:
+  version "4.28.3"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.28.3.tgz#8acef6e77fad8a01bfd0c2b25aa3636d46511874"
+  integrity sha512-vLZN9k5I7Nr/XB1IDG9GbZB4yQd1sPuvufMFgJkx0b31fi2LD97KQIjwjxE7xytdruAYfu5S0FLBLjdxmwGJCg==
   dependencies:
     "@webassemblyjs/ast" "1.7.11"
     "@webassemblyjs/helper-module-context" "1.7.11"
