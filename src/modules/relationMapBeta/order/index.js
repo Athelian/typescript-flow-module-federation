@@ -25,13 +25,14 @@ import {
   ShipmentListWrapperStyle,
   ShipmentListBodyStyle,
 } from 'modules/relationMap/orderFocused/style';
-import query from './query';
+import { orderListQuery } from './query';
 import normalize from './normalize';
 import { hasMoreItems } from './helpers';
 import { useFilter } from '../hooks';
 import OrderFocusView from './components/OrderFocusView';
 import Shipment from './components/Shipment';
 import { uiInitState, uiReducer, actionCreators, selectors } from './store';
+import ShipmentList from './components/ShipmentList';
 
 type Props = {
   intl: IntlShape,
@@ -53,7 +54,7 @@ const Order = ({ intl }: Props) => {
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
   return (
-    <Query query={query} variables={queryVariables} fetchPolicy="network-only">
+    <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
@@ -192,11 +193,15 @@ const Order = ({ intl }: Props) => {
                   </InfiniteScroll>
                 </div>
                 <div className={ShipmentListWrapperStyle}>
-                  <div className={ShipmentListBodyStyle}>
-                    {Object.entries(shipments || []).map(([shipmentId, shipment]) => (
-                      <Shipment key={shipmentId} {...shipment} onToggle={console.warn} />
-                    ))}
-                  </div>
+                  {state.toggleShipmentList ? (
+                    <ShipmentList />
+                  ) : (
+                    <div className={ShipmentListBodyStyle}>
+                      {Object.entries(shipments || []).map(([shipmentId, shipment]) => (
+                        <Shipment key={shipmentId} {...shipment} onToggle={console.warn} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

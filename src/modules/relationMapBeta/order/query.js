@@ -47,4 +47,24 @@ export const orderListQuery = gql`
   ${tagFragment}
 `;
 
-export default orderListQuery;
+export const shipmentListQuery = gql`
+  query($page: Int!, $perPage: Int!, $filter: ShipmentFilterInput, $sort: ShipmentSortInput) {
+    shipments(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
+      nodes {
+        id
+        no
+        totalVolume {
+          value
+          metric
+        }
+        tags {
+          ...tagFragment
+        }
+      }
+      page
+      totalPage
+    }
+  }
+
+  ${tagFragment}
+`;
