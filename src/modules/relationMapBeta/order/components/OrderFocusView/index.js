@@ -34,7 +34,7 @@ export default function OrderFocusView({ item }: Props) {
   if (item.orderItems.length === 0)
     return (
       <>
-        <Order {...item} />
+        <Order wrapperClassName={ItemWrapperStyle(false)} {...item} />
         <div />
         <div />
         <div />
