@@ -55,7 +55,7 @@ const Order = ({ intl }: Props) => {
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
   return (
-    <DispatchProvider value={{ dispatch }}>
+    <DispatchProvider value={{ dispatch, state }}>
       <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
         {({ loading, data, fetchMore, error }) => {
           if (error) {

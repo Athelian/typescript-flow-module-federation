@@ -1,6 +1,6 @@
 // @flow
 
-type UIState = {
+export type UIState = {
   showTag: boolean,
   toggleShipmentList: boolean,
   select: {
