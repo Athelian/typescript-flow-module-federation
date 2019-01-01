@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
+import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import BaseCard from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
-import { OrderCard, WrapperCard } from 'components/RelationMap';
+import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import type { OrderFocusProps } from 'modules/relationMapBeta/order/type.js.flow';
 
@@ -19,7 +20,12 @@ export default function Order({
   totalOrdered,
   totalBatched,
   totalShipped,
+  tags,
 }: Props) {
+  const context = React.useContext(ActionDispatch);
+  const {
+    state: { showTag },
+  } = context;
   return (
     <BaseCard icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
       <BooleanValue>
@@ -66,6 +72,7 @@ export default function Order({
                 </>
               )}
             </ActionCard>
+            {showTag && <Tags dataSource={tags} />}
           </WrapperCard>
         )}
       </BooleanValue>

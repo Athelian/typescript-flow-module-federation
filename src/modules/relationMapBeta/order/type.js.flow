@@ -11,6 +11,7 @@ export type OrderFocusProps = {
   totalBatched: number,
   totalOrdered: number,
   totalShipped: number,
+  tags: Array<Object>,
 };
 
 export type ShipmentProps = {
@@ -19,4 +20,5 @@ export type ShipmentProps = {
     value: number,
     metric: string,
   },
+  tags: Array<Object>,
 };

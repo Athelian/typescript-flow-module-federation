@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
+import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import BaseCard from 'components/Cards';
-import { ShipmentCollapsed, WrapperCard } from 'components/RelationMap';
+import { ShipmentCollapsed, WrapperCard, Tags } from 'components/RelationMap';
 import type { ShipmentProps } from 'modules/relationMapBeta/order/type.js.flow';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
 
@@ -16,7 +17,11 @@ const defaultProps = {
   wrapperClassName: ItemWrapperStyle(false),
 };
 
-export default function Shipment({ wrapperClassName, onToggle, ...shipment }: Props) {
+export default function Shipment({ wrapperClassName, onToggle, tags, ...shipment }: Props) {
+  const context = React.useContext(ActionDispatch);
+  const {
+    state: { showTag },
+  } = context;
   return (
     <BaseCard
       showActionsOnHover
@@ -26,6 +31,7 @@ export default function Shipment({ wrapperClassName, onToggle, ...shipment }: Pr
     >
       <WrapperCard onClick={onToggle}>
         <ShipmentCollapsed shipment={shipment} />
+        {showTag && <Tags dataSource={tags} />}
       </WrapperCard>
     </BaseCard>
   );
