@@ -7,7 +7,7 @@ import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, ResetButton } from 'components/Buttons';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
@@ -145,7 +145,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                         {(tagState, entityTypesState, form) =>
                           (isNewOrClone || tagState.isDirty() || entityTypesState.isDirty()) && (
                             <>
-                              <CancelButton
+                              <ResetButton
                                 onClick={() =>
                                   this.onCancel({
                                     tagState,

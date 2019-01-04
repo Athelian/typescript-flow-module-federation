@@ -10,7 +10,7 @@ import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
-import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
+import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -394,7 +394,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             shipmentTransportTypeState.isDirty() ||
                             shipmentFileState.isDirty()) && (
                             <>
-                              <CancelButton
+                              <ResetButton
                                 onClick={() =>
                                   this.onCancel({
                                     shipmentBatchesState,

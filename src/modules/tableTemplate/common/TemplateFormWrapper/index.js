@@ -17,7 +17,7 @@ import emitter from 'utils/emitter';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, ResetButton } from 'components/Buttons';
 
 type OptionalProps = {
   template: Object,
@@ -175,7 +175,7 @@ class TemplateFormWrapper extends React.Component<Props> {
                           icon="METADATA"
                         />
                       </JumpToSection>
-                      <CancelButton onClick={() => this.handleCancel(formState)} />
+                      <ResetButton onClick={() => this.handleCancel(formState)} />
                       <SaveButton
                         disabled={
                           !formState.isDirty() || !formContainer.isReady(formState.state, validator)

@@ -8,7 +8,7 @@ import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, ResetButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -183,7 +183,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                         {(formState, form) =>
                           (isNewOrClone || formState.isDirty()) && (
                             <>
-                              <CancelButton onClick={() => this.onCancel(formState)} />
+                              <ResetButton onClick={() => this.onCancel(formState)} />
                               <SaveButton
                                 disabled={!form.isReady(formState.state, validator)}
                                 isLoading={isLoading}

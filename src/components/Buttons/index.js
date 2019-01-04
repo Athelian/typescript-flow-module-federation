@@ -4,6 +4,7 @@ import ApproveButton from './ApproveButton';
 import ArchiveButton from './ArchiveButton';
 import BaseButton from './BaseButton';
 import CancelButton from './CancelButton';
+import ResetButton from './ResetButton';
 import CloneButton from './CloneButton';
 import NewButton from './NewButton';
 import NoButton from './NoButton';
@@ -19,6 +20,7 @@ export {
   ArchiveButton,
   BaseButton,
   CancelButton,
+  ResetButton,
   CloneButton,
   NewButton,
   NoButton,

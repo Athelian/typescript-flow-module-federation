@@ -10,7 +10,7 @@ import { QueryForm } from 'components/common';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import { cloneOrderItemMutation as orderUpdateFromSlideView } from 'modules/relationMap/orderFocused/mutation';
-import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
+import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
@@ -307,7 +307,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                               orderTagsState.isDirty() ||
                               orderFilesState.isDirty()) && (
                               <>
-                                <CancelButton
+                                <ResetButton
                                   onClick={() =>
                                     this.onCancel({
                                       orderItemState,

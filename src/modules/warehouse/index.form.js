@@ -11,7 +11,7 @@ import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, ResetButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { decodeId, encodeId } from 'utils/id';
 import WarehouseForm from './form';
@@ -148,7 +148,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                         {(formState, form) =>
                           (isNewOrClone || formState.isDirty()) && (
                             <>
-                              <CancelButton onClick={() => this.onCancel(formState)} />
+                              <ResetButton onClick={() => this.onCancel(formState)} />
                               <SaveButton
                                 data-testid="saveButton"
                                 disabled={!form.isReady(formState.state, validator)}
