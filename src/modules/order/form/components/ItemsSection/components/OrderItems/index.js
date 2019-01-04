@@ -10,7 +10,7 @@ import { isEquals } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
-import { NewButton } from 'components/Buttons';
+import { NewButton, BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import {
@@ -61,6 +61,43 @@ export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
     batchAdjustments: [],
     no: `batch no ${batches.length + 1}`,
   });
+}
+
+function autoFillBatch(orderItem: Object, batches: Array<Object>, addNewBatch: Function) {
+  const totalBatchQuantity = orderItem.batches.reduce((total, batch) => {
+    const { quantity = 0 } = batch;
+    const batchQuantity = batch.batchAdjustments
+      ? batch.batchAdjustments.reduce(
+          (totalAdjustment, adjustment) => totalAdjustment + adjustment.quantity,
+          quantity
+        )
+      : quantity;
+    return total + batchQuantity;
+  }, 0);
+  if (orderItem.quantity > totalBatchQuantity) {
+    const {
+      productProvider: {
+        packageName,
+        packageCapacity,
+        packageGrossWeight,
+        packageVolume,
+        packageSize,
+      },
+    } = orderItem;
+    addNewBatch({
+      orderItem,
+      tags: [],
+      packageName,
+      packageCapacity,
+      packageGrossWeight,
+      packageVolume,
+      packageSize,
+      quantity: orderItem.quantity - totalBatchQuantity,
+      isNew: true,
+      batchAdjustments: [],
+      no: `batch no ${batches.length + 1}`,
+    });
+  }
 }
 
 class OrderItems extends React.Component<Props> {
@@ -131,6 +168,15 @@ class OrderItems extends React.Component<Props> {
                             />
                           }
                           onClick={() => addNewBatch(generateBatchItem(item, batches))}
+                        />
+                        <BaseButton
+                          label={
+                            <FormattedMessage
+                              id="modules.Orders.autoFillBatch"
+                              defaultMessage="AUTOFILL BATCH"
+                            />
+                          }
+                          onClick={() => autoFillBatch(item, batches, addNewBatch)}
                         />
                       </div>
 

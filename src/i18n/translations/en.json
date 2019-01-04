@@ -212,6 +212,7 @@
   "modules.Orders.form.archiveDialog.warnMsg": "You need to archive those shipments in order to archive these batches.",
   "modules.Orders.noProductProvidersFound": "No end products found",
   "modules.Orders.newBatch": "NEW BATCH",
+  "modules.Orders.autoFillBatch": "AUTOFILL BATCH",
   "modules.Orders.form.noItems": "No Items found / Please choose Exporter first",
   "modules.Orders.orderedQTY": "ORDERED QTY",
   "modules.Orders.totalPrice": "TOTAL PRICE",
