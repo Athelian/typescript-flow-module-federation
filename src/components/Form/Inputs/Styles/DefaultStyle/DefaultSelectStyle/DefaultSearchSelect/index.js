@@ -79,7 +79,10 @@ function DefaultSearchSelect({
           </button>
         ))}
       <DebounceInput
-        onClick={toggle}
+        onClick={e => {
+          e.target.select();
+          toggle();
+        }}
         debounceTimeout={500}
         spellCheck={false}
         style={{ textAlign: align }}
