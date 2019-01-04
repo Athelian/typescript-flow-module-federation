@@ -1,8 +1,13 @@
 // @flow
-const findBatchQuantity = (batch: Object) => {
-  const { quantity = 0 } = batch;
-  const batchQuantity = batch.batchAdjustments
-    ? batch.batchAdjustments.reduce(
+const findBatchQuantity = ({
+  quantity = 0,
+  batchAdjustments,
+}: {
+  quantity: number,
+  batchAdjustments: Object,
+}) => {
+  const batchQuantity = batchAdjustments
+    ? batchAdjustments.reduce(
         (totalAdjustment, adjustment) => totalAdjustment + adjustment.quantity,
         quantity
       )
