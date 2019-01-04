@@ -5,6 +5,7 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { findBatchQuantity } from 'utils/batch';
 import { SectionNavBar } from 'components/NavBar';
 import { NewButton, BaseButton } from 'components/Buttons';
@@ -128,7 +129,15 @@ function ItemSection({ intl, isNew }: Props) {
                                             batches: [],
                                             quantity: 0,
                                             price: {
-                                              amount: 0,
+                                              amount:
+                                                getByPath('unitPrice.currency', productProvider) ===
+                                                currency
+                                                  ? getByPathWithDefault(
+                                                      0,
+                                                      'unitPrice.amount',
+                                                      productProvider
+                                                    )
+                                                  : 0,
                                               currency,
                                             },
                                           })
