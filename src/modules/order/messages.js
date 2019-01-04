@@ -490,4 +490,8 @@ export default defineMessages({
     id: 'modules.Orders.inCharge',
     defaultMessage: 'IN CHARGE',
   },
+  autoFillBatch: {
+    id: 'modules.Orders.autoFillBatch',
+    defaultMessage: 'AUTOFILL BATCH',
+  },
 });

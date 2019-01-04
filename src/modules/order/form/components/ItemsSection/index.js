@@ -5,8 +5,9 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
+import { findBatchQuantity } from 'utils/batch';
 import { SectionNavBar } from 'components/NavBar';
-import { NewButton } from 'components/Buttons';
+import { NewButton, BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import messages from 'modules/order/messages';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
@@ -58,7 +59,53 @@ function ItemSection({ intl, isNew }: Props) {
                             disabled={!((exporter && exporter.id) || !isNew)}
                             onClick={() => slideToggle(true)}
                           />
-
+                          <Subscribe to={[OrderItemsContainer]}>
+                            {({ state: { orderItems }, setFieldValue }) => (
+                              <BaseButton
+                                label={intl.formatMessage(messages.autoFillBatch)}
+                                onClick={() => {
+                                  const newOrderItems = orderItems.map(orderItem => {
+                                    const totalBatchQuantity = orderItem.batches.reduce(
+                                      (total, batch) => total + findBatchQuantity(batch),
+                                      0
+                                    );
+                                    if (orderItem.quantity > totalBatchQuantity) {
+                                      const {
+                                        productProvider: {
+                                          packageName,
+                                          packageCapacity,
+                                          packageGrossWeight,
+                                          packageVolume,
+                                          packageSize,
+                                        },
+                                      } = orderItem;
+                                      return {
+                                        ...orderItem,
+                                        batches: [
+                                          ...orderItem.batches,
+                                          injectUid({
+                                            orderItem,
+                                            tags: [],
+                                            packageName,
+                                            packageCapacity,
+                                            packageGrossWeight,
+                                            packageVolume,
+                                            packageSize,
+                                            quantity: orderItem.quantity - totalBatchQuantity,
+                                            isNew: true,
+                                            batchAdjustments: [],
+                                            no: `batch auto fill`,
+                                          }),
+                                        ],
+                                      };
+                                    }
+                                    return orderItem;
+                                  });
+                                  setFieldValue('orderItems', newOrderItems);
+                                }}
+                              />
+                            )}
+                          </Subscribe>
                           <SlideView
                             isOpen={opened}
                             onRequestClose={() => slideToggle(false)}
