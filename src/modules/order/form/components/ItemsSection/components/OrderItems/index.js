@@ -6,6 +6,7 @@ import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
 import BatchFormContainer from 'modules/batch/form/container';
+import { findBatchQuantity } from 'utils/batch';
 import { isEquals } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
@@ -64,16 +65,10 @@ export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
 }
 
 function autoFillBatch(orderItem: Object, batches: Array<Object>, addNewBatch: Function) {
-  const totalBatchQuantity = orderItem.batches.reduce((total, batch) => {
-    const { quantity = 0 } = batch;
-    const batchQuantity = batch.batchAdjustments
-      ? batch.batchAdjustments.reduce(
-          (totalAdjustment, adjustment) => totalAdjustment + adjustment.quantity,
-          quantity
-        )
-      : quantity;
-    return total + batchQuantity;
-  }, 0);
+  const totalBatchQuantity = orderItem.batches.reduce(
+    (total, batch) => total + findBatchQuantity(batch),
+    0
+  );
   if (orderItem.quantity > totalBatchQuantity) {
     const {
       productProvider: {
