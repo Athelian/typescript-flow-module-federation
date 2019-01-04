@@ -8,7 +8,7 @@ import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, ResetButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -239,7 +239,7 @@ class ProductFormModule extends React.Component<Props> {
                             productTagsState.isDirty() ||
                             productFilesState.isDirty()) && (
                             <>
-                              <CancelButton
+                              <ResetButton
                                 onClick={() =>
                                   this.onCancel({
                                     productInfoState,

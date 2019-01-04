@@ -10,7 +10,7 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, ResetButton } from 'components/Buttons';
 import { contains, getByPathWithDefault } from 'utils/fp';
 
 type OptionalProps = {
@@ -130,7 +130,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       icon="DOCUMENT"
                     />
                   </JumpToSection>
-                  <CancelButton onClick={() => this.handleCancel(formState)} />
+                  <ResetButton onClick={() => this.handleCancel(formState)} />
                   <SaveButton
                     disabled={
                       !formState.isDirty() ||
