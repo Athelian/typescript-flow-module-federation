@@ -39,6 +39,7 @@ type OptionalProps = {
   isSlideView: boolean,
   redirectAfterSuccess: boolean,
   onSuccessCallback: ?Function,
+  onCancel?: Function,
 };
 
 type Props = OptionalProps & {
@@ -194,7 +195,7 @@ class OrderFormModule extends React.PureComponent<Props> {
   };
 
   render() {
-    const { orderId, isSlideView } = this.props;
+    const { orderId, isSlideView, onCancel } = this.props;
     const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (orderId && !isNewOrClone) {
@@ -309,12 +310,14 @@ class OrderFormModule extends React.PureComponent<Props> {
                               <>
                                 <ResetButton
                                   onClick={() =>
-                                    this.onCancel({
-                                      orderItemState,
-                                      orderInfoState,
-                                      orderTagsState,
-                                      orderFilesState,
-                                    })
+                                    onCancel
+                                      ? onCancel()
+                                      : this.onCancel({
+                                          orderItemState,
+                                          orderInfoState,
+                                          orderTagsState,
+                                          orderFilesState,
+                                        })
                                   }
                                 />
                                 <SaveButton
