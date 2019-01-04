@@ -41,6 +41,7 @@ export default function selectSearchEnumInputFactory({
   isNew,
   label,
   originalValue,
+  showClearButton = true,
 }: {
   enumType: string,
   required?: boolean,
@@ -59,6 +60,7 @@ export default function selectSearchEnumInputFactory({
     onBlur: Function,
   },
   originalValue: any,
+  showClearButton?: boolean,
 }) {
   return (
     <EnumProvider enumType={enumType}>
@@ -101,6 +103,7 @@ export default function selectSearchEnumInputFactory({
                     renderSelect={({ ...rest }) => (
                       <DefaultSearchSelect
                         {...rest}
+                        showClearButton={showClearButton}
                         hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
                         forceHoverStyle={isNew}
                         width={width}

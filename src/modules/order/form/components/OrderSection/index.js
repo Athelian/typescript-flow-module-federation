@@ -109,7 +109,7 @@ const OrderSection = ({ isNew }: Props) => (
                 </FormField>
                 <FormField
                   name="currency"
-                  initValue={values.currency}
+                  initValue={values.currency || 'USD'}
                   values={values}
                   validator={validator}
                   setFieldValue={setFieldValue}
@@ -123,6 +123,7 @@ const OrderSection = ({ isNew }: Props) => (
                       isNew,
                       originalValue: initialValues[name],
                       label: <FormattedMessage {...messages.currency} />,
+                      showClearButton: false,
                     })
                   }
                 </FormField>
