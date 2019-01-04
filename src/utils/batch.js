@@ -4,7 +4,7 @@ const findBatchQuantity = ({
   batchAdjustments,
 }: {
   quantity: number,
-  batchAdjustments: Object,
+  batchAdjustments: Array<{ quantity: number }>,
 }) => {
   const batchQuantity = batchAdjustments
     ? batchAdjustments.reduce(
