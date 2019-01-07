@@ -54,9 +54,9 @@ class BaseFormField extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const { initValue } = props;
+    const { initValue: initialValue } = props;
     this.state = {
-      value: isNullOrUndefined(initValue) ? '' : initValue,
+      value: isNullOrUndefined(initialValue) ? '' : initialValue,
     };
   }
 

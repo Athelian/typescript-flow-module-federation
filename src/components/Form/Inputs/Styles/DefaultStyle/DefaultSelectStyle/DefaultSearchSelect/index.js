@@ -16,6 +16,7 @@ type OptionalProps = {
   width: string,
   height: string,
   align: 'left' | 'right' | 'center',
+  hideClearButton: boolean,
 };
 
 type Props = OptionalProps &
@@ -34,6 +35,7 @@ const defaultProps = {
   width: '100%',
   height: '30px',
   align: 'right',
+  hideClearButton: false,
 };
 
 function DefaultSearchSelect({
@@ -51,6 +53,7 @@ function DefaultSearchSelect({
   value,
   handleQueryChange,
   itemToString,
+  hideClearButton,
   ...rest
 }: Props) {
   return (
@@ -66,7 +69,7 @@ function DefaultSearchSelect({
       })}
     >
       {align === 'right' &&
-        (selectedItem ? (
+        (!hideClearButton && selectedItem ? (
           <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
             <Icon icon="CLEAR" />
           </button>
@@ -76,7 +79,10 @@ function DefaultSearchSelect({
           </button>
         ))}
       <DebounceInput
-        onClick={toggle}
+        onClick={e => {
+          e.target.select();
+          toggle();
+        }}
         debounceTimeout={500}
         spellCheck={false}
         style={{ textAlign: align }}
@@ -87,7 +93,7 @@ function DefaultSearchSelect({
         })}
       />
       {align === 'left' &&
-        (selectedItem ? (
+        (!hideClearButton && selectedItem ? (
           <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
             <Icon icon="CLEAR" />
           </button>
