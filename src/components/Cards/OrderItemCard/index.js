@@ -301,7 +301,7 @@ const OrderItemCard = ({
     </BaseCard>
   ) : (
     <ObjectValue
-      defaultValue={{
+      value={{
         quantity: item.quantity,
         price: item.price,
       }}

@@ -98,14 +98,11 @@ function autoFillBatch(orderItem: Object, batches: Array<Object>, addNewBatch: F
 class OrderItems extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const { orderItems, selected, currency } = this.props;
-    if (
+    return (
       !isEquals(orderItems, nextProps.orderItems) ||
       !isEquals(selected, nextProps.selected) ||
       !isEquals(currency, nextProps.currency)
-    )
-      return true;
-
-    return false;
+    );
   }
 
   render() {

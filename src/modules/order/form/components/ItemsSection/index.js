@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ArrayValue } from 'react-values';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
@@ -55,56 +55,79 @@ function ItemSection({ intl, isNew }: Props) {
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>
-                          <NewButton
-                            label={intl.formatMessage(messages.newItems)}
-                            disabled={!((exporter && exporter.id) || !isNew)}
-                            onClick={() => slideToggle(true)}
-                          />
                           <Subscribe to={[OrderItemsContainer]}>
                             {({ state: { orderItems }, setFieldValue }) => (
-                              <BaseButton
-                                label={intl.formatMessage(messages.autoFillBatch)}
-                                onClick={() => {
-                                  const newOrderItems = orderItems.map(orderItem => {
-                                    const totalBatchQuantity = orderItem.batches.reduce(
-                                      (total, batch) => total + findBatchQuantity(batch),
-                                      0
-                                    );
-                                    if (orderItem.quantity > totalBatchQuantity) {
-                                      const {
-                                        productProvider: {
-                                          packageName,
-                                          packageCapacity,
-                                          packageGrossWeight,
-                                          packageVolume,
-                                          packageSize,
-                                        },
-                                      } = orderItem;
-                                      return {
-                                        ...orderItem,
-                                        batches: [
-                                          ...orderItem.batches,
-                                          injectUid({
-                                            orderItem,
-                                            tags: [],
+                              <>
+                                <BaseButton
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.order.syncAllPrice"
+                                      defaultMessage="SYNC ALL PRICE"
+                                    />
+                                  }
+                                  onClick={() => {
+                                    const newOrderItems = orderItems.map(orderItem => {
+                                      const unitPrice = getByPath(
+                                        'productProvider.unitPrice',
+                                        orderItem
+                                      );
+                                      if (unitPrice && unitPrice.currency === currency) {
+                                        return { ...orderItem, ...{ price: unitPrice } };
+                                      }
+                                      return orderItem;
+                                    });
+                                    setFieldValue('orderItems', newOrderItems);
+                                  }}
+                                />
+                                <NewButton
+                                  label={intl.formatMessage(messages.newItems)}
+                                  disabled={!((exporter && exporter.id) || !isNew)}
+                                  onClick={() => slideToggle(true)}
+                                />
+                                <BaseButton
+                                  label={intl.formatMessage(messages.autoFillBatch)}
+                                  onClick={() => {
+                                    const newOrderItems = orderItems.map(orderItem => {
+                                      const totalBatchQuantity = orderItem.batches.reduce(
+                                        (total, batch) => total + findBatchQuantity(batch),
+                                        0
+                                      );
+                                      if (orderItem.quantity > totalBatchQuantity) {
+                                        const {
+                                          productProvider: {
                                             packageName,
                                             packageCapacity,
                                             packageGrossWeight,
                                             packageVolume,
                                             packageSize,
-                                            quantity: orderItem.quantity - totalBatchQuantity,
-                                            isNew: true,
-                                            batchAdjustments: [],
-                                            no: `batch auto fill`,
-                                          }),
-                                        ],
-                                      };
-                                    }
-                                    return orderItem;
-                                  });
-                                  setFieldValue('orderItems', newOrderItems);
-                                }}
-                              />
+                                          },
+                                        } = orderItem;
+                                        return {
+                                          ...orderItem,
+                                          batches: [
+                                            ...orderItem.batches,
+                                            injectUid({
+                                              orderItem,
+                                              tags: [],
+                                              packageName,
+                                              packageCapacity,
+                                              packageGrossWeight,
+                                              packageVolume,
+                                              packageSize,
+                                              quantity: orderItem.quantity - totalBatchQuantity,
+                                              isNew: true,
+                                              batchAdjustments: [],
+                                              no: `batch auto fill`,
+                                            }),
+                                          ],
+                                        };
+                                      }
+                                      return orderItem;
+                                    });
+                                    setFieldValue('orderItems', newOrderItems);
+                                  }}
+                                />
+                              </>
                             )}
                           </Subscribe>
                           <SlideView
