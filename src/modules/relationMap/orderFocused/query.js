@@ -60,6 +60,9 @@ export const shipmentRMFragment = gql`
     cargoReady {
       ...timelineDateFullFragment
     }
+    customFields {
+      ...customFieldsFragment
+    }
     voyages {
       id
       vesselName
