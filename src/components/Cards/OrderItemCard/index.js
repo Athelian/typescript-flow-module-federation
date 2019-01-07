@@ -10,12 +10,9 @@ import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import QuantityChart from 'components/QuantityChart';
-import GridColumn from 'components/GridColumn';
 import FormattedNumber from 'components/FormattedNumber';
-import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { Label, Display, FieldItem } from 'components/Form';
-import { spanWithColor } from 'utils/color';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderItemCardWrapperStyle,
@@ -456,72 +453,24 @@ const OrderItemCard = ({
                 )}
 
                 {!selectable && !readOnly && !!unitPrice && (
-                  <BooleanValue>
-                    {({ value: isOpen, set: dialogToggle }) => (
-                      <>
-                        <ConfirmDialog
-                          isOpen={isOpen}
-                          onRequestClose={() => dialogToggle(false)}
-                          onCancel={() => dialogToggle(false)}
-                          onConfirm={() => {
-                            assign({ price: { currency, amount: unitPrice.amount } });
-                            saveOnBlur({
-                              quantity,
-                              price: { currency, amount: unitPrice.amount },
-                            });
-                            dialogToggle(false);
-                          }}
-                          message={
-                            <GridColumn>
-                              <div>
-                                <FormattedMessage
-                                  id="components.cards.endProductUnitPrice"
-                                  defaultMessage="The unit price of {product} is {unitPrice}"
-                                  values={{
-                                    product: spanWithColor(product.name, 'PRODUCT'),
-                                    unitPrice: spanWithColor(
-                                      <FormattedNumber
-                                        value={unitPrice.amount}
-                                        suffix={unitPrice.currency}
-                                      />,
-                                      'TEAL'
-                                    ),
-                                  }}
-                                />
-                              </div>
-                              <div>
-                                <FormattedMessage
-                                  id="components.cards.wantSync"
-                                  defaultMessage="Currency is not matched. Do you want to sync?"
-                                />
-                              </div>
-                            </GridColumn>
-                          }
-                          width={400}
-                        />
-                        <button
-                          className={SyncButtonStyle}
-                          type="button"
-                          onClick={() => {
-                            if (unitPrice) {
-                              if (unitPrice.currency === currency) {
-                                assign({ price: { currency, amount: unitPrice.amount } });
-                                saveOnBlur({
-                                  quantity,
-                                  price: { currency, amount: unitPrice.amount },
-                                });
-                              } else {
-                                dialogToggle(true);
-                              }
-                            }
-                          }}
-                        >
-                          <FormattedMessage id="components.cards.sync" defaultMessage="SYNC" />
-                          <Icon icon="SYNC" />
-                        </button>
-                      </>
-                    )}
-                  </BooleanValue>
+                  <button
+                    className={SyncButtonStyle}
+                    type="button"
+                    onClick={() => {
+                      if (unitPrice) {
+                        if (unitPrice.currency === currency) {
+                          assign({ price: { currency, amount: unitPrice.amount } });
+                          saveOnBlur({
+                            quantity,
+                            price: { currency, amount: unitPrice.amount },
+                          });
+                        }
+                      }
+                    }}
+                  >
+                    <FormattedMessage id="components.cards.sync" defaultMessage="SYNC" />
+                    <Icon icon="SYNC" />
+                  </button>
                 )}
               </div>
               <div className={DividerStyle} />
