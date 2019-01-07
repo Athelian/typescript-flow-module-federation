@@ -185,7 +185,7 @@ const Order = ({ intl }: Props) => {
                       threshold={500}
                     >
                       {getByPathWithDefault([], 'orders.nodes', data).map(order => (
-                        <OrderFocusView key={order.id} item={orders[order.id]} />
+                        <OrderFocusView key={order.id} item={order} />
                       ))}
                       {Object.entries(orders || []).length === 0 && (
                         <Display>

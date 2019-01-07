@@ -20,11 +20,20 @@ export const orderListQuery = gql`
         orderItems {
           id
           quantity
+          productProvider {
+            product {
+              name
+              serial
+            }
+          }
           batches {
             id
             no
             quantity
             totalAdjusted
+            tags {
+              ...tagFragment
+            }
           }
         }
         shipments {

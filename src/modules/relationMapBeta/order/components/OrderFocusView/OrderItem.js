@@ -1,60 +1,33 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
-import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import BaseCard from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
-import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
+import { OrderItemCard, WrapperCard } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
-import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
+import type { OrderItemProps } from 'modules/relationMapBeta/order/type.js.flow';
 
 type OptionalProps = {
   wrapperClassName?: string,
 };
 
-type Props = OptionalProps & OrderProps;
+type Props = OptionalProps & OrderItemProps;
 
-export default function Order({
-  wrapperClassName,
-  poNo,
-  totalOrdered,
-  totalBatched,
-  totalShipped,
-  tags,
-}: Props) {
-  const context = React.useContext(ActionDispatch);
-  const {
-    state: { showTag },
-  } = context;
+export default function OrderItem({ wrapperClassName, ...orderItem }: Props) {
   return (
-    <BaseCard icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
+    <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" wrapperClassName={wrapperClassName}>
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
-            {/* NOTE: better naming for order card props */}
-            <OrderCard
-              order={{
-                poNo,
-                orderedQuantity: totalOrdered,
-                batchedQuantity: totalBatched,
-                shippedQuantity: totalShipped,
-              }}
-            />
+            <OrderItemCard orderItem={orderItem} />
             <ActionCard show={hovered}>
               {({ targetted, toggle }) => (
                 <>
-                  {/* NOTE: why need to send targetted and toggle to ACTION */}
                   <Action
                     icon="MAGIC"
                     targetted={targetted}
                     toggle={toggle}
                     onClick={() => console.warn('HIGHLIGHT')}
-                  />
-                  <Action
-                    icon="DOCUMENT"
-                    targetted={targetted}
-                    toggle={toggle}
-                    onClick={() => console.warn('EDIT')}
                   />
                   <Action
                     icon="BRANCH"
@@ -72,7 +45,6 @@ export default function Order({
                 </>
               )}
             </ActionCard>
-            {showTag && <Tags dataSource={tags} />}
           </WrapperCard>
         )}
       </BooleanValue>

@@ -1,7 +1,12 @@
 // @flow
+import logger from 'utils/logger';
 
 export type UIState = {
   showTag: boolean,
+  expandCards: {
+    orders: Array<string>,
+    shipments: Array<string>,
+  },
   toggleShipmentList: boolean,
   select: {
     mode: 'SINGLE' | 'ALL',
@@ -12,6 +17,10 @@ export type UIState = {
 
 export const uiInitState: UIState = {
   showTag: false,
+  expandCards: {
+    orders: [],
+    shipments: [],
+  },
   toggleShipmentList: false,
   select: {
     mode: 'SINGLE',
@@ -21,6 +30,7 @@ export const uiInitState: UIState = {
 };
 
 export function uiReducer(state: UIState, action: { type: string, payload?: Object }) {
+  logger.warn({ action, state });
   switch (action.type) {
     case 'RESET':
       return uiInitState;
@@ -55,6 +65,25 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const total = payload && payload.total ? payload.total : 0;
       return { ...state, totalShipment: total };
     }
+    case 'TOGGLE_EXPAND': {
+      const { payload } = action;
+      if (payload) {
+        let field = 'orders';
+        if (payload && payload.entity && payload.entity === 'SHIPMENT') {
+          field = 'shipments';
+        }
+        return {
+          ...state,
+          expandCards: {
+            ...state.expandCards,
+            [field]: state.expandCards[field].includes(payload.id)
+              ? (state.expandCards[field].filter(id => id !== payload.id): Array<string>)
+              : [...state.expandCards[field], payload && payload.id ? payload.id : ''],
+          },
+        };
+      }
+      return state;
+    }
     default:
       return state;
   }
@@ -65,6 +94,14 @@ export function actionCreators(dispatch: Function) {
     toggleTag: () =>
       dispatch({
         type: 'TOGGLE_TAG',
+      }),
+    toggleExpand: (entity: string, id: string) =>
+      dispatch({
+        type: 'TOGGLE_EXPAND',
+        payload: {
+          entity,
+          id,
+        },
       }),
     toggleShipmentList: () =>
       dispatch({
