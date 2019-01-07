@@ -194,6 +194,10 @@ export const shipmentRMCardQuery = gql`
   ${tagFragment}
   ${portFragment}
   ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const shipmentListQuery = gql`
@@ -207,6 +211,10 @@ export const shipmentListQuery = gql`
     }
   }
   ${shipmentRMFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${userAvatarFragment}
   ${partnerCardFragment}
   ${timelineDateFullFragment}
