@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, StringValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import {
   OrderInfoContainer,
@@ -107,26 +107,34 @@ const OrderSection = ({ isNew }: Props) => (
                     })
                   }
                 </FormField>
-                <FormField
-                  name="currency"
-                  initValue={values.currency || 'USD'}
-                  values={values}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    selectSearchEnumInputFactory({
-                      required: true,
-                      enumType: 'Currency',
-                      name,
-                      inputHandlers,
-                      isNew,
-                      originalValue: initialValues[name],
-                      label: <FormattedMessage {...messages.currency} />,
-                      showClearButton: false,
-                    })
-                  }
-                </FormField>
+                <StringValue value={values.currency}>
+                  {({ value: previousValue, set: setPreviousValue }) => (
+                    <FormField
+                      name="currency"
+                      initValue={values.currency || 'USD'}
+                      values={values}
+                      validator={validator}
+                      setFieldValue={setFieldValue}
+                    >
+                      {({ name, ...inputHandlers }) =>
+                        selectSearchEnumInputFactory({
+                          required: true,
+                          enumType: 'Currency',
+                          name,
+                          inputHandlers,
+                          isNew,
+                          originalValue: initialValues[name],
+                          previousInputHandlers: {
+                            value: previousValue,
+                            setValue: setPreviousValue,
+                          },
+                          label: <FormattedMessage {...messages.currency} />,
+                          hideClearButton: true,
+                        })
+                      }
+                    </FormField>
+                  )}
+                </StringValue>
                 <FormField
                   name="incoterm"
                   initValue={values.incoterm}

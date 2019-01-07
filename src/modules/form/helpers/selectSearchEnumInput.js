@@ -41,7 +41,8 @@ export default function selectSearchEnumInputFactory({
   isNew,
   label,
   originalValue,
-  showClearButton = true,
+  previousInputHandlers,
+  hideClearButton = false,
 }: {
   enumType: string,
   required?: boolean,
@@ -52,7 +53,6 @@ export default function selectSearchEnumInputFactory({
   inputHandlers: {
     name: string,
     value: string,
-    previousValue: string,
     isTouched: boolean,
     errorMessage: string,
     isFocused: boolean,
@@ -60,8 +60,12 @@ export default function selectSearchEnumInputFactory({
     onFocus: Function,
     onBlur: Function,
   },
+  previousInputHandlers?: {
+    value: string,
+    setValue: Function,
+  },
   originalValue: any,
-  showClearButton?: boolean,
+  hideClearButton?: boolean,
 }) {
   return (
     <EnumProvider enumType={enumType}>
@@ -104,7 +108,7 @@ export default function selectSearchEnumInputFactory({
                     renderSelect={({ ...rest }) => (
                       <DefaultSearchSelect
                         {...rest}
-                        showClearButton={showClearButton}
+                        hideClearButton={hideClearButton}
                         hasError={inputHandlers.isTouched && inputHandlers.errorMessage}
                         forceHoverStyle={isNew}
                         width={width}
@@ -135,12 +139,16 @@ export default function selectSearchEnumInputFactory({
                     }}
                     onBlur={() => {
                       logger.warn('SearchSelectInput onBlur', inputHandlers.value);
+
                       if (data.find(item => item.name === inputHandlers.value)) {
                         inputHandlers.onBlur();
+                        if (previousInputHandlers) {
+                          previousInputHandlers.setValue(inputHandlers.value);
+                        }
                       } else {
                         inputHandlers.onChange({
                           target: {
-                            value: inputHandlers.previousValue,
+                            value: previousInputHandlers ? previousInputHandlers.value : '',
                           },
                         });
                         setTimeout(() => {

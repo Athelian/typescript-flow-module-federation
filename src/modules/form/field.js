@@ -110,9 +110,6 @@ class BaseFormField extends React.Component<Props, State> {
     setFieldTouched(name, true);
     setActiveField('');
     setFieldValue(name, value);
-    this.setState({
-      previousValue: value,
-    });
   };
 
   render() {
