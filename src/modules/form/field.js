@@ -35,6 +35,7 @@ type Props = OptionalProps & {
 
 type State = {
   value: any,
+  previousValue: any,
 };
 
 const defaultProps = {
@@ -54,9 +55,10 @@ class BaseFormField extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const { initValue } = props;
+    const { initValue: initialValue } = props;
     this.state = {
-      value: isNullOrUndefined(initValue) ? '' : initValue,
+      value: isNullOrUndefined(initialValue) ? '' : initialValue,
+      previousValue: isNullOrUndefined(initialValue) ? '' : initialValue,
     };
   }
 
@@ -108,11 +110,14 @@ class BaseFormField extends React.Component<Props, State> {
     setFieldTouched(name, true);
     setActiveField('');
     setFieldValue(name, value);
+    this.setState({
+      previousValue: value,
+    });
   };
 
   render() {
     const { children, name, activeField, isTouched, errorMessage } = this.props;
-    const { value } = this.state;
+    const { value, previousValue } = this.state;
     return children({
       name,
       value,
@@ -122,6 +127,7 @@ class BaseFormField extends React.Component<Props, State> {
       onChange: this.onChange,
       onFocus: this.onFocus,
       onBlur: this.onBlur,
+      previousValue,
     });
   }
 }

@@ -52,6 +52,7 @@ export default function selectSearchEnumInputFactory({
   inputHandlers: {
     name: string,
     value: string,
+    previousValue: string,
     isTouched: boolean,
     errorMessage: string,
     isFocused: boolean,
@@ -139,7 +140,7 @@ export default function selectSearchEnumInputFactory({
                       } else {
                         inputHandlers.onChange({
                           target: {
-                            value: '',
+                            value: inputHandlers.previousValue,
                           },
                         });
                         setTimeout(() => {
