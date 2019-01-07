@@ -59,6 +59,7 @@ function ItemSection({ intl, isNew }: Props) {
                             {({ state: { orderItems }, setFieldValue }) => (
                               <>
                                 <BaseButton
+                                  icon="SYNC"
                                   label={
                                     <FormattedMessage
                                       id="modules.order.syncAllPrice"
