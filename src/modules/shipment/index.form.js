@@ -10,7 +10,7 @@ import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
-import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -42,6 +42,7 @@ type OptionalProps = {
   isSlideView: boolean,
   onSuccessCallback: ?Function,
   redirectAfterSuccess: boolean,
+  onCancel?: Function,
 };
 
 type Props = OptionalProps;
@@ -97,7 +98,9 @@ class ShipmentFormModule extends React.Component<Props> {
 
   isNewOrClone = () => this.isNew() || this.isClone();
 
-  onCancel = ({
+  onCancel = () => navigate(`/shipment`);
+
+  onReset = ({
     shipmentInfoState,
     shipmentBatchesState,
     shipmentTagsState,
@@ -105,16 +108,12 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentTransportTypeState,
     shipmentFileState,
   }: ShipmentFormState) => {
-    if (this.isNewOrClone()) {
-      navigate(`/shipment`);
-    } else {
-      resetFormState(shipmentInfoState);
-      resetFormState(shipmentBatchesState, 'batches');
-      resetFormState(shipmentTagsState, 'tags');
-      resetFormState(shipmentTimelineState);
-      resetFormState(shipmentTransportTypeState, 'transportType');
-      resetFormState(shipmentFileState, 'files');
-    }
+    resetFormState(shipmentInfoState);
+    resetFormState(shipmentBatchesState, 'batches');
+    resetFormState(shipmentTagsState, 'tags');
+    resetFormState(shipmentTimelineState);
+    resetFormState(shipmentTransportTypeState, 'transportType');
+    resetFormState(shipmentFileState, 'files');
   };
 
   onSave = async (
@@ -259,7 +258,7 @@ class ShipmentFormModule extends React.Component<Props> {
   };
 
   render() {
-    const { shipmentId, anchor, isSlideView } = this.props;
+    const { shipmentId, anchor, isSlideView, onCancel } = this.props;
     const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (shipmentId && !isNewOrClone) {
@@ -394,18 +393,25 @@ class ShipmentFormModule extends React.Component<Props> {
                             shipmentTransportTypeState.isDirty() ||
                             shipmentFileState.isDirty()) && (
                             <>
-                              <ResetButton
-                                onClick={() =>
-                                  this.onCancel({
-                                    shipmentBatchesState,
-                                    shipmentInfoState,
-                                    shipmentTagsState,
-                                    shipmentTimelineState,
-                                    shipmentTransportTypeState,
-                                    shipmentFileState,
-                                  })
-                                }
-                              />
+                              {this.isNewOrClone() ? (
+                                <CancelButton
+                                  onClick={() => (onCancel ? onCancel() : this.onCancel())}
+                                />
+                              ) : (
+                                <ResetButton
+                                  onClick={() =>
+                                    this.onReset({
+                                      shipmentBatchesState,
+                                      shipmentInfoState,
+                                      shipmentTagsState,
+                                      shipmentTimelineState,
+                                      shipmentTransportTypeState,
+                                      shipmentFileState,
+                                    })
+                                  }
+                                />
+                              )}
+
                               <SaveButton
                                 disabled={
                                   !form.isReady(
