@@ -2,22 +2,26 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import PreventInitialAnimation from 'components/PreventInitialAnimation';
+import Icon from 'components/Icon';
 import logger from 'utils/logger';
 import {
   BackdropFadeInStyle,
   BackdropFadeOutStyle,
   DialogFadeInStyle,
   DialogFadeOutStyle,
+  CancelButtonStyle,
 } from './style';
 
 type OptionalProps = {
   rootElementId: string,
   width: string,
+  showCancelButton: boolean,
 };
 
 type Props = OptionalProps & {
   isOpen: boolean,
   onRequestClose: (evt: Event) => void,
+  onCancel?: Function,
   children: React.Node,
 };
 
@@ -27,6 +31,7 @@ export default class Dialog extends React.Component<Props> {
   static defaultProps = {
     rootElementId: 'dialog-root',
     width: 'min-content',
+    showCancelButton: false,
   };
 
   constructor() {
@@ -61,7 +66,7 @@ export default class Dialog extends React.Component<Props> {
   dialogContainer: HTMLDivElement;
 
   render() {
-    const { children, isOpen, onRequestClose, width } = this.props;
+    const { children, isOpen, onRequestClose, onCancel, width, showCancelButton } = this.props;
 
     return (
       <PreventInitialAnimation isChildrenVisible>
@@ -76,6 +81,12 @@ export default class Dialog extends React.Component<Props> {
               onClick={e => e.stopPropagation()}
               role="presentation"
             >
+              {showCancelButton && (
+                <button type="button" onClick={onCancel} className={CancelButtonStyle}>
+                  <Icon icon="CLEAR" />
+                </button>
+              )}
+
               {children}
             </div>
           </div>,
