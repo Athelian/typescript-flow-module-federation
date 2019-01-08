@@ -419,7 +419,7 @@ const OrderItemCard = ({
                 ) : (
                   <FormField
                     name={`${item.id}.price`}
-                    initValue={price.amount}
+                    initValue={{ ...price, currency }}
                     setFieldValue={(fieldName, amount) => assign({ price: { amount, currency } })}
                   >
                     {({ name: fieldName, ...inputHandlers }) =>
@@ -428,7 +428,6 @@ const OrderItemCard = ({
                           <FormattedMessage id="components.cards.price" defaultMessage="PRICE" />
                         ),
                         required: true,
-                        currency,
                         width: '90px',
                         height: '20px',
                         inputHandlers: {
@@ -437,16 +436,13 @@ const OrderItemCard = ({
                             inputHandlers.onBlur(evt);
                             saveOnBlur({
                               quantity,
-                              price: {
-                                amount: inputHandlers.value,
-                                currency,
-                              },
+                              price: inputHandlers.value,
                             });
                           },
                         },
                         name: fieldName,
                         isNew: false,
-                        originalValue: price.amount,
+                        originalValue: { ...price, currency },
                       })
                     }
                   </FormField>
