@@ -171,6 +171,7 @@ function ItemSection({ intl, isNew }: Props) {
                                       slideToggle(false);
                                     }}
                                     exporter={exporter && exporter.id}
+                                    orderCurrency={currency}
                                     onCancel={() => slideToggle(false)}
                                   />
                                 )}

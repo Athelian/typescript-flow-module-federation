@@ -9,6 +9,7 @@ import GridView from 'components/GridView';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
+import { Label, Display } from 'components/Form';
 import { OrderProductProviderCard } from 'components/Cards';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -21,6 +22,7 @@ import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
   exporter: string,
+  orderCurrency: string,
 };
 
 type Props = OptionalProps & {
@@ -31,6 +33,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   exporter: '',
+  orderCurrency: '',
 };
 
 function onSelectProduct({
@@ -73,7 +76,7 @@ function onChangeProductQuantity({
   set(items);
 }
 
-function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
+function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.nameSort), value: 'name' },
     { title: intl.formatMessage(messages.serialSort), value: 'serial' },
@@ -127,6 +130,13 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                           filtersAndSort={filtersAndSort}
                           onChange={onChange}
                         />
+                        <Label>
+                          <FormattedMessage
+                            id="modules.Orders.orderCurrency"
+                            defaultMessage="ORDER CURRENCY"
+                          />
+                          <Display align="left">{orderCurrency || 'N/A'}</Display>
+                        </Label>
                         <CancelButton onClick={onCancel} />
                         <SaveButton
                           disabled={selected.length === 0}
