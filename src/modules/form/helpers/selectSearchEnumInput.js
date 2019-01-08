@@ -41,7 +41,6 @@ export default function selectSearchEnumInputFactory({
   isNew,
   label,
   originalValue,
-  previousInputHandlers,
   hideClearButton = false,
   event = {},
 }: {
@@ -60,10 +59,6 @@ export default function selectSearchEnumInputFactory({
     onChange: Function,
     onFocus: Function,
     onBlur: Function,
-  },
-  previousInputHandlers?: {
-    value: string,
-    setValue: Function,
   },
   originalValue: any,
   hideClearButton?: boolean,
@@ -147,18 +142,12 @@ export default function selectSearchEnumInputFactory({
                       if (data.find(item => item.name === inputHandlers.value)) {
                         inputHandlers.onBlur();
                         if (event.onBlurHasValue) {
-                          event.onBlurHasValue(
-                            inputHandlers.value,
-                            previousInputHandlers ? previousInputHandlers.value : ''
-                          );
-                        }
-                        if (previousInputHandlers) {
-                          previousInputHandlers.setValue(inputHandlers.value);
+                          event.onBlurHasValue(inputHandlers.value);
                         }
                       } else {
                         inputHandlers.onChange({
                           target: {
-                            value: previousInputHandlers ? previousInputHandlers.value : '',
+                            value: originalValue,
                           },
                         });
                         setTimeout(() => {
