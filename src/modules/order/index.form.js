@@ -141,6 +141,8 @@ class OrderFormModule extends React.PureComponent<Props> {
     orderFilesState: Object,
   }) => (order: Object) => {
     const { orderItems, tags, files, ...info } = order;
+    const { currency } = info;
+    orderInfoState.initDetailValues({ currency });
     if (this.isClone()) {
       const { issuedAt, poNo, ...cloneInfo } = info;
       orderInfoState.initDetailValues({
