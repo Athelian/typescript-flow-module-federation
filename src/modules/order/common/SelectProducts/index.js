@@ -171,6 +171,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: P
                             />
                           )}
                           <OrderProductProviderCard
+                            orderCurrency={orderCurrency}
                             productProvider={item}
                             selectable
                             selected={selected.includes(item)}
