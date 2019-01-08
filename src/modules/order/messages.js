@@ -498,9 +498,16 @@ export default defineMessages({
     id: 'modules.Orders.autoFillBatch',
     defaultMessage: 'AUTOFILL BATCH',
   },
+  detectPriceChanged: {
+    id: 'modules,Orders.detectPriceChanged',
+    defaultMessage: 'It is detected that some of your {items} have Unit Prices filled in.',
+  },
   changePrice: {
     id: 'modules,Orders.changePrice',
-    defaultMessage:
-      'It is detected that some of your Items have Unit Prices filled in. Changing your Currency will change the Currencies of all your Items. Would you like to reset all Unit Prices to 0?',
+    defaultMessage: 'Changing your Currency will change the Currencies of all your {items}.',
+  },
+  resetPrice: {
+    id: 'modules,Orders.resetPrice',
+    defaultMessage: 'Would you like to reset all Unit Prices to 0?',
   },
 });

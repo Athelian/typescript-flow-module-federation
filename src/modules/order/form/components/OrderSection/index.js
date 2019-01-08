@@ -3,6 +3,8 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import { getByPath } from 'utils/fp';
+import { spanWithColor } from 'utils/color';
 import {
   OrderInfoContainer,
   OrderTagsContainer,
@@ -10,7 +12,6 @@ import {
 } from 'modules/order/form/containers';
 import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
-import { getByPath } from 'utils/fp';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, DashedPlusButton, TagsInput, FormTooltip } from 'components/Form';
@@ -21,11 +22,11 @@ import {
   selectSearchEnumInputFactory,
   customFieldsInputFactory,
 } from 'modules/form/helpers';
-import { PartnerCard } from 'components/Cards';
 import { getQuantitySummary } from 'modules/order/helpers';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import Icon from 'components/Icon';
+import { PartnerCard } from 'components/Cards';
 import UserAvatar from 'components/UserAvatar';
 import AssignUsers from 'modules/shipment/form/components/TimelineSection/components/AssignUsers';
 import {
@@ -41,6 +42,7 @@ import {
   MainFieldsWrapperStyle,
   QuantitySummaryStyle,
   DividerStyle,
+  DialogLineStyle,
 } from './style';
 
 type Props = {
@@ -137,11 +139,39 @@ const OrderSection = ({ isNew }: Props) => (
                               setPriceDialog(false);
                             }}
                             onDeny={() => setPriceDialog(false)}
-                            message={<FormattedMessage {...messages.changePrice} />}
+                            message={
+                              <>
+                                <div className={DialogLineStyle}>
+                                  <FormattedMessage
+                                    {...messages.detectPriceChanged}
+                                    values={{
+                                      items: spanWithColor(
+                                        <FormattedMessage {...messages.sectionItems} />,
+                                        'ORDER_ITEM'
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                                <div className={DialogLineStyle}>
+                                  <FormattedMessage
+                                    {...messages.changePrice}
+                                    values={{
+                                      items: spanWithColor(
+                                        <FormattedMessage {...messages.sectionItems} />,
+                                        'ORDER_ITEM'
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                                <div className={DialogLineStyle}>
+                                  <FormattedMessage {...messages.resetPrice} />
+                                </div>
+                              </>
+                            }
                           />
                           <FormField
                             name="currency"
-                            initValue={values.currency || 'USD'}
+                            initValue={values.currency}
                             values={values}
                             validator={validator}
                             setFieldValue={setFieldValue}

@@ -9,7 +9,6 @@ import {
   BackdropFadeOutStyle,
   DialogFadeInStyle,
   DialogFadeOutStyle,
-  CancelButtonWrapperStyle,
   CancelButtonStyle,
 } from './style';
 
@@ -83,11 +82,9 @@ export default class Dialog extends React.Component<Props> {
               role="presentation"
             >
               {showCancelButton && (
-                <div className={CancelButtonWrapperStyle}>
-                  <button type="button" onClick={onCancel} className={CancelButtonStyle}>
-                    <Icon icon="CLEAR" />
-                  </button>
-                </div>
+                <button type="button" onClick={onCancel} className={CancelButtonStyle}>
+                  <Icon icon="CLEAR" />
+                </button>
               )}
 
               {children}

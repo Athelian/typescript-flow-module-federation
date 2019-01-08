@@ -21,6 +21,7 @@ type FormState = {
 const initValues = {
   shipments: [],
   inCharges: [],
+  currency: 'USD',
   customFields: {
     mask: null,
     fieldValues: [],
