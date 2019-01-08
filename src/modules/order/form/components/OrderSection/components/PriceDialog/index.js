@@ -24,7 +24,7 @@ function PriceDialog({
     <Dialog
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      width="450px"
+      width="400px"
       showCancelButton
       onCancel={onCancel}
     >
