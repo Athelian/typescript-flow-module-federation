@@ -47,7 +47,7 @@ type Props = {
   isNew: boolean,
 };
 const isDifferentItemCurrency = (currency, items) =>
-  items.some(item => getByPath('price.currency', item) !== currency);
+  items.length > 0 ? items.some(item => getByPath('price.currency', item) !== currency) : false;
 
 const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
