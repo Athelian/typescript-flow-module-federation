@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
-import { toFloat } from 'utils/number';
-import { FieldItem, Label, FormTooltip, NumberInput, DefaultPriceStyle } from 'components/Form';
+import { FieldItem, Label, FormTooltip, NumberInput, DefaultDayStyle } from 'components/Form';
 
-export default function priceInputFactory({
+export default function dayInputFactory({
   required = false,
   width = '200px',
   height = '30px',
@@ -23,7 +22,7 @@ export default function priceInputFactory({
   name: string,
   inputHandlers: {
     name: string,
-    value: { amount: string, currency: string },
+    value: string,
     isTouched: boolean,
     errorMessage: string,
     isFocused: boolean,
@@ -31,9 +30,9 @@ export default function priceInputFactory({
     onFocus: Function,
     onBlur: Function,
   },
-  originalValue: { amount: string, currency: string },
+  originalValue: any,
 }) {
-  const { isTouched, errorMessage, isFocused, value, onChange, ...rest } = inputHandlers;
+  const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
     <FieldItem
       label={
@@ -48,38 +47,21 @@ export default function priceInputFactory({
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{
-            oldValue: `${originalValue.amount} ${originalValue.currency}`,
-            newValue: `${value.amount} ${value.currency}`,
+            oldValue: originalValue,
+            newValue: inputHandlers.value,
           }}
         />
       }
       input={
-        <DefaultPriceStyle
-          currency={value.currency}
+        <DefaultDayStyle
           isFocused={isFocused}
           hasError={isTouched && errorMessage}
           forceHoverStyle={isNew}
           width={width}
           height={height}
         >
-          <NumberInput
-            align={align}
-            name={name}
-            value={value.amount}
-            onChange={evt =>
-              onChange({
-                ...evt,
-                target: {
-                  value: {
-                    amount: toFloat(evt.target.value),
-                    currency: value.currency,
-                  },
-                },
-              })
-            }
-            {...rest}
-          />
-        </DefaultPriceStyle>
+          <NumberInput align={align} name={name} {...rest} />
+        </DefaultDayStyle>
       }
     />
   );
