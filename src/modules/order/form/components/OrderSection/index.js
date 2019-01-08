@@ -10,6 +10,7 @@ import {
 } from 'modules/order/form/containers';
 import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
+import { getByPath } from 'utils/fp';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, DashedPlusButton, TagsInput, FormTooltip } from 'components/Form';
@@ -44,6 +45,8 @@ import {
 type Props = {
   isNew: boolean,
 };
+const isDifferentItemCurrency = (currency, items) =>
+  items.some(item => getByPath('price.currency', item) !== currency);
 
 const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
@@ -107,34 +110,45 @@ const OrderSection = ({ isNew }: Props) => (
                     })
                   }
                 </FormField>
-                <StringValue value={values.currency}>
-                  {({ value: previousValue, set: setPreviousValue }) => (
-                    <FormField
-                      name="currency"
-                      initValue={values.currency || 'USD'}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) =>
-                        selectSearchEnumInputFactory({
-                          required: true,
-                          enumType: 'Currency',
-                          name,
-                          inputHandlers,
-                          isNew,
-                          originalValue: initialValues[name],
-                          previousInputHandlers: {
-                            value: previousValue,
-                            setValue: setPreviousValue,
-                          },
-                          label: <FormattedMessage {...messages.currency} />,
-                          hideClearButton: true,
-                        })
-                      }
-                    </FormField>
+                <Subscribe to={[OrderItemsContainer]}>
+                  {({ state: { orderItems } }) => (
+                    <StringValue value={values.currency}>
+                      {({ value: previousValue, set: setPreviousValue }) => (
+                        <FormField
+                          name="currency"
+                          initValue={values.currency || 'USD'}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) =>
+                            selectSearchEnumInputFactory({
+                              required: true,
+                              enumType: 'Currency',
+                              name,
+                              inputHandlers,
+                              isNew,
+                              originalValue: initialValues[name],
+                              event: {
+                                onBlurHasValue: (value: string) => {
+                                  if (isDifferentItemCurrency(value, orderItems)) {
+                                    console.log('onBlurHasValue isDifferentItemCurrency');
+                                  }
+                                },
+                              },
+                              previousInputHandlers: {
+                                value: previousValue,
+                                setValue: setPreviousValue,
+                              },
+                              label: <FormattedMessage {...messages.currency} />,
+                              hideClearButton: true,
+                            })
+                          }
+                        </FormField>
+                      )}
+                    </StringValue>
                   )}
-                </StringValue>
+                </Subscribe>
                 <FormField
                   name="incoterm"
                   initValue={values.incoterm}
