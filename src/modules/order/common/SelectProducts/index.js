@@ -22,7 +22,7 @@ import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
   exporter: string,
-  baseCurrency: string,
+  orderCurrency: string,
 };
 
 type Props = OptionalProps & {
@@ -33,7 +33,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   exporter: '',
-  baseCurrency: '',
+  orderCurrency: '',
 };
 
 function onSelectProduct({
@@ -76,7 +76,7 @@ function onChangeProductQuantity({
   set(items);
 }
 
-function SelectProducts({ intl, onCancel, onSelect, exporter, baseCurrency }: Props) {
+function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.nameSort), value: 'name' },
     { title: intl.formatMessage(messages.serialSort), value: 'serial' },
@@ -132,9 +132,9 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, baseCurrency }: Pr
                         <Label>
                           <FormattedMessage
                             id="modules.Orders.orderCurrency"
-                            defaultMessage="Order's Currency"
+                            defaultMessage="ORDER CURRENCY"
                           />
-                          <Display>{baseCurrency || 'N/A'}</Display>
+                          <Display align="left">{orderCurrency || 'N/A'}</Display>
                         </Label>
                         <CancelButton onClick={onCancel} />
                         <SaveButton
