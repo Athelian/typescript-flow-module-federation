@@ -130,13 +130,15 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: P
                           filtersAndSort={filtersAndSort}
                           onChange={onChange}
                         />
-                        <Label>
-                          <FormattedMessage
-                            id="modules.Orders.orderCurrency"
-                            defaultMessage="ORDER CURRENCY"
-                          />
+                        <div>
+                          <Label>
+                            <FormattedMessage
+                              id="modules.Orders.orderCurrency"
+                              defaultMessage="ORDER CURRENCY"
+                            />
+                          </Label>
                           <Display align="left">{orderCurrency || 'N/A'}</Display>
-                        </Label>
+                        </div>
                         <CancelButton onClick={onCancel} />
                         <SaveButton
                           disabled={selected.length === 0}
