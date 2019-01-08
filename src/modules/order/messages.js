@@ -498,4 +498,9 @@ export default defineMessages({
     id: 'modules.Orders.autoFillBatch',
     defaultMessage: 'AUTOFILL BATCH',
   },
+  changePrice: {
+    id: 'modules,Orders.changePrice',
+    defaultMessage:
+      'It is detected that some of your Items have Unit Prices filled in. Changing your Currency will change the Currencies of all your Items. Would you like to reset all Unit Prices to 0?',
+  },
 });

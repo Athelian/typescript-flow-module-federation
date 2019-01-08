@@ -35,6 +35,7 @@ import {
   AddAssignmentButtonStyle,
 } from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import TotalSummary from './components/TotalSummary';
+import PriceDialog from './components/PriceDialog';
 import {
   OrderSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -110,45 +111,59 @@ const OrderSection = ({ isNew }: Props) => (
                     })
                   }
                 </FormField>
-                <Subscribe to={[OrderItemsContainer]}>
-                  {({ state: { orderItems } }) => (
-                    <StringValue value={values.currency}>
-                      {({ value: previousValue, set: setPreviousValue }) => (
-                        <FormField
-                          name="currency"
-                          initValue={values.currency || 'USD'}
-                          values={values}
-                          validator={validator}
-                          setFieldValue={setFieldValue}
-                        >
-                          {({ name, ...inputHandlers }) =>
-                            selectSearchEnumInputFactory({
-                              required: true,
-                              enumType: 'Currency',
-                              name,
-                              inputHandlers,
-                              isNew,
-                              originalValue: initialValues[name],
-                              event: {
-                                onBlurHasValue: (value: string) => {
-                                  if (isDifferentItemCurrency(value, orderItems)) {
-                                    console.log('onBlurHasValue isDifferentItemCurrency');
-                                  }
-                                },
-                              },
-                              previousInputHandlers: {
-                                value: previousValue,
-                                setValue: setPreviousValue,
-                              },
-                              label: <FormattedMessage {...messages.currency} />,
-                              hideClearButton: true,
-                            })
-                          }
-                        </FormField>
+                <BooleanValue>
+                  {({ value: isOpen, set: dialogToggle }) => (
+                    <Subscribe to={[OrderItemsContainer]}>
+                      {({ state: { orderItems } }) => (
+                        <>
+                          <PriceDialog
+                            isOpen={isOpen}
+                            onRequestClose={() => dialogToggle(false)}
+                            onConfirm={() => {}}
+                            onCancel={() => {}}
+                            onDeny={() => {}}
+                            message={<FormattedMessage {...messages.changePrice} />}
+                          />
+                          <StringValue value={values.currency}>
+                            {({ value: previousValue, set: setPreviousValue }) => (
+                              <FormField
+                                name="currency"
+                                initValue={values.currency || 'USD'}
+                                values={values}
+                                validator={validator}
+                                setFieldValue={setFieldValue}
+                              >
+                                {({ name, ...inputHandlers }) =>
+                                  selectSearchEnumInputFactory({
+                                    required: true,
+                                    enumType: 'Currency',
+                                    name,
+                                    inputHandlers,
+                                    isNew,
+                                    originalValue: initialValues[name],
+                                    event: {
+                                      onBlurHasValue: (value: string) => {
+                                        if (isDifferentItemCurrency(value, orderItems)) {
+                                          dialogToggle(true);
+                                        }
+                                      },
+                                    },
+                                    previousInputHandlers: {
+                                      value: previousValue,
+                                      setValue: setPreviousValue,
+                                    },
+                                    label: <FormattedMessage {...messages.currency} />,
+                                    hideClearButton: true,
+                                  })
+                                }
+                              </FormField>
+                            )}
+                          </StringValue>
+                        </>
                       )}
-                    </StringValue>
+                    </Subscribe>
                   )}
-                </Subscribe>
+                </BooleanValue>
                 <FormField
                   name="incoterm"
                   initValue={values.incoterm}
