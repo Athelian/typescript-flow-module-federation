@@ -115,7 +115,7 @@ const OrderSection = ({ isNew }: Props) => (
                   {({ value: { isOpen, previousCurrency }, set: setPriceDialog }) => (
                     <Subscribe to={[OrderItemsContainer]}>
                       {({ state: { orderItems }, setFieldValue: setItemFieldValue }) => (
-                        <StringValue value={values.currency}>
+                        <StringValue defaultValue={values.currency}>
                           {({ value: previousValue, set: setPreviousValue }) => (
                             <>
                               <PriceDialog

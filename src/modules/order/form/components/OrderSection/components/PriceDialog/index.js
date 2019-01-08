@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Dialog from 'components/Dialog';
-import { CancelButton, YesButton, NoButton } from 'components/Buttons';
+import { YesButton, NoButton } from 'components/Buttons';
 import type { ConfirmDialogProps } from 'components/Dialog/type';
 import {
   ModalStyle,
@@ -21,11 +21,16 @@ function PriceDialog({
   message,
 }: PriceDialogProps) {
   return (
-    <Dialog isOpen={isOpen} onRequestClose={onRequestClose} width="400px">
+    <Dialog
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      width="400px"
+      showCancelButton
+      onCancel={onCancel}
+    >
       <div className={ModalStyle}>
         <div className={ConfirmMessageStyle}>{message}</div>
         <div className={ButtonsStyle}>
-          <CancelButton onClick={onCancel} />
           <NoButton onClick={onDeny} />
           <YesButton onClick={onConfirm} />
         </div>

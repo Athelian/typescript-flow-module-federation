@@ -86,3 +86,14 @@ export const DialogFadeOutStyle = (width: string): string => css`
   animation-duration: 0.2s;
   animation-fill-mode: forwards;
 `;
+
+export const CancelButtonWrapperStyle: string = css`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export const CancelButtonStyle: string = css`
+  ${presets.BUTTON};
+  padding-top: 3px;
+  padding-right: 3px;
+`;
