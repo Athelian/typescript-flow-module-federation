@@ -1,5 +1,65 @@
 import gql from 'graphql-tag';
-import { tagFragment } from 'graphql';
+import {
+  timelineDateMinimalFragment,
+  tagFragment,
+  portFragment,
+  userAvatarFragment,
+  metricFragment,
+} from 'graphql';
+
+const shipmentCardRMFragment = gql`
+  fragment shipmentCardRMFragment on Shipment {
+    id
+    no
+    blNo
+    transportType
+    batchCount
+    orderItemCount
+    totalVolume {
+      ...metricFragment
+    }
+    cargoReady {
+      ...timelineDateMinimalFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    inCharges {
+      ...userAvatarFragment
+    }
+    voyages {
+      id
+      departurePort {
+        ...portFragment
+      }
+      arrivalPort {
+        ...portFragment
+      }
+      departure {
+        ...timelineDateMinimalFragment
+      }
+      arrival {
+        ...timelineDateMinimalFragment
+      }
+    }
+    containerGroups {
+      id
+      customClearance {
+        ...timelineDateMinimalFragment
+      }
+      warehouseArrival {
+        ...timelineDateMinimalFragment
+      }
+      deliveryReady {
+        ...timelineDateMinimalFragment
+      }
+      warehouse {
+        id
+        name
+      }
+    }
+  }
+`;
 
 export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
@@ -38,14 +98,7 @@ export const orderListQuery = gql`
         }
         shipments {
           id
-          no
-          totalVolume {
-            value
-            metric
-          }
-          tags {
-            ...tagFragment
-          }
+          ...shipmentCardRMFragment
         }
       }
       page
@@ -53,7 +106,12 @@ export const orderListQuery = gql`
     }
   }
 
+  ${shipmentCardRMFragment}
+  ${timelineDateMinimalFragment}
   ${tagFragment}
+  ${portFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
 `;
 
 export const shipmentListQuery = gql`
@@ -61,19 +119,17 @@ export const shipmentListQuery = gql`
     shipments(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
         id
-        no
-        totalVolume {
-          value
-          metric
-        }
-        tags {
-          ...tagFragment
-        }
+        ...shipmentCardRMFragment
       }
       page
       totalPage
     }
   }
 
+  ${shipmentCardRMFragment}
+  ${timelineDateMinimalFragment}
   ${tagFragment}
+  ${portFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
 `;

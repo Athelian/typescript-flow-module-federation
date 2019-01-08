@@ -38,7 +38,6 @@ export default function OrderFocusView({ item }: Props) {
   const context = React.useContext(ActionDispatch);
   const { dispatch, state } = context;
   const actions = actionCreators(dispatch);
-  console.warn({ item });
   if (item.orderItems.length === 0)
     return (
       <>
@@ -83,7 +82,7 @@ export default function OrderFocusView({ item }: Props) {
                 <div /> <div />
               </>
             )}
-            {/* render the the rest batch, from 2nd to end */}
+            {/* render the the remaining batches, from 2nd to end */}
             {orderItem.batches.length > 1 &&
               orderItem.batches.map(
                 (batch, index) =>
