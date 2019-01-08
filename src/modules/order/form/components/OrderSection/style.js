@@ -29,5 +29,5 @@ export const DividerStyle: string = css`
 `;
 
 export const DialogLineStyle: string = css`
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 `;
