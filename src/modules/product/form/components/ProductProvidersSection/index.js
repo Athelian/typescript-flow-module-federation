@@ -57,15 +57,15 @@ function ProductProvidersSection() {
                               unitSize: {
                                 width: {
                                   value: 0,
-                                  metric: 'm',
+                                  metric: 'cm',
                                 },
                                 height: {
                                   value: 0,
-                                  metric: 'm',
+                                  metric: 'cm',
                                 },
                                 length: {
                                   value: 0,
-                                  metric: 'm',
+                                  metric: 'cm',
                                 },
                               },
                               unitWeight: {
@@ -91,15 +91,15 @@ function ProductProvidersSection() {
                               packageSize: {
                                 width: {
                                   value: 0,
-                                  metric: 'm',
+                                  metric: 'cm',
                                 },
                                 height: {
                                   value: 0,
-                                  metric: 'm',
+                                  metric: 'cm',
                                 },
                                 length: {
                                   value: 0,
-                                  metric: 'm',
+                                  metric: 'cm',
                                 },
                               },
                             })}

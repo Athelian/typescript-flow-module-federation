@@ -72,15 +72,15 @@ const initValues = {
   },
   packageSize: {
     width: {
-      metric: 'm',
+      metric: 'cm',
       value: 0,
     },
     height: {
-      metric: 'm',
+      metric: 'cm',
       value: 0,
     },
     length: {
-      metric: 'm',
+      metric: 'cm',
       value: 0,
     },
   },
@@ -144,15 +144,15 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       packageVolume = { value: 0, metric: 'm³' },
       packageSize = {
         width: {
-          metric: 'm',
+          metric: 'cm',
           value: 0,
         },
         height: {
-          metric: 'm',
+          metric: 'cm',
           value: 0,
         },
         length: {
-          metric: 'm',
+          metric: 'cm',
           value: 0,
         },
       },
