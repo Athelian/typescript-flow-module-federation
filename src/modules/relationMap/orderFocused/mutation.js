@@ -162,6 +162,10 @@ export const cloneShipmentMutation: Object = gql`
   ${tagFragment}
   ${portFragment}
   ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export const updateBatchWithReturnDataMutation = gql`
@@ -195,4 +199,8 @@ export const updateBatchWithReturnDataMutation = gql`
   ${timelineDateFullFragment}
   ${userAvatarFragment}
   ${portFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
