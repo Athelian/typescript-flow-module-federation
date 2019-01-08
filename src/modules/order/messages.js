@@ -166,6 +166,10 @@ export default defineMessages({
     id: 'modules.Orders.price',
     defaultMessage: 'UNIT PRICE',
   },
+  priceCurrency: {
+    id: 'modules.Orders.priceCurrency',
+    defaultMessage: 'Unit Price Currency',
+  },
   itemPrice: {
     id: 'modules.OrderItems.price',
     defaultMessage: 'ORDER ITEM UNIT PRICE',

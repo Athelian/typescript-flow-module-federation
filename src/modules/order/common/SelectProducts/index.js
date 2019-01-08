@@ -79,7 +79,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
     { title: intl.formatMessage(messages.serialSort), value: 'serial' },
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
-    { title: intl.formatMessage(messages.currency), value: 'unitPriceCurrency' },
+    { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
   ];
   return (
     <ObjectValue
