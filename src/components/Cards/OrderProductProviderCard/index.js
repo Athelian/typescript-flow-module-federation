@@ -126,7 +126,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
             <div className={ProductSerialStyle}>{serial}</div>
             <div className={ProductPriceStyle}>
               <Label>
-                <FormattedMessage id="modules.Orders.priceLabel" defaultMessage="Price" />
+                <FormattedMessage id="modules.Orders.price" defaultMessage="Unit Price" />
               </Label>
               <Display>
                 <FormattedNumber
