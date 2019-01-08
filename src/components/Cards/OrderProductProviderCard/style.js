@@ -98,6 +98,14 @@ export const ProductSerialStyle: string = css`
   width: 100%;
 `;
 
+export const ProductPriceStyle: string = css`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 export const ProductProvidersWrapperStyle: string = css`
   position: relative;
   display: grid;
