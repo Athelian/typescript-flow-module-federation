@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue, StringValue } from 'react-values';
+import { BooleanValue, StringValue, ObjectValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import {
   OrderInfoContainer,
@@ -111,21 +111,36 @@ const OrderSection = ({ isNew }: Props) => (
                     })
                   }
                 </FormField>
-                <BooleanValue>
-                  {({ value: isOpen, set: dialogToggle }) => (
+                <ObjectValue>
+                  {({ value: { isOpen, previousCurrency }, set: setPriceDialog }) => (
                     <Subscribe to={[OrderItemsContainer]}>
-                      {({ state: { orderItems } }) => (
-                        <>
-                          <PriceDialog
-                            isOpen={isOpen}
-                            onRequestClose={() => dialogToggle(false)}
-                            onConfirm={() => {}}
-                            onCancel={() => {}}
-                            onDeny={() => {}}
-                            message={<FormattedMessage {...messages.changePrice} />}
-                          />
-                          <StringValue value={values.currency}>
-                            {({ value: previousValue, set: setPreviousValue }) => (
+                      {({ state: { orderItems }, setFieldValue: setItemFieldValue }) => (
+                        <StringValue value={values.currency}>
+                          {({ value: previousValue, set: setPreviousValue }) => (
+                            <>
+                              <PriceDialog
+                                isOpen={isOpen}
+                                onRequestClose={() => setPriceDialog('isOpen', false)}
+                                onConfirm={() => {
+                                  setItemFieldValue(
+                                    'orderItems',
+                                    orderItems.map(orderItem => ({
+                                      ...orderItem,
+                                      price: {
+                                        ...orderItem.price,
+                                        amount: 0,
+                                      },
+                                    }))
+                                  );
+                                  setPriceDialog('isOpen', false);
+                                }}
+                                onCancel={() => {
+                                  setFieldValue('currency', previousCurrency);
+                                  setPriceDialog('isOpen', false);
+                                }}
+                                onDeny={() => setPriceDialog('isOpen', false)}
+                                message={<FormattedMessage {...messages.changePrice} />}
+                              />
                               <FormField
                                 name="currency"
                                 initValue={values.currency || 'USD'}
@@ -142,9 +157,13 @@ const OrderSection = ({ isNew }: Props) => (
                                     isNew,
                                     originalValue: initialValues[name],
                                     event: {
-                                      onBlurHasValue: (value: string) => {
+                                      onBlurHasValue: (
+                                        value: string,
+                                        previousBlurValue: string
+                                      ) => {
                                         if (isDifferentItemCurrency(value, orderItems)) {
-                                          dialogToggle(true);
+                                          setPriceDialog('previousCurrency', previousBlurValue);
+                                          setPriceDialog('isOpen', true);
                                         }
                                       },
                                     },
@@ -157,13 +176,13 @@ const OrderSection = ({ isNew }: Props) => (
                                   })
                                 }
                               </FormField>
-                            )}
-                          </StringValue>
-                        </>
+                            </>
+                          )}
+                        </StringValue>
                       )}
                     </Subscribe>
                   )}
-                </BooleanValue>
+                </ObjectValue>
                 <FormField
                   name="incoterm"
                   initValue={values.incoterm}

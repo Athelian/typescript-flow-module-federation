@@ -147,7 +147,10 @@ export default function selectSearchEnumInputFactory({
                       if (data.find(item => item.name === inputHandlers.value)) {
                         inputHandlers.onBlur();
                         if (event.onBlurHasValue) {
-                          event.onBlurHasValue(inputHandlers.value);
+                          event.onBlurHasValue(
+                            inputHandlers.value,
+                            previousInputHandlers ? previousInputHandlers.value : ''
+                          );
                         }
                         if (previousInputHandlers) {
                           previousInputHandlers.setValue(inputHandlers.value);

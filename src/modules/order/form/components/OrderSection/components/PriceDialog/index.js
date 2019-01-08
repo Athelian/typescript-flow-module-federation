@@ -24,7 +24,6 @@ function PriceDialog({
     <Dialog isOpen={isOpen} onRequestClose={onRequestClose} width="400px">
       <div className={ModalStyle}>
         <div className={ConfirmMessageStyle}>{message}</div>
-
         <div className={ButtonsStyle}>
           <CancelButton onClick={onCancel} />
           <NoButton onClick={onDeny} />
