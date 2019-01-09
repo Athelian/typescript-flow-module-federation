@@ -88,19 +88,9 @@ export default function BatchFilterMenu({
     },
   ];
 
-  const togglesMap = [
-    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-    {
-      name: 'showArchived',
-      label: <FormattedMessage {...messages.showArchived} />,
-      icon: 'ARCHIVE',
-    },
-  ];
-
   return (
     <BaseFilterMenu
       filtersMap={filtersMap}
-      togglesMap={togglesMap}
       entityType="batch"
       parsedActiveFilters={parsedActiveFilters}
       toggleActiveFilter={toggleActiveFilter}
