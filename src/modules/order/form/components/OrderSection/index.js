@@ -124,7 +124,6 @@ const OrderSection = ({ isNew }: Props) => (
                                     'currency',
                                     previousCurrency || initialValues.currency
                                   );
-                                  setPreviousCurrency(values.currency);
                                   setPriceDialog(false);
                                 }}
                                 onConfirm={() => {
@@ -146,7 +145,6 @@ const OrderSection = ({ isNew }: Props) => (
                                     'currency',
                                     previousCurrency || initialValues.currency
                                   );
-                                  setPreviousCurrency(values.currency);
                                   setPriceDialog(false);
                                 }}
                                 onDeny={() => {
