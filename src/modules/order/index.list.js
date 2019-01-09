@@ -45,9 +45,24 @@ class OrderModule extends React.Component<Props, State> {
     page: 1,
   };
 
+  componentDidMount() {
+    const localFilter = window.localStorage.getItem('filter-order');
+    if (localFilter) {
+      this.setState({ ...JSON.parse(localFilter) });
+    }
+  }
+
   onChangeFilter = (newValue: any) => {
-    const { filter, sort } = newValue;
-    this.setState(prevState => ({ ...prevState, sort, filterBy: filter }));
+    const { filter: filterBy, sort } = newValue;
+    this.setState(prevState => ({ ...prevState, sort, filterBy }));
+    window.localStorage.setItem(
+      'filter-order',
+      JSON.stringify({
+        ...this.state,
+        sort,
+        filterBy,
+      })
+    );
   };
 
   render() {
