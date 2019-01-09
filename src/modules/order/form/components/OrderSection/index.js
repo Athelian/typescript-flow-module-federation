@@ -131,14 +131,18 @@ const OrderSection = ({ isNew }: Props) => (
                                       },
                                     }))
                                   );
+                                  setPreviousCurrency(values.currency);
                                   setPriceDialog(false);
                                 }}
                                 onCancel={() => {
-                                  setPreviousCurrency(initialValues.currency);
-                                  setFieldValue('currency', initialValues.currency);
+                                  setFieldValue('currency', previousCurrency || values.currency);
+                                  setPreviousCurrency(values.currency);
                                   setPriceDialog(false);
                                 }}
-                                onDeny={() => setPriceDialog(false)}
+                                onDeny={() => {
+                                  setPriceDialog(false);
+                                  setPreviousCurrency(values.currency);
+                                }}
                                 message={
                                   <>
                                     <div className={DialogLineStyle}>
@@ -187,13 +191,11 @@ const OrderSection = ({ isNew }: Props) => (
                                     originalValue: initialValues[name],
                                     event: {
                                       onBlurHasValue: (value: string) => {
-                                        if (
-                                          value !== previousCurrency &&
-                                          value !== values.currency
-                                        ) {
+                                        if (value !== values.currency) {
                                           setPriceDialog(true);
+                                        } else {
+                                          setPreviousCurrency(value);
                                         }
-                                        setPreviousCurrency(value);
                                       },
                                     },
                                     label: <FormattedMessage {...messages.currency} />,
