@@ -6,6 +6,8 @@ import messages from './messages';
 
 type Props = {
   parsedActiveFilters: Array<string>,
+  parsedStatusFilters: any,
+  changeStatusFilter: Function,
   toggleActiveFilter: (string, string) => void,
   parsedFilterToggles: Object,
   toggleFilterToggle: (string, string) => void,
@@ -35,6 +37,8 @@ const getSelectData = (
 
 export default function ShipmentFilterMenu({
   parsedActiveFilters,
+  parsedStatusFilters,
+  changeStatusFilter,
   toggleActiveFilter,
   parsedFilterToggles,
   toggleFilterToggle,
@@ -140,14 +144,28 @@ export default function ShipmentFilterMenu({
     },
   ];
 
-  const togglesMap = [
-    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
+  const statusMap = [
     {
-      name: 'showArchived',
-      label: <FormattedMessage {...messages.showArchived} />,
-      icon: 'ARCHIVE',
+      name: 'active',
+      label: <FormattedMessage id="modules.relationMap.active" defaultMessage="ACTIVE" />,
+      field: 'archived',
+      value: false,
+    },
+    {
+      name: 'archived',
+      label: <FormattedMessage id="modules.relationMap.archived" defaultMessage="ARCHIVED" />,
+      field: 'archived',
+      value: true,
+    },
+    {
+      name: 'all',
+      label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
+      field: 'archived',
+      value: null,
     },
   ];
+
+  const togglesMap = [];
 
   return (
     <BaseFilterMenu
@@ -155,6 +173,9 @@ export default function ShipmentFilterMenu({
       togglesMap={togglesMap}
       entityType="shipment"
       parsedActiveFilters={parsedActiveFilters}
+      statusMap={statusMap}
+      parsedStatusFilters={parsedStatusFilters}
+      changeStatusFilter={changeStatusFilter}
       toggleActiveFilter={toggleActiveFilter}
       parsedFilterToggles={parsedFilterToggles}
       toggleFilterToggle={toggleFilterToggle}

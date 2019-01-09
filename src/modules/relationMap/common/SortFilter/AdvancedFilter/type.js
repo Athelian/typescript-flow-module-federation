@@ -16,8 +16,5 @@ export type FilterToggles = {
   },
   item: {},
   batch: {},
-  shipment: {
-    showActive: boolean,
-    showArchived: boolean,
-  },
+  shipment: {},
 };

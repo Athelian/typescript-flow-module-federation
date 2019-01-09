@@ -52,6 +52,7 @@ type State = {
   },
   statusFilters: {
     order: Object,
+    shipment: Object,
   },
 };
 
@@ -74,6 +75,9 @@ const initialState: State = {
     order: {
       archived: false,
     },
+    shipment: {
+      archived: null,
+    },
   },
   filterToggles: {
     order: {
@@ -82,10 +86,7 @@ const initialState: State = {
     },
     item: {},
     batch: {},
-    shipment: {
-      showActive: true,
-      showArchived: false,
-    },
+    shipment: {},
   },
 };
 
@@ -330,9 +331,13 @@ const convertPackagingQuery = (state: Object, type: string, prevKey: string) => 
 //   return filterQuery;
 // };
 
-const convertArchivedFilter = (state: Object, entityType: string) => {
+const convertArchivedFilter = (state: Object, entityType: string, key: string) => {
   const archived = getByPath(`statusFilters.${entityType}.archived`, state);
-  return isNullOrUndefined(archived) ? {} : { archived };
+  const query = {};
+  if (!isNullOrUndefined(archived)) {
+    query[key] = archived;
+  }
+  return query;
 };
 
 const convertToFilterQuery = (state: Object) => ({
@@ -341,7 +346,8 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'batch'),
   ...convertActiveFilter(state, 'shipment'),
 
-  ...convertArchivedFilter(state, 'order'),
+  ...convertArchivedFilter(state, 'order', 'archived'),
+  ...convertArchivedFilter(state, 'shipment', 'shipmentArchived'),
 
   ...convertPackagingQuery(state, 'item', 'productProvider'),
   // ...convertPackagingQuery(state, 'batch', 'batch'),
