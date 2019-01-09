@@ -75,10 +75,7 @@ const initialState: State = {
       showArchived: false,
     },
     item: {},
-    batch: {
-      showActive: true,
-      showArchived: false,
-    },
+    batch: {},
     shipment: {
       showActive: true,
       showArchived: false,
@@ -117,13 +114,11 @@ const FILTER = {
   },
   batch: {
     deliveredAt: 'batchDeliveredAt',
-    expiredAt: 'batchExpiredAt',
-    producedAt: 'batchProducedAt',
+    // expiredAt: 'batchExpiredAt',
+    // producedAt: 'batchProducedAt',
     tags: 'batchTagIds',
-    createdAt: 'batchCreatedAt',
-    updatedAt: 'batchUpdatedAt',
-    showActive: null,
-    showArchived: null,
+    // createdAt: 'batchCreatedAt',
+    // updatedAt: 'batchUpdatedAt',
   },
   shipment: {
     cargoReady: 'shipmentCargoReady',
@@ -357,7 +352,7 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertArchivedFilter(state, 'order', 'archived'),
 
   ...convertPackagingQuery(state, 'item', 'productProvider'),
-  ...convertPackagingQuery(state, 'batch', 'batch'),
+  // ...convertPackagingQuery(state, 'batch', 'batch'),
   ...convertPortsQuery(state),
 
   ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),

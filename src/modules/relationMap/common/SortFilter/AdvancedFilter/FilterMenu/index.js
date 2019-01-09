@@ -6,7 +6,7 @@ import type {
   FilterToggles,
 } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import OrderFilterMenu from './OrderFilterMenu';
-import ItemFilterMenu from './ItemFilterMenu';
+// import ItemFilterMenu from './ItemFilterMenu';
 import BatchFilterMenu from './BatchFilterMenu';
 import ShipmentFilterMenu from './ShipmentFilterMenu';
 import { FilterMenuWrapperStyle } from './style';
@@ -32,8 +32,8 @@ const getFilterMenu = (selectedEntityType: EntityTypes) => {
   switch (selectedEntityType) {
     case 'order':
       return OrderFilterMenu;
-    case 'item':
-      return ItemFilterMenu;
+    // case 'item':
+    //   return ItemFilterMenu;
     case 'batch':
       return BatchFilterMenu;
     case 'shipment':
