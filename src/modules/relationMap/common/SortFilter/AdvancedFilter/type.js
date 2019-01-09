@@ -13,8 +13,6 @@ export type FilterToggles = {
   order: {
     completelyBatched: boolean,
     completelyShipped: boolean,
-    showActive: boolean,
-    showArchived: boolean,
   },
   item: {},
   batch: {},
