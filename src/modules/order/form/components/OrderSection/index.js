@@ -135,7 +135,10 @@ const OrderSection = ({ isNew }: Props) => (
                                   setPriceDialog(false);
                                 }}
                                 onCancel={() => {
-                                  setFieldValue('currency', previousCurrency || values.currency);
+                                  setFieldValue(
+                                    'currency',
+                                    previousCurrency || initialValues.currency
+                                  );
                                   setPreviousCurrency(values.currency);
                                   setPriceDialog(false);
                                 }}
