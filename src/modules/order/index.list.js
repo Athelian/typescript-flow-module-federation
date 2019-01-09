@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
+import FilterHandler from 'components/FilterHandler';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
@@ -30,8 +31,8 @@ type State = {
   page: number,
 };
 
-class OrderModule extends React.Component<Props, State> {
-  state = {
+const getInitFilter = () => {
+  const state: State = {
     viewType: 'grid',
     filterBy: {
       query: '',
@@ -44,72 +45,54 @@ class OrderModule extends React.Component<Props, State> {
     perPage: 10,
     page: 1,
   };
+  return state;
+};
+function OrderModule(props: Props) {
+  const { intl } = props;
 
-  componentDidMount() {
-    const localFilter = window.localStorage.getItem('filter-order');
-    if (localFilter) {
-      this.setState({ ...JSON.parse(localFilter) });
-    }
-  }
-
-  onChangeFilter = (newValue: any) => {
-    const { filter: filterBy, sort } = newValue;
-    this.setState(prevState => ({ ...prevState, sort, filterBy }));
-    window.localStorage.setItem(
-      'filter-order',
-      JSON.stringify({
-        ...this.state,
-        sort,
-        filterBy,
-      })
-    );
-  };
-
-  render() {
-    const { intl } = this.props;
-    const { filterBy, sort, page, perPage } = this.state;
-
-    const sortFields = [
-      { title: intl.formatMessage(messages.poSort), value: 'poNo' },
-      { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
-      { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
-    ];
-
-    return (
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <FilterToolBar
-                  icon="ORDER"
-                  sortFields={sortFields}
-                  filtersAndSort={{ page, perPage, sort, filter: filterBy }}
-                  onChange={this.onChangeFilter}
-                />
-                <ExportButton
-                  type="Orders"
-                  exportQuery={ordersExportQuery}
-                  variables={{
-                    filterBy,
-                    sortBy: {
-                      [sort.field]: sort.direction,
-                    },
-                  }}
-                />
-                <Link to="new">
-                  <NewButton />
-                </Link>
-              </NavBar>
-            }
-          >
-            <OrderList {...this.state} />
-          </Layout>
-        )}
-      </UIConsumer>
-    );
-  }
+  const sortFields = [
+    { title: intl.formatMessage(messages.poSort), value: 'poNo' },
+    { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
+  ];
+  return (
+    <UIConsumer>
+      {uiState => (
+        <FilterHandler filterName="filterOrder" initFilter={getInitFilter()}>
+          {({ filterBy, sort, page, perPage, viewType, onChangeFilter }) => (
+            <Layout
+              {...uiState}
+              navBar={
+                <NavBar>
+                  <FilterToolBar
+                    icon="ORDER"
+                    sortFields={sortFields}
+                    filtersAndSort={{ page, perPage, sort, filter: filterBy }}
+                    onChange={onChangeFilter}
+                  />
+                  <ExportButton
+                    type="Orders"
+                    exportQuery={ordersExportQuery}
+                    variables={{
+                      filterBy,
+                      sortBy: {
+                        [sort.field]: sort.direction,
+                      },
+                    }}
+                  />
+                  <Link to="new">
+                    <NewButton />
+                  </Link>
+                </NavBar>
+              }
+            >
+              <OrderList {...{ filterBy, sort, page, perPage, viewType }} />
+            </Layout>
+          )}
+        </FilterHandler>
+      )}
+    </UIConsumer>
+  );
 }
 
 export default injectIntl(OrderModule);

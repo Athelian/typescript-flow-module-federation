@@ -49,6 +49,7 @@ export default function FilterToolBar({
       {renderIcon(icon)}
       {Object.prototype.hasOwnProperty.call(filtersAndSort.filter, 'archived') && (
         <StatusToggleTabs
+          activeIndex={filtersAndSort.filter.archived ? 1 : 0}
           onChange={index =>
             onChange({ ...filtersAndSort, filter: { ...filtersAndSort.filter, archived: !!index } })
           }
