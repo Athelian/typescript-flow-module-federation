@@ -136,6 +136,10 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 
+.emotion-2:focus {
+  border-color: #11d1a6;
+}
+
 .emotion-2 > button {
   opacity: 1;
 }
@@ -164,6 +168,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
 .emotion-2 > input:focus,
 .emotion-2 > textarea:focus {
   outline: none;
+  border-color: #11d1a6;
 }
 
 .emotion-2 > input::-webkit-input-placeholder,
@@ -305,7 +310,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             EMAIL
           </div>
           <div
-            class="css-ri1ip4"
+            class="css-19eu71p"
           >
             <input
               data-testid="email"
@@ -330,7 +335,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             PASSWORD
           </div>
           <div
-            class="css-ri1ip4"
+            class="css-19eu71p"
           >
             <input
               data-testid="password"
@@ -515,6 +520,10 @@ exports[`<LoginForm /> should render without crash 1`] = `
   box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 
+.emotion-2:focus {
+  border-color: #11d1a6;
+}
+
 .emotion-2 > button {
   opacity: 1;
 }
@@ -543,6 +552,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
 .emotion-2 > input:focus,
 .emotion-2 > textarea:focus {
   outline: none;
+  border-color: #11d1a6;
 }
 
 .emotion-2 > input::-webkit-input-placeholder,

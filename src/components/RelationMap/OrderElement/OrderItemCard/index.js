@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-// import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { getByPathWithDefault as get } from 'utils/fp';
 import {
@@ -17,17 +16,20 @@ import {
 import { CardWrapperStyle, CardVisualizeStyle, CardTitleStyle } from '../style';
 import Number from '../Card/Number';
 import Badge from '../Card/Badge';
-// import messages from './messages';
 
 type Props = {
   orderItem: {
-    name: string | React.Node,
     orderedQuantity: number,
     batchedQuantity: number,
     shippedQuantity: number,
     batched?: number,
     shipped?: number,
-    productProvider: Object,
+    productProvider: {
+      product: {
+        name: string,
+        serial: string,
+      },
+    },
   },
 };
 
@@ -35,7 +37,6 @@ export default class OrderItemCard extends React.PureComponent<Props> {
   render() {
     const {
       orderItem: {
-        name,
         orderedQuantity,
         batchedQuantity,
         shippedQuantity,
@@ -47,7 +48,7 @@ export default class OrderItemCard extends React.PureComponent<Props> {
     return (
       <div className={CardWrapperStyle}>
         <div className={ProductNameWrapperStyle}>
-          <div className={CardTitleStyle}>{name}</div>
+          <div className={CardTitleStyle}>{get('', 'product.name', productProvider)}</div>
           <div className={SerialWrapperStyle}>{get('', 'product.serial', productProvider)}</div>
         </div>
 

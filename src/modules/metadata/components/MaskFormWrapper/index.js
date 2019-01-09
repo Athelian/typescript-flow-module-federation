@@ -227,7 +227,6 @@ class MaskFormWrapper extends React.Component<Props> {
                       </Query>
                     )}
                   </Layout>
-                  )} }}
                 </>
               )}
             </Mutation>

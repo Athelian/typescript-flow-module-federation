@@ -45,7 +45,7 @@ type OptionalProps = {
   onCancel?: Function,
 };
 
-type Props = OptionalProps;
+type Props = OptionalProps & {};
 
 const defaultProps = {
   path: '',

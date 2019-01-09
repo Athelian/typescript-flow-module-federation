@@ -35,7 +35,6 @@ const defaultProps = {
   isClone: false,
   order: {},
   onFormReady: () => {},
-  onChangeStatus: () => Promise.resolve({}),
 };
 
 export default class OrderForm extends React.Component<Props> {
