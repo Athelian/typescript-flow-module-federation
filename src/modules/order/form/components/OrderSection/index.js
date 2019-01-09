@@ -114,60 +114,62 @@ const OrderSection = ({ isNew }: Props) => (
                   {({ value: isOpen, set: setPriceDialog }) => (
                     <Subscribe to={[OrderItemsContainer]}>
                       {({ state: { orderItems }, setFieldValue: setItemFieldValue }) => (
-                        <>
-                          <PriceDialog
-                            isOpen={isOpen}
-                            onRequestClose={() => setPriceDialog(false)}
-                            onConfirm={() => {
-                              setItemFieldValue(
-                                'orderItems',
-                                orderItems.map(orderItem => ({
-                                  ...orderItem,
-                                  price: {
-                                    ...orderItem.price,
-                                    amount: 0,
-                                  },
-                                }))
-                              );
-                              setPriceDialog(false);
-                            }}
-                            onCancel={() => {
-                              setFieldValue('currency', initialValues.currency);
-                              setPriceDialog(false);
-                            }}
-                            onDeny={() => setPriceDialog(false)}
-                            message={
-                              <>
-                                <div className={DialogLineStyle}>
-                                  <FormattedMessage
-                                    {...messages.detectPriceChanged}
-                                    values={{
-                                      items: spanWithColor(
-                                        <FormattedMessage {...messages.sectionItems} />,
-                                        'ORDER_ITEM'
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                                <div className={DialogLineStyle}>
-                                  <FormattedMessage
-                                    {...messages.changePrice}
-                                    values={{
-                                      items: spanWithColor(
-                                        <FormattedMessage {...messages.sectionItems} />,
-                                        'ORDER_ITEM'
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                                <div className={DialogLineStyle}>
-                                  <FormattedMessage {...messages.resetPrice} />
-                                </div>
-                              </>
-                            }
-                          />
-                          <StringValue>
-                            {({ value: previousCurrency, set: setPreviousCurrency }) => (
+                        <StringValue>
+                          {({ value: previousCurrency, set: setPreviousCurrency }) => (
+                            <>
+                              <PriceDialog
+                                isOpen={isOpen}
+                                onRequestClose={() => setPriceDialog(false)}
+                                onConfirm={() => {
+                                  setItemFieldValue(
+                                    'orderItems',
+                                    orderItems.map(orderItem => ({
+                                      ...orderItem,
+                                      price: {
+                                        ...orderItem.price,
+                                        amount: 0,
+                                      },
+                                    }))
+                                  );
+                                  setPriceDialog(false);
+                                }}
+                                onCancel={() => {
+                                  setPreviousCurrency(initialValues.currency);
+                                  setFieldValue('currency', initialValues.currency);
+                                  setPriceDialog(false);
+                                }}
+                                onDeny={() => setPriceDialog(false)}
+                                message={
+                                  <>
+                                    <div className={DialogLineStyle}>
+                                      <FormattedMessage
+                                        {...messages.detectPriceChanged}
+                                        values={{
+                                          items: spanWithColor(
+                                            <FormattedMessage {...messages.sectionItems} />,
+                                            'ORDER_ITEM'
+                                          ),
+                                        }}
+                                      />
+                                    </div>
+                                    <div className={DialogLineStyle}>
+                                      <FormattedMessage
+                                        {...messages.changePrice}
+                                        values={{
+                                          items: spanWithColor(
+                                            <FormattedMessage {...messages.sectionItems} />,
+                                            'ORDER_ITEM'
+                                          ),
+                                        }}
+                                      />
+                                    </div>
+                                    <div className={DialogLineStyle}>
+                                      <FormattedMessage {...messages.resetPrice} />
+                                    </div>
+                                  </>
+                                }
+                              />
+
                               <FormField
                                 name="currency"
                                 initValue={values.currency}
@@ -196,9 +198,9 @@ const OrderSection = ({ isNew }: Props) => (
                                   })
                                 }
                               </FormField>
-                            )}
-                          </StringValue>
-                        </>
+                            </>
+                          )}
+                        </StringValue>
                       )}
                     </Subscribe>
                   )}
