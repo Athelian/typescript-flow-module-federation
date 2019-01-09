@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
+import { actionCreators } from 'modules/relationMapBeta/order/store';
 import BaseCard from 'components/Cards';
 import { BatchCard, WrapperCard, Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
@@ -13,11 +14,13 @@ type OptionalProps = {
 
 type Props = OptionalProps & BatchProps;
 
-export default function Batch({ wrapperClassName, tags, ...batch }: Props) {
+export default function Batch({ wrapperClassName, id, tags, ...batch }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
     state: { showTag },
+    dispatch,
   } = context;
+  const actions = actionCreators(dispatch);
   return (
     <BaseCard showActionsOnHover icon="BATCH" color="BATCH" wrapperClassName={wrapperClassName}>
       <BooleanValue>
@@ -31,19 +34,19 @@ export default function Batch({ wrapperClassName, tags, ...batch }: Props) {
                     icon="MAGIC"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('HIGHLIGHT')}
+                    onClick={() => actions.toggleHighLight('BATCH', id)}
                   />
                   <Action
                     icon="DOCUMENT"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('EDIT')}
+                    onClick={() => actions.showEditForm('BATCH', id)}
                   />
                   <Action
                     icon="CHECKED"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('TARGET')}
+                    onClick={() => actions.targetEntity('BATCH', id)}
                   />
                 </>
               )}

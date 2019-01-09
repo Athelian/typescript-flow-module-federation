@@ -12,6 +12,10 @@ export type UIState = {
     mode: 'SINGLE' | 'ALL',
     entities: Array<string>,
   },
+  highlight: {
+    type: string,
+    selectedId: string,
+  },
   totalShipment: number,
 };
 
@@ -38,6 +42,10 @@ export const uiInitState: UIState = {
   select: {
     mode: 'SINGLE',
     entities: [],
+  },
+  highlight: {
+    type: '',
+    selectedId: '',
   },
   totalShipment: 0,
 };
@@ -116,6 +124,14 @@ export function actionCreators(dispatch: Function) {
           id,
         },
       }),
+    toggleHighLight: (entity: string, id: string) =>
+      dispatch({
+        type: 'TOGGLE_HIGH_LIGHT',
+        payload: {
+          entity,
+          id,
+        },
+      }),
     toggleShipmentList: () =>
       dispatch({
         type: 'TOGGLE_SHIPMENT_LIST',
@@ -132,6 +148,30 @@ export function actionCreators(dispatch: Function) {
         type: 'TOTAL_SHIPMENT',
         payload: {
           total,
+        },
+      }),
+    showEditForm: (entity: string, id: string) =>
+      dispatch({
+        type: 'SHOW_EDIT_FORM',
+        payload: {
+          entity,
+          id,
+        },
+      }),
+    selectBranch: (entity: string, id: string) =>
+      dispatch({
+        type: 'SELECT_BRANCH',
+        payload: {
+          entity,
+          id,
+        },
+      }),
+    targetEntity: (entity: string, id: string) =>
+      dispatch({
+        type: 'TARGET_ENTITY',
+        payload: {
+          entity,
+          id,
         },
       }),
   };

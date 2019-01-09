@@ -6,6 +6,7 @@ import BaseCard from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
+import { actionCreators } from 'modules/relationMapBeta/order/store';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
 
 type OptionalProps = {
@@ -21,11 +22,14 @@ export default function Order({
   totalBatched,
   totalShipped,
   tags,
+  id,
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
     state: { showTag },
+    dispatch,
   } = context;
+  const actions = actionCreators(dispatch);
   return (
     <BaseCard icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
       <BooleanValue>
@@ -43,31 +47,30 @@ export default function Order({
             <ActionCard show={hovered}>
               {({ targetted, toggle }) => (
                 <>
-                  {/* NOTE: why need to send targetted and toggle to ACTION */}
                   <Action
                     icon="MAGIC"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('HIGHLIGHT')}
+                    onClick={() => actions.toggleHighLight('ORDER', id)}
                   />
                   <Action
                     icon="DOCUMENT"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('EDIT')}
+                    onClick={() => actions.showEditForm('ORDER', id)}
                   />
                   <Action
                     icon="BRANCH"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('BRANCH')}
+                    onClick={() => actions.selectBranch('ORDER', id)}
                     className={RotateIcon}
                   />
                   <Action
                     icon="CHECKED"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('TARGET')}
+                    onClick={() => actions.targetEntity('ORDER', id)}
                   />
                 </>
               )}

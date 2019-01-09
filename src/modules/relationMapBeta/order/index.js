@@ -215,7 +215,7 @@ const Order = ({ intl }: Props) => {
                     ) : (
                       <div className={ShipmentListBodyStyle}>
                         {Object.entries(shipments || []).map(([shipmentId, shipment]) => (
-                          <Shipment key={shipmentId} {...shipment} onToggle={console.warn} />
+                          <Shipment key={shipmentId} {...shipment} />
                         ))}
                       </div>
                     )}
