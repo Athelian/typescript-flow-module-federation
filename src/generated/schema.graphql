@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Jan 15 2019 14:17:42 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Jan 09 2019 15:22:37 GMT+0700 (Indochina Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -26899,11 +26899,9 @@ type Batch implements Model & Owned & Package & Tagged & Customizable {
   expiredAt: DateTime
   desiredAt: DateTime
   memo: String
-  totalAdjusted: Float!
-  totalVolume: MetricValue!
+  totalAdjusted: Float
   batchAssignments: [BatchAssignment!]!
   batchAdjustments: [BatchAdjustment!]!
-  container: Container
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -27117,84 +27115,6 @@ type Comment implements Model & Owned {
   ownedBy: Group!
 }
 
-type Container implements Model & Owned & Sortable & Tagged {
-  no: String!
-  warehouseArrivalAgreedDate: DateTime
-  warehouseArrivalAgreedDateApprovedBy: User
-  warehouseArrivalActualDate: DateTime
-  warehouseArrivalActualDateApprovedBy: User
-  shipment: Shipment!
-  warehouse: Warehouse
-  representativeBatch: Batch
-  batches: [Batch!]!
-  totalVolume: MetricValue!
-  totalWeight: MetricValue!
-  totalPrice: MetricValue!
-  totalBatchQuantity: Int!
-  totalBatchPackages: Int!
-  totalNumberOfUniqueOrderItems: Int!
-  warehouseArrivalActualDateAssignedTo: User
-  warehouseArrivalAgreedDateAssignedTo: User
-  memo: String
-  archived: Boolean!
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
-  sort: Int!
-  tags: [Tag!]!
-}
-
-input ContainerBatchAdjustmentInput {
-  id: ID
-  reason: BatchAdjustmentReason
-  quantity: Float
-  memo: String
-}
-
-input ContainerBatchAssignmentInput {
-  id: ID
-  userId: ID
-  quantity: Float
-  memo: String
-}
-
-input ContainerBatchInput {
-  no: String
-  quantity: Float
-  producedAt: DateTime
-  deliveredAt: DateTime
-  expiredAt: DateTime
-  desiredAt: DateTime
-  packageQuantity: Float
-  autoCalculatePackageQuantity: Boolean
-  packageName: String
-  packageGrossWeight: MetricValueInput
-  packageVolume: MetricValueInput
-  packageSize: SizeInput
-  packageCapacity: Float
-  memo: String
-  tagIds: [ID!]
-  customFields: CustomFieldsInput
-  id: ID
-  orderItemId: ID
-  batchAssignments: [ContainerBatchAssignmentInput!]
-  batchAdjustments: [ContainerBatchAdjustmentInput!]
-}
-
-input ContainerFilterInput {
-  query: String
-  createdAt: DateRangeInput
-  updatedAt: DateRangeInput
-  archived: Boolean
-  warehouseArrivalActualDate: DateRangeInput
-  warehouses: [ID!]
-}
-
 type ContainerGroup implements Model & Owned & Sortable {
   customClearance: TimelineDate!
   warehouseArrival: TimelineDate!
@@ -27210,42 +27130,6 @@ type ContainerGroup implements Model & Owned & Sortable {
   deletedBy: User
   ownedBy: Group!
   sort: Int!
-}
-
-type ContainerMutated {
-  container: Container
-  violations: [Violation!]
-}
-
-type ContainerPagination {
-  nodes: [Container!]!
-  page: Int!
-  perPage: Int!
-  totalPage: Int!
-  count: Int!
-  totalCount: Int!
-}
-
-input ContainerSortInput {
-  createdAt: SortOrder
-  updatedAt: SortOrder
-  warehouseName: SortOrder
-  warehouseArrivalActualDate: SortOrder
-}
-
-input ContainerUpdateInput {
-  no: String
-  warehouseArrivalAgreedDateApprovedById: ID
-  warehouseArrivalAgreedDate: DateTime
-  warehouseArrivalActualDateApprovedById: ID
-  warehouseArrivalActualDate: DateTime
-  warehouseId: ID
-  representativeBatchId: ID
-  batches: [ContainerBatchInput!]
-  warehouseArrivalAgreedDateAssignedToId: ID
-  warehouseArrivalActualDateAssignedToId: ID
-  memo: String
-  tagIds: [ID!]
 }
 
 enum Country {
@@ -29731,7 +29615,6 @@ type Mutation {
   notificationRead(id: ID!): Boolean!
   notificationReadAll: Boolean!
   notificationSeeAll: Boolean!
-  containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerMutated!
 }
 
 type Notification {
@@ -29964,7 +29847,6 @@ input OrderFilterInput {
   batchQuantity: ValueRangeInput
   batchPackageSize: SizeRangeInput
   batchPackageVolume: MetricRangeInput
-  batchTotalVolume: MetricRangeInput
   batchPackageWeight: MetricRangeInput
   shipmentTagIds: [ID!]
   shipmentForwarderIds: [ID!]
@@ -29980,7 +29862,6 @@ input OrderFilterInput {
   shipmentSecondTransitPortArrival: DateRangeInput
   shipmentSecondTransitPortDeparture: DateRangeInput
   shipmentDischargePortArrival: DateRangeInput
-  shipmentWarehouseIds: [ID!]
   shipmentCustomClearance: DateRangeInput
   shipmentWarehouseArrival: DateRangeInput
   shipmentDeliveryReady: DateRangeInput
@@ -30529,8 +30410,6 @@ type Query {
   integrationConfigurations(page: Int! = 1, perPage: Int! = 10): IntegrationConfigurationPagination!
   integrationLink(id: ID!): IntegrationLink
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplate!]!
-  container(id: ID!): Container
-  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPagination!
 }
 
 enum ResizePreset {
@@ -35468,9 +35347,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   orderItemCount: Int
   timeline: Timeline!
   batches: [Batch!]!
-  batchesWithoutContainer: [Batch!]!
   integrationLinks: [IntegrationLink!]!
-  containers: [Container!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -35522,21 +35399,6 @@ input ShipmentBatchInput {
   batchAdjustments: [ShipmentBatchAdjustmentInput!]
 }
 
-input ShipmentContainerCreateInput {
-  no: String!
-  warehouseArrivalAgreedDateApprovedById: ID
-  warehouseArrivalAgreedDate: DateTime
-  warehouseArrivalActualDateApprovedById: ID
-  warehouseArrivalActualDate: DateTime
-  warehouseId: ID
-  representativeBatchId: ID
-  batches: [ShipmentBatchInput!]
-  warehouseArrivalAgreedDateAssignedToId: ID
-  warehouseArrivalActualDateAssignedToId: ID
-  memo: String
-  tagIds: [ID!]
-}
-
 input ShipmentContainerGroupCreateInput {
   warehouseId: ID
   customClearance: ShipmentTimelineDateCreateInput
@@ -35552,22 +35414,6 @@ input ShipmentContainerGroupUpdateInput {
   deliveryReady: ShipmentTimelineDateUpdateInput
 }
 
-input ShipmentContainerUpdateInput {
-  id: ID
-  no: String
-  warehouseArrivalAgreedDateApprovedById: ID
-  warehouseArrivalAgreedDate: DateTime
-  warehouseArrivalActualDateApprovedById: ID
-  warehouseArrivalActualDate: DateTime
-  warehouseId: ID
-  representativeBatchId: ID
-  batches: [ShipmentBatchInput!]
-  warehouseArrivalAgreedDateAssignedToId: ID
-  warehouseArrivalActualDateAssignedToId: ID
-  memo: String
-  tagIds: [ID!]
-}
-
 input ShipmentCreateInput {
   no: String!
   blNo: String
@@ -35577,7 +35423,6 @@ input ShipmentCreateInput {
   invoiceNo: String
   loadType: LoadType
   transportType: TransportType
-  containerType: String
   incoterm: Incoterm
   carrier: String
   cargoReady: ShipmentTimelineDateCreateInput
@@ -35590,7 +35435,6 @@ input ShipmentCreateInput {
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
-  containers: [ShipmentContainerCreateInput!]
 }
 
 input ShipmentFilterInput {
@@ -35612,7 +35456,6 @@ input ShipmentFilterInput {
   secondTransitPortArrival: DateRangeInput
   secondTransitPortDeparture: DateRangeInput
   dischargePortArrival: DateRangeInput
-  warehouseIds: [ID!]
   customClearance: DateRangeInput
   warehouseArrival: DateRangeInput
   deliveryReady: DateRangeInput
@@ -35681,7 +35524,6 @@ input ShipmentUpdateInput {
   invoiceNo: String
   loadType: LoadType
   transportType: TransportType
-  containerType: String
   incoterm: Incoterm
   carrier: String
   cargoReady: ShipmentTimelineDateUpdateInput
@@ -35694,7 +35536,6 @@ input ShipmentUpdateInput {
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
-  containers: [ShipmentContainerUpdateInput!]
 }
 
 input ShipmentUpdateWrapperInput {
@@ -35801,9 +35642,6 @@ enum TagEntityType {
 
   """User"""
   User
-
-  """Container"""
-  Container
 }
 
 input TagFilterInput {
