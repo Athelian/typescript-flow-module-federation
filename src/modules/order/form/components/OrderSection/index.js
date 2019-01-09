@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, StringValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import { getByPath } from 'utils/fp';
 import { spanWithColor } from 'utils/color';
 import {
   OrderInfoContainer,
@@ -48,8 +47,6 @@ import {
 type Props = {
   isNew: boolean,
 };
-const isDifferentItemCurrency = (currency, items) =>
-  items.length > 0 ? items.some(item => getByPath('price.currency', item) !== currency) : false;
 
 const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
@@ -169,33 +166,38 @@ const OrderSection = ({ isNew }: Props) => (
                               </>
                             }
                           />
-                          <FormField
-                            name="currency"
-                            initValue={values.currency}
-                            values={values}
-                            validator={validator}
-                            setFieldValue={setFieldValue}
-                          >
-                            {({ name, ...inputHandlers }) =>
-                              selectSearchEnumInputFactory({
-                                required: true,
-                                enumType: 'Currency',
-                                name,
-                                inputHandlers,
-                                isNew,
-                                originalValue: initialValues[name],
-                                event: {
-                                  onBlurHasValue: (value: string) => {
-                                    if (isDifferentItemCurrency(value, orderItems)) {
-                                      setPriceDialog(true);
-                                    }
-                                  },
-                                },
-                                label: <FormattedMessage {...messages.currency} />,
-                                hideClearButton: true,
-                              })
-                            }
-                          </FormField>
+                          <StringValue>
+                            {({ value: previousCurrency, set: setPreviousCurrency }) => (
+                              <FormField
+                                name="currency"
+                                initValue={values.currency}
+                                values={values}
+                                validator={validator}
+                                setFieldValue={setFieldValue}
+                              >
+                                {({ name, ...inputHandlers }) =>
+                                  selectSearchEnumInputFactory({
+                                    required: true,
+                                    enumType: 'Currency',
+                                    name,
+                                    inputHandlers,
+                                    isNew,
+                                    originalValue: initialValues[name],
+                                    event: {
+                                      onBlurHasValue: (value: string) => {
+                                        if (value !== previousCurrency) {
+                                          setPriceDialog(true);
+                                        }
+                                        setPreviousCurrency(value);
+                                      },
+                                    },
+                                    label: <FormattedMessage {...messages.currency} />,
+                                    hideClearButton: true,
+                                  })
+                                }
+                              </FormField>
+                            )}
+                          </StringValue>
                         </>
                       )}
                     </Subscribe>
