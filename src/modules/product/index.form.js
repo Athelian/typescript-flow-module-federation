@@ -8,7 +8,7 @@ import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -82,20 +82,18 @@ type ProductFormState = {
 class ProductFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
-  onCancel = ({
+  onCancel = () => navigate(`/product`);
+
+  onReset = ({
     productInfoState,
     productTagsState,
     productFilesState,
     productProvidersState,
   }: ProductFormState) => {
-    if (this.isNewOrClone()) {
-      navigate(`/product`);
-    } else {
-      resetFormState(productInfoState);
-      resetFormState(productTagsState, 'tags');
-      resetFormState(productFilesState, 'files');
-      resetFormState(productProvidersState, 'productProviders');
-    }
+    resetFormState(productInfoState);
+    resetFormState(productTagsState, 'tags');
+    resetFormState(productFilesState, 'files');
+    resetFormState(productProvidersState, 'productProviders');
   };
 
   onSave = async (
@@ -239,16 +237,21 @@ class ProductFormModule extends React.Component<Props> {
                             productTagsState.isDirty() ||
                             productFilesState.isDirty()) && (
                             <>
-                              <CancelButton
-                                onClick={() =>
-                                  this.onCancel({
-                                    productInfoState,
-                                    productProvidersState,
-                                    productTagsState,
-                                    productFilesState,
-                                  })
-                                }
-                              />
+                              {this.isNewOrClone() ? (
+                                <CancelButton onClick={() => this.onCancel()} />
+                              ) : (
+                                <ResetButton
+                                  onClick={() =>
+                                    this.onReset({
+                                      productInfoState,
+                                      productProvidersState,
+                                      productTagsState,
+                                      productFilesState,
+                                    })
+                                  }
+                                />
+                              )}
+
                               <SaveButton
                                 disabled={
                                   !form.isReady(

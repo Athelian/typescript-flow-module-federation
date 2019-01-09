@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { toFloat } from 'utils/number';
 import { FieldItem, Label, FormTooltip, NumberInput, DefaultPriceStyle } from 'components/Form';
 
 export default function priceInputFactory({
@@ -7,7 +8,6 @@ export default function priceInputFactory({
   width = '200px',
   height = '30px',
   align = 'right',
-  currency,
   isNew,
   label,
   name,
@@ -18,13 +18,12 @@ export default function priceInputFactory({
   align?: string,
   width?: string,
   height?: string,
-  currency: string,
   isNew: boolean,
   label?: React.Node,
   name: string,
   inputHandlers: {
     name: string,
-    value: string,
+    value: { amount: string, currency: string },
     isTouched: boolean,
     errorMessage: string,
     isFocused: boolean,
@@ -32,9 +31,9 @@ export default function priceInputFactory({
     onFocus: Function,
     onBlur: Function,
   },
-  originalValue: any,
+  originalValue: { amount: string, currency: string },
 }) {
-  const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
+  const { isTouched, errorMessage, isFocused, value, onChange, ...rest } = inputHandlers;
   return (
     <FieldItem
       label={
@@ -49,21 +48,37 @@ export default function priceInputFactory({
           isNew={isNew}
           errorMessage={isTouched && errorMessage}
           changedValues={{
-            oldValue: originalValue,
-            newValue: inputHandlers.value,
+            oldValue: `${originalValue.amount} ${originalValue.currency}`,
+            newValue: `${value.amount} ${value.currency}`,
           }}
         />
       }
       input={
         <DefaultPriceStyle
-          currency={currency}
+          currency={value.currency}
           isFocused={isFocused}
           hasError={isTouched && errorMessage}
           forceHoverStyle={isNew}
           width={width}
           height={height}
         >
-          <NumberInput align={align} name={name} {...rest} />
+          <NumberInput
+            align={align}
+            name={name}
+            value={value.amount}
+            onChange={evt =>
+              onChange({
+                ...evt,
+                target: {
+                  value: {
+                    amount: toFloat(evt.target.value),
+                    currency: value.currency,
+                  },
+                },
+              })
+            }
+            {...rest}
+          />
         </DefaultPriceStyle>
       }
     />

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { scrollbars, presets } from 'styles/common';
+import { scrollbars, presets, borderRadiuses, fontSizes, colors } from 'styles/common';
 
 const BackdropStyle: string = css`
   position: fixed;
@@ -54,6 +54,7 @@ export const BackdropFadeOutStyle: string = css`
 `;
 
 export const DialogFadeInStyle = (width: string): string => css`
+  position: relative;
   ${presets.BOX};
   width: ${width};
   z-index: 10001;
@@ -71,9 +72,9 @@ export const DialogFadeInStyle = (width: string): string => css`
 `;
 
 export const DialogFadeOutStyle = (width: string): string => css`
+  position: relative;
   ${presets.BOX};
   width: ${width};
-
   @keyframes fadeAway {
     to {
       transform: translateY(100px);
@@ -85,4 +86,22 @@ export const DialogFadeOutStyle = (width: string): string => css`
   animation-name: fadeAway;
   animation-duration: 0.2s;
   animation-fill-mode: forwards;
+`;
+
+export const CancelButtonStyle: string = css`
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  ${presets.BUTTON};
+  ${borderRadiuses.CIRCLE};
+  height: 20px;
+  width: 20px;
+  ${fontSizes.SMALL};
+  color: ${colors.GRAY_LIGHT};
+  background-color: ${colors.WHITE};
+  &:hover,
+  :focus {
+    color: ${colors.GRAY_DARK};
+    background-color: ${colors.GRAY_SUPER_LIGHT};
+  }
 `;

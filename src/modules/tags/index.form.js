@@ -7,7 +7,7 @@ import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
@@ -39,13 +39,11 @@ type TagFormState = {
 export default class TagFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
-  onCancel = ({ tagState, entityTypesState }: TagFormState) => {
-    if (this.isNewOrClone()) {
-      navigate('/tags');
-    } else {
-      resetFormState(tagState);
-      resetFormState(entityTypesState, 'entityTypes');
-    }
+  onCancel = () => navigate('/tags');
+
+  onReset = ({ tagState, entityTypesState }: TagFormState) => {
+    resetFormState(tagState);
+    resetFormState(entityTypesState, 'entityTypes');
   };
 
   onSave = async (
@@ -145,14 +143,18 @@ export default class TagFormModule extends React.PureComponent<Props> {
                         {(tagState, entityTypesState, form) =>
                           (isNewOrClone || tagState.isDirty() || entityTypesState.isDirty()) && (
                             <>
-                              <CancelButton
-                                onClick={() =>
-                                  this.onCancel({
-                                    tagState,
-                                    entityTypesState,
-                                  })
-                                }
-                              />
+                              {this.isNewOrClone() ? (
+                                <CancelButton onClick={() => this.onCancel()} />
+                              ) : (
+                                <ResetButton
+                                  onClick={() =>
+                                    this.onReset({
+                                      tagState,
+                                      entityTypesState,
+                                    })
+                                  }
+                                />
+                              )}
                               <SaveButton
                                 data-testid="saveButton"
                                 disabled={

@@ -2,6 +2,7 @@
 import dateInputFactory from './dateInput';
 import numberInputFactory from './numberInput';
 import priceInputFactory from './priceInput';
+import dayInputFactory from './dayInput';
 import selectSearchEnumInputFactory, {
   parseEnumValue,
   parseEnumDescriptionOrValue,
@@ -21,6 +22,7 @@ export {
   dateInputFactory,
   numberInputFactory,
   priceInputFactory,
+  dayInputFactory,
   selectSearchEnumInputFactory,
   selectEnumInputFactory,
   textAreaFactory,

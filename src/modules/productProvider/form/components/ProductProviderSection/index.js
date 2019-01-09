@@ -6,7 +6,7 @@ import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
 import {
   selectSearchEnumInputFactory,
-  priceInputFactory,
+  dayInputFactory,
   numberInputFactory,
   customFieldsInputFactory,
 } from 'modules/form/helpers';
@@ -208,7 +208,7 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
               setFieldValue={setFieldValue}
             >
               {({ name, ...inputHandlers }) =>
-                priceInputFactory({
+                dayInputFactory({
                   name,
                   isNew,
                   inputHandlers,
@@ -219,7 +219,6 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
                       defaultMessage="PRODUCTION LEAD TIME"
                     />
                   ),
-                  currency: 'Days',
                 })
               }
             </FormField>

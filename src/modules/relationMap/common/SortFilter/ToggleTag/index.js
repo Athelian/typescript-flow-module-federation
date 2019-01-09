@@ -8,7 +8,12 @@ import { ToggleTagWrapperStyle, ToggleTagIconStyle } from './style';
 
 const TagValue = createBooleanValue(false);
 
-const ToggleTag = () => (
+type OptionalProps = {
+  onToggle: Function,
+};
+type Props = OptionalProps & {};
+
+const ToggleTag = ({ onToggle }: Props) => (
   <TagValue>
     {({ value: isToggle, toggle }) => (
       <div className={ToggleTagWrapperStyle}>
@@ -18,11 +23,21 @@ const ToggleTag = () => (
         <Label>
           <FormattedMessage id="modules.RelationMaps.filter.tags" defaultMessage="TAGS" />
         </Label>
-        <ToggleInput toggled={isToggle} onToggle={toggle} />
+        <ToggleInput
+          toggled={isToggle}
+          onToggle={() => {
+            toggle();
+            onToggle(!isToggle);
+          }}
+        />
       </div>
     )}
   </TagValue>
 );
+
+ToggleTag.defaultProps = {
+  onToggle: () => {},
+};
 
 export { TagValue };
 export default ToggleTag;

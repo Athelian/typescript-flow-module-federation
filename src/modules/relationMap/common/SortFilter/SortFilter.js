@@ -7,6 +7,7 @@ import { SortFilterWrapperStyle, SortWrapperStyle, GroupFilterWrapperStyle } fro
 type OptionalProps = {
   renderAdvanceFilter: Function,
   showTags: boolean,
+  onToggle: Function,
 };
 
 type Props = OptionalProps & {
@@ -21,6 +22,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   renderAdvanceFilter: () => null,
+  onToggle: () => {},
   showTags: true,
 };
 
@@ -29,6 +31,7 @@ const SortFilter = ({
   filter,
   sort,
   onChange,
+  onToggle,
   renderAdvanceFilter,
   showTags,
 }: Props) => (
@@ -58,7 +61,7 @@ const SortFilter = ({
           onChange={newQuery => onChange({ filter: { query: newQuery } })}
         />
       </div>
-      {showTags && <ToggleTag />}
+      {showTags && <ToggleTag onToggle={onToggle} />}
     </div>
   </GenericNavBar>
 );

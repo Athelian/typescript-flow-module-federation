@@ -11,6 +11,7 @@ type OptionalProps = {
   color: string,
   actions: Array<React.Node>,
   showActionsOnHover: boolean,
+  forceShowActions: boolean,
   selectable: boolean,
   isArchived: boolean,
   disabled: boolean,
@@ -35,6 +36,7 @@ const defaultProps = {
   color: '',
   actions: [],
   showActionsOnHover: false,
+  forceShowActions: false,
   selectable: false,
   isArchived: false,
   disabled: false,
@@ -80,6 +82,7 @@ export default class BaseCard extends React.Component<Props, State> {
       color,
       actions,
       showActionsOnHover,
+      forceShowActions,
       selectable,
       isArchived,
       disabled,
@@ -125,12 +128,12 @@ export default class BaseCard extends React.Component<Props, State> {
         {!disabled && actions.length > 0 && (
           <OutsideClickHandler
             onOutsideClick={this.closeActions}
-            ignoreClick={!actionsAreShown}
+            ignoreClick={!forceShowActions && !actionsAreShown}
             ignoreElements={
               this.cornerIcon && this.cornerIcon.current ? [this.cornerIcon.current] : []
             }
           >
-            <Actions visible={actionsAreShown}>
+            <Actions visible={forceShowActions || actionsAreShown}>
               {React.Children.map(actions, action => action)}
             </Actions>
           </OutsideClickHandler>

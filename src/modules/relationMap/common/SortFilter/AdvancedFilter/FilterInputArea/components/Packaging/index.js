@@ -60,7 +60,7 @@ export default function Packaging({
           </Label>
           <MetricRangeInput
             metrics={['cm', 'm']}
-            metric="m"
+            metric="cm"
             min={packageLength && packageLength.min}
             max={packageLength && packageLength.max}
             onChange={length => onChangePackageLength(length)}
@@ -73,7 +73,7 @@ export default function Packaging({
           </Label>
           <MetricRangeInput
             metrics={['cm', 'm']}
-            metric="m"
+            metric="cm"
             min={packageWidth && packageWidth.min}
             max={packageWidth && packageWidth.max}
             onChange={width => onChangePackageWidth(width)}
@@ -86,7 +86,7 @@ export default function Packaging({
           </Label>
           <MetricRangeInput
             metrics={['cm', 'm']}
-            metric="m"
+            metric="cm"
             min={packageHeight && packageHeight.min}
             max={packageHeight && packageHeight.max}
             onChange={height => onChangePackageHeight(height)}

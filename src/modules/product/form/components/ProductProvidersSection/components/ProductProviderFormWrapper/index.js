@@ -10,7 +10,7 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { contains, getByPathWithDefault } from 'utils/fp';
 
 type OptionalProps = {
@@ -68,17 +68,12 @@ class ProductProviderFormWrapper extends React.Component<Props> {
     formContainer.onReset();
   }
 
-  handleCancel = (state: Object) => {
-    const { isNew, onCancel } = this.props;
-    if (isNew) {
-      onCancel();
-    } else {
-      resetFormState(state);
-    }
+  onReset = (state: Object) => {
+    resetFormState(state);
   };
 
   render() {
-    const { isNew, onSave, productProviders, isAddedProvider } = this.props;
+    const { isNew, onSave, productProviders, isAddedProvider, onCancel } = this.props;
 
     return (
       <Provider inject={[formContainer]}>
@@ -130,7 +125,11 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       icon="DOCUMENT"
                     />
                   </JumpToSection>
-                  <CancelButton onClick={() => this.handleCancel(formState)} />
+                  {isNew ? (
+                    <CancelButton onClick={() => onCancel()} />
+                  ) : (
+                    <ResetButton onClick={() => this.onReset(formState)} />
+                  )}
                   <SaveButton
                     disabled={
                       !formState.isDirty() ||

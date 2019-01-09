@@ -46,6 +46,7 @@ const SlideForm = () => (
               isSlideView
               onSuccessCallback={onSuccess}
               redirectAfterSuccess={false}
+              onCancel={reset}
             />
           );
           break;
@@ -65,6 +66,7 @@ const SlideForm = () => (
               isSlideView
               onSuccessCallback={onSuccess}
               redirectAfterSuccess={false}
+              onCancel={reset}
             />
           );
           break;

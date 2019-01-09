@@ -351,7 +351,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     selected,
     mappingObjects
   );
-
   logger.warn({ selected, mappingObjects });
   logger.warn({ orderIds, orderItemsIds, batchIds, shipmentIds });
   const { entities } = normalize({ orders: data });
@@ -896,7 +895,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                             )}
                           </div>
                           <div>
-                            {shipmentIds.length ? (
+                            {shipmentIds.length > 0 ? (
                               <>
                                 {orderItems.map(orderItem =>
                                   orderItem.data.batches
@@ -940,16 +939,16 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                               range(totalLines).map(index => (
                                 <TableEmptyItem
                                   key={index}
-                                  fields={batchCustomFieldsFilter}
+                                  fields={shipmentColumnFieldsFilter}
                                   rowNo={getRowCounter(rowCounter, 'shipment')}
-                                  columnNo={columnBatchCustomNo}
+                                  columnNo={columnShipmentNo}
                                 />
                               ))
                             )}
                           </div>
 
                           <div>
-                            {shipmentIds.length ? (
+                            {shipmentIds.length > 0 ? (
                               <>
                                 {orderItems.map(orderItem =>
                                   orderItem.data.batches

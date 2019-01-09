@@ -3,12 +3,13 @@ import * as React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
-import { ObjectValue, ArrayValue, NumberValue } from 'react-values';
+import { ObjectValue, ArrayValue } from 'react-values';
 import { removeTypename } from 'utils/data';
 import GridView from 'components/GridView';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
+import { Label, Display } from 'components/Form';
 import { OrderProductProviderCard } from 'components/Cards';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -21,6 +22,7 @@ import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
   exporter: string,
+  orderCurrency: string,
 };
 
 type Props = OptionalProps & {
@@ -31,6 +33,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   exporter: '',
+  orderCurrency: '',
 };
 
 function onSelectProduct({
@@ -51,10 +54,13 @@ function onSelectProduct({
   }
 }
 
+const getProductQuantity = (items: Array<OrderItem> = [], item: OrderItem) =>
+  items.filter(endProduct => endProduct.id === item.id).length;
+
 function onChangeProductQuantity({
   selected,
-  item,
   set,
+  item,
   total,
 }: {
   selected: Array<OrderItem>,
@@ -62,19 +68,21 @@ function onChangeProductQuantity({
   set: Function,
   total: number,
 }) {
-  const items = [];
-  for (let counter = 0; counter < total; counter += 1) {
-    items.push(item);
-  }
-  set(items.concat(selected.filter((orderItem: OrderItem) => orderItem.id !== item.id)));
+  const items = [...selected];
+  const count = getProductQuantity(items, item);
+  const index = items.indexOf(item);
+  items.splice(index, count, ...Array(total).fill(item));
+
+  set(items);
 }
 
-function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
+function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.nameSort), value: 'name' },
     { title: intl.formatMessage(messages.serialSort), value: 'serial' },
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
+    { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
   ];
   return (
     <ObjectValue
@@ -122,6 +130,15 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                           filtersAndSort={filtersAndSort}
                           onChange={onChange}
                         />
+                        <div>
+                          <Label>
+                            <FormattedMessage
+                              id="modules.Orders.orderCurrency"
+                              defaultMessage="ORDER CURRENCY"
+                            />
+                          </Label>
+                          <Display align="left">{orderCurrency || 'N/A'}</Display>
+                        </div>
                         <CancelButton onClick={onCancel} />
                         <SaveButton
                           disabled={selected.length === 0}
@@ -148,18 +165,15 @@ function SelectProducts({ intl, onCancel, onSelect, exporter }: Props) {
                       {items.map(item => (
                         <div key={item.id} className={ItemWrapperStyle}>
                           {selected.includes(item) && (
-                            <NumberValue
-                              defaultValue={1}
+                            <IncrementInput
+                              value={getProductQuantity(selected, item)}
                               onChange={total =>
-                                onChangeProductQuantity({ total, set, selected, item })
+                                onChangeProductQuantity({ selected, set, total, item })
                               }
-                            >
-                              {({ value: num, set: changeNumber }) => (
-                                <IncrementInput value={num} onChange={changeNumber} />
-                              )}
-                            </NumberValue>
+                            />
                           )}
                           <OrderProductProviderCard
+                            orderCurrency={orderCurrency}
                             productProvider={item}
                             selectable
                             selected={selected.includes(item)}

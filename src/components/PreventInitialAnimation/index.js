@@ -24,6 +24,8 @@ export default class PreventInitialAnimation extends React.Component<Props, Stat
   }
 
   componentDidUpdate() {
+    // Due to this issue https://github.com/yannickcr/eslint-plugin-react/issues/2017
+    // eslint-disable-next-line react/prop-types
     const { shouldApplyAnimation } = this.state;
     const { isChildrenVisible } = this.props;
     if (shouldApplyAnimation || !isChildrenVisible) return;
@@ -39,6 +41,6 @@ export default class PreventInitialAnimation extends React.Component<Props, Stat
   render() {
     const { children } = this.props;
     const { shouldApplyAnimation } = this.state;
-    return <React.Fragment>{shouldApplyAnimation && children}</React.Fragment>;
+    return <>{shouldApplyAnimation && children}</>;
   }
 }

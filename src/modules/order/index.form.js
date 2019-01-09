@@ -10,7 +10,7 @@ import { QueryForm } from 'components/common';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import { cloneOrderItemMutation as orderUpdateFromSlideView } from 'modules/relationMap/orderFocused/mutation';
-import { SaveButton, CancelButton, ExportButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
@@ -39,6 +39,7 @@ type OptionalProps = {
   isSlideView: boolean,
   redirectAfterSuccess: boolean,
   onSuccessCallback: ?Function,
+  onCancel?: Function,
 };
 
 type Props = OptionalProps & {
@@ -75,20 +76,18 @@ class OrderFormModule extends React.PureComponent<Props> {
 
   isNewOrClone = () => this.isNew() || this.isClone();
 
-  onCancel = ({
+  onCancel = () => navigate('/order');
+
+  onReset = ({
     orderInfoState,
     orderItemState,
     orderTagsState,
     orderFilesState,
   }: OrderFormState) => {
-    if (this.isNewOrClone()) {
-      navigate('/order');
-    } else {
-      resetFormState(orderInfoState);
-      resetFormState(orderItemState, 'orderItems');
-      resetFormState(orderTagsState, 'tags');
-      resetFormState(orderFilesState, 'files');
-    }
+    resetFormState(orderInfoState);
+    resetFormState(orderItemState, 'orderItems');
+    resetFormState(orderTagsState, 'tags');
+    resetFormState(orderFilesState, 'files');
   };
 
   onSave = async (
@@ -142,6 +141,8 @@ class OrderFormModule extends React.PureComponent<Props> {
     orderFilesState: Object,
   }) => (order: Object) => {
     const { orderItems, tags, files, ...info } = order;
+    const { currency } = info;
+    orderInfoState.initDetailValues({ currency });
     if (this.isClone()) {
       const { issuedAt, poNo, ...cloneInfo } = info;
       orderInfoState.initDetailValues({
@@ -194,7 +195,7 @@ class OrderFormModule extends React.PureComponent<Props> {
   };
 
   render() {
-    const { orderId, isSlideView } = this.props;
+    const { orderId, isSlideView, onCancel } = this.props;
     const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (orderId && !isNewOrClone) {
@@ -307,16 +308,23 @@ class OrderFormModule extends React.PureComponent<Props> {
                               orderTagsState.isDirty() ||
                               orderFilesState.isDirty()) && (
                               <>
-                                <CancelButton
-                                  onClick={() =>
-                                    this.onCancel({
-                                      orderItemState,
-                                      orderInfoState,
-                                      orderTagsState,
-                                      orderFilesState,
-                                    })
-                                  }
-                                />
+                                {this.isNewOrClone() ? (
+                                  <CancelButton
+                                    onClick={() => (onCancel ? onCancel() : this.onCancel())}
+                                  />
+                                ) : (
+                                  <ResetButton
+                                    onClick={() =>
+                                      this.onReset({
+                                        orderItemState,
+                                        orderInfoState,
+                                        orderTagsState,
+                                        orderFilesState,
+                                      })
+                                    }
+                                  />
+                                )}
+
                                 <SaveButton
                                   disabled={
                                     !form.isReady(

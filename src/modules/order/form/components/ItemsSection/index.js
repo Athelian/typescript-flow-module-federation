@@ -2,11 +2,13 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ArrayValue } from 'react-values';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
+import { findBatchQuantity } from 'utils/batch';
 import { SectionNavBar } from 'components/NavBar';
-import { NewButton } from 'components/Buttons';
+import { NewButton, BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import messages from 'modules/order/messages';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
@@ -53,12 +55,82 @@ function ItemSection({ intl, isNew }: Props) {
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>
-                          <NewButton
-                            label={intl.formatMessage(messages.newItems)}
-                            disabled={!((exporter && exporter.id) || !isNew)}
-                            onClick={() => slideToggle(true)}
-                          />
-
+                          <Subscribe to={[OrderItemsContainer]}>
+                            {({ state: { orderItems }, setFieldValue }) => (
+                              <>
+                                <BaseButton
+                                  icon="SYNC"
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.order.syncAllPrice"
+                                      defaultMessage="SYNC ALL PRICE"
+                                    />
+                                  }
+                                  onClick={() => {
+                                    const newOrderItems = orderItems.map(orderItem => {
+                                      const unitPrice = getByPath(
+                                        'productProvider.unitPrice',
+                                        orderItem
+                                      );
+                                      if (unitPrice && unitPrice.currency === currency) {
+                                        return { ...orderItem, ...{ price: unitPrice } };
+                                      }
+                                      return orderItem;
+                                    });
+                                    setFieldValue('orderItems', newOrderItems);
+                                  }}
+                                />
+                                <NewButton
+                                  label={intl.formatMessage(messages.newItems)}
+                                  disabled={!((exporter && exporter.id) || !isNew)}
+                                  onClick={() => slideToggle(true)}
+                                />
+                                <BaseButton
+                                  label={intl.formatMessage(messages.autoFillBatch)}
+                                  onClick={() => {
+                                    const newOrderItems = orderItems.map(orderItem => {
+                                      const totalBatchQuantity = orderItem.batches.reduce(
+                                        (total, batch) => total + findBatchQuantity(batch),
+                                        0
+                                      );
+                                      if (orderItem.quantity > totalBatchQuantity) {
+                                        const {
+                                          productProvider: {
+                                            packageName,
+                                            packageCapacity,
+                                            packageGrossWeight,
+                                            packageVolume,
+                                            packageSize,
+                                          },
+                                        } = orderItem;
+                                        return {
+                                          ...orderItem,
+                                          batches: [
+                                            ...orderItem.batches,
+                                            injectUid({
+                                              orderItem,
+                                              tags: [],
+                                              packageName,
+                                              packageCapacity,
+                                              packageGrossWeight,
+                                              packageVolume,
+                                              packageSize,
+                                              quantity: orderItem.quantity - totalBatchQuantity,
+                                              isNew: true,
+                                              batchAdjustments: [],
+                                              no: `batch auto fill`,
+                                            }),
+                                          ],
+                                        };
+                                      }
+                                      return orderItem;
+                                    });
+                                    setFieldValue('orderItems', newOrderItems);
+                                  }}
+                                />
+                              </>
+                            )}
+                          </Subscribe>
                           <SlideView
                             isOpen={opened}
                             onRequestClose={() => slideToggle(false)}
@@ -81,7 +153,15 @@ function ItemSection({ intl, isNew }: Props) {
                                             batches: [],
                                             quantity: 0,
                                             price: {
-                                              amount: 0,
+                                              amount:
+                                                getByPath('unitPrice.currency', productProvider) ===
+                                                currency
+                                                  ? getByPathWithDefault(
+                                                      0,
+                                                      'unitPrice.amount',
+                                                      productProvider
+                                                    )
+                                                  : 0,
                                               currency,
                                             },
                                           })
@@ -91,6 +171,7 @@ function ItemSection({ intl, isNew }: Props) {
                                       slideToggle(false);
                                     }}
                                     exporter={exporter && exporter.id}
+                                    orderCurrency={currency}
                                     onCancel={() => slideToggle(false)}
                                   />
                                 )}

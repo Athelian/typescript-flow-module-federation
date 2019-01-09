@@ -52,7 +52,7 @@ function ProductProvidersSection() {
                               isNew: true,
                               unitVolume: {
                                 value: 0,
-                                metric: 'cm³',
+                                metric: 'm³',
                               },
                               unitSize: {
                                 width: {
@@ -86,7 +86,7 @@ function ProductProvidersSection() {
                               },
                               packageVolume: {
                                 value: 0,
-                                metric: 'cm³',
+                                metric: 'm³',
                               },
                               packageSize: {
                                 width: {

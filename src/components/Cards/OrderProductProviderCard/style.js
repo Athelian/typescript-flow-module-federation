@@ -7,7 +7,7 @@ export const ProductProviderCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 197px;
+  height: 222px;
   &:hover {
     button {
       opacity: 1;
@@ -95,6 +95,14 @@ export const ProductSerialStyle: string = css`
   color: ${colors.BLACK};
   ${presets.ELLIPSIS};
   padding: 0 5px;
+  width: 100%;
+`;
+
+export const ProductPriceStyle: string = css`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
 `;
 

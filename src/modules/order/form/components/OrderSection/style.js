@@ -27,3 +27,7 @@ export const DividerStyle: string = css`
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};
 `;
+
+export const DialogLineStyle: string = css`
+  margin-bottom: 10px;
+`;

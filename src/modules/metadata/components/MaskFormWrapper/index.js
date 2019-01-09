@@ -10,7 +10,7 @@ import Layout from 'components/Layout';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
 import { FormContainer, resetFormState } from 'modules/form';
 import MaskForm from 'modules/metadata/components/MaskForm';
@@ -84,17 +84,12 @@ class MaskFormWrapper extends React.Component<Props> {
     }
   };
 
-  handleCancel = (formState: Object) => {
-    const { isNew, onCancel } = this.props;
-    if (isNew) {
-      onCancel();
-    } else {
-      resetFormState(formState);
-    }
+  onReset = (formState: Object) => {
+    resetFormState(formState);
   };
 
   render() {
-    const { entityType, isNew, id, onSave } = this.props;
+    const { entityType, isNew, id, onSave, onCancel } = this.props;
 
     return (
       <Query query={fieldDefinitionsQuery} variables={{ entityType }} fetchPolicy="network-only">
@@ -147,7 +142,12 @@ class MaskFormWrapper extends React.Component<Props> {
                         <Subscribe to={[MaskContainer, FormContainer]}>
                           {(formState, form) => (
                             <>
-                              <CancelButton onClick={() => this.handleCancel(formState)} />
+                              {isNew ? (
+                                <CancelButton onClick={() => onCancel()} />
+                              ) : (
+                                <ResetButton onClick={() => this.onReset(formState)} />
+                              )}
+
                               <SaveButton
                                 disabled={
                                   !formState.isDirty() || !form.isReady(formState.state, validator)
@@ -227,7 +227,6 @@ class MaskFormWrapper extends React.Component<Props> {
                       </Query>
                     )}
                   </Layout>
-                  )} }}
                 </>
               )}
             </Mutation>

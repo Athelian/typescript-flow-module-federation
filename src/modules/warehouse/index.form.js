@@ -11,7 +11,7 @@ import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { decodeId, encodeId } from 'utils/id';
 import WarehouseForm from './form';
@@ -36,12 +36,10 @@ const defaultProps = {
 class WarehouseFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
-  onCancel = (formState: Object) => {
-    if (this.isNewOrClone()) {
-      navigate(`/warehouse`);
-    } else {
-      resetFormState(formState);
-    }
+  onCancel = () => navigate(`/warehouse`);
+
+  onReset = (formState: Object) => {
+    resetFormState(formState);
   };
 
   onSave = async (
@@ -148,7 +146,11 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                         {(formState, form) =>
                           (isNewOrClone || formState.isDirty()) && (
                             <>
-                              <CancelButton onClick={() => this.onCancel(formState)} />
+                              {this.isNewOrClone() ? (
+                                <CancelButton onClick={() => this.onCancel()} />
+                              ) : (
+                                <ResetButton onClick={() => this.onReset(formState)} />
+                              )}
                               <SaveButton
                                 data-testid="saveButton"
                                 disabled={!form.isReady(formState.state, validator)}

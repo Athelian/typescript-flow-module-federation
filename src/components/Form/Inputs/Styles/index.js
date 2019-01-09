@@ -2,6 +2,7 @@
 import DefaultAdjustmentStyle from './DefaultStyle/DefaultAdjustmentStyle';
 import DefaultStyle from './DefaultStyle';
 import DefaultPriceStyle from './DefaultStyle/DefaultPriceStyle';
+import DefaultDayStyle from './DefaultStyle/DefaultDayStyle';
 import DefaultWeightStyle from './DefaultStyle/DefaultWeightStyle';
 import DefaultVolumeStyle from './DefaultStyle/DefaultVolumeStyle';
 import DefaultSurfaceStyle from './DefaultStyle/DefaultSurfaceStyle';
@@ -17,6 +18,7 @@ export {
   DefaultAdjustmentStyle,
   DefaultStyle,
   DefaultPriceStyle,
+  DefaultDayStyle,
   DefaultWeightStyle,
   DefaultVolumeStyle,
   DefaultSurfaceStyle,

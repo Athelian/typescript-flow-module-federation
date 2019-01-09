@@ -14,16 +14,13 @@ type TotalVolumeProps = {
   metric: 'cm³' | 'm³',
 };
 
-const TotalVolume = ({ value, metric }: TotalVolumeProps) => (
+const TotalVolume = ({ value = 0, metric = 'm³' }: TotalVolumeProps) => (
   <span>
     <FormattedNumber value={value} /> {metric}
   </span>
 );
-TotalVolume.defaultProps = {
-  value: 0,
-};
 
-export default function ShipmentLabel({ name = '', value = 0, metric = 'cm³' }: Props) {
+export default function ShipmentLabel({ name = '', value = 0, metric = 'm³' }: Props) {
   return (
     <div className={ShipmentLabelStyle}>
       <span>{name}</span>

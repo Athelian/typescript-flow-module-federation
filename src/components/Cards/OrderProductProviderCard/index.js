@@ -1,5 +1,8 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
+import FormattedNumber from 'components/FormattedNumber';
+import { Label, Display, FormTooltip } from 'components/Form';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -18,11 +21,14 @@ import {
   ProductExporterStyle,
   ProductSupplierStyle,
   ProductTagsWrapperStyle,
+  ProductPriceStyle,
 } from './style';
 
 type OptionalProps = {
   onClick?: ?Function,
   selectable: boolean,
+  selected: boolean,
+  orderCurrency?: string,
 };
 
 type Props = OptionalProps & {
@@ -35,6 +41,7 @@ type State = {
 
 const defaultProps = {
   selectable: false,
+  selected: false,
 };
 
 class OrderProductProviderCard extends React.PureComponent<Props, State> {
@@ -59,7 +66,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { productProvider, onClick, selectable, ...rest } = this.props;
+    const { productProvider, onClick, selectable, orderCurrency, ...rest } = this.props;
     const { activeImage } = this.state;
 
     if (!productProvider) return '';
@@ -68,7 +75,21 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
 
     const {
       product: { name, serial, tags, files },
+      unitPrice,
     } = productProvider;
+
+    if (orderCurrency && orderCurrency !== unitPrice.currency) {
+      actions.push(
+        <FormTooltip
+          infoMessage={
+            <FormattedMessage
+              id="components,cards.currencyDifferentWarningMessage"
+              defaultMessage="The Unit Price will not be automatically synced into the Item because the Currency of the Unit Price of this End Product does not match the Currency of this Order."
+            />
+          }
+        />
+      );
+    }
 
     const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
 
@@ -78,6 +99,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
         color="PROVIDER"
         actions={actions}
         selectable={selectable}
+        forceShowActions={rest.selected}
         {...rest}
       >
         <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
@@ -119,6 +141,17 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
           <div className={ProductInfoWrapperStyle}>
             <div className={ProductNameStyle}>{name}</div>
             <div className={ProductSerialStyle}>{serial}</div>
+            <div className={ProductPriceStyle}>
+              <Label>
+                <FormattedMessage id="modules.Orders.price" defaultMessage="Unit Price" />
+              </Label>
+              <Display>
+                <FormattedNumber
+                  value={unitPrice && unitPrice.amount}
+                  suffix={unitPrice && unitPrice.currency}
+                />
+              </Display>
+            </div>
             <div className={ProductProvidersWrapperStyle}>
               <div className={ProductExporterStyle}>
                 <Icon icon="EXPORTER" />

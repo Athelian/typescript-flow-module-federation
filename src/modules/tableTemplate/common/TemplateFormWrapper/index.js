@@ -17,7 +17,7 @@ import emitter from 'utils/emitter';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 
 type OptionalProps = {
   template: Object,
@@ -125,17 +125,12 @@ class TemplateFormWrapper extends React.Component<Props> {
     }
   };
 
-  handleCancel = (formState: Object) => {
-    const { isNew, onCancel } = this.props;
-    if (isNew) {
-      onCancel();
-    } else {
-      resetFormState(formState);
-    }
+  onReset = (formState: Object) => {
+    resetFormState(formState);
   };
 
   render() {
-    const { isNew, template } = this.props;
+    const { isNew, template, onCancel } = this.props;
     let mutationKey = {};
     if (!isNew) {
       mutationKey = { key: template.id };
@@ -175,7 +170,11 @@ class TemplateFormWrapper extends React.Component<Props> {
                           icon="METADATA"
                         />
                       </JumpToSection>
-                      <CancelButton onClick={() => this.handleCancel(formState)} />
+                      {isNew ? (
+                        <CancelButton onClick={() => onCancel()} />
+                      ) : (
+                        <ResetButton onClick={() => this.onReset(formState)} />
+                      )}
                       <SaveButton
                         disabled={
                           !formState.isDirty() || !formContainer.isReady(formState.state, validator)

@@ -57,15 +57,15 @@ const initValues = {
   },
   unitSize: {
     width: {
-      metric: 'm',
+      metric: 'cm',
       value: 0,
     },
     height: {
-      metric: 'm',
+      metric: 'cm',
       value: 0,
     },
     length: {
-      metric: 'm',
+      metric: 'cm',
       value: 0,
     },
   },
@@ -91,15 +91,15 @@ const initValues = {
   },
   packageSize: {
     width: {
-      metric: 'm',
+      metric: 'cm',
       value: 0,
     },
     height: {
-      metric: 'm',
+      metric: 'cm',
       value: 0,
     },
     length: {
-      metric: 'm',
+      metric: 'cm',
       value: 0,
     },
   },

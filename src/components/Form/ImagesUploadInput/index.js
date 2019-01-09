@@ -15,7 +15,6 @@ type Props = OptionalProps & {
   name: string,
   values: Array<Image>,
   onChange: (string, any) => void,
-  onBlur: (string, boolean) => void,
   onUpload?: ({ uploading: boolean, progress: number }) => void,
 };
 
@@ -28,7 +27,6 @@ class ImagesUploadInput extends React.Component<Props, State> {
   static defaultProps = {
     values: [],
     onChange: () => {},
-    onBlur: () => {},
     onUpload: () => {},
     width: '180px',
     height: '180px',

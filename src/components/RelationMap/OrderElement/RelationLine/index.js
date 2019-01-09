@@ -3,11 +3,14 @@ import React from 'react';
 import { getByPathWithDefault } from 'utils/fp';
 import * as style from './style';
 
-type Props = {
-  type: number,
+type OptionalProps = {
+  hasRelation: boolean,
+  isTargeted: boolean,
   isFocused: boolean,
-  hasRelation?: boolean,
-  isTargeted?: boolean,
+};
+
+type Props = OptionalProps & {
+  type: number,
 };
 
 const RelationLine = (props: Props) => {
@@ -18,6 +21,12 @@ const RelationLine = (props: Props) => {
     hasRelation
   );
   return <div className={className} />;
+};
+
+RelationLine.defaultProps = {
+  hasRelation: false,
+  isTargeted: false,
+  isFocused: false,
 };
 
 export default RelationLine;
