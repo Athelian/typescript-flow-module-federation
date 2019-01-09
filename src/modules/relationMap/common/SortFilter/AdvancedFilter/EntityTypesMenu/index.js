@@ -36,11 +36,11 @@ export default function EntityTypesMenu({
       icon: 'ORDER',
       count: activeFilters.order.length,
     },
-    {
-      name: 'item',
-      icon: 'ORDER_ITEM',
-      count: activeFilters.item.length,
-    },
+    // {
+    //   name: 'item',
+    //   icon: 'ORDER_ITEM',
+    //   count: activeFilters.item.length,
+    // },
     {
       name: 'batch',
       icon: 'BATCH',
