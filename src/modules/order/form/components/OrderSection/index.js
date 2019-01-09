@@ -119,7 +119,14 @@ const OrderSection = ({ isNew }: Props) => (
                             <>
                               <PriceDialog
                                 isOpen={isOpen}
-                                onRequestClose={() => setPriceDialog(false)}
+                                onRequestClose={() => {
+                                  setFieldValue(
+                                    'currency',
+                                    previousCurrency || initialValues.currency
+                                  );
+                                  setPreviousCurrency(values.currency);
+                                  setPriceDialog(false);
+                                }}
                                 onConfirm={() => {
                                   setItemFieldValue(
                                     'orderItems',
