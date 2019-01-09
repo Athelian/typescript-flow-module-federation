@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, StringValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import { getByPath } from 'utils/fp';
 import { spanWithColor } from 'utils/color';
 import {
   OrderInfoContainer,
@@ -48,8 +47,6 @@ import {
 type Props = {
   isNew: boolean,
 };
-const isDifferentItemCurrency = (currency, items) =>
-  items.length > 0 ? items.some(item => getByPath('price.currency', item) !== currency) : false;
 
 const OrderSection = ({ isNew }: Props) => (
   <div className={OrderSectionWrapperStyle}>
@@ -117,86 +114,106 @@ const OrderSection = ({ isNew }: Props) => (
                   {({ value: isOpen, set: setPriceDialog }) => (
                     <Subscribe to={[OrderItemsContainer]}>
                       {({ state: { orderItems }, setFieldValue: setItemFieldValue }) => (
-                        <>
-                          <PriceDialog
-                            isOpen={isOpen}
-                            onRequestClose={() => setPriceDialog(false)}
-                            onConfirm={() => {
-                              setItemFieldValue(
-                                'orderItems',
-                                orderItems.map(orderItem => ({
-                                  ...orderItem,
-                                  price: {
-                                    ...orderItem.price,
-                                    amount: 0,
-                                  },
-                                }))
-                              );
-                              setPriceDialog(false);
-                            }}
-                            onCancel={() => {
-                              setFieldValue('currency', initialValues.currency);
-                              setPriceDialog(false);
-                            }}
-                            onDeny={() => setPriceDialog(false)}
-                            message={
-                              <>
-                                <div className={DialogLineStyle}>
-                                  <FormattedMessage
-                                    {...messages.detectPriceChanged}
-                                    values={{
-                                      items: spanWithColor(
-                                        <FormattedMessage {...messages.sectionItems} />,
-                                        'ORDER_ITEM'
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                                <div className={DialogLineStyle}>
-                                  <FormattedMessage
-                                    {...messages.changePrice}
-                                    values={{
-                                      items: spanWithColor(
-                                        <FormattedMessage {...messages.sectionItems} />,
-                                        'ORDER_ITEM'
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                                <div className={DialogLineStyle}>
-                                  <FormattedMessage {...messages.resetPrice} />
-                                </div>
-                              </>
-                            }
-                          />
-                          <FormField
-                            name="currency"
-                            initValue={values.currency}
-                            values={values}
-                            validator={validator}
-                            setFieldValue={setFieldValue}
-                          >
-                            {({ name, ...inputHandlers }) =>
-                              selectSearchEnumInputFactory({
-                                required: true,
-                                enumType: 'Currency',
-                                name,
-                                inputHandlers,
-                                isNew,
-                                originalValue: initialValues[name],
-                                event: {
-                                  onBlurHasValue: (value: string) => {
-                                    if (isDifferentItemCurrency(value, orderItems)) {
-                                      setPriceDialog(true);
-                                    }
-                                  },
-                                },
-                                label: <FormattedMessage {...messages.currency} />,
-                                hideClearButton: true,
-                              })
-                            }
-                          </FormField>
-                        </>
+                        <StringValue>
+                          {({ value: previousCurrency, set: setPreviousCurrency }) => (
+                            <>
+                              <PriceDialog
+                                isOpen={isOpen}
+                                onRequestClose={() => {
+                                  setFieldValue(
+                                    'currency',
+                                    previousCurrency || initialValues.currency
+                                  );
+                                  setPriceDialog(false);
+                                }}
+                                onConfirm={() => {
+                                  setItemFieldValue(
+                                    'orderItems',
+                                    orderItems.map(orderItem => ({
+                                      ...orderItem,
+                                      price: {
+                                        ...orderItem.price,
+                                        amount: 0,
+                                      },
+                                    }))
+                                  );
+                                  setPreviousCurrency(values.currency);
+                                  setPriceDialog(false);
+                                }}
+                                onCancel={() => {
+                                  setFieldValue(
+                                    'currency',
+                                    previousCurrency || initialValues.currency
+                                  );
+                                  setPriceDialog(false);
+                                }}
+                                onDeny={() => {
+                                  setPriceDialog(false);
+                                  setPreviousCurrency(values.currency);
+                                }}
+                                message={
+                                  <>
+                                    <div className={DialogLineStyle}>
+                                      <FormattedMessage
+                                        {...messages.detectPriceChanged}
+                                        values={{
+                                          items: spanWithColor(
+                                            <FormattedMessage {...messages.sectionItems} />,
+                                            'ORDER_ITEM'
+                                          ),
+                                        }}
+                                      />
+                                    </div>
+                                    <div className={DialogLineStyle}>
+                                      <FormattedMessage
+                                        {...messages.changePrice}
+                                        values={{
+                                          items: spanWithColor(
+                                            <FormattedMessage {...messages.sectionItems} />,
+                                            'ORDER_ITEM'
+                                          ),
+                                        }}
+                                      />
+                                    </div>
+                                    <div className={DialogLineStyle}>
+                                      <FormattedMessage {...messages.resetPrice} />
+                                    </div>
+                                  </>
+                                }
+                              />
+
+                              <FormField
+                                name="currency"
+                                initValue={values.currency}
+                                values={values}
+                                validator={validator}
+                                setFieldValue={setFieldValue}
+                              >
+                                {({ name, ...inputHandlers }) =>
+                                  selectSearchEnumInputFactory({
+                                    required: true,
+                                    enumType: 'Currency',
+                                    name,
+                                    inputHandlers,
+                                    isNew,
+                                    originalValue: initialValues[name],
+                                    event: {
+                                      onBlurHasValue: (value: string) => {
+                                        if (value !== values.currency) {
+                                          setPriceDialog(true);
+                                        } else {
+                                          setPreviousCurrency(value);
+                                        }
+                                      },
+                                    },
+                                    label: <FormattedMessage {...messages.currency} />,
+                                    hideClearButton: true,
+                                  })
+                                }
+                              </FormField>
+                            </>
+                          )}
+                        </StringValue>
                       )}
                     </Subscribe>
                   )}
