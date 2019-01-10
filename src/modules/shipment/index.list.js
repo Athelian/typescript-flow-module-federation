@@ -59,7 +59,7 @@ const ShipmentListModule = (props: Props) => {
   return (
     <UIConsumer>
       {uiState => (
-        <ListConfigProvider filterName="filterShipment" initFilter={getInitFilter()}>
+        <ListConfigProvider filterName="filterProduct" initFilter={getInitFilter()}>
           <Layout
             {...uiState}
             navBar={

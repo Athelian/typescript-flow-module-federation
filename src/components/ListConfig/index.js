@@ -26,20 +26,6 @@ export default class ListConfigProvider extends React.Component<Props, Object> {
     }
   }
 
-  // onChangeFilter = (newValue: Object) => {
-  //   const { filterName } = this.props;
-  //   const { filter: filterBy, sort } = newValue;
-  //   this.setState(prevState => ({ ...prevState, sort, filterBy }));
-  //   window.localStorage.setItem(
-  //     filterName,
-  //     JSON.stringify({
-  //       ...this.state,
-  //       sort,
-  //       filterBy,
-  //     })
-  //   );
-  // };
-
   onChangeFilter = (newValue: any) => {
     const { filterName } = this.props;
     this.setState(prevState => ({ ...prevState, ...newValue }));

@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
+import ListConfigProvider, { ListConfigConsumer } from 'components/ListConfig';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
@@ -30,8 +31,8 @@ type State = {
   page: number,
 };
 
-class ProductListModule extends React.Component<Props, State> {
-  state = {
+const getInitFilter = () => {
+  const state: State = {
     viewType: 'grid',
     filter: {
       query: '',
@@ -44,57 +45,63 @@ class ProductListModule extends React.Component<Props, State> {
     perPage: 10,
     page: 1,
   };
+  return state;
+};
 
-  onChangeFilter = (newValue: any) => {
-    this.setState(prevState => ({ ...prevState, ...newValue }));
-  };
+const ProductListModule = (props: Props) => {
+  const { intl } = props;
 
-  render() {
-    const { intl } = this.props;
-    const { filter, sort } = this.state;
+  const sortFields = [
+    { title: intl.formatMessage(messages.name), value: 'name' },
+    { title: intl.formatMessage(messages.serial), value: 'serial' },
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+  ];
 
-    const sortFields = [
-      { title: intl.formatMessage(messages.name), value: 'name' },
-      { title: intl.formatMessage(messages.serial), value: 'serial' },
-      { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-      { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    ];
-
-    return (
-      <UIConsumer>
-        {uiState => (
+  return (
+    <UIConsumer>
+      {uiState => (
+        <ListConfigProvider filterName="filterShipment" initFilter={getInitFilter()}>
           <Layout
             {...uiState}
             navBar={
-              <NavBar>
-                <FilterToolBar
-                  icon="PRODUCT"
-                  sortFields={sortFields}
-                  filtersAndSort={this.state}
-                  onChange={this.onChangeFilter}
-                />
-                <Link to="new">
-                  <NewButton data-testid="newButton" />
-                </Link>
-                <ExportButton
-                  type="Products"
-                  exportQuery={productsExportQuery}
-                  variables={{
-                    sortBy: {
-                      [sort.field]: sort.direction,
-                    },
-                    filterBy: filter,
-                  }}
-                />
-              </NavBar>
+              <ListConfigConsumer>
+                {({ filter, sort, page, perPage, onChangeFilter }) => (
+                  <NavBar>
+                    <FilterToolBar
+                      icon="PRODUCT"
+                      sortFields={sortFields}
+                      filtersAndSort={{ page, perPage, sort, filter }}
+                      onChange={onChangeFilter}
+                    />
+                    <Link to="new">
+                      <NewButton data-testid="newButton" />
+                    </Link>
+                    <ExportButton
+                      type="Products"
+                      exportQuery={productsExportQuery}
+                      variables={{
+                        sortBy: {
+                          [sort.field]: sort.direction,
+                        },
+                        filterBy: filter,
+                      }}
+                    />
+                  </NavBar>
+                )}
+              </ListConfigConsumer>
             }
           >
-            <ProductList {...this.state} />
+            <ListConfigConsumer>
+              {({ filter, sort, page, perPage, viewType }) => (
+                <ProductList {...{ filter, sort, page, perPage, viewType }} />
+              )}
+            </ListConfigConsumer>
           </Layout>
-        )}
-      </UIConsumer>
-    );
-  }
-}
+        </ListConfigProvider>
+      )}
+    </UIConsumer>
+  );
+};
 
 export default injectIntl(ProductListModule);
