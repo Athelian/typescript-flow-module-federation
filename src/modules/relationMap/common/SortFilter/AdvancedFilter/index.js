@@ -174,8 +174,8 @@ const getFilterValue = (name: string, data: any) => {
     case 'warehouseArrival':
     case 'deliveryReady':
       return {
-        ...(data.after && { after: formatToDateTimeGraphql(new Date(data.after)) }),
-        ...(data.before && { before: formatToDateTimeGraphql(new Date(data.before)) }),
+        ...(data.before && { before: formatToDateTimeGraphql(data.before) }),
+        ...(data.after && { after: formatToDateTimeGraphql(data.after) }),
       };
     case 'price': {
       const currency = getByPath('currency.name', data);
