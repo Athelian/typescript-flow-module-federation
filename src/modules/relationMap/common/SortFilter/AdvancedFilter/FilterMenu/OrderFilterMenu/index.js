@@ -94,6 +94,12 @@ export default function OrderFilterMenu({
 
   const statusMap = [
     {
+      name: 'all',
+      label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
+      field: 'archived',
+      value: null,
+    },
+    {
       name: 'active',
       label: <FormattedMessage id="modules.relationMap.active" defaultMessage="ACTIVE" />,
       field: 'archived',
@@ -105,25 +111,48 @@ export default function OrderFilterMenu({
       field: 'archived',
       value: true,
     },
+  ];
+
+  const togglesMap = [];
+
+  const completelyBatchedUI = [
     {
       name: 'all',
       label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
-      field: 'archived',
+      field: 'completelyBatched',
       value: null,
+    },
+    {
+      name: 'completely',
+      label: (
+        <FormattedMessage
+          id="modules.relationMap.notFullBatched"
+          defaultMessage="NOT FULL BATCHED"
+        />
+      ),
+      field: 'completelyBatched',
+      value: false,
     },
   ];
 
-  const togglesMap = [
-    // {
-    //   name: 'completelyBatched',
-    //   label: <FormattedMessage {...messages.completelyBatched} />,
-    //   icon: 'BATCH',
-    // },
-    // {
-    //   name: 'completelyShipped',
-    //   label: <FormattedMessage {...messages.completelyShipped} />,
-    //   icon: 'SHIPMENT',
-    // },
+  const completelyShippedUI = [
+    {
+      name: 'all',
+      label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
+      field: 'completelyShipped',
+      value: null,
+    },
+    {
+      name: 'completely',
+      label: (
+        <FormattedMessage
+          id="modules.relationMap.notFullShipped"
+          defaultMessage="NOT FULL SHIPPED"
+        />
+      ),
+      field: 'completelyShipped',
+      value: false,
+    },
   ];
 
   return (
@@ -131,6 +160,8 @@ export default function OrderFilterMenu({
       filtersMap={filtersMap}
       togglesMap={togglesMap}
       statusMap={statusMap}
+      completelyBatchedUI={completelyBatchedUI}
+      completelyShippedUI={completelyShippedUI}
       parsedStatusFilters={parsedStatusFilters}
       changeStatusFilter={changeStatusFilter}
       entityType="order"

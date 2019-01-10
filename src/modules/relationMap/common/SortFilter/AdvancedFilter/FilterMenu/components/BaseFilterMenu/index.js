@@ -6,6 +6,13 @@ import { type EntityTypes } from 'modules/relationMap/common/SortFilter/Advanced
 import { FilterMenuItem, SectionHeader, ToggleMenuItem } from '..';
 import { FilterMenuWrapperStyle, FiltersBodyStyle, TogglesBodyStyle } from './style';
 
+type RadioFilterProps = {
+  name: string,
+  label: React.Node,
+  field: string,
+  value: any,
+};
+
 type OptionalProps = {
   filtersMap?: Array<{
     label: React.Node,
@@ -22,8 +29,14 @@ type OptionalProps = {
     label: React.Node,
     icon: string,
   }>,
-  statusMap?: any,
-  parsedStatusFilters: { archived?: boolean },
+  statusMap?: Array<RadioFilterProps>,
+  completelyBatchedUI?: Array<RadioFilterProps>,
+  completelyShippedUI?: Array<RadioFilterProps>,
+  parsedStatusFilters: {
+    archived?: boolean,
+    completelyBatched?: boolean,
+    completelyShipped?: boolean,
+  },
   changeStatusFilter: Function,
 };
 
@@ -45,6 +58,12 @@ const isSelectedStatus = (name: string, archived: any): boolean => {
   return false;
 };
 
+const isCompleted = (name: string, status: any): boolean => {
+  if (name === 'all' && isNullOrUndefined(status)) return true;
+  if (name === 'completely' && !isNullOrUndefined(status)) return true;
+  return false;
+};
+
 const defaultProps = {
   parsedStatusFilters: {
     archived: false,
@@ -56,6 +75,8 @@ function BaseFilterMenu({
   filtersMap,
   togglesMap,
   statusMap,
+  completelyBatchedUI,
+  completelyShippedUI,
   entityType,
   parsedActiveFilters,
   parsedStatusFilters,
@@ -114,6 +135,52 @@ function BaseFilterMenu({
                 selected={isSelectedStatus(
                   name,
                   isNullOrUndefined(parsedStatusFilters) ? null : parsedStatusFilters.archived
+                )}
+                onToggle={() => changeStatusFilter(entityType, field, value)}
+              >
+                <Label>{text}</Label>
+              </RadioInput>
+            );
+          })}
+        </div>
+      )}
+
+      {completelyBatchedUI && (
+        <div className={TogglesBodyStyle}>
+          {completelyBatchedUI.map(UIItem => {
+            const { name, label: text, field, value } = UIItem;
+
+            return (
+              <RadioInput
+                key={name}
+                selected={isCompleted(
+                  name,
+                  isNullOrUndefined(parsedStatusFilters)
+                    ? null
+                    : parsedStatusFilters.completelyBatched
+                )}
+                onToggle={() => changeStatusFilter(entityType, field, value)}
+              >
+                <Label>{text}</Label>
+              </RadioInput>
+            );
+          })}
+        </div>
+      )}
+
+      {completelyShippedUI && (
+        <div className={TogglesBodyStyle}>
+          {completelyShippedUI.map(UIItem => {
+            const { name, label: text, field, value } = UIItem;
+
+            return (
+              <RadioInput
+                key={name}
+                selected={isCompleted(
+                  name,
+                  isNullOrUndefined(parsedStatusFilters)
+                    ? null
+                    : parsedStatusFilters.completelyShipped
                 )}
                 onToggle={() => changeStatusFilter(entityType, field, value)}
               >

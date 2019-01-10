@@ -74,6 +74,8 @@ const initialState: State = {
   statusFilters: {
     order: {
       archived: false,
+      completelyBatched: null,
+      completelyShipped: null,
     },
     shipment: {
       archived: null,
@@ -322,20 +324,20 @@ const convertPackagingQuery = (state: Object, type: string, prevKey: string) => 
   return packagingQuery;
 };
 
-// const booleanFilterQuery = (state: Object, filterName: string, path: string) => {
-//   const filterValue = getByPathWithDefault(false, path, state);
-//   const filterQuery = {};
-//   if (filterValue) {
-//     filterQuery[filterName] = filterValue;
-//   }
-//   return filterQuery;
-// };
-
 const convertArchivedFilter = (state: Object, entityType: string, key: string) => {
   const archived = getByPath(`statusFilters.${entityType}.archived`, state);
   const query = {};
   if (!isNullOrUndefined(archived)) {
     query[key] = archived;
+  }
+  return query;
+};
+
+const covertCompletelyFilter = (state: Object, entityType: string, key: string) => {
+  const completed = getByPath(`statusFilters.${entityType}.${key}`, state);
+  const query = {};
+  if (!isNullOrUndefined(completed)) {
+    query[key] = completed;
   }
   return query;
 };
@@ -353,8 +355,8 @@ const convertToFilterQuery = (state: Object) => ({
   // ...convertPackagingQuery(state, 'batch', 'batch'),
   ...convertPortsQuery(state),
 
-  // ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
-  // ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
+  ...covertCompletelyFilter(state, 'order', 'completelyBatched'),
+  ...covertCompletelyFilter(state, 'order', 'completelyShipped'),
 });
 
 const removeActiveFilter = state => ({
