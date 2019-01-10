@@ -19,6 +19,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
+import { useListConfig } from 'components/ListConfig';
 import {
   OrderListWrapperStyle,
   OrderListBodyStyle,
@@ -28,7 +29,6 @@ import {
 import { orderListQuery } from './query';
 import normalize from './normalize';
 import { hasMoreItems } from './helpers';
-import { useFilter } from '../hooks';
 import OrderFocusView from './components/OrderFocusView';
 import Shipment from './components/Shipment';
 import { uiInitState, uiReducer, actionCreators, selectors } from './store';
@@ -40,17 +40,20 @@ type Props = {
 };
 
 const Order = ({ intl }: Props) => {
-  const { queryVariables, filterAndSort, onChange } = useFilter({
-    page: 1,
-    perPage: 10,
-    filter: {
-      archived: false,
+  const { queryVariables, filterAndSort, onChangeFilter: onChange } = useListConfig(
+    {
+      page: 1,
+      perPage: 10,
+      filter: {
+        archived: false,
+      },
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
     },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-  });
+    'filterRelationMap'
+  );
   const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);

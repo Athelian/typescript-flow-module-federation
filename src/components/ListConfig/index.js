@@ -3,7 +3,15 @@ import * as React from 'react';
 import useFilter from 'modules/relationMapBeta/hooks/useFilter';
 
 const { useEffect, useCallback } = React;
-const useListConfig = (initFilter: Object, filterName: string) => {
+type Props = {
+  initFilter: Object,
+  filterName: string,
+  children: React.Node,
+};
+
+const ListConfigContext: React.Context<Object> = React.createContext();
+
+export const useListConfig = (initFilter: Object, filterName: string) => {
   const { filterAndSort, queryVariables, onChange } = useFilter(initFilter);
   useEffect(() => {
     const localFilter = window.localStorage && window.localStorage.getItem(filterName);
@@ -25,14 +33,6 @@ const useListConfig = (initFilter: Object, filterName: string) => {
   }, []);
   return { filterAndSort, queryVariables, onChangeFilter };
 };
-
-type Props = {
-  initFilter: Object,
-  filterName: string,
-  children: React.Node,
-};
-
-const ListConfigContext: React.Context<Object> = React.createContext();
 
 const ListConfigProvider = (props: Props) => {
   const { children, initFilter, filterName } = props;
