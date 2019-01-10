@@ -1,5 +1,30 @@
 // @flow
 import * as React from 'react';
+import useFilter from 'modules/relationMapBeta/hooks/useFilter';
+
+const { useEffect, useCallback } = React;
+const useListConfig = (initFilter: Object, filterName: string) => {
+  const { filterAndSort, queryVariables, onChange } = useFilter(initFilter);
+  useEffect(() => {
+    const localFilter = window.localStorage && window.localStorage.getItem(filterName);
+    if (localFilter) {
+      onChange({ ...JSON.parse(localFilter) });
+    }
+  }, []);
+  const onChangeFilter = useCallback((newFilter: Object) => {
+    onChange(newFilter);
+    if (window.localStorage) {
+      window.localStorage.setItem(
+        filterName,
+        JSON.stringify({
+          ...filterAndSort,
+          ...newFilter,
+        })
+      );
+    }
+  }, []);
+  return { filterAndSort, queryVariables, onChangeFilter };
+};
 
 type Props = {
   initFilter: Object,
@@ -9,43 +34,15 @@ type Props = {
 
 const ListConfigContext: React.Context<Object> = React.createContext();
 
+const ListConfigProvider = (props: Props) => {
+  const { children, initFilter, filterName } = props;
+  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(initFilter, filterName);
+  return (
+    <ListConfigContext.Provider value={{ filterAndSort, queryVariables, onChangeFilter }}>
+      {children}
+    </ListConfigContext.Provider>
+  );
+};
+
 export const ListConfigConsumer = ListConfigContext.Consumer;
-
-export default class ListConfigProvider extends React.Component<Props, Object> {
-  constructor(props: Props) {
-    super(props);
-    const { initFilter }: { initFilter: Object } = props;
-    this.state = initFilter;
-  }
-
-  componentDidMount() {
-    const { filterName } = this.props;
-    const localFilter = window.localStorage && window.localStorage.getItem(filterName);
-    if (localFilter) {
-      this.setState({ ...JSON.parse(localFilter) });
-    }
-  }
-
-  onChangeFilter = (newValue: any) => {
-    const { filterName } = this.props;
-    this.setState(prevState => ({ ...prevState, ...newValue }));
-    if (window.localStorage) {
-      window.localStorage.setItem(
-        filterName,
-        JSON.stringify({
-          ...this.state,
-          ...newValue,
-        })
-      );
-    }
-  };
-
-  render() {
-    const { children } = this.props;
-    return (
-      <ListConfigContext.Provider value={{ ...this.state, onChangeFilter: this.onChangeFilter }}>
-        {children}
-      </ListConfigContext.Provider>
-    );
-  }
-}
+export default ListConfigProvider;

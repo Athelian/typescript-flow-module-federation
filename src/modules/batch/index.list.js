@@ -87,12 +87,12 @@ const BatchListModule = (props: Props) => {
             {...uiState}
             navBar={
               <ListConfigConsumer>
-                {({ filter, sort, page, perPage, onChangeFilter }) => (
+                {({ filterAndSort, onChangeFilter }) => (
                   <NavBar>
                     <FilterToolBar
                       icon="BATCH"
                       sortFields={sortFields}
-                      filtersAndSort={{ page, perPage, sort, filter }}
+                      filtersAndSort={filterAndSort}
                       onChange={onChangeFilter}
                     />
                     <Link to="new">
@@ -104,9 +104,7 @@ const BatchListModule = (props: Props) => {
             }
           >
             <ListConfigConsumer>
-              {({ filter, sort, page, perPage, viewType }) => (
-                <BatchList {...{ filter, sort, page, perPage, viewType }} />
-              )}
+              {({ queryVariables }) => <BatchList {...queryVariables} />}
             </ListConfigConsumer>
           </Layout>
         </ListConfigProvider>

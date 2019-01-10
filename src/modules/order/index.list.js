@@ -63,21 +63,21 @@ function OrderModule(props: Props) {
             {...uiState}
             navBar={
               <ListConfigConsumer>
-                {({ filter, sort, page, perPage, onChangeFilter }) => (
+                {({ filterAndSort, onChangeFilter }) => (
                   <NavBar>
                     <FilterToolBar
                       icon="ORDER"
                       sortFields={sortFields}
-                      filtersAndSort={{ page, perPage, sort, filter }}
+                      filtersAndSort={filterAndSort}
                       onChange={onChangeFilter}
                     />
                     <ExportButton
                       type="Orders"
                       exportQuery={ordersExportQuery}
                       variables={{
-                        filter,
+                        filterBy: filterAndSort.filter,
                         sortBy: {
-                          [sort.field]: sort.direction,
+                          [filterAndSort.sort.field]: filterAndSort.sort.direction,
                         },
                       }}
                     />
@@ -90,9 +90,7 @@ function OrderModule(props: Props) {
             }
           >
             <ListConfigConsumer>
-              {({ filter, sort, page, perPage, viewType }) => (
-                <OrderList {...{ filter, sort, page, perPage, viewType }} />
-              )}
+              {({ queryVariables }) => <OrderList {...queryVariables} />}
             </ListConfigConsumer>
           </Layout>
         </ListConfigProvider>

@@ -20,14 +20,11 @@ type Props = {
   perPage: number,
 };
 
-const ProductList = ({ viewType, sort, ...filtersAndSort }: Props) => (
+const ProductList = ({ viewType, ...filtersAndSort }: Props) => (
   <Query
     query={productListQuery}
     variables={{
       page: 1,
-      sort: {
-        [sort.field]: sort.direction,
-      },
       ...filtersAndSort,
     }}
     fetchPolicy="network-only"

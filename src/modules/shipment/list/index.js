@@ -28,9 +28,6 @@ class ShipmentList extends React.PureComponent<Props> {
         query={shipmentListQuery}
         variables={{
           page: 1,
-          sort: {
-            [sort.field]: sort.direction,
-          },
           ...filtersAndSort,
         }}
         fetchPolicy="network-only"

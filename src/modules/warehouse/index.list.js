@@ -56,12 +56,12 @@ const WarehouseModule = (props: Props) => {
             {...uiState}
             navBar={
               <ListConfigConsumer>
-                {({ filter, sort, page, perPage, onChangeFilter }) => (
+                {({ filterAndSort, onChangeFilter }) => (
                   <NavBar>
                     <FilterToolBar
                       icon="WAREHOUSE"
                       sortFields={sortFields}
-                      filtersAndSort={{ page, perPage, sort, filter }}
+                      filtersAndSort={filterAndSort}
                       onChange={onChangeFilter}
                     />
                     <Link to="new">
@@ -73,9 +73,7 @@ const WarehouseModule = (props: Props) => {
             }
           >
             <ListConfigConsumer>
-              {({ filter, sort, page, perPage, viewType }) => (
-                <WarehouseList {...{ filter, sort, page, perPage, viewType }} />
-              )}
+              {({ queryVariables }) => <WarehouseList {...queryVariables} />}
             </ListConfigConsumer>
           </Layout>
         </ListConfigProvider>

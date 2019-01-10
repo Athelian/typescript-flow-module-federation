@@ -59,17 +59,17 @@ const ShipmentListModule = (props: Props) => {
   return (
     <UIConsumer>
       {uiState => (
-        <ListConfigProvider filterName="filterProduct" initFilter={getInitFilter()}>
+        <ListConfigProvider filterName="filterShipment" initFilter={getInitFilter()}>
           <Layout
             {...uiState}
             navBar={
               <ListConfigConsumer>
-                {({ filter, sort, page, perPage, onChangeFilter }) => (
+                {({ filterAndSort, onChangeFilter }) => (
                   <NavBar>
                     <FilterToolBar
                       icon="SHIPMENT"
                       sortFields={sortFields}
-                      filtersAndSort={{ page, perPage, sort, filter }}
+                      filtersAndSort={filterAndSort}
                       onChange={onChangeFilter}
                     />
                     <Link to="new">
@@ -80,9 +80,9 @@ const ShipmentListModule = (props: Props) => {
                       exportQuery={shipmentsExportQuery}
                       variables={{
                         sortBy: {
-                          [sort.field]: sort.direction,
+                          [filterAndSort.sort.field]: filterAndSort.sort.direction,
                         },
-                        filterBy: filter,
+                        filterBy: filterAndSort.filter,
                       }}
                     />
                   </NavBar>
@@ -91,9 +91,7 @@ const ShipmentListModule = (props: Props) => {
             }
           >
             <ListConfigConsumer>
-              {({ filter, sort, page, perPage, viewType }) => (
-                <ShipmentList {...{ filter, sort, page, perPage, viewType }} />
-              )}
+              {({ queryVariables }) => <ShipmentList {...queryVariables} />}
             </ListConfigConsumer>
           </Layout>
         </ListConfigProvider>

@@ -9,29 +9,16 @@ import { orderListQuery } from './query';
 
 type Props = {
   viewType: string,
-  filter: {
-    query: string,
-    archived: boolean,
-  },
-  sort: {
-    field: string,
-    direction: string,
-  },
-  perPage: number,
 };
 
 class OrderList extends React.PureComponent<Props> {
   render() {
-    const { viewType, sort, ...filtersAndSort } = this.props;
-
+    const { viewType, ...filtersAndSort } = this.props;
     return (
       <Query
         query={orderListQuery}
         variables={{
           page: 1,
-          sort: {
-            [sort.field]: sort.direction,
-          },
           ...filtersAndSort,
         }}
         fetchPolicy="network-only"
