@@ -16,6 +16,10 @@ export type UIState = {
     type: string,
     selectedId: string,
   },
+  targets: Array<{
+    type: string,
+    selectedId: string,
+  }>,
   totalShipment: number,
 };
 
@@ -47,6 +51,7 @@ export const uiInitState: UIState = {
     type: '',
     selectedId: '',
   },
+  targets: [],
   totalShipment: 0,
 };
 
@@ -62,22 +67,53 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const {
         select: { entities },
       } = state;
-      if (payload && payload.entity && state.select.entities.includes(payload.entity)) {
+      if (payload) {
+        if (payload.entity && state.select.entities.includes(payload.entity)) {
+          return {
+            ...state,
+            select: {
+              ...state.select,
+              entities: (entities.filter(item => item !== payload.entity): Array<string>),
+            },
+          };
+        }
         return {
           ...state,
           select: {
-            ...state.select,
-            entities: (entities.filter(item => item !== payload.entity): Array<string>),
+            mode: 'ALL',
+            entities: [...entities, payload.entity || ''],
           },
         };
       }
-      return {
-        ...state,
-        select: {
-          mode: 'ALL',
-          entities: [...entities, payload && payload.entity ? payload.entity : ''],
-        },
-      };
+      return state;
+    }
+    case 'TARGET_ENTITY': {
+      const { payload } = action;
+      const { targets } = state;
+      if (payload) {
+        if (targets.find(item => item.selectedId === payload.id && item.type === payload.entity)) {
+          return {
+            ...state,
+            targets: (targets.filter(
+              item => item.type !== payload.entity && item.selectedId !== payload.id
+            ): Array<{
+              type: string,
+              selectedId: string,
+            }>),
+          };
+        }
+        return {
+          ...state,
+          targets: [
+            ...targets,
+            {
+              type: payload.entity || '',
+              selectedId: payload.id || '',
+            },
+          ],
+        };
+      }
+      return state;
     }
     case 'TOGGLE_SHIPMENT_LIST':
       return { ...state, totalShipment: 0, toggleShipmentList: !state.toggleShipmentList };
@@ -85,6 +121,29 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const { payload } = action;
       const total = payload && payload.total ? payload.total : 0;
       return { ...state, totalShipment: total };
+    }
+    case 'TOGGLE_HIGH_LIGHT': {
+      const { payload } = action;
+      if (payload) {
+        const { entity, id } = payload;
+        if (state.highlight.type === entity && state.highlight.selectedId === id) {
+          return {
+            ...state,
+            highlight: {
+              type: '',
+              selectedId: '',
+            },
+          };
+        }
+        return {
+          ...state,
+          highlight: {
+            type: entity,
+            selectedId: id,
+          },
+        };
+      }
+      return state;
     }
     case 'TOGGLE_EXPAND': {
       const { payload } = action;
@@ -99,7 +158,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             ...state.expandCards,
             [field]: state.expandCards[field].includes(payload.id)
               ? (state.expandCards[field].filter(id => id !== payload.id): Array<string>)
-              : [...state.expandCards[field], payload && payload.id ? payload.id : ''],
+              : [...state.expandCards[field], payload.id || ''],
           },
         };
       }
