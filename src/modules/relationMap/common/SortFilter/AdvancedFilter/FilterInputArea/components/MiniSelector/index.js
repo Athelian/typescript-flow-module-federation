@@ -9,7 +9,6 @@ import Icon from 'components/Icon';
 import { SearchInput } from 'components/NavBar';
 import { usePrevious } from 'modules/form/hooks';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
-import { convertArchivedQuery } from 'modules/relationMap/common/SortFilter/AdvancedFilter';
 import {
   MiniSelectorWrapperStyle,
   MiniSelectorSearchWrapperStyle,
@@ -31,6 +30,20 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   hideToggles: false,
+};
+
+const convertArchivedQuery = (isActive: boolean, isArchive: boolean, key: string) => {
+  if (isActive && isArchive) {
+    return {};
+  }
+  if (!isActive && !isArchive) {
+    return {
+      query: 'FAKE QUERY FOR RETURN NULL DATA',
+    };
+  }
+  const query = {};
+  query[key] = isArchive;
+  return query;
 };
 
 export default function MiniSelector({

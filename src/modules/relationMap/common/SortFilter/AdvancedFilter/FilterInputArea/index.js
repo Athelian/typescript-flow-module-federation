@@ -120,8 +120,8 @@ const getFilterInputArea = ({
         case 'updatedAt':
           return () => (
             <DateRange
-              fromDate={new Date(selectedItems.after)}
-              toDate={new Date(selectedItems.before)}
+              fromDate={selectedItems.after}
+              toDate={selectedItems.before}
               onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
               onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
             />
@@ -147,8 +147,8 @@ const getFilterInputArea = ({
         case 'updatedAt':
           return () => (
             <DateRange
-              fromDate={new Date(selectedItems.after)}
-              toDate={new Date(selectedItems.before)}
+              fromDate={selectedItems.after}
+              toDate={selectedItems.before}
               onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
               onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
             />
@@ -236,8 +236,8 @@ const getFilterInputArea = ({
         case 'producedAt':
           return () => (
             <DateRange
-              fromDate={new Date(selectedItems.after)}
-              toDate={new Date(selectedItems.before)}
+              fromDate={selectedItems.after}
+              toDate={selectedItems.before}
               onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
               onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
             />
@@ -269,8 +269,8 @@ const getFilterInputArea = ({
         case 'updatedAt':
           return () => (
             <DateRange
-              fromDate={new Date(selectedItems.after)}
-              toDate={new Date(selectedItems.before)}
+              fromDate={selectedItems.after}
+              toDate={selectedItems.before}
               onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
               onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
             />
@@ -369,8 +369,8 @@ const getFilterInputArea = ({
         case 'deliveryReady':
           return () => (
             <DateRange
-              fromDate={new Date(selectedItems.after)}
-              toDate={new Date(selectedItems.before)}
+              fromDate={selectedItems.after}
+              toDate={selectedItems.before}
               onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
               onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
             />
@@ -387,8 +387,8 @@ const getFilterInputArea = ({
         case 'updatedAt':
           return () => (
             <DateRange
-              fromDate={new Date(selectedItems.after)}
-              toDate={new Date(selectedItems.before)}
+              fromDate={selectedItems.after}
+              toDate={selectedItems.before}
               onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
               onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
             />

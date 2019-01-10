@@ -50,6 +50,10 @@ type State = {
     batch: Object,
     shipment: Object,
   },
+  statusFilters: {
+    order: Object,
+    shipment: Object,
+  },
 };
 
 const initialState: State = {
@@ -67,19 +71,22 @@ const initialState: State = {
     batch: {},
     shipment: {},
   },
+  statusFilters: {
+    order: {
+      archived: false,
+    },
+    shipment: {
+      archived: null,
+    },
+  },
   filterToggles: {
     order: {
       completelyBatched: false,
       completelyShipped: false,
-      showActive: true,
-      showArchived: false,
     },
     item: {},
     batch: {},
-    shipment: {
-      showActive: true,
-      showArchived: false,
-    },
+    shipment: {},
   },
 };
 
@@ -167,8 +174,8 @@ const getFilterValue = (name: string, data: any) => {
     case 'warehouseArrival':
     case 'deliveryReady':
       return {
-        ...(data.after && { after: formatToDateTimeGraphql(new Date(data.after)) }),
-        ...(data.before && { before: formatToDateTimeGraphql(new Date(data.before)) }),
+        ...(data.before && { before: formatToDateTimeGraphql(data.before) }),
+        ...(data.after && { after: formatToDateTimeGraphql(data.after) }),
       };
     case 'price': {
       const currency = getByPath('currency.name', data);
@@ -199,25 +206,6 @@ const convertActiveFilter = (state: Object, type: string) => {
     return currentQuery;
   }, {});
   return query;
-};
-
-export const convertArchivedQuery = (isActive: boolean, isArchive: boolean, key: string) => {
-  if (isActive && isArchive) {
-    return {};
-  }
-  if (!isActive && !isArchive) {
-    return {
-      query: 'FAKE QUERY FOR RETURN NULL DATA',
-    };
-  }
-  const query = {};
-  query[key] = isArchive;
-  return query;
-};
-
-const convertArchivedFilter = (state: Object, type: string, key: string) => {
-  const { showActive, showArchived } = getByPathWithDefault({}, `filterToggles.${type}`, state);
-  return convertArchivedQuery(showActive, showArchived, key);
 };
 
 const convertMetricRangeQuery = ({
@@ -334,13 +322,22 @@ const convertPackagingQuery = (state: Object, type: string, prevKey: string) => 
   return packagingQuery;
 };
 
-const booleanFilterQuery = (state: Object, filterName: string, path: string) => {
-  const filterValue = getByPathWithDefault(false, path, state);
-  const filterQuery = {};
-  if (filterValue) {
-    filterQuery[filterName] = filterValue;
+// const booleanFilterQuery = (state: Object, filterName: string, path: string) => {
+//   const filterValue = getByPathWithDefault(false, path, state);
+//   const filterQuery = {};
+//   if (filterValue) {
+//     filterQuery[filterName] = filterValue;
+//   }
+//   return filterQuery;
+// };
+
+const convertArchivedFilter = (state: Object, entityType: string, key: string) => {
+  const archived = getByPath(`statusFilters.${entityType}.archived`, state);
+  const query = {};
+  if (!isNullOrUndefined(archived)) {
+    query[key] = archived;
   }
-  return filterQuery;
+  return query;
 };
 
 const convertToFilterQuery = (state: Object) => ({
@@ -350,13 +347,14 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertActiveFilter(state, 'shipment'),
 
   ...convertArchivedFilter(state, 'order', 'archived'),
+  ...convertArchivedFilter(state, 'shipment', 'shipmentArchived'),
 
   ...convertPackagingQuery(state, 'item', 'productProvider'),
   // ...convertPackagingQuery(state, 'batch', 'batch'),
   ...convertPortsQuery(state),
 
-  ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
-  ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
+  // ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
+  // ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
 });
 
 const removeActiveFilter = state => ({
@@ -380,6 +378,19 @@ function reducer(state, action) {
         ...state,
         selectedEntityType: entityType,
         selectedFilterItem: defaultFilterMenuItemMap[entityType],
+      };
+    }
+
+    case 'CHANGE_STATUS_FILTER': {
+      const { entityType, filter, value } = action;
+      const { statusFilters } = state;
+
+      const newStatusFilters = { ...statusFilters };
+      newStatusFilters[entityType][filter] = value;
+
+      return {
+        ...state,
+        statusFilters: newStatusFilters,
       };
     }
 
@@ -584,6 +595,7 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
                         selectedItems={state.selectedItems}
                         selectedEntityType={state.selectedEntityType}
                         activeFilters={state.activeFilters}
+                        statusFilters={state.statusFilters}
                         filterToggles={state.filterToggles}
                         selectedFilterItem={state.selectedFilterItem}
                         onToggleSelect={(selectItem: any, field?: string) =>
@@ -591,6 +603,14 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
                             type: field ? 'SET_SELECT_ITEM' : 'TOGGLE_SELECT_ITEM',
                             selectItem,
                             ...(field ? { field } : {}),
+                          })
+                        }
+                        changeStatusFilter={(entityType, filter, value) =>
+                          dispatch({
+                            type: 'CHANGE_STATUS_FILTER',
+                            entityType,
+                            filter,
+                            value,
                           })
                         }
                         toggleActiveFilter={(entityType, filter) =>

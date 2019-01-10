@@ -6,6 +6,8 @@ import messages from './messages';
 
 type Props = {
   parsedActiveFilters: Array<string>,
+  parsedStatusFilters: any,
+  changeStatusFilter: Function,
   toggleActiveFilter: (string, string) => void,
   parsedFilterToggles: Object,
   toggleFilterToggle: (string, string) => void,
@@ -35,6 +37,8 @@ const getSelectData = (
 
 export default function OrderFilterMenu({
   parsedActiveFilters,
+  parsedStatusFilters,
+  changeStatusFilter,
   toggleActiveFilter,
   parsedFilterToggles,
   toggleFilterToggle,
@@ -88,6 +92,27 @@ export default function OrderFilterMenu({
     },
   ];
 
+  const statusMap = [
+    {
+      name: 'active',
+      label: <FormattedMessage id="modules.relationMap.active" defaultMessage="ACTIVE" />,
+      field: 'archived',
+      value: false,
+    },
+    {
+      name: 'archived',
+      label: <FormattedMessage id="modules.relationMap.archived" defaultMessage="ARCHIVED" />,
+      field: 'archived',
+      value: true,
+    },
+    {
+      name: 'all',
+      label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
+      field: 'archived',
+      value: null,
+    },
+  ];
+
   const togglesMap = [
     // {
     //   name: 'completelyBatched',
@@ -99,18 +124,15 @@ export default function OrderFilterMenu({
     //   label: <FormattedMessage {...messages.completelyShipped} />,
     //   icon: 'SHIPMENT',
     // },
-    { name: 'showActive', label: <FormattedMessage {...messages.showActive} />, icon: 'ACTIVE' },
-    {
-      name: 'showArchived',
-      label: <FormattedMessage {...messages.showArchived} />,
-      icon: 'ARCHIVE',
-    },
   ];
 
   return (
     <BaseFilterMenu
       filtersMap={filtersMap}
       togglesMap={togglesMap}
+      statusMap={statusMap}
+      parsedStatusFilters={parsedStatusFilters}
+      changeStatusFilter={changeStatusFilter}
       entityType="order"
       parsedActiveFilters={parsedActiveFilters}
       toggleActiveFilter={toggleActiveFilter}

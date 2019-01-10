@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { isNullOrUndefined } from 'utils/fp';
+import { RadioInput, Label } from 'components/Form';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import { FilterMenuItem, SectionHeader, ToggleMenuItem } from '..';
 import { FilterMenuWrapperStyle, FiltersBodyStyle, TogglesBodyStyle } from './style';
@@ -20,6 +22,9 @@ type OptionalProps = {
     label: React.Node,
     icon: string,
   }>,
+  statusMap?: any,
+  parsedStatusFilters: { archived?: boolean },
+  changeStatusFilter: Function,
 };
 
 type Props = OptionalProps & {
@@ -33,11 +38,28 @@ type Props = OptionalProps & {
   onToggleSelect: Function,
 };
 
-export default function BaseFilterMenu({
+const isSelectedStatus = (name: string, archived: any): boolean => {
+  if (name === 'active' && archived === false) return true;
+  if (name === 'archived' && archived === true) return true;
+  if (name === 'all' && isNullOrUndefined(archived)) return true;
+  return false;
+};
+
+const defaultProps = {
+  parsedStatusFilters: {
+    archived: false,
+  },
+  changeStatusFilter: () => {},
+};
+
+function BaseFilterMenu({
   filtersMap,
   togglesMap,
+  statusMap,
   entityType,
   parsedActiveFilters,
+  parsedStatusFilters,
+  changeStatusFilter,
   toggleActiveFilter,
   parsedFilterToggles,
   toggleFilterToggle,
@@ -81,6 +103,26 @@ export default function BaseFilterMenu({
           );
         })}
 
+      {statusMap && parsedFilterToggles && (
+        <div className={TogglesBodyStyle}>
+          {statusMap.map(status => {
+            const { name, label: text, field, value } = status;
+
+            return (
+              <RadioInput
+                key={name}
+                selected={isSelectedStatus(
+                  name,
+                  isNullOrUndefined(parsedStatusFilters) ? null : parsedStatusFilters.archived
+                )}
+                onToggle={() => changeStatusFilter(entityType, field, value)}
+              >
+                <Label>{text}</Label>
+              </RadioInput>
+            );
+          })}
+        </div>
+      )}
       {togglesMap && (
         <div className={TogglesBodyStyle}>
           {togglesMap.map(toggle => {
@@ -105,3 +147,7 @@ export default function BaseFilterMenu({
     </div>
   );
 }
+
+BaseFilterMenu.defaultProps = defaultProps;
+
+export default BaseFilterMenu;
