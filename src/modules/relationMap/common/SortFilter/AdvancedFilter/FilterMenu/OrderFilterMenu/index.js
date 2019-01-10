@@ -126,8 +126,8 @@ export default function OrderFilterMenu({
       name: 'completely',
       label: (
         <FormattedMessage
-          id="modules.relationMap.notFullBatched"
-          defaultMessage="NOT FULL BATCHED"
+          id="modules.relationMap.notFullyBatched"
+          defaultMessage="NOT FULLY BATCHED"
         />
       ),
       field: 'completelyBatched',
@@ -146,8 +146,8 @@ export default function OrderFilterMenu({
       name: 'completely',
       label: (
         <FormattedMessage
-          id="modules.relationMap.notFullShipped"
-          defaultMessage="NOT FULL SHIPPED"
+          id="modules.relationMap.notFullyShipped"
+          defaultMessage="NOT FULLY SHIPPED"
         />
       ),
       field: 'completelyShipped',
