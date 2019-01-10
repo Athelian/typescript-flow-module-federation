@@ -11,26 +11,36 @@ type Props = {
 
 const ListConfigContext: React.Context<Object> = React.createContext();
 
-export const useListConfig = (initFilter: Object, filterName: string) => {
+export const useListConfig = (
+  initFilter: Object,
+  filterName: string,
+  option?: Object = {
+    appliedLocalFilter: true,
+    saveLocalFilter: true,
+  }
+) => {
   const { filterAndSort, queryVariables, onChange } = useFilter(initFilter);
   useEffect(() => {
     const localFilter = window.localStorage && window.localStorage.getItem(filterName);
-    if (localFilter) {
+    if (localFilter && option.appliedLocalFilter) {
       onChange({ ...JSON.parse(localFilter) });
     }
   }, []);
-  const onChangeFilter = useCallback((newFilter: Object) => {
-    onChange(newFilter);
-    if (window.localStorage) {
-      window.localStorage.setItem(
-        filterName,
-        JSON.stringify({
-          ...filterAndSort,
-          ...newFilter,
-        })
-      );
-    }
-  }, []);
+  const onChangeFilter = useCallback(
+    (newFilter: Object) => {
+      onChange(newFilter);
+      if (window.localStorage && option.saveLocalFilter) {
+        window.localStorage.setItem(
+          filterName,
+          JSON.stringify({
+            ...filterAndSort,
+            ...newFilter,
+          })
+        );
+      }
+    },
+    [filterAndSort]
+  );
   return { filterAndSort, queryVariables, onChangeFilter };
 };
 

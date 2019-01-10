@@ -22,10 +22,10 @@ function useFilter({ filter, sort, page = 1, perPage = 10, viewType }: State) {
   });
 
   const onChange = useCallback((newFilter: Object) => {
-    changeFilterAndSort({
-      ...filterAndSort,
+    changeFilterAndSort(prevState => ({
+      ...prevState,
       ...newFilter,
-    });
+    }));
   }, []);
 
   return {

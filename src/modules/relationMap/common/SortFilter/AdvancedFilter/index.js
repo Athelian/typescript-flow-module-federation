@@ -528,15 +528,31 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
         type: 'OVERRIDE_FILTER',
         advanceFilter,
       });
+
       const advanceFilterQuery = convertToFilterQuery(advanceFilter);
-      onApply({ filter: advanceFilterQuery });
       setAppliedFilter(!isDefaultFilter(advanceFilterQuery));
+    }
+    const localFilterAndSort =
+      window.localStorage && window.localStorage.getItem('filterRelationMap');
+    if (localFilterAndSort) {
+      onApply(JSON.parse(localFilterAndSort));
     }
   }, []);
   useEffect(
     () => {
       if (window.localStorage) {
+        const advanceFilterQuery = convertToFilterQuery(state);
+        const localAdvanceFilter = JSON.parse(
+          window.localStorage.getItem('filterRelationMap') || '{}'
+        );
         window.localStorage.setItem(ADVANCE_FILTER_STORAGE, JSON.stringify(state));
+        window.localStorage.setItem(
+          'filterRelationMap',
+          JSON.stringify({
+            ...localAdvanceFilter,
+            filter: advanceFilterQuery,
+          })
+        );
       }
     },
     [state]

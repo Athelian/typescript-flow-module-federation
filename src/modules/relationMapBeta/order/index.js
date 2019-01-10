@@ -52,7 +52,11 @@ const Order = ({ intl }: Props) => {
         direction: 'DESCENDING',
       },
     },
-    'filterRelationMap'
+    'filterRelationMap',
+    {
+      appliedLocalFilter: false,
+      saveLocalFilter: true,
+    }
   );
   const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
   const actions = actionCreators(dispatch);
@@ -113,12 +117,7 @@ const Order = ({ intl }: Props) => {
                 onChange={onChange}
                 onToggle={actions.toggleTag}
                 renderAdvanceFilter={({ onChange: onApplyFilter }) => (
-                  <AdvancedFilter
-                    initialFilter={{
-                      archived: false,
-                    }}
-                    onApply={onApplyFilter}
-                  />
+                  <AdvancedFilter initialFilter={filterAndSort.filter} onApply={onApplyFilter} />
                 )}
               />
               {loading ? (
