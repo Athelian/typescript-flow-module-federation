@@ -4,9 +4,14 @@ import * as React from 'react';
 type Props = {
   initFilter: Object,
   filterName: string,
-  children: Function,
+  children: React.Node,
 };
-export default class FilterHandler extends React.Component<Props, Object> {
+
+const ListConfigContext: React.Context<Object> = React.createContext();
+
+export const ListConfigConsumer = ListConfigContext.Consumer;
+
+export default class ListConfigProvider extends React.Component<Props, Object> {
   constructor(props: Props) {
     super(props);
     const { initFilter }: { initFilter: Object } = props;
@@ -51,10 +56,10 @@ export default class FilterHandler extends React.Component<Props, Object> {
 
   render() {
     const { children } = this.props;
-    return children({
-      ...this.state,
-      ...this.props,
-      onChangeFilter: this.onChangeFilter,
-    });
+    return (
+      <ListConfigContext.Provider value={{ ...this.state, onChangeFilter: this.onChangeFilter }}>
+        {children}
+      </ListConfigContext.Provider>
+    );
   }
 }
