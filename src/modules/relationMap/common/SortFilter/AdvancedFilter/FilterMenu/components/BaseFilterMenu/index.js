@@ -29,15 +29,15 @@ type OptionalProps = {
     label: React.Node,
     icon: string,
   }>,
-  statusMap?: Array<RadioFilterProps>,
+  archivedUI?: Array<RadioFilterProps>,
   completelyBatchedUI?: Array<RadioFilterProps>,
   completelyShippedUI?: Array<RadioFilterProps>,
-  parsedStatusFilters: {
+  parsedRadioFilters: {
     archived?: boolean,
     completelyBatched?: boolean,
     completelyShipped?: boolean,
   },
-  changeStatusFilter: Function,
+  changeRadioFilter: Function,
 };
 
 type Props = OptionalProps & {
@@ -65,22 +65,22 @@ const isCompleted = (name: string, status: any): boolean => {
 };
 
 const defaultProps = {
-  parsedStatusFilters: {
+  parsedRadioFilters: {
     archived: false,
   },
-  changeStatusFilter: () => {},
+  changeRadioFilter: () => {},
 };
 
 function BaseFilterMenu({
   filtersMap,
   togglesMap,
-  statusMap,
+  archivedUI,
   completelyBatchedUI,
   completelyShippedUI,
   entityType,
   parsedActiveFilters,
-  parsedStatusFilters,
-  changeStatusFilter,
+  parsedRadioFilters,
+  changeRadioFilter,
   toggleActiveFilter,
   parsedFilterToggles,
   toggleFilterToggle,
@@ -124,19 +124,19 @@ function BaseFilterMenu({
           );
         })}
 
-      {statusMap && parsedFilterToggles && (
+      {archivedUI && parsedFilterToggles && (
         <div className={TogglesBodyStyle}>
-          {statusMap.map(status => {
-            const { name, label: text, field, value } = status;
+          {archivedUI.map(UIItem => {
+            const { name, label: text, field, value } = UIItem;
 
             return (
               <RadioInput
                 key={name}
                 selected={isSelectedStatus(
                   name,
-                  isNullOrUndefined(parsedStatusFilters) ? null : parsedStatusFilters.archived
+                  isNullOrUndefined(parsedRadioFilters) ? null : parsedRadioFilters.archived
                 )}
-                onToggle={() => changeStatusFilter(entityType, field, value)}
+                onToggle={() => changeRadioFilter(entityType, field, value)}
               >
                 <Label>{text}</Label>
               </RadioInput>
@@ -155,11 +155,11 @@ function BaseFilterMenu({
                 key={name}
                 selected={isCompleted(
                   name,
-                  isNullOrUndefined(parsedStatusFilters)
+                  isNullOrUndefined(parsedRadioFilters)
                     ? null
-                    : parsedStatusFilters.completelyBatched
+                    : parsedRadioFilters.completelyBatched
                 )}
-                onToggle={() => changeStatusFilter(entityType, field, value)}
+                onToggle={() => changeRadioFilter(entityType, field, value)}
               >
                 <Label>{text}</Label>
               </RadioInput>
@@ -178,11 +178,11 @@ function BaseFilterMenu({
                 key={name}
                 selected={isCompleted(
                   name,
-                  isNullOrUndefined(parsedStatusFilters)
+                  isNullOrUndefined(parsedRadioFilters)
                     ? null
-                    : parsedStatusFilters.completelyShipped
+                    : parsedRadioFilters.completelyShipped
                 )}
-                onToggle={() => changeStatusFilter(entityType, field, value)}
+                onToggle={() => changeRadioFilter(entityType, field, value)}
               >
                 <Label>{text}</Label>
               </RadioInput>

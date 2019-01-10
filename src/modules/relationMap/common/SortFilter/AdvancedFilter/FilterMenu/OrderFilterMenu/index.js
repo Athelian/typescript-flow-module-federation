@@ -6,8 +6,8 @@ import messages from './messages';
 
 type Props = {
   parsedActiveFilters: Array<string>,
-  parsedStatusFilters: any,
-  changeStatusFilter: Function,
+  parsedRadioFilters: any,
+  changeRadioFilter: Function,
   toggleActiveFilter: (string, string) => void,
   parsedFilterToggles: Object,
   toggleFilterToggle: (string, string) => void,
@@ -37,8 +37,8 @@ const getSelectData = (
 
 export default function OrderFilterMenu({
   parsedActiveFilters,
-  parsedStatusFilters,
-  changeStatusFilter,
+  parsedRadioFilters,
+  changeRadioFilter,
   toggleActiveFilter,
   parsedFilterToggles,
   toggleFilterToggle,
@@ -92,7 +92,7 @@ export default function OrderFilterMenu({
     },
   ];
 
-  const statusMap = [
+  const archivedUI = [
     {
       name: 'all',
       label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
@@ -159,11 +159,11 @@ export default function OrderFilterMenu({
     <BaseFilterMenu
       filtersMap={filtersMap}
       togglesMap={togglesMap}
-      statusMap={statusMap}
+      archivedUI={archivedUI}
       completelyBatchedUI={completelyBatchedUI}
       completelyShippedUI={completelyShippedUI}
-      parsedStatusFilters={parsedStatusFilters}
-      changeStatusFilter={changeStatusFilter}
+      parsedRadioFilters={parsedRadioFilters}
+      changeRadioFilter={changeRadioFilter}
       entityType="order"
       parsedActiveFilters={parsedActiveFilters}
       toggleActiveFilter={toggleActiveFilter}
