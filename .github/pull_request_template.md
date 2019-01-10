@@ -1,13 +1,14 @@
 ## WHAT
 
+<!-- Links to task(s) -->
+<!-- Links to documentation or slack discussion -->
+<!-- Link to testing -->
+
 ## WHY
 
 ## HOW
 
 ## Meta
-
-<!--- Links to task(s) -->
-<!--- Links to documentation or slack discussion -->
 
 ## Screenshots (if appropriate):
 
