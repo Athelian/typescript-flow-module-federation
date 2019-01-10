@@ -4,7 +4,12 @@ import { isNullOrUndefined } from 'utils/fp';
 import { RadioInput, Label } from 'components/Form';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import { FilterMenuItem, SectionHeader, ToggleMenuItem } from '..';
-import { FilterMenuWrapperStyle, FiltersBodyStyle, TogglesBodyStyle } from './style';
+import {
+  FilterMenuWrapperStyle,
+  FiltersBodyStyle,
+  TogglesBodyStyle,
+  RadioInputWrapperStyle,
+} from './style';
 
 type RadioFilterProps = {
   name: string,
@@ -130,16 +135,18 @@ function BaseFilterMenu({
             const { name, label: text, field, value } = UIItem;
 
             return (
-              <RadioInput
-                key={name}
-                selected={isSelectedStatus(
-                  name,
-                  isNullOrUndefined(parsedRadioFilters) ? null : parsedRadioFilters.archived
-                )}
-                onToggle={() => changeRadioFilter(entityType, field, value)}
-              >
-                <Label>{text}</Label>
-              </RadioInput>
+              <div className={RadioInputWrapperStyle}>
+                <RadioInput
+                  key={name}
+                  selected={isSelectedStatus(
+                    name,
+                    isNullOrUndefined(parsedRadioFilters) ? null : parsedRadioFilters.archived
+                  )}
+                  onToggle={() => changeRadioFilter(entityType, field, value)}
+                >
+                  <Label>{text}</Label>
+                </RadioInput>
+              </div>
             );
           })}
         </div>
@@ -151,18 +158,20 @@ function BaseFilterMenu({
             const { name, label: text, field, value } = UIItem;
 
             return (
-              <RadioInput
-                key={name}
-                selected={isCompleted(
-                  name,
-                  isNullOrUndefined(parsedRadioFilters)
-                    ? null
-                    : parsedRadioFilters.completelyBatched
-                )}
-                onToggle={() => changeRadioFilter(entityType, field, value)}
-              >
-                <Label>{text}</Label>
-              </RadioInput>
+              <div className={RadioInputWrapperStyle}>
+                <RadioInput
+                  key={name}
+                  selected={isCompleted(
+                    name,
+                    isNullOrUndefined(parsedRadioFilters)
+                      ? null
+                      : parsedRadioFilters.completelyBatched
+                  )}
+                  onToggle={() => changeRadioFilter(entityType, field, value)}
+                >
+                  <Label>{text}</Label>
+                </RadioInput>
+              </div>
             );
           })}
         </div>
@@ -174,18 +183,20 @@ function BaseFilterMenu({
             const { name, label: text, field, value } = UIItem;
 
             return (
-              <RadioInput
-                key={name}
-                selected={isCompleted(
-                  name,
-                  isNullOrUndefined(parsedRadioFilters)
-                    ? null
-                    : parsedRadioFilters.completelyShipped
-                )}
-                onToggle={() => changeRadioFilter(entityType, field, value)}
-              >
-                <Label>{text}</Label>
-              </RadioInput>
+              <div className={RadioInputWrapperStyle}>
+                <RadioInput
+                  key={name}
+                  selected={isCompleted(
+                    name,
+                    isNullOrUndefined(parsedRadioFilters)
+                      ? null
+                      : parsedRadioFilters.completelyShipped
+                  )}
+                  onToggle={() => changeRadioFilter(entityType, field, value)}
+                >
+                  <Label>{text}</Label>
+                </RadioInput>
+              </div>
             );
           })}
         </div>
