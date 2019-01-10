@@ -20,6 +20,8 @@ type Props = {
   },
   selectedEntityType: EntityTypes,
   activeFilters: ActiveFilters,
+  statusFilters: any,
+  changeStatusFilter: Function,
   toggleActiveFilter: (string, string) => void,
   filterToggles: FilterToggles,
   toggleFilterToggle: (string, string) => void,
@@ -46,6 +48,8 @@ const getFilterMenu = (selectedEntityType: EntityTypes) => {
 export default function FilterMenu({
   selectedEntityType,
   activeFilters,
+  statusFilters,
+  changeStatusFilter,
   toggleActiveFilter,
   filterToggles,
   toggleFilterToggle,
@@ -56,6 +60,7 @@ export default function FilterMenu({
 }: Props) {
   const SelectedFilterMenu = getFilterMenu(selectedEntityType);
   const parsedActiveFilters = activeFilters[selectedEntityType];
+  const parsedStatusFilters = statusFilters[selectedEntityType];
   const parsedFilterToggles = filterToggles[selectedEntityType];
 
   return (
@@ -63,6 +68,8 @@ export default function FilterMenu({
       <SelectedFilterMenu
         selectedItems={selectedItems}
         parsedActiveFilters={parsedActiveFilters}
+        parsedStatusFilters={parsedStatusFilters}
+        changeStatusFilter={changeStatusFilter}
         toggleActiveFilter={toggleActiveFilter}
         parsedFilterToggles={parsedFilterToggles}
         toggleFilterToggle={toggleFilterToggle}
