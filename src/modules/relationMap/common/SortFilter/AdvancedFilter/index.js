@@ -532,11 +532,6 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
       const advanceFilterQuery = convertToFilterQuery(advanceFilter);
       setAppliedFilter(!isDefaultFilter(advanceFilterQuery));
     }
-    const localFilterAndSort =
-      window.localStorage && window.localStorage.getItem('filterRelationMap');
-    if (localFilterAndSort) {
-      onApply(JSON.parse(localFilterAndSort));
-    }
   }, []);
   useEffect(
     () => {

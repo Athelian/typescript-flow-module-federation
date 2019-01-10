@@ -39,24 +39,22 @@ type Props = {
   intl: IntlShape,
 };
 
+const initFilter = {
+  page: 1,
+  perPage: 10,
+  filter: {
+    archived: false,
+  },
+  sort: {
+    field: 'updatedAt',
+    direction: 'DESCENDING',
+  },
+};
+
 const Order = ({ intl }: Props) => {
   const { queryVariables, filterAndSort, onChangeFilter: onChange } = useListConfig(
-    {
-      page: 1,
-      perPage: 10,
-      filter: {
-        archived: false,
-      },
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-    },
-    'filterRelationMap',
-    {
-      appliedLocalFilter: false,
-      saveLocalFilter: true,
-    }
+    initFilter,
+    'filterRelationMap'
   );
   const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
   const actions = actionCreators(dispatch);
