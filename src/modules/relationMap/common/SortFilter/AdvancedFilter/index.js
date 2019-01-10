@@ -512,39 +512,32 @@ const isDefaultFilter = isEquals({
 });
 
 function AdvanceFilter({ onApply, initialFilter }: Props) {
+  const localAdvanceFilter =
+    window.localStorage && window.localStorage.getItem(ADVANCE_FILTER_STORAGE);
+  const initialLocalAdvanceFilter = JSON.parse(localAdvanceFilter);
+
   const filterButtonRef = useRef(null);
-  const [filterIsApplied, setAppliedFilter] = useState(false);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [filterIsApplied, setAppliedFilter] = useState(
+    initialLocalAdvanceFilter
+      ? !isDefaultFilter(convertToFilterQuery(initialLocalAdvanceFilter))
+      : false
+  );
+
+  const [state, dispatch] = useReducer(reducer, initialLocalAdvanceFilter || initialState);
   const filterQuery = convertToFilterQuery(state);
   const defaultInitialFilter = isDefaultFilter(initialFilter);
   const defaultFilterQuery = isDefaultFilter(filterQuery);
 
-  useEffect(() => {
-    const localAdvanceFilter =
-      window.localStorage && window.localStorage.getItem(ADVANCE_FILTER_STORAGE);
-    if (localAdvanceFilter) {
-      const advanceFilter = JSON.parse(localAdvanceFilter);
-      dispatch({
-        type: 'OVERRIDE_FILTER',
-        advanceFilter,
-      });
-
-      const advanceFilterQuery = convertToFilterQuery(advanceFilter);
-      setAppliedFilter(!isDefaultFilter(advanceFilterQuery));
-    }
-  }, []);
   useEffect(
     () => {
       if (window.localStorage) {
         const advanceFilterQuery = convertToFilterQuery(state);
-        const localAdvanceFilter = JSON.parse(
-          window.localStorage.getItem('filterRelationMap') || '{}'
-        );
+        const localFilter = JSON.parse(window.localStorage.getItem('filterRelationMap') || '{}');
         window.localStorage.setItem(ADVANCE_FILTER_STORAGE, JSON.stringify(state));
         window.localStorage.setItem(
           'filterRelationMap',
           JSON.stringify({
-            ...localAdvanceFilter,
+            ...localFilter,
             filter: advanceFilterQuery,
           })
         );
