@@ -19,7 +19,7 @@ type Props = {
 
 type State = {
   viewType: string,
-  filterBy: {
+  filter: {
     query: string,
     archived: boolean,
   },
@@ -34,7 +34,7 @@ type State = {
 const getInitFilter = () => {
   const state: State = {
     viewType: 'grid',
-    filterBy: {
+    filter: {
       query: '',
       archived: false,
     },
@@ -63,19 +63,19 @@ function OrderModule(props: Props) {
             {...uiState}
             navBar={
               <ListConfigConsumer>
-                {({ filterBy, sort, page, perPage, onChangeFilter }) => (
+                {({ filter, sort, page, perPage, onChangeFilter }) => (
                   <NavBar>
                     <FilterToolBar
                       icon="ORDER"
                       sortFields={sortFields}
-                      filtersAndSort={{ page, perPage, sort, filter: filterBy }}
+                      filtersAndSort={{ page, perPage, sort, filter }}
                       onChange={onChangeFilter}
                     />
                     <ExportButton
                       type="Orders"
                       exportQuery={ordersExportQuery}
                       variables={{
-                        filterBy,
+                        filter,
                         sortBy: {
                           [sort.field]: sort.direction,
                         },
@@ -90,8 +90,8 @@ function OrderModule(props: Props) {
             }
           >
             <ListConfigConsumer>
-              {({ filterBy, sort, page, perPage, viewType }) => (
-                <OrderList {...{ filterBy, sort, page, perPage, viewType }} />
+              {({ filter, sort, page, perPage, viewType }) => (
+                <OrderList {...{ filter, sort, page, perPage, viewType }} />
               )}
             </ListConfigConsumer>
           </Layout>
