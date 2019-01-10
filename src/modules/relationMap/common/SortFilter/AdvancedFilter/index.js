@@ -1,5 +1,5 @@
 // @flow
-import React, { useRef, useReducer, useState } from 'react';
+import React, { useRef, useReducer, useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import {
@@ -96,6 +96,8 @@ const defaultFilterMenuItemMap = {
   batch: 'deliveredAt',
   shipment: 'forwarder',
 };
+
+const ADVANCE_FILTER_STORAGE = 'advanceFilterRelationMap';
 
 const FILTER = {
   order: {
@@ -394,6 +396,14 @@ function reducer(state, action) {
       };
     }
 
+    case 'OVERRIDE_FILTER': {
+      const { advanceFilter } = action;
+      return {
+        ...state,
+        ...advanceFilter,
+      };
+    }
+
     case 'TOGGLE_FILTER_TOGGLE': {
       const { entityType, toggle } = action;
       const { filterToggles } = state;
@@ -508,6 +518,29 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
   const filterQuery = convertToFilterQuery(state);
   const defaultInitialFilter = isDefaultFilter(initialFilter);
   const defaultFilterQuery = isDefaultFilter(filterQuery);
+
+  useEffect(() => {
+    const localAdvanceFilter =
+      window.localStorage && window.localStorage.getItem(ADVANCE_FILTER_STORAGE);
+    if (localAdvanceFilter) {
+      const advanceFilter = JSON.parse(localAdvanceFilter);
+      dispatch({
+        type: 'OVERRIDE_FILTER',
+        advanceFilter,
+      });
+      onApply({ filter: convertToFilterQuery(advanceFilter) });
+      setAppliedFilter(true);
+    }
+  }, []);
+  useEffect(
+    () => {
+      if (window.localStorage && !defaultFilterQuery) {
+        window.localStorage.setItem(ADVANCE_FILTER_STORAGE, JSON.stringify(state));
+      }
+    },
+    [state]
+  );
+
   const sameFilter = isEquals(initialFilter, filterQuery);
   const showApplyButton = !defaultInitialFilter || !sameFilter;
 
