@@ -1,17 +1,12 @@
-## Title
+## WHAT
 
-<!--- A general summary of your changes in the above -->
+## WHY
 
-## Description
-
-<!--- Describe your changes in detail -->
-
-## Task / Issue Link
-
-<!--- Links to Jira task(s) / Gitlab Issue(s) -->
+## HOW
 
 ## Meta
 
+<!--- Links to task(s) -->
 <!--- Links to documentation or slack discussion -->
 
 ## Screenshots (if appropriate):
