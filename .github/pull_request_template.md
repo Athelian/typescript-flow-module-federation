@@ -1,22 +1,21 @@
 ## WHAT
 
+<!-- Links to task(s) -->
+<!-- Links to documentation or slack discussion -->
+<!-- Link to testing -->
+
 ## WHY
 
 ## HOW
 
-## Meta
-
-<!--- Links to task(s) -->
-<!--- Links to documentation or slack discussion -->
-
 ## Screenshots (if appropriate):
 
-<!--- Attach a screen shot if ui change -->
-<!--- or attach a gif if workflow has changed -->
+<!-- Attach a screen shot if ui change -->
+<!-- or attach a gif if workflow has changed -->
 
 ## Types of changes
 
-<!--- Types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
+<!-- Types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
@@ -24,7 +23,7 @@
 
 ## Checklist:
 
-<!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
+<!-- Go over all the following points, and put an `x` in all the boxes that apply. -->
 
 - [ ] I18n
 - [ ] Eslint
