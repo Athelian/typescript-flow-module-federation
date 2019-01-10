@@ -528,13 +528,14 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
         type: 'OVERRIDE_FILTER',
         advanceFilter,
       });
-      onApply({ filter: convertToFilterQuery(advanceFilter) });
-      setAppliedFilter(true);
+      const advanceFilterQuery = convertToFilterQuery(advanceFilter);
+      onApply({ filter: advanceFilterQuery });
+      setAppliedFilter(!isDefaultFilter(advanceFilterQuery));
     }
   }, []);
   useEffect(
     () => {
-      if (window.localStorage && !defaultFilterQuery) {
+      if (window.localStorage) {
         window.localStorage.setItem(ADVANCE_FILTER_STORAGE, JSON.stringify(state));
       }
     },
