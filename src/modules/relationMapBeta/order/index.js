@@ -19,7 +19,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
-import { useListConfig } from 'components/ListConfig';
+import useListConfig from 'hooks/useListConfig';
 import {
   OrderListWrapperStyle,
   OrderListBodyStyle,

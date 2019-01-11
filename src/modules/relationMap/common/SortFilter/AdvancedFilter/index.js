@@ -512,9 +512,14 @@ const isDefaultFilter = isEquals({
 });
 
 function AdvanceFilter({ onApply, initialFilter }: Props) {
-  const localAdvanceFilter =
-    window.localStorage && window.localStorage.getItem(ADVANCE_FILTER_STORAGE);
-  const initialLocalAdvanceFilter = JSON.parse(localAdvanceFilter);
+  let initialLocalAdvanceFilter;
+  try {
+    const localAdvanceFilter =
+      window.localStorage && window.localStorage.getItem(ADVANCE_FILTER_STORAGE);
+    initialLocalAdvanceFilter = JSON.parse(localAdvanceFilter);
+  } catch (error) {
+    initialLocalAdvanceFilter = null;
+  }
 
   const filterButtonRef = useRef(null);
   const [filterIsApplied, setAppliedFilter] = useState(

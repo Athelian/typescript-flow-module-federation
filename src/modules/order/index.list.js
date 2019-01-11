@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { useListConfig } from 'components/ListConfig';
+import useListConfig from 'hooks/useListConfig';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';

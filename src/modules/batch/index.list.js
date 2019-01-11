@@ -4,7 +4,7 @@ import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
-import { useListConfig } from 'components/ListConfig';
+import useListConfig from 'hooks/useListConfig';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
