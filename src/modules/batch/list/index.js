@@ -12,7 +12,7 @@ type Props = {
     query: string,
     archived: boolean,
   },
-  sortBy: {
+  sort: {
     [field: string]: string,
   },
   perPage: number,

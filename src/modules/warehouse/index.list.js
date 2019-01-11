@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
-import ListConfigProvider, { ListConfigConsumer } from 'components/ListConfig';
+import { useListConfig } from 'components/ListConfig';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
@@ -47,36 +47,31 @@ const WarehouseModule = (props: Props) => {
     { title: intl.formatMessage(messages.createdAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.updatedAt), value: 'createdAt' },
   ];
-
+  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+    getInitFilter(),
+    'filterWarehouse'
+  );
   return (
     <UIConsumer>
       {uiState => (
-        <ListConfigProvider filterName="filterWarehouse" initFilter={getInitFilter()}>
-          <Layout
-            {...uiState}
-            navBar={
-              <ListConfigConsumer>
-                {({ filterAndSort, onChangeFilter }) => (
-                  <NavBar>
-                    <FilterToolBar
-                      icon="WAREHOUSE"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <Link to="new">
-                      <NewButton />
-                    </Link>
-                  </NavBar>
-                )}
-              </ListConfigConsumer>
-            }
-          >
-            <ListConfigConsumer>
-              {({ queryVariables }) => <WarehouseList {...queryVariables} />}
-            </ListConfigConsumer>
-          </Layout>
-        </ListConfigProvider>
+        <Layout
+          {...uiState}
+          navBar={
+            <NavBar>
+              <FilterToolBar
+                icon="WAREHOUSE"
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+              <Link to="new">
+                <NewButton />
+              </Link>
+            </NavBar>
+          }
+        >
+          <WarehouseList {...queryVariables} />
+        </Layout>
       )}
     </UIConsumer>
   );

@@ -9,13 +9,12 @@ import { shipmentListQuery } from './query';
 
 type Props = {
   viewType: string,
-  filter: {
+  filterBy: {
     query: string,
     archived: boolean,
   },
   sort: {
-    field: string,
-    direction: string,
+    [field: string]: string,
   },
   perPage: number,
 };

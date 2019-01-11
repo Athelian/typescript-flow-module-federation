@@ -4,7 +4,7 @@ import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
-import ListConfigProvider, { ListConfigConsumer } from 'components/ListConfig';
+import { useListConfig } from 'components/ListConfig';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
@@ -78,36 +78,31 @@ const BatchListModule = (props: Props) => {
       value: 'createdAt',
     },
   ];
-
+  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+    getInitFilter(),
+    'filterBatch'
+  );
   return (
     <UIConsumer>
       {uiState => (
-        <ListConfigProvider filterName="filterBatch" initFilter={getInitFilter()}>
-          <Layout
-            {...uiState}
-            navBar={
-              <ListConfigConsumer>
-                {({ filterAndSort, onChangeFilter }) => (
-                  <NavBar>
-                    <FilterToolBar
-                      icon="BATCH"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <Link to="new">
-                      <NewButton />
-                    </Link>
-                  </NavBar>
-                )}
-              </ListConfigConsumer>
-            }
-          >
-            <ListConfigConsumer>
-              {({ queryVariables }) => <BatchList {...queryVariables} />}
-            </ListConfigConsumer>
-          </Layout>
-        </ListConfigProvider>
+        <Layout
+          {...uiState}
+          navBar={
+            <NavBar>
+              <FilterToolBar
+                icon="BATCH"
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+              <Link to="new">
+                <NewButton />
+              </Link>
+            </NavBar>
+          }
+        >
+          <BatchList {...queryVariables} />
+        </Layout>
       )}
     </UIConsumer>
   );

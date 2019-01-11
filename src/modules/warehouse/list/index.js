@@ -9,8 +9,7 @@ import { warehouseListQuery } from './query';
 type Props = {
   viewType: string,
   sort: {
-    field: string,
-    direction: string,
+    [field: string]: string,
   },
   perPage: number,
 };

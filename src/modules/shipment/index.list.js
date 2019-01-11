@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
 import FilterToolBar from 'components/common/FilterToolBar';
-import ListConfigProvider, { ListConfigConsumer } from 'components/ListConfig';
+import { useListConfig } from 'components/ListConfig';
 import Layout from 'components/Layout';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
@@ -55,46 +55,41 @@ const ShipmentListModule = (props: Props) => {
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
   ];
-
+  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+    getInitFilter(),
+    'filterShipment'
+  );
   return (
     <UIConsumer>
       {uiState => (
-        <ListConfigProvider filterName="filterShipment" initFilter={getInitFilter()}>
-          <Layout
-            {...uiState}
-            navBar={
-              <ListConfigConsumer>
-                {({ filterAndSort, onChangeFilter }) => (
-                  <NavBar>
-                    <FilterToolBar
-                      icon="SHIPMENT"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <Link to="new">
-                      <NewButton />
-                    </Link>
-                    <ExportButton
-                      type="Shipments"
-                      exportQuery={shipmentsExportQuery}
-                      variables={{
-                        sortBy: {
-                          [filterAndSort.sort.field]: filterAndSort.sort.direction,
-                        },
-                        filterBy: filterAndSort.filter,
-                      }}
-                    />
-                  </NavBar>
-                )}
-              </ListConfigConsumer>
-            }
-          >
-            <ListConfigConsumer>
-              {({ queryVariables }) => <ShipmentList {...queryVariables} />}
-            </ListConfigConsumer>
-          </Layout>
-        </ListConfigProvider>
+        <Layout
+          {...uiState}
+          navBar={
+            <NavBar>
+              <FilterToolBar
+                icon="SHIPMENT"
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+              <Link to="new">
+                <NewButton />
+              </Link>
+              <ExportButton
+                type="Shipments"
+                exportQuery={shipmentsExportQuery}
+                variables={{
+                  sortBy: {
+                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
+                  },
+                  filterBy: filterAndSort.filter,
+                }}
+              />
+            </NavBar>
+          }
+        >
+          <ShipmentList {...queryVariables} />
+        </Layout>
       )}
     </UIConsumer>
   );

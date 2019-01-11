@@ -31,10 +31,11 @@ function useFilter({ filter, sort, page = 1, perPage = 10, viewType }: State) {
   return {
     filterAndSort,
     queryVariables: {
+      ...(viewType ? { viewType } : {}),
       page: filterAndSort.page,
       perPage: filterAndSort.perPage,
       filterBy: filterAndSort.filter,
-      sortBy: { [filterAndSort.sort.field]: filterAndSort.sort.direction },
+      sort: { [filterAndSort.sort.field]: filterAndSort.sort.direction },
     },
     onChange,
   };
