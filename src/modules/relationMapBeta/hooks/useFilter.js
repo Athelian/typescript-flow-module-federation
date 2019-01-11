@@ -35,7 +35,7 @@ function useFilter({ filter, sort, page = 1, perPage = 10, viewType }: State) {
       page: filterAndSort.page,
       perPage: filterAndSort.perPage,
       filterBy: filterAndSort.filter,
-      sort: { [filterAndSort.sort.field]: filterAndSort.sort.direction },
+      sortBy: { [filterAndSort.sort.field]: filterAndSort.sort.direction },
     },
     onChange,
   };

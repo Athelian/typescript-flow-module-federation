@@ -3,8 +3,8 @@ import gql from 'graphql-tag';
 import { warehouseCardFragment } from 'graphql';
 
 export const warehouseListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filter: WarehouseFilterInput, $sort: WarehouseSortInput) {
-    warehouses(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
+  query($page: Int!, $perPage: Int!, $filterBy: WarehouseFilterInput, $sortBy: WarehouseSortInput) {
+    warehouses(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...warehouseCardFragment
       }

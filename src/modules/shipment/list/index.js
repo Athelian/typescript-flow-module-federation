@@ -13,7 +13,7 @@ type Props = {
     query: string,
     archived: boolean,
   },
-  sort: {
+  sortBy: {
     [field: string]: string,
   },
   perPage: number,
@@ -21,7 +21,7 @@ type Props = {
 
 class ShipmentList extends React.PureComponent<Props> {
   render() {
-    const { viewType, sort, ...filtersAndSort } = this.props;
+    const { viewType, ...filtersAndSort } = this.props;
     return (
       <Query
         query={shipmentListQuery}
