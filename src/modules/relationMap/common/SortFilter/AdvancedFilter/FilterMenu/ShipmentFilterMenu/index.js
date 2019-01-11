@@ -58,6 +58,12 @@ export default function ShipmentFilterMenu({
           label: <FormattedMessage {...messages.forwarder} />,
           data: getSelectData(selectedItems, 'forwarder'),
         },
+        {
+          name: 'warehouse',
+          field: 'name',
+          label: <FormattedMessage id="modules.relationMap.warehouse" defaultMessage="WAREHOUSE" />,
+          data: getSelectData(selectedItems, 'warehouse'),
+        },
         // {
         //   name: 'inCharge',
         //   field: 'id',

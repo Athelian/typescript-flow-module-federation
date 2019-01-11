@@ -139,6 +139,7 @@ const FILTER = {
     warehouseArrival: 'shipmentWarehouseArrival',
     deliveryReady: 'shipmentDeliveryReady',
     forwarder: 'shipmentForwarderIds',
+    warehouse: 'shipmentWarehouseIds',
     inCharge: 'shipmentInChargeIds',
     tags: 'shipmentTagIds',
     createdAt: 'shipmentCreatedAt',
@@ -155,6 +156,7 @@ const getFilterValue = (name: string, data: any) => {
     case 'inCharge':
     case 'supplier':
     case 'forwarder':
+    case 'warehouse':
       return data.map(d => d.id);
     case 'origin':
       return data.filter(d => !isNullOrUndefined(d)).map(d => d.name);
