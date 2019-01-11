@@ -50,7 +50,7 @@ type State = {
     batch: Object,
     shipment: Object,
   },
-  statusFilters: {
+  radioFilters: {
     order: Object,
     shipment: Object,
   },
@@ -71,9 +71,11 @@ const initialState: State = {
     batch: {},
     shipment: {},
   },
-  statusFilters: {
+  radioFilters: {
     order: {
       archived: false,
+      completelyBatched: null,
+      completelyShipped: null,
     },
     shipment: {
       archived: null,
@@ -322,20 +324,20 @@ const convertPackagingQuery = (state: Object, type: string, prevKey: string) => 
   return packagingQuery;
 };
 
-// const booleanFilterQuery = (state: Object, filterName: string, path: string) => {
-//   const filterValue = getByPathWithDefault(false, path, state);
-//   const filterQuery = {};
-//   if (filterValue) {
-//     filterQuery[filterName] = filterValue;
-//   }
-//   return filterQuery;
-// };
-
 const convertArchivedFilter = (state: Object, entityType: string, key: string) => {
-  const archived = getByPath(`statusFilters.${entityType}.archived`, state);
+  const archived = getByPath(`radioFilters.${entityType}.archived`, state);
   const query = {};
   if (!isNullOrUndefined(archived)) {
     query[key] = archived;
+  }
+  return query;
+};
+
+const covertCompletelyFilter = (state: Object, entityType: string, key: string) => {
+  const completed = getByPath(`radioFilters.${entityType}.${key}`, state);
+  const query = {};
+  if (!isNullOrUndefined(completed)) {
+    query[key] = completed;
   }
   return query;
 };
@@ -353,8 +355,8 @@ const convertToFilterQuery = (state: Object) => ({
   // ...convertPackagingQuery(state, 'batch', 'batch'),
   ...convertPortsQuery(state),
 
-  // ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
-  // ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
+  ...covertCompletelyFilter(state, 'order', 'completelyBatched'),
+  ...covertCompletelyFilter(state, 'order', 'completelyShipped'),
 });
 
 const removeActiveFilter = state => ({
@@ -381,16 +383,16 @@ function reducer(state, action) {
       };
     }
 
-    case 'CHANGE_STATUS_FILTER': {
+    case 'CHANGE_RADIO_FILTER': {
       const { entityType, filter, value } = action;
-      const { statusFilters } = state;
+      const { radioFilters } = state;
 
-      const newStatusFilters = { ...statusFilters };
-      newStatusFilters[entityType][filter] = value;
+      const newRadioFilters = { ...radioFilters };
+      newRadioFilters[entityType][filter] = value;
 
       return {
         ...state,
-        statusFilters: newStatusFilters,
+        radioFilters: newRadioFilters,
       };
     }
 
@@ -595,7 +597,7 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
                         selectedItems={state.selectedItems}
                         selectedEntityType={state.selectedEntityType}
                         activeFilters={state.activeFilters}
-                        statusFilters={state.statusFilters}
+                        radioFilters={state.radioFilters}
                         filterToggles={state.filterToggles}
                         selectedFilterItem={state.selectedFilterItem}
                         onToggleSelect={(selectItem: any, field?: string) =>
@@ -605,9 +607,9 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
                             ...(field ? { field } : {}),
                           })
                         }
-                        changeStatusFilter={(entityType, filter, value) =>
+                        changeRadioFilter={(entityType, filter, value) =>
                           dispatch({
-                            type: 'CHANGE_STATUS_FILTER',
+                            type: 'CHANGE_RADIO_FILTER',
                             entityType,
                             filter,
                             value,

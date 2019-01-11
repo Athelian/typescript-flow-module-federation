@@ -6,8 +6,8 @@ import messages from './messages';
 
 type Props = {
   parsedActiveFilters: Array<string>,
-  parsedStatusFilters: any,
-  changeStatusFilter: Function,
+  parsedRadioFilters: any,
+  changeRadioFilter: Function,
   toggleActiveFilter: (string, string) => void,
   parsedFilterToggles: Object,
   toggleFilterToggle: (string, string) => void,
@@ -37,8 +37,8 @@ const getSelectData = (
 
 export default function OrderFilterMenu({
   parsedActiveFilters,
-  parsedStatusFilters,
-  changeStatusFilter,
+  parsedRadioFilters,
+  changeRadioFilter,
   toggleActiveFilter,
   parsedFilterToggles,
   toggleFilterToggle,
@@ -92,7 +92,13 @@ export default function OrderFilterMenu({
     },
   ];
 
-  const statusMap = [
+  const archivedUI = [
+    {
+      name: 'all',
+      label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
+      field: 'archived',
+      value: null,
+    },
     {
       name: 'active',
       label: <FormattedMessage id="modules.relationMap.active" defaultMessage="ACTIVE" />,
@@ -105,34 +111,59 @@ export default function OrderFilterMenu({
       field: 'archived',
       value: true,
     },
+  ];
+
+  const togglesMap = [];
+
+  const completelyBatchedUI = [
     {
       name: 'all',
       label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
-      field: 'archived',
+      field: 'completelyBatched',
       value: null,
+    },
+    {
+      name: 'completely',
+      label: (
+        <FormattedMessage
+          id="modules.relationMap.notFullyBatched"
+          defaultMessage="NOT FULLY BATCHED"
+        />
+      ),
+      field: 'completelyBatched',
+      value: false,
     },
   ];
 
-  const togglesMap = [
-    // {
-    //   name: 'completelyBatched',
-    //   label: <FormattedMessage {...messages.completelyBatched} />,
-    //   icon: 'BATCH',
-    // },
-    // {
-    //   name: 'completelyShipped',
-    //   label: <FormattedMessage {...messages.completelyShipped} />,
-    //   icon: 'SHIPMENT',
-    // },
+  const completelyShippedUI = [
+    {
+      name: 'all',
+      label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
+      field: 'completelyShipped',
+      value: null,
+    },
+    {
+      name: 'completely',
+      label: (
+        <FormattedMessage
+          id="modules.relationMap.notFullyShipped"
+          defaultMessage="NOT FULLY SHIPPED"
+        />
+      ),
+      field: 'completelyShipped',
+      value: false,
+    },
   ];
 
   return (
     <BaseFilterMenu
       filtersMap={filtersMap}
       togglesMap={togglesMap}
-      statusMap={statusMap}
-      parsedStatusFilters={parsedStatusFilters}
-      changeStatusFilter={changeStatusFilter}
+      archivedUI={archivedUI}
+      completelyBatchedUI={completelyBatchedUI}
+      completelyShippedUI={completelyShippedUI}
+      parsedRadioFilters={parsedRadioFilters}
+      changeRadioFilter={changeRadioFilter}
       entityType="order"
       parsedActiveFilters={parsedActiveFilters}
       toggleActiveFilter={toggleActiveFilter}
