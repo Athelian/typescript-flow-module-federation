@@ -4,7 +4,12 @@ import useFilter from 'modules/relationMapBeta/hooks/useFilter';
 
 const useListConfig = (initFilter: Object, filterName: string) => {
   const localFilter = window.localStorage.getItem(filterName);
-  const initialFilter = localFilter ? JSON.parse(localFilter) : initFilter;
+  const initialFilter = localFilter
+    ? {
+        ...initFilter,
+        ...JSON.parse(localFilter),
+      }
+    : initFilter;
   const { filterAndSort, queryVariables, onChange } = useFilter(initialFilter);
   const onChangeFilter = useCallback(
     (newFilter: Object) => {

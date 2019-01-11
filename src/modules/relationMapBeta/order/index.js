@@ -170,7 +170,15 @@ const Order = ({ intl }: Props) => {
                         </Label>
                         <ToggleInput
                           toggled={state.toggleShipmentList}
-                          onToggle={actions.toggleShipmentList}
+                          onToggle={() => {
+                            actions.toggleShipmentList();
+                            if (window.localStorage) {
+                              window.localStorage.setItem(
+                                'filterRMShipmentToggle',
+                                JSON.stringify({ isToggle: !state.toggleShipmentList })
+                              );
+                            }
+                          }}
                         />
                       </div>
                     </EntityHeader>

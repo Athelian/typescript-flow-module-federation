@@ -27,7 +27,6 @@ function useFilter({ filter, sort, page = 1, perPage = 10, viewType }: State) {
       ...newFilter,
     }));
   }, []);
-
   return {
     filterAndSort,
     queryVariables: {
