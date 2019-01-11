@@ -7,6 +7,7 @@ import { type EntityTypes } from 'modules/relationMap/common/SortFilter/Advanced
 import { orderListQuery } from 'modules/order/list/query';
 import { partnerListQuery } from 'providers/PartnerList/query';
 import { userListQuery } from 'providers/UserList/query';
+import { warehouseListQuery } from 'providers/WarehouseListProvider/query';
 import {
   DateRange,
   DayRange,
@@ -300,6 +301,26 @@ const getFilterInputArea = ({
                 </MiniSelectorItem>
               ),
               hideToggles: true,
+            });
+        case 'warehouse':
+          return () =>
+            MiniSelector({
+              hideToggles: true,
+              entityType: 'warehouses',
+              query: warehouseListQuery,
+              filterBy: {
+                query: '',
+              },
+              renderItem: (item: Object) => (
+                <MiniSelectorItem
+                  key={item.id}
+                  onClick={() => onToggleSelect(item)}
+                  selectable
+                  selected={selectedItems.includes(item)}
+                >
+                  <Display align="left">{item.name}</Display>
+                </MiniSelectorItem>
+              ),
             });
         case 'inCharge':
           return () =>
