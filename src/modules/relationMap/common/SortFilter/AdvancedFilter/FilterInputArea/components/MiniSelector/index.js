@@ -118,7 +118,7 @@ export default function MiniSelector({
             const hasMore = nextPage <= totalPage;
 
             const items = getByPathWithDefault([], `${entityType}.nodes`, data);
-            const onLoadMore = () => loadMore({ fetchMore, data }, filterBy, entityType);
+            const onLoadMore = () => loadMore({ fetchMore, data }, {}, entityType);
 
             return (
               <GridView
