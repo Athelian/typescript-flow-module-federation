@@ -76,7 +76,6 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
     },
     'filterSelectOrderItems'
   );
-  console.log('queryVariables', queryVariables);
   return (
     <Query query={orderItemsQuery} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, error, fetchMore }) => {
