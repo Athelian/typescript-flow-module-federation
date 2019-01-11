@@ -18,6 +18,7 @@ export const useListConfig = (initFilter: Object, filterName: string) => {
   const onChangeFilter = useCallback(
     (newFilter: Object) => {
       onChange(newFilter);
+      // @TODO need to handle if brower is not support localstorage
       if (window.localStorage) {
         window.localStorage.setItem(
           filterName,
