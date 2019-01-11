@@ -3,7 +3,7 @@ import * as React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
-import { ObjectValue, ArrayValue } from 'react-values';
+import { ArrayValue } from 'react-values';
 import { removeTypename } from 'utils/data';
 import GridView from 'components/GridView';
 import FilterToolBar from 'components/common/FilterToolBar';
@@ -17,6 +17,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
+import useListConfig from 'hooks/useListConfig';
 import { productProvidersListQuery } from 'modules/productProvider/list/query';
 import { ItemWrapperStyle } from './style';
 
@@ -84,112 +85,101 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: P
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
     { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
   ];
+  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useListConfig(
+    {
+      perPage: 20,
+      page: 1,
+      filter: {
+        exporterId: exporter,
+        query: '',
+      },
+      sort: { field: 'updatedAt', direction: 'DESCENDING' },
+    },
+    `filterProductExporter${exporter}`
+  );
   return (
-    <ObjectValue
-      defaultValue={{
-        perPage: 20,
-        page: 1,
-        filter: {
-          exporterId: exporter,
-          query: '',
-        },
-        sort: { field: 'updatedAt', direction: 'DESCENDING' },
-      }}
-    >
-      {({ value: filtersAndSort, set: onChange }) => (
-        <Query
-          query={productProvidersListQuery}
-          variables={{
-            page: 1,
-            perPage: filtersAndSort.perPage,
-            filter: filtersAndSort.filter,
-            sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
-          }}
-          fetchPolicy="network-only"
-        >
-          {({ loading, data, error, fetchMore }) => {
-            if (error) {
-              return error.message;
-            }
+    <Query query={productProvidersListQuery} variables={queryVariables} fetchPolicy="network-only">
+      {({ loading, data, error, fetchMore }) => {
+        if (error) {
+          return error.message;
+        }
 
-            const nextPage = getByPathWithDefault(1, 'productProviders.page', data) + 1;
-            const totalPage = getByPathWithDefault(1, 'productProviders.totalPage', data);
-            const hasMore = nextPage <= totalPage;
+        const nextPage = getByPathWithDefault(1, 'productProviders.page', data) + 1;
+        const totalPage = getByPathWithDefault(1, 'productProviders.totalPage', data);
+        const hasMore = nextPage <= totalPage;
 
-            const items = getByPathWithDefault([], 'productProviders.nodes', data);
+        const items = getByPathWithDefault([], 'productProviders.nodes', data);
 
-            return (
-              <ArrayValue>
-                {({ value: selected, push, set }) => (
-                  <Layout
-                    navBar={
-                      <SlideViewNavBar>
-                        <FilterToolBar
-                          icon="PROVIDER"
-                          sortFields={sortFields}
-                          filtersAndSort={filtersAndSort}
-                          onChange={onChange}
-                        />
-                        <div>
-                          <Label>
-                            <FormattedMessage
-                              id="modules.Orders.orderCurrency"
-                              defaultMessage="ORDER CURRENCY"
-                            />
-                          </Label>
-                          <Display align="left">{orderCurrency || 'N/A'}</Display>
-                        </div>
-                        <CancelButton onClick={onCancel} />
-                        <SaveButton
-                          disabled={selected.length === 0}
-                          onClick={() => onSelect(removeTypename(selected))}
-                        />
-                      </SlideViewNavBar>
-                    }
-                  >
-                    <GridView
-                      onLoadMore={() =>
-                        loadMore({ fetchMore, data }, filtersAndSort, 'productProviders')
-                      }
-                      hasMore={hasMore}
-                      isLoading={loading}
-                      itemWidth="195px"
-                      isEmpty={items.length === 0}
-                      emptyMessage={
+        return (
+          <ArrayValue>
+            {({ value: selected, push, set }) => (
+              <Layout
+                navBar={
+                  <SlideViewNavBar>
+                    <FilterToolBar
+                      icon="PROVIDER"
+                      sortFields={sortFields}
+                      filtersAndSort={filtersAndSort}
+                      onChange={onChange}
+                    />
+                    <div>
+                      <Label>
                         <FormattedMessage
-                          id="modules.Orders.noProductProvidersFound"
-                          defaultMessage="No end products found"
+                          id="modules.Orders.orderCurrency"
+                          defaultMessage="ORDER CURRENCY"
                         />
-                      }
-                    >
-                      {items.map(item => (
-                        <div key={item.id} className={ItemWrapperStyle}>
-                          {selected.includes(item) && (
-                            <IncrementInput
-                              value={getProductQuantity(selected, item)}
-                              onChange={total =>
-                                onChangeProductQuantity({ selected, set, total, item })
-                              }
-                            />
-                          )}
-                          <OrderProductProviderCard
-                            orderCurrency={orderCurrency}
-                            productProvider={item}
-                            selectable
-                            selected={selected.includes(item)}
-                            onSelect={() => onSelectProduct({ selected, item, push, set })}
-                          />
-                        </div>
-                      ))}
-                    </GridView>
-                  </Layout>
-                )}
-              </ArrayValue>
-            );
-          }}
-        </Query>
-      )}
-    </ObjectValue>
+                      </Label>
+                      <Display align="left">{orderCurrency || 'N/A'}</Display>
+                    </div>
+                    <CancelButton onClick={onCancel} />
+                    <SaveButton
+                      disabled={selected.length === 0}
+                      onClick={() => onSelect(removeTypename(selected))}
+                    />
+                  </SlideViewNavBar>
+                }
+              >
+                <GridView
+                  onLoadMore={() =>
+                    loadMore({ fetchMore, data }, filtersAndSort, 'productProviders')
+                  }
+                  hasMore={hasMore}
+                  isLoading={loading}
+                  itemWidth="195px"
+                  isEmpty={items.length === 0}
+                  emptyMessage={
+                    <FormattedMessage
+                      id="modules.Orders.noProductProvidersFound"
+                      defaultMessage="No end products found"
+                    />
+                  }
+                >
+                  {items.map(item => (
+                    <div key={item.id} className={ItemWrapperStyle}>
+                      {selected.includes(item) && (
+                        <IncrementInput
+                          value={getProductQuantity(selected, item)}
+                          onChange={total =>
+                            onChangeProductQuantity({ selected, set, total, item })
+                          }
+                        />
+                      )}
+                      <OrderProductProviderCard
+                        orderCurrency={orderCurrency}
+                        productProvider={item}
+                        selectable
+                        selected={selected.includes(item)}
+                        onSelect={() => onSelectProduct({ selected, item, push, set })}
+                      />
+                    </div>
+                  ))}
+                </GridView>
+              </Layout>
+            )}
+          </ArrayValue>
+        );
+      }}
+    </Query>
   );
 }
 
