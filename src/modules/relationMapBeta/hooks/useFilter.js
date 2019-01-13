@@ -12,13 +12,14 @@ type State = {
   },
 };
 
-function useFilter({ filter, sort, page = 1, perPage = 10, viewType }: State) {
+function useFilter({ filter, sort, page = 1, perPage = 10, viewType, ...rest }: State) {
   const [filterAndSort, changeFilterAndSort] = useState({
     ...(viewType ? { viewType } : {}),
     filter,
     sort,
     page,
     perPage,
+    ...rest,
   });
 
   const onChange = useCallback((newFilter: Object) => {
@@ -35,6 +36,7 @@ function useFilter({ filter, sort, page = 1, perPage = 10, viewType }: State) {
       perPage: filterAndSort.perPage,
       filterBy: filterAndSort.filter,
       sortBy: { [filterAndSort.sort.field]: filterAndSort.sort.direction },
+      ...rest,
     },
     onChange,
   };
