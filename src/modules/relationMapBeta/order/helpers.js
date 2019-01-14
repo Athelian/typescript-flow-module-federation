@@ -34,6 +34,28 @@ export function findHighLightEntities(
 ) {
   const highLightIds = [];
   switch (highlight.type) {
+    case SHIPMENT: {
+      const { shipments, orders, orderItems } = entities;
+      highLightIds.push(`${SHIPMENT}-${highlight.selectedId}`);
+      const { batches } = shipments[highlight.selectedId];
+      batches.forEach(id => {
+        highLightIds.push(`${BATCH}-${id}`);
+        const [orderItemId] =
+          (Object.entries(orderItems): Array<any>).find(([, orderItem]) =>
+            orderItem.batches.includes(id)
+          ) || [];
+        if (orderItemId) {
+          highLightIds.push(`${ORDER_ITEM}-${orderItemId}`);
+          const [orderId] =
+            (Object.entries(orders): Array<any>).find(([, order]) =>
+              order.orderItems.includes(orderItemId)
+            ) || [];
+          if (orderId) highLightIds.push(`${ORDER}-${orderId}`);
+        }
+      });
+      break;
+    }
+
     case ORDER: {
       const { orders, orderItems } = entities;
       highLightIds.push(`${ORDER}-${highlight.selectedId}`);
