@@ -54,8 +54,10 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
       <TotalItems
         wrapperClassName={ItemWrapperStyle(
           !state.expandCards.orders.includes(item.id) &&
-            highlight.type === ORDER &&
-            highlight.selectedId === item.id
+            ((highlight.type === ORDER && highlight.selectedId === item.id) ||
+              item.orderItems
+                .map(({ id }) => id)
+                .some(id => highLightEntities.includes(`${ORDER_ITEM}-${id}`)))
         )}
         type="ITEMS"
         total={item.orderItemCount}
@@ -65,8 +67,13 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
       <TotalItems
         wrapperClassName={ItemWrapperStyle(
           !state.expandCards.orders.includes(item.id) &&
-            highlight.type === ORDER &&
-            highlight.selectedId === item.id
+            ((highlight.type === ORDER && highlight.selectedId === item.id) ||
+              item.orderItems
+                .reduce(
+                  (result, orderItem) => result.concat(orderItem.batches.map(({ id }) => id)),
+                  []
+                )
+                .some(id => highLightEntities.includes(`${BATCH}-${id}`)))
         )}
         type="BATCHES"
         total={item.batchCount}

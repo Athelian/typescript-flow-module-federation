@@ -76,7 +76,7 @@ export function findHighLightEntities(
 
     case ORDER_ITEM: {
       const { orders, orderItems, shipments } = entities;
-      highLightIds.push(`${ORDER}-${highlight.selectedId}`);
+      highLightIds.push(`${ORDER_ITEM}-${highlight.selectedId}`);
       const orderItem = orderItems[highlight.selectedId];
       const { batches } = orderItem;
       batches.forEach(id => {
