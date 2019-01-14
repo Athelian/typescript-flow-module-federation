@@ -4,44 +4,36 @@ import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { actionCreators } from 'modules/relationMapBeta/order/store';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
-import {
-  RelationLine,
-  // OrderCard,
-  // OrderItemCard,
-  // BatchCard,
-  // TotalCard,
-  // WrapperCard,
-  // Tags,
-  // ShipmentCard,
-  // ShipmentCollapsed,
-} from 'components/RelationMap';
+import { RelationLine } from 'components/RelationMap';
+import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 import Order from './Order';
 import OrderItem from './OrderItem';
 import Batch from './Batch';
 import TotalItems from './TotalItems';
-// import {
-//   ORDER_ITEM_ALL,
-//   BATCH_ALL,
-//   ORDER,
-//   ORDER_ALL,
-//   ORDER_ITEM,
-//   BATCH,
-//   SHIPMENT,
-//   SHIPMENT_ALL,
-// } from 'modules/relationMap/constants';
 
 type Props = {
   item: OrderProps,
+  highLightEntities: Array<string>,
 };
 
-export default function OrderFocusView({ item }: Props) {
+export default function OrderFocusView({ item, highLightEntities }: Props) {
   const context = React.useContext(ActionDispatch);
   const { dispatch, state } = context;
   const actions = actionCreators(dispatch);
+  const { highlight } = state;
+  const isTarget = false;
+
   if (item.orderItems.length === 0)
     return (
       <>
-        <Order wrapperClassName={ItemWrapperStyle(false)} {...item} />
+        <Order
+          wrapperClassName={ItemWrapperStyle(
+            highLightEntities.includes(`${ORDER}-${item.id}`),
+            isTarget,
+            highlight.type === ORDER && highlight.selectedId === item.id
+          )}
+          {...item}
+        />
         <div />
         <div />
         <div />
@@ -50,20 +42,35 @@ export default function OrderFocusView({ item }: Props) {
     );
   return (
     <>
-      <Order wrapperClassName={ItemWrapperStyle(false)} {...item} />
-      <RelationLine type={1} />
-      <TotalItems
-        wrapperClassName={ItemWrapperStyle(false)}
-        type="ITEMS"
-        total={item.orderItemCount}
-        onToggle={() => actions.toggleExpand('ORDER', item.id)}
+      <Order
+        wrapperClassName={ItemWrapperStyle(
+          highLightEntities.includes(`${ORDER}-${item.id}`),
+          isTarget,
+          highlight.type === ORDER && highlight.selectedId === item.id
+        )}
+        {...item}
       />
       <RelationLine type={1} />
       <TotalItems
-        wrapperClassName={ItemWrapperStyle(false)}
+        wrapperClassName={ItemWrapperStyle(
+          !state.expandCards.orders.includes(item.id) &&
+            highlight.type === ORDER &&
+            highlight.selectedId === item.id
+        )}
+        type="ITEMS"
+        total={item.orderItemCount}
+        onToggle={() => actions.toggleExpand(ORDER, item.id)}
+      />
+      <RelationLine type={1} />
+      <TotalItems
+        wrapperClassName={ItemWrapperStyle(
+          !state.expandCards.orders.includes(item.id) &&
+            highlight.type === ORDER &&
+            highlight.selectedId === item.id
+        )}
         type="BATCHES"
         total={item.batchCount}
-        onToggle={() => actions.toggleExpand('ORDER', item.id)}
+        onToggle={() => actions.toggleExpand(ORDER, item.id)}
       />
       {state.expandCards.orders.includes(item.id) &&
         item.orderItems.map(orderItem => (
@@ -71,11 +78,25 @@ export default function OrderFocusView({ item }: Props) {
             {/* Render order item and first batch if available */}
             <div />
             <RelationLine type={4} />
-            <OrderItem wrapperClassName={ItemWrapperStyle(false)} {...orderItem} />
+            <OrderItem
+              wrapperClassName={ItemWrapperStyle(
+                highLightEntities.includes(`${ORDER_ITEM}-${orderItem.id}`),
+                isTarget,
+                highlight.type === ORDER_ITEM && highlight.selectedId === orderItem.id
+              )}
+              {...orderItem}
+            />
             {orderItem.batches.length > 0 ? (
               <>
                 <RelationLine type={1} />
-                <Batch wrapperClassName={ItemWrapperStyle(false)} {...orderItem.batches[0]} />
+                <Batch
+                  wrapperClassName={ItemWrapperStyle(
+                    highLightEntities.includes(`${BATCH}-${orderItem.batches[0].id}`),
+                    isTarget,
+                    highlight.type === BATCH && highlight.selectedId === orderItem.batches[0].id
+                  )}
+                  {...orderItem.batches[0]}
+                />
               </>
             ) : (
               <>
@@ -92,7 +113,14 @@ export default function OrderFocusView({ item }: Props) {
                       <RelationLine type={2} />
                       <div />
                       <RelationLine type={4} />
-                      <Batch wrapperClassName={ItemWrapperStyle(false)} {...batch} />
+                      <Batch
+                        wrapperClassName={ItemWrapperStyle(
+                          highLightEntities.includes(`${BATCH}-${batch.id}`),
+                          isTarget,
+                          highlight.type === BATCH && highlight.selectedId === batch.id
+                        )}
+                        {...batch}
+                      />
                     </React.Fragment>
                   )
               )}

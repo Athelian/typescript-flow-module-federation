@@ -6,6 +6,7 @@ import { actionCreators } from 'modules/relationMapBeta/order/store';
 import BaseCard from 'components/Cards';
 import { BatchCard, WrapperCard, Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
+import { BATCH } from 'modules/relationMap/constants';
 import type { BatchProps } from 'modules/relationMapBeta/order/type.js.flow';
 
 type OptionalProps = {
@@ -34,19 +35,19 @@ export default function Batch({ wrapperClassName, id, tags, ...batch }: Props) {
                     icon="MAGIC"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.toggleHighLight('BATCH', id)}
+                    onClick={() => actions.toggleHighLight(BATCH, id)}
                   />
                   <Action
                     icon="DOCUMENT"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.showEditForm('BATCH', id)}
+                    onClick={() => actions.showEditForm(BATCH, id)}
                   />
                   <Action
                     icon="CHECKED"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.targetEntity('BATCH', id)}
+                    onClick={() => actions.targetEntity(BATCH, id)}
                   />
                 </>
               )}

@@ -7,6 +7,7 @@ import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { actionCreators } from 'modules/relationMapBeta/order/store';
 import { OrderItemCard, WrapperCard } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
+import { ORDER_ITEM } from 'modules/relationMap/constants';
 import type { OrderItemProps } from 'modules/relationMapBeta/order/type.js.flow';
 
 type OptionalProps = {
@@ -32,20 +33,20 @@ export default function OrderItem({ wrapperClassName, id, ...orderItem }: Props)
                     icon="MAGIC"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.toggleHighLight('ORDER_ITEM', id)}
+                    onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
                   />
                   <Action
                     icon="BRANCH"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.selectBranch('ORDER_ITEM', id)}
+                    onClick={() => actions.selectBranch(ORDER_ITEM, id)}
                     className={RotateIcon}
                   />
                   <Action
                     icon="CHECKED"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.targetEntity('ORDER_ITEM', id)}
+                    onClick={() => actions.targetEntity(ORDER_ITEM, id)}
                   />
                 </>
               )}

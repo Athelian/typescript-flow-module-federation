@@ -27,7 +27,7 @@ export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Pr
   } = context;
   const actions = actionCreators(dispatch);
   return (
-    <BaseCard wrapperClassName={wrapperClassName}>
+    <BaseCard id={`shipment-${id}`} wrapperClassName={wrapperClassName}>
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>

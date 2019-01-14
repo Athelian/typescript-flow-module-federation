@@ -98,6 +98,9 @@ export const orderListQuery = gql`
         }
         shipments {
           id
+          batches {
+            id
+          }
           ...shipmentCardRMFragment
         }
       }

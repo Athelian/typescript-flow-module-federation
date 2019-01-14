@@ -26,14 +26,17 @@ import {
   ShipmentListWrapperStyle,
   ShipmentListBodyStyle,
 } from 'modules/relationMap/orderFocused/style';
+import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
+import { SHIPMENT } from 'modules/relationMap/constants';
+import { useFilter } from '../hooks';
 import { orderListQuery } from './query';
 import normalize from './normalize';
-import { hasMoreItems } from './helpers';
+import { hasMoreItems, findHighLightEntities } from './helpers';
+import { uiInitState, uiReducer, actionCreators, selectors } from './store';
+import { DispatchProvider } from './provider';
 import OrderFocusView from './components/OrderFocusView';
 import Shipment from './components/Shipment';
-import { uiInitState, uiReducer, actionCreators, selectors } from './store';
 import ShipmentList from './components/ShipmentList';
-import { DispatchProvider } from './provider';
 
 type Props = {
   intl: IntlShape,
@@ -69,6 +72,13 @@ const Order = ({ intl }: Props) => {
           const {
             entities: { orders, orderItems, batches, shipments },
           } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
+
+          const highLightEntities = findHighLightEntities(state.highlight, {
+            orders,
+            orderItems,
+            batches,
+            shipments,
+          });
           return (
             <>
               <SortFilter
@@ -193,7 +203,11 @@ const Order = ({ intl }: Props) => {
                       threshold={500}
                     >
                       {getByPathWithDefault([], 'orders.nodes', data).map(order => (
-                        <OrderFocusView key={order.id} item={order} />
+                        <OrderFocusView
+                          highLightEntities={highLightEntities}
+                          key={order.id}
+                          item={order}
+                        />
                       ))}
                       {Object.entries(orders || []).length === 0 && (
                         <Display>
@@ -208,15 +222,27 @@ const Order = ({ intl }: Props) => {
                   <div className={ShipmentListWrapperStyle}>
                     {state.toggleShipmentList ? (
                       <ShipmentList
+                        highLightEntities={highLightEntities}
                         onCountShipment={total =>
                           total !== state.totalShipment ? actions.countShipment(total) : null
                         }
                       />
                     ) : (
                       <div className={ShipmentListBodyStyle}>
-                        {Object.entries(shipments || []).map(([shipmentId, shipment]) => (
-                          <Shipment key={shipmentId} {...shipment} />
-                        ))}
+                        {(Object.entries(shipments || []): Array<any>).map(
+                          ([shipmentId, shipment]) => (
+                            <Shipment
+                              wrapperClassName={ItemWrapperStyle(
+                                highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
+                                false,
+                                state.highlight.type === SHIPMENT &&
+                                  state.highlight.selectedId === shipment.id
+                              )}
+                              key={shipmentId}
+                              {...shipment}
+                            />
+                          )
+                        )}
                       </div>
                     )}
                   </div>

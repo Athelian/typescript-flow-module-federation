@@ -8,6 +8,7 @@ import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import { actionCreators } from 'modules/relationMapBeta/order/store';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
+import { ORDER } from 'modules/relationMap/constants';
 
 type OptionalProps = {
   wrapperClassName?: string,
@@ -31,7 +32,7 @@ export default function Order({
   } = context;
   const actions = actionCreators(dispatch);
   return (
-    <BaseCard icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
+    <BaseCard id={`order-${id}`} icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
@@ -51,26 +52,26 @@ export default function Order({
                     icon="MAGIC"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.toggleHighLight('ORDER', id)}
+                    onClick={() => actions.toggleHighLight(ORDER, id)}
                   />
                   <Action
                     icon="DOCUMENT"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.showEditForm('ORDER', id)}
+                    onClick={() => actions.showEditForm(ORDER, id)}
                   />
                   <Action
                     icon="BRANCH"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.selectBranch('ORDER', id)}
+                    onClick={() => actions.selectBranch(ORDER, id)}
                     className={RotateIcon}
                   />
                   <Action
                     icon="CHECKED"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.targetEntity('ORDER', id)}
+                    onClick={() => actions.targetEntity(ORDER, id)}
                   />
                 </>
               )}
