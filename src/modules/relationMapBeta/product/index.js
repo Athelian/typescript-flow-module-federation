@@ -5,10 +5,13 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { useFilter } from 'modules/relationMapBeta/hooks';
 import { SortFilter } from 'modules/relationMap/common/SortFilter';
-import { QueryHandler } from 'modules/relationMap/common';
 import ProductFocused from 'modules/relationMap/productFocused';
 import messages from 'modules/relationMap/messages';
+import LoadingIcon from 'components/LoadingIcon';
+import loadMore from 'utils/loadMore';
+import { getByPathWithDefault } from 'utils/fp';
 import query from './query';
+import { hasMoreItems } from '../order/helpers';
 
 type Props = {
   intl: IntlShape,
@@ -34,45 +37,48 @@ function Product(props: Props) {
   });
   return (
     <Query query={query} variables={queryVariables} fetchPolicy="network-only">
-      {({ loading, data, fetchMore, error }) => (
-        <>
-          <SortFilter
-            sort={filterAndSort.sort}
-            sortInputs={[
-              {
-                title: intl.formatMessage(messages.productName),
-                value: 'name',
-              },
-              {
-                title: intl.formatMessage(messages.productSerial),
-                value: 'serial',
-              },
-              {
-                title: intl.formatMessage(messages.updatedAtSort),
-                value: 'updatedAt',
-              },
-              {
-                title: intl.formatMessage(messages.createdAtSort),
-                value: 'createdAt',
-              },
-            ]}
-            filter={filterAndSort.filter}
-            onChange={onChange}
-            showTags={false}
-          />
-          <QueryHandler
-            model="products"
-            loading={loading}
-            data={data}
-            fetchMore={fetchMore}
-            error={error}
-          >
-            {({ nodes, hasMore, loadMore }) => (
-              <ProductFocused hasMore={hasMore} loadMore={loadMore} items={nodes} />
+      {({ loading, data, fetchMore, error }) => {
+        if (error) {
+          return error.message;
+        }
+        return (
+          <>
+            <SortFilter
+              sort={filterAndSort.sort}
+              sortInputs={[
+                {
+                  title: intl.formatMessage(messages.productName),
+                  value: 'name',
+                },
+                {
+                  title: intl.formatMessage(messages.productSerial),
+                  value: 'serial',
+                },
+                {
+                  title: intl.formatMessage(messages.updatedAtSort),
+                  value: 'updatedAt',
+                },
+                {
+                  title: intl.formatMessage(messages.createdAtSort),
+                  value: 'createdAt',
+                },
+              ]}
+              filter={filterAndSort.filter}
+              onChange={onChange}
+              showTags={false}
+            />
+            {loading ? (
+              <LoadingIcon />
+            ) : (
+              <ProductFocused
+                hasMore={hasMoreItems(data)}
+                loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'products')}
+                items={getByPathWithDefault([], `products.nodes`, data)}
+              />
             )}
-          </QueryHandler>
-        </>
-      )}
+          </>
+        );
+      }}
     </Query>
   );
 }
