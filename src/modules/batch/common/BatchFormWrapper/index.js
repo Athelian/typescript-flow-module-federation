@@ -42,6 +42,7 @@ class BatchFormWrapper extends React.Component<Props> {
     initDetailValues({
       ...rest,
       orderItem,
+      autoCalculatePackageQuantity: true,
       deliveredAt: isDataType(String, deliveredAt)
         ? deliveredAt
         : deliveredAt && deliveredAt.toISOString(),
