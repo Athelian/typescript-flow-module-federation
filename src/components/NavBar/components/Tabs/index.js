@@ -29,6 +29,13 @@ class Tabs extends React.Component<Props, State> {
     };
   }
 
+  static getDerivedStateFromProps(props: Props, state: State) {
+    if (props.activeIndex !== state.activeIndex) {
+      return { activeIndex: props.activeIndex };
+    }
+    return null;
+  }
+
   handleChange = (index: number) => {
     this.setState({ activeIndex: index });
     const { onChange } = this.props;

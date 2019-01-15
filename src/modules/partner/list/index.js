@@ -8,10 +8,9 @@ import { partnerListQuery } from './query';
 
 type Props = {
   viewType: string,
-  filter: {},
-  sort: {
-    field: string,
-    direction: string,
+  filterBy: {},
+  sortBy: {
+    [field: string]: string,
   },
   perPage: number,
 };
@@ -37,7 +36,7 @@ class PartnerList extends React.Component<Props> {
         ...filtersAndSort,
       },
       updateQuery: (prevResult, { fetchMoreResult }) => {
-        const { filter, perPage } = this.props;
+        const { filterBy: filter, perPage } = this.props;
         if (
           !isEquals({ filter, perPage }, filtersAndSort) ||
           getByPathWithDefault({}, `${this.partnerPath}.page`, prevResult) + 1 !==
@@ -72,15 +71,12 @@ class PartnerList extends React.Component<Props> {
   partnerPath: string;
 
   render() {
-    const { viewType, sort, ...filtersAndSort } = this.props;
+    const { viewType, ...filtersAndSort } = this.props;
     return (
       <Query
         query={partnerListQuery}
         variables={{
           page: 1,
-          sort: {
-            [sort.field]: sort.direction,
-          },
           ...filtersAndSort,
         }}
         fetchPolicy="network-only"

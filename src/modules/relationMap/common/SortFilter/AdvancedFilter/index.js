@@ -1,5 +1,5 @@
 // @flow
-import React, { useRef, useReducer, useState } from 'react';
+import React, { useRef, useReducer, useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import {
@@ -98,6 +98,8 @@ const defaultFilterMenuItemMap = {
   batch: 'deliveredAt',
   shipment: 'forwarder',
 };
+
+const ADVANCE_FILTER_STORAGE = 'advanceFilterRelationMap';
 
 const FILTER = {
   order: {
@@ -398,6 +400,14 @@ function reducer(state, action) {
       };
     }
 
+    case 'OVERRIDE_FILTER': {
+      const { advanceFilter } = action;
+      return {
+        ...state,
+        ...advanceFilter,
+      };
+    }
+
     case 'TOGGLE_FILTER_TOGGLE': {
       const { entityType, toggle } = action;
       const { filterToggles } = state;
@@ -506,12 +516,45 @@ const isDefaultFilter = isEquals({
 });
 
 function AdvanceFilter({ onApply, initialFilter }: Props) {
+  let initialLocalAdvanceFilter;
+  try {
+    const localAdvanceFilter =
+      window.localStorage && window.localStorage.getItem(ADVANCE_FILTER_STORAGE);
+    initialLocalAdvanceFilter = JSON.parse(localAdvanceFilter);
+  } catch (error) {
+    initialLocalAdvanceFilter = null;
+  }
+
   const filterButtonRef = useRef(null);
-  const [filterIsApplied, setAppliedFilter] = useState(false);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [filterIsApplied, setAppliedFilter] = useState(
+    initialLocalAdvanceFilter
+      ? !isDefaultFilter(convertToFilterQuery(initialLocalAdvanceFilter))
+      : false
+  );
+
+  const [state, dispatch] = useReducer(reducer, initialLocalAdvanceFilter || initialState);
   const filterQuery = convertToFilterQuery(state);
   const defaultInitialFilter = isDefaultFilter(initialFilter);
   const defaultFilterQuery = isDefaultFilter(filterQuery);
+
+  useEffect(
+    () => {
+      if (window.localStorage) {
+        const advanceFilterQuery = convertToFilterQuery(state);
+        const localFilter = JSON.parse(window.localStorage.getItem('filterRelationMap') || '{}');
+        window.localStorage.setItem(ADVANCE_FILTER_STORAGE, JSON.stringify(state));
+        window.localStorage.setItem(
+          'filterRelationMap',
+          JSON.stringify({
+            ...localFilter,
+            filter: advanceFilterQuery,
+          })
+        );
+      }
+    },
+    [state]
+  );
+
   const sameFilter = isEquals(initialFilter, filterQuery);
   const showApplyButton = !defaultInitialFilter || !sameFilter;
 

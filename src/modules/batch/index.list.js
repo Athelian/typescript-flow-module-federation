@@ -4,6 +4,7 @@ import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
+import useListConfig from 'hooks/useListConfig';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
@@ -29,8 +30,8 @@ type State = {
   page: number,
 };
 
-class BatchListModule extends React.Component<Props, State> {
-  state = {
+const getInitFilter = () => {
+  const state: State = {
     viewType: 'grid',
     filter: {
       query: '',
@@ -43,68 +44,68 @@ class BatchListModule extends React.Component<Props, State> {
     perPage: 10,
     page: 1,
   };
+  return state;
+};
 
-  onChangeFilter = (newValue: any) => {
-    this.setState(prevState => ({ ...prevState, ...newValue }));
-  };
+const BatchListModule = (props: Props) => {
+  const { intl } = props;
 
-  render() {
-    const { intl } = this.props;
-
-    const sortFields = [
-      { title: intl.formatMessage(messages.batchNo), value: 'no' },
-      { title: intl.formatMessage(messages.PO), value: 'poNo' },
-      {
-        title: intl.formatMessage(messages.productName),
-        value: 'product',
-      },
-      {
-        title: intl.formatMessage(messages.deliveredAt),
-        value: 'deliveredAt',
-      },
-      {
-        title: intl.formatMessage(messages.expiredAt),
-        value: 'expiredAt',
-      },
-      {
-        title: intl.formatMessage(messages.producedAt),
-        value: 'producedAt',
-      },
-      {
-        title: intl.formatMessage(messages.updatedAt),
-        value: 'updatedAt',
-      },
-      {
-        title: intl.formatMessage(messages.createdAt),
-        value: 'createdAt',
-      },
-    ];
-
-    return (
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <FilterToolBar
-                  icon="BATCH"
-                  sortFields={sortFields}
-                  filtersAndSort={this.state}
-                  onChange={this.onChangeFilter}
-                />
-                <Link to="new">
-                  <NewButton />
-                </Link>
-              </NavBar>
-            }
-          >
-            <BatchList {...this.state} />
-          </Layout>
-        )}
-      </UIConsumer>
-    );
-  }
-}
+  const sortFields = [
+    { title: intl.formatMessage(messages.batchNo), value: 'no' },
+    { title: intl.formatMessage(messages.PO), value: 'poNo' },
+    {
+      title: intl.formatMessage(messages.productName),
+      value: 'product',
+    },
+    {
+      title: intl.formatMessage(messages.deliveredAt),
+      value: 'deliveredAt',
+    },
+    {
+      title: intl.formatMessage(messages.expiredAt),
+      value: 'expiredAt',
+    },
+    {
+      title: intl.formatMessage(messages.producedAt),
+      value: 'producedAt',
+    },
+    {
+      title: intl.formatMessage(messages.updatedAt),
+      value: 'updatedAt',
+    },
+    {
+      title: intl.formatMessage(messages.createdAt),
+      value: 'createdAt',
+    },
+  ];
+  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+    getInitFilter(),
+    'filterBatch'
+  );
+  return (
+    <UIConsumer>
+      {uiState => (
+        <Layout
+          {...uiState}
+          navBar={
+            <NavBar>
+              <FilterToolBar
+                icon="BATCH"
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+              <Link to="new">
+                <NewButton />
+              </Link>
+            </NavBar>
+          }
+        >
+          <BatchList {...queryVariables} />
+        </Layout>
+      )}
+    </UIConsumer>
+  );
+};
 
 export default injectIntl(BatchListModule);

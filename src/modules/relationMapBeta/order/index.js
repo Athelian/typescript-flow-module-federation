@@ -19,6 +19,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
+import useListConfig from 'hooks/useListConfig';
 import {
   OrderListWrapperStyle,
   OrderListBodyStyle,
@@ -28,7 +29,6 @@ import {
 import { orderListQuery } from './query';
 import normalize from './normalize';
 import { hasMoreItems } from './helpers';
-import { useFilter } from '../hooks';
 import OrderFocusView from './components/OrderFocusView';
 import Shipment from './components/Shipment';
 import { uiInitState, uiReducer, actionCreators, selectors } from './store';
@@ -39,18 +39,23 @@ type Props = {
   intl: IntlShape,
 };
 
+const initFilter = {
+  page: 1,
+  perPage: 10,
+  filter: {
+    archived: false,
+  },
+  sort: {
+    field: 'updatedAt',
+    direction: 'DESCENDING',
+  },
+};
+
 const Order = ({ intl }: Props) => {
-  const { queryVariables, filterAndSort, onChange } = useFilter({
-    page: 1,
-    perPage: 10,
-    filter: {
-      archived: false,
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-  });
+  const { queryVariables, filterAndSort, onChangeFilter: onChange } = useListConfig(
+    initFilter,
+    'filterRelationMap'
+  );
   const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
@@ -110,12 +115,7 @@ const Order = ({ intl }: Props) => {
                 onChange={onChange}
                 onToggle={actions.toggleTag}
                 renderAdvanceFilter={({ onChange: onApplyFilter }) => (
-                  <AdvancedFilter
-                    initialFilter={{
-                      archived: false,
-                    }}
-                    onApply={onApplyFilter}
-                  />
+                  <AdvancedFilter initialFilter={filterAndSort.filter} onApply={onApplyFilter} />
                 )}
               />
               {loading ? (
@@ -170,7 +170,15 @@ const Order = ({ intl }: Props) => {
                         </Label>
                         <ToggleInput
                           toggled={state.toggleShipmentList}
-                          onToggle={actions.toggleShipmentList}
+                          onToggle={() => {
+                            actions.toggleShipmentList();
+                            if (window.localStorage) {
+                              window.localStorage.setItem(
+                                'filterRMShipmentToggle',
+                                JSON.stringify({ isToggle: !state.toggleShipmentList })
+                              );
+                            }
+                          }}
                         />
                       </div>
                     </EntityHeader>

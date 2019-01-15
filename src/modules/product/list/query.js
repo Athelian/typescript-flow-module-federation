@@ -6,10 +6,10 @@ export const productListQuery = gql`
   query products(
     $page: Int!
     $perPage: Int!
-    $filter: ProductFilterInput
-    $sort: ProductSortInput
+    $filterBy: ProductFilterInput
+    $sortBy: ProductSortInput
   ) {
-    products(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
+    products(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...productCardFragment
       }

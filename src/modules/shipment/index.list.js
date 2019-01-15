@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
 import FilterToolBar from 'components/common/FilterToolBar';
+import useListConfig from 'hooks/useListConfig';
 import Layout from 'components/Layout';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
@@ -30,8 +31,8 @@ type State = {
   page: number,
 };
 
-class ShipmentListModule extends React.Component<Props, State> {
-  state = {
+const getInitFilter = () => {
+  const state: State = {
     viewType: 'grid',
     filter: {
       query: '',
@@ -44,55 +45,54 @@ class ShipmentListModule extends React.Component<Props, State> {
     perPage: 10,
     page: 1,
   };
+  return state;
+};
 
-  onChangeFilter = (newValue: Object) => {
-    this.setState(prevState => ({ ...prevState, ...newValue }));
-  };
+const ShipmentListModule = (props: Props) => {
+  const { intl } = props;
 
-  render() {
-    const { intl } = this.props;
-    const { filter, sort } = this.state;
-
-    const sortFields = [
-      { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-      { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    ];
-
-    return (
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <FilterToolBar
-                  icon="SHIPMENT"
-                  sortFields={sortFields}
-                  filtersAndSort={this.state}
-                  onChange={this.onChangeFilter}
-                />
-                <Link to="new">
-                  <NewButton />
-                </Link>
-                <ExportButton
-                  type="Shipments"
-                  exportQuery={shipmentsExportQuery}
-                  variables={{
-                    sortBy: {
-                      [sort.field]: sort.direction,
-                    },
-                    filterBy: filter,
-                  }}
-                />
-              </NavBar>
-            }
-          >
-            <ShipmentList {...this.state} />
-          </Layout>
-        )}
-      </UIConsumer>
-    );
-  }
-}
+  const sortFields = [
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+  ];
+  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+    getInitFilter(),
+    'filterShipment'
+  );
+  return (
+    <UIConsumer>
+      {uiState => (
+        <Layout
+          {...uiState}
+          navBar={
+            <NavBar>
+              <FilterToolBar
+                icon="SHIPMENT"
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+              <Link to="new">
+                <NewButton />
+              </Link>
+              <ExportButton
+                type="Shipments"
+                exportQuery={shipmentsExportQuery}
+                variables={{
+                  sortBy: {
+                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
+                  },
+                  filterBy: filterAndSort.filter,
+                }}
+              />
+            </NavBar>
+          }
+        >
+          <ShipmentList {...queryVariables} />
+        </Layout>
+      )}
+    </UIConsumer>
+  );
+};
 
 export default injectIntl(ShipmentListModule);

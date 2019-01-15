@@ -6,6 +6,7 @@ import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
+import useListConfig from 'hooks/useListConfig';
 import StaffList from './list';
 import messages from './messages';
 
@@ -24,52 +25,49 @@ type State = {
   page: number,
 };
 
-class StaffModule extends React.Component<Props, State> {
-  state = {
-    viewType: 'grid',
-    filter: {},
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
+const getInitFilter = (): State => ({
+  viewType: 'grid',
+  filter: {},
+  sort: {
+    field: 'updatedAt',
+    direction: 'DESCENDING',
+  },
+  perPage: 10,
+  page: 1,
+});
 
-  onChangeFilter = (newValue: any) => {
-    this.setState(prevState => ({ ...prevState, ...newValue }));
-  };
+const StaffModule = (props: Props) => {
+  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+    getInitFilter(),
+    'filterStaff'
+  );
+  const { intl } = props;
 
-  render() {
-    const { intl } = this.props;
-
-    const sortFields = [
-      { title: intl.formatMessage(messages.createdAt), value: 'updatedAt' },
-      { title: intl.formatMessage(messages.updatedAt), value: 'createdAt' },
-    ];
-
-    return (
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <FilterToolBar
-                  icon="STAFF"
-                  sortFields={sortFields}
-                  filtersAndSort={this.state}
-                  onChange={this.onChangeFilter}
-                />
-              </NavBar>
-            }
-          >
-            <StaffList {...this.state} />
-          </Layout>
-        )}
-      </UIConsumer>
-    );
-  }
-}
+  const sortFields = [
+    { title: intl.formatMessage(messages.createdAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.updatedAt), value: 'createdAt' },
+  ];
+  return (
+    <UIConsumer>
+      {uiState => (
+        <Layout
+          {...uiState}
+          navBar={
+            <NavBar>
+              <FilterToolBar
+                icon="STAFF"
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+            </NavBar>
+          }
+        >
+          <StaffList {...queryVariables} />
+        </Layout>
+      )}
+    </UIConsumer>
+  );
+};
 
 export default injectIntl(StaffModule);

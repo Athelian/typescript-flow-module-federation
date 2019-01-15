@@ -8,24 +8,20 @@ import { warehouseListQuery } from './query';
 
 type Props = {
   viewType: string,
-  sort: {
-    field: string,
-    direction: string,
+  sortBy: {
+    [field: string]: string,
   },
   perPage: number,
 };
 
 class WarehouseList extends React.Component<Props> {
   render() {
-    const { viewType, sort, ...filtersAndSort } = this.props;
+    const { viewType, ...filtersAndSort } = this.props;
     return (
       <Query
         query={warehouseListQuery}
         variables={{
           page: 1,
-          sort: {
-            [sort.field]: sort.direction,
-          },
           ...filtersAndSort,
         }}
         fetchPolicy="network-only"
