@@ -222,7 +222,6 @@ const convertMetricRangeQuery = ({
   min: number,
   max: number,
   metric: string,
-  key: string,
 }) =>
   isNullOrUndefined(min) && isNullOrUndefined(max)
     ? {}
@@ -231,6 +230,19 @@ const convertMetricRangeQuery = ({
         ...(isNullOrUndefined(max) ? {} : { max }),
         metric,
       };
+
+const convertTotalVolumeRangeQuery = (state: Object) => {
+  const activeFilters = getByPathWithDefault({}, `activeFilters.batch`, state);
+  if (!activeFilters.includes('totalVolume')) return {};
+  const { min, max, metric } = getByPathWithDefault(
+    {},
+    `selectedItems.batch.totalVolume.value`,
+    state
+  );
+
+  const query = convertMetricRangeQuery({ min, max, metric });
+  return isEmpty(query) ? query : { batchTotalVolume: query };
+};
 
 const mergeAirportsAndSeaports = (airports: Array<Object>, seaports: Array<Object>) => [
   ...(isValidOfPortsInput(airports)
@@ -356,6 +368,7 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertArchivedFilter(state, 'shipment', 'shipmentArchived'),
 
   ...convertPackagingQuery(state, 'item', 'productProvider'),
+  ...convertTotalVolumeRangeQuery(state),
   // ...convertPackagingQuery(state, 'batch', 'batch'),
   ...convertPortsQuery(state),
 

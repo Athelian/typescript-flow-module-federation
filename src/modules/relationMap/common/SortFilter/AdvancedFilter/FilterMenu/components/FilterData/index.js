@@ -169,6 +169,20 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
         </div>
       );
     }
+    case 'totalVolume': {
+      return (
+        <div className={FilterDataWrapperStyle}>
+          {isValidOfMetricRangeInput(data.value) && (
+            <MetricInputItem
+              {...data.value}
+              onRemove={onRemove}
+              name="totalVolume"
+              label="TOTAL VOLUME"
+            />
+          )}
+        </div>
+      );
+    }
     case 'packaging': {
       return (
         <div className={FilterDataWrapperStyle}>

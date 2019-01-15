@@ -22,6 +22,10 @@ export default defineMessages({
     id: 'modules.Batches.packaging',
     defaultMessage: 'PACKAGING',
   },
+  totalVolume: {
+    id: 'modules.Batches.totalVolume',
+    defaultMessage: 'TOTAL VOLUME',
+  },
   tags: {
     id: 'modules.Batches.tags',
     defaultMessage: 'TAGS',

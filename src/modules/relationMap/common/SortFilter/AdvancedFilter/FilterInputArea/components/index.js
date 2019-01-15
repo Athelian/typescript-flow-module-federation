@@ -6,6 +6,7 @@ import MiniSelector from './MiniSelector';
 import MiniSelectorItem from './MiniSelectorItem';
 import Origin from './Origin';
 import Packaging from './Packaging';
+import TotalVolumeRangeInput from './TotalVolumeRangeInput';
 import Ports from './Ports';
 import PriceRange from './PriceRange';
 import Specifications from './Specifications';
@@ -19,6 +20,7 @@ export {
   MiniSelectorItem,
   Origin,
   Packaging,
+  TotalVolumeRangeInput,
   Ports,
   PriceRange,
   Specifications,

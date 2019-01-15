@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Label } from 'components/Form';
-import MetricRangeInput from './components/MetricRangeInput';
+import MetricRangeInput from '../MetricRangeInput';
 import {
   PackagingWrapperStyle,
   LabelsWrapperStyle,
