@@ -69,6 +69,11 @@ export default function BatchFilterMenu({
         //   data: getSelectData(selectedItems, 'packaging'),
         // },
         {
+          name: 'totalVolume',
+          label: <FormattedMessage {...messages.totalVolume} />,
+          data: getSelectData(selectedItems, 'totalVolume'),
+        },
+        {
           name: 'tags',
           field: 'name',
           label: <FormattedMessage {...messages.tags} />,

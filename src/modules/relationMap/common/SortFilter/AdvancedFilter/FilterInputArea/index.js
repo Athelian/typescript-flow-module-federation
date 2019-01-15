@@ -15,6 +15,7 @@ import {
   MiniSelectorItem,
   Origin,
   Packaging,
+  TotalVolumeRangeInput,
   Ports,
   PriceRange,
   Specifications,
@@ -241,6 +242,13 @@ const getFilterInputArea = ({
               toDate={selectedItems.before}
               onChangeFromDate={e => onToggleSelect(e.target.value, 'after')}
               onChangeToDate={e => onToggleSelect(e.target.value, 'before')}
+            />
+          );
+        case 'totalVolume':
+          return () => (
+            <TotalVolumeRangeInput
+              value={selectedItems.value}
+              onChange={value => onToggleSelect(value, 'value')}
             />
           );
         case 'packaging':
