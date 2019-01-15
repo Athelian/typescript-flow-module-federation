@@ -173,17 +173,7 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
       return (
         <div className={FilterDataWrapperStyle}>
           {isValidOfMetricRangeInput(data.value) && (
-            <MetricInputItem
-              {...data.value}
-              onRemove={onRemove}
-              name="totalVolume"
-              label={
-                <FormattedMessage
-                  id="modules.relationMap.totalVolume"
-                  defaultMessage="TOTAL VOLUME"
-                />
-              }
-            />
+            <MetricInputItem {...data.value} onRemove={onRemove} name="value" />
           )}
         </div>
       );
