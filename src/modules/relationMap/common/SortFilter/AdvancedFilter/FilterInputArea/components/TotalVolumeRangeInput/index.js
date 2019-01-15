@@ -22,7 +22,13 @@ type Props = OptionalProps & {
   onChange: Function,
 };
 
-export default function TotalVolumeRangeInput({ value = { metric: 'm³' }, onChange }: Props) {
+const defaultProps = {
+  value: {
+    metric: 'm³',
+  },
+};
+
+function TotalVolumeRangeInput({ value, onChange }: Props) {
   return (
     <div className={PackagingWrapperStyle}>
       <div className={LabelsWrapperStyle}>
@@ -47,3 +53,7 @@ export default function TotalVolumeRangeInput({ value = { metric: 'm³' }, onCha
     </div>
   );
 }
+
+TotalVolumeRangeInput.defaultProps = defaultProps;
+
+export default TotalVolumeRangeInput;
