@@ -12,7 +12,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   metric: string,
   name: string,
-  label: string,
+  label: string | React.Node,
   onRemove: Function,
 };
 
