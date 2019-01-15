@@ -14,7 +14,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import BatchForm from './form';
-import { ToggleCalculatePackageQuantity } from './form/components';
+// import { ToggleCalculatePackageQuantity } from './form/components';
 import BatchFormContainer from './form/container';
 import validator from './form/validator';
 import { batchFormQuery } from './form/query';
@@ -188,27 +188,21 @@ class BatchFormModule extends React.PureComponent<Props> {
                               ) : (
                                 <ResetButton onClick={() => this.onReset(formState)} />
                               )}
-                              <ToggleCalculatePackageQuantity>
-                                {({ value: autoCalculatePackageQuantity }) => (
-                                  <SaveButton
-                                    disabled={!form.isReady(formState.state, validator)}
-                                    isLoading={isLoading}
-                                    onClick={() =>
-                                      this.onSave(
-                                        formatBatchInput(formState.state, {
-                                          autoCalculatePackageQuantity,
-                                        }),
-                                        saveBatch,
-                                        () => {
-                                          formState.onSuccess();
-                                          form.onReset();
-                                        },
-                                        form.onErrors
-                                      )
-                                    }
-                                  />
-                                )}
-                              </ToggleCalculatePackageQuantity>
+                              <SaveButton
+                                disabled={!form.isReady(formState.state, validator)}
+                                isLoading={isLoading}
+                                onClick={() =>
+                                  this.onSave(
+                                    formatBatchInput(formState.state),
+                                    saveBatch,
+                                    () => {
+                                      formState.onSuccess();
+                                      form.onReset();
+                                    },
+                                    form.onErrors
+                                  )
+                                }
+                              />
                             </>
                           )
                         }

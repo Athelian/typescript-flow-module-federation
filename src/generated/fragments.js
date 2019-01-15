@@ -316,6 +316,7 @@ export const BatchFragment = `fragment Batch on Batch {
   no
   quantity
   packageQuantity
+  autoCalculatePackageQuantity
   producedAt
   deliveredAt
   expiredAt
@@ -1132,6 +1133,7 @@ export const BatchNoNestingFragment = `fragment BatchNoNesting on Batch {
   no
   quantity
   packageQuantity
+  autoCalculatePackageQuantity
   producedAt
   deliveredAt
   expiredAt
@@ -1769,6 +1771,7 @@ export const BatchDeepNestingFragment = `fragment BatchDeepNesting on Batch {
   no
   quantity
   packageQuantity
+  autoCalculatePackageQuantity
   producedAt
   deliveredAt
   expiredAt
