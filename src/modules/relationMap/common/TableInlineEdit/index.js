@@ -44,7 +44,12 @@ import {
 } from './components';
 import TableItemForCustomFields from './components/TableItem/index.customFields';
 import { entitiesUpdateManyMutation } from './mutation';
-import { findAllPossibleOrders, totalLinePerOrder, parseChangedData } from './helpers';
+import {
+  findAllPossibleOrders,
+  totalLinePerOrder,
+  parseChangedData,
+  getOrderItemIdsByOrderId,
+} from './helpers';
 import normalize from './normalize';
 import { ordersByIDsExportQuery } from './query';
 import {
@@ -308,6 +313,16 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     [templateColumns]
   );
 
+  const {
+    sumShipments,
+    sumOrders,
+    sumOrderItems,
+    sumBatches,
+    collapsedRelation,
+    expandRelation,
+    ...mappingObjects
+  } = formatOrderData(data);
+
   useEffect(() => {
     if (data.length) {
       if (Object.keys(editData.orders).length === 0) {
@@ -321,7 +336,18 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
         setErrorMessage('');
 
         const { name, value, hasError } = newData;
-        const newEditData = set(editData, name, value);
+
+        const [entityType, id, field] = name.split('.');
+
+        let newEditData = { ...editData };
+        if (entityType === 'orders' && field === 'currency') {
+          const orderItemIds = getOrderItemIdsByOrderId(id, mappingObjects);
+          orderItemIds.forEach(orderItemId => {
+            newEditData = set(newEditData, `orderItems.${orderItemId}.price.currency`, value);
+          });
+        }
+        newEditData = set(newEditData, name, value);
+
         setEditData(newEditData);
 
         if (!touched[name]) {
@@ -344,16 +370,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     }
     return () => {};
   });
-
-  const {
-    sumShipments,
-    sumOrders,
-    sumOrderItems,
-    sumBatches,
-    collapsedRelation,
-    expandRelation,
-    ...mappingObjects
-  } = formatOrderData(data);
 
   const { orderIds, orderItemsIds, batchIds, shipmentIds } = findAllPossibleOrders(
     selected,

@@ -102,6 +102,13 @@ export const findAllPossibleOrders = (
   };
 };
 
+export const getOrderItemIdsByOrderId = (
+  orderId: string,
+  mappingObjects: {
+    order: Object,
+  }
+): Array<string> => [...Object.keys(mappingObjects.order[orderId].relation.orderItem)];
+
 export const totalLinePerOrder = (orderItems: Array<Object>, batchIds: Array<string>) => {
   let totalLines = 0;
   if (orderItems.length === 0) {
