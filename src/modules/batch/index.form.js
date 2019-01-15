@@ -14,7 +14,6 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import BatchForm from './form';
-// import { ToggleCalculatePackageQuantity } from './form/components';
 import BatchFormContainer from './form/container';
 import validator from './form/validator';
 import { batchFormQuery } from './form/query';
