@@ -107,6 +107,7 @@ const initValues = {
   },
   producedAt: '',
   batchAdjustments: [],
+  autoCalculatePackageQuantity: true,
 };
 
 export default class BatchFormContainer extends Container<BatchFormState> {
@@ -182,9 +183,11 @@ export default class BatchFormContainer extends Container<BatchFormState> {
   getPackageQuantity = () => calculatePackageQuantity(this.state);
 
   calculatePackageQuantity = () => {
-    this.setState(prevState => ({
-      packageQuantity: calculatePackageQuantity(prevState),
-    }));
+    if (this.state.autoCalculatePackageQuantity) {
+      this.setState(prevState => ({
+        packageQuantity: calculatePackageQuantity(prevState),
+      }));
+    }
   };
 
   calculatePackageVolume = () => {

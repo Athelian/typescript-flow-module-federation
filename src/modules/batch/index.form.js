@@ -212,17 +212,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                 >
                   {apiError && <p>Error: Please try again.</p>}
                   {this.isNew() || !batchId ? (
-                    <Subscribe to={[BatchFormContainer]}>
-                      {({ initDetailValues }) => (
-                        <BatchForm
-                          batch={{}}
-                          isNew
-                          onFormReady={() =>
-                            initDetailValues({ autoCalculatePackageQuantity: true })
-                          }
-                        />
-                      )}
-                    </Subscribe>
+                    <BatchForm batch={{}} isNew />
                   ) : (
                     <QueryForm
                       query={batchFormQuery}

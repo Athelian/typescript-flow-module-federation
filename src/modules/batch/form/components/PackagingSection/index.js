@@ -12,7 +12,6 @@ import {
   volumeInputFactory,
 } from 'modules/form/helpers';
 import { CalculatorButtonStyle } from 'modules/form/helpers/numberInput/style';
-import CalculatePackageQuantity from 'modules/batch/common/CalculatePackageQuantity';
 import GridColumn from 'components/GridColumn';
 import { ToggleInput } from 'components/Form';
 import { getByPath } from 'utils/fp';
@@ -32,7 +31,6 @@ const PackagingSection = ({ isNew }: Props) => (
         setFieldArrayValue,
         calculatePackageVolume,
         calculatePackageQuantity,
-        getPackageQuantity,
       }) => {
         const values = { ...originalValues, ...state };
         return (
@@ -66,7 +64,14 @@ const PackagingSection = ({ isNew }: Props) => (
               {({ name, ...inputHandlers }) =>
                 numberInputFactory({
                   name,
-                  inputHandlers,
+                  inputHandlers: {
+                    ...inputHandlers,
+                    onBlur: evt => {
+                      inputHandlers.onBlur(evt);
+                      setFieldValue('packageCapacity', inputHandlers.value);
+                      calculatePackageQuantity();
+                    },
+                  },
                   isNew,
                   originalValue: originalValues[name],
                   label: (
@@ -79,51 +84,44 @@ const PackagingSection = ({ isNew }: Props) => (
               }
             </FormField>
 
-            <CalculatePackageQuantity
-              batch={values}
-              setPackageQuantity={() =>
-                setFieldValue('packageQuantity', getPackageQuantity(values))
-              }
+            <FormField
+              name="packageQuantity"
+              initValue={values.packageQuantity}
+              setFieldValue={setFieldValue}
             >
-              <FormField
-                name="packageQuantity"
-                initValue={values.packageQuantity}
-                setFieldValue={setFieldValue}
-              >
-                {({ name, ...inputHandlers }) =>
-                  numberInputFactory({
-                    name,
-                    inputHandlers,
-                    isNew,
-                    originalValue: originalValues[name],
-                    label: (
-                      <FormattedMessage
-                        id="modules.Batches.packageQuantity"
-                        defaultMessage="PACKAGE QUANTITY"
-                      />
-                    ),
-                    calculate: calculatePackageQuantity,
-                    renderCalculate: () => (
-                      <div className={CalculatorButtonStyle}>
-                        <Subscribe to={[BatchFormContainer]}>
-                          {({ state: batchFormState }) => (
-                            <ToggleInput
-                              toggled={batchFormState.autoCalculatePackageQuantity}
-                              onToggle={() =>
-                                setFieldValue(
-                                  'autoCalculatePackageQuantity',
-                                  !batchFormState.autoCalculatePackageQuantity
-                                )
-                              }
-                            />
-                          )}
-                        </Subscribe>
-                      </div>
-                    ),
-                  })
-                }
-              </FormField>
-            </CalculatePackageQuantity>
+              {({ name, ...inputHandlers }) =>
+                numberInputFactory({
+                  name,
+                  inputHandlers,
+                  isNew,
+                  originalValue: originalValues[name],
+                  label: (
+                    <FormattedMessage
+                      id="modules.Batches.packageQuantity"
+                      defaultMessage="PACKAGE QUANTITY"
+                    />
+                  ),
+                  calculate: calculatePackageQuantity,
+                  renderCalculate: () => (
+                    <div className={CalculatorButtonStyle}>
+                      <Subscribe to={[BatchFormContainer]}>
+                        {({ state: batchFormState }) => (
+                          <ToggleInput
+                            toggled={batchFormState.autoCalculatePackageQuantity}
+                            onToggle={() =>
+                              setFieldValue(
+                                'autoCalculatePackageQuantity',
+                                !batchFormState.autoCalculatePackageQuantity
+                              )
+                            }
+                          />
+                        )}
+                      </Subscribe>
+                    </div>
+                  ),
+                })
+              }
+            </FormField>
             <FormField
               name="packageGrossWeight"
               initValue={getByPath('packageGrossWeight', values)}

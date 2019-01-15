@@ -25,7 +25,13 @@ type Props = {
 const QuantityAdjustmentsSection = ({ isNew }: Props) => (
   <div className={QuantityAdjustmentsSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues, state, setFieldArrayValue, removeArrayItem }) => {
+      {({
+        originalValues,
+        state,
+        setFieldArrayValue,
+        removeArrayItem,
+        calculatePackageQuantity,
+      }) => {
         const values = { ...originalValues, ...state };
 
         const currentQuantity = values.batchAdjustments.reduce(
@@ -73,7 +79,14 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                         >
                           {({ name, ...inputHandlers }) =>
                             numberInputFactory({
-                              inputHandlers,
+                              inputHandlers: {
+                                ...inputHandlers,
+                                onBlur: evt => {
+                                  inputHandlers.onBlur(evt);
+                                  setFieldArrayValue(name, inputHandlers.value);
+                                  calculatePackageQuantity();
+                                },
+                              },
                               name,
                               isNew,
                               originalValue: adjustment.quantity,

@@ -34,7 +34,7 @@ type Props = {
 const BatchSection = ({ isNew, selectable }: Props) => (
   <div className={BatchSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues: initialValues, state, setFieldValue }) => {
+      {({ originalValues: initialValues, state, setFieldValue, calculatePackageQuantity }) => {
         const values = { ...initialValues, ...state };
         const { batchAdjustments = [] } = values;
         const totalAdjustment = batchAdjustments
@@ -78,6 +78,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                         onBlur: evt => {
                           inputHandlers.onBlur(evt);
                           setFieldValue('quantity', inputHandlers.value - totalAdjustment);
+                          calculatePackageQuantity();
                         },
                       },
                       name,
