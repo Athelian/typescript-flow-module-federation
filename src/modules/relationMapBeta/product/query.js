@@ -46,16 +46,7 @@ export const productListQuery = gql`
             }
             batchAdjustments {
               id
-              reason
               quantity
-              memo
-              updatedAt
-              updatedBy {
-                firstName
-                lastName
-                id
-              }
-              sort
             }
             orderItem {
               id
@@ -79,11 +70,8 @@ export const productListQuery = gql`
           color
         }
         files {
-          name
-          type
-          path
-          memo
           id
+          path
         }
       }
       page
