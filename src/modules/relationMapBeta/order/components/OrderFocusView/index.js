@@ -117,7 +117,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                   index > 0 && (
                     <React.Fragment key={batch.id}>
                       <div />
-                      <RelationLine type={2} />
+                      {item.orderItems.length > 1 ? <RelationLine type={2} /> : <div />}
                       <div />
                       <RelationLine type={4} />
                       <Batch

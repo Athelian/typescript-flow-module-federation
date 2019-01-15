@@ -28,7 +28,6 @@ import {
 } from 'modules/relationMap/orderFocused/style';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
 import { SHIPMENT } from 'modules/relationMap/constants';
-import { useFilter } from '../hooks';
 import { orderListQuery } from './query';
 import normalize from './normalize';
 import { hasMoreItems, findHighLightEntities } from './helpers';

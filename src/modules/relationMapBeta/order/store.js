@@ -32,7 +32,6 @@ export const getInitShowTag = () => {
 const getInitToggleShipmentList = () => {
   const localFilter = window.localStorage && window.localStorage.getItem('filterRMShipmentToggle');
   const initValue = localFilter ? JSON.parse(localFilter) : { isToggle: false };
-  console.log('localFilter', localFilter, initValue);
   return initValue.isToggle || false;
 };
 
@@ -242,5 +241,7 @@ const entitySelector = (state: UIState, entity: string) =>
 export function selectors(state: UIState) {
   return {
     isSelectEntity: (entity: string) => entitySelector(state, entity),
+    isTarget: (entity: string, id: string) =>
+      state.targets.find(item => item.selectedId === id && item.type === entity),
   };
 }
