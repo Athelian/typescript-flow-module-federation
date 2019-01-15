@@ -34,7 +34,7 @@ const PackagingSection = ({ isNew }: Props) => (
         getPackageQuantity,
       }) => {
         const values = { ...originalValues, ...state };
-        console.log('values', values);
+        console.log('autoCalculatePackageQuantity', values.autoCalculatePackageQuantity);
         return (
           <GridColumn>
             <FormField
@@ -101,15 +101,19 @@ const PackagingSection = ({ isNew }: Props) => (
                   calculate: calculatePackageQuantity,
                   renderCalculate: () => (
                     <div className={CalculatorButtonStyle}>
-                      <ToggleInput
-                        toggled={values.autoCalculatePackageQuantity}
-                        onToggle={() =>
-                          setFieldValue(
-                            'autoCalculatePackageQuantity',
-                            !values.autoCalculatePackageQuantity
-                          )
-                        }
-                      />
+                      <Subscribe to={[BatchFormContainer]}>
+                        {({ state: batchFormState }) => (
+                          <ToggleInput
+                            toggled={batchFormState.autoCalculatePackageQuantity}
+                            onToggle={() =>
+                              setFieldValue(
+                                'autoCalculatePackageQuantity',
+                                !batchFormState.autoCalculatePackageQuantity
+                              )
+                            }
+                          />
+                        )}
+                      </Subscribe>
                     </div>
                   ),
                 })
