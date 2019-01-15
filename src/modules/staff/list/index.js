@@ -8,22 +8,18 @@ import { staffListQuery } from './query';
 
 type Props = {
   viewType: string,
-  filter: {},
-  sort: {
-    field: string,
-    direction: string,
+  filterBy: {},
+  sortBy: {
+    [field: string]: string,
   },
   perPage: number,
 };
 
-const StaffList = ({ viewType, sort, ...filtersAndSort }: Props) => (
+const StaffList = ({ viewType, ...filtersAndSort }: Props) => (
   <Query
     query={staffListQuery}
     variables={{
       page: 1,
-      sort: {
-        [sort.field]: sort.direction,
-      },
       ...filtersAndSort,
     }}
     fetchPolicy="network-only"

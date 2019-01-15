@@ -5,7 +5,10 @@ import { injectUid } from 'utils/id';
 import Tabs from '../index';
 import messages from '../messages';
 
-type Props = {
+type OptionalProps = {
+  activeIndex?: number,
+};
+type Props = OptionalProps & {
   onChange: number => void,
 };
 
@@ -14,8 +17,14 @@ const tabs = [
   { icon: 'ARCHIVE', label: <FormattedMessage {...messages.archived} /> },
 ];
 
-function StatusToggleTabs({ onChange }: Props) {
-  return <Tabs tabs={tabs.map(injectUid)} onChange={onChange} />;
+function StatusToggleTabs({ onChange, activeIndex }: Props) {
+  return (
+    <Tabs
+      tabs={tabs.map(injectUid)}
+      onChange={onChange}
+      {...(activeIndex ? { activeIndex } : {})}
+    />
+  );
 }
 
 export default StatusToggleTabs;

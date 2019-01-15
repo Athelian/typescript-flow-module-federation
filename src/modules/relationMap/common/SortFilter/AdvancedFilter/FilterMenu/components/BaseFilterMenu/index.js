@@ -4,7 +4,19 @@ import { isNullOrUndefined } from 'utils/fp';
 import { RadioInput, Label } from 'components/Form';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import { FilterMenuItem, SectionHeader, ToggleMenuItem } from '..';
-import { FilterMenuWrapperStyle, FiltersBodyStyle, TogglesBodyStyle } from './style';
+import {
+  FilterMenuWrapperStyle,
+  FiltersBodyStyle,
+  TogglesBodyStyle,
+  RadioInputWrapperStyle,
+} from './style';
+
+type RadioFilterProps = {
+  name: string,
+  label: React.Node,
+  field: string,
+  value: any,
+};
 
 type OptionalProps = {
   filtersMap?: Array<{
@@ -22,9 +34,15 @@ type OptionalProps = {
     label: React.Node,
     icon: string,
   }>,
-  statusMap?: any,
-  parsedStatusFilters: { archived?: boolean },
-  changeStatusFilter: Function,
+  archivedUI?: Array<RadioFilterProps>,
+  completelyBatchedUI?: Array<RadioFilterProps>,
+  completelyShippedUI?: Array<RadioFilterProps>,
+  parsedRadioFilters: {
+    archived?: boolean,
+    completelyBatched?: boolean,
+    completelyShipped?: boolean,
+  },
+  changeRadioFilter: Function,
 };
 
 type Props = OptionalProps & {
@@ -45,21 +63,29 @@ const isSelectedStatus = (name: string, archived: any): boolean => {
   return false;
 };
 
+const isCompleted = (name: string, status: any): boolean => {
+  if (name === 'all' && isNullOrUndefined(status)) return true;
+  if (name === 'completely' && !isNullOrUndefined(status)) return true;
+  return false;
+};
+
 const defaultProps = {
-  parsedStatusFilters: {
+  parsedRadioFilters: {
     archived: false,
   },
-  changeStatusFilter: () => {},
+  changeRadioFilter: () => {},
 };
 
 function BaseFilterMenu({
   filtersMap,
   togglesMap,
-  statusMap,
+  archivedUI,
+  completelyBatchedUI,
+  completelyShippedUI,
   entityType,
   parsedActiveFilters,
-  parsedStatusFilters,
-  changeStatusFilter,
+  parsedRadioFilters,
+  changeRadioFilter,
   toggleActiveFilter,
   parsedFilterToggles,
   toggleFilterToggle,
@@ -103,22 +129,74 @@ function BaseFilterMenu({
           );
         })}
 
-      {statusMap && parsedFilterToggles && (
+      {archivedUI && parsedFilterToggles && (
         <div className={TogglesBodyStyle}>
-          {statusMap.map(status => {
-            const { name, label: text, field, value } = status;
+          {archivedUI.map(UIItem => {
+            const { name, label: text, field, value } = UIItem;
 
             return (
-              <RadioInput
-                key={name}
-                selected={isSelectedStatus(
-                  name,
-                  isNullOrUndefined(parsedStatusFilters) ? null : parsedStatusFilters.archived
-                )}
-                onToggle={() => changeStatusFilter(entityType, field, value)}
-              >
-                <Label>{text}</Label>
-              </RadioInput>
+              <div className={RadioInputWrapperStyle}>
+                <RadioInput
+                  key={name}
+                  selected={isSelectedStatus(
+                    name,
+                    isNullOrUndefined(parsedRadioFilters) ? null : parsedRadioFilters.archived
+                  )}
+                  onToggle={() => changeRadioFilter(entityType, field, value)}
+                >
+                  <Label>{text}</Label>
+                </RadioInput>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {completelyBatchedUI && (
+        <div className={TogglesBodyStyle}>
+          {completelyBatchedUI.map(UIItem => {
+            const { name, label: text, field, value } = UIItem;
+
+            return (
+              <div className={RadioInputWrapperStyle}>
+                <RadioInput
+                  key={name}
+                  selected={isCompleted(
+                    name,
+                    isNullOrUndefined(parsedRadioFilters)
+                      ? null
+                      : parsedRadioFilters.completelyBatched
+                  )}
+                  onToggle={() => changeRadioFilter(entityType, field, value)}
+                >
+                  <Label>{text}</Label>
+                </RadioInput>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {completelyShippedUI && (
+        <div className={TogglesBodyStyle}>
+          {completelyShippedUI.map(UIItem => {
+            const { name, label: text, field, value } = UIItem;
+
+            return (
+              <div className={RadioInputWrapperStyle}>
+                <RadioInput
+                  key={name}
+                  selected={isCompleted(
+                    name,
+                    isNullOrUndefined(parsedRadioFilters)
+                      ? null
+                      : parsedRadioFilters.completelyShipped
+                  )}
+                  onToggle={() => changeRadioFilter(entityType, field, value)}
+                >
+                  <Label>{text}</Label>
+                </RadioInput>
+              </div>
             );
           })}
         </div>

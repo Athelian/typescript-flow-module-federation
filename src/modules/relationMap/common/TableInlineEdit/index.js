@@ -252,12 +252,17 @@ const getRowCounter = (counter, type) => {
 const mapCustomField = entity => (_, index) => `${entity}-customFields-${index}`;
 
 export default function TableInlineEdit({ type, selected, onCancel }: Props) {
+  const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
+  const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
   const [data] = useIdb(type, []);
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
-  const [templateColumns, setTemplateColumns] = useState([...allColumnIds]);
+  const [templateColumns, setTemplateColumns] = useState(
+    initTemplateColumn ? JSON.parse(initTemplateColumn) : [...allColumnIds]
+  );
   const [isReady, setIsReady] = useState(false);
-  const [showAll, setShowAll] = useState(true);
+
+  const [showAll, setShowAll] = useState(Number.isInteger(+initShowAll) ? !!+initShowAll : true);
   const [loading, setLoading] = useState(false);
   const [showTemplate, setShowTemplate] = useState(false);
   const [touched, setTouched] = useState({});
@@ -290,10 +295,13 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
   const onToggle = useCallback(
     selectedColumn => {
       if (templateColumns && selectedColumn) {
-        setTemplateColumns(
-          templateColumns.includes(selectedColumn)
-            ? templateColumns.filter(item => item !== selectedColumn)
-            : [...templateColumns, selectedColumn]
+        const filteredTemplateColumns = templateColumns.includes(selectedColumn)
+          ? templateColumns.filter(item => item !== selectedColumn)
+          : [...templateColumns, selectedColumn];
+        setTemplateColumns(filteredTemplateColumns);
+        window.localStorage.setItem(
+          'filterRMTemplateColumns',
+          JSON.stringify(filteredTemplateColumns)
         );
       }
     },
@@ -602,7 +610,13 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                           </SlideView>
                           <ToggleInput
                             toggled={showAll}
-                            onToggle={() => (showAll ? setShowAll(false) : setShowAll(true))}
+                            onToggle={() => {
+                              setShowAll(!showAll);
+                              window.localStorage.setItem(
+                                'filterRMEditViewShowAll',
+                                showAll ? '0' : '1'
+                              );
+                            }}
                           >
                             <Label>
                               <FormattedMessage

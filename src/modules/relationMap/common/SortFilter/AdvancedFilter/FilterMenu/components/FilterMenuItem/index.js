@@ -27,6 +27,9 @@ function isValid(name: string, data: any): boolean {
     case 'origin':
       return data.filter(item => !isNullOrUndefined(item)).length > 0;
 
+    case 'totalVolume': {
+      return isValidOfMetricRangeInput(data.value);
+    }
     case 'packaging': {
       const { packageLength, packageWidth, packageHeight, packageVolume, packageWeight } = data;
       return (

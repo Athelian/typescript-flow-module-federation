@@ -14,10 +14,10 @@ export const productProvidersListQuery = gql`
   query productProviders(
     $page: Int!
     $perPage: Int!
-    $filter: ProductProviderFilterInput
-    $sort: ProductProviderSortInput
+    $filterBy: ProductProviderFilterInput
+    $sortBy: ProductProviderSortInput
   ) {
-    productProviders(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
+    productProviders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...productProviderCardFragment
       }

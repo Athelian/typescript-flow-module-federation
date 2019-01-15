@@ -1,5 +1,5 @@
 // @flow
-import React, { useRef, useReducer, useState } from 'react';
+import React, { useRef, useReducer, useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import {
@@ -50,7 +50,7 @@ type State = {
     batch: Object,
     shipment: Object,
   },
-  statusFilters: {
+  radioFilters: {
     order: Object,
     shipment: Object,
   },
@@ -71,9 +71,11 @@ const initialState: State = {
     batch: {},
     shipment: {},
   },
-  statusFilters: {
+  radioFilters: {
     order: {
       archived: false,
+      completelyBatched: null,
+      completelyShipped: null,
     },
     shipment: {
       archived: null,
@@ -96,6 +98,8 @@ const defaultFilterMenuItemMap = {
   batch: 'deliveredAt',
   shipment: 'forwarder',
 };
+
+const ADVANCE_FILTER_STORAGE = 'advanceFilterRelationMap';
 
 const FILTER = {
   order: {
@@ -139,6 +143,7 @@ const FILTER = {
     warehouseArrival: 'shipmentWarehouseArrival',
     deliveryReady: 'shipmentDeliveryReady',
     forwarder: 'shipmentForwarderIds',
+    warehouse: 'shipmentWarehouseIds',
     inCharge: 'shipmentInChargeIds',
     tags: 'shipmentTagIds',
     createdAt: 'shipmentCreatedAt',
@@ -155,6 +160,7 @@ const getFilterValue = (name: string, data: any) => {
     case 'inCharge':
     case 'supplier':
     case 'forwarder':
+    case 'warehouse':
       return data.map(d => d.id);
     case 'origin':
       return data.filter(d => !isNullOrUndefined(d)).map(d => d.name);
@@ -216,7 +222,6 @@ const convertMetricRangeQuery = ({
   min: number,
   max: number,
   metric: string,
-  key: string,
 }) =>
   isNullOrUndefined(min) && isNullOrUndefined(max)
     ? {}
@@ -225,6 +230,19 @@ const convertMetricRangeQuery = ({
         ...(isNullOrUndefined(max) ? {} : { max }),
         metric,
       };
+
+const convertTotalVolumeRangeQuery = (state: Object) => {
+  const activeFilters = getByPathWithDefault({}, `activeFilters.batch`, state);
+  if (!activeFilters.includes('totalVolume')) return {};
+  const { min, max, metric } = getByPathWithDefault(
+    {},
+    `selectedItems.batch.totalVolume.value`,
+    state
+  );
+
+  const query = convertMetricRangeQuery({ min, max, metric });
+  return isEmpty(query) ? query : { batchTotalVolume: query };
+};
 
 const mergeAirportsAndSeaports = (airports: Array<Object>, seaports: Array<Object>) => [
   ...(isValidOfPortsInput(airports)
@@ -322,20 +340,20 @@ const convertPackagingQuery = (state: Object, type: string, prevKey: string) => 
   return packagingQuery;
 };
 
-// const booleanFilterQuery = (state: Object, filterName: string, path: string) => {
-//   const filterValue = getByPathWithDefault(false, path, state);
-//   const filterQuery = {};
-//   if (filterValue) {
-//     filterQuery[filterName] = filterValue;
-//   }
-//   return filterQuery;
-// };
-
 const convertArchivedFilter = (state: Object, entityType: string, key: string) => {
-  const archived = getByPath(`statusFilters.${entityType}.archived`, state);
+  const archived = getByPath(`radioFilters.${entityType}.archived`, state);
   const query = {};
   if (!isNullOrUndefined(archived)) {
     query[key] = archived;
+  }
+  return query;
+};
+
+const covertCompletelyFilter = (state: Object, entityType: string, key: string) => {
+  const completed = getByPath(`radioFilters.${entityType}.${key}`, state);
+  const query = {};
+  if (!isNullOrUndefined(completed)) {
+    query[key] = completed;
   }
   return query;
 };
@@ -350,11 +368,12 @@ const convertToFilterQuery = (state: Object) => ({
   ...convertArchivedFilter(state, 'shipment', 'shipmentArchived'),
 
   ...convertPackagingQuery(state, 'item', 'productProvider'),
+  ...convertTotalVolumeRangeQuery(state),
   // ...convertPackagingQuery(state, 'batch', 'batch'),
   ...convertPortsQuery(state),
 
-  // ...booleanFilterQuery(state, 'completelyBatched', 'filterToggles.order.completelyBatched'),
-  // ...booleanFilterQuery(state, 'completelyShipped', 'filterToggles.order.completelyShipped'),
+  ...covertCompletelyFilter(state, 'order', 'completelyBatched'),
+  ...covertCompletelyFilter(state, 'order', 'completelyShipped'),
 });
 
 const removeActiveFilter = state => ({
@@ -381,16 +400,24 @@ function reducer(state, action) {
       };
     }
 
-    case 'CHANGE_STATUS_FILTER': {
+    case 'CHANGE_RADIO_FILTER': {
       const { entityType, filter, value } = action;
-      const { statusFilters } = state;
+      const { radioFilters } = state;
 
-      const newStatusFilters = { ...statusFilters };
-      newStatusFilters[entityType][filter] = value;
+      const newRadioFilters = { ...radioFilters };
+      newRadioFilters[entityType][filter] = value;
 
       return {
         ...state,
-        statusFilters: newStatusFilters,
+        radioFilters: newRadioFilters,
+      };
+    }
+
+    case 'OVERRIDE_FILTER': {
+      const { advanceFilter } = action;
+      return {
+        ...state,
+        ...advanceFilter,
       };
     }
 
@@ -502,12 +529,45 @@ const isDefaultFilter = isEquals({
 });
 
 function AdvanceFilter({ onApply, initialFilter }: Props) {
+  let initialLocalAdvanceFilter;
+  try {
+    const localAdvanceFilter =
+      window.localStorage && window.localStorage.getItem(ADVANCE_FILTER_STORAGE);
+    initialLocalAdvanceFilter = JSON.parse(localAdvanceFilter);
+  } catch (error) {
+    initialLocalAdvanceFilter = null;
+  }
+
   const filterButtonRef = useRef(null);
-  const [filterIsApplied, setAppliedFilter] = useState(false);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [filterIsApplied, setAppliedFilter] = useState(
+    initialLocalAdvanceFilter
+      ? !isDefaultFilter(convertToFilterQuery(initialLocalAdvanceFilter))
+      : false
+  );
+
+  const [state, dispatch] = useReducer(reducer, initialLocalAdvanceFilter || initialState);
   const filterQuery = convertToFilterQuery(state);
   const defaultInitialFilter = isDefaultFilter(initialFilter);
   const defaultFilterQuery = isDefaultFilter(filterQuery);
+
+  useEffect(
+    () => {
+      if (window.localStorage) {
+        const advanceFilterQuery = convertToFilterQuery(state);
+        const localFilter = JSON.parse(window.localStorage.getItem('filterRelationMap') || '{}');
+        window.localStorage.setItem(ADVANCE_FILTER_STORAGE, JSON.stringify(state));
+        window.localStorage.setItem(
+          'filterRelationMap',
+          JSON.stringify({
+            ...localFilter,
+            filter: advanceFilterQuery,
+          })
+        );
+      }
+    },
+    [state]
+  );
+
   const sameFilter = isEquals(initialFilter, filterQuery);
   const showApplyButton = !defaultInitialFilter || !sameFilter;
 
@@ -595,7 +655,7 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
                         selectedItems={state.selectedItems}
                         selectedEntityType={state.selectedEntityType}
                         activeFilters={state.activeFilters}
-                        statusFilters={state.statusFilters}
+                        radioFilters={state.radioFilters}
                         filterToggles={state.filterToggles}
                         selectedFilterItem={state.selectedFilterItem}
                         onToggleSelect={(selectItem: any, field?: string) =>
@@ -605,9 +665,9 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
                             ...(field ? { field } : {}),
                           })
                         }
-                        changeStatusFilter={(entityType, filter, value) =>
+                        changeRadioFilter={(entityType, filter, value) =>
                           dispatch({
-                            type: 'CHANGE_STATUS_FILTER',
+                            type: 'CHANGE_RADIO_FILTER',
                             entityType,
                             filter,
                             value,

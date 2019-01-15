@@ -23,6 +23,16 @@ class SelectInput extends React.Component<Props, State> {
     };
   }
 
+  static getDerivedStateFromProps(props: Props, state: State) {
+    const { value, items, itemToValue } = props;
+    if (value !== state.selectedItem) {
+      return {
+        selectedItem: value ? (items || []).find(item => isEquals(itemToValue(item), value)) : null,
+      };
+    }
+    return null;
+  }
+
   componentDidUpdate(prevProps: Props) {
     const { value } = this.props;
     if (prevProps.value && !value) {

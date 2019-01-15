@@ -3,7 +3,7 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
-import { ObjectValue, ArrayValue } from 'react-values';
+import { ArrayValue } from 'react-values';
 import Layout from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
 import { ShipmentBatchCard } from 'components/Cards';
@@ -12,6 +12,7 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/batch/messages';
+import useListConfig from 'hooks/useListConfig';
 import { selectBatchListQuery } from './query';
 
 type Props = {
@@ -21,6 +22,15 @@ type Props = {
   selectedBatches: Array<Object>,
 };
 
+const getInitFilter = () => ({
+  perPage: 20,
+  page: 1,
+  filter: {
+    query: '',
+    hasShipment: false,
+  },
+  sort: { field: 'updatedAt', direction: 'DESCENDING' },
+});
 function onSelectBatch({
   selected,
   item,
@@ -75,112 +85,91 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
       value: 'createdAt',
     },
   ];
+  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useListConfig(
+    getInitFilter(),
+    'filterSelectBatches'
+  );
   return (
-    <ObjectValue
-      defaultValue={{
-        perPage: 20,
-        page: 1,
-        filter: {
-          query: '',
-          hasShipment: false,
-        },
-        sort: { field: 'updatedAt', direction: 'DESCENDING' },
-      }}
-    >
-      {({ value: filtersAndSort, set: onChange }) => (
-        <Query
-          query={selectBatchListQuery}
-          variables={{
-            page: 1,
-            perPage: filtersAndSort.perPage,
-            filter: filtersAndSort.filter,
-            sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
-          }}
-          fetchPolicy="network-only"
-        >
-          {({ loading, data, error, fetchMore }) => {
-            if (error) {
-              return error.message;
-            }
+    <Query query={selectBatchListQuery} variables={queryVariables} fetchPolicy="network-only">
+      {({ loading, data, error, fetchMore }) => {
+        if (error) {
+          return error.message;
+        }
+        const nextPage = getByPathWithDefault(1, 'batches.page', data) + 1;
+        const totalPage = getByPathWithDefault(1, 'batches.totalPage', data);
+        const hasMore = nextPage <= totalPage;
 
-            const nextPage = getByPathWithDefault(1, 'batches.page', data) + 1;
-            const totalPage = getByPathWithDefault(1, 'batches.totalPage', data);
-            const hasMore = nextPage <= totalPage;
-
-            return (
-              <ArrayValue>
-                {({ value: selected, push, set }) => (
-                  <Layout
-                    navBar={
-                      <SlideViewNavBar>
-                        <EntityIcon icon="BATCH" color="BATCH" />
-                        <SortInput
-                          sort={
-                            fields.find(item => item.value === filtersAndSort.sort.field) ||
-                            fields[0]
-                          }
-                          ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
-                          fields={fields}
-                          onChange={({ field: { value }, ascending }) =>
-                            onChange({
-                              ...filtersAndSort,
-                              sort: {
-                                field: value,
-                                direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                              },
-                            })
-                          }
-                        />
-                        <SearchInput
-                          value={filtersAndSort.filter.query}
-                          name="search"
-                          onClear={() =>
-                            onChange({
-                              ...filtersAndSort,
-                              filter: { ...filtersAndSort.filter, query: '' },
-                            })
-                          }
-                          onChange={newQuery =>
-                            onChange({
-                              ...filtersAndSort,
-                              filter: { ...filtersAndSort.filter, query: newQuery },
-                            })
-                          }
-                        />
-                        <CancelButton onClick={onCancel} />
-                        <SaveButton
-                          data-testid="saveButtonOnSelectBatches"
-                          disabled={selected.length === 0}
-                          onClick={() => onSelect(selected)}
-                        />
-                      </SlideViewNavBar>
-                    }
-                  >
-                    <BatchGridView
-                      items={getByPathWithDefault([], 'batches.nodes', data).filter(
-                        item => !removedBatches[item.id]
-                      )}
-                      onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
-                      hasMore={hasMore}
-                      isLoading={loading}
-                      renderItem={item => (
-                        <ShipmentBatchCard
-                          batch={item}
-                          selectable
-                          selected={selected.includes(item)}
-                          onSelect={() => onSelectBatch({ selected, item, push, set })}
-                          key={item.id}
-                        />
-                      )}
+        return (
+          <ArrayValue>
+            {({ value: selected, push, set }) => (
+              <Layout
+                navBar={
+                  <SlideViewNavBar>
+                    <EntityIcon icon="BATCH" color="BATCH" />
+                    <SortInput
+                      sort={
+                        fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]
+                      }
+                      ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+                      fields={fields}
+                      onChange={({ field: { value }, ascending }) =>
+                        onChange({
+                          ...filtersAndSort,
+                          sort: {
+                            field: value,
+                            direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                          },
+                        })
+                      }
                     />
-                  </Layout>
-                )}
-              </ArrayValue>
-            );
-          }}
-        </Query>
-      )}
-    </ObjectValue>
+                    <SearchInput
+                      value={filtersAndSort.filter.query}
+                      name="search"
+                      onClear={() =>
+                        onChange({
+                          ...filtersAndSort,
+                          filter: { ...filtersAndSort.filter, query: '' },
+                        })
+                      }
+                      onChange={newQuery =>
+                        onChange({
+                          ...filtersAndSort,
+                          filter: { ...filtersAndSort.filter, query: newQuery },
+                        })
+                      }
+                    />
+                    <CancelButton onClick={onCancel} />
+                    <SaveButton
+                      data-testid="saveButtonOnSelectBatches"
+                      disabled={selected.length === 0}
+                      onClick={() => onSelect(selected)}
+                    />
+                  </SlideViewNavBar>
+                }
+              >
+                <BatchGridView
+                  items={getByPathWithDefault([], 'batches.nodes', data).filter(
+                    item => !removedBatches[item.id]
+                  )}
+                  onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'batches')}
+                  hasMore={hasMore}
+                  isLoading={loading}
+                  renderItem={item => (
+                    <ShipmentBatchCard
+                      batch={item}
+                      selectable
+                      selected={selected.includes(item)}
+                      onSelect={() => onSelectBatch({ selected, item, push, set })}
+                      key={item.id}
+                    />
+                  )}
+                />
+              </Layout>
+            )}
+          </ArrayValue>
+        );
+      }}
+    </Query>
   );
 }
 

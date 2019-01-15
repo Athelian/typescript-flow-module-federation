@@ -6,6 +6,7 @@ import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
+import useListConfig from 'hooks/useListConfig';
 import PartnerList from './list';
 import messages from './messages';
 
@@ -24,8 +25,8 @@ type State = {
   perPage: number,
 };
 
-class PartnerModule extends React.Component<Props, State> {
-  state = {
+const getInitFilter = (): State => {
+  const state: State = {
     viewType: 'grid',
     filter: {},
     sort: {
@@ -35,41 +36,42 @@ class PartnerModule extends React.Component<Props, State> {
     page: 1,
     perPage: 10,
   };
+  return state;
+};
 
-  onChangeFilter = (newValue: any) => {
-    this.setState(prevState => ({ ...prevState, ...newValue }));
-  };
+const PartnerModule = (props: Props) => {
+  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+    getInitFilter(),
+    'filterPartner'
+  );
+  const { intl } = props;
 
-  render() {
-    const { intl } = this.props;
+  const sortFields = [
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+  ];
 
-    const sortFields = [
-      { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-      { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
-    ];
-
-    return (
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <FilterToolBar
-                  icon="PARTNER"
-                  sortFields={sortFields}
-                  filtersAndSort={this.state}
-                  onChange={this.onChangeFilter}
-                />
-              </NavBar>
-            }
-          >
-            <PartnerList {...this.state} />
-          </Layout>
-        )}
-      </UIConsumer>
-    );
-  }
-}
+  return (
+    <UIConsumer>
+      {uiState => (
+        <Layout
+          {...uiState}
+          navBar={
+            <NavBar>
+              <FilterToolBar
+                icon="PARTNER"
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+            </NavBar>
+          }
+        >
+          <PartnerList {...queryVariables} />
+        </Layout>
+      )}
+    </UIConsumer>
+  );
+};
 
 export default injectIntl(PartnerModule);

@@ -6,8 +6,8 @@ import messages from './messages';
 
 type Props = {
   parsedActiveFilters: Array<string>,
-  parsedStatusFilters: any,
-  changeStatusFilter: Function,
+  parsedRadioFilters: any,
+  changeRadioFilter: Function,
   toggleActiveFilter: (string, string) => void,
   parsedFilterToggles: Object,
   toggleFilterToggle: (string, string) => void,
@@ -37,8 +37,8 @@ const getSelectData = (
 
 export default function ShipmentFilterMenu({
   parsedActiveFilters,
-  parsedStatusFilters,
-  changeStatusFilter,
+  parsedRadioFilters,
+  changeRadioFilter,
   toggleActiveFilter,
   parsedFilterToggles,
   toggleFilterToggle,
@@ -57,6 +57,12 @@ export default function ShipmentFilterMenu({
           field: 'group.name',
           label: <FormattedMessage {...messages.forwarder} />,
           data: getSelectData(selectedItems, 'forwarder'),
+        },
+        {
+          name: 'warehouse',
+          field: 'name',
+          label: <FormattedMessage id="modules.relationMap.warehouse" defaultMessage="WAREHOUSE" />,
+          data: getSelectData(selectedItems, 'warehouse'),
         },
         // {
         //   name: 'inCharge',
@@ -144,7 +150,13 @@ export default function ShipmentFilterMenu({
     },
   ];
 
-  const statusMap = [
+  const archivedUI = [
+    {
+      name: 'all',
+      label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
+      field: 'archived',
+      value: null,
+    },
     {
       name: 'active',
       label: <FormattedMessage id="modules.relationMap.active" defaultMessage="ACTIVE" />,
@@ -157,12 +169,6 @@ export default function ShipmentFilterMenu({
       field: 'archived',
       value: true,
     },
-    {
-      name: 'all',
-      label: <FormattedMessage id="modules.relationMap.all" defaultMessage="ALL" />,
-      field: 'archived',
-      value: null,
-    },
   ];
 
   const togglesMap = [];
@@ -173,9 +179,9 @@ export default function ShipmentFilterMenu({
       togglesMap={togglesMap}
       entityType="shipment"
       parsedActiveFilters={parsedActiveFilters}
-      statusMap={statusMap}
-      parsedStatusFilters={parsedStatusFilters}
-      changeStatusFilter={changeStatusFilter}
+      archivedUI={archivedUI}
+      parsedRadioFilters={parsedRadioFilters}
+      changeRadioFilter={changeRadioFilter}
       toggleActiveFilter={toggleActiveFilter}
       parsedFilterToggles={parsedFilterToggles}
       toggleFilterToggle={toggleFilterToggle}

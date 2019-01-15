@@ -78,7 +78,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
       unitPrice,
     } = productProvider;
 
-    if (orderCurrency && orderCurrency !== unitPrice.currency) {
+    if (orderCurrency && unitPrice && orderCurrency !== unitPrice.currency) {
       actions.push(
         <FormTooltip
           infoMessage={

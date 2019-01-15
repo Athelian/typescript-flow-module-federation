@@ -63,8 +63,8 @@ function SelectProduct({ intl, onCancel, onSelect, exporter, selected }: Props) 
           variables={{
             page: 1,
             perPage: filtersAndSort.perPage,
-            filter: filtersAndSort.filter,
-            sort: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
+            filterBy: filtersAndSort.filter,
+            sortBy: { [filtersAndSort.sort.field]: filtersAndSort.sort.direction },
           }}
           fetchPolicy="network-only"
         >
@@ -78,7 +78,6 @@ function SelectProduct({ intl, onCancel, onSelect, exporter, selected }: Props) 
             const hasMore = nextPage <= totalPage;
 
             const items = getByPathWithDefault([], 'productProviders.nodes', data);
-
             return (
               <ObjectValue defaultValue={selected}>
                 {({ value, set }) => (

@@ -22,3 +22,7 @@ export const TogglesBodyStyle: string = css`
   flex-shrink: 0;
   border-top: 1px solid ${colors.GRAY_VERY_LIGHT};
 `;
+
+export const RadioInputWrapperStyle: string = css`
+  padding: 5px;
+`;

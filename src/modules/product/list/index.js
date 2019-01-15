@@ -9,25 +9,21 @@ import { productListQuery } from './query';
 
 type Props = {
   viewType: string,
-  filter: {
+  filterBy: {
     query: string,
     archived: boolean,
   },
-  sort: {
-    field: string,
-    direction: string,
+  sortBy: {
+    [field: string]: string,
   },
   perPage: number,
 };
 
-const ProductList = ({ viewType, sort, ...filtersAndSort }: Props) => (
+const ProductList = ({ viewType, ...filtersAndSort }: Props) => (
   <Query
     query={productListQuery}
     variables={{
       page: 1,
-      sort: {
-        [sort.field]: sort.direction,
-      },
       ...filtersAndSort,
     }}
     fetchPolicy="network-only"

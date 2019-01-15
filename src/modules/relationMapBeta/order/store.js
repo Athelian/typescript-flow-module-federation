@@ -15,13 +15,26 @@ export type UIState = {
   totalShipment: number,
 };
 
+export const getInitShowTag = () => {
+  const localFilterRMTags = window.localStorage && window.localStorage.getItem('filterRMTags');
+  const initTagValue = localFilterRMTags ? JSON.parse(localFilterRMTags) : { showTag: false };
+  return initTagValue.showTag || false;
+};
+
+const getInitToggleShipmentList = () => {
+  const localFilter = window.localStorage && window.localStorage.getItem('filterRMShipmentToggle');
+  const initValue = localFilter ? JSON.parse(localFilter) : { isToggle: false };
+  console.log('localFilter', localFilter, initValue);
+  return initValue.isToggle || false;
+};
+
 export const uiInitState: UIState = {
-  showTag: false,
+  showTag: getInitShowTag(),
   expandCards: {
     orders: [],
     shipments: [],
   },
-  toggleShipmentList: false,
+  toggleShipmentList: getInitToggleShipmentList(),
   select: {
     mode: 'SINGLE',
     entities: [],
