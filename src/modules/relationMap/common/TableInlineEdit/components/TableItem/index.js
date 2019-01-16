@@ -122,12 +122,20 @@ function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) 
         const value = getFieldValue ? getFieldValue(values) : getByPath(name, values);
         const fieldName = getFieldName ? getFieldName(values) : name;
         const cellName = `${cell}.${fieldName}`;
+        const id = `${rowNo}-${fieldCounter + columnNo + 1}`;
         return (
           <div className={ItemStyle} key={name}>
-            <FormField name={cellName} initValue={value} validator={validator} values={values}>
+            <FormField
+              name={cellName}
+              initValue={value}
+              validator={validator}
+              values={values}
+              cachedFields={['id']}
+              id={id}
+            >
               {() =>
                 renderItem({
-                  id: `${rowNo}-${fieldCounter + columnNo + 1}`,
+                  id,
                   name: cellName,
                   type,
                   meta,

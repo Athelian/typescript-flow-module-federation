@@ -8,8 +8,10 @@ export default function withCache(
 ) {
   return class CacheWrappedComponent extends React.Component<any> {
     shouldComponentUpdate(nextProps: Object) {
-      const nextPropsValues = pickByProps(cachedProps, this.props);
-      const currentPropsValues = pickByProps(cachedProps, nextProps);
+      const { cachedFields = [] } = this.props;
+      const caches = [...cachedProps, ...cachedFields];
+      const nextPropsValues = pickByProps(caches, this.props);
+      const currentPropsValues = pickByProps(caches, nextProps);
       if (isEquals(nextPropsValues, currentPropsValues)) {
         return false;
       }
