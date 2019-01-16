@@ -337,9 +337,8 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
 
         const { name, value, hasError } = newData;
 
-        const [entityType, id, field] = name.split('.');
-
         let newEditData = { ...editData };
+        const [entityType, id, field] = name.split('.');
         if (entityType === 'orders' && field === 'currency') {
           const orderItemIds = getOrderItemIdsByOrderId(id, mappingObjects);
           orderItemIds.forEach(orderItemId => {
