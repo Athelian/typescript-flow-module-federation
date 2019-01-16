@@ -30,8 +30,9 @@ const batch = {
       supplier: { name: 'test suppli' },
       exporter: { name: 'exprot' },
     },
-    order: {},
+    order: { poNo: 'testp osno' },
   },
+  container: { no: 'test container' },
 };
 storiesOf('Container', module)
   .add('ContainerBatchCard (isRepresented)', () => (

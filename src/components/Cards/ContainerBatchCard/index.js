@@ -92,6 +92,7 @@ const ContainerBatchCard = ({
     packageVolume,
     packageQuantity,
     tags,
+    container,
     orderItem: {
       price,
       productProvider: { product, supplier, exporter },
@@ -343,6 +344,19 @@ const ContainerBatchCard = ({
               <Icon icon="ORDER" />
             </Link>
             <Display align="left">{order.poNo}</Display>
+          </div>
+
+          <div className={OrderWrapperStyle}>
+            <Link
+              className={OrderIconStyle}
+              to={`/order/${encodeId(order.id)}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
+              <Icon icon="CONTAINER" />
+            </Link>
+            <Display align="left">{container.no}</Display>
           </div>
 
           <div className={OrderInChargeWrapperStyle}>
