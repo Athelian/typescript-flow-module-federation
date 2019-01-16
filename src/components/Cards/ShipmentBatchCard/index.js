@@ -340,22 +340,16 @@ const ShipmentBatchCard = ({
           </div>
 
           <div className={ContainerWrapperStyle}>
-            {container ? (
-              <>
-                <Link
-                  className={ContainerIconStyle}
-                  to={`/container/${encodeId(container.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon="CONTAINER" />
-                </Link>
-                <Display align="left">{container.no}</Display>
-              </>
-            ) : (
+            <Link
+              className={ContainerIconStyle}
+              to={`/container/${container ? encodeId(container.id) : ''}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
               <Icon icon="CONTAINER" />
-            )}
+            </Link>
+            <Display align="left">{container ? container.no : ''}</Display>
           </div>
 
           <div className={OrderInChargeWrapperStyle}>
