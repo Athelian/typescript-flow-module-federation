@@ -48,7 +48,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  batch: ?Object,
+  batch: Object,
   currency: string,
   saveOnBlur: Function,
 };
@@ -89,7 +89,7 @@ const ContainerBatchCard = ({
     quantity,
     deliveredAt,
     desiredAt,
-    batchAdjustments,
+    totalAdjusted: totalAdjustment,
     packageVolume,
     packageQuantity,
     tags,
@@ -99,11 +99,6 @@ const ContainerBatchCard = ({
       order,
     },
   } = batch;
-
-  const totalAdjustment = batchAdjustments
-    ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
-    : 0;
-
   const productImage =
     product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
 
@@ -329,7 +324,7 @@ const ContainerBatchCard = ({
               }
               input={
                 <Display>
-                  {packageVolume && packageQuantity != null && (
+                  {packageVolume != null && packageQuantity != null && (
                     <FormattedNumber
                       value={packageVolume.value * packageQuantity}
                       suffix={packageVolume.metric}

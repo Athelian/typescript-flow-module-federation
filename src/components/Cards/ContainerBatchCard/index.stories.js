@@ -13,7 +13,11 @@ const batch = {
   deliveredAt: '2019-01-16T06:28:52.643Z',
   desiredAt: '2019-01-16T06:28:52.643Z',
   batchAdjustments: [],
-  packageVolume: 'm',
+  totalAdjusted: 0,
+  packageVolume: {
+    value: 10,
+    metric: 'm',
+  },
   packageQuantity: 10,
   tags: [],
   orderItem: {
