@@ -61,7 +61,7 @@ const defaultProps = {
   isRepresented: false,
 };
 
-const ContainerBatchCard = ({
+const ShipmentContainerBatchCard = ({
   batch,
   onClick,
   onClear,
@@ -373,6 +373,6 @@ const ContainerBatchCard = ({
   );
 };
 
-ContainerBatchCard.defaultProps = defaultProps;
+ShipmentContainerBatchCard.defaultProps = defaultProps;
 
-export default ContainerBatchCard;
+export default ShipmentContainerBatchCard;

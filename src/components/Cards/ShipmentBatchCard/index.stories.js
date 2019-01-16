@@ -3,8 +3,7 @@ import * as React from 'react';
 import { Provider } from 'unstated';
 import { IntlProvider } from 'react-intl';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import ContainerBatchCard from './index';
+import ShipmentBatchCard from './index';
 
 const batch = {
   id: 'Batch',
@@ -38,28 +37,10 @@ const batch = {
     no: 'test shipment',
   },
 };
-storiesOf('Container', module)
-  .add('ContainerBatchCard (isRepresented)', () => (
-    <IntlProvider>
-      <Provider>
-        <ContainerBatchCard
-          batch={batch}
-          currency="JPY"
-          isRepresented
-          onClickRepresentative={action('onClickRepresentative')}
-        />
-      </Provider>
-    </IntlProvider>
-  ))
-  .add('ContainerBatchCard (is not Represented)', () => (
-    <IntlProvider>
-      <Provider>
-        <ContainerBatchCard
-          batch={batch}
-          currency="JPY"
-          isRepresented={false}
-          onClickRepresentative={action('onClickRepresentative')}
-        />
-      </Provider>
-    </IntlProvider>
-  ));
+storiesOf('Container', module).add('ShipmentBatchCard', () => (
+  <IntlProvider>
+    <Provider>
+      <ShipmentBatchCard batch={batch} currency="JPY" />
+    </Provider>
+  </IntlProvider>
+));
