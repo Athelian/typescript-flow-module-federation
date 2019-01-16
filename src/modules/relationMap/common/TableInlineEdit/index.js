@@ -80,18 +80,18 @@ const calculatePosition = (position, type) => {
       return position;
     case 'tab':
     case 'right':
-      return [+row, +column + 1];
+      return [Number(row), Number(column) + 1];
     case 'reverseTab':
     case 'left':
-      return [+row, +column - 1];
+      return [Number(row), Number(column) - 1];
     case 'top':
-      return [+row - 1, column];
+      return [Number(row) - 1, column];
     case 'bottom':
-      return [+row + 1, column];
+      return [Number(row) + 1, column];
     case 'newLine':
-      return [+row + 1, 1];
+      return [Number(row) + 1, 1];
     case 'previousLine':
-      return [+row - 1, 1];
+      return [Number(row) - 1, 1];
   }
 };
 
