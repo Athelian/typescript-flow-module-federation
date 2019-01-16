@@ -23,6 +23,13 @@ const FormattedDate = ({ value, mode = 'date' }: Props) => {
       );
     case 'relative':
       return <FormattedRelative value={isDataType(Date, value) ? value : new Date(value)} />;
+    case 'datetime':
+      return (
+        <>
+          <FormattedDateIntl value={isDataType(Date, value) ? value : new Date(value)} />{' '}
+          <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />
+        </>
+      );
     case 'time':
       return <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />;
     case 'time-relative':

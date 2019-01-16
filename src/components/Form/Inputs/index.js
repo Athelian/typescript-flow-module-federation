@@ -1,5 +1,6 @@
 // @flow
 import DateInput from './DateInput';
+import DateTimeInput from './DateTimeInput';
 import EmailInput from './EmailInput';
 import MetricInput from './MetricInput';
 import NumberInput from './NumberInput';
@@ -24,6 +25,7 @@ import {
 
 export {
   DateInput,
+  DateTimeInput,
   EmailInput,
   MetricInput,
   NumberInput,

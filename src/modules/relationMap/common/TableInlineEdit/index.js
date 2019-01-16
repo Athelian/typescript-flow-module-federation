@@ -44,7 +44,12 @@ import {
 } from './components';
 import TableItemForCustomFields from './components/TableItem/index.customFields';
 import { entitiesUpdateManyMutation } from './mutation';
-import { findAllPossibleOrders, totalLinePerOrder, parseChangedData } from './helpers';
+import {
+  findAllPossibleOrders,
+  totalLinePerOrder,
+  parseChangedData,
+  getOrderItemIdsByOrderId,
+} from './helpers';
 import normalize from './normalize';
 import { ordersByIDsExportQuery } from './query';
 import {
@@ -80,18 +85,18 @@ const calculatePosition = (position, type) => {
       return position;
     case 'tab':
     case 'right':
-      return [row, +column + 1];
+      return [Number(row), Number(column) + 1];
     case 'reverseTab':
     case 'left':
-      return [row, +column - 1];
+      return [Number(row), Number(column) - 1];
     case 'top':
-      return [+row - 1, column];
+      return [Number(row) - 1, column];
     case 'bottom':
-      return [+row + 1, column];
+      return [Number(row) + 1, column];
     case 'newLine':
-      return [+row + 1, 1];
+      return [Number(row) + 1, 1];
     case 'previousLine':
-      return [+row - 1, 1];
+      return [Number(row) - 1, 1];
   }
 };
 
@@ -308,6 +313,16 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     [templateColumns]
   );
 
+  const {
+    sumShipments,
+    sumOrders,
+    sumOrderItems,
+    sumBatches,
+    collapsedRelation,
+    expandRelation,
+    ...mappingObjects
+  } = formatOrderData(data);
+
   useEffect(() => {
     if (data.length) {
       if (Object.keys(editData.orders).length === 0) {
@@ -321,7 +336,17 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
         setErrorMessage('');
 
         const { name, value, hasError } = newData;
-        const newEditData = set(editData, name, value);
+
+        let newEditData = { ...editData };
+        const [entityType, id, field] = name.split('.');
+        if (entityType === 'orders' && field === 'currency') {
+          const orderItemIds = getOrderItemIdsByOrderId(id, mappingObjects);
+          orderItemIds.forEach(orderItemId => {
+            newEditData = set(newEditData, `orderItems.${orderItemId}.price.currency`, value);
+          });
+        }
+        newEditData = set(newEditData, name, value);
+
         setEditData(newEditData);
 
         if (!touched[name]) {
@@ -344,16 +369,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     }
     return () => {};
   });
-
-  const {
-    sumShipments,
-    sumOrders,
-    sumOrderItems,
-    sumBatches,
-    collapsedRelation,
-    expandRelation,
-    ...mappingObjects
-  } = formatOrderData(data);
 
   const { orderIds, orderItemsIds, batchIds, shipmentIds } = findAllPossibleOrders(
     selected,
@@ -451,7 +466,6 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
           entity: 'SHIPMENT',
         });
         const rowCounter = {};
-
         const columnOrderCustomNo = orderColumnFieldsFilter.length;
         const columnOrderItemNo = columnOrderCustomNo + orderCustomFieldsFilter.length;
         const columnOrderItemCustomNo = columnOrderItemNo + orderItemColumnFieldsFilter.length;

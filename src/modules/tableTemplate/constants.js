@@ -234,10 +234,9 @@ export const orderItemColumnFields = [
   },
   {
     name: 'price.currency',
-    type: 'enum',
+    type: 'text',
     meta: {
-      enumType: 'Currency',
-      isRequired: true,
+      disabled: true,
     },
   },
   {

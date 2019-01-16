@@ -4,6 +4,7 @@ import {
   faFileEdit as ORDER,
   faBox as BATCH,
   faShip as SHIPMENT,
+  faContainerStorage as CONTAINER,
   faCube as PRODUCT,
   faWarehouse as WAREHOUSE,
   faInventory as INVENTORY,
@@ -100,6 +101,7 @@ import {
   faBezierCurve as ENTITY,
   faMagic as MAGIC,
   faCodeBranch as BRANCH,
+  faStar as STAR,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -135,6 +137,7 @@ export default {
   ORDER_SELECT,
   BATCH,
   SHIPMENT,
+  CONTAINER,
   PRODUCT,
   WAREHOUSE,
   INVENTORY,
@@ -166,6 +169,7 @@ export default {
   DRAG_HANDLE,
   METADATA,
   TEMPLATE,
+  STAR,
 
   RELATION_MAP,
   CONNECT,
