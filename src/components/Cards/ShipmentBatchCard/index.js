@@ -6,6 +6,7 @@ import { encodeId } from 'utils/id';
 import { isEnableBetaFeature } from 'utils/env';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
+import { calculatePackageQuantity } from 'modules/batch/form/container';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
@@ -89,6 +90,7 @@ const ShipmentBatchCard = ({
     packageQuantity,
     tags,
     container,
+    autoCalculatePackageQuantity,
     orderItem: {
       price,
       productProvider: { product, supplier, exporter },
@@ -208,9 +210,18 @@ const ShipmentBatchCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
+                      const baseQuantity = inputHandlers.value - totalAdjustment;
                       saveOnBlur({
                         ...batch,
-                        quantity: inputHandlers.value - totalAdjustment,
+                        quantity: baseQuantity,
+                        ...(autoCalculatePackageQuantity
+                          ? {
+                              packageQuantity: calculatePackageQuantity({
+                                ...batch,
+                                quantity: baseQuantity,
+                              }),
+                            }
+                          : {}),
                       });
                     },
                   },

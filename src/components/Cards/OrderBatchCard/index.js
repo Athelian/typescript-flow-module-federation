@@ -6,6 +6,7 @@ import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
+import { calculatePackageQuantity } from 'modules/batch/form/container';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -116,6 +117,7 @@ const OrderBatchCard = ({
     packageQuantity,
     batchAdjustments,
     shipment,
+    autoCalculatePackageQuantity,
   } = batch;
 
   const warehouseArrivalApproved = !!(
@@ -200,9 +202,18 @@ const OrderBatchCard = ({
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
+                    const baseQuantity = inputHandlers.value - totalAdjustment;
                     saveOnBlur({
                       ...batch,
-                      quantity: inputHandlers.value - totalAdjustment,
+                      quantity: baseQuantity,
+                      ...(autoCalculatePackageQuantity
+                        ? {
+                            packageQuantity: calculatePackageQuantity({
+                              ...batch,
+                              quantity: baseQuantity,
+                            }),
+                          }
+                        : {}),
                     });
                   },
                 },
