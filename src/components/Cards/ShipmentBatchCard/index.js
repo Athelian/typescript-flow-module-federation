@@ -34,6 +34,8 @@ import {
   OrderInChargeWrapperStyle,
   InChargeWrapperStyle,
   BatchTagsWrapperStyle,
+  ContainerWrapperStyle,
+  ContainerIconStyle,
 } from './style';
 
 type OptionalProps = {
@@ -85,6 +87,7 @@ const ShipmentBatchCard = ({
     packageVolume,
     packageQuantity,
     tags,
+    container,
     orderItem: {
       price,
       productProvider: { product, supplier, exporter },
@@ -334,6 +337,25 @@ const ShipmentBatchCard = ({
               <Icon icon="ORDER" />
             </Link>
             <Display align="left">{order.poNo}</Display>
+          </div>
+
+          <div className={ContainerWrapperStyle}>
+            {container ? (
+              <>
+                <Link
+                  className={ContainerIconStyle}
+                  to={`/container/${encodeId(container.id)}`}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon="CONTAINER" />
+                </Link>
+                <Display align="left">{container.no}</Display>
+              </>
+            ) : (
+              <Icon icon="CONTAINER" />
+            )}
           </div>
 
           <div className={OrderInChargeWrapperStyle}>
