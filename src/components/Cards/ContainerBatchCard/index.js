@@ -21,7 +21,6 @@ import {
   ProductNameStyle,
   ProductSerialStyle,
   ProductSupplierStyle,
-  ProductSupplierWrapperStyle,
   ProductIconLinkStyle,
   BatchInfoWrapperStyle,
   BatchNoWrapperStyle,
@@ -138,18 +137,9 @@ const ContainerBatchCard = ({
               <Icon icon="EXPORTER" />
               {exporter && exporter.name}
             </div>
-            <div className={ProductSupplierWrapperStyle}>
-              <div className={ProductSupplierStyle}>
-                <Icon icon="SUPPLIER" />
-                {supplier && supplier.name}
-              </div>
-              <button
-                type="button"
-                onClick={onClickRepresentative}
-                className={RepresentIconStyle(isRepresented)}
-              >
-                <Icon icon="STAR" />
-              </button>
+            <div className={ProductSupplierStyle}>
+              <Icon icon="SUPPLIER" />
+              {supplier && supplier.name}
             </div>
           </div>
 
@@ -162,6 +152,13 @@ const ContainerBatchCard = ({
           >
             <Icon icon="PRODUCT" />
           </Link>
+          <button
+            type="button"
+            onClick={onClickRepresentative}
+            className={RepresentIconStyle(isRepresented)}
+          >
+            <Icon icon="STAR" />
+          </button>
         </div>
         <div className={BatchInfoWrapperStyle}>
           <div

@@ -71,13 +71,14 @@ export const ProductSupplierStyle: string = css`
   }
 `;
 
-export const ProductSupplierWrapperStyle: string = css`
-  display: flex;
-  justify-content: space-between;
-`;
-
 export const RepresentIconStyle = (isRepresented: boolean) => css`
-  cursor: pointer;
+  position: absolute;
+  bottom: 5px;
+  right: 0;
+  ${fontSizes.SMALL};
+  width: 20px;
+  height: 20px;
+  ${presets.BUTTON};
   color: ${isRepresented ? colors.YELLOW : 'rgba(255, 255, 255, 0.5)'};
   &:hover,
   :focus {
