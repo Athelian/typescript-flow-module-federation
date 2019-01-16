@@ -105,15 +105,21 @@ const PackagingSection = ({ isNew }: Props) => (
                   renderCalculate: () => (
                     <div className={CalculatorButtonStyle}>
                       <Subscribe to={[BatchFormContainer]}>
-                        {({ state: batchFormState }) => (
+                        {({
+                          state: batchFormState,
+                          calculatePackageQuantity: calculateNewPackageQty,
+                        }) => (
                           <ToggleInput
                             toggled={batchFormState.autoCalculatePackageQuantity}
-                            onToggle={() =>
+                            onToggle={() => {
                               setFieldValue(
                                 'autoCalculatePackageQuantity',
                                 !batchFormState.autoCalculatePackageQuantity
-                              )
-                            }
+                              );
+                              if (!batchFormState.autoCalculatePackageQuantity) {
+                                calculateNewPackageQty(true);
+                              }
+                            }}
                           />
                         )}
                       </Subscribe>

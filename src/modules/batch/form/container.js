@@ -182,8 +182,8 @@ export default class BatchFormContainer extends Container<BatchFormState> {
 
   getPackageQuantity = () => calculatePackageQuantity(this.state);
 
-  calculatePackageQuantity = () => {
-    if (this.state.autoCalculatePackageQuantity) {
+  calculatePackageQuantity = (trigger?: boolean) => {
+    if (trigger || this.state.autoCalculatePackageQuantity) {
       this.setState(prevState => ({
         packageQuantity: calculatePackageQuantity(prevState),
       }));
