@@ -31,6 +31,8 @@ import {
   VolumeWrapperStyle,
   OrderWrapperStyle,
   OrderIconStyle,
+  ContainerWrapperStyle,
+  ContainerIconStyle,
   OrderInChargeWrapperStyle,
   InChargeWrapperStyle,
   BatchTagsWrapperStyle,
@@ -346,9 +348,9 @@ const ContainerBatchCard = ({
             <Display align="left">{order.poNo}</Display>
           </div>
 
-          <div className={OrderWrapperStyle}>
+          <div className={ContainerWrapperStyle}>
             <Link
-              className={OrderIconStyle}
+              className={ContainerIconStyle}
               to={`/container/${encodeId(container.id)}`}
               onClick={evt => {
                 evt.stopPropagation();
