@@ -349,7 +349,7 @@ const ContainerBatchCard = ({
           <div className={OrderWrapperStyle}>
             <Link
               className={OrderIconStyle}
-              to={`/order/${encodeId(order.id)}`}
+              to={`/container/${encodeId(container.id)}`}
               onClick={evt => {
                 evt.stopPropagation();
               }}
