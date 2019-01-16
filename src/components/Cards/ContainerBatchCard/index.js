@@ -14,13 +14,14 @@ import { FieldItem, Label, Display } from 'components/Form';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
-  ShipmentBatchCardWrapperStyle,
+  ContainerBatchCardWrapperStyle,
   ProductWrapperStyle,
   ProductImageStyle,
   ProductInfoWrapperStyle,
   ProductNameStyle,
   ProductSerialStyle,
   ProductSupplierStyle,
+  ProductSupplierWrapperStyle,
   ProductIconLinkStyle,
   BatchInfoWrapperStyle,
   BatchNoWrapperStyle,
@@ -34,13 +35,16 @@ import {
   OrderInChargeWrapperStyle,
   InChargeWrapperStyle,
   BatchTagsWrapperStyle,
+  RepresentIconStyle,
 } from './style';
 
 type OptionalProps = {
   onClick: (batch: Object) => void,
   onClone: (batch: Object) => void,
   onClear: (batch: Object) => void,
+  onClickRepresentative: () => void,
   selectable: boolean,
+  isRepresented: boolean,
 };
 
 type Props = OptionalProps & {
@@ -53,17 +57,21 @@ const defaultProps = {
   onClick: () => {},
   onClone: () => {},
   onClear: () => {},
+  onClickRepresentative: () => {},
   selectable: false,
+  isRepresented: false,
 };
 
-const ShipmentBatchCard = ({
+const ContainerBatchCard = ({
   batch,
   onClick,
   onClear,
   onClone,
+  onClickRepresentative,
   saveOnBlur,
   currency,
   selectable,
+  isRepresented,
   ...rest
 }: Props) => {
   if (!batch) return '';
@@ -117,7 +125,7 @@ const ShipmentBatchCard = ({
       {...rest}
     >
       <div
-        className={ShipmentBatchCardWrapperStyle}
+        className={ContainerBatchCardWrapperStyle}
         onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
         role="presentation"
       >
@@ -135,9 +143,18 @@ const ShipmentBatchCard = ({
               <Icon icon="EXPORTER" />
               {exporter && exporter.name}
             </div>
-            <div className={ProductSupplierStyle}>
-              <Icon icon="SUPPLIER" />
-              {supplier && supplier.name}
+            <div className={ProductSupplierWrapperStyle}>
+              <div className={ProductSupplierStyle}>
+                <Icon icon="SUPPLIER" />
+                {supplier && supplier.name}
+              </div>
+              <button
+                type="button"
+                onClick={onClickRepresentative}
+                className={RepresentIconStyle(isRepresented)}
+              >
+                <Icon icon="STAR" />
+              </button>
             </div>
           </div>
 
@@ -364,6 +381,6 @@ const ShipmentBatchCard = ({
   );
 };
 
-ShipmentBatchCard.defaultProps = defaultProps;
+ContainerBatchCard.defaultProps = defaultProps;
 
-export default ShipmentBatchCard;
+export default ContainerBatchCard;

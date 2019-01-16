@@ -101,6 +101,7 @@ import {
   faBezierCurve as ENTITY,
   faMagic as MAGIC,
   faCodeBranch as BRANCH,
+  faStar as STAR,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -168,6 +169,7 @@ export default {
   DRAG_HANDLE,
   METADATA,
   TEMPLATE,
+  STAR,
 
   RELATION_MAP,
   CONNECT,

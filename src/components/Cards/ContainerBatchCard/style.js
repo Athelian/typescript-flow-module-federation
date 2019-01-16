@@ -9,7 +9,7 @@ import {
   borderRadiuses,
 } from 'styles/common';
 
-export const ShipmentBatchCardWrapperStyle: string = css`
+export const ContainerBatchCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,6 +68,20 @@ export const ProductSupplierStyle: string = css`
   padding: 0 10px;
   & > svg {
     margin: 0 5px 0 0;
+  }
+`;
+
+export const ProductSupplierWrapperStyle: string = css`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const RepresentIconStyle = (isRepresented: boolean) => css`
+  cursor: pointer;
+  color: ${isRepresented ? colors.YELLOW : 'rgba(255, 255, 255, 0.5)'};
+  &:hover,
+  :focus {
+    color: ${isRepresented ? colors.YELLOW_DARK : colors.WHITE};
   }
 `;
 
