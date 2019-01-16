@@ -8,7 +8,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { NewButton } from 'components/Buttons';
 import { injectUid } from 'utils/id';
 import Divider from 'components/Divider';
-import { FormField } from 'modules/form';
+import { FormField, FormContainer } from 'modules/form';
 import { FieldItem, Label, DefaultAdjustmentStyle } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import {
@@ -77,21 +77,25 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                           initValue={adjustment.quantity}
                           setFieldValue={setFieldArrayValue}
                         >
-                          {({ name, ...inputHandlers }) =>
-                            numberInputFactory({
-                              inputHandlers: {
-                                ...inputHandlers,
-                                onBlur: evt => {
-                                  inputHandlers.onBlur(evt);
-                                  setFieldArrayValue(name, inputHandlers.value);
-                                  calculatePackageQuantity();
-                                },
-                              },
-                              name,
-                              isNew,
-                              originalValue: adjustment.quantity,
-                            })
-                          }
+                          {({ name, ...inputHandlers }) => (
+                            <Subscribe to={[FormContainer]}>
+                              {({ setFieldTouched }) =>
+                                numberInputFactory({
+                                  inputHandlers: {
+                                    ...inputHandlers,
+                                    onBlur: evt => {
+                                      inputHandlers.onBlur(evt);
+                                      setFieldArrayValue(name, inputHandlers.value);
+                                      calculatePackageQuantity(setFieldTouched);
+                                    },
+                                  },
+                                  name,
+                                  isNew,
+                                  originalValue: adjustment.quantity,
+                                })
+                              }
+                            </Subscribe>
+                          )}
                         </FormField>
                       }
                     />

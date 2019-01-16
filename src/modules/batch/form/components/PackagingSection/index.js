@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import BatchFormContainer from 'modules/batch/form/container';
-import { FormField } from 'modules/form';
+import { FormField, FormContainer } from 'modules/form';
 import {
   textInputFactory,
   numberInputFactory,
@@ -61,27 +61,31 @@ const PackagingSection = ({ isNew }: Props) => (
               initValue={values.packageCapacity}
               setFieldValue={setFieldValue}
             >
-              {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
-                  inputHandlers: {
-                    ...inputHandlers,
-                    onBlur: evt => {
-                      inputHandlers.onBlur(evt);
-                      setFieldValue('packageCapacity', inputHandlers.value);
-                      calculatePackageQuantity();
-                    },
-                  },
-                  isNew,
-                  originalValue: originalValues[name],
-                  label: (
-                    <FormattedMessage
-                      id="modules.Batches.packageCapacity"
-                      defaultMessage="PACKAGE CAPACITY"
-                    />
-                  ),
-                })
-              }
+              {({ name, ...inputHandlers }) => (
+                <Subscribe to={[FormContainer]}>
+                  {({ setFieldTouched }) =>
+                    numberInputFactory({
+                      name,
+                      inputHandlers: {
+                        ...inputHandlers,
+                        onBlur: evt => {
+                          inputHandlers.onBlur(evt);
+                          setFieldValue('packageCapacity', inputHandlers.value);
+                          calculatePackageQuantity(setFieldTouched);
+                        },
+                      },
+                      isNew,
+                      originalValue: originalValues[name],
+                      label: (
+                        <FormattedMessage
+                          id="modules.Batches.packageCapacity"
+                          defaultMessage="PACKAGE CAPACITY"
+                        />
+                      ),
+                    })
+                  }
+                </Subscribe>
+              )}
             </FormField>
 
             <FormField
