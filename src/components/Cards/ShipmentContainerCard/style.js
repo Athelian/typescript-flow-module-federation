@@ -18,30 +18,44 @@ export const CardWrapperStyle: string = css`
 `;
 
 export const ImagePartWrapperStyle: string = css`
+  padding: 5px 5px 0 5px;
+  background: linear-gradient(to bottom, rgba(11, 110, 222, 0.5), rgba(17, 209, 166, 0.5));
+  ${borderRadiuses.MAIN};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   position: relative;
   height: 80px;
   width: 195px;
 `;
 
-export const CardImageStyle: string = css`
+export const CardImageWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   width: 100%;
-  height: 80px;
+  height: 75px;
+  background-color: ${colors.WHITE};
+`;
+
+export const CardImageStyle: string = css`
+  // ${borderRadiuses.MAIN};
+  // border-bottom-left-radius: 0;
+  // border-bottom-right-radius: 0;
+  width: 100%;
+  height: 75px;
   object-fit: contain;
 `;
 
 export const CardInfoWrapperStyle: string = css`
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 5px;
+  left: 5px;
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  height: 80px;
-  width: 195px;
+  height: 75px;
+  width: 185px;
 `;
 
 export const CardNameStyle: string = css`
@@ -50,7 +64,7 @@ export const CardNameStyle: string = css`
   font-weight: bold;
   ${presets.ELLIPSIS};
   padding: 0 0 0 10px;
-  width: 175px;
+  width: 165px;
 `;
 
 export const CardSerialStyle: string = css`
@@ -58,7 +72,7 @@ export const CardSerialStyle: string = css`
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
   padding: 0 0 0 10px;
-  width: 175px;
+  width: 180px;
 `;
 
 export const CardSupplierStyle: string = css`

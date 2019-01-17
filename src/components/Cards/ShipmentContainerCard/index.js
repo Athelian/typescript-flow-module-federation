@@ -13,6 +13,7 @@ import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   CardWrapperStyle,
+  CardImageWrapperStyle,
   ImagePartWrapperStyle,
   CardImageStyle,
   CardInfoWrapperStyle,
@@ -118,8 +119,9 @@ const ShipmentContainerCard = ({
           onClick={() => onClick(newContainer)}
           role="presentation"
         >
-          <img className={CardImageStyle} src={productImage} alt="product_image" />
-
+          <div className={CardImageWrapperStyle}>
+            <img className={CardImageStyle} src={productImage} alt="product_image" />
+          </div>
           <div className={CardInfoWrapperStyle}>
             <div className={CardNameStyle}>{product.name}</div>
             <div className={CardSerialStyle}>{product.serial}</div>
