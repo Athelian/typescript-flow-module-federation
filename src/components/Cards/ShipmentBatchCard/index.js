@@ -210,7 +210,7 @@ const ShipmentBatchCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
-                      const baseQuantity = inputHandlers.value - totalAdjustment;
+                      const baseQuantity = Number(inputHandlers.value) - Number(totalAdjustment);
                       saveOnBlur({
                         ...batch,
                         quantity: baseQuantity,
