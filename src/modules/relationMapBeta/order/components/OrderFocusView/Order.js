@@ -8,7 +8,7 @@ import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import { actionCreators } from 'modules/relationMapBeta/order/store';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
-import { ORDER } from 'modules/relationMap/constants';
+import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 
 type OptionalProps = {
   wrapperClassName?: string,
@@ -24,6 +24,7 @@ export default function Order({
   totalShipped,
   tags,
   id,
+  orderItems,
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
@@ -64,7 +65,28 @@ export default function Order({
                     icon="BRANCH"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.selectBranch(ORDER, id)}
+                    onClick={() =>
+                      actions.selectBranch([
+                        {
+                          entity: ORDER,
+                          id,
+                        },
+                        ...orderItems.map(orderItem => ({
+                          entity: ORDER_ITEM,
+                          id: orderItem.id,
+                        })),
+                        ...orderItems.reduce(
+                          (result, orderItem) =>
+                            result.concat(
+                              orderItem.batches.map(batch => ({
+                                entity: BATCH,
+                                id: batch.id,
+                              }))
+                            ),
+                          []
+                        ),
+                      ])
+                    }
                     className={RotateIcon}
                   />
                   <Action

@@ -83,15 +83,36 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       }
       return state;
     }
+    case 'SELECT_BRANCH': {
+      const { payload } = action;
+      const { targets } = state;
+      let result = [...targets];
+      if (payload) {
+        const { selectItems } = payload;
+        if (
+          selectItems.every(selectItem => result.includes(`${selectItem.entity}-${selectItem.id}`))
+        ) {
+          selectItems.forEach(selectItem => {
+            result = (result.filter(
+              item => item !== `${selectItem.entity}-${selectItem.id}`
+            ): Array<string>);
+          });
+        } else {
+          selectItems.forEach(selectItem => {
+            result = [...result, `${selectItem.entity}-${selectItem.id}`];
+          });
+        }
+      }
+      return {
+        ...state,
+        targets: result,
+      };
+    }
     case 'TARGET_ENTITY': {
       const { payload } = action;
       const { targets } = state;
       if (payload) {
         if (targets.includes(`${payload.entity}-${payload.id}`)) {
-          console.warn({
-            ...state,
-            targets: targets.filter(item => item !== `${payload.entity}-${payload.id}`),
-          });
           return {
             ...state,
             targets: (targets.filter(
@@ -208,12 +229,11 @@ export function actionCreators(dispatch: Function) {
           id,
         },
       }),
-    selectBranch: (entity: string, id: string) =>
+    selectBranch: (selectItems: Array<{ entity: string, id: string }>) =>
       dispatch({
         type: 'SELECT_BRANCH',
         payload: {
-          entity,
-          id,
+          selectItems,
         },
       }),
     targetEntity: (entity: string, id: string) =>

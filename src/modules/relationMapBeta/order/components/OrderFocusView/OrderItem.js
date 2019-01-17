@@ -7,7 +7,7 @@ import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { actionCreators } from 'modules/relationMapBeta/order/store';
 import { OrderItemCard, WrapperCard } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
-import { ORDER_ITEM } from 'modules/relationMap/constants';
+import { ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 import type { OrderItemProps } from 'modules/relationMapBeta/order/type.js.flow';
 
 type OptionalProps = {
@@ -16,7 +16,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & OrderItemProps;
 
-export default function OrderItem({ wrapperClassName, id, ...orderItem }: Props) {
+export default function OrderItem({ wrapperClassName, id, batches, ...rest }: Props) {
   const context = React.useContext(ActionDispatch);
   const { dispatch } = context;
   const actions = actionCreators(dispatch);
@@ -25,7 +25,7 @@ export default function OrderItem({ wrapperClassName, id, ...orderItem }: Props)
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
-            <OrderItemCard orderItem={orderItem} />
+            <OrderItemCard orderItem={{ ...rest, batches }} />
             <ActionCard show={hovered}>
               {({ targetted, toggle }) => (
                 <>
@@ -39,7 +39,18 @@ export default function OrderItem({ wrapperClassName, id, ...orderItem }: Props)
                     icon="BRANCH"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.selectBranch(ORDER_ITEM, id)}
+                    onClick={() =>
+                      actions.selectBranch([
+                        {
+                          entity: ORDER_ITEM,
+                          id,
+                        },
+                        ...batches.map(batch => ({
+                          entity: BATCH,
+                          id: batch.id,
+                        })),
+                      ])
+                    }
                     className={RotateIcon}
                   />
                   <Action
