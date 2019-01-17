@@ -13,21 +13,21 @@ import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   CardWrapperStyle,
-  CardImageWrapperStyle,
   ImagePartWrapperStyle,
-  CardImageStyle,
-  CardInfoWrapperStyle,
-  CardNameStyle,
-  CardSerialStyle,
+  ImageWrapperStyle,
+  ImageStyle,
+  InfoInsideImageWrapperStyle,
+  NameStyle,
+  SerialStyle,
   InfoPartWrapperStyle,
-  TextInputStyle,
-  BasicCardItemStyle,
-  InputWithIconStyle,
+  InputStyle,
+  LabelInputStyle,
   DividerStyle,
-  IconWithInputStyle,
+  IconInputStyle,
+  InputIconStyle,
   WarehouseIconStyle,
   ApprovalIconStyle,
-  CardTagsWrapperStyle,
+  TagsWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -119,21 +119,17 @@ const ShipmentContainerCard = ({
           onClick={() => onClick(newContainer)}
           role="presentation"
         >
-          <div className={CardImageWrapperStyle}>
-            <img className={CardImageStyle} src={productImage} alt="product_image" />
+          <div className={ImageWrapperStyle}>
+            <img className={ImageStyle} src={productImage} alt="product_image" />
           </div>
-          <div className={CardInfoWrapperStyle}>
-            <div className={CardNameStyle}>{product.name}</div>
-            <div className={CardSerialStyle}>{product.serial}</div>
+          <div className={InfoInsideImageWrapperStyle}>
+            <div className={NameStyle}>{product.name}</div>
+            <div className={SerialStyle}>{product.serial}</div>
           </div>
         </div>
 
         <div className={InfoPartWrapperStyle}>
-          <div
-            className={TextInputStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
+          <div className={InputStyle} onClick={evt => evt.stopPropagation()} role="presentation">
             <FormField
               name={`container.${id}.no`}
               initValue={no}
@@ -160,7 +156,7 @@ const ShipmentContainerCard = ({
             </FormField>
           </div>
 
-          <div className={BasicCardItemStyle}>
+          <div className={LabelInputStyle}>
             <Label>
               <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
             </Label>
@@ -169,7 +165,7 @@ const ShipmentContainerCard = ({
             </Display>
           </div>
 
-          <div className={BasicCardItemStyle}>
+          <div className={LabelInputStyle}>
             <Label>
               <FormattedMessage id="components.cards.batches" defaultMessage="BATCHES" />
             </Label>
@@ -180,7 +176,7 @@ const ShipmentContainerCard = ({
 
           <div className={DividerStyle} />
 
-          <div className={IconWithInputStyle}>
+          <div className={IconInputStyle}>
             <div className={WarehouseIconStyle(!!warehouse)}>
               <Icon icon="WAREHOUSE" />
             </div>
@@ -197,7 +193,7 @@ const ShipmentContainerCard = ({
             </Label>
           </div>
           <div
-            className={InputWithIconStyle}
+            className={InputIconStyle}
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
@@ -245,7 +241,7 @@ const ShipmentContainerCard = ({
             </Label>
           </div>
           <div
-            className={InputWithIconStyle}
+            className={InputIconStyle}
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
@@ -284,7 +280,7 @@ const ShipmentContainerCard = ({
             </div>
           </div>
 
-          <div className={CardTagsWrapperStyle}>
+          <div className={TagsWrapperStyle}>
             {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
           </div>
         </div>

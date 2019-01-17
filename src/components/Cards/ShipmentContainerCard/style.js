@@ -1,13 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import {
-  fontSizes,
-  fontSizesWithHeights,
-  layout,
-  colors,
-  presets,
-  borderRadiuses,
-} from 'styles/common';
+import { fontSizesWithHeights, layout, colors, presets, borderRadiuses } from 'styles/common';
 
 export const CardWrapperStyle: string = css`
   display: flex;
@@ -28,7 +21,7 @@ export const ImagePartWrapperStyle: string = css`
   width: 195px;
 `;
 
-export const CardImageWrapperStyle: string = css`
+export const ImageWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -37,16 +30,13 @@ export const CardImageWrapperStyle: string = css`
   background-color: ${colors.WHITE};
 `;
 
-export const CardImageStyle: string = css`
-  // ${borderRadiuses.MAIN};
-  // border-bottom-left-radius: 0;
-  // border-bottom-right-radius: 0;
+export const ImageStyle: string = css`
   width: 100%;
   height: 75px;
   object-fit: contain;
 `;
 
-export const CardInfoWrapperStyle: string = css`
+export const InfoInsideImageWrapperStyle: string = css`
   position: absolute;
   top: 5px;
   left: 5px;
@@ -58,7 +48,7 @@ export const CardInfoWrapperStyle: string = css`
   width: 185px;
 `;
 
-export const CardNameStyle: string = css`
+export const NameStyle: string = css`
   ${fontSizesWithHeights.MAIN};
   color: ${colors.WHITE};
   font-weight: bold;
@@ -67,36 +57,12 @@ export const CardNameStyle: string = css`
   width: 165px;
 `;
 
-export const CardSerialStyle: string = css`
+export const SerialStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
   padding: 0 0 0 10px;
   width: 180px;
-`;
-
-export const CardSupplierStyle: string = css`
-  ${fontSizesWithHeights.SMALL};
-  color: ${colors.WHITE};
-  ${presets.ELLIPSIS};
-  padding: 0 10px;
-  & > svg {
-    margin: 0 5px 0 0;
-  }
-`;
-
-export const CardIconLinkStyle: string = css`
-  ${presets.BUTTON};
-  position: absolute;
-  color: ${colors.WHITE};
-  ${fontSizes.SMALL};
-  right: 0;
-  top: 25px;
-  width: 20px;
-  height: 20px;
-  &:hover {
-    color: ${colors.TEAL};
-  }
 `;
 
 export const InfoPartWrapperStyle: string = css`
@@ -107,21 +73,14 @@ export const InfoPartWrapperStyle: string = css`
   padding: 5px 0;
 `;
 
-export const TextInputStyle: string = css`
+export const InputStyle: string = css`
   width: 100%;
   padding: 0 5px;
 `;
 
-export const BasicCardItemStyle: string = css`
+export const LabelInputStyle: string = css`
   display: grid;
   grid-template-columns: 95px 90px;
-  width: 100%;
-  padding: 0 5px;
-`;
-
-export const InputWithIconStyle: string = css`
-  display: grid;
-  grid-template-columns: 165px 20px;
   width: 100%;
   padding: 0 5px;
 `;
@@ -132,17 +91,7 @@ export const DividerStyle: string = css`
   margin: 0 10px;
 `;
 
-export const TotalPriceWrapperStyle: string = css`
-  width: 100%;
-  padding: 0 5px;
-`;
-
-export const VolumeWrapperStyle: string = css`
-  width: 100%;
-  padding: 0 5px;
-`;
-
-export const IconWithInputStyle: string = css`
+export const IconInputStyle: string = css`
   display: grid;
   grid-template-columns: 30px 150px;
   width: 100%;
@@ -160,6 +109,13 @@ export const WarehouseIconStyle = (hasWarehouse: boolean): string => css`
   background-color: ${hasWarehouse ? colors.TEAL : colors.GRAY_LIGHT};
 `;
 
+export const InputIconStyle: string = css`
+  display: grid;
+  grid-template-columns: 165px 20px;
+  width: 100%;
+  padding: 0 5px;
+`;
+
 export const ApprovalIconStyle = (approval: boolean): string => css`
   color: ${approval ? colors.BLUE : colors.GRAY_LIGHT};
   &:hover {
@@ -167,36 +123,7 @@ export const ApprovalIconStyle = (approval: boolean): string => css`
   }
 `;
 
-export const OrderIconStyle: string = css`
-  ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 20px;
-  height: 20px;
-  background-color: ${colors.TEAL};
-  color: ${colors.WHITE};
-  font-size: 11px;
-  &:hover,
-  :focus {
-    background-color: ${colors.TEAL_DARK};
-  }
-`;
-
-export const OrderInChargeWrapperStyle: string = css`
-  ${layout.GRID_VERTICAL};
-  grid-gap: 5px;
-  width: 195px;
-  padding: 0 5px;
-`;
-
-export const InChargeWrapperStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
-  grid-gap: 6.25px;
-  padding: 0 5px;
-  width: 100%;
-  height: 30px;
-`;
-
-export const CardTagsWrapperStyle: string = css`
+export const TagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   ${borderRadiuses.MAIN};
   grid-gap: 5px;
