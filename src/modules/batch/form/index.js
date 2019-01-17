@@ -17,6 +17,7 @@ import {
   QuantityAdjustmentsSection,
   PackagingSection,
   ShipmentSection,
+  ContainerSection,
 } from './components';
 import { BatchFormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
 
@@ -158,6 +159,14 @@ export default class BatchForm extends React.Component<Props> {
             title={<FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />}
           />
           <ShipmentSection shipment={batch.shipment} />
+        </SectionWrapper>
+
+        <SectionWrapper id="containerSection">
+          <SectionHeader
+            icon="CONTAINER"
+            title={<FormattedMessage id="modules.Batches.container" defaultMessage="CONTAINER" />}
+          />
+          <ContainerSection container={batch.container} />
         </SectionWrapper>
 
         <SectionWrapper id="orderSection">

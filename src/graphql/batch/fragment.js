@@ -98,6 +98,55 @@ export const batchFormFragment = gql`
     shipment {
       ...shipmentCardFragment
     }
+    container {
+      id
+      no
+      representativeBatch {
+        id
+        orderItem {
+          id
+          productProvider {
+            id
+            product {
+              id
+              files {
+                id
+                name
+                type
+              }
+              name
+              serial
+            }
+          }
+        }
+      }
+      totalVolume {
+        value
+        metric
+      }
+      batches {
+        id
+      }
+      warehouse {
+        id
+        name
+      }
+      warehouseArrivalAgreedDate
+      warehouseArrivalActualDate
+      warehouseArrivalAgreedDateApprovedBy {
+        id
+      }
+      warehouseArrivalActualDateApprovedBy {
+        id
+      }
+      shipment {
+        id
+        no
+      }
+      tags {
+        ...tagFragment
+      }
+    }
   }
 `;
 
