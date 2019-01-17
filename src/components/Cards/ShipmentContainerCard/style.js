@@ -85,7 +85,7 @@ export const CardIconLinkStyle: string = css`
   }
 `;
 
-export const BatchInfoWrapperStyle: string = css`
+export const InfoPartWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 195px;
   grid-gap: 5px;
@@ -93,21 +93,21 @@ export const BatchInfoWrapperStyle: string = css`
   padding: 5px 0;
 `;
 
-export const BatchNoWrapperStyle: string = css`
-  padding: 0 5px;
+export const TextInputStyle: string = css`
   width: 100%;
+  padding: 0 5px;
 `;
 
-export const QuantityWrapperStyle: string = css`
+export const BasicCardItemStyle: string = css`
   display: grid;
   grid-template-columns: 95px 90px;
   width: 100%;
   padding: 0 5px;
 `;
 
-export const DateInputWrapperStyle: string = css`
+export const InputWithIconStyle: string = css`
   display: grid;
-  grid-template-columns: 65px 120px;
+  grid-template-columns: 165px 20px;
   width: 100%;
   padding: 0 5px;
 `;
@@ -128,13 +128,29 @@ export const VolumeWrapperStyle: string = css`
   padding: 0 5px;
 `;
 
-export const OrderWrapperStyle: string = css`
+export const IconWithInputStyle: string = css`
   display: grid;
-  grid-template-columns: 20px 160px;
+  grid-template-columns: 30px 150px;
   width: 100%;
   padding: 0 10px;
   align-items: center;
   grid-gap: 5px;
+`;
+
+export const WarehouseIconStyle = (hasWarehouse: boolean): string => css`
+  height: 30px;
+  width: 30px;
+  ${presets.BUTTON};
+  ${borderRadiuses.CIRCLE};
+  color: ${colors.WHITE};
+  background-color: ${hasWarehouse ? colors.TEAL : colors.GRAY_LIGHT};
+`;
+
+export const ApprovalIconStyle = (approval: boolean): string => css`
+  color: ${approval ? colors.BLUE : colors.GRAY_LIGHT};
+  &:hover {
+    color: ${approval ? colors.BLUE_DARK : colors.GRAY};
+  }
 `;
 
 export const OrderIconStyle: string = css`
@@ -166,7 +182,7 @@ export const InChargeWrapperStyle: string = css`
   height: 30px;
 `;
 
-export const BatchTagsWrapperStyle: string = css`
+export const CardTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   ${borderRadiuses.MAIN};
   grid-gap: 5px;

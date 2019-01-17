@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { FormField } from 'modules/form';
 import { textInputFactory, dateTimeInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
-// import Tag from 'components/Tag';
+import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
@@ -18,14 +18,15 @@ import {
   CardInfoWrapperStyle,
   CardNameStyle,
   CardSerialStyle,
-  BatchInfoWrapperStyle,
-  BatchNoWrapperStyle,
-  QuantityWrapperStyle,
-  DateInputWrapperStyle,
+  InfoPartWrapperStyle,
+  TextInputStyle,
+  BasicCardItemStyle,
+  InputWithIconStyle,
   DividerStyle,
-  OrderWrapperStyle,
-
-  // BatchTagsWrapperStyle,
+  IconWithInputStyle,
+  WarehouseIconStyle,
+  ApprovalIconStyle,
+  CardTagsWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -79,9 +80,10 @@ const ShipmentContainerCard = ({
     batches,
     warehouse,
     warehouseArrivalAgreedDate,
-    // warehouseArrivalAgreedDateApprovedBy,
+    warehouseArrivalAgreedDateApprovedBy,
     warehouseArrivalActualDate,
-    // warehouseArrivalActualDateApprovedBy,
+    warehouseArrivalActualDateApprovedBy,
+    tags,
   } = container;
 
   const productImage = getProductImage(product);
@@ -123,9 +125,10 @@ const ShipmentContainerCard = ({
             <div className={CardSerialStyle}>{product.serial}</div>
           </div>
         </div>
-        <div className={BatchInfoWrapperStyle}>
+
+        <div className={InfoPartWrapperStyle}>
           <div
-            className={BatchNoWrapperStyle}
+            className={TextInputStyle}
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
@@ -155,18 +158,18 @@ const ShipmentContainerCard = ({
             </FormField>
           </div>
 
-          <div className={QuantityWrapperStyle}>
+          <div className={BasicCardItemStyle}>
             <Label>
-              <FormattedMessage id="components.cards.totalVolume" defaultMessage="TOTAL VOLUME" />
+              <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
             </Label>
             <Display align="right">
               <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
             </Display>
           </div>
 
-          <div className={QuantityWrapperStyle}>
+          <div className={BasicCardItemStyle}>
             <Label>
-              <FormattedMessage id="components.cards.totalBatch" defaultMessage="TOTAL BATCH" />
+              <FormattedMessage id="components.cards.batches" defaultMessage="BATCHES" />
             </Label>
             <Display align="right">
               <FormattedNumber value={batches.length} />
@@ -175,8 +178,10 @@ const ShipmentContainerCard = ({
 
           <div className={DividerStyle} />
 
-          <div className={OrderWrapperStyle}>
-            <Icon icon="WAREHOUSE" />
+          <div className={IconWithInputStyle}>
+            <div className={WarehouseIconStyle(!!warehouse)}>
+              <Icon icon="WAREHOUSE" />
+            </div>
             {/* clicking, open slide view */}
             <Display align="right">{warehouse.name}</Display>
           </div>
@@ -190,7 +195,7 @@ const ShipmentContainerCard = ({
             </Label>
           </div>
           <div
-            className={DateInputWrapperStyle}
+            className={InputWithIconStyle}
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
@@ -200,7 +205,7 @@ const ShipmentContainerCard = ({
             >
               {({ name: fieldName, ...inputHandlers }) =>
                 dateTimeInputFactory({
-                  width: '185px',
+                  width: '165px',
                   height: '20px',
                   name: fieldName,
                   isNew: false,
@@ -220,6 +225,13 @@ const ShipmentContainerCard = ({
                 })
               }
             </FormField>
+            <div className={ApprovalIconStyle(!!warehouseArrivalAgreedDateApprovedBy)}>
+              {warehouseArrivalAgreedDateApprovedBy ? (
+                <Icon icon="CHECKED" />
+              ) : (
+                <Icon icon="UNCHECKED" />
+              )}
+            </div>
           </div>
 
           <div>
@@ -231,7 +243,7 @@ const ShipmentContainerCard = ({
             </Label>
           </div>
           <div
-            className={DateInputWrapperStyle}
+            className={InputWithIconStyle}
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
@@ -241,7 +253,7 @@ const ShipmentContainerCard = ({
             >
               {({ name: fieldName, ...inputHandlers }) =>
                 dateTimeInputFactory({
-                  width: '185px',
+                  width: '165px',
                   height: '20px',
                   name: fieldName,
                   isNew: false,
@@ -261,11 +273,18 @@ const ShipmentContainerCard = ({
                 })
               }
             </FormField>
+            <div className={ApprovalIconStyle(!!warehouseArrivalActualDateApprovedBy)}>
+              {warehouseArrivalActualDateApprovedBy ? (
+                <Icon icon="CHECKED" />
+              ) : (
+                <Icon icon="UNCHECKED" />
+              )}
+            </div>
           </div>
 
-          {/* <div className={BatchTagsWrapperStyle}>
+          <div className={CardTagsWrapperStyle}>
             {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
-          </div> */}
+          </div>
         </div>
       </div>
     </BaseCard>

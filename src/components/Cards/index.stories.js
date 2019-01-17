@@ -46,7 +46,7 @@ const container = {
     },
   },
   no: 'container no',
-  totalVolume: { value: '2500', metric: 'm³' },
+  totalVolume: { value: '25000000000', metric: 'm³' },
   batches: [{}, {}, {}],
   warehouse: {
     name: 'warehouse name',
@@ -55,6 +55,11 @@ const container = {
   warehouseArrivalAgreedDateApprovedBy: null,
   warehouseArrivalActualDate: '2019-01-16T17:59',
   warehouseArrivalActualDateApprovedBy: {},
+  tags: [
+    { id: 'bfrsvt4s7cccia20kjtg', name: 'tag1', color: '#c4ebff' },
+    { id: 'bfrsvt4s7cccia20kjth', name: 'TAG A', color: '#a4ebff' },
+    { id: 'bfrsvt4s7cccia20kjti', name: 'TAG TAG TAG TAG', color: '#c4abff' },
+  ],
 };
 
 storiesOf('Card', module)
