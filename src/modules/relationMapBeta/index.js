@@ -43,9 +43,9 @@ const RelationMap = () => {
                       activeIndex={location.pathname.includes('products') ? 1 : 0}
                       onChange={tabId => {
                         if (tabId) {
-                          navigate('products');
+                          navigate('/relation-map-beta/products');
                         } else {
-                          navigate('orders');
+                          navigate('/relation-map-beta/orders');
                         }
                       }}
                     />

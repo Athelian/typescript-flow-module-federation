@@ -233,7 +233,7 @@ const Order = ({ intl }: Props) => {
                             <Shipment
                               wrapperClassName={ItemWrapperStyle(
                                 highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
-                                false,
+                                uiSelectors.isTarget(SHIPMENT, shipment.id),
                                 state.highlight.type === SHIPMENT &&
                                   state.highlight.selectedId === shipment.id
                               )}

@@ -14,6 +14,7 @@ import { shipmentListQuery } from 'modules/relationMapBeta/order/query';
 import { hasMoreItems } from 'modules/relationMapBeta/order/helpers';
 import { useFilter } from 'modules/relationMapBeta/hooks';
 import { SHIPMENT } from 'modules/relationMap/constants';
+import { selectors } from 'modules/relationMapBeta/order/store';
 import Shipment from '../Shipment';
 
 type Props = {
@@ -25,7 +26,7 @@ function ShipmentList({ onCountShipment, highLightEntities }: Props) {
   const context = React.useContext(ActionDispatch);
   const { state } = context;
   const { highlight } = state;
-  const isTarget = false;
+  const uiSelectors = selectors(state);
   const { queryVariables } = useFilter({
     page: 1,
     perPage: 10,
@@ -65,7 +66,7 @@ function ShipmentList({ onCountShipment, highLightEntities }: Props) {
                   <Shipment
                     wrapperClassName={ItemWrapperStyle(
                       highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
-                      isTarget,
+                      uiSelectors.isTarget(SHIPMENT, shipment.id),
                       highlight.type === SHIPMENT && highlight.selectedId === shipment.id
                     )}
                     key={shipment.id}

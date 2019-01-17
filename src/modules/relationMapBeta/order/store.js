@@ -16,10 +16,7 @@ export type UIState = {
     type: string,
     selectedId: string,
   },
-  targets: Array<{
-    type: string,
-    selectedId: string,
-  }>,
+  targets: Array<string>,
   totalShipment: number,
 };
 
@@ -90,26 +87,21 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const { payload } = action;
       const { targets } = state;
       if (payload) {
-        if (targets.find(item => item.selectedId === payload.id && item.type === payload.entity)) {
+        if (targets.includes(`${payload.entity}-${payload.id}`)) {
+          console.warn({
+            ...state,
+            targets: targets.filter(item => item !== `${payload.entity}-${payload.id}`),
+          });
           return {
             ...state,
             targets: (targets.filter(
-              item => item.type !== payload.entity && item.selectedId !== payload.id
-            ): Array<{
-              type: string,
-              selectedId: string,
-            }>),
+              item => item !== `${payload.entity}-${payload.id}`
+            ): Array<string>),
           };
         }
         return {
           ...state,
-          targets: [
-            ...targets,
-            {
-              type: payload.entity || '',
-              selectedId: payload.id || '',
-            },
-          ],
+          targets: [...targets, `${payload.entity}-${payload.id}`],
         };
       }
       return state;
@@ -241,7 +233,6 @@ const entitySelector = (state: UIState, entity: string) =>
 export function selectors(state: UIState) {
   return {
     isSelectEntity: (entity: string) => entitySelector(state, entity),
-    isTarget: (entity: string, id: string) =>
-      state.targets.find(item => item.selectedId === id && item.type === entity),
+    isTarget: (entity: string, id: string) => state.targets.includes(`${entity}-${id}`),
   };
 }

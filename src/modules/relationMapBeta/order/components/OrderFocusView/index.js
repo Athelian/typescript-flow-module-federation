@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
-import { actionCreators } from 'modules/relationMapBeta/order/store';
+import { actionCreators, selectors } from 'modules/relationMapBeta/order/store';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
 import { RelationLine } from 'components/RelationMap';
 import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
@@ -21,7 +21,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
   const { dispatch, state } = context;
   const actions = actionCreators(dispatch);
   const { highlight } = state;
-  const isTarget = false;
+  const uiSelectors = selectors(state);
 
   if (item.orderItems.length === 0)
     return (
@@ -29,7 +29,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
         <Order
           wrapperClassName={ItemWrapperStyle(
             highLightEntities.includes(`${ORDER}-${item.id}`),
-            isTarget,
+            uiSelectors.isTarget(ORDER, item.id),
             highlight.type === ORDER && highlight.selectedId === item.id
           )}
           {...item}
@@ -45,7 +45,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
       <Order
         wrapperClassName={ItemWrapperStyle(
           highLightEntities.includes(`${ORDER}-${item.id}`),
-          isTarget,
+          uiSelectors.isTarget(ORDER, item.id),
           highlight.type === ORDER && highlight.selectedId === item.id
         )}
         {...item}
@@ -88,7 +88,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
             <OrderItem
               wrapperClassName={ItemWrapperStyle(
                 highLightEntities.includes(`${ORDER_ITEM}-${orderItem.id}`),
-                isTarget,
+                uiSelectors.isTarget(ORDER_ITEM, orderItem.id),
                 highlight.type === ORDER_ITEM && highlight.selectedId === orderItem.id
               )}
               {...orderItem}
@@ -99,7 +99,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                 <Batch
                   wrapperClassName={ItemWrapperStyle(
                     highLightEntities.includes(`${BATCH}-${orderItem.batches[0].id}`),
-                    isTarget,
+                    uiSelectors.isTarget(BATCH, orderItem.batches[0].id),
                     highlight.type === BATCH && highlight.selectedId === orderItem.batches[0].id
                   )}
                   {...orderItem.batches[0]}
@@ -123,7 +123,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                       <Batch
                         wrapperClassName={ItemWrapperStyle(
                           highLightEntities.includes(`${BATCH}-${batch.id}`),
-                          isTarget,
+                          uiSelectors.isTarget(BATCH, batch.id),
                           highlight.type === BATCH && highlight.selectedId === batch.id
                         )}
                         {...batch}
