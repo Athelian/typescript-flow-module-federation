@@ -15,7 +15,7 @@ type Props = {
 const DefaultEvent = ({ event }: Props) => (
   <div className={DefaultEventWrapperStyle}>
     <div className={DateStyle}>
-      {isSameDay(new Date(), event.createdAt) ? (
+      {isSameDay(new Date(), new Date(event.createdAt)) ? (
         <FormattedDate value={event.createdAt} mode="time-relative" />
       ) : (
         <FormattedDate value={event.createdAt} mode="time" />
