@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { isEnableBetaFeature } from 'utils/env';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
@@ -155,13 +156,15 @@ const ContainerBatchCard = ({
           >
             <Icon icon="PRODUCT" />
           </Link>
-          <button
-            type="button"
-            onClick={onClickRepresentative}
-            className={RepresentIconStyle(isRepresented)}
-          >
-            <Icon icon="STAR" />
-          </button>
+          {isEnableBetaFeature && (
+            <button
+              type="button"
+              onClick={onClickRepresentative}
+              className={RepresentIconStyle(isRepresented)}
+            >
+              <Icon icon="STAR" />
+            </button>
+          )}
         </div>
         <div className={BatchInfoWrapperStyle}>
           <div
@@ -348,18 +351,20 @@ const ContainerBatchCard = ({
             <Display align="left">{order.poNo}</Display>
           </div>
 
-          <div className={ShipmentWrapperStyle}>
-            <Link
-              className={ShipmentIconStyle}
-              to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="SHIPMENT" />
-            </Link>
-            <Display align="left">{shipment ? shipment.no : ''}</Display>
-          </div>
+          {isEnableBetaFeature && (
+            <div className={ShipmentWrapperStyle}>
+              <Link
+                className={ShipmentIconStyle}
+                to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="SHIPMENT" />
+              </Link>
+              <Display align="left">{shipment ? shipment.no : ''}</Display>
+            </div>
+          )}
 
           <div className={OrderInChargeWrapperStyle}>
             <Label>

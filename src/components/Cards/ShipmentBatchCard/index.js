@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { isEnableBetaFeature } from 'utils/env';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
@@ -339,18 +340,20 @@ const ShipmentBatchCard = ({
             <Display align="left">{order.poNo}</Display>
           </div>
 
-          <div className={ContainerWrapperStyle}>
-            <Link
-              className={ContainerIconStyle}
-              to={`/container/${container ? encodeId(container.id) : ''}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="CONTAINER" />
-            </Link>
-            <Display align="left">{container ? container.no : ''}</Display>
-          </div>
+          {isEnableBetaFeature && (
+            <div className={ContainerWrapperStyle}>
+              <Link
+                className={ContainerIconStyle}
+                to={`/container/${container ? encodeId(container.id) : ''}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="CONTAINER" />
+              </Link>
+              <Display align="left">{container ? container.no : ''}</Display>
+            </div>
+          )}
 
           <div className={OrderInChargeWrapperStyle}>
             <Label>

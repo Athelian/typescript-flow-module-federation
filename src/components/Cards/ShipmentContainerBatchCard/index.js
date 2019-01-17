@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { isEnableBetaFeature } from 'utils/env';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
@@ -152,13 +153,15 @@ const ShipmentContainerBatchCard = ({
           >
             <Icon icon="PRODUCT" />
           </Link>
-          <button
-            type="button"
-            onClick={onClickRepresentative}
-            className={RepresentIconStyle(isRepresented)}
-          >
-            <Icon icon="STAR" />
-          </button>
+          {isEnableBetaFeature && (
+            <button
+              type="button"
+              onClick={onClickRepresentative}
+              className={RepresentIconStyle(isRepresented)}
+            >
+              <Icon icon="STAR" />
+            </button>
+          )}
         </div>
         <div className={BatchInfoWrapperStyle}>
           <div
