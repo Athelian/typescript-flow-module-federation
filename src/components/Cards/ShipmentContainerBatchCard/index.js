@@ -3,7 +3,6 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { isEnableBetaFeature } from 'utils/env';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
@@ -15,7 +14,7 @@ import { FieldItem, Label, Display } from 'components/Form';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
-  ShipmentBatchCardWrapperStyle,
+  ContainerBatchCardWrapperStyle,
   ProductWrapperStyle,
   ProductImageStyle,
   ProductInfoWrapperStyle,
@@ -35,19 +34,20 @@ import {
   OrderInChargeWrapperStyle,
   InChargeWrapperStyle,
   BatchTagsWrapperStyle,
-  ContainerWrapperStyle,
-  ContainerIconStyle,
+  RepresentIconStyle,
 } from './style';
 
 type OptionalProps = {
   onClick: (batch: Object) => void,
   onClone: (batch: Object) => void,
   onClear: (batch: Object) => void,
+  onClickRepresentative: () => void,
   selectable: boolean,
+  isRepresented: boolean,
 };
 
 type Props = OptionalProps & {
-  batch: ?Object,
+  batch: Object,
   currency: string,
   saveOnBlur: Function,
 };
@@ -56,17 +56,21 @@ const defaultProps = {
   onClick: () => {},
   onClone: () => {},
   onClear: () => {},
+  onClickRepresentative: () => {},
   selectable: false,
+  isRepresented: false,
 };
 
-const ShipmentBatchCard = ({
+const ShipmentContainerBatchCard = ({
   batch,
   onClick,
   onClear,
   onClone,
+  onClickRepresentative,
   saveOnBlur,
   currency,
   selectable,
+  isRepresented,
   ...rest
 }: Props) => {
   if (!batch) return '';
@@ -84,22 +88,16 @@ const ShipmentBatchCard = ({
     quantity,
     deliveredAt,
     desiredAt,
-    batchAdjustments,
+    totalAdjusted: totalAdjustment,
     packageVolume,
     packageQuantity,
     tags,
-    container,
     orderItem: {
       price,
       productProvider: { product, supplier, exporter },
       order,
     },
   } = batch;
-
-  const totalAdjustment = batchAdjustments
-    ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
-    : 0;
-
   const productImage =
     product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
 
@@ -121,7 +119,7 @@ const ShipmentBatchCard = ({
       {...rest}
     >
       <div
-        className={ShipmentBatchCardWrapperStyle}
+        className={ContainerBatchCardWrapperStyle}
         onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
         role="presentation"
       >
@@ -154,6 +152,13 @@ const ShipmentBatchCard = ({
           >
             <Icon icon="PRODUCT" />
           </Link>
+          <button
+            type="button"
+            onClick={onClickRepresentative}
+            className={RepresentIconStyle(isRepresented)}
+          >
+            <Icon icon="STAR" />
+          </button>
         </div>
         <div className={BatchInfoWrapperStyle}>
           <div
@@ -316,7 +321,7 @@ const ShipmentBatchCard = ({
               }
               input={
                 <Display>
-                  {packageVolume && packageQuantity != null && (
+                  {packageVolume != null && packageQuantity != null && (
                     <FormattedNumber
                       value={packageVolume.value * packageQuantity}
                       suffix={packageVolume.metric}
@@ -339,21 +344,6 @@ const ShipmentBatchCard = ({
             </Link>
             <Display align="left">{order.poNo}</Display>
           </div>
-
-          {isEnableBetaFeature && (
-            <div className={ContainerWrapperStyle}>
-              <Link
-                className={ContainerIconStyle}
-                to={`/container/${container ? encodeId(container.id) : ''}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <Icon icon="CONTAINER" />
-              </Link>
-              <Display align="left">{container ? container.no : ''}</Display>
-            </div>
-          )}
 
           <div className={OrderInChargeWrapperStyle}>
             <Label>
@@ -383,6 +373,6 @@ const ShipmentBatchCard = ({
   );
 };
 
-ShipmentBatchCard.defaultProps = defaultProps;
+ShipmentContainerBatchCard.defaultProps = defaultProps;
 
-export default ShipmentBatchCard;
+export default ShipmentContainerBatchCard;
