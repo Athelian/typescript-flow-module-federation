@@ -49,6 +49,7 @@ const container = {
   totalVolume: { value: '25000000000', metric: 'm³' },
   batches: [{}, {}, {}],
   warehouse: {
+    id: '123',
     name: 'warehouse name',
   },
   warehouseArrivalAgreedDate: '2019-01-16T13:59',

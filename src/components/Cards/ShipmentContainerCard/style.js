@@ -1,13 +1,20 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizesWithHeights, layout, colors, presets, borderRadiuses } from 'styles/common';
+import {
+  fontSizesWithHeights,
+  layout,
+  colors,
+  presets,
+  borderRadiuses,
+  fontSizes,
+} from 'styles/common';
 
 export const CardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 354px;
+  height: 319px;
 `;
 
 export const ImagePartWrapperStyle: string = css`
@@ -93,32 +100,47 @@ export const DividerStyle: string = css`
 
 export const IconInputStyle: string = css`
   display: grid;
-  grid-template-columns: 30px 150px;
+  grid-template-columns: 20px 155px;
   width: 100%;
-  padding: 0 10px;
+  padding: 0 0 0 10px;
   align-items: center;
-  grid-gap: 5px;
 `;
 
 export const WarehouseIconStyle = (hasWarehouse: boolean): string => css`
-  height: 30px;
-  width: 30px;
   ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
+  ${borderRadiuses.MAIN};
+  width: 20px;
+  height: 20px;
+  background-color: ${hasWarehouse ? colors.TEAL : colors.GRAY_VERY_LIGHT};
   color: ${colors.WHITE};
-  background-color: ${hasWarehouse ? colors.TEAL : colors.GRAY_LIGHT};
+  font-size: 11px;
+  ${hasWarehouse &&
+    `
+    &:hover, :focus {
+      background-color: ${colors.TEAL_DARK};
+    }
+  `};
+`;
+
+export const LabelStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
 `;
 
 export const InputIconStyle: string = css`
   display: grid;
+  align-items: center;
   grid-template-columns: 165px 20px;
+  // grid-gap: 5px;
   width: 100%;
   padding: 0 5px;
 `;
 
 export const ApprovalIconStyle = (approval: boolean): string => css`
+  ${fontSizes.MAIN};
   color: ${approval ? colors.BLUE : colors.GRAY_LIGHT};
-  &:hover {
+  &:hover,
+  :focus {
     color: ${approval ? colors.BLUE_DARK : colors.GRAY};
   }
 `;

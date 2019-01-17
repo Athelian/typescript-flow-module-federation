@@ -1,14 +1,16 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-
+import { Link } from '@reach/router';
+import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import { textInputFactory, dateTimeInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import { Label, Display } from 'components/Form';
+import { Label, Display, DefaultStyle } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
+
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -26,6 +28,8 @@ import {
   IconInputStyle,
   InputIconStyle,
   WarehouseIconStyle,
+  LabelStyle,
+  // WarehouseSelectButtonStyle,
   ApprovalIconStyle,
   TagsWrapperStyle,
 } from './style';
@@ -177,14 +181,24 @@ const ShipmentContainerCard = ({
           <div className={DividerStyle} />
 
           <div className={IconInputStyle}>
-            <div className={WarehouseIconStyle(!!warehouse)}>
+            <Link
+              className={WarehouseIconStyle(!!warehouse)}
+              to={`/warehouse/${encodeId(warehouse.id)}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
               <Icon icon="WAREHOUSE" />
-            </div>
+            </Link>
             {/* clicking, open slide view */}
-            <Display align="right">{warehouse.name}</Display>
+            <DefaultStyle type="button" height="20px">
+              {/* <button type="button" className={WarehouseSelectButtonStyle}> */}
+              <Display align="left">{warehouse.name}</Display>
+              {/* </button> */}
+            </DefaultStyle>
           </div>
 
-          <div>
+          <div className={LabelStyle}>
             <Label>
               <FormattedMessage
                 id="components.cards.agreedArrival"
@@ -232,7 +246,7 @@ const ShipmentContainerCard = ({
             </div>
           </div>
 
-          <div>
+          <div className={LabelStyle}>
             <Label>
               <FormattedMessage
                 id="components.cards.actualArrival"
