@@ -79,6 +79,13 @@ class SideBar extends React.Component<Props, State> {
                       label={<FormattedMessage {...messages.warehouse} />}
                       onClick={() => this.setExpandedSubMenu(null)}
                     />
+                    <MenuItem
+                      path="/container"
+                      isActive={`/${location.pathname.split('/')[1]}` === '/container'}
+                      icon="CONTAINER"
+                      label={<FormattedMessage {...messages.container} />}
+                      onClick={() => this.setExpandedSubMenu(null)}
+                    />
                     <SubMenu
                       id="network"
                       isExpanded={expandedSubMenu === 'network'}

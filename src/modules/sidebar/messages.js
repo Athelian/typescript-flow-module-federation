@@ -54,6 +54,10 @@ export default defineMessages({
     id: 'modules.SideBar.warehouse',
     defaultMessage: 'WAREHOUSES',
   },
+  container: {
+    id: 'modules.SideBar.container',
+    defaultMessage: 'CONTAINERS',
+  },
   settings: {
     id: 'modules.SideBar.settings',
     defaultMessage: 'SETTINGS',
