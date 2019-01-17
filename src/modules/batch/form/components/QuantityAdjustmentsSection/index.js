@@ -60,26 +60,29 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
               values.batchAdjustments.map(
                 (adjustment, index) =>
                   adjustment && (
-                    <DefaultAdjustmentStyle
-                      isNew={isNew}
-                      index={index}
-                      adjustment={adjustment}
-                      key={adjustment.id}
-                      setFieldArrayValue={setFieldArrayValue}
-                      removeArrayItem={removeArrayItem}
-                      enumType="BatchAdjustmentReason"
-                      targetName="batchAdjustments"
-                      typeName="reason"
-                      memoName="memo"
-                      valueInput={
-                        <FormField
-                          name={`batchAdjustments.${index}.quantity`}
-                          initValue={adjustment.quantity}
-                          setFieldValue={setFieldArrayValue}
-                        >
-                          {({ name, ...inputHandlers }) => (
-                            <Subscribe to={[FormContainer]}>
-                              {({ setFieldTouched }) =>
+                    <Subscribe to={[FormContainer]}>
+                      {({ setFieldTouched }) => (
+                        <DefaultAdjustmentStyle
+                          isNew={isNew}
+                          index={index}
+                          adjustment={adjustment}
+                          key={adjustment.id}
+                          setFieldArrayValue={setFieldArrayValue}
+                          removeArrayItem={targetName => {
+                            removeArrayItem(targetName);
+                            calculatePackageQuantity(setFieldTouched);
+                          }}
+                          enumType="BatchAdjustmentReason"
+                          targetName="batchAdjustments"
+                          typeName="reason"
+                          memoName="memo"
+                          valueInput={
+                            <FormField
+                              name={`batchAdjustments.${index}.quantity`}
+                              initValue={adjustment.quantity}
+                              setFieldValue={setFieldArrayValue}
+                            >
+                              {({ name, ...inputHandlers }) =>
                                 numberInputFactory({
                                   inputHandlers: {
                                     ...inputHandlers,
@@ -94,11 +97,11 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
                                   originalValue: adjustment.quantity,
                                 })
                               }
-                            </Subscribe>
-                          )}
-                        </FormField>
-                      }
-                    />
+                            </FormField>
+                          }
+                        />
+                      )}
+                    </Subscribe>
                   )
               )}
             <div className={AddAdjustmentButtonWrapperStyle}>
