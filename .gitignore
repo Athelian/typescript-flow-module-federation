@@ -42,3 +42,4 @@ cypress/screenshots
 
 # storybook cache
 .cache
+storybook-static

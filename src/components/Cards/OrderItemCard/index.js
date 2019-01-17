@@ -6,13 +6,13 @@ import { encodeId } from 'utils/id';
 import { ObjectValue, BooleanValue } from 'react-values';
 import { FormField } from 'modules/form';
 import { numberInputFactory, priceInputFactory } from 'modules/form/helpers';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { Label, Display, FieldItem } from 'components/Form';
+import { getProductImage } from 'components/Cards/utils';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderItemCardWrapperStyle,
@@ -181,8 +181,7 @@ const OrderItemCard = ({
     productProvider: { product, supplier, unitPrice },
   } = item;
 
-  const productImage =
-    product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
+  const productImage = getProductImage(product);
 
   return readOnly ? (
     <BaseCard

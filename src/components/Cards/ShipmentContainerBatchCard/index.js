@@ -5,12 +5,12 @@ import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { FieldItem, Label, Display } from 'components/Form';
+import { getProductImage } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -98,8 +98,7 @@ const ShipmentContainerBatchCard = ({
       order,
     },
   } = batch;
-  const productImage =
-    product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
+  const productImage = getProductImage(product);
 
   const validation = validator({
     no: `batch.${id}.no`,

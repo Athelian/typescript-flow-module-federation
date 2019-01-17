@@ -1,5 +1,6 @@
 // @flow
 import dateInputFactory from './dateInput';
+import dateTimeInputFactory from './dateTimeInput';
 import numberInputFactory from './numberInput';
 import priceInputFactory from './priceInput';
 import dayInputFactory from './dayInput';
@@ -20,6 +21,7 @@ export {
   parseEnumValue,
   parseEnumDescriptionOrValue,
   dateInputFactory,
+  dateTimeInputFactory,
   numberInputFactory,
   priceInputFactory,
   dayInputFactory,
