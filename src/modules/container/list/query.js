@@ -48,6 +48,11 @@ export const containerListQuery = gql`
           id
           no
         }
+        tags {
+          id
+          name
+          color
+        }
       }
       page
       totalPage
