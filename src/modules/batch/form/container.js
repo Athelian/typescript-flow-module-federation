@@ -34,18 +34,16 @@ export function calculateVolume(
 
   return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
 }
-
-export const calculatePackageQuantity = (prevState: Object) =>
-  prevState.packageCapacity > 0 &&
-  prevState.batchAdjustments.reduce(
-    (total, adjustment) => adjustment.quantity + total,
-    prevState.quantity
-  ) > 0
-    ? prevState.batchAdjustments.reduce(
-        (total, adjustment) => adjustment.quantity + total,
-        prevState.quantity
-      ) / prevState.packageCapacity
-    : 0;
+export const calculatePackageQuantity = (prevState: Object) => {
+  if (prevState.packageCapacity > 0) {
+    const totalQuantity = prevState.batchAdjustments.reduce(
+      (total, adjustment) => adjustment.quantity + total,
+      prevState.quantity
+    );
+    return totalQuantity > 0 ? totalQuantity / prevState.packageCapacity : 0;
+  }
+  return 0;
+};
 
 export type BatchFormState = {
   id?: ?string,
