@@ -34,6 +34,16 @@ export function calculateVolume(
 
   return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
 }
+export const calculatePackageQuantity = (prevState: Object) => {
+  if (prevState.packageCapacity > 0) {
+    const totalQuantity = prevState.batchAdjustments.reduce(
+      (total, adjustment) => adjustment.quantity + total,
+      prevState.quantity
+    );
+    return totalQuantity > 0 ? totalQuantity / prevState.packageCapacity : 0;
+  }
+  return 0;
+};
 
 export type BatchFormState = {
   id?: ?string,
@@ -95,6 +105,7 @@ const initValues = {
   },
   producedAt: '',
   batchAdjustments: [],
+  autoCalculatePackageQuantity: true,
 };
 
 export default class BatchFormContainer extends Container<BatchFormState> {
@@ -167,20 +178,17 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     });
   };
 
-  calculatePackageQuantity = () => {
-    this.setState(prevState => ({
-      packageQuantity:
-        prevState.packageCapacity > 0 &&
-        prevState.batchAdjustments.reduce(
-          (total, adjustment) => adjustment.quantity + total,
-          prevState.quantity
-        ) > 0
-          ? prevState.batchAdjustments.reduce(
-              (total, adjustment) => adjustment.quantity + total,
-              prevState.quantity
-            ) / prevState.packageCapacity
-          : 0,
-    }));
+  getPackageQuantity = () => calculatePackageQuantity(this.state);
+
+  calculatePackageQuantity = (setFieldTouched?: Function) => {
+    if (this.state.autoCalculatePackageQuantity) {
+      this.setState(prevState => ({
+        packageQuantity: calculatePackageQuantity(prevState),
+      }));
+      if (setFieldTouched) {
+        setFieldTouched('packageQuantity');
+      }
+    }
   };
 
   calculatePackageVolume = () => {

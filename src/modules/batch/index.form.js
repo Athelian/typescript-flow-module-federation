@@ -22,6 +22,7 @@ import {
   prepareCreateBatchInput,
   updateBatchMutation,
   prepareUpdateBatchInput,
+  formatBatchInput,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -186,13 +187,12 @@ class BatchFormModule extends React.PureComponent<Props> {
                               ) : (
                                 <ResetButton onClick={() => this.onReset(formState)} />
                               )}
-
                               <SaveButton
                                 disabled={!form.isReady(formState.state, validator)}
                                 isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
-                                    formState.state,
+                                    formatBatchInput(formState.state),
                                     saveBatch,
                                     () => {
                                       formState.onSuccess();
@@ -223,9 +223,6 @@ class BatchFormModule extends React.PureComponent<Props> {
                             <BatchForm
                               isClone={this.isClone()}
                               batch={batch}
-                              onChangeStatus={(formData, onSuccess) =>
-                                this.onSave(formData, saveBatch, onSuccess)
-                              }
                               onFormReady={() => {
                                 if (this.isClone()) {
                                   const {
@@ -240,6 +237,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                                   } = batch;
                                   initDetailValues({
                                     ...batchClone,
+                                    autoCalculatePackageQuantity: true,
                                     no: `[cloned] ${no}`,
                                     batchAdjustments: [],
                                   });

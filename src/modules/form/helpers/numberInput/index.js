@@ -4,6 +4,28 @@ import { FieldItem, Label, FormTooltip, DefaultStyle, NumberInput } from 'compon
 import Icon from 'components/Icon';
 import { CalculatorButtonStyle } from './style';
 
+const renderDefaultCalculateComponent = ({
+  calculate,
+  isFocused,
+}: {
+  calculate: Function,
+  isFocused: boolean,
+}) => {
+  if (calculate && !isFocused) {
+    return (
+      <button
+        data-testid="calculatorButton"
+        className={CalculatorButtonStyle}
+        type="button"
+        onClick={calculate}
+      >
+        <Icon icon="CALCULATOR" />
+      </button>
+    );
+  }
+  return null;
+};
+
 const numberInputFactory = ({
   WrapperComponent = DefaultStyle,
   required = false,
@@ -17,6 +39,7 @@ const numberInputFactory = ({
   name,
   inputHandlers,
   originalValue,
+  renderCalculate = renderDefaultCalculateComponent,
 }: {
   WrapperComponent?: () => React.Node,
   required?: boolean,
@@ -39,6 +62,7 @@ const numberInputFactory = ({
     onBlur: Function,
   },
   originalValue: number,
+  renderCalculate?: Function,
 }) => {
   const { isTouched, errorMessage, isFocused, ...rest } = inputHandlers;
   return (
@@ -74,16 +98,7 @@ const numberInputFactory = ({
           >
             <NumberInput align={align} name={name} {...rest} />
           </WrapperComponent>
-          {calculate && !isFocused && (
-            <button
-              data-testid="calculatorButton"
-              className={CalculatorButtonStyle}
-              type="button"
-              onClick={calculate}
-            >
-              <Icon icon="CALCULATOR" />
-            </button>
-          )}
+          {renderCalculate({ calculate, isFocused })}
         </>
       }
     />
