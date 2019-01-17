@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { tagFragment } from 'graphql';
 
 export const containerListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: ContainerFilterInput, $sortBy: ContainerSortInput) {
@@ -49,15 +50,14 @@ export const containerListQuery = gql`
           no
         }
         tags {
-          id
-          name
-          color
+          ...tagFragment
         }
       }
       page
       totalPage
     }
   }
+  ${tagFragment}
 `;
 
 export default containerListQuery;
