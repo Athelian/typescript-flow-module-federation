@@ -37,7 +37,7 @@ const batch = {
     no: 'test shipment',
   },
 };
-storiesOf('Container', module).add('ShipmentBatchCard', () => (
+storiesOf('Card', module).add('ShipmentBatchCard', () => (
   <IntlProvider>
     <Provider>
       <ShipmentBatchCard batch={batch} currency="JPY" />
