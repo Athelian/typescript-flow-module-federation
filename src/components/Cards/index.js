@@ -10,6 +10,7 @@ import ProductProviderCard from './ProductProviderCard';
 import ShipmentCard from './ShipmentCard';
 import ShipmentBatchCard from './ShipmentBatchCard';
 import ContainerBatchCard from './ContainerBatchCard';
+import ContainerCard from './ContainerCard';
 import ShipmentContainerCard from './ShipmentContainerCard';
 import ContainerCard from './ContainerCard';
 import ShipmentWarehouseCard from './ShipmentWarehouseCard';

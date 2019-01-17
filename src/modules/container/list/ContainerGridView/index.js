@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
-import { ShipmentContainerCard } from 'components/Cards';
+import { ContainerCard } from 'components/Cards';
 import messages from 'modules/container/messages';
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <ShipmentContainerCard container={item} />;
+const defaultRenderItem = (item: Object) => <ContainerCard container={item} />;
 
 const defaultProps = {
   renderItem: defaultRenderItem,

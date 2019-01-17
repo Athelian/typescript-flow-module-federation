@@ -4,10 +4,14 @@ export const containerListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: ContainerFilterInput, $sortBy: ContainerSortInput) {
     containers(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
+        id
+        no
         representativeBatch {
+          id
           orderItem {
             id
             productProvider {
+              id
               product {
                 id
                 files {
@@ -21,8 +25,6 @@ export const containerListQuery = gql`
             }
           }
         }
-        id
-        no
         totalVolume {
           value
           metric
@@ -36,6 +38,16 @@ export const containerListQuery = gql`
         }
         warehouseArrivalAgreedDate
         warehouseArrivalActualDate
+        warehouseArrivalAgreedDateApprovedBy {
+          id
+        }
+        warehouseArrivalActualDateApprovedBy {
+          id
+        }
+        shipment {
+          id
+          no
+        }
       }
       page
       totalPage
