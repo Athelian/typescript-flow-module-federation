@@ -16,6 +16,10 @@ export type UIState = {
     type: string,
     selectedId: string,
   },
+  edit: {
+    type: string,
+    selectedId: string,
+  },
   targets: Array<string>,
   totalShipment: number,
 };
@@ -47,6 +51,10 @@ export const uiInitState: UIState = {
     type: '',
     selectedId: '',
   },
+  edit: {
+    type: '',
+    selectedId: '',
+  },
   targets: [],
   totalShipment: 0,
 };
@@ -58,6 +66,8 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       return uiInitState;
     case 'TOGGLE_TAG':
       return { ...state, showTag: !state.showTag };
+    case 'TOGGLE_EDIT_FORM':
+      return { ...state, edit: action.payload };
     case 'TOGGLE_SELECT_ALL': {
       const { payload } = action;
       const {
@@ -221,12 +231,12 @@ export function actionCreators(dispatch: Function) {
           total,
         },
       }),
-    showEditForm: (entity: string, id: string) =>
+    showEditForm: (type: string, selectedId: string) =>
       dispatch({
-        type: 'SHOW_EDIT_FORM',
+        type: 'TOGGLE_EDIT_FORM',
         payload: {
-          entity,
-          id,
+          type,
+          selectedId,
         },
       }),
     selectBranch: (selectItems: Array<{ entity: string, id: string }>) =>

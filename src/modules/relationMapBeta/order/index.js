@@ -36,6 +36,7 @@ import { DispatchProvider } from './provider';
 import OrderFocusView from './components/OrderFocusView';
 import Shipment from './components/Shipment';
 import ShipmentList from './components/ShipmentList';
+import EditForm from './components/EditForm';
 
 type Props = {
   intl: IntlShape,
@@ -247,6 +248,7 @@ const Order = ({ intl }: Props) => {
                   </div>
                 </div>
               )}
+              <EditForm onClose={() => actions.showEditForm('', '')} {...state.edit} />
             </>
           );
         }}

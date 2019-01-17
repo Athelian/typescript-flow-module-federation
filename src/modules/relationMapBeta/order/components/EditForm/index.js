@@ -1,0 +1,42 @@
+// @flow
+import * as React from 'react';
+import SlideView from 'components/SlideView';
+import OrderForm from 'modules/order/index.form';
+import BatchForm from 'modules/batch/index.form';
+import ShipmentForm from 'modules/shipment/index.form';
+import { encodeId } from 'utils/id';
+
+type Props = {
+  type: string,
+  selectedId: string,
+  onClose: () => void,
+};
+
+const EditForm = ({ type, selectedId: id, onClose }: Props) => {
+  let form = null;
+  switch (type) {
+    default: {
+      form = null;
+      break;
+    }
+    case 'ORDER': {
+      form = <OrderForm orderId={encodeId(id)} isSlideView />;
+      break;
+    }
+    case 'BATCH': {
+      form = <BatchForm batchId={encodeId(id)} isSlideView />;
+      break;
+    }
+    case 'SHIPMENT': {
+      form = <ShipmentForm shipmentId={encodeId(id)} isSlideView />;
+      break;
+    }
+  }
+  return (
+    <SlideView isOpen={id !== ''} onRequestClose={onClose} options={{ width: '1030px' }}>
+      {form}
+    </SlideView>
+  );
+};
+
+export default EditForm;
