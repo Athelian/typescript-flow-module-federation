@@ -7,7 +7,7 @@ import FilterToolBar from 'components/common/FilterToolBar';
 import useListConfig from 'hooks/useListConfig';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
-// import OrderList from './list';
+import ContainerList from './list';
 import messages from './messages';
 
 type Props = {
@@ -56,7 +56,10 @@ function OrderModule(props: Props) {
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
   ];
-  const { filterAndSort, onChangeFilter } = useListConfig(getInitFilter(), 'filterContainer');
+  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+    getInitFilter(),
+    'filterContainer'
+  );
   return (
     <UIConsumer>
       {uiState => (
@@ -73,7 +76,7 @@ function OrderModule(props: Props) {
             </NavBar>
           }
         >
-          <div>Container List</div>
+          <ContainerList {...queryVariables} />
         </Layout>
       )}
     </UIConsumer>

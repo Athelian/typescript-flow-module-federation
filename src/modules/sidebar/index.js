@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
+import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle, BetaTagWrapperStyle, BetaTagStyle } from './style';
 import messages from './messages';
@@ -65,6 +66,15 @@ class SideBar extends React.Component<Props, State> {
                       label={<FormattedMessage {...messages.shipment} />}
                       onClick={() => this.setExpandedSubMenu(null)}
                     />
+                    {isEnableBetaFeature && (
+                      <MenuItem
+                        path="/container"
+                        isActive={`/${location.pathname.split('/')[1]}` === '/container'}
+                        icon="CONTAINER"
+                        label={<FormattedMessage {...messages.container} />}
+                        onClick={() => this.setExpandedSubMenu(null)}
+                      />
+                    )}
                     <MenuItem
                       path="/product"
                       isActive={`/${location.pathname.split('/')[1]}` === '/product'}
@@ -77,13 +87,6 @@ class SideBar extends React.Component<Props, State> {
                       isActive={`/${location.pathname.split('/')[1]}` === '/warehouse'}
                       icon="WAREHOUSE"
                       label={<FormattedMessage {...messages.warehouse} />}
-                      onClick={() => this.setExpandedSubMenu(null)}
-                    />
-                    <MenuItem
-                      path="/container"
-                      isActive={`/${location.pathname.split('/')[1]}` === '/container'}
-                      icon="CONTAINER"
-                      label={<FormattedMessage {...messages.container} />}
                       onClick={() => this.setExpandedSubMenu(null)}
                     />
                     <SubMenu

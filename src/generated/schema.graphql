@@ -27117,7 +27117,7 @@ type Comment implements Model & Owned {
   ownedBy: Group!
 }
 
-type Container implements Model & Owned & Sortable {
+type Container implements Model & Owned & Sortable & Tagged {
   no: String!
   warehouseArrivalAgreedDate: DateTime
   warehouseArrivalAgreedDateApprovedBy: User
@@ -27133,6 +27133,10 @@ type Container implements Model & Owned & Sortable {
   totalBatchQuantity: Int!
   totalBatchPackages: Int!
   totalNumberOfUniqueOrderItems: Int!
+  warehouseArrivalActualDateAssignedTo: User
+  warehouseArrivalAgreedDateAssignedTo: User
+  memo: String
+  archived: Boolean!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -27142,12 +27146,51 @@ type Container implements Model & Owned & Sortable {
   deletedBy: User
   ownedBy: Group!
   sort: Int!
+  tags: [Tag!]!
+}
+
+input ContainerBatchAdjustmentInput {
+  id: ID
+  reason: BatchAdjustmentReason
+  quantity: Float
+  memo: String
+}
+
+input ContainerBatchAssignmentInput {
+  id: ID
+  userId: ID
+  quantity: Float
+  memo: String
+}
+
+input ContainerBatchInput {
+  no: String
+  quantity: Float
+  producedAt: DateTime
+  deliveredAt: DateTime
+  expiredAt: DateTime
+  desiredAt: DateTime
+  packageQuantity: Float
+  autoCalculatePackageQuantity: Boolean
+  packageName: String
+  packageGrossWeight: MetricValueInput
+  packageVolume: MetricValueInput
+  packageSize: SizeInput
+  packageCapacity: Float
+  memo: String
+  tagIds: [ID!]
+  customFields: CustomFieldsInput
+  id: ID
+  orderItemId: ID
+  batchAssignments: [ContainerBatchAssignmentInput!]
+  batchAdjustments: [ContainerBatchAdjustmentInput!]
 }
 
 input ContainerFilterInput {
   query: String
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
+  archived: Boolean
   warehouseArrivalActualDate: DateRangeInput
   warehouses: [ID!]
 }
@@ -27169,6 +27212,11 @@ type ContainerGroup implements Model & Owned & Sortable {
   sort: Int!
 }
 
+type ContainerMutated {
+  container: Container
+  violations: [Violation!]
+}
+
 type ContainerPagination {
   nodes: [Container!]!
   page: Int!
@@ -27183,6 +27231,21 @@ input ContainerSortInput {
   updatedAt: SortOrder
   warehouseName: SortOrder
   warehouseArrivalActualDate: SortOrder
+}
+
+input ContainerUpdateInput {
+  no: String
+  warehouseArrivalAgreedDateApprovedById: ID
+  warehouseArrivalAgreedDate: DateTime
+  warehouseArrivalActualDateApprovedById: ID
+  warehouseArrivalActualDate: DateTime
+  warehouseId: ID
+  representativeBatchId: ID
+  batches: [ContainerBatchInput!]
+  warehouseArrivalAgreedDateAssignedToId: ID
+  warehouseArrivalActualDateAssignedToId: ID
+  memo: String
+  tagIds: [ID!]
 }
 
 enum Country {
@@ -29668,6 +29731,7 @@ type Mutation {
   notificationRead(id: ID!): Boolean!
   notificationReadAll: Boolean!
   notificationSeeAll: Boolean!
+  containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerMutated!
 }
 
 type Notification {
@@ -35467,6 +35531,10 @@ input ShipmentContainerCreateInput {
   warehouseId: ID
   representativeBatchId: ID
   batches: [ShipmentBatchInput!]
+  warehouseArrivalAgreedDateAssignedToId: ID
+  warehouseArrivalActualDateAssignedToId: ID
+  memo: String
+  tagIds: [ID!]
 }
 
 input ShipmentContainerGroupCreateInput {
@@ -35494,6 +35562,10 @@ input ShipmentContainerUpdateInput {
   warehouseId: ID
   representativeBatchId: ID
   batches: [ShipmentBatchInput!]
+  warehouseArrivalAgreedDateAssignedToId: ID
+  warehouseArrivalActualDateAssignedToId: ID
+  memo: String
+  tagIds: [ID!]
 }
 
 input ShipmentCreateInput {
@@ -35729,6 +35801,9 @@ enum TagEntityType {
 
   """User"""
   User
+
+  """Container"""
+  Container
 }
 
 input TagFilterInput {

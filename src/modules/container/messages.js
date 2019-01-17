@@ -18,4 +18,8 @@ export default defineMessages({
     id: 'modules.container.updatedAt',
     defaultMessage: 'LAST MODIFIED',
   },
+  noContainerFound: {
+    id: 'modules.container.noContainerFound',
+    defaultMessage: 'No containers found',
+  },
 });
