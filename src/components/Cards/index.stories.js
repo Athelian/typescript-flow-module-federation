@@ -82,7 +82,12 @@ storiesOf('Card', module)
   ))
   .add('ContainerCard', () => (
     <Provider>
-      <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
+      <IntlProvider
+        locale="en"
+        messages={translationMessages.en}
+        textComponent={React.Fragment}
+        formats={{ time: { hour12: false } }}
+      >
         <ContainerCard container={container} />
       </IntlProvider>
     </Provider>

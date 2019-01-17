@@ -4,11 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
-import { formatToDateTimeDisplay } from 'utils/date';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-// import FormattedDate from 'components/FormattedDate';
+import FormattedDate from 'components/FormattedDate';
 import { Label, Display, DefaultStyle } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import BaseCard, { CardAction } from '../BaseCard';
@@ -180,7 +179,13 @@ const ShipmentContainerCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <Display align="left">{formatToDateTimeDisplay(warehouseArrivalAgreedDate)}</Display>
+            <Display align="left">
+              <FormattedDate
+                value={warehouseArrivalAgreedDate}
+                mode="datetime"
+                timeFormat={{ hour12: false }}
+              />
+            </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalAgreedDateApprovedBy)}>
               {warehouseArrivalAgreedDateApprovedBy ? (
                 <Icon icon="CHECKED" />
@@ -203,7 +208,13 @@ const ShipmentContainerCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <Display align="left">{formatToDateTimeDisplay(warehouseArrivalActualDate)}</Display>
+            <Display align="left">
+              <FormattedDate
+                value={warehouseArrivalAgreedDate}
+                mode="datetime"
+                timeFormat={{ hour12: false }}
+              />
+            </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalActualDateApprovedBy)}>
               {warehouseArrivalActualDateApprovedBy ? (
                 <Icon icon="CHECKED" />

@@ -5,10 +5,11 @@ import { isDataType } from 'utils/fp';
 
 type Props = {
   value: ?string | ?Date,
-  mode?: 'date' | 'date-no-year' | 'relative' | 'time' | 'time-relative',
+  mode?: 'date' | 'date-no-year' | 'relative' | 'time' | 'time-relative' | 'datetime',
+  timeFormat?: Object,
 };
 
-const FormattedDate = ({ value, mode = 'date' }: Props) => {
+const FormattedDate = ({ value, mode = 'date', timeFormat }: Props) => {
   if (!value) return '';
   switch (mode) {
     case 'date':
@@ -27,7 +28,10 @@ const FormattedDate = ({ value, mode = 'date' }: Props) => {
       return (
         <>
           <FormattedDateIntl value={isDataType(Date, value) ? value : new Date(value)} />{' '}
-          <FormattedTime value={isDataType(Date, value) ? value : new Date(value)} />
+          <FormattedTime
+            value={isDataType(Date, value) ? value : new Date(value)}
+            {...timeFormat}
+          />
         </>
       );
     case 'time':

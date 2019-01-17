@@ -157,6 +157,7 @@
         "name": "Tagged",
         "possibleTypes": [
           { "name": "Batch" },
+          { "name": "Container" },
           { "name": "Order" },
           { "name": "Product" },
           { "name": "Shipment" },
