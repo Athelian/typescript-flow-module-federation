@@ -13,6 +13,7 @@ import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
+import { isEnableBetaFeature } from 'utils/env';
 import BatchForm from './form';
 import BatchFormContainer from './form/container';
 import validator from './form/validator';
@@ -170,6 +171,18 @@ class BatchFormModule extends React.PureComponent<Props> {
                           }
                           icon="SHIPMENT"
                         />
+                        {isEnableBetaFeature && (
+                          <SectionTabs
+                            link="containerSection"
+                            label={
+                              <FormattedMessage
+                                id="modules.Batches.contianer"
+                                defaultMessage="CONTAINER"
+                              />
+                            }
+                            icon="CONTAINER"
+                          />
+                        )}
                         <SectionTabs
                           link="orderSection"
                           label={
