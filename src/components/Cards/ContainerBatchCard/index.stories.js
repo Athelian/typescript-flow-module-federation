@@ -38,7 +38,7 @@ const batch = {
     no: 'test shipment',
   },
 };
-storiesOf('Container', module)
+storiesOf('Card', module)
   .add('ContainerBatchCard (isRepresented)', () => (
     <IntlProvider>
       <Provider>

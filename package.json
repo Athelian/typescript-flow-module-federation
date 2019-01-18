@@ -48,7 +48,7 @@
     "react-hotkeys": "^1.1.4",
     "react-infinite-scroller": "^1.2.4",
     "react-intercom": "^1.0.15",
-    "react-intl": "^2.7.2",
+    "react-intl": "^2.8.0",
     "react-tiny-virtual-list": "^2.2.0",
     "react-transition-group": "^2.5.2",
     "react-use-idb": "^1.0.1",

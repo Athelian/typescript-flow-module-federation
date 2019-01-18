@@ -7,7 +7,7 @@ import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
 import { Provider } from 'unstated';
 
-import { ShipmentCard, ShipmentContainerCard } from './index';
+import { ShipmentCard, ShipmentContainerCard, ContainerCard } from './index';
 
 const shipment = {
   archived: true,
@@ -52,6 +52,10 @@ const container = {
     id: '123',
     name: 'warehouse name',
   },
+  shipment: {
+    id: '1234',
+    no: 'shipment name',
+  },
   warehouseArrivalAgreedDate: '2019-01-16T13:59',
   warehouseArrivalAgreedDateApprovedBy: null,
   warehouseArrivalActualDate: '2019-01-16T17:59',
@@ -73,6 +77,13 @@ storiesOf('Card', module)
     <Provider>
       <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
         <ShipmentContainerCard container={container} />
+      </IntlProvider>
+    </Provider>
+  ))
+  .add('ContainerCard', () => (
+    <Provider>
+      <IntlProvider locale="ja" messages={translationMessages.en} textComponent={React.Fragment}>
+        <ContainerCard container={container} />
       </IntlProvider>
     </Provider>
   ));
