@@ -61,6 +61,7 @@ export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
     isNew: true,
     batchAdjustments: [],
     no: `batch no ${batches.length + 1}`,
+    autoCalculatePackageQuantity: true,
   });
 }
 
@@ -91,6 +92,7 @@ function autoFillBatch(orderItem: Object, batches: Array<Object>, addNewBatch: F
       isNew: true,
       batchAdjustments: [],
       no: `batch no ${batches.length + 1}`,
+      autoCalculatePackageQuantity: true,
     });
   }
 }

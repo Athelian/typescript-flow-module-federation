@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { isDataType } from 'utils/fp';
-import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/container';
 import validator from 'modules/batch/form/validator';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -38,22 +38,10 @@ const formatDateValue = (batch: BatchFormState) => {
 class BatchFormWrapper extends React.Component<Props> {
   componentDidMount() {
     const { batch, orderItem, initDetailValues } = this.props;
-    const {
-      deliveredAt,
-      expiredAt,
-      producedAt,
-      autoCalculatePackageQuantity,
-      packageQuantity,
-      ...rest
-    } = batch;
+    const { deliveredAt, expiredAt, producedAt, ...rest } = batch;
     initDetailValues({
       ...rest,
       orderItem,
-      ...((autoCalculatePackageQuantity && !packageQuantity) || !autoCalculatePackageQuantity
-        ? { packageQuantity: calculatePackageQuantity(batch) }
-        : {}),
-      autoCalculatePackageQuantity:
-        typeof autoCalculatePackageQuantity === 'boolean' ? autoCalculatePackageQuantity : true,
       deliveredAt: isDataType(String, deliveredAt)
         ? deliveredAt
         : deliveredAt && deliveredAt.toISOString(),

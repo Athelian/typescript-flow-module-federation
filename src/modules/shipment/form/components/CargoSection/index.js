@@ -12,7 +12,7 @@ import SlideView from 'components/SlideView';
 import messages from 'modules/shipment/messages';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
-import BatchFormContainer from 'modules/batch/form/container';
+import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import SelectOrderItems from './components/SelectOrderItems';
 import {
   ItemsSectionWrapperStyle,
@@ -50,7 +50,11 @@ function CargoSection({ intl }: Props) {
                       <SelectBatches
                         selectedBatches={batches}
                         onSelect={selected => {
-                          setFieldValue('batches', [...batches, ...selected]);
+                          const selectedBatches = selected.map(selectedBatch => ({
+                            ...selectedBatch,
+                            packageQuantity: calculatePackageQuantity(selectedBatch),
+                          }));
+                          setFieldValue('batches', [...batches, ...selectedBatches]);
                           selectBatchesSlideToggle(false);
                         }}
                         onCancel={() => selectBatchesSlideToggle(false)}
@@ -101,6 +105,7 @@ function CargoSection({ intl }: Props) {
                               isNew: true,
                               batchAdjustments: [],
                               no: `batch no ${batches.length + counter + 1}`,
+                              autoCalculatePackageQuantity: true,
                             });
                           });
                           setFieldValue('batches', [...batches, ...result]);
