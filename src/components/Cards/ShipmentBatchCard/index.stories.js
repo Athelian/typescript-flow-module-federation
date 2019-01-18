@@ -18,7 +18,13 @@ const batch = {
     metric: 'm',
   },
   packageQuantity: 10,
-  tags: [],
+  tags: [
+    {
+      id: 'tag1',
+      name: 'tag111',
+      color: '#343212',
+    },
+  ],
   orderItem: {
     price: 4000,
     productProvider: {
