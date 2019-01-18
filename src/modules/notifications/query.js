@@ -6,25 +6,31 @@ export const notificationListQuery = gql`
     viewer {
       notifications(page: $page, perPage: $perPage) {
         nodes {
-          id
-          createdAt
-          sender {
+          ... on Notification {
             id
-            firstName
-            lastName
-          }
-          receiver {
-            id
-            firstName
-            lastName
-          }
-          body
-          read
-          seen
-          entity {
-            __typename
-            ... on Model {
-              id
+            createdAt
+            sender {
+              ... on User {
+                id
+                firstName
+                lastName
+              }
+            }
+            receiver {
+              ... on User {
+                id
+                firstName
+                lastName
+              }
+            }
+            body
+            read
+            seen
+            entity {
+              __typename
+              ... on Model {
+                id
+              }
             }
           }
         }

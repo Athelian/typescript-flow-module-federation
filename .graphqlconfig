@@ -5,7 +5,7 @@
       "extensions": {
         "endpoints": {
           "dev": {
-            "url": "https://graphql-staging.zenport.io/graphql"
+            "url": "http://localhost:8080/graphql"
           }
         },
         "generate-fragments": {

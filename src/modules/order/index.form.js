@@ -173,24 +173,18 @@ class OrderFormModule extends React.PureComponent<Props> {
   }) => (result: Object) => {
     const { redirectAfterSuccess } = this.props;
     if (this.isNewOrClone()) {
-      const {
-        orderCreate: {
-          order: { id },
-        },
-      } = result;
+      const { orderCreate } = result;
       if (redirectAfterSuccess) {
-        navigate(`/order/${encodeId(id)}`);
+        navigate(`/order/${encodeId(orderCreate.id)}`);
       }
     } else {
-      const {
-        orderUpdate: { order },
-      } = result;
+      const { orderUpdate } = result;
       this.onFormReady({
         orderItemState,
         orderInfoState,
         orderTagsState,
         orderFilesState,
-      })(order);
+      })(orderUpdate);
     }
   };
 

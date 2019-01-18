@@ -46,19 +46,15 @@ const defaultProps = {
 
 type CreateProductResponse = {|
   productCreate: {
-    violations: ?Array<Object>,
-    product: ?{
-      id: string,
-    },
+    violations?: Array<Object>,
+    id?: string,
   },
 |};
 
 type UpdateProductResponse = {|
   productUpdate: {
-    violations: ?Array<Object>,
-    product: ?{
-      id: string,
-    },
+    violations?: Array<Object>,
+    id?: string,
   },
 |};
 
@@ -146,13 +142,11 @@ class ProductFormModule extends React.Component<Props> {
 
   onMutationCompleted = (result: CreateProductResponse | UpdateProductResponse) => {
     if (this.isNewOrClone() && result.productCreate) {
-      const {
-        productCreate: { product, violations },
-      } = result;
+      const { productCreate } = result;
 
-      if (!violations) {
-        if (product && product.id) {
-          navigate(`/product/${encodeId(product.id)}`);
+      if (!productCreate.violations) {
+        if (productCreate.id) {
+          navigate(`/product/${encodeId(productCreate.id)}`);
         }
       }
     }

@@ -22,15 +22,15 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  badRequestFragment,
 } from 'graphql';
-import { violationFragment } from 'graphql/violations/fragment';
 import { orderItemRmFragment, shipmentRMFragment } from './query';
 
 export const cloneOrderMutation: Object = gql`
   mutation orderCreate($input: OrderCreateInput!) {
     orderCreate(input: $input) {
-      order {
-        ...orderBasicFragment
+      ...orderBasicFragment
+      ... on Order {
         orderItems {
           ...orderItemRmFragment
         }
@@ -38,12 +38,10 @@ export const cloneOrderMutation: Object = gql`
           ...shipmentRMFragment
         }
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${orderBasicFragment}
   ${userAvatarFragment}
   ${sizeFragment}
@@ -72,8 +70,8 @@ export const cloneOrderMutation: Object = gql`
 export const cloneOrderItemMutation: Object = gql`
   mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
     orderUpdate(id: $id, input: $input) {
-      order {
-        ...orderBasicFragment
+      ...orderBasicFragment
+      ... on Order {
         orderItems {
           ...orderItemRmFragment
         }
@@ -81,12 +79,10 @@ export const cloneOrderItemMutation: Object = gql`
           ...shipmentRMFragment
         }
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${orderBasicFragment}
   ${userAvatarFragment}
   ${sizeFragment}
@@ -115,15 +111,11 @@ export const cloneOrderItemMutation: Object = gql`
 export const cloneBatchMutation: Object = gql`
   mutation batchCreate($input: BatchCreateInput!) {
     batchCreate(input: $input) {
-      batch {
-        ...batchFormFragment
-      }
-      violations {
-        ...violationFragment
-      }
+      ...batchFormFragment
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${batchFormFragment}
   ${metricFragment}
   ${tagFragment}
@@ -146,15 +138,11 @@ export const cloneBatchMutation: Object = gql`
 export const cloneShipmentMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
     shipmentCreate(input: $input) {
-      shipment {
-        ...shipmentRMFragment
-      }
-      violations {
-        ...violationFragment
-      }
+      ...shipmentRMFragment
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${shipmentRMFragment}
   ${timelineDateFullFragment}
   ${userAvatarFragment}
@@ -171,8 +159,8 @@ export const cloneShipmentMutation: Object = gql`
 export const updateBatchWithReturnDataMutation = gql`
   mutation batchUpdate($id: ID!, $input: BatchUpdateInput!) {
     batchUpdate(id: $id, input: $input) {
-      batch {
-        ...batchCardFragment
+      ...batchCardFragment
+      ... on Batch {
         packageSize {
           ...sizeFragment
         }
@@ -180,12 +168,10 @@ export const updateBatchWithReturnDataMutation = gql`
           ...shipmentRMFragment
         }
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${batchCardFragment}
   ${metricFragment}
   ${sizeFragment}

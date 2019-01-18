@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { violationFragment } from 'graphql/violations/fragment';
+import { badRequestFragment } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { calculatePackageQuantity } from './container';
 import type { BatchCreate, BatchUpdate } from '../type.js.flow';
@@ -8,16 +8,14 @@ import type { BatchCreate, BatchUpdate } from '../type.js.flow';
 export const createBatchMutation = gql`
   mutation batchCreate($input: BatchCreateInput!) {
     batchCreate(input: $input) {
-      batch {
+      ... on Batch {
         id
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
 
-  ${violationFragment}
+  ${badRequestFragment}
 `;
 
 export const formatBatchInput = (state: Object, option?: Object) => {
@@ -72,16 +70,14 @@ export const prepareCreateBatchInput = (
 export const updateBatchMutation = gql`
   mutation batchUpdate($id: ID!, $input: BatchUpdateInput!) {
     batchUpdate(id: $id, input: $input) {
-      batch {
+      ... on Batch {
         id
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
 
-  ${violationFragment}
+  ${badRequestFragment}
 `;
 
 export const prepareUpdateBatchInput = (

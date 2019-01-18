@@ -4,7 +4,9 @@ import gql from 'graphql-tag';
 export const shipmentExportQuery = gql`
   query shipmentExport($id: ID!, $templateId: ID!, $fields: [String!]) {
     shipmentExport(id: $id, templateId: $templateId, fields: $fields) {
-      path
+      ... on File {
+        path
+      }
     }
   }
 `;
@@ -22,7 +24,9 @@ export const shipmentsExportQuery = gql`
       templateId: $templateId
       fields: $fields
     ) {
-      path
+      ... on File {
+        path
+      }
     }
   }
 `;

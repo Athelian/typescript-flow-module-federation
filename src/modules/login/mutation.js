@@ -1,17 +1,15 @@
 // @flow
 import gql from 'graphql-tag';
-import { violationFragment } from 'graphql/violations/fragment';
+import { badRequestFragment } from 'graphql';
 
 export const loginMutation = gql`
   mutation($input: CredentialsInput!) {
     login(input: $input) {
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
 
-  ${violationFragment}
+  ${badRequestFragment}
 `;
 
 export default loginMutation;

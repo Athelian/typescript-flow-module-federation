@@ -39,36 +39,42 @@ export const shipmentFormFragment = gql`
       ...timelineDateFullFragment
     }
     voyages {
-      id
-      vesselName
-      vesselCode
-      departurePort {
-        ...portFragment
-      }
-      arrivalPort {
-        ...portFragment
-      }
-      departure {
-        ...timelineDateFullFragment
-      }
-      arrival {
-        ...timelineDateFullFragment
+      ... on Voyage {
+        id
+        vesselName
+        vesselCode
+        departurePort {
+          ...portFragment
+        }
+        arrivalPort {
+          ...portFragment
+        }
+        departure {
+          ...timelineDateFullFragment
+        }
+        arrival {
+          ...timelineDateFullFragment
+        }
       }
     }
     containerGroups {
-      id
-      warehouse {
+      ... on ContainerGroup {
         id
-        name
-      }
-      customClearance {
-        ...timelineDateFullFragment
-      }
-      warehouseArrival {
-        ...timelineDateFullFragment
-      }
-      deliveryReady {
-        ...timelineDateFullFragment
+        warehouse {
+          ... on Warehouse {
+            id
+            name
+          }
+        }
+        customClearance {
+          ...timelineDateFullFragment
+        }
+        warehouseArrival {
+          ...timelineDateFullFragment
+        }
+        deliveryReady {
+          ...timelineDateFullFragment
+        }
       }
     }
     totalVolume {
@@ -102,38 +108,46 @@ export const shipmentCardFragment = gql`
       ...userAvatarFragment
     }
     voyages {
-      id
-      departurePort {
-        ...portFragment
-      }
-      arrivalPort {
-        ...portFragment
-      }
-      departure {
-        ...timelineDateMinimalFragment
-      }
-      arrival {
-        ...timelineDateMinimalFragment
+      ... on Voyage {
+        id
+        departurePort {
+          ...portFragment
+        }
+        arrivalPort {
+          ...portFragment
+        }
+        departure {
+          ...timelineDateMinimalFragment
+        }
+        arrival {
+          ...timelineDateMinimalFragment
+        }
       }
     }
     containerGroups {
-      id
-      customClearance {
-        ...timelineDateMinimalFragment
-      }
-      warehouseArrival {
-        ...timelineDateMinimalFragment
-      }
-      deliveryReady {
-        ...timelineDateMinimalFragment
-      }
-      warehouse {
+      ... on ContainerGroup {
         id
-        name
+        customClearance {
+          ...timelineDateMinimalFragment
+        }
+        warehouseArrival {
+          ...timelineDateMinimalFragment
+        }
+        deliveryReady {
+          ...timelineDateMinimalFragment
+        }
+        warehouse {
+          ... on Warehouse {
+            id
+            name
+          }
+        }
       }
     }
     batches {
-      id
+      ... on Batch {
+        id
+      }
     }
   }
 `;

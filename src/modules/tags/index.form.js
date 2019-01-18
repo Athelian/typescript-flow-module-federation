@@ -88,12 +88,8 @@ export default class TagFormModule extends React.PureComponent<Props> {
 
   onMutationCompleted = (result: Object) => {
     if (this.isNewOrClone()) {
-      const {
-        tagCreate: {
-          tag: { id },
-        },
-      } = result;
-      navigate(`/tags/${encodeId(id)}`);
+      const { tagCreate } = result;
+      navigate(`/tags/${encodeId(tagCreate.id)}`);
     }
   };
 
