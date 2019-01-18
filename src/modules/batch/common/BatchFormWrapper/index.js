@@ -38,12 +38,10 @@ const formatDateValue = (batch: BatchFormState) => {
 class BatchFormWrapper extends React.Component<Props> {
   componentDidMount() {
     const { batch, orderItem, initDetailValues } = this.props;
-    const { deliveredAt, expiredAt, producedAt, autoCalculatePackageQuantity, ...rest } = batch;
+    const { deliveredAt, expiredAt, producedAt, ...rest } = batch;
     initDetailValues({
       ...rest,
       orderItem,
-      autoCalculatePackageQuantity:
-        typeof autoCalculatePackageQuantity === 'boolean' ? autoCalculatePackageQuantity : true,
       deliveredAt: isDataType(String, deliveredAt)
         ? deliveredAt
         : deliveredAt && deliveredAt.toISOString(),
