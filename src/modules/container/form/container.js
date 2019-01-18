@@ -30,6 +30,8 @@ export type ContainerFormState = {
   totalVolume: Metric,
   totalWeight: Metric,
   totalPrice: Metric,
+
+  shipment: Object,
 };
 
 const initValues = {};

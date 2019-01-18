@@ -1,7 +1,15 @@
 // @flow
 import gql from 'graphql-tag';
 
-import { userAvatarFragment, warehouseCardFragment } from 'graphql';
+import {
+  userAvatarFragment,
+  warehouseCardFragment,
+  shipmentCardFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  metricFragment,
+  tagFragment,
+} from 'graphql';
 
 export const containerFormQuery = gql`
   query($id: ID!) {
@@ -15,15 +23,26 @@ export const containerFormQuery = gql`
       warehouseArrivalAgreedDateApprovedBy {
         ...userAvatarFragment
       }
-
+      tags {
+        ...tagFragment
+      }
       warehouseArrivalActualDateApprovedBy {
         ...userAvatarFragment
+      }
+      shipment {
+        ...shipmentCardFragment
       }
     }
   }
 
   ${userAvatarFragment}
   ${warehouseCardFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+
+  ${metricFragment}
+  ${tagFragment}
 `;
 
 export default containerFormQuery;
