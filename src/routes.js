@@ -37,6 +37,8 @@ const AsyncMetadata = lazy(() => import('./modules/metadata'));
 
 const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
 
+const AsyncContainer = lazy(() => import('./modules/container'));
+
 const Routes: StatelessFunctionalComponent<{}> = () => (
   <>
     <SideBar />
@@ -52,6 +54,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
           <AsyncPartner path="partner/*" />
           <AsyncStaff path="staff/*" />
           <AsyncTags path="tags/*" />
+          <AsyncContainer path="container/*" />
           <AsyncRelationMap path="relation-map/*" />
           <AsyncRelationMapBeta path="relation-map-beta/*" />
           <AsyncNotifications path="notifications/*" />

@@ -1,7 +1,7 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import Icon from 'components/Icon';
@@ -10,7 +10,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
   CardWrapperStyle,
   ImagePartWrapperStyle,
@@ -32,47 +32,23 @@ import {
 } from './style';
 
 type OptionalProps = {
-  onClick: (container: Object) => void,
-  onClone: (container: Object) => void,
-  onClear: (container: Object) => void,
-  selectable: boolean,
+  actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
   container: Object,
-  currency: string,
-  saveOnBlur: Function,
 };
 
 const defaultProps = {
-  onClick: () => {},
-  onClone: () => {},
-  onClear: () => {},
-  selectable: false,
+  actions: [],
 };
 
-const ShipmentContainerCard = ({
-  container,
-  onClick,
-  onClear,
-  onClone,
-  saveOnBlur,
-  currency,
-  selectable,
-  ...rest
-}: Props) => {
+const ContainerCard = ({ container, ...rest }: Props) => {
   if (!container) return '';
-
-  const actions = selectable
-    ? []
-    : [
-        <CardAction icon="CLONE" onClick={() => onClone(container)} />,
-        <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(container)} />,
-      ];
-
   const {
     representativeBatch,
     shipment,
+    id,
     no,
     totalVolume,
     batches,
@@ -89,30 +65,14 @@ const ShipmentContainerCard = ({
     representativeBatch
   );
   const productImage = getProductImage(product);
-
-  const newContainer = {
-    ...container,
-    no,
-    totalVolume,
-    warehouseArrivalAgreedDate,
-    warehouseArrivalActualDate,
-  };
-
   return (
-    <BaseCard
-      icon="CONTAINER"
-      color="CONTAINER"
-      showActionsOnHover
-      actions={actions}
-      selectable={selectable}
-      {...rest}
-    >
-      <div className={CardWrapperStyle} onClick={() => onClick(newContainer)} role="presentation">
-        <div
-          className={ImagePartWrapperStyle}
-          onClick={() => onClick(newContainer)}
-          role="presentation"
-        >
+    <BaseCard icon="CONTAINER" color="CONTAINER" {...rest}>
+      <div
+        className={CardWrapperStyle}
+        onClick={() => navigate(`/container/${encodeId(id)}`)}
+        role="presentation"
+      >
+        <div className={ImagePartWrapperStyle}>
           <div className={ImageWrapperStyle}>
             <img className={ImageStyle} src={productImage} alt="product_image" />
           </div>
@@ -187,7 +147,7 @@ const ShipmentContainerCard = ({
           </div>
           <div className={InputIconStyle}>
             <Display align="left">
-              <FormattedDate value={warehouseArrivalAgreedDate} mode="datetime" />
+              <FormattedDate value={warehouseArrivalActualDate} mode="datetime" />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalActualDateApprovedBy)}>
               <Icon icon="CHECKED" />
@@ -215,6 +175,6 @@ const ShipmentContainerCard = ({
   );
 };
 
-ShipmentContainerCard.defaultProps = defaultProps;
+ContainerCard.defaultProps = defaultProps;
 
-export default ShipmentContainerCard;
+export default ContainerCard;
