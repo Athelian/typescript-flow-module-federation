@@ -174,11 +174,7 @@ const ShipmentContainerCard = ({
           </div>
           <div className={InputIconStyle}>
             <Display align="left">
-              <FormattedDate
-                value={warehouseArrivalAgreedDate}
-                mode="datetime"
-                timeFormat={{ hour12: false }}
-              />
+              <FormattedDate value={warehouseArrivalAgreedDate} mode="datetime" />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalAgreedDateApprovedBy)}>
               {warehouseArrivalAgreedDateApprovedBy ? (
@@ -199,11 +195,7 @@ const ShipmentContainerCard = ({
           </div>
           <div className={InputIconStyle}>
             <Display align="left">
-              <FormattedDate
-                value={warehouseArrivalAgreedDate}
-                mode="datetime"
-                timeFormat={{ hour12: false }}
-              />
+              <FormattedDate value={warehouseArrivalAgreedDate} mode="datetime" />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalActualDateApprovedBy)}>
               {warehouseArrivalActualDateApprovedBy ? (
