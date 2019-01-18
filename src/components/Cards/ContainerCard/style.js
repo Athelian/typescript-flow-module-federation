@@ -141,9 +141,6 @@ export const ApprovalIconStyle = (approval: boolean): string => css`
   color: ${approval ? colors.BLUE : colors.GRAY_LIGHT};
 `;
 
-export const WarehouseNameWrapperStyle: string = css`
-  padding: 0 5px;
-`;
 export const TagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   ${borderRadiuses.MAIN};

@@ -26,9 +26,7 @@ import {
   IconInputStyle,
   InputIconStyle,
   WarehouseIconStyle,
-  WarehouseNameWrapperStyle,
   LabelStyle,
-  // WarehouseSelectButtonStyle,
   ApprovalIconStyle,
   TagsWrapperStyle,
 } from './style';
@@ -159,9 +157,7 @@ const ShipmentContainerCard = ({
             >
               <Icon icon="WAREHOUSE" />
             </Link>
-            <div className={WarehouseNameWrapperStyle}>
-              <Display align="left">{warehouse.name}</Display>
-            </div>
+            <Display align="left">{warehouse.name}</Display>
           </div>
 
           <div className={LabelStyle}>
@@ -177,11 +173,7 @@ const ShipmentContainerCard = ({
               <FormattedDate value={warehouseArrivalAgreedDate} mode="datetime" />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalAgreedDateApprovedBy)}>
-              {warehouseArrivalAgreedDateApprovedBy ? (
-                <Icon icon="CHECKED" />
-              ) : (
-                <Icon icon="UNCHECKED" />
-              )}
+              <Icon icon="CHECKED" />
             </div>
           </div>
 
@@ -198,11 +190,7 @@ const ShipmentContainerCard = ({
               <FormattedDate value={warehouseArrivalAgreedDate} mode="datetime" />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalActualDateApprovedBy)}>
-              {warehouseArrivalActualDateApprovedBy ? (
-                <Icon icon="CHECKED" />
-              ) : (
-                <Icon icon="UNCHECKED" />
-              )}
+              <Icon icon="CHECKED" />
             </div>
           </div>
           <div className={DividerStyle} />
