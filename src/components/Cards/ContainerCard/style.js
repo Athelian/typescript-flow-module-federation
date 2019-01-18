@@ -14,7 +14,7 @@ export const CardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 348px;
+  height: 350px;
 `;
 
 export const ImagePartWrapperStyle: string = css`
@@ -139,12 +139,11 @@ export const InputIconStyle: string = css`
 export const ApprovalIconStyle = (approval: boolean): string => css`
   ${fontSizes.MAIN};
   color: ${approval ? colors.BLUE : colors.GRAY_LIGHT};
-  &:hover,
-  :focus {
-    color: ${approval ? colors.BLUE_DARK : colors.GRAY};
-  }
 `;
 
+export const WarehouseNameWrapperStyle: string = css`
+  padding: 0 5px;
+`;
 export const TagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   ${borderRadiuses.MAIN};

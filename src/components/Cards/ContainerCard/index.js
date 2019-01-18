@@ -8,7 +8,7 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
-import { Label, Display, DefaultStyle } from 'components/Form';
+import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -26,6 +26,7 @@ import {
   IconInputStyle,
   InputIconStyle,
   WarehouseIconStyle,
+  WarehouseNameWrapperStyle,
   LabelStyle,
   // WarehouseSelectButtonStyle,
   ApprovalIconStyle,
@@ -124,7 +125,7 @@ const ShipmentContainerCard = ({
         </div>
 
         <div className={InfoPartWrapperStyle}>
-          <div className={InputStyle} onClick={evt => evt.stopPropagation()} role="presentation">
+          <div className={InputStyle}>
             <Display align="left">{no}</Display>
           </div>
 
@@ -158,12 +159,9 @@ const ShipmentContainerCard = ({
             >
               <Icon icon="WAREHOUSE" />
             </Link>
-            {/* clicking, open slide view */}
-            <DefaultStyle type="button" height="20px">
-              {/* <button type="button" className={WarehouseSelectButtonStyle}> */}
+            <div className={WarehouseNameWrapperStyle}>
               <Display align="left">{warehouse.name}</Display>
-              {/* </button> */}
-            </DefaultStyle>
+            </div>
           </div>
 
           <div className={LabelStyle}>
@@ -174,11 +172,7 @@ const ShipmentContainerCard = ({
               />
             </Label>
           </div>
-          <div
-            className={InputIconStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
+          <div className={InputIconStyle}>
             <Display align="left">
               <FormattedDate
                 value={warehouseArrivalAgreedDate}
@@ -203,11 +197,7 @@ const ShipmentContainerCard = ({
               />
             </Label>
           </div>
-          <div
-            className={InputIconStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
+          <div className={InputIconStyle}>
             <Display align="left">
               <FormattedDate
                 value={warehouseArrivalAgreedDate}
