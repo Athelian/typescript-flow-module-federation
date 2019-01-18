@@ -49,10 +49,7 @@ class BatchFormWrapper extends React.Component<Props> {
     initDetailValues({
       ...rest,
       orderItem,
-      ...((typeof autoCalculatePackageQuantity === 'boolean' &&
-        autoCalculatePackageQuantity &&
-        !packageQuantity) ||
-      !autoCalculatePackageQuantity
+      ...((autoCalculatePackageQuantity && !packageQuantity) || !autoCalculatePackageQuantity
         ? { packageQuantity: calculatePackageQuantity(batch) }
         : {}),
       autoCalculatePackageQuantity:
