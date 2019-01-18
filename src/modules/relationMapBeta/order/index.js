@@ -71,7 +71,6 @@ const Order = ({ intl }: Props) => {
           }
           const {
             entities: { orders, orderItems, batches, shipments },
-            // $FlowFixMe `data` is a exact empty object `{||}` for flow, so the field `orders` cannot exist
           } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
 
           const highLightEntities = findHighLightEntities(state.highlight, {
