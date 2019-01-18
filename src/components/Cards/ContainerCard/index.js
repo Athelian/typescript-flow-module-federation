@@ -51,7 +51,7 @@ const defaultProps = {
   selectable: false,
 };
 
-const ShipmentContainerCard = ({
+const ContainerCard = ({
   container,
   onClick,
   onClear,
@@ -215,6 +215,6 @@ const ShipmentContainerCard = ({
   );
 };
 
-ShipmentContainerCard.defaultProps = defaultProps;
+ContainerCard.defaultProps = defaultProps;
 
-export default ShipmentContainerCard;
+export default ContainerCard;
