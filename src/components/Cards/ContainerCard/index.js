@@ -43,7 +43,7 @@ const defaultProps = {
   actions: [],
 };
 
-const ContainerCard = ({ container, actions, ...rest }: Props) => {
+const ContainerCard = ({ container, ...rest }: Props) => {
   if (!container) return '';
   const {
     representativeBatch,
@@ -66,13 +66,13 @@ const ContainerCard = ({ container, actions, ...rest }: Props) => {
   );
   const productImage = getProductImage(product);
   return (
-    <BaseCard icon="CONTAINER" color="CONTAINER" showActionsOnHover actions={actions} {...rest}>
-      <div className={CardWrapperStyle}>
-        <div
-          className={ImagePartWrapperStyle}
-          onClick={() => navigate(`/container/${encodeId(id)}`)}
-          role="presentation"
-        >
+    <BaseCard icon="CONTAINER" color="CONTAINER" {...rest}>
+      <div
+        className={CardWrapperStyle}
+        onClick={() => navigate(`/container/${encodeId(id)}`)}
+        role="presentation"
+      >
+        <div className={ImagePartWrapperStyle}>
           <div className={ImageWrapperStyle}>
             <img className={ImageStyle} src={productImage} alt="product_image" />
           </div>
