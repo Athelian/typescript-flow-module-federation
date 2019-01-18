@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
@@ -10,7 +10,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
   CardWrapperStyle,
   ImagePartWrapperStyle,
@@ -36,6 +36,7 @@ type OptionalProps = {
   onClone: (container: Object) => void,
   onClear: (container: Object) => void,
   selectable: boolean,
+  actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
@@ -49,6 +50,7 @@ const defaultProps = {
   onClone: () => {},
   onClear: () => {},
   selectable: false,
+  actions: [],
 };
 
 const ContainerCard = ({
@@ -59,17 +61,10 @@ const ContainerCard = ({
   saveOnBlur,
   currency,
   selectable,
+  actions,
   ...rest
 }: Props) => {
   if (!container) return '';
-
-  const actions = selectable
-    ? []
-    : [
-        <CardAction icon="CLONE" onClick={() => onClone(container)} />,
-        <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(container)} />,
-      ];
-
   const {
     representativeBatch,
     shipment,
