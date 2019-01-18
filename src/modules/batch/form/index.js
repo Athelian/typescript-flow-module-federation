@@ -8,6 +8,7 @@ import BatchFormContainer from 'modules/batch/form/container';
 import Icon from 'components/Icon';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
+import { isEnableBetaFeature } from 'utils/env';
 import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import { SyncButton, CloneButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
@@ -161,13 +162,15 @@ export default class BatchForm extends React.Component<Props> {
           <ShipmentSection shipment={batch.shipment} />
         </SectionWrapper>
 
-        <SectionWrapper id="containerSection">
-          <SectionHeader
-            icon="CONTAINER"
-            title={<FormattedMessage id="modules.Batches.container" defaultMessage="CONTAINER" />}
-          />
-          <ContainerSection container={batch.container} />
-        </SectionWrapper>
+        {isEnableBetaFeature && (
+          <SectionWrapper id="containerSection">
+            <SectionHeader
+              icon="CONTAINER"
+              title={<FormattedMessage id="modules.Batches.container" defaultMessage="CONTAINER" />}
+            />
+            <ContainerSection container={batch.container} />
+          </SectionWrapper>
+        )}
 
         <SectionWrapper id="orderSection">
           <SectionHeader
