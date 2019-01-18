@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import Icon from 'components/Icon';
@@ -32,42 +32,23 @@ import {
 } from './style';
 
 type OptionalProps = {
-  onClick: (container: Object) => void,
-  onClone: (container: Object) => void,
-  onClear: (container: Object) => void,
-  selectable: boolean,
   actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
   container: Object,
-  currency: string,
-  saveOnBlur: Function,
 };
 
 const defaultProps = {
-  onClick: () => {},
-  onClone: () => {},
-  onClear: () => {},
-  selectable: false,
   actions: [],
 };
 
-const ContainerCard = ({
-  container,
-  onClick,
-  onClear,
-  onClone,
-  saveOnBlur,
-  currency,
-  selectable,
-  actions,
-  ...rest
-}: Props) => {
+const ContainerCard = ({ container, actions, ...rest }: Props) => {
   if (!container) return '';
   const {
     representativeBatch,
     shipment,
+    id,
     no,
     totalVolume,
     batches,
@@ -84,28 +65,12 @@ const ContainerCard = ({
     representativeBatch
   );
   const productImage = getProductImage(product);
-
-  const newContainer = {
-    ...container,
-    no,
-    totalVolume,
-    warehouseArrivalAgreedDate,
-    warehouseArrivalActualDate,
-  };
-
   return (
-    <BaseCard
-      icon="CONTAINER"
-      color="CONTAINER"
-      showActionsOnHover
-      actions={actions}
-      selectable={selectable}
-      {...rest}
-    >
-      <div className={CardWrapperStyle} onClick={() => onClick(newContainer)} role="presentation">
+    <BaseCard icon="CONTAINER" color="CONTAINER" showActionsOnHover actions={actions} {...rest}>
+      <div className={CardWrapperStyle}>
         <div
           className={ImagePartWrapperStyle}
-          onClick={() => onClick(newContainer)}
+          onClick={() => navigate(`/container/${encodeId(id)}`)}
           role="presentation"
         >
           <div className={ImageWrapperStyle}>
@@ -182,7 +147,7 @@ const ContainerCard = ({
           </div>
           <div className={InputIconStyle}>
             <Display align="left">
-              <FormattedDate value={warehouseArrivalAgreedDate} mode="datetime" />
+              <FormattedDate value={warehouseArrivalActualDate} mode="datetime" />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalActualDateApprovedBy)}>
               <Icon icon="CHECKED" />
