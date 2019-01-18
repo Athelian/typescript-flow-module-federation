@@ -1,5 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
+import { isEnableBetaFeature } from 'utils/env';
 import {
   fontSizes,
   fontSizesWithHeights,
@@ -14,7 +15,7 @@ export const ShipmentBatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 354px;
+  height: ${isEnableBetaFeature ? '379px' : '354px'};
 `;
 
 export const ProductWrapperStyle: string = css`
