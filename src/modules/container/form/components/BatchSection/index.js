@@ -125,7 +125,7 @@ function BatchSection({ intl }: Props) {
       </SectionNavBar>
       <div className={ItemsSectionBodyStyle}>
         <Subscribe to={[ContainerFormContainer]}>
-          {({ state: { batches = [] }, setFieldValue, setFieldArrayValue }) =>
+          {({ state: { batches = [] }, setFieldValue, setDeepFieldValue }) =>
             batches.length === 0 ? (
               <div className={EmptyMessageStyle}>
                 <FormattedMessage
@@ -155,7 +155,7 @@ function BatchSection({ intl }: Props) {
                                   onCancel={() => batchSlideToggle(false)}
                                   onSave={updatedBatch => {
                                     batchSlideToggle(false);
-                                    setFieldArrayValue(position, updatedBatch);
+                                    setDeepFieldValue(`batches.${position}`, updatedBatch);
                                   }}
                                 />
                               )}
@@ -165,8 +165,8 @@ function BatchSection({ intl }: Props) {
                         <div className={ItemStyle}>
                           <ContainerBatchCard
                             batch={item}
-                            saveOnBlur={updateBatch => {
-                              setFieldArrayValue(position, updateBatch);
+                            saveOnBlur={updatedBatch => {
+                              setDeepFieldValue(`batches.${position}`, updatedBatch);
                             }}
                             onClick={() => batchSlideToggle(true)}
                             onClear={({ id }) => {
