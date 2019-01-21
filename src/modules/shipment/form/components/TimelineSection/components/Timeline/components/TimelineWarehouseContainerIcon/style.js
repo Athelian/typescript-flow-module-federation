@@ -31,7 +31,9 @@ export const TimelineRingWrapperStyle = (percent: number, size: number) => css`
   position: absolute;
   width: ${size}px;
   height: ${size}px;
-  clip: ${percent > 50 ? 'rect(auto, auto, auto, auto)' : 'rect(0em, 30px, 30px, 15px)'};
+  clip: ${percent > 50
+    ? 'rect(auto, auto, auto, auto)'
+    : `rect(0em, ${size}px, ${size}px, ${size / 2}px)`};
 `;
 
 export const TimelineRingStyle = ({ size, color }: { size: number, color: string }) => css`
