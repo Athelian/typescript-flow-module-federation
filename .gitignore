@@ -35,6 +35,7 @@ styleguide
 
 # deploy
 .netlify
+.firebase
 
 # e2e
 cypress/videos
