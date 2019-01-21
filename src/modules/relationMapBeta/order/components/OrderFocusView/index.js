@@ -137,8 +137,9 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
             <RelationLine
               type={4}
               isTargeted={
-                uiSelectors.isTarget(ORDER_ITEM, orderItem.id) &&
-                uiSelectors.isTarget(ORDER, item.id)
+                findLastIndex(item.orderItems, currentOrderItem =>
+                  uiSelectors.isTarget(ORDER_ITEM, currentOrderItem.id)
+                ) >= position && uiSelectors.isTarget(ORDER, item.id)
               }
               isFocused={
                 uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
@@ -146,7 +147,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                   uiSelectors.isSelectEntity(highLightEntities, ORDER_ITEM, currentOrderItem.id)
                 ) >= position
               }
-              hasRelation
+              hasRelation={uiSelectors.isTarget(ORDER_ITEM, orderItem.id)}
             />
             <OrderItem
               wrapperClassName={ItemWrapperStyle(
@@ -201,8 +202,10 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                         <RelationLine
                           type={2}
                           isTargeted={
-                            uiSelectors.isTarget(ORDER_ITEM, orderItem.id) &&
-                            uiSelectors.isTarget(ORDER, item.id)
+                            uiSelectors.isTarget(ORDER, item.id) &&
+                            findLastIndex(item.orderItems, currentOrderItem =>
+                              uiSelectors.isTarget(ORDER_ITEM, currentOrderItem.id)
+                            ) > position
                           }
                           isFocused={
                             uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
@@ -214,7 +217,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                               )
                             ) > position
                           }
-                          hasRelation
+                          hasRelation={uiSelectors.isTarget(ORDER_ITEM, orderItem.id)}
                         />
                       ) : (
                         <div />
