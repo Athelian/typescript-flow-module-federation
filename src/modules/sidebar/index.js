@@ -4,7 +4,6 @@ import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { isEnableBetaFeature } from 'utils/env';
 import { UIConsumer } from 'modules/ui';
-import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle, BetaTagWrapperStyle, BetaTagStyle } from './style';
 import messages from './messages';
