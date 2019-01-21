@@ -17,7 +17,6 @@ import { ShipmentBatchesContainer } from './containers';
 import { ShipmentSection } from './components';
 import { ShipmentFormWrapperStyle } from './style';
 
-// $FlowFixMe https://github.com/facebook/flow/issues/7093
 const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
 const AsyncContainerCargoSection = lazy(() => import('./components/ContainerCargoSection'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
