@@ -164,7 +164,7 @@ const ContainerSection = () => (
                       ) : (
                         <WarehouseCard
                           selectable
-                          item={values.warehouse}
+                          warehouse={values.warehouse}
                           onSelect={() => slideToggle(true)}
                           readOnly
                         />

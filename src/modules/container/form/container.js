@@ -12,6 +12,7 @@ type Metric = {
 export type ContainerFormState = {
   id?: ?string,
   no?: ?string,
+  archived: boolean,
   warehouse: Object,
   warehouseArrivalAgreedDate: string,
   warehouseArrivalAgreedDateAssignedTo: Object,
@@ -32,6 +33,7 @@ export type ContainerFormState = {
   totalPrice: Metric,
 
   shipment: Object,
+  batches: Array<Object>,
 };
 
 const initValues = {};

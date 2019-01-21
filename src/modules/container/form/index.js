@@ -11,7 +11,7 @@ import Icon from 'components/Icon';
 import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 
 // import ConfirmDialog from 'components/Dialog/ConfirmDialog';
-import { ContainerSection, ShipmentSection } from './components';
+import { ContainerSection, ShipmentSection, BatchSection } from './components';
 
 import { FormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
 
@@ -88,6 +88,14 @@ export default class containerForm extends React.Component<Props> {
             title={<FormattedMessage id="modules.container.shipment" defaultMessage="SHIPMENT" />}
           />
           <ShipmentSection shipment={container.shipment} />
+        </SectionWrapper>
+
+        <SectionWrapper id="BatchSection">
+          <SectionHeader
+            icon="BATCH"
+            title={<FormattedMessage id="modules.container.batch" defaultMessage="BATCH" />}
+          />
+          <BatchSection />
         </SectionWrapper>
       </div>
     );

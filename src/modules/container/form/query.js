@@ -9,12 +9,24 @@ import {
   portFragment,
   metricFragment,
   tagFragment,
+  batchFormFragment,
+  sizeFragment,
+  priceFragment,
+  orderCardFragment,
+  imageFragment,
+  partnerNameFragment,
+  partnerCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const containerFormQuery = gql`
   query($id: ID!) {
     container(id: $id) {
       no
+      archived
       warehouse {
         ...warehouseCardFragment
       }
@@ -32,6 +44,10 @@ export const containerFormQuery = gql`
       shipment {
         ...shipmentCardFragment
       }
+
+      batches {
+        ...batchFormFragment
+      }
     }
   }
 
@@ -43,6 +59,20 @@ export const containerFormQuery = gql`
 
   ${metricFragment}
   ${tagFragment}
+  ${batchFormFragment}
+
+  ${sizeFragment}
+
+  ${priceFragment}
+  ${orderCardFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+
+  ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default containerFormQuery;
