@@ -262,7 +262,9 @@ const entitySelector = (state: UIState, entity: string) =>
 
 export function selectors(state: UIState) {
   return {
-    isSelectEntity: (entity: string) => entitySelector(state, entity),
+    isSelectEntity: (highLightEntities: Array<string>, entity: string, id: string) =>
+      highLightEntities.includes(`${entity}-${id}`),
+    isSelectAllEntity: (entity: string) => entitySelector(state, entity),
     isTarget: (entity: string, id: string) => state.targets.includes(`${entity}-${id}`),
   };
 }

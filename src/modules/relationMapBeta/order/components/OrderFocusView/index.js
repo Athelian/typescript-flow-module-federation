@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { findLastIndex } from 'lodash';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { actionCreators, selectors } from 'modules/relationMapBeta/order/store';
@@ -50,7 +51,28 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
         )}
         {...item}
       />
-      <RelationLine type={1} />
+      <RelationLine
+        type={1}
+        isTargeted={
+          uiSelectors.isTarget(ORDER, item.id) &&
+          item.orderItems.map(({ id }) => id).some(id => uiSelectors.isTarget(ORDER_ITEM, id))
+        }
+        hasRelation={
+          (!state.expandCards.orders.includes(item.id) &&
+            item.orderItems.map(({ id }) => id).some(id => uiSelectors.isTarget(ORDER_ITEM, id))) ||
+          (!state.expandCards.orders.includes(item.id) &&
+            ((highlight.type === ORDER && highlight.selectedId === item.id) ||
+              item.orderItems
+                .map(({ id }) => id)
+                .some(id => highLightEntities.includes(`${ORDER_ITEM}-${id}`))))
+        }
+        isFocused={
+          (highlight.type === ORDER && highlight.selectedId === item.id) ||
+          item.orderItems
+            .map(({ id }) => id)
+            .some(id => highLightEntities.includes(`${ORDER_ITEM}-${id}`))
+        }
+      />
       <TotalItems
         wrapperClassName={ItemWrapperStyle(
           !state.expandCards.orders.includes(item.id) &&
@@ -65,7 +87,26 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
         total={item.orderItemCount}
         onToggle={() => actions.toggleExpand(ORDER, item.id)}
       />
-      <RelationLine type={1} />
+      <RelationLine
+        type={1}
+        isTargeted={
+          !state.expandCards.orders.includes(item.id) &&
+          item.orderItems
+            .reduce((result, orderItem) => result.concat(orderItem.batches.map(({ id }) => id)), [])
+            .some(id => uiSelectors.isTarget(BATCH, id))
+        }
+        isFocused={
+          !state.expandCards.orders.includes(item.id) &&
+          ((highlight.type === ORDER && highlight.selectedId === item.id) ||
+            item.orderItems
+              .reduce(
+                (result, orderItem) => result.concat(orderItem.batches.map(({ id }) => id)),
+                []
+              )
+              .some(id => highLightEntities.includes(`${BATCH}-${id}`)))
+        }
+        hasRelation
+      />
       <TotalItems
         wrapperClassName={ItemWrapperStyle(
           !state.expandCards.orders.includes(item.id) &&
@@ -89,11 +130,24 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
         onToggle={() => actions.toggleExpand(ORDER, item.id)}
       />
       {state.expandCards.orders.includes(item.id) &&
-        item.orderItems.map(orderItem => (
+        item.orderItems.map((orderItem, position) => (
           <React.Fragment key={orderItem.id}>
             {/* Render order item and first batch if available */}
             <div />
-            <RelationLine type={4} />
+            <RelationLine
+              type={4}
+              isTargeted={
+                uiSelectors.isTarget(ORDER_ITEM, orderItem.id) &&
+                uiSelectors.isTarget(ORDER, item.id)
+              }
+              isFocused={
+                uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
+                findLastIndex(item.orderItems, currentOrderItem =>
+                  uiSelectors.isSelectEntity(highLightEntities, ORDER_ITEM, currentOrderItem.id)
+                ) >= position
+              }
+              hasRelation
+            />
             <OrderItem
               wrapperClassName={ItemWrapperStyle(
                 highLightEntities.includes(`${ORDER_ITEM}-${orderItem.id}`),
@@ -104,7 +158,24 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
             />
             {orderItem.batches.length > 0 ? (
               <>
-                <RelationLine type={1} />
+                <RelationLine
+                  type={1}
+                  isTargeted={
+                    orderItem.batches.some(batchItem =>
+                      uiSelectors.isTarget(BATCH, batchItem.id)
+                    ) && uiSelectors.isTarget(ORDER_ITEM, orderItem.id)
+                  }
+                  isFocused={
+                    orderItem.batches.some(batchItem =>
+                      uiSelectors.isSelectEntity(highLightEntities, BATCH, batchItem.id)
+                    ) && uiSelectors.isSelectEntity(highLightEntities, ORDER_ITEM, orderItem.id)
+                  }
+                  hasRelation={
+                    (uiSelectors.isTarget(BATCH, orderItem.batches[0].id) &&
+                      uiSelectors.isTarget(ORDER_ITEM, orderItem.id)) ||
+                    uiSelectors.isSelectEntity(highLightEntities, BATCH, orderItem.batches[0].id)
+                  }
+                />
                 <Batch
                   wrapperClassName={ItemWrapperStyle(
                     highLightEntities.includes(`${BATCH}-${orderItem.batches[0].id}`),
@@ -126,9 +197,47 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                   index > 0 && (
                     <React.Fragment key={batch.id}>
                       <div />
-                      {item.orderItems.length > 1 ? <RelationLine type={2} /> : <div />}
+                      {item.orderItems.length > 1 && position < item.orderItems.length - 1 ? (
+                        <RelationLine
+                          type={2}
+                          isTargeted={
+                            uiSelectors.isTarget(ORDER_ITEM, orderItem.id) &&
+                            uiSelectors.isTarget(ORDER, item.id)
+                          }
+                          isFocused={
+                            uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
+                            item.orderItems.findIndex(currentOrderItem =>
+                              uiSelectors.isSelectEntity(
+                                highLightEntities,
+                                ORDER_ITEM,
+                                currentOrderItem.id
+                              )
+                            ) > position
+                          }
+                          hasRelation
+                        />
+                      ) : (
+                        <div />
+                      )}
                       <div />
-                      <RelationLine type={4} />
+                      <RelationLine
+                        type={4}
+                        isTargeted={
+                          findLastIndex(orderItem.batches, batchItem =>
+                            uiSelectors.isTarget(BATCH, batchItem.id)
+                          ) >= index && uiSelectors.isTarget(ORDER_ITEM, orderItem.id)
+                        }
+                        isFocused={
+                          findLastIndex(orderItem.batches, batchItem =>
+                            uiSelectors.isSelectEntity(highLightEntities, BATCH, batchItem.id)
+                          ) >= index &&
+                          uiSelectors.isSelectEntity(highLightEntities, ORDER_ITEM, orderItem.id)
+                        }
+                        hasRelation={
+                          uiSelectors.isTarget(BATCH, batch.id) ||
+                          uiSelectors.isSelectEntity(highLightEntities, BATCH, batch.id)
+                        }
+                      />
                       <Batch
                         wrapperClassName={ItemWrapperStyle(
                           highLightEntities.includes(`${BATCH}-${batch.id}`),

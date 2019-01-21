@@ -135,7 +135,7 @@ const Order = ({ intl }: Props) => {
                   <div className={OrderFocusEntityHeaderWrapperStyle}>
                     <EntityHeader
                       icon="ORDER"
-                      color={uiSelectors.isSelectEntity('ORDER') ? 'ORDER_DARK' : 'ORDER'}
+                      color={uiSelectors.isSelectAllEntity('ORDER') ? 'ORDER_DARK' : 'ORDER'}
                       label={intl.formatMessage(messages.ordersLabel)}
                       no={Object.keys(orders || []).length}
                       onClick={() => actions.toggleSelectAll('ORDER')}
@@ -143,7 +143,9 @@ const Order = ({ intl }: Props) => {
                     <EntityHeader
                       icon="ORDER_ITEM"
                       color={
-                        uiSelectors.isSelectEntity('ORDER_ITEM') ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'
+                        uiSelectors.isSelectAllEntity('ORDER_ITEM')
+                          ? 'ORDER_ITEM_DARK'
+                          : 'ORDER_ITEM'
                       }
                       label={intl.formatMessage(messages.itemsLabel)}
                       no={Object.keys(orderItems || []).length}
@@ -151,14 +153,16 @@ const Order = ({ intl }: Props) => {
                     />
                     <EntityHeader
                       icon="BATCH"
-                      color={uiSelectors.isSelectEntity('BATCH') ? 'BATCH_DARK' : 'BATCH'}
+                      color={uiSelectors.isSelectAllEntity('BATCH') ? 'BATCH_DARK' : 'BATCH'}
                       label={intl.formatMessage(messages.batchesLabel)}
                       no={Object.keys(batches || []).length}
                       onClick={() => actions.toggleSelectAll('BATCH')}
                     />
                     <EntityHeader
                       icon="SHIPMENT"
-                      color={uiSelectors.isSelectEntity('SHIPMENT') ? 'SHIPMENT_DARK' : 'SHIPMENT'}
+                      color={
+                        uiSelectors.isSelectAllEntity('SHIPMENT') ? 'SHIPMENT_DARK' : 'SHIPMENT'
+                      }
                       label={intl.formatMessage(messages.shipmentsLabel)}
                       no={
                         state.toggleShipmentList
