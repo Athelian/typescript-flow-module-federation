@@ -26,6 +26,7 @@ steps:
 - name: 'gcr.io/cloud-builders/yarn'
   args: ['build:stg']
 - name: 'gcr.io/zenport-183806/firebase'
+  args: ['deploy', '--only', 'hosting:staging']
 secrets:
 - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
   secretEnv:
