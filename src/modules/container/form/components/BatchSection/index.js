@@ -14,9 +14,9 @@ import messages from 'modules/shipment/messages';
 import ContainerFormContainer from 'modules/container/form/container';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import SelectOrderItems from 'providers/SelectOrderItems';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 
-import SelectOrderItems from './components/SelectOrderItems';
 import {
   ItemsSectionWrapperStyle,
   ItemsSectionBodyStyle,
