@@ -20,11 +20,6 @@ export const ItemSectionStyle: string = css`
   grid-gap: 10px;
 `;
 
-export const QuantitySummaryStyle: string = css`
-  display: flex;
-  justify-content: space-between;
-`;
-
 export const DividerStyle: string = css`
   margin: 20px 0;
   height: 1px;
@@ -38,4 +33,10 @@ export const AssignedAndApprovalWrapperStyle: string = css`
   background-color: ${colors.GRAY_SUPER_LIGHT};
   ${borderRadiuses.MAIN};
   padding: 5px 0 10px 0;
+`;
+
+export const SummaryStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 100px;
+  grid-template-columns: repeat(2, 1fr);
 `;

@@ -36,7 +36,15 @@ export type ContainerFormState = {
   batches: Array<Object>,
 };
 
-const initValues = {};
+const initValues = {
+  totalBatchPackages: 0,
+  totalBatchQuantity: 0,
+  totalNumberOfUniqueOrderItems: 0,
+
+  totalVolume: { value: 0, metric: 'm³' },
+  totalWeight: { value: 0, metric: 'cm' },
+  totalPrice: { value: 0, metric: '' },
+};
 
 export default class ContainerFormContainer extends Container<ContainerFormState> {
   state = initValues;

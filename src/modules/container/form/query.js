@@ -45,6 +45,18 @@ export const containerFormQuery = gql`
       tags {
         ...tagFragment
       }
+      totalVolume {
+        ...metricFragment
+      }
+      totalWeight {
+        ...metricFragment
+      }
+      totalPrice {
+        ...metricFragment
+      }
+      totalBatchQuantity
+      totalBatchPackages
+      totalNumberOfUniqueOrderItems
       shipment {
         ...shipmentCardFragment
       }

@@ -16,7 +16,7 @@ import ContainerFormContainer from 'modules/container/form/container';
 import validator from 'modules/container/form/validator';
 import { textInputFactory, dateTimeInputFactory, textAreaFactory } from 'modules/form/helpers';
 
-import { AssignedTo, Approval } from 'modules/container/form/components';
+import { AssignedTo, Approval, ContainerTotalSummary } from 'modules/container/form/components';
 
 import {
   SectionWrapperStyle,
@@ -24,6 +24,7 @@ import {
   ItemSectionStyle,
   DividerStyle,
   AssignedAndApprovalWrapperStyle,
+  SummaryStyle,
 } from './style';
 
 const ContainerSection = () => (
@@ -248,6 +249,10 @@ const ContainerSection = () => (
             </FormField>
 
             <div className={DividerStyle} />
+
+            <div className={SummaryStyle}>
+              <ContainerTotalSummary />
+            </div>
           </>
         );
       }}
