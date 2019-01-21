@@ -18,23 +18,27 @@ import {
 
 type Props = {
   assignedTo: any,
-  setDeepFieldValue: Function,
-  onRemoveAssignTo: Function,
+  setFieldValue: Function,
+  field: string,
 };
 
-const defaultProps = {
-  setDeepFieldValue: () => {},
-  onRemoveAssignTo: () => {},
+const onRemoveAssignTo = (index: number, assignedTo: Array<Object>) => {
+  const assigns = [...assignedTo];
+  assigns.splice(index, 1);
+  return assigns;
 };
 
-const AssignedTo = ({ assignedTo, setDeepFieldValue, onRemoveAssignTo }: Props) => (
+const AssignedTo = ({ assignedTo, setFieldValue, field }: Props) => (
   <div className={AssignmentWrapperStyle}>
     {assignedTo &&
       assignedTo.map(({ id, firstName, lastName }, index) => (
         <div className={AssignmentStyle} key={id}>
           <button
             className={RemoveAssignmentButtonStyle}
-            onClick={() => onRemoveAssignTo(index)}
+            onClick={() => {
+              const newAssignTo = onRemoveAssignTo(index, assignedTo);
+              setFieldValue(field, newAssignTo);
+            }}
             type="button"
           >
             <Icon icon="REMOVE" />
@@ -42,7 +46,7 @@ const AssignedTo = ({ assignedTo, setDeepFieldValue, onRemoveAssignTo }: Props) 
           <UserAvatar firstName={firstName} lastName={lastName} />
         </div>
       ))}
-    {(assignedTo || (assignedTo && assignedTo.length < 5)) && (
+    {(!assignedTo || (assignedTo && assignedTo.length < 5)) && (
       <BooleanValue>
         {({ value: isOpen, set: slideToggle }) => (
           <>
@@ -61,9 +65,9 @@ const AssignedTo = ({ assignedTo, setDeepFieldValue, onRemoveAssignTo }: Props) 
               {isOpen && (
                 <AssignUsers
                   selected={assignedTo}
-                  onSelect={selected => {
+                  onSelect={users => {
                     slideToggle(false);
-                    setDeepFieldValue(`assignedTo`, selected);
+                    setFieldValue(field, users);
                   }}
                   onCancel={() => slideToggle(false)}
                 />
@@ -75,7 +79,5 @@ const AssignedTo = ({ assignedTo, setDeepFieldValue, onRemoveAssignTo }: Props) 
     )}
   </div>
 );
-
-AssignedTo.defaultProps = defaultProps;
 
 export default AssignedTo;

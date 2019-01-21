@@ -27,6 +27,10 @@ export const containerFormQuery = gql`
     container(id: $id) {
       no
       archived
+      updatedAt
+      updatedBy {
+        ...userAvatarFragment
+      }
       warehouse {
         ...warehouseCardFragment
       }
@@ -35,11 +39,11 @@ export const containerFormQuery = gql`
       warehouseArrivalAgreedDateApprovedBy {
         ...userAvatarFragment
       }
-      tags {
-        ...tagFragment
-      }
       warehouseArrivalActualDateApprovedBy {
         ...userAvatarFragment
+      }
+      tags {
+        ...tagFragment
       }
       shipment {
         ...shipmentCardFragment

@@ -3,6 +3,7 @@
 import React from 'react';
 import FormattedName from 'components/FormattedName';
 // import FormattedDate from 'components/FormattedDate';
+
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import { ApproveButton } from 'components/Buttons';
@@ -16,18 +17,17 @@ import {
 } from './style';
 
 type Props = {
-  // approvedAt: string,
+  field: string,
   approvedBy: any,
-  onApproval: Function,
-  onUnApproval: Function,
+  setFieldValue: Function,
 };
 
-const defaultProps = {
-  onApproval: () => {},
-  onUnApproval: () => {},
-};
+const onApproval = (user: Object, setFieldValue: Function, field: string) =>
+  setFieldValue(field, user);
 
-const Approval = ({ approvedBy, onApproval, onUnApproval }: Props) => (
+const onUnApproval = (setFieldValue: Function, field: string) => setFieldValue(field, null);
+
+const Approval = ({ approvedBy, setFieldValue, field }: Props) => (
   <div className={ApprovalWrapperStyle}>
     {approvedBy ? (
       <>
@@ -43,7 +43,7 @@ const Approval = ({ approvedBy, onApproval, onUnApproval }: Props) => (
         <button
           data-testid="unApproveButton"
           className={UnApproveButtonStyle}
-          onClick={onApproval}
+          onClick={() => onUnApproval(setFieldValue, field)}
           type="button"
         >
           <Icon icon="CLEAR" />
@@ -52,13 +52,14 @@ const Approval = ({ approvedBy, onApproval, onUnApproval }: Props) => (
     ) : (
       <UserConsumer>
         {({ user }) => (
-          <ApproveButton data-testid="approveButton" onClick={() => onUnApproval(user)} />
+          <ApproveButton
+            data-testid="approveButton"
+            onClick={() => onApproval(user, setFieldValue, field)}
+          />
         )}
       </UserConsumer>
     )}
   </div>
 );
-
-Approval.defaultProps = defaultProps;
 
 export default Approval;

@@ -72,7 +72,6 @@ const ContainerSection = () => (
                       inputHandlers,
                       name,
                       isNew: false,
-                      required: true,
                       originalValue: originalValues[name],
                       label: (
                         <FormattedMessage
@@ -92,14 +91,22 @@ const ContainerSection = () => (
                         defaultMessage="ASSIGNED TO"
                       />
                     </Label>
-                    <AssignedTo assignedTo={values.warehouseArrivalAgreedDateAssignedTo} />
+                    <AssignedTo
+                      assignedTo={values.warehouseArrivalAgreedDateAssignedTo}
+                      setFieldValue={setFieldValue}
+                      field="warehouseArrivalAgreedDateAssignedTo"
+                    />
                   </GridColumn>
 
                   <GridColumn gap="5px">
                     <Label align="right">
                       <FormattedMessage id="modules.container.approval" defaultMessage="APPROVAL" />
                     </Label>
-                    <Approval approvedBy={values.warehouseArrivalAgreedDateApprovedBy} />
+                    <Approval
+                      approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
+                      setFieldValue={setFieldValue}
+                      field="warehouseArrivalAgreedDateApprovedBy"
+                    />
                   </GridColumn>
                 </div>
 
@@ -115,7 +122,6 @@ const ContainerSection = () => (
                       inputHandlers,
                       name,
                       isNew: false,
-                      required: true,
                       originalValue: originalValues[name],
                       label: (
                         <FormattedMessage
@@ -135,20 +141,28 @@ const ContainerSection = () => (
                         defaultMessage="ASSIGNED TO"
                       />
                     </Label>
-                    <AssignedTo assignedTo={values.warehouseArrivalActualDateAssignedTo} />
+                    <AssignedTo
+                      assignedTo={values.warehouseArrivalActualDateAssignedTo}
+                      setFieldValue={setFieldValue}
+                      field="warehouseArrivalActualDateAssignedTo"
+                    />
                   </GridColumn>
 
                   <GridColumn gap="5px">
                     <Label align="right">
                       <FormattedMessage id="modules.container.approval" defaultMessage="APPROVAL" />
                     </Label>
-                    <Approval approvedBy={values.warehouseArrivalActualDateApprovedBy} />
+                    <Approval
+                      approvedBy={values.warehouseArrivalActualDateApprovedBy}
+                      setFieldValue={setFieldValue}
+                      field="warehouseArrivalActualDateApprovedBy"
+                    />
                   </GridColumn>
                 </div>
               </GridColumn>
 
               <div className={ItemSectionStyle}>
-                <Label required>
+                <Label>
                   <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />
                 </Label>
                 <BooleanValue>

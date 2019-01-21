@@ -8,7 +8,7 @@ export default function dateTimeInputFactory({
   align = 'right',
   width = '200px',
   height = '30px',
-  isNew,
+  isNew = false,
   label,
   name,
   inputHandlers,
@@ -49,12 +49,12 @@ export default function dateTimeInputFactory({
           errorMessage={isTouched && errorMessage}
           changedValues={{
             oldValue: originalValue ? (
-              <FormattedDate value={originalValue} mode="time" />
+              <FormattedDate value={originalValue} mode="datetime" />
             ) : (
               originalValue
             ),
             newValue: inputHandlers.value ? (
-              <FormattedDate value={inputHandlers.value} mode="time" />
+              <FormattedDate value={inputHandlers.value} mode="datetime" />
             ) : (
               inputHandlers.value
             ),
