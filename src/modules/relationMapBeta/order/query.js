@@ -81,7 +81,9 @@ export const orderListQuery = gql`
           id
           quantity
           productProvider {
+            id
             product {
+              id
               name
               serial
             }
