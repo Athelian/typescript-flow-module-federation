@@ -8,9 +8,11 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 // import { isEquals } from 'utils/fp';
 // import { encodeId } from 'utils/id';
-import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 
+import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
+import OrdersSection from 'modules/shipment/form/components/OrdersSection';
 // import ConfirmDialog from 'components/Dialog/ConfirmDialog';
+import { uniqueOrders } from 'modules/container/utils';
 import { ContainerSection, ShipmentSection, BatchSection } from './components';
 
 import { FormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
@@ -96,6 +98,14 @@ export default class containerForm extends React.Component<Props> {
             title={<FormattedMessage id="modules.container.batch" defaultMessage="BATCH" />}
           />
           <BatchSection />
+        </SectionWrapper>
+
+        <SectionWrapper id="OrderSection">
+          <SectionHeader
+            icon="ORDER"
+            title={<FormattedMessage id="modules.container.order" defaultMessage="ORDER" />}
+          />
+          <OrdersSection orders={uniqueOrders(container.batches)} />
         </SectionWrapper>
       </div>
     );
