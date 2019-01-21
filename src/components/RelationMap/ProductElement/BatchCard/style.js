@@ -57,7 +57,7 @@ const IconWrapper = css`
   margin-right: 5px;
 `;
 
-export const LightIconWrapperLightIconWrapper = css`
+export const LightIconWrapper = css`
   ${IconWrapper};
   background-color: ${colors.TEAL};
 `;
