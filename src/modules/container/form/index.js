@@ -1,17 +1,13 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 
 import { FormattedMessage } from 'react-intl';
-// import { Subscribe } from 'unstated';
-// import { BooleanValue } from 'react-values';
-// import containerFormContainer from 'modules/container/form/container';
+import { Subscribe } from 'unstated';
+import containerFormContainer from 'modules/container/form/container';
 import Icon from 'components/Icon';
-// import { isEquals } from 'utils/fp';
-// import { encodeId } from 'utils/id';
 
 import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import OrdersSection from 'modules/shipment/form/components/OrdersSection';
-// import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { uniqueOrders } from 'modules/container/utils';
 import { ContainerSection, ShipmentSection, BatchSection } from './components';
 
@@ -83,7 +79,6 @@ export default class containerForm extends React.Component<Props> {
           </SectionHeader>
           <ContainerSection />
         </SectionWrapper>
-
         <SectionWrapper id="ShipmentSection">
           <SectionHeader
             icon="SHIPMENT"
@@ -91,22 +86,40 @@ export default class containerForm extends React.Component<Props> {
           />
           <ShipmentSection shipment={container.shipment} />
         </SectionWrapper>
-
-        <SectionWrapper id="BatchSection">
-          <SectionHeader
-            icon="BATCH"
-            title={<FormattedMessage id="modules.container.batch" defaultMessage="BATCH" />}
-          />
-          <BatchSection />
-        </SectionWrapper>
-
-        <SectionWrapper id="OrderSection">
-          <SectionHeader
-            icon="ORDER"
-            title={<FormattedMessage id="modules.container.order" defaultMessage="ORDER" />}
-          />
-          <OrdersSection orders={uniqueOrders(container.batches)} />
-        </SectionWrapper>
+        <Subscribe to={[containerFormContainer]}>
+          {({ state: values }) => {
+            const { batches = [] } = values;
+            const orders = uniqueOrders(batches);
+            return (
+              <>
+                <SectionWrapper id="BatchSection">
+                  <SectionHeader
+                    icon="BATCH"
+                    title={
+                      <>
+                        <FormattedMessage id="modules.container.batch" defaultMessage="BATCHES" /> (
+                        {batches.length})
+                      </>
+                    }
+                  />
+                  <BatchSection />
+                </SectionWrapper>
+                <SectionWrapper id="OrderSection">
+                  <SectionHeader
+                    icon="ORDER"
+                    title={
+                      <>
+                        <FormattedMessage id="modules.container.order" defaultMessage="ORDERS" /> (
+                        {orders.length})
+                      </>
+                    }
+                  />
+                  <OrdersSection orders={orders} />
+                </SectionWrapper>
+              </>
+            );
+          }}
+        </Subscribe>
       </div>
     );
   }
