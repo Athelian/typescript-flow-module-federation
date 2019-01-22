@@ -15,6 +15,7 @@ import {
   HorizontalTimelineWrapperStyle,
   BlankSpaceStyle,
   ContainerIconWrapperStyle,
+  WarehouseContainerIconWrapperStyle,
   WarehouseContainerWrapperStyle,
 } from './style';
 
@@ -112,7 +113,9 @@ const HorizontalTimeline = ({ shipment }: Props) => {
           <div className={ContainerIconWrapperStyle}>
             <TimelineContainerIcon />
           </div>
-          <TimelineWarehouseContainerIcon containers={containers} />
+          <div className={WarehouseContainerIconWrapperStyle}>
+            <TimelineWarehouseContainerIcon containers={containers} />
+          </div>
         </div>
       ) : (
         <TimelineIcon

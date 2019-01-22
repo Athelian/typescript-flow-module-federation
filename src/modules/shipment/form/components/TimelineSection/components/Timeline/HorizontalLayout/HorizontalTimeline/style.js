@@ -13,10 +13,18 @@ export const BlankSpaceStyle: string = css`
 
 export const ContainerIconWrapperStyle: string = css`
   position: absolute;
-  top: 0px;
-  left: -35px;
+  top: -13px;
+  left: -30px;
+  z-index: 1;
+`;
+
+export const WarehouseContainerIconWrapperStyle: string = css`
+  position: absolute;
+  top: -15px;
+  left: 2px;
 `;
 
 export const WarehouseContainerWrapperStyle: string = css`
   position: relative;
+  display: flex;
 `;
