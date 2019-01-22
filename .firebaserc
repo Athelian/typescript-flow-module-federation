@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "zenport-183806"
+  },
+  "targets": {
+    "zenport-183806": {
+      "hosting": {
+        "staging": [
+          "zenport-183806-staging"
+        ],
+        "prod": [
+          "zenport-183806-prod"
+        ]
+      }
+    }
+  }
+}

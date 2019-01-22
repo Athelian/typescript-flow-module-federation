@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import BatchFormContainer from 'modules/batch/form/container';
-import { FormField } from 'modules/form';
+import { FormField, FormContainer } from 'modules/form';
 import {
   textInputFactory,
   numberInputFactory,
@@ -11,7 +11,9 @@ import {
   weightInputFactory,
   volumeInputFactory,
 } from 'modules/form/helpers';
+import { CalculatorButtonStyle } from 'modules/form/helpers/numberInput/style';
 import GridColumn from 'components/GridColumn';
+import { ToggleInput } from 'components/Form';
 import { getByPath } from 'utils/fp';
 import { PackagingSectionWrapperStyle } from './style';
 
@@ -31,7 +33,6 @@ const PackagingSection = ({ isNew }: Props) => (
         calculatePackageQuantity,
       }) => {
         const values = { ...originalValues, ...state };
-
         return (
           <GridColumn>
             <FormField
@@ -60,20 +61,31 @@ const PackagingSection = ({ isNew }: Props) => (
               initValue={values.packageCapacity}
               setFieldValue={setFieldValue}
             >
-              {({ name, ...inputHandlers }) =>
-                numberInputFactory({
-                  name,
-                  inputHandlers,
-                  isNew,
-                  originalValue: originalValues[name],
-                  label: (
-                    <FormattedMessage
-                      id="modules.Batches.packageCapacity"
-                      defaultMessage="PACKAGE CAPACITY"
-                    />
-                  ),
-                })
-              }
+              {({ name, ...inputHandlers }) => (
+                <Subscribe to={[FormContainer]}>
+                  {({ setFieldTouched }) =>
+                    numberInputFactory({
+                      name,
+                      inputHandlers: {
+                        ...inputHandlers,
+                        onBlur: evt => {
+                          inputHandlers.onBlur(evt);
+                          setFieldValue('packageCapacity', inputHandlers.value);
+                          calculatePackageQuantity(setFieldTouched);
+                        },
+                      },
+                      isNew,
+                      originalValue: originalValues[name],
+                      label: (
+                        <FormattedMessage
+                          id="modules.Batches.packageCapacity"
+                          defaultMessage="PACKAGE CAPACITY"
+                        />
+                      ),
+                    })
+                  }
+                </Subscribe>
+              )}
             </FormField>
 
             <FormField
@@ -94,10 +106,29 @@ const PackagingSection = ({ isNew }: Props) => (
                     />
                   ),
                   calculate: calculatePackageQuantity,
+                  renderCalculate: () => (
+                    <div className={CalculatorButtonStyle}>
+                      <Subscribe to={[BatchFormContainer]}>
+                        {({ state: batchFormState, triggerCalculatePackageQuantity }) => (
+                          <ToggleInput
+                            toggled={batchFormState.autoCalculatePackageQuantity}
+                            onToggle={() => {
+                              setFieldValue(
+                                'autoCalculatePackageQuantity',
+                                !batchFormState.autoCalculatePackageQuantity
+                              );
+                              if (!batchFormState.autoCalculatePackageQuantity) {
+                                triggerCalculatePackageQuantity();
+                              }
+                            }}
+                          />
+                        )}
+                      </Subscribe>
+                    </div>
+                  ),
                 })
               }
             </FormField>
-
             <FormField
               name="packageGrossWeight"
               initValue={getByPath('packageGrossWeight', values)}

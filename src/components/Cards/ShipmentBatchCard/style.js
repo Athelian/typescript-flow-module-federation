@@ -1,5 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
+import { isEnableBetaFeature } from 'utils/env';
 import {
   fontSizes,
   fontSizesWithHeights,
@@ -14,7 +15,7 @@ export const ShipmentBatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 354px;
+  height: ${isEnableBetaFeature ? '379px' : '354px'};
 `;
 
 export const ProductWrapperStyle: string = css`
@@ -138,6 +139,29 @@ export const OrderWrapperStyle: string = css`
 `;
 
 export const OrderIconStyle: string = css`
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  width: 20px;
+  height: 20px;
+  background-color: ${colors.TEAL};
+  color: ${colors.WHITE};
+  font-size: 11px;
+  &:hover,
+  :focus {
+    background-color: ${colors.TEAL_DARK};
+  }
+`;
+
+export const ContainerWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 20px 160px;
+  width: 100%;
+  padding: 0 10px;
+  align-items: center;
+  grid-gap: 5px;
+`;
+
+export const ContainerIconStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
   width: 20px;

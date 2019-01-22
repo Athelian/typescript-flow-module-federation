@@ -5,7 +5,7 @@ import { isDataType } from 'utils/fp';
 
 type Props = {
   value: ?string | ?Date,
-  mode?: 'date' | 'date-no-year' | 'relative' | 'time' | 'time-relative',
+  mode?: 'date' | 'date-no-year' | 'relative' | 'time' | 'time-relative' | 'datetime',
 };
 
 const FormattedDate = ({ value, mode = 'date' }: Props) => {

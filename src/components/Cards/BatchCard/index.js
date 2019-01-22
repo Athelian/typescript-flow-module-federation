@@ -3,12 +3,12 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { FieldItem, Label, Display } from 'components/Form';
+import { getProductImage } from 'components/Cards/utils';
 import BaseCard from '../BaseCard';
 import {
   BatchCardWrapperStyle,
@@ -62,8 +62,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
     price,
   } = orderItem;
 
-  const productImage =
-    product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
+  const productImage = getProductImage(product);
 
   const totalAdjustment = batchAdjustments
     ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)

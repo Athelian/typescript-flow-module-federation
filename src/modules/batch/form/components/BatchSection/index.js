@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
 import validator from 'modules/batch/form/validator';
-import { FormField } from 'modules/form';
+import { FormField, FormContainer } from 'modules/form';
 import {
   textInputFactory,
   numberInputFactory,
@@ -34,7 +34,7 @@ type Props = {
 const BatchSection = ({ isNew, selectable }: Props) => (
   <div className={BatchSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues: initialValues, state, setFieldValue }) => {
+      {({ originalValues: initialValues, state, setFieldValue, calculatePackageQuantity }) => {
         const values = { ...initialValues, ...state };
         const { batchAdjustments = [] } = values;
         const totalAdjustment = batchAdjustments
@@ -71,22 +71,27 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                   values={values}
                   validator={validator}
                 >
-                  {({ name, ...inputHandlers }) =>
-                    numberInputFactory({
-                      inputHandlers: {
-                        ...inputHandlers,
-                        onBlur: evt => {
-                          inputHandlers.onBlur(evt);
-                          setFieldValue('quantity', inputHandlers.value - totalAdjustment);
-                        },
-                      },
-                      name,
-                      isNew,
-                      required: true,
-                      originalValue: initialValues[name] + totalAdjustment,
-                      label: <FormattedMessage {...messages.quantity} />,
-                    })
-                  }
+                  {({ name, ...inputHandlers }) => (
+                    <Subscribe to={[FormContainer]}>
+                      {({ setFieldTouched }) =>
+                        numberInputFactory({
+                          inputHandlers: {
+                            ...inputHandlers,
+                            onBlur: evt => {
+                              inputHandlers.onBlur(evt);
+                              setFieldValue('quantity', inputHandlers.value - totalAdjustment);
+                              calculatePackageQuantity(setFieldTouched);
+                            },
+                          },
+                          name,
+                          isNew,
+                          required: true,
+                          originalValue: initialValues[name] + totalAdjustment,
+                          label: <FormattedMessage {...messages.quantity} />,
+                        })
+                      }
+                    </Subscribe>
+                  )}
                 </FormField>
 
                 <FormField

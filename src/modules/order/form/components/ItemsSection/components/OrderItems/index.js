@@ -5,7 +5,7 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
-import BatchFormContainer from 'modules/batch/form/container';
+import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import { findBatchQuantity } from 'utils/batch';
 import { isEquals } from 'utils/fp';
 import { injectUid } from 'utils/id';
@@ -61,6 +61,7 @@ export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
     isNew: true,
     batchAdjustments: [],
     no: `batch no ${batches.length + 1}`,
+    autoCalculatePackageQuantity: true,
   });
 }
 
@@ -88,9 +89,15 @@ function autoFillBatch(orderItem: Object, batches: Array<Object>, addNewBatch: F
       packageVolume,
       packageSize,
       quantity: orderItem.quantity - totalBatchQuantity,
+      packageQuantity: calculatePackageQuantity({
+        batchAdjustments: [],
+        packageCapacity,
+        quantity: orderItem.quantity,
+      }),
       isNew: true,
       batchAdjustments: [],
       no: `batch no ${batches.length + 1}`,
+      autoCalculatePackageQuantity: true,
     });
   }
 }

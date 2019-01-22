@@ -12,6 +12,15 @@ export type UIState = {
     mode: 'SINGLE' | 'ALL',
     entities: Array<string>,
   },
+  highlight: {
+    type: string,
+    selectedId: string,
+  },
+  edit: {
+    type: string,
+    selectedId: string,
+  },
+  targets: Array<string>,
   totalShipment: number,
 };
 
@@ -24,7 +33,6 @@ export const getInitShowTag = () => {
 const getInitToggleShipmentList = () => {
   const localFilter = window.localStorage && window.localStorage.getItem('filterRMShipmentToggle');
   const initValue = localFilter ? JSON.parse(localFilter) : { isToggle: false };
-  console.log('localFilter', localFilter, initValue);
   return initValue.isToggle || false;
 };
 
@@ -39,6 +47,15 @@ export const uiInitState: UIState = {
     mode: 'SINGLE',
     entities: [],
   },
+  highlight: {
+    type: '',
+    selectedId: '',
+  },
+  edit: {
+    type: '',
+    selectedId: '',
+  },
+  targets: [],
   totalShipment: 0,
 };
 
@@ -49,27 +66,76 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       return uiInitState;
     case 'TOGGLE_TAG':
       return { ...state, showTag: !state.showTag };
+    case 'TOGGLE_EDIT_FORM':
+      return { ...state, edit: action.payload };
     case 'TOGGLE_SELECT_ALL': {
       const { payload } = action;
       const {
         select: { entities },
       } = state;
-      if (payload && payload.entity && state.select.entities.includes(payload.entity)) {
+      if (payload) {
+        if (payload.entity && state.select.entities.includes(payload.entity)) {
+          return {
+            ...state,
+            select: {
+              ...state.select,
+              entities: (entities.filter(item => item !== payload.entity): Array<string>),
+            },
+          };
+        }
         return {
           ...state,
           select: {
-            ...state.select,
-            entities: (entities.filter(item => item !== payload.entity): Array<string>),
+            mode: 'ALL',
+            entities: [...entities, payload.entity || ''],
           },
         };
       }
+      return state;
+    }
+    case 'SELECT_BRANCH': {
+      const { payload } = action;
+      const { targets } = state;
+      let result = [...targets];
+      if (payload) {
+        const { selectItems } = payload;
+        if (
+          selectItems.every(selectItem => result.includes(`${selectItem.entity}-${selectItem.id}`))
+        ) {
+          selectItems.forEach(selectItem => {
+            result = (result.filter(
+              item => item !== `${selectItem.entity}-${selectItem.id}`
+            ): Array<string>);
+          });
+        } else {
+          selectItems.forEach(selectItem => {
+            result = [...result, `${selectItem.entity}-${selectItem.id}`];
+          });
+        }
+      }
       return {
         ...state,
-        select: {
-          mode: 'ALL',
-          entities: [...entities, payload && payload.entity ? payload.entity : ''],
-        },
+        targets: result,
       };
+    }
+    case 'TARGET_ENTITY': {
+      const { payload } = action;
+      const { targets } = state;
+      if (payload) {
+        if (targets.includes(`${payload.entity}-${payload.id}`)) {
+          return {
+            ...state,
+            targets: (targets.filter(
+              item => item !== `${payload.entity}-${payload.id}`
+            ): Array<string>),
+          };
+        }
+        return {
+          ...state,
+          targets: [...targets, `${payload.entity}-${payload.id}`],
+        };
+      }
+      return state;
     }
     case 'TOGGLE_SHIPMENT_LIST':
       return { ...state, totalShipment: 0, toggleShipmentList: !state.toggleShipmentList };
@@ -77,6 +143,29 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const { payload } = action;
       const total = payload && payload.total ? payload.total : 0;
       return { ...state, totalShipment: total };
+    }
+    case 'TOGGLE_HIGH_LIGHT': {
+      const { payload } = action;
+      if (payload) {
+        const { entity, id } = payload;
+        if (state.highlight.type === entity && state.highlight.selectedId === id) {
+          return {
+            ...state,
+            highlight: {
+              type: '',
+              selectedId: '',
+            },
+          };
+        }
+        return {
+          ...state,
+          highlight: {
+            type: entity,
+            selectedId: id,
+          },
+        };
+      }
+      return state;
     }
     case 'TOGGLE_EXPAND': {
       const { payload } = action;
@@ -91,7 +180,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             ...state.expandCards,
             [field]: state.expandCards[field].includes(payload.id)
               ? (state.expandCards[field].filter(id => id !== payload.id): Array<string>)
-              : [...state.expandCards[field], payload && payload.id ? payload.id : ''],
+              : [...state.expandCards[field], payload.id || ''],
           },
         };
       }
@@ -116,6 +205,14 @@ export function actionCreators(dispatch: Function) {
           id,
         },
       }),
+    toggleHighLight: (entity: string, id: string) =>
+      dispatch({
+        type: 'TOGGLE_HIGH_LIGHT',
+        payload: {
+          entity,
+          id,
+        },
+      }),
     toggleShipmentList: () =>
       dispatch({
         type: 'TOGGLE_SHIPMENT_LIST',
@@ -134,6 +231,29 @@ export function actionCreators(dispatch: Function) {
           total,
         },
       }),
+    showEditForm: (type: string, selectedId: string) =>
+      dispatch({
+        type: 'TOGGLE_EDIT_FORM',
+        payload: {
+          type,
+          selectedId,
+        },
+      }),
+    selectBranch: (selectItems: Array<{ entity: string, id: string }>) =>
+      dispatch({
+        type: 'SELECT_BRANCH',
+        payload: {
+          selectItems,
+        },
+      }),
+    targetEntity: (entity: string, id: string) =>
+      dispatch({
+        type: 'TARGET_ENTITY',
+        payload: {
+          entity,
+          id,
+        },
+      }),
   };
 }
 
@@ -142,6 +262,9 @@ const entitySelector = (state: UIState, entity: string) =>
 
 export function selectors(state: UIState) {
   return {
-    isSelectEntity: (entity: string) => entitySelector(state, entity),
+    isSelectEntity: (highLightEntities: Array<string>, entity: string, id: string) =>
+      highLightEntities.includes(`${entity}-${id}`),
+    isSelectAllEntity: (entity: string) => entitySelector(state, entity),
+    isTarget: (entity: string, id: string) => state.targets.includes(`${entity}-${id}`),
   };
 }

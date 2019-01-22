@@ -45,14 +45,17 @@
           { "name": "User" },
           { "name": "Group" },
           { "name": "File" },
-          { "name": "Partnership" },
-          { "name": "EventChange" },
-          { "name": "EventComment" }
+          { "name": "Partnership" }
         ]
       },
       {
         "kind": "UNION",
-        "name": "Event",
+        "name": "Entry",
+        "possibleTypes": [{ "name": "Event" }, { "name": "Comment" }]
+      },
+      {
+        "kind": "UNION",
+        "name": "EventUnion",
         "possibleTypes": [{ "name": "EventChange" }, { "name": "EventComment" }]
       },
       {
@@ -62,7 +65,10 @@
           { "name": "Batch" },
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "Comment" },
+          { "name": "Container" },
           { "name": "ContainerGroup" },
+          { "name": "Event" },
           { "name": "EventChange" },
           { "name": "EventComment" },
           { "name": "ExportTemplate" },
@@ -96,7 +102,10 @@
           { "name": "Batch" },
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "Comment" },
+          { "name": "Container" },
           { "name": "ContainerGroup" },
+          { "name": "Event" },
           { "name": "EventChange" },
           { "name": "EventComment" },
           { "name": "FieldDefinition" },
@@ -129,6 +138,7 @@
         "possibleTypes": [
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "Container" },
           { "name": "ContainerGroup" },
           { "name": "FieldDefinition" },
           { "name": "OrderItem" },
@@ -147,6 +157,7 @@
         "name": "Tagged",
         "possibleTypes": [
           { "name": "Batch" },
+          { "name": "Container" },
           { "name": "Order" },
           { "name": "Product" },
           { "name": "Shipment" },
@@ -160,7 +171,12 @@
           { "name": "StringValue" },
           { "name": "IntValue" },
           { "name": "FloatValue" },
-          { "name": "BooleanValue" }
+          { "name": "BooleanValue" },
+          { "name": "DateTimeValue" },
+          { "name": "MetricValueValue" },
+          { "name": "SizeValue" },
+          { "name": "EntityValue" },
+          { "name": "Values" }
         ]
       }
     ]

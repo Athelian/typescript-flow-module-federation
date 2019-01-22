@@ -110,7 +110,7 @@ class CommentEntry extends React.Component<Props, State> {
                     </div>
                   )}
                   <div className={DateStyle(isSameUser)}>
-                    {isSameDay(new Date(), comment.createdAt) ? (
+                    {isSameDay(new Date(), new Date(comment.createdAt)) ? (
                       <FormattedDate value={comment.createdAt} mode="time-relative" />
                     ) : (
                       <FormattedDate value={comment.createdAt} mode="time" />

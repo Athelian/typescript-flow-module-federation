@@ -3,14 +3,16 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { isEnableBetaFeature } from 'utils/env';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
+import { calculatePackageQuantity } from 'modules/batch/form/container';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { FieldItem, Label, Display } from 'components/Form';
+import { getProductImage } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -34,6 +36,8 @@ import {
   OrderInChargeWrapperStyle,
   InChargeWrapperStyle,
   BatchTagsWrapperStyle,
+  ContainerWrapperStyle,
+  ContainerIconStyle,
 } from './style';
 
 type OptionalProps = {
@@ -85,6 +89,8 @@ const ShipmentBatchCard = ({
     packageVolume,
     packageQuantity,
     tags,
+    container,
+    autoCalculatePackageQuantity,
     orderItem: {
       price,
       productProvider: { product, supplier, exporter },
@@ -96,8 +102,7 @@ const ShipmentBatchCard = ({
     ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
     : 0;
 
-  const productImage =
-    product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
+  const productImage = getProductImage(product);
 
   const validation = validator({
     no: `batch.${id}.no`,
@@ -205,9 +210,18 @@ const ShipmentBatchCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
+                      const baseQuantity = Number(inputHandlers.value) - Number(totalAdjustment);
                       saveOnBlur({
                         ...batch,
-                        quantity: inputHandlers.value - totalAdjustment,
+                        quantity: baseQuantity,
+                        ...(autoCalculatePackageQuantity
+                          ? {
+                              packageQuantity: calculatePackageQuantity({
+                                ...batch,
+                                quantity: baseQuantity,
+                              }),
+                            }
+                          : {}),
                       });
                     },
                   },
@@ -335,6 +349,21 @@ const ShipmentBatchCard = ({
             </Link>
             <Display align="left">{order.poNo}</Display>
           </div>
+
+          {isEnableBetaFeature && (
+            <div className={ContainerWrapperStyle}>
+              <Link
+                className={ContainerIconStyle}
+                to={`/container/${container ? encodeId(container.id) : ''}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="CONTAINER" />
+              </Link>
+              <Display align="left">{container ? container.no : ''}</Display>
+            </div>
+          )}
 
           <div className={OrderInChargeWrapperStyle}>
             <Label>

@@ -8,7 +8,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { NewButton } from 'components/Buttons';
 import { injectUid } from 'utils/id';
 import Divider from 'components/Divider';
-import { FormField } from 'modules/form';
+import { FormField, FormContainer } from 'modules/form';
 import { FieldItem, Label, DefaultAdjustmentStyle } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import {
@@ -25,7 +25,13 @@ type Props = {
 const QuantityAdjustmentsSection = ({ isNew }: Props) => (
   <div className={QuantityAdjustmentsSectionWrapperStyle}>
     <Subscribe to={[BatchFormContainer]}>
-      {({ originalValues, state, setFieldArrayValue, removeArrayItem }) => {
+      {({
+        originalValues,
+        state,
+        setFieldArrayValue,
+        removeArrayItem,
+        calculatePackageQuantity,
+      }) => {
         const values = { ...originalValues, ...state };
 
         const currentQuantity = values.batchAdjustments.reduce(
@@ -54,34 +60,48 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
               values.batchAdjustments.map(
                 (adjustment, index) =>
                   adjustment && (
-                    <DefaultAdjustmentStyle
-                      isNew={isNew}
-                      index={index}
-                      adjustment={adjustment}
-                      key={adjustment.id}
-                      setFieldArrayValue={setFieldArrayValue}
-                      removeArrayItem={removeArrayItem}
-                      enumType="BatchAdjustmentReason"
-                      targetName="batchAdjustments"
-                      typeName="reason"
-                      memoName="memo"
-                      valueInput={
-                        <FormField
-                          name={`batchAdjustments.${index}.quantity`}
-                          initValue={adjustment.quantity}
-                          setFieldValue={setFieldArrayValue}
-                        >
-                          {({ name, ...inputHandlers }) =>
-                            numberInputFactory({
-                              inputHandlers,
-                              name,
-                              isNew,
-                              originalValue: adjustment.quantity,
-                            })
+                    <Subscribe to={[FormContainer]}>
+                      {({ setFieldTouched }) => (
+                        <DefaultAdjustmentStyle
+                          isNew={isNew}
+                          index={index}
+                          adjustment={adjustment}
+                          key={adjustment.id}
+                          setFieldArrayValue={setFieldArrayValue}
+                          removeArrayItem={targetName => {
+                            removeArrayItem(targetName);
+                            calculatePackageQuantity(setFieldTouched);
+                          }}
+                          enumType="BatchAdjustmentReason"
+                          targetName="batchAdjustments"
+                          typeName="reason"
+                          memoName="memo"
+                          valueInput={
+                            <FormField
+                              name={`batchAdjustments.${index}.quantity`}
+                              initValue={adjustment.quantity}
+                              setFieldValue={setFieldArrayValue}
+                            >
+                              {({ name, ...inputHandlers }) =>
+                                numberInputFactory({
+                                  inputHandlers: {
+                                    ...inputHandlers,
+                                    onBlur: evt => {
+                                      inputHandlers.onBlur(evt);
+                                      setFieldArrayValue(name, inputHandlers.value);
+                                      calculatePackageQuantity(setFieldTouched);
+                                    },
+                                  },
+                                  name,
+                                  isNew,
+                                  originalValue: adjustment.quantity,
+                                })
+                              }
+                            </FormField>
                           }
-                        </FormField>
-                      }
-                    />
+                        />
+                      )}
+                    </Subscribe>
                   )
               )}
             <div className={AddAdjustmentButtonWrapperStyle}>

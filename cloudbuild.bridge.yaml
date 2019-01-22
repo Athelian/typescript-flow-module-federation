@@ -1,62 +1,92 @@
-# name: 'test NewPR to develop'
-# triggers:
-# - pullRequestBases: ['develop']
-# steps:
-# - name: 'gcr.io/cloud-builders/yarn'
-#   args: ['install']
-# - name: 'gcr.io/cloud-builders/yarn'
-#   args: ['test']
-# ---
-name: 'Deploy Staging'
+####################################
+# Branch develop deploy to staging #
+####################################
+name: 'Deploy Staging firebase'
 triggers:
 - branches: ['develop']
 steps:
-# rebuild base image if 'package.json' & 'yarn.lock' are changed
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/cloud-builders/gsutil'
+  entrypoint: 'bash'
   args:
-  - 'build'
-  - '-t'
-  - 'asia.gcr.io/zenport-183806/web-app-base:latest'
-  - '-f'
-  - 'base.Dockerfile'
-  - '--cache-from'
-  - 'asia.gcr.io/zenport-183806/web-app-base:latest'
-  - '.'
-  triggers:
-  - includedFiles: ['package.json', 'yarn.lock', 'base.Dockerfile']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'asia.gcr.io/zenport-183806/web-app-base:latest']
-  triggers:
-  - includedFiles: ['package.json', 'yarn.lock', 'base.Dockerfile']
-# build main image
-- name: 'gcr.io/cloud-builders/docker'
+    - '-c'
+    - |
+      gsutil cp gs://zenport-gcb-bridge/cache/web-app-develop_node_modules.tar.gz node_modules.tar.gz || true
+      if [ -e node_modules.tar.gz ]; then
+        tar -xzf node_modules.tar.gz
+      fi
+- name: 'gcr.io/cloud-builders/yarn'
+  args: ['install']
+- name: 'gcr.io/cloud-builders/gsutil'
+  entrypoint: 'bash'
   args:
-  - 'build'
-  - '-t'
-  - 'asia.gcr.io/zenport-183806/web-app:$SHORT_SHA'
-  - '-t'
-  - 'asia.gcr.io/zenport-183806/web-app:latest'
-  - '--build-arg'
-  - 'BUILDTYPE=stg'
-  - '.'
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'asia.gcr.io/zenport-183806/web-app:$SHORT_SHA']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'asia.gcr.io/zenport-183806/web-app:latest']
-# deploy new image
-- name: 'gcr.io/cloud-builders/kubectl'
-  args:
-  - 'set'
-  - 'image'
-  - 'deployment/web-app'
-  - 'web-app=asia.gcr.io/zenport-183806/web-app:$SHORT_SHA'
-  - '-n'
-  - 'staging'
-  env:
-  - 'CLOUDSDK_COMPUTE_ZONE=asia-northeast1-c'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+    - '-c'
+    - |
+      tar -czf node_modules.tar.gz node_modules
+      gsutil cp node_modules.tar.gz gs://zenport-gcb-bridge/cache/web-app-develop_node_modules.tar.gz
+- name: 'gcr.io/cloud-builders/yarn'
+  args: ['build:stg']
+- name: 'gcr.io/zenport-183806/firebase'
+  args: ['deploy', '--only', 'hosting:staging']
+  secretEnv: ['FIREBASE_TOKEN']
+secrets:
+- kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
+  secretEnv:
+    FIREBASE_TOKEN: 'CiQABMiRS2pzGQzkQpV9nxSXoJ2JJasJwnByeP5/LkT1BvD480USVgBl1o1Vk8mKYamYIoTV+nKp3ioXT69W8uWUke0duMu48TPBE2kNHEU6lDETMssT8Mw7rPaATUsLDb69WA5MhmvpdXHz2nOavdjM9ZfWa/ZoV9Bcvp83'
 timeout: 1200s
 ---
+name: 'Deploy Staging'
+triggers:
+  - branches: ['develop']
+steps:
+  # rebuild base image if 'package.json' & 'yarn.lock' are changed
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'asia.gcr.io/zenport-183806/web-app-base:latest'
+      - '-f'
+      - 'base.Dockerfile'
+      - '--cache-from'
+      - 'asia.gcr.io/zenport-183806/web-app-base:latest'
+      - '.'
+    triggers:
+      - includedFiles: ['package.json', 'yarn.lock', 'base.Dockerfile']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia.gcr.io/zenport-183806/web-app-base:latest']
+    triggers:
+      - includedFiles: ['package.json', 'yarn.lock', 'base.Dockerfile']
+  # build main image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'asia.gcr.io/zenport-183806/web-app:$SHORT_SHA'
+      - '-t'
+      - 'asia.gcr.io/zenport-183806/web-app:latest'
+      - '--build-arg'
+      - 'BUILDTYPE=stg'
+      - '.'
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia.gcr.io/zenport-183806/web-app:$SHORT_SHA']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia.gcr.io/zenport-183806/web-app:latest']
+  # deploy new image
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'set'
+      - 'image'
+      - 'deployment/web-app'
+      - 'web-app=asia.gcr.io/zenport-183806/web-app:$SHORT_SHA'
+      - '-n'
+      - 'staging'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=asia-northeast1-c'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+timeout: 1200s
+---
+######################################
+# Branch master deploy to production #
+######################################
 name: 'Deploy Prod'
 triggers:
 - branches: ['master']

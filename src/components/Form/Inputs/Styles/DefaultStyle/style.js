@@ -105,11 +105,9 @@ export const DefaultStyleWrapperStyle = ({
       `
         resize: none;
         ${scrollbars.SMALL};
-        overflow: hidden;
-        &:hover {
-          overflow-x: hidden;
+        overflow-x: hidden;
           overflow-y: auto;
-        }
+   
       `};
     ${type === 'max-textarea' &&
       `

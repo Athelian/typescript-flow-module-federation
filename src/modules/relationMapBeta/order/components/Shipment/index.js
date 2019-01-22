@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
+import { actionCreators } from 'modules/relationMapBeta/order/store';
 import BaseCard, { ShipmentCard } from 'components/Cards';
 import { WrapperCard } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
@@ -18,13 +19,15 @@ const defaultProps = {
   wrapperClassName: ItemWrapperStyle(false),
 };
 
-export default function Shipment({ wrapperClassName, tags, ...shipment }: Props) {
+export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
     state: { showTag },
+    dispatch,
   } = context;
+  const actions = actionCreators(dispatch);
   return (
-    <BaseCard wrapperClassName={wrapperClassName}>
+    <BaseCard id={`shipment-${id}`} wrapperClassName={wrapperClassName}>
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
@@ -38,19 +41,19 @@ export default function Shipment({ wrapperClassName, tags, ...shipment }: Props)
                     icon="MAGIC"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('HIGHLIGHT')}
+                    onClick={() => actions.toggleHighLight('SHIPMENT', id)}
                   />
                   <Action
                     icon="DOCUMENT"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('EDIT')}
+                    onClick={() => actions.showEditForm('SHIPMENT', id)}
                   />
                   <Action
                     icon="CHECKED"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('TARGET')}
+                    onClick={() => actions.targetEntity('SHIPMENT', id)}
                   />
                 </>
               )}

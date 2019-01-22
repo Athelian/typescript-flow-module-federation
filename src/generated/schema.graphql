@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Dec 21 2018 11:08:15 GMT+0900 (JST)
+# timestamp: Thu Jan 17 2019 21:28:45 GMT+0700 (Indochina Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -26893,14 +26893,17 @@ type Batch implements Model & Owned & Package & Tagged & Customizable {
   no: String!
   quantity: Float!
   packageQuantity: Float
+  autoCalculatePackageQuantity: Boolean!
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
   desiredAt: DateTime
   memo: String
-  totalAdjusted: Float
+  totalAdjusted: Float!
+  totalVolume: MetricValue!
   batchAssignments: [BatchAssignment!]!
   batchAdjustments: [BatchAdjustment!]!
+  container: Container
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -26995,6 +26998,7 @@ input BatchCreateInput {
   expiredAt: DateTime
   desiredAt: DateTime
   packageQuantity: Float
+  autoCalculatePackageQuantity: Boolean
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -27076,6 +27080,7 @@ input BatchUpdateInput {
   expiredAt: DateTime
   desiredAt: DateTime
   packageQuantity: Float
+  autoCalculatePackageQuantity: Boolean
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -27099,6 +27104,97 @@ type BooleanValue {
   boolean: Boolean!
 }
 
+type Comment implements Model & Owned {
+  entity: Entity!
+  content: String!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
+
+type Container implements Model & Owned & Sortable & Tagged {
+  no: String!
+  warehouseArrivalAgreedDate: DateTime
+  warehouseArrivalAgreedDateApprovedBy: User
+  warehouseArrivalActualDate: DateTime
+  warehouseArrivalActualDateApprovedBy: User
+  shipment: Shipment!
+  warehouse: Warehouse
+  representativeBatch: Batch
+  batches: [Batch!]!
+  totalVolume: MetricValue!
+  totalWeight: MetricValue!
+  totalPrice: MetricValue!
+  totalBatchQuantity: Int!
+  totalBatchPackages: Int!
+  totalNumberOfUniqueOrderItems: Int!
+  warehouseArrivalActualDateAssignedTo: User
+  warehouseArrivalAgreedDateAssignedTo: User
+  memo: String
+  archived: Boolean!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+  sort: Int!
+  tags: [Tag!]!
+}
+
+input ContainerBatchAdjustmentInput {
+  id: ID
+  reason: BatchAdjustmentReason
+  quantity: Float
+  memo: String
+}
+
+input ContainerBatchAssignmentInput {
+  id: ID
+  userId: ID
+  quantity: Float
+  memo: String
+}
+
+input ContainerBatchInput {
+  no: String
+  quantity: Float
+  producedAt: DateTime
+  deliveredAt: DateTime
+  expiredAt: DateTime
+  desiredAt: DateTime
+  packageQuantity: Float
+  autoCalculatePackageQuantity: Boolean
+  packageName: String
+  packageGrossWeight: MetricValueInput
+  packageVolume: MetricValueInput
+  packageSize: SizeInput
+  packageCapacity: Float
+  memo: String
+  tagIds: [ID!]
+  customFields: CustomFieldsInput
+  id: ID
+  orderItemId: ID
+  batchAssignments: [ContainerBatchAssignmentInput!]
+  batchAdjustments: [ContainerBatchAdjustmentInput!]
+}
+
+input ContainerFilterInput {
+  query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  archived: Boolean
+  warehouseArrivalActualDate: DateRangeInput
+  warehouses: [ID!]
+}
+
 type ContainerGroup implements Model & Owned & Sortable {
   customClearance: TimelineDate!
   warehouseArrival: TimelineDate!
@@ -27114,6 +27210,42 @@ type ContainerGroup implements Model & Owned & Sortable {
   deletedBy: User
   ownedBy: Group!
   sort: Int!
+}
+
+type ContainerMutated {
+  container: Container
+  violations: [Violation!]
+}
+
+type ContainerPagination {
+  nodes: [Container!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input ContainerSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  warehouseName: SortOrder
+  warehouseArrivalActualDate: SortOrder
+}
+
+input ContainerUpdateInput {
+  no: String
+  warehouseArrivalAgreedDateApprovedById: ID
+  warehouseArrivalAgreedDate: DateTime
+  warehouseArrivalActualDateApprovedById: ID
+  warehouseArrivalActualDate: DateTime
+  warehouseId: ID
+  representativeBatchId: ID
+  batches: [ContainerBatchInput!]
+  warehouseArrivalAgreedDateAssignedToId: ID
+  warehouseArrivalActualDateAssignedToId: ID
+  memo: String
+  tagIds: [ID!]
 }
 
 enum Country {
@@ -28417,6 +28549,10 @@ input DateRangeInput {
 
 scalar DateTime
 
+type DateTimeValue {
+  datetime: DateTime!
+}
+
 interface Documented {
   files: [File!]!
 }
@@ -28429,9 +28565,35 @@ type EntitiesMutatedMany {
   warehouses: WarehouseMutatedMany
 }
 
-union Entity = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | File | Partnership | EventChange | EventComment
+union Entity = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | File | Partnership
 
-union Event = EventChange | EventComment
+type EntityValue {
+  entity: Entity
+}
+
+union Entry = Event | Comment
+
+type EntryPagination {
+  nodes: [Entry!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+type Event implements Model & Owned {
+  entity: Entity!
+  logs: [Log!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  deletedBy: User
+  ownedBy: Group!
+}
 
 type EventChange implements Model & Owned {
   updates: [EventChangeUpdate!]!
@@ -28488,8 +28650,10 @@ input EventCommentUpdateInput {
   content: String
 }
 
-type EventPagination {
-  nodes: [Event!]!
+union EventUnion = EventChange | EventComment
+
+type EventUnionPagination {
+  nodes: [EventUnion!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -29378,6 +29542,12 @@ enum LoadType {
   LCL
 }
 
+type Log {
+  entity: Entity
+  translationKey: String!
+  parameters: [Parameter!]!
+}
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -29507,6 +29677,10 @@ input MetricValueInput {
   metric: String!
 }
 
+type MetricValueValue {
+  metricValue: MetricValue!
+}
+
 interface Model {
   id: ID!
   createdAt: DateTime!
@@ -29557,6 +29731,7 @@ type Mutation {
   notificationRead(id: ID!): Boolean!
   notificationReadAll: Boolean!
   notificationSeeAll: Boolean!
+  containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerMutated!
 }
 
 type Notification {
@@ -29610,6 +29785,9 @@ enum NotificationType {
 
   """ShipmentUpdateDateRevision"""
   ShipmentUpdateDateRevision
+
+  """ShipmentApprovedDate"""
+  ShipmentApprovedDate
 
   """ProductCreate"""
   ProductCreate
@@ -29786,6 +29964,7 @@ input OrderFilterInput {
   batchQuantity: ValueRangeInput
   batchPackageSize: SizeRangeInput
   batchPackageVolume: MetricRangeInput
+  batchTotalVolume: MetricRangeInput
   batchPackageWeight: MetricRangeInput
   shipmentTagIds: [ID!]
   shipmentForwarderIds: [ID!]
@@ -29801,6 +29980,7 @@ input OrderFilterInput {
   shipmentSecondTransitPortArrival: DateRangeInput
   shipmentSecondTransitPortDeparture: DateRangeInput
   shipmentDischargePortArrival: DateRangeInput
+  shipmentWarehouseIds: [ID!]
   shipmentCustomClearance: DateRangeInput
   shipmentWarehouseArrival: DateRangeInput
   shipmentDeliveryReady: DateRangeInput
@@ -29861,6 +30041,7 @@ input OrderItemBatchCreateInput {
   expiredAt: DateTime
   desiredAt: DateTime
   packageQuantity: Float
+  autoCalculatePackageQuantity: Boolean
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -29882,6 +30063,7 @@ input OrderItemBatchUpdateInput {
   expiredAt: DateTime
   desiredAt: DateTime
   packageQuantity: Float
+  autoCalculatePackageQuantity: Boolean
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -29999,6 +30181,11 @@ interface Package {
   packageVolume: MetricValue
   packageSize: Size
   packageCapacity: Float
+}
+
+type Parameter {
+  key: String!
+  value: Value
 }
 
 type Partner implements Model {
@@ -30246,6 +30433,7 @@ input ProductProviderSortInput {
   updatedAt: SortOrder
   name: SortOrder
   serial: SortOrder
+  unitPriceCurrency: SortOrder
 }
 
 input ProductProviderUpdateInput {
@@ -30341,6 +30529,8 @@ type Query {
   integrationConfigurations(page: Int! = 1, perPage: Int! = 10): IntegrationConfigurationPagination!
   integrationLink(id: ID!): IntegrationLink
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplate!]!
+  container(id: ID!): Container
+  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPagination!
 }
 
 enum ResizePreset {
@@ -35278,7 +35468,9 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   orderItemCount: Int
   timeline: Timeline!
   batches: [Batch!]!
+  batchesWithoutContainer: [Batch!]!
   integrationLinks: [IntegrationLink!]!
+  containers: [Container!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -35315,6 +35507,7 @@ input ShipmentBatchInput {
   expiredAt: DateTime
   desiredAt: DateTime
   packageQuantity: Float
+  autoCalculatePackageQuantity: Boolean
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
@@ -35327,6 +35520,21 @@ input ShipmentBatchInput {
   orderItemId: ID
   batchAssignments: [ShipmentBatchAssignmentInput!]
   batchAdjustments: [ShipmentBatchAdjustmentInput!]
+}
+
+input ShipmentContainerCreateInput {
+  no: String!
+  warehouseArrivalAgreedDateApprovedById: ID
+  warehouseArrivalAgreedDate: DateTime
+  warehouseArrivalActualDateApprovedById: ID
+  warehouseArrivalActualDate: DateTime
+  warehouseId: ID
+  representativeBatchId: ID
+  batches: [ShipmentBatchInput!]
+  warehouseArrivalAgreedDateAssignedToId: ID
+  warehouseArrivalActualDateAssignedToId: ID
+  memo: String
+  tagIds: [ID!]
 }
 
 input ShipmentContainerGroupCreateInput {
@@ -35344,6 +35552,22 @@ input ShipmentContainerGroupUpdateInput {
   deliveryReady: ShipmentTimelineDateUpdateInput
 }
 
+input ShipmentContainerUpdateInput {
+  id: ID
+  no: String
+  warehouseArrivalAgreedDateApprovedById: ID
+  warehouseArrivalAgreedDate: DateTime
+  warehouseArrivalActualDateApprovedById: ID
+  warehouseArrivalActualDate: DateTime
+  warehouseId: ID
+  representativeBatchId: ID
+  batches: [ShipmentBatchInput!]
+  warehouseArrivalAgreedDateAssignedToId: ID
+  warehouseArrivalActualDateAssignedToId: ID
+  memo: String
+  tagIds: [ID!]
+}
+
 input ShipmentCreateInput {
   no: String!
   blNo: String
@@ -35353,6 +35577,7 @@ input ShipmentCreateInput {
   invoiceNo: String
   loadType: LoadType
   transportType: TransportType
+  containerType: String
   incoterm: Incoterm
   carrier: String
   cargoReady: ShipmentTimelineDateCreateInput
@@ -35365,6 +35590,7 @@ input ShipmentCreateInput {
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
+  containers: [ShipmentContainerCreateInput!]
 }
 
 input ShipmentFilterInput {
@@ -35386,6 +35612,7 @@ input ShipmentFilterInput {
   secondTransitPortArrival: DateRangeInput
   secondTransitPortDeparture: DateRangeInput
   dischargePortArrival: DateRangeInput
+  warehouseIds: [ID!]
   customClearance: DateRangeInput
   warehouseArrival: DateRangeInput
   deliveryReady: DateRangeInput
@@ -35454,6 +35681,7 @@ input ShipmentUpdateInput {
   invoiceNo: String
   loadType: LoadType
   transportType: TransportType
+  containerType: String
   incoterm: Incoterm
   carrier: String
   cargoReady: ShipmentTimelineDateUpdateInput
@@ -35466,6 +35694,7 @@ input ShipmentUpdateInput {
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
+  containers: [ShipmentContainerUpdateInput!]
 }
 
 input ShipmentUpdateWrapperInput {
@@ -35508,6 +35737,10 @@ input SizeRangeInput {
   length: MetricRangeInput
   width: MetricRangeInput
   height: MetricRangeInput
+}
+
+type SizeValue {
+  size: Size!
 }
 
 interface Sortable {
@@ -35568,6 +35801,9 @@ enum TagEntityType {
 
   """User"""
   User
+
+  """Container"""
+  Container
 }
 
 input TagFilterInput {
@@ -35611,7 +35847,8 @@ input TagUpdateInput {
 type Timeline {
   id: ID!
   unreadCount: Int!
-  events(page: Int! = 1, perPage: Int! = 10): EventPagination!
+  events(page: Int! = 1, perPage: Int! = 10): EventUnionPagination!
+  entries(page: Int! = 1, perPage: Int! = 10): EntryPagination!
 }
 
 type TimelineDate implements Model & Owned {
@@ -35741,7 +35978,7 @@ input UserUpdateInput {
   tagIds: [ID!]
 }
 
-union Value = StringValue | IntValue | FloatValue | BooleanValue
+union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | MetricValueValue | SizeValue | EntityValue | Values
 
 input ValueInput {
   string: String
@@ -35753,6 +35990,10 @@ input ValueInput {
 input ValueRangeInput {
   min: Float
   max: Float
+}
+
+type Values {
+  values: [Value!]!
 }
 
 type Viewer {
