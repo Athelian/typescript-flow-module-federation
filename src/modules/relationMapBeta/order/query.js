@@ -28,34 +28,40 @@ const shipmentCardRMFragment = gql`
       ...userAvatarFragment
     }
     voyages {
-      id
-      departurePort {
-        ...portFragment
-      }
-      arrivalPort {
-        ...portFragment
-      }
-      departure {
-        ...timelineDateMinimalFragment
-      }
-      arrival {
-        ...timelineDateMinimalFragment
+      ... on Voyage {
+        id
+        departurePort {
+          ...portFragment
+        }
+        arrivalPort {
+          ...portFragment
+        }
+        departure {
+          ...timelineDateMinimalFragment
+        }
+        arrival {
+          ...timelineDateMinimalFragment
+        }
       }
     }
     containerGroups {
-      id
-      customClearance {
-        ...timelineDateMinimalFragment
-      }
-      warehouseArrival {
-        ...timelineDateMinimalFragment
-      }
-      deliveryReady {
-        ...timelineDateMinimalFragment
-      }
-      warehouse {
+      ... on ContainerGroup {
         id
-        name
+        customClearance {
+          ...timelineDateMinimalFragment
+        }
+        warehouseArrival {
+          ...timelineDateMinimalFragment
+        }
+        deliveryReady {
+          ...timelineDateMinimalFragment
+        }
+        warehouse {
+          ... on Warehouse {
+            id
+            name
+          }
+        }
       }
     }
   }
@@ -65,45 +71,59 @@ export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        id
-        poNo
-        totalOrdered
-        totalBatched
-        totalShipped
-        orderItemCount
-        batchCount
-        batchShippedCount
-        shipmentCount
-        tags {
-          ...tagFragment
-        }
-        orderItems {
+        ... on Order {
           id
-          quantity
-          productProvider {
-            id
-            product {
+          poNo
+          totalOrdered
+          totalBatched
+          totalShipped
+          orderItemCount
+          batchCount
+          batchShippedCount
+          shipmentCount
+          tags {
+            ...tagFragment
+          }
+          orderItems {
+            ... on OrderItem {
               id
-              name
-              serial
+              quantity
+              productProvider {
+                ... on ProductProvider {
+                  id
+                  product {
+                    ... on Product {
+                      id
+                      name
+                      serial
+                    }
+                  }
+                }
+              }
+              batches {
+                ... on Batch {
+                  id
+                  no
+                  quantity
+                  totalAdjusted
+                  tags {
+                    ...tagFragment
+                  }
+                }
+              }
             }
           }
-          batches {
-            id
-            no
-            quantity
-            totalAdjusted
-            tags {
-              ...tagFragment
+          shipments {
+            ... on Shipment {
+              id
+              batches {
+                ... on Batch {
+                  id
+                }
+              }
             }
+            ...shipmentCardRMFragment
           }
-        }
-        shipments {
-          id
-          batches {
-            id
-          }
-          ...shipmentCardRMFragment
         }
       }
       page
@@ -123,7 +143,9 @@ export const shipmentListQuery = gql`
   query($page: Int!, $perPage: Int!, $filter: ShipmentFilterInput, $sort: ShipmentSortInput) {
     shipments(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
       nodes {
-        id
+        ... on Shipment {
+          id
+        }
         ...shipmentCardRMFragment
       }
       page

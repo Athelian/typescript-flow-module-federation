@@ -1,76 +1,43 @@
 // @flow
 import gql from 'graphql-tag';
-
+import { isEnableBetaFeature } from 'utils/env';
 // @TODO change container field to use containerCardFragment
-export const batchFormFragment = gql`
-  fragment batchFormFragment on Batch {
-    id
-    archived
-    autoCalculatePackageQuantity
-    updatedAt
-    updatedBy {
-      ...userAvatarFragment
-    }
-    memo
-    no
-    quantity
-    producedAt
-    deliveredAt
-    desiredAt
-    expiredAt
-    customFields {
-      ...customFieldsFragment
-    }
-    batchAdjustments {
-      id
-      sort
-      updatedAt
-      updatedBy {
-        ...userAvatarFragment
-      }
-      reason
-      quantity
-      memo
-    }
-    packageName
-    packageCapacity
-    packageQuantity
-    packageGrossWeight {
-      ...metricFragment
-    }
-    packageVolume {
-      ...metricFragment
-    }
-    packageSize {
-      ...sizeFragment
-    }
-    tags {
-      ...tagFragment
-    }
-    orderItem {
-      id
-      quantity
-      price {
-        ...priceFragment
-      }
-      batches {
+export const batchFormFragment = isEnableBetaFeature
+  ? gql`
+      fragment batchFormFragment on Batch {
         id
+        archived
+        autoCalculatePackageQuantity
+        updatedAt
+        updatedBy {
+          ...userAvatarFragment
+        }
+        memo
+        no
         quantity
+        producedAt
+        deliveredAt
+        desiredAt
+        expiredAt
+        customFields {
+          ...customFieldsFragment
+        }
         batchAdjustments {
-          id
-          quantity
+          ... on BatchAdjustment {
+            id
+            sort
+            updatedAt
+            updatedBy {
+              ...userAvatarFragment
+            }
+            reason
+            quantity
+            memo
+          }
         }
-        shipment {
-          id
-        }
-      }
-      order {
-        ...orderCardFragment
-      }
-      productProvider {
-        id
         packageName
         packageCapacity
+        packageQuantity
         packageGrossWeight {
           ...metricFragment
         }
@@ -80,76 +47,259 @@ export const batchFormFragment = gql`
         packageSize {
           ...sizeFragment
         }
-        product {
-          id
-          name
-          serial
-          files {
-            ...imageFragment
+        tags {
+          ...tagFragment
+        }
+        orderItem {
+          ... on OrderItem {
+            id
+            quantity
+            price {
+              ...priceFragment
+            }
+            batches {
+              ... on Batch {
+                id
+                quantity
+                batchAdjustments {
+                  ... on BatchAdjustment {
+                    id
+                    quantity
+                  }
+                }
+                shipment {
+                  ... on Shipment {
+                    id
+                  }
+                }
+              }
+            }
+            order {
+              ...orderCardFragment
+            }
+            productProvider {
+              ... on ProductProvider {
+                id
+                packageName
+                packageCapacity
+                packageGrossWeight {
+                  ...metricFragment
+                }
+                packageVolume {
+                  ...metricFragment
+                }
+                packageSize {
+                  ...sizeFragment
+                }
+                product {
+                  ... on Product {
+                    id
+                    name
+                    serial
+                    files {
+                      ...imageFragment
+                    }
+                  }
+                }
+                exporter {
+                  ...partnerCardFragment
+                }
+                supplier {
+                  ...partnerNameFragment
+                }
+              }
+            }
           }
         }
-        exporter {
-          ...partnerCardFragment
+        shipment {
+          ...shipmentCardFragment
         }
-        supplier {
-          ...partnerNameFragment
-        }
-      }
-    }
-    shipment {
-      ...shipmentCardFragment
-    }
-    container {
-      id
-      no
-      representativeBatch {
-        id
-        orderItem {
-          id
-          productProvider {
+        container {
+          ... on Container {
             id
-            product {
-              id
-              files {
+            no
+            representativeBatch {
+              ... on Batch {
+                id
+                orderItem {
+                  ... on OrderItem {
+                    id
+                    productProvider {
+                      ... on ProductProvider {
+                        id
+                        product {
+                          ... on Product {
+                            id
+                            files {
+                              ... on File {
+                                id
+                                name
+                                type
+                              }
+                            }
+                            name
+                            serial
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            totalVolume {
+              value
+              metric
+            }
+            batches {
+              ... on Batch {
+                id
+              }
+            }
+            warehouse {
+              ... on Warehouse {
                 id
                 name
-                type
               }
-              name
-              serial
+            }
+            warehouseArrivalAgreedDate
+            warehouseArrivalActualDate
+            warehouseArrivalAgreedDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouseArrivalActualDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            shipment {
+              ... on Shipment {
+                id
+                no
+              }
+            }
+            tags {
+              ...tagFragment
             }
           }
         }
       }
-      totalVolume {
-        value
-        metric
-      }
-      batches {
+    `
+  : gql`
+      fragment batchFormFragment on Batch {
         id
-      }
-      warehouse {
-        id
-        name
-      }
-      warehouseArrivalAgreedDate
-      warehouseArrivalActualDate
-      warehouseArrivalAgreedDateApprovedBy {
-        id
-      }
-      warehouseArrivalActualDateApprovedBy {
-        id
-      }
-      shipment {
-        id
+        archived
+        autoCalculatePackageQuantity
+        updatedAt
+        updatedBy {
+          ...userAvatarFragment
+        }
+        memo
         no
+        quantity
+        producedAt
+        deliveredAt
+        desiredAt
+        expiredAt
+        customFields {
+          ...customFieldsFragment
+        }
+        batchAdjustments {
+          ... on BatchAdjustment {
+            id
+            sort
+            updatedAt
+            updatedBy {
+              ...userAvatarFragment
+            }
+            reason
+            quantity
+            memo
+          }
+        }
+        packageName
+        packageCapacity
+        packageQuantity
+        packageGrossWeight {
+          ...metricFragment
+        }
+        packageVolume {
+          ...metricFragment
+        }
+        packageSize {
+          ...sizeFragment
+        }
+        tags {
+          ...tagFragment
+        }
+        orderItem {
+          ... on OrderItem {
+            id
+            quantity
+            price {
+              ...priceFragment
+            }
+            batches {
+              ... on Batch {
+                id
+                quantity
+                batchAdjustments {
+                  ... on BatchAdjustment {
+                    id
+                    quantity
+                  }
+                }
+                shipment {
+                  ... on Shipment {
+                    id
+                  }
+                }
+              }
+            }
+            order {
+              ...orderCardFragment
+            }
+            productProvider {
+              ... on ProductProvider {
+                id
+                packageName
+                packageCapacity
+                packageGrossWeight {
+                  ...metricFragment
+                }
+                packageVolume {
+                  ...metricFragment
+                }
+                packageSize {
+                  ...sizeFragment
+                }
+                product {
+                  ... on Product {
+                    id
+                    name
+                    serial
+                    files {
+                      ...imageFragment
+                    }
+                  }
+                }
+                exporter {
+                  ...partnerCardFragment
+                }
+                supplier {
+                  ...partnerNameFragment
+                }
+              }
+            }
+          }
+        }
+        shipment {
+          ...shipmentCardFragment
+        }
       }
-      tags {
-        ...tagFragment
-      }
-    }
-  }
-`;
+    `;
 
 export const batchCardFragment = gql`
   fragment batchCardFragment on Batch {
@@ -164,40 +314,50 @@ export const batchCardFragment = gql`
     }
     packageQuantity
     batchAdjustments {
-      id
-      quantity
-      sort
+      ... on BatchAdjustment {
+        id
+        quantity
+        sort
+      }
     }
     tags {
       ...tagFragment
     }
     shipment {
-      id
-      no
+      ... on Shipment {
+        id
+        no
+      }
     }
     orderItem {
-      id
-      price {
-        ...priceFragment
-      }
-      order {
-        ...orderCardFragment
-      }
-      productProvider {
+      ... on OrderItem {
         id
-        product {
-          id
-          name
-          serial
-          files {
-            ...imageFragment
+        price {
+          ...priceFragment
+        }
+        order {
+          ...orderCardFragment
+        }
+        productProvider {
+          ... on ProductProvider {
+            id
+            product {
+              ... on Product {
+                id
+                name
+                serial
+                files {
+                  ...imageFragment
+                }
+              }
+            }
+            exporter {
+              ...partnerNameFragment
+            }
+            supplier {
+              ...partnerNameFragment
+            }
           }
-        }
-        exporter {
-          ...partnerNameFragment
-        }
-        supplier {
-          ...partnerNameFragment
         }
       }
     }

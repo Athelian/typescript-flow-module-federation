@@ -35,7 +35,7 @@ export const cloneTree = async ({ client, target }: { client: any, target: Objec
   const newShipments = await Promise.all(shipmentRequests);
 
   const shipmentResults: Array<Object> = newShipments.map(newShipment =>
-    get({}, 'data.shipmentCreate.shipment', newShipment)
+    get({}, 'data.shipmentCreate', newShipment)
   );
   const shipmentFocus = shipmentResults.reduce(
     (focus, shipmentResult) =>
@@ -46,7 +46,7 @@ export const cloneTree = async ({ client, target }: { client: any, target: Objec
   );
 
   const mappedNewShipment = newShipments.reduce((mappedObj, newShipment) => {
-    const newShipmentId = get(null, 'data.shipmentCreate.shipment.id', newShipment);
+    const newShipmentId = get(null, 'data.shipmentCreate.id', newShipment);
     const oldShipmentId = newShipment.refId;
     const oldShipmentRef = oldShipmentId ? { [oldShipmentId]: newShipmentId } : {};
     return Object.assign(mappedObj, oldShipmentRef);
@@ -98,7 +98,7 @@ export const cloneTree = async ({ client, target }: { client: any, target: Objec
   );
   const newOrders = await Promise.all(orderCreateMutates);
   const orderResults: Array<Object> = newOrders.map(newOrder =>
-    get({}, 'data.orderCreate.order', newOrder)
+    get({}, 'data.orderCreate', newOrder)
   );
   const orderFocus = orderResults.reduce(
     (focus, orderResult) =>

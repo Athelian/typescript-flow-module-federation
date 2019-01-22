@@ -32,45 +32,51 @@ export const orderFormFragment = gql`
       ...documentFragment
     }
     orderItems {
-      id
-      quantity
-      price {
-        ...priceFragment
-      }
-      productProvider {
+      ... on OrderItem {
         id
-        packageName
-        packageCapacity
-        packageGrossWeight {
-          ...metricFragment
+        quantity
+        price {
+          ...priceFragment
         }
-        packageVolume {
-          ...metricFragment
-        }
-        packageSize {
-          ...sizeFragment
-        }
-        unitPrice {
-          currency
-          amount
-        }
-        product {
-          id
-          name
-          serial
-          files {
-            ...imageFragment
+        productProvider {
+          ... on ProductProvider {
+            id
+            packageName
+            packageCapacity
+            packageGrossWeight {
+              ...metricFragment
+            }
+            packageVolume {
+              ...metricFragment
+            }
+            packageSize {
+              ...sizeFragment
+            }
+            unitPrice {
+              currency
+              amount
+            }
+            product {
+              ... on Product {
+                id
+                name
+                serial
+                files {
+                  ...imageFragment
+                }
+              }
+            }
+            exporter {
+              ...partnerNameFragment
+            }
+            supplier {
+              ...partnerNameFragment
+            }
           }
         }
-        exporter {
-          ...partnerNameFragment
+        batches {
+          ...batchFormFragment
         }
-        supplier {
-          ...partnerNameFragment
-        }
-      }
-      batches {
-        ...batchFormFragment
       }
     }
     shipments {
@@ -113,34 +119,40 @@ export const orderBasicFragment = gql`
       ...priceFragment
     }
     orderItems {
-      id
-      quantity
-      price {
-        ...priceFragment
-      }
-      productProvider {
+      ... on OrderItem {
         id
-        unitPrice {
-          currency
-          amount
+        quantity
+        price {
+          ...priceFragment
         }
-        product {
-          id
-          name
-          serial
-          files {
-            ...imageFragment
+        productProvider {
+          ... on ProductProvider {
+            id
+            unitPrice {
+              currency
+              amount
+            }
+            product {
+              ... on Product {
+                id
+                name
+                serial
+                files {
+                  ...imageFragment
+                }
+              }
+            }
+            exporter {
+              ...partnerNameFragment
+            }
+            supplier {
+              ...partnerNameFragment
+            }
           }
         }
-        exporter {
-          ...partnerNameFragment
+        batches {
+          ...batchFormFragment
         }
-        supplier {
-          ...partnerNameFragment
-        }
-      }
-      batches {
-        ...batchFormFragment
       }
     }
   }

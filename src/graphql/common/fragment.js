@@ -85,13 +85,15 @@ export const timelineDateFullFragment = gql`
     }
     approvedAt
     timelineDateRevisions {
-      id
-      date
-      type
-      memo
-      updatedAt
-      updatedBy {
-        ...userAvatarFragment
+      ... on TimelineDateRevision {
+        id
+        date
+        type
+        memo
+        updatedAt
+        updatedBy {
+          ...userAvatarFragment
+        }
       }
     }
   }
@@ -103,8 +105,10 @@ export const timelineDateMinimalFragment = gql`
     date
     approvedAt
     timelineDateRevisions {
-      id
-      date
+      ... on TimelineDateRevision {
+        id
+        date
+      }
     }
   }
 `;

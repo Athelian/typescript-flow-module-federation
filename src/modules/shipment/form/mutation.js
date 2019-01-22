@@ -21,8 +21,8 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  badRequestFragment,
 } from 'graphql';
-import { violationFragment } from 'graphql/violations/fragment';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
@@ -88,29 +88,23 @@ export const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGro
 export const createShipmentMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
     shipmentCreate(input: $input) {
-      shipment {
+      ... on Shipment {
         id
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
 `;
 
 export const createShipmentWithReturnDataMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
     shipmentCreate(input: $input) {
-      shipment {
-        ...shipmentFormFragment
-      }
-      violations {
-        ...violationFragment
-      }
+      ...shipmentFormFragment
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${shipmentFormFragment}
   ${timelineDateFullFragment}
   ${batchFormFragment}
@@ -185,12 +179,8 @@ export const prepareCreateShipmentInput = ({
 export const updateShipmentMutation: Object = gql`
   mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
     shipmentUpdate(id: $id, input: $input) {
-      shipment {
-        ...shipmentFormFragment
-      }
-      violations {
-        ...violationFragment
-      }
+      ...shipmentFormFragment
+      ...badRequestFragment
     }
   }
 
@@ -210,7 +200,7 @@ export const updateShipmentMutation: Object = gql`
   ${portFragment}
   ${documentFragment}
   ${partnerCardFragment}
-  ${violationFragment}
+  ${badRequestFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}

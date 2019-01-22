@@ -9,70 +9,90 @@ export const orderItemsListQuery = gql`
       page
       totalPage
       nodes {
-        id
-        price {
-          amount
-          currency
-        }
-        quantity
-        batches {
+        ... on OrderItem {
           id
+          price {
+            amount
+            currency
+          }
           quantity
-        }
-        order {
-          id
-          poNo
-          issuedAt
-          currency
-          exporter {
-            id
-            name
-          }
-          tags {
-            id
-            name
-            color
-          }
-          orderItems {
-            id
-            quantity
-            price {
-              amount
-              currency
-            }
-            batches {
+          batches {
+            ... on Batch {
               id
               quantity
-              batchAdjustments {
-                id
-                quantity
+            }
+          }
+          order {
+            ... on Order {
+              id
+              poNo
+              issuedAt
+              currency
+              exporter {
+                ... on Group {
+                  id
+                  name
+                }
+              }
+              tags {
+                ... on Tag {
+                  id
+                  name
+                  color
+                }
+              }
+              orderItems {
+                ... on OrderItem {
+                  id
+                  quantity
+                  price {
+                    amount
+                    currency
+                  }
+                  batches {
+                    ... on Batch {
+                      id
+                      quantity
+                      batchAdjustments {
+                        ... on BatchAdjustment {
+                          id
+                          quantity
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
-        }
-        productProvider {
-          id
-          packageName
-          packageCapacity
-          packageGrossWeight {
-            ...metricFragment
-          }
-          packageVolume {
-            ...metricFragment
-          }
-          packageSize {
-            ...sizeFragment
-          }
-          product {
-            id
-            name
-            serial
-            files {
-              ...imageFragment
+          productProvider {
+            ... on ProductProvider {
+              id
+              packageName
+              packageCapacity
+              packageGrossWeight {
+                ...metricFragment
+              }
+              packageVolume {
+                ...metricFragment
+              }
+              packageSize {
+                ...sizeFragment
+              }
+              product {
+                ... on Product {
+                  id
+                  name
+                  serial
+                  files {
+                    ...imageFragment
+                  }
+                }
+              }
+              exporter {
+                ...partnerCardFragment
+              }
             }
-          }
-          exporter {
-            ...partnerCardFragment
           }
         }
       }

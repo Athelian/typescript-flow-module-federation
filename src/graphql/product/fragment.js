@@ -36,12 +36,14 @@ export const productCardFragment = gql`
     name
     serial
     productProviders {
-      id
-      exporter {
-        ...partnerNameFragment
-      }
-      supplier {
-        ...partnerNameFragment
+      ... on ProductProvider {
+        id
+        exporter {
+          ...partnerNameFragment
+        }
+        supplier {
+          ...partnerNameFragment
+        }
       }
     }
     tags {

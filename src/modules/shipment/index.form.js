@@ -58,19 +58,15 @@ const defaultProps = {
 
 type CreateShipmentResponse = {|
   shipmentCreate: {
-    violations: ?Array<Object>,
-    shipment: ?{
-      id: string,
-    },
+    violations?: Array<Object>,
+    id?: string,
   },
 |};
 
 type UpdateShipmentResponse = {|
   shipmentUpdate: {
-    violations: ?Array<Object>,
-    shipment: ?{
-      id: string,
-    },
+    violations?: Array<Object>,
+    id?: string,
   },
 |};
 
@@ -232,20 +228,16 @@ class ShipmentFormModule extends React.Component<Props> {
     const { redirectAfterSuccess } = this.props;
 
     if (isNewOrClone && result.shipmentCreate) {
-      const {
-        shipmentCreate: { shipment, violations },
-      } = result;
+      const { shipmentCreate } = result;
 
-      if (!violations) {
-        if (shipment && shipment.id && redirectAfterSuccess) {
-          navigate(`/shipment/${encodeId(shipment.id)}`);
+      if (!shipmentCreate.violations) {
+        if (shipmentCreate.id && redirectAfterSuccess) {
+          navigate(`/shipment/${encodeId(shipmentCreate.id)}`);
         }
       }
     }
     if (!isNewOrClone && result.shipmentUpdate) {
-      const {
-        shipmentUpdate: { shipment },
-      } = result;
+      const { shipmentUpdate } = result;
       this.onFormReady({
         shipmentBatchesState,
         shipmentInfoState,
@@ -253,7 +245,7 @@ class ShipmentFormModule extends React.Component<Props> {
         shipmentTimelineState,
         shipmentTransportTypeState,
         shipmentFileState,
-      })(shipment);
+      })(shipmentUpdate);
     }
   };
 

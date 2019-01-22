@@ -31,7 +31,7 @@ export const connectNewShipment = async (client: any, target: Object) => {
       },
     },
   });
-  const newShipment = get('', 'shipmentCreate.shipment', data);
+  const newShipment = get('', 'shipmentCreate', data);
   await Promise.all(connectShipmentInBatch(client, target.batch || {}, newShipment.id));
   const result = {
     order: [],

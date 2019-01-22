@@ -72,7 +72,7 @@ export const connectNewShipment = async (client: any, target: Object) => {
       },
     },
   });
-  const newShipment = get('', 'shipmentCreate.shipment', data);
+  const newShipment = get('', 'shipmentCreate', data);
   await Promise.all(connectShipmentInBatch(client, target.batch || {}, newShipment.id));
   const result = {
     order: [],
@@ -152,7 +152,7 @@ export const deleteItemAndBatchInOrder = async (
         if (filterVariables) {
           const query = { query: orderListQuery, variables: filterVariables };
           const orderList = store.readQuery(query);
-          const updateData = data.orderUpdate.order;
+          const updateData = data.orderUpdate;
           orderList.orders.nodes.forEach((order, orderIndex) => {
             if (order.id === updateData.id) {
               orderList.orders.nodes[orderIndex] = updateData;
@@ -232,7 +232,7 @@ export const connectExistingOrder = async (client: any, target: Object, selected
       },
     },
   });
-  const orderResult = get({}, 'data.orderUpdate.order', result);
+  const orderResult = get({}, 'data.orderUpdate', result);
   const diffOrderItems = differenceBy(orderResult.orderItems, selectedItem.orderItems, 'id');
   const batchResult = diffOrderItems.reduce((itemResult, item) => {
     if (!item.batches) {

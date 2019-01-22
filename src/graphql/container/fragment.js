@@ -5,20 +5,30 @@ export const containerCardFragment = gql`
     id
     no
     representativeBatch {
-      id
-      orderItem {
+      ... on Batch {
         id
-        productProvider {
-          id
-          product {
+        orderItem {
+          ... on OrderItem {
             id
-            files {
-              id
-              name
-              type
+            productProvider {
+              ... on ProductProvider {
+                id
+                product {
+                  ... on Product {
+                    id
+                    files {
+                      ... on File {
+                        id
+                        name
+                        type
+                      }
+                    }
+                    name
+                    serial
+                  }
+                }
+              }
             }
-            name
-            serial
           }
         }
       }
@@ -28,23 +38,33 @@ export const containerCardFragment = gql`
       metric
     }
     batches {
-      id
+      ... on Batch {
+        id
+      }
     }
     warehouse {
-      id
-      name
+      ... on Warehouse {
+        id
+        name
+      }
     }
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
     warehouseArrivalAgreedDateApprovedBy {
-      id
+      ... on User {
+        id
+      }
     }
     warehouseArrivalActualDateApprovedBy {
-      id
+      ... on User {
+        id
+      }
     }
     shipment {
-      id
-      no
+      ... on Shipment {
+        id
+        no
+      }
     }
     tags {
       ...tagFragment
