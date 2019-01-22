@@ -14,13 +14,13 @@ import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import SelectOrderItems from '../CargoSection/components/SelectOrderItems';
 import {
-  ItemsSectionWrapperStyle,
+  CargoSectionWrapperStyle,
   NavbarWrapperStyle,
   NavbarLeftWrapperStyle,
   NavbarRightWrapperStyle,
-  ItemsSectionBodyStyle,
-  ItemGridStyle,
-  ItemStyle,
+  CargoBodyWrapperStyle,
+  ContainersBodyWrapperStyle,
+  BatchesBodyWrapperStyle,
   EmptyMessageStyle,
   FooterWrapperStyle,
   FooterLeftWrapperStyle,
@@ -34,12 +34,13 @@ type Props = {
 
 function CargoSection({ intl }: Props) {
   return (
-    <div className={ItemsSectionWrapperStyle}>
+    <div className={CargoSectionWrapperStyle}>
       <div className={NavbarWrapperStyle}>
-        <div className={NavbarLeftWrapperStyle}>hi</div>
-        <div className={NavbarRightWrapperStyle}>hi</div>
+        <div className={NavbarLeftWrapperStyle} />
+        <div className={NavbarRightWrapperStyle} />
       </div>
-      <div className={ItemsSectionBodyStyle}>
+      <div className={CargoBodyWrapperStyle}>
+        <div className={ContainersBodyWrapperStyle}>hi</div>
         <Subscribe to={[ShipmentBatchesContainer]}>
           {({ state: { batches }, setFieldValue, setFieldArrayValue }) =>
             batches.length === 0 ? (
@@ -50,7 +51,7 @@ function CargoSection({ intl }: Props) {
                 />
               </div>
             ) : (
-              <div className={ItemGridStyle}>
+              <div className={BatchesBodyWrapperStyle}>
                 {batches.map((item, position) => (
                   <BooleanValue key={item.id}>
                     {({ value: opened, set: batchSlideToggle }) => (
@@ -78,40 +79,38 @@ function CargoSection({ intl }: Props) {
                             </Subscribe>
                           )}
                         </SlideView>
-                        <div className={ItemStyle}>
-                          <ShipmentBatchCard
-                            batch={item}
-                            saveOnBlur={updateBatch => {
-                              setFieldArrayValue(position, updateBatch);
-                            }}
-                            onClick={() => batchSlideToggle(true)}
-                            onClear={({ id }) => {
-                              setFieldValue(
-                                'batches',
-                                batches.filter(({ id: itemId }) => id !== itemId)
-                              );
-                            }}
-                            onClone={({
-                              id,
-                              deliveredAt,
-                              desired,
-                              expiredAt,
-                              producedAt,
-                              no,
-                              ...rest
-                            }) => {
-                              setFieldValue('batches', [
-                                ...batches,
-                                injectUid({
-                                  ...rest,
-                                  isNew: true,
-                                  batchAdjustments: [],
-                                  no: `${no}- clone`,
-                                }),
-                              ]);
-                            }}
-                          />
-                        </div>
+                        <ShipmentBatchCard
+                          batch={item}
+                          saveOnBlur={updateBatch => {
+                            setFieldArrayValue(position, updateBatch);
+                          }}
+                          onClick={() => batchSlideToggle(true)}
+                          onClear={({ id }) => {
+                            setFieldValue(
+                              'batches',
+                              batches.filter(({ id: itemId }) => id !== itemId)
+                            );
+                          }}
+                          onClone={({
+                            id,
+                            deliveredAt,
+                            desired,
+                            expiredAt,
+                            producedAt,
+                            no,
+                            ...rest
+                          }) => {
+                            setFieldValue('batches', [
+                              ...batches,
+                              injectUid({
+                                ...rest,
+                                isNew: true,
+                                batchAdjustments: [],
+                                no: `${no}- clone`,
+                              }),
+                            ]);
+                          }}
+                        />
                       </>
                     )}
                   </BooleanValue>
@@ -122,7 +121,9 @@ function CargoSection({ intl }: Props) {
         </Subscribe>
       </div>
       <div className={FooterWrapperStyle}>
-        <div className={FooterLeftWrapperStyle}>hi</div>
+        <div className={FooterLeftWrapperStyle}>
+          <NewButton label={intl.formatMessage(messages.newContainer)} onClick={() => {}} />
+        </div>
         <div className={FooterRightWrapperStyle}>
           <BooleanValue>
             {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (

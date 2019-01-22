@@ -10,7 +10,7 @@ import {
   borderRadiuses,
 } from 'styles/common';
 
-export const ItemsSectionWrapperStyle: string = css`
+export const CargoSectionWrapperStyle: string = css`
   position: relative;
   ${presets.BOX};
   width: 880px;
@@ -39,7 +39,6 @@ export const NavbarLeftWrapperStyle: string = css`
   height: 50px;
   background: ${colors.WHITE};
   ${shadows.HEADER_RIGHT};
-  z-index: 1;
 `;
 
 export const NavbarRightWrapperStyle: string = css`
@@ -53,31 +52,55 @@ export const NavbarRightWrapperStyle: string = css`
   ${shadows.HEADER_LEFT};
 `;
 
-export const ItemsSectionBodyStyle: string = css`
+export const CargoBodyWrapperStyle: string = css`
+  position: relative;
+  display: grid;
+  grid-template-columns: 235px 1fr;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+`;
+
+export const ContainersBodyWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: min-content;
+  grid-gap: 30px;
+  position: relative;
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  max-height: 70vh;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
+  height: 100%;
+  max-height: 65vh;
+  ${shadows.HEADER_RIGHT};
+  padding: 30px 10px 30px 20px;
 `;
 
-export const ItemGridStyle: string = css`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 15px 0 15px 10px;
-`;
-
-export const ItemStyle: string = css`
-  display: flex;
-  margin: 15px 10px;
+export const BatchesBodyWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+  grid-auto-rows: min-content;
+  grid-row-gap: 30px;
+  grid-column-gap: 10px;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  overflow-x: hidden;
+  overflow-y: auto;
+  ${scrollbars.SMALL};
+  height: 100%;
+  max-height: 65vh;
+  ${shadows.HEADER_LEFT};
+  padding: 30px 10px 30px 20px;
 `;
 
 export const EmptyMessageStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   ${fontSizes.MAIN};
   font-weight: bold;
   color: ${colors.BLACK};
-  text-align: center;
-  padding: 100px;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  padding: 100px 0;
 `;
 
 export const FooterWrapperStyle: string = css`
@@ -93,6 +116,9 @@ export const FooterWrapperStyle: string = css`
 `;
 
 export const FooterLeftWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
