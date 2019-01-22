@@ -9,7 +9,7 @@ import {
 
 type OptionalProps = {
   vertical: boolean,
-  containerGroups: Array<Object>,
+  containers: Array<Object>,
 };
 
 type Props = OptionalProps & {
@@ -18,11 +18,11 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   vertical: false,
-  containerGroups: [],
+  containers: [],
 };
 
-const TimelineWarehouseName = ({ name, vertical, containerGroups }: Props) => {
-  const warehouses = (containerGroups || []).slice(1).filter(group => group.warehouse);
+const TimelineWarehouseName = ({ name, vertical, containers }: Props) => {
+  const warehouses = (containers || []).slice(1).filter(group => group.warehouse);
   return (
     <div className={TimelineWarehouseNameWrapperStyle(vertical)}>
       <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
