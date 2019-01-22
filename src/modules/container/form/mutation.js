@@ -10,6 +10,8 @@ export const updateContainerMutation = gql`
     containerUpdate(id: $id, input: $input) {
       container {
         id
+        warehouseArrivalAgreedDate
+        warehouseArrivalActualDate
       }
       violations {
         ...violationFragment
@@ -20,13 +22,10 @@ export const updateContainerMutation = gql`
   ${violationFragment}
 `;
 
-const prepareUserIdForGraphQL = (user: Object, field: string) => {
-  if (isNullOrUndefined(user)) return {};
-  const data = {};
-  data[field] = user.id;
+const getIdOrReturnNull = (obj: { id: string }): string | null =>
+  isNullOrUndefined(obj) ? null : obj.id;
 
-  return data;
-};
+const getDateOrReturnNull = (date: string): Date | null => (date ? new Date(date) : null);
 
 export const prepareUpdateContainerInput = ({
   updatedAt,
@@ -41,23 +40,23 @@ export const prepareUpdateContainerInput = ({
   shipment,
   tags,
   warehouse,
+  warehouseArrivalAgreedDate,
+  warehouseArrivalActualDate,
+  warehouseArrivalAgreedDateApprovedAt,
+  warehouseArrivalActualDateApprovedAt,
   warehouseArrivalAgreedDateApprovedBy,
   warehouseArrivalActualDateApprovedBy,
+  totalAdjusted,
   batches,
   ...rest
 }: Object) => ({
   ...rest,
   tagIds: tags.map(({ id }) => id),
-  warehouseId: warehouse.id,
-  ...prepareUserIdForGraphQL(
-    warehouseArrivalAgreedDateApprovedBy,
-    'warehouseArrivalAgreedDateApprovedById'
-  ),
-  ...prepareUserIdForGraphQL(
-    warehouseArrivalActualDateApprovedBy,
-    'warehouseArrivalActualDateApprovedById'
-  ),
-
+  warehouseArrivalAgreedDate: getDateOrReturnNull(warehouseArrivalAgreedDate),
+  warehouseArrivalActualDate: getDateOrReturnNull(warehouseArrivalActualDate),
+  warehouseArrivalAgreedDateApprovedById: getIdOrReturnNull(warehouseArrivalAgreedDateApprovedBy),
+  warehouseArrivalActualDateApprovedById: getIdOrReturnNull(warehouseArrivalActualDateApprovedBy),
+  warehouseId: getIdOrReturnNull(warehouse),
   batches: batches
     .map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false))
     .map(({ container, ...batch }) => ({ ...batch })),

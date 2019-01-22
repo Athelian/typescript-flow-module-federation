@@ -90,7 +90,6 @@ const ContainerBatchCard = ({
     quantity,
     deliveredAt,
     desiredAt,
-    totalAdjusted: totalAdjustment,
     packageVolume,
     packageQuantity,
     tags,
@@ -109,7 +108,7 @@ const ContainerBatchCard = ({
   });
   const values = {
     [`batch.${id}.no`]: no,
-    [`batch.${id}.quantity`]: quantity + totalAdjustment,
+    [`batch.${id}.quantity`]: quantity,
   };
   return (
     <BaseCard
@@ -204,7 +203,7 @@ const ContainerBatchCard = ({
             </Label>
             <FormField
               name={`batch.${id}.quantity`}
-              initValue={quantity + totalAdjustment}
+              initValue={quantity}
               validator={validation}
               values={values}
             >
@@ -218,13 +217,13 @@ const ContainerBatchCard = ({
                       inputHandlers.onBlur(evt);
                       saveOnBlur({
                         ...batch,
-                        quantity: inputHandlers.value - totalAdjustment,
+                        quantity: inputHandlers.value,
                       });
                     },
                   },
                   name: fieldName,
                   isNew: false,
-                  originalValue: quantity + totalAdjustment,
+                  originalValue: quantity,
                 })
               }
             </FormField>
@@ -304,9 +303,7 @@ const ContainerBatchCard = ({
               input={
                 <Display>
                   <FormattedNumber
-                    value={
-                      (price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)
-                    }
+                    value={(price && price.amount ? price.amount : 0) * quantity}
                     suffix={currency || (price && price.currency)}
                   />
                 </Display>

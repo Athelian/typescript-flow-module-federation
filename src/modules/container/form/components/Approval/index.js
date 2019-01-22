@@ -2,7 +2,7 @@
 
 import React from 'react';
 import FormattedName from 'components/FormattedName';
-// import FormattedDate from 'components/FormattedDate';
+import FormattedDate from 'components/FormattedDate';
 
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
@@ -12,13 +12,14 @@ import {
   ApprovalWrapperStyle,
   ApprovedByWrapperStyle,
   ApprovedByStyle,
-  // ApprovedAtStyle,
+  ApprovedAtStyle,
   UnApproveButtonStyle,
 } from './style';
 
 type Props = {
   field: string,
-  approvedBy: any,
+  approvedBy: Object,
+  approvedAt?: string,
   setFieldValue: Function,
 };
 
@@ -27,7 +28,7 @@ const onApproval = (user: Object, setFieldValue: Function, field: string) =>
 
 const onUnApproval = (setFieldValue: Function, field: string) => setFieldValue(field, null);
 
-const Approval = ({ approvedBy, setFieldValue, field }: Props) => (
+const Approval = ({ approvedBy, approvedAt, setFieldValue, field }: Props) => (
   <div className={ApprovalWrapperStyle}>
     {approvedBy ? (
       <>
@@ -35,9 +36,9 @@ const Approval = ({ approvedBy, setFieldValue, field }: Props) => (
           <div className={ApprovedByStyle}>
             <FormattedName firstName={approvedBy.firstName} lastName={approvedBy.lastName} />
           </div>
-          {/* <div className={ApprovedAtStyle}>
+          <div className={ApprovedAtStyle}>
             <FormattedDate value={approvedAt} />
-          </div> */}
+          </div>
         </div>
         <UserAvatar firstName={approvedBy.firstName} lastName={approvedBy.lastName} />
         <button

@@ -5,6 +5,8 @@ import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { decodeId } from 'utils/id';
+import { formatToDateTimeInput } from 'utils/date';
+import { isNullOrUndefined } from 'utils/fp';
 import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
 import { SaveButton, ResetButton } from 'components/Buttons';
@@ -153,16 +155,41 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                     query={containerFormQuery}
                     entityId={containerId}
                     entityType="container"
-                    render={container => (
-                      <Subscribe to={[ContainerFormContainer]}>
-                        {({ initDetailValues }) => (
-                          <ContainerForm
-                            container={container}
-                            onFormReady={() => initDetailValues(container)}
-                          />
-                        )}
-                      </Subscribe>
-                    )}
+                    render={container => {
+                      const {
+                        warehouseArrivalAgreedDate,
+                        warehouseArrivalActualDate,
+                        ...rest
+                      } = container;
+                      const usefulContainer = {
+                        ...(isNullOrUndefined(warehouseArrivalAgreedDate)
+                          ? {}
+                          : {
+                              warehouseArrivalAgreedDate: formatToDateTimeInput(
+                                warehouseArrivalAgreedDate
+                              ),
+                            }),
+                        ...(isNullOrUndefined(warehouseArrivalActualDate)
+                          ? {}
+                          : {
+                              warehouseArrivalActualDate: formatToDateTimeInput(
+                                warehouseArrivalActualDate
+                              ),
+                            }),
+                        ...rest,
+                      };
+
+                      return (
+                        <Subscribe to={[ContainerFormContainer]}>
+                          {({ initDetailValues }) => (
+                            <ContainerForm
+                              container={usefulContainer}
+                              onFormReady={() => initDetailValues(usefulContainer)}
+                            />
+                          )}
+                        </Subscribe>
+                      );
+                    }}
                   />
                 </Layout>
               )}
