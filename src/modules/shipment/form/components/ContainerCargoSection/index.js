@@ -5,7 +5,6 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
-import { SectionNavBar } from 'components/NavBar';
 import { ShipmentBatchCard } from 'components/Cards';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -16,11 +15,16 @@ import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form
 import SelectOrderItems from '../CargoSection/components/SelectOrderItems';
 import {
   ItemsSectionWrapperStyle,
+  NavbarWrapperStyle,
+  NavbarLeftWrapperStyle,
+  NavbarRightWrapperStyle,
   ItemsSectionBodyStyle,
   ItemGridStyle,
   ItemStyle,
   EmptyMessageStyle,
-  BatchButtonsWrapperStyle,
+  FooterWrapperStyle,
+  FooterLeftWrapperStyle,
+  FooterRightWrapperStyle,
 } from './style';
 import SelectBatches from '../SelectBatches';
 
@@ -31,7 +35,10 @@ type Props = {
 function CargoSection({ intl }: Props) {
   return (
     <div className={ItemsSectionWrapperStyle}>
-      <SectionNavBar>Hi</SectionNavBar>
+      <div className={NavbarWrapperStyle}>
+        <div className={NavbarLeftWrapperStyle}>hi</div>
+        <div className={NavbarRightWrapperStyle}>hi</div>
+      </div>
       <div className={ItemsSectionBodyStyle}>
         <Subscribe to={[ShipmentBatchesContainer]}>
           {({ state: { batches }, setFieldValue, setFieldArrayValue }) =>
@@ -114,8 +121,9 @@ function CargoSection({ intl }: Props) {
           }
         </Subscribe>
       </div>
-      <SectionNavBar upsideDown>
-        <div className={BatchButtonsWrapperStyle}>
+      <div className={FooterWrapperStyle}>
+        <div className={FooterLeftWrapperStyle}>hi</div>
+        <div className={FooterRightWrapperStyle}>
           <BooleanValue>
             {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
               <>
@@ -206,7 +214,7 @@ function CargoSection({ intl }: Props) {
             )}
           </BooleanValue>
         </div>
-      </SectionNavBar>
+      </div>
     </div>
   );
 }
