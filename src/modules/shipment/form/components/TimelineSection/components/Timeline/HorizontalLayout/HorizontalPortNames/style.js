@@ -7,6 +7,7 @@ export const HorizontalPortsWrapperStyle: string = css`
 `;
 
 export const PortNameWrapperStyle: string = css`
+  position: relative;
   display: flex;
   flex: 1;
   justify-content: center;

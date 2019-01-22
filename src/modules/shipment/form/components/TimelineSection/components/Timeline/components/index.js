@@ -9,6 +9,7 @@ import TimelineWarehouseName from './TimelineWarehouseName';
 import TimelineTransitIcon from './TimelineTransitIcon';
 import TimelineVoyage from './TimelineVoyage';
 import TimelineWarehouseContainerIcon from './TimelineWarehouseContainerIcon';
+import TimelineContainerIcon from './TimelineContainerIcon';
 
 export {
   TimelineDate,
@@ -21,4 +22,5 @@ export {
   TimelineTransitIcon,
   TimelineVoyage,
   TimelineWarehouseContainerIcon,
+  TimelineContainerIcon,
 };

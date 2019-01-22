@@ -8,9 +8,15 @@ import {
   TimelineLine,
   TimelineVoyage,
   TimelineWarehouseContainerIcon,
+  TimelineContainerIcon,
 } from '../../components';
 import { getTimelineColoring, getTransportIcon } from '../../helpers';
-import { HorizontalTimelineWrapperStyle, BlankSpaceStyle } from './style';
+import {
+  HorizontalTimelineWrapperStyle,
+  BlankSpaceStyle,
+  ContainerIconWrapperStyle,
+  WarehouseContainerWrapperStyle,
+} from './style';
 
 type Props = {
   shipment: any,
@@ -102,7 +108,12 @@ const HorizontalTimeline = ({ shipment }: Props) => {
       <TimelineLine color={warehouseArrivalColoring} />
 
       {isEnableBetaFeature && containers && containers.length > 0 ? (
-        <TimelineWarehouseContainerIcon containers={containers} />
+        <div className={WarehouseContainerWrapperStyle}>
+          <div className={ContainerIconWrapperStyle}>
+            <TimelineContainerIcon />
+          </div>
+          <TimelineWarehouseContainerIcon containers={containers} />
+        </div>
       ) : (
         <TimelineIcon
           icon="WAREHOUSE"
