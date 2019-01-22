@@ -6,7 +6,9 @@ import BaseCard from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
+import { actionCreators } from 'modules/relationMapBeta/order/store';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
+import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 
 type OptionalProps = {
   wrapperClassName?: string,
@@ -21,13 +23,17 @@ export default function Order({
   totalBatched,
   totalShipped,
   tags,
+  id,
+  orderItems,
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
     state: { showTag },
+    dispatch,
   } = context;
+  const actions = actionCreators(dispatch);
   return (
-    <BaseCard icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
+    <BaseCard id={`order-${id}`} icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
@@ -43,31 +49,51 @@ export default function Order({
             <ActionCard show={hovered}>
               {({ targetted, toggle }) => (
                 <>
-                  {/* NOTE: why need to send targetted and toggle to ACTION */}
                   <Action
                     icon="MAGIC"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('HIGHLIGHT')}
+                    onClick={() => actions.toggleHighLight(ORDER, id)}
                   />
                   <Action
                     icon="DOCUMENT"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('EDIT')}
+                    onClick={() => actions.showEditForm(ORDER, id)}
                   />
                   <Action
                     icon="BRANCH"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('BRANCH')}
+                    onClick={() =>
+                      actions.selectBranch([
+                        {
+                          entity: ORDER,
+                          id,
+                        },
+                        ...orderItems.map(orderItem => ({
+                          entity: ORDER_ITEM,
+                          id: orderItem.id,
+                        })),
+                        ...orderItems.reduce(
+                          (result, orderItem) =>
+                            result.concat(
+                              orderItem.batches.map(batch => ({
+                                entity: BATCH,
+                                id: batch.id,
+                              }))
+                            ),
+                          []
+                        ),
+                      ])
+                    }
                     className={RotateIcon}
                   />
                   <Action
                     icon="CHECKED"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => console.warn('TARGET')}
+                    onClick={() => actions.targetEntity(ORDER, id)}
                   />
                 </>
               )}

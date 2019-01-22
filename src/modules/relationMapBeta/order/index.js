@@ -26,14 +26,17 @@ import {
   ShipmentListWrapperStyle,
   ShipmentListBodyStyle,
 } from 'modules/relationMap/orderFocused/style';
+import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
+import { SHIPMENT } from 'modules/relationMap/constants';
 import { orderListQuery } from './query';
 import normalize from './normalize';
-import { hasMoreItems } from './helpers';
+import { hasMoreItems, findHighLightEntities } from './helpers';
+import { uiInitState, uiReducer, actionCreators, selectors } from './store';
+import { DispatchProvider } from './provider';
 import OrderFocusView from './components/OrderFocusView';
 import Shipment from './components/Shipment';
-import { uiInitState, uiReducer, actionCreators, selectors } from './store';
 import ShipmentList from './components/ShipmentList';
-import { DispatchProvider } from './provider';
+import EditForm from './components/EditForm';
 
 type Props = {
   intl: IntlShape,
@@ -69,6 +72,13 @@ const Order = ({ intl }: Props) => {
           const {
             entities: { orders, orderItems, batches, shipments },
           } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
+
+          const highLightEntities = findHighLightEntities(state.highlight, {
+            orders,
+            orderItems,
+            batches,
+            shipments,
+          });
           return (
             <>
               <SortFilter
@@ -125,7 +135,7 @@ const Order = ({ intl }: Props) => {
                   <div className={OrderFocusEntityHeaderWrapperStyle}>
                     <EntityHeader
                       icon="ORDER"
-                      color={uiSelectors.isSelectEntity('ORDER') ? 'ORDER_DARK' : 'ORDER'}
+                      color={uiSelectors.isSelectAllEntity('ORDER') ? 'ORDER_DARK' : 'ORDER'}
                       label={intl.formatMessage(messages.ordersLabel)}
                       no={Object.keys(orders || []).length}
                       onClick={() => actions.toggleSelectAll('ORDER')}
@@ -133,7 +143,9 @@ const Order = ({ intl }: Props) => {
                     <EntityHeader
                       icon="ORDER_ITEM"
                       color={
-                        uiSelectors.isSelectEntity('ORDER_ITEM') ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'
+                        uiSelectors.isSelectAllEntity('ORDER_ITEM')
+                          ? 'ORDER_ITEM_DARK'
+                          : 'ORDER_ITEM'
                       }
                       label={intl.formatMessage(messages.itemsLabel)}
                       no={Object.keys(orderItems || []).length}
@@ -141,14 +153,16 @@ const Order = ({ intl }: Props) => {
                     />
                     <EntityHeader
                       icon="BATCH"
-                      color={uiSelectors.isSelectEntity('BATCH') ? 'BATCH_DARK' : 'BATCH'}
+                      color={uiSelectors.isSelectAllEntity('BATCH') ? 'BATCH_DARK' : 'BATCH'}
                       label={intl.formatMessage(messages.batchesLabel)}
                       no={Object.keys(batches || []).length}
                       onClick={() => actions.toggleSelectAll('BATCH')}
                     />
                     <EntityHeader
                       icon="SHIPMENT"
-                      color={uiSelectors.isSelectEntity('SHIPMENT') ? 'SHIPMENT_DARK' : 'SHIPMENT'}
+                      color={
+                        uiSelectors.isSelectAllEntity('SHIPMENT') ? 'SHIPMENT_DARK' : 'SHIPMENT'
+                      }
                       label={intl.formatMessage(messages.shipmentsLabel)}
                       no={
                         state.toggleShipmentList
@@ -193,7 +207,11 @@ const Order = ({ intl }: Props) => {
                       threshold={500}
                     >
                       {getByPathWithDefault([], 'orders.nodes', data).map(order => (
-                        <OrderFocusView key={order.id} item={order} />
+                        <OrderFocusView
+                          highLightEntities={highLightEntities}
+                          key={order.id}
+                          item={order}
+                        />
                       ))}
                       {Object.entries(orders || []).length === 0 && (
                         <Display>
@@ -208,20 +226,33 @@ const Order = ({ intl }: Props) => {
                   <div className={ShipmentListWrapperStyle}>
                     {state.toggleShipmentList ? (
                       <ShipmentList
+                        highLightEntities={highLightEntities}
                         onCountShipment={total =>
                           total !== state.totalShipment ? actions.countShipment(total) : null
                         }
                       />
                     ) : (
                       <div className={ShipmentListBodyStyle}>
-                        {Object.entries(shipments || []).map(([shipmentId, shipment]) => (
-                          <Shipment key={shipmentId} {...shipment} onToggle={console.warn} />
-                        ))}
+                        {(Object.entries(shipments || []): Array<any>).map(
+                          ([shipmentId, shipment]) => (
+                            <Shipment
+                              wrapperClassName={ItemWrapperStyle(
+                                highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
+                                uiSelectors.isTarget(SHIPMENT, shipment.id),
+                                state.highlight.type === SHIPMENT &&
+                                  state.highlight.selectedId === shipment.id
+                              )}
+                              key={shipmentId}
+                              {...shipment}
+                            />
+                          )
+                        )}
                       </div>
                     )}
                   </div>
                 </div>
               )}
+              <EditForm onClose={() => actions.showEditForm('', '')} {...state.edit} />
             </>
           );
         }}

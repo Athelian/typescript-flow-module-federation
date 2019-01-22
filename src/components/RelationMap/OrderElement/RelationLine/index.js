@@ -4,8 +4,17 @@ import { getByPathWithDefault } from 'utils/fp';
 import * as style from './style';
 
 type OptionalProps = {
+  /**
+   * Has relation between entity
+   */
   hasRelation: boolean,
+  /**
+   * Has targeted
+   */
   isTargeted: boolean,
+  /**
+   * Has highlighted
+   */
   isFocused: boolean,
 };
 

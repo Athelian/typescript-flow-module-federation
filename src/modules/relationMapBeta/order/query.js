@@ -81,7 +81,9 @@ export const orderListQuery = gql`
           id
           quantity
           productProvider {
+            id
             product {
+              id
               name
               serial
             }
@@ -98,6 +100,9 @@ export const orderListQuery = gql`
         }
         shipments {
           id
+          batches {
+            id
+          }
           ...shipmentCardRMFragment
         }
       }
