@@ -217,11 +217,12 @@ export function actionCreators(dispatch: Function) {
       dispatch({
         type: 'TOGGLE_SHIPMENT_LIST',
       }),
-    toggleSelectAll: (entity: string) =>
+    toggleSelectAll: (entity: string, selectedIds: Array<string>) =>
       dispatch({
         type: 'TOGGLE_SELECT_ALL',
         payload: {
           entity,
+          selectedIds,
         },
       }),
     countShipment: (total: number) =>

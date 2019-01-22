@@ -138,7 +138,12 @@ const Order = ({ intl }: Props) => {
                       color={uiSelectors.isSelectAllEntity('ORDER') ? 'ORDER_DARK' : 'ORDER'}
                       label={intl.formatMessage(messages.ordersLabel)}
                       no={Object.keys(orders || []).length}
-                      onClick={() => actions.toggleSelectAll('ORDER')}
+                      onClick={() =>
+                        actions.toggleSelectAll(
+                          'ORDER',
+                          Object.keys(orders || []).map(item => item.id)
+                        )
+                      }
                     />
                     <EntityHeader
                       icon="ORDER_ITEM"
@@ -149,14 +154,24 @@ const Order = ({ intl }: Props) => {
                       }
                       label={intl.formatMessage(messages.itemsLabel)}
                       no={Object.keys(orderItems || []).length}
-                      onClick={() => actions.toggleSelectAll('ORDER_ITEM')}
+                      onClick={() =>
+                        actions.toggleSelectAll(
+                          'ORDER_ITEM',
+                          Object.keys(orderItems || []).map(item => item.id)
+                        )
+                      }
                     />
                     <EntityHeader
                       icon="BATCH"
                       color={uiSelectors.isSelectAllEntity('BATCH') ? 'BATCH_DARK' : 'BATCH'}
                       label={intl.formatMessage(messages.batchesLabel)}
                       no={Object.keys(batches || []).length}
-                      onClick={() => actions.toggleSelectAll('BATCH')}
+                      onClick={() =>
+                        actions.toggleSelectAll(
+                          'BATCH',
+                          Object.keys(batches || []).map(item => item.id)
+                        )
+                      }
                     />
                     <EntityHeader
                       icon="SHIPMENT"
@@ -169,7 +184,12 @@ const Order = ({ intl }: Props) => {
                           ? state.totalShipment
                           : Object.keys(shipments || []).length
                       }
-                      onClick={() => actions.toggleSelectAll('SHIPMENT')}
+                      onClick={() =>
+                        actions.toggleSelectAll(
+                          'SHIPMENT',
+                          Object.keys(shipments || []).map(item => item.id)
+                        )
+                      }
                     >
                       <div className={AllShipmentsToggleWrapperStyle}>
                         <div className={AllShipmentsIconStyle}>
