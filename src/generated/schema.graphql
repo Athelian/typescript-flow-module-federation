@@ -1,5 +1,5 @@
-# source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Jan 17 2019 21:28:45 GMT+0700 (Indochina Time)
+# source: http://localhost:8080/graphql
+# timestamp: Tue Jan 22 2019 19:12:24 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -26886,10 +26886,14 @@ enum Airport {
 """Any scalar"""
 scalar Any
 
-type Batch implements Model & Owned & Package & Tagged & Customizable {
+type BadRequest {
+  violations: [Violation!]!
+}
+
+type Batch implements Model & Owned & Package & Tagged & Customizable & Memorizable {
   archived: Boolean!
-  orderItem: OrderItem!
-  shipment: Shipment
+  orderItem: OrderItemPayload!
+  shipment: ShipmentPayload
   no: String!
   quantity: Float!
   packageQuantity: Float
@@ -26898,43 +26902,43 @@ type Batch implements Model & Owned & Package & Tagged & Customizable {
   deliveredAt: DateTime
   expiredAt: DateTime
   desiredAt: DateTime
-  memo: String
   totalAdjusted: Float!
   totalVolume: MetricValue!
-  batchAssignments: [BatchAssignment!]!
-  batchAdjustments: [BatchAdjustment!]!
-  container: Container
+  batchAssignments: [BatchAssignmentPayload!]!
+  batchAdjustments: [BatchAdjustmentPayload!]!
+  container: ContainerPayload
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   packageName: String
   packageGrossWeight: MetricValue
   packageVolume: MetricValue
   packageSize: Size
   packageCapacity: Float
-  tags: [Tag!]!
+  tags: [TagPayload!]!
   customFields: CustomFields!
+  memo: String
 }
 
-type BatchAdjustment implements Model & Owned & Sortable {
-  batch: Batch!
+type BatchAdjustment implements Model & Owned & Sortable & Memorizable {
+  batch: BatchPayload!
   reason: BatchAdjustmentReason!
   quantity: Float!
-  memo: String
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   sort: Int!
+  memo: String
 }
 
 input BatchAdjustmentCreateInput {
@@ -26942,6 +26946,8 @@ input BatchAdjustmentCreateInput {
   quantity: Float!
   memo: String
 }
+
+union BatchAdjustmentPayload = BatchAdjustment | BadRequest | Forbidden | NotFound
 
 enum BatchAdjustmentReason {
   """Inspection"""
@@ -26961,20 +26967,20 @@ input BatchAdjustmentUpdateInput {
   memo: String
 }
 
-type BatchAssignment implements Model & Owned & Sortable {
-  batch: Batch!
-  user: User!
+type BatchAssignment implements Model & Owned & Sortable & Memorizable {
+  batch: BatchPayload!
+  user: UserPayload!
   quantity: Float!
-  memo: String
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   sort: Int!
+  memo: String
 }
 
 input BatchAssignmentCreateInput {
@@ -26982,6 +26988,8 @@ input BatchAssignmentCreateInput {
   quantity: Float!
   memo: String
 }
+
+union BatchAssignmentPayload = BatchAssignment | BadRequest | Forbidden | NotFound
 
 input BatchAssignmentUpdateInput {
   id: ID
@@ -27018,10 +27026,11 @@ input BatchEqualSplitInput {
   precision: Int!
 }
 
-type BatchesMutated {
-  batches: [Batch!]
-  violations: [Violation!]
+type Batches {
+  batches: [Batch!]!
 }
+
+union BatchesPayload = Batches | BadRequest | Forbidden | NotFound
 
 input BatchFilterInput {
   query: String
@@ -27038,18 +27047,10 @@ input BatchFilterInput {
   tagIds: [ID!]
 }
 
-type BatchMutated {
-  batch: Batch
-  violations: [Violation!]
-}
+union BatchPayload = Batch | BadRequest | Forbidden | NotFound
 
-type BatchMutatedMany {
-  batchs: [Batch!]
-  violations: [[Violation!]]
-}
-
-type BatchPagination {
-  nodes: [Batch!]!
+type BatchPayloadPagination {
+  nodes: [BatchPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -27105,48 +27106,50 @@ type BooleanValue {
 }
 
 type Comment implements Model & Owned {
-  entity: Entity!
+  entity: EntityPayload!
   content: String!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
 }
 
-type Container implements Model & Owned & Sortable & Tagged {
+type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   no: String!
   warehouseArrivalAgreedDate: DateTime
-  warehouseArrivalAgreedDateApprovedBy: User
+  warehouseArrivalAgreedDateApprovedBy: UserPayload
+  warehouseArrivalAgreedDateApprovedAt: DateTime
   warehouseArrivalActualDate: DateTime
-  warehouseArrivalActualDateApprovedBy: User
-  shipment: Shipment!
-  warehouse: Warehouse
-  representativeBatch: Batch
-  batches: [Batch!]!
+  warehouseArrivalActualDateApprovedBy: UserPayload
+  warehouseArrivalActualDateApprovedAt: DateTime
+  shipment: ShipmentPayload!
+  warehouse: WarehousePayload
+  representativeBatch: BatchPayload
+  batches: [BatchPayload!]!
   totalVolume: MetricValue!
   totalWeight: MetricValue!
   totalPrice: MetricValue!
   totalBatchQuantity: Int!
   totalBatchPackages: Int!
   totalNumberOfUniqueOrderItems: Int!
-  warehouseArrivalActualDateAssignedTo: User
-  warehouseArrivalAgreedDateAssignedTo: User
-  memo: String
+  warehouseArrivalActualDateAssignedTo: UserPayload
+  warehouseArrivalAgreedDateAssignedTo: UserPayload
   archived: Boolean!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  tags: [TagPayload!]!
   sort: Int!
-  tags: [Tag!]!
+  memo: String
 }
 
 input ContainerBatchAdjustmentInput {
@@ -27196,29 +27199,28 @@ input ContainerFilterInput {
 }
 
 type ContainerGroup implements Model & Owned & Sortable {
-  customClearance: TimelineDate!
-  warehouseArrival: TimelineDate!
-  deliveryReady: TimelineDate!
-  warehouse: Warehouse
-  shipment: Shipment!
+  customClearance: TimelineDatePayload!
+  warehouseArrival: TimelineDatePayload!
+  deliveryReady: TimelineDatePayload!
+  warehouse: WarehousePayload
+  shipment: ShipmentPayload!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   sort: Int!
 }
 
-type ContainerMutated {
-  container: Container
-  violations: [Violation!]
-}
+union ContainerGroupPayload = ContainerGroup | BadRequest | Forbidden | NotFound
 
-type ContainerPagination {
-  nodes: [Container!]!
+union ContainerPayload = Container | BadRequest | Forbidden | NotFound
+
+type ContainerPayloadPagination {
+  nodes: [ContainerPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -27258,7 +27260,7 @@ enum Country {
   """Afghanistan"""
   AFG
 
-  """Antigua & Barbuda"""
+  """Antigua and Barbuda"""
   ATG
 
   """Anguilla"""
@@ -27269,6 +27271,9 @@ enum Country {
 
   """Armenia"""
   ARM
+
+  """Netherlands Antilles"""
+  ANT
 
   """Angola"""
   AGO
@@ -27297,7 +27302,7 @@ enum Country {
   """Azerbaijan"""
   AZE
 
-  """Bosnia & Herzegovina"""
+  """Bosnia and Herzegovina"""
   BIH
 
   """Barbados"""
@@ -27324,7 +27329,7 @@ enum Country {
   """Benin"""
   BEN
 
-  """St. Barthélemy"""
+  """Saint Barthélemy"""
   BLM
 
   """Bermuda"""
@@ -27336,7 +27341,7 @@ enum Country {
   """Bolivia"""
   BOL
 
-  """Caribbean Netherlands"""
+  """Bonaire, Sint Eustatius and Saba"""
   BES
 
   """Brazil"""
@@ -27363,22 +27368,22 @@ enum Country {
   """Canada"""
   CAN
 
-  """Cocos (Keeling) Islands"""
+  """Cocos Islands"""
   CCK
 
-  """Congo - Kinshasa"""
+  """The Democratic Republic Of Congo"""
   COD
 
   """Central African Republic"""
   CAF
 
-  """Congo - Brazzaville"""
+  """Congo"""
   COG
 
   """Switzerland"""
   CHE
 
-  """Côte d’Ivoire"""
+  """Côte d'Ivoire"""
   CIV
 
   """Cook Islands"""
@@ -27414,7 +27419,7 @@ enum Country {
   """Cyprus"""
   CYP
 
-  """Czechia"""
+  """Czech Republic"""
   CZE
 
   """Germany"""
@@ -27516,7 +27521,7 @@ enum Country {
   """Greece"""
   GRC
 
-  """South Georgia & South Sandwich Islands"""
+  """South Georgia And The South Sandwich Islands"""
   SGS
 
   """Guatemala"""
@@ -27531,10 +27536,10 @@ enum Country {
   """Guyana"""
   GUY
 
-  """Hong Kong SAR China"""
+  """Hong Kong"""
   HKG
 
-  """Heard & McDonald Islands"""
+  """Heard Island And McDonald Islands"""
   HMD
 
   """Honduras"""
@@ -27558,7 +27563,7 @@ enum Country {
   """Israel"""
   ISR
 
-  """Isle of Man"""
+  """Isle Of Man"""
   IMN
 
   """India"""
@@ -27606,7 +27611,7 @@ enum Country {
   """Comoros"""
   COM
 
-  """St. Kitts & Nevis"""
+  """Saint Kitts And Nevis"""
   KNA
 
   """North Korea"""
@@ -27630,7 +27635,7 @@ enum Country {
   """Lebanon"""
   LBN
 
-  """St. Lucia"""
+  """Saint Lucia"""
   LCA
 
   """Liechtenstein"""
@@ -27669,7 +27674,7 @@ enum Country {
   """Montenegro"""
   MNE
 
-  """St. Martin"""
+  """Saint Martin"""
   MAF
 
   """Madagascar"""
@@ -27684,13 +27689,13 @@ enum Country {
   """Mali"""
   MLI
 
-  """Myanmar (Burma)"""
+  """Myanmar"""
   MMR
 
   """Mongolia"""
   MNG
 
-  """Macau SAR China"""
+  """Macao"""
   MAC
 
   """Northern Mariana Islands"""
@@ -27786,16 +27791,16 @@ enum Country {
   """Poland"""
   POL
 
-  """St. Pierre & Miquelon"""
+  """Saint Pierre And Miquelon"""
   SPM
 
-  """Pitcairn Islands"""
+  """Pitcairn"""
   PCN
 
   """Puerto Rico"""
   PRI
 
-  """Palestinian Territories"""
+  """Palestine"""
   PSE
 
   """Portugal"""
@@ -27810,7 +27815,7 @@ enum Country {
   """Qatar"""
   QAT
 
-  """Réunion"""
+  """Reunion"""
   REU
 
   """Romania"""
@@ -27843,13 +27848,13 @@ enum Country {
   """Singapore"""
   SGP
 
-  """St. Helena"""
+  """Saint Helena"""
   SHN
 
   """Slovenia"""
   SVN
 
-  """Svalbard & Jan Mayen"""
+  """Svalbard And Jan Mayen"""
   SJM
 
   """Slovakia"""
@@ -27873,13 +27878,13 @@ enum Country {
   """South Sudan"""
   SSD
 
-  """São Tomé & Príncipe"""
+  """Sao Tome And Principe"""
   STP
 
   """El Salvador"""
   SLV
 
-  """Sint Maarten"""
+  """Sint Maarten (Dutch part)"""
   SXM
 
   """Syria"""
@@ -27888,7 +27893,7 @@ enum Country {
   """Swaziland"""
   SWZ
 
-  """Turks & Caicos Islands"""
+  """Turks And Caicos Islands"""
   TCA
 
   """Chad"""
@@ -27924,7 +27929,7 @@ enum Country {
   """Turkey"""
   TUR
 
-  """Trinidad & Tobago"""
+  """Trinidad and Tobago"""
   TTO
 
   """Tuvalu"""
@@ -27942,7 +27947,7 @@ enum Country {
   """Uganda"""
   UGA
 
-  """U.S. Outlying Islands"""
+  """United States Minor Outlying Islands"""
   UMI
 
   """United States"""
@@ -27954,10 +27959,10 @@ enum Country {
   """Uzbekistan"""
   UZB
 
-  """Vatican City"""
+  """Vatican"""
   VAT
 
-  """St. Vincent & Grenadines"""
+  """Saint Vincent And The Grenadines"""
   VCT
 
   """Venezuela"""
@@ -27975,7 +27980,7 @@ enum Country {
   """Vanuatu"""
   VUT
 
-  """Wallis & Futuna"""
+  """Wallis And Futuna"""
   WLF
 
   """Samoa"""
@@ -28518,9 +28523,9 @@ enum Currency {
 }
 
 type CustomFields {
-  mask: Mask
-  fieldValues: [FieldValue!]!
-  fieldDefinitions: [FieldDefinition!]!
+  mask: MaskPayload
+  fieldValues: [FieldValuePayload!]!
+  fieldDefinitions: [FieldDefinitionPayload!]!
 }
 
 input CustomFieldsInput {
@@ -28554,24 +28559,24 @@ type DateTimeValue {
 }
 
 interface Documented {
-  files: [File!]!
+  files: [FilePayload!]!
 }
 
-type EntitiesMutatedMany {
-  orders: OrderMutatedMany
-  shipments: ShipmentMutatedMany
-  products: ProductMutatedMany
-  batches: BatchMutatedMany
-  warehouses: WarehouseMutatedMany
+type EntitiesMany {
+  orders: [OrderPayload!]
+  shipments: [ShipmentPayload!]
+  products: [ProductPayload!]
+  batches: [BatchPayload!]
+  warehouses: [WarehousePayload!]
 }
 
-union Entity = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | File | Partnership
+union EntityPayload = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | Partnership | File | BadRequest | Forbidden | NotFound
 
 type EntityValue {
-  entity: Entity
+  entity: EntityPayload
 }
 
-union Entry = Event | Comment
+union Entry = Event | Comment | BadRequest | Forbidden | NotFound
 
 type EntryPagination {
   nodes: [Entry!]!
@@ -28583,16 +28588,16 @@ type EntryPagination {
 }
 
 type Event implements Model & Owned {
-  entity: Entity!
+  entity: EntityPayload!
   logs: [Log!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
 }
 
 type EventChange implements Model & Owned {
@@ -28603,22 +28608,22 @@ type EventChange implements Model & Owned {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
 }
 
 type EventChangeAdd {
-  entity: Entity!
+  entity: EntityPayload!
 }
 
 type EventChangeRemove {
-  entity: Entity!
+  entity: EntityPayload!
 }
 
 type EventChangeUpdate {
-  entity: Entity!
+  entity: EntityPayload!
   field: String!
   oldValue: Any
   newValue: Any
@@ -28630,10 +28635,10 @@ type EventComment implements Model & Owned {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
 }
 
 input EventCommentCreateInput {
@@ -28641,16 +28646,11 @@ input EventCommentCreateInput {
   timelineId: ID!
 }
 
-type EventCommentMutated {
-  eventComment: EventComment
-  violations: [Violation!]
-}
-
 input EventCommentUpdateInput {
   content: String
 }
 
-union EventUnion = EventChange | EventComment
+union EventUnion = EventChange | EventComment | BadRequest | Forbidden | NotFound
 
 type EventUnionPagination {
   nodes: [EventUnion!]!
@@ -28666,20 +28666,22 @@ type ExportTemplate implements Model {
   types: [ExportType!]!
   extension: String!
   dynamic: Boolean!
-  ownedBy: Group
+  ownedBy: GroupPayload
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
 }
 
 input ExportTemplateFilterInput {
   type: ExportType
   dynamic: Boolean
 }
+
+union ExportTemplatePayload = ExportTemplate | BadRequest | Forbidden | NotFound
 
 enum ExportType {
   """Order"""
@@ -28708,10 +28710,10 @@ type FieldDefinition implements Model & Owned & Sortable {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   sort: Int!
 }
 
@@ -28720,20 +28722,23 @@ input FieldDefinitionInput {
   name: String
 }
 
+union FieldDefinitionPayload = FieldDefinition | BadRequest | Forbidden | NotFound
+
+type FieldDefinitions {
+  fieldDefinitions: [FieldDefinition!]!
+}
+
 input FieldDefinitionsInput {
   entityType: CustomizableEntityType!
   fieldDefinitions: [FieldDefinitionInput!]!
 }
 
-type FieldDefinitionsMutated {
-  fieldDefinitions: [FieldDefinition!]
-  violations: [Violation!]
-}
+union FieldDefinitionsPayload = FieldDefinitions | BadRequest | Forbidden | NotFound
 
 type FieldValue {
   value: Value!
-  fieldDefinition: FieldDefinition!
-  entity: Entity!
+  fieldDefinition: FieldDefinitionPayload!
+  entity: EntityPayload!
 }
 
 input FieldValueInput {
@@ -28741,23 +28746,25 @@ input FieldValueInput {
   fieldDefinitionId: ID!
 }
 
-type File implements Model & Owned {
+union FieldValuePayload = FieldValue | BadRequest | Forbidden | NotFound
+
+type File implements Model & Owned & Memorizable {
   name: String!
   type: FileType!
   size: Int!
   mimetype: String!
   path(preset: ResizePreset, width: Int, height: Int): String!
   pathExpiredAt: DateTime!
-  memo: String
-  entity: Entity
+  entity: EntityPayload
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  memo: String
 }
 
 input FileInput {
@@ -28766,6 +28773,8 @@ input FileInput {
   type: FileType
   memo: String
 }
+
+union FilePayload = File | BadRequest | Forbidden | NotFound
 
 enum FileType {
   """File"""
@@ -28812,6 +28821,10 @@ type FloatValue {
   float: Float!
 }
 
+type Forbidden {
+  reference: Reference
+}
+
 type Group implements Model {
   types: [GroupType!]!
   name: String!
@@ -28820,23 +28833,20 @@ type Group implements Model {
   address: String
   zipCode: String
   country: String
-  avatar: File
+  avatar: FilePayload
   disabled: Boolean!
   dummy: Boolean!
-  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPagination!
+  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPayloadPagination!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
 }
 
-type GroupMutated {
-  group: Group
-  violations: [Violation!]
-}
+union GroupPayload = Group | BadRequest | Forbidden | NotFound
 
 enum GroupType {
   """Importer"""
@@ -28885,35 +28895,37 @@ enum Incoterm {
 type Integration implements Model & Owned {
   name: String!
   service: String!
-  bot: User!
+  bot: UserPayload!
   automated: Boolean!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
 }
 
 type IntegrationConfiguration implements Model & Owned {
-  integration: Integration!
+  integration: IntegrationPayload!
   automated: Boolean!
   interval: Long!
-  integrationLinks(page: Int! = 1, perPage: Int! = 10): IntegrationLinkPagination!
+  integrationLinks(page: Int! = 1, perPage: Int! = 10): IntegrationLinkPayloadPagination!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
 }
 
-type IntegrationConfigurationPagination {
-  nodes: [IntegrationConfiguration!]!
+union IntegrationConfigurationPayload = IntegrationConfiguration | BadRequest | Forbidden | NotFound
+
+type IntegrationConfigurationPayloadPagination {
+  nodes: [IntegrationConfigurationPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -28922,9 +28934,9 @@ type IntegrationConfigurationPagination {
 }
 
 type IntegrationLink implements Model & Owned {
-  configuration: IntegrationConfiguration!
+  configuration: IntegrationConfigurationPayload!
   status: IntegrationLinkStatus!
-  entity: Entity!
+  entity: EntityPayload!
   externalId: ID!
   automated: Boolean!
   interval: Long!
@@ -28935,14 +28947,16 @@ type IntegrationLink implements Model & Owned {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
 }
 
-type IntegrationLinkPagination {
-  nodes: [IntegrationLink!]!
+union IntegrationLinkPayload = IntegrationLink | BadRequest | Forbidden | NotFound
+
+type IntegrationLinkPayloadPagination {
+  nodes: [IntegrationLinkPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -28967,8 +28981,10 @@ enum IntegrationLinkStatus {
   Stop
 }
 
-type IntegrationPagination {
-  nodes: [Integration!]!
+union IntegrationPayload = Integration | BadRequest | Forbidden | NotFound
+
+type IntegrationPayloadPagination {
+  nodes: [IntegrationPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -29035,7 +29051,7 @@ enum Language {
   """Bambara"""
   bm
 
-  """Bangla"""
+  """Bengali"""
   bn
 
   """Tibetan"""
@@ -29125,7 +29141,7 @@ enum Language {
   """French"""
   fr
 
-  """Western Frisian"""
+  """Frisian"""
   fy
 
   """Irish"""
@@ -29134,7 +29150,7 @@ enum Language {
   """Scottish Gaelic"""
   gd
 
-  """Galician"""
+  """Gallegan"""
   gl
 
   """Guarani"""
@@ -29161,7 +29177,7 @@ enum Language {
   """Croatian"""
   hr
 
-  """Haitian Creole"""
+  """Haitian"""
   ht
 
   """Hungarian"""
@@ -29221,13 +29237,13 @@ enum Language {
   """Kikuyu"""
   ki
 
-  """Kuanyama"""
+  """Kwanyama"""
   kj
 
   """Kazakh"""
   kk
 
-  """Kalaallisut"""
+  """Greenlandic"""
   kl
 
   """Khmer"""
@@ -29254,7 +29270,7 @@ enum Language {
   """Cornish"""
   kw
 
-  """Kyrgyz"""
+  """Kirghiz"""
   ky
 
   """Latin"""
@@ -29359,13 +29375,13 @@ enum Language {
   """Oromo"""
   om
 
-  """Odia"""
+  """Oriya"""
   or
 
-  """Ossetic"""
+  """Ossetian"""
   os
 
-  """Punjabi"""
+  """Panjabi"""
   pa
 
   """Pali"""
@@ -29374,7 +29390,7 @@ enum Language {
   """Polish"""
   pl
 
-  """Pashto"""
+  """Pushto"""
   ps
 
   """Portuguese"""
@@ -29383,7 +29399,7 @@ enum Language {
   """Quechua"""
   qu
 
-  """Romansh"""
+  """Raeto-Romance"""
   rm
 
   """Rundi"""
@@ -29413,7 +29429,7 @@ enum Language {
   """Sango"""
   sg
 
-  """Sinhala"""
+  """Sinhalese"""
   si
 
   """Slovak"""
@@ -29476,7 +29492,7 @@ enum Language {
   """Tswana"""
   tn
 
-  """Tongan"""
+  """Tonga"""
   to
 
   """Turkish"""
@@ -29494,7 +29510,7 @@ enum Language {
   """Tahitian"""
   ty
 
-  """Uyghur"""
+  """Uighur"""
   ug
 
   """Ukrainian"""
@@ -29543,7 +29559,7 @@ enum LoadType {
 }
 
 type Log {
-  entity: Entity
+  entity: EntityPayload!
   translationKey: String!
   parameters: [Parameter!]!
 }
@@ -29554,19 +29570,19 @@ Long can represent values between -(2^63) and 2^63 - 1.
 """
 scalar Long
 
-type Mask implements Model & Owned {
+type Mask implements Model & Owned & Memorizable {
   name: String!
   entityType: CustomizableEntityType!
-  memo: String
-  fieldDefinitions: [FieldDefinition!]!
+  fieldDefinitions: [FieldDefinitionPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  memo: String
 }
 
 input MaskCreateInput {
@@ -29576,19 +29592,19 @@ input MaskCreateInput {
   fieldDefinitionIDs: [ID!]!
 }
 
-type MaskEdit implements Model & Owned {
+type MaskEdit implements Model & Owned & Memorizable {
   name: String!
   type: MaskEditType!
-  memo: String
   fields: [String!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  memo: String
 }
 
 input MaskEditCreateInput {
@@ -29605,13 +29621,10 @@ input MaskEditFilterInput {
   type: MaskEditType
 }
 
-type MaskEditMutated {
-  maskEdit: MaskEdit
-  violations: [Violation!]
-}
+union MaskEditPayload = MaskEdit | BadRequest | Forbidden | NotFound
 
-type MaskEditPagination {
-  nodes: [MaskEdit!]!
+type MaskEditPayloadPagination {
+  nodes: [MaskEditPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -29640,13 +29653,10 @@ input MaskFilterInput {
   entityTypes: [CustomizableEntityType!]
 }
 
-type MaskMutated {
-  mask: Mask
-  violations: [Violation!]
-}
+union MaskPayload = Mask | BadRequest | Forbidden | NotFound
 
-type MaskPagination {
-  nodes: [Mask!]!
+type MaskPayloadPagination {
+  nodes: [MaskPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -29659,6 +29669,10 @@ input MaskUpdateInput {
   entityType: CustomizableEntityType
   memo: String
   fieldDefinitionIDs: [ID!]
+}
+
+interface Memorizable {
+  memo: String
 }
 
 input MetricRangeInput {
@@ -29686,68 +29700,74 @@ interface Model {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
 }
 
 type Mutation {
-  login(input: CredentialsInput!): TokenMutated!
+  login(input: CredentialsInput!): TokenPayload!
   logout: Boolean!
-  userUpdate(id: ID!, input: UserUpdateInput!): UserMutated!
-  groupUpdate(id: ID!, input: GroupUpdateInput!): GroupMutated!
-  productCreate(input: ProductCreateInput!): ProductMutated!
-  productUpdate(id: ID!, input: ProductUpdateInput!): ProductMutated!
-  productUpdateMany(products: [ProductUpdateWrapperInput!]!): ProductMutatedMany!
-  orderCreate(input: OrderCreateInput!): OrderMutated!
-  orderUpdate(id: ID!, input: OrderUpdateInput!): OrderMutated!
-  orderUpdateMany(orders: [OrderUpdateWrapperInput!]!): OrderMutatedMany!
-  batchCreate(input: BatchCreateInput!): BatchMutated!
-  batchUpdate(id: ID!, input: BatchUpdateInput!): BatchMutated!
-  batchUpdateMany(batches: [BatchUpdateWrapperInput!]!): BatchMutatedMany!
-  batchSimpleSplit(id: ID!, input: BatchSimpleSplitInput!): BatchesMutated!
-  batchEqualSplit(id: ID!, input: BatchEqualSplitInput!): BatchesMutated!
-  batchBalanceSplit(orderItemId: ID!): BatchesMutated!
-  shipmentCreate(input: ShipmentCreateInput!): ShipmentMutated!
-  shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentMutated!
-  shipmentUpdateMany(shipments: [ShipmentUpdateWrapperInput!]!): ShipmentMutatedMany!
-  warehouseCreate(input: WarehouseCreateInput!): WarehouseMutated!
-  warehouseUpdate(id: ID!, input: WarehouseUpdateInput!): WarehouseMutated!
-  warehouseUpdateMany(warehouses: [WarehouseUpdateWrapperInput!]!): WarehouseMutatedMany!
-  entitiesUpdateMany(orders: [OrderUpdateWrapperInput!], shipments: [ShipmentUpdateWrapperInput!], products: [ProductUpdateWrapperInput!], batches: [BatchUpdateWrapperInput!], warehouses: [WarehouseUpdateWrapperInput!]): EntitiesMutatedMany!
-  tagCreate(input: TagCreateInput!): TagMutated!
-  tagUpdate(id: ID!, input: TagUpdateInput!): TagMutated!
-  fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsMutated!
-  maskCreate(input: MaskCreateInput!): MaskMutated!
-  maskUpdate(id: ID!, input: MaskUpdateInput!): MaskMutated!
+  userUpdate(id: ID!, input: UserUpdateInput!): UserPayload!
+  groupUpdate(id: ID!, input: GroupUpdateInput!): GroupPayload!
+  productCreate(input: ProductCreateInput!): ProductPayload!
+  productUpdate(id: ID!, input: ProductUpdateInput!): ProductPayload!
+  productUpdateMany(products: [ProductUpdateWrapperInput!]!): [ProductPayload!]!
+  orderCreate(input: OrderCreateInput!): OrderPayload!
+  orderUpdate(id: ID!, input: OrderUpdateInput!): OrderPayload!
+  orderUpdateMany(orders: [OrderUpdateWrapperInput!]!): [OrderPayload!]!
+  batchCreate(input: BatchCreateInput!): BatchPayload!
+  batchUpdate(id: ID!, input: BatchUpdateInput!): BatchPayload!
+  batchUpdateMany(batches: [BatchUpdateWrapperInput!]!): [BatchPayload!]!
+  batchSimpleSplit(id: ID!, input: BatchSimpleSplitInput!): BatchesPayload!
+  batchEqualSplit(id: ID!, input: BatchEqualSplitInput!): BatchesPayload!
+  batchBalanceSplit(orderItemId: ID!): BatchesPayload!
+  shipmentCreate(input: ShipmentCreateInput!): ShipmentPayload!
+  shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
+  shipmentUpdateMany(shipments: [ShipmentUpdateWrapperInput!]!): [ShipmentPayload!]!
+  warehouseCreate(input: WarehouseCreateInput!): WarehousePayload!
+  warehouseUpdate(id: ID!, input: WarehouseUpdateInput!): WarehousePayload!
+  warehouseUpdateMany(warehouses: [WarehouseUpdateWrapperInput!]!): [WarehousePayload!]!
+  entitiesUpdateMany(orders: [OrderUpdateWrapperInput!], shipments: [ShipmentUpdateWrapperInput!], products: [ProductUpdateWrapperInput!], batches: [BatchUpdateWrapperInput!], warehouses: [WarehouseUpdateWrapperInput!]): EntitiesMany!
+  tagCreate(input: TagCreateInput!): TagPayload!
+  tagUpdate(id: ID!, input: TagUpdateInput!): TagPayload!
+  fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsPayload!
+  maskCreate(input: MaskCreateInput!): MaskPayload!
+  maskUpdate(id: ID!, input: MaskUpdateInput!): MaskPayload!
   maskDelete(id: ID!): Boolean!
-  maskEditCreate(input: MaskEditCreateInput!): MaskEditMutated!
-  maskEditUpdate(id: ID!, input: MaskEditUpdateInput!): MaskEditMutated!
+  maskEditCreate(input: MaskEditCreateInput!): MaskEditPayload!
+  maskEditUpdate(id: ID!, input: MaskEditUpdateInput!): MaskEditPayload!
   maskEditDelete(id: ID!): Boolean!
-  eventCommentCreate(input: EventCommentCreateInput!): EventCommentMutated!
-  eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): EventCommentMutated!
+  eventCommentCreate(input: EventCommentCreateInput!): Entry!
+  eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): Entry!
   eventCommentDelete(id: ID!): Boolean!
   timelineRead(id: ID!): Boolean!
   notificationRead(id: ID!): Boolean!
   notificationReadAll: Boolean!
   notificationSeeAll: Boolean!
-  containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerMutated!
+  containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerPayload!
+}
+
+type NotFound {
+  reference: Reference
 }
 
 type Notification {
   id: ID!
-  sender: User!
-  receiver: User!
+  sender: UserPayload!
+  receiver: UserPayload!
   type: NotificationType!
   body: String!
-  entity: Entity!
+  entity: EntityPayload!
   read: Boolean!
   seen: Boolean!
   createdAt: DateTime!
 }
 
-type NotificationPagination {
-  nodes: [Notification!]!
+union NotificationPayload = Notification | BadRequest | Forbidden | NotFound
+
+type NotificationPayloadPagination {
+  nodes: [NotificationPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -29877,9 +29897,9 @@ enum NotificationType {
   CommentCreate
 }
 
-type Order implements Model & Owned & Tagged & Supervised & Documented & Customizable {
+type Order implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
   archived: Boolean!
-  exporter: Group!
+  exporter: GroupPayload!
   poNo: String!
   currency: Currency!
   issuedAt: DateTime
@@ -29894,22 +29914,22 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Customi
   batchCount: Int
   batchShippedCount: Int
   shipmentCount: Int
-  orderItems: [OrderItem!]!
+  orderItems: [OrderItemPayload!]!
   timeline: Timeline!
-  memo: String
-  shipments: [Shipment!]!
+  shipments: [ShipmentPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
-  tags: [Tag!]!
-  inCharges: [User!]!
-  files: [File!]!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  tags: [TagPayload!]!
+  inCharges: [UserPayload!]!
+  files: [FilePayload!]!
   customFields: CustomFields!
+  memo: String
 }
 
 input OrderCreateInput {
@@ -29990,19 +30010,19 @@ input OrderFilterInput {
 }
 
 type OrderItem implements Model & Owned & Sortable & Customizable {
-  order: Order!
-  productProvider: ProductProvider!
+  order: OrderPayload!
+  productProvider: ProductProviderPayload!
   price: Price!
   quantity: Float!
-  batches: [Batch!]!
+  batches: [BatchPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   sort: Int!
   customFields: CustomFields!
 }
@@ -30095,8 +30115,10 @@ input OrderItemFilterInput {
   supplierId: ID
 }
 
-type OrderItemPagination {
-  nodes: [OrderItem!]!
+union OrderItemPayload = OrderItem | BadRequest | Forbidden | NotFound
+
+type OrderItemPayloadPagination {
+  nodes: [OrderItemPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30118,18 +30140,10 @@ input OrderItemUpdateInput {
   customFields: CustomFieldsInput
 }
 
-type OrderMutated {
-  order: Order
-  violations: [Violation!]
-}
+union OrderPayload = Order | BadRequest | Forbidden | NotFound
 
-type OrderMutatedMany {
-  orders: [Order!]
-  violations: [[Violation!]]
-}
-
-type OrderPagination {
-  nodes: [Order!]!
+type OrderPayloadPagination {
+  nodes: [OrderPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30172,7 +30186,7 @@ input OrderUpdateWrapperInput {
 }
 
 interface Owned {
-  ownedBy: Group!
+  ownedBy: GroupPayload!
 }
 
 interface Package {
@@ -30189,7 +30203,7 @@ type Parameter {
 }
 
 type Partner implements Model {
-  group: Group!
+  group: GroupPayload!
   types: [GroupType!]!
   name: String
   code: String
@@ -30200,9 +30214,9 @@ type Partner implements Model {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
 }
 
 input PartnerFilterInput {
@@ -30213,8 +30227,10 @@ input PartnerFilterInput {
   confirmed: Boolean
 }
 
-type PartnerPagination {
-  nodes: [Partner!]!
+union PartnerPayload = Partner | BadRequest | Forbidden | NotFound
+
+type PartnerPayloadPagination {
+  nodes: [PartnerPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30224,12 +30240,12 @@ type PartnerPagination {
 
 type Partnership implements Model {
   confirmed: Boolean!
-  leftGroup: Group!
+  leftGroup: GroupPayload!
   leftTypes: [GroupType!]!
   leftName: String
   leftCode: String
   leftConfirmedAt: DateTime
-  rightGroup: Group!
+  rightGroup: GroupPayload!
   rightTypes: [GroupType!]!
   rightName: String
   rightCode: String
@@ -30238,13 +30254,15 @@ type Partnership implements Model {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
 }
 
-type PartnershipPagination {
-  nodes: [Partnership!]!
+union PartnershipPayload = Partnership | BadRequest | Forbidden | NotFound
+
+type PartnershipPayloadPagination {
+  nodes: [PartnershipPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30290,22 +30308,22 @@ type Product implements Model & Owned & Tagged & Documented & Customizable {
   hsCode: String
   janCode: String
   material: String
-  productProviders: [ProductProvider!]!
+  productProviders: [ProductProviderPayload!]!
   timeline: Timeline!
-  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPagination!
-  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPagination!
-  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
-  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPagination!
+  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
+  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
+  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
-  tags: [Tag!]!
-  files: [File!]!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  tags: [TagPayload!]!
+  files: [FilePayload!]!
   customFields: CustomFields!
 }
 
@@ -30331,18 +30349,10 @@ input ProductFilterInput {
   tagIds: [ID!]
 }
 
-type ProductMutated {
-  product: Product
-  violations: [Violation!]
-}
+union ProductPayload = Product | BadRequest | Forbidden | NotFound
 
-type ProductMutatedMany {
-  products: [Product!]
-  violations: [[Violation!]]
-}
-
-type ProductPagination {
-  nodes: [Product!]!
+type ProductPayloadPagination {
+  nodes: [ProductPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30350,16 +30360,16 @@ type ProductPagination {
   totalCount: Int!
 }
 
-type ProductProvider implements Model & Owned & Sortable & Package & Documented & Customizable {
+type ProductProvider implements Model & Owned & Sortable & Package & Documented & Customizable & Memorizable {
   archived: Boolean!
 
   """
   Determined if the ProductProvider is referenced by at least one OrderItem or not
   """
   referenced: Boolean!
-  product: Product!
-  exporter: Group!
-  supplier: Group
+  product: ProductPayload!
+  exporter: GroupPayload!
+  supplier: GroupPayload
   unitType: String
   unitVolume: MetricValue
   unitWeight: MetricValue
@@ -30368,24 +30378,24 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   inspectionFee: Price
   origin: Country
   productionLeadTime: Int
-  memo: String
-  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   sort: Int!
   packageName: String
   packageGrossWeight: MetricValue
   packageVolume: MetricValue
   packageSize: Size
   packageCapacity: Float
-  files: [File!]!
+  files: [FilePayload!]!
   customFields: CustomFields!
+  memo: String
 }
 
 input ProductProviderCreateInput {
@@ -30419,8 +30429,10 @@ input ProductProviderFilterInput {
   tagIds: [ID!]
 }
 
-type ProductProviderPagination {
-  nodes: [ProductProvider!]!
+union ProductProviderPayload = ProductProvider | BadRequest | Forbidden | NotFound
+
+type ProductProviderPayloadPagination {
+  nodes: [ProductProviderPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -30487,50 +30499,56 @@ input ProductUpdateWrapperInput {
 type Query {
   viewer: Viewer!
   authenticated: Boolean!
-  user(id: ID!): User
-  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPagination!
-  partner(id: ID!): Partnership
-  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPagination!
-  product(id: ID!): Product
-  products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPagination!
-  productExport(id: ID!, templateId: ID!, fields: [String!]): File
-  productsExport(templateId: ID!, filterBy: ProductFilterInput, sortBy: ProductSortInput, fields: [String!]): File
-  productsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): File
-  productProvider(id: ID!): ProductProvider
-  productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPagination!
-  order(id: ID!): Order
-  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPagination!
-  orderExport(id: ID!, templateId: ID!, fields: [String!]): File
-  ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput, fields: [String!]): File
-  ordersByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): File
-  orderItem(id: ID!): OrderItem
-  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPagination!
-  batch(id: ID!): Batch
-  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPagination!
-  shipment(id: ID!): Shipment
-  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPagination!
-  shipmentExport(id: ID!, templateId: ID!, fields: [String!]): File
-  shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput, fields: [String!]): File
-  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): File
-  warehouse(id: ID!): Warehouse
-  warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePagination!
-  tag(id: ID!): Tag
-  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPagination!
-  fieldDefinition(id: ID!): FieldDefinition
-  fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinition!]!
-  mask(id: ID!): Mask
-  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput): MaskPagination!
-  maskEdit(id: ID!): MaskEdit
-  maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPagination!
-  integration(id: ID!): Integration
-  integrations(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
-  integrationsOfPartners(page: Int! = 1, perPage: Int! = 10): IntegrationPagination!
-  integrationConfiguration(id: ID!): IntegrationConfiguration
-  integrationConfigurations(page: Int! = 1, perPage: Int! = 10): IntegrationConfigurationPagination!
-  integrationLink(id: ID!): IntegrationLink
-  exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplate!]!
-  container(id: ID!): Container
-  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPagination!
+  user(id: ID!): UserPayload!
+  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPagination!
+  partner(id: ID!): PartnershipPayload!
+  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPayloadPagination!
+  product(id: ID!): ProductPayload!
+  products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPagination!
+  productExport(id: ID!, templateId: ID!, fields: [String!]): FilePayload!
+  productsExport(templateId: ID!, filterBy: ProductFilterInput, sortBy: ProductSortInput, fields: [String!]): FilePayload!
+  productsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): FilePayload!
+  productProvider(id: ID!): ProductProviderPayload!
+  productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPagination!
+  order(id: ID!): OrderPayload!
+  orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
+  orderExport(id: ID!, templateId: ID!, fields: [String!]): FilePayload!
+  ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput, fields: [String!]): FilePayload!
+  ordersByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): FilePayload!
+  orderItem(id: ID!): OrderItemPayload!
+  orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
+  batch(id: ID!): BatchPayload!
+  batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
+  shipment(id: ID!): ShipmentPayload!
+  shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
+  shipmentExport(id: ID!, templateId: ID!, fields: [String!]): FilePayload!
+  shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput, fields: [String!]): FilePayload!
+  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): FilePayload!
+  warehouse(id: ID!): WarehousePayload!
+  warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePayloadPagination!
+  tag(id: ID!): TagPayload!
+  tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPagination!
+  fieldDefinition(id: ID!): FieldDefinitionPayload!
+  fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinitionPayload!]!
+  mask(id: ID!): MaskPayload!
+  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput): MaskPayloadPagination!
+  maskEdit(id: ID!): MaskEditPayload!
+  maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPayloadPagination!
+  integration(id: ID!): IntegrationPayload!
+  integrations(page: Int! = 1, perPage: Int! = 10): IntegrationPayloadPagination!
+  integrationsOfPartners(page: Int! = 1, perPage: Int! = 10): IntegrationPayloadPagination!
+  integrationConfiguration(id: ID!): IntegrationConfigurationPayload!
+  integrationConfigurations(page: Int! = 1, perPage: Int! = 10): IntegrationConfigurationPayloadPagination!
+  integrationLink(id: ID!): IntegrationLinkPayload!
+  exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplatePayload!]!
+  container(id: ID!): ContainerPayload!
+  containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
+}
+
+type Reference {
+  id: ID!
+  type: String!
+  service: String!
 }
 
 enum ResizePreset {
@@ -35445,7 +35463,7 @@ enum Seaport {
   CNZUH
 }
 
-type Shipment implements Model & Owned & Tagged & Supervised & Documented & Customizable {
+type Shipment implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
   archived: Boolean!
   no: String!
   blNo: String
@@ -35457,32 +35475,32 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   loadType: LoadType
   transportType: TransportType
   carrier: String
-  cargoReady: TimelineDate!
-  voyages: [Voyage!]!
-  containerGroups: [ContainerGroup!]!
-  forwarders: [Group!]!
-  memo: String
+  cargoReady: TimelineDatePayload!
+  voyages: [VoyagePayload!]!
+  containerGroups: [ContainerGroupPayload!]!
+  forwarders: [GroupPayload!]!
   totalVolume: MetricValue
   orderCount: Int
   batchCount: Int
   orderItemCount: Int
   timeline: Timeline!
-  batches: [Batch!]!
-  batchesWithoutContainer: [Batch!]!
-  integrationLinks: [IntegrationLink!]!
-  containers: [Container!]!
+  batches: [BatchPayload!]!
+  batchesWithoutContainer: [BatchPayload!]!
+  integrationLinks: [IntegrationLinkPayload!]!
+  containers: [ContainerPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
-  tags: [Tag!]!
-  inCharges: [User!]!
-  files: [File!]!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  tags: [TagPayload!]!
+  inCharges: [UserPayload!]!
+  files: [FilePayload!]!
   customFields: CustomFields!
+  memo: String
 }
 
 input ShipmentBatchAdjustmentInput {
@@ -35618,18 +35636,10 @@ input ShipmentFilterInput {
   deliveryReady: DateRangeInput
 }
 
-type ShipmentMutated {
-  shipment: Shipment
-  violations: [Violation!]
-}
+union ShipmentPayload = Shipment | BadRequest | Forbidden | NotFound
 
-type ShipmentMutatedMany {
-  shipments: [Shipment!]
-  violations: [[Violation!]]
-}
-
-type ShipmentPagination {
-  nodes: [Shipment!]!
+type ShipmentPayloadPagination {
+  nodes: [ShipmentPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -35761,22 +35771,23 @@ type Subscription {
 }
 
 interface Supervised {
-  inCharges: [User!]!
+  inCharges: [UserPayload!]!
 }
 
-type Tag implements Model & Owned {
+type Tag implements Model & Owned & Memorizable {
   name: String!
-  description: String
+  memo: String
+  description: String @deprecated(reason: "use memo instead")
   color: String!
   entityTypes: [TagEntityType!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
 }
 
 input TagCreateInput {
@@ -35814,16 +35825,13 @@ input TagFilterInput {
 }
 
 interface Tagged {
-  tags: [Tag!]!
+  tags: [TagPayload!]!
 }
 
-type TagMutated {
-  tag: Tag
-  violations: [Violation!]
-}
+union TagPayload = Tag | BadRequest | Forbidden | NotFound
 
-type TagPagination {
-  nodes: [Tag!]!
+type TagPayloadPagination {
+  nodes: [TagPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -35851,38 +35859,42 @@ type Timeline {
   entries(page: Int! = 1, perPage: Int! = 10): EntryPagination!
 }
 
-type TimelineDate implements Model & Owned {
+type TimelineDate implements Model & Owned & Memorizable {
   date: DateTime
-  assignedTo: [User!]!
-  approvedBy: User
+  assignedTo: [UserPayload!]!
+  approvedBy: UserPayload
   approvedAt: DateTime
-  memo: String
-  timelineDateRevisions: [TimelineDateRevision!]!
+  timelineDateRevisions: [TimelineDateRevisionPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  memo: String
 }
 
-type TimelineDateRevision implements Model & Owned & Sortable {
+union TimelineDatePayload = TimelineDate | BadRequest | Forbidden | NotFound
+
+type TimelineDateRevision implements Model & Owned & Sortable & Memorizable {
   date: DateTime!
   type: TimelineDateRevisionType!
-  memo: String
-  timelineDate: TimelineDate!
+  timelineDate: TimelineDatePayload!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   sort: Int!
+  memo: String
 }
+
+union TimelineDateRevisionPayload = TimelineDateRevision | BadRequest | Forbidden | NotFound
 
 enum TimelineDateRevisionType {
   """Delay"""
@@ -35899,10 +35911,7 @@ type Token {
   token: String!
 }
 
-type TokenMutated {
-  token: Token
-  violations: [Violation!]
-}
+union TokenPayload = Token | BadRequest | Forbidden | NotFound
 
 enum TransportType {
   """Sea"""
@@ -35912,27 +35921,27 @@ enum TransportType {
   Air
 }
 
-type User implements Model & Tagged {
+type User implements Model & Tagged & Memorizable {
   email: String!
-  group: Group
+  group: GroupPayload
   role: String!
   disabled: Boolean!
   firstName: String!
   lastName: String!
   firstName2: String
   lastName2: String
-  avatar: File
+  avatar: FilePayload
   language: Language!
   timezone: String!
-  memo: String
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  tags: [Tag!]!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  tags: [TagPayload!]!
+  memo: String
 }
 
 input UserFilterInput {
@@ -35942,13 +35951,10 @@ input UserFilterInput {
   role: String
 }
 
-type UserMutated {
-  user: User
-  violations: [Violation!]
-}
+union UserPayload = User | BadRequest | Forbidden | NotFound
 
-type UserPagination {
-  nodes: [User!]!
+type UserPayloadPagination {
+  nodes: [UserPayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
@@ -35997,8 +36003,8 @@ type Values {
 }
 
 type Viewer {
-  user: User!
-  notifications(page: Int! = 1, perPage: Int! = 10): NotificationPagination!
+  user: UserPayload!
+  notifications(page: Int! = 1, perPage: Int! = 10): NotificationPayloadPagination!
   notificationUnread: Int!
   notificationUnseen: Int!
   token: String
@@ -36021,20 +36027,22 @@ type Voyage implements Model & Owned & Sortable {
   vesselName: String
   vesselCode: String
   departurePort: Port
-  departure: TimelineDate!
+  departure: TimelineDatePayload!
   arrivalPort: Port
-  arrival: TimelineDate!
-  shipment: Shipment!
+  arrival: TimelineDatePayload!
+  shipment: ShipmentPayload!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   sort: Int!
 }
+
+union VoyagePayload = Voyage | BadRequest | Forbidden | NotFound
 
 type Warehouse implements Model & Owned & Customizable {
   archived: Boolean!
@@ -36050,10 +36058,10 @@ type Warehouse implements Model & Owned & Customizable {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  createdBy: User
-  updatedBy: User
-  deletedBy: User
-  ownedBy: Group!
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
   customFields: CustomFields!
 }
 
@@ -36076,18 +36084,10 @@ input WarehouseFilterInput {
   archived: Boolean
 }
 
-type WarehouseMutated {
-  warehouse: Warehouse
-  violations: [Violation!]
-}
+union WarehousePayload = Warehouse | BadRequest | Forbidden | NotFound
 
-type WarehouseMutatedMany {
-  warehouses: [Warehouse!]
-  violations: [[Violation!]]
-}
-
-type WarehousePagination {
-  nodes: [Warehouse!]!
+type WarehousePayloadPagination {
+  nodes: [WarehousePayload!]!
   page: Int!
   perPage: Int!
   totalPage: Int!
