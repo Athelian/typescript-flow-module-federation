@@ -8,7 +8,7 @@ type Props = {
 };
 
 const HorizontalPortNames = ({ shipment }: Props) => {
-  const { voyages, transportType, containerGroups, containers } = shipment;
+  const { voyages, transportType, containerGroups } = shipment;
 
   const loadPort = voyages[0].departurePort;
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
@@ -40,7 +40,10 @@ const HorizontalPortNames = ({ shipment }: Props) => {
       <div className={BlankSpaceStyle} />
 
       <div className={PortNameWrapperStyle}>
-        <TimelineWarehouseName name={warehouse && warehouse.name} containers={containers} />
+        <TimelineWarehouseName
+          name={warehouse && warehouse.name}
+          containerGroups={containerGroups}
+        />
       </div>
 
       <div className={BlankSpaceStyle} />

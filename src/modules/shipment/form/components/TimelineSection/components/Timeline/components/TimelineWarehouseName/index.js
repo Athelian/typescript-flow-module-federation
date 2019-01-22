@@ -9,7 +9,7 @@ import {
 
 type OptionalProps = {
   vertical: boolean,
-  containers: Array<Object>,
+  containerGroups: Array<Object>,
 };
 
 type Props = OptionalProps & {
@@ -18,17 +18,20 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   vertical: false,
-  containers: [],
+  containerGroups: [],
 };
 
-const TimelineWarehouseName = ({ name, vertical, containers }: Props) => (
-  <div className={TimelineWarehouseNameWrapperStyle(vertical)}>
-    <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
-    {isEnableBetaFeature && containers.length > 1 && (
-      <div className={TimelineWarehouseNameBadgeStyle(vertical)}>+{containers.length - 1}</div>
-    )}
-  </div>
-);
+const TimelineWarehouseName = ({ name, vertical, containerGroups }: Props) => {
+  const warehouses = containerGroups.slice(1).filter(group => group.warehouse) || [];
+  return (
+    <div className={TimelineWarehouseNameWrapperStyle(vertical)}>
+      <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
+      {isEnableBetaFeature && warehouses.length > 0 && (
+        <div className={TimelineWarehouseNameBadgeStyle(vertical)}>+{warehouses.length}</div>
+      )}
+    </div>
+  );
+};
 
 TimelineWarehouseName.defaultProps = defaultProps;
 
