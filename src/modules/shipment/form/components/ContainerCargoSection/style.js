@@ -26,7 +26,7 @@ export const NavbarWrapperStyle: string = css`
   grid-template-columns: 235px 1fr;
   grid-template-rows: 50px;
   ${shadows.HEADER};
-  z-index: 1;
+  z-index: 2;
 `;
 
 export const NavbarLeftWrapperStyle: string = css`
@@ -74,22 +74,62 @@ export const ContainersBodyWrapperStyle: string = css`
   max-height: 65vh;
   ${shadows.HEADER_RIGHT};
   padding: 30px 10px 30px 20px;
+  z-index: 1;
 `;
 
 export const BatchesBodyWrapperStyle: string = css`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 65vh;
+  ${shadows.HEADER_LEFT};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+`;
+
+export const BatchesHeaderWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-template-rows: 50px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+`;
+
+export const TitleWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  ${fontSizes.LARGE};
+  color: ${colors.GRAY_DARK};
+`;
+
+export const IconStyle: string = css`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+export const TitleStyle: string = css`
+  ${presets.ELLIPSIS};
+  font-weight: bold;
+  letter-spacing: 2px;
+`;
+
+export const BatchesGridStyle: string = css`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
   grid-auto-rows: min-content;
   grid-row-gap: 30px;
   grid-column-gap: 10px;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
-  height: 100%;
-  max-height: 65vh;
-  ${shadows.HEADER_LEFT};
   padding: 30px 10px 30px 20px;
+  height: 100%;
 `;
 
 export const EmptyMessageStyle: string = css`
@@ -111,7 +151,7 @@ export const FooterWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 235px 1fr;
   grid-template-rows: 50px;
-  ${shadows.HEADER};
+  ${shadows.HEADER_REVERSED};
   z-index: 1;
 `;
 
