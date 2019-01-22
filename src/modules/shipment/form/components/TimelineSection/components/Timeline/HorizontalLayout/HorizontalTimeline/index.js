@@ -101,7 +101,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
 
       <TimelineLine color={warehouseArrivalColoring} />
 
-      {isEnableBetaFeature && containers.length > 0 ? (
+      {isEnableBetaFeature && containers && containers.length > 0 ? (
         <TimelineWarehouseContainerIcon containers={containers} />
       ) : (
         <TimelineIcon

@@ -4,7 +4,7 @@ import { isEnableBetaFeature } from 'utils/env';
 import {
   TimelineWarehouseNameWrapperStyle,
   TimelineWarehouseNameStyle,
-  TimelineRemainContainerWrapperStyle,
+  TimelineWarehouseNameBadgeStyle,
 } from './style';
 
 type OptionalProps = {
@@ -23,10 +23,9 @@ const defaultProps = {
 
 const TimelineWarehouseName = ({ name, vertical, containers }: Props) => (
   <div className={TimelineWarehouseNameWrapperStyle(vertical)}>
-    <div className={TimelineWarehouseNameStyle}>{name}</div>
-
+    <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
     {isEnableBetaFeature && containers.length > 1 && (
-      <div className={TimelineRemainContainerWrapperStyle}>+{containers.length - 1}</div>
+      <div className={TimelineWarehouseNameBadgeStyle(vertical)}>+{containers.length - 1}</div>
     )}
   </div>
 );

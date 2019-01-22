@@ -10,7 +10,7 @@ export const TimelinePortNameWrapperStyle = (vertical: boolean): string => css`
     width: 165px;
     height: 30px;
     line-height: 30px;
-    padding: 0 10px 0 20px;
+    padding: 0 5px 0 20px;
     transform: translateX(-15px);
     ${fontSizes.MAIN};
   `
@@ -20,7 +20,7 @@ export const TimelinePortNameWrapperStyle = (vertical: boolean): string => css`
     width: 100px;
     height: 20px;
     line-height: 20px;
-    padding: 0 10px;
+    padding: 0 5px;
     ${fontSizes.MEDIUM};
   `};
   ${presets.ELLIPSIS};
