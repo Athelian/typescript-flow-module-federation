@@ -147,7 +147,10 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                   uiSelectors.isSelectEntity(highLightEntities, ORDER_ITEM, currentOrderItem.id)
                 ) >= position
               }
-              hasRelation={uiSelectors.isTarget(ORDER_ITEM, orderItem.id)}
+              hasRelation={
+                uiSelectors.isTarget(ORDER_ITEM, orderItem.id) ||
+                uiSelectors.isSelectEntity(highLightEntities, ORDER_ITEM, orderItem.id)
+              }
             />
             <OrderItem
               wrapperClassName={ItemWrapperStyle(
