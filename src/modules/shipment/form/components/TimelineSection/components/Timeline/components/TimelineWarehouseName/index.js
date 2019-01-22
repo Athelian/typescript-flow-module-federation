@@ -1,9 +1,15 @@
 // @flow
 import * as React from 'react';
-import { TimelineWarehouseNameWrapperStyle } from './style';
+import { isEnableBetaFeature } from 'utils/env';
+import {
+  TimelineWarehouseNameWrapperStyle,
+  TimelineWarehouseNameStyle,
+  TimelineRemainContainerWrapperStyle,
+} from './style';
 
 type OptionalProps = {
   vertical: boolean,
+  containers: Array<Object>,
 };
 
 type Props = OptionalProps & {
@@ -12,10 +18,17 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   vertical: false,
+  containers: [],
 };
 
-const TimelineWarehouseName = ({ name, vertical }: Props) => (
-  <div className={TimelineWarehouseNameWrapperStyle(vertical)}>{name}</div>
+const TimelineWarehouseName = ({ name, vertical, containers }: Props) => (
+  <div className={TimelineWarehouseNameWrapperStyle(vertical)}>
+    <div className={TimelineWarehouseNameStyle}>{name}</div>
+
+    {isEnableBetaFeature && containers.length > 1 && (
+      <div className={TimelineRemainContainerWrapperStyle}>+{containers.length - 1}</div>
+    )}
+  </div>
 );
 
 TimelineWarehouseName.defaultProps = defaultProps;

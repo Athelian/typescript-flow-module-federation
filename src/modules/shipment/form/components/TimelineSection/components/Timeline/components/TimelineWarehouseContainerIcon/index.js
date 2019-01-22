@@ -56,13 +56,6 @@ const getRingPercent = (containers: Array<Container>) => {
   });
   const actualPercent = (actualDates / totalContainer) * 100;
   const agreedPercent = (agreedDates / totalContainer) * 100;
-  console.log(
-    '[actualDates, agreedDates]',
-    [actualDates, agreedDates],
-    'totalContainer',
-    totalContainer
-  );
-  console.log('[actualPercent, agreedPercent]', [actualPercent, agreedPercent]);
   return [actualPercent, agreedPercent];
 };
 
@@ -70,7 +63,6 @@ const TimelineWarehouseContainerIcon = (props: Props) => {
   const { containers } = props;
   const iconColor = getIconColor(containers);
   const [actualPercent, agreedPercent] = getRingPercent(containers);
-
   return (
     <div className={TimelineIconStyle}>
       <Ring percent={actualPercent} size={30} color="TEAL" />

@@ -70,7 +70,6 @@ class ShipmentForm extends React.Component<Props> {
   render() {
     const { isNew, isClone, shipment } = this.props;
     const { updatedAt, updatedBy, archived } = shipment;
-
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={ShipmentFormWrapperStyle}>

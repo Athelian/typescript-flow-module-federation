@@ -69,5 +69,15 @@ storiesOf('Timeline', module).add('TimelineWarehouseContainerIcon', () => (
         ]}
       />
     </div>
+    <div>
+      <div>all agreed (not actual)</div>
+      <TimelineWarehouseContainerIcon
+        containers={[
+          containerAgreedDateApproved,
+          containerAgreedDateApproved,
+          containerAgreedDateApproved,
+        ]}
+      />
+    </div>
   </div>
 ));

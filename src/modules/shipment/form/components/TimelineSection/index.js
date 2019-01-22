@@ -35,7 +35,6 @@ const TimelineSection = ({ isNew }: Props) => (
         ...state,
         ...transportTypeState,
       };
-
       const { cargoReady, voyages, containerGroups = [] } = values;
       const { customClearance, warehouseArrival, deliveryReady, warehouse } =
         containerGroups[0] || {};

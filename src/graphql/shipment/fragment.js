@@ -77,6 +77,17 @@ export const shipmentFormFragment = gql`
         }
       }
     }
+    containers {
+      id
+      warehouseArrivalAgreedDate
+      warehouseArrivalAgreedDateApprovedBy {
+        id
+      }
+      warehouseArrivalActualDate
+      warehouseArrivalActualDateApprovedBy {
+        id
+      }
+    }
     totalVolume {
       ...metricFragment
     }
@@ -142,6 +153,17 @@ export const shipmentCardFragment = gql`
             name
           }
         }
+      }
+    }
+    containers {
+      id
+      warehouseArrivalAgreedDate
+      warehouseArrivalAgreedDateApprovedBy {
+        id
+      }
+      warehouseArrivalActualDate
+      warehouseArrivalActualDateApprovedBy {
+        id
       }
     }
     batches {
