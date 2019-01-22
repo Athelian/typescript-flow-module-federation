@@ -10,7 +10,7 @@ import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { FieldItem, Label, Display } from 'components/Form';
-import { getProductImage } from 'components/Cards/utils';
+import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -49,6 +49,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  position: number,
   batch: Object,
   currency: string,
   saveOnBlur: Function,
@@ -64,6 +65,7 @@ const defaultProps = {
 };
 
 const ContainerBatchCard = ({
+  position,
   batch,
   onClick,
   onClear,
@@ -85,9 +87,9 @@ const ContainerBatchCard = ({
       ];
 
   const {
-    id,
     no,
     quantity,
+    batchAdjustments,
     deliveredAt,
     desiredAt,
     packageVolume,
@@ -102,13 +104,17 @@ const ContainerBatchCard = ({
   } = batch;
   const productImage = getProductImage(product);
 
+  const totalAdjustment = totalAdjustQuantity(batchAdjustments);
+
+  const actualQuantity = quantity + totalAdjustment;
+
   const validation = validator({
-    no: `batch.${id}.no`,
-    quantity: `batch.${id}.quantity`,
+    no: `batches.${position}.no`,
+    quantity: `batches.${position}.quantity`,
   });
   const values = {
-    [`batch.${id}.no`]: no,
-    [`batch.${id}.quantity`]: quantity,
+    [`batches.${position}.no`]: no,
+    [`batches.${position}.quantity`]: actualQuantity,
   };
   return (
     <BaseCard
@@ -168,7 +174,7 @@ const ContainerBatchCard = ({
             role="presentation"
           >
             <FormField
-              name={`batch.${id}.no`}
+              name={`batches.${position}.no`}
               initValue={no}
               validator={validation}
               values={values}
@@ -202,8 +208,8 @@ const ContainerBatchCard = ({
               <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
             </Label>
             <FormField
-              name={`batch.${id}.quantity`}
-              initValue={quantity}
+              name={`batches.${position}.quantity`}
+              initValue={actualQuantity}
               validator={validation}
               values={values}
             >
@@ -217,13 +223,13 @@ const ContainerBatchCard = ({
                       inputHandlers.onBlur(evt);
                       saveOnBlur({
                         ...batch,
-                        quantity: inputHandlers.value,
+                        quantity: inputHandlers.value - totalAdjustment,
                       });
                     },
                   },
                   name: fieldName,
                   isNew: false,
-                  originalValue: quantity,
+                  originalValue: actualQuantity,
                 })
               }
             </FormField>
@@ -237,7 +243,7 @@ const ContainerBatchCard = ({
             <Label>
               <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
             </Label>
-            <FormField name={`batch.${id}.deliveredAt`} initValue={deliveredAt}>
+            <FormField name={`batches.${position}.deliveredAt`} initValue={deliveredAt}>
               {({ name: fieldName, ...inputHandlers }) =>
                 dateInputFactory({
                   width: '120px',
@@ -268,7 +274,7 @@ const ContainerBatchCard = ({
             <Label>
               <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
             </Label>
-            <FormField name={`batch.${id}.desiredAt`} initValue={desiredAt}>
+            <FormField name={`batches.${position}.desiredAt`} initValue={desiredAt}>
               {({ name: fieldName, ...inputHandlers }) =>
                 dateInputFactory({
                   width: '120px',
@@ -303,7 +309,7 @@ const ContainerBatchCard = ({
               input={
                 <Display>
                   <FormattedNumber
-                    value={(price && price.amount ? price.amount : 0) * quantity}
+                    value={(price && price.amount ? price.amount : 0) * actualQuantity}
                     suffix={currency || (price && price.currency)}
                   />
                 </Display>

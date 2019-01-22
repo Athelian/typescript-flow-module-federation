@@ -13,6 +13,7 @@ import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display } from 'components/Form';
+import { totalAdjustQuantity } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -128,9 +129,7 @@ const OrderBatchCard = ({
     batch.shipment.containerGroups[0].warehouseArrival.date
   );
 
-  const totalAdjustment = batchAdjustments
-    ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
-    : 0;
+  const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
   const validation = validator({
     no: `batch.${batch.id}.no`,

@@ -12,7 +12,7 @@ import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { FieldItem, Label, Display } from 'components/Form';
-import { getProductImage } from 'components/Cards/utils';
+import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -98,9 +98,7 @@ const ShipmentBatchCard = ({
     },
   } = batch;
 
-  const totalAdjustment = batchAdjustments
-    ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
-    : 0;
+  const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
   const productImage = getProductImage(product);
 

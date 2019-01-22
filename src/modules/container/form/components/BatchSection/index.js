@@ -164,6 +164,7 @@ function BatchSection({ intl }: Props) {
                         </SlideView>
                         <div className={ItemStyle}>
                           <ContainerBatchCard
+                            position={position}
                             batch={item}
                             saveOnBlur={updatedBatch => {
                               setDeepFieldValue(`batches.${position}`, updatedBatch);
