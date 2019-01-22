@@ -256,6 +256,10 @@ export const shipmentCardFragment = isEnableBetaFeature
           warehouseArrivalActualDateApprovedBy {
             id
           }
+          warehouse {
+            id
+            name
+          }
         }
         batches {
           ... on Batch {
