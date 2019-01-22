@@ -101,12 +101,8 @@ class BatchFormModule extends React.PureComponent<Props> {
   onMutationCompleted = (result: Object) => {
     const isNewOrClone = this.isNewOrClone();
     if (isNewOrClone) {
-      const {
-        batchCreate: {
-          batch: { id },
-        },
-      } = result;
-      navigate(`/batch/${encodeId(id)}`);
+      const { batchCreate } = result;
+      navigate(`/batch/${encodeId(batchCreate.id)}`);
     }
   };
 

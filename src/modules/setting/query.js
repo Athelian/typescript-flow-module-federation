@@ -5,9 +5,11 @@ export const viewerQuery = gql`
   query {
     viewer {
       user {
-        id
-        firstName
-        lastName
+        ... on User {
+          id
+          firstName
+          lastName
+        }
       }
       notificationUnread
       notificationUnseen

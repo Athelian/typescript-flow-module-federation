@@ -7,15 +7,19 @@ export const userListQuery = gql`
       page
       totalPage
       nodes {
-        id
-        firstName
-        lastName
-        email
-        role
-        tags {
+        ... on User {
           id
-          name
-          color
+          firstName
+          lastName
+          email
+          role
+          tags {
+            ... on Tag {
+              id
+              name
+              color
+            }
+          }
         }
       }
     }

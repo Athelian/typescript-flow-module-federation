@@ -23,15 +23,17 @@ export const batchFormFragment = isEnableBetaFeature
           ...customFieldsFragment
         }
         batchAdjustments {
-          id
-          sort
-          updatedAt
-          updatedBy {
-            ...userAvatarFragment
+          ... on BatchAdjustment {
+            id
+            sort
+            updatedAt
+            updatedBy {
+              ...userAvatarFragment
+            }
+            reason
+            quantity
+            memo
           }
-          reason
-          quantity
-          memo
         }
         packageName
         packageCapacity
@@ -49,51 +51,63 @@ export const batchFormFragment = isEnableBetaFeature
           ...tagFragment
         }
         orderItem {
-          id
-          quantity
-          price {
-            ...priceFragment
-          }
-          batches {
+          ... on OrderItem {
             id
             quantity
-            batchAdjustments {
-              id
-              quantity
+            price {
+              ...priceFragment
             }
-            shipment {
-              id
-            }
-          }
-          order {
-            ...orderCardFragment
-          }
-          productProvider {
-            id
-            packageName
-            packageCapacity
-            packageGrossWeight {
-              ...metricFragment
-            }
-            packageVolume {
-              ...metricFragment
-            }
-            packageSize {
-              ...sizeFragment
-            }
-            product {
-              id
-              name
-              serial
-              files {
-                ...imageFragment
+            batches {
+              ... on Batch {
+                id
+                quantity
+                batchAdjustments {
+                  ... on BatchAdjustment {
+                    id
+                    quantity
+                  }
+                }
+                shipment {
+                  ... on Shipment {
+                    id
+                  }
+                }
               }
             }
-            exporter {
-              ...partnerCardFragment
+            order {
+              ...orderCardFragment
             }
-            supplier {
-              ...partnerNameFragment
+            productProvider {
+              ... on ProductProvider {
+                id
+                packageName
+                packageCapacity
+                packageGrossWeight {
+                  ...metricFragment
+                }
+                packageVolume {
+                  ...metricFragment
+                }
+                packageSize {
+                  ...sizeFragment
+                }
+                product {
+                  ... on Product {
+                    id
+                    name
+                    serial
+                    files {
+                      ...imageFragment
+                    }
+                  }
+                }
+                exporter {
+                  ...partnerCardFragment
+                }
+                supplier {
+                  ...partnerNameFragment
+                }
+              }
             }
           }
         }
@@ -101,52 +115,74 @@ export const batchFormFragment = isEnableBetaFeature
           ...shipmentCardFragment
         }
         container {
-          id
-          no
-          representativeBatch {
+          ... on Container {
             id
-            orderItem {
-              id
-              productProvider {
+            no
+            representativeBatch {
+              ... on Batch {
                 id
-                product {
-                  id
-                  files {
+                orderItem {
+                  ... on OrderItem {
                     id
-                    name
-                    type
+                    productProvider {
+                      ... on ProductProvider {
+                        id
+                        product {
+                          ... on Product {
+                            id
+                            files {
+                              ... on File {
+                                id
+                                name
+                                type
+                              }
+                            }
+                            name
+                            serial
+                          }
+                        }
+                      }
+                    }
                   }
-                  name
-                  serial
                 }
               }
             }
-          }
-          totalVolume {
-            value
-            metric
-          }
-          batches {
-            id
-          }
-          warehouse {
-            id
-            name
-          }
-          warehouseArrivalAgreedDate
-          warehouseArrivalActualDate
-          warehouseArrivalAgreedDateApprovedBy {
-            id
-          }
-          warehouseArrivalActualDateApprovedBy {
-            id
-          }
-          shipment {
-            id
-            no
-          }
-          tags {
-            ...tagFragment
+            totalVolume {
+              value
+              metric
+            }
+            batches {
+              ... on Batch {
+                id
+              }
+            }
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
+            warehouseArrivalAgreedDate
+            warehouseArrivalActualDate
+            warehouseArrivalAgreedDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouseArrivalActualDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            shipment {
+              ... on Shipment {
+                id
+                no
+              }
+            }
+            tags {
+              ...tagFragment
+            }
           }
         }
       }
@@ -171,15 +207,17 @@ export const batchFormFragment = isEnableBetaFeature
           ...customFieldsFragment
         }
         batchAdjustments {
-          id
-          sort
-          updatedAt
-          updatedBy {
-            ...userAvatarFragment
+          ... on BatchAdjustment {
+            id
+            sort
+            updatedAt
+            updatedBy {
+              ...userAvatarFragment
+            }
+            reason
+            quantity
+            memo
           }
-          reason
-          quantity
-          memo
         }
         packageName
         packageCapacity
@@ -197,51 +235,63 @@ export const batchFormFragment = isEnableBetaFeature
           ...tagFragment
         }
         orderItem {
-          id
-          quantity
-          price {
-            ...priceFragment
-          }
-          batches {
+          ... on OrderItem {
             id
             quantity
-            batchAdjustments {
-              id
-              quantity
+            price {
+              ...priceFragment
             }
-            shipment {
-              id
-            }
-          }
-          order {
-            ...orderCardFragment
-          }
-          productProvider {
-            id
-            packageName
-            packageCapacity
-            packageGrossWeight {
-              ...metricFragment
-            }
-            packageVolume {
-              ...metricFragment
-            }
-            packageSize {
-              ...sizeFragment
-            }
-            product {
-              id
-              name
-              serial
-              files {
-                ...imageFragment
+            batches {
+              ... on Batch {
+                id
+                quantity
+                batchAdjustments {
+                  ... on BatchAdjustment {
+                    id
+                    quantity
+                  }
+                }
+                shipment {
+                  ... on Shipment {
+                    id
+                  }
+                }
               }
             }
-            exporter {
-              ...partnerCardFragment
+            order {
+              ...orderCardFragment
             }
-            supplier {
-              ...partnerNameFragment
+            productProvider {
+              ... on ProductProvider {
+                id
+                packageName
+                packageCapacity
+                packageGrossWeight {
+                  ...metricFragment
+                }
+                packageVolume {
+                  ...metricFragment
+                }
+                packageSize {
+                  ...sizeFragment
+                }
+                product {
+                  ... on Product {
+                    id
+                    name
+                    serial
+                    files {
+                      ...imageFragment
+                    }
+                  }
+                }
+                exporter {
+                  ...partnerCardFragment
+                }
+                supplier {
+                  ...partnerNameFragment
+                }
+              }
             }
           }
         }
@@ -264,40 +314,50 @@ export const batchCardFragment = gql`
     }
     packageQuantity
     batchAdjustments {
-      id
-      quantity
-      sort
+      ... on BatchAdjustment {
+        id
+        quantity
+        sort
+      }
     }
     tags {
       ...tagFragment
     }
     shipment {
-      id
-      no
+      ... on Shipment {
+        id
+        no
+      }
     }
     orderItem {
-      id
-      price {
-        ...priceFragment
-      }
-      order {
-        ...orderCardFragment
-      }
-      productProvider {
+      ... on OrderItem {
         id
-        product {
-          id
-          name
-          serial
-          files {
-            ...imageFragment
+        price {
+          ...priceFragment
+        }
+        order {
+          ...orderCardFragment
+        }
+        productProvider {
+          ... on ProductProvider {
+            id
+            product {
+              ... on Product {
+                id
+                name
+                serial
+                files {
+                  ...imageFragment
+                }
+              }
+            }
+            exporter {
+              ...partnerNameFragment
+            }
+            supplier {
+              ...partnerNameFragment
+            }
           }
-        }
-        exporter {
-          ...partnerNameFragment
-        }
-        supplier {
-          ...partnerNameFragment
         }
       }
     }

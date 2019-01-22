@@ -1,6 +1,5 @@
 // @flow
 import gql from 'graphql-tag';
-import { violationFragment } from 'graphql/violations/fragment';
 import {
   orderFormFragment,
   userAvatarFragment,
@@ -21,6 +20,7 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  badRequestFragment,
 } from 'graphql';
 import { prepareUpdateBatchInput, prepareCreateBatchInput } from 'modules/batch/form/mutation';
 import { prepareCustomFieldsData } from 'utils/customFields';
@@ -29,30 +29,23 @@ import type { OrderForm } from '../type.js.flow';
 export const createOrderMutation = gql`
   mutation orderCreate($input: OrderCreateInput!) {
     orderCreate(input: $input) {
-      order {
+      ... on Order {
         id
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
 `;
 
 export const createOrderWithReturnDataMutation = gql`
   mutation orderCreate($input: OrderCreateInput!) {
     orderCreate(input: $input) {
-      order {
-        ...orderFormFragment
-      }
-      violations {
-        ...violationFragment
-      }
+      ...orderFormFragment
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
-
+  ${badRequestFragment}
   ${orderFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
@@ -68,7 +61,7 @@ export const createOrderWithReturnDataMutation = gql`
   ${metricFragment}
   ${sizeFragment}
   ${orderCardFragment}
-  ${violationFragment}
+  ${badRequestFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -120,12 +113,8 @@ export const prepareCreateOrderInput = ({
 export const updateOrderMutation = gql`
   mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
     orderUpdate(id: $id, input: $input) {
-      order {
-        ...orderFormFragment
-      }
-      violations {
-        ...violationFragment
-      }
+      ...orderFormFragment
+      ...badRequestFragment
     }
   }
 
@@ -144,7 +133,7 @@ export const updateOrderMutation = gql`
   ${metricFragment}
   ${sizeFragment}
   ${orderCardFragment}
-  ${violationFragment}
+  ${badRequestFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -154,22 +143,24 @@ export const updateOrderMutation = gql`
 export const updateOrderItemMutation = gql`
   mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
     orderUpdate(id: $id, input: $input) {
-      order {
+      ... on Order {
         id
         orderItems {
-          id
-          batches {
+          ... on OrderItem {
             id
+            batches {
+              ... on Batch {
+                id
+              }
+            }
           }
         }
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
 
-  ${violationFragment}
+  ${badRequestFragment}
 `;
 
 export const prepareUpdateOrderInput = ({

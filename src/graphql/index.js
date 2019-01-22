@@ -12,6 +12,7 @@ import { staffFormFragment, staffCardFragment } from './staff/fragment';
 import { tagFormFragment, tagCardFragment } from './tag/fragment';
 import { warehouseFormFragment, warehouseCardFragment } from './warehouse/fragment';
 import { tableTemplateCardFragment } from './tableTemplate/fragment';
+import { badRequestFragment, notFoundFragment, forbiddenFragment } from './errors/fragment';
 import {
   metricFragment,
   sizeFragment,
@@ -67,4 +68,7 @@ export {
   fieldValuesFragment,
   fieldDefinitionFragment,
   containerCardFragment,
+  badRequestFragment,
+  notFoundFragment,
+  forbiddenFragment,
 };

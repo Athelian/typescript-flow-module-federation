@@ -5,52 +5,74 @@ export const containerListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: ContainerFilterInput, $sortBy: ContainerSortInput) {
     containers(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        id
-        no
-        representativeBatch {
+        ... on Container {
           id
-          orderItem {
-            id
-            productProvider {
+          no
+          representativeBatch {
+            ... on Batch {
               id
-              product {
-                id
-                files {
+              orderItem {
+                ... on OrderItem {
                   id
-                  name
-                  type
+                  productProvider {
+                    ... on ProductProvider {
+                      id
+                      product {
+                        ... on Product {
+                          id
+                          files {
+                            ... on File {
+                              id
+                              name
+                              type
+                            }
+                          }
+                          name
+                          serial
+                        }
+                      }
+                    }
+                  }
                 }
-                name
-                serial
               }
             }
           }
-        }
-        totalVolume {
-          value
-          metric
-        }
-        batches {
-          id
-        }
-        warehouse {
-          id
-          name
-        }
-        warehouseArrivalAgreedDate
-        warehouseArrivalActualDate
-        warehouseArrivalAgreedDateApprovedBy {
-          id
-        }
-        warehouseArrivalActualDateApprovedBy {
-          id
-        }
-        shipment {
-          id
-          no
-        }
-        tags {
-          ...tagFragment
+          totalVolume {
+            value
+            metric
+          }
+          batches {
+            ... on Batch {
+              id
+            }
+          }
+          warehouse {
+            ... on Warehouse {
+              id
+              name
+            }
+          }
+          warehouseArrivalAgreedDate
+          warehouseArrivalActualDate
+          warehouseArrivalAgreedDateApprovedBy {
+            ... on User {
+              id
+            }
+          }
+          warehouseArrivalActualDateApprovedBy {
+            ... on User {
+              id
+            }
+          }
+          shipment {
+            ... on Shipment {
+              id
+              no
+            }
+          }
+          tags {
+            ...tagFragment
+          }
         }
       }
       page

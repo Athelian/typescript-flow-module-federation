@@ -259,11 +259,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                                     const { data: orderData } = await client.query({
                                       query: orderFormQuery,
                                       variables: {
-                                        id: getByPathWithDefault(
-                                          null,
-                                          'orderCreate.order.id',
-                                          data
-                                        ),
+                                        id: getByPathWithDefault(null, 'orderCreate.id', data),
                                       },
                                     });
                                     result = { ...orderData.order, actionType: 'newItem' };
@@ -271,7 +267,7 @@ const SelectedPanel = ({ connectType }: Props) => (
                                   if (connectType === 'SHIPMENT') {
                                     const shipmentId = getByPathWithDefault(
                                       '',
-                                      'shipmentCreate.shipment.id',
+                                      'shipmentCreate.id',
                                       data
                                     );
                                     // $FlowFixMe flow error on apollo client https://github.com/flow-typed/flow-typed/issues/2233

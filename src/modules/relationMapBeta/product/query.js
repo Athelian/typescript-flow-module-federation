@@ -13,65 +13,91 @@ export const productListQuery = gql`
   ) {
     products(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        id
-        name
-        serial
-        archived
-        productProviders {
+        ... on Product {
           id
-          exporter {
-            id
-            name
-          }
-          supplier {
-            id
-            name
-          }
-        }
-        batches(page: $batchPage, perPage: $batchPerPage, sortBy: $batchSort) {
-          nodes {
-            id
-            no
-            quantity
-            deliveredAt
-            shipment {
+          name
+          serial
+          archived
+          productProviders {
+            ... on ProductProvider {
               id
-              no
-              containerGroups {
-                id
-                warehouseArrival {
-                  ...timelineDateMinimalFragment
+              exporter {
+                ... on Group {
+                  id
+                  name
+                }
+              }
+              supplier {
+                ... on Group {
+                  id
+                  name
                 }
               }
             }
-            batchAdjustments {
-              id
-              quantity
-            }
-            orderItem {
-              id
-              quantity
-              order {
+          }
+          batches(page: $batchPage, perPage: $batchPerPage, sortBy: $batchSort) {
+            nodes {
+              ... on Batch {
                 id
-                poNo
+                no
+                quantity
+                deliveredAt
+                shipment {
+                  ... on Shipment {
+                    id
+                    no
+                    containerGroups {
+                      ... on ContainerGroup {
+                        id
+                        warehouseArrival {
+                          ...timelineDateMinimalFragment
+                        }
+                      }
+                    }
+                  }
+                }
+                batchAdjustments {
+                  ... on BatchAdjustment {
+                    id
+                    quantity
+                  }
+                }
+                orderItem {
+                  ... on OrderItem {
+                    id
+                    quantity
+                    order {
+                      ... on Order {
+                        id
+                        poNo
+                      }
+                    }
+                  }
+                }
+                tags {
+                  ... on Tag {
+                    id
+                    name
+                    color
+                  }
+                }
               }
             }
-            tags {
+            totalCount
+          }
+          tags {
+            ... on Tag {
               id
               name
               color
             }
           }
-          totalCount
-        }
-        tags {
-          id
-          name
-          color
-        }
-        files {
-          id
-          path
+          files {
+            ... on File {
+              id
+              path
+            }
+          }
         }
       }
       page

@@ -5,18 +5,22 @@ export const userDetailQuery = gql`
   query {
     viewer {
       user {
-        id
-        email
-        firstName
-        lastName
-        language
-        timezone
-        role
-        group {
+        ... on User {
           id
-          name
-          name2
-          types
+          email
+          firstName
+          lastName
+          language
+          timezone
+          role
+          group {
+            ... on Group {
+              id
+              name
+              name2
+              types
+            }
+          }
         }
       }
     }

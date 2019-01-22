@@ -64,40 +64,48 @@ export const shipmentRMFragment = gql`
       ...customFieldsFragment
     }
     voyages {
-      id
-      vesselName
-      vesselCode
-      departurePort {
-        ...portFragment
-      }
-      arrivalPort {
-        ...portFragment
-      }
-      departure {
-        ...timelineDateFullFragment
-      }
-      arrival {
-        ...timelineDateFullFragment
+      ... on Voyage {
+        id
+        vesselName
+        vesselCode
+        departurePort {
+          ...portFragment
+        }
+        arrivalPort {
+          ...portFragment
+        }
+        departure {
+          ...timelineDateFullFragment
+        }
+        arrival {
+          ...timelineDateFullFragment
+        }
       }
     }
     containerGroups {
-      id
-      warehouse {
+      ... on ContainerGroup {
         id
-        name
-      }
-      customClearance {
-        ...timelineDateFullFragment
-      }
-      warehouseArrival {
-        ...timelineDateFullFragment
-      }
-      deliveryReady {
-        ...timelineDateFullFragment
+        warehouse {
+          ... on Warehouse {
+            id
+            name
+          }
+        }
+        customClearance {
+          ...timelineDateFullFragment
+        }
+        warehouseArrival {
+          ...timelineDateFullFragment
+        }
+        deliveryReady {
+          ...timelineDateFullFragment
+        }
       }
     }
     batches {
-      id
+      ... on Batch {
+        id
+      }
     }
   }
 `;
@@ -110,27 +118,35 @@ export const orderItemRmFragment = gql`
       ...priceFragment
     }
     productProvider {
-      id
-      unitPrice {
-        currency
-        amount
-      }
-      product {
+      ... on ProductProvider {
         id
-        name
-        serial
-      }
-      exporter {
-        ...partnerNameFragment
-      }
-      supplier {
-        ...partnerNameFragment
+        unitPrice {
+          currency
+          amount
+        }
+        product {
+          ... on Product {
+            id
+            name
+            serial
+          }
+        }
+        exporter {
+          ...partnerNameFragment
+        }
+        supplier {
+          ...partnerNameFragment
+        }
       }
     }
     order {
       ...orderCardFragment
-      orderItems {
-        id
+      ... on Order {
+        orderItems {
+          ... on OrderItem {
+            id
+          }
+        }
       }
     }
     batches {
@@ -144,11 +160,13 @@ export const orderListQuery = gql`
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...orderBasicFragment
-        orderItems {
-          ...orderItemRmFragment
-        }
-        shipments {
-          ...shipmentRMFragment
+        ... on Order {
+          orderItems {
+            ...orderItemRmFragment
+          }
+          shipments {
+            ...shipmentRMFragment
+          }
         }
       }
       page

@@ -5,8 +5,10 @@ export const warehouseListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: WarehouseFilterInput) {
     warehouses(page: $page, perPage: $perPage, filterBy: $filterBy) {
       nodes {
-        id
-        name
+        ... on Warehouse {
+          id
+          name
+        }
       }
       page
       totalPage

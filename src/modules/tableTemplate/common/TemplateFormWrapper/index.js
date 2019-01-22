@@ -73,7 +73,7 @@ class TemplateFormWrapper extends React.Component<Props> {
               },
             },
           });
-          collections.maskEdits.nodes.unshift(maskEditCreate.maskEdit);
+          collections.maskEdits.nodes.unshift(maskEditCreate);
           collections.maskEdits.totalCount += 1;
           if (collections.maskEdits.totalCount % collections.maskEdits.perPage === 1) {
             collections.maskEdits.totalPage += 1;
