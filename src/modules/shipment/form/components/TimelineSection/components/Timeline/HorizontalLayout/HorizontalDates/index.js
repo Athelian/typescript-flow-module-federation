@@ -1,13 +1,16 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { TimelineDate } from '../../components';
+import { isEnableBetaFeature } from 'utils/env';
+import { TimelineDate, TimelineContainerDate } from '../../components';
 import {
   HorizontalDatesWrapperStyle,
   SingleDateWrapperStyle,
   DoubleDatesWrapperStyle,
   BlankPlaceholderStyle,
   ArrivalDepartureIconsWrapperStyle,
+  ContainerDateWrapperStyle,
+  ContainerDateLabelStyle,
 } from './style';
 
 type Props = {
@@ -15,7 +18,7 @@ type Props = {
 };
 
 const HorizontalDates = ({ shipment }: Props) => {
-  const { cargoReady, voyages, containerGroups } = shipment;
+  const { cargoReady, voyages, containerGroups, containers } = shipment;
   const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
   if (voyages.length > 1) {
     return (
@@ -84,9 +87,24 @@ const HorizontalDates = ({ shipment }: Props) => {
         <TimelineDate timelineDate={customClearance} />
       </div>
 
-      <div className={SingleDateWrapperStyle}>
-        <TimelineDate timelineDate={warehouseArrival} />
-      </div>
+      {isEnableBetaFeature && containers && containers.length > 0 ? (
+        <div className={DoubleDatesWrapperStyle}>
+          <div>
+            <div className={ContainerDateWrapperStyle}>
+              <div className={ContainerDateLabelStyle}>AGREED</div>
+              <TimelineContainerDate timelineDates={containers} type="Agreed" />
+            </div>
+            <div className={ContainerDateWrapperStyle}>
+              <div className={ContainerDateLabelStyle}>ACTUAL</div>
+              <TimelineContainerDate timelineDates={containers} type="Actual" />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className={SingleDateWrapperStyle}>
+          <TimelineDate timelineDate={warehouseArrival} />
+        </div>
+      )}
 
       <div className={SingleDateWrapperStyle}>
         <TimelineDate timelineDate={deliveryReady} />

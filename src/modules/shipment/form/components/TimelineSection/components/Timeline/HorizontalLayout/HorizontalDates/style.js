@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, colors } from 'styles/common';
+import { fontSizes, colors, borderRadiuses } from 'styles/common';
 
 export const HorizontalDatesWrapperStyle: string = css`
   position: relative;
@@ -36,4 +36,22 @@ export const ArrivalDepartureIconsWrapperStyle: string = css`
   justify-content: center;
   ${fontSizes.SMALL};
   color: ${colors.GRAY_LIGHT};
+`;
+
+export const ContainerDateWrapperStyle: string = css`
+  display: flex;
+  margin-bottom: 5px;
+`;
+
+export const ContainerDateLabelStyle: string = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 3px;
+  width: 45px;
+  height: 18px;
+  ${borderRadiuses.BUTTON};
+  ${fontSizes.TINY};
+  background-color: ${colors.GRAY_LIGHT};
+  color: ${colors.WHITE};
 `;
