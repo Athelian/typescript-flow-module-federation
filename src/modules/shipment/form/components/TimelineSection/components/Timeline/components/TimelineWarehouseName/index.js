@@ -22,7 +22,7 @@ const defaultProps = {
 };
 
 const TimelineWarehouseName = ({ name, vertical, containerGroups }: Props) => {
-  const warehouses = containerGroups.slice(1).filter(group => group.warehouse) || [];
+  const warehouses = (containerGroups || []).slice(1).filter(group => group.warehouse);
   return (
     <div className={TimelineWarehouseNameWrapperStyle(vertical)}>
       <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
