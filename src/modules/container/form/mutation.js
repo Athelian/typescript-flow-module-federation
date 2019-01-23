@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { violationFragment } from 'graphql/violations/fragment';
+import { badRequestFragment } from 'graphql';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
 import { isNullOrUndefined } from 'utils/fp';
@@ -8,18 +8,15 @@ import { isNullOrUndefined } from 'utils/fp';
 export const updateContainerMutation = gql`
   mutation containerUpdate($id: ID!, $input: ContainerUpdateInput!) {
     containerUpdate(id: $id, input: $input) {
-      container {
+      ... on Container {
         id
         warehouseArrivalAgreedDate
         warehouseArrivalActualDate
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-
-  ${violationFragment}
+  ${badRequestFragment}
 `;
 
 const getIdOrReturnNull = (obj: { id: string }): string | null =>

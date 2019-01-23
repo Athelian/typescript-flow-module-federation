@@ -25,47 +25,49 @@ import {
 export const containerFormQuery = gql`
   query($id: ID!) {
     container(id: $id) {
-      archived
-      updatedAt
-      no
-      memo
-      updatedBy {
-        ...userAvatarFragment
-      }
-      warehouse {
-        ...warehouseCardFragment
-      }
-      warehouseArrivalAgreedDate
-      warehouseArrivalActualDate
-      warehouseArrivalAgreedDateApprovedAt
-      warehouseArrivalActualDateApprovedAt
-      warehouseArrivalAgreedDateApprovedBy {
-        ...userAvatarFragment
-      }
-      warehouseArrivalActualDateApprovedBy {
-        ...userAvatarFragment
-      }
-      tags {
-        ...tagFragment
-      }
-      totalVolume {
-        ...metricFragment
-      }
-      totalWeight {
-        ...metricFragment
-      }
-      totalPrice {
-        ...metricFragment
-      }
-      totalBatchQuantity
-      totalBatchPackages
-      totalNumberOfUniqueOrderItems
-      shipment {
-        ...shipmentCardFragment
-      }
+      ... on Container {
+        archived
+        updatedAt
+        no
+        memo
+        updatedBy {
+          ...userAvatarFragment
+        }
+        warehouse {
+          ...warehouseCardFragment
+        }
+        warehouseArrivalAgreedDate
+        warehouseArrivalActualDate
+        warehouseArrivalAgreedDateApprovedAt
+        warehouseArrivalActualDateApprovedAt
+        warehouseArrivalAgreedDateApprovedBy {
+          ...userAvatarFragment
+        }
+        warehouseArrivalActualDateApprovedBy {
+          ...userAvatarFragment
+        }
+        tags {
+          ...tagFragment
+        }
+        totalVolume {
+          ...metricFragment
+        }
+        totalWeight {
+          ...metricFragment
+        }
+        totalPrice {
+          ...metricFragment
+        }
+        totalBatchQuantity
+        totalBatchPackages
+        totalNumberOfUniqueOrderItems
+        shipment {
+          ...shipmentCardFragment
+        }
 
-      batches {
-        ...batchFormFragment
+        batches {
+          ...batchFormFragment
+        }
       }
     }
   }
