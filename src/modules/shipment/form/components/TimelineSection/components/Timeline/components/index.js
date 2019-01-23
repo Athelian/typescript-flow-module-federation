@@ -8,6 +8,7 @@ import TimelinePortNameSnakeLayout from './TimelinePortNameSnakeLayout';
 import TimelineWarehouseName from './TimelineWarehouseName';
 import TimelineTransitIcon from './TimelineTransitIcon';
 import TimelineVoyage from './TimelineVoyage';
+import TimelineWarehouseContainerIcon from './TimelineWarehouseContainerIcon';
 
 export {
   TimelineDate,
@@ -19,4 +20,5 @@ export {
   TimelineWarehouseName,
   TimelineTransitIcon,
   TimelineVoyage,
+  TimelineWarehouseContainerIcon,
 };

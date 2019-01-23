@@ -186,6 +186,7 @@ class ShipmentFormModule extends React.Component<Props> {
       voyages,
       containerGroups,
       files,
+      containers,
       ...info
     }: Object = shipment;
     if (this.isClone()) {
@@ -202,6 +203,7 @@ class ShipmentFormModule extends React.Component<Props> {
         cargoReady,
         voyages,
         containerGroups,
+        containers,
       });
       shipmentFileState.initDetailValues(files);
     }

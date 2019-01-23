@@ -13,12 +13,11 @@ type Props = {
 };
 
 const VerticalDates = ({ shipment }: Props) => {
-  const { cargoReady, voyages, containerGroups, transportType } = shipment;
-  const { customClearance, warehouseArrival, deliveryReady, warehouse } = containerGroups[0];
-
+  const { cargoReady, voyages, containerGroups, transportType, containers } = shipment;
+  const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
+  const { warehouse } = containers && containers.length > 0 ? containers[0] : containerGroups[0];
   const loadPort = voyages[0].departurePort;
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
-
   return (
     <div className={VerticalDatesWrapperStyle}>
       <div className={SingularDateWrapperStyle}>
@@ -57,7 +56,7 @@ const VerticalDates = ({ shipment }: Props) => {
       <div className={BlankGapStyle}>
         <TimelineDate timelineDate={warehouseArrival} vertical />
       </div>
-      <TimelineWarehouseName name={warehouse && warehouse.name} vertical />
+      <TimelineWarehouseName name={warehouse && warehouse.name} vertical containers={containers} />
 
       <div className={BlankGapStyle} />
 

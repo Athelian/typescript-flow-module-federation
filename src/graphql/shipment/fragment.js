@@ -1,153 +1,351 @@
 // @flow
 import gql from 'graphql-tag';
+import { isEnableBetaFeature } from 'utils/env';
 
-export const shipmentFormFragment = gql`
-  fragment shipmentFormFragment on Shipment {
-    id
-    archived
-    updatedAt
-    updatedBy {
-      ...userAvatarFragment
-    }
-    memo
-    no
-    blNo
-    blDate
-    bookingNo
-    bookingDate
-    invoiceNo
-    incoterm
-    loadType
-    transportType
-    carrier
-    customFields {
-      ...customFieldsFragment
-    }
-    forwarders {
-      ...partnerCardFragment
-    }
-    inCharges {
-      ...userAvatarFragment
-    }
-    tags {
-      ...tagFragment
-    }
-    files {
-      ...documentFragment
-    }
-    cargoReady {
-      ...timelineDateFullFragment
-    }
-    voyages {
-      ... on Voyage {
+export const shipmentFormFragment = isEnableBetaFeature
+  ? gql`
+      fragment shipmentFormFragment on Shipment {
         id
-        vesselName
-        vesselCode
-        departurePort {
-          ...portFragment
+        archived
+        updatedAt
+        updatedBy {
+          ...userAvatarFragment
         }
-        arrivalPort {
-          ...portFragment
+        memo
+        no
+        blNo
+        blDate
+        bookingNo
+        bookingDate
+        invoiceNo
+        incoterm
+        loadType
+        transportType
+        carrier
+        customFields {
+          ...customFieldsFragment
         }
-        departure {
+        forwarders {
+          ...partnerCardFragment
+        }
+        inCharges {
+          ...userAvatarFragment
+        }
+        tags {
+          ...tagFragment
+        }
+        files {
+          ...documentFragment
+        }
+        cargoReady {
           ...timelineDateFullFragment
         }
-        arrival {
-          ...timelineDateFullFragment
-        }
-      }
-    }
-    containerGroups {
-      ... on ContainerGroup {
-        id
-        warehouse {
-          ... on Warehouse {
+        voyages {
+          ... on Voyage {
             id
-            name
+            vesselName
+            vesselCode
+            departurePort {
+              ...portFragment
+            }
+            arrivalPort {
+              ...portFragment
+            }
+            departure {
+              ...timelineDateFullFragment
+            }
+            arrival {
+              ...timelineDateFullFragment
+            }
           }
         }
-        customClearance {
-          ...timelineDateFullFragment
-        }
-        warehouseArrival {
-          ...timelineDateFullFragment
-        }
-        deliveryReady {
-          ...timelineDateFullFragment
-        }
-      }
-    }
-    totalVolume {
-      ...metricFragment
-    }
-    batches {
-      ...batchFormFragment
-    }
-  }
-`;
-
-export const shipmentCardFragment = gql`
-  fragment shipmentCardFragment on Shipment {
-    id
-    archived
-    no
-    blNo
-    transportType
-    batchCount
-    orderItemCount
-    totalVolume {
-      ...metricFragment
-    }
-    cargoReady {
-      ...timelineDateMinimalFragment
-    }
-    tags {
-      ...tagFragment
-    }
-    inCharges {
-      ...userAvatarFragment
-    }
-    voyages {
-      ... on Voyage {
-        id
-        departurePort {
-          ...portFragment
-        }
-        arrivalPort {
-          ...portFragment
-        }
-        departure {
-          ...timelineDateMinimalFragment
-        }
-        arrival {
-          ...timelineDateMinimalFragment
-        }
-      }
-    }
-    containerGroups {
-      ... on ContainerGroup {
-        id
-        customClearance {
-          ...timelineDateMinimalFragment
-        }
-        warehouseArrival {
-          ...timelineDateMinimalFragment
-        }
-        deliveryReady {
-          ...timelineDateMinimalFragment
-        }
-        warehouse {
-          ... on Warehouse {
+        containerGroups {
+          ... on ContainerGroup {
             id
-            name
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
+            customClearance {
+              ...timelineDateFullFragment
+            }
+            warehouseArrival {
+              ...timelineDateFullFragment
+            }
+            deliveryReady {
+              ...timelineDateFullFragment
+            }
+          }
+        }
+        containers {
+          ... on Container {
+            id
+            warehouseArrivalAgreedDate
+            warehouseArrivalAgreedDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouseArrivalActualDate
+            warehouseArrivalActualDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
+          }
+        }
+        totalVolume {
+          ...metricFragment
+        }
+        batches {
+          ...batchFormFragment
+        }
+      }
+    `
+  : gql`
+      fragment shipmentFormFragment on Shipment {
+        id
+        archived
+        updatedAt
+        updatedBy {
+          ...userAvatarFragment
+        }
+        memo
+        no
+        blNo
+        blDate
+        bookingNo
+        bookingDate
+        invoiceNo
+        incoterm
+        loadType
+        transportType
+        carrier
+        customFields {
+          ...customFieldsFragment
+        }
+        forwarders {
+          ...partnerCardFragment
+        }
+        inCharges {
+          ...userAvatarFragment
+        }
+        tags {
+          ...tagFragment
+        }
+        files {
+          ...documentFragment
+        }
+        cargoReady {
+          ...timelineDateFullFragment
+        }
+        voyages {
+          ... on Voyage {
+            id
+            vesselName
+            vesselCode
+            departurePort {
+              ...portFragment
+            }
+            arrivalPort {
+              ...portFragment
+            }
+            departure {
+              ...timelineDateFullFragment
+            }
+            arrival {
+              ...timelineDateFullFragment
+            }
+          }
+        }
+        containerGroups {
+          ... on ContainerGroup {
+            id
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
+            customClearance {
+              ...timelineDateFullFragment
+            }
+            warehouseArrival {
+              ...timelineDateFullFragment
+            }
+            deliveryReady {
+              ...timelineDateFullFragment
+            }
+          }
+        }
+        totalVolume {
+          ...metricFragment
+        }
+        batches {
+          ...batchFormFragment
+        }
+      }
+    `;
+
+export const shipmentCardFragment = isEnableBetaFeature
+  ? gql`
+      fragment shipmentCardFragment on Shipment {
+        id
+        archived
+        no
+        blNo
+        transportType
+        batchCount
+        orderItemCount
+        totalVolume {
+          ...metricFragment
+        }
+        cargoReady {
+          ...timelineDateMinimalFragment
+        }
+        tags {
+          ...tagFragment
+        }
+        inCharges {
+          ...userAvatarFragment
+        }
+        voyages {
+          ... on Voyage {
+            id
+            departurePort {
+              ...portFragment
+            }
+            arrivalPort {
+              ...portFragment
+            }
+            departure {
+              ...timelineDateMinimalFragment
+            }
+            arrival {
+              ...timelineDateMinimalFragment
+            }
+          }
+        }
+        containerGroups {
+          ... on ContainerGroup {
+            id
+            customClearance {
+              ...timelineDateMinimalFragment
+            }
+            warehouseArrival {
+              ...timelineDateMinimalFragment
+            }
+            deliveryReady {
+              ...timelineDateMinimalFragment
+            }
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
+          }
+        }
+        containers {
+          ... on Container {
+            id
+            warehouseArrivalAgreedDate
+            warehouseArrivalAgreedDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouseArrivalActualDate
+            warehouseArrivalActualDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
+          }
+        }
+        batches {
+          ... on Batch {
+            id
           }
         }
       }
-    }
-    batches {
-      ... on Batch {
+    `
+  : gql`
+      fragment shipmentCardFragment on Shipment {
         id
+        archived
+        no
+        blNo
+        transportType
+        batchCount
+        orderItemCount
+        totalVolume {
+          ...metricFragment
+        }
+        cargoReady {
+          ...timelineDateMinimalFragment
+        }
+        tags {
+          ...tagFragment
+        }
+        inCharges {
+          ...userAvatarFragment
+        }
+        voyages {
+          ... on Voyage {
+            id
+            departurePort {
+              ...portFragment
+            }
+            arrivalPort {
+              ...portFragment
+            }
+            departure {
+              ...timelineDateMinimalFragment
+            }
+            arrival {
+              ...timelineDateMinimalFragment
+            }
+          }
+        }
+        containerGroups {
+          ... on ContainerGroup {
+            id
+            customClearance {
+              ...timelineDateMinimalFragment
+            }
+            warehouseArrival {
+              ...timelineDateMinimalFragment
+            }
+            deliveryReady {
+              ...timelineDateMinimalFragment
+            }
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
+          }
+        }
+        batches {
+          ... on Batch {
+            id
+          }
+        }
       }
-    }
-  }
-`;
+    `;

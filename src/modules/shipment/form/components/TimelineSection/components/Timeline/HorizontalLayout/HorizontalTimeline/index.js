@@ -1,7 +1,14 @@
 // @flow
 import * as React from 'react';
 import { encodeId } from 'utils/id';
-import { TimelineIcon, TimelineTransitIcon, TimelineLine, TimelineVoyage } from '../../components';
+import { isEnableBetaFeature } from 'utils/env';
+import {
+  TimelineIcon,
+  TimelineTransitIcon,
+  TimelineLine,
+  TimelineVoyage,
+  TimelineWarehouseContainerIcon,
+} from '../../components';
 import { getTimelineColoring, getTransportIcon } from '../../helpers';
 import { HorizontalTimelineWrapperStyle, BlankSpaceStyle } from './style';
 
@@ -10,7 +17,7 @@ type Props = {
 };
 
 const HorizontalTimeline = ({ shipment }: Props) => {
-  const { cargoReady, voyages, containerGroups, transportType } = shipment;
+  const { cargoReady, voyages, containerGroups, transportType, containers } = shipment;
 
   const transportIcon = getTransportIcon(transportType);
 
@@ -94,11 +101,15 @@ const HorizontalTimeline = ({ shipment }: Props) => {
 
       <TimelineLine color={warehouseArrivalColoring} />
 
-      <TimelineIcon
-        icon="WAREHOUSE"
-        color={warehouseArrivalColoring}
-        linkPath={`/shipment/${encodeId(shipment.id)}/warehouseArrival`}
-      />
+      {isEnableBetaFeature && containers && containers.length > 0 ? (
+        <TimelineWarehouseContainerIcon containers={containers} />
+      ) : (
+        <TimelineIcon
+          icon="WAREHOUSE"
+          color={warehouseArrivalColoring}
+          linkPath={`/shipment/${encodeId(shipment.id)}/warehouseArrival`}
+        />
+      )}
 
       <TimelineLine color={deliveryReadyColoring} />
 
