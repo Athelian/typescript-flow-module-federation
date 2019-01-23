@@ -78,21 +78,23 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       if (payload && payload.entity && payload.selectedIds) {
         const { selectedIds, entity } = payload;
         if (state.select.entities.includes(entity)) {
-          selectedIds.forEach(selectItemId => {
-            result = [...result, `${entity}-${selectItemId}`];
-          });
           return {
             ...state,
-            targets: result,
+            targets: (result.filter(
+              targetItem => !targetItem.includes(`${entity}-`)
+            ): Array<string>),
             select: {
               ...state.select,
               entities: (entities.filter(item => item !== payload.entity): Array<string>),
             },
           };
         }
+        selectedIds.forEach(selectItemId => {
+          result = [...result, `${entity}-${selectItemId}`];
+        });
         return {
           ...state,
-          targets: (result.filter(targetItem => !targetItem.includes(`${entity}-`)): Array<string>),
+          targets: result,
           select: {
             mode: 'ALL',
             entities: [...entities, payload.entity || ''],
