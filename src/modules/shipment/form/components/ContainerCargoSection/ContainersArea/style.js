@@ -1,6 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, shadows, borderRadiuses, layout, presets, fontSizes } from 'styles/common';
+import {
+  colors,
+  shadows,
+  borderRadiuses,
+  layout,
+  presets,
+  fontSizes,
+  scrollbars,
+} from 'styles/common';
 
 export const ContainersWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
@@ -58,6 +66,18 @@ export const TitleStyle: string = css`
   ${presets.ELLIPSIS};
   font-weight: bold;
   letter-spacing: 2px;
+`;
+
+export const ContainersGridStyle: string = css`
+  display: grid;
+  grid-template-columns: 195px;
+  grid-auto-rows: min-content;
+  grid-gap: 30px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  ${scrollbars.SMALL};
+  padding: 30px 10px 30px 20px;
+  height: 100%;
 `;
 
 export const ContainersFooterWrapperStyle: string = css`

@@ -4,6 +4,7 @@ import { injectIntl, type IntlShape, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { NewButton } from 'components/Buttons';
 import { ShipmentContainersContainer } from 'modules/shipment/form/containers';
+import { ShipmentContainerCard, CardAction } from 'components/Cards';
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
 import {
@@ -13,6 +14,7 @@ import {
   ContainersHeaderWrapperStyle,
   IconStyle,
   TitleStyle,
+  ContainersGridStyle,
   ContainersFooterWrapperStyle,
 } from './style';
 
@@ -24,7 +26,7 @@ type Props = {
 function ContainersArea({ intl, selectedContainer }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer]}>
-      {({ state: { containers } }) => (
+      {({ state: { containers }, setFieldValue, setFieldArrayValue }) => (
         <div className={ContainersWrapperStyle}>
           <div className={ContainersNavbarWrapperStyle} />
           <div className={ContainersBodyWrapperStyle}>
@@ -37,7 +39,31 @@ function ContainersArea({ intl, selectedContainer }: Props) {
                 {` (${containers.length})`}
               </div>
             </div>
-            {selectedContainer}
+            <div className={ContainersGridStyle}>
+              {selectedContainer}
+              {containers.map((container, position) => (
+                <ShipmentContainerCard
+                  key={container.id}
+                  container={container}
+                  saveOnBlur={updateContainer => {
+                    setFieldArrayValue(position, updateContainer);
+                  }}
+                  // onClick={() => containerSlideToggle(true)}
+                  actions={[
+                    <CardAction
+                      icon="REMOVE"
+                      hoverColor="RED"
+                      onClick={() => {
+                        setFieldValue(
+                          'containers',
+                          containers.filter(({ id: containerId }) => container.id !== containerId)
+                        );
+                      }}
+                    />,
+                  ]}
+                />
+              ))}
+            </div>
           </div>
           <div className={ContainersFooterWrapperStyle}>
             <NewButton label={intl.formatMessage(messages.newContainer)} onClick={() => {}} />
