@@ -46,9 +46,15 @@ function BatchesArea({ intl, selectedContainerId }: Props) {
         const containerIsSelected = leftCardIsSelected && selectedContainerId !== 'Pool';
 
         if (leftCardIsSelected) {
-          batchesCopy = batchesCopy.filter(batch =>
-            !isNullOrUndefined(batch.container) ? batch.container.id === selectedContainerId : false
-          );
+          if (containerIsSelected) {
+            batchesCopy = batchesCopy.filter(batch =>
+              !isNullOrUndefined(batch.container)
+                ? batch.container.id === selectedContainerId
+                : false
+            );
+          } else {
+            batchesCopy = batchesCopy.filter(batch => isNullOrUndefined(batch.container));
+          }
         }
 
         return (

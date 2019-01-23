@@ -6,7 +6,7 @@ import { injectUid } from 'utils/id';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import { ShipmentContainersContainer } from 'modules/shipment/form/containers';
-import { ShipmentContainerCard, CardAction } from 'components/Cards';
+import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
 import {
@@ -45,6 +45,18 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
               </div>
             </div>
             <div className={ContainersGridStyle}>
+              <div className={SelectContainerCardWrapperStyle}>
+                <button
+                  className={SelectContainerCardBackgroundStyle(selectedContainerId === 'Pool')}
+                  type="button"
+                  onClick={() => setSelectedContainerId('Pool')}
+                />
+                <BatchesPoolCard
+                  totalBatches={5}
+                  product={null}
+                  setSelectedContainerId={setSelectedContainerId}
+                />
+              </div>
               {containers.map((container, position) => (
                 <div className={SelectContainerCardWrapperStyle}>
                   <button
