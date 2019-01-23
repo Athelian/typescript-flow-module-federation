@@ -124,7 +124,8 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           });
         } else {
           selectItems.forEach(selectItem => {
-            result = [...result, `${selectItem.entity}-${selectItem.id}`];
+            if (!result.includes(`${selectItem.entity}-${selectItem.id}`))
+              result = [...result, `${selectItem.entity}-${selectItem.id}`];
           });
         }
       }
