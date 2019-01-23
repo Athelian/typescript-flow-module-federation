@@ -2,7 +2,7 @@ import { batchFormFragment, batchCardFragment } from './batch/fragment';
 import { orderFormFragment, orderCardFragment, orderBasicFragment } from './order/fragment';
 import { partnerFormFragment, partnerCardFragment } from './partner/fragment';
 import { productFormFragment, productCardFragment } from './product/fragment';
-import { containerCardFragment } from './container/fragment';
+import { containerCardFragment, shipmentContainerCardFragment } from './container/fragment';
 import {
   productProviderFormFragment,
   productProviderCardFragment,
@@ -68,6 +68,7 @@ export {
   fieldValuesFragment,
   fieldDefinitionFragment,
   containerCardFragment,
+  shipmentContainerCardFragment,
   badRequestFragment,
   notFoundFragment,
   forbiddenFragment,

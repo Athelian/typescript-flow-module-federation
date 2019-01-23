@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const containerCardFragment = gql`
-  fragment ContainerCardFragment on Container {
+  fragment containerCardFragment on Container {
     id
     no
     representativeBatch {
@@ -17,11 +17,7 @@ export const containerCardFragment = gql`
                   ... on Product {
                     id
                     files {
-                      ... on File {
-                        id
-                        name
-                        type
-                      }
+                      ...imageFragment
                     }
                     name
                     serial
@@ -34,8 +30,7 @@ export const containerCardFragment = gql`
       }
     }
     totalVolume {
-      value
-      metric
+      ...metricFragment
     }
     batches {
       ... on Batch {
@@ -64,6 +59,67 @@ export const containerCardFragment = gql`
       ... on Shipment {
         id
         no
+      }
+    }
+    tags {
+      ...tagFragment
+    }
+  }
+`;
+
+export const shipmentContainerCardFragment = gql`
+  fragment shipmentContainerCardFragment on Container {
+    id
+    no
+    representativeBatch {
+      ... on Batch {
+        id
+        orderItem {
+          ... on OrderItem {
+            id
+            productProvider {
+              ... on ProductProvider {
+                id
+                product {
+                  ... on Product {
+                    id
+                    files {
+                      ...imageFragment
+                    }
+                    name
+                    serial
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    totalVolume {
+      ...metricFragment
+    }
+    batches {
+      ... on Batch {
+        id
+      }
+    }
+    warehouse {
+      ... on Warehouse {
+        id
+        name
+      }
+    }
+    warehouseArrivalAgreedDate
+    warehouseArrivalActualDate
+    warehouseArrivalAgreedDateApprovedBy {
+      ... on User {
+        id
+      }
+    }
+    warehouseArrivalActualDateApprovedBy {
+      ... on User {
+        id
       }
     }
     tags {

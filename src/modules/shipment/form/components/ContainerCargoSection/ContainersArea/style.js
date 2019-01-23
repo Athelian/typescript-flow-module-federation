@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, scrollbars, shadows, borderRadiuses } from 'styles/common';
+import { colors, shadows, borderRadiuses, layout, presets, fontSizes } from 'styles/common';
 
 export const ContainersWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
@@ -27,18 +27,37 @@ export const ContainersNavbarWrapperStyle: string = css`
 `;
 
 export const ContainersBodyWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: min-content;
-  grid-gap: 30px;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  overflow-x: hidden;
-  overflow-y: auto;
-  ${scrollbars.SMALL};
+  display: flex;
+  flex-direction: column;
   height: 100%;
   max-height: 65vh;
-  ${shadows.HEADER_RIGHT};
-  padding: 30px 10px 30px 20px;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+`;
+
+export const ContainersHeaderWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-template-rows: 50px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  ${fontSizes.LARGE};
+  color: ${colors.GRAY_DARK};
+`;
+
+export const IconStyle: string = css`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+export const TitleStyle: string = css`
+  ${presets.ELLIPSIS};
+  font-weight: bold;
+  letter-spacing: 2px;
 `;
 
 export const ContainersFooterWrapperStyle: string = css`
