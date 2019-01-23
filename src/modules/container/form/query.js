@@ -46,6 +46,12 @@ export const containerFormQuery = gql`
         warehouseArrivalActualDateApprovedBy {
           ...userAvatarFragment
         }
+        warehouseArrivalAgreedDateAssignedTo {
+          ...userAvatarFragment
+        }
+        warehouseArrivalActualDateAssignedTo {
+          ...userAvatarFragment
+        }
         tags {
           ...tagFragment
         }

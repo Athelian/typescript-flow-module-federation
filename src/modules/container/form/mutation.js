@@ -43,6 +43,8 @@ export const prepareUpdateContainerInput = ({
   warehouseArrivalActualDateApprovedAt,
   warehouseArrivalAgreedDateApprovedBy,
   warehouseArrivalActualDateApprovedBy,
+  warehouseArrivalAgreedDateAssignedTo,
+  warehouseArrivalActualDateAssignedTo,
   totalAdjusted,
   batches,
   ...rest
@@ -53,6 +55,12 @@ export const prepareUpdateContainerInput = ({
   warehouseArrivalActualDate: getDateOrReturnNull(warehouseArrivalActualDate),
   warehouseArrivalAgreedDateApprovedById: getIdOrReturnNull(warehouseArrivalAgreedDateApprovedBy),
   warehouseArrivalActualDateApprovedById: getIdOrReturnNull(warehouseArrivalActualDateApprovedBy),
+  warehouseArrivalAgreedDateAssignedToIds: warehouseArrivalAgreedDateAssignedTo.map(item =>
+    getIdOrReturnNull(item)
+  ),
+  warehouseArrivalActualDateAssignedToIds: warehouseArrivalActualDateAssignedTo.map(item =>
+    getIdOrReturnNull(item)
+  ),
   warehouseId: getIdOrReturnNull(warehouse),
   batches: batches
     .map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false))
