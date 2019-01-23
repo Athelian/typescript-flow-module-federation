@@ -1,5 +1,6 @@
 // @flow
 import logger from 'utils/logger';
+import { SHIPMENT } from 'modules/relationMap/constants';
 
 export type UIState = {
   showTag: boolean,
@@ -77,7 +78,10 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       let result = [...targets];
       if (payload && payload.entity && payload.selectedIds) {
         const { selectedIds, entity } = payload;
-        if (state.select.entities.includes(entity)) {
+        if (
+          state.select.entities.includes(entity) &&
+          state.targets.filter(item => item.includes(`${entity}-`)).length === selectedIds.length
+        ) {
           return {
             ...state,
             targets: (result.filter(
@@ -90,7 +94,8 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           };
         }
         selectedIds.forEach(selectItemId => {
-          result = [...result, `${entity}-${selectItemId}`];
+          if (!result.includes(`${entity}-${selectItemId}`))
+            result = [...result, `${entity}-${selectItemId}`];
         });
         return {
           ...state,
@@ -148,7 +153,12 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       return state;
     }
     case 'TOGGLE_SHIPMENT_LIST':
-      return { ...state, totalShipment: 0, toggleShipmentList: !state.toggleShipmentList };
+      return {
+        ...state,
+        totalShipment: 0,
+        toggleShipmentList: !state.toggleShipmentList,
+        targets: (state.targets.filter(item => !item.includes(`${SHIPMENT}-`)): Array<string>),
+      };
     case 'TOTAL_SHIPMENT': {
       const { payload } = action;
       const total = payload && payload.total ? payload.total : 0;
@@ -268,14 +278,24 @@ export function actionCreators(dispatch: Function) {
   };
 }
 
-const entitySelector = (state: UIState, entity: string) =>
-  state.select.mode === 'ALL' && state.select.entities.includes(entity);
+const entitySelector = ({
+  state,
+  entity,
+  total,
+}: {
+  state: UIState,
+  entity: string,
+  total: number,
+}) =>
+  state.select.mode === 'ALL' &&
+  state.select.entities.includes(entity) &&
+  total === state.targets.filter(item => item.includes(`${entity}-`)).length;
 
 export function selectors(state: UIState) {
   return {
     isSelectEntity: (highLightEntities: Array<string>, entity: string, id: string) =>
       highLightEntities.includes(`${entity}-${id}`),
-    isSelectAllEntity: (entity: string) => entitySelector(state, entity),
+    isSelectAllEntity: (entity: string, total: number) => entitySelector({ state, entity, total }),
     isTarget: (entity: string, id: string) => state.targets.includes(`${entity}-${id}`),
   };
 }
