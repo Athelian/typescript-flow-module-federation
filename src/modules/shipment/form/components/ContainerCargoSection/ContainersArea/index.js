@@ -17,8 +17,10 @@ import {
   IconStyle,
   TitleStyle,
   ContainersGridStyle,
+  SelectBatchesPoolCardWrapperStyle,
   SelectContainerCardWrapperStyle,
   SelectContainerCardBackgroundStyle,
+  EyeballIconStyle,
   ContainersFooterWrapperStyle,
 } from './style';
 
@@ -45,49 +47,59 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
               </div>
             </div>
             <div className={ContainersGridStyle}>
-              <div className={SelectContainerCardWrapperStyle}>
-                <button
-                  className={SelectContainerCardBackgroundStyle(selectedContainerId === 'Pool')}
-                  type="button"
-                  onClick={() => setSelectedContainerId('Pool')}
-                />
+              <button
+                className={SelectBatchesPoolCardWrapperStyle(selectedContainerId === 'Pool')}
+                type="button"
+                onClick={() => setSelectedContainerId('Pool')}
+              >
+                <div className={EyeballIconStyle}>
+                  <Icon icon={selectedContainerId === 'Pool' ? 'INVISIBLE' : 'VISIBLE'} />
+                </div>
                 <BatchesPoolCard
                   totalBatches={5}
                   product={null}
                   setSelectedContainerId={setSelectedContainerId}
                 />
-              </div>
-              {containers.map((container, position) => (
-                <div className={SelectContainerCardWrapperStyle}>
-                  <button
-                    className={SelectContainerCardBackgroundStyle(
-                      selectedContainerId === container.id
-                    )}
-                    type="button"
-                    onClick={() => setSelectedContainerId(container.id)}
-                  />
-                  <ShipmentContainerCard
-                    key={container.id}
-                    container={container}
-                    saveOnBlur={updateContainer => {
-                      setFieldArrayValue(position, updateContainer);
-                    }}
-                    // onClick={() => containerSlideToggle(true)}
-                    actions={[
-                      <CardAction
-                        icon="REMOVE"
-                        hoverColor="RED"
-                        onClick={() => {
-                          setFieldValue(
-                            'containers',
-                            containers.filter(({ id: containerId }) => container.id !== containerId)
-                          );
-                        }}
-                      />,
-                    ]}
-                  />
-                </div>
-              ))}
+              </button>
+              {containers.map((container, position) => {
+                const isSelected = selectedContainerId === container.id;
+
+                return (
+                  <div className={SelectContainerCardWrapperStyle}>
+                    <button
+                      className={SelectContainerCardBackgroundStyle(isSelected)}
+                      type="button"
+                      onClick={() => setSelectedContainerId(container.id)}
+                    >
+                      <div className={EyeballIconStyle}>
+                        <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
+                      </div>
+                    </button>
+                    <ShipmentContainerCard
+                      key={container.id}
+                      container={container}
+                      saveOnBlur={updateContainer => {
+                        setFieldArrayValue(position, updateContainer);
+                      }}
+                      // onClick={() => containerSlideToggle(true)}
+                      actions={[
+                        <CardAction
+                          icon="REMOVE"
+                          hoverColor="RED"
+                          onClick={() => {
+                            setFieldValue(
+                              'containers',
+                              containers.filter(
+                                ({ id: containerId }) => container.id !== containerId
+                              )
+                            );
+                          }}
+                        />,
+                      ]}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className={ContainersFooterWrapperStyle}>

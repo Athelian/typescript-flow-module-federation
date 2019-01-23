@@ -77,6 +77,23 @@ export const ContainersGridStyle: string = css`
   padding: 15px 0;
 `;
 
+export const SelectBatchesPoolCardWrapperStyle = (isSelected: boolean): string => css`
+  position: relative;
+  padding: 30px 0 30px 20px;
+  ${presets.BUTTON};
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  background-color: ${isSelected ? colors.GRAY_LIGHT : colors.GRAY_SUPER_LIGHT};
+  text-align: left;
+  &:hover {
+    background-color: ${isSelected ? colors.GRAY : colors.GRAY_VERY_LIGHT};
+    & > div {
+      opacity: 1;
+    }
+  }
+`;
+
 export const SelectContainerCardWrapperStyle: string = css`
   position: relative;
   width: 100%;
@@ -92,10 +109,27 @@ export const SelectContainerCardBackgroundStyle = (isSelected: boolean): string 
   width: 100%;
   height: 100%;
   background-color: ${isSelected ? colors.GRAY_LIGHT : colors.GRAY_SUPER_LIGHT};
-  &:hover,
-  :focus {
+  &:hover {
     background-color: ${isSelected ? colors.GRAY : colors.GRAY_VERY_LIGHT};
+    & > div {
+      opacity: 1;
+    }
   }
+`;
+
+export const EyeballIconStyle: string = css`
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  ${presets.BUTTON};
+  ${borderRadiuses.CIRCLE};
+  width: 30px;
+  height: 30px;
+  color: ${colors.GRAY_LIGHT};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  opacity: 0;
+  ${fontSizes.MAIN};
+  z-index: 1;
 `;
 
 export const ContainersFooterWrapperStyle: string = css`
