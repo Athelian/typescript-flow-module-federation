@@ -17,10 +17,12 @@ export type ContainerFormState = {
   warehouseArrivalAgreedDate: string,
   warehouseArrivalAgreedDateAssignedTo: Object,
   warehouseArrivalAgreedDateApprovedBy: Object,
+  warehouseArrivalAgreedDateApprovedAt: string,
 
   warehouseArrivalActualDate: string,
   warehouseArrivalActualDateAssignedTo: Object,
   warehouseArrivalActualDateApprovedBy: Object,
+  warehouseArrivalActualDateApprovedAt: string,
   tags?: Array<Object>,
   memo?: string,
 

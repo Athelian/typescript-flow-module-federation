@@ -105,7 +105,7 @@ const ContainerSection = () => (
                     </Label>
                     <Approval
                       approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
-                      approvedAt={values.warehouseArrivalAgreedDateApprovedBy}
+                      approvedAt={values.warehouseArrivalAgreedDateApprovedAt}
                       setFieldValue={setFieldValue}
                       field="warehouseArrivalAgreedDateApprovedBy"
                     />
