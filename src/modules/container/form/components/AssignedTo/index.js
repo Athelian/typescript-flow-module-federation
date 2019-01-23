@@ -22,7 +22,7 @@ type Props = {
   field: string,
 };
 
-const onRemoveAssignTo = (index: number, assignedTo: Array<Object>) => {
+const removeAssignmentByIndex = (assignedTo: Array<Object>, index: number) => {
   const assigns = [...assignedTo];
   assigns.splice(index, 1);
   return assigns;
@@ -36,8 +36,8 @@ const AssignedTo = ({ assignedTo, setFieldValue, field }: Props) => (
           <button
             className={RemoveAssignmentButtonStyle}
             onClick={() => {
-              const newAssignTo = onRemoveAssignTo(index, assignedTo);
-              setFieldValue(field, newAssignTo);
+              const users = removeAssignmentByIndex(assignedTo, index);
+              setFieldValue(field, users);
             }}
             type="button"
           >

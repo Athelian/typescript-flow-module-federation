@@ -16,10 +16,13 @@ import {
   UnApproveButtonStyle,
 } from './style';
 
-type Props = {
-  field: string,
+type OptionalProps = {
   approvedBy: Object,
-  approvedAt?: string,
+  approvedAt: string,
+};
+
+type Props = OptionalProps & {
+  field: string,
   setFieldValue: Function,
 };
 
