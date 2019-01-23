@@ -4,6 +4,7 @@ import { injectIntl, type IntlShape, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { injectUid } from 'utils/id';
 import { NewButton } from 'components/Buttons';
+import FormattedNumber from 'components/FormattedNumber';
 import { ShipmentContainersContainer } from 'modules/shipment/form/containers';
 import { ShipmentContainerCard, CardAction } from 'components/Cards';
 import Icon from 'components/Icon';
@@ -16,15 +17,18 @@ import {
   IconStyle,
   TitleStyle,
   ContainersGridStyle,
+  SelectContainerCardWrapperStyle,
+  SelectContainerCardBackgroundStyle,
   ContainersFooterWrapperStyle,
 } from './style';
 
 type Props = {
   intl: IntlShape,
-  selectedContainer: ?string,
+  selectedContainerId: ?string,
+  setSelectedContainerId: string => void,
 };
 
-function ContainersArea({ intl, selectedContainer }: Props) {
+function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer]}>
       {({ state: { containers }, setFieldValue, setFieldArrayValue }) => (
@@ -36,33 +40,41 @@ function ContainersArea({ intl, selectedContainer }: Props) {
                 <Icon icon="CONTAINER" />
               </div>
               <div className={TitleStyle}>
-                <FormattedMessage id="modules.Shipments.containers" defaultMessage="CONTAINERS" />
-                {` (${containers.length})`}
+                <FormattedMessage id="modules.Shipments.containers" defaultMessage="CONTAINERS" /> (
+                <FormattedNumber value={containers.length} />)
               </div>
             </div>
             <div className={ContainersGridStyle}>
-              {selectedContainer}
               {containers.map((container, position) => (
-                <ShipmentContainerCard
-                  key={container.id}
-                  container={container}
-                  saveOnBlur={updateContainer => {
-                    setFieldArrayValue(position, updateContainer);
-                  }}
-                  // onClick={() => containerSlideToggle(true)}
-                  actions={[
-                    <CardAction
-                      icon="REMOVE"
-                      hoverColor="RED"
-                      onClick={() => {
-                        setFieldValue(
-                          'containers',
-                          containers.filter(({ id: containerId }) => container.id !== containerId)
-                        );
-                      }}
-                    />,
-                  ]}
-                />
+                <div className={SelectContainerCardWrapperStyle}>
+                  <button
+                    className={SelectContainerCardBackgroundStyle(
+                      selectedContainerId === container.id
+                    )}
+                    type="button"
+                    onClick={() => setSelectedContainerId(container.id)}
+                  />
+                  <ShipmentContainerCard
+                    key={container.id}
+                    container={container}
+                    saveOnBlur={updateContainer => {
+                      setFieldArrayValue(position, updateContainer);
+                    }}
+                    // onClick={() => containerSlideToggle(true)}
+                    actions={[
+                      <CardAction
+                        icon="REMOVE"
+                        hoverColor="RED"
+                        onClick={() => {
+                          setFieldValue(
+                            'containers',
+                            containers.filter(({ id: containerId }) => container.id !== containerId)
+                          );
+                        }}
+                      />,
+                    ]}
+                  />
+                </div>
               ))}
             </div>
           </div>

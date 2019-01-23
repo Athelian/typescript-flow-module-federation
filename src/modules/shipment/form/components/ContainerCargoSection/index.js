@@ -7,21 +7,33 @@ import BatchesArea from './BatchesArea';
 type Props = {};
 
 type State = {
-  selectedContainer: ?string,
+  selectedContainerId: ?string,
 };
 
 class CargoSection extends React.Component<Props, State> {
   state = {
-    selectedContainer: null,
+    selectedContainerId: null, // 'Pool' = Batches Pool
+  };
+
+  setSelectedContainerId = (id: string) => {
+    const { selectedContainerId } = this.state;
+    if (selectedContainerId === id) {
+      this.setState({ selectedContainerId: null });
+    } else {
+      this.setState({ selectedContainerId: id });
+    }
   };
 
   render() {
-    const { selectedContainer } = this.state;
+    const { selectedContainerId } = this.state;
 
     return (
       <div className={CargoSectionWrapperStyle}>
-        <ContainersArea selectedContainer={selectedContainer} />
-        <BatchesArea selectedContainer={selectedContainer} />
+        <ContainersArea
+          selectedContainerId={selectedContainerId}
+          setSelectedContainerId={this.setSelectedContainerId}
+        />
+        <BatchesArea selectedContainerId={selectedContainerId} />
       </div>
     );
   }

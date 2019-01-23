@@ -69,15 +69,33 @@ export const TitleStyle: string = css`
 `;
 
 export const ContainersGridStyle: string = css`
-  display: grid;
-  grid-template-columns: 195px;
-  grid-auto-rows: min-content;
-  grid-gap: 30px;
+  ${layout.GRID_VERTICAL};
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
-  padding: 30px 10px 30px 20px;
   height: 100%;
+  padding: 15px 0;
+`;
+
+export const SelectContainerCardWrapperStyle: string = css`
+  position: relative;
+  width: 100%;
+  padding: 30px 0 30px 20px;
+`;
+
+export const SelectContainerCardBackgroundStyle = (isSelected: boolean): string => css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  ${presets.BUTTON};
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  background-color: ${isSelected ? colors.GRAY_LIGHT : colors.GRAY_SUPER_LIGHT};
+  &:hover,
+  :focus {
+    background-color: ${isSelected ? colors.GRAY : colors.GRAY_VERY_LIGHT};
+  }
 `;
 
 export const ContainersFooterWrapperStyle: string = css`
