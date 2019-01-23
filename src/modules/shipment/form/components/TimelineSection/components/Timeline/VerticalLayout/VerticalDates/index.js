@@ -14,8 +14,8 @@ type Props = {
 
 const VerticalDates = ({ shipment }: Props) => {
   const { cargoReady, voyages, containerGroups, transportType, containers } = shipment;
-  const { customClearance, warehouseArrival, deliveryReady, warehouse } = containerGroups[0];
-
+  const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
+  const { warehouse } = containers && containers.length > 0 ? containers[0] : containerGroups[0];
   const loadPort = voyages[0].departurePort;
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
   return (

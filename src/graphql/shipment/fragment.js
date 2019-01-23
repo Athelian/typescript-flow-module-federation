@@ -80,18 +80,26 @@ export const shipmentFormFragment = isEnableBetaFeature
           }
         }
         containers {
-          id
-          warehouseArrivalAgreedDate
-          warehouseArrivalAgreedDateApprovedBy {
+          ... on Container {
             id
-          }
-          warehouseArrivalActualDate
-          warehouseArrivalActualDateApprovedBy {
-            id
-          }
-          warehouse {
-            id
-            name
+            warehouseArrivalAgreedDate
+            warehouseArrivalAgreedDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouseArrivalActualDate
+            warehouseArrivalActualDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
           }
         }
         totalVolume {
@@ -247,18 +255,26 @@ export const shipmentCardFragment = isEnableBetaFeature
           }
         }
         containers {
-          id
-          warehouseArrivalAgreedDate
-          warehouseArrivalAgreedDateApprovedBy {
+          ... on Container {
             id
-          }
-          warehouseArrivalActualDate
-          warehouseArrivalActualDateApprovedBy {
-            id
-          }
-          warehouse {
-            id
-            name
+            warehouseArrivalAgreedDate
+            warehouseArrivalAgreedDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouseArrivalActualDate
+            warehouseArrivalActualDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouse {
+              ... on Warehouse {
+                id
+                name
+              }
+            }
           }
         }
         batches {
