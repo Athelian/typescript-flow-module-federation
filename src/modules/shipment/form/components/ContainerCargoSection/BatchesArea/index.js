@@ -10,8 +10,8 @@ import { NewButton, MoveButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
-import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import SelectOrderItems from '../../CargoSection/components/SelectOrderItems';
 import {
@@ -35,12 +35,12 @@ type Props = {
 
 function BatchesArea({ intl, selectedContainer }: Props) {
   return (
-    <div className={BatchesWrapperStyle}>
-      <div className={BatchesNavbarWrapperStyle} />
-      <div className={BatchesBodyWrapperStyle}>
-        <Subscribe to={[ShipmentBatchesContainer]}>
-          {({ state: { batches }, setFieldValue, setFieldArrayValue }) =>
-            batches.length === 0 ? (
+    <Subscribe to={[ShipmentBatchesContainer]}>
+      {({ state: { batches }, setFieldValue, setFieldArrayValue }) => (
+        <div className={BatchesWrapperStyle}>
+          <div className={BatchesNavbarWrapperStyle} />
+          <div className={BatchesBodyWrapperStyle}>
+            {batches.length === 0 ? (
               <div className={EmptyMessageStyle}>
                 <FormattedMessage
                   id="modules.Shipments.noBatches"
@@ -66,8 +66,8 @@ function BatchesArea({ intl, selectedContainer }: Props) {
                   <MoveButton label={intl.formatMessage(messages.moveBatches)} onClick={() => {}} />
                 </div>
                 <div className={BatchesGridStyle}>
-                  {batches.map((item, position) => (
-                    <BooleanValue key={item.id}>
+                  {batches.map((batch, position) => (
+                    <BooleanValue key={batch.id}>
                       {({ value: opened, set: batchSlideToggle }) => (
                         <>
                           <SlideView
@@ -80,9 +80,9 @@ function BatchesArea({ intl, selectedContainer }: Props) {
                                 {({ initDetailValues }) => (
                                   <BatchFormWrapper
                                     initDetailValues={initDetailValues}
-                                    batch={item}
-                                    isNew={!!item.isNew}
-                                    orderItem={item.orderItem}
+                                    batch={batch}
+                                    isNew={!!batch.isNew}
+                                    orderItem={batch.orderItem}
                                     onCancel={() => batchSlideToggle(false)}
                                     onSave={updatedBatch => {
                                       batchSlideToggle(false);
@@ -94,7 +94,7 @@ function BatchesArea({ intl, selectedContainer }: Props) {
                             )}
                           </SlideView>
                           <ShipmentBatchCard
-                            batch={item}
+                            batch={batch}
                             saveOnBlur={updateBatch => {
                               setFieldArrayValue(position, updateBatch);
                             }}
@@ -102,7 +102,7 @@ function BatchesArea({ intl, selectedContainer }: Props) {
                             onClear={({ id }) => {
                               setFieldValue(
                                 'batches',
-                                batches.filter(({ id: itemId }) => id !== itemId)
+                                batches.filter(({ id: batchId }) => id !== batchId)
                               );
                             }}
                             onClone={({
@@ -131,27 +131,23 @@ function BatchesArea({ intl, selectedContainer }: Props) {
                   ))}
                 </div>
               </>
-            )
-          }
-        </Subscribe>
-      </div>
-      <div className={BatchesFooterWrapperStyle}>
-        <BooleanValue>
-          {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
-            <>
-              <NewButton
-                data-testid="selectBatchesButton"
-                label={intl.formatMessage(messages.selectBatches)}
-                onClick={() => selectBatchesSlideToggle(true)}
-              />
-              <SlideView
-                isOpen={selectBatchesIsOpen}
-                onRequestClose={() => selectBatchesSlideToggle(false)}
-                options={{ width: '1030px' }}
-              >
-                {selectBatchesIsOpen && (
-                  <Subscribe to={[ShipmentBatchesContainer]}>
-                    {({ state: { batches }, setFieldValue }) => (
+            )}
+          </div>
+          <div className={BatchesFooterWrapperStyle}>
+            <BooleanValue>
+              {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
+                <>
+                  <NewButton
+                    data-testid="selectBatchesButton"
+                    label={intl.formatMessage(messages.selectBatches)}
+                    onClick={() => selectBatchesSlideToggle(true)}
+                  />
+                  <SlideView
+                    isOpen={selectBatchesIsOpen}
+                    onRequestClose={() => selectBatchesSlideToggle(false)}
+                    options={{ width: '1030px' }}
+                  >
+                    {selectBatchesIsOpen && (
                       <SelectBatches
                         selectedBatches={batches}
                         onSelect={selected => {
@@ -165,27 +161,23 @@ function BatchesArea({ intl, selectedContainer }: Props) {
                         onCancel={() => selectBatchesSlideToggle(false)}
                       />
                     )}
-                  </Subscribe>
-                )}
-              </SlideView>
-            </>
-          )}
-        </BooleanValue>
-        <BooleanValue>
-          {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
-            <>
-              <NewButton
-                label={intl.formatMessage(messages.newBatch)}
-                onClick={() => createBatchesSlideToggle(true)}
-              />
-              <SlideView
-                isOpen={createBatchesIsOpen}
-                onRequestClose={() => createBatchesSlideToggle(false)}
-                options={{ width: '1030px' }}
-              >
-                {createBatchesIsOpen && (
-                  <Subscribe to={[ShipmentBatchesContainer]}>
-                    {({ state: { batches }, setFieldValue }) => (
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
+            <BooleanValue>
+              {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
+                <>
+                  <NewButton
+                    label={intl.formatMessage(messages.newBatch)}
+                    onClick={() => createBatchesSlideToggle(true)}
+                  />
+                  <SlideView
+                    isOpen={createBatchesIsOpen}
+                    onRequestClose={() => createBatchesSlideToggle(false)}
+                    options={{ width: '1030px' }}
+                  >
+                    {createBatchesIsOpen && (
                       <SelectOrderItems
                         onSelect={selectedOrderItems => {
                           const result = selectedOrderItems.map((orderItem, counter) => {
@@ -219,14 +211,14 @@ function BatchesArea({ intl, selectedContainer }: Props) {
                         onCancel={() => createBatchesSlideToggle(false)}
                       />
                     )}
-                  </Subscribe>
-                )}
-              </SlideView>
-            </>
-          )}
-        </BooleanValue>
-      </div>
-    </div>
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
+          </div>
+        </div>
+      )}
+    </Subscribe>
   );
 }
 

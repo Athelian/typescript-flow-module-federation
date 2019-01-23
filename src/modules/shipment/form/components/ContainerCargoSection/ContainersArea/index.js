@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
-import type { IntlShape } from 'react-intl';
+import { injectIntl, type IntlShape } from 'react-intl';
+import { Subscribe } from 'unstated';
 import { NewButton } from 'components/Buttons';
+import { ShipmentContainersContainer } from 'modules/shipment/form/containers';
 import messages from 'modules/shipment/messages';
 import {
   ContainersWrapperStyle,
@@ -18,13 +19,20 @@ type Props = {
 
 function ContainersArea({ intl, selectedContainer }: Props) {
   return (
-    <div className={ContainersWrapperStyle}>
-      <div className={ContainersNavbarWrapperStyle} />
-      <div className={ContainersBodyWrapperStyle}>{selectedContainer}</div>
-      <div className={ContainersFooterWrapperStyle}>
-        <NewButton label={intl.formatMessage(messages.newContainer)} onClick={() => {}} />
-      </div>
-    </div>
+    <Subscribe to={[ShipmentContainersContainer]}>
+      {({ state: { containers } }) => (
+        <div className={ContainersWrapperStyle}>
+          <div className={ContainersNavbarWrapperStyle} />
+          <div className={ContainersBodyWrapperStyle}>
+            {selectedContainer}
+            {containers.length}
+          </div>
+          <div className={ContainersFooterWrapperStyle}>
+            <NewButton label={intl.formatMessage(messages.newContainer)} onClick={() => {}} />
+          </div>
+        </div>
+      )}
+    </Subscribe>
   );
 }
 
