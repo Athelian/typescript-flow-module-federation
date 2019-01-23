@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import { FormattedMessage, FormattedDate } from 'react-intl';
-
+import { FormattedMessage } from 'react-intl';
+import { isNullOrUndefined } from 'utils/fp';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
+import FormattedDate from 'components/FormattedDate';
 import Icon from 'components/Icon';
 import {
   SummaryWrapperStyle,
@@ -15,10 +16,10 @@ import {
 } from './style';
 
 type OptionalProps = {
-  agreedArrivalDateFrom: string,
-  agreedArrivalDateTo: string,
-  actualArrivalDateFrom: string,
-  actualArrivalDateTo: string,
+  agreedArrivalDateFrom: Date,
+  agreedArrivalDateTo: Date,
+  actualArrivalDateFrom: Date,
+  actualArrivalDateTo: Date,
 };
 
 type Props = OptionalProps & {
@@ -52,23 +53,23 @@ const Summary = ({
           <div>
             <FormattedMessage id="modules.shipment.from" defaultMessage="FROM" />
           </div>
-          {agreedArrivalDateFrom ? (
+          {isNullOrUndefined(agreedArrivalDateFrom) ? (
+            <div className={GrayLightStyle}>
+              <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+            </div>
+          ) : (
             <div className={BlueStyle}>
               <FormattedDate mode="datetime" value={agreedArrivalDateFrom} />
             </div>
-          ) : (
-            <div className={GrayLightStyle}>
-              <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
-            </div>
           )}
 
-          {actualArrivalDateFrom ? (
-            <div className={BlueStyle}>
-              <FormattedDate mode="datetime" value={actualArrivalDateFrom} />
-            </div>
-          ) : (
+          {isNullOrUndefined(actualArrivalDateFrom) ? (
             <div className={GrayLightStyle}>
               <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+            </div>
+          ) : (
+            <div className={BlueStyle}>
+              <FormattedDate mode="datetime" value={actualArrivalDateFrom} />
             </div>
           )}
         </GridColumn>
@@ -77,23 +78,23 @@ const Summary = ({
             <FormattedMessage id="modules.shipment.to" defaultMessage="TO" />
           </div>
 
-          {agreedArrivalDateTo ? (
+          {isNullOrUndefined(agreedArrivalDateTo) ? (
+            <div className={GrayLightStyle}>
+              <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+            </div>
+          ) : (
             <div className={TealStyle}>
               <FormattedDate mode="datetime" value={agreedArrivalDateTo} />
             </div>
-          ) : (
-            <div className={GrayLightStyle}>
-              <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
-            </div>
           )}
 
-          {actualArrivalDateTo ? (
-            <div className={TealStyle}>
-              <FormattedDate mode="datetime" value={actualArrivalDateTo} />
-            </div>
-          ) : (
+          {isNullOrUndefined(actualArrivalDateTo) ? (
             <div className={GrayLightStyle}>
               <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+            </div>
+          ) : (
+            <div className={TealStyle}>
+              <FormattedDate mode="datetime" value={actualArrivalDateTo} />
             </div>
           )}
         </GridColumn>
@@ -111,7 +112,7 @@ const Summary = ({
         }
         input={
           <Display>
-            <FormattedNumber value={containers.length} />
+            <FormattedNumber value={containers.length} /> <Icon icon="CONTAINER" />
           </Display>
         }
       />

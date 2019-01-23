@@ -73,6 +73,7 @@ const TimelineSection = ({ isNew }: Props) => (
                       <ContainersSlideView
                         onCancel={() => slideToggle(false)}
                         onSave={() => slideToggle(false)}
+                        containers={containers}
                       />
                     )}
                   </SlideView>

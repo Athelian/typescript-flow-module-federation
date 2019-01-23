@@ -10,7 +10,7 @@ export const SummaryWrapperStyle: string = css`
 
 export const LeftPartWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
-  grid-gap: 100px;
+  grid-gap: 40px;
   grid-template-columns: repeat(3, 1fr);
 `;
 
