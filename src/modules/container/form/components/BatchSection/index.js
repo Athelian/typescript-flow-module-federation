@@ -1,5 +1,4 @@
 // @flow
-// FIXME: same with shipment/form/components/SelectBatches
 import * as React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';

@@ -34,16 +34,6 @@ export default class containerForm extends React.Component<Props> {
     if (onFormReady) onFormReady();
   }
 
-  // shouldComponentUpdate(nextProps: Props) {
-  //   const { container, selectable, isNew } = this.props;
-
-  //   return (
-  //     !isEquals(container, nextProps.container) ||
-  //     !isEquals(selectable, nextProps.selectable) ||
-  //     !isEquals(isNew, nextProps.isNew)
-  //   );
-  // }
-
   render() {
     const { container } = this.props;
     return (

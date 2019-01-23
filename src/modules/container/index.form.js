@@ -50,10 +50,6 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
   ) => {
     const { containerId } = this.props;
 
-    // const input = isNewOrClone
-    //   ? prepareCreateBatchInput(formData)
-    //   : prepareUpdateBatchInput(formData);
-
     const input = prepareUpdateContainerInput(formData);
 
     const { data } = await saveBatch({

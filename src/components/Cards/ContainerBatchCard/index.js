@@ -88,7 +88,7 @@ const ContainerBatchCard = ({
 
   const {
     no,
-    quantity,
+    quantity = 0,
     batchAdjustments,
     deliveredAt,
     desiredAt,
