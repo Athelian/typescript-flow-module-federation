@@ -27,7 +27,7 @@ import {
   ShipmentListBodyStyle,
 } from 'modules/relationMap/orderFocused/style';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
-import { SHIPMENT } from 'modules/relationMap/constants';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
 import { orderListQuery } from './query';
 import normalize from './normalize';
 import { hasMoreItems, findHighLightEntities } from './helpers';
@@ -135,41 +135,41 @@ const Order = ({ intl }: Props) => {
                   <div className={OrderFocusEntityHeaderWrapperStyle}>
                     <EntityHeader
                       icon="ORDER"
-                      color={uiSelectors.isSelectAllEntity('ORDER') ? 'ORDER_DARK' : 'ORDER'}
+                      color={uiSelectors.isSelectAllEntity(ORDER) ? 'ORDER_DARK' : 'ORDER'}
                       label={intl.formatMessage(messages.ordersLabel)}
                       no={Object.keys(orders || []).length}
-                      onClick={() => actions.toggleSelectAll('ORDER')}
+                      onClick={() => actions.toggleSelectAll(ORDER, Object.keys(orders || []))}
                     />
                     <EntityHeader
                       icon="ORDER_ITEM"
                       color={
-                        uiSelectors.isSelectAllEntity('ORDER_ITEM')
-                          ? 'ORDER_ITEM_DARK'
-                          : 'ORDER_ITEM'
+                        uiSelectors.isSelectAllEntity(ORDER_ITEM) ? 'ORDER_ITEM_DARK' : 'ORDER_ITEM'
                       }
                       label={intl.formatMessage(messages.itemsLabel)}
                       no={Object.keys(orderItems || []).length}
-                      onClick={() => actions.toggleSelectAll('ORDER_ITEM')}
+                      onClick={() =>
+                        actions.toggleSelectAll(ORDER_ITEM, Object.keys(orderItems || []))
+                      }
                     />
                     <EntityHeader
                       icon="BATCH"
-                      color={uiSelectors.isSelectAllEntity('BATCH') ? 'BATCH_DARK' : 'BATCH'}
+                      color={uiSelectors.isSelectAllEntity(BATCH) ? 'BATCH_DARK' : 'BATCH'}
                       label={intl.formatMessage(messages.batchesLabel)}
                       no={Object.keys(batches || []).length}
-                      onClick={() => actions.toggleSelectAll('BATCH')}
+                      onClick={() => actions.toggleSelectAll(BATCH, Object.keys(batches || []))}
                     />
                     <EntityHeader
                       icon="SHIPMENT"
-                      color={
-                        uiSelectors.isSelectAllEntity('SHIPMENT') ? 'SHIPMENT_DARK' : 'SHIPMENT'
-                      }
+                      color={uiSelectors.isSelectAllEntity(SHIPMENT) ? 'SHIPMENT_DARK' : 'SHIPMENT'}
                       label={intl.formatMessage(messages.shipmentsLabel)}
                       no={
                         state.toggleShipmentList
                           ? state.totalShipment
                           : Object.keys(shipments || []).length
                       }
-                      onClick={() => actions.toggleSelectAll('SHIPMENT')}
+                      onClick={() =>
+                        actions.toggleSelectAll(SHIPMENT, Object.keys(shipments || []))
+                      }
                     >
                       <div className={AllShipmentsToggleWrapperStyle}>
                         <div className={AllShipmentsIconStyle}>

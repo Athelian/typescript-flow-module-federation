@@ -72,11 +72,18 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const { payload } = action;
       const {
         select: { entities },
+        targets,
       } = state;
-      if (payload) {
-        if (payload.entity && state.select.entities.includes(payload.entity)) {
+      let result = [...targets];
+      if (payload && payload.entity && payload.selectedIds) {
+        const { selectedIds, entity } = payload;
+        if (state.select.entities.includes(entity)) {
+          selectedIds.forEach(selectItemId => {
+            result = [...result, `${entity}-${selectItemId}`];
+          });
           return {
             ...state,
+            targets: result,
             select: {
               ...state.select,
               entities: (entities.filter(item => item !== payload.entity): Array<string>),
@@ -85,6 +92,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         }
         return {
           ...state,
+          targets: (result.filter(targetItem => !targetItem.includes(`${entity}-`)): Array<string>),
           select: {
             mode: 'ALL',
             entities: [...entities, payload.entity || ''],
@@ -217,11 +225,12 @@ export function actionCreators(dispatch: Function) {
       dispatch({
         type: 'TOGGLE_SHIPMENT_LIST',
       }),
-    toggleSelectAll: (entity: string) =>
+    toggleSelectAll: (entity: string, selectedIds: Array<string>) =>
       dispatch({
         type: 'TOGGLE_SELECT_ALL',
         payload: {
           entity,
+          selectedIds,
         },
       }),
     countShipment: (total: number) =>

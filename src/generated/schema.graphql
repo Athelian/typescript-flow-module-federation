@@ -1,5 +1,5 @@
-# source: http://localhost:8080/graphql
-# timestamp: Tue Jan 22 2019 19:12:24 GMT+0900 (Japan Standard Time)
+# source: https://graphql-staging.zenport.io/graphql
+# timestamp: Tue Jan 22 2019 17:49:46 GMT+0700 (Indochina Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27260,7 +27260,7 @@ enum Country {
   """Afghanistan"""
   AFG
 
-  """Antigua and Barbuda"""
+  """Antigua & Barbuda"""
   ATG
 
   """Anguilla"""
@@ -27271,9 +27271,6 @@ enum Country {
 
   """Armenia"""
   ARM
-
-  """Netherlands Antilles"""
-  ANT
 
   """Angola"""
   AGO
@@ -27302,7 +27299,7 @@ enum Country {
   """Azerbaijan"""
   AZE
 
-  """Bosnia and Herzegovina"""
+  """Bosnia & Herzegovina"""
   BIH
 
   """Barbados"""
@@ -27329,7 +27326,7 @@ enum Country {
   """Benin"""
   BEN
 
-  """Saint Barthélemy"""
+  """St. Barthélemy"""
   BLM
 
   """Bermuda"""
@@ -27341,7 +27338,7 @@ enum Country {
   """Bolivia"""
   BOL
 
-  """Bonaire, Sint Eustatius and Saba"""
+  """Caribbean Netherlands"""
   BES
 
   """Brazil"""
@@ -27368,22 +27365,22 @@ enum Country {
   """Canada"""
   CAN
 
-  """Cocos Islands"""
+  """Cocos (Keeling) Islands"""
   CCK
 
-  """The Democratic Republic Of Congo"""
+  """Congo - Kinshasa"""
   COD
 
   """Central African Republic"""
   CAF
 
-  """Congo"""
+  """Congo - Brazzaville"""
   COG
 
   """Switzerland"""
   CHE
 
-  """Côte d'Ivoire"""
+  """Côte d’Ivoire"""
   CIV
 
   """Cook Islands"""
@@ -27419,7 +27416,7 @@ enum Country {
   """Cyprus"""
   CYP
 
-  """Czech Republic"""
+  """Czechia"""
   CZE
 
   """Germany"""
@@ -27521,7 +27518,7 @@ enum Country {
   """Greece"""
   GRC
 
-  """South Georgia And The South Sandwich Islands"""
+  """South Georgia & South Sandwich Islands"""
   SGS
 
   """Guatemala"""
@@ -27536,10 +27533,10 @@ enum Country {
   """Guyana"""
   GUY
 
-  """Hong Kong"""
+  """Hong Kong SAR China"""
   HKG
 
-  """Heard Island And McDonald Islands"""
+  """Heard & McDonald Islands"""
   HMD
 
   """Honduras"""
@@ -27563,7 +27560,7 @@ enum Country {
   """Israel"""
   ISR
 
-  """Isle Of Man"""
+  """Isle of Man"""
   IMN
 
   """India"""
@@ -27611,7 +27608,7 @@ enum Country {
   """Comoros"""
   COM
 
-  """Saint Kitts And Nevis"""
+  """St. Kitts & Nevis"""
   KNA
 
   """North Korea"""
@@ -27635,7 +27632,7 @@ enum Country {
   """Lebanon"""
   LBN
 
-  """Saint Lucia"""
+  """St. Lucia"""
   LCA
 
   """Liechtenstein"""
@@ -27674,7 +27671,7 @@ enum Country {
   """Montenegro"""
   MNE
 
-  """Saint Martin"""
+  """St. Martin"""
   MAF
 
   """Madagascar"""
@@ -27689,13 +27686,13 @@ enum Country {
   """Mali"""
   MLI
 
-  """Myanmar"""
+  """Myanmar (Burma)"""
   MMR
 
   """Mongolia"""
   MNG
 
-  """Macao"""
+  """Macau SAR China"""
   MAC
 
   """Northern Mariana Islands"""
@@ -27791,16 +27788,16 @@ enum Country {
   """Poland"""
   POL
 
-  """Saint Pierre And Miquelon"""
+  """St. Pierre & Miquelon"""
   SPM
 
-  """Pitcairn"""
+  """Pitcairn Islands"""
   PCN
 
   """Puerto Rico"""
   PRI
 
-  """Palestine"""
+  """Palestinian Territories"""
   PSE
 
   """Portugal"""
@@ -27815,7 +27812,7 @@ enum Country {
   """Qatar"""
   QAT
 
-  """Reunion"""
+  """Réunion"""
   REU
 
   """Romania"""
@@ -27848,13 +27845,13 @@ enum Country {
   """Singapore"""
   SGP
 
-  """Saint Helena"""
+  """St. Helena"""
   SHN
 
   """Slovenia"""
   SVN
 
-  """Svalbard And Jan Mayen"""
+  """Svalbard & Jan Mayen"""
   SJM
 
   """Slovakia"""
@@ -27878,13 +27875,13 @@ enum Country {
   """South Sudan"""
   SSD
 
-  """Sao Tome And Principe"""
+  """São Tomé & Príncipe"""
   STP
 
   """El Salvador"""
   SLV
 
-  """Sint Maarten (Dutch part)"""
+  """Sint Maarten"""
   SXM
 
   """Syria"""
@@ -27893,7 +27890,7 @@ enum Country {
   """Swaziland"""
   SWZ
 
-  """Turks And Caicos Islands"""
+  """Turks & Caicos Islands"""
   TCA
 
   """Chad"""
@@ -27929,7 +27926,7 @@ enum Country {
   """Turkey"""
   TUR
 
-  """Trinidad and Tobago"""
+  """Trinidad & Tobago"""
   TTO
 
   """Tuvalu"""
@@ -27947,7 +27944,7 @@ enum Country {
   """Uganda"""
   UGA
 
-  """United States Minor Outlying Islands"""
+  """U.S. Outlying Islands"""
   UMI
 
   """United States"""
@@ -27959,10 +27956,10 @@ enum Country {
   """Uzbekistan"""
   UZB
 
-  """Vatican"""
+  """Vatican City"""
   VAT
 
-  """Saint Vincent And The Grenadines"""
+  """St. Vincent & Grenadines"""
   VCT
 
   """Venezuela"""
@@ -27980,7 +27977,7 @@ enum Country {
   """Vanuatu"""
   VUT
 
-  """Wallis And Futuna"""
+  """Wallis & Futuna"""
   WLF
 
   """Samoa"""
@@ -29051,7 +29048,7 @@ enum Language {
   """Bambara"""
   bm
 
-  """Bengali"""
+  """Bangla"""
   bn
 
   """Tibetan"""
@@ -29141,7 +29138,7 @@ enum Language {
   """French"""
   fr
 
-  """Frisian"""
+  """Western Frisian"""
   fy
 
   """Irish"""
@@ -29150,7 +29147,7 @@ enum Language {
   """Scottish Gaelic"""
   gd
 
-  """Gallegan"""
+  """Galician"""
   gl
 
   """Guarani"""
@@ -29177,7 +29174,7 @@ enum Language {
   """Croatian"""
   hr
 
-  """Haitian"""
+  """Haitian Creole"""
   ht
 
   """Hungarian"""
@@ -29237,13 +29234,13 @@ enum Language {
   """Kikuyu"""
   ki
 
-  """Kwanyama"""
+  """Kuanyama"""
   kj
 
   """Kazakh"""
   kk
 
-  """Greenlandic"""
+  """Kalaallisut"""
   kl
 
   """Khmer"""
@@ -29270,7 +29267,7 @@ enum Language {
   """Cornish"""
   kw
 
-  """Kirghiz"""
+  """Kyrgyz"""
   ky
 
   """Latin"""
@@ -29375,13 +29372,13 @@ enum Language {
   """Oromo"""
   om
 
-  """Oriya"""
+  """Odia"""
   or
 
-  """Ossetian"""
+  """Ossetic"""
   os
 
-  """Panjabi"""
+  """Punjabi"""
   pa
 
   """Pali"""
@@ -29390,7 +29387,7 @@ enum Language {
   """Polish"""
   pl
 
-  """Pushto"""
+  """Pashto"""
   ps
 
   """Portuguese"""
@@ -29399,7 +29396,7 @@ enum Language {
   """Quechua"""
   qu
 
-  """Raeto-Romance"""
+  """Romansh"""
   rm
 
   """Rundi"""
@@ -29429,7 +29426,7 @@ enum Language {
   """Sango"""
   sg
 
-  """Sinhalese"""
+  """Sinhala"""
   si
 
   """Slovak"""
@@ -29492,7 +29489,7 @@ enum Language {
   """Tswana"""
   tn
 
-  """Tonga"""
+  """Tongan"""
   to
 
   """Turkish"""
@@ -29510,7 +29507,7 @@ enum Language {
   """Tahitian"""
   ty
 
-  """Uighur"""
+  """Uyghur"""
   ug
 
   """Ukrainian"""
