@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { textInputFactory, dateTimeInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
@@ -87,6 +87,7 @@ const ShipmentContainerCard = ({
   const validation = validator({
     no: `container.${id}.no`,
   });
+
   const values = {
     [`container.${id}.no`]: no,
   };
@@ -171,21 +172,27 @@ const ShipmentContainerCard = ({
           <div className={DividerStyle} />
 
           <div className={IconInputStyle}>
-            <Link
-              className={WarehouseIconStyle(!!warehouse)}
-              to={`/warehouse/${encodeId(warehouse.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="WAREHOUSE" />
-            </Link>
+            {isNullOrUndefined(warehouse) ? (
+              <div className={WarehouseIconStyle(false)}>
+                <Icon icon="WAREHOUSE" />
+              </div>
+            ) : (
+              <Link
+                className={WarehouseIconStyle(true)}
+                to={`/warehouse/${encodeId(warehouse.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="WAREHOUSE" />
+              </Link>
+            )}
             {/* clicking, open slide view */}
+            {/* <button type="button" onClick={openTheSlideView}> */}
             <DefaultStyle type="button" height="20px">
-              {/* <button type="button" className={WarehouseSelectButtonStyle}> */}
-              <Display align="left">{warehouse.name}</Display>
-              {/* </button> */}
+              <Display align="left">{isNullOrUndefined(warehouse) ? '' : warehouse.name}</Display>
             </DefaultStyle>
+            {/* </button> */}
           </div>
 
           <div className={LabelStyle}>

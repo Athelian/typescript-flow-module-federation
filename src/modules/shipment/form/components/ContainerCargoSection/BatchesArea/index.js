@@ -13,7 +13,7 @@ import messages from 'modules/shipment/messages';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
-import SelectOrderItems from '../../CargoSection/components/SelectOrderItems';
+import SelectOrderItems from 'providers/SelectOrderItems';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,

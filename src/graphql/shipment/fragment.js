@@ -80,27 +80,7 @@ export const shipmentFormFragment = isEnableBetaFeature
           }
         }
         containers {
-          ... on Container {
-            id
-            warehouseArrivalAgreedDate
-            warehouseArrivalAgreedDateApprovedBy {
-              ... on User {
-                id
-              }
-            }
-            warehouseArrivalActualDate
-            warehouseArrivalActualDateApprovedBy {
-              ... on User {
-                id
-              }
-            }
-            warehouse {
-              ... on Warehouse {
-                id
-                name
-              }
-            }
-          }
+          ...shipmentContainerCardFragment
         }
         totalVolume {
           ...metricFragment

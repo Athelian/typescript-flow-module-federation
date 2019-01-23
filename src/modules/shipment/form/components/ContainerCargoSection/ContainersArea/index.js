@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { injectIntl, type IntlShape, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { injectUid } from 'utils/id';
 import { NewButton } from 'components/Buttons';
 import { ShipmentContainersContainer } from 'modules/shipment/form/containers';
 import { ShipmentContainerCard, CardAction } from 'components/Cards';
@@ -66,7 +67,33 @@ function ContainersArea({ intl, selectedContainer }: Props) {
             </div>
           </div>
           <div className={ContainersFooterWrapperStyle}>
-            <NewButton label={intl.formatMessage(messages.newContainer)} onClick={() => {}} />
+            <NewButton
+              label={intl.formatMessage(messages.newContainer)}
+              onClick={() => {
+                const clonedContainers = containers.slice(0);
+                clonedContainers.push(
+                  injectUid({
+                    no: `container no ${containers.length + 1}`,
+                    batches: [],
+                    tags: [],
+                    totalVolume: {
+                      metric: 'm³',
+                      value: 0,
+                    },
+                    totalWeight: {
+                      metric: 'kg',
+                      value: 0,
+                    },
+                    totalBatchQuantity: 0,
+                    totalBatchPackages: 0,
+                    totalNumberOfUniqueOrderItems: 0,
+                    warehouseArrivalActualDateAssignedTo: [],
+                    warehouseArrivalAgreedDateAssignedTo: [],
+                  })
+                );
+                setFieldValue('containers', clonedContainers);
+              }}
+            />
           </div>
         </div>
       )}

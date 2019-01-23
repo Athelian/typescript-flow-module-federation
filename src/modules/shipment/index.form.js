@@ -193,7 +193,6 @@ class ShipmentFormModule extends React.Component<Props> {
       voyages,
       containerGroups,
       files,
-      containers,
       ...info
     }: Object = shipment;
     if (this.isClone()) {
