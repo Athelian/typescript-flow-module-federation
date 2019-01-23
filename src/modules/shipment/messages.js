@@ -538,4 +538,12 @@ export default defineMessages({
     id: 'modules.Shipments.dischargePort',
     defaultMessage: 'DISCHARGE PORT',
   },
+  agreedDateLabel: {
+    id: 'modules.Shipments.agreedDateLabel',
+    defaultMessage: 'AGREED',
+  },
+  actualDateLabel: {
+    id: 'modules.Shipments.actualDateLabel',
+    defaultMessage: 'ACTUAL',
+  },
 });

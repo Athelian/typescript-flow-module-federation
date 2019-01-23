@@ -16,3 +16,7 @@ export const PortNameWrapperStyle: string = css`
 export const BlankSpaceStyle: string = css`
   flex: 1;
 `;
+
+export const FlexSizeStyle = (flex: number) => css`
+  flex: ${flex};
+`;

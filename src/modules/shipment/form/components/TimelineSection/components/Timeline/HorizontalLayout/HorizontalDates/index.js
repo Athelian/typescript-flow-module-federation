@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
+import { FormattedMessage } from 'react-intl';
 import { isEnableBetaFeature } from 'utils/env';
 import { TimelineDate, TimelineContainerDate } from '../../components';
 import {
@@ -56,10 +57,35 @@ const HorizontalDates = ({ shipment }: Props) => {
           <div className={BlankPlaceholderStyle} />
         </div>
 
-        <div className={DoubleDatesWrapperStyle}>
-          <TimelineDate timelineDate={warehouseArrival} />
-          <div className={BlankPlaceholderStyle} />
-        </div>
+        {isEnableBetaFeature && containers && containers.length > 0 ? (
+          <div className={DoubleDatesWrapperStyle}>
+            <div>
+              <div className={ContainerDateWrapperStyle}>
+                <div className={ContainerDateLabelStyle}>
+                  <FormattedMessage
+                    id="modules.Shipments.agreedDateLabel"
+                    defaultMessage="AGREED"
+                  />
+                </div>
+                <TimelineContainerDate timelineDates={containers} type="Agreed" />
+              </div>
+              <div className={ContainerDateWrapperStyle}>
+                <div className={ContainerDateLabelStyle}>
+                  <FormattedMessage
+                    id="modules.Shipments.actualDateLabel"
+                    defaultMessage="ACTUAL"
+                  />
+                </div>
+                <TimelineContainerDate timelineDates={containers} type="Actual" />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className={DoubleDatesWrapperStyle}>
+            <TimelineDate timelineDate={warehouseArrival} />
+            <div className={BlankPlaceholderStyle} />
+          </div>
+        )}
 
         <div className={DoubleDatesWrapperStyle}>
           <TimelineDate timelineDate={deliveryReady} />

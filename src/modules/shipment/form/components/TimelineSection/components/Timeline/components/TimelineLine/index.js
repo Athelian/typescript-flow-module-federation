@@ -5,6 +5,7 @@ import { TimelineLineStyle } from './style';
 type OptionalProps = {
   vertical: boolean,
   color: string,
+  size?: number,
 };
 
 type Props = OptionalProps;
@@ -14,8 +15,8 @@ const defaultProps = {
   color: 'GRAY_LIGHT',
 };
 
-const TimelineLine = ({ vertical, color }: Props) => (
-  <div className={TimelineLineStyle({ vertical, color })} />
+const TimelineLine = ({ vertical, color, size }: Props) => (
+  <div className={TimelineLineStyle({ vertical, color, size })} />
 );
 
 TimelineLine.defaultProps = defaultProps;

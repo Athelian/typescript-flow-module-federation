@@ -17,7 +17,7 @@ export const TimelinePortNameWrapperStyle = (vertical: boolean): string => css`
     : `
     text-align: center;
     ${borderRadiuses.BUTTON};
-    width: 100px;
+    width: 90px;
     height: 20px;
     line-height: 20px;
     padding: 0 5px;
