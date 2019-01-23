@@ -13,6 +13,7 @@ import { DashedPlusButton } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import SlideView from 'components/SlideView';
 import { ShipmentWarehouseCard } from 'components/Cards';
+import { ContainersSlideView } from 'modules/shipment/form/components';
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
   VerticalLayout,
@@ -57,6 +58,27 @@ const TimelineSection = ({ isNew }: Props) => (
             />
           </div>
           <div className={BodyWrapperStyle} id="timelineInfoSection">
+            <BooleanValue>
+              {({ value: isOpen, set: slideToggle }) => (
+                <>
+                  <button type="button" onClick={() => slideToggle(true)}>
+                    open
+                  </button>
+                  <SlideView
+                    isOpen={isOpen}
+                    onRequestClose={() => slideToggle(false)}
+                    options={{ width: '1030px' }}
+                  >
+                    {isOpen && (
+                      <ContainersSlideView
+                        onCancel={() => slideToggle(false)}
+                        onSave={() => slideToggle(false)}
+                      />
+                    )}
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
             <TimelineInfoSection
               id="cargoReady"
               isNew={isNew}
