@@ -13,7 +13,12 @@ import { getByPathWithDefault } from 'utils/fp';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton, SelectTemplateButton, ExportButton } from 'components/Buttons';
+import {
+  SaveButton,
+  CancelButton,
+  SelectTemplateButton,
+  ExportGenericButton,
+} from 'components/Buttons';
 import { ToggleInput, Label, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
@@ -51,7 +56,6 @@ import {
   getOrderItemIdsByOrderId,
 } from './helpers';
 import normalize from './normalize';
-import { ordersByIDsExportQuery } from './query';
 import {
   EditTableViewWrapperStyle,
   NavbarWrapperStyle,
@@ -179,71 +183,6 @@ function findColumnsForCustomFields({ showAll, fields: customFields, templateCol
   return customFields;
 }
 
-function findAllFieldsFilter({
-  orderColumnFieldsFilter,
-  orderItemColumnFieldsFilter,
-  batchColumnFieldsFilter,
-  shipmentColumnFieldsFilter,
-  orderCustomFieldsFilter,
-  orderItemCustomFieldsFilter,
-  batchCustomFieldsFilter,
-  shipmentCustomFieldsFilter,
-}: {
-  orderColumnFieldsFilter: Array<Object>,
-  orderItemColumnFieldsFilter: Array<Object>,
-  batchColumnFieldsFilter: Array<Object>,
-  shipmentColumnFieldsFilter: Array<Object>,
-  orderCustomFieldsFilter: Array<Object>,
-  orderItemCustomFieldsFilter: Array<Object>,
-  batchCustomFieldsFilter: Array<Object>,
-  shipmentCustomFieldsFilter: Array<Object>,
-}): Array<string> {
-  return [
-    ...orderColumnFieldsFilter.map(item => `${item.name}`),
-    ...orderItemColumnFieldsFilter.map(item => {
-      switch (item.name) {
-        case 'productProvider':
-          return `orderItems.productProvider.product.name`;
-        default:
-          return `orderItems.${item.name}`;
-      }
-    }),
-    ...batchColumnFieldsFilter.map(item => `orderItems.batches.${item.name}`),
-    ...shipmentColumnFieldsFilter.map(item => {
-      switch (item.name) {
-        case 'cargoReady':
-          return `orderItems.batches.shipment.cargoReady.date`;
-        case 'voyages.0.departure':
-          return `orderItems.batches.shipment.voyage_1.departure.date`;
-        case 'voyages.0.arrival':
-          return `orderItems.batches.shipment.voyage_1.arrival.date`;
-        case 'voyages.1.departure':
-          return `orderItems.batches.shipment.voyage_2.departure.date`;
-        case 'voyages.1.arrival':
-          return `orderItems.batches.shipment.voyage_2.arrival.date`;
-        case 'voyages.2.departure':
-          return `orderItems.batches.shipment.voyage_3.departure.date`;
-        case 'voyages.2.arrival':
-          return `orderItems.batches.shipment.voyage_3.arrival.date`;
-        case 'containerGroups.0.customClearance':
-          return `orderItems.batches.shipment.containerGroup.customClearance.date`;
-        case 'containerGroups.0.warehouseArrival':
-          return `orderItems.batches.shipment.containerGroup.warehouseArrival.date`;
-        case 'containerGroups.0.deliveryReady':
-          return `orderItems.batches.shipment.containerGroup.deliveryReady.date`;
-        default:
-          return `orderItems.batches.shipment.${item.name}`;
-      }
-    }),
-    ...orderCustomFieldsFilter.map(item => `customFields.${item.id}`),
-    ...orderItemCustomFieldsFilter.map(item => `orderItems.customFields.${item.id}`),
-    ...batchCustomFieldsFilter.map(item => `orderItems.batches.customFields.${item.id}`),
-    ...shipmentCustomFieldsFilter.map(
-      item => `orderItems.batches.shipment.customFields.${item.id}`
-    ),
-  ];
-}
-
 const getRowCounter = (counter, type) => {
   if (!counter[type]) {
     // eslint-disable-next-line no-param-reassign
@@ -297,21 +236,18 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     };
   });
 
-  const onToggle = useCallback(
-    selectedColumn => {
-      if (templateColumns && selectedColumn) {
-        const filteredTemplateColumns = templateColumns.includes(selectedColumn)
-          ? templateColumns.filter(item => item !== selectedColumn)
-          : [...templateColumns, selectedColumn];
-        setTemplateColumns(filteredTemplateColumns);
-        window.localStorage.setItem(
-          'filterRMTemplateColumns',
-          JSON.stringify(filteredTemplateColumns)
-        );
-      }
-    },
-    [templateColumns]
-  );
+  const onToggle = useCallback(selectedColumn => {
+    if (templateColumns && selectedColumn) {
+      const filteredTemplateColumns = templateColumns.includes(selectedColumn)
+        ? templateColumns.filter(item => item !== selectedColumn)
+        : [...templateColumns, selectedColumn];
+      setTemplateColumns(filteredTemplateColumns);
+      window.localStorage.setItem(
+        'filterRMTemplateColumns',
+        JSON.stringify(filteredTemplateColumns)
+      );
+    }
+  }, [templateColumns]);
 
   const {
     sumShipments,
@@ -555,23 +491,8 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                         )
                       }
                     />
-                    <ExportButton
-                      type="Orders"
-                      exportQuery={ordersByIDsExportQuery}
-                      variables={{
-                        fields: findAllFieldsFilter({
-                          orderColumnFieldsFilter,
-                          orderItemColumnFieldsFilter,
-                          batchColumnFieldsFilter,
-                          shipmentColumnFieldsFilter,
-                          orderCustomFieldsFilter,
-                          orderItemCustomFieldsFilter,
-                          batchCustomFieldsFilter,
-                          shipmentCustomFieldsFilter,
-                        }),
-                        ids: orderIds,
-                      }}
-                    />
+                    {/* @TODO set current columns and rows data to this button */}
+                    <ExportGenericButton columns={[]} rows={[]} />
                     {errorMessage && errorMessage.length > 0 && (
                       <div style={{ width: 400 }}> Error: {errorMessage} </div>
                     )}
