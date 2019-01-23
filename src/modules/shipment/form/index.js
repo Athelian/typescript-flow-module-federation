@@ -4,7 +4,6 @@ import React, { lazy, Suspense } from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
-import { uniqBy } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
@@ -13,6 +12,7 @@ import { encodeId } from 'utils/id';
 import scrollIntoView from 'utils/scrollIntoView';
 import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
+import { uniqueOrders } from 'modules/container/utils';
 import { ShipmentBatchesContainer } from './containers';
 import ShipmentSection from './components/ShipmentSection';
 import { ShipmentFormWrapperStyle } from './style';
@@ -146,7 +146,7 @@ class ShipmentForm extends React.Component<Props> {
           <SectionWrapper id="orderSection">
             <Subscribe to={[ShipmentBatchesContainer]}>
               {({ state: { batches } }) => {
-                const uniqueOrders = uniqBy(batches.map(batch => batch.orderItem.order), 'id');
+                const orders = uniqueOrders(batches);
                 return (
                   <>
                     <SectionHeader
@@ -154,11 +154,11 @@ class ShipmentForm extends React.Component<Props> {
                       title={
                         <>
                           <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />(
-                          {uniqueOrders.length})
+                          {orders.length})
                         </>
                       }
                     />
-                    <AsyncOrdersSection orders={uniqueOrders} />
+                    <AsyncOrdersSection orders={orders} />
                   </>
                 );
               }}

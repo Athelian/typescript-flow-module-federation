@@ -8,7 +8,7 @@ import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { FieldItem, Label, Display } from 'components/Form';
-import { getProductImage } from 'components/Cards/utils';
+import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
 import BaseCard from '../BaseCard';
 import {
   BatchCardWrapperStyle,
@@ -64,9 +64,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
 
   const productImage = getProductImage(product);
 
-  const totalAdjustment = batchAdjustments
-    ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
-    : 0;
+  const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
   return (
     <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>

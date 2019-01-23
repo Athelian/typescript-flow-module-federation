@@ -1,15 +1,14 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { Router } from '@reach/router';
-import { Provider } from 'unstated';
-import ContainerList from './index.list';
+import ContainerListModule from './index.list';
+import ContainerFormModule from './index.form';
 
 const ContainerModule = () => (
-  <Provider>
-    <Router>
-      <ContainerList path="/" />
-    </Router>
-  </Provider>
+  <Router>
+    <ContainerListModule path="/" />
+    <ContainerFormModule path=":containerId" />
+  </Router>
 );
 
 export default ContainerModule;

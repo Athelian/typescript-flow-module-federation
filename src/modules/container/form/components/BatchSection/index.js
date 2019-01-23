@@ -6,15 +6,16 @@ import { BooleanValue } from 'react-values';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
-import { ShipmentBatchCard } from 'components/Cards';
+import { ContainerBatchCard } from 'components/Cards';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import messages from 'modules/shipment/messages';
-import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import ContainerFormContainer from 'modules/container/form/container';
+import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import SelectOrderItems from 'providers/SelectOrderItems';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 
-import SelectOrderItems from 'providers/SelectOrderItems';
 import {
   ItemsSectionWrapperStyle,
   ItemsSectionBodyStyle,
@@ -22,13 +23,12 @@ import {
   ItemStyle,
   EmptyMessageStyle,
 } from './style';
-import SelectBatches from '../SelectBatches';
 
 type Props = {
   intl: IntlShape,
 };
 
-function CargoSection({ intl }: Props) {
+function BatchSection({ intl }: Props) {
   return (
     <div className={ItemsSectionWrapperStyle}>
       <SectionNavBar>
@@ -46,7 +46,7 @@ function CargoSection({ intl }: Props) {
                 options={{ width: '1030px' }}
               >
                 {selectBatchesIsOpen && (
-                  <Subscribe to={[ShipmentBatchesContainer]}>
+                  <Subscribe to={[ContainerFormContainer]}>
                     {({ state: { batches }, setFieldValue }) => (
                       <SelectBatches
                         selectedBatches={batches}
@@ -80,7 +80,7 @@ function CargoSection({ intl }: Props) {
                 options={{ width: '1030px' }}
               >
                 {createBatchesIsOpen && (
-                  <Subscribe to={[ShipmentBatchesContainer]}>
+                  <Subscribe to={[ContainerFormContainer]}>
                     {({ state: { batches }, setFieldValue }) => (
                       <SelectOrderItems
                         onSelect={selectedOrderItems => {
@@ -123,12 +123,12 @@ function CargoSection({ intl }: Props) {
         </BooleanValue>
       </SectionNavBar>
       <div className={ItemsSectionBodyStyle}>
-        <Subscribe to={[ShipmentBatchesContainer]}>
-          {({ state: { batches }, setFieldValue, setFieldArrayValue }) =>
+        <Subscribe to={[ContainerFormContainer]}>
+          {({ state: { batches = [] }, setFieldValue, setDeepFieldValue }) =>
             batches.length === 0 ? (
               <div className={EmptyMessageStyle}>
                 <FormattedMessage
-                  id="modules.Shipments.noBatches"
+                  id="modules.container.noBatches"
                   defaultMessage="No batches found"
                 />
               </div>
@@ -154,7 +154,7 @@ function CargoSection({ intl }: Props) {
                                   onCancel={() => batchSlideToggle(false)}
                                   onSave={updatedBatch => {
                                     batchSlideToggle(false);
-                                    setFieldArrayValue(position, updatedBatch);
+                                    setDeepFieldValue(`batches.${position}`, updatedBatch);
                                   }}
                                 />
                               )}
@@ -162,10 +162,11 @@ function CargoSection({ intl }: Props) {
                           )}
                         </SlideView>
                         <div className={ItemStyle}>
-                          <ShipmentBatchCard
+                          <ContainerBatchCard
+                            position={position}
                             batch={item}
-                            saveOnBlur={updateBatch => {
-                              setFieldArrayValue(position, updateBatch);
+                            saveOnBlur={updatedBatch => {
+                              setDeepFieldValue(`batches.${position}`, updatedBatch);
                             }}
                             onClick={() => batchSlideToggle(true)}
                             onClear={({ id }) => {
@@ -208,4 +209,4 @@ function CargoSection({ intl }: Props) {
   );
 }
 
-export default injectIntl(CargoSection);
+export default injectIntl(BatchSection);

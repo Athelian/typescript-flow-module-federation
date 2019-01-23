@@ -23,6 +23,8 @@ const AsyncWarehouse = lazy(() => import('./modules/warehouse'));
 
 const AsyncShipment = lazy(() => import('./modules/shipment'));
 
+const AsyncContainer = lazy(() => import('./modules/container'));
+
 const AsyncProduct = lazy(() => import('./modules/product'));
 
 const AsyncBatch = lazy(() => import('./modules/batch'));
@@ -37,8 +39,6 @@ const AsyncMetadata = lazy(() => import('./modules/metadata'));
 
 const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
 
-const AsyncContainer = lazy(() => import('./modules/container'));
-
 const Routes: StatelessFunctionalComponent<{}> = () => (
   <>
     <SideBar />
@@ -49,12 +49,12 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
           <Order path="order/*" />
           <AsyncBatch path="batch/*" />
           <AsyncShipment path="shipment/*" />
+          <AsyncContainer path="container/*" />
           <AsyncProduct path="product/*" />
           <AsyncWarehouse path="warehouse/*" />
           <AsyncPartner path="partner/*" />
           <AsyncStaff path="staff/*" />
           <AsyncTags path="tags/*" />
-          <AsyncContainer path="container/*" />
           <AsyncRelationMap path="relation-map/*" />
           <AsyncRelationMapBeta path="relation-map-beta/*" />
           <AsyncNotifications path="notifications/*" />

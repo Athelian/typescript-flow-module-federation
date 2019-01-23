@@ -6,4 +6,9 @@ export const getProductImage = (product: Object): any => {
   return product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
 };
 
+export const totalAdjustQuantity = (batchAdjustments: Array<{ quantity: number }>): number =>
+  batchAdjustments
+    ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
+    : 0;
+
 export default getProductImage;

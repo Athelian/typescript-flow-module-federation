@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Jan 23 2019 10:10:07 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Jan 23 2019 10:21:36 GMT+0900 (JST)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27017,6 +27017,7 @@ input BatchCreateInput {
   customFields: CustomFieldsInput
   orderItemId: ID!
   shipmentId: ID
+  containerId: ID
   batchAssignments: [BatchAssignmentCreateInput!]
   batchAdjustments: [BatchAdjustmentCreateInput!]
 }
@@ -27092,6 +27093,7 @@ input BatchUpdateInput {
   customFields: CustomFieldsInput
   orderItemId: ID
   shipmentId: ID
+  containerId: ID
   batchAssignments: [BatchAssignmentUpdateInput!]
   batchAdjustments: [BatchAdjustmentUpdateInput!]
 }
@@ -28657,6 +28659,12 @@ type EventUnionPagination {
   count: Int!
   totalCount: Int!
 }
+
+type ExportExtension {
+  extension: String!
+}
+
+union ExportExtensionPayload = ExportExtension | BadRequest | Forbidden | NotFound
 
 type ExportTemplate implements Model {
   name: String!
@@ -30538,8 +30546,10 @@ type Query {
   integrationConfigurations(page: Int! = 1, perPage: Int! = 10): IntegrationConfigurationPayloadPagination!
   integrationLink(id: ID!): IntegrationLinkPayload!
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplatePayload!]!
+  exportExtensions: [ExportExtensionPayload!]!
   container(id: ID!): ContainerPayload!
   containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
+  genericExport(extension: String!, columns: [String!]!, rows: [[String]!]!): FilePayload!
 }
 
 type Reference {
