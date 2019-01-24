@@ -2,7 +2,8 @@
 import { intersection } from 'lodash';
 import { removeTypename } from 'utils/data';
 import logger from 'utils/logger';
-import { prepareCustomFieldsData } from 'utils/customFields';
+import { getByPathWithDefault } from 'utils/fp';
+import { prepareCustomFieldsData, list2Map } from 'utils/customFields';
 import {
   formatTimeline,
   formatContainerGroups,
@@ -365,3 +366,148 @@ export const parseChangedData = (
     products: [],
   };
 };
+
+export function getExportColumns({
+  orderColumnFieldsFilter,
+  orderItemColumnFieldsFilter,
+  batchColumnFieldsFilter,
+  shipmentColumnFieldsFilter,
+  orderCustomFieldsFilter,
+  orderItemCustomFieldsFilter,
+  batchCustomFieldsFilter,
+  shipmentCustomFieldsFilter,
+}: Object) {
+  const allColumns = [
+    ...orderColumnFieldsFilter,
+    ...orderCustomFieldsFilter,
+    ...orderItemColumnFieldsFilter,
+    ...orderItemCustomFieldsFilter,
+    ...batchColumnFieldsFilter,
+    ...batchCustomFieldsFilter,
+    ...shipmentColumnFieldsFilter,
+    ...shipmentCustomFieldsFilter,
+  ].map(column => column.name);
+  return allColumns;
+}
+
+export function getFieldValues(fields: Array<Object>, values: Array<Object>) {
+  const fieldValues: Array<string> = (fields: Array<Object>).map(
+    ({ name, getExportValue }): any => {
+      const value = getExportValue
+        ? getExportValue(values)
+        : getByPathWithDefault('', name, values);
+      return value;
+    }
+  );
+  return fieldValues;
+}
+
+export function getEmptyValues(fields: Array<Object>) {
+  return (fields.map(() => ''): Array<string>);
+}
+
+export function getCustomFieldValues(fields: Array<Object>, values: Array<Object>) {
+  const customFields = getByPathWithDefault(
+    {
+      mask: null,
+      fieldDefinitions: [],
+      fieldValues: [],
+    },
+    'customFields',
+    values
+  );
+  const { fieldValues } = customFields;
+  const fieldValueMap = list2Map(fieldValues);
+  const customFieldValues: Array<string> = fields.map(({ id }) => {
+    const fieldValue = fieldValueMap.get(id);
+    return fieldValue ? fieldValue.value.string : '';
+  });
+  return customFieldValues;
+}
+export function getExportRows(info: Object) {
+  const {
+    data: { editData, mappingObjects },
+    ids: { orderIds, orderItemsIds, batchIds },
+    columns: {
+      orderColumnFieldsFilter,
+      orderItemColumnFieldsFilter,
+      batchColumnFieldsFilter,
+      shipmentColumnFieldsFilter,
+      orderCustomFieldsFilter,
+      orderItemCustomFieldsFilter,
+      batchCustomFieldsFilter,
+      shipmentCustomFieldsFilter,
+    },
+  } = info;
+  const rows = [];
+  orderIds.forEach(orderId => {
+    const order = mappingObjects.order[orderId];
+    if (!order) return null;
+    const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+      item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
+    );
+    const orderData = editData.orders[orderId];
+    const orderValues = getFieldValues(orderColumnFieldsFilter, orderData);
+    const orderCustomValues = getCustomFieldValues(orderCustomFieldsFilter, orderData);
+    const orderRow = [...orderValues, ...orderCustomValues];
+    if (orderItems.length === 0) {
+      const emptyRow = getEmptyValues([
+        ...orderItemColumnFieldsFilter,
+        ...orderItemCustomFieldsFilter,
+        ...batchColumnFieldsFilter,
+        ...batchCustomFieldsFilter,
+        ...shipmentColumnFieldsFilter,
+        ...shipmentCustomFieldsFilter,
+      ]);
+      const currentRow = [...orderRow, ...emptyRow];
+      return rows.push(currentRow);
+    }
+    return orderItems.forEach(orderItem => {
+      const notHaveBatches = Object.keys(orderItem.relation.batch).length === 0;
+      const orderItemData = editData.orderItems[orderItem.data.id];
+      const orderItemValues = getFieldValues(orderItemColumnFieldsFilter, orderItemData);
+      const orderItemCustomValues = getCustomFieldValues(
+        orderItemCustomFieldsFilter,
+        orderItemData
+      );
+      const orderItemRow = [...orderItemValues, ...orderItemCustomValues];
+      if (notHaveBatches) {
+        const emptyRow = getEmptyValues([
+          ...batchColumnFieldsFilter,
+          ...batchCustomFieldsFilter,
+          ...shipmentColumnFieldsFilter,
+          ...shipmentCustomFieldsFilter,
+        ]);
+        const currentRow = [...orderRow, ...orderItemRow, ...emptyRow];
+        return rows.push(currentRow);
+      }
+      return orderItem.data.batches
+        .filter(batch => batchIds.includes(batch.id))
+        .forEach(batch => {
+          const batchData = editData.batches[batch.id];
+          const batchValues = getFieldValues(batchColumnFieldsFilter, batchData);
+          const batchCustomValues = getCustomFieldValues(batchCustomFieldsFilter, batchData);
+          const batchRow = [...batchValues, ...batchCustomValues];
+          let shipmentRow = [];
+          if (!batch.shipment) {
+            shipmentRow = getEmptyValues([
+              ...shipmentColumnFieldsFilter,
+              ...shipmentCustomFieldsFilter,
+            ]);
+          } else {
+            const shipment = mappingObjects.shipment[batch.shipment.id];
+            const shipmentData = editData.shipments[shipment.data.id];
+            const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData);
+            const shipmentCustomValues = getCustomFieldValues(
+              shipmentCustomFieldsFilter,
+              shipmentData
+            );
+            shipmentRow = [...shipmentValues, ...shipmentCustomValues];
+          }
+          const currentRow = [...orderRow, ...orderItemRow, ...batchRow, ...shipmentRow];
+          rows.push(currentRow);
+        });
+    });
+  });
+  return rows;
+}

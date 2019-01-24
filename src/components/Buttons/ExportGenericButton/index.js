@@ -84,7 +84,6 @@ class ExportGenericButton extends React.Component<Props, State> {
   render() {
     const { label, disabled } = this.props;
     const { isLoading } = this.state;
-
     return (
       <ApolloConsumer>
         {client => (

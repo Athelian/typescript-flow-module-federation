@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { getByPath } from 'utils/fp';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
@@ -143,6 +143,7 @@ export const shipmentColumns = [
 
 export const orderColumnFields = [
   {
+    messageId: orderMessages.PO.id,
     name: 'poNo',
     type: 'text',
     meta: {
@@ -150,14 +151,17 @@ export const orderColumnFields = [
     },
   },
   {
+    messageId: orderMessages.PI.id,
     name: 'piNo',
     type: 'text',
   },
   {
+    messageId: orderMessages.date.id,
     name: 'issuedAt',
     type: 'date',
   },
   {
+    messageId: orderMessages.exporter.id,
     name: 'exporter.name',
     type: 'text',
     meta: {
@@ -165,6 +169,7 @@ export const orderColumnFields = [
     },
   },
   {
+    messageId: orderMessages.currency.id,
     name: 'currency',
     type: 'enum',
     meta: {
@@ -173,6 +178,7 @@ export const orderColumnFields = [
     },
   },
   {
+    messageId: orderMessages.incoterm.id,
     name: 'incoterm',
     type: 'enum',
     meta: {
@@ -180,22 +186,30 @@ export const orderColumnFields = [
     },
   },
   {
+    messageId: orderMessages.deliveryPlace.id,
     name: 'deliveryPlace',
     type: 'text',
   },
   {
+    messageId: orderMessages.inCharge.id,
     name: 'inCharges',
     type: 'inCharges',
     meta: {
       max: 5,
     },
+    getExportValue: ({ inCharges }: { inCharges: Array<Object> }) =>
+      inCharges &&
+      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
   },
   {
+    messageId: orderMessages.tags.id,
     name: 'tags',
     type: 'tags',
     meta: {
       tagType: 'Order',
     },
+    getExportValue: ({ tags }: { tags: Array<Object> }) =>
+      tags && tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
 ];
 
@@ -203,6 +217,8 @@ export const orderItemColumnFields = [
   {
     name: 'productProvider',
     type: 'productProvider',
+    getExportValue: ({ productProvider }: { productProvider: Object }) =>
+      getByPathWithDefault('', 'product.name', productProvider),
   },
   {
     name: 'productProvider.product.serial',
@@ -281,6 +297,8 @@ export const batchColumnFields = [
     meta: {
       tagType: 'Batch',
     },
+    getExportValue: ({ tags }: { tags: Array<Object> }) =>
+      tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
   {
     name: 'packageName',
@@ -297,6 +315,8 @@ export const batchColumnFields = [
       metrics: weightMetrics,
       convert: weightConvert,
     },
+    getExportValue: ({ packageGrossWeight }: { packageGrossWeight: Object }) =>
+      packageGrossWeight && `${packageGrossWeight.value} ${packageGrossWeight.metric}`,
   },
   {
     name: 'packageVolume',
@@ -305,6 +325,8 @@ export const batchColumnFields = [
       metrics: volumeMetrics,
       convert: volumeConvert,
     },
+    getExportValue: ({ packageVolume }: { packageVolume: Object }) =>
+      packageVolume && `${packageVolume.value} ${packageVolume.metric}`,
   },
   {
     name: 'packageSize.width',
@@ -315,6 +337,8 @@ export const batchColumnFields = [
       sourcePath: 'packageSize',
       destPath: 'width',
     },
+    getExportValue: ({ packageSize }: { packageSize: Object }) =>
+      packageSize && packageSize.width && `${packageSize.width.value} ${packageSize.width.metric}`,
   },
   {
     name: 'packageSize.height',
@@ -325,6 +349,10 @@ export const batchColumnFields = [
       sourcePath: 'packageSize',
       destPath: 'height',
     },
+    getExportValue: ({ packageSize }: { packageSize: Object }) =>
+      packageSize &&
+      packageSize.height &&
+      `${packageSize.height.value} ${packageSize.height.metric}`,
   },
   {
     name: 'packageSize.length',
@@ -335,6 +363,10 @@ export const batchColumnFields = [
       sourcePath: 'packageSize',
       destPath: 'length',
     },
+    getExportValue: ({ packageSize }: { packageSize: Object }) =>
+      packageSize &&
+      packageSize.length &&
+      `${packageSize.length.value} ${packageSize.length.metric}`,
   },
 ];
 
@@ -397,6 +429,8 @@ export const shipmentColumnFields = [
     meta: {
       max: 4,
     },
+    getExportValue: ({ forwarders }: { forwarders: Array<Object> }) =>
+      forwarders && forwarders.reduce((field, value) => `${field}${value.name}, `, ''),
   },
   {
     name: 'inCharges',
@@ -404,6 +438,9 @@ export const shipmentColumnFields = [
     meta: {
       max: 5,
     },
+    getExportValue: ({ inCharges }: { inCharges: Array<Object> }) =>
+      inCharges &&
+      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
   },
   {
     name: 'tags',
@@ -411,34 +448,47 @@ export const shipmentColumnFields = [
     meta: {
       tagType: 'Shipment',
     },
+    getExportValue: ({ tags }: { tags: Array<Object> }) =>
+      tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
   {
     name: 'cargoReady',
     type: 'timeline',
+    getExportValue: ({ cargoReady }: { cargoReady: Object }) => cargoReady && cargoReady.date,
   },
   {
     name: 'voyages.0.departure',
     type: 'timeline',
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
+      getByPathWithDefault('', '0.departure.date', voyages),
   },
   {
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
       getByPath(`${voyages && voyages.length > 1 ? '0' : ''}.arrival`, voyages),
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
+      getByPathWithDefault('', `${voyages && voyages.length > 1 ? '0' : ''}.arrival.date`, voyages),
     name: 'voyages.0.arrival',
     type: 'timeline',
   },
   {
     name: 'voyages.1.departure',
     type: 'timeline',
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
+      getByPathWithDefault('', '1.departure.date', voyages),
   },
   {
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
       getByPath(`${voyages && voyages.length > 2 ? '1' : ''}.arrival`, voyages),
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
+      getByPathWithDefault('', `${voyages && voyages.length > 2 ? '1' : ''}.arrival.date`, voyages),
     name: 'voyages.1.arrival',
     type: 'timeline',
   },
   {
     name: 'voyages.2.departure',
     type: 'timeline',
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
+      getByPathWithDefault('', '2.departure.date', voyages),
   },
   {
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) => {
@@ -447,20 +497,30 @@ export const shipmentColumnFields = [
     },
     getFieldName: ({ voyages }: { voyages: Array<Object> }) =>
       `voyages.${voyages ? voyages.length - 1 : 0}.arrival`,
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+      const index = voyages ? voyages.length - 1 : 0;
+      return getByPathWithDefault('', `${index}.arrival.date`, voyages);
+    },
     name: 'voyages.2.arrival',
     type: 'timeline',
   },
   {
     name: 'containerGroups.0.customClearance',
     type: 'timeline',
+    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) =>
+      getByPathWithDefault('', '0.customClearance.date', containerGroups),
   },
   {
     name: 'containerGroups.0.warehouseArrival',
     type: 'timeline',
+    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) =>
+      getByPathWithDefault('', '0.warehouseArrival.date', containerGroups),
   },
   {
     name: 'containerGroups.0.deliveryReady',
     type: 'timeline',
+    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) =>
+      getByPathWithDefault('', '0.deliveryReady.date', containerGroups),
   },
 ];
 

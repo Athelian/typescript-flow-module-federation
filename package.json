@@ -94,7 +94,7 @@
     "build-storybook": "build-storybook"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json}": [
+    "src/**/*.{js,jsx}": [
       "eslint --fix",
       "prettier-eslint --write",
       "git add"

@@ -236,18 +236,21 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     };
   });
 
-  const onToggle = useCallback(selectedColumn => {
-    if (templateColumns && selectedColumn) {
-      const filteredTemplateColumns = templateColumns.includes(selectedColumn)
-        ? templateColumns.filter(item => item !== selectedColumn)
-        : [...templateColumns, selectedColumn];
-      setTemplateColumns(filteredTemplateColumns);
-      window.localStorage.setItem(
-        'filterRMTemplateColumns',
-        JSON.stringify(filteredTemplateColumns)
-      );
-    }
-  }, [templateColumns]);
+  const onToggle = useCallback(
+    selectedColumn => {
+      if (templateColumns && selectedColumn) {
+        const filteredTemplateColumns = templateColumns.includes(selectedColumn)
+          ? templateColumns.filter(item => item !== selectedColumn)
+          : [...templateColumns, selectedColumn];
+        setTemplateColumns(filteredTemplateColumns);
+        window.localStorage.setItem(
+          'filterRMTemplateColumns',
+          JSON.stringify(filteredTemplateColumns)
+        );
+      }
+    },
+    [templateColumns]
+  );
 
   const {
     sumShipments,

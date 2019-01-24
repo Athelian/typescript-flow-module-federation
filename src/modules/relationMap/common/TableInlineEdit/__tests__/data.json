@@ -1,0 +1,296 @@
+{
+  "ids": {
+    "orderIds": ["598"],
+    "orderItemsIds": ["2171", "2174"],
+    "batchIds": ["4903", "4904", "4911", "4914", "4919", "4996"],
+    "shipmentIds": ["228", "310", "312"]
+  },
+  "columns": {
+    "orderColumnFieldsFilter": [
+      { "messageId": "modules.Orders.issuedAt", "name": "issuedAt", "type": "date" },
+      {
+        "messageId": "modules.Orders.exporter",
+        "name": "exporter.name",
+        "type": "text",
+        "meta": { "disabled": true }
+      },
+      {
+        "messageId": "modules.Orders.incoterms",
+        "name": "incoterm",
+        "type": "enum",
+        "meta": { "enumType": "Incoterm" }
+      },
+      { "messageId": "modules.Orders.deliveryPlace", "name": "deliveryPlace", "type": "text" },
+      {
+        "messageId": "modules.Orders.inCharge",
+        "name": "inCharges",
+        "type": "inCharges",
+        "meta": { "max": 5 }
+      },
+      {
+        "messageId": "modules.Orders.tags",
+        "name": "tags",
+        "type": "tags",
+        "meta": { "tagType": "Order" }
+      }
+    ],
+    "orderItemColumnFieldsFilter": [
+      { "name": "productProvider", "type": "productProvider" },
+      { "name": "productProvider.product.serial", "type": "text", "meta": { "disabled": true } },
+      { "name": "productProvider.exporter.name", "type": "text", "meta": { "disabled": true } },
+      { "name": "productProvider.supplier.name", "type": "text", "meta": { "disabled": true } },
+      { "name": "price.amount", "type": "number", "meta": { "isRequired": true } },
+      { "name": "price.currency", "type": "text", "meta": { "disabled": true } },
+      { "name": "quantity", "type": "number", "meta": { "isRequired": true } }
+    ],
+    "batchColumnFieldsFilter": [
+      { "name": "no", "type": "text", "meta": { "isRequired": true } },
+      { "name": "quantity", "type": "numberAdjustment", "meta": { "isRequired": true } },
+      { "name": "deliveredAt", "type": "date" },
+      { "name": "expiredAt", "type": "date" },
+      { "name": "producedAt", "type": "date" },
+      { "name": "tags", "type": "tags", "meta": { "tagType": "Batch" } },
+      { "name": "packageName", "type": "text" },
+      { "name": "packageQuantity", "type": "number" },
+      { "name": "packageGrossWeight", "type": "metric", "meta": { "metrics": ["g", "kg", "ton"] } },
+      { "name": "packageVolume", "type": "metric", "meta": { "metrics": ["cm³", "m³"] } },
+      {
+        "name": "packageSize.width",
+        "type": "metric",
+        "meta": { "metrics": ["cm", "m"], "sourcePath": "packageSize", "destPath": "width" }
+      },
+      {
+        "name": "packageSize.height",
+        "type": "metric",
+        "meta": { "metrics": ["cm", "m"], "sourcePath": "packageSize", "destPath": "height" }
+      },
+      {
+        "name": "packageSize.length",
+        "type": "metric",
+        "meta": { "metrics": ["cm", "m"], "sourcePath": "packageSize", "destPath": "length" }
+      }
+    ],
+    "shipmentColumnFieldsFilter": [
+      { "name": "no", "type": "text", "meta": { "isRequired": true } },
+      { "name": "blNo", "type": "text" },
+      { "name": "blDate", "type": "date" },
+      { "name": "bookingNo", "type": "text" },
+      { "name": "bookingDate", "type": "date" },
+      { "name": "invoiceNo", "type": "text" },
+      { "name": "transportType", "type": "enum", "meta": { "enumType": "TransportType" } },
+      { "name": "loadType", "type": "enum", "meta": { "enumType": "LoadType" } },
+      { "name": "incoterm", "type": "enum", "meta": { "enumType": "Incoterm" } },
+      { "name": "carrier", "type": "text" },
+      { "name": "forwarders", "type": "forwarders", "meta": { "max": 4 } },
+      { "name": "inCharges", "type": "inCharges", "meta": { "max": 5 } },
+      { "name": "tags", "type": "tags", "meta": { "tagType": "Shipment" } },
+      { "name": "cargoReady", "type": "timeline" },
+      { "name": "voyages.0.departure", "type": "timeline" },
+      { "name": "voyages.0.arrival", "type": "timeline" },
+      { "name": "voyages.1.departure", "type": "timeline" },
+      { "name": "voyages.1.arrival", "type": "timeline" },
+      { "name": "voyages.2.departure", "type": "timeline" },
+      { "name": "voyages.2.arrival", "type": "timeline" },
+      { "name": "containerGroups.0.customClearance", "type": "timeline" },
+      { "name": "containerGroups.0.warehouseArrival", "type": "timeline" },
+      { "name": "containerGroups.0.deliveryReady", "type": "timeline" }
+    ],
+    "orderCustomFieldsFilter": [
+      {
+        "id": "bg3js3cs7cc37l4d1p0g",
+        "name": "order 1_new",
+        "entityType": "Order",
+        "sort": 0,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg3js3cs7cc37l4d1p10",
+        "name": "order 2",
+        "entityType": "Order",
+        "sort": 1,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg3js3cs7cc37l4d1p1g",
+        "name": "order 3",
+        "entityType": "Order",
+        "sort": 2,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg3tcpss7cccfdr07i6g",
+        "name": "order 4",
+        "entityType": "Order",
+        "sort": 3,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg3tcpss7cccfdr07i70",
+        "name": "order 5",
+        "entityType": "Order",
+        "sort": 4,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg3tcpss7cccfdr07i7g",
+        "name": "order 6",
+        "entityType": "Order",
+        "sort": 5,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg3tcpss7cccfdr07i80",
+        "name": "order 7",
+        "entityType": "Order",
+        "sort": 6,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg3tcpss7cccfdr07i8g",
+        "name": "order 8",
+        "entityType": "Order",
+        "sort": 7,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg3tcpss7cccfdr07i90",
+        "name": "order 9",
+        "entityType": "Order",
+        "sort": 8,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg4817cs7cc3os827pig",
+        "name": "order 10",
+        "entityType": "Order",
+        "sort": 9,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg4817cs7cc3os827pj0",
+        "name": "order 11",
+        "entityType": "Order",
+        "sort": 10,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg4817cs7cc3os827pjg",
+        "name": "order 12",
+        "entityType": "Order",
+        "sort": 11,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg72lfovsbn4qsvm27lg",
+        "name": "order 14",
+        "entityType": "Order",
+        "sort": 12,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg72qiovsbn4qsvm27m0",
+        "name": "order 15",
+        "entityType": "Order",
+        "sort": 13,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg72qiovsbn4qsvm27mg",
+        "name": "order 16",
+        "entityType": "Order",
+        "sort": 14,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bg74k6gvsbn4qsvm27n0",
+        "name": "order 17by Toshi",
+        "entityType": "Order",
+        "sort": 15,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bh4jtdks7cc31q2sefm0",
+        "name": "order18 by take",
+        "entityType": "Order",
+        "sort": 16,
+        "__typename": "FieldDefinition"
+      }
+    ],
+    "orderItemCustomFieldsFilter": [
+      {
+        "id": "bfqj4ogvsbn9o28av1mg",
+        "name": "item custom field 1",
+        "entityType": "OrderItem",
+        "sort": 0,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bfruo18vsbna9j6595vg",
+        "name": "item custom field 2",
+        "entityType": "OrderItem",
+        "sort": 1,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bftqf8ovsbna9j6597ug",
+        "name": "item custom field 4",
+        "entityType": "OrderItem",
+        "sort": 2,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bfqj4ogvsbn9o28av1m0",
+        "name": "item custom field 3",
+        "entityType": "OrderItem",
+        "sort": 3,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bh4jthss7cc31q2sefmg",
+        "name": "item custom field 5",
+        "entityType": "OrderItem",
+        "sort": 4,
+        "__typename": "FieldDefinition"
+      }
+    ],
+    "batchCustomFieldsFilter": [
+      {
+        "id": "bfrsrq8vsbna9j6595rg",
+        "name": "batch custom field 1",
+        "entityType": "Batch",
+        "sort": 0,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bfrsrq8vsbna9j6595s0",
+        "name": "batch custom field 2",
+        "entityType": "Batch",
+        "sort": 1,
+        "__typename": "FieldDefinition"
+      }
+    ],
+    "shipmentCustomFieldsFilter": [
+      {
+        "id": "bft0oc8vsbna9j6596bg",
+        "name": "shipment 2",
+        "entityType": "Shipment",
+        "sort": 0,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bft0oc8vsbna9j6596b0",
+        "name": "shipment 1",
+        "entityType": "Shipment",
+        "sort": 1,
+        "__typename": "FieldDefinition"
+      },
+      {
+        "id": "bft0oc8vsbna9j6596c0",
+        "name": "shipment 3",
+        "entityType": "Shipment",
+        "sort": 2,
+        "__typename": "FieldDefinition"
+      }
+    ]
+  }
+}
