@@ -6,6 +6,7 @@ import ShipmentTagsContainer from './tags';
 import ShipmentTimelineContainer from './timeline';
 import ShipmentTransportTypeContainer from './transportType';
 import ShipmentFilesContainer from './files';
+import ContainersFormContainer from './containersSlideView';
 
 export {
   ShipmentBatchesContainer,
@@ -15,4 +16,5 @@ export {
   ShipmentTimelineContainer,
   ShipmentTransportTypeContainer,
   ShipmentFilesContainer,
+  ContainersFormContainer,
 };

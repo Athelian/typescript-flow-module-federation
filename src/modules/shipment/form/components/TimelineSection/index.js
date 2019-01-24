@@ -8,6 +8,7 @@ import {
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
   ShipmentContainersContainer,
+  ContainersFormContainer,
 } from 'modules/shipment/form/containers';
 import { DashedPlusButton } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
@@ -70,11 +71,19 @@ const TimelineSection = ({ isNew }: Props) => (
                     options={{ width: '1030px' }}
                   >
                     {isOpen && (
-                      <ContainersSlideView
-                        onCancel={() => slideToggle(false)}
-                        onSave={() => slideToggle(false)}
-                        containers={containers}
-                      />
+                      <Subscribe to={[ContainersFormContainer]}>
+                        {({ initDetailValues }) => (
+                          <ContainersSlideView
+                            onCancel={() => slideToggle(false)}
+                            onSave={newContainers => {
+                              setFieldDeepValue('containers', newContainers);
+                              slideToggle(false);
+                            }}
+                            containers={containers}
+                            onFormReady={() => initDetailValues({ containers })}
+                          />
+                        )}
+                      </Subscribe>
                     )}
                   </SlideView>
                 </>
