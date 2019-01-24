@@ -34,7 +34,7 @@ const renderApp = (Component, renderFn) => {
       {isAppInProduction && (
         <DeployNotifier
           revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
-          environment={process.env.NODE_ENV || ''}
+          revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
         />
       )}
       <ApolloProvider client={apolloClient}>

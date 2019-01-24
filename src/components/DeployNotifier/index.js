@@ -5,7 +5,7 @@ import logger from 'utils/logger';
 
 type Props = {
   revision: string,
-  environment: string,
+  revisionKey: string,
 };
 
 type State = {
@@ -18,9 +18,9 @@ export default class DeployNotifier extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const { revision, environment } = this.props;
+    const { revision, revisionKey } = this.props;
 
-    const docRef = firebase.database().ref(`/revision_${environment}`);
+    const docRef = firebase.database().ref(`/${revisionKey}`);
 
     docRef.on('value', snapshot => {
       if (!snapshot.exists()) {
