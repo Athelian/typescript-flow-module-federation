@@ -24,15 +24,12 @@ export type ContainerFormState = {
   warehouseArrivalActualDateApprovedAt: string,
   tags?: Array<Object>,
   memo?: string,
-
   totalBatchPackages: number,
   totalBatchQuantity: number,
   totalNumberOfUniqueOrderItems: number,
-
   totalVolume: Metric,
   totalWeight: Metric,
-  totalPrice: Metric,
-
+  totalPrice: ?Metric,
   shipment: Object,
   batches: Array<Object>,
 };
@@ -41,10 +38,9 @@ const initValues = {
   totalBatchPackages: 0,
   totalBatchQuantity: 0,
   totalNumberOfUniqueOrderItems: 0,
-
   totalVolume: { value: 0, metric: 'm³' },
-  totalWeight: { value: 0, metric: 'cm' },
-  totalPrice: { value: 0, metric: '' },
+  totalWeight: { value: 0, metric: 'kg' },
+  totalPrice: null,
 };
 
 export default class ContainerFormContainer extends Container<ContainerFormState> {

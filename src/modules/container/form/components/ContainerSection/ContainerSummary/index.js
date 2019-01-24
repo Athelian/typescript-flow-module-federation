@@ -6,6 +6,8 @@ import ContainerFormContainer from 'modules/container/form/container';
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
+import Tooltip from 'components/Tooltip';
+import { isNullOrUndefined } from 'utils/fp';
 
 export default function ContainerSummary() {
   return (
@@ -28,7 +30,7 @@ export default function ContainerSummary() {
                   <Label>
                     <FormattedMessage
                       id="modules.container.totalPackages"
-                      defaultMessage="TOTAL PACKAGE"
+                      defaultMessage="TOTAL PACKAGES"
                     />
                   </Label>
                 }
@@ -43,7 +45,7 @@ export default function ContainerSummary() {
                   <Label>
                     <FormattedMessage
                       id="modules.container.totalBatchQuantity"
-                      defaultMessage="TOTAL BATCH QUANTITY"
+                      defaultMessage="BATCHED QTY"
                     />
                   </Label>
                 }
@@ -58,7 +60,7 @@ export default function ContainerSummary() {
                   <Label>
                     <FormattedMessage
                       id="modules.container.totalUniqueItems"
-                      defaultMessage="TOTAL UNIQUE ITEMS"
+                      defaultMessage="UNIQUE ITEMS"
                     />
                   </Label>
                 }
@@ -111,7 +113,20 @@ export default function ContainerSummary() {
                 }
                 input={
                   <Display>
-                    <FormattedNumber value={totalPrice.value} suffix={totalPrice.metric} />
+                    {isNullOrUndefined(totalPrice) ? (
+                      <Tooltip
+                        message={
+                          <FormattedMessage
+                            id="modules.container.totalPriceUnavailable"
+                            defaultMessage="Cannot calculate due to mixed currencies"
+                          />
+                        }
+                      >
+                        <span>N/A</span>
+                      </Tooltip>
+                    ) : (
+                      <FormattedNumber value={totalPrice.amount} suffix={totalPrice.currency} />
+                    )}
                   </Display>
                 }
               />
