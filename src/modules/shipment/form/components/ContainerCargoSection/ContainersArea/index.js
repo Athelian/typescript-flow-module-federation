@@ -2,10 +2,14 @@
 import * as React from 'react';
 import { injectIntl, type IntlShape, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { getByPath } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
-import { ShipmentContainersContainer } from 'modules/shipment/form/containers';
+import {
+  ShipmentContainersContainer,
+  ShipmentBatchesContainer,
+} from 'modules/shipment/form/containers';
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
@@ -32,8 +36,8 @@ type Props = {
 
 function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: Props) {
   return (
-    <Subscribe to={[ShipmentContainersContainer]}>
-      {({ state: { containers }, setFieldValue, setFieldArrayValue }) => (
+    <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
+      {({ state: { containers }, setFieldValue, setFieldArrayValue }, { state: { batches } }) => (
         <div className={ContainersWrapperStyle}>
           <div className={ContainersNavbarWrapperStyle} />
           <div className={ContainersBodyWrapperStyle}>
@@ -56,8 +60,12 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                   <Icon icon={selectedContainerId === 'Pool' ? 'INVISIBLE' : 'VISIBLE'} />
                 </div>
                 <BatchesPoolCard
-                  totalBatches={5}
-                  product={null}
+                  totalBatches={batches.length}
+                  product={
+                    batches.length > 0
+                      ? getByPath('orderItem.productProvider.product', batches[0])
+                      : null
+                  }
                   setSelectedContainerId={setSelectedContainerId}
                 />
               </button>
