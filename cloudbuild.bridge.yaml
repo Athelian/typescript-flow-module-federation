@@ -30,7 +30,7 @@ steps:
   args: ['deploy', '--only', 'hosting:staging']
   secretEnv: ['FIREBASE_TOKEN']
 - name: 'gcr.io/zenport-183806/firebase'
-  args: ['database:set', '/revision_staging', '--data "\"$SHORT_SHA\""']
+  args: ['database:set', '/revision_staging', '--data', "\"$SHORT_SHA\""]
   secretEnv: ['FIREBASE_TOKEN']
 secrets:
 - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
