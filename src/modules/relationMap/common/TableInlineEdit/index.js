@@ -54,6 +54,8 @@ import {
   totalLinePerOrder,
   parseChangedData,
   getOrderItemIdsByOrderId,
+  getExportColumns,
+  getExportRows,
 } from './helpers';
 import normalize from './normalize';
 import {
@@ -412,6 +414,16 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
         const columnBatchCustomNo = columnBatchNo + batchColumnFieldsFilter.length;
         const columnShipmentNo = columnBatchCustomNo + batchCustomFieldsFilter.length;
         const columnShipmentCustomNo = columnShipmentNo + shipmentColumnFieldsFilter.length;
+        const allColumns = {
+          orderColumnFieldsFilter,
+          orderItemColumnFieldsFilter,
+          batchColumnFieldsFilter,
+          shipmentColumnFieldsFilter,
+          orderCustomFieldsFilter,
+          orderItemCustomFieldsFilter,
+          batchCustomFieldsFilter,
+          shipmentCustomFieldsFilter,
+        };
         return (
           <ApolloConsumer>
             {client => (
@@ -495,7 +507,16 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                       }
                     />
                     {/* @TODO set current columns and rows data to this button */}
-                    <ExportGenericButton columns={[]} rows={[]} />
+                    <ExportGenericButton
+                      getColumns={() => getExportColumns(allColumns)}
+                      getRows={() =>
+                        getExportRows({
+                          data: { editData, mappingObjects },
+                          ids: { orderIds, orderItemsIds, batchIds },
+                          columns: allColumns,
+                        })
+                      }
+                    />
                     {errorMessage && errorMessage.length > 0 && (
                       <div style={{ width: 400 }}> Error: {errorMessage} </div>
                     )}

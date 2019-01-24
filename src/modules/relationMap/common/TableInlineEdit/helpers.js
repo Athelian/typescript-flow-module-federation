@@ -2,7 +2,8 @@
 import { intersection } from 'lodash';
 import { removeTypename } from 'utils/data';
 import logger from 'utils/logger';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, compose } from 'utils/fp';
+import { formatToDateLabel } from 'utils/date';
 import { prepareCustomFieldsData, list2Map } from 'utils/customFields';
 import {
   formatTimeline,
@@ -376,7 +377,7 @@ export function getExportColumns({
   orderItemCustomFieldsFilter,
   batchCustomFieldsFilter,
   shipmentCustomFieldsFilter,
-}: Object) {
+}: Object): Array<string> {
   const allColumns = [
     ...orderColumnFieldsFilter,
     ...orderCustomFieldsFilter,
@@ -390,13 +391,30 @@ export function getExportColumns({
   return allColumns;
 }
 
+export const getFieldValueByType = (type: string) => (value: any) => {
+  switch (type) {
+    case 'date':
+    case 'timeline':
+      return value ? formatToDateLabel(value) : '';
+    case 'number':
+      return `${value}`;
+    default:
+      return value;
+  }
+};
 export function getFieldValues(fields: Array<Object>, values: Array<Object>) {
   const fieldValues: Array<string> = (fields: Array<Object>).map(
-    ({ name, getExportValue }): any => {
+    ({ name, type, getExportValue }): any => {
       const value = getExportValue
-        ? getExportValue(values)
-        : getByPathWithDefault('', name, values);
-      return value;
+        ? compose(
+            getFieldValueByType(type),
+            getExportValue
+          )(values)
+        : compose(
+            getFieldValueByType(type),
+            getByPathWithDefault('', name)
+          )(values);
+      return `${value}`;
     }
   );
   return fieldValues;
@@ -424,7 +442,8 @@ export function getCustomFieldValues(fields: Array<Object>, values: Array<Object
   });
   return customFieldValues;
 }
-export function getExportRows(info: Object) {
+
+export function getExportRows(info: Object): Array<Array<?string>> {
   const {
     data: { editData, mappingObjects },
     ids: { orderIds, orderItemsIds, batchIds },

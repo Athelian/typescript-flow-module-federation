@@ -460,13 +460,13 @@ export const shipmentColumnFields = [
     name: 'voyages.0.departure',
     type: 'timeline',
     getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPathWithDefault('', '0.departure.date', voyages),
+      getByPath('0.departure.date', voyages),
   },
   {
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
       getByPath(`${voyages && voyages.length > 1 ? '0' : ''}.arrival`, voyages),
     getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPathWithDefault('', `${voyages && voyages.length > 1 ? '0' : ''}.arrival.date`, voyages),
+      getByPath(`${voyages && voyages.length > 1 ? '0' : ''}.arrival.date`, voyages),
     name: 'voyages.0.arrival',
     type: 'timeline',
   },
@@ -474,13 +474,13 @@ export const shipmentColumnFields = [
     name: 'voyages.1.departure',
     type: 'timeline',
     getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPathWithDefault('', '1.departure.date', voyages),
+      getByPath('1.departure.date', voyages),
   },
   {
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
       getByPath(`${voyages && voyages.length > 2 ? '1' : ''}.arrival`, voyages),
     getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPathWithDefault('', `${voyages && voyages.length > 2 ? '1' : ''}.arrival.date`, voyages),
+      getByPath(`${voyages && voyages.length > 2 ? '1' : ''}.arrival.date`, voyages),
     name: 'voyages.1.arrival',
     type: 'timeline',
   },
@@ -488,7 +488,7 @@ export const shipmentColumnFields = [
     name: 'voyages.2.departure',
     type: 'timeline',
     getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPathWithDefault('', '2.departure.date', voyages),
+      getByPath('2.departure.date', voyages),
   },
   {
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) => {
@@ -499,7 +499,7 @@ export const shipmentColumnFields = [
       `voyages.${voyages ? voyages.length - 1 : 0}.arrival`,
     getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
       const index = voyages ? voyages.length - 1 : 0;
-      return getByPathWithDefault('', `${index}.arrival.date`, voyages);
+      return getByPath(`${index}.arrival.date`, voyages);
     },
     name: 'voyages.2.arrival',
     type: 'timeline',
