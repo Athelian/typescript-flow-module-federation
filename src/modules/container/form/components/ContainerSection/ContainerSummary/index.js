@@ -1,15 +1,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-
 import { Subscribe } from 'unstated';
 import ContainerFormContainer from 'modules/container/form/container';
-
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 
-export default function ContainerTotalSummary() {
+export default function ContainerSummary() {
   return (
     <Subscribe to={[ContainerFormContainer]}>
       {({ originalValues, state }) => {

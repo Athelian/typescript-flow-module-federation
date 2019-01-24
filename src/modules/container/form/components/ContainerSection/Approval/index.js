@@ -1,9 +1,7 @@
 // @flow
-
 import React from 'react';
 import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
-
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import { ApproveButton } from 'components/Buttons';
@@ -22,16 +20,18 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  field: string,
+  approvedByField: string,
+  approvedAtField: string,
   setFieldValue: Function,
 };
 
-const onApproval = (user: Object, setFieldValue: Function, field: string) =>
-  setFieldValue(field, user);
-
-const onUnApproval = (setFieldValue: Function, field: string) => setFieldValue(field, null);
-
-const Approval = ({ approvedBy, approvedAt, setFieldValue, field }: Props) => (
+const Approval = ({
+  approvedBy,
+  approvedAt,
+  setFieldValue,
+  approvedByField,
+  approvedAtField,
+}: Props) => (
   <div className={ApprovalWrapperStyle}>
     {approvedBy ? (
       <>
@@ -47,7 +47,10 @@ const Approval = ({ approvedBy, approvedAt, setFieldValue, field }: Props) => (
         <button
           data-testid="unApproveButton"
           className={UnApproveButtonStyle}
-          onClick={() => onUnApproval(setFieldValue, field)}
+          onClick={() => {
+            setFieldValue(approvedByField, null);
+            setFieldValue(approvedAtField, null);
+          }}
           type="button"
         >
           <Icon icon="CLEAR" />
@@ -58,7 +61,10 @@ const Approval = ({ approvedBy, approvedAt, setFieldValue, field }: Props) => (
         {({ user }) => (
           <ApproveButton
             data-testid="approveButton"
-            onClick={() => onApproval(user, setFieldValue, field)}
+            onClick={() => {
+              setFieldValue(approvedByField, user);
+              setFieldValue(approvedAtField, new Date());
+            }}
           />
         )}
       </UserConsumer>

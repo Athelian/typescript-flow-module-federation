@@ -4,20 +4,17 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
-
 import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { WarehouseCard } from 'components/Cards';
-
 import { FormField } from 'modules/form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
-
 import ContainerFormContainer from 'modules/container/form/container';
 import validator from 'modules/container/form/validator';
 import { textInputFactory, dateTimeInputFactory, textAreaFactory } from 'modules/form/helpers';
-
-import { AssignedTo, Approval, ContainerTotalSummary } from 'modules/container/form/components';
-
+import AssignedTo from './AssignedTo';
+import Approval from './Approval';
+import ContainerSummary from './ContainerSummary';
 import {
   SectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -107,7 +104,8 @@ const ContainerSection = () => (
                       approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
                       approvedAt={values.warehouseArrivalAgreedDateApprovedAt}
                       setFieldValue={setFieldValue}
-                      field="warehouseArrivalAgreedDateApprovedBy"
+                      approvedByField="warehouseArrivalAgreedDateApprovedBy"
+                      approvedAtField="warehouseArrivalAgreedDateApprovedAt"
                     />
                   </GridColumn>
                 </div>
@@ -158,7 +156,8 @@ const ContainerSection = () => (
                       approvedBy={values.warehouseArrivalActualDateApprovedBy}
                       approvedAt={values.warehouseArrivalActualDateApprovedAt}
                       setFieldValue={setFieldValue}
-                      field="warehouseArrivalActualDateApprovedBy"
+                      approvedByField="warehouseArrivalActualDateApprovedBy"
+                      approvedAtField="warehouseArrivalActualDateApprovedAt"
                     />
                   </GridColumn>
                 </div>
@@ -175,15 +174,13 @@ const ContainerSection = () => (
                         <DashedPlusButton
                           data-testid="selectWarehouseButton"
                           width="195px"
-                          height="217px"
+                          height="215px"
                           onClick={() => slideToggle(true)}
                         />
                       ) : (
                         <WarehouseCard
-                          selectable
                           warehouse={values.warehouse}
                           onSelect={() => slideToggle(true)}
-                          readOnly
                         />
                       )}
 
@@ -242,7 +239,7 @@ const ContainerSection = () => (
                   inputHandlers,
                   isNew: false,
                   originalValue: originalValues[name],
-                  label: <FormattedMessage id="modules.container.memo" defaultMessage="memo" />,
+                  label: <FormattedMessage id="modules.container.memo" defaultMessage="MEMO" />,
                   vertical: true,
                   width: '680px',
                   height: '65px',
@@ -253,7 +250,7 @@ const ContainerSection = () => (
             <div className={DividerStyle} />
 
             <div className={SummaryStyle}>
-              <ContainerTotalSummary />
+              <ContainerSummary />
             </div>
           </>
         );

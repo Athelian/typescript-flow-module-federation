@@ -1,16 +1,14 @@
 // @flow
 import React from 'react';
-
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import containerFormContainer from 'modules/container/form/container';
 import Icon from 'components/Icon';
-
+import FormattedNumber from 'components/FormattedNumber';
 import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import OrdersSection from 'modules/shipment/form/components/OrdersSection';
 import { uniqueOrders } from 'modules/container/utils';
 import { ContainerSection, ShipmentSection, BatchSection } from './components';
-
 import { FormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
 
 type OptionalProps = {
@@ -38,7 +36,7 @@ export default class containerForm extends React.Component<Props> {
     const { container } = this.props;
     return (
       <div className={FormWrapperStyle}>
-        <SectionWrapper id="ContainerSection">
+        <SectionWrapper id="containerSection">
           <SectionHeader
             icon="CONTAINER"
             title={<FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />}
@@ -69,7 +67,7 @@ export default class containerForm extends React.Component<Props> {
           </SectionHeader>
           <ContainerSection />
         </SectionWrapper>
-        <SectionWrapper id="ShipmentSection">
+        <SectionWrapper id="shipmentSection">
           <SectionHeader
             icon="SHIPMENT"
             title={<FormattedMessage id="modules.container.shipment" defaultMessage="SHIPMENT" />}
@@ -82,25 +80,26 @@ export default class containerForm extends React.Component<Props> {
             const orders = uniqueOrders(batches);
             return (
               <>
-                <SectionWrapper id="BatchSection">
+                <SectionWrapper id="batchesSection">
                   <SectionHeader
                     icon="BATCH"
                     title={
                       <>
-                        <FormattedMessage id="modules.container.batch" defaultMessage="BATCHES" /> (
-                        {batches.length})
+                        <FormattedMessage id="modules.container.batches" defaultMessage="BATCHES" />{' '}
+                        (
+                        <FormattedNumber value={batches.length} />)
                       </>
                     }
                   />
                   <BatchSection />
                 </SectionWrapper>
-                <SectionWrapper id="OrderSection">
+                <SectionWrapper id="ordersSection">
                   <SectionHeader
                     icon="ORDER"
                     title={
                       <>
-                        <FormattedMessage id="modules.container.order" defaultMessage="ORDERS" /> (
-                        {orders.length})
+                        <FormattedMessage id="modules.container.orders" defaultMessage="ORDERS" /> (
+                        <FormattedNumber value={orders.length} />)
                       </>
                     }
                   />
