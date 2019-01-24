@@ -12,6 +12,7 @@ export const SingleDateWrapperStyle: string = css`
   display: flex;
   justify-content: center;
   flex: 1;
+  min-width: 95px;
 `;
 
 export const DoubleDatesWrapperStyle: string = css`
@@ -19,6 +20,7 @@ export const DoubleDatesWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   flex: 1;
+  min-width: 95px;
 `;
 
 export const BlankPlaceholderStyle: string = css`

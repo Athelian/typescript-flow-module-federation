@@ -7,14 +7,13 @@ export const HorizontalPortsWrapperStyle: string = css`
 `;
 
 export const PortNameWrapperStyle: string = css`
-  position: relative;
   display: flex;
   flex: 1;
   justify-content: center;
+  min-width: 95px;
 `;
 
 export const WarehouseNameWrapperStyle: string = css`
-  position: relative;
   display: flex;
   flex: 1.89;
   justify-content: center;
@@ -22,4 +21,5 @@ export const WarehouseNameWrapperStyle: string = css`
 
 export const BlankSpaceStyle: string = css`
   flex: 1;
+  min-width: 95px;
 `;
