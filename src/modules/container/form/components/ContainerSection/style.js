@@ -15,7 +15,7 @@ export const MainFieldsWrapperStyle: string = css`
   justify-content: space-between;
 `;
 
-export const ItemSectionStyle: string = css`
+export const WarehouseSectionStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 10px;
 `;
