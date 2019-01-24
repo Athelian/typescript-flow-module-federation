@@ -37,6 +37,7 @@ import OrderFocusView from './components/OrderFocusView';
 import Shipment from './components/Shipment';
 import ShipmentList from './components/ShipmentList';
 import EditForm from './components/EditForm';
+import ActionNavbar from './components/ActionNavbar';
 
 type Props = {
   intl: IntlShape,
@@ -128,6 +129,7 @@ const Order = ({ intl }: Props) => {
                   <AdvancedFilter initialFilter={filterAndSort.filter} onApply={onApplyFilter} />
                 )}
               />
+              <ActionNavbar highLightEntities={highLightEntities} />
               {loading ? (
                 <LoadingIcon />
               ) : (

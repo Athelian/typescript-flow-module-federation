@@ -298,5 +298,11 @@ export function selectors(state: UIState) {
       highLightEntities.includes(`${entity}-${id}`),
     isSelectAllEntity: (entity: string, total: number) => entitySelector({ state, entity, total }),
     isTarget: (entity: string, id: string) => state.targets.includes(`${entity}-${id}`),
+    isTargetAnyItem: () => state.targets.length > 0,
+    isHighLightAnyItem: () => state.highlight.selectedId !== '',
+    countTargetBy: (entity: string) =>
+      state.targets.filter(item => item.includes(`${entity}-`)).length,
+    countHighLightBy: (highLightEntities: Array<string>, entity: string) =>
+      highLightEntities.filter(item => item.includes(`${entity}-`)).length,
   };
 }
