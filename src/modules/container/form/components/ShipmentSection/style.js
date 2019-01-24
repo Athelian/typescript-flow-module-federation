@@ -2,11 +2,10 @@
 import { css } from 'react-emotion';
 import { presets, fontSizes, colors, layout, borderRadiuses, scrollbars } from 'styles/common';
 
-export const SectionWrapperStyle: string = css`
+export const ShipmentSectionWrapperStyle: string = css`
   position: relative;
   ${presets.BOX};
   width: 880px;
-  padding: 50px 0 0 0;
   height: min-content;
 `;
 

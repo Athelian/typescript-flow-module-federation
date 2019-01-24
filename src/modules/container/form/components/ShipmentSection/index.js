@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ShipmentCard } from 'components/Cards';
-import { SectionWrapperStyle, ShipmentSectionBodyStyle, EmptyMessageStyle } from './style';
+import { SectionNavBar } from 'components/NavBar';
+import { ShipmentSectionWrapperStyle, ShipmentSectionBodyStyle, EmptyMessageStyle } from './style';
 
 type Props = {
   shipment: ?Object,
@@ -10,7 +11,10 @@ type Props = {
 
 function ShipmentSection({ shipment }: Props) {
   return (
-    <div className={SectionWrapperStyle}>
+    <div className={ShipmentSectionWrapperStyle}>
+      <SectionNavBar>
+        <div id="sortsandfilterswip" />
+      </SectionNavBar>
       <div className={ShipmentSectionBodyStyle}>
         {shipment ? (
           <ShipmentCard shipment={shipment} />

@@ -1,6 +1,7 @@
 // @flow
+import BatchesSection from './BatchesSection';
 import ContainerSection from './ContainerSection';
+import OrdersSection from './OrdersSection';
 import ShipmentSection from './ShipmentSection';
-import BatchSection from './BatchSection';
 
-export { ContainerSection, ShipmentSection, BatchSection };
+export { BatchesSection, ContainerSection, OrdersSection, ShipmentSection };

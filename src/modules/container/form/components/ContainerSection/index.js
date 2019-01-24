@@ -16,7 +16,7 @@ import AssignedTo from './AssignedTo';
 import Approval from './Approval';
 import ContainerSummary from './ContainerSummary';
 import {
-  SectionWrapperStyle,
+  ContainerSectionWrapperStyle,
   MainFieldsWrapperStyle,
   ItemSectionStyle,
   DividerStyle,
@@ -25,7 +25,7 @@ import {
 } from './style';
 
 const ContainerSection = () => (
-  <div className={SectionWrapperStyle}>
+  <div className={ContainerSectionWrapperStyle}>
     <Subscribe to={[ContainerFormContainer]}>
       {({ originalValues, state, setFieldValue, setDeepFieldValue }) => {
         const values = { ...originalValues, ...state };

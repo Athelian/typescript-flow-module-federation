@@ -6,9 +6,8 @@ import containerFormContainer from 'modules/container/form/container';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
-import OrdersSection from 'modules/shipment/form/components/OrdersSection';
 import { uniqueOrders } from 'modules/container/utils';
-import { ContainerSection, ShipmentSection, BatchSection } from './components';
+import { ContainerSection, ShipmentSection, BatchesSection, OrdersSection } from './components';
 import { FormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
 
 type OptionalProps = {
@@ -91,7 +90,7 @@ export default class containerForm extends React.Component<Props> {
                       </>
                     }
                   />
-                  <BatchSection />
+                  <BatchesSection />
                 </SectionWrapper>
                 <SectionWrapper id="ordersSection">
                   <SectionHeader
