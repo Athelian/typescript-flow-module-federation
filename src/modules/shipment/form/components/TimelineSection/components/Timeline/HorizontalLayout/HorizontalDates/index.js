@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { isEnableBetaFeature } from 'utils/env';
 import Icon from 'components/Icon';
 import { TimelineDate, TimelineDateContainers } from '../../components';
 import {
@@ -18,7 +19,7 @@ const HorizontalDates = ({ shipment }: Props) => {
   const { cargoReady, voyages, containerGroups, containers } = shipment;
   const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
 
-  if ((containers && containers.length > 0) || voyages.length > 1) {
+  if ((isEnableBetaFeature && containers && containers.length > 0) || voyages.length > 1) {
     return (
       <div className={HorizontalDatesWrapperStyle}>
         <div className={ArrivalDepartureIconsWrapperStyle}>
@@ -54,7 +55,7 @@ const HorizontalDates = ({ shipment }: Props) => {
           <div className={BlankPlaceholderStyle} />
         </div>
 
-        {containers && containers.length > 0 ? (
+        {isEnableBetaFeature && containers && containers.length > 0 ? (
           <TimelineDateContainers containers={containers} />
         ) : (
           <div className={DoubleDatesWrapperStyle}>

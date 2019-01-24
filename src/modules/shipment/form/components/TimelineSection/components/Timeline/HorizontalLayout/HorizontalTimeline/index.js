@@ -105,24 +105,32 @@ const HorizontalTimeline = ({ shipment }: Props) => {
         linkPath={`/shipment/${encodeId(shipment.id)}/customClearance`}
       />
 
-      <TimelineLine color={warehouseArrivalColoring} size={1.46} />
-
       {isEnableBetaFeature && containers && containers.length > 0 ? (
-        <div className={WarehouseContainerWrapperStyle}>
-          <div className={ContainerIconWrapperStyle}>
-            <TimelineContainerIcon />
-          </div>
-          <TimelineWarehouseContainerIcon containers={containers} />
-        </div>
-      ) : (
-        <TimelineIcon
-          icon="WAREHOUSE"
-          color={warehouseArrivalColoring}
-          linkPath={`/shipment/${encodeId(shipment.id)}/warehouseArrival`}
-        />
-      )}
+        <>
+          <TimelineLine color={warehouseArrivalColoring} flex="1.59" />
 
-      <TimelineLine color={deliveryReadyColoring} size={1.46} />
+          <div className={WarehouseContainerWrapperStyle}>
+            <div className={ContainerIconWrapperStyle}>
+              <TimelineContainerIcon />
+            </div>
+            <TimelineWarehouseContainerIcon containers={containers} />
+          </div>
+
+          <TimelineLine color={deliveryReadyColoring} flex="1.59" />
+        </>
+      ) : (
+        <>
+          <TimelineLine color={warehouseArrivalColoring} />
+
+          <TimelineIcon
+            icon="WAREHOUSE"
+            color={warehouseArrivalColoring}
+            linkPath={`/shipment/${encodeId(shipment.id)}/warehouseArrival`}
+          />
+
+          <TimelineLine color={deliveryReadyColoring} />
+        </>
+      )}
 
       <TimelineIcon
         icon="DELIVERY_READY"

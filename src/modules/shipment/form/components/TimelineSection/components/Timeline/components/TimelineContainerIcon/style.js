@@ -5,8 +5,8 @@ export const IconWrapperStyle = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 26px;
-  height: 26px;
+  width: 25px;
+  height: 25px;
   color: ${colors.WHITE};
   background-color: ${colors.GRAY_LIGHT};
   ${fontSizes.SMALL};
