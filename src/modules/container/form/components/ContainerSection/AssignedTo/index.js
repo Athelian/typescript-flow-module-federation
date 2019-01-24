@@ -1,14 +1,10 @@
 // @flow
 import React from 'react';
-
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
-
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
-
 import AssignUsers from 'modules/shipment/form/components/TimelineSection/components/AssignUsers';
-
 import {
   AssignmentWrapperStyle,
   AssignmentStyle,

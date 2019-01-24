@@ -85,7 +85,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                       <EntityIcon icon="CONTAINER" color="CONTAINER" />
                       <JumpToSection>
                         <SectionTabs
-                          link="ContainerSection"
+                          link="containerSection"
                           label={
                             <FormattedMessage
                               id="modules.container.container"
@@ -95,7 +95,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                           icon="CONTAINER"
                         />
                         <SectionTabs
-                          link="ShipmentSection"
+                          link="shipmentSection"
                           label={
                             <FormattedMessage
                               id="modules.container.shipment"
@@ -105,16 +105,22 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                           icon="SHIPMENT"
                         />
                         <SectionTabs
-                          link="BatchSection"
+                          link="batchesSection"
                           label={
-                            <FormattedMessage id="modules.container.batch" defaultMessage="BATCH" />
+                            <FormattedMessage
+                              id="modules.container.batches"
+                              defaultMessage="BATCHES"
+                            />
                           }
                           icon="BATCH"
                         />
                         <SectionTabs
-                          link="OrderSection"
+                          link="ordersSection"
                           label={
-                            <FormattedMessage id="modules.container.order" defaultMessage="ORDER" />
+                            <FormattedMessage
+                              id="modules.container.orders"
+                              defaultMessage="ORDERS"
+                            />
                           }
                           icon="ORDER"
                         />

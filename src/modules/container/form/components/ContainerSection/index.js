@@ -4,31 +4,28 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
-
 import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { WarehouseCard } from 'components/Cards';
-
 import { FormField } from 'modules/form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
-
 import ContainerFormContainer from 'modules/container/form/container';
 import validator from 'modules/container/form/validator';
 import { textInputFactory, dateTimeInputFactory, textAreaFactory } from 'modules/form/helpers';
-
-import { AssignedTo, Approval, ContainerTotalSummary } from 'modules/container/form/components';
-
+import AssignedTo from './AssignedTo';
+import Approval from './Approval';
+import ContainerSummary from './ContainerSummary';
 import {
-  SectionWrapperStyle,
+  ContainerSectionWrapperStyle,
   MainFieldsWrapperStyle,
-  ItemSectionStyle,
+  WarehouseSectionStyle,
   DividerStyle,
   AssignedAndApprovalWrapperStyle,
   SummaryStyle,
 } from './style';
 
 const ContainerSection = () => (
-  <div className={SectionWrapperStyle}>
+  <div className={ContainerSectionWrapperStyle}>
     <Subscribe to={[ContainerFormContainer]}>
       {({ originalValues, state, setFieldValue, setDeepFieldValue }) => {
         const values = { ...originalValues, ...state };
@@ -61,110 +58,124 @@ const ContainerSection = () => (
                   }
                 </FormField>
 
-                <FormField
-                  name="warehouseArrivalAgreedDate"
-                  initValue={values.warehouseArrivalAgreedDate}
-                  setFieldValue={setDeepFieldValue}
-                  validator={validator}
-                  values={values}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    dateTimeInputFactory({
-                      inputHandlers,
-                      name,
-                      isNew: false,
-                      originalValue: originalValues[name],
-                      label: (
-                        <FormattedMessage
-                          id="module.container.agreedArrival"
-                          defaultMessage="AGREED ARRIVAL"
+                <GridColumn gap="40px">
+                  <GridColumn>
+                    <FormField
+                      name="warehouseArrivalAgreedDate"
+                      initValue={values.warehouseArrivalAgreedDate}
+                      setFieldValue={setDeepFieldValue}
+                      validator={validator}
+                      values={values}
+                    >
+                      {({ name, ...inputHandlers }) =>
+                        dateTimeInputFactory({
+                          inputHandlers,
+                          name,
+                          isNew: false,
+                          originalValue: originalValues[name],
+                          label: (
+                            <FormattedMessage
+                              id="module.container.agreedArrival"
+                              defaultMessage="AGREED ARRIVAL"
+                            />
+                          ),
+                        })
+                      }
+                    </FormField>
+
+                    <div className={AssignedAndApprovalWrapperStyle}>
+                      <GridColumn gap="5px">
+                        <Label>
+                          <FormattedMessage
+                            id="modules.container.assignedTo"
+                            defaultMessage="ASSIGNED TO"
+                          />
+                        </Label>
+                        <AssignedTo
+                          assignedTo={values.warehouseArrivalAgreedDateAssignedTo}
+                          setFieldValue={setFieldValue}
+                          field="warehouseArrivalAgreedDateAssignedTo"
                         />
-                      ),
-                    })
-                  }
-                </FormField>
+                      </GridColumn>
 
-                <div className={AssignedAndApprovalWrapperStyle}>
-                  <GridColumn gap="5px">
-                    <Label>
-                      <FormattedMessage
-                        id="modules.container.assignedTo"
-                        defaultMessage="ASSIGNED TO"
-                      />
-                    </Label>
-                    <AssignedTo
-                      assignedTo={values.warehouseArrivalAgreedDateAssignedTo}
-                      setFieldValue={setFieldValue}
-                      field="warehouseArrivalAgreedDateAssignedTo"
-                    />
-                  </GridColumn>
-
-                  <GridColumn gap="5px">
-                    <Label align="right">
-                      <FormattedMessage id="modules.container.approval" defaultMessage="APPROVAL" />
-                    </Label>
-                    <Approval
-                      approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
-                      approvedAt={values.warehouseArrivalAgreedDateApprovedAt}
-                      setFieldValue={setFieldValue}
-                      field="warehouseArrivalAgreedDateApprovedBy"
-                    />
-                  </GridColumn>
-                </div>
-
-                <FormField
-                  name="warehouseArrivalActualDate"
-                  initValue={values.warehouseArrivalActualDate}
-                  setFieldValue={setDeepFieldValue}
-                  validator={validator}
-                  values={values.warehouseArrivalActualDate}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    dateTimeInputFactory({
-                      inputHandlers,
-                      name,
-                      isNew: false,
-                      originalValue: originalValues[name],
-                      label: (
-                        <FormattedMessage
-                          id="module.container.actualArrival"
-                          defaultMessage="ACTUAL ARRIVAL"
+                      <GridColumn gap="5px">
+                        <Label align="right">
+                          <FormattedMessage
+                            id="modules.container.approval"
+                            defaultMessage="APPROVAL"
+                          />
+                        </Label>
+                        <Approval
+                          approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
+                          approvedAt={values.warehouseArrivalAgreedDateApprovedAt}
+                          setFieldValue={setFieldValue}
+                          approvedByField="warehouseArrivalAgreedDateApprovedBy"
+                          approvedAtField="warehouseArrivalAgreedDateApprovedAt"
                         />
-                      ),
-                    })
-                  }
-                </FormField>
-
-                <div className={AssignedAndApprovalWrapperStyle}>
-                  <GridColumn gap="5px">
-                    <Label>
-                      <FormattedMessage
-                        id="modules.container.assignedTo"
-                        defaultMessage="ASSIGNED TO"
-                      />
-                    </Label>
-                    <AssignedTo
-                      assignedTo={values.warehouseArrivalActualDateAssignedTo}
-                      setFieldValue={setFieldValue}
-                      field="warehouseArrivalActualDateAssignedTo"
-                    />
+                      </GridColumn>
+                    </div>
                   </GridColumn>
 
-                  <GridColumn gap="5px">
-                    <Label align="right">
-                      <FormattedMessage id="modules.container.approval" defaultMessage="APPROVAL" />
-                    </Label>
-                    <Approval
-                      approvedBy={values.warehouseArrivalActualDateApprovedBy}
-                      approvedAt={values.warehouseArrivalActualDateApprovedAt}
-                      setFieldValue={setFieldValue}
-                      field="warehouseArrivalActualDateApprovedBy"
-                    />
+                  <GridColumn>
+                    <FormField
+                      name="warehouseArrivalActualDate"
+                      initValue={values.warehouseArrivalActualDate}
+                      setFieldValue={setDeepFieldValue}
+                      validator={validator}
+                      values={values.warehouseArrivalActualDate}
+                    >
+                      {({ name, ...inputHandlers }) =>
+                        dateTimeInputFactory({
+                          inputHandlers,
+                          name,
+                          isNew: false,
+                          originalValue: originalValues[name],
+                          label: (
+                            <FormattedMessage
+                              id="module.container.actualArrival"
+                              defaultMessage="ACTUAL ARRIVAL"
+                            />
+                          ),
+                        })
+                      }
+                    </FormField>
+
+                    <div className={AssignedAndApprovalWrapperStyle}>
+                      <GridColumn gap="5px">
+                        <Label>
+                          <FormattedMessage
+                            id="modules.container.assignedTo"
+                            defaultMessage="ASSIGNED TO"
+                          />
+                        </Label>
+                        <AssignedTo
+                          assignedTo={values.warehouseArrivalActualDateAssignedTo}
+                          setFieldValue={setFieldValue}
+                          field="warehouseArrivalActualDateAssignedTo"
+                        />
+                      </GridColumn>
+
+                      <GridColumn gap="5px">
+                        <Label align="right">
+                          <FormattedMessage
+                            id="modules.container.approval"
+                            defaultMessage="APPROVAL"
+                          />
+                        </Label>
+                        <Approval
+                          approvedBy={values.warehouseArrivalActualDateApprovedBy}
+                          approvedAt={values.warehouseArrivalActualDateApprovedAt}
+                          setFieldValue={setFieldValue}
+                          approvedByField="warehouseArrivalActualDateApprovedBy"
+                          approvedAtField="warehouseArrivalActualDateApprovedAt"
+                        />
+                      </GridColumn>
+                    </div>
                   </GridColumn>
-                </div>
+                </GridColumn>
               </GridColumn>
 
-              <div className={ItemSectionStyle}>
+              <div className={WarehouseSectionStyle}>
                 <Label>
                   <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />
                 </Label>
@@ -175,15 +186,13 @@ const ContainerSection = () => (
                         <DashedPlusButton
                           data-testid="selectWarehouseButton"
                           width="195px"
-                          height="217px"
+                          height="215px"
                           onClick={() => slideToggle(true)}
                         />
                       ) : (
                         <WarehouseCard
-                          selectable
                           warehouse={values.warehouse}
                           onSelect={() => slideToggle(true)}
-                          readOnly
                         />
                       )}
 
@@ -242,7 +251,7 @@ const ContainerSection = () => (
                   inputHandlers,
                   isNew: false,
                   originalValue: originalValues[name],
-                  label: <FormattedMessage id="modules.container.memo" defaultMessage="memo" />,
+                  label: <FormattedMessage id="modules.container.memo" defaultMessage="MEMO" />,
                   vertical: true,
                   width: '680px',
                   height: '65px',
@@ -253,7 +262,7 @@ const ContainerSection = () => (
             <div className={DividerStyle} />
 
             <div className={SummaryStyle}>
-              <ContainerTotalSummary />
+              <ContainerSummary />
             </div>
           </>
         );

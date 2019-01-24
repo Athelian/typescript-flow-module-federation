@@ -1,17 +1,7 @@
 // @flow
-import AssignedTo from './AssignedTo';
-import Approval from './Approval';
-
+import BatchesSection from './BatchesSection';
 import ContainerSection from './ContainerSection';
+import OrdersSection from './OrdersSection';
 import ShipmentSection from './ShipmentSection';
-import BatchSection from './BatchSection';
-import ContainerTotalSummary from './ContainerTotalSummary';
 
-export {
-  AssignedTo,
-  Approval,
-  ContainerSection,
-  ShipmentSection,
-  BatchSection,
-  ContainerTotalSummary,
-};
+export { BatchesSection, ContainerSection, OrdersSection, ShipmentSection };

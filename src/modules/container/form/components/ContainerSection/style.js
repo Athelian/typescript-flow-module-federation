@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, layout, colors, borderRadiuses } from 'styles/common';
 
-export const SectionWrapperStyle: string = css`
+export const ContainerSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
   padding: 40px 100px;
@@ -15,7 +15,7 @@ export const MainFieldsWrapperStyle: string = css`
   justify-content: space-between;
 `;
 
-export const ItemSectionStyle: string = css`
+export const WarehouseSectionStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 10px;
 `;

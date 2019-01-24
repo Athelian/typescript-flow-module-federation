@@ -15,6 +15,7 @@ function OrdersSection({ orders }: Props) {
       <SectionNavBar>
         <div id="sortsandfilterswip" />
       </SectionNavBar>
+
       {orders.length === 0 ? (
         <div className={EmptyMessageStyle}>
           <FormattedMessage id="modules.Shipments.noOrderFound" defaultMessage="No orders found" />

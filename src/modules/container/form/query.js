@@ -1,6 +1,5 @@
 // @flow
 import gql from 'graphql-tag';
-
 import {
   userAvatarFragment,
   warehouseCardFragment,
@@ -55,22 +54,9 @@ export const containerFormQuery = gql`
         tags {
           ...tagFragment
         }
-        totalVolume {
-          ...metricFragment
-        }
-        totalWeight {
-          ...metricFragment
-        }
-        totalPrice {
-          ...metricFragment
-        }
-        totalBatchQuantity
-        totalBatchPackages
-        totalNumberOfUniqueOrderItems
         shipment {
           ...shipmentCardFragment
         }
-
         batches {
           ...batchFormFragment
         }
@@ -83,18 +69,14 @@ export const containerFormQuery = gql`
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-
   ${metricFragment}
   ${tagFragment}
   ${batchFormFragment}
-
   ${sizeFragment}
-
   ${priceFragment}
   ${orderCardFragment}
   ${imageFragment}
   ${partnerNameFragment}
-
   ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}

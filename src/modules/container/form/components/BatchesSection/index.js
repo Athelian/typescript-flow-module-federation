@@ -15,11 +15,10 @@ import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
-
 import {
-  ItemsSectionWrapperStyle,
-  ItemsSectionBodyStyle,
-  ItemGridStyle,
+  BatchesSectionWrapperStyle,
+  BatchesSectionBodyStyle,
+  BatchesGridStyle,
   ItemStyle,
   EmptyMessageStyle,
 } from './style';
@@ -28,9 +27,9 @@ type Props = {
   intl: IntlShape,
 };
 
-function BatchSection({ intl }: Props) {
+function BatchesSection({ intl }: Props) {
   return (
-    <div className={ItemsSectionWrapperStyle}>
+    <div className={BatchesSectionWrapperStyle}>
       <SectionNavBar>
         <BooleanValue>
           {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
@@ -122,7 +121,7 @@ function BatchSection({ intl }: Props) {
           )}
         </BooleanValue>
       </SectionNavBar>
-      <div className={ItemsSectionBodyStyle}>
+      <div className={BatchesSectionBodyStyle}>
         <Subscribe to={[ContainerFormContainer]}>
           {({ state: { batches = [] }, setFieldValue, setDeepFieldValue }) =>
             batches.length === 0 ? (
@@ -133,7 +132,7 @@ function BatchSection({ intl }: Props) {
                 />
               </div>
             ) : (
-              <div className={ItemGridStyle}>
+              <div className={BatchesGridStyle}>
                 {batches.map((item, position) => (
                   <BooleanValue key={item.id}>
                     {({ value: opened, set: batchSlideToggle }) => (
@@ -209,4 +208,4 @@ function BatchSection({ intl }: Props) {
   );
 }
 
-export default injectIntl(BatchSection);
+export default injectIntl(BatchesSection);
