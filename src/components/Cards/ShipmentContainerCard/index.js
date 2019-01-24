@@ -1,8 +1,9 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { textInputFactory, dateTimeInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
@@ -10,9 +11,8 @@ import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display, DefaultStyle } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
-
 import validator from './validator';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
   CardWrapperStyle,
   ImagePartWrapperStyle,
@@ -36,49 +36,35 @@ import {
 
 type OptionalProps = {
   onClick: (container: Object) => void,
-  onClone: (container: Object) => void,
-  onClear: (container: Object) => void,
+  onRemove: (container: Object) => void,
   selectable: boolean,
+  actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
   container: Object,
-  currency: string,
   saveOnBlur: Function,
 };
 
 const defaultProps = {
   onClick: () => {},
-  onClone: () => {},
-  onClear: () => {},
+  onRemove: () => {},
   selectable: false,
+  actions: [],
 };
 
 const ShipmentContainerCard = ({
   container,
   onClick,
-  onClear,
-  onClone,
+  onRemove,
   saveOnBlur,
-  currency,
   selectable,
   ...rest
 }: Props) => {
   if (!container) return '';
 
-  const actions = selectable
-    ? []
-    : [
-        <CardAction icon="CLONE" onClick={() => onClone(container)} />,
-        <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(container)} />,
-      ];
-
   const {
-    representativeBatch: {
-      orderItem: {
-        productProvider: { product },
-      },
-    },
+    representativeBatch,
     id,
     no,
     totalVolume,
@@ -91,11 +77,17 @@ const ShipmentContainerCard = ({
     tags,
   } = container;
 
+  const product = getByPathWithDefault(
+    {},
+    'orderItem.productProvider.product',
+    representativeBatch
+  );
   const productImage = getProductImage(product);
 
   const validation = validator({
     no: `container.${id}.no`,
   });
+
   const values = {
     [`container.${id}.no`]: no,
   };
@@ -113,7 +105,6 @@ const ShipmentContainerCard = ({
       icon="CONTAINER"
       color="CONTAINER"
       showActionsOnHover
-      actions={actions}
       selectable={selectable}
       {...rest}
     >
@@ -181,21 +172,27 @@ const ShipmentContainerCard = ({
           <div className={DividerStyle} />
 
           <div className={IconInputStyle}>
-            <Link
-              className={WarehouseIconStyle(!!warehouse)}
-              to={`/warehouse/${encodeId(warehouse.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="WAREHOUSE" />
-            </Link>
+            {isNullOrUndefined(warehouse) ? (
+              <div className={WarehouseIconStyle(false)}>
+                <Icon icon="WAREHOUSE" />
+              </div>
+            ) : (
+              <Link
+                className={WarehouseIconStyle(true)}
+                to={`/warehouse/${encodeId(warehouse.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="WAREHOUSE" />
+              </Link>
+            )}
             {/* clicking, open slide view */}
+            {/* <button type="button" onClick={openTheSlideView}> */}
             <DefaultStyle type="button" height="20px">
-              {/* <button type="button" className={WarehouseSelectButtonStyle}> */}
-              <Display align="left">{warehouse.name}</Display>
-              {/* </button> */}
+              <Display align="left">{isNullOrUndefined(warehouse) ? '' : warehouse.name}</Display>
             </DefaultStyle>
+            {/* </button> */}
           </div>
 
           <div className={LabelStyle}>

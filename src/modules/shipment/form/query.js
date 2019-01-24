@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import {
   shipmentFormFragment,
+  shipmentContainerCardFragment,
   timelineDateFullFragment,
   batchFormFragment,
   userAvatarFragment,
@@ -31,6 +32,7 @@ export const shipmentFormQuery = gql`
   }
 
   ${shipmentFormFragment}
+  ${shipmentContainerCardFragment}
   ${timelineDateFullFragment}
   ${batchFormFragment}
   ${userAvatarFragment}

@@ -1,5 +1,4 @@
 // @flow
-
 import React, { lazy, Suspense } from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
@@ -9,13 +8,20 @@ import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { CloneButton } from 'components/Buttons';
 import { encodeId } from 'utils/id';
+import { isEnableBetaFeature } from 'utils/env';
 import scrollIntoView from 'utils/scrollIntoView';
 import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 import { uniqueOrders } from 'modules/container/utils';
 import { ShipmentBatchesContainer } from './containers';
-import ShipmentSection from './components/ShipmentSection';
+import { ShipmentSection } from './components';
 import { ShipmentFormWrapperStyle } from './style';
+
+const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
+const AsyncContainerCargoSection = lazy(() => import('./components/ContainerCargoSection'));
+const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
+const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
+const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
 
 type OptionalProps = {
   isNew: boolean,
@@ -34,14 +40,6 @@ const defaultProps = {
   onFormReady: () => {},
   anchor: '',
 };
-
-const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
-
-const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
-
-const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
-
-const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 
 class ShipmentForm extends React.Component<Props> {
   static defaultProps = defaultProps;
@@ -119,20 +117,41 @@ class ShipmentForm extends React.Component<Props> {
             <AsyncTimelineSection isNew={isNew} />
           </SectionWrapper>
           <SectionWrapper id="cargoSection">
-            <Subscribe to={[ShipmentBatchesContainer]}>
-              {({ state: { batches } }) => (
-                <SectionHeader
-                  icon="CARGO"
-                  title={
-                    <>
-                      <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
-                      {batches.length})
-                    </>
-                  }
-                />
-              )}
-            </Subscribe>
-            <AsyncCargoSection />
+            {isEnableBetaFeature ? (
+              <>
+                <Subscribe to={[ShipmentBatchesContainer]}>
+                  {({ state: { batches } }) => (
+                    <SectionHeader
+                      icon="CARGO"
+                      title={
+                        <>
+                          <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
+                          {batches.length})
+                        </>
+                      }
+                    />
+                  )}
+                </Subscribe>
+                <AsyncContainerCargoSection />
+              </>
+            ) : (
+              <>
+                <Subscribe to={[ShipmentBatchesContainer]}>
+                  {({ state: { batches } }) => (
+                    <SectionHeader
+                      icon="CARGO"
+                      title={
+                        <>
+                          <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
+                          {batches.length})
+                        </>
+                      }
+                    />
+                  )}
+                </Subscribe>
+                <AsyncCargoSection />
+              </>
+            )}
           </SectionWrapper>
           <SectionWrapper id="documentsSection">
             <SectionHeader
