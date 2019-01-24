@@ -91,6 +91,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
         type={1}
         isTargeted={
           !state.expandCards.orders.includes(item.id) &&
+          item.orderItems.map(({ id }) => id).some(id => uiSelectors.isTarget(ORDER_ITEM, id)) &&
           item.orderItems
             .reduce((result, orderItem) => result.concat(orderItem.batches.map(({ id }) => id)), [])
             .some(id => uiSelectors.isTarget(BATCH, id))
