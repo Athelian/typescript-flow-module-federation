@@ -21,13 +21,20 @@ export const DoubleDatesWrapperStyle: string = css`
   flex: 1;
 `;
 
+export const ContainerDatesContainerWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1.89;
+`;
+
 export const BlankPlaceholderStyle: string = css`
   height: 15px;
 `;
 
 export const ArrivalDepartureIconsWrapperStyle: string = css`
   position: absolute;
-  left: -5px;
+  left: -15px;
   top: 0;
   display: grid;
   grid-template-rows: 15px 15px;
@@ -48,10 +55,13 @@ export const ContainerDateLabelStyle: string = css`
   justify-content: center;
   align-items: center;
   padding: 0 3px;
-  width: 45px;
   height: 18px;
   ${borderRadiuses.BUTTON};
   ${fontSizes.TINY};
   background-color: ${colors.GRAY_LIGHT};
   color: ${colors.WHITE};
+`;
+
+export const ApprovalStyle = () => css`
+  ${fontSizes.SMALL}
 `;

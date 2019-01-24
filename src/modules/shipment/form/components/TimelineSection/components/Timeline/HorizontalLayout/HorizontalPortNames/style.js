@@ -13,10 +13,13 @@ export const PortNameWrapperStyle: string = css`
   justify-content: center;
 `;
 
-export const BlankSpaceStyle: string = css`
-  flex: 1;
+export const WarehouseNameWrapperStyle: string = css`
+  position: relative;
+  display: flex;
+  flex: 1.89;
+  justify-content: center;
 `;
 
-export const FlexSizeStyle = (flex: number) => css`
-  flex: ${flex};
+export const BlankSpaceStyle: string = css`
+  flex: 1;
 `;

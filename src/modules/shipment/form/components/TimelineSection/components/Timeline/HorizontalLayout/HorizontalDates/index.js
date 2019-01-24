@@ -12,6 +12,8 @@ import {
   ArrivalDepartureIconsWrapperStyle,
   ContainerDateWrapperStyle,
   ContainerDateLabelStyle,
+  ContainerDatesContainerWrapperStyle,
+  ApprovalStyle,
 } from './style';
 
 type Props = {
@@ -58,7 +60,7 @@ const HorizontalDates = ({ shipment }: Props) => {
         </div>
 
         {isEnableBetaFeature && containers && containers.length > 0 ? (
-          <div className={DoubleDatesWrapperStyle}>
+          <div className={ContainerDatesContainerWrapperStyle}>
             <div>
               <div className={ContainerDateWrapperStyle}>
                 <div className={ContainerDateLabelStyle}>
@@ -68,6 +70,9 @@ const HorizontalDates = ({ shipment }: Props) => {
                   />
                 </div>
                 <TimelineContainerDate timelineDates={containers} type="Agreed" />
+                <div className={ApprovalStyle()}>
+                  <Icon icon="CHECKED" />
+                </div>
               </div>
               <div className={ContainerDateWrapperStyle}>
                 <div className={ContainerDateLabelStyle}>
@@ -77,6 +82,9 @@ const HorizontalDates = ({ shipment }: Props) => {
                   />
                 </div>
                 <TimelineContainerDate timelineDates={containers} type="Actual" />
+                <div className={ApprovalStyle()}>
+                  <Icon icon="CHECKED" />
+                </div>
               </div>
             </div>
           </div>
@@ -114,15 +122,21 @@ const HorizontalDates = ({ shipment }: Props) => {
       </div>
 
       {isEnableBetaFeature && containers && containers.length > 0 ? (
-        <div className={DoubleDatesWrapperStyle}>
+        <div className={ContainerDatesContainerWrapperStyle}>
           <div>
             <div className={ContainerDateWrapperStyle}>
               <div className={ContainerDateLabelStyle}>AGREED</div>
               <TimelineContainerDate timelineDates={containers} type="Agreed" />
+              <div className={ApprovalStyle()}>
+                <Icon icon="CHECKED" />
+              </div>
             </div>
             <div className={ContainerDateWrapperStyle}>
               <div className={ContainerDateLabelStyle}>ACTUAL</div>
               <TimelineContainerDate timelineDates={containers} type="Actual" />
+              <div className={ApprovalStyle()}>
+                <Icon icon="CHECKED" />
+              </div>
             </div>
           </div>
         </div>

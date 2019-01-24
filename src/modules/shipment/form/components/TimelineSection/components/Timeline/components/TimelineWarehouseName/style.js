@@ -2,7 +2,10 @@
 import { css } from 'react-emotion';
 import { colors, presets, fontSizes, borderRadiuses } from 'styles/common';
 
-export const TimelineWarehouseNameWrapperStyle = (vertical: boolean): string => css`
+export const TimelineWarehouseNameWrapperStyle = (
+  vertical: boolean,
+  haveContainer: boolean
+): string => css`
   ${vertical
     ? `
     border-radius: 0 999px 999px 0;
@@ -13,12 +16,12 @@ export const TimelineWarehouseNameWrapperStyle = (vertical: boolean): string => 
   `
     : `
     ${borderRadiuses.BUTTON};
-    width: 100px;
+    width: ${haveContainer ? '90px' : '90px'};
     height: 20px;
     line-height: 20px;
   `};
   display: flex;
-  justify-content: space-between;
+  justify-content: ${haveContainer ? 'space-between' : 'center'};
   align-items: center;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   z-index: 0;

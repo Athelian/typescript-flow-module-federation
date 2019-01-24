@@ -15,7 +15,6 @@ import {
   HorizontalTimelineWrapperStyle,
   BlankSpaceStyle,
   ContainerIconWrapperStyle,
-  WarehouseContainerIconWrapperStyle,
   WarehouseContainerWrapperStyle,
 } from './style';
 
@@ -106,16 +105,14 @@ const HorizontalTimeline = ({ shipment }: Props) => {
         linkPath={`/shipment/${encodeId(shipment.id)}/customClearance`}
       />
 
-      <TimelineLine color={warehouseArrivalColoring} />
+      <TimelineLine color={warehouseArrivalColoring} size={1.46} />
 
       {isEnableBetaFeature && containers && containers.length > 0 ? (
         <div className={WarehouseContainerWrapperStyle}>
           <div className={ContainerIconWrapperStyle}>
             <TimelineContainerIcon />
           </div>
-          <div className={WarehouseContainerIconWrapperStyle}>
-            <TimelineWarehouseContainerIcon containers={containers} />
-          </div>
+          <TimelineWarehouseContainerIcon containers={containers} />
         </div>
       ) : (
         <TimelineIcon
@@ -125,7 +122,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
         />
       )}
 
-      <TimelineLine color={deliveryReadyColoring} />
+      <TimelineLine color={deliveryReadyColoring} size={1.46} />
 
       <TimelineIcon
         icon="DELIVERY_READY"

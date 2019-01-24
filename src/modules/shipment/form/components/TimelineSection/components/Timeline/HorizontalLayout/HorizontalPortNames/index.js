@@ -5,7 +5,7 @@ import {
   HorizontalPortsWrapperStyle,
   PortNameWrapperStyle,
   BlankSpaceStyle,
-  FlexSizeStyle,
+  WarehouseNameWrapperStyle,
 } from './style';
 
 type Props = {
@@ -14,10 +14,10 @@ type Props = {
 
 const HorizontalPortNames = ({ shipment }: Props) => {
   const { voyages, transportType, containerGroups, containers } = shipment;
-
+  const haveContainer = containers && containers.length > 0;
   const loadPort = voyages[0].departurePort;
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
-  const { warehouse } = containers && containers.length > 0 ? containers[0] : containerGroups[0];
+  const { warehouse } = haveContainer ? containers[0] : containerGroups[0];
 
   return (
     <div className={HorizontalPortsWrapperStyle}>
@@ -42,13 +42,13 @@ const HorizontalPortNames = ({ shipment }: Props) => {
         <TimelinePortName port={dischargePort} transportType={transportType} />
       </div>
 
-      <div className={FlexSizeStyle(1)} />
+      <div className={BlankSpaceStyle} />
 
-      <div className={PortNameWrapperStyle}>
+      <div className={haveContainer ? WarehouseNameWrapperStyle : PortNameWrapperStyle}>
         <TimelineWarehouseName name={warehouse && warehouse.name} containers={containers} />
       </div>
 
-      <div className={FlexSizeStyle(1)} />
+      <div className={BlankSpaceStyle} />
     </div>
   );
 };

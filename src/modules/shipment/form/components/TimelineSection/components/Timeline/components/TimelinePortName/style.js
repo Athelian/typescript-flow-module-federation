@@ -20,7 +20,6 @@ export const TimelinePortNameWrapperStyle = (vertical: boolean): string => css`
     width: 90px;
     height: 20px;
     line-height: 20px;
-    padding: 0 5px;
     ${fontSizes.MEDIUM};
   `};
   ${presets.ELLIPSIS};
