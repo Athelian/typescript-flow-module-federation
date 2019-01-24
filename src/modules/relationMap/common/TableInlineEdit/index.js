@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { ApolloConsumer } from 'react-apollo';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
 import { HotKeys } from 'react-hotkeys';
@@ -73,6 +74,7 @@ type Props = {
   onCancel: () => void,
   type: string,
   selected: Object,
+  intl: IntlShape,
 };
 
 const keyMap = {
@@ -197,7 +199,7 @@ const getRowCounter = (counter, type) => {
 
 const mapCustomField = entity => (_, index) => `${entity}-customFields-${index}`;
 
-export default function TableInlineEdit({ type, selected, onCancel }: Props) {
+function TableInlineEdit({ type, selected, onCancel, intl }: Props) {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
   const [data] = useIdb(type, []);
@@ -238,21 +240,18 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     };
   });
 
-  const onToggle = useCallback(
-    selectedColumn => {
-      if (templateColumns && selectedColumn) {
-        const filteredTemplateColumns = templateColumns.includes(selectedColumn)
-          ? templateColumns.filter(item => item !== selectedColumn)
-          : [...templateColumns, selectedColumn];
-        setTemplateColumns(filteredTemplateColumns);
-        window.localStorage.setItem(
-          'filterRMTemplateColumns',
-          JSON.stringify(filteredTemplateColumns)
-        );
-      }
-    },
-    [templateColumns]
-  );
+  const onToggle = useCallback(selectedColumn => {
+    if (templateColumns && selectedColumn) {
+      const filteredTemplateColumns = templateColumns.includes(selectedColumn)
+        ? templateColumns.filter(item => item !== selectedColumn)
+        : [...templateColumns, selectedColumn];
+      setTemplateColumns(filteredTemplateColumns);
+      window.localStorage.setItem(
+        'filterRMTemplateColumns',
+        JSON.stringify(filteredTemplateColumns)
+      );
+    }
+  }, [templateColumns]);
 
   const {
     sumShipments,
@@ -508,7 +507,7 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                     />
                     {/* @TODO set current columns and rows data to this button */}
                     <ExportGenericButton
-                      getColumns={() => getExportColumns(allColumns)}
+                      getColumns={() => getExportColumns(intl, allColumns)}
                       getRows={() =>
                         getExportRows({
                           data: { editData, mappingObjects },
@@ -1067,3 +1066,5 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     />
   );
 }
+
+export default injectIntl(TableInlineEdit);

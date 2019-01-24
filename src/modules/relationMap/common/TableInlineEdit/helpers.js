@@ -10,6 +10,7 @@ import {
   formatContainerGroups,
   formatVoyages,
 } from 'modules/shipment/form/mutation';
+import type { IntlShape } from 'react-intl';
 
 type MappingObject = {
   data: {
@@ -368,16 +369,19 @@ export const parseChangedData = (
   };
 };
 
-export function getExportColumns({
-  orderColumnFieldsFilter,
-  orderItemColumnFieldsFilter,
-  batchColumnFieldsFilter,
-  shipmentColumnFieldsFilter,
-  orderCustomFieldsFilter,
-  orderItemCustomFieldsFilter,
-  batchCustomFieldsFilter,
-  shipmentCustomFieldsFilter,
-}: Object): Array<string> {
+export function getExportColumns(
+  intl: IntlShape,
+  {
+    orderColumnFieldsFilter,
+    orderItemColumnFieldsFilter,
+    batchColumnFieldsFilter,
+    shipmentColumnFieldsFilter,
+    orderCustomFieldsFilter,
+    orderItemCustomFieldsFilter,
+    batchCustomFieldsFilter,
+    shipmentCustomFieldsFilter,
+  }: Object
+): Array<string> {
   const allColumns = [
     ...orderColumnFieldsFilter,
     ...orderCustomFieldsFilter,
@@ -387,7 +391,7 @@ export function getExportColumns({
     ...batchCustomFieldsFilter,
     ...shipmentColumnFieldsFilter,
     ...shipmentCustomFieldsFilter,
-  ].map(column => column.name);
+  ].map(column => (column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name));
   return allColumns;
 }
 
