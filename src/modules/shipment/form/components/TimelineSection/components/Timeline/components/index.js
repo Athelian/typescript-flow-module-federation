@@ -1,5 +1,6 @@
 // @flow
 import TimelineDate from './TimelineDate';
+import TimelineDateContainers from './TimelineDateContainers';
 import TimelineIcon from './TimelineIcon';
 import TimelineIconSnakeLayout from './TimelineIconSnakeLayout';
 import TimelineLine from './TimelineLine';
@@ -14,6 +15,7 @@ import TimelineContainerDate from './TimelineContainerDate';
 
 export {
   TimelineDate,
+  TimelineDateContainers,
   TimelineIcon,
   TimelineIconSnakeLayout,
   TimelineLine,

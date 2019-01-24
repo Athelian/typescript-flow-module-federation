@@ -238,17 +238,9 @@ export const shipmentCardFragment = isEnableBetaFeature
           ... on Container {
             id
             warehouseArrivalAgreedDate
-            warehouseArrivalAgreedDateApprovedBy {
-              ... on User {
-                id
-              }
-            }
+            warehouseArrivalAgreedDateApprovedAt
             warehouseArrivalActualDate
-            warehouseArrivalActualDateApprovedBy {
-              ... on User {
-                id
-              }
-            }
+            warehouseArrivalActualDateApprovedAt
             warehouse {
               ... on Warehouse {
                 id

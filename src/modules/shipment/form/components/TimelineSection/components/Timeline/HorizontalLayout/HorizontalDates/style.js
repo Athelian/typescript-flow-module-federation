@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, colors, borderRadiuses } from 'styles/common';
+import { fontSizes, colors } from 'styles/common';
 
 export const HorizontalDatesWrapperStyle: string = css`
   position: relative;
@@ -21,13 +21,6 @@ export const DoubleDatesWrapperStyle: string = css`
   flex: 1;
 `;
 
-export const ContainerDatesContainerWrapperStyle: string = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1.89;
-`;
-
 export const BlankPlaceholderStyle: string = css`
   height: 15px;
 `;
@@ -43,25 +36,4 @@ export const ArrivalDepartureIconsWrapperStyle: string = css`
   justify-content: center;
   ${fontSizes.SMALL};
   color: ${colors.GRAY_LIGHT};
-`;
-
-export const ContainerDateWrapperStyle: string = css`
-  display: flex;
-  margin-bottom: 5px;
-`;
-
-export const ContainerDateLabelStyle: string = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 3px;
-  height: 18px;
-  ${borderRadiuses.BUTTON};
-  ${fontSizes.TINY};
-  background-color: ${colors.GRAY_LIGHT};
-  color: ${colors.WHITE};
-`;
-
-export const ApprovalStyle = () => css`
-  ${fontSizes.SMALL}
 `;

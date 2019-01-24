@@ -9,11 +9,14 @@ type Props = {
   timelineDates?: Array<Object>,
   type: 'Agreed' | 'Actual',
 };
+
 const defaultProps = {
   timelineDates: [],
 };
+
 const TimelineContainerDate = (props: Props) => {
   const { timelineDates = [], type } = props;
+
   if (timelineDates && timelineDates.length === 1) {
     const [timelineDate] = timelineDates;
     return (
@@ -24,11 +27,14 @@ const TimelineContainerDate = (props: Props) => {
       </div>
     );
   }
+
   const dates = timelineDates.map(timelineDate =>
     new Date(timelineDate[`warehouseArrival${type}Date`]).getTime()
   );
+
   const maxDate = new Date(Math.max.apply(null, dates));
   const minDate = new Date(Math.min.apply(null, dates));
+
   return (
     <div style={{ display: 'flex' }}>
       <div
@@ -44,5 +50,7 @@ const TimelineContainerDate = (props: Props) => {
     </div>
   );
 };
+
 TimelineContainerDate.defaultProps = defaultProps;
+
 export default TimelineContainerDate;

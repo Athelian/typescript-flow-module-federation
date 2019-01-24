@@ -1,19 +1,13 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { FormattedMessage } from 'react-intl';
-import { isEnableBetaFeature } from 'utils/env';
-import { TimelineDate, TimelineContainerDate } from '../../components';
+import { TimelineDate, TimelineDateContainers } from '../../components';
 import {
   HorizontalDatesWrapperStyle,
   SingleDateWrapperStyle,
   DoubleDatesWrapperStyle,
   BlankPlaceholderStyle,
   ArrivalDepartureIconsWrapperStyle,
-  ContainerDateWrapperStyle,
-  ContainerDateLabelStyle,
-  ContainerDatesContainerWrapperStyle,
-  ApprovalStyle,
 } from './style';
 
 type Props = {
@@ -23,7 +17,8 @@ type Props = {
 const HorizontalDates = ({ shipment }: Props) => {
   const { cargoReady, voyages, containerGroups, containers } = shipment;
   const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
-  if (voyages.length > 1) {
+
+  if ((containers && containers.length > 0) || voyages.length > 1) {
     return (
       <div className={HorizontalDatesWrapperStyle}>
         <div className={ArrivalDepartureIconsWrapperStyle}>
@@ -59,35 +54,8 @@ const HorizontalDates = ({ shipment }: Props) => {
           <div className={BlankPlaceholderStyle} />
         </div>
 
-        {isEnableBetaFeature && containers && containers.length > 0 ? (
-          <div className={ContainerDatesContainerWrapperStyle}>
-            <div>
-              <div className={ContainerDateWrapperStyle}>
-                <div className={ContainerDateLabelStyle}>
-                  <FormattedMessage
-                    id="modules.Shipments.agreedDateLabel"
-                    defaultMessage="AGREED"
-                  />
-                </div>
-                <TimelineContainerDate timelineDates={containers} type="Agreed" />
-                <div className={ApprovalStyle()}>
-                  <Icon icon="CHECKED" />
-                </div>
-              </div>
-              <div className={ContainerDateWrapperStyle}>
-                <div className={ContainerDateLabelStyle}>
-                  <FormattedMessage
-                    id="modules.Shipments.actualDateLabel"
-                    defaultMessage="ACTUAL"
-                  />
-                </div>
-                <TimelineContainerDate timelineDates={containers} type="Actual" />
-                <div className={ApprovalStyle()}>
-                  <Icon icon="CHECKED" />
-                </div>
-              </div>
-            </div>
-          </div>
+        {containers && containers.length > 0 ? (
+          <TimelineDateContainers containers={containers} />
         ) : (
           <div className={DoubleDatesWrapperStyle}>
             <TimelineDate timelineDate={warehouseArrival} />
@@ -121,30 +89,9 @@ const HorizontalDates = ({ shipment }: Props) => {
         <TimelineDate timelineDate={customClearance} />
       </div>
 
-      {isEnableBetaFeature && containers && containers.length > 0 ? (
-        <div className={ContainerDatesContainerWrapperStyle}>
-          <div>
-            <div className={ContainerDateWrapperStyle}>
-              <div className={ContainerDateLabelStyle}>AGREED</div>
-              <TimelineContainerDate timelineDates={containers} type="Agreed" />
-              <div className={ApprovalStyle()}>
-                <Icon icon="CHECKED" />
-              </div>
-            </div>
-            <div className={ContainerDateWrapperStyle}>
-              <div className={ContainerDateLabelStyle}>ACTUAL</div>
-              <TimelineContainerDate timelineDates={containers} type="Actual" />
-              <div className={ApprovalStyle()}>
-                <Icon icon="CHECKED" />
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className={SingleDateWrapperStyle}>
-          <TimelineDate timelineDate={warehouseArrival} />
-        </div>
-      )}
+      <div className={SingleDateWrapperStyle}>
+        <TimelineDate timelineDate={warehouseArrival} />
+      </div>
 
       <div className={SingleDateWrapperStyle}>
         <TimelineDate timelineDate={deliveryReady} />
