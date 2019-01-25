@@ -507,8 +507,8 @@ function TableInlineEdit({ type, selected, onCancel, intl }: Props) {
                     />
                     {/* @TODO set current columns and rows data to this button */}
                     <ExportGenericButton
-                      getColumns={() => getExportColumns(intl, allColumns)}
-                      getRows={() =>
+                      columns={() => getExportColumns(intl, allColumns)}
+                      rows={() =>
                         getExportRows({
                           data: { editData, mappingObjects },
                           ids: { orderIds, orderItemsIds, batchIds },

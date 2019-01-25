@@ -17,8 +17,8 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  getColumns: () => Array<string>,
-  getRows: () => Array<Array<?string>>,
+  columns: Array<string> | (() => Array<string>),
+  rows: Array<Array<?string>> | (() => Array<Array<?string>>),
 };
 
 type State = {
@@ -46,7 +46,7 @@ class ExportGenericButton extends React.Component<Props, State> {
   }
 
   doExport = (client: ApolloClient<any>, extension: string) => {
-    const { getColumns, getRows } = this.props;
+    const { columns, rows } = this.props;
 
     this.setState({ isLoading: true }, () => {
       client
@@ -55,8 +55,8 @@ class ExportGenericButton extends React.Component<Props, State> {
           // $FlowFixMe: it's bullshit
           variables: {
             extension,
-            columns: getColumns(),
-            rows: getRows(),
+            columns: typeof columns === 'function' ? columns() : columns,
+            rows: typeof rows === 'function' ? rows() : rows,
           },
         })
         .then(({ data }) => {

@@ -401,24 +401,19 @@ export const getFieldValueByType = (type: string) => (value: any) => {
     case 'timeline':
       return value ? formatToDateLabel(value) : '';
     case 'number':
-      return `${value}`;
     default:
-      return value;
+      return `${value}` || '';
   }
 };
 export function getFieldValues(fields: Array<Object>, values: Array<Object>) {
   const fieldValues: Array<string> = (fields: Array<Object>).map(
     ({ name, type, getExportValue }): any => {
-      const value = getExportValue
-        ? compose(
-            getFieldValueByType(type),
-            getExportValue
-          )(values)
-        : compose(
-            getFieldValueByType(type),
-            getByPathWithDefault('', name)
-          )(values);
-      return `${value}`;
+      const getValueFunction = getExportValue || getByPathWithDefault('', name);
+      const value = compose(
+        getFieldValueByType(type),
+        getValueFunction
+      )(values);
+      return value;
     }
   );
   return fieldValues;
