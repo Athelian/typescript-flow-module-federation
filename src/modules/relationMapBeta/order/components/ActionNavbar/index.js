@@ -36,7 +36,7 @@ export default function ActionNavbar({ highLightEntities }: Props) {
               <FormattedMessage id="modules.RelationMaps.label.split" defaultMessage="SPLIT" />
             }
             icon="SPLIT"
-            disabled={!uiSelectors.isAllowToSplit()}
+            disabled={!uiSelectors.isAllowToSplitBatch()}
             active={activeAction === 'SPLIT'}
             onClick={() => setActiveAction('SPLIT')}
           />
