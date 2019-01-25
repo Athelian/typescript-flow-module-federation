@@ -65,6 +65,26 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
   switch (action.type) {
     case 'RESET':
       return uiInitState;
+    case 'CLEAR_ALL': {
+      const { payload } = action;
+      if (payload && payload.mode === 'TARGET') {
+        return {
+          ...state,
+          targets: [],
+          select: {
+            mode: 'SINGLE',
+            entities: [],
+          },
+        };
+      }
+      return {
+        ...state,
+        highlight: {
+          type: '',
+          selectedId: '',
+        },
+      };
+    }
     case 'TOGGLE_TAG':
       return { ...state, showTag: !state.showTag };
     case 'TOGGLE_EDIT_FORM':
@@ -214,6 +234,13 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
 
 export function actionCreators(dispatch: Function) {
   return {
+    clearAllBy: (mode: 'TARGET' | 'HIGHLIGHT') =>
+      dispatch({
+        type: 'CLEAR_ALL',
+        payload: {
+          mode,
+        },
+      }),
     toggleTag: () =>
       dispatch({
         type: 'TOGGLE_TAG',
@@ -298,5 +325,11 @@ export function selectors(state: UIState) {
       highLightEntities.includes(`${entity}-${id}`),
     isSelectAllEntity: (entity: string, total: number) => entitySelector({ state, entity, total }),
     isTarget: (entity: string, id: string) => state.targets.includes(`${entity}-${id}`),
+    isTargetAnyItem: () => state.targets.length > 0,
+    isHighLightAnyItem: () => state.highlight.selectedId !== '',
+    countTargetBy: (entity: string) =>
+      state.targets.filter(item => item.includes(`${entity}-`)).length,
+    countHighLightBy: (highLightEntities: Array<string>, entity: string) =>
+      highLightEntities.filter(item => item.includes(`${entity}-`)).length,
   };
 }
