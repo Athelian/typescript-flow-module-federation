@@ -483,6 +483,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
     return orderItems.forEach(orderItem => {
       const notHaveBatches = Object.keys(orderItem.relation.batch).length === 0;
       const orderItemData = editData.orderItems[orderItem.data.id];
+      console.log(orderItemData, orderItem.data.id);
       const orderItemValues = getFieldValues(orderItemColumnFieldsFilter, orderItemData);
       const orderItemCustomValues = getCustomFieldValues(
         orderItemCustomFieldsFilter,
