@@ -513,8 +513,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
               ...shipmentCustomFieldsFilter,
             ]);
           } else {
-            const shipment = mappingObjects.shipment[batch.shipment.id];
-            const shipmentData = editData.shipments[shipment.data.id];
+            const shipmentData = editData.shipments[batch.shipment.id];
             const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData);
             const shipmentCustomValues = getCustomFieldValues(
               shipmentCustomFieldsFilter,

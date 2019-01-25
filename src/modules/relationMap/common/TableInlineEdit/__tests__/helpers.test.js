@@ -7,7 +7,7 @@ import {
 import { getExportRows, getExportColumns } from '../helpers';
 import info from './data.json';
 import editData from './editData.json';
-import mappingObjects from './mappingObj.json';
+import mappingObjects from './mappingObjects.json';
 
 describe('export helper function', () => {
   test('getExportRows', () => {
