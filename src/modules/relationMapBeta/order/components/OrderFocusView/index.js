@@ -212,14 +212,16 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                             ) > position
                           }
                           isFocused={
-                            uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
-                            item.orderItems.findIndex(currentOrderItem =>
-                              uiSelectors.isSelectEntity(
-                                highLightEntities,
-                                ORDER_ITEM,
-                                currentOrderItem.id
-                              )
-                            ) > position
+                            (state.highlight.type === ORDER &&
+                              state.highlight.selectedId === item.id) ||
+                            (uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
+                              item.orderItems.findIndex(currentOrderItem =>
+                                uiSelectors.isSelectEntity(
+                                  highLightEntities,
+                                  ORDER_ITEM,
+                                  currentOrderItem.id
+                                )
+                              ) > position)
                           }
                           hasRelation={uiSelectors.isTarget(ORDER_ITEM, orderItem.id)}
                         />
