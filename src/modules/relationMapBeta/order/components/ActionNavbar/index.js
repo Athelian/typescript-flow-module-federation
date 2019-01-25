@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
-import { selectors } from 'modules/relationMapBeta/order/store';
+import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
 import TargetToolBar from './TargetToolBar';
 import HighLightToolBar from './HighLightToolBar';
@@ -13,8 +13,9 @@ type Props = {
 
 export default function ActionNavbar({ highLightEntities }: Props) {
   const context = React.useContext(ActionDispatch);
-  const { state } = context;
+  const { state, dispatch } = context;
   const uiSelectors = selectors(state);
+  const actions = actionCreators(dispatch);
   return (
     <>
       {uiSelectors.isTargetAnyItem() && (
@@ -23,9 +24,9 @@ export default function ActionNavbar({ highLightEntities }: Props) {
           totalOrderItem={uiSelectors.countTargetBy(ORDER_ITEM)}
           totalBatch={uiSelectors.countTargetBy(BATCH)}
           totalShipment={uiSelectors.countTargetBy(SHIPMENT)}
-          onCancel={console.warn}
+          onCancel={() => actions.clearAllBy('TARGET')}
         >
-          Test
+          WIP
         </TargetToolBar>
       )}
       {uiSelectors.isHighLightAnyItem() && (
@@ -34,7 +35,7 @@ export default function ActionNavbar({ highLightEntities }: Props) {
           totalOrderItem={uiSelectors.countHighLightBy(highLightEntities, ORDER_ITEM)}
           totalBatch={uiSelectors.countHighLightBy(highLightEntities, BATCH)}
           totalShipment={uiSelectors.countHighLightBy(highLightEntities, SHIPMENT)}
-          onCancel={console.warn}
+          onCancel={() => actions.clearAllBy('HIGHLIGHT')}
         />
       )}
     </>
