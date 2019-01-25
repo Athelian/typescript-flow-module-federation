@@ -22,14 +22,10 @@ const findPriceAmount = (batch: Object, totalBatchQuantity: number) => {
 const findVolume = (batch: Object) => {
   const {
     packageQuantity = 0,
-    orderItem: {
-      productProvider: { packageVolume = {} },
-    },
+    packageVolume = {},
   }: {
     packageQuantity: number,
-    orderItem: {
-      productProvider: { packageVolume: Object },
-    },
+    packageVolume: Object,
   } = batch;
   const volume = convertVolume(packageVolume.value, packageVolume.metric, 'm³');
   return packageQuantity * volume;
@@ -37,24 +33,19 @@ const findVolume = (batch: Object) => {
 
 const findWeight = (batch: Object) => {
   const {
-    orderItem: { productProvider },
     packageQuantity = 0,
+    packageGrossWeight = {},
   }: {
     packageQuantity: number,
-    orderItem: { productProvider: Object },
+    packageGrossWeight: Object,
   } = batch;
-  return productProvider.packageGrossWeight
-    ? packageQuantity *
-        convertWeight(
-          productProvider.packageGrossWeight.value,
-          productProvider.packageGrossWeight.metric,
-          'kg'
-        )
+  return packageGrossWeight
+    ? packageQuantity * convertWeight(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
     : 0;
 };
 
 export const findSummary = (values: Object) => {
-  const { batches = [], totalVolume, totalWeight, totalPrice } = values;
+  const { batches = [], totalVolume, totalWeight } = values;
   let diffCurrency = false;
   let totalBatchQuantity = 0;
   let totalPriceAmount = 0;
@@ -87,7 +78,7 @@ export const findSummary = (values: Object) => {
     totalPrice: diffCurrency
       ? null
       : {
-          ...totalPrice,
+          currency: baseCurrency,
           amount: totalPriceAmount,
         },
     totalVolume: {
