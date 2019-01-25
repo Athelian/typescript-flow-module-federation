@@ -322,6 +322,7 @@ const entitySelector = ({
 export function selectors(state: UIState) {
   return {
     isAllowToSplitBatch: () =>
+      state.targets.length === 1 &&
       state.targets.filter(item => item.includes(`${BATCH}-`)).length === 1,
     isSelectEntity: (highLightEntities: Array<string>, entity: string, id: string) =>
       highLightEntities.includes(`${entity}-${id}`),
