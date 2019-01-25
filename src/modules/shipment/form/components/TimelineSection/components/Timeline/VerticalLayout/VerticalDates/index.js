@@ -30,8 +30,6 @@ const VerticalDates = ({ shipment }: Props) => {
     actualApproved,
   } = getContainerDatesRange(containers);
 
-  console.log(containers);
-
   return (
     <div className={VerticalDatesWrapperStyle}>
       <div className={SingularDateWrapperStyle}>
