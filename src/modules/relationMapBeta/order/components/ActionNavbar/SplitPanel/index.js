@@ -80,7 +80,7 @@ function SplitPanel({ intl, onSplit }: Props) {
                 icon="ARROW_RIGHT"
                 onClick={() =>
                   onSplit({
-                    type: 'SIMPLE',
+                    type: 'batchSimpleSplit',
                     quantity,
                   })
                 }
@@ -114,7 +114,7 @@ function SplitPanel({ intl, onSplit }: Props) {
                 icon="ARROW_RIGHT"
                 onClick={() =>
                   onSplit({
-                    type: 'EQUALLY',
+                    type: 'batchEqualSplit',
                     quantity,
                   })
                 }
