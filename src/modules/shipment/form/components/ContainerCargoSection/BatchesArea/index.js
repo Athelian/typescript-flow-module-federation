@@ -5,7 +5,6 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
-import { isNullOrUndefined } from 'utils/fp';
 import { ShipmentBatchCard, ShipmentContainerBatchCard } from 'components/Cards';
 import { NewButton, MoveButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
@@ -16,6 +15,7 @@ import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import SelectOrderItems from 'providers/SelectOrderItems';
+import { getUsefulBatches } from 'modules/shipment/form/components/ContainerCargoSection';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -28,6 +28,7 @@ import {
   EmptyMessageStyle,
   BatchesFooterWrapperStyle,
 } from './style';
+
 import SelectBatches from '../../SelectBatches';
 
 type Props = {
@@ -39,29 +40,16 @@ function BatchesArea({ intl, selectedContainerId }: Props) {
   return (
     <Subscribe to={[ShipmentBatchesContainer]}>
       {({ state: { batches }, setFieldValue, setFieldArrayValue }) => {
-        let batchesCopy = batches.slice(0);
-
-        const leftCardIsSelected = !isNullOrUndefined(selectedContainerId);
-
-        const containerIsSelected = leftCardIsSelected && selectedContainerId !== 'Pool';
-
-        if (leftCardIsSelected) {
-          if (containerIsSelected) {
-            batchesCopy = batchesCopy.filter(batch =>
-              !isNullOrUndefined(batch.container)
-                ? batch.container.id === selectedContainerId
-                : false
-            );
-          } else {
-            batchesCopy = batchesCopy.filter(batch => isNullOrUndefined(batch.container));
-          }
-        }
+        const { usefulBatch, leftCardIsSelected, containerIsSelected } = getUsefulBatches(
+          batches,
+          selectedContainerId
+        );
 
         return (
           <div className={BatchesWrapperStyle}>
             <div className={BatchesNavbarWrapperStyle} />
             <div className={BatchesBodyWrapperStyle}>
-              {batchesCopy.length === 0 ? (
+              {usefulBatch.length === 0 ? (
                 <div className={EmptyMessageStyle}>
                   <FormattedMessage
                     id="modules.Shipments.noBatches"
@@ -87,7 +75,7 @@ function BatchesArea({ intl, selectedContainerId }: Props) {
                             defaultMessage="ALL BATCHES"
                           />
                         )}{' '}
-                        (<FormattedNumber value={batchesCopy.length} />)
+                        (<FormattedNumber value={usefulBatch.length} />)
                       </div>
                     </div>
                     <MoveButton
@@ -96,7 +84,7 @@ function BatchesArea({ intl, selectedContainerId }: Props) {
                     />
                   </div>
                   <div className={BatchesGridStyle}>
-                    {batchesCopy.map((batch, position) => (
+                    {usefulBatch.map((batch, position) => (
                       <BooleanValue key={batch.id}>
                         {({ value: opened, set: batchSlideToggle }) => (
                           <>

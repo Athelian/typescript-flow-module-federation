@@ -13,6 +13,7 @@ import {
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
+import { getUsefulBatches } from 'modules/shipment/form/components/ContainerCargoSection';
 import {
   ContainersWrapperStyle,
   ContainersNavbarWrapperStyle,
@@ -37,110 +38,114 @@ type Props = {
 function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
-      {({ state: { containers }, setFieldValue, setFieldArrayValue }, { state: { batches } }) => (
-        <div className={ContainersWrapperStyle}>
-          <div className={ContainersNavbarWrapperStyle} />
-          <div className={ContainersBodyWrapperStyle}>
-            <div className={ContainersHeaderWrapperStyle}>
-              <div className={IconStyle}>
-                <Icon icon="CONTAINER" />
-              </div>
-              <div className={TitleStyle}>
-                <FormattedMessage id="modules.Shipments.containers" defaultMessage="CONTAINERS" /> (
-                <FormattedNumber value={containers.length} />)
-              </div>
-            </div>
-            <div className={ContainersGridStyle}>
-              <button
-                className={SelectBatchesPoolCardWrapperStyle(selectedContainerId === 'Pool')}
-                type="button"
-                onClick={() => setSelectedContainerId('Pool')}
-              >
-                <div className={EyeballIconStyle}>
-                  <Icon icon={selectedContainerId === 'Pool' ? 'INVISIBLE' : 'VISIBLE'} />
+      {({ state: { containers }, setFieldValue, setFieldArrayValue }, { state: { batches } }) => {
+        const { usefulBatch } = getUsefulBatches(batches, selectedContainerId);
+        return (
+          <div className={ContainersWrapperStyle}>
+            <div className={ContainersNavbarWrapperStyle} />
+            <div className={ContainersBodyWrapperStyle}>
+              <div className={ContainersHeaderWrapperStyle}>
+                <div className={IconStyle}>
+                  <Icon icon="CONTAINER" />
                 </div>
-                <BatchesPoolCard
-                  totalBatches={batches.length}
-                  product={
-                    batches.length > 0
-                      ? getByPath('orderItem.productProvider.product', batches[0])
-                      : null
-                  }
-                  setSelectedContainerId={setSelectedContainerId}
-                />
-              </button>
-              {containers.map((container, position) => {
-                const isSelected = selectedContainerId === container.id;
-
-                return (
-                  <div className={SelectContainerCardWrapperStyle}>
-                    <button
-                      className={SelectContainerCardBackgroundStyle(isSelected)}
-                      type="button"
-                      onClick={() => setSelectedContainerId(container.id)}
-                    >
-                      <div className={EyeballIconStyle}>
-                        <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
-                      </div>
-                    </button>
-                    <ShipmentContainerCard
-                      key={container.id}
-                      container={container}
-                      saveOnBlur={updateContainer => {
-                        setFieldArrayValue(position, updateContainer);
-                      }}
-                      // onClick={() => containerSlideToggle(true)}
-                      actions={[
-                        <CardAction
-                          icon="REMOVE"
-                          hoverColor="RED"
-                          onClick={() => {
-                            setFieldValue(
-                              'containers',
-                              containers.filter(
-                                ({ id: containerId }) => container.id !== containerId
-                              )
-                            );
-                          }}
-                        />,
-                      ]}
-                    />
+                <div className={TitleStyle}>
+                  <FormattedMessage id="modules.Shipments.containers" defaultMessage="CONTAINERS" />{' '}
+                  (
+                  <FormattedNumber value={containers.length} />)
+                </div>
+              </div>
+              <div className={ContainersGridStyle}>
+                <button
+                  className={SelectBatchesPoolCardWrapperStyle(selectedContainerId === 'Pool')}
+                  type="button"
+                  onClick={() => setSelectedContainerId('Pool')}
+                >
+                  <div className={EyeballIconStyle}>
+                    <Icon icon={selectedContainerId === 'Pool' ? 'INVISIBLE' : 'VISIBLE'} />
                   </div>
-                );
-              })}
+                  <BatchesPoolCard
+                    totalBatches={usefulBatch.length}
+                    product={
+                      usefulBatch.length > 0
+                        ? getByPath('orderItem.productProvider.product', usefulBatch[0])
+                        : null
+                    }
+                    setSelectedContainerId={setSelectedContainerId}
+                  />
+                </button>
+                {containers.map((container, position) => {
+                  const isSelected = selectedContainerId === container.id;
+
+                  return (
+                    <div className={SelectContainerCardWrapperStyle}>
+                      <button
+                        className={SelectContainerCardBackgroundStyle(isSelected)}
+                        type="button"
+                        onClick={() => setSelectedContainerId(container.id)}
+                      >
+                        <div className={EyeballIconStyle}>
+                          <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
+                        </div>
+                      </button>
+                      <ShipmentContainerCard
+                        key={container.id}
+                        container={container}
+                        saveOnBlur={updateContainer => {
+                          setFieldArrayValue(position, updateContainer);
+                        }}
+                        // onClick={() => containerSlideToggle(true)}
+                        actions={[
+                          <CardAction
+                            icon="REMOVE"
+                            hoverColor="RED"
+                            onClick={() => {
+                              setFieldValue(
+                                'containers',
+                                containers.filter(
+                                  ({ id: containerId }) => container.id !== containerId
+                                )
+                              );
+                            }}
+                          />,
+                        ]}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className={ContainersFooterWrapperStyle}>
+              <NewButton
+                label={intl.formatMessage(messages.newContainer)}
+                onClick={() => {
+                  const clonedContainers = containers.slice(0);
+                  clonedContainers.push(
+                    injectUid({
+                      no: `container no ${containers.length + 1}`,
+                      batches: [],
+                      tags: [],
+                      totalVolume: {
+                        metric: 'm³',
+                        value: 0,
+                      },
+                      totalWeight: {
+                        metric: 'kg',
+                        value: 0,
+                      },
+                      totalBatchQuantity: 0,
+                      totalBatchPackages: 0,
+                      totalNumberOfUniqueOrderItems: 0,
+                      warehouseArrivalActualDateAssignedTo: [],
+                      warehouseArrivalAgreedDateAssignedTo: [],
+                    })
+                  );
+                  setFieldValue('containers', clonedContainers);
+                }}
+              />
             </div>
           </div>
-          <div className={ContainersFooterWrapperStyle}>
-            <NewButton
-              label={intl.formatMessage(messages.newContainer)}
-              onClick={() => {
-                const clonedContainers = containers.slice(0);
-                clonedContainers.push(
-                  injectUid({
-                    no: `container no ${containers.length + 1}`,
-                    batches: [],
-                    tags: [],
-                    totalVolume: {
-                      metric: 'm³',
-                      value: 0,
-                    },
-                    totalWeight: {
-                      metric: 'kg',
-                      value: 0,
-                    },
-                    totalBatchQuantity: 0,
-                    totalBatchPackages: 0,
-                    totalNumberOfUniqueOrderItems: 0,
-                    warehouseArrivalActualDateAssignedTo: [],
-                    warehouseArrivalAgreedDateAssignedTo: [],
-                  })
-                );
-                setFieldValue('containers', clonedContainers);
-              }}
-            />
-          </div>
-        </div>
-      )}
+        );
+      }}
     </Subscribe>
   );
 }
