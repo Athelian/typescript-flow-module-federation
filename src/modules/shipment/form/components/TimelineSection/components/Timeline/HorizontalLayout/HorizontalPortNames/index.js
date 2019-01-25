@@ -1,7 +1,13 @@
 // @flow
 import * as React from 'react';
+import { isEnableBetaFeature } from 'utils/env';
 import { TimelinePortName, TimelineWarehouseName } from '../../components';
-import { HorizontalPortsWrapperStyle, PortNameWrapperStyle, BlankSpaceStyle } from './style';
+import {
+  HorizontalPortsWrapperStyle,
+  PortNameWrapperStyle,
+  BlankSpaceStyle,
+  WarehouseNameWrapperStyle,
+} from './style';
 
 type Props = {
   shipment: any,
@@ -9,10 +15,11 @@ type Props = {
 
 const HorizontalPortNames = ({ shipment }: Props) => {
   const { voyages, transportType, containerGroups, containers } = shipment;
-
   const loadPort = voyages[0].departurePort;
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
-  const { warehouse } = containers && containers.length > 0 ? containers[0] : containerGroups[0];
+
+  const haveContainer = containers && containers.length > 0;
+  const { warehouse } = isEnableBetaFeature && haveContainer ? containers[0] : containerGroups[0];
 
   return (
     <div className={HorizontalPortsWrapperStyle}>
@@ -39,7 +46,11 @@ const HorizontalPortNames = ({ shipment }: Props) => {
 
       <div className={BlankSpaceStyle} />
 
-      <div className={PortNameWrapperStyle}>
+      <div
+        className={
+          isEnableBetaFeature && haveContainer ? WarehouseNameWrapperStyle : PortNameWrapperStyle
+        }
+      >
         <TimelineWarehouseName name={warehouse && warehouse.name} containers={containers} />
       </div>
 

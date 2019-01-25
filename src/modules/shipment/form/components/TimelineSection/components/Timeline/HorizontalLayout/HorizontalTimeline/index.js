@@ -8,9 +8,15 @@ import {
   TimelineLine,
   TimelineVoyage,
   TimelineWarehouseContainerIcon,
+  TimelineContainerIcon,
 } from '../../components';
 import { getTimelineColoring, getTransportIcon } from '../../helpers';
-import { HorizontalTimelineWrapperStyle, BlankSpaceStyle } from './style';
+import {
+  HorizontalTimelineWrapperStyle,
+  BlankSpaceStyle,
+  ContainerIconWrapperStyle,
+  WarehouseContainerWrapperStyle,
+} from './style';
 
 type Props = {
   shipment: any,
@@ -99,19 +105,32 @@ const HorizontalTimeline = ({ shipment }: Props) => {
         linkPath={`/shipment/${encodeId(shipment.id)}/customClearance`}
       />
 
-      <TimelineLine color={warehouseArrivalColoring} />
-
       {isEnableBetaFeature && containers && containers.length > 0 ? (
-        <TimelineWarehouseContainerIcon containers={containers} />
-      ) : (
-        <TimelineIcon
-          icon="WAREHOUSE"
-          color={warehouseArrivalColoring}
-          linkPath={`/shipment/${encodeId(shipment.id)}/warehouseArrival`}
-        />
-      )}
+        <>
+          <TimelineLine color={warehouseArrivalColoring} flex="1.59" />
 
-      <TimelineLine color={deliveryReadyColoring} />
+          <div className={WarehouseContainerWrapperStyle}>
+            <div className={ContainerIconWrapperStyle}>
+              <TimelineContainerIcon />
+            </div>
+            <TimelineWarehouseContainerIcon containers={containers} />
+          </div>
+
+          <TimelineLine color={deliveryReadyColoring} flex="1.59" />
+        </>
+      ) : (
+        <>
+          <TimelineLine color={warehouseArrivalColoring} />
+
+          <TimelineIcon
+            icon="WAREHOUSE"
+            color={warehouseArrivalColoring}
+            linkPath={`/shipment/${encodeId(shipment.id)}/warehouseArrival`}
+          />
+
+          <TimelineLine color={deliveryReadyColoring} />
+        </>
+      )}
 
       <TimelineIcon
         icon="DELIVERY_READY"

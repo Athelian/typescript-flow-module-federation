@@ -5,12 +5,13 @@ import { colors } from 'styles/common';
 type TimelineLine = {
   vertical: boolean,
   color: string,
+  flex: string,
 };
 
-export const TimelineLineStyle = ({ vertical, color }: TimelineLine): string => css`
+export const TimelineLineStyle = ({ vertical, color, flex }: TimelineLine): string => css`
   position: relative;
   background-color: ${colors[color]};
-  flex: 1;
+  flex: ${flex};
   ${vertical
     ? `
     width: 2px;

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { isBefore, isAfter } from 'date-fns';
 import EnumProvider from 'providers/enum';
 
 export const getTimelineColoring = ({
@@ -91,4 +92,93 @@ export const getPortName = (
     );
   }
   return null;
+};
+
+export const getContainerDatesRange = (
+  containers: Array<{
+    warehouseArrivalAgreedDate: ?string,
+    warehouseArrivalAgreedDateApprovedAt: ?string,
+    warehouseArrivalActualDate: ?string,
+    warehouseArrivalActualDateApprovedAt: ?string,
+  }>
+) => {
+  let minAgreedDate = null;
+  let maxAgreedDate = null;
+  let agreedApproved = false;
+  let minActualDate = null;
+  let maxActualDate = null;
+  let actualApproved = false;
+
+  let agreedApprovalCounter = 0;
+  let actualApprovalCounter = 0;
+
+  containers.forEach(
+    ({
+      warehouseArrivalAgreedDate,
+      warehouseArrivalAgreedDateApprovedAt,
+      warehouseArrivalActualDate,
+      warehouseArrivalActualDateApprovedAt,
+    }) => {
+      if (warehouseArrivalAgreedDate) {
+        if (minAgreedDate) {
+          if (isBefore(new Date(warehouseArrivalAgreedDate), new Date(minAgreedDate))) {
+            minAgreedDate = warehouseArrivalAgreedDate;
+          }
+        } else {
+          minAgreedDate = warehouseArrivalAgreedDate;
+        }
+
+        if (maxAgreedDate) {
+          if (isAfter(new Date(warehouseArrivalAgreedDate), new Date(maxAgreedDate))) {
+            maxAgreedDate = warehouseArrivalAgreedDate;
+          }
+        } else {
+          maxAgreedDate = warehouseArrivalAgreedDate;
+        }
+      }
+
+      if (warehouseArrivalActualDate) {
+        if (minActualDate) {
+          if (isBefore(new Date(warehouseArrivalActualDate), new Date(minActualDate))) {
+            minActualDate = warehouseArrivalActualDate;
+          }
+        } else {
+          minActualDate = warehouseArrivalActualDate;
+        }
+
+        if (maxActualDate) {
+          if (isAfter(new Date(warehouseArrivalActualDate), new Date(maxActualDate))) {
+            maxActualDate = warehouseArrivalActualDate;
+          }
+        } else {
+          maxActualDate = warehouseArrivalActualDate;
+        }
+      }
+
+      if (warehouseArrivalAgreedDateApprovedAt) {
+        agreedApprovalCounter += 1;
+      }
+
+      if (warehouseArrivalActualDateApprovedAt) {
+        actualApprovalCounter += 1;
+      }
+    }
+  );
+
+  if (agreedApprovalCounter === containers.length) {
+    agreedApproved = true;
+  }
+
+  if (actualApprovalCounter === containers.length) {
+    actualApproved = true;
+  }
+
+  return {
+    minAgreedDate,
+    maxAgreedDate,
+    agreedApproved,
+    minActualDate,
+    maxActualDate,
+    actualApproved,
+  };
 };

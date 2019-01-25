@@ -26,8 +26,9 @@ const TimelineWarehouseName = ({ name, vertical, containers }: Props) => {
     .filter(group => group.warehouse)
     .map(group => group.warehouse.id);
   const warehouses = [...new Set(filteredWarehouses)].slice(1);
+  const haveContainer = containers && containers.length > 0;
   return (
-    <div className={TimelineWarehouseNameWrapperStyle(vertical)}>
+    <div className={TimelineWarehouseNameWrapperStyle(vertical, haveContainer)}>
       <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
       {isEnableBetaFeature && warehouses.length > 0 && (
         <div className={TimelineWarehouseNameBadgeStyle(vertical)}>+{warehouses.length}</div>
