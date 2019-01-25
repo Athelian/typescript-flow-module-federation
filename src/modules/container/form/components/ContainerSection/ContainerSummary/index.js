@@ -23,7 +23,6 @@ export default function ContainerSummary() {
           totalWeight,
           totalPrice,
         } = findSummary(values);
-        console.log(values);
         return (
           <>
             <GridColumn>
