@@ -7,19 +7,23 @@ import { cx } from 'react-emotion';
 import { DefaultStyleWrapperStyle } from 'components/Form/Inputs/Styles/DefaultStyle/style';
 import Tabs from 'components/NavBar/components/Tabs';
 import { CardAction } from 'components/Cards/BaseCard';
-import { TextInput, Label } from 'components/Form';
+import { NumberInput, Label } from 'components/Form';
 import messages from 'modules/relationMap/messages';
 import * as style from 'modules/relationMap/common/ActionPanel/style';
 import * as splitStyle from './style';
 
 type Props = {
   intl: IntlShape,
+  onSplit: ({
+    type: string,
+    quantity: number,
+  }) => void,
 };
 
 const SIMPLE = 0;
 const EQUALLY = 1;
 
-function SplitPanel({ intl }: Props) {
+function SplitPanel({ intl, onSplit }: Props) {
   const [activeTab, setActiveTab] = React.useState(SIMPLE);
   const [quantity, setQuantity] = React.useState(0);
   const tabs = [
@@ -69,10 +73,18 @@ function SplitPanel({ intl }: Props) {
                 splitStyle.SplitInputWrapperStyle
               )}
             >
-              <TextInput value={quantity} onChange={evt => setQuantity(evt.target.value)} />
+              <NumberInput value={quantity} onChange={evt => setQuantity(evt.target.value)} />
             </div>
             <div className={splitStyle.SplitInputWrapperStyle}>
-              <CardAction icon="ARROW_RIGHT" onClick={console.warn} />
+              <CardAction
+                icon="ARROW_RIGHT"
+                onClick={() =>
+                  onSplit({
+                    type: 'SIMPLE',
+                    quantity,
+                  })
+                }
+              />
             </div>
           </>
         ) : (
@@ -95,10 +107,18 @@ function SplitPanel({ intl }: Props) {
                 splitStyle.SplitInputWrapperStyle
               )}
             >
-              <TextInput value={1} onChange={console.warn} />
+              <NumberInput value={quantity} onChange={evt => setQuantity(evt.target.value)} />
             </div>
             <div className={splitStyle.SplitInputWrapperStyle}>
-              <CardAction icon="ARROW_RIGHT" onClick={console.warn} />
+              <CardAction
+                icon="ARROW_RIGHT"
+                onClick={() =>
+                  onSplit({
+                    type: 'EQUALLY',
+                    quantity,
+                  })
+                }
+              />
             </div>
           </>
         )}

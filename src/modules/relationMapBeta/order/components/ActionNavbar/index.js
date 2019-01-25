@@ -55,7 +55,7 @@ export default function ActionNavbar({ highLightEntities }: Props) {
             />
           )}
           {activeAction === 'SPLIT' && uiSelectors.isAllowToSplitBatch() && (
-            <SplitPanel targetedItem={{}} onApply={console.warn} />
+            <SplitPanel onSplit={console.warn} />
           )}
         </>
       )}
