@@ -172,8 +172,7 @@ export const getContainerDatesRange = (
   if (actualApprovalCounter === containers.length) {
     actualApproved = true;
   }
-  console.log(`agreed counter: ${agreedApprovalCounter}`);
-  console.log(`containerslength: ${containers.length}`);
+
   return {
     minAgreedDate,
     maxAgreedDate,
