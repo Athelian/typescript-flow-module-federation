@@ -102,7 +102,11 @@ const VerticalTimeline = ({ shipment }: Props) => {
       <TimelineLine color={warehouseArrivalColoring} vertical />
 
       {isEnableBetaFeature && containers && containers.length > 0 ? (
-        <TimelineWarehouseContainerIcon containers={containers} />
+        <TimelineWarehouseContainerIcon
+          containers={containers}
+          targetId="containersWarehouseArrival"
+          boundaryId="timelineInfoSection"
+        />
       ) : (
         <TimelineIcon
           icon="WAREHOUSE"

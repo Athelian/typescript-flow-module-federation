@@ -1,6 +1,9 @@
 // @flow
 import * as React from 'react';
+import { isEnableBetaFeature } from 'utils/env';
+import { getContainerDatesRange } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import { TimelineDate, TimelinePortName, TimelineWarehouseName } from '../../components';
+import { TimelineDateRange } from './components';
 import {
   VerticalDatesWrapperStyle,
   SingularDateWrapperStyle,
@@ -18,6 +21,15 @@ const VerticalDates = ({ shipment }: Props) => {
   const { warehouse } = containers && containers.length > 0 ? containers[0] : containerGroups[0];
   const loadPort = voyages[0].departurePort;
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
+  const {
+    minAgreedDate,
+    maxAgreedDate,
+    agreedApproved,
+    minActualDate,
+    maxActualDate,
+    actualApproved,
+  } = getContainerDatesRange(containers);
+
   return (
     <div className={VerticalDatesWrapperStyle}>
       <div className={SingularDateWrapperStyle}>
@@ -54,11 +66,32 @@ const VerticalDates = ({ shipment }: Props) => {
       </div>
 
       <div className={BlankGapStyle}>
-        <TimelineDate timelineDate={warehouseArrival} vertical />
+        {isEnableBetaFeature && containers && containers.length > 0 ? (
+          <TimelineDateRange
+            minDate={minAgreedDate}
+            maxDate={maxAgreedDate}
+            approved={agreedApproved}
+            color="BLUE"
+          />
+        ) : (
+          <TimelineDate timelineDate={warehouseArrival} vertical />
+        )}
       </div>
+
       <TimelineWarehouseName name={warehouse && warehouse.name} vertical containers={containers} />
 
-      <div className={BlankGapStyle} />
+      {isEnableBetaFeature && containers && containers.length > 0 ? (
+        <div className={BlankGapStyle}>
+          <TimelineDateRange
+            minDate={minActualDate}
+            maxDate={maxActualDate}
+            approved={actualApproved}
+            color="TEAL"
+          />
+        </div>
+      ) : (
+        <div className={BlankGapStyle} />
+      )}
 
       <div className={SingularDateWrapperStyle}>
         <TimelineDate timelineDate={deliveryReady} vertical />
