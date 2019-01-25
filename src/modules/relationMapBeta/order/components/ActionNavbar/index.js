@@ -1,9 +1,12 @@
 // @flow
 
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
+import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
+import { TabItemStyled } from 'modules/relationMap/common/ActionPanel/ActionSubscribe/style';
 import TargetToolBar from './TargetToolBar';
 import HighLightToolBar from './HighLightToolBar';
 
@@ -12,6 +15,7 @@ type Props = {
 };
 
 export default function ActionNavbar({ highLightEntities }: Props) {
+  const [activeAction, setActiveAction] = React.useState('');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
   const uiSelectors = selectors(state);
@@ -26,7 +30,16 @@ export default function ActionNavbar({ highLightEntities }: Props) {
           totalShipment={uiSelectors.countTargetBy(SHIPMENT)}
           onCancel={() => actions.clearAllBy('TARGET')}
         >
-          WIP
+          <TabItem
+            className={TabItemStyled}
+            label={
+              <FormattedMessage id="modules.RelationMaps.label.split" defaultMessage="SPLIT" />
+            }
+            icon="SPLIT"
+            disabled={!uiSelectors.isAllowToSplit()}
+            active={activeAction === 'SPLIT'}
+            onClick={() => setActiveAction('SPLIT')}
+          />
         </TargetToolBar>
       )}
       {uiSelectors.isHighLightAnyItem() && (

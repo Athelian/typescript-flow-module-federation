@@ -1,6 +1,6 @@
 // @flow
 import logger from 'utils/logger';
-import { SHIPMENT } from 'modules/relationMap/constants';
+import { SHIPMENT, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 
 export type UIState = {
   showTag: boolean,
@@ -321,6 +321,9 @@ const entitySelector = ({
 
 export function selectors(state: UIState) {
   return {
+    isAllowToSplit: () =>
+      state.targets.filter(item => item.includes(`${ORDER_ITEM}-`) || item.includes(`${BATCH}-`))
+        .length === 1,
     isSelectEntity: (highLightEntities: Array<string>, entity: string, id: string) =>
       highLightEntities.includes(`${entity}-${id}`),
     isSelectAllEntity: (entity: string, total: number) => entitySelector({ state, entity, total }),
