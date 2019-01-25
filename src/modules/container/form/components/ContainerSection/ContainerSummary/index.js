@@ -3,63 +3,12 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import ContainerFormContainer from 'modules/container/form/container';
-import { calculateVolume } from 'modules/batch/form/container';
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 import Tooltip from 'components/Tooltip';
-import { totalAdjustQuantity } from 'components/Cards/utils';
 import { isNullOrUndefined } from 'utils/fp';
-
-const findSummary = values => {
-  const { batches, totalVolume, totalWeight, totalPrice } = values;
-  let totalBatchQuantity = 0;
-  let totalPriceAmount = 0;
-  let totalVolumeValue = 0;
-  let totalWeightValue = 0;
-  let totalBatchPackages = 0;
-  const uniqueItems = [];
-  (batches || []).forEach(batch => {
-    const { quantity, orderItem, batchAdjustments, packageQuantity = 0 } = batch;
-    totalBatchQuantity += quantity + totalAdjustQuantity(batchAdjustments);
-    totalBatchPackages += packageQuantity;
-    if (orderItem) {
-      const { price, productProvider } = orderItem;
-      if (!uniqueItems.includes(orderItem && orderItem.id)) {
-        uniqueItems.push(orderItem.id);
-      }
-      totalPriceAmount += price.amount * totalBatchQuantity;
-      totalVolumeValue +=
-        packageQuantity *
-        calculateVolume(
-          productProvider.packageVolume.metric,
-          productProvider.packageSize.height,
-          productProvider.packageSize.width,
-          productProvider.packageSize.length
-        );
-      totalWeightValue += productProvider.packageGrossWeight
-        ? packageQuantity * productProvider.packageGrossWeight.value
-        : 0;
-    }
-  });
-  return {
-    totalBatchQuantity,
-    totalBatchPackages,
-    totalNumberOfUniqueOrderItems: uniqueItems.length,
-    totalPrice: {
-      ...totalPrice,
-      amount: totalPriceAmount,
-    },
-    totalVolume: {
-      ...totalVolume,
-      value: totalVolumeValue,
-    },
-    totalWeight: {
-      ...totalWeight,
-      value: totalWeightValue,
-    },
-  };
-};
+import { findSummary } from './helper';
 
 export default function ContainerSummary() {
   return (
