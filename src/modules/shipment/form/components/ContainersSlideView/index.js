@@ -1,17 +1,15 @@
 // @flow
 import React from 'react';
-
 import { Subscribe } from 'unstated';
 import { isNullOrUndefined, isEquals } from 'utils/fp';
 import { earliest, latest } from 'utils/date';
-
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { ShipmentContainerCard } from 'components/Cards';
-
 import { ContainersFormContainer } from 'modules/shipment/form/containers';
-import Summary from './components/Summary';
+import ContainersSummaryNavbar from './ContainersSummaryNavbar';
+import { GridViewWrapperStyle } from './style';
 
 type OptionalProps = {
   containers: Array<Object>,
@@ -65,16 +63,16 @@ class ContainersSlideView extends React.Component<Props> {
                 </SlideViewNavBar>
               }
             >
-              <Summary
+              <ContainersSummaryNavbar
                 agreedArrivalDateFrom={earliest(agreedArrivalDates)}
                 agreedArrivalDateTo={latest(agreedArrivalDates)}
                 actualArrivalDateFrom={earliest(actualArrivalDates)}
                 actualArrivalDateTo={latest(actualArrivalDates)}
-                containers={containers}
-                approvedAgreementSize={agreedArrivalDates.length}
-                approvedConfirmationSize={actualArrivalDates.length}
+                numOfContainers={containers.length}
+                numOfApprovedAgreed={agreedArrivalDates.length}
+                numOfApprovedActual={actualArrivalDates.length}
               />
-              <div>
+              <div className={GridViewWrapperStyle}>
                 {containers.map((container, index) => (
                   <ShipmentContainerCard
                     key={container.id}

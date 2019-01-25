@@ -13,6 +13,7 @@ import {
 import { DashedPlusButton } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import SlideView from 'components/SlideView';
+import { EditButton } from 'components/Buttons';
 import { ShipmentWarehouseCard } from 'components/Cards';
 import { ContainersSlideView } from 'modules/shipment/form/components';
 import { getTransportIcon } from './components/Timeline/helpers';
@@ -62,9 +63,15 @@ const TimelineSection = ({ isNew }: Props) => (
             <BooleanValue>
               {({ value: isOpen, set: slideToggle }) => (
                 <>
-                  <button type="button" onClick={() => slideToggle(true)}>
-                    open
-                  </button>
+                  <EditButton
+                    label={
+                      <FormattedMessage
+                        id="modules.Shipments.editDates"
+                        defaultMessage="EDIT DATES"
+                      />
+                    }
+                    onClick={() => slideToggle(true)}
+                  />
                   <SlideView
                     isOpen={isOpen}
                     onRequestClose={() => slideToggle(false)}

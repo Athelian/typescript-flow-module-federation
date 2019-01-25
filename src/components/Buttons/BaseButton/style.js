@@ -23,6 +23,7 @@ export const ButtonWrapperStyle = ({
   padding: 0 10px;
   width: min-content;
   min-width: 75px;
+  flex-shrink: 0;
   &:hover,
   :focus {
     color: ${colors[hoverTextColor]};
@@ -40,6 +41,7 @@ export const DisabledButtonWrapperStyle: string = css`
   cursor: default;
   width: min-content;
   min-width: 75px;
+  flex-shrink: 0;
 `;
 
 export const ButtonLabelStyle: string = css`
