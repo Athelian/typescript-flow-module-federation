@@ -14,12 +14,7 @@ import {
 } from './style';
 
 type OptionalProps = {
-  containers: Array<{
-    warehouseArrivalAgreedDate: ?string,
-    warehouseArrivalAgreedDateApprovedAt: ?string,
-    warehouseArrivalActualDate: ?string,
-    warehouseArrivalActualDateApprovedAt: ?string,
-  }>,
+  containers: Array<Object>,
 };
 
 type Props = OptionalProps & {};

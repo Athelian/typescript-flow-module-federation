@@ -5,7 +5,7 @@ import { presets, borderRadiuses, scrollbars } from 'styles/common';
 export const TimelineSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
-  height: 600px;
+  height: 650px;
   display: flex;
 `;
 

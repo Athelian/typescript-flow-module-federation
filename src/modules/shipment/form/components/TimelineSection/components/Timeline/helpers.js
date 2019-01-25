@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { isNullOrUndefined } from 'utils/fp';
 import { isBefore, isAfter } from 'date-fns';
 import EnumProvider from 'providers/enum';
 
@@ -97,9 +98,11 @@ export const getPortName = (
 export const getContainerDatesRange = (
   containers: Array<{
     warehouseArrivalAgreedDate: ?string,
-    warehouseArrivalAgreedDateApprovedAt: ?string,
+    warehouseArrivalAgreedDateApprovedAt?: ?string,
+    warehouseArrivalAgreedDateApprovedBy?: ?Object,
     warehouseArrivalActualDate: ?string,
-    warehouseArrivalActualDateApprovedAt: ?string,
+    warehouseArrivalActualDateApprovedAt?: ?string,
+    warehouseArrivalActualDateApprovedBy?: ?Object,
   }>
 ) => {
   let minAgreedDate = null;
@@ -116,11 +119,13 @@ export const getContainerDatesRange = (
     ({
       warehouseArrivalAgreedDate,
       warehouseArrivalAgreedDateApprovedAt,
+      warehouseArrivalAgreedDateApprovedBy,
       warehouseArrivalActualDate,
       warehouseArrivalActualDateApprovedAt,
+      warehouseArrivalActualDateApprovedBy,
     }) => {
-      if (warehouseArrivalAgreedDate) {
-        if (minAgreedDate) {
+      if (!isNullOrUndefined(warehouseArrivalAgreedDate)) {
+        if (!isNullOrUndefined(minAgreedDate)) {
           if (isBefore(new Date(warehouseArrivalAgreedDate), new Date(minAgreedDate))) {
             minAgreedDate = warehouseArrivalAgreedDate;
           }
@@ -128,7 +133,7 @@ export const getContainerDatesRange = (
           minAgreedDate = warehouseArrivalAgreedDate;
         }
 
-        if (maxAgreedDate) {
+        if (!isNullOrUndefined(maxAgreedDate)) {
           if (isAfter(new Date(warehouseArrivalAgreedDate), new Date(maxAgreedDate))) {
             maxAgreedDate = warehouseArrivalAgreedDate;
           }
@@ -137,8 +142,8 @@ export const getContainerDatesRange = (
         }
       }
 
-      if (warehouseArrivalActualDate) {
-        if (minActualDate) {
+      if (!isNullOrUndefined(warehouseArrivalActualDate)) {
+        if (!isNullOrUndefined(minActualDate)) {
           if (isBefore(new Date(warehouseArrivalActualDate), new Date(minActualDate))) {
             minActualDate = warehouseArrivalActualDate;
           }
@@ -146,7 +151,7 @@ export const getContainerDatesRange = (
           minActualDate = warehouseArrivalActualDate;
         }
 
-        if (maxActualDate) {
+        if (!isNullOrUndefined(maxActualDate)) {
           if (isAfter(new Date(warehouseArrivalActualDate), new Date(maxActualDate))) {
             maxActualDate = warehouseArrivalActualDate;
           }
@@ -155,11 +160,17 @@ export const getContainerDatesRange = (
         }
       }
 
-      if (warehouseArrivalAgreedDateApprovedAt) {
+      if (
+        !isNullOrUndefined(warehouseArrivalAgreedDateApprovedAt) ||
+        !isNullOrUndefined(warehouseArrivalAgreedDateApprovedBy)
+      ) {
         agreedApprovalCounter += 1;
       }
 
-      if (warehouseArrivalActualDateApprovedAt) {
+      if (
+        !isNullOrUndefined(warehouseArrivalActualDateApprovedAt) ||
+        !isNullOrUndefined(warehouseArrivalActualDateApprovedBy)
+      ) {
         actualApprovalCounter += 1;
       }
     }
