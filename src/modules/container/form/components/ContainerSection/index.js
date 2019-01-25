@@ -29,7 +29,6 @@ const ContainerSection = () => (
     <Subscribe to={[ContainerFormContainer]}>
       {({ originalValues, state, setFieldValue, setDeepFieldValue }) => {
         const values = { ...originalValues, ...state };
-
         return (
           <>
             <div className={MainFieldsWrapperStyle}>
