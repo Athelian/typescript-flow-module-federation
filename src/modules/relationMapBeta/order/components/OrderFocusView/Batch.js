@@ -15,7 +15,15 @@ type OptionalProps = {
 
 type Props = OptionalProps & BatchProps;
 
-export default function Batch({ wrapperClassName, id, tags, ...batch }: Props) {
+export default function Batch({
+  wrapperClassName,
+  id,
+  tags,
+  no,
+  quantity,
+  totalAdjusted,
+  packageVolume,
+}: Props) {
   const context = React.useContext(ActionDispatch);
   const {
     state: { showTag },
@@ -27,7 +35,14 @@ export default function Batch({ wrapperClassName, id, tags, ...batch }: Props) {
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
-            <BatchCard batch={batch} />
+            <BatchCard
+              batch={{
+                no,
+                volumeLabel: packageVolume && packageVolume.value,
+                metric: packageVolume && packageVolume.metric,
+                batchedQuantity: quantity + totalAdjusted,
+              }}
+            />
             <ActionCard show={hovered}>
               {({ targetted, toggle }) => (
                 <>

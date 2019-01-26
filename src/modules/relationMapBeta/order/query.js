@@ -109,6 +109,9 @@ export const orderListQuery = gql`
                   tags {
                     ...tagFragment
                   }
+                  packageVolume {
+                    ...metricFragment
+                  }
                 }
               }
             }
