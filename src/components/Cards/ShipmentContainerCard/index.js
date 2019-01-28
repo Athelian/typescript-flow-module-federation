@@ -96,14 +96,6 @@ const ShipmentContainerCard = ({
     [`container.${id}.no`]: no,
   };
 
-  const newContainer = {
-    ...container,
-    no,
-    totalVolume,
-    warehouseArrivalAgreedDate,
-    warehouseArrivalActualDate,
-  };
-
   return (
     <UserConsumer>
       {({ user }) => (
@@ -114,16 +106,8 @@ const ShipmentContainerCard = ({
           selectable={selectable}
           {...rest}
         >
-          <div
-            className={CardWrapperStyle}
-            onClick={() => onClick(newContainer)}
-            role="presentation"
-          >
-            <div
-              className={ImagePartWrapperStyle}
-              onClick={() => onClick(newContainer)}
-              role="presentation"
-            >
+          <div className={CardWrapperStyle} role="presentation" onClick={onClick}>
+            <div className={ImagePartWrapperStyle} role="presentation">
               <div className={ImageWrapperStyle}>
                 <img className={ImageStyle} src={productImage} alt="product_image" />
               </div>
@@ -204,7 +188,13 @@ const ShipmentContainerCard = ({
                 <BooleanValue>
                   {({ value: isOpenSelectWarehouse, set: toggleSelectWarehouse }) => (
                     <>
-                      <button type="button" onClick={() => toggleSelectWarehouse(true)}>
+                      <button
+                        type="button"
+                        onClick={evt => {
+                          toggleSelectWarehouse(true);
+                          evt.stopPropagation();
+                        }}
+                      >
                         <DefaultStyle type="button" height="20px">
                           <Display align="left">
                             {isNullOrUndefined(warehouse) ? '' : warehouse.name}
@@ -280,12 +270,13 @@ const ShipmentContainerCard = ({
                   <button
                     type="button"
                     className={ApprovalIconStyle(true)}
-                    onClick={() =>
+                    onClick={evt => {
                       update({
                         ...container,
                         warehouseArrivalAgreedDateApprovedBy: null,
-                      })
-                    }
+                      });
+                      evt.stopPropagation();
+                    }}
                   >
                     <Icon icon="CHECKED" />
                   </button>
@@ -293,12 +284,13 @@ const ShipmentContainerCard = ({
                   <button
                     type="button"
                     className={ApprovalIconStyle(false)}
-                    onClick={() =>
+                    onClick={evt => {
                       update({
                         ...container,
                         warehouseArrivalAgreedDateApprovedBy: user,
-                      })
-                    }
+                      });
+                      evt.stopPropagation();
+                    }}
                   >
                     <Icon icon="UNCHECKED" />
                   </button>
@@ -349,12 +341,13 @@ const ShipmentContainerCard = ({
                   <button
                     type="button"
                     className={ApprovalIconStyle(true)}
-                    onClick={() =>
+                    onClick={evt => {
                       update({
                         ...container,
                         warehouseArrivalActualDateApprovedBy: null,
-                      })
-                    }
+                      });
+                      evt.stopPropagation();
+                    }}
                   >
                     <Icon icon="CHECKED" />
                   </button>
@@ -362,12 +355,13 @@ const ShipmentContainerCard = ({
                   <button
                     type="button"
                     className={ApprovalIconStyle(false)}
-                    onClick={() =>
+                    onClick={evt => {
                       update({
                         ...container,
                         warehouseArrivalActualDateApprovedBy: user,
-                      })
-                    }
+                      });
+                      evt.stopPropagation();
+                    }}
                   >
                     <Icon icon="UNCHECKED" />
                   </button>

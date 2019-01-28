@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
 import { injectIntl, type IntlShape, FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
 import { injectUid } from 'utils/id';
+import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import {
@@ -14,6 +16,7 @@ import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/C
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
 import { BATCHES_POOL, isSelectedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
+import ContainerFormInSlide from 'modules/container/index.form.slide';
 
 import {
   ContainersWrapperStyle,
@@ -93,28 +96,50 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                           <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
                         </div>
                       </button>
-                      <ShipmentContainerCard
-                        key={container.id}
-                        container={container}
-                        update={newContainer => {
-                          setFieldArrayValue(position, newContainer);
-                        }}
-                        // onClick={() => containerSlideToggle(true)}
-                        actions={[
-                          <CardAction
-                            icon="REMOVE"
-                            hoverColor="RED"
-                            onClick={() => {
-                              setFieldValue(
-                                'containers',
-                                containers.filter(
-                                  ({ id: containerId }) => container.id !== containerId
-                                )
-                              );
-                            }}
-                          />,
-                        ]}
-                      />
+                      <BooleanValue>
+                        {({ value: isOpenContainerForm, set: toggleContainerForm }) => (
+                          <>
+                            <ShipmentContainerCard
+                              key={container.id}
+                              container={container}
+                              update={newContainer => {
+                                setFieldArrayValue(position, newContainer);
+                              }}
+                              onClick={() => toggleContainerForm(true)}
+                              actions={[
+                                <CardAction
+                                  icon="REMOVE"
+                                  hoverColor="RED"
+                                  onClick={() => {
+                                    setFieldValue(
+                                      'containers',
+                                      containers.filter(
+                                        ({ id: containerId }) => container.id !== containerId
+                                      )
+                                    );
+                                  }}
+                                />,
+                              ]}
+                            />
+                            <SlideView
+                              isOpen={isOpenContainerForm}
+                              onRequestClose={() => toggleContainerForm(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {isOpenContainerForm && (
+                                <ContainerFormInSlide
+                                  container={container}
+                                  onCancel={() => toggleContainerForm(false)}
+                                  onSave={newContainer => {
+                                    setFieldArrayValue(position, newContainer);
+                                    toggleContainerForm(false);
+                                  }}
+                                />
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
                     </div>
                   );
                 })}
