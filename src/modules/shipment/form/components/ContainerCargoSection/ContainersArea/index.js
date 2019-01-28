@@ -96,8 +96,8 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                       <ShipmentContainerCard
                         key={container.id}
                         container={container}
-                        saveOnBlur={updateContainer => {
-                          setFieldArrayValue(position, updateContainer);
+                        update={newContainer => {
+                          setFieldArrayValue(position, newContainer);
                         }}
                         // onClick={() => containerSlideToggle(true)}
                         actions={[

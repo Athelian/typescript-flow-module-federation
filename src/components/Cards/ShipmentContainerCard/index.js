@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
@@ -10,6 +11,8 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display, DefaultStyle } from 'components/Form';
+import SlideView from 'components/SlideView';
+import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import { getProductImage } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard from '../BaseCard';
@@ -43,7 +46,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   container: Object,
-  saveOnBlur: Function,
+  update: Function,
 };
 
 const defaultProps = {
@@ -57,7 +60,7 @@ const ShipmentContainerCard = ({
   container,
   onClick,
   onRemove,
-  saveOnBlur,
+  update,
   selectable,
   ...rest
 }: Props) => {
@@ -139,7 +142,7 @@ const ShipmentContainerCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
-                      saveOnBlur({ ...container, no: inputHandlers.value });
+                      update({ ...container, no: inputHandlers.value });
                     },
                   },
                   name: fieldName,
@@ -187,12 +190,39 @@ const ShipmentContainerCard = ({
                 <Icon icon="WAREHOUSE" />
               </Link>
             )}
-            {/* clicking, open slide view */}
-            {/* <button type="button" onClick={openTheSlideView}> */}
-            <DefaultStyle type="button" height="20px">
-              <Display align="left">{isNullOrUndefined(warehouse) ? '' : warehouse.name}</Display>
-            </DefaultStyle>
-            {/* </button> */}
+            <BooleanValue>
+              {({ value: isOpenSelectWarehouse, set: toggleSelectWarehouse }) => (
+                <>
+                  <button type="button" onClick={() => toggleSelectWarehouse(true)}>
+                    <DefaultStyle type="button" height="20px">
+                      <Display align="left">
+                        {isNullOrUndefined(warehouse) ? '' : warehouse.name}
+                      </Display>
+                    </DefaultStyle>
+                  </button>
+
+                  <SlideView
+                    isOpen={isOpenSelectWarehouse}
+                    onRequestClose={() => toggleSelectWarehouse(false)}
+                    options={{ width: '1030px' }}
+                  >
+                    {isOpenSelectWarehouse && (
+                      <SelectWareHouse
+                        selected={warehouse}
+                        onCancel={() => toggleSelectWarehouse(false)}
+                        onSelect={newValue => {
+                          toggleSelectWarehouse(false);
+                          update({
+                            ...container,
+                            warehouse: newValue,
+                          });
+                        }}
+                      />
+                    )}
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
           </div>
 
           <div className={LabelStyle}>
@@ -223,7 +253,7 @@ const ShipmentContainerCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
-                      saveOnBlur({
+                      update({
                         ...container,
                         warehouseArrivalAgreedDate: inputHandlers.value
                           ? inputHandlers.value
@@ -271,7 +301,7 @@ const ShipmentContainerCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
-                      saveOnBlur({
+                      update({
                         ...container,
                         warehouseArrivalActualDate: inputHandlers.value
                           ? inputHandlers.value
