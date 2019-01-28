@@ -90,3 +90,40 @@ steps:
   - 'CLOUDSDK_COMPUTE_ZONE=asia-northeast1-c'
   - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
 timeout: 1200s
+---
+name: 'Deploy Prod'
+triggers:
+  - branches: ['master']
+steps:
+  - name: 'gcr.io/cloud-builders/gsutil'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gsutil cp gs://zenport-gcb-bridge/cache/web-app-master_node_modules.tar.gz node_modules.tar.gz || true
+        if [ -e node_modules.tar.gz ]; then
+          tar -xzf node_modules.tar.gz
+        fi
+  - name: 'gcr.io/cloud-builders/yarn'
+    args: ['install']
+  - name: 'gcr.io/cloud-builders/gsutil'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        tar -czf node_modules.tar.gz node_modules
+        gsutil cp node_modules.tar.gz gs://zenport-gcb-bridge/cache/web-app-master_node_modules.tar.gz
+  - name: 'gcr.io/cloud-builders/yarn'
+    args: ['build:prod']
+    env: ['ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA']
+  - name: 'gcr.io/zenport-183806/firebase'
+    args: ['deploy', '--only', 'hosting:prod']
+    secretEnv: ['FIREBASE_TOKEN']
+  - name: 'gcr.io/zenport-183806/firebase'
+    args: ['database:set', '/revision_production', '--data', "\"$SHORT_SHA\"", '--confirm']
+    secretEnv: ['FIREBASE_TOKEN']
+secrets:
+  - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
+    secretEnv:
+      FIREBASE_TOKEN: 'CiQABMiRS2pzGQzkQpV9nxSXoJ2JJasJwnByeP5/LkT1BvD480USVgBl1o1Vk8mKYamYIoTV+nKp3ioXT69W8uWUke0duMu48TPBE2kNHEU6lDETMssT8Mw7rPaATUsLDb69WA5MhmvpdXHz2nOavdjM9ZfWa/ZoV9Bcvp83'
+timeout: 1200s
