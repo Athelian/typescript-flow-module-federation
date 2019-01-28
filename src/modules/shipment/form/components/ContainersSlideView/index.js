@@ -1,94 +1,73 @@
 // @flow
 import React from 'react';
-import { Subscribe } from 'unstated';
-import { isNullOrUndefined, isEquals } from 'utils/fp';
 import { earliest, latest } from 'utils/date';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { ShipmentContainerCard } from 'components/Cards';
-import { ContainersFormContainer } from 'modules/shipment/form/containers';
 import ContainersSummaryNavbar from './ContainersSummaryNavbar';
 import { GridViewWrapperStyle } from './style';
 
 type OptionalProps = {
   containers: Array<Object>,
-};
-
-type Props = OptionalProps & {
+  agreedArrivalDateFrom: Date,
+  agreedArrivalDateTo: Date,
+  actualArrivalDateFrom: Date,
+  actualArrivalDateTo: Date,
+  numOfContainers: number,
+  numOfApprovedAgreed: number,
+  numOfApprovedActual: number,
   onCancel: Function,
   onSave: Function,
-  onFormReady: Function,
 };
 
-class ContainersSlideView extends React.Component<Props> {
-  componentDidMount() {
-    const { onFormReady } = this.props;
-    if (onFormReady) onFormReady();
-  }
+type Props = OptionalProps;
 
-  shouldComponentUpdate(nextProps: Props) {
-    const { containers } = this.props;
-    return !isEquals(containers, nextProps.containers);
-  }
+const defaultProps = {
+  onCancel: () => {},
+  onSave: () => {},
+};
 
-  render() {
-    const { containers, onCancel, onSave } = this.props;
+const ContainersSlideView = ({
+  containers,
+  agreedArrivalDates,
+  actualArrivalDates,
+  onCancel,
+  onSave,
+  isDirty,
+}: Props) => (
+  <Layout
+    navBar={
+      <SlideViewNavBar>
+        <EntityIcon icon="CONTAINER" color="CONTAINER" />
+        <CancelButton onClick={onCancel} />
+        <SaveButton disabled={!isDirty()} onClick={() => onSave(containers)} />
+      </SlideViewNavBar>
+    }
+  >
+    <ContainersSummaryNavbar
+      agreedArrivalDateFrom={earliest(agreedArrivalDates)}
+      agreedArrivalDateTo={latest(agreedArrivalDates)}
+      actualArrivalDateFrom={earliest(actualArrivalDates)}
+      actualArrivalDateTo={latest(actualArrivalDates)}
+      numOfContainers={containers.length}
+      numOfApprovedAgreed={agreedArrivalDates.length}
+      numOfApprovedActual={actualArrivalDates.length}
+    />
+    <div className={GridViewWrapperStyle}>
+      {containers.map(container => (
+        <ShipmentContainerCard
+          key={container.id}
+          container={container}
+          // update={newContainer => {
+          //   setDeepFieldValue(`containers.${index}`, newContainer);
+          // }}
+        />
+      ))}
+    </div>
+  </Layout>
+);
 
-    const agreedArrivalDates = containers
-      .map(({ warehouseArrivalAgreedDate }) => warehouseArrivalAgreedDate)
-      .filter(item => !isNullOrUndefined(item))
-      .map(item => new Date(item));
-
-    const actualArrivalDates = containers
-      .map(({ warehouseArrivalActualDate }) => warehouseArrivalActualDate)
-      .filter(item => !isNullOrUndefined(item))
-      .map(item => new Date(item));
-
-    return (
-      <Subscribe to={[ContainersFormContainer]}>
-        {({ originalValues, state, isDirty, setDeepFieldValue }) => {
-          const values = {
-            ...originalValues,
-            ...state,
-          };
-
-          return (
-            <Layout
-              navBar={
-                <SlideViewNavBar>
-                  <EntityIcon icon="CONTAINER" color="CONTAINER" />
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton disabled={!isDirty()} onClick={() => onSave(values.containers)} />
-                </SlideViewNavBar>
-              }
-            >
-              <ContainersSummaryNavbar
-                agreedArrivalDateFrom={earliest(agreedArrivalDates)}
-                agreedArrivalDateTo={latest(agreedArrivalDates)}
-                actualArrivalDateFrom={earliest(actualArrivalDates)}
-                actualArrivalDateTo={latest(actualArrivalDates)}
-                numOfContainers={containers.length}
-                numOfApprovedAgreed={agreedArrivalDates.length}
-                numOfApprovedActual={actualArrivalDates.length}
-              />
-              <div className={GridViewWrapperStyle}>
-                {containers.map((container, index) => (
-                  <ShipmentContainerCard
-                    key={container.id}
-                    container={container}
-                    update={newContainer => {
-                      setDeepFieldValue(`containers.${index}`, newContainer);
-                    }}
-                  />
-                ))}
-              </div>
-            </Layout>
-          );
-        }}
-      </Subscribe>
-    );
-  }
-}
+ContainersSlideView.defaultProps = defaultProps;
 
 export default ContainersSlideView;

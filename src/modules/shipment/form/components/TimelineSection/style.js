@@ -24,7 +24,7 @@ export const BodyWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   flex: 1;
-  height: 600px;
+  height: 650px;
   ${scrollbars.SMALL};
   overflow: hidden;
   &:hover {

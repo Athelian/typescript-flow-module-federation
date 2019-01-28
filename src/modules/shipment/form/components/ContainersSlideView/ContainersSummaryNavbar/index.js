@@ -1,14 +1,9 @@
 // @flow
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { isNullOrUndefined } from 'utils/fp';
-import { FieldItem, Label, Display } from 'components/Form';
-import FormattedNumber from 'components/FormattedNumber';
-import FormattedDate from 'components/FormattedDate';
+import { ContainersAmountSummary, ContainersDatesSummary } from 'modules/shipment/form/components';
 import {
   ContainersSummaryNavbarWrapperStyle,
   LeftAreaWrapperStyle,
-  ColumnWrapperStyle,
   RightAreaWrapperStyle,
 } from './style';
 
@@ -25,7 +20,7 @@ type Props = OptionalProps & {
   numOfApprovedActual: number,
 };
 
-const Summary = ({
+const ContainersSummaryNavbar = ({
   agreedArrivalDateFrom,
   agreedArrivalDateTo,
   actualArrivalDateFrom,
@@ -36,112 +31,21 @@ const Summary = ({
 }: Props) => (
   <div className={ContainersSummaryNavbarWrapperStyle}>
     <div className={LeftAreaWrapperStyle}>
-      <div className={ColumnWrapperStyle}>
-        <Label>
-          <FormattedMessage id="modules.shipment.agreedArrival" defaultMessage="AGREED ARRIVAL" />
-        </Label>
-        <Label>
-          <FormattedMessage id="modules.shipment.actualArrival" defaultMessage="ACTUAL ARRIVAL" />
-        </Label>
-      </div>
-
-      <div className={ColumnWrapperStyle}>
-        <Label>
-          <FormattedMessage id="modules.shipment.from" defaultMessage="FROM" />
-        </Label>
-        {isNullOrUndefined(agreedArrivalDateFrom) ? (
-          <Display color="GRAY_LIGHT" align="left">
-            <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
-          </Display>
-        ) : (
-          <Display color="BLUE" align="left">
-            <FormattedDate mode="datetime" value={agreedArrivalDateFrom} />
-          </Display>
-        )}
-        {isNullOrUndefined(actualArrivalDateFrom) ? (
-          <Display color="GRAY_LIGHT" align="left">
-            <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
-          </Display>
-        ) : (
-          <Display color="TEAL" align="left">
-            <FormattedDate mode="datetime" value={actualArrivalDateFrom} />
-          </Display>
-        )}
-      </div>
-
-      <div className={ColumnWrapperStyle}>
-        <Label>
-          <FormattedMessage id="modules.shipment.to" defaultMessage="TO" />
-        </Label>
-        {isNullOrUndefined(agreedArrivalDateTo) ? (
-          <Display color="GRAY_LIGHT" align="left">
-            <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
-          </Display>
-        ) : (
-          <Display color="BLUE" align="left">
-            <FormattedDate mode="datetime" value={agreedArrivalDateTo} />
-          </Display>
-        )}
-        {isNullOrUndefined(actualArrivalDateTo) ? (
-          <Display color="GRAY_LIGHT" align="left">
-            <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
-          </Display>
-        ) : (
-          <Display color="TEAL" align="left">
-            <FormattedDate mode="datetime" value={actualArrivalDateTo} />
-          </Display>
-        )}
-      </div>
+      <ContainersAmountSummary
+        numOfContainers={numOfContainers}
+        numOfApprovedAgreed={numOfApprovedAgreed}
+        numOfApprovedActual={numOfApprovedActual}
+      />
     </div>
-
     <div className={RightAreaWrapperStyle}>
-      <FieldItem
-        label={
-          <Label>
-            <FormattedMessage
-              id="modules.shipment.noOfContainers"
-              defaultMessage="NO. OF CONTAINERS"
-            />
-          </Label>
-        }
-        input={
-          <Display>
-            <FormattedNumber value={numOfContainers} />
-          </Display>
-        }
-      />
-      <FieldItem
-        label={
-          <Label>
-            <FormattedMessage
-              id="modules.shipment.noOfApprovedAgreedDates"
-              defaultMessage="NO. OF APPROVED AGREED DATES"
-            />
-          </Label>
-        }
-        input={
-          <Display color="BLUE">
-            <FormattedNumber value={numOfApprovedAgreed} />
-          </Display>
-        }
-      />
-      <FieldItem
-        label={
-          <Label>
-            <FormattedMessage
-              id="modules.shipment.noOfApprovedActualDates"
-              defaultMessage="NO. OF APPROVED ACTUAL DATES"
-            />
-          </Label>
-        }
-        input={
-          <Display color="TEAL">
-            <FormattedNumber value={numOfApprovedActual} />
-          </Display>
-        }
+      <ContainersDatesSummary
+        agreedArrivalDateFrom={agreedArrivalDateFrom}
+        agreedArrivalDateTo={agreedArrivalDateTo}
+        actualArrivalDateFrom={actualArrivalDateFrom}
+        actualArrivalDateTo={actualArrivalDateTo}
       />
     </div>
   </div>
 );
 
-export default Summary;
+export default ContainersSummaryNavbar;

@@ -8,14 +8,11 @@ import {
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
   ShipmentContainersContainer,
-  ContainersFormContainer,
 } from 'modules/shipment/form/containers';
 import { DashedPlusButton } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import SlideView from 'components/SlideView';
-import { EditButton } from 'components/Buttons';
 import { ShipmentWarehouseCard } from 'components/Cards';
-import { ContainersSlideView } from 'modules/shipment/form/components';
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
   VerticalLayout,
@@ -60,42 +57,6 @@ const TimelineSection = ({ isNew }: Props) => (
             />
           </div>
           <div className={BodyWrapperStyle} id="timelineInfoSection">
-            <BooleanValue>
-              {({ value: isOpen, set: slideToggle }) => (
-                <>
-                  <EditButton
-                    label={
-                      <FormattedMessage
-                        id="modules.Shipments.editDates"
-                        defaultMessage="EDIT DATES"
-                      />
-                    }
-                    onClick={() => slideToggle(true)}
-                  />
-                  <SlideView
-                    isOpen={isOpen}
-                    onRequestClose={() => slideToggle(false)}
-                    options={{ width: '1030px' }}
-                  >
-                    {isOpen && (
-                      <Subscribe to={[ContainersFormContainer]}>
-                        {({ initDetailValues }) => (
-                          <ContainersSlideView
-                            onCancel={() => slideToggle(false)}
-                            onSave={newContainers => {
-                              setFieldDeepValue('containers', newContainers);
-                              slideToggle(false);
-                            }}
-                            containers={containers}
-                            onFormReady={() => initDetailValues({ containers })}
-                          />
-                        )}
-                      </Subscribe>
-                    )}
-                  </SlideView>
-                </>
-              )}
-            </BooleanValue>
             <TimelineInfoSection
               id="cargoReady"
               isNew={isNew}

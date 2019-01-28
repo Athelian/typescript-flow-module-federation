@@ -101,7 +101,6 @@ function ContainersArea({ intl, selectCardId, setSelected }: Props) {
                               {({ value: isOpenSelectWarehouse, set: toggleSelectWarehouse }) => (
                                 <>
                                   <ShipmentContainerCard
-                                    key={container.id}
                                     container={container}
                                     update={newContainer => {
                                       setDeepFieldValue(`containers.${position}`, newContainer);

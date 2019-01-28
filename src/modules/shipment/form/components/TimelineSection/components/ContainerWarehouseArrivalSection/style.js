@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes, presets } from 'styles/common';
+import { colors } from 'styles/common';
 
 export const ContainerWarehouseArrivalSectionWrapperStyle: string = css`
   display: flex;
@@ -11,14 +11,4 @@ export const ContainerWarehouseArrivalSectionWrapperStyle: string = css`
   width: 490px;
 `;
 
-export const SelectTransportTypeMessageStyle: string = css`
-  ${presets.ELLIPSIS};
-  color: ${colors.GRAY_DARK};
-  font-weight: bold;
-  ${fontSizes.MAIN};
-  text-align: right;
-  width: 200px;
-  flex-shrink: 0;
-  height: 30px;
-  line-height: 30px;
-`;
+export default ContainerWarehouseArrivalSectionWrapperStyle;
