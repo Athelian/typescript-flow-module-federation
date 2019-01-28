@@ -125,7 +125,8 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                 label={intl.formatMessage(messages.newContainer)}
                 onClick={() => {
                   const clonedContainers = containers.slice(0);
-                  clonedContainers.push(
+                  setFieldValue('containers', [
+                    ...clonedContainers,
                     injectUid({
                       no: `container no ${containers.length + 1}`,
                       batches: [],
@@ -143,9 +144,8 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                       totalNumberOfUniqueOrderItems: 0,
                       warehouseArrivalActualDateAssignedTo: [],
                       warehouseArrivalAgreedDateAssignedTo: [],
-                    })
-                  );
-                  setFieldValue('containers', clonedContainers);
+                    }),
+                  ]);
                 }}
               />
             </div>
