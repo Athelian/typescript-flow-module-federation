@@ -13,7 +13,8 @@ import {
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
-import { getUsefulBatches } from 'modules/shipment/form/components/ContainerCargoSection';
+import { BATCHES_POOL, getUsefulBatches, isSelectedBatchesPool } from 'modules/shipment/helpers';
+
 import {
   ContainersWrapperStyle,
   ContainersNavbarWrapperStyle,
@@ -56,12 +57,16 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
               </div>
               <div className={ContainersGridStyle}>
                 <button
-                  className={SelectBatchesPoolCardWrapperStyle(selectedContainerId === 'Pool')}
+                  className={SelectBatchesPoolCardWrapperStyle(
+                    isSelectedBatchesPool(selectedContainerId)
+                  )}
                   type="button"
-                  onClick={() => setSelectedContainerId('Pool')}
+                  onClick={() => setSelectedContainerId(BATCHES_POOL)}
                 >
                   <div className={EyeballIconStyle}>
-                    <Icon icon={selectedContainerId === 'Pool' ? 'INVISIBLE' : 'VISIBLE'} />
+                    <Icon
+                      icon={isSelectedBatchesPool(selectedContainerId) ? 'INVISIBLE' : 'VISIBLE'}
+                    />
                   </div>
                   <BatchesPoolCard
                     totalBatches={usefulBatches.length}

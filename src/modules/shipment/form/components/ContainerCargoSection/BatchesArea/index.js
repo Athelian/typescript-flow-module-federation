@@ -15,7 +15,7 @@ import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import { getUsefulBatches } from 'modules/shipment/form/components/ContainerCargoSection';
+import { getUsefulBatches } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import {
   BatchesWrapperStyle,

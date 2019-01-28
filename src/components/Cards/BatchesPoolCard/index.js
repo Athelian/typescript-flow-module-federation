@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedNumber from 'components/FormattedNumber';
 import { getProductImage } from 'components/Cards/utils';
+import { BATCHES_POOL } from 'modules/shipment/helpers';
 import BaseCard from '../BaseCard';
 import {
   BatchesPoolCardWrapperStyle,
@@ -32,7 +33,7 @@ const BatchesPoolCard = ({ totalBatches, product, setSelectedContainerId }: Prop
     <BaseCard icon="BATCH" color="BATCH">
       <div
         className={BatchesPoolCardWrapperStyle}
-        onClick={() => setSelectedContainerId('Pool')}
+        onClick={() => setSelectedContainerId(BATCHES_POOL)}
         role="presentation"
       >
         <img className={ProductImageStyle} src={productImage} alt="product_image" />
