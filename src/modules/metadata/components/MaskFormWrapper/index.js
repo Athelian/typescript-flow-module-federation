@@ -118,7 +118,7 @@ class MaskFormWrapper extends React.Component<Props> {
                         <EntityIcon icon="METADATA" color="METADATA" />
                         <JumpToSection>
                           <SectionTabs
-                            link="templateSection"
+                            link="metadata_templateSection"
                             label={
                               <FormattedMessage
                                 id="modules.metadata.template"

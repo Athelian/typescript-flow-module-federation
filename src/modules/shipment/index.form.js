@@ -315,7 +315,7 @@ class ShipmentFormModule extends React.Component<Props> {
                         <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
                         <JumpToSection>
                           <SectionTabs
-                            link="shipmentSection"
+                            link="shipment_shipmentSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.shipment"
@@ -325,7 +325,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             icon="SHIPMENT"
                           />
                           <SectionTabs
-                            link="timelineSection"
+                            link="shipment_timelineSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.timeline"
@@ -335,7 +335,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             icon="TIMELINE"
                           />
                           <SectionTabs
-                            link="cargoSection"
+                            link="shipment_cargoSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.cargo"
@@ -345,7 +345,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             icon="CARGO"
                           />
                           <SectionTabs
-                            link="documentsSection"
+                            link="shipment_documentsSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.document"
@@ -355,7 +355,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             icon="DOCUMENT"
                           />
                           <SectionTabs
-                            link="orderSection"
+                            link="shipment_orderSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.order"

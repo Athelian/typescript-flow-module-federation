@@ -67,7 +67,7 @@ const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
         />
         <PackagingSection isNew={isNew} />
       </SectionWrapper>
-      <SectionWrapper id="documentsSection">
+      <SectionWrapper id="product_documentsSection">
         <Subscribe to={[ProductProviderContainer]}>
           {({ state: { files } }) => (
             <SectionHeader

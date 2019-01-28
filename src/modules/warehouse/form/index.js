@@ -48,7 +48,7 @@ class WarehouseForm extends React.Component<Props> {
 
     return (
       <div className={WarehouseFormWrapperStyle}>
-        <SectionWrapper id="warehouseSection">
+        <SectionWrapper id="warehouse_warehouseSection">
           <SectionHeader
             icon="WAREHOUSE"
             title={

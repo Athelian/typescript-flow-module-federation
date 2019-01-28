@@ -115,7 +115,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       icon="PACKAGING"
                     />
                     <SectionTabs
-                      link="documentsSection"
+                      link="product_documentsSection"
                       label={
                         <FormattedMessage
                           id="modules.Products.documents"
