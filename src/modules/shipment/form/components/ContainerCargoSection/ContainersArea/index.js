@@ -13,7 +13,7 @@ import {
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
-import { BATCHES_POOL, getUsefulBatches, isSelectedBatchesPool } from 'modules/shipment/helpers';
+import { BATCHES_POOL, isSelectedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
 
 import {
   ContainersWrapperStyle,
@@ -40,7 +40,8 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {({ state: { containers }, setFieldValue, setFieldArrayValue }, { state: { batches } }) => {
-        const { usefulBatches } = getUsefulBatches(batches, selectedContainerId);
+        const batchesInPool = getBatchesInPool(batches);
+
         return (
           <div className={ContainersWrapperStyle}>
             <div className={ContainersNavbarWrapperStyle} />
@@ -69,10 +70,10 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                     />
                   </div>
                   <BatchesPoolCard
-                    totalBatches={usefulBatches.length}
+                    totalBatches={batchesInPool.length}
                     product={
-                      usefulBatches.length > 0
-                        ? getByPath('orderItem.productProvider.product', usefulBatches[0])
+                      batchesInPool.length > 0
+                        ? getByPath('orderItem.productProvider.product', batchesInPool[0])
                         : null
                     }
                     setSelectedContainerId={setSelectedContainerId}

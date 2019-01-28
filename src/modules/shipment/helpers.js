@@ -51,3 +51,6 @@ export const getUsefulBatches = (
   }
   return { usefulBatches, leftCardIsSelected, containerIsSelected };
 };
+
+export const getBatchesInPool = (batches: Array<Object>): Array<Object> =>
+  batches.filter(batch => isNullOrUndefined(batch.container));
