@@ -86,12 +86,8 @@ class WarehouseFormModule extends React.PureComponent<Props> {
 
   onMutationCompleted = (result: Object) => {
     if (this.isNewOrClone()) {
-      const {
-        warehouseCreate: {
-          warehouse: { id },
-        },
-      } = result;
-      navigate(`/warehouse/${encodeId(id)}`);
+      const { warehouseCreate } = result;
+      navigate(`/warehouse/${encodeId(warehouseCreate.id)}`);
     }
   };
 

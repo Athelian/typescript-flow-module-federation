@@ -1,19 +1,19 @@
 // @flow
 import gql from 'graphql-tag';
-import { violationFragment } from 'graphql/violations/fragment';
+import { badRequestFragment } from 'graphql';
 
 export const updateFieldDefinitionsMutation = gql`
   mutation fieldDefinitionsUpdate($input: FieldDefinitionsInput!) {
     fieldDefinitionsUpdate(input: $input) {
-      fieldDefinitions {
-        id
+      ... on FieldDefinitions {
+        fieldDefinitions {
+          id
+        }
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
 `;
 
 export default updateFieldDefinitionsMutation;

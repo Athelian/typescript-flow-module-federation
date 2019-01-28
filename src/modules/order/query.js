@@ -4,7 +4,9 @@ import gql from 'graphql-tag';
 export const orderExportQuery = gql`
   query orderExport($id: ID!, $templateId: ID!, $fields: [String!]) {
     orderExport(id: $id, templateId: $templateId, fields: $fields) {
-      path
+      ... on File {
+        path
+      }
     }
   }
 `;
@@ -17,7 +19,9 @@ export const ordersExportQuery = gql`
     $fields: [String!]
   ) {
     ordersExport(filterBy: $filterBy, sortBy: $sortBy, templateId: $templateId, fields: $fields) {
-      path
+      ... on File {
+        path
+      }
     }
   }
 `;

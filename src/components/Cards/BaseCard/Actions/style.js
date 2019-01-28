@@ -11,7 +11,6 @@ export const ActionsWrapperStyle = (visible: boolean) => css`
   justify-content: end;
   grid-gap: 5px;
   overflow: hidden;
-  width: 100%;
   ${visible
     ? `
       opacity: 1;

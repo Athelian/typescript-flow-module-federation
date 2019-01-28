@@ -1,6 +1,5 @@
 // @flow
 import gql from 'graphql-tag';
-import { violationFragment } from 'graphql/violations/fragment';
 import {
   orderFormFragment,
   shipmentFormFragment,
@@ -23,6 +22,7 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  badRequestFragment,
 } from 'graphql';
 
 export const entitiesUpdateManyMutation = gql`
@@ -41,39 +41,25 @@ export const entitiesUpdateManyMutation = gql`
       warehouses: $warehouses
     ) {
       orders {
-        orders {
-          ...orderFormFragment
-        }
-        violations {
-          ...violationFragment
-        }
+        ...orderFormFragment
+        ...badRequestFragment
       }
       shipments {
-        shipments {
-          ...shipmentFormFragment
-        }
-        violations {
-          ...violationFragment
-        }
+        ...shipmentFormFragment
+        ...badRequestFragment
       }
       products {
-        violations {
-          ...violationFragment
-        }
+        ...badRequestFragment
       }
       batches {
-        violations {
-          ...violationFragment
-        }
+        ...badRequestFragment
       }
       warehouses {
-        violations {
-          ...violationFragment
-        }
+        ...badRequestFragment
       }
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${orderFormFragment}
   ${userAvatarFragment}
   ${tagFragment}

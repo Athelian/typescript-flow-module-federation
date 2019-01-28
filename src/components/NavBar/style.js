@@ -21,4 +21,5 @@ export const ChildrenWrapperStyle: string = css`
   grid-template-rows: 50px;
   grid-gap: 20px;
   align-items: center;
+  width: 100%;
 `;

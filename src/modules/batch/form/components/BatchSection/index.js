@@ -15,6 +15,7 @@ import {
   customFieldsInputFactory,
 } from 'modules/form/helpers';
 import { OrderItemCard } from 'components/Cards';
+import { totalAdjustQuantity } from 'components/Cards/utils';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
 import messages from 'modules/batch/messages';
@@ -37,9 +38,7 @@ const BatchSection = ({ isNew, selectable }: Props) => (
       {({ originalValues: initialValues, state, setFieldValue, calculatePackageQuantity }) => {
         const values = { ...initialValues, ...state };
         const { batchAdjustments = [] } = values;
-        const totalAdjustment = batchAdjustments
-          ? batchAdjustments.reduce((total, adjustment) => adjustment.quantity + total, 0)
-          : 0;
+        const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
         return (
           <>

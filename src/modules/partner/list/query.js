@@ -6,18 +6,24 @@ export const partnerListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: PartnerFilterInput, $sortBy: PartnerSortInput) {
     viewer {
       user {
-        id
-        group {
+        ... on User {
           id
-          partners(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
-            nodes {
+          group {
+            ... on Group {
               id
-              group {
-                ...partnerCardFragment
+              partners(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
+                nodes {
+                  ... on Partner {
+                    id
+                    group {
+                      ...partnerCardFragment
+                    }
+                  }
+                }
+                page
+                totalPage
               }
             }
-            page
-            totalPage
           }
         }
       }

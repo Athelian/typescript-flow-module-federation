@@ -138,6 +138,7 @@ export const InputIconStyle: string = css`
 
 export const ApprovalIconStyle = (approval: boolean): string => css`
   ${fontSizes.MAIN};
+  ${presets.BUTTON};
   color: ${approval ? colors.BLUE : colors.GRAY_LIGHT};
   &:hover,
   :focus {

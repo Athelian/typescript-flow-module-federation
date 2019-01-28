@@ -6,7 +6,6 @@ export const ProductProviderSectionWrapperStyle: string = css`
   position: relative;
   ${presets.BOX};
   width: 880px;
-  padding: 50px 0 0 0;
   height: min-content;
 `;
 

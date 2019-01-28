@@ -15,18 +15,17 @@ function OrdersSection({ orders }: Props) {
       <SectionNavBar>
         <div id="sortsandfilterswip" />
       </SectionNavBar>
-      <div className={OrdersSectionBodyStyle}>
-        {orders.length === 0 ? (
-          <div className={EmptyMessageStyle}>
-            <FormattedMessage
-              id="modules.Shipments.noOrderFound"
-              defaultMessage="No orders found"
-            />
-          </div>
-        ) : (
-          orders.map(order => <OrderCard order={order} key={order.id} />)
-        )}
-      </div>
+      {orders.length === 0 ? (
+        <div className={EmptyMessageStyle}>
+          <FormattedMessage id="modules.Shipments.noOrderFound" defaultMessage="No orders found" />
+        </div>
+      ) : (
+        <div className={OrdersSectionBodyStyle}>
+          {orders.map(order => (
+            <OrderCard order={order} key={order.id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

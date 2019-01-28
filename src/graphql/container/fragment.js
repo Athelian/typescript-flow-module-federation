@@ -1,50 +1,126 @@
 import gql from 'graphql-tag';
 
 export const containerCardFragment = gql`
-  fragment ContainerCardFragment on Container {
+  fragment containerCardFragment on Container {
     id
     no
     representativeBatch {
-      id
-      orderItem {
+      ... on Batch {
         id
-        productProvider {
-          id
-          product {
+        orderItem {
+          ... on OrderItem {
             id
-            files {
-              id
-              name
-              type
+            productProvider {
+              ... on ProductProvider {
+                id
+                product {
+                  ... on Product {
+                    id
+                    files {
+                      ...imageFragment
+                    }
+                    name
+                    serial
+                  }
+                }
+              }
             }
-            name
-            serial
           }
         }
       }
     }
     totalVolume {
-      value
-      metric
+      ...metricFragment
     }
     batches {
-      id
+      ... on Batch {
+        id
+      }
     }
     warehouse {
-      id
-      name
+      ... on Warehouse {
+        id
+        name
+      }
     }
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
     warehouseArrivalAgreedDateApprovedBy {
-      id
+      ... on User {
+        id
+      }
     }
     warehouseArrivalActualDateApprovedBy {
-      id
+      ... on User {
+        id
+      }
     }
     shipment {
-      id
-      no
+      ... on Shipment {
+        id
+        no
+      }
+    }
+    tags {
+      ...tagFragment
+    }
+  }
+`;
+
+export const shipmentContainerCardFragment = gql`
+  fragment shipmentContainerCardFragment on Container {
+    id
+    no
+    representativeBatch {
+      ... on Batch {
+        id
+        orderItem {
+          ... on OrderItem {
+            id
+            productProvider {
+              ... on ProductProvider {
+                id
+                product {
+                  ... on Product {
+                    id
+                    files {
+                      ...imageFragment
+                    }
+                    name
+                    serial
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    totalVolume {
+      ...metricFragment
+    }
+    batches {
+      ... on Batch {
+        id
+      }
+    }
+    warehouse {
+      ... on Warehouse {
+        id
+        name
+      }
+    }
+    warehouseArrivalAgreedDate
+    warehouseArrivalActualDate
+    warehouseArrivalAgreedDateApprovedBy {
+      ... on User {
+        id
+      }
+    }
+    warehouseArrivalActualDateApprovedBy {
+      ... on User {
+        id
+      }
     }
     tags {
       ...tagFragment

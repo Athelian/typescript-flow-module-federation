@@ -14,6 +14,7 @@ import { isAppInProduction } from './utils/env';
 import errorReport from './errorReport';
 import './styles/reset.css';
 import * as serviceWorker from './serviceWorker';
+import DeployNotifier from './components/DeployNotifier';
 
 loadFonts();
 errorReport();
@@ -30,6 +31,12 @@ const renderApp = (Component, renderFn) => {
   renderFn(
     <div>
       {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
+      {isAppInProduction && (
+        <DeployNotifier
+          revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
+          revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
+        />
+      )}
       <ApolloProvider client={apolloClient}>
         <AuthenticationProvider>
           <LanguageProvider>

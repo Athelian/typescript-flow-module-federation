@@ -1,16 +1,29 @@
 // @flow
 import * as React from 'react';
 import { encodeId } from 'utils/id';
-import { TimelineIcon, TimelineTransitIcon, TimelineLine, TimelineVoyage } from '../../components';
+import { isEnableBetaFeature } from 'utils/env';
+import {
+  TimelineIcon,
+  TimelineTransitIcon,
+  TimelineLine,
+  TimelineVoyage,
+  TimelineWarehouseContainerIcon,
+  TimelineContainerIcon,
+} from '../../components';
 import { getTimelineColoring, getTransportIcon } from '../../helpers';
-import { HorizontalTimelineWrapperStyle, BlankSpaceStyle } from './style';
+import {
+  HorizontalTimelineWrapperStyle,
+  BlankSpaceStyle,
+  ContainerIconWrapperStyle,
+  WarehouseContainerWrapperStyle,
+} from './style';
 
 type Props = {
   shipment: any,
 };
 
 const HorizontalTimeline = ({ shipment }: Props) => {
-  const { cargoReady, voyages, containerGroups, transportType } = shipment;
+  const { cargoReady, voyages, containerGroups, transportType, containers } = shipment;
 
   const transportIcon = getTransportIcon(transportType);
 
@@ -92,15 +105,32 @@ const HorizontalTimeline = ({ shipment }: Props) => {
         linkPath={`/shipment/${encodeId(shipment.id)}/customClearance`}
       />
 
-      <TimelineLine color={warehouseArrivalColoring} />
+      {isEnableBetaFeature && containers && containers.length > 0 ? (
+        <>
+          <TimelineLine color={warehouseArrivalColoring} flex="1.59" />
 
-      <TimelineIcon
-        icon="WAREHOUSE"
-        color={warehouseArrivalColoring}
-        linkPath={`/shipment/${encodeId(shipment.id)}/warehouseArrival`}
-      />
+          <div className={WarehouseContainerWrapperStyle}>
+            <div className={ContainerIconWrapperStyle}>
+              <TimelineContainerIcon />
+            </div>
+            <TimelineWarehouseContainerIcon containers={containers} />
+          </div>
 
-      <TimelineLine color={deliveryReadyColoring} />
+          <TimelineLine color={deliveryReadyColoring} flex="1.59" />
+        </>
+      ) : (
+        <>
+          <TimelineLine color={warehouseArrivalColoring} />
+
+          <TimelineIcon
+            icon="WAREHOUSE"
+            color={warehouseArrivalColoring}
+            linkPath={`/shipment/${encodeId(shipment.id)}/warehouseArrival`}
+          />
+
+          <TimelineLine color={deliveryReadyColoring} />
+        </>
+      )}
 
       <TimelineIcon
         icon="DELIVERY_READY"

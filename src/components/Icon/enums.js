@@ -76,6 +76,8 @@ import {
   faFeatherAlt as EDITED,
   faPaperPlane as PAPER_PLANE,
   faExternalLink as EXTERNAL_LINK,
+  faEye as VISIBLE,
+  faEyeSlash as INVISIBLE,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -223,6 +225,8 @@ export default {
   EDITED,
   PAPER_PLANE,
   EXTERNAL_LINK,
+  VISIBLE,
+  INVISIBLE,
 
   TIMELINE,
   CARGO_READY,

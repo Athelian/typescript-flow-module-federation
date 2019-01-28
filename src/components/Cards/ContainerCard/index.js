@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
@@ -108,16 +108,24 @@ const ContainerCard = ({ container, ...rest }: Props) => {
           <div className={DividerStyle} />
 
           <div className={IconInputStyle}>
-            <Link
-              className={WarehouseIconStyle(!!warehouse)}
-              to={`/warehouse/${encodeId(warehouse.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="WAREHOUSE" />
-            </Link>
-            <Display align="left">{warehouse.name}</Display>
+            {isNullOrUndefined(warehouse) ? (
+              <div className={WarehouseIconStyle(false)}>
+                <Icon icon="WAREHOUSE" />
+              </div>
+            ) : (
+              <>
+                <Link
+                  className={WarehouseIconStyle(true)}
+                  to={`/warehouse/${encodeId(warehouse.id)}`}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon="WAREHOUSE" />
+                </Link>
+                <Display align="left">{warehouse.name}</Display>
+              </>
+            )}
           </div>
 
           <div className={LabelStyle}>

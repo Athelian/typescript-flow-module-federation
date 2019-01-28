@@ -1,5 +1,6 @@
 import BaseCard, { CardAction } from './BaseCard';
 import BatchCard from './BatchCard';
+import BatchesPoolCard from './BatchesPoolCard';
 import OrderBatchCard from './OrderBatchCard';
 import OrderCard from './OrderCard';
 import OrderItemCard from './OrderItemCard';
@@ -12,6 +13,7 @@ import ShipmentBatchCard from './ShipmentBatchCard';
 import ContainerBatchCard from './ContainerBatchCard';
 import ContainerCard from './ContainerCard';
 import ShipmentContainerCard from './ShipmentContainerCard';
+import ShipmentContainerBatchCard from './ShipmentContainerBatchCard';
 import ShipmentWarehouseCard from './ShipmentWarehouseCard';
 import StaffCard from './StaffCard';
 import TagCard from './TagCard';
@@ -25,6 +27,7 @@ export default BaseCard;
 export {
   CardAction,
   BatchCard,
+  BatchesPoolCard,
   OrderBatchCard,
   OrderCard,
   OrderItemCard,
@@ -36,6 +39,7 @@ export {
   ShipmentBatchCard,
   ShipmentWarehouseCard,
   ShipmentContainerCard,
+  ShipmentContainerBatchCard,
   StaffCard,
   TagCard,
   WarehouseCard,

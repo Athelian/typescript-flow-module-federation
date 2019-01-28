@@ -64,14 +64,16 @@ export const productProviderCardFragment = gql`
       ...partnerNameFragment
     }
     product {
-      id
-      name
-      serial
-      tags {
-        ...tagFragment
-      }
-      files {
-        ...imageFragment
+      ... on Product {
+        id
+        name
+        serial
+        tags {
+          ...tagFragment
+        }
+        files {
+          ...imageFragment
+        }
       }
     }
     packageName

@@ -72,6 +72,9 @@ function OrderModule(props: Props) {
                 filtersAndSort={filterAndSort}
                 onChange={onChangeFilter}
               />
+              <Link to="new">
+                <NewButton />
+              </Link>
               <ExportButton
                 type="Orders"
                 exportQuery={ordersExportQuery}
@@ -82,9 +85,6 @@ function OrderModule(props: Props) {
                   },
                 }}
               />
-              <Link to="new">
-                <NewButton />
-              </Link>
             </NavBar>
           }
         >

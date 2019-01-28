@@ -39,7 +39,7 @@ const Login = ({ redirectUrl }: Props) => (
           <Mutation
             mutation={loginMutation}
             onCompleted={({ login }) => {
-              if (login.violations === null) {
+              if (!login.violations) {
                 setAuthenticated(true);
               }
             }}
@@ -58,11 +58,7 @@ const Login = ({ redirectUrl }: Props) => (
                       <LoginForm
                         onLogin={variables => login({ variables: { input: variables } })}
                       />
-                      {(error ||
-                        (data &&
-                          data.login &&
-                          data.login.violations &&
-                          data.login.violations.length > 0)) && (
+                      {(error || (data && data.login && data.login.violations)) && (
                         <div id="errorMsg" className={LoginErrorStyle}>
                           <FormattedMessage {...messages.error} />{' '}
                         </div>

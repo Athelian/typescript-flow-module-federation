@@ -518,6 +518,14 @@ export default defineMessages({
     id: 'modules.Shipments.selectBatches',
     defaultMessage: 'SELECT BATCHES',
   },
+  newContainer: {
+    id: 'modules.Shipments.newContainer',
+    defaultMessage: 'NEW CONTAINER',
+  },
+  moveBatches: {
+    id: 'modules.Shipments.moveBatches',
+    defaultMessage: 'MOVE BATCHES',
+  },
   clearSelection: {
     id: 'modules.Shipments.clearSelection',
     defaultMessage: 'Clear Selections',
@@ -529,5 +537,13 @@ export default defineMessages({
   arrivalPort: {
     id: 'modules.Shipments.dischargePort',
     defaultMessage: 'DISCHARGE PORT',
+  },
+  agreedDateLabel: {
+    id: 'modules.Shipments.agreedDateLabel',
+    defaultMessage: 'AGREED',
+  },
+  actualDateLabel: {
+    id: 'modules.Shipments.actualDateLabel',
+    defaultMessage: 'ACTUAL',
   },
 });

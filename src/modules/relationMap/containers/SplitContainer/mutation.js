@@ -18,21 +18,21 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  badRequestFragment,
 } from 'graphql';
-import { violationFragment } from 'graphql/violations/fragment';
 
 export const batchSimpleSplitMutation = gql`
   mutation batchSimpleSplit($id: ID!, $input: BatchSimpleSplitInput!) {
     batchSimpleSplit(id: $id, input: $input) {
-      batches {
-        ...batchFormFragment
+      ... on Batches {
+        batches {
+          ...batchFormFragment
+        }
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${batchFormFragment}
   ${metricFragment}
   ${tagFragment}
@@ -55,15 +55,15 @@ export const batchSimpleSplitMutation = gql`
 export const batchEqualSplitMutaion = gql`
   mutation batchEqualSplit($id: ID!, $input: BatchEqualSplitInput!) {
     batchEqualSplit(id: $id, input: $input) {
-      batches {
-        ...batchFormFragment
+      ... on Batches {
+        batches {
+          ...batchFormFragment
+        }
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${batchFormFragment}
   ${metricFragment}
   ${tagFragment}
@@ -86,15 +86,15 @@ export const batchEqualSplitMutaion = gql`
 export const batchBalanceSplitMutaion = gql`
   mutation batchBalanceSplit($orderItemId: ID!) {
     batchBalanceSplit(orderItemId: $orderItemId) {
-      batches {
-        ...batchFormFragment
+      ... on Batches {
+        batches {
+          ...batchFormFragment
+        }
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${batchFormFragment}
   ${metricFragment}
   ${tagFragment}

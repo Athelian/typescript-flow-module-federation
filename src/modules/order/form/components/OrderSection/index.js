@@ -199,7 +199,7 @@ const OrderSection = ({ isNew }: Props) => (
                                     originalValue: initialValues[name],
                                     event: {
                                       onBlurHasValue: (value: string) => {
-                                        if (value !== values.currency) {
+                                        if (value !== values.currency && orderItems.length > 0) {
                                           setPriceDialog(true);
                                         } else {
                                           setPreviousCurrency(value);

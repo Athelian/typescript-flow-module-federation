@@ -13,7 +13,7 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <ContainerCard container={item} />;
+const defaultRenderItem = (item: Object) => <ContainerCard key={item.id} container={item} />;
 
 const defaultProps = {
   renderItem: defaultRenderItem,

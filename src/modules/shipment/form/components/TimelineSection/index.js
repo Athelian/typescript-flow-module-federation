@@ -3,9 +3,11 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import { isEnableBetaFeature } from 'utils/env';
 import {
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
+  ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
 import { DashedPlusButton } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
@@ -14,6 +16,7 @@ import { ShipmentWarehouseCard } from 'components/Cards';
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
   VerticalLayout,
+  ContainerWarehouseArrivalSection,
   TimelineInfoSection,
   VoyageInfoSection,
   VoyageSelector,
@@ -25,18 +28,21 @@ type Props = {
 };
 
 const TimelineSection = ({ isNew }: Props) => (
-  <Subscribe to={[ShipmentTimelineContainer, ShipmentTransportTypeContainer]}>
+  <Subscribe
+    to={[ShipmentTimelineContainer, ShipmentTransportTypeContainer, ShipmentContainersContainer]}
+  >
     {(
       { originalValues: initialValues, state, setFieldDeepValue, removeArrayItem },
-      { state: transportTypeState }
+      { state: transportTypeState },
+      { state: containersState }
     ) => {
       const values: Object = {
         ...initialValues,
         ...state,
         ...transportTypeState,
+        ...containersState,
       };
-
-      const { cargoReady, voyages, containerGroups = [] } = values;
+      const { cargoReady, voyages, containerGroups = [], containers = [] } = values;
       const { customClearance, warehouseArrival, deliveryReady, warehouse } =
         containerGroups[0] || {};
 
@@ -269,58 +275,65 @@ const TimelineSection = ({ isNew }: Props) => (
               setFieldDeepValue={setFieldDeepValue}
               removeArrayItem={removeArrayItem}
             />
-            <TimelineInfoSection
-              id="warehouseArrival"
-              isNew={isNew}
-              icon="WAREHOUSE"
-              title={
-                <FormattedMessage
-                  id="modules.Shipments.warehouseArrival"
-                  defaultMessage="WAREHOUSE ARRIVAL"
-                />
-              }
-              timelineDate={warehouseArrival}
-              sourceName="containerGroups.0.warehouseArrival"
-              setFieldDeepValue={setFieldDeepValue}
-              removeArrayItem={removeArrayItem}
-              renderBelowHeader={
-                <BooleanValue>
-                  {({ value: opened, set: slideToggle }) => (
-                    <>
-                      {!warehouse ? (
-                        <DashedPlusButton
-                          width="195px"
-                          height="40px"
-                          onClick={() => slideToggle(true)}
-                        />
-                      ) : (
-                        <ShipmentWarehouseCard
-                          warehouse={warehouse}
-                          onClick={() => slideToggle(true)}
-                        />
-                      )}
-
-                      <SlideView
-                        isOpen={opened}
-                        onRequestClose={() => slideToggle(false)}
-                        options={{ width: '1030px' }}
-                      >
-                        {opened && (
-                          <SelectWareHouse
-                            selected={warehouse}
-                            onCancel={() => slideToggle(false)}
-                            onSelect={newValue => {
-                              slideToggle(false);
-                              setFieldDeepValue('containerGroups.0.warehouse', newValue);
-                            }}
+            {isEnableBetaFeature && containers && containers.length > 0 ? (
+              <ContainerWarehouseArrivalSection
+                id="containersWarehouseArrival"
+                containers={containers}
+              />
+            ) : (
+              <TimelineInfoSection
+                id="warehouseArrival"
+                isNew={isNew}
+                icon="WAREHOUSE"
+                title={
+                  <FormattedMessage
+                    id="modules.Shipments.warehouseArrival"
+                    defaultMessage="WAREHOUSE ARRIVAL"
+                  />
+                }
+                timelineDate={warehouseArrival}
+                sourceName="containerGroups.0.warehouseArrival"
+                setFieldDeepValue={setFieldDeepValue}
+                removeArrayItem={removeArrayItem}
+                renderBelowHeader={
+                  <BooleanValue>
+                    {({ value: opened, set: slideToggle }) => (
+                      <>
+                        {!warehouse ? (
+                          <DashedPlusButton
+                            width="195px"
+                            height="40px"
+                            onClick={() => slideToggle(true)}
+                          />
+                        ) : (
+                          <ShipmentWarehouseCard
+                            warehouse={warehouse}
+                            onClick={() => slideToggle(true)}
                           />
                         )}
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
-              }
-            />
+
+                        <SlideView
+                          isOpen={opened}
+                          onRequestClose={() => slideToggle(false)}
+                          options={{ width: '1030px' }}
+                        >
+                          {opened && (
+                            <SelectWareHouse
+                              selected={warehouse}
+                              onCancel={() => slideToggle(false)}
+                              onSelect={newValue => {
+                                slideToggle(false);
+                                setFieldDeepValue('containerGroups.0.warehouse', newValue);
+                              }}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                }
+              />
+            )}
             <TimelineInfoSection
               id="deliveryReady"
               isNew={isNew}

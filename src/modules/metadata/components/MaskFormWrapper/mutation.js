@@ -1,31 +1,27 @@
 // @flow
 import gql from 'graphql-tag';
-import { violationFragment } from 'graphql/violations/fragment';
+import { badRequestFragment } from 'graphql';
 
 export const createMaskMutation = gql`
   mutation maskCreate($input: MaskCreateInput!) {
     maskCreate(input: $input) {
-      mask {
+      ... on Mask {
         id
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
 `;
 
 export const updateMaskMutation = gql`
   mutation maskUpdate($id: ID!, $input: MaskUpdateInput!) {
     maskUpdate(id: $id, input: $input) {
-      mask {
+      ... on Mask {
         id
       }
-      violations {
-        ...violationFragment
-      }
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
 `;

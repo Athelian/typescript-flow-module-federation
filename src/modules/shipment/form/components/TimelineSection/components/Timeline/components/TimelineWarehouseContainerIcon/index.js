@@ -1,0 +1,121 @@
+// @flow
+import React from 'react';
+import { Link } from '@reach/router';
+import scrollIntoView from 'utils/scrollIntoView';
+import Icon from 'components/Icon';
+import { TimelineIconStyle, IconWrapperStyle } from './style';
+import Ring from './Ring';
+
+type Container = {
+  warehouseArrivalAgreedDate: string,
+  warehouseArrivalAgreedDateApprovedBy: string,
+  warehouseArrivalActualDate: string,
+  warehouseArrivalActualDateApprovedBy: string,
+};
+type Props = {
+  containers: Array<Container>,
+  linkPath: string,
+  targetId: string,
+  boundaryId: string,
+};
+
+const defaultProps = {
+  containers: [],
+  linkPath: '',
+  targetId: '',
+  boundaryId: '',
+};
+
+const getIconColor = (containers: Array<Container>) => {
+  let color = 'TEAL';
+  const allAgreed = containers.every(container => container.warehouseArrivalAgreedDateApprovedBy);
+  containers.forEach(container => {
+    const {
+      warehouseArrivalAgreedDateApprovedBy: agreedDateApproved,
+      warehouseArrivalActualDateApprovedBy: actualDateApproved,
+    } = container;
+    if (!agreedDateApproved && !actualDateApproved) {
+      color = 'GRAY_LIGHT';
+    } else if (allAgreed && !actualDateApproved) {
+      color = 'BLUE';
+    }
+  });
+  return color;
+};
+
+const getRingPercent = (containers: Array<Container>) => {
+  const totalContainer = containers.length;
+  if (totalContainer === 0) {
+    return [0, 0];
+  }
+  let agreedDates = 0;
+  let actualDates = 0;
+  containers.forEach(container => {
+    const {
+      warehouseArrivalAgreedDateApprovedBy: agreedDateApproved,
+      warehouseArrivalActualDateApprovedBy: actualDateApproved,
+    } = container;
+    if (agreedDateApproved) {
+      agreedDates += 1;
+    }
+    if (actualDateApproved) {
+      actualDates += 1;
+    }
+  });
+  const actualPercent = (actualDates / totalContainer) * 100;
+  const agreedPercent = (agreedDates / totalContainer) * 100;
+  return [actualPercent, agreedPercent];
+};
+
+const TimelineWarehouseContainerIcon = ({ containers, linkPath, targetId, boundaryId }: Props) => {
+  const iconColor = getIconColor(containers);
+  const [actualPercent, agreedPercent] = getRingPercent(containers);
+
+  if (linkPath) {
+    return (
+      <Link
+        className={TimelineIconStyle}
+        to={linkPath}
+        onClick={evt => {
+          evt.stopPropagation();
+        }}
+      >
+        <Ring percent={actualPercent} size={30} color="TEAL" />
+        <Ring percent={agreedPercent} size={26} color="BLUE" />
+        <div className={IconWrapperStyle(iconColor)}>
+          <Icon icon="WAREHOUSE" />
+        </div>
+      </Link>
+    );
+  }
+
+  if (targetId) {
+    return (
+      <button
+        className={TimelineIconStyle}
+        onClick={() => scrollIntoView({ targetId, boundaryId })}
+        type="button"
+      >
+        <Ring percent={actualPercent} size={30} color="TEAL" />
+        <Ring percent={agreedPercent} size={26} color="BLUE" />
+        <div className={IconWrapperStyle(iconColor)}>
+          <Icon icon="WAREHOUSE" />
+        </div>
+      </button>
+    );
+  }
+
+  return (
+    <div className={TimelineIconStyle}>
+      <Ring percent={actualPercent} size={30} color="TEAL" />
+      <Ring percent={agreedPercent} size={26} color="BLUE" />
+      <div className={IconWrapperStyle(iconColor)}>
+        <Icon icon="WAREHOUSE" />
+      </div>
+    </div>
+  );
+};
+
+TimelineWarehouseContainerIcon.defaultProps = defaultProps;
+
+export default TimelineWarehouseContainerIcon;

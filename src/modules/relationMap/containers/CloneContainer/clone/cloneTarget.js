@@ -56,7 +56,7 @@ export const cloneOrder = async (client: any, orders: Array<Object>, filter: Obj
         const orderList = store.readQuery(query);
 
         const newOrderList = Object.assign({}, orderList);
-        newOrderList.orders.nodes.push(getByPathWithDefault({}, 'orderCreate.order', data));
+        newOrderList.orders.nodes.push(getByPathWithDefault({}, 'orderCreate', data));
 
         // @NOTE should use this way to implement maybe wait path from apollo
         // ref: https://github.com/apollographql/apollo-client/issues/2415
@@ -76,7 +76,7 @@ export const cloneOrder = async (client: any, orders: Array<Object>, filter: Obj
   });
   const newOrders: Array<Object> = await Promise.all(orderRequests);
   const orderResults: Array<Object> = newOrders.map(newOrder => {
-    const result = getByPathWithDefault({}, 'data.orderCreate.order', newOrder);
+    const result = getByPathWithDefault({}, 'data.orderCreate', newOrder);
     return Object.assign(result, { actionType: 'clone' });
   });
   const orderFocus = orderResults.reduce(
@@ -137,7 +137,7 @@ export const cloneOrderItem = async (client: any, target: Object, filter: Object
       update: (store, { data }) => {
         const query = { query: orderListQuery, variables: filter };
         const orderList = store.readQuery(query);
-        const updateData = data.orderUpdate.order;
+        const updateData = data.orderUpdate;
         orderList.orders.nodes.forEach((order, orderIndex) => {
           if (order.id === updateData.id) {
             orderList.orders.nodes[orderIndex] = updateData;
@@ -149,12 +149,8 @@ export const cloneOrderItem = async (client: any, target: Object, filter: Object
   });
   const updatedOrderItems = await Promise.all(orderItemRequests);
   const orderItemResult = updatedOrderItems.reduce((resultOrderItemObj, updatedOrderItem) => {
-    const updatedOrderId = getByPathWithDefault('', 'data.orderUpdate.order.id', updatedOrderItem);
-    const newOrderItems = getByPathWithDefault(
-      [],
-      'data.orderUpdate.order.orderItems',
-      updatedOrderItem
-    );
+    const updatedOrderId = getByPathWithDefault('', 'data.orderUpdate.id', updatedOrderItem);
+    const newOrderItems = getByPathWithDefault([], 'data.orderUpdate.orderItems', updatedOrderItem);
     const oldOrderItems = orderUpdate[updatedOrderId];
     const diffOrderItems = differenceBy(newOrderItems, oldOrderItems, 'id');
     const results = diffOrderItems.map(diffItem =>
@@ -164,12 +160,8 @@ export const cloneOrderItem = async (client: any, target: Object, filter: Object
   }, {});
 
   const orderItemFocus = updatedOrderItems.reduce((resultOrderItemObj, updatedOrderItem) => {
-    const updatedOrderId = getByPathWithDefault('', 'data.orderUpdate.order.id', updatedOrderItem);
-    const newOrderItems = getByPathWithDefault(
-      [],
-      'data.orderUpdate.order.orderItems',
-      updatedOrderItem
-    );
+    const updatedOrderId = getByPathWithDefault('', 'data.orderUpdate.id', updatedOrderItem);
+    const newOrderItems = getByPathWithDefault([], 'data.orderUpdate.orderItems', updatedOrderItem);
     const oldOrderItems = orderUpdate[updatedOrderId];
     const diffOrderItems = differenceBy(newOrderItems, oldOrderItems, 'id');
     const focusedOrderItem = diffOrderItems.reduce(
@@ -236,7 +228,7 @@ export const cloneBatchByUpdateOrder = async (client: any, batches: Object, filt
       update: (store, { data }) => {
         const query = { query: orderListQuery, variables: filter };
         const orderList = store.readQuery(query);
-        const updateData = data.orderUpdate.order;
+        const updateData = data.orderUpdate;
         orderList.orders.nodes.forEach((currentOrder, orderIndex) => {
           if (currentOrder.id === updateData.id) {
             orderList.orders.nodes[orderIndex] = updateData;
@@ -249,7 +241,7 @@ export const cloneBatchByUpdateOrder = async (client: any, batches: Object, filt
   const updatedBatches = await Promise.all(batchRequests);
   const batchesFocus = {};
   updatedBatches.forEach(updatedData => {
-    const order = getByPathWithDefault({}, 'data.orderUpdate.order', updatedData);
+    const order = getByPathWithDefault({}, 'data.orderUpdate', updatedData);
     order.orderItems.forEach(orderItem => {
       const newBatches = orderItem.batches;
       const oldBatches = getByPathWithDefault(
@@ -303,7 +295,7 @@ export const cloneBatch = async (client: any, batches: Object) => {
   const newBatches = await Promise.all(batchRequests);
   const batchResult = newBatches.reduce((batchResultObj, newBatch) => {
     const { refId } = newBatch;
-    const newBatchData = getByPathWithDefault('', 'data.batchCreate.batch', newBatch);
+    const newBatchData = getByPathWithDefault('', 'data.batchCreate', newBatch);
     const batchRef = refId
       ? { [refId]: [...(batchResultObj[refId] || []), { ...newBatchData, actionType: 'clone' }] }
       : {};
@@ -311,7 +303,7 @@ export const cloneBatch = async (client: any, batches: Object) => {
     return Object.assign(batchResultObj, batchRef);
   }, {});
   const batchFocus = newBatches.reduce((batchResultObj, newBatch) => {
-    const newBatchData = getByPathWithDefault('', 'data.batchCreate.batch', newBatch);
+    const newBatchData = getByPathWithDefault('', 'data.batchCreate', newBatch);
     const { id: batchId } = newBatchData;
     return Object.assign(batchResultObj, { [batchId]: newBatchData });
   }, {});
@@ -355,7 +347,7 @@ export const cloneShipment = async (client: any, shipmentIds: Array<string>) => 
 
   const newShipments = await Promise.all(shipmentRequests);
   const shipmentResults: Array<Object> = newShipments.map(newShipment => {
-    const result = getByPathWithDefault({}, 'data.shipmentCreate.shipment', newShipment);
+    const result = getByPathWithDefault({}, 'data.shipmentCreate', newShipment);
     return Object.assign(result, { actionType: 'clone', isNew: 'clone' });
   });
   const shipmentFocus = shipmentResults.reduce(

@@ -15,23 +15,20 @@ import {
   fieldDefinitionFragment,
   productProviderFormFragment,
   documentFragment,
+  badRequestFragment,
 } from 'graphql';
-import { violationFragment } from 'graphql/violations/fragment';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import type { ProductCreate, ProductUpdate } from '../type.js.flow';
 
 export const createProductMutation: Object = gql`
   mutation productCreate($input: ProductCreateInput!) {
     productCreate(input: $input) {
-      product {
-        ...productFormFragment
-      }
-      violations {
-        ...violationFragment
-      }
+      __typename
+      ...productFormFragment
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${productFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
@@ -99,15 +96,12 @@ export const prepareCreateProductInput = ({
 export const updateProductMutation: Object = gql`
   mutation productUpdate($id: ID!, $input: ProductUpdateInput!) {
     productUpdate(id: $id, input: $input) {
-      product {
-        ...productFormFragment
-      }
-      violations {
-        ...violationFragment
-      }
+      __typename
+      ...productFormFragment
+      ...badRequestFragment
     }
   }
-  ${violationFragment}
+  ${badRequestFragment}
   ${productFormFragment}
   ${userAvatarFragment}
   ${tagFragment}

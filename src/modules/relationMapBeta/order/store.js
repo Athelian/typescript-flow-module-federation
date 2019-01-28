@@ -1,5 +1,6 @@
 // @flow
 import logger from 'utils/logger';
+import { SHIPMENT } from 'modules/relationMap/constants';
 
 export type UIState = {
   showTag: boolean,
@@ -64,6 +65,26 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
   switch (action.type) {
     case 'RESET':
       return uiInitState;
+    case 'CLEAR_ALL': {
+      const { payload } = action;
+      if (payload && payload.mode === 'TARGET') {
+        return {
+          ...state,
+          targets: [],
+          select: {
+            mode: 'SINGLE',
+            entities: [],
+          },
+        };
+      }
+      return {
+        ...state,
+        highlight: {
+          type: '',
+          selectedId: '',
+        },
+      };
+    }
     case 'TOGGLE_TAG':
       return { ...state, showTag: !state.showTag };
     case 'TOGGLE_EDIT_FORM':
@@ -72,19 +93,33 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const { payload } = action;
       const {
         select: { entities },
+        targets,
       } = state;
-      if (payload) {
-        if (payload.entity && state.select.entities.includes(payload.entity)) {
+      let result = [...targets];
+      if (payload && payload.entity && payload.selectedIds) {
+        const { selectedIds, entity } = payload;
+        if (
+          state.select.entities.includes(entity) &&
+          state.targets.filter(item => item.includes(`${entity}-`)).length === selectedIds.length
+        ) {
           return {
             ...state,
+            targets: (result.filter(
+              targetItem => !targetItem.includes(`${entity}-`)
+            ): Array<string>),
             select: {
               ...state.select,
               entities: (entities.filter(item => item !== payload.entity): Array<string>),
             },
           };
         }
+        selectedIds.forEach(selectItemId => {
+          if (!result.includes(`${entity}-${selectItemId}`))
+            result = [...result, `${entity}-${selectItemId}`];
+        });
         return {
           ...state,
+          targets: result,
           select: {
             mode: 'ALL',
             entities: [...entities, payload.entity || ''],
@@ -109,7 +144,8 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           });
         } else {
           selectItems.forEach(selectItem => {
-            result = [...result, `${selectItem.entity}-${selectItem.id}`];
+            if (!result.includes(`${selectItem.entity}-${selectItem.id}`))
+              result = [...result, `${selectItem.entity}-${selectItem.id}`];
           });
         }
       }
@@ -138,7 +174,12 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       return state;
     }
     case 'TOGGLE_SHIPMENT_LIST':
-      return { ...state, totalShipment: 0, toggleShipmentList: !state.toggleShipmentList };
+      return {
+        ...state,
+        totalShipment: 0,
+        toggleShipmentList: !state.toggleShipmentList,
+        targets: (state.targets.filter(item => !item.includes(`${SHIPMENT}-`)): Array<string>),
+      };
     case 'TOTAL_SHIPMENT': {
       const { payload } = action;
       const total = payload && payload.total ? payload.total : 0;
@@ -193,6 +234,13 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
 
 export function actionCreators(dispatch: Function) {
   return {
+    clearAllBy: (mode: 'TARGET' | 'HIGHLIGHT') =>
+      dispatch({
+        type: 'CLEAR_ALL',
+        payload: {
+          mode,
+        },
+      }),
     toggleTag: () =>
       dispatch({
         type: 'TOGGLE_TAG',
@@ -217,11 +265,12 @@ export function actionCreators(dispatch: Function) {
       dispatch({
         type: 'TOGGLE_SHIPMENT_LIST',
       }),
-    toggleSelectAll: (entity: string) =>
+    toggleSelectAll: (entity: string, selectedIds: Array<string>) =>
       dispatch({
         type: 'TOGGLE_SELECT_ALL',
         payload: {
           entity,
+          selectedIds,
         },
       }),
     countShipment: (total: number) =>
@@ -257,14 +306,30 @@ export function actionCreators(dispatch: Function) {
   };
 }
 
-const entitySelector = (state: UIState, entity: string) =>
-  state.select.mode === 'ALL' && state.select.entities.includes(entity);
+const entitySelector = ({
+  state,
+  entity,
+  total,
+}: {
+  state: UIState,
+  entity: string,
+  total: number,
+}) =>
+  state.select.mode === 'ALL' &&
+  state.select.entities.includes(entity) &&
+  total === state.targets.filter(item => item.includes(`${entity}-`)).length;
 
 export function selectors(state: UIState) {
   return {
     isSelectEntity: (highLightEntities: Array<string>, entity: string, id: string) =>
       highLightEntities.includes(`${entity}-${id}`),
-    isSelectAllEntity: (entity: string) => entitySelector(state, entity),
+    isSelectAllEntity: (entity: string, total: number) => entitySelector({ state, entity, total }),
     isTarget: (entity: string, id: string) => state.targets.includes(`${entity}-${id}`),
+    isTargetAnyItem: () => state.targets.length > 0,
+    isHighLightAnyItem: () => state.highlight.selectedId !== '',
+    countTargetBy: (entity: string) =>
+      state.targets.filter(item => item.includes(`${entity}-`)).length,
+    countHighLightBy: (highLightEntities: Array<string>, entity: string) =>
+      highLightEntities.filter(item => item.includes(`${entity}-`)).length,
   };
 }
