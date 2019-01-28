@@ -150,7 +150,7 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/node": "^7.2.2",
-    "@commitlint/cli": "^7.3.2",
+    "@commitlint/cli": "^7.4.0",
     "@commitlint/config-conventional": "^7.3.1",
     "@storybook/addon-a11y": "^4.1.11",
     "@storybook/addon-actions": "^4.1.11",
@@ -182,7 +182,7 @@
     "dotenv-expand": "4.2.0",
     "eslint": "^5.12.1",
     "eslint-config-airbnb": "17.1.0",
-    "eslint-config-prettier": "^3.6.0",
+    "eslint-config-prettier": "^4.0.0",
     "eslint-config-react-app": "^3.0.6",
     "eslint-loader": "2.1.1",
     "eslint-plugin-cypress": "^2.2.0",
