@@ -334,5 +334,14 @@ export function selectors(state: UIState) {
       state.targets.filter(item => item.includes(`${entity}-`)).length,
     countHighLightBy: (highLightEntities: Array<string>, entity: string) =>
       highLightEntities.filter(item => item.includes(`${entity}-`)).length,
+    targetedBatchId: () => {
+      const batch = state.targets.find(item => item.includes(`${BATCH}-`));
+      if (batch) {
+        const [, batchId] = batch.split('-');
+        console.warn({ batchId });
+        return batchId;
+      }
+      return '';
+    },
   };
 }

@@ -1,25 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import {
-  sizeFragment,
-  metricFragment,
-  batchFormFragment,
-  tagFragment,
-  priceFragment,
-  imageFragment,
-  partnerNameFragment,
-  partnerCardFragment,
-  orderCardFragment,
-  userAvatarFragment,
-  shipmentCardFragment,
-  timelineDateMinimalFragment,
-  portFragment,
-  customFieldsFragment,
-  maskFragment,
-  fieldValuesFragment,
-  fieldDefinitionFragment,
-  badRequestFragment,
-} from 'graphql';
+import { metricFragment, tagFragment, badRequestFragment } from 'graphql';
 
 export const batchSimpleSplitMutation = gql`
   mutation batchSimpleSplit($id: ID!, $input: BatchSimpleSplitInput!) {
@@ -44,23 +25,8 @@ export const batchSimpleSplitMutation = gql`
     }
   }
   ${badRequestFragment}
-  ${batchFormFragment}
   ${metricFragment}
   ${tagFragment}
-  ${priceFragment}
-  ${sizeFragment}
-  ${orderCardFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${partnerCardFragment}
-  ${userAvatarFragment}
-  ${shipmentCardFragment}
-  ${portFragment}
-  ${timelineDateMinimalFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
 `;
 
 export const batchEqualSplitMutation = gql`
@@ -86,21 +52,6 @@ export const batchEqualSplitMutation = gql`
     }
   }
   ${badRequestFragment}
-  ${batchFormFragment}
   ${metricFragment}
   ${tagFragment}
-  ${priceFragment}
-  ${sizeFragment}
-  ${orderCardFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${partnerCardFragment}
-  ${userAvatarFragment}
-  ${shipmentCardFragment}
-  ${portFragment}
-  ${timelineDateMinimalFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
 `;

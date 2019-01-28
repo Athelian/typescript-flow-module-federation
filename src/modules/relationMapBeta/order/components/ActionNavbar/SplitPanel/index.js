@@ -17,7 +17,7 @@ type Props = {
   onSplit: ({
     type: string,
     quantity: number,
-  }) => void,
+  }) => any,
 };
 
 const SIMPLE = 0;
