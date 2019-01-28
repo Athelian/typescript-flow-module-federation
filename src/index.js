@@ -4,6 +4,8 @@ import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 import UNSTATED from 'unstated-debug';
 import FullStory from 'react-fullstory';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AuthenticationProvider from './modules/authentication';
 import LanguageProvider from './modules/language';
 import UIProvider from './modules/ui';
@@ -48,6 +50,8 @@ const renderApp = (Component, renderFn) => {
           </LanguageProvider>
         </AuthenticationProvider>
       </ApolloProvider>
+      
+      <ToastContainer />
     </div>,
     container
   );
