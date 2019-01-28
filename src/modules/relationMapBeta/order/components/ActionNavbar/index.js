@@ -3,16 +3,25 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ApolloConsumer } from 'react-apollo';
+import OutsideClickHandler from 'components/OutsideClickHandler';
+import Dialog from 'components/Dialog';
+import LoadingIcon from 'components/LoadingIcon';
+import { Label } from 'components/Form';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
-import { TabItemStyled } from 'modules/relationMap/common/ActionPanel/ActionSubscribe/style';
+import {
+  TabItemStyled,
+  LoadingContainerStyle,
+} from 'modules/relationMap/common/ActionPanel/ActionSubscribe/style';
+import messages from 'modules/relationMap/messages';
 import TargetToolBar from './TargetToolBar';
 import HighLightToolBar from './HighLightToolBar';
 import SplitPanel from './SplitPanel';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
 import ConstrainPanel from './ConstrainPanel';
+import ErrorPanel from './ErrorPanel';
 
 type Props = {
   highLightEntities: Array<string>,
@@ -48,8 +57,8 @@ export default function ActionNavbar({ highLightEntities }: Props) {
                   }
                   icon="SPLIT"
                   disabled={!uiSelectors.isAllowToSplitBatch()}
-                  active={activeAction === 'SPLIT'}
-                  onClick={() => setActiveAction('SPLIT')}
+                  active={activeAction === 'split'}
+                  onClick={() => setActiveAction('split')}
                 />
               </TargetToolBar>
               {activeAction !== '' && (
@@ -61,23 +70,54 @@ export default function ActionNavbar({ highLightEntities }: Props) {
                   }}
                 />
               )}
-              {activeAction === 'SPLIT' && uiSelectors.isAllowToSplitBatch() && (
+              {state.error && (
+                <ErrorPanel onClickCancel={console.warn} onClickRefresh={console.warn} />
+              )}
+              {activeAction && (
+                <OutsideClickHandler ignoreClick onOutsideClick={() => {}}>
+                  <Dialog isOpen={state.loading} options={{ width: 300 }} onRequestClose={() => {}}>
+                    <div className={LoadingContainerStyle}>
+                      <LoadingIcon />
+                      <Label align="center">
+                        <FormattedMessage {...messages[activeAction]} />
+                      </Label>
+                      <Label align="center">
+                        <FormattedMessage {...messages.waiting} />
+                      </Label>
+                    </div>
+                  </Dialog>
+                </OutsideClickHandler>
+              )}
+              {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
                   onSplit={async inputData => {
                     const { type, quantity } = inputData;
                     const id = uiSelectors.targetedBatchId();
-                    if (type === 'batchEqualSplit') {
-                      const result = await client.mutate({
-                        mutation: batchEqualSplitMutation,
-                        variables: { id, input: { quantity } },
+                    try {
+                      actions.splitBatch({
+                        type,
+                        quantity,
+                        batchId: id,
                       });
-                      console.warn(result);
-                    } else {
-                      const result = await client.mutate({
-                        mutation: batchSimpleSplitMutation,
-                        variables: { id, input: { quantity } },
-                      });
-                      console.warn(result);
+                      // TODO: handle user error if enter the quality bigger than batch's quantity
+                      if (type === 'batchEqualSplit') {
+                        const result: any = await client.mutate({
+                          mutation: batchEqualSplitMutation,
+                          variables: { id, input: { precision: 0, divideBy: quantity } },
+                        });
+                        console.warn(result.data.batchEqualSplit);
+                        actions.splitBatchSuccess(result.data.batchEqualSplit);
+                      } else {
+                        const result: any = await client.mutate({
+                          mutation: batchSimpleSplitMutation,
+                          variables: { id, input: { quantity } },
+                        });
+                        console.warn(result.data.batchSimpleSplit);
+                        actions.splitBatchSuccess(result.data.batchSimpleSplit);
+                      }
+                    } catch (error) {
+                      console.warn(error);
+                      actions.splitBatchFailed(error);
                     }
                   }}
                 />

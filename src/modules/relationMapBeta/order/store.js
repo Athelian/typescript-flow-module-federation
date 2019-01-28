@@ -3,6 +3,8 @@ import logger from 'utils/logger';
 import { SHIPMENT, BATCH } from 'modules/relationMap/constants';
 
 export type UIState = {
+  loading: boolean,
+  error: boolean,
   showTag: boolean,
   expandCards: {
     orders: Array<string>,
@@ -38,6 +40,8 @@ const getInitToggleShipmentList = () => {
 };
 
 export const uiInitState: UIState = {
+  loading: false,
+  error: false,
   showTag: getInitShowTag(),
   expandCards: {
     orders: [],
@@ -65,6 +69,23 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
   switch (action.type) {
     case 'RESET':
       return uiInitState;
+    case 'SPLIT_BATCH':
+      return {
+        ...state,
+        loading: true,
+      };
+    case 'SPLIT_BATCH_ERROR':
+      return {
+        ...state,
+        loading: false,
+        error: true,
+      };
+    case 'SPLIT_BATCH_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        error: false,
+      };
     case 'CLEAR_ALL': {
       const { payload } = action;
       if (payload && payload.mode === 'TARGET') {
@@ -301,6 +322,37 @@ export function actionCreators(dispatch: Function) {
         payload: {
           entity,
           id,
+        },
+      }),
+    splitBatch: ({
+      type,
+      batchId,
+      quantity,
+    }: {
+      type: string,
+      batchId: string,
+      quantity: number,
+    }) =>
+      dispatch({
+        type: 'SPLIT_BATCH',
+        payload: {
+          type,
+          batchId,
+          quantity,
+        },
+      }),
+    splitBatchSuccess: (data: Object) =>
+      dispatch({
+        type: 'SPLIT_BATCH_SUCCESS',
+        payload: {
+          data,
+        },
+      }),
+    splitBatchFailed: (error: string) =>
+      dispatch({
+        type: 'SPLIT_BATCH_ERROR',
+        payload: {
+          error,
         },
       }),
   };
