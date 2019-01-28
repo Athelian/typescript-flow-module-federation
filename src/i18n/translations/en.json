@@ -855,6 +855,7 @@
   "modules.Tags.staff": "STAFF",
   "modules.Tags.tag": "TAG",
   "modules.Tags.noItem": "No tags found",
+  "modules.Tags.container": "CONTAINER",
   "modules.WareHouses.name": "NAME",
   "modules.WareHouses.streetAddress": "STREET ADDRESS",
   "modules.WareHouses.locality": "LOCALITY",
