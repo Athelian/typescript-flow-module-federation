@@ -16,6 +16,7 @@ import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getUsefulBatches } from 'modules/shipment/form/components/ContainerCargoSection';
+import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -29,8 +30,6 @@ import {
   BatchesFooterWrapperStyle,
 } from './style';
 
-import SelectBatches from '../../SelectBatches';
-
 type Props = {
   intl: IntlShape,
   selectedContainerId: ?string,
@@ -40,7 +39,7 @@ function BatchesArea({ intl, selectedContainerId }: Props) {
   return (
     <Subscribe to={[ShipmentBatchesContainer]}>
       {({ state: { batches }, setFieldValue, setFieldArrayValue }) => {
-        const { usefulBatch, leftCardIsSelected, containerIsSelected } = getUsefulBatches(
+        const { usefulBatches, leftCardIsSelected, containerIsSelected } = getUsefulBatches(
           batches,
           selectedContainerId
         );
@@ -49,7 +48,7 @@ function BatchesArea({ intl, selectedContainerId }: Props) {
           <div className={BatchesWrapperStyle}>
             <div className={BatchesNavbarWrapperStyle} />
             <div className={BatchesBodyWrapperStyle}>
-              {usefulBatch.length === 0 ? (
+              {usefulBatches.length === 0 ? (
                 <div className={EmptyMessageStyle}>
                   <FormattedMessage
                     id="modules.Shipments.noBatches"
@@ -75,7 +74,7 @@ function BatchesArea({ intl, selectedContainerId }: Props) {
                             defaultMessage="ALL BATCHES"
                           />
                         )}{' '}
-                        (<FormattedNumber value={usefulBatch.length} />)
+                        (<FormattedNumber value={usefulBatches.length} />)
                       </div>
                     </div>
                     <MoveButton
@@ -84,7 +83,7 @@ function BatchesArea({ intl, selectedContainerId }: Props) {
                     />
                   </div>
                   <div className={BatchesGridStyle}>
-                    {usefulBatch.map((batch, position) => (
+                    {usefulBatches.map((batch, position) => (
                       <BooleanValue key={batch.id}>
                         {({ value: opened, set: batchSlideToggle }) => (
                           <>

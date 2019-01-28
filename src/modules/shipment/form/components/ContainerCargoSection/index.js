@@ -15,11 +15,11 @@ export const getUsefulBatches = (
   batches: Array<Object>,
   selectedContainerId: ?string
 ): {
-  usefulBatch: Array<Object>,
+  usefulBatches: Array<Object>,
   leftCardIsSelected: boolean,
   containerIsSelected: boolean,
 } => {
-  let usefulBatch = batches.slice(0);
+  let usefulBatches = batches.slice(0);
 
   const leftCardIsSelected = !isNullOrUndefined(selectedContainerId);
 
@@ -27,14 +27,14 @@ export const getUsefulBatches = (
 
   if (leftCardIsSelected) {
     if (containerIsSelected) {
-      usefulBatch = usefulBatch.filter(batch =>
+      usefulBatches = usefulBatches.filter(batch =>
         !isNullOrUndefined(batch.container) ? batch.container.id === selectedContainerId : false
       );
     } else {
-      usefulBatch = usefulBatch.filter(batch => isNullOrUndefined(batch.container));
+      usefulBatches = usefulBatches.filter(batch => isNullOrUndefined(batch.container));
     }
   }
-  return { usefulBatch, leftCardIsSelected, containerIsSelected };
+  return { usefulBatches, leftCardIsSelected, containerIsSelected };
 };
 
 class CargoSection extends React.Component<Props, State> {

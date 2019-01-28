@@ -39,7 +39,7 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {({ state: { containers }, setFieldValue, setFieldArrayValue }, { state: { batches } }) => {
-        const { usefulBatch } = getUsefulBatches(batches, selectedContainerId);
+        const { usefulBatches } = getUsefulBatches(batches, selectedContainerId);
         return (
           <div className={ContainersWrapperStyle}>
             <div className={ContainersNavbarWrapperStyle} />
@@ -64,10 +64,10 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                     <Icon icon={selectedContainerId === 'Pool' ? 'INVISIBLE' : 'VISIBLE'} />
                   </div>
                   <BatchesPoolCard
-                    totalBatches={usefulBatch.length}
+                    totalBatches={usefulBatches.length}
                     product={
-                      usefulBatch.length > 0
-                        ? getByPath('orderItem.productProvider.product', usefulBatch[0])
+                      usefulBatches.length > 0
+                        ? getByPath('orderItem.productProvider.product', usefulBatches[0])
                         : null
                     }
                     setSelectedContainerId={setSelectedContainerId}
