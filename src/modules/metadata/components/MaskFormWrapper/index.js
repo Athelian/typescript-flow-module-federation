@@ -128,7 +128,7 @@ class MaskFormWrapper extends React.Component<Props> {
                             icon="TEMPLATE"
                           />
                           <SectionTabs
-                            link="customFieldsSection"
+                            link="metadata_customFieldsSection"
                             label={
                               <FormattedMessage
                                 id="modules.metadata.customFieldsSection"

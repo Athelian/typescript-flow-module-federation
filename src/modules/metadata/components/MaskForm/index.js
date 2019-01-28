@@ -113,7 +113,7 @@ class MaskForm extends React.Component<Props> {
                     </GridColumn>
                   </ContentWrapper>
                 </SectionWrapper>
-                <SectionWrapper id="customFieldsSection">
+                <SectionWrapper id="metadata_customFieldsSection">
                   <SectionHeader
                     icon="METADATA"
                     title={

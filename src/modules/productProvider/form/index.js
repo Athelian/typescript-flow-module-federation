@@ -28,7 +28,7 @@ const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection')
 const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
   <Suspense fallback={<LoadingIcon />}>
     <div className={ProductProviderFormWrapperStyle}>
-      <SectionWrapper id="productProviderSection">
+      <SectionWrapper id="productProvider_productProviderSection">
         <SectionHeader
           icon="PROVIDER"
           title={
@@ -45,7 +45,7 @@ const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
         <ProductProviderSection isExist={isExist} isNew={isNew} />
       </SectionWrapper>
 
-      <SectionWrapper id="specificationsSection">
+      <SectionWrapper id="productProvider_specificationsSection">
         <SectionHeader
           icon="SPECIFICATIONS"
           title={
@@ -58,7 +58,7 @@ const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
         <SpecificationsSection isNew={isNew} />
       </SectionWrapper>
 
-      <SectionWrapper id="productProviderPackagingSection">
+      <SectionWrapper id="productProvider_productProviderPackagingSection">
         <SectionHeader
           icon="PACKAGING"
           title={
@@ -67,7 +67,7 @@ const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
         />
         <PackagingSection isNew={isNew} />
       </SectionWrapper>
-      <SectionWrapper id="product_documentsSection">
+      <SectionWrapper id="productProvider_documentsSection">
         <Subscribe to={[ProductProviderContainer]}>
           {({ state: { files } }) => (
             <SectionHeader

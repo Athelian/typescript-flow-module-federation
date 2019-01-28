@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { isDataType } from 'utils/fp';
+import { isEnableBetaFeature } from 'utils/env';
 import BatchFormContainer from 'modules/batch/form/container';
 import validator from 'modules/batch/form/validator';
 import JumpToSection from 'components/JumpToSection';
@@ -99,6 +100,18 @@ class BatchFormWrapper extends React.Component<Props> {
                       }
                       icon="SHIPMENT"
                     />
+                    {isEnableBetaFeature && (
+                      <SectionTabs
+                        link="batch_containerSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Batches.container"
+                            defaultMessage="SHIPMENT"
+                          />
+                        }
+                        icon="CONTAINER"
+                      />
+                    )}
                     <SectionTabs
                       link="batch_orderSection"
                       label={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
