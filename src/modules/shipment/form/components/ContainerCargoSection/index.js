@@ -12,7 +12,7 @@ type State = {
 
 class CargoSection extends React.Component<Props, State> {
   state = {
-    selectedContainerId: null, // 'Pool' = Batches Pool
+    selectedContainerId: null, // 'Batches_Pool' = Batches Pool
   };
 
   setSelectedContainerId = (id: string) => {
