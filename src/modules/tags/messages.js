@@ -62,4 +62,8 @@ export default defineMessages({
     id: 'modules.Tags.validation.invalidColor',
     defaultMessage: 'Invalid color',
   },
+  container: {
+    id: 'modules.Tags.container',
+    defaultMessage: 'CONTAINER',
+  },
 });

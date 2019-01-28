@@ -851,6 +851,7 @@
   "modules.Tags.staff": "スタッフ",
   "modules.Tags.tag": "タグ",
   "modules.Tags.noItem": "タグが見つかりません",
+  "modules.Tags.container": "CONTAINER",
   "modules.WareHouses.name": "倉庫名",
   "modules.WareHouses.streetAddress": "丁目番地",
   "modules.WareHouses.locality": "市区町村",
