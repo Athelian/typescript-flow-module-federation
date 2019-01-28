@@ -494,15 +494,25 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.loadPortDeparture',
     name: 'voyages.0.departure',
     type: 'timeline',
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPath('0.departure.date', voyages),
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+      const dates = getByPathWithDefault([], '0.departure.timelineDateRevisions', voyages);
+      const lastDate = dates[dates.length - 1];
+      return lastDate && lastDate.date;
+    },
   },
   {
     messageId: 'modules.Shipments.firstTransitPortArrival',
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
       getByPath(`${voyages && voyages.length > 1 ? '0' : ''}.arrival`, voyages),
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPath(`${voyages && voyages.length > 1 ? '0' : ''}.arrival.date`, voyages),
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+      const dates = getByPathWithDefault(
+        [],
+        `${voyages && voyages.length > 1 ? '0' : ''}.arrival.timelineDateRevisions`,
+        voyages
+      );
+      const lastDate = dates[dates.length - 1];
+      return lastDate && lastDate.date;
+    },
     name: 'voyages.0.arrival',
     type: 'timeline',
   },
@@ -510,15 +520,25 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.firstTransitPortDeparture',
     name: 'voyages.1.departure',
     type: 'timeline',
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPath('1.departure.date', voyages),
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+      const dates = getByPathWithDefault([], '1.departure.date', voyages);
+      const lastDate = dates[dates.length - 1];
+      return lastDate && lastDate.date;
+    },
   },
   {
     messageId: 'modules.Shipments.secondTransitPortArrival',
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
       getByPath(`${voyages && voyages.length > 2 ? '1' : ''}.arrival`, voyages),
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPath(`${voyages && voyages.length > 2 ? '1' : ''}.arrival.date`, voyages),
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+      const dates = getByPathWithDefault(
+        [],
+        `${voyages && voyages.length > 2 ? '1' : ''}.arrival.timelineDateRevisions`,
+        voyages
+      );
+      const lastDate = dates[dates.length - 1];
+      return lastDate && lastDate.date;
+    },
     name: 'voyages.1.arrival',
     type: 'timeline',
   },
@@ -526,8 +546,11 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.secondTransitPortDeparture',
     name: 'voyages.2.departure',
     type: 'timeline',
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) =>
-      getByPath('2.departure.date', voyages),
+    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+      const dates = getByPathWithDefault([], '2.departure.timelineDateRevisions', voyages);
+      const lastDate = dates[dates.length - 1];
+      return lastDate && lastDate.date;
+    },
   },
   {
     messageId: 'modules.Shipments.dischargePortArrival',
@@ -539,7 +562,9 @@ export const shipmentColumnFields = [
       `voyages.${voyages ? voyages.length - 1 : 0}.arrival`,
     getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
       const index = voyages ? voyages.length - 1 : 0;
-      return getByPath(`${index}.arrival.date`, voyages);
+      const dates = getByPathWithDefault([], `${index}.arrival.timelineDateRevisions`, voyages);
+      const lastDate = dates[dates.length - 1];
+      return lastDate && lastDate.date;
     },
     name: 'voyages.2.arrival',
     type: 'timeline',
@@ -548,22 +573,39 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.customsClearance',
     name: 'containerGroups.0.customClearance',
     type: 'timeline',
-    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) =>
-      getByPathWithDefault('', '0.customClearance.date', containerGroups),
+    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) => {
+      const dates = getByPathWithDefault(
+        [],
+        '0.customClearance.timelineDateRevisions',
+        containerGroups
+      );
+      const lastDate = dates[dates.length - 1];
+      return lastDate && lastDate.date;
+    },
   },
   {
     messageId: 'modules.Shipments.warehouseArrival',
     name: 'containerGroups.0.warehouseArrival',
     type: 'timeline',
-    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) =>
-      getByPathWithDefault('', '0.warehouseArrival.date', containerGroups),
+    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) => {
+      const dates = getByPathWithDefault(
+        '',
+        '0.warehouseArrival.timelineDateRevisions',
+        containerGroups
+      );
+      const lastDate = dates[dates.length - 1];
+      return lastDate && lastDate.date;
+    },
   },
   {
     messageId: 'modules.Shipments.deliveryReady',
     name: 'containerGroups.0.deliveryReady',
     type: 'timeline',
-    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) =>
-      getByPathWithDefault('', '0.deliveryReady.date', containerGroups),
+    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) => {
+      const dates = getByPathWithDefault('', '0.deliveryReady.date', containerGroups);
+      const lastDate = dates[dates.length - 1];
+      return lastDate && lastDate.date;
+    },
   },
 ];
 
