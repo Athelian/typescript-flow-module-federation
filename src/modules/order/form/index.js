@@ -110,7 +110,7 @@ export default class OrderForm extends React.Component<Props> {
                   title={
                     <>
                       <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" /> (
-                      {values.orderItems.length})
+                      {values.orderItems ? values.orderItems.length : 0})
                     </>
                   }
                 />
