@@ -33,32 +33,26 @@ import {
 } from './style';
 
 type Props = {
-  selectedContainerId: string,
-  selectedContainerIndex: number,
+  containerId: string,
+  containerIndex: number,
 };
 
-export default function ContainerBatchesArea({
-  selectedContainerId,
-  selectedContainerIndex,
-}: Props) {
+export default function ContainerBatchesArea({ containerId, containerIndex }: Props) {
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
         { state: { batches }, setFieldValue, setFieldArrayValue },
         { state, setDeepFieldValue }
       ) => {
-        const usefulBatches = getBatchesByContainerId(batches, selectedContainerId);
+        const usefulBatches = getBatchesByContainerId(batches, containerId);
         const representativeBatchId = getByPath(
-          `containers.${selectedContainerIndex}.representativeBatch.id`,
+          `containers.${containerIndex}.representativeBatch.id`,
           state
         );
 
         if (usefulBatches.length > 0) {
           if (isNullOrUndefined(representativeBatchId)) {
-            setDeepFieldValue(
-              `containers.${selectedContainerIndex}.representativeBatch`,
-              usefulBatches[0]
-            );
+            setDeepFieldValue(`containers.${containerIndex}.representativeBatch`, usefulBatches[0]);
           }
         }
         return (
@@ -136,14 +130,14 @@ export default function ContainerBatchesArea({
                                 );
                                 if (batch.id === representativeBatchId) {
                                   setDeepFieldValue(
-                                    `containers.${selectedContainerIndex}.representativeBatch`,
+                                    `containers.${containerIndex}.representativeBatch`,
                                     null
                                   );
                                 }
                               }}
                               onClickRepresentative={() =>
                                 setDeepFieldValue(
-                                  `containers.${selectedContainerIndex}.representativeBatch`,
+                                  `containers.${containerIndex}.representativeBatch`,
                                   batch
                                 )
                               }
@@ -218,8 +212,8 @@ export default function ContainerBatchesArea({
                     <NewButton
                       label={
                         <FormattedMessage
-                          id="modules.shipment.newBatches"
-                          defaultMessage="NEW BATCHES"
+                          id="modules.shipment.newBatch"
+                          defaultMessage="NEW BATCH"
                         />
                       }
                       onClick={() => createBatchesSlideToggle(true)}

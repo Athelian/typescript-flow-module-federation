@@ -10,34 +10,34 @@ import ContainerBatchesArea from './ContainerBatchesArea';
 type Props = {};
 
 type State = {
-  id: ?string,
-  index: number,
+  selectCardId: ?string,
+  containerIndex: number,
 };
 
 class CargoSection extends React.Component<Props, State> {
   state = {
-    id: null, // 'Batches_Pool' = Batches Pool
-    index: -1,
+    selectCardId: null, // 'Batches_Pool' = Batches Pool
+    containerIndex: -1,
   };
 
-  setSelected = ({ id, index }: { id: string, index: number }) => {
-    const { id: currentId } = this.state;
-    if (currentId === id) {
-      this.setState({ id: null, index: -1 });
+  setSelected = ({ cardId, containerIndex }: { cardId: string, containerIndex: number }) => {
+    const { selectCardId } = this.state;
+    if (selectCardId === cardId) {
+      this.setState({ selectCardId: null, containerIndex: -1 });
     } else {
-      this.setState({ id, index });
+      this.setState({ selectCardId: cardId, containerIndex });
     }
   };
 
   render() {
-    const { id, index } = this.state;
+    const { selectCardId, containerIndex } = this.state;
     return (
       <div className={CargoSectionWrapperStyle}>
-        <ContainersArea selectedContainerId={id} setSelected={this.setSelected} />
-        {isNullOrUndefined(id) || id === BATCHES_POOL ? (
-          <BatchesArea isSelectedBatchesPool={isSelectedBatchesPool(id)} />
+        <ContainersArea selectCardId={selectCardId} setSelected={this.setSelected} />
+        {isNullOrUndefined(selectCardId) || selectCardId === BATCHES_POOL ? (
+          <BatchesArea isSelectedBatchesPool={isSelectedBatchesPool(selectCardId)} />
         ) : (
-          <ContainerBatchesArea selectedContainerId={id} selectedContainerIndex={index} />
+          <ContainerBatchesArea containerId={selectCardId} containerIndex={containerIndex} />
         )}
       </div>
     );

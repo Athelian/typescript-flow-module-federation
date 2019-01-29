@@ -36,11 +36,11 @@ import {
 
 type Props = {
   intl: IntlShape,
-  selectedContainerId: ?string,
-  setSelected: ({ id: string, index: number }) => void,
+  selectCardId: ?string,
+  setSelected: ({ cardId: string, containerIndex: number }) => void,
 };
 
-function ContainersArea({ intl, selectedContainerId, setSelected }: Props) {
+function ContainersArea({ intl, selectCardId, setSelected }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {({ state: { containers }, setFieldValue, setDeepFieldValue }, { state: { batches } }) => {
@@ -62,16 +62,12 @@ function ContainersArea({ intl, selectedContainerId, setSelected }: Props) {
               </div>
               <div className={ContainersGridStyle}>
                 <div
-                  className={SelectBatchesPoolCardWrapperStyle(
-                    isSelectedBatchesPool(selectedContainerId)
-                  )}
+                  className={SelectBatchesPoolCardWrapperStyle(isSelectedBatchesPool(selectCardId))}
                   role="presentation"
-                  onClick={() => setSelected({ id: BATCHES_POOL, index: -1 })}
+                  onClick={() => setSelected({ cardId: BATCHES_POOL, containerIndex: -1 })}
                 >
                   <div className={EyeballIconStyle}>
-                    <Icon
-                      icon={isSelectedBatchesPool(selectedContainerId) ? 'INVISIBLE' : 'VISIBLE'}
-                    />
+                    <Icon icon={isSelectedBatchesPool(selectCardId) ? 'INVISIBLE' : 'VISIBLE'} />
                   </div>
                   <BatchesPoolCard
                     totalBatches={batchesInPool.length}
@@ -83,14 +79,16 @@ function ContainersArea({ intl, selectedContainerId, setSelected }: Props) {
                   />
                 </div>
                 {containers.map((container, position) => {
-                  const isSelected = selectedContainerId === container.id;
+                  const isSelected = selectCardId === container.id;
 
                   return (
                     <div key={container.id} className={SelectContainerCardWrapperStyle}>
                       <button
                         className={SelectContainerCardBackgroundStyle(isSelected)}
                         type="button"
-                        onClick={() => setSelected({ id: container.id, index: position })}
+                        onClick={() =>
+                          setSelected({ cardId: container.id, containerIndex: position })
+                        }
                       >
                         <div className={EyeballIconStyle}>
                           <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
