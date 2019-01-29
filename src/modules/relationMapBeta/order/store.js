@@ -28,7 +28,7 @@ export type UIState = {
   totalShipment: number,
   split: {
     parentOrderIds: Array<string>,
-    result: Object,
+    batches: Object,
   },
 };
 
@@ -69,7 +69,7 @@ export const uiInitState: UIState = {
   totalShipment: 0,
   split: {
     parentOrderIds: [],
-    result: {},
+    batches: {},
   },
 };
 
@@ -94,13 +94,26 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const [, orderId] = (
         state.split.parentOrderIds.find(item => item.includes(`${batchId}-`)) || ''
       ).split('-');
+      const { batches } = state.split;
       return {
         ...state,
         split: {
+          batches: {
+            ...batches,
+            [batchId]: state.split.batches[batchId]
+              ? [
+                  ...state.split.batches[batchId],
+                  ...getByPathWithDefault([], 'payload.data.batches', action).filter(
+                    item => item && item.id !== batchId
+                  ),
+                ]
+              : getByPathWithDefault([], 'payload.data.batches', action).filter(
+                  item => item && item.id !== batchId
+                ),
+          },
           parentOrderIds: getByPathWithDefault([], 'payload.data.batches', action)
             .filter(item => item && item.id !== batchId)
             .map(batch => `${batch.id}-${orderId}`),
-          result: (action.payload && action.payload.data) || {},
         },
         targets: getByPathWithDefault([], 'payload.data.batches', action)
           .filter(item => item && item.id !== batchId)
@@ -225,11 +238,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           return {
             ...state,
             split: {
+              ...state.split,
               parentOrderIds: [
                 ...state.split.parentOrderIds,
                 `${payload.id}-${payload.parentOrderId}`,
               ],
-              result: {},
             },
             targets: (targets.filter(item => item !== `${BATCH}-${payload.id}`): Array<string>),
           };
@@ -237,11 +250,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         return {
           ...state,
           split: {
+            ...state.split,
             parentOrderIds: [
               ...state.split.parentOrderIds,
               `${payload.id}-${payload.parentOrderId}`,
             ],
-            result: {},
           },
           targets: [...targets, `${BATCH}-${payload.id}`],
         };
@@ -453,7 +466,6 @@ export function selectors(state: UIState) {
       const batch = state.targets.find(item => item.includes(`${BATCH}-`));
       if (batch) {
         const [, batchId] = batch.split('-');
-        console.warn({ batchId });
         return batchId;
       }
       return '';

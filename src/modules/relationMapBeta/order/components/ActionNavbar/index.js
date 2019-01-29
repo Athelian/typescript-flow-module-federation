@@ -37,7 +37,6 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
   const { state, dispatch } = context;
   const uiSelectors = selectors(state);
   const actions = actionCreators(dispatch);
-  console.warn({ batches });
   return (
     <ApolloConsumer>
       {client => (
