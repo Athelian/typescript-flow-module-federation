@@ -14,6 +14,7 @@ import * as splitStyle from './style';
 
 type Props = {
   intl: IntlShape,
+  max: number,
   onSplit: ({
     type: string,
     quantity: number,
@@ -23,7 +24,7 @@ type Props = {
 const SIMPLE = 0;
 const EQUALLY = 1;
 
-function SplitPanel({ intl, onSplit }: Props) {
+function SplitPanel({ intl, onSplit, max }: Props) {
   const [activeTab, setActiveTab] = React.useState(SIMPLE);
   const [quantity, setQuantity] = React.useState(0);
   const tabs = [
@@ -73,7 +74,12 @@ function SplitPanel({ intl, onSplit }: Props) {
                 splitStyle.SplitInputWrapperStyle
               )}
             >
-              <NumberInput value={quantity} onChange={evt => setQuantity(evt.target.value)} />
+              <NumberInput
+                min={1}
+                max={max}
+                value={quantity}
+                onChange={evt => setQuantity(evt.target.value)}
+              />
             </div>
             <div className={splitStyle.SplitInputWrapperStyle}>
               <CardAction
@@ -107,7 +113,12 @@ function SplitPanel({ intl, onSplit }: Props) {
                 splitStyle.SplitInputWrapperStyle
               )}
             >
-              <NumberInput value={quantity} onChange={evt => setQuantity(evt.target.value)} />
+              <NumberInput
+                min={1}
+                max={max}
+                value={quantity}
+                onChange={evt => setQuantity(evt.target.value)}
+              />
             </div>
             <div className={splitStyle.SplitInputWrapperStyle}>
               <CardAction

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ApolloConsumer } from 'react-apollo';
 import OutsideClickHandler from 'components/OutsideClickHandler';
+import { getByPathWithDefault } from 'utils/fp';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
@@ -26,14 +27,16 @@ import ErrorPanel from './ErrorPanel';
 
 type Props = {
   highLightEntities: Array<string>,
+  batches: Object,
 };
 
-export default function ActionNavbar({ highLightEntities }: Props) {
+export default function ActionNavbar({ highLightEntities, batches }: Props) {
   const [activeAction, setActiveAction] = React.useState('');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
   const uiSelectors = selectors(state);
   const actions = actionCreators(dispatch);
+  console.warn({ batches });
   return (
     <ApolloConsumer>
       {client => (
@@ -91,6 +94,7 @@ export default function ActionNavbar({ highLightEntities }: Props) {
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
+                  max={getByPathWithDefault(0, 'quantity', batches[uiSelectors.targetedBatchId()])}
                   onSplit={async inputData => {
                     const { type, quantity } = inputData;
                     const id = uiSelectors.targetedBatchId();
