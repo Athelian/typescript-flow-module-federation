@@ -191,8 +191,8 @@ const ShipmentContainerCard = ({
                       <button
                         type="button"
                         onClick={evt => {
-                          toggleSelectWarehouse(true);
                           evt.stopPropagation();
+                          toggleSelectWarehouse(true);
                         }}
                       >
                         <DefaultStyle type="button" height="20px">
@@ -271,11 +271,11 @@ const ShipmentContainerCard = ({
                     type="button"
                     className={ApprovalIconStyle(true)}
                     onClick={evt => {
+                      evt.stopPropagation();
                       update({
                         ...container,
                         warehouseArrivalAgreedDateApprovedBy: null,
                       });
-                      evt.stopPropagation();
                     }}
                   >
                     <Icon icon="CHECKED" />
@@ -285,11 +285,11 @@ const ShipmentContainerCard = ({
                     type="button"
                     className={ApprovalIconStyle(false)}
                     onClick={evt => {
+                      evt.stopPropagation();
                       update({
                         ...container,
                         warehouseArrivalAgreedDateApprovedBy: user,
                       });
-                      evt.stopPropagation();
                     }}
                   >
                     <Icon icon="UNCHECKED" />
@@ -342,11 +342,11 @@ const ShipmentContainerCard = ({
                     type="button"
                     className={ApprovalIconStyle(true)}
                     onClick={evt => {
+                      evt.stopPropagation();
                       update({
                         ...container,
                         warehouseArrivalActualDateApprovedBy: null,
                       });
-                      evt.stopPropagation();
                     }}
                   >
                     <Icon icon="CHECKED" />
@@ -356,11 +356,11 @@ const ShipmentContainerCard = ({
                     type="button"
                     className={ApprovalIconStyle(false)}
                     onClick={evt => {
+                      evt.stopPropagation();
                       update({
                         ...container,
                         warehouseArrivalActualDateApprovedBy: user,
                       });
-                      evt.stopPropagation();
                     }}
                   >
                     <Icon icon="UNCHECKED" />
