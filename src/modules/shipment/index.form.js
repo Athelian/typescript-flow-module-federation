@@ -73,7 +73,7 @@ type UpdateShipmentResponse = {|
 
 type ShipmentFormState = {
   shipmentBatchesState: Object,
-  shipmentContainersState: Object,
+  shipmentContainersContainer: Object,
   shipmentFilesState: Object,
   shipmentInfoState: Object,
   shipmentTagsState: Object,
@@ -100,7 +100,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onReset = ({
     shipmentBatchesState,
-    shipmentContainersState,
+    shipmentContainersContainer,
     shipmentFilesState,
     shipmentInfoState,
     shipmentTagsState,
@@ -109,7 +109,7 @@ class ShipmentFormModule extends React.Component<Props> {
   }: ShipmentFormState) => {
     resetFormState(shipmentInfoState);
     resetFormState(shipmentBatchesState, 'batches');
-    resetFormState(shipmentContainersState, 'containers');
+    resetFormState(shipmentContainersContainer, 'containers');
     resetFormState(shipmentFilesState, 'files');
     resetFormState(shipmentTagsState, 'tags');
     resetFormState(shipmentTimelineState);
@@ -169,7 +169,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onFormReady = ({
     shipmentBatchesState,
-    shipmentContainersState,
+    shipmentContainersContainer,
     shipmentFilesState,
     shipmentInfoState,
     shipmentTagsState,
@@ -177,7 +177,7 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentTransportTypeState,
   }: {
     shipmentBatchesState: Object,
-    shipmentContainersState: Object,
+    shipmentContainersContainer: Object,
     shipmentFilesState: Object,
     shipmentInfoState: Object,
     shipmentTagsState: Object,
@@ -205,7 +205,7 @@ class ShipmentFormModule extends React.Component<Props> {
     } else {
       shipmentInfoState.initDetailValues(info);
       shipmentBatchesState.initDetailValues(batches);
-      shipmentContainersState.initDetailValues(containers);
+      shipmentContainersContainer.initDetailValues({ containers });
       shipmentTimelineState.initDetailValues({
         cargoReady,
         voyages,
@@ -220,7 +220,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onMutationCompleted = ({
     shipmentBatchesState,
-    shipmentContainersState,
+    shipmentContainersContainer,
     shipmentFilesState,
     shipmentInfoState,
     shipmentTagsState,
@@ -228,7 +228,7 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentTransportTypeState,
   }: {
     shipmentBatchesState: Object,
-    shipmentContainersState: Object,
+    shipmentContainersContainer: Object,
     shipmentFilesState: Object,
     shipmentInfoState: Object,
     shipmentTagsState: Object,
@@ -251,7 +251,7 @@ class ShipmentFormModule extends React.Component<Props> {
       const { shipmentUpdate } = result;
       this.onFormReady({
         shipmentBatchesState,
-        shipmentContainersState,
+        shipmentContainersContainer,
         shipmentFilesState,
         shipmentInfoState,
         shipmentTagsState,
@@ -286,7 +286,7 @@ class ShipmentFormModule extends React.Component<Props> {
           >
             {(
               shipmentBatchesState,
-              shipmentContainersState,
+              shipmentContainersContainer,
               shipmentFilesState,
               shipmentInfoState,
               shipmentTagsState,
@@ -298,7 +298,7 @@ class ShipmentFormModule extends React.Component<Props> {
                 mutation={isNewOrClone ? createShipmentMutation : updateShipmentMutation}
                 onCompleted={this.onMutationCompleted({
                   shipmentBatchesState,
-                  shipmentContainersState,
+                  shipmentContainersContainer,
                   shipmentFilesState,
                   shipmentInfoState,
                   shipmentTagsState,
@@ -394,7 +394,7 @@ class ShipmentFormModule extends React.Component<Props> {
                         <>
                           {(isNewOrClone ||
                             shipmentBatchesState.isDirty() ||
-                            shipmentContainersState.isDirty() ||
+                            shipmentContainersContainer.isDirty() ||
                             shipmentFilesState.isDirty() ||
                             shipmentInfoState.isDirty() ||
                             shipmentTagsState.isDirty() ||
@@ -410,7 +410,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   onClick={() =>
                                     this.onReset({
                                       shipmentBatchesState,
-                                      shipmentContainersState,
+                                      shipmentContainersContainer,
                                       shipmentFilesState,
                                       shipmentInfoState,
                                       shipmentTagsState,
@@ -426,7 +426,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   !form.isReady(
                                     {
                                       ...shipmentBatchesState.state,
-                                      ...shipmentContainersState.state,
+                                      ...shipmentContainersContainer.state,
                                       ...shipmentFilesState.state,
                                       ...shipmentInfoState.state,
                                       ...shipmentTagsState.state,
@@ -441,7 +441,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   this.onSave(
                                     {
                                       ...shipmentBatchesState.state,
-                                      ...shipmentContainersState.state,
+                                      ...shipmentContainersContainer.state,
                                       ...shipmentFilesState.state,
                                       ...shipmentInfoState.state,
                                       ...shipmentTagsState.state,
@@ -451,7 +451,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     saveShipment,
                                     () => {
                                       shipmentBatchesState.onSuccess();
-                                      shipmentContainersState.onSuccess();
+                                      shipmentContainersContainer.onSuccess();
                                       shipmentFilesState.onSuccess();
                                       shipmentInfoState.onSuccess();
                                       shipmentTagsState.onSuccess();
@@ -468,7 +468,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           {shipmentId &&
                             !isNewOrClone &&
                             !shipmentBatchesState.isDirty() &&
-                            !shipmentContainersState.isDirty() &&
+                            !shipmentContainersContainer.isDirty() &&
                             !shipmentFilesState.isDirty() &&
                             !shipmentInfoState.isDirty() &&
                             !shipmentTagsState.isDirty() &&
@@ -500,7 +500,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             onFormReady={() => {
                               this.onFormReady({
                                 shipmentBatchesState,
-                                shipmentContainersState,
+                                shipmentContainersContainer,
                                 shipmentFilesState,
                                 shipmentInfoState,
                                 shipmentTagsState,

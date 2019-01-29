@@ -43,7 +43,7 @@ type Props = {
 function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
-      {({ state: { containers }, setFieldValue, setFieldArrayValue }, { state: { batches } }) => {
+      {({ state: { containers }, setFieldValue, setDeepFieldValue }, { state: { batches } }) => {
         const batchesInPool = getBatchesInPool(batches);
 
         return (
@@ -107,7 +107,7 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                                     key={container.id}
                                     container={container}
                                     update={newContainer => {
-                                      setFieldArrayValue(position, newContainer);
+                                      setDeepFieldValue(`containers.${position}`, newContainer);
                                     }}
                                     onClick={() => toggleContainerForm(true)}
                                     onSelectWarehouse={() => toggleSelectWarehouse(true)}
@@ -137,7 +137,7 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                                         onCancel={() => toggleSelectWarehouse(false)}
                                         onSelect={newValue => {
                                           toggleSelectWarehouse(false);
-                                          setFieldArrayValue(position, {
+                                          setDeepFieldValue(`containers.${position}`, {
                                             ...container,
                                             warehouse: newValue,
                                           });
@@ -158,7 +158,7 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                                   container={container}
                                   onCancel={() => toggleContainerForm(false)}
                                   onSave={newContainer => {
-                                    setFieldArrayValue(position, newContainer);
+                                    setDeepFieldValue(`containers.${position}`, newContainer);
                                     toggleContainerForm(false);
                                   }}
                                 />
