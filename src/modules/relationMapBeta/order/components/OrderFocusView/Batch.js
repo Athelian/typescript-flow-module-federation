@@ -11,6 +11,7 @@ import type { BatchProps } from 'modules/relationMapBeta/order/type.js.flow';
 
 type OptionalProps = {
   wrapperClassName?: string,
+  parentOrderId?: string,
 };
 
 type Props = OptionalProps & BatchProps;
@@ -18,6 +19,7 @@ type Props = OptionalProps & BatchProps;
 export default function Batch({
   wrapperClassName,
   id,
+  parentOrderId,
   tags,
   no,
   quantity,
@@ -62,7 +64,7 @@ export default function Batch({
                     icon="CHECKED"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.targetEntity(BATCH, id)}
+                    onClick={() => actions.targetBatchEntity(id, parentOrderId || '')}
                   />
                 </>
               )}

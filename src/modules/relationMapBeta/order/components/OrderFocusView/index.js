@@ -182,6 +182,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                   }
                 />
                 <Batch
+                  parentOrderId={item.id}
                   wrapperClassName={ItemWrapperStyle(
                     highLightEntities.includes(`${BATCH}-${orderItem.batches[0].id}`),
                     uiSelectors.isTarget(BATCH, orderItem.batches[0].id),
@@ -248,6 +249,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                         }
                       />
                       <Batch
+                        parentOrderId={item.id}
                         wrapperClassName={ItemWrapperStyle(
                           highLightEntities.includes(`${BATCH}-${batch.id}`),
                           uiSelectors.isTarget(BATCH, batch.id),

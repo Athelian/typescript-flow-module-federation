@@ -9,6 +9,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
+import { orderDetailQuery } from 'modules/relationMapBeta/order/query';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import {
@@ -100,20 +101,39 @@ export default function ActionNavbar({ highLightEntities }: Props) {
                         batchId: id,
                       });
                       // TODO: handle user error if enter the quality bigger than batch's quantity
+                      const [, orderId] = (
+                        state.split.parentOrderIds.find(item => item.includes(`${id}-`)) || ''
+                      ).split('-');
                       if (type === 'batchEqualSplit') {
                         const result: any = await client.mutate({
                           mutation: batchEqualSplitMutation,
                           variables: { id, input: { precision: 0, divideBy: quantity } },
+                          refetchQueries: [
+                            {
+                              query: orderDetailQuery,
+                              variables: {
+                                id: orderId,
+                              },
+                            },
+                          ],
                         });
                         console.warn(result.data.batchEqualSplit);
-                        actions.splitBatchSuccess(result.data.batchEqualSplit);
+                        actions.splitBatchSuccess(id, result.data.batchEqualSplit);
                       } else {
                         const result: any = await client.mutate({
                           mutation: batchSimpleSplitMutation,
                           variables: { id, input: { quantity } },
+                          refetchQueries: [
+                            {
+                              query: orderDetailQuery,
+                              variables: {
+                                id: orderId,
+                              },
+                            },
+                          ],
                         });
                         console.warn(result.data.batchSimpleSplit);
-                        actions.splitBatchSuccess(result.data.batchSimpleSplit);
+                        actions.splitBatchSuccess(id, result.data.batchSimpleSplit);
                       }
                     } catch (error) {
                       console.warn(error);
