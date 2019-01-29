@@ -171,7 +171,7 @@ export const ContainerIconStyle = (hasContainer: boolean): string => css`
   font-size: 11px;
   &:hover,
   :focus {
-    background-color: ${hasContainer ? colors.TEAL_DARK : colors.GRAY};
+    background-color: ${hasContainer ? colors.TEAL_DARK : colors.GRAY_LIGHT};
   }
 `;
 
