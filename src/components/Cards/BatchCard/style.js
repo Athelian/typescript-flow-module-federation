@@ -15,7 +15,7 @@ export const BatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: ${isEnableBetaFeature ? '360px' : '334px'};
+  height: ${isEnableBetaFeature ? '359px' : '334px'};
 `;
 
 export const ProductWrapperStyle: string = css`
