@@ -35,7 +35,7 @@ export default class containerForm extends React.Component<Props> {
     const { container } = this.props;
     return (
       <div className={FormWrapperStyle}>
-        <SectionWrapper id="containerSection">
+        <SectionWrapper id="container_containerSection">
           <SectionHeader
             icon="CONTAINER"
             title={<FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />}
@@ -66,7 +66,7 @@ export default class containerForm extends React.Component<Props> {
           </SectionHeader>
           <ContainerSection />
         </SectionWrapper>
-        <SectionWrapper id="shipmentSection">
+        <SectionWrapper id="container_shipmentSection">
           <SectionHeader
             icon="SHIPMENT"
             title={<FormattedMessage id="modules.container.shipment" defaultMessage="SHIPMENT" />}
@@ -79,7 +79,7 @@ export default class containerForm extends React.Component<Props> {
             const orders = uniqueOrders(batches);
             return (
               <>
-                <SectionWrapper id="batchesSection">
+                <SectionWrapper id="container_batchesSection">
                   <SectionHeader
                     icon="BATCH"
                     title={
@@ -92,7 +92,7 @@ export default class containerForm extends React.Component<Props> {
                   />
                   <BatchesSection />
                 </SectionWrapper>
-                <SectionWrapper id="ordersSection">
+                <SectionWrapper id="container_ordersSection">
                   <SectionHeader
                     icon="ORDER"
                     title={

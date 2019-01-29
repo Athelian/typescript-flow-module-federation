@@ -71,7 +71,7 @@ class ShipmentForm extends React.Component<Props> {
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={ShipmentFormWrapperStyle}>
-          <SectionWrapper id="shipmentSection">
+          <SectionWrapper id="shipment_shipmentSection">
             <SectionHeader
               icon="SHIPMENT"
               title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
@@ -109,14 +109,14 @@ class ShipmentForm extends React.Component<Props> {
             </SectionHeader>
             <ShipmentSection isNew={isNew} />
           </SectionWrapper>
-          <SectionWrapper id="timelineSection">
+          <SectionWrapper id="shipment_timelineSection">
             <SectionHeader
               icon="TIMELINE"
               title={<FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />}
             />
             <AsyncTimelineSection isNew={isNew} />
           </SectionWrapper>
-          <SectionWrapper id="cargoSection">
+          <SectionWrapper id="shipment_cargoSection">
             {isEnableBetaFeature ? (
               <>
                 <Subscribe to={[ShipmentBatchesContainer]}>
@@ -153,7 +153,7 @@ class ShipmentForm extends React.Component<Props> {
               </>
             )}
           </SectionWrapper>
-          <SectionWrapper id="documentsSection">
+          <SectionWrapper id="shipment_documentsSection">
             <SectionHeader
               icon="DOCUMENT"
               title={
@@ -162,7 +162,7 @@ class ShipmentForm extends React.Component<Props> {
             />
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <SectionWrapper id="orderSection">
+          <SectionWrapper id="shipment_orderSection">
             <Subscribe to={[ShipmentBatchesContainer]}>
               {({ state: { batches } }) => {
                 const orders = uniqueOrders(batches);

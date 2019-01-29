@@ -189,7 +189,7 @@ class ProductFormModule extends React.Component<Props> {
                       <EntityIcon icon="PRODUCT" color="PRODUCT" />
                       <JumpToSection>
                         <SectionTabs
-                          link="productSection"
+                          link="product_productSection"
                           label={
                             <FormattedMessage
                               id="modules.Products.product"
@@ -199,7 +199,7 @@ class ProductFormModule extends React.Component<Props> {
                           icon="PRODUCT"
                         />
                         <SectionTabs
-                          link="productProvidersSection"
+                          link="product_productProvidersSection"
                           label={
                             <FormattedMessage
                               id="modules.Products.providers"

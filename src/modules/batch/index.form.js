@@ -132,14 +132,14 @@ class BatchFormModule extends React.PureComponent<Props> {
                       {isEnableBetaFeature ? (
                         <JumpToSection>
                           <SectionTabs
-                            link="batchSection"
+                            link="batch_batchSection"
                             label={
                               <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />
                             }
                             icon="BATCH"
                           />
                           <SectionTabs
-                            link="quantityAdjustmentsSection"
+                            link="batch_quantityAdjustmentsSection"
                             label={
                               <FormattedMessage
                                 id="modules.Batches.quantityAdjustments"
@@ -149,7 +149,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                             icon="QUANTITY_ADJUSTMENTS"
                           />
                           <SectionTabs
-                            link="packagingSection"
+                            link="batch_packagingSection"
                             label={
                               <FormattedMessage
                                 id="modules.Batches.packaging"
@@ -159,7 +159,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                             icon="PACKAGING"
                           />
                           <SectionTabs
-                            link="shipmentSection"
+                            link="batch_shipmentSection"
                             label={
                               <FormattedMessage
                                 id="modules.Batches.shipment"
@@ -169,7 +169,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                             icon="SHIPMENT"
                           />
                           <SectionTabs
-                            link="containerSection"
+                            link="batch_containerSection"
                             label={
                               <FormattedMessage
                                 id="modules.Batches.container"
@@ -179,7 +179,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                             icon="CONTAINER"
                           />
                           <SectionTabs
-                            link="orderSection"
+                            link="batch_orderSection"
                             label={
                               <FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />
                             }
@@ -189,14 +189,14 @@ class BatchFormModule extends React.PureComponent<Props> {
                       ) : (
                         <JumpToSection>
                           <SectionTabs
-                            link="batchSection"
+                            link="batch_batchSection"
                             label={
                               <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />
                             }
                             icon="BATCH"
                           />
                           <SectionTabs
-                            link="quantityAdjustmentsSection"
+                            link="batch_quantityAdjustmentsSection"
                             label={
                               <FormattedMessage
                                 id="modules.Batches.quantityAdjustments"
@@ -206,7 +206,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                             icon="QUANTITY_ADJUSTMENTS"
                           />
                           <SectionTabs
-                            link="packagingSection"
+                            link="batch_packagingSection"
                             label={
                               <FormattedMessage
                                 id="modules.Batches.packaging"
@@ -216,7 +216,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                             icon="PACKAGING"
                           />
                           <SectionTabs
-                            link="shipmentSection"
+                            link="batch_shipmentSection"
                             label={
                               <FormattedMessage
                                 id="modules.Batches.shipment"
@@ -226,7 +226,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                             icon="SHIPMENT"
                           />
                           <SectionTabs
-                            link="orderSection"
+                            link="batch_orderSection"
                             label={
                               <FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />
                             }

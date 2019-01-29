@@ -68,7 +68,7 @@ export default class BatchForm extends React.Component<Props> {
     const { batch, isNew, isClone, selectable } = this.props;
     return (
       <div className={BatchFormWrapperStyle}>
-        <SectionWrapper id="batchSection">
+        <SectionWrapper id="batch_batchSection">
           <SectionHeader
             icon="BATCH"
             title={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
@@ -102,7 +102,7 @@ export default class BatchForm extends React.Component<Props> {
           <BatchSection isNew={isNew} selectable={selectable} />
         </SectionWrapper>
 
-        <SectionWrapper id="quantityAdjustmentsSection">
+        <SectionWrapper id="batch_quantityAdjustmentsSection">
           <SectionHeader
             icon="QUANTITY_ADJUSTMENTS"
             title={
@@ -115,7 +115,7 @@ export default class BatchForm extends React.Component<Props> {
           <QuantityAdjustmentsSection isNew={isNew} />
         </SectionWrapper>
 
-        <SectionWrapper id="packagingSection">
+        <SectionWrapper id="batch_packagingSection">
           <SectionHeader
             icon="PACKAGING"
             title={<FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />}
@@ -154,7 +154,7 @@ export default class BatchForm extends React.Component<Props> {
           <PackagingSection isNew={isNew} />
         </SectionWrapper>
 
-        <SectionWrapper id="shipmentSection">
+        <SectionWrapper id="batch_shipmentSection">
           <SectionHeader
             icon="SHIPMENT"
             title={<FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />}
@@ -163,7 +163,7 @@ export default class BatchForm extends React.Component<Props> {
         </SectionWrapper>
 
         {isEnableBetaFeature && (
-          <SectionWrapper id="containerSection">
+          <SectionWrapper id="batch_containerSection">
             <SectionHeader
               icon="CONTAINER"
               title={<FormattedMessage id="modules.Batches.container" defaultMessage="CONTAINER" />}
@@ -172,7 +172,7 @@ export default class BatchForm extends React.Component<Props> {
           </SectionWrapper>
         )}
 
-        <SectionWrapper id="orderSection">
+        <SectionWrapper id="batch_orderSection">
           <SectionHeader
             icon="ORDER"
             title={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}

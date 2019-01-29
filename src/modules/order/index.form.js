@@ -228,7 +228,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                           <EntityIcon icon="ORDER" color="ORDER" />
                           <JumpToSection>
                             <SectionTabs
-                              link="orderSection"
+                              link="order_orderSection"
                               label={
                                 <FormattedMessage
                                   id="modules.Orders.order"
@@ -238,7 +238,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                               icon="ORDER"
                             />
                             <SectionTabs
-                              link="itemsSection"
+                              link="order_itemsSection"
                               label={
                                 <FormattedMessage
                                   id="modules.Orders.items"
@@ -248,7 +248,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                               icon="ORDER_ITEM"
                             />
                             <SectionTabs
-                              link="documentsSection"
+                              link="order_documentsSection"
                               label={
                                 <FormattedMessage
                                   id="modules.Orders.documents"
@@ -258,7 +258,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                               icon="DOCUMENT"
                             />
                             <SectionTabs
-                              link="shipmentsSection"
+                              link="order_shipmentsSection"
                               label={
                                 <FormattedMessage
                                   id="modules.Orders.shipments"
