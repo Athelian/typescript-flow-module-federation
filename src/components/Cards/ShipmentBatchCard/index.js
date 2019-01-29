@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { isNullOrUndefined } from 'utils/fp';
 import { isEnableBetaFeature } from 'utils/env';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
@@ -350,16 +351,30 @@ const ShipmentBatchCard = ({
 
           {isEnableBetaFeature && (
             <div className={ContainerWrapperStyle}>
-              <Link
-                className={ContainerIconStyle}
-                to={`/container/${container ? encodeId(container.id) : ''}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <Icon icon="CONTAINER" />
-              </Link>
-              <Display align="left">{container ? container.no : ''}</Display>
+              {isNullOrUndefined(container) ? (
+                <div
+                  className={ContainerIconStyle(false)}
+                  role="presentation"
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon="CONTAINER" />
+                </div>
+              ) : (
+                <>
+                  <Link
+                    className={ContainerIconStyle(true)}
+                    to={`/container/${encodeId(container.id)}`}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                    }}
+                  >
+                    <Icon icon="CONTAINER" />
+                  </Link>
+                  <Display align="left">{container.no}</Display>
+                </>
+              )}
             </div>
           )}
 
