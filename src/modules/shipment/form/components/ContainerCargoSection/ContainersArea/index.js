@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
 import { injectIntl, type IntlShape, FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
 import { injectUid } from 'utils/id';
+import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import {
@@ -14,6 +16,8 @@ import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/C
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
 import { BATCHES_POOL, isSelectedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
+import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
+import ContainerFormInSlide from 'modules/container/index.form.slide';
 
 import {
   ContainersWrapperStyle,
@@ -57,11 +61,11 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                 </div>
               </div>
               <div className={ContainersGridStyle}>
-                <button
+                <div
                   className={SelectBatchesPoolCardWrapperStyle(
                     isSelectedBatchesPool(selectedContainerId)
                   )}
-                  type="button"
+                  role="presentation"
                   onClick={() => setSelectedContainerId(BATCHES_POOL)}
                 >
                   <div className={EyeballIconStyle}>
@@ -78,12 +82,12 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                     }
                     setSelectedContainerId={setSelectedContainerId}
                   />
-                </button>
+                </div>
                 {containers.map((container, position) => {
                   const isSelected = selectedContainerId === container.id;
 
                   return (
-                    <div className={SelectContainerCardWrapperStyle}>
+                    <div key={container.id} className={SelectContainerCardWrapperStyle}>
                       <button
                         className={SelectContainerCardBackgroundStyle(isSelected)}
                         type="button"
@@ -93,28 +97,76 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                           <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
                         </div>
                       </button>
-                      <ShipmentContainerCard
-                        key={container.id}
-                        container={container}
-                        update={newContainer => {
-                          setFieldArrayValue(position, newContainer);
-                        }}
-                        // onClick={() => containerSlideToggle(true)}
-                        actions={[
-                          <CardAction
-                            icon="REMOVE"
-                            hoverColor="RED"
-                            onClick={() => {
-                              setFieldValue(
-                                'containers',
-                                containers.filter(
-                                  ({ id: containerId }) => container.id !== containerId
-                                )
-                              );
-                            }}
-                          />,
-                        ]}
-                      />
+                      <BooleanValue>
+                        {({ value: isOpenContainerForm, set: toggleContainerForm }) => (
+                          <>
+                            <BooleanValue>
+                              {({ value: isOpenSelectWarehouse, set: toggleSelectWarehouse }) => (
+                                <>
+                                  <ShipmentContainerCard
+                                    key={container.id}
+                                    container={container}
+                                    update={newContainer => {
+                                      setFieldArrayValue(position, newContainer);
+                                    }}
+                                    onClick={() => toggleContainerForm(true)}
+                                    onSelectWarehouse={() => toggleSelectWarehouse(true)}
+                                    actions={[
+                                      <CardAction
+                                        icon="REMOVE"
+                                        hoverColor="RED"
+                                        onClick={() => {
+                                          setFieldValue(
+                                            'containers',
+                                            containers.filter(
+                                              ({ id: containerId }) => container.id !== containerId
+                                            )
+                                          );
+                                        }}
+                                      />,
+                                    ]}
+                                  />
+                                  <SlideView
+                                    isOpen={isOpenSelectWarehouse}
+                                    onRequestClose={() => toggleSelectWarehouse(false)}
+                                    options={{ width: '1030px' }}
+                                  >
+                                    {isOpenSelectWarehouse && (
+                                      <SelectWareHouse
+                                        selected={container.warehouse}
+                                        onCancel={() => toggleSelectWarehouse(false)}
+                                        onSelect={newValue => {
+                                          toggleSelectWarehouse(false);
+                                          setFieldArrayValue(position, {
+                                            ...container,
+                                            warehouse: newValue,
+                                          });
+                                        }}
+                                      />
+                                    )}
+                                  </SlideView>
+                                </>
+                              )}
+                            </BooleanValue>
+                            <SlideView
+                              isOpen={isOpenContainerForm}
+                              onRequestClose={() => toggleContainerForm(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {isOpenContainerForm && (
+                                <ContainerFormInSlide
+                                  container={container}
+                                  onCancel={() => toggleContainerForm(false)}
+                                  onSave={newContainer => {
+                                    setFieldArrayValue(position, newContainer);
+                                    toggleContainerForm(false);
+                                  }}
+                                />
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
                     </div>
                   );
                 })}
