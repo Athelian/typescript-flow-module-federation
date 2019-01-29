@@ -23,7 +23,7 @@ class OrderList extends React.PureComponent<Props> {
         }}
         fetchPolicy="network-only"
       >
-        {({ loading, data, fetchMore, error }) => {
+        {({ loading, data, fetchMore, error, refetch }) => {
           if (error) {
             return error.message;
           }
@@ -31,10 +31,9 @@ class OrderList extends React.PureComponent<Props> {
           const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
           const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
           const hasMore = nextPage <= totalPage;
-
           emitter.once('CHANGE_ORDER_STATUS', () => {
             // TODO: after the mutation, it's not ready on data yet
-            window.location.reload();
+            refetch();
           });
 
           return (

@@ -31,7 +31,7 @@ class ShipmentList extends React.PureComponent<Props> {
         }}
         fetchPolicy="network-only"
       >
-        {({ loading, data, fetchMore, error }) => {
+        {({ loading, data, fetchMore, error, refetch }) => {
           if (error) {
             return error.message;
           }
@@ -42,7 +42,7 @@ class ShipmentList extends React.PureComponent<Props> {
 
           emitter.once('CHANGE_SHIPMENT_STATUS', () => {
             // TODO: after the mutation, it's not ready on data yet
-            window.location.reload();
+            refetch();
           });
 
           return (

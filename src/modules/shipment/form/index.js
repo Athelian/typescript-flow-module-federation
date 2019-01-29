@@ -90,7 +90,6 @@ class ShipmentForm extends React.Component<Props> {
                             shipment={shipment}
                             isOpen={statusDialogIsOpen && !!archived}
                             onRequestClose={() => dialogToggle(false)}
-                            onConfirm={() => window.location.reload()}
                           />
                         }
                         archiveDialog={
@@ -98,7 +97,6 @@ class ShipmentForm extends React.Component<Props> {
                             shipment={shipment}
                             isOpen={statusDialogIsOpen && !archived}
                             onRequestClose={() => dialogToggle(false)}
-                            onConfirm={() => window.location.reload()}
                           />
                         }
                       />
