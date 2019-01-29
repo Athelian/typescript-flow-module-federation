@@ -61,11 +61,11 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                 </div>
               </div>
               <div className={ContainersGridStyle}>
-                <button
+                <div
                   className={SelectBatchesPoolCardWrapperStyle(
                     isSelectedBatchesPool(selectedContainerId)
                   )}
-                  type="button"
+                  role="presentation"
                   onClick={() => setSelectedContainerId(BATCHES_POOL)}
                 >
                   <div className={EyeballIconStyle}>
@@ -82,12 +82,12 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                     }
                     setSelectedContainerId={setSelectedContainerId}
                   />
-                </button>
+                </div>
                 {containers.map((container, position) => {
                   const isSelected = selectedContainerId === container.id;
 
                   return (
-                    <div className={SelectContainerCardWrapperStyle}>
+                    <div key={container.id} className={SelectContainerCardWrapperStyle}>
                       <button
                         className={SelectContainerCardBackgroundStyle(isSelected)}
                         type="button"
