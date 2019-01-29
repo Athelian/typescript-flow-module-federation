@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { findLastIndex } from 'lodash';
+import logger from 'utils/logger';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { actionCreators, selectors } from 'modules/relationMapBeta/order/store';
@@ -16,6 +17,45 @@ type Props = {
   item: OrderProps,
   highLightEntities: Array<string>,
 };
+
+function manualSortByAction(orderItems: Array<Object>, state: Object) {
+  logger.warn({
+    orderItems,
+    state,
+  });
+  return orderItems.map(orderItem => {
+    logger.warn({ orderItem });
+    const { batches } = orderItem;
+    const orderingBatches = [];
+    const processBatchIds = [];
+    batches.forEach(batch => {
+      if (!processBatchIds.includes(batch.id)) {
+        orderingBatches.push(batch);
+        processBatchIds.push(batch.id);
+        if (state.split.batches[batch.id]) {
+          logger.warn(state.split.batches[batch.id]);
+          (Object.entries(state.split.batches[batch.id]): Array<any>)
+            .reverse()
+            .forEach(([, currentBatch]) => {
+              processBatchIds.push(currentBatch.id);
+              const selectedBatch = batches.find(
+                item => Number(item.id) === Number(currentBatch.id)
+              );
+              if (selectedBatch) {
+                orderingBatches.push(selectedBatch);
+              }
+            });
+        }
+      }
+    });
+
+    logger.warn({ orderingBatches });
+    return {
+      ...orderItem,
+      batches: orderingBatches,
+    };
+  });
+}
 
 export default function OrderFocusView({ item, highLightEntities }: Props) {
   const context = React.useContext(ActionDispatch);
@@ -131,7 +171,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
         onToggle={() => actions.toggleExpand(ORDER, item.id)}
       />
       {state.expandCards.orders.includes(item.id) &&
-        item.orderItems.map((orderItem, position) => (
+        manualSortByAction(item.orderItems, state).map((orderItem, position) => (
           <React.Fragment key={orderItem.id}>
             {/* Render order item and first batch if available */}
             <div />
