@@ -82,7 +82,6 @@ export default class OrderForm extends React.Component<Props> {
                             order={order}
                             isOpen={isDialogOpen && !!archived}
                             onRequestClose={() => dialogToggle(false)}
-                            onConfirm={() => window.location.reload()}
                           />
                         }
                         archiveDialog={
@@ -90,7 +89,6 @@ export default class OrderForm extends React.Component<Props> {
                             order={order}
                             isOpen={isDialogOpen && !archived}
                             onRequestClose={() => dialogToggle(false)}
-                            onConfirm={() => window.location.reload()}
                           />
                         }
                       />

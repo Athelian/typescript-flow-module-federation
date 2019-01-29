@@ -28,7 +28,7 @@ const ProductList = ({ viewType, ...filtersAndSort }: Props) => (
     }}
     fetchPolicy="network-only"
   >
-    {({ loading, data, fetchMore, error }) => {
+    {({ loading, data, fetchMore, error, refetch }) => {
       if (error) {
         return error.message;
       }
@@ -38,7 +38,7 @@ const ProductList = ({ viewType, ...filtersAndSort }: Props) => (
       const hasMore = nextPage <= totalPage;
       emitter.once('CHANGE_PRODUCT_STATUS', () => {
         // TODO: after the mutation, it's not ready on data yet
-        window.location.reload();
+        refetch();
       });
       return (
         <ProductGridView

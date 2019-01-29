@@ -77,7 +77,6 @@ class ProductForm extends React.Component<Props> {
                           product={product}
                           isOpen={statusDialogIsOpen && !!archived}
                           onRequestClose={() => dialogToggle(false)}
-                          onConfirm={() => window.location.reload()}
                         />
                       }
                       archiveDialog={
@@ -85,7 +84,6 @@ class ProductForm extends React.Component<Props> {
                           product={product}
                           isOpen={statusDialogIsOpen && !archived}
                           onRequestClose={() => dialogToggle(false)}
-                          onConfirm={() => window.location.reload()}
                         />
                       }
                     />
