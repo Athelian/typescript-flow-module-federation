@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ApolloConsumer } from 'react-apollo';
+import { toast } from 'react-toastify';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
 import Dialog from 'components/Dialog';
@@ -104,7 +105,6 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
                         quantity,
                         batchId: id,
                       });
-                      // TODO: handle user error if enter the quality bigger than batch's quantity
                       const [, orderId] = (
                         state.split.parentOrderIds.find(item => item.includes(`${id}-`)) || ''
                       ).split('-');
@@ -121,8 +121,12 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
                             },
                           ],
                         });
-                        console.warn(result.data.batchEqualSplit);
-                        actions.splitBatchSuccess(id, result.data.batchEqualSplit);
+                        if (result.data.batchEqualSplit.batches) {
+                          actions.splitBatchSuccess(id, result.data.batchEqualSplit);
+                        } else {
+                          actions.splitBatchFailed(result.data.batchEqualSplit.violations);
+                          toast.error(result.data.batchEqualSplit.violations[0].message);
+                        }
                       } else {
                         const result: any = await client.mutate({
                           mutation: batchSimpleSplitMutation,
@@ -136,11 +140,14 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
                             },
                           ],
                         });
-                        console.warn(result.data.batchSimpleSplit);
-                        actions.splitBatchSuccess(id, result.data.batchSimpleSplit);
+                        if (result.data.batchSimpleSplit.batches) {
+                          actions.splitBatchSuccess(id, result.data.batchSimpleSplit);
+                        } else {
+                          actions.splitBatchFailed(result.data.batchSimpleSplit.violations);
+                          toast.error(result.data.batchSimpleSplit.violations[0].message);
+                        }
                       }
                     } catch (error) {
-                      console.warn(error);
                       actions.splitBatchFailed(error);
                     }
                   }}

@@ -1,9 +1,9 @@
 // @flow
 import * as Yup from 'yup';
 
-export default (max: number) =>
+export default (min: number, max: number) =>
   Yup.object().shape({
     quantity: Yup.number()
-      .min(1)
+      .min(min)
       .max(max),
   });

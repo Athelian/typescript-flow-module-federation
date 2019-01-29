@@ -47,14 +47,23 @@ function SplitPanel({ intl, onSplit, max }: Props) {
       disabled: false,
     },
   ];
-  const validation = validator(max);
+  const validation = validator(activeTab + 1, max);
   return (
     <div className={style.ActionSection2WrapperStyle}>
       <div className={splitStyle.SplitTapWrapperStyle}>
         <Label width="120px">
           <FormattedMessage {...messages.splitType} />
         </Label>
-        <Tabs tabs={tabs} activeIndex={activeTab} onChange={changeTab => setActiveTab(changeTab)} />
+        <Tabs
+          tabs={tabs}
+          activeIndex={activeTab}
+          onChange={changeTab => {
+            setActiveTab(changeTab);
+            if (!activeTab) {
+              if (quantity < 2) setQuantity(2);
+            }
+          }}
+        />
       </div>
       <div className={splitStyle.SplitTypeWrapperStyle}>
         {activeTab === SIMPLE ? (
@@ -91,7 +100,11 @@ function SplitPanel({ intl, onSplit, max }: Props) {
                   errorMessage={
                     <FormattedMessage
                       id="modules.RelationMap.split.validationError"
-                      defaultMessage="Please enter the number lower than current quantity"
+                      defaultMessage="Please enter the number between {min} and {max}"
+                      values={{
+                        min: activeTab + 1,
+                        max,
+                      }}
                     />
                   }
                 />
@@ -147,7 +160,11 @@ function SplitPanel({ intl, onSplit, max }: Props) {
                   errorMessage={
                     <FormattedMessage
                       id="modules.RelationMap.split.validationError"
-                      defaultMessage="Please enter the number lower than current quantity"
+                      defaultMessage="Please enter the number between {min} and {max}"
+                      values={{
+                        min: activeTab + 1,
+                        max,
+                      }}
                     />
                   }
                 />
