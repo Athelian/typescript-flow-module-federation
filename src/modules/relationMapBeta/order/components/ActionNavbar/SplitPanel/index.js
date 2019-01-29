@@ -1,16 +1,18 @@
 // @flow
 
 import * as React from 'react';
+import { noop } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { cx } from 'react-emotion';
 import { DefaultStyleWrapperStyle } from 'components/Form/Inputs/Styles/DefaultStyle/style';
 import Tabs from 'components/NavBar/components/Tabs';
 import { CardAction } from 'components/Cards/BaseCard';
-import { NumberInput, Label } from 'components/Form';
+import { NumberInput, Label, FormTooltip } from 'components/Form';
 import messages from 'modules/relationMap/messages';
 import * as style from 'modules/relationMap/common/ActionPanel/style';
 import * as splitStyle from './style';
+import validator from './validator';
 
 type Props = {
   intl: IntlShape,
@@ -26,7 +28,7 @@ const EQUALLY = 1;
 
 function SplitPanel({ intl, onSplit, max }: Props) {
   const [activeTab, setActiveTab] = React.useState(SIMPLE);
-  const [quantity, setQuantity] = React.useState(0);
+  const [quantity, setQuantity] = React.useState(1);
   const tabs = [
     {
       id: 'simple',
@@ -45,6 +47,7 @@ function SplitPanel({ intl, onSplit, max }: Props) {
       disabled: false,
     },
   ];
+  const validation = validator(max);
   return (
     <div className={style.ActionSection2WrapperStyle}>
       <div className={splitStyle.SplitTapWrapperStyle}>
@@ -80,15 +83,32 @@ function SplitPanel({ intl, onSplit, max }: Props) {
                 value={quantity}
                 onChange={evt => setQuantity(evt.target.value)}
               />
+              {!validation.isValidSync({
+                quantity,
+              }) && (
+                <FormTooltip
+                  isNew={false}
+                  errorMessage={
+                    <FormattedMessage
+                      id="modules.RelationMap.split.validationError"
+                      defaultMessage="Please enter the number lower than current quantity"
+                    />
+                  }
+                />
+              )}
             </div>
             <div className={splitStyle.SplitInputWrapperStyle}>
               <CardAction
                 icon="ARROW_RIGHT"
                 onClick={() =>
-                  onSplit({
-                    type: 'batchSimpleSplit',
+                  validation.isValidSync({
                     quantity,
                   })
+                    ? onSplit({
+                        type: 'batchSimpleSplit',
+                        quantity,
+                      })
+                    : noop()
                 }
               />
             </div>
@@ -119,15 +139,32 @@ function SplitPanel({ intl, onSplit, max }: Props) {
                 value={quantity}
                 onChange={evt => setQuantity(evt.target.value)}
               />
+              {!validation.isValidSync({
+                quantity,
+              }) && (
+                <FormTooltip
+                  isNew={false}
+                  errorMessage={
+                    <FormattedMessage
+                      id="modules.RelationMap.split.validationError"
+                      defaultMessage="Please enter the number lower than current quantity"
+                    />
+                  }
+                />
+              )}
             </div>
             <div className={splitStyle.SplitInputWrapperStyle}>
               <CardAction
                 icon="ARROW_RIGHT"
                 onClick={() =>
-                  onSplit({
-                    type: 'batchEqualSplit',
+                  validation.isValidSync({
                     quantity,
                   })
+                    ? onSplit({
+                        type: 'batchEqualSplit',
+                        quantity,
+                      })
+                    : noop()
                 }
               />
             </div>
