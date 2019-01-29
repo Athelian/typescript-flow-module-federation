@@ -51,7 +51,7 @@ class MaskForm extends React.Component<Props> {
             const values = { ...originalValues, ...state };
             return (
               <div className={TemplateFormWrapperStyle}>
-                <SectionWrapper id="templateSection">
+                <SectionWrapper id="metadata_templateSection">
                   <SectionHeader
                     icon="TEMPLATE"
                     title={
@@ -113,7 +113,7 @@ class MaskForm extends React.Component<Props> {
                     </GridColumn>
                   </ContentWrapper>
                 </SectionWrapper>
-                <SectionWrapper id="customFieldsSection">
+                <SectionWrapper id="metadata_customFieldsSection">
                   <SectionHeader
                     icon="METADATA"
                     title={

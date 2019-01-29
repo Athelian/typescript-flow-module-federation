@@ -78,6 +78,7 @@ import {
   faExternalLink as EXTERNAL_LINK,
   faEye as VISIBLE,
   faEyeSlash as INVISIBLE,
+  faRedo as RELOAD,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -227,6 +228,7 @@ export default {
   EXTERNAL_LINK,
   VISIBLE,
   INVISIBLE,
+  RELOAD, 
 
   TIMELINE,
   CARGO_READY,

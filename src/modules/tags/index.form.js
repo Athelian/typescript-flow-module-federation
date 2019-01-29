@@ -130,7 +130,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                       <EntityIcon icon="TAG" color="TAG" />
                       <JumpToSection>
                         <SectionTabs
-                          link="tagSection"
+                          link="tag_tagSection"
                           label={<FormattedMessage id="modules.Tags.tag" defaultMessage="TAG" />}
                           icon="TAG"
                         />

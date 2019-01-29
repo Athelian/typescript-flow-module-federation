@@ -150,7 +150,7 @@ class TemplateFormWrapper extends React.Component<Props> {
                       <EntityIcon icon="ORDER" color="ORDER" />
                       <JumpToSection>
                         <SectionTabs
-                          link="templateSection"
+                          link="tableTemplate_templateSection"
                           label={
                             <FormattedMessage
                               id="modules.Templates.template"
@@ -160,7 +160,7 @@ class TemplateFormWrapper extends React.Component<Props> {
                           icon="TEMPLATE"
                         />
                         <SectionTabs
-                          link="editFieldsSection"
+                          link="tableTemplate_editFieldsSection"
                           label={
                             <FormattedMessage
                               id="modules.Templates.editFields"

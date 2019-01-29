@@ -1,22 +1,22 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import firebase from 'firebase';
-import logger from 'utils/logger';
+import { toast } from 'react-toastify';
+import Icon from 'components/Icon';
+import {
+  ToastWrapperStyle,
+  ToastBodyStyle,
+  ToastButtonWrapperStyle,
+  ToastButtonIconStyle,
+} from './style';
 
 type Props = {
   revision: string,
   revisionKey: string,
 };
 
-type State = {
-  outdated: boolean,
-};
-
-export default class DeployNotifier extends React.Component<Props, State> {
-  state = {
-    outdated: false,
-  };
-
+export default class DeployNotifier extends React.Component<Props> {
   componentDidMount() {
     const { revision, revisionKey } = this.props;
 
@@ -29,17 +29,37 @@ export default class DeployNotifier extends React.Component<Props, State> {
 
       const currentRevision = snapshot.val();
       if (revision !== currentRevision) {
-        this.setState({ outdated: true });
+        toast(
+          <button
+            className={ToastButtonWrapperStyle}
+            onClick={() => window.location.reload()}
+            type="button"
+          >
+            <FormattedMessage
+              id="components.deployNotifier.message"
+              defaultMessage={`There has been an update.\nPlease refresh your browser.`}
+            />
+            <div className={ToastButtonIconStyle}>
+              <Icon icon="RELOAD" />
+            </div>
+          </button>,
+          {
+            position: 'bottom-left',
+            autoClose: false,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            closeButton: false,
+            className: ToastWrapperStyle,
+            bodyClassName: ToastBodyStyle,
+          }
+        );
       }
     });
   }
 
   render() {
-    const { outdated } = this.state;
-    if (outdated) {
-      logger.warn('new version has been deployed, please refresh');
-    }
-
     return null;
   }
 }
