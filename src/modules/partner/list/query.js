@@ -15,6 +15,7 @@ export const partnerListQuery = gql`
                 nodes {
                   ... on Partner {
                     id
+                    code
                     group {
                       ...partnerCardFragment
                     }
