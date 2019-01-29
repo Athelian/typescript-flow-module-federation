@@ -11,6 +11,7 @@ import {
   PartnerNameStyle,
   PartnerTypesWrapperStyle,
   PartnerTypeStyle,
+  PartnerCodeStyle,
 } from './style';
 
 type OptionalProps = {
@@ -34,7 +35,7 @@ const defaultProps = {
 const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: Props) => {
   if (!partner) return '';
 
-  const { name, types } = partner;
+  const { name, types, code } = partner;
 
   const actions = selectable ? [] : [];
 
@@ -44,6 +45,7 @@ const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: 
         <img className={PartnerCardImageStyle} src={FALLBACK_IMAGE} alt="exporter_image" />
         <div className={PartnerInfoWrapperStyle(size)}>
           <div className={PartnerNameStyle}>{name}</div>
+          <div className={PartnerCodeStyle}>{code}</div>
           <div className={PartnerTypesWrapperStyle(size)}>
             <div className={PartnerTypeStyle(types && types.includes('Importer'))}>
               <Icon icon="IMPORTER" />

@@ -3,4 +3,5 @@ export type Partner = {
   id: string,
   name: string,
   types: Array<string>,
+  code: string,
 };

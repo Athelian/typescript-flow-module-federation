@@ -87,12 +87,12 @@ class PartnerList extends React.Component<Props> {
           }
 
           const parsedData = getByPathWithDefault([], `${this.partnerPath}.nodes`, data).map(
-            item => item.group
+            item => ({ ...item.group, code: item.code })
           );
           const nextPage = getByPathWithDefault(1, `${this.partnerPath}.page`, data) + 1;
           const totalPage = getByPathWithDefault(1, `${this.partnerPath}.totalPage`, data);
           const hasMore = nextPage <= totalPage;
-
+          console.log(parsedData);
           return (
             <PartnerGridView
               items={parsedData}

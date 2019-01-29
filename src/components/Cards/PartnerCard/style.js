@@ -17,7 +17,7 @@ export const PartnerCardStyle = (size: 'full' | 'half' | 'quarter'): string => c
   ${size === 'quarter' &&
     `
       grid-template-columns: 92.5px;
-      grid-template-rows: 30px 80px;
+      grid-template-rows: 30px 105px;
     `};
 `;
 
@@ -43,6 +43,14 @@ export const PartnerNameStyle: string = css`
   ${presets.ELLIPSIS};
   width: 100%;
   padding: 0 10px;
+`;
+
+export const PartnerCodeStyle: string = css`
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  padding: 0 10px;
+  width: 100%;
 `;
 
 export const PartnerTypesWrapperStyle = (size: 'full' | 'half' | 'quarter'): string => css`
