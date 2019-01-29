@@ -18,6 +18,39 @@ type Props = {
   highLightEntities: Array<string>,
 };
 
+function findRelateBatches({
+  state,
+  batchId,
+  processBatchIds,
+  batches,
+  orderingBatches,
+}: {
+  state: Object,
+  batchId: string,
+  processBatchIds: Array<string>,
+  batches: Array<Object>,
+  orderingBatches: Array<Object>,
+}) {
+  if (state.split.batches[batchId]) {
+    (Object.entries(state.split.batches[batchId]): Array<any>)
+      .reverse()
+      .forEach(([, currentBatch]) => {
+        processBatchIds.push(currentBatch.id);
+        const selectedBatch = batches.find(item => Number(item.id) === Number(currentBatch.id));
+        if (selectedBatch) {
+          orderingBatches.push(selectedBatch);
+          findRelateBatches({
+            batchId: currentBatch.id,
+            state,
+            processBatchIds,
+            batches,
+            orderingBatches,
+          });
+        }
+      });
+  }
+}
+
 function manualSortByAction(orderItems: Array<Object>, state: Object) {
   logger.warn({
     orderItems,
@@ -32,20 +65,8 @@ function manualSortByAction(orderItems: Array<Object>, state: Object) {
       if (!processBatchIds.includes(batch.id)) {
         orderingBatches.push(batch);
         processBatchIds.push(batch.id);
-        if (state.split.batches[batch.id]) {
-          logger.warn(state.split.batches[batch.id]);
-          (Object.entries(state.split.batches[batch.id]): Array<any>)
-            .reverse()
-            .forEach(([, currentBatch]) => {
-              processBatchIds.push(currentBatch.id);
-              const selectedBatch = batches.find(
-                item => Number(item.id) === Number(currentBatch.id)
-              );
-              if (selectedBatch) {
-                orderingBatches.push(selectedBatch);
-              }
-            });
-        }
+        const batchId = batch.id;
+        findRelateBatches({ state, batchId, processBatchIds, batches, orderingBatches });
       }
     });
 
