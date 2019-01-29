@@ -1,6 +1,25 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment } from 'graphql';
+import {
+  badRequestFragment,
+  batchFormFragment,
+  userAvatarFragment,
+  metricFragment,
+  sizeFragment,
+  tagFragment,
+  priceFragment,
+  orderCardFragment,
+  imageFragment,
+  partnerNameFragment,
+  shipmentCardFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  partnerCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
+} from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { calculatePackageQuantity } from './container';
 import type { BatchCreate, BatchUpdate } from '../type.js.flow';
@@ -70,13 +89,28 @@ export const prepareCreateBatchInput = (
 export const updateBatchMutation = gql`
   mutation batchUpdate($id: ID!, $input: BatchUpdateInput!) {
     batchUpdate(id: $id, input: $input) {
-      ... on Batch {
-        id
-      }
+      ...batchFormFragment
       ...badRequestFragment
     }
   }
 
+  ${batchFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${badRequestFragment}
 `;
 
