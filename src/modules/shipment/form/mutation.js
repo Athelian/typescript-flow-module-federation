@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import {
   shipmentFormFragment,
+  shipmentContainerCardFragment,
   timelineDateFullFragment,
   batchFormFragment,
   userAvatarFragment,
@@ -26,6 +27,7 @@ import {
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
+import { isEnableBetaFeature } from 'utils/env';
 import type {
   CargoReady,
   ShipmentVoyage,
@@ -176,36 +178,68 @@ export const prepareCreateShipmentInput = ({
   })),
 });
 
-export const updateShipmentMutation: Object = gql`
-  mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
-    shipmentUpdate(id: $id, input: $input) {
-      ...shipmentFormFragment
-      ...badRequestFragment
-    }
-  }
+export const updateShipmentMutation: Object = isEnableBetaFeature
+  ? gql`
+      mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
+        shipmentUpdate(id: $id, input: $input) {
+          ...shipmentFormFragment
+          ...badRequestFragment
+        }
+      }
 
-  ${shipmentFormFragment}
-  ${timelineDateFullFragment}
-  ${batchFormFragment}
-  ${userAvatarFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${tagFragment}
-  ${priceFragment}
-  ${orderCardFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${shipmentCardFragment}
-  ${timelineDateMinimalFragment}
-  ${portFragment}
-  ${documentFragment}
-  ${partnerCardFragment}
-  ${badRequestFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
-`;
+      ${shipmentFormFragment}
+      ${shipmentContainerCardFragment}
+      ${timelineDateFullFragment}
+      ${batchFormFragment}
+      ${userAvatarFragment}
+      ${metricFragment}
+      ${sizeFragment}
+      ${tagFragment}
+      ${priceFragment}
+      ${orderCardFragment}
+      ${imageFragment}
+      ${partnerNameFragment}
+      ${shipmentCardFragment}
+      ${timelineDateMinimalFragment}
+      ${portFragment}
+      ${documentFragment}
+      ${partnerCardFragment}
+      ${badRequestFragment}
+      ${customFieldsFragment}
+      ${maskFragment}
+      ${fieldValuesFragment}
+      ${fieldDefinitionFragment}
+    `
+  : gql`
+      mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
+        shipmentUpdate(id: $id, input: $input) {
+          ...shipmentFormFragment
+          ...badRequestFragment
+        }
+      }
+
+      ${shipmentFormFragment}
+      ${timelineDateFullFragment}
+      ${batchFormFragment}
+      ${userAvatarFragment}
+      ${metricFragment}
+      ${sizeFragment}
+      ${tagFragment}
+      ${priceFragment}
+      ${orderCardFragment}
+      ${imageFragment}
+      ${partnerNameFragment}
+      ${shipmentCardFragment}
+      ${timelineDateMinimalFragment}
+      ${portFragment}
+      ${documentFragment}
+      ${partnerCardFragment}
+      ${badRequestFragment}
+      ${customFieldsFragment}
+      ${maskFragment}
+      ${fieldValuesFragment}
+      ${fieldDefinitionFragment}
+    `;
 
 export const prepareUpdateShipmentInput = ({
   no,

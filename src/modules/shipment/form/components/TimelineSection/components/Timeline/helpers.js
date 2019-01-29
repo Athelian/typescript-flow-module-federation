@@ -103,7 +103,7 @@ export const getContainerDatesRange = (
     warehouseArrivalActualDate: ?string,
     warehouseArrivalActualDateApprovedAt?: ?string,
     warehouseArrivalActualDateApprovedBy?: ?Object,
-  }>
+  }> = []
 ) => {
   let minAgreedDate = null;
   let maxAgreedDate = null;
