@@ -45,6 +45,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
         { state, setDeepFieldValue }
       ) => {
         const usefulBatches = getBatchesByContainerId(batches, containerId);
+        const container = getByPath(`containers.${containerIndex}`, state);
         const representativeBatchId = getByPath(
           `containers.${containerIndex}.representativeBatch.id`,
           state
@@ -194,6 +195,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                           onSelect={selected => {
                             const selectedBatches = selected.map(selectedBatch => ({
                               ...selectedBatch,
+                              container,
                               packageQuantity: calculatePackageQuantity(selectedBatch),
                             }));
                             setFieldValue('batches', [...batches, ...selectedBatches]);
@@ -226,7 +228,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                       {createBatchesIsOpen && (
                         <SelectOrderItems
                           onSelect={selectedOrderItems => {
-                            const result = selectedOrderItems.map((orderItem, counter) => {
+                            const createdBatches = selectedOrderItems.map((orderItem, counter) => {
                               const {
                                 productProvider: {
                                   packageName,
@@ -249,9 +251,10 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                                 batchAdjustments: [],
                                 no: `batch no ${batches.length + counter + 1}`,
                                 autoCalculatePackageQuantity: true,
+                                container,
                               });
                             });
-                            setFieldValue('batches', [...batches, ...result]);
+                            setFieldValue('batches', [...batches, ...createdBatches]);
                             createBatchesSlideToggle(false);
                           }}
                           onCancel={() => createBatchesSlideToggle(false)}
