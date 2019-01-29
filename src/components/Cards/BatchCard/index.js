@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { isEnableBetaFeature } from 'utils/env';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
@@ -26,6 +27,8 @@ import {
   OrderIconStyle,
   ShipmentWrapperStyle,
   ShipmentIconStyle,
+  ContainerWrapperStyle,
+  ContainerIconStyle,
   BatchTagsWrapperStyle,
 } from './style';
 
@@ -55,6 +58,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
     orderItem,
     shipment,
     batchAdjustments,
+    container,
   } = batch;
   const {
     productProvider: { product, supplier, exporter },
@@ -220,6 +224,21 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             </Link>
             <Display align="left">{shipment && shipment.no}</Display>
           </div>
+
+          {isEnableBetaFeature && (
+            <div className={ContainerWrapperStyle}>
+              <Link
+                className={ContainerIconStyle(!!container)}
+                to={container ? `/container/${encodeId(container.id)}` : '.'}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="CONTAINER" />
+              </Link>
+              <Display align="left">{container && container.no}</Display>
+            </div>
+          )}
 
           <div className={BatchTagsWrapperStyle}>
             {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
