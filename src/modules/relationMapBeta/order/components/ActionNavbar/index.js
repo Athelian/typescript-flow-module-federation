@@ -94,7 +94,11 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
-                  max={getByPathWithDefault(0, 'quantity', batches[uiSelectors.targetedBatchId()])}
+                  max={getByPathWithDefault(
+                    0,
+                    `${uiSelectors.targetedBatchId()}.quantity`,
+                    batches
+                  )}
                   onSplit={async inputData => {
                     const { type, quantity } = inputData;
                     const id = uiSelectors.targetedBatchId();
