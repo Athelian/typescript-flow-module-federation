@@ -1,21 +1,23 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
-import { ShipmentBatchCard } from 'components/Cards';
+import { getByPath, isNullOrUndefined } from 'utils/fp';
+import { ShipmentContainerBatchCard } from 'components/Cards';
 import { NewButton, MoveButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
-import messages from 'modules/shipment/messages';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
-import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import {
+  ShipmentBatchesContainer,
+  ShipmentContainersContainer,
+} from 'modules/shipment/form/containers';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import { getBatchesInPool } from 'modules/shipment/helpers';
+import { getBatchesByContainerId } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import {
   BatchesWrapperStyle,
@@ -31,15 +33,28 @@ import {
 } from './style';
 
 type Props = {
-  intl: IntlShape,
-  isSelectedBatchesPool: boolean,
+  containerId: string,
+  containerIndex: number,
 };
 
-function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
+export default function ContainerBatchesArea({ containerId, containerIndex }: Props) {
   return (
-    <Subscribe to={[ShipmentBatchesContainer]}>
-      {({ state: { batches }, setFieldValue, setFieldArrayValue }) => {
-        const usefulBatches = isSelectedBatchesPool ? getBatchesInPool(batches) : [...batches];
+    <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
+      {(
+        { state: { batches }, setFieldValue, setFieldArrayValue },
+        { state, setDeepFieldValue }
+      ) => {
+        const usefulBatches = getBatchesByContainerId(batches, containerId);
+        const representativeBatchId = getByPath(
+          `containers.${containerIndex}.representativeBatch.id`,
+          state
+        );
+
+        if (usefulBatches.length > 0) {
+          if (isNullOrUndefined(representativeBatchId)) {
+            setDeepFieldValue(`containers.${containerIndex}.representativeBatch`, usefulBatches[0]);
+          }
+        }
         return (
           <div className={BatchesWrapperStyle}>
             <div className={BatchesNavbarWrapperStyle} />
@@ -59,22 +74,17 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
                         <Icon icon="BATCH" />
                       </div>
                       <div className={TitleStyle}>
-                        {isSelectedBatchesPool ? (
-                          <FormattedMessage
-                            id="modules.Shipments.batches"
-                            defaultMessage="BATCHES"
-                          />
-                        ) : (
-                          <FormattedMessage
-                            id="modules.Shipments.allBatches"
-                            defaultMessage="ALL BATCHES"
-                          />
-                        )}{' '}
+                        <FormattedMessage id="modules.Shipments.batches" defaultMessage="BATCHES" />{' '}
                         (<FormattedNumber value={usefulBatches.length} />)
                       </div>
                     </div>
                     <MoveButton
-                      label={intl.formatMessage(messages.moveBatches)}
+                      label={
+                        <FormattedMessage
+                          id="modules.shipment.moveBatches"
+                          defaultMessage="MOVE BATCHES"
+                        />
+                      }
                       onClick={() => {}}
                     />
                   </div>
@@ -106,9 +116,9 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
                                 </Subscribe>
                               )}
                             </SlideView>
-
-                            <ShipmentBatchCard
+                            <ShipmentContainerBatchCard
                               batch={batch}
+                              isRepresented={batch.id === representativeBatchId}
                               saveOnBlur={updateBatch => {
                                 setFieldArrayValue(position, updateBatch);
                               }}
@@ -118,7 +128,19 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
                                   'batches',
                                   batches.filter(({ id: batchId }) => id !== batchId)
                                 );
+                                if (batch.id === representativeBatchId) {
+                                  setDeepFieldValue(
+                                    `containers.${containerIndex}.representativeBatch`,
+                                    null
+                                  );
+                                }
                               }}
+                              onClickRepresentative={() =>
+                                setDeepFieldValue(
+                                  `containers.${containerIndex}.representativeBatch`,
+                                  batch
+                                )
+                              }
                               onClone={({
                                 id,
                                 deliveredAt,
@@ -153,7 +175,12 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
                   <>
                     <NewButton
                       data-testid="selectBatchesButton"
-                      label={intl.formatMessage(messages.selectBatches)}
+                      label={
+                        <FormattedMessage
+                          id="modules.shipment.selectBatches"
+                          defaultMessage="SELECT BATCHES"
+                        />
+                      }
                       onClick={() => selectBatchesSlideToggle(true)}
                     />
                     <SlideView
@@ -183,7 +210,12 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
                 {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
                   <>
                     <NewButton
-                      label={intl.formatMessage(messages.newBatch)}
+                      label={
+                        <FormattedMessage
+                          id="modules.shipment.newBatch"
+                          defaultMessage="NEW BATCH"
+                        />
+                      }
                       onClick={() => createBatchesSlideToggle(true)}
                     />
                     <SlideView
@@ -236,5 +268,3 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
     </Subscribe>
   );
 }
-
-export default injectIntl(BatchesArea);

@@ -36,14 +36,14 @@ import {
 
 type Props = {
   intl: IntlShape,
-  selectedContainerId: ?string,
-  setSelectedContainerId: string => void,
+  selectCardId: ?string,
+  setSelected: ({ cardId: string, containerIndex: number }) => void,
 };
 
-function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: Props) {
+function ContainersArea({ intl, selectCardId, setSelected }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
-      {({ state: { containers }, setFieldValue, setFieldArrayValue }, { state: { batches } }) => {
+      {({ state: { containers }, setFieldValue, setDeepFieldValue }, { state: { batches } }) => {
         const batchesInPool = getBatchesInPool(batches);
 
         return (
@@ -62,16 +62,12 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
               </div>
               <div className={ContainersGridStyle}>
                 <div
-                  className={SelectBatchesPoolCardWrapperStyle(
-                    isSelectedBatchesPool(selectedContainerId)
-                  )}
+                  className={SelectBatchesPoolCardWrapperStyle(isSelectedBatchesPool(selectCardId))}
                   role="presentation"
-                  onClick={() => setSelectedContainerId(BATCHES_POOL)}
+                  onClick={() => setSelected({ cardId: BATCHES_POOL, containerIndex: -1 })}
                 >
                   <div className={EyeballIconStyle}>
-                    <Icon
-                      icon={isSelectedBatchesPool(selectedContainerId) ? 'INVISIBLE' : 'VISIBLE'}
-                    />
+                    <Icon icon={isSelectedBatchesPool(selectCardId) ? 'INVISIBLE' : 'VISIBLE'} />
                   </div>
                   <BatchesPoolCard
                     totalBatches={batchesInPool.length}
@@ -80,18 +76,19 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                         ? getByPath('orderItem.productProvider.product', batchesInPool[0])
                         : null
                     }
-                    setSelectedContainerId={setSelectedContainerId}
                   />
                 </div>
                 {containers.map((container, position) => {
-                  const isSelected = selectedContainerId === container.id;
+                  const isSelected = selectCardId === container.id;
 
                   return (
                     <div key={container.id} className={SelectContainerCardWrapperStyle}>
                       <button
                         className={SelectContainerCardBackgroundStyle(isSelected)}
                         type="button"
-                        onClick={() => setSelectedContainerId(container.id)}
+                        onClick={() =>
+                          setSelected({ cardId: container.id, containerIndex: position })
+                        }
                       >
                         <div className={EyeballIconStyle}>
                           <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
@@ -107,7 +104,7 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                                     key={container.id}
                                     container={container}
                                     update={newContainer => {
-                                      setFieldArrayValue(position, newContainer);
+                                      setDeepFieldValue(`containers.${position}`, newContainer);
                                     }}
                                     onClick={() => toggleContainerForm(true)}
                                     onSelectWarehouse={() => toggleSelectWarehouse(true)}
@@ -137,7 +134,7 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                                         onCancel={() => toggleSelectWarehouse(false)}
                                         onSelect={newValue => {
                                           toggleSelectWarehouse(false);
-                                          setFieldArrayValue(position, {
+                                          setDeepFieldValue(`containers.${position}`, {
                                             ...container,
                                             warehouse: newValue,
                                           });
@@ -158,7 +155,7 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                                   container={container}
                                   onCancel={() => toggleContainerForm(false)}
                                   onSave={newContainer => {
-                                    setFieldArrayValue(position, newContainer);
+                                    setDeepFieldValue(`containers.${position}`, newContainer);
                                     toggleContainerForm(false);
                                   }}
                                 />

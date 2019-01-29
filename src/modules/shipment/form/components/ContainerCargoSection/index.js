@@ -1,39 +1,44 @@
 // @flow
 import * as React from 'react';
+import { isNullOrUndefined } from 'utils/fp';
+import { BATCHES_POOL, isSelectedBatchesPool } from 'modules/shipment/helpers';
 import { CargoSectionWrapperStyle } from './style';
 import ContainersArea from './ContainersArea';
 import BatchesArea from './BatchesArea';
+import ContainerBatchesArea from './ContainerBatchesArea';
 
 type Props = {};
 
 type State = {
-  selectedContainerId: ?string,
+  selectCardId: ?string,
+  containerIndex: number,
 };
 
 class CargoSection extends React.Component<Props, State> {
   state = {
-    selectedContainerId: null, // 'Batches_Pool' = Batches Pool
+    selectCardId: null, // 'Batches_Pool' = Batches Pool
+    containerIndex: -1,
   };
 
-  setSelectedContainerId = (id: string) => {
-    const { selectedContainerId } = this.state;
-    if (selectedContainerId === id) {
-      this.setState({ selectedContainerId: null });
+  setSelected = ({ cardId, containerIndex }: { cardId: string, containerIndex: number }) => {
+    const { selectCardId } = this.state;
+    if (selectCardId === cardId) {
+      this.setState({ selectCardId: null, containerIndex: -1 });
     } else {
-      this.setState({ selectedContainerId: id });
+      this.setState({ selectCardId: cardId, containerIndex });
     }
   };
 
   render() {
-    const { selectedContainerId } = this.state;
-
+    const { selectCardId, containerIndex } = this.state;
     return (
       <div className={CargoSectionWrapperStyle}>
-        <ContainersArea
-          selectedContainerId={selectedContainerId}
-          setSelectedContainerId={this.setSelectedContainerId}
-        />
-        <BatchesArea selectedContainerId={selectedContainerId} />
+        <ContainersArea selectCardId={selectCardId} setSelected={this.setSelected} />
+        {isNullOrUndefined(selectCardId) || selectCardId === BATCHES_POOL ? (
+          <BatchesArea isSelectedBatchesPool={isSelectedBatchesPool(selectCardId)} />
+        ) : (
+          <ContainerBatchesArea containerId={selectCardId} containerIndex={containerIndex} />
+        )}
       </div>
     );
   }
