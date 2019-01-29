@@ -40,7 +40,6 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
     <Subscribe to={[ShipmentBatchesContainer]}>
       {({ state: { batches }, setFieldValue, setFieldArrayValue }) => {
         const usefulBatches = isSelectedBatchesPool ? getBatchesInPool(batches) : [...batches];
-        console.log({ batches, usefulBatches });
         return (
           <div className={BatchesWrapperStyle}>
             <div className={BatchesNavbarWrapperStyle} />

@@ -4,13 +4,17 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
+import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { ShipmentContainerBatchCard } from 'components/Cards';
 import { NewButton, MoveButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
-import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import {
+  ShipmentBatchesContainer,
+  ShipmentContainersContainer,
+} from 'modules/shipment/form/containers';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesByContainerId } from 'modules/shipment/helpers';
@@ -30,14 +34,33 @@ import {
 
 type Props = {
   selectedContainerId: string,
+  selectedContainerIndex: number,
 };
 
-export default function ContainerBatchesArea({ selectedContainerId }: Props) {
+export default function ContainerBatchesArea({
+  selectedContainerId,
+  selectedContainerIndex,
+}: Props) {
   return (
-    <Subscribe to={[ShipmentBatchesContainer]}>
-      {({ state: { batches }, setFieldValue, setFieldArrayValue }) => {
+    <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
+      {(
+        { state: { batches }, setFieldValue, setFieldArrayValue },
+        { state, setDeepFieldValue }
+      ) => {
         const usefulBatches = getBatchesByContainerId(batches, selectedContainerId);
+        const representativeBatchId = getByPath(
+          `containers.${selectedContainerIndex}.representativeBatch.id`,
+          state
+        );
 
+        if (usefulBatches.length > 0) {
+          if (isNullOrUndefined(representativeBatchId)) {
+            setDeepFieldValue(
+              `containers.${selectedContainerIndex}.representativeBatch`,
+              usefulBatches[0]
+            );
+          }
+        }
         return (
           <div className={BatchesWrapperStyle}>
             <div className={BatchesNavbarWrapperStyle} />
@@ -101,6 +124,7 @@ export default function ContainerBatchesArea({ selectedContainerId }: Props) {
                             </SlideView>
                             <ShipmentContainerBatchCard
                               batch={batch}
+                              isRepresented={batch.id === representativeBatchId}
                               saveOnBlur={updateBatch => {
                                 setFieldArrayValue(position, updateBatch);
                               }}
@@ -110,7 +134,19 @@ export default function ContainerBatchesArea({ selectedContainerId }: Props) {
                                   'batches',
                                   batches.filter(({ id: batchId }) => id !== batchId)
                                 );
+                                if (batch.id === representativeBatchId) {
+                                  setDeepFieldValue(
+                                    `containers.${selectedContainerIndex}.representativeBatch`,
+                                    null
+                                  );
+                                }
                               }}
+                              onClickRepresentative={() =>
+                                setDeepFieldValue(
+                                  `containers.${selectedContainerIndex}.representativeBatch`,
+                                  batch
+                                )
+                              }
                               onClone={({
                                 id,
                                 deliveredAt,
