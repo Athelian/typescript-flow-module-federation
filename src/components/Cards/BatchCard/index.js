@@ -26,6 +26,8 @@ import {
   OrderIconStyle,
   ShipmentWrapperStyle,
   ShipmentIconStyle,
+  ContainerWrapperStyle,
+  ContainerIconStyle,
   BatchTagsWrapperStyle,
 } from './style';
 
@@ -55,6 +57,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
     orderItem,
     shipment,
     batchAdjustments,
+    container,
   } = batch;
   const {
     productProvider: { product, supplier, exporter },
@@ -219,6 +222,19 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
               <Icon icon="SHIPMENT" />
             </Link>
             <Display align="left">{shipment && shipment.no}</Display>
+          </div>
+
+          <div className={ContainerWrapperStyle}>
+            <Link
+              className={ContainerIconStyle(!!container)}
+              to={container ? `/container/${encodeId(container.id)}` : '.'}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
+              <Icon icon="CONTAINER" />
+            </Link>
+            <Display align="left">{container && container.no}</Display>
           </div>
 
           <div className={BatchTagsWrapperStyle}>

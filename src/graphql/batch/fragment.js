@@ -301,65 +301,134 @@ export const batchFormFragment = isEnableBetaFeature
       }
     `;
 
-export const batchCardFragment = gql`
-  fragment batchCardFragment on Batch {
-    id
-    no
-    archived
-    quantity
-    deliveredAt
-    desiredAt
-    packageVolume {
-      ...metricFragment
-    }
-    packageQuantity
-    batchAdjustments {
-      ... on BatchAdjustment {
-        id
-        quantity
-        sort
-      }
-    }
-    tags {
-      ...tagFragment
-    }
-    shipment {
-      ... on Shipment {
+export const batchCardFragment = isEnableBetaFeature
+  ? gql`
+      fragment batchCardFragment on Batch {
         id
         no
-      }
-    }
-    orderItem {
-      ... on OrderItem {
-        id
-        price {
-          ...priceFragment
+        archived
+        quantity
+        deliveredAt
+        desiredAt
+        packageVolume {
+          ...metricFragment
         }
-        order {
-          ...orderCardFragment
-        }
-        productProvider {
-          ... on ProductProvider {
+        packageQuantity
+        batchAdjustments {
+          ... on BatchAdjustment {
             id
-            product {
-              ... on Product {
+            quantity
+            sort
+          }
+        }
+        tags {
+          ...tagFragment
+        }
+        shipment {
+          ... on Shipment {
+            id
+            no
+          }
+        }
+        container {
+          ... on Container {
+            id
+            no
+          }
+        }
+        orderItem {
+          ... on OrderItem {
+            id
+            price {
+              ...priceFragment
+            }
+            order {
+              ...orderCardFragment
+            }
+            productProvider {
+              ... on ProductProvider {
                 id
-                name
-                serial
-                files {
-                  ...imageFragment
+                product {
+                  ... on Product {
+                    id
+                    name
+                    serial
+                    files {
+                      ...imageFragment
+                    }
+                  }
+                }
+                exporter {
+                  ...partnerNameFragment
+                }
+                supplier {
+                  ...partnerNameFragment
                 }
               }
-            }
-            exporter {
-              ...partnerNameFragment
-            }
-            supplier {
-              ...partnerNameFragment
             }
           }
         }
       }
-    }
-  }
-`;
+    `
+  : gql`
+      fragment batchCardFragment on Batch {
+        id
+        no
+        archived
+        quantity
+        deliveredAt
+        desiredAt
+        packageVolume {
+          ...metricFragment
+        }
+        packageQuantity
+        batchAdjustments {
+          ... on BatchAdjustment {
+            id
+            quantity
+            sort
+          }
+        }
+        tags {
+          ...tagFragment
+        }
+        shipment {
+          ... on Shipment {
+            id
+            no
+          }
+        }
+        orderItem {
+          ... on OrderItem {
+            id
+            price {
+              ...priceFragment
+            }
+            order {
+              ...orderCardFragment
+            }
+            productProvider {
+              ... on ProductProvider {
+                id
+                product {
+                  ... on Product {
+                    id
+                    name
+                    serial
+                    files {
+                      ...imageFragment
+                    }
+                  }
+                }
+                exporter {
+                  ...partnerNameFragment
+                }
+                supplier {
+                  ...partnerNameFragment
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
