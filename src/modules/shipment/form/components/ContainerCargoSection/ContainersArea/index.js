@@ -37,10 +37,10 @@ import {
 type Props = {
   intl: IntlShape,
   selectedContainerId: ?string,
-  setSelectedContainerId: string => void,
+  setSelected: ({ id: string, index: number }) => void,
 };
 
-function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: Props) {
+function ContainersArea({ intl, selectedContainerId, setSelected }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {({ state: { containers }, setFieldValue, setDeepFieldValue }, { state: { batches } }) => {
@@ -66,7 +66,7 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                     isSelectedBatchesPool(selectedContainerId)
                   )}
                   role="presentation"
-                  onClick={() => setSelectedContainerId(BATCHES_POOL)}
+                  onClick={() => setSelected({ id: BATCHES_POOL, index: -1 })}
                 >
                   <div className={EyeballIconStyle}>
                     <Icon
@@ -80,7 +80,6 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                         ? getByPath('orderItem.productProvider.product', batchesInPool[0])
                         : null
                     }
-                    setSelectedContainerId={setSelectedContainerId}
                   />
                 </div>
                 {containers.map((container, position) => {
@@ -91,7 +90,7 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                       <button
                         className={SelectContainerCardBackgroundStyle(isSelected)}
                         type="button"
-                        onClick={() => setSelectedContainerId(container.id)}
+                        onClick={() => setSelected({ id: container.id, index: position })}
                       >
                         <div className={EyeballIconStyle}>
                           <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
