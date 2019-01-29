@@ -16,6 +16,7 @@ import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/C
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
 import { BATCHES_POOL, isSelectedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
+import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormInSlide from 'modules/container/index.form.slide';
 
 import {
@@ -99,28 +100,54 @@ function ContainersArea({ intl, selectedContainerId, setSelectedContainerId }: P
                       <BooleanValue>
                         {({ value: isOpenContainerForm, set: toggleContainerForm }) => (
                           <>
-                            <ShipmentContainerCard
-                              key={container.id}
-                              container={container}
-                              update={newContainer => {
-                                setFieldArrayValue(position, newContainer);
-                              }}
-                              onClick={() => toggleContainerForm(true)}
-                              actions={[
-                                <CardAction
-                                  icon="REMOVE"
-                                  hoverColor="RED"
-                                  onClick={() => {
-                                    setFieldValue(
-                                      'containers',
-                                      containers.filter(
-                                        ({ id: containerId }) => container.id !== containerId
-                                      )
-                                    );
-                                  }}
-                                />,
-                              ]}
-                            />
+                            <BooleanValue>
+                              {({ value: isOpenSelectWarehouse, set: toggleSelectWarehouse }) => (
+                                <>
+                                  <ShipmentContainerCard
+                                    key={container.id}
+                                    container={container}
+                                    update={newContainer => {
+                                      setFieldArrayValue(position, newContainer);
+                                    }}
+                                    onClick={() => toggleContainerForm(true)}
+                                    onSelectWarehouse={() => toggleSelectWarehouse(true)}
+                                    actions={[
+                                      <CardAction
+                                        icon="REMOVE"
+                                        hoverColor="RED"
+                                        onClick={() => {
+                                          setFieldValue(
+                                            'containers',
+                                            containers.filter(
+                                              ({ id: containerId }) => container.id !== containerId
+                                            )
+                                          );
+                                        }}
+                                      />,
+                                    ]}
+                                  />
+                                  <SlideView
+                                    isOpen={isOpenSelectWarehouse}
+                                    onRequestClose={() => toggleSelectWarehouse(false)}
+                                    options={{ width: '1030px' }}
+                                  >
+                                    {isOpenSelectWarehouse && (
+                                      <SelectWareHouse
+                                        selected={container.warehouse}
+                                        onCancel={() => toggleSelectWarehouse(false)}
+                                        onSelect={newValue => {
+                                          toggleSelectWarehouse(false);
+                                          setFieldArrayValue(position, {
+                                            ...container,
+                                            warehouse: newValue,
+                                          });
+                                        }}
+                                      />
+                                    )}
+                                  </SlideView>
+                                </>
+                              )}
+                            </BooleanValue>
                             <SlideView
                               isOpen={isOpenContainerForm}
                               onRequestClose={() => toggleContainerForm(false)}
