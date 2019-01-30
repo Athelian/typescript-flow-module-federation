@@ -140,10 +140,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         balanceSplit: {
           batches: [...state.balanceSplit.batches, ...batches],
         },
-        targets: [
-          ...batches.map(({ id }) => `${BATCH}-${id}`),
-          ...(state.targets.filter(item => !item.includes(`${ORDER_ITEM}-`)): Array<string>),
-        ],
+        targets: batches.map(({ id }) => `${BATCH}-${id}`),
         loading: false,
         error: false,
       };
