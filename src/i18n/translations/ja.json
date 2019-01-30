@@ -616,6 +616,7 @@
   "modules.RelationMaps.label.total": "合計 {number} {name}",
   "global.quantity": "数量",
   "modules.RelationMaps.label.newItem": "新規",
+  "modules.RelationMaps.label.autoFill": "AUTOFILL",
   "modules.RelationMaps.label.splitType": "分割方法",
   "modules.RelationMaps.label.splitTo": "分割数量",
   "modules.RelationMaps.label.splitQuantity": "分割数",

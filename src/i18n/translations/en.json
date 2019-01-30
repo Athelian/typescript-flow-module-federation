@@ -616,6 +616,7 @@
   "modules.RelationMaps.label.total": "Total {number} {name}",
   "global.quantity": "QUANTITY",
   "modules.RelationMaps.label.newItem": "New",
+  "modules.RelationMaps.label.autoFill": "AUTOFILL",
   "modules.RelationMaps.label.splitType": "Split Type",
   "modules.RelationMaps.label.splitTo": "Split To",
   "modules.RelationMaps.label.splitQuantity": "Split QTY",
