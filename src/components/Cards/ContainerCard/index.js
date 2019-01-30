@@ -162,17 +162,26 @@ const ContainerCard = ({ container, ...rest }: Props) => {
             </div>
           </div>
           <div className={DividerStyle} />
+
           <div className={IconInputStyle}>
-            <Link
-              className={WarehouseIconStyle(!!shipment)}
-              to={`/shipment/${encodeId(shipment.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="SHIPMENT" />
-            </Link>
-            <Display align="left">{shipment ? shipment.no : ''}</Display>
+            {isNullOrUndefined(shipment) ? (
+              <div className={WarehouseIconStyle(false)} role="presentation">
+                <Icon icon="SHIPMENT" />
+              </div>
+            ) : (
+              <>
+                <Link
+                  className={WarehouseIconStyle(true)}
+                  to={`/shipment/${encodeId(shipment.id)}`}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon="SHIPMENT" />
+                </Link>
+                <Display align="left">{shipment.no}</Display>
+              </>
+            )}
           </div>
           <div className={TagsWrapperStyle}>
             {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
