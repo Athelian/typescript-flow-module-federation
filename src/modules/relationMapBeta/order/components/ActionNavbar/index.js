@@ -111,7 +111,9 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
                   </Dialog>
                 </OutsideClickHandler>
               )}
-              {activeAction === 'autoFillBatch' && <SplitBalancePanel onClick={console.warn} />}
+              {activeAction === 'autoFillBatch' && uiSelectors.isAllowToAutoFillBatch() && (
+                <SplitBalancePanel onClick={console.warn} />
+              )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
                   max={getByPathWithDefault(
