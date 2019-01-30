@@ -154,6 +154,14 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.connect',
     defaultMessage: 'CONNECT',
   },
+  connectOrder: {
+    id: 'modules.RelationMaps.label.connectOrder',
+    defaultMessage: 'CONNECT ORDER',
+  },
+  connectShipment: {
+    id: 'modules.RelationMaps.label.connectShipment',
+    defaultMessage: 'CONNECT SHIPMENT',
+  },
   connectTo: {
     id: 'modules.RelationMaps.label.connectTo',
     defaultMessage: 'CONNECT TO',
@@ -170,8 +178,8 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.askConnectToShipment',
     defaultMessage: 'Do you want to connect to this shipment',
   },
-  connectShipment: {
-    id: 'modules.RelationMaps.label.connectShipment',
+  connectShipmentInfo: {
+    id: 'modules.RelationMaps.label.connectShipmentInfo',
     defaultMessage: 'Connect Shipment on the list',
   },
   disconnect: {

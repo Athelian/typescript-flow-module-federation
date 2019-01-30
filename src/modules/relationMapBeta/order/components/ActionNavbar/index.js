@@ -19,6 +19,7 @@ import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import {
   TabItemStyled,
   LoadingContainerStyle,
+  MoveToWrapper,
 } from 'modules/relationMap/common/ActionPanel/ActionSubscribe/style';
 import messages from 'modules/relationMap/messages';
 import TargetToolBar from './TargetToolBar';
@@ -84,6 +85,32 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   disabled={!uiSelectors.isAllowToSplitBatch()}
                   active={activeAction === 'split'}
                   onClick={() => setActiveAction('split')}
+                />
+                <TabItem
+                  className={TabItemStyled}
+                  label={
+                    <div className={MoveToWrapper}>
+                      <FormattedMessage {...messages.moveTo} />
+                      <Icon icon="ORDER" />
+                    </div>
+                  }
+                  icon="EXCHANGE"
+                  disabled={!uiSelectors.isAllowToConnectOrder(orderItems)}
+                  active={activeAction === 'connectOrder'}
+                  onClick={() => setActiveAction('connectOrder')}
+                />
+                <TabItem
+                  className={TabItemStyled}
+                  label={
+                    <div className={MoveToWrapper}>
+                      <FormattedMessage {...messages.moveTo} />
+                      <Icon icon="SHIPMENT" />
+                    </div>
+                  }
+                  icon="EXCHANGE"
+                  disabled={!uiSelectors.isAllowToConnectShipment()}
+                  active={activeAction === 'connectShipment'}
+                  onClick={() => setActiveAction('connectShipment')}
                 />
                 <TabItem
                   className={TabItemStyled}
