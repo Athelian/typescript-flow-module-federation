@@ -23,12 +23,13 @@ import {
 import messages from 'modules/relationMap/messages';
 import TargetToolBar from './TargetToolBar';
 import HighLightToolBar from './HighLightToolBar';
+import ClonePanel from './ClonePanel';
 import SplitPanel from './SplitPanel';
 import SplitBalancePanel from './SplitBalancePanel';
-import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
-import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import ConstraintPanel from './ConstraintPanel';
 import ErrorPanel from './ErrorPanel';
+import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
+import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
 
 type Props = {
   highLightEntities: Array<string>,
@@ -55,6 +56,20 @@ export default function ActionNavbar({ highLightEntities, batches, orders }: Pro
                 totalShipment={uiSelectors.countTargetBy(SHIPMENT)}
                 onCancel={() => actions.clearAllBy('TARGET')}
               >
+                <TabItem
+                  className={TabItemStyled}
+                  allowClickOnDisable
+                  label={
+                    <FormattedMessage
+                      id="modules.RelationMaps.label.clone"
+                      defaultMessage="CLONE"
+                    />
+                  }
+                  icon="CLONE"
+                  disabled={!uiSelectors.isAllowToSplitBatch()}
+                  active={activeAction === 'clone'}
+                  onClick={() => setActiveAction('clone')}
+                />
                 <TabItem
                   className={TabItemStyled}
                   allowClickOnDisable
@@ -116,6 +131,7 @@ export default function ActionNavbar({ highLightEntities, batches, orders }: Pro
                   </Dialog>
                 </OutsideClickHandler>
               )}
+              {activeAction === 'clone' && <ClonePanel onClick={console.warn} />}
               {activeAction === 'autoFillBatch' && uiSelectors.isAllowToAutoFillBatch() && (
                 <SplitBalancePanel
                   onClick={async () => {
