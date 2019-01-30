@@ -27,7 +27,7 @@ import SplitPanel from './SplitPanel';
 import SplitBalancePanel from './SplitBalancePanel';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
-import ConstrainPanel from './ConstrainPanel';
+import ConstraintPanel from './ConstraintPanel';
 import ErrorPanel from './ErrorPanel';
 
 type Props = {
@@ -88,7 +88,7 @@ export default function ActionNavbar({ highLightEntities, batches, orders }: Pro
                 />
               </TargetToolBar>
               {['split', 'autoFillBatch'].includes(activeAction) && (
-                <ConstrainPanel
+                <ConstraintPanel
                   disable={{
                     disabledSplit: activeAction === 'split' && !uiSelectors.isAllowToSplitBatch(),
                     disableAutoFillBatch:

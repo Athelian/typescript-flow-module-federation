@@ -14,7 +14,7 @@ type Props = {
     disabledMoveToOrder: boolean,
   },
 };
-const ConstrainPanel = ({ disable }: Props) => {
+const ConstraintPanel = ({ disable }: Props) => {
   const {
     disabledSplit,
     disabledMoveToOrder,
@@ -64,4 +64,4 @@ const ConstrainPanel = ({ disable }: Props) => {
   );
 };
 
-export default ConstrainPanel;
+export default ConstraintPanel;
