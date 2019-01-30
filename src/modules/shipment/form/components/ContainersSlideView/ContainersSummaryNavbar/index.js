@@ -31,18 +31,18 @@ const ContainersSummaryNavbar = ({
 }: Props) => (
   <div className={ContainersSummaryNavbarWrapperStyle}>
     <div className={LeftAreaWrapperStyle}>
-      <ContainersAmountSummary
-        numOfContainers={numOfContainers}
-        numOfApprovedAgreed={numOfApprovedAgreed}
-        numOfApprovedActual={numOfApprovedActual}
-      />
-    </div>
-    <div className={RightAreaWrapperStyle}>
       <ContainersDatesSummary
         agreedArrivalDateFrom={agreedArrivalDateFrom}
         agreedArrivalDateTo={agreedArrivalDateTo}
         actualArrivalDateFrom={actualArrivalDateFrom}
         actualArrivalDateTo={actualArrivalDateTo}
+      />
+    </div>
+    <div className={RightAreaWrapperStyle}>
+      <ContainersAmountSummary
+        numOfContainers={numOfContainers}
+        numOfApprovedAgreed={numOfApprovedAgreed}
+        numOfApprovedActual={numOfApprovedActual}
       />
     </div>
   </div>
