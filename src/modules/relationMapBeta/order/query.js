@@ -50,6 +50,11 @@ export const orderCardRMFragment = gql`
                 serial
               }
             }
+            exporter {
+              ... on Group {
+                id
+              }
+            }
           }
         }
         batches {

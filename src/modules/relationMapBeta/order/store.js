@@ -567,14 +567,25 @@ const isAllowToConnectOrder = ({ state, orderItems }: { state: UIState, orderIte
   const orderItemIds = targetedOrderItemIds(state);
 
   const matchingBatchIds = [];
+  const exporterIds = [];
   orderItemIds.forEach(orderItemId => {
     const orderItem = orderItems[orderItemId];
     if (orderItem) {
       matchingBatchIds.push(...orderItem.batches);
+      const {
+        productProvider: {
+          exporter: { id },
+        },
+      } = orderItem;
+      if (!exporterIds.includes(id)) {
+        exporterIds.push(id);
+      }
     }
   });
 
-  return intersection(batchIds, matchingBatchIds).length === batchIds.length;
+  return (
+    exporterIds.length === 1 && intersection(batchIds, matchingBatchIds).length === batchIds.length
+  );
 };
 
 export function selectors(state: UIState) {
