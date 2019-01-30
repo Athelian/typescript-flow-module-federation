@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { set, unset, cloneDeep } from 'lodash';
+import { cloneDeep, unset, set } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanUpData } from 'utils/data';
 
@@ -54,8 +54,9 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
 
   setFieldDeepValue = (path: string, value: any) => {
     this.setState(prevState => {
-      const newState = set(cloneDeep(prevState), path, value);
-      return newState;
+      const cloneState = cloneDeep(prevState);
+      set(cloneState, path, value);
+      return cloneState;
     });
   };
 
