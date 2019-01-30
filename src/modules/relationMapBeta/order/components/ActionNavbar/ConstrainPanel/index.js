@@ -9,13 +9,19 @@ import * as style from './style';
 type Props = {
   disable: {
     disabledSplit: boolean,
+    disableAutoFillBatch: boolean,
     disabledMoveToShipment: boolean,
     disabledMoveToOrder: boolean,
   },
 };
 const ConstrainPanel = ({ disable }: Props) => {
-  const { disabledSplit, disabledMoveToOrder, disabledMoveToShipment } = disable;
-  if (!disabledSplit && !disabledMoveToOrder && !disabledMoveToShipment) {
+  const {
+    disabledSplit,
+    disabledMoveToOrder,
+    disabledMoveToShipment,
+    disableAutoFillBatch,
+  } = disable;
+  if (!disabledSplit && !disabledMoveToOrder && !disabledMoveToShipment && !disableAutoFillBatch) {
     return null;
   }
   return (
@@ -25,6 +31,14 @@ const ConstrainPanel = ({ disable }: Props) => {
           <FormattedMessage {...messages.split} />{' '}
           <FormattedMessage {...messages.actionAvailable} /> 1 <Icon icon="BATCH" />{' '}
         </Label>
+      )}
+      {disableAutoFillBatch && (
+        <>
+          <Label className={style.LabelStyle} align="center">
+            <FormattedMessage {...messages.autoFillBatch} />{' '}
+            <FormattedMessage {...messages.actionAvailable} /> 1 <Icon icon="ORDER_ITEM" />{' '}
+          </Label>
+        </>
       )}
       {disabledMoveToOrder && (
         <Label className={style.LabelStyle} align="center">

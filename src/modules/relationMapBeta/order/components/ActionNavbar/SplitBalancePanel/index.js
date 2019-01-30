@@ -14,7 +14,7 @@ type Props = {
 const SplitBalancePanel = ({ onClick }: Props) => (
   <div className={style.ContainerWrapper}>
     <div className={style.Header}>
-      <Icon icon="ORDER" />
+      <Icon icon="ORDER_ITEM" />
       <Label color={colors.TEAL}>
         <FormattedMessage {...messages.autoFillBatch} />
       </Label>

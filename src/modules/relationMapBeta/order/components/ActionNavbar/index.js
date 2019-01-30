@@ -78,16 +78,18 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
                       <Icon icon="BATCH" />
                     </>
                   }
-                  icon="ORDER"
+                  icon="ORDER_ITEM"
                   disabled={!uiSelectors.isAllowToAutoFillBatch()}
                   active={activeAction === 'autoFillBatch'}
                   onClick={() => setActiveAction('autoFillBatch')}
                 />
               </TargetToolBar>
-              {['split'].includes(activeAction) && (
+              {['split', 'autoFillBatch'].includes(activeAction) && (
                 <ConstrainPanel
                   disable={{
-                    disabledSplit: !uiSelectors.isAllowToSplitBatch(),
+                    disabledSplit: activeAction === 'split' && !uiSelectors.isAllowToSplitBatch(),
+                    disableAutoFillBatch:
+                      activeAction === 'autoFillBatch' && !uiSelectors.isAllowToAutoFillBatch(),
                     disabledMoveToShipment: false,
                     disabledMoveToOrder: false,
                   }}
