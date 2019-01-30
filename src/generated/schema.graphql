@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Jan 23 2019 13:18:36 GMT+0900 (Tokyo Standard Time)
+# timestamp: Wed Jan 30 2019 15:23:12 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -26958,6 +26958,9 @@ enum BatchAdjustmentReason {
 
   """Other"""
   Other
+
+  """Split"""
+  Split
 }
 
 input BatchAdjustmentUpdateInput {
@@ -27134,12 +27137,12 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   batches: [BatchPayload!]!
   totalVolume: MetricValue!
   totalWeight: MetricValue!
-  totalPrice: MetricValue!
+  totalPrice: Price
   totalBatchQuantity: Int!
   totalBatchPackages: Int!
   totalNumberOfUniqueOrderItems: Int!
-  warehouseArrivalActualDateAssignedTo: UserPayload
-  warehouseArrivalAgreedDateAssignedTo: UserPayload
+  warehouseArrivalAgreedDateAssignedTo: [UserPayload!]!
+  warehouseArrivalActualDateAssignedTo: [UserPayload!]!
   archived: Boolean!
   id: ID!
   createdAt: DateTime!
@@ -27246,8 +27249,8 @@ input ContainerUpdateInput {
   warehouseId: ID
   representativeBatchId: ID
   batches: [ContainerBatchInput!]
-  warehouseArrivalAgreedDateAssignedToId: ID
-  warehouseArrivalActualDateAssignedToId: ID
+  warehouseArrivalAgreedDateAssignedToIds: [ID!]
+  warehouseArrivalActualDateAssignedToIds: [ID!]
   memo: String
   tagIds: [ID!]
 }
@@ -29727,6 +29730,7 @@ type Mutation {
   batchSimpleSplit(id: ID!, input: BatchSimpleSplitInput!): BatchesPayload!
   batchEqualSplit(id: ID!, input: BatchEqualSplitInput!): BatchesPayload!
   batchBalanceSplit(orderItemId: ID!): BatchesPayload!
+  batchClone(id: ID!, input: BatchUpdateInput!): BatchPayload!
   shipmentCreate(input: ShipmentCreateInput!): ShipmentPayload!
   shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
   shipmentUpdateMany(shipments: [ShipmentUpdateWrapperInput!]!): [ShipmentPayload!]!
@@ -35556,8 +35560,8 @@ input ShipmentContainerCreateInput {
   warehouseId: ID
   representativeBatchId: ID
   batches: [ShipmentBatchInput!]
-  warehouseArrivalAgreedDateAssignedToId: ID
-  warehouseArrivalActualDateAssignedToId: ID
+  warehouseArrivalAgreedDateAssignedToIds: [ID!]
+  warehouseArrivalActualDateAssignedToIds: [ID!]
   memo: String
   tagIds: [ID!]
 }
@@ -35587,8 +35591,8 @@ input ShipmentContainerUpdateInput {
   warehouseId: ID
   representativeBatchId: ID
   batches: [ShipmentBatchInput!]
-  warehouseArrivalAgreedDateAssignedToId: ID
-  warehouseArrivalActualDateAssignedToId: ID
+  warehouseArrivalAgreedDateAssignedToIds: [ID!]
+  warehouseArrivalActualDateAssignedToIds: [ID!]
   memo: String
   tagIds: [ID!]
 }

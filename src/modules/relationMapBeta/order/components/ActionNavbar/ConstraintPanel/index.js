@@ -33,16 +33,14 @@ const ConstraintPanel = ({ disable }: Props) => {
         </Label>
       )}
       {disableAutoFillBatch && (
-        <>
-          <Label className={style.LabelStyle} align="center">
-            <FormattedMessage {...messages.autoFillBatch} />{' '}
-            <FormattedMessage
-              id="modules.RelationMaps.action.actionAutoFillBatchAvailable"
-              defaultMessage="is only available for a selection containing"
-            />{' '}
-            1 <Icon icon="ORDER_ITEM" />{' '}
-          </Label>
-        </>
+        <Label className={style.LabelStyle} align="center">
+          <FormattedMessage {...messages.autoFillBatch} />{' '}
+          <FormattedMessage
+            id="modules.RelationMaps.action.actionAutoFillBatchAvailable"
+            defaultMessage="is only available for a selection containing"
+          />{' '}
+          <Icon icon="ORDER_ITEM" />{' '}
+        </Label>
       )}
       {disabledMoveToOrder && (
         <Label className={style.LabelStyle} align="center">

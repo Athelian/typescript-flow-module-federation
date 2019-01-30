@@ -33,6 +33,9 @@ export type UIState = {
   balanceSplit: {
     batches: Array<Object>,
   },
+  clone: {
+    batches: Object,
+  },
 };
 
 export const getInitShowTag = () => {
@@ -77,6 +80,9 @@ export const uiInitState: UIState = {
   balanceSplit: {
     batches: [],
   },
+  clone: {
+    batches: {},
+  },
 };
 
 export function uiReducer(state: UIState, action: { type: string, payload?: Object }) {
@@ -86,12 +92,14 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       return uiInitState;
     case 'SPLIT_BATCH':
     case 'AUTO_FILL_BATCHES':
+    case 'CLONE_ENTITIES':
       return {
         ...state,
         loading: true,
       };
     case 'SPLIT_BATCH_ERROR':
     case 'AUTO_FILL_BATCHES_ERROR':
+    case 'CLONE_ENTITIES_ERROR':
       return {
         ...state,
         loading: false,
@@ -141,6 +149,24 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           batches: [...state.balanceSplit.batches, ...batches],
         },
         targets: batches.map(({ id }) => `${BATCH}-${id}`),
+        loading: false,
+        error: false,
+      };
+    }
+    case 'CLONE_ENTITIES_SUCCESS': {
+      const { batches } = state.clone;
+      getByPathWithDefault([], 'payload.data', action).forEach(({ id, batch }) => {
+        batches[id] = batches[id] ? [...batches[id], batch] : [batch];
+      });
+
+      return {
+        ...state,
+        clone: {
+          batches,
+        },
+        targets: getByPathWithDefault([], 'payload.data', action).map(
+          ({ batch }) => `${BATCH}-${batch.id}`
+        ),
         loading: false,
         error: false,
       };
@@ -475,6 +501,27 @@ export function actionCreators(dispatch: Function) {
           error,
         },
       }),
+    cloneEntities: (entities: Object) =>
+      dispatch({
+        type: 'CLONE_ENTITIES',
+        payload: {
+          entities,
+        },
+      }),
+    cloneEntitiesSuccess: (data: Object) =>
+      dispatch({
+        type: 'CLONE_ENTITIES_SUCCESS',
+        payload: {
+          data,
+        },
+      }),
+    cloneEntitiesFailed: (error: string) =>
+      dispatch({
+        type: 'CLONE_ENTITIES_ERROR',
+        payload: {
+          error,
+        },
+      }),
   };
 }
 
@@ -519,13 +566,17 @@ export function selectors(state: UIState) {
     },
     targetedOrderItemIds: () => {
       const orderItems = state.targets.filter(item => item.includes(`${ORDER_ITEM}-`));
-      if (orderItems) {
-        return (orderItems.map(orderItem => {
-          const [, orderItemId] = orderItem.split('-');
-          return orderItemId;
-        }): Array<string>);
-      }
-      return [];
+      return (orderItems.map(orderItem => {
+        const [, orderItemId] = orderItem.split('-');
+        return orderItemId;
+      }): Array<string>);
+    },
+    targetedBatchIds: () => {
+      const batches = state.targets.filter(item => item.includes(`${BATCH}-`));
+      return (batches.map(orderItem => {
+        const [, batchId] = orderItem.split('-');
+        return batchId;
+      }): Array<string>);
     },
   };
 }

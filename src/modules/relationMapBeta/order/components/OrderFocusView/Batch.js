@@ -17,6 +17,21 @@ type OptionalProps = {
 
 type Props = OptionalProps & BatchProps;
 
+function findBadgeLabel({
+  showSplitBadge,
+  showAutoFillBadge,
+  showCloneBadge,
+}: {
+  showSplitBadge: boolean,
+  showCloneBadge: boolean,
+  showAutoFillBadge: boolean,
+}) {
+  if (showSplitBadge) return 'Split';
+  if (showAutoFillBadge) return 'autoFill';
+  if (showCloneBadge) return 'clone';
+  return '';
+}
+
 export default function Batch({
   wrapperClassName,
   id,
@@ -29,18 +44,21 @@ export default function Batch({
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
-    state: { showTag, split, balanceSplit },
+    state: { showTag, split, clone, balanceSplit },
     dispatch,
   } = context;
   const actions = actionCreators(dispatch);
   const showSplitBadge = (Object.entries(split.batches): Array<any>).some(([, item]) =>
     item.map(({ id: batchId }) => batchId).includes(id)
   );
+  const showCloneBadge = (Object.entries(clone.batches): Array<any>).some(([, item]) =>
+    item.map(({ id: batchId }) => batchId).includes(id)
+  );
   const showAutoFillBadge = !!balanceSplit.batches.find(item => item.id === id);
   return (
     <BaseCard showActionsOnHover icon="BATCH" color="BATCH" wrapperClassName={wrapperClassName}>
-      {(showSplitBadge || showAutoFillBadge) && (
-        <Badge label={showSplitBadge ? 'Split' : 'autoFill'} />
+      {(showSplitBadge || showAutoFillBadge || showCloneBadge) && (
+        <Badge label={findBadgeLabel({ showSplitBadge, showCloneBadge, showAutoFillBadge })} />
       )}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (

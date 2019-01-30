@@ -49,6 +49,24 @@ function findRelateBatches({
         }
       });
   }
+  if (state.clone.batches[batchId]) {
+    (Object.entries(state.clone.batches[batchId]): Array<any>)
+      .reverse()
+      .forEach(([, currentBatch]) => {
+        processBatchIds.push(currentBatch.id);
+        const selectedBatch = batches.find(item => Number(item.id) === Number(currentBatch.id));
+        if (selectedBatch) {
+          orderingBatches.push(selectedBatch);
+          findRelateBatches({
+            batchId: currentBatch.id,
+            state,
+            processBatchIds,
+            batches,
+            orderingBatches,
+          });
+        }
+      });
+  }
 }
 
 function manualSortByAction(orderItems: Array<Object>, state: Object) {
@@ -57,7 +75,6 @@ function manualSortByAction(orderItems: Array<Object>, state: Object) {
     state,
   });
   return orderItems.map(orderItem => {
-    logger.warn({ orderItem });
     const { batches } = orderItem;
     const orderingBatches = [];
     const processBatchIds = [];
@@ -70,7 +87,6 @@ function manualSortByAction(orderItems: Array<Object>, state: Object) {
       }
     });
 
-    logger.warn({ orderingBatches });
     return {
       ...orderItem,
       batches: orderingBatches,
