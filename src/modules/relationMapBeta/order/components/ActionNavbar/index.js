@@ -130,14 +130,16 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   onClick={() => setActiveAction('autoFillBatch')}
                 />
               </TargetToolBar>
-              {['split', 'autoFillBatch'].includes(activeAction) && (
+              {['split', 'autoFillBatch', 'connectOrder'].includes(activeAction) && (
                 <ConstraintPanel
                   disable={{
                     disabledSplit: activeAction === 'split' && !uiSelectors.isAllowToSplitBatch(),
                     disableAutoFillBatch:
                       activeAction === 'autoFillBatch' && !uiSelectors.isAllowToAutoFillBatch(),
                     disabledMoveToShipment: false,
-                    disabledMoveToOrder: false,
+                    disabledMoveToOrder:
+                      activeAction === 'connectOrder' &&
+                      !uiSelectors.isAllowToConnectOrder(orderItems),
                   }}
                 />
               )}
