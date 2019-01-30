@@ -26,8 +26,8 @@ module.exports = on => {
         body: JSON.stringify({
           query: `mutation ($input: CredentialsInput!) {
           login(input: $input) {
-            token {
-              token
+            ... on Token {
+               token
             }
           }
         }`,
@@ -53,9 +53,11 @@ module.exports = on => {
           query: `{
               viewer {
                 user {
-                  id
-                  email
-                  language
+                  ... on User {
+                    id
+                    email
+                    language
+                  }
                 }
               }
             }`,
@@ -73,7 +75,7 @@ module.exports = on => {
         body: JSON.stringify({
           query: `mutation ChangeUserLanguage($id: ID!, $input: UserUpdateInput!) {
             userUpdate(id: $id, input: $input) {
-              user {
+              ... on User {
                 id
                 language
               }
