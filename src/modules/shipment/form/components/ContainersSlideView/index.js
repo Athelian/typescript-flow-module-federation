@@ -6,7 +6,12 @@ import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { ShipmentContainerCard } from 'components/Cards';
-import { getAgreedArrivalDates, getActualArrivalDates } from 'modules/shipment/helpers';
+import {
+  getAgreedArrivalDates,
+  getActualArrivalDates,
+  numAgreedArrivalDateApproved,
+  numActualArrivalDateApproved,
+} from 'modules/shipment/helpers';
 import { ContainersInSlideViewContainer } from 'modules/shipment/form/containers';
 import ContainersSummaryNavbar from './ContainersSummaryNavbar';
 import { GridViewWrapperStyle } from './style';
@@ -46,8 +51,8 @@ class ContainersSlideView extends React.Component<Props> {
             const actualArrivalDateFrom = earliest(actualArrivalDates);
             const actualArrivalDateTo = latest(actualArrivalDates);
             const numOfContainers = containers.length;
-            const numOfApprovedAgreed = agreedArrivalDates.length;
-            const numOfApprovedActual = actualArrivalDates.length;
+            const numOfApprovedAgreed = numAgreedArrivalDateApproved(containers);
+            const numOfApprovedActual = numActualArrivalDateApproved(containers);
             return (
               <Layout
                 navBar={

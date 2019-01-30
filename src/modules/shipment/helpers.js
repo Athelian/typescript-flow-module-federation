@@ -50,3 +50,13 @@ export const getActualArrivalDates = (containers: Array<Object>): Array<Object> 
     .map(({ warehouseArrivalActualDate }) => warehouseArrivalActualDate)
     .filter(item => !isNullOrUndefined(item))
     .map(item => new Date(item));
+
+export const numAgreedArrivalDateApproved = (containers: Array<Object>): number =>
+  containers
+    .map(({ warehouseArrivalAgreedDateApprovedBy }) => warehouseArrivalAgreedDateApprovedBy)
+    .filter(item => !isNullOrUndefined(item)).length;
+
+export const numActualArrivalDateApproved = (containers: Array<Object>): number =>
+  containers
+    .map(({ warehouseArrivalActualDateApprovedBy }) => warehouseArrivalActualDateApprovedBy)
+    .filter(item => !isNullOrUndefined(item)).length;

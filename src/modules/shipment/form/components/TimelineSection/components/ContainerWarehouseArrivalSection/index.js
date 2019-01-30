@@ -8,7 +8,12 @@ import GridColumn from 'components/GridColumn';
 import { SectionHeader } from 'components/Form';
 import { EditButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
-import { getAgreedArrivalDates, getActualArrivalDates } from 'modules/shipment/helpers';
+import {
+  getAgreedArrivalDates,
+  getActualArrivalDates,
+  numAgreedArrivalDateApproved,
+  numActualArrivalDateApproved,
+} from 'modules/shipment/helpers';
 import {
   ContainersAmountSummary,
   ContainersDatesSummary,
@@ -30,8 +35,8 @@ const ContainerWarehouseArrivalSection = () => (
       const actualArrivalDateFrom = earliest(actualArrivalDates);
       const actualArrivalDateTo = latest(actualArrivalDates);
       const numOfContainers = containers.length;
-      const numOfApprovedAgreed = agreedArrivalDates.length;
-      const numOfApprovedActual = actualArrivalDates.length;
+      const numOfApprovedAgreed = numAgreedArrivalDateApproved(containers);
+      const numOfApprovedActual = numActualArrivalDateApproved(containers);
       return (
         <div
           id="containersWarehouseArrival"
