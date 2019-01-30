@@ -130,6 +130,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.splitBalance',
     defaultMessage: 'BALANCE',
   },
+  autoFillBatch: {
+    id: 'modules.RelationMaps.label.autoFillBatch',
+    defaultMessage: 'AUTOFILL BATCH',
+  },
   select: {
     id: 'modules.RelationMaps.select',
     defaultMessage: 'SELECT',

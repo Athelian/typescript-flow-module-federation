@@ -1,6 +1,6 @@
 // @flow
 import logger from 'utils/logger';
-import { SHIPMENT, BATCH } from 'modules/relationMap/constants';
+import { SHIPMENT, BATCH, ORDER_ITEM } from 'modules/relationMap/constants';
 import { getByPathWithDefault } from 'utils/fp';
 
 export type UIState = {
@@ -452,6 +452,9 @@ export function selectors(state: UIState) {
     isAllowToSplitBatch: () =>
       state.targets.length === 1 &&
       state.targets.filter(item => item.includes(`${BATCH}-`)).length === 1,
+    isAllowToAutoFillBatch: () =>
+      state.targets.length > 0 &&
+      state.targets.filter(item => item.includes(`${ORDER_ITEM}-`)).length > 0,
     isSelectEntity: (highLightEntities: Array<string>, entity: string, id: string) =>
       highLightEntities.includes(`${entity}-${id}`),
     isSelectAllEntity: (entity: string, total: number) => entitySelector({ state, entity, total }),

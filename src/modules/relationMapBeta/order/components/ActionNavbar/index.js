@@ -9,6 +9,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
+import Icon from 'components/Icon';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import { orderDetailQuery } from 'modules/relationMapBeta/order/query';
@@ -22,6 +23,7 @@ import messages from 'modules/relationMap/messages';
 import TargetToolBar from './TargetToolBar';
 import HighLightToolBar from './HighLightToolBar';
 import SplitPanel from './SplitPanel';
+import SplitBalancePanel from './SplitBalancePanel';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
 import ConstrainPanel from './ConstrainPanel';
 import ErrorPanel from './ErrorPanel';
@@ -64,8 +66,25 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
                   active={activeAction === 'split'}
                   onClick={() => setActiveAction('split')}
                 />
+                <TabItem
+                  className={TabItemStyled}
+                  allowClickOnDisable
+                  label={
+                    <>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.autoFillBatch"
+                        defaultMessage="AUTOFILL BATCH"
+                      />
+                      <Icon icon="BATCH" />
+                    </>
+                  }
+                  icon="ORDER"
+                  disabled={!uiSelectors.isAllowToAutoFillBatch()}
+                  active={activeAction === 'autoFillBatch'}
+                  onClick={() => setActiveAction('autoFillBatch')}
+                />
               </TargetToolBar>
-              {activeAction !== '' && (
+              {['split'].includes(activeAction) && (
                 <ConstrainPanel
                   disable={{
                     disabledSplit: !uiSelectors.isAllowToSplitBatch(),
@@ -91,6 +110,9 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
                     </div>
                   </Dialog>
                 </OutsideClickHandler>
+              )}
+              {activeAction === 'autoFillBatch' && uiSelectors.isAllowToAutoFillBatch() && (
+                <SplitBalancePanel onClick={console.warn} />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
