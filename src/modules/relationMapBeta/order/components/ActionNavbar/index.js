@@ -30,14 +30,16 @@ import ConstraintPanel from './ConstraintPanel';
 import ErrorPanel from './ErrorPanel';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
+import { cloneBatchMutation } from './ClonePanel/mutation';
 
 type Props = {
   highLightEntities: Array<string>,
   batches: Object,
   orders: Object,
+  orderItems: Object,
 };
 
-export default function ActionNavbar({ highLightEntities, batches, orders }: Props) {
+export default function ActionNavbar({ highLightEntities, batches, orders, orderItems }: Props) {
   const [activeAction, setActiveAction] = React.useState('');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
@@ -130,7 +132,61 @@ export default function ActionNavbar({ highLightEntities, batches, orders }: Pro
                   </Dialog>
                 </OutsideClickHandler>
               )}
-              {activeAction === 'clone' && <ClonePanel onClick={console.warn} />}
+              {activeAction === 'clone' && (
+                <ClonePanel
+                  onClick={async () => {
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const orderItemIds = [];
+                    (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
+                      if (
+                        !orderItemIds.includes(orderItemId) &&
+                        intersection(orderItem.batches, batchIds).length > 0
+                      ) {
+                        orderItemIds.push(orderItemId);
+                      }
+                    });
+                    const orderIds = [];
+                    (Object.entries(orders): Array<any>).forEach(([orderId, order]) => {
+                      if (
+                        !orderIds.includes(orderId) &&
+                        intersection(order.orderItems, orderItemIds).length > 0
+                      ) {
+                        orderIds.push(orderId);
+                      }
+                    });
+                    actions.cloneEntities({
+                      type: BATCH,
+                      ids: batchIds,
+                    });
+                    try {
+                      const cloneBatches = await Promise.all(
+                        batchIds.map(batchId =>
+                          client.mutate({
+                            mutation: cloneBatchMutation,
+                            variables: { id: batchId, input: {} },
+                            refetchQueries: orderIds.map(orderId => ({
+                              query: orderDetailQuery,
+                              variables: {
+                                id: orderId,
+                              },
+                            })),
+                          })
+                        )
+                      );
+                      const result = cloneBatches.map((item, index) => {
+                        return {
+                          id: batchIds[index],
+                          batch: getByPathWithDefault([], 'data.batchClone', item),
+                        };
+                      });
+                      console.warn(result);
+                      actions.cloneEntitiesSuccess(result);
+                    } catch (error) {
+                      actions.cloneEntitiesFailed(error);
+                    }
+                  }}
+                />
+              )}
               {activeAction === 'autoFillBatch' && uiSelectors.isAllowToAutoFillBatch() && (
                 <SplitBalancePanel
                   onClick={async () => {
@@ -139,7 +195,7 @@ export default function ActionNavbar({ highLightEntities, batches, orders }: Pro
                     (Object.entries(orders): Array<any>).forEach(([orderId, order]) => {
                       if (
                         !orderIds.includes(orderId) &&
-                        intersection(order.orderItems, orderItemIds)
+                        intersection(order.orderItems, orderItemIds).length > 0
                       ) {
                         orderIds.push(orderId);
                       }
