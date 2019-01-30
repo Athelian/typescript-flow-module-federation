@@ -1,8 +1,10 @@
 // @flow
 import React from 'react';
 import { Provider, Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import { earliest, latest } from 'utils/date';
 import Layout from 'components/Layout';
+import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { ShipmentContainerCard } from 'components/Cards';
@@ -12,6 +14,7 @@ import {
   numAgreedArrivalDateApproved,
   numActualArrivalDateApproved,
 } from 'modules/shipment/helpers';
+import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import { ContainersInSlideViewContainer } from 'modules/shipment/form/containers';
 import ContainersSummaryNavbar from './ContainersSummaryNavbar';
 import { GridViewWrapperStyle } from './style';
@@ -72,15 +75,41 @@ class ContainersSlideView extends React.Component<Props> {
                   numOfApprovedAgreed={numOfApprovedAgreed}
                   numOfApprovedActual={numOfApprovedActual}
                 />
+
                 <div className={GridViewWrapperStyle}>
                   {containers.map((container, index) => (
-                    <ShipmentContainerCard
-                      key={container.id}
-                      container={container}
-                      update={newContainer => {
-                        setDeepFieldValue(`containers.${index}`, newContainer);
-                      }}
-                    />
+                    <BooleanValue key={container.id}>
+                      {({ value: isOpenSelectWarehouse, set: toggleSelectWarehouse }) => (
+                        <>
+                          <ShipmentContainerCard
+                            container={container}
+                            update={newContainer => {
+                              setDeepFieldValue(`containers.${index}`, newContainer);
+                            }}
+                            onSelectWarehouse={() => toggleSelectWarehouse(true)}
+                          />
+                          <SlideView
+                            isOpen={isOpenSelectWarehouse}
+                            onRequestClose={() => toggleSelectWarehouse(false)}
+                            options={{ width: '1030px' }}
+                          >
+                            {isOpenSelectWarehouse && (
+                              <SelectWareHouse
+                                selected={container.warehouse}
+                                onCancel={() => toggleSelectWarehouse(false)}
+                                onSelect={newValue => {
+                                  toggleSelectWarehouse(false);
+                                  setDeepFieldValue(`containers.${index}`, {
+                                    ...container,
+                                    warehouse: newValue,
+                                  });
+                                }}
+                              />
+                            )}
+                          </SlideView>
+                        </>
+                      )}
+                    </BooleanValue>
                   ))}
                 </div>
               </Layout>
