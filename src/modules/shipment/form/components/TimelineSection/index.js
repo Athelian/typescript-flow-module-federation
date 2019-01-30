@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
@@ -276,10 +276,7 @@ const TimelineSection = ({ isNew }: Props) => (
               removeArrayItem={removeArrayItem}
             />
             {isEnableBetaFeature && containers && containers.length > 0 ? (
-              <ContainerWarehouseArrivalSection
-                id="containersWarehouseArrival"
-                containers={containers}
-              />
+              <ContainerWarehouseArrivalSection />
             ) : (
               <TimelineInfoSection
                 id="warehouseArrival"

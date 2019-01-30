@@ -38,3 +38,15 @@ export const getBatchesByContainerId = (
 
 export const getBatchesInPool = (batches: Array<Object>): Array<Object> =>
   batches.filter(batch => isNullOrUndefined(batch.container));
+
+export const getAgreedArrivalDates = (containers: Array<Object>): Array<Object> =>
+  containers
+    .map(({ warehouseArrivalAgreedDate }) => warehouseArrivalAgreedDate)
+    .filter(item => !isNullOrUndefined(item))
+    .map(item => new Date(item));
+
+export const getActualArrivalDates = (containers: Array<Object>): Array<Object> =>
+  containers
+    .map(({ warehouseArrivalActualDate }) => warehouseArrivalActualDate)
+    .filter(item => !isNullOrUndefined(item))
+    .map(item => new Date(item));
