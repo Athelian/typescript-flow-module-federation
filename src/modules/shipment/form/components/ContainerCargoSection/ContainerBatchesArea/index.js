@@ -44,23 +44,26 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
         { state: { batches }, setFieldValue, setFieldArrayValue },
         { state, setDeepFieldValue }
       ) => {
-        const usefulBatches = getBatchesByContainerId(batches, containerId);
+        const batchesInContainer = getBatchesByContainerId(batches, containerId);
         const container = getByPath(`containers.${containerIndex}`, state);
         const representativeBatchId = getByPath(
           `containers.${containerIndex}.representativeBatch.id`,
           state
         );
 
-        if (usefulBatches.length > 0) {
+        if (batchesInContainer.length > 0) {
           if (isNullOrUndefined(representativeBatchId)) {
-            setDeepFieldValue(`containers.${containerIndex}.representativeBatch`, usefulBatches[0]);
+            setDeepFieldValue(
+              `containers.${containerIndex}.representativeBatch`,
+              batchesInContainer[0]
+            );
           }
         }
         return (
           <div className={BatchesWrapperStyle}>
             <div className={BatchesNavbarWrapperStyle} />
             <div className={BatchesBodyWrapperStyle}>
-              {usefulBatches.length === 0 ? (
+              {batchesInContainer.length === 0 ? (
                 <div className={EmptyMessageStyle}>
                   <FormattedMessage
                     id="modules.Shipments.noBatches"
@@ -76,7 +79,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                       </div>
                       <div className={TitleStyle}>
                         <FormattedMessage id="modules.Shipments.batches" defaultMessage="BATCHES" />{' '}
-                        (<FormattedNumber value={usefulBatches.length} />)
+                        (<FormattedNumber value={batchesInContainer.length} />)
                       </div>
                     </div>
                     <MoveButton
@@ -90,7 +93,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                     />
                   </div>
                   <div className={BatchesGridStyle}>
-                    {usefulBatches.map((batch, position) => (
+                    {batchesInContainer.map((batch, position) => (
                       <BooleanValue key={batch.id}>
                         {({ value: opened, set: batchSlideToggle }) => (
                           <>
@@ -129,6 +132,10 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                                   'batches',
                                   batches.filter(({ id: batchId }) => id !== batchId)
                                 );
+                                setDeepFieldValue(
+                                  `containers.${containerIndex}.batches`,
+                                  batchesInContainer.filter(({ id: batchId }) => id !== batchId)
+                                );
                                 if (batch.id === representativeBatchId) {
                                   setDeepFieldValue(
                                     `containers.${containerIndex}.representativeBatch`,
@@ -153,6 +160,15 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                               }) => {
                                 setFieldValue('batches', [
                                   ...batches,
+                                  injectUid({
+                                    ...rest,
+                                    isNew: true,
+                                    batchAdjustments: [],
+                                    no: `${no}- clone`,
+                                  }),
+                                ]);
+                                setDeepFieldValue(`containers.${containerIndex}.batches`, [
+                                  ...batchesInContainer,
                                   injectUid({
                                     ...rest,
                                     isNew: true,
@@ -199,6 +215,10 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                               packageQuantity: calculatePackageQuantity(selectedBatch),
                             }));
                             setFieldValue('batches', [...batches, ...selectedBatches]);
+                            setDeepFieldValue(`containers.${containerIndex}.batches`, [
+                              ...batchesInContainer,
+                              ...selectedBatches,
+                            ]);
                             selectBatchesSlideToggle(false);
                           }}
                           onCancel={() => selectBatchesSlideToggle(false)}
@@ -255,6 +275,10 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                               });
                             });
                             setFieldValue('batches', [...batches, ...createdBatches]);
+                            setDeepFieldValue(`containers.${containerIndex}.batches`, [
+                              ...batchesInContainer,
+                              ...createdBatches,
+                            ]);
                             createBatchesSlideToggle(false);
                           }}
                           onCancel={() => createBatchesSlideToggle(false)}
