@@ -40,7 +40,7 @@ export default function Batch({
   return (
     <BaseCard showActionsOnHover icon="BATCH" color="BATCH" wrapperClassName={wrapperClassName}>
       {(showSplitBadge || showAutoFillBadge) && (
-        <Badge label={showSplitBadge ? 'Split' : 'autoFillBatch'} />
+        <Badge label={showSplitBadge ? 'Split' : 'autoFill'} />
       )}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
