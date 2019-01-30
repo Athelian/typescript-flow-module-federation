@@ -519,13 +519,10 @@ export function selectors(state: UIState) {
     },
     targetedOrderItemIds: () => {
       const orderItems = state.targets.filter(item => item.includes(`${ORDER_ITEM}-`));
-      if (orderItems) {
-        return (orderItems.map(orderItem => {
-          const [, orderItemId] = orderItem.split('-');
-          return orderItemId;
-        }): Array<string>);
-      }
-      return [];
+      return (orderItems.map(orderItem => {
+        const [, orderItemId] = orderItem.split('-');
+        return orderItemId;
+      }): Array<string>);
     },
   };
 }
