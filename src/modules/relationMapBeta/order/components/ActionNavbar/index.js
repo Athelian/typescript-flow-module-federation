@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { intersection } from 'lodash';
+import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -11,6 +12,8 @@ import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
+import SlideView from 'components/SlideView';
+import { BaseButton } from 'components/Buttons';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import { orderDetailQuery } from 'modules/relationMapBeta/order/query';
@@ -129,6 +132,31 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   active={activeAction === 'autoFillBatch'}
                   onClick={() => setActiveAction('autoFillBatch')}
                 />
+                <BooleanValue>
+                  {({ value: opened, set: openTableView }) => (
+                    <>
+                      <BaseButton
+                        icon="EDIT"
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMaps.label.edit"
+                            defaultMessage="EDIT"
+                          />
+                        }
+                        backgroundColor="TEAL"
+                        hoverBackgroundColor="TEAL_DARK"
+                        onClick={() => openTableView(true)}
+                      />
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={() => openTableView(false)}
+                        options={{ width: '1030px' }}
+                      >
+                        {opened && <TableView entities={entities} />}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
               </TargetToolBar>
               {['split', 'autoFillBatch', 'connectOrder'].includes(activeAction) && (
                 <ConstraintPanel

@@ -131,9 +131,12 @@ const Order = ({ intl }: Props) => {
               />
               <ActionNavbar
                 highLightEntities={highLightEntities}
-                batches={batches}
-                orders={orders}
-                orderItems={orderItems}
+                entities={{
+                  orders,
+                  orderItems,
+                  batches,
+                  shipments,
+                }}
               />
               {loading ? (
                 <LoadingIcon />
