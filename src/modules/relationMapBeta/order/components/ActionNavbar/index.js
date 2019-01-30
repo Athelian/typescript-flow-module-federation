@@ -79,7 +79,7 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
                     </>
                   }
                   icon="ORDER"
-                  disabled={!uiSelectors.isAllowToSplitBatch()}
+                  disabled={!uiSelectors.isAllowToAutoFillBatch()}
                   active={activeAction === 'autoFillBatch'}
                   onClick={() => setActiveAction('autoFillBatch')}
                 />
