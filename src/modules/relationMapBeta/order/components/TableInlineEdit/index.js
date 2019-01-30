@@ -4,11 +4,13 @@ import { Query } from 'react-apollo';
 import LoadingIcon from 'components/LoadingIcon';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { getByPathWithDefault } from 'utils/fp';
+import logger from 'utils/logger';
 import TableInlineEdit from './index.table';
 import { findAllPossibleIds } from './helpers';
 import { orderListQuery } from './query';
 
 type Props = {
+  onCancel: Function,
   entities: {
     orders: Object,
     orderItems: Object,
@@ -17,8 +19,9 @@ type Props = {
   },
 };
 const TableView = (props: Props) => {
-  const { entities } = props;
+  const { entities, onCancel } = props;
   const { state } = React.useContext(ActionDispatch);
+  logger.warn('entities', entities);
   const allId = findAllPossibleIds(state.targets, entities);
   const { orderIds } = allId;
   return (
@@ -47,7 +50,7 @@ const TableView = (props: Props) => {
           <TableInlineEdit
             data={getByPathWithDefault([], 'orders.nodes', data)}
             allId={allId}
-            onCancel={() => {}}
+            onCancel={onCancel}
           />
         );
       }}

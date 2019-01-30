@@ -55,6 +55,9 @@ export const findAllPossibleIds = (targets: Object, entities: Object) => {
     if (orderItem && orderItem.order) {
       selected.ORDER.push(orderItem.order);
     }
+    if (orderItem && orderItem.batches) {
+      selected.BATCH.push(...orderItem.batches);
+    }
   });
   batchIds.forEach(batchId => {
     const batch = entities.batches[batchId];
