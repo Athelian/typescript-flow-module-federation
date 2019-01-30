@@ -7,7 +7,7 @@ import {
   metricFragment,
 } from 'graphql';
 
-const batchCardRMFragment = gql`
+export const batchCardRMFragment = gql`
   fragment batchCardRMFragment on Batch {
     id
     no

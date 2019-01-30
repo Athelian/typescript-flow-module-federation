@@ -66,7 +66,6 @@ export default function ActionNavbar({ highLightEntities, batches, orders }: Pro
                     />
                   }
                   icon="CLONE"
-                  disabled={!uiSelectors.isAllowToSplitBatch()}
                   active={activeAction === 'clone'}
                   onClick={() => setActiveAction('clone')}
                 />
