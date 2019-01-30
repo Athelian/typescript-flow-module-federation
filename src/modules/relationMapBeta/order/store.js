@@ -1,8 +1,11 @@
 // @flow
 import logger from 'utils/logger';
-import { SHIPMENT } from 'modules/relationMap/constants';
+import { SHIPMENT, BATCH } from 'modules/relationMap/constants';
+import { getByPathWithDefault } from 'utils/fp';
 
 export type UIState = {
+  loading: boolean,
+  error: boolean,
   showTag: boolean,
   expandCards: {
     orders: Array<string>,
@@ -23,6 +26,10 @@ export type UIState = {
   },
   targets: Array<string>,
   totalShipment: number,
+  split: {
+    parentOrderIds: Array<string>,
+    batches: Object,
+  },
 };
 
 export const getInitShowTag = () => {
@@ -38,6 +45,8 @@ const getInitToggleShipmentList = () => {
 };
 
 export const uiInitState: UIState = {
+  loading: false,
+  error: false,
   showTag: getInitShowTag(),
   expandCards: {
     orders: [],
@@ -58,6 +67,10 @@ export const uiInitState: UIState = {
   },
   targets: [],
   totalShipment: 0,
+  split: {
+    parentOrderIds: [],
+    batches: {},
+  },
 };
 
 export function uiReducer(state: UIState, action: { type: string, payload?: Object }) {
@@ -65,6 +78,50 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
   switch (action.type) {
     case 'RESET':
       return uiInitState;
+    case 'SPLIT_BATCH':
+      return {
+        ...state,
+        loading: true,
+      };
+    case 'SPLIT_BATCH_ERROR':
+      return {
+        ...state,
+        loading: false,
+        error: true,
+      };
+    case 'SPLIT_BATCH_SUCCESS': {
+      const batchId = getByPathWithDefault('', 'payload.batchId', action);
+      const [, orderId] = (
+        state.split.parentOrderIds.find(item => item.includes(`${batchId}-`)) || ''
+      ).split('-');
+      const { batches } = state.split;
+      return {
+        ...state,
+        split: {
+          batches: {
+            ...batches,
+            [batchId]: state.split.batches[batchId]
+              ? [
+                  ...state.split.batches[batchId],
+                  ...getByPathWithDefault([], 'payload.data.batches', action).filter(
+                    item => item && item.id !== batchId
+                  ),
+                ]
+              : getByPathWithDefault([], 'payload.data.batches', action).filter(
+                  item => item && item.id !== batchId
+                ),
+          },
+          parentOrderIds: getByPathWithDefault([], 'payload.data.batches', action)
+            .filter(item => item && item.id !== batchId)
+            .map(batch => `${batch.id}-${orderId}`),
+        },
+        targets: getByPathWithDefault([], 'payload.data.batches', action)
+          .filter(item => item && item.id !== batchId)
+          .map(batch => `${BATCH}-${batch.id}`),
+        loading: false,
+        error: false,
+      };
+    }
     case 'CLEAR_ALL': {
       const { payload } = action;
       if (payload && payload.mode === 'TARGET') {
@@ -169,6 +226,37 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         return {
           ...state,
           targets: [...targets, `${payload.entity}-${payload.id}`],
+        };
+      }
+      return state;
+    }
+    case 'TARGET_BATCH_ENTITY': {
+      const { payload } = action;
+      const { targets } = state;
+      if (payload) {
+        if (targets.includes(`${BATCH}-${payload.id}`)) {
+          return {
+            ...state,
+            split: {
+              ...state.split,
+              parentOrderIds: [
+                ...state.split.parentOrderIds,
+                `${payload.id}-${payload.parentOrderId}`,
+              ],
+            },
+            targets: (targets.filter(item => item !== `${BATCH}-${payload.id}`): Array<string>),
+          };
+        }
+        return {
+          ...state,
+          split: {
+            ...state.split,
+            parentOrderIds: [
+              ...state.split.parentOrderIds,
+              `${payload.id}-${payload.parentOrderId}`,
+            ],
+          },
+          targets: [...targets, `${BATCH}-${payload.id}`],
         };
       }
       return state;
@@ -303,6 +391,46 @@ export function actionCreators(dispatch: Function) {
           id,
         },
       }),
+    targetBatchEntity: (id: string, parentOrderId: string) =>
+      dispatch({
+        type: 'TARGET_BATCH_ENTITY',
+        payload: {
+          parentOrderId,
+          id,
+        },
+      }),
+    splitBatch: ({
+      type,
+      batchId,
+      quantity,
+    }: {
+      type: string,
+      batchId: string,
+      quantity: number,
+    }) =>
+      dispatch({
+        type: 'SPLIT_BATCH',
+        payload: {
+          type,
+          batchId,
+          quantity,
+        },
+      }),
+    splitBatchSuccess: (batchId: string, data: Object) =>
+      dispatch({
+        type: 'SPLIT_BATCH_SUCCESS',
+        payload: {
+          batchId,
+          data,
+        },
+      }),
+    splitBatchFailed: (error: string) =>
+      dispatch({
+        type: 'SPLIT_BATCH_ERROR',
+        payload: {
+          error,
+        },
+      }),
   };
 }
 
@@ -321,6 +449,9 @@ const entitySelector = ({
 
 export function selectors(state: UIState) {
   return {
+    isAllowToSplitBatch: () =>
+      state.targets.length === 1 &&
+      state.targets.filter(item => item.includes(`${BATCH}-`)).length === 1,
     isSelectEntity: (highLightEntities: Array<string>, entity: string, id: string) =>
       highLightEntities.includes(`${entity}-${id}`),
     isSelectAllEntity: (entity: string, total: number) => entitySelector({ state, entity, total }),
@@ -331,5 +462,13 @@ export function selectors(state: UIState) {
       state.targets.filter(item => item.includes(`${entity}-`)).length,
     countHighLightBy: (highLightEntities: Array<string>, entity: string) =>
       highLightEntities.filter(item => item.includes(`${entity}-`)).length,
+    targetedBatchId: () => {
+      const batch = state.targets.find(item => item.includes(`${BATCH}-`));
+      if (batch) {
+        const [, batchId] = batch.split('-');
+        return batchId;
+      }
+      return '';
+    },
   };
 }

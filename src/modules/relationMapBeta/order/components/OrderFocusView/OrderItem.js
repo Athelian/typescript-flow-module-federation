@@ -16,6 +16,45 @@ type OptionalProps = {
 
 type Props = OptionalProps & OrderItemProps;
 
+function getQuantitySummary(item: Object) {
+  let orderedQuantity = 0;
+  let batchedQuantity = 0;
+  let shippedQuantity = 0;
+  let batched = 0;
+  let shipped = 0;
+
+  orderedQuantity += item.quantity ? item.quantity : 0;
+
+  if (item.batches) {
+    item.batches.forEach(batch => {
+      batchedQuantity += batch.quantity;
+      batched += 1;
+
+      let currentQuantity = batch.quantity;
+
+      if (batch.batchAdjustments) {
+        batch.batchAdjustments.forEach(batchAdjustment => {
+          batchedQuantity += batchAdjustment.quantity;
+          currentQuantity += batchAdjustment.quantity;
+        });
+      }
+
+      if (batch.shipment) {
+        shippedQuantity += currentQuantity;
+        shipped += 1;
+      }
+    });
+  }
+
+  return {
+    orderedQuantity,
+    batchedQuantity,
+    shippedQuantity,
+    batched,
+    shipped,
+  };
+}
+
 export default function OrderItem({ wrapperClassName, id, batches, ...rest }: Props) {
   const context = React.useContext(ActionDispatch);
   const { dispatch } = context;
@@ -25,7 +64,9 @@ export default function OrderItem({ wrapperClassName, id, batches, ...rest }: Pr
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
-            <OrderItemCard orderItem={{ ...rest, batches }} />
+            <OrderItemCard
+              orderItem={{ ...rest, batches, ...getQuantitySummary({ ...rest, batches }) }}
+            />
             <ActionCard show={hovered}>
               {({ targetted, toggle }) => (
                 <>

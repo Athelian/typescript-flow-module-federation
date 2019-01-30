@@ -8,26 +8,48 @@ import { BatchCard, WrapperCard, Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import { BATCH } from 'modules/relationMap/constants';
 import type { BatchProps } from 'modules/relationMapBeta/order/type.js.flow';
+import Badge from '../Badge';
 
 type OptionalProps = {
   wrapperClassName?: string,
+  parentOrderId?: string,
 };
 
 type Props = OptionalProps & BatchProps;
 
-export default function Batch({ wrapperClassName, id, tags, ...batch }: Props) {
+export default function Batch({
+  wrapperClassName,
+  id,
+  parentOrderId,
+  tags,
+  no,
+  quantity,
+  totalAdjusted,
+  packageVolume,
+}: Props) {
   const context = React.useContext(ActionDispatch);
   const {
-    state: { showTag },
+    state: { showTag, split },
     dispatch,
   } = context;
   const actions = actionCreators(dispatch);
+  const showBadge = (Object.entries(split.batches): Array<any>).some(([, item]) =>
+    item.map(({ id: batchId }) => batchId).includes(id)
+  );
   return (
     <BaseCard showActionsOnHover icon="BATCH" color="BATCH" wrapperClassName={wrapperClassName}>
+      {showBadge && <Badge label="split" />}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
-            <BatchCard batch={batch} />
+            <BatchCard
+              batch={{
+                no,
+                volumeLabel: packageVolume && packageVolume.value,
+                metric: packageVolume && packageVolume.metric,
+                batchedQuantity: quantity + totalAdjusted,
+              }}
+            />
             <ActionCard show={hovered}>
               {({ targetted, toggle }) => (
                 <>
@@ -47,7 +69,7 @@ export default function Batch({ wrapperClassName, id, tags, ...batch }: Props) {
                     icon="CHECKED"
                     targetted={targetted}
                     toggle={toggle}
-                    onClick={() => actions.targetEntity(BATCH, id)}
+                    onClick={() => actions.targetBatchEntity(id, parentOrderId || '')}
                   />
                 </>
               )}
