@@ -40,7 +40,7 @@ type Props = {
 };
 
 export default function ActionNavbar({ highLightEntities, batches, orders, orderItems }: Props) {
-  const [activeAction, setActiveAction] = React.useState('');
+  const [activeAction, setActiveAction] = React.useState('clone');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
   const uiSelectors = selectors(state);
@@ -179,7 +179,6 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                           batch: getByPathWithDefault([], 'data.batchClone', item),
                         };
                       });
-                      console.warn(result);
                       actions.cloneEntitiesSuccess(result);
                     } catch (error) {
                       actions.cloneEntitiesFailed(error);

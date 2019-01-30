@@ -39,7 +39,7 @@ const ConstraintPanel = ({ disable }: Props) => {
             id="modules.RelationMaps.action.actionAutoFillBatchAvailable"
             defaultMessage="is only available for a selection containing"
           />{' '}
-          1 <Icon icon="ORDER_ITEM" />{' '}
+          <Icon icon="ORDER_ITEM" />{' '}
         </Label>
       )}
       {disabledMoveToOrder && (
