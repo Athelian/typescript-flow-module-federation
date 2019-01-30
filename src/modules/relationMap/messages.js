@@ -106,6 +106,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.split',
     defaultMessage: 'Split',
   },
+  autoFill: {
+    id: 'modules.RelationMaps.label.autoFill',
+    defaultMessage: 'AUTOFILL',
+  },
   splitType: {
     id: 'modules.RelationMaps.label.splitType',
     defaultMessage: 'Split Type',

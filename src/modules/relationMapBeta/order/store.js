@@ -30,6 +30,9 @@ export type UIState = {
     parentOrderIds: Array<string>,
     batches: Object,
   },
+  balanceSplit: {
+    batches: Array<Object>,
+  },
 };
 
 export const getInitShowTag = () => {
@@ -71,6 +74,9 @@ export const uiInitState: UIState = {
     parentOrderIds: [],
     batches: {},
   },
+  balanceSplit: {
+    batches: [],
+  },
 };
 
 export function uiReducer(state: UIState, action: { type: string, payload?: Object }) {
@@ -79,11 +85,13 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'RESET':
       return uiInitState;
     case 'SPLIT_BATCH':
+    case 'AUTO_FILL_BATCHES':
       return {
         ...state,
         loading: true,
       };
     case 'SPLIT_BATCH_ERROR':
+    case 'AUTO_FILL_BATCHES_ERROR':
       return {
         ...state,
         loading: false,
@@ -118,6 +126,21 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         targets: getByPathWithDefault([], 'payload.data.batches', action)
           .filter(item => item && item.id !== batchId)
           .map(batch => `${BATCH}-${batch.id}`),
+        loading: false,
+        error: false,
+      };
+    }
+    case 'AUTO_FILL_BATCHES_SUCCESS': {
+      const batches = getByPathWithDefault([], 'payload.data', action).reduce(
+        (result, currentItem) => result.concat(currentItem.batches),
+        []
+      );
+      return {
+        ...state,
+        balanceSplit: {
+          batches: [...state.balanceSplit.batches, ...batches],
+        },
+        targets: batches.map(({ id }) => `${BATCH}-${id}`),
         loading: false,
         error: false,
       };
@@ -431,6 +454,27 @@ export function actionCreators(dispatch: Function) {
           error,
         },
       }),
+    autoFillBatches: (orderItemIds: Array<string>) =>
+      dispatch({
+        type: 'AUTO_FILL_BATCHES',
+        payload: {
+          orderItemIds,
+        },
+      }),
+    autoFillBatchesSuccess: (data: Object) =>
+      dispatch({
+        type: 'AUTO_FILL_BATCHES_SUCCESS',
+        payload: {
+          data,
+        },
+      }),
+    autoFillBatchesFailed: (error: string) =>
+      dispatch({
+        type: 'AUTO_FILL_BATCHES_ERROR',
+        payload: {
+          error,
+        },
+      }),
   };
 }
 
@@ -472,6 +516,16 @@ export function selectors(state: UIState) {
         return batchId;
       }
       return '';
+    },
+    targetedOrderItemIds: () => {
+      const orderItems = state.targets.filter(item => item.includes(`${ORDER_ITEM}-`));
+      if (orderItems) {
+        return (orderItems.map(orderItem => {
+          const [, orderItemId] = orderItem.split('-');
+          return orderItemId;
+        }): Array<string>);
+      }
+      return [];
     },
   };
 }
