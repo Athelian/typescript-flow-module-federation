@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { intersection } from 'lodash';
 import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -25,15 +26,17 @@ import HighLightToolBar from './HighLightToolBar';
 import SplitPanel from './SplitPanel';
 import SplitBalancePanel from './SplitBalancePanel';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
+import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import ConstrainPanel from './ConstrainPanel';
 import ErrorPanel from './ErrorPanel';
 
 type Props = {
   highLightEntities: Array<string>,
   batches: Object,
+  orders: Object,
 };
 
-export default function ActionNavbar({ highLightEntities, batches }: Props) {
+export default function ActionNavbar({ highLightEntities, batches, orders }: Props) {
   const [activeAction, setActiveAction] = React.useState('');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
@@ -114,7 +117,46 @@ export default function ActionNavbar({ highLightEntities, batches }: Props) {
                 </OutsideClickHandler>
               )}
               {activeAction === 'autoFillBatch' && uiSelectors.isAllowToAutoFillBatch() && (
-                <SplitBalancePanel onClick={console.warn} />
+                <SplitBalancePanel
+                  onClick={async () => {
+                    const orderItemIds = uiSelectors.targetedOrderItemIds();
+                    const orderIds = [];
+                    (Object.entries(orders): Array<any>).forEach(([orderId, order]) => {
+                      if (
+                        !orderIds.includes(orderId) &&
+                        intersection(order.orderItems, orderItemIds)
+                      ) {
+                        orderIds.push(orderId);
+                      }
+                    });
+                    actions.autoFillBatches(orderItemIds);
+                    try {
+                      const balanceSplitBatches = await Promise.all(
+                        orderItemIds.map(orderItemId =>
+                          client.mutate({
+                            mutation: batchBalanceSplitMutation,
+                            variables: { orderItemId },
+                            refetchQueries: orderIds.map(orderId => ({
+                              query: orderDetailQuery,
+                              variables: {
+                                id: orderId,
+                              },
+                            })),
+                          })
+                        )
+                      );
+                      const result = balanceSplitBatches.map((item, index) => {
+                        return {
+                          id: orderItemIds[index],
+                          batches: getByPathWithDefault([], 'data.batchBalanceSplit.batches', item),
+                        };
+                      });
+                      actions.autoFillBatchesSuccess(result);
+                    } catch (error) {
+                      actions.autoFillBatchesFailed(error);
+                    }
+                  }}
+                />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel

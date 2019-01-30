@@ -29,16 +29,19 @@ export default function Batch({
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
-    state: { showTag, split },
+    state: { showTag, split, balanceSplit },
     dispatch,
   } = context;
   const actions = actionCreators(dispatch);
-  const showBadge = (Object.entries(split.batches): Array<any>).some(([, item]) =>
+  const showSplitBadge = (Object.entries(split.batches): Array<any>).some(([, item]) =>
     item.map(({ id: batchId }) => batchId).includes(id)
   );
+  const showAutoFillBadge = !!balanceSplit.batches.find(item => item.id === id);
   return (
     <BaseCard showActionsOnHover icon="BATCH" color="BATCH" wrapperClassName={wrapperClassName}>
-      {showBadge && <Badge label="split" />}
+      {(showSplitBadge || showAutoFillBadge) && (
+        <Badge label={showSplitBadge ? 'Split' : 'autoFillBatch'} />
+      )}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>

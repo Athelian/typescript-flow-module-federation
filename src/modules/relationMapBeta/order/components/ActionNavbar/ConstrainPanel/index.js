@@ -36,7 +36,11 @@ const ConstrainPanel = ({ disable }: Props) => {
         <>
           <Label className={style.LabelStyle} align="center">
             <FormattedMessage {...messages.autoFillBatch} />{' '}
-            <FormattedMessage {...messages.actionAvailable} /> 1 <Icon icon="ORDER_ITEM" />{' '}
+            <FormattedMessage
+              id="modules.RelationMaps.action.actionAutoFillBatchAvailable"
+              defaultMessage="is only available for a selection containing"
+            />{' '}
+            1 <Icon icon="ORDER_ITEM" />{' '}
           </Label>
         </>
       )}

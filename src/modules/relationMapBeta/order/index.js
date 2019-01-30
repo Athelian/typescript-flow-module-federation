@@ -129,7 +129,12 @@ const Order = ({ intl }: Props) => {
                   <AdvancedFilter initialFilter={filterAndSort.filter} onApply={onApplyFilter} />
                 )}
               />
-              <ActionNavbar highLightEntities={highLightEntities} batches={batches} />
+              <ActionNavbar
+                highLightEntities={highLightEntities}
+                batches={batches}
+                orders={orders}
+                orderItems={orderItems}
+              />
               {loading ? (
                 <LoadingIcon />
               ) : (
