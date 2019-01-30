@@ -46,6 +46,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  field: string,
   container: Object,
   update: Function,
 };
@@ -59,6 +60,7 @@ const defaultProps = {
 };
 
 const ShipmentContainerCard = ({
+  field,
   container,
   onRemove,
   onSelectWarehouse,
@@ -149,7 +151,6 @@ const ShipmentContainerCard = ({
                   }
                 </FormField>
               </div>
-
               <div className={LabelInputStyle}>
                 <Label>
                   <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />

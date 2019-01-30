@@ -21,8 +21,8 @@ const defaultProps = {
   containers: [],
 };
 
-const TimelineWarehouseName = ({ name, vertical, containers }: Props) => {
-  const filteredWarehouses = (containers || [])
+const TimelineWarehouseName = ({ name, vertical, containers = [] }: Props) => {
+  const filteredWarehouses = containers
     .filter(group => group.warehouse)
     .map(group => group.warehouse.id);
   const warehouses = [...new Set(filteredWarehouses)].slice(1);

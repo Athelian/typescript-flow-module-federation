@@ -14,6 +14,7 @@ type ActionDetail = {
 
 type FormState = {
   cargoReady?: ActionDetail,
+  containers?: Array<Object>,
   containerGroups: Array<{
     customClearance?: ActionDetail,
     deliveryReady?: ActionDetail,
