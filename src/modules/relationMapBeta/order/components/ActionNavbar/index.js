@@ -71,7 +71,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   }
                   icon="CLONE"
                   active={activeAction === 'clone'}
-                  onClick={() => setActiveAction('clone')}
+                  onClick={() => {
+                    actions.selectOrderMode(false);
+                    setActiveAction('clone');
+                  }}
                 />
                 <TabItem
                   className={TabItemStyled}
@@ -85,7 +88,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   icon="SPLIT"
                   disabled={!uiSelectors.isAllowToSplitBatch()}
                   active={activeAction === 'split'}
-                  onClick={() => setActiveAction('split')}
+                  onClick={() => {
+                    actions.selectOrderMode(false);
+                    setActiveAction('split');
+                  }}
                 />
                 <TabItem
                   className={TabItemStyled}
@@ -99,7 +105,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   icon="EXCHANGE"
                   disabled={!uiSelectors.isAllowToConnectOrder(orderItems)}
                   active={activeAction === 'connectOrder'}
-                  onClick={() => setActiveAction('connectOrder')}
+                  onClick={() => {
+                    actions.selectOrderMode(true);
+                    setActiveAction('connectOrder');
+                  }}
                 />
                 <TabItem
                   className={TabItemStyled}
@@ -113,7 +122,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   icon="EXCHANGE"
                   disabled={!uiSelectors.isAllowToConnectShipment()}
                   active={activeAction === 'connectShipment'}
-                  onClick={() => setActiveAction('connectShipment')}
+                  onClick={() => {
+                    actions.selectOrderMode(false);
+                    setActiveAction('connectShipment');
+                  }}
                 />
                 <TabItem
                   className={TabItemStyled}
@@ -130,7 +142,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   icon="ORDER_ITEM"
                   disabled={!uiSelectors.isAllowToAutoFillBatch()}
                   active={activeAction === 'autoFillBatch'}
-                  onClick={() => setActiveAction('autoFillBatch')}
+                  onClick={() => {
+                    actions.selectOrderMode(false);
+                    setActiveAction('autoFillBatch');
+                  }}
                 />
               </TargetToolBar>
               {['split', 'autoFillBatch', 'connectOrder'].includes(activeAction) && (
@@ -264,7 +279,12 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                 />
               )}
               {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder(orderItems) && (
-                <MoveToOrderPanel />
+                <MoveToOrderPanel
+                  onMoveToNewOrder={console.warn}
+                  onMoveToExistOrder={console.warn}
+                  onClearSelectOrder={console.warn}
+                  hasSelectedOrder={false}
+                />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel

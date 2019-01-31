@@ -37,6 +37,11 @@ export type UIState = {
   clone: {
     batches: Object,
   },
+  connectOrder: {
+    enableSelectMode: boolean,
+    orderId: string,
+    exporterId: string,
+  },
 };
 
 export const getInitShowTag = () => {
@@ -84,6 +89,11 @@ export const uiInitState: UIState = {
   clone: {
     batches: {},
   },
+  connectOrder: {
+    enableSelectMode: false,
+    orderId: '',
+    exporterId: '',
+  },
 };
 
 export function uiReducer(state: UIState, action: { type: string, payload?: Object }) {
@@ -96,6 +106,14 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         ...state,
         loading: false,
         error: false,
+      };
+    case 'ENABLE_SELECT_ORDER':
+      return {
+        ...state,
+        connectOrder: {
+          ...state.connectOrder,
+          enableSelectMode: !!getByPathWithDefault(false, 'payload.isEnable', action),
+        },
       };
     case 'SPLIT_BATCH':
     case 'AUTO_FILL_BATCHES':
@@ -532,6 +550,13 @@ export function actionCreators(dispatch: Function) {
         type: 'CLONE_ENTITIES_ERROR',
         payload: {
           error,
+        },
+      }),
+    selectOrderMode: (isEnable: boolean) =>
+      dispatch({
+        type: 'ENABLE_SELECT_ORDER',
+        payload: {
+          isEnable,
         },
       }),
   };
