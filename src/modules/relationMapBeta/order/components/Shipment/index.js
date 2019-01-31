@@ -34,24 +34,24 @@ export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Pr
             {/* Send empty array for tags for hidden tags on shipment card when hidden tags */}
             <ShipmentCard shipment={showTag ? shipment : { ...shipment, tags: [] }} actions={[]} />
             <ActionCard show={hovered}>
-              {({ targetted, toggle }) => (
+              {({ targeted, toggle }) => (
                 <>
-                  {/* NOTE: why need to send targetted and toggle to ACTION */}
+                  {/* NOTE: why need to send targeted and toggle to ACTION */}
                   <Action
                     icon="MAGIC"
-                    targetted={targetted}
+                    targeted={targeted}
                     toggle={toggle}
                     onClick={() => actions.toggleHighLight('SHIPMENT', id)}
                   />
                   <Action
                     icon="DOCUMENT"
-                    targetted={targetted}
+                    targeted={targeted}
                     toggle={toggle}
                     onClick={() => actions.showEditForm('SHIPMENT', id)}
                   />
                   <Action
                     icon="CHECKED"
-                    targetted={targetted}
+                    targeted={targeted}
                     toggle={toggle}
                     onClick={() => actions.targetEntity('SHIPMENT', id)}
                   />

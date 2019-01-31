@@ -188,30 +188,30 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                   }
                                   return (
                                     <ActionCard show={hovered}>
-                                      {({ targetted, toggle }) => (
+                                      {({ targeted, toggle }) => (
                                         <>
                                           <Action
                                             icon="MAGIC"
-                                            targetted={targetted}
+                                            targeted={targeted}
                                             toggle={toggle}
                                             onClick={onClickHighlight}
                                           />
                                           <Action
                                             icon="DOCUMENT"
-                                            targetted={targetted}
+                                            targeted={targeted}
                                             toggle={toggle}
                                             onClick={() => setSlide({ show: true, type, id })}
                                           />
                                           <Action
                                             icon="BRANCH"
-                                            targetted={isCurrentTarget ? 'BRANCH' : targetted}
+                                            targeted={isCurrentTarget ? 'BRANCH' : targeted}
                                             toggle={toggle}
                                             onClick={onClickTargetTree}
                                             className={RotateIcon}
                                           />
                                           <Action
                                             icon="CHECKED"
-                                            targetted={isTargeted ? 'CHECKED' : targetted}
+                                            targeted={isTargeted ? 'CHECKED' : targeted}
                                             toggle={toggle}
                                             onClick={() => {
                                               if (connectType === 'ORDER') {
@@ -262,24 +262,24 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                       >
                         <OrderItemCard orderItem={data} />
                         <ActionCard show={hovered}>
-                          {({ targetted, toggle }) => (
+                          {({ targeted, toggle }) => (
                             <>
                               <Action
                                 icon="MAGIC"
-                                targetted={targetted}
+                                targeted={targeted}
                                 toggle={toggle}
                                 onClick={onClickHighlight}
                               />
                               <Action
                                 icon="BRANCH"
-                                targetted={isCurrentTarget ? 'BRANCH' : targetted}
+                                targeted={isCurrentTarget ? 'BRANCH' : targeted}
                                 toggle={toggle}
                                 onClick={onClickTargetTree}
                                 className={RotateIcon}
                               />
                               <Action
                                 icon="CHECKED"
-                                targetted={isTargeted ? 'CHECKED' : targetted}
+                                targeted={isTargeted ? 'CHECKED' : targeted}
                                 toggle={toggle}
                                 onClick={onClickTarget}
                               />
@@ -314,23 +314,23 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                           >
                             <BatchCard batch={data} />
                             <ActionCard show={hovered}>
-                              {({ targetted, toggle }) => (
+                              {({ targeted, toggle }) => (
                                 <>
                                   <Action
                                     icon="MAGIC"
-                                    targetted={targetted}
+                                    targeted={targeted}
                                     toggle={toggle}
                                     onClick={onClickHighlight}
                                   />
                                   <Action
                                     icon="DOCUMENT"
-                                    targetted={targetted}
+                                    targeted={targeted}
                                     toggle={toggle}
                                     onClick={() => setSlide({ show: true, type, id })}
                                   />
                                   <Action
                                     icon="CHECKED"
-                                    targetted={targetted}
+                                    targeted={targeted}
                                     toggle={toggle}
                                     onClick={onClickTarget}
                                   />
@@ -417,23 +417,23 @@ const Item = ({ relation, itemData, itemType, onToggle, isCollapsed }: Props) =>
                                     }
                                     return (
                                       <ActionCard show={hovered}>
-                                        {({ targetted, toggle }) => (
+                                        {({ targeted, toggle }) => (
                                           <>
                                             <Action
                                               icon="MAGIC"
-                                              targetted={targetted}
+                                              targeted={targeted}
                                               toggle={toggle}
                                               onClick={onClickHighlight}
                                             />
                                             <Action
                                               icon="DOCUMENT"
-                                              targetted={targetted}
+                                              targeted={targeted}
                                               toggle={toggle}
                                               onClick={() => setSlide({ show: true, type, id })}
                                             />
                                             <Action
                                               icon="CHECKED"
-                                              targetted={targetted}
+                                              targeted={targeted}
                                               toggle={toggle}
                                               onClick={onClickTarget}
                                             />

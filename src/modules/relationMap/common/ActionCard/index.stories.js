@@ -18,12 +18,12 @@ storiesOf('RelationMap/ActionCard', module).add('ActionCard', () => (
   <div className={ContainerStyle}>
     <div>XXXXXXXXXXXXXXXXX</div>
     <ActionCard>
-      {({ targetted, toggle }) => (
+      {({ targeted, toggle }) => (
         <>
-          <Action icon="MAGIC" targetted={targetted} toggle={toggle} />
-          <Action icon="DOCUMENT" targetted={targetted} toggle={toggle} />
-          <Action icon="BRANCH" targetted={targetted} toggle={toggle} />
-          <Action icon="CHECKED" targetted={targetted} toggle={toggle} />
+          <Action icon="MAGIC" targeted={targeted} toggle={toggle} />
+          <Action icon="DOCUMENT" targeted={targeted} toggle={toggle} />
+          <Action icon="BRANCH" targeted={targeted} toggle={toggle} />
+          <Action icon="CHECKED" targeted={targeted} toggle={toggle} />
         </>
       )}
     </ActionCard>

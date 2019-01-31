@@ -6,12 +6,13 @@ import BaseCard from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
-import { actionCreators } from 'modules/relationMapBeta/order/store';
+import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
 import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 
 type OptionalProps = {
   wrapperClassName?: string,
+  orderItemsCollection?: Object,
 };
 
 type Props = OptionalProps & OrderProps;
@@ -25,12 +26,12 @@ export default function Order({
   tags,
   id,
   orderItems,
+  exporter,
+  orderItemsCollection,
 }: Props) {
   const context = React.useContext(ActionDispatch);
-  const {
-    state: { showTag },
-    dispatch,
-  } = context;
+  const { dispatch, state } = context;
+  const uiSelectors = selectors(state);
   const actions = actionCreators(dispatch);
   return (
     <BaseCard id={`order-${id}`} icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
@@ -46,59 +47,69 @@ export default function Order({
                 shippedQuantity: totalShipped,
               }}
             />
-            <ActionCard show={hovered}>
-              {({ targetted, toggle }) => (
-                <>
-                  <Action
-                    icon="MAGIC"
-                    targetted={targetted}
-                    toggle={toggle}
-                    onClick={() => actions.toggleHighLight(ORDER, id)}
-                  />
-                  <Action
-                    icon="DOCUMENT"
-                    targetted={targetted}
-                    toggle={toggle}
-                    onClick={() => actions.showEditForm(ORDER, id)}
-                  />
-                  <Action
-                    icon="BRANCH"
-                    targetted={targetted}
-                    toggle={toggle}
-                    onClick={() =>
-                      actions.selectBranch([
-                        {
-                          entity: ORDER,
-                          id,
-                        },
-                        ...orderItems.map(orderItem => ({
-                          entity: ORDER_ITEM,
-                          id: orderItem.id,
-                        })),
-                        ...orderItems.reduce(
-                          (result, orderItem) =>
-                            result.concat(
-                              orderItem.batches.map(batch => ({
-                                entity: BATCH,
-                                id: batch.id,
-                              }))
-                            ),
-                          []
-                        ),
-                      ])
-                    }
-                    className={RotateIcon}
-                  />
-                  <Action
-                    icon="CHECKED"
-                    targetted={targetted}
-                    toggle={toggle}
-                    onClick={() => actions.targetEntity(ORDER, id)}
-                  />
-                </>
-              )}
-            </ActionCard>
-            {showTag && <Tags dataSource={tags} />}
+            {uiSelectors.isAllowToSelectOrder({
+              orderId: id,
+              exporterId: exporter.id,
+              orderItems: orderItemsCollection,
+            }) ? (
+              <ActionCard show={hovered}>
+                {() => <Action icon="CHECKED" onClick={console.warn} />}
+              </ActionCard>
+            ) : (
+              <ActionCard show={hovered}>
+                {({ targeted, toggle }) => (
+                  <>
+                    <Action
+                      icon="MAGIC"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() => actions.toggleHighLight(ORDER, id)}
+                    />
+                    <Action
+                      icon="DOCUMENT"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() => actions.showEditForm(ORDER, id)}
+                    />
+                    <Action
+                      icon="BRANCH"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() =>
+                        actions.selectBranch([
+                          {
+                            entity: ORDER,
+                            id,
+                          },
+                          ...orderItems.map(orderItem => ({
+                            entity: ORDER_ITEM,
+                            id: orderItem.id,
+                          })),
+                          ...orderItems.reduce(
+                            (result, orderItem) =>
+                              result.concat(
+                                orderItem.batches.map(batch => ({
+                                  entity: BATCH,
+                                  id: batch.id,
+                                }))
+                              ),
+                            []
+                          ),
+                        ])
+                      }
+                      className={RotateIcon}
+                    />
+                    <Action
+                      icon="CHECKED"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() => actions.targetEntity(ORDER, id)}
+                    />
+                  </>
+                )}
+              </ActionCard>
+            )}
+            {state.showTag && <Tags dataSource={tags} />}
           </WrapperCard>
         )}
       </BooleanValue>

@@ -103,7 +103,7 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                     </div>
                   }
                   icon="EXCHANGE"
-                  disabled={!uiSelectors.isAllowToConnectOrder(orderItems)}
+                  disabled={!uiSelectors.isAllowToConnectOrder()}
                   active={activeAction === 'connectOrder'}
                   onClick={() => {
                     actions.selectOrderMode(true);
@@ -156,8 +156,7 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                       activeAction === 'autoFillBatch' && !uiSelectors.isAllowToAutoFillBatch(),
                     disabledMoveToShipment: false,
                     disabledMoveToOrder:
-                      activeAction === 'connectOrder' &&
-                      !uiSelectors.isAllowToConnectOrder(orderItems),
+                      activeAction === 'connectOrder' && !uiSelectors.isAllowToConnectOrder(),
                   }}
                 />
               )}
@@ -278,7 +277,7 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   }}
                 />
               )}
-              {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder(orderItems) && (
+              {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder() && (
                 <MoveToOrderPanel
                   onMoveToNewOrder={console.warn}
                   onMoveToExistOrder={console.warn}

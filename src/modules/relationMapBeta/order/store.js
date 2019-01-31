@@ -1,5 +1,4 @@
 // @flow
-import { intersection } from 'lodash';
 import logger from 'utils/logger';
 import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMap/constants';
 import { getByPathWithDefault } from 'utils/fp';
@@ -40,7 +39,7 @@ export type UIState = {
   connectOrder: {
     enableSelectMode: boolean,
     orderId: string,
-    exporterId: string,
+    exporterIds: Array<string>,
   },
 };
 
@@ -92,7 +91,7 @@ export const uiInitState: UIState = {
   connectOrder: {
     enableSelectMode: false,
     orderId: '',
-    exporterId: '',
+    exporterIds: [],
   },
 };
 
@@ -221,6 +220,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'TOGGLE_EDIT_FORM':
       return { ...state, edit: action.payload };
     case 'TOGGLE_SELECT_ALL': {
+      // TODO: Need to check target all action for split and move to order
       const { payload } = action;
       const {
         select: { entities },
@@ -260,6 +260,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       return state;
     }
     case 'SELECT_BRANCH': {
+      // TODO: Need to check target all action for split and move to order
       const { payload } = action;
       const { targets } = state;
       let result = [...targets];
@@ -313,10 +314,17 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             ...state,
             split: {
               ...state.split,
-              parentOrderIds: [
-                ...state.split.parentOrderIds,
-                `${payload.id}-${payload.parentOrderId}`,
-              ],
+              parentOrderIds: state.split.parentOrderIds.includes(
+                `${payload.id}-${payload.parentOrderId}`
+              )
+                ? state.split.parentOrderIds
+                : [...state.split.parentOrderIds, `${payload.id}-${payload.parentOrderId}`],
+            },
+            connectOrder: {
+              ...state.connectOrder,
+              exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
+                ? state.connectOrder.exporterIds
+                : [...state.connectOrder.exporterIds, payload.exporterId],
             },
             targets: (targets.filter(item => item !== `${BATCH}-${payload.id}`): Array<string>),
           };
@@ -325,10 +333,17 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           ...state,
           split: {
             ...state.split,
-            parentOrderIds: [
-              ...state.split.parentOrderIds,
-              `${payload.id}-${payload.parentOrderId}`,
-            ],
+            parentOrderIds: state.split.parentOrderIds.includes(
+              `${payload.id}-${payload.parentOrderId}`
+            )
+              ? state.split.parentOrderIds
+              : [...state.split.parentOrderIds, `${payload.id}-${payload.parentOrderId}`],
+          },
+          connectOrder: {
+            ...state.connectOrder,
+            exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
+              ? state.connectOrder.exporterIds
+              : [...state.connectOrder.exporterIds, payload.exporterId],
           },
           targets: [...targets, `${BATCH}-${payload.id}`],
         };
@@ -470,11 +485,36 @@ export function actionCreators(dispatch: Function) {
           id,
         },
       }),
-    targetBatchEntity: (id: string, parentOrderId: string) =>
+    targetOrderEntity: (id: string, exporterId: string) =>
+      dispatch({
+        type: 'TARGET_ORDER_ENTITY',
+        payload: {
+          exporterId,
+          id,
+        },
+      }),
+    targetOrderItemEntity: (id: string, exporterId: string) =>
+      dispatch({
+        type: 'TARGET_ORDER_ITEM_ENTITY',
+        payload: {
+          exporterId,
+          id,
+        },
+      }),
+    targetBatchEntity: ({
+      id,
+      parentOrderId,
+      exporterId,
+    }: {
+      id: string,
+      parentOrderId: string,
+      exporterId: string,
+    }) =>
       dispatch({
         type: 'TARGET_BATCH_ENTITY',
         payload: {
           parentOrderId,
+          exporterId,
           id,
         },
       }),
@@ -591,7 +631,7 @@ function targetedBatchIds(state: UIState) {
   }): Array<string>);
 }
 
-const isAllowToConnectOrder = ({ state, orderItems }: { state: UIState, orderItems: Object }) => {
+const isAllowToConnectOrder = (state: UIState) => {
   if (
     state.targets.filter(item => item.includes(`${ORDER}-`)).length > 0 ||
     state.targets.filter(item => item.includes(`${SHIPMENT}-`)).length > 0
@@ -602,38 +642,37 @@ const isAllowToConnectOrder = ({ state, orderItems }: { state: UIState, orderIte
 
   const orderItemIds = targetedOrderItemIds(state);
 
-  const matchingBatchIds = [];
-  const exporterIds = [];
+  return state.connectOrder.exporterIds.length === 1 && (batchIds.length || orderItemIds.length);
+};
 
-  (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
-    if (
-      intersection(batchIds, orderItem.batches).length > 0 &&
-      !orderItemIds.includes(orderItemId)
-    ) {
-      orderItemIds.push(orderItemId);
-    }
-  });
-
-  orderItemIds.forEach(orderItemId => {
-    const orderItem = orderItems[orderItemId];
-    if (orderItem) {
-      matchingBatchIds.push(...orderItem.batches);
-      const {
-        productProvider: { exporter },
-      } = orderItem;
-      if (!exporterIds.includes(exporter)) {
-        exporterIds.push(exporter);
-      }
-    }
-  });
+const isAllowToSelectOrder = ({
+  orderId,
+  exporterId,
+  state,
+}: {
+  orderId: string,
+  exporterId: string,
+  state: UIState,
+}) => {
   return (
-    exporterIds.length === 1 && intersection(batchIds, matchingBatchIds).length === batchIds.length
+    state.connectOrder.enableSelectMode &&
+    state.connectOrder.exporterIds.includes(exporterId) &&
+    state.connectOrder.orderId !== orderId
   );
 };
 
 export function selectors(state: UIState) {
   return {
-    isAllowToConnectOrder: (orderItems: Object) => isAllowToConnectOrder({ orderItems, state }),
+    isAllowToConnectOrder: () => isAllowToConnectOrder(state),
+    isAllowToSelectOrder: ({
+      orderId,
+      exporterId,
+      orderItems,
+    }: {
+      orderItems: Object,
+      orderId: string,
+      exporterId: string,
+    }) => isAllowToSelectOrder({ orderId, exporterId, orderItems, state }),
     isAllowToConnectShipment: () => false,
     isAllowToSplitBatch: () =>
       state.targets.length === 1 &&
