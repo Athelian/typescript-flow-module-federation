@@ -79,10 +79,12 @@ export default function Order({
                           {
                             entity: ORDER,
                             id,
+                            exporterId: `${ORDER}-${exporter.id}`,
                           },
                           ...orderItems.map(orderItem => ({
                             entity: ORDER_ITEM,
                             id: orderItem.id,
+                            exporterId: `${ORDER_ITEM}-${exporter.id}`,
                           })),
                           ...orderItems.reduce(
                             (result, orderItem) =>
@@ -90,6 +92,7 @@ export default function Order({
                                 orderItem.batches.map(batch => ({
                                   entity: BATCH,
                                   id: batch.id,
+                                  exporterId: `${BATCH}-${exporter.id}`,
                                 }))
                               ),
                             []

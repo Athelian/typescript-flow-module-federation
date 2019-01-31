@@ -262,8 +262,12 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'SELECT_BRANCH': {
       // TODO: Need to check target all action for split and move to order
       const { payload } = action;
-      const { targets } = state;
+      const {
+        targets,
+        connectOrder: { exporterIds },
+      } = state;
       let result = [...targets];
+      let exporters = [...exporterIds];
       if (payload) {
         const { selectItems } = payload;
         if (
@@ -273,16 +277,23 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             result = (result.filter(
               item => item !== `${selectItem.entity}-${selectItem.id}`
             ): Array<string>);
+            exporters = (exporterIds.filter(item => item !== selectItem.exporterId): Array<string>);
           });
         } else {
           selectItems.forEach(selectItem => {
             if (!result.includes(`${selectItem.entity}-${selectItem.id}`))
               result = [...result, `${selectItem.entity}-${selectItem.id}`];
+            if (!exporterIds.includes(selectItem.exporterId))
+              exporters = [...exporterIds, selectItem.exporterId];
           });
         }
       }
       return {
         ...state,
+        connectOrder: {
+          ...state.connectOrder,
+          exporterIds: exporters,
+        },
         targets: result,
       };
     }
@@ -528,7 +539,7 @@ export function actionCreators(dispatch: Function) {
           selectedId,
         },
       }),
-    selectBranch: (selectItems: Array<{ entity: string, id: string }>) =>
+    selectBranch: (selectItems: Array<{ entity: string, id: string, exporterId: string }>) =>
       dispatch({
         type: 'SELECT_BRANCH',
         payload: {

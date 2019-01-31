@@ -87,12 +87,14 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
                     onClick={() =>
                       actions.selectBranch([
                         {
-                          entity: ORDER_ITEM,
                           id,
+                          entity: ORDER_ITEM,
+                          exporterId: `${ORDER_ITEM}-${exporterId}`,
                         },
                         ...batches.map(batch => ({
                           entity: BATCH,
                           id: batch.id,
+                          exporterId: `${BATCH}-${exporterId}`,
                         })),
                       ])
                     }
