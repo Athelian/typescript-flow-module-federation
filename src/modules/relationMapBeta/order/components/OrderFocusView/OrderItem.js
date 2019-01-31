@@ -59,7 +59,7 @@ function getQuantitySummary(item: Object) {
   };
 }
 
-export default function OrderItem({ wrapperClassName, id, batches, ...rest }: Props) {
+export default function OrderItem({ wrapperClassName, id, exporterId, batches, ...rest }: Props) {
   const context = React.useContext(ActionDispatch);
   const { dispatch } = context;
   const actions = actionCreators(dispatch);
@@ -102,7 +102,7 @@ export default function OrderItem({ wrapperClassName, id, batches, ...rest }: Pr
                     icon="CHECKED"
                     targeted={targeted}
                     toggle={toggle}
-                    onClick={() => actions.targetEntity(ORDER_ITEM, id)}
+                    onClick={() => actions.targetOrderItemEntity(id, `${ORDER_ITEM}-${exporterId}`)}
                   />
                 </>
               )}

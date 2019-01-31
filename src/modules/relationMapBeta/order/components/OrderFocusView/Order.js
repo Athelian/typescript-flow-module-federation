@@ -38,7 +38,6 @@ export default function Order({
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
-            {/* NOTE: better naming for order card props */}
             <OrderCard
               order={{
                 poNo,
@@ -103,7 +102,7 @@ export default function Order({
                       icon="CHECKED"
                       targeted={targeted}
                       toggle={toggle}
-                      onClick={() => actions.targetEntity(ORDER, id)}
+                      onClick={() => actions.targetOrderEntity(id, `${ORDER}-${exporter.id}`)}
                     />
                   </>
                 )}

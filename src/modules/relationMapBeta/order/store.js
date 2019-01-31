@@ -286,21 +286,79 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         targets: result,
       };
     }
-    case 'TARGET_ENTITY': {
+    case 'TARGET_SHIPMENT_ENTITY': {
       const { payload } = action;
       const { targets } = state;
       if (payload) {
-        if (targets.includes(`${payload.entity}-${payload.id}`)) {
+        if (targets.includes(`${SHIPMENT}-${payload.id}`)) {
           return {
             ...state,
+            targets: (targets.filter(item => item !== `${SHIPMENT}-${payload.id}`): Array<string>),
+          };
+        }
+        return {
+          ...state,
+          targets: [...targets, `${SHIPMENT}-${payload.id}`],
+        };
+      }
+      return state;
+    }
+    case 'TARGET_ORDER_ITEM_ENTITY': {
+      const { payload } = action;
+      const { targets } = state;
+      if (payload) {
+        if (targets.includes(`${ORDER_ITEM}-${payload.id}`)) {
+          return {
+            ...state,
+            connectOrder: {
+              ...state.connectOrder,
+              exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
+                ? state.connectOrder.exporterIds
+                : [...state.connectOrder.exporterIds, payload.exporterId],
+            },
             targets: (targets.filter(
-              item => item !== `${payload.entity}-${payload.id}`
+              item => item !== `${ORDER_ITEM}-${payload.id}`
             ): Array<string>),
           };
         }
         return {
           ...state,
-          targets: [...targets, `${payload.entity}-${payload.id}`],
+          connectOrder: {
+            ...state.connectOrder,
+            exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
+              ? state.connectOrder.exporterIds
+              : [...state.connectOrder.exporterIds, payload.exporterId],
+          },
+          targets: [...targets, `${ORDER_ITEM}-${payload.id}`],
+        };
+      }
+      return state;
+    }
+    case 'TARGET_ORDER_ENTITY': {
+      const { payload } = action;
+      const { targets } = state;
+      if (payload) {
+        if (targets.includes(`${ORDER}-${payload.id}`)) {
+          return {
+            ...state,
+            connectOrder: {
+              ...state.connectOrder,
+              exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
+                ? state.connectOrder.exporterIds
+                : [...state.connectOrder.exporterIds, payload.exporterId],
+            },
+            targets: (targets.filter(item => item !== `${ORDER}-${payload.id}`): Array<string>),
+          };
+        }
+        return {
+          ...state,
+          connectOrder: {
+            ...state.connectOrder,
+            exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
+              ? state.connectOrder.exporterIds
+              : [...state.connectOrder.exporterIds, payload.exporterId],
+          },
+          targets: [...targets, `${ORDER}-${payload.id}`],
         };
       }
       return state;
@@ -477,11 +535,10 @@ export function actionCreators(dispatch: Function) {
           selectItems,
         },
       }),
-    targetEntity: (entity: string, id: string) =>
+    targetShipmentEntity: (id: string) =>
       dispatch({
-        type: 'TARGET_ENTITY',
+        type: 'TARGET_SHIPMENT_ENTITY',
         payload: {
-          entity,
           id,
         },
       }),

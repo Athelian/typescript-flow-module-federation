@@ -53,7 +53,7 @@ export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Pr
                     icon="CHECKED"
                     targeted={targeted}
                     toggle={toggle}
-                    onClick={() => actions.targetEntity('SHIPMENT', id)}
+                    onClick={() => actions.targetShipmentEntity(id)}
                   />
                 </>
               )}
