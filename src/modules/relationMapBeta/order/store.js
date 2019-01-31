@@ -568,6 +568,16 @@ const isAllowToConnectOrder = ({ state, orderItems }: { state: UIState, orderIte
 
   const matchingBatchIds = [];
   const exporterIds = [];
+
+  (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
+    if (
+      intersection(batchIds, orderItem.batches).length > 0 &&
+      !orderItemIds.includes(orderItemId)
+    ) {
+      orderItemIds.push(orderItemId);
+    }
+  });
+
   orderItemIds.forEach(orderItemId => {
     const orderItem = orderItems[orderItemId];
     if (orderItem) {
@@ -582,7 +592,6 @@ const isAllowToConnectOrder = ({ state, orderItems }: { state: UIState, orderIte
       }
     }
   });
-
   return (
     exporterIds.length === 1 && intersection(batchIds, matchingBatchIds).length === batchIds.length
   );
