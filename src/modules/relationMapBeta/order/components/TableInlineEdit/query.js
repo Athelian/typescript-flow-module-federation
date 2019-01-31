@@ -1,5 +1,15 @@
 // @flow
 import gql from 'graphql-tag';
+import {
+  timelineDateMinimalFragment,
+  tagFragment,
+  portFragment,
+  userAvatarFragment,
+  metricFragment,
+  partnerNameFragment,
+  priceFragment,
+  sizeFragment,
+} from 'graphql';
 
 export const ordersByIDsExportQuery = gql`
   query ordersByIDsExport($ids: [ID!]!, $templateId: ID!, $fields: [String!]) {
@@ -18,27 +28,16 @@ const orderTableFragment = gql`
     piNo
     issuedAt
     exporter {
-      ... on Group {
-        id
-        name
-      }
+      ...partnerNameFragment
     }
     currency
     incoterm
     deliveryPlace
     inCharges {
-      ... on User {
-        id
-        firstName
-        lastName
-      }
+      ...userAvatarFragment
     }
     tags {
-      ... on Tag {
-        id
-        name
-        color
-      }
+      ...tagFragment
     }
     orderItems {
       ...orderItemTableFragmemt
@@ -53,10 +52,7 @@ const orderItemTableFragmemt = gql`
     id
     quantity
     price {
-      ... on Price {
-        amount
-        currency
-      }
+      ...priceFragment
     }
     productProvider {
       ... on ProductProvider {
@@ -69,16 +65,10 @@ const orderItemTableFragmemt = gql`
           }
         }
         exporter {
-          ... on Group {
-            id
-            name
-          }
+          ...partnerNameFragment
         }
         supplier {
-          ... on Group {
-            id
-            name
-          }
+          ...partnerNameFragment
         }
       }
     }
@@ -98,47 +88,18 @@ const batchTableFragment = gql`
     producedAt
     totalAdjusted
     tags {
-      ... on Tag {
-        id
-        name
-        color
-      }
+      ...tagFragment
     }
     packageName
     packageQuantity
     packageGrossWeight {
-      ... on MetricValue {
-        value
-        metric
-      }
+      ...metricFragment
     }
     packageVolume {
-      ... on MetricValue {
-        value
-        metric
-      }
+      ...metricFragment
     }
     packageSize {
-      ... on Size {
-        length {
-          ... on MetricValue {
-            value
-            metric
-          }
-        }
-        width {
-          ... on MetricValue {
-            value
-            metric
-          }
-        }
-        height {
-          ... on MetricValue {
-            value
-            metric
-          }
-        }
-      }
+      ...sizeFragment
     }
   }
 `;
@@ -150,10 +111,7 @@ const shipmentTableFramgent = gql`
     blNo
     transportType
     totalVolume {
-      ... on MetricValue {
-        metric
-        value
-      }
+      ...metricFragment
     }
     bookingNo
     bookingDate
@@ -163,78 +121,31 @@ const shipmentTableFramgent = gql`
     carrier
 
     forwarders {
-      ... on Group {
-        id
-        name
-      }
+      ...partnerNameFragment
     }
     inCharges {
-      ... on User {
-        id
-        firstName
-        lastName
-      }
+      ...userAvatarFragment
     }
     tags {
-      ... on Tag {
-        id
-        name
-        color
-      }
+      ...tagFragment
     }
     cargoReady {
-      ... on TimelineDate {
-        id
-        date
-        approvedAt
-        timelineDateRevisions {
-          ... on TimelineDateRevision {
-            id
-            date
-          }
-        }
-      }
+      ...timelineDateMinimalFragment
     }
     voyages {
       ... on Voyage {
         id
         departurePort {
-          ... on Port {
-            seaport
-            airport
-          }
+          ...portFragment
         }
         arrivalPort {
-          ... on Port {
-            seaport
-            airport
-          }
+          ...portFragment
         }
         departure {
-          ... on TimelineDate {
-            id
-            date
-            approvedAt
-            timelineDateRevisions {
-              ... on TimelineDateRevision {
-                id
-                date
-              }
-            }
-          }
+          ...timelineDateMinimalFragment
         }
         arrival {
-          ... on TimelineDate {
-            id
-            date
-            approvedAt
-            timelineDateRevisions {
-              ... on TimelineDateRevision {
-                id
-                date
-              }
-            }
-          }
+          ...timelineDateMinimalFragment
         }
       }
     }
@@ -242,43 +153,13 @@ const shipmentTableFramgent = gql`
       ... on ContainerGroup {
         id
         customClearance {
-          ... on TimelineDate {
-            id
-            date
-            approvedAt
-            timelineDateRevisions {
-              ... on TimelineDateRevision {
-                id
-                date
-              }
-            }
-          }
+          ...timelineDateMinimalFragment
         }
         warehouseArrival {
-          ... on TimelineDate {
-            id
-            date
-            approvedAt
-            timelineDateRevisions {
-              ... on TimelineDateRevision {
-                id
-                date
-              }
-            }
-          }
+          ...timelineDateMinimalFragment
         }
         deliveryReady {
-          ... on TimelineDate {
-            id
-            date
-            approvedAt
-            timelineDateRevisions {
-              ... on TimelineDateRevision {
-                id
-                date
-              }
-            }
-          }
+          ...timelineDateMinimalFragment
         }
         warehouse {
           ... on Warehouse {
@@ -304,6 +185,14 @@ export const orderListQuery = gql`
   ${orderItemTableFragmemt}
   ${batchTableFragment}
   ${shipmentTableFramgent}
+  ${timelineDateMinimalFragment}
+  ${tagFragment}
+  ${portFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${partnerNameFragment}
+  ${priceFragment}
+  ${sizeFragment}
 `;
 
 export default ordersByIDsExportQuery;
