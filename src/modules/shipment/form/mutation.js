@@ -25,8 +25,10 @@ import {
   badRequestFragment,
 } from 'graphql';
 import { isNullOrUndefined } from 'utils/fp';
+import { formatToDateTimeGraphql } from 'utils/date';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
+import { getBatchesInPool } from 'modules/shipment/helpers';
 import { cleanUpData } from 'utils/data';
 import { isEnableBetaFeature } from 'utils/env';
 import type {
@@ -112,8 +114,12 @@ const prepareContainer = ({
     ...rest,
     ...(!isNew ? { id } : {}),
     warehouseId: isNullOrUndefined(warehouse) ? null : warehouse.id,
-    warehouseArrivalAgreedDate,
-    warehouseArrivalActualDate,
+    ...(isNullOrUndefined(warehouseArrivalAgreedDate)
+      ? {}
+      : { warehouseArrivalAgreedDate: formatToDateTimeGraphql(warehouseArrivalAgreedDate) }),
+    ...(isNullOrUndefined(warehouseArrivalActualDate)
+      ? {}
+      : { warehouseArrivalAgreedDate: formatToDateTimeGraphql(warehouseArrivalActualDate) }),
     warehouseArrivalAgreedDateApprovedById: isNullOrUndefined(warehouseArrivalAgreedDateApprovedBy)
       ? null
       : warehouseArrivalAgreedDateApprovedBy.id,
@@ -214,7 +220,9 @@ export const prepareCreateShipmentInput = ({
   forwarderIds: forwarders.map(({ id }) => id),
   inChargeIds: inCharges.map(({ id }) => id),
   voyages: formatVoyages(voyages),
-  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+  batches: getBatchesInPool(batches).map(batch =>
+    prepareUpdateBatchInput(cleanUpData(batch), true, false)
+  ),
   containers: containers.map(container => prepareContainer(cleanUpData(container))),
   containerGroups: formatContainerGroups(containerGroups),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({
@@ -327,7 +335,9 @@ export const prepareUpdateShipmentInput = ({
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
   inChargeIds: inCharges.map(({ id }) => id),
-  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+  batches: getBatchesInPool(batches).map(batch =>
+    prepareUpdateBatchInput(cleanUpData(batch), true, false)
+  ),
   containers: containers.map(container => prepareContainer(cleanUpData(container))),
   voyages: formatVoyages(voyages),
   containerGroups: formatContainerGroups(containerGroups),
