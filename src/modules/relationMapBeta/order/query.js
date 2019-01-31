@@ -19,11 +19,6 @@ export const batchCardRMFragment = gql`
     packageVolume {
       ...metricFragment
     }
-    orderItem {
-      ... on OrderItem {
-        id
-      }
-    }
   }
 `;
 
@@ -64,11 +59,6 @@ export const orderCardRMFragment = gql`
         }
         batches {
           ...batchCardRMFragment
-        }
-        order {
-          ... on Order {
-            id
-          }
         }
       }
     }

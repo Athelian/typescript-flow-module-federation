@@ -38,51 +38,103 @@ export const findAllPossibleIds = (targets: Object, entities: Object) => {
     BATCH: batchIds,
     SHIPMENT: shipmentIds,
   } = selected;
-  orderIds.forEach(orderId => {
-    const order = entities.orders[orderId];
-    if (order && order.orderItems) {
-      selected.ORDER_ITEM.push(...order.orderItems);
+  (Object.values(entities.orders): any).forEach(order => {
+    if (orderIds.includes(order.id)) {
+      orderItemIds.push(...order.orderItems);
       order.orderItems.forEach(orderItemId => {
         const orderItem = entities.orderItems[orderItemId];
         if (orderItem && orderItem.batches) {
-          selected.BATCH.push(...orderItem.batches);
+          batchIds.push(...orderItem.batches);
         }
       });
+      return;
     }
-  });
-  orderItemIds.forEach(orderItemId => {
-    const orderItem = entities.orderItems[orderItemId];
-    if (orderItem && orderItem.order) {
-      selected.ORDER.push(orderItem.order);
-    }
-    if (orderItem && orderItem.batches) {
-      selected.BATCH.push(...orderItem.batches);
-    }
-  });
-  batchIds.forEach(batchId => {
-    const batch = entities.batches[batchId];
-    const orderItem = entities.orderItems[batch.orderItem];
-    if (batch.orderItem) {
-      selected.ORDER_ITEM.push(batch.orderItem);
-    }
-    if (orderItem && orderItem.order) {
-      selected.ORDER.push(orderItem.order);
-    }
-  });
-  shipmentIds.forEach(shipmentId => {
-    const shipment = entities.shipments[shipmentId];
-    selected.BATCH.push(...shipment.batches);
-    shipment.batches.forEach(batchId => {
-      const batch = entities.batches[batchId];
-      const orderItem = entities.orderItems[batch.orderItem];
-      if (batch.orderItem) {
-        selected.ORDER_ITEM.push(batch.orderItem);
+    order.shipments.forEach(shipmentId => {
+      const shipment = entities.shipments[shipmentId];
+      // shipmentIds.push(shipment.id)
+      if (shipmentIds.includes(shipmentId) && shipment.batches) {
+        orderIds.push(order.id);
+        order.orderItems.forEach(orderItemId => {
+          const orderItem = entities.orderItems[orderItemId] || {};
+          if (orderItem && orderItem.batches) {
+            orderItem.batches.forEach(batchId => {
+              if (shipment.batches.includes(batchId)) {
+                batchIds.push(batchId);
+              }
+            });
+          }
+        });
+        // batchIds.push(...shipment.batches)
       }
-      if (orderItem && orderItem.order) {
-        selected.ORDER.push(orderItem.order);
+    });
+
+    order.orderItems.forEach(orderItemId => {
+      const orderItem = entities.orderItems[orderItemId];
+      if (orderItemIds.includes(orderItemId)) {
+        orderIds.push(order.id);
+        if (orderItem && orderItem.batches) {
+          batchIds.push(...orderItem.batches);
+        }
+      } else {
+        orderItem.batches.forEach(batchId => {
+          if (batchIds.includes(batchId)) {
+            // console.log(!orderIds.includes(order.id), batchId)
+            if (!orderItemIds.includes(orderItemId)) {
+              orderItemIds.push(orderItemId);
+            }
+            if (!orderIds.includes(order.id)) {
+              orderIds.push(order.id);
+            }
+          }
+        });
       }
     });
   });
+  // orderIds.forEach(orderId => {
+  //   const order = entities.orders[orderId];
+  //   if (order && order.orderItems) {
+  //     selected.ORDER_ITEM.push(...order.orderItems);
+  //     order.orderItems.forEach(orderItemId => {
+  //       const orderItem = entities.orderItems[orderItemId];
+  //       if (orderItem && orderItem.batches) {
+  //         selected.BATCH.push(...orderItem.batches);
+  //       }
+  //     });
+  //   }
+  // });
+  // orderItemIds.forEach(orderItemId => {
+  //   const orderItem = entities.orderItems[orderItemId];
+  //   if (orderItem && orderItem.order) {
+  //     selected.ORDER.push(orderItem.order);
+  //   }
+  //   if (orderItem && orderItem.batches) {
+  //     selected.BATCH.push(...orderItem.batches);
+  //   }
+  // });
+  // batchIds.forEach(batchId => {
+  //   const batch = entities.batches[batchId];
+  //   const orderItem = entities.orderItems[batch.orderItem];
+  //   if (batch.orderItem) {
+  //     selected.ORDER_ITEM.push(batch.orderItem);
+  //   }
+  //   if (orderItem && orderItem.order) {
+  //     selected.ORDER.push(orderItem.order);
+  //   }
+  // });
+  // shipmentIds.forEach(shipmentId => {
+  //   const shipment = entities.shipments[shipmentId];
+  //   selected.BATCH.push(...shipment.batches);
+  //   shipment.batches.forEach(batchId => {
+  //     const batch = entities.batches[batchId];
+  //     const orderItem = entities.orderItems[batch.orderItem];
+  //     if (batch.orderItem) {
+  //       selected.ORDER_ITEM.push(batch.orderItem);
+  //     }
+  //     if (orderItem && orderItem.order) {
+  //       selected.ORDER.push(orderItem.order);
+  //     }
+  //   });
+  // });
 
   return {
     orderIds: [...new Set(selected.ORDER)],

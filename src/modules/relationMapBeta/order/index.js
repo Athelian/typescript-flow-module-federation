@@ -70,6 +70,10 @@ const Order = ({ intl }: Props) => {
           if (error) {
             return error.message;
           }
+          if (loading) {
+            return <LoadingIcon />;
+          }
+          console.log('loading', loading, data);
           const {
             entities: { orders, orderItems, batches, shipments },
           } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });

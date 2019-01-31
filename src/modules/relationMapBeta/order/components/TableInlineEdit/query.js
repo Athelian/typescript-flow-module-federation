@@ -40,6 +40,162 @@ export const orderListQuery = gql`
             ... on Tag {
               id
               name
+              color
+            }
+          }
+          shipments {
+            ... on Shipment {
+              id
+              batches {
+                ... on Batch {
+                  id
+                }
+              }
+            }
+            ... on Shipment {
+              id
+              no
+              blNo
+              transportType
+              totalVolume {
+                ... on MetricValue {
+                  metric
+                  value
+                }
+              }
+              bookingNo
+              bookingDate
+              invoiceNo
+              loadType
+              incoterm
+              carrier
+
+              forwarders {
+                ... on Group {
+                  id
+                  name
+                }
+              }
+              inCharges {
+                ... on User {
+                  id
+                  firstName
+                  lastName
+                }
+              }
+              tags {
+                ... on Tag {
+                  id
+                  name
+                  color
+                }
+              }
+              cargoReady {
+                ... on TimelineDate {
+                  id
+                  date
+                  approvedAt
+                  timelineDateRevisions {
+                    ... on TimelineDateRevision {
+                      id
+                      date
+                    }
+                  }
+                }
+              }
+              voyages {
+                ... on Voyage {
+                  id
+                  departurePort {
+                    ... on Port {
+                      seaport
+                      airport
+                    }
+                  }
+                  arrivalPort {
+                    ... on Port {
+                      seaport
+                      airport
+                    }
+                  }
+                  departure {
+                    ... on TimelineDate {
+                      id
+                      date
+                      approvedAt
+                      timelineDateRevisions {
+                        ... on TimelineDateRevision {
+                          id
+                          date
+                        }
+                      }
+                    }
+                  }
+                  arrival {
+                    ... on TimelineDate {
+                      id
+                      date
+                      approvedAt
+                      timelineDateRevisions {
+                        ... on TimelineDateRevision {
+                          id
+                          date
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              containerGroups {
+                ... on ContainerGroup {
+                  id
+                  customClearance {
+                    ... on TimelineDate {
+                      id
+                      date
+                      approvedAt
+                      timelineDateRevisions {
+                        ... on TimelineDateRevision {
+                          id
+                          date
+                        }
+                      }
+                    }
+                  }
+                  warehouseArrival {
+                    ... on TimelineDate {
+                      id
+                      date
+                      approvedAt
+                      timelineDateRevisions {
+                        ... on TimelineDateRevision {
+                          id
+                          date
+                        }
+                      }
+                    }
+                  }
+                  deliveryReady {
+                    ... on TimelineDate {
+                      id
+                      date
+                      approvedAt
+                      timelineDateRevisions {
+                        ... on TimelineDateRevision {
+                          id
+                          date
+                        }
+                      }
+                    }
+                  }
+                  warehouse {
+                    ... on Warehouse {
+                      id
+                      name
+                    }
+                  }
+                }
+              }
             }
           }
           orderItems {
@@ -58,6 +214,7 @@ export const orderListQuery = gql`
                   product {
                     ... on Product {
                       id
+                      name
                       serial
                     }
                   }
@@ -83,10 +240,12 @@ export const orderListQuery = gql`
                   deliveredAt
                   expiredAt
                   producedAt
+                  totalAdjusted
                   tags {
                     ... on Tag {
                       id
                       name
+                      color
                     }
                   }
                   packageName
@@ -121,127 +280,6 @@ export const orderListQuery = gql`
                         ... on MetricValue {
                           value
                           metric
-                        }
-                      }
-                    }
-                  }
-                  shipment {
-                    ... on Shipment {
-                      id
-                      no
-                      blNo
-                      blDate
-                      bookingNo
-                      bookingDate
-                      invoiceNo
-                      transportType
-                      loadType
-                      incoterm
-                      carrier
-                      forwarders {
-                        ... on Group {
-                          id
-                          name
-                        }
-                      }
-                      inCharges {
-                        ... on User {
-                          id
-                          firstName
-                          lastName
-                        }
-                      }
-                      tags {
-                        ... on Tag {
-                          id
-                          name
-                        }
-                      }
-                      cargoReady {
-                        ... on TimelineDate {
-                          id
-                          date
-                          timelineDateRevisions {
-                            ... on TimelineDateRevision {
-                              id
-                              date
-                              type
-                            }
-                          }
-                        }
-                      }
-                      voyages {
-                        ... on Voyage {
-                          id
-                          departure {
-                            ... on TimelineDate {
-                              id
-                              date
-                              timelineDateRevisions {
-                                ... on TimelineDateRevision {
-                                  id
-                                  date
-                                  type
-                                }
-                              }
-                            }
-                          }
-                          arrival {
-                            ... on TimelineDate {
-                              id
-                              date
-                              timelineDateRevisions {
-                                ... on TimelineDateRevision {
-                                  id
-                                  date
-                                  type
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                      containerGroups {
-                        ... on ContainerGroup {
-                          customClearance {
-                            ... on TimelineDate {
-                              id
-                              date
-                              timelineDateRevisions {
-                                ... on TimelineDateRevision {
-                                  id
-                                  date
-                                  type
-                                }
-                              }
-                            }
-                          }
-                          warehouseArrival {
-                            ... on TimelineDate {
-                              id
-                              date
-                              timelineDateRevisions {
-                                ... on TimelineDateRevision {
-                                  id
-                                  date
-                                  type
-                                }
-                              }
-                            }
-                          }
-                          deliveryReady {
-                            ... on TimelineDate {
-                              id
-                              date
-                              timelineDateRevisions {
-                                ... on TimelineDateRevision {
-                                  id
-                                  date
-                                  type
-                                }
-                              }
-                            }
-                          }
                         }
                       }
                     }
