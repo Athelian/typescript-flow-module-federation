@@ -259,6 +259,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                                 },
                               } = orderItem;
                               return injectUid({
+                                isNew: true,
                                 orderItem,
                                 tags: [],
                                 packageName,
@@ -267,7 +268,6 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                                 packageVolume,
                                 packageSize,
                                 quantity: 0,
-                                isNew: true,
                                 batchAdjustments: [],
                                 no: `batch no ${batches.length + counter + 1}`,
                                 autoCalculatePackageQuantity: true,
