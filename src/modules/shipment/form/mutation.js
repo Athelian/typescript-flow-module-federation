@@ -24,6 +24,7 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
 } from 'graphql';
+import { isNullOrUndefined } from 'utils/fp';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
@@ -241,6 +242,45 @@ export const updateShipmentMutation: Object = isEnableBetaFeature
       ${fieldDefinitionFragment}
     `;
 
+const prepareContainerInput = ({
+  id,
+  representativeBatch,
+  batches = [],
+  warehouse,
+  warehouseArrivalAgreedDate,
+  warehouseArrivalActualDate,
+  warehouseArrivalAgreedDateApprovedBy,
+  warehouseArrivalActualDateApprovedBy,
+  warehouseArrivalAgreedDateAssignedTo = [],
+  warehouseArrivalActualDateAssignedTo = [],
+  tags = [],
+  totalVolume,
+  ...rest
+}: Object) => {
+  return {
+    ...rest,
+    id,
+    warehouseId: isNullOrUndefined(warehouse) ? null : warehouse.id,
+    warehouseArrivalAgreedDate,
+    warehouseArrivalActualDate,
+    warehouseArrivalAgreedDateApprovedById: isNullOrUndefined(warehouseArrivalAgreedDateApprovedBy)
+      ? null
+      : warehouseArrivalAgreedDateApprovedBy.id,
+    warehouseArrivalActualDateApprovedById: isNullOrUndefined(warehouseArrivalActualDateApprovedBy)
+      ? null
+      : warehouseArrivalActualDateApprovedBy.id,
+    representativeBatchId: isNullOrUndefined(representativeBatch) ? null : representativeBatch.id,
+    batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+    warehouseArrivalAgreedDateAssignedToIds: warehouseArrivalAgreedDateAssignedTo.map(
+      ({ id: userId }) => userId
+    ),
+    warehouseArrivalActualDateAssignedToIds: warehouseArrivalActualDateAssignedTo.map(
+      ({ id: userId }) => userId
+    ),
+    tagIds: tags.map(({ id: tagId }) => tagId),
+  };
+};
+
 export const prepareUpdateShipmentInput = ({
   no,
   blNo,
@@ -262,6 +302,7 @@ export const prepareUpdateShipmentInput = ({
   forwarders = [],
   inCharges = [],
   files = [],
+  containers = [],
 }: Object): ShipmentUpdate => ({
   no,
   blNo,
@@ -280,6 +321,7 @@ export const prepareUpdateShipmentInput = ({
   forwarderIds: forwarders.map(({ id }) => id),
   inChargeIds: inCharges.map(({ id }) => id),
   batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+  containers: containers.map(container => prepareContainerInput(cleanUpData(container))),
   voyages: formatVoyages(voyages),
   containerGroups: formatContainerGroups(containerGroups),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({

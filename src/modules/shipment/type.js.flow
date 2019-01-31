@@ -86,4 +86,5 @@ export type ShipmentUpdate = {
   batches?: Array<Object>,
   voyages?: Array<ShipmentVoyage>,
   containerGroups?: Array<ShipmentGroups>,
+  container?: Object,
 };

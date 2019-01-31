@@ -131,6 +131,7 @@ export const prepareUpdateBatchInput = (
     tags = [],
     batchAdjustments = [],
     archived,
+    container,
     ...rest
   }: Object,
   inShipmentOrBatchForm: boolean = true,
