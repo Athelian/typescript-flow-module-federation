@@ -88,6 +88,7 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                 />
                 <TabItem
                   className={TabItemStyled}
+                  allowClickOnDisable
                   label={
                     <div className={MoveToWrapper}>
                       <FormattedMessage {...messages.moveTo} />
@@ -101,6 +102,7 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                 />
                 <TabItem
                   className={TabItemStyled}
+                  allowClickOnDisable
                   label={
                     <div className={MoveToWrapper}>
                       <FormattedMessage {...messages.moveTo} />
@@ -144,7 +146,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                 />
               )}
               {state.error && (
-                <ErrorPanel onClickCancel={console.warn} onClickRefresh={console.warn} />
+                <ErrorPanel
+                  onClickCancel={() => actions.clearErrorMessage()}
+                  onClickRefresh={() => window.location.reload()}
+                />
               )}
               {activeAction && (
                 <OutsideClickHandler ignoreClick onOutsideClick={() => {}}>

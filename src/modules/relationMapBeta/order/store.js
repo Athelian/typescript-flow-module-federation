@@ -91,6 +91,12 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
   switch (action.type) {
     case 'RESET':
       return uiInitState;
+    case 'CLEAR_ERROR_MESSAGE':
+      return {
+        ...state,
+        loading: false,
+        error: false,
+      };
     case 'SPLIT_BATCH':
     case 'AUTO_FILL_BATCHES':
     case 'CLONE_ENTITIES':
@@ -378,6 +384,11 @@ export function actionCreators(dispatch: Function) {
         payload: {
           mode,
         },
+      }),
+    clearErrorMessage: () =>
+      dispatch({
+        type: 'CLEAR_ERROR_MESSAGE',
+        payload: {},
       }),
     toggleTag: () =>
       dispatch({

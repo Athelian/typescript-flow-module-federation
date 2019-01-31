@@ -293,7 +293,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                             (state.highlight.type === ORDER &&
                               state.highlight.selectedId === item.id) ||
                             (uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
-                              item.orderItems.findIndex(currentOrderItem =>
+                              findLastIndex(item.orderItems, currentOrderItem =>
                                 uiSelectors.isSelectEntity(
                                   highLightEntities,
                                   ORDER_ITEM,
