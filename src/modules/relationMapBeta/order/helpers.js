@@ -37,7 +37,7 @@ export function findHighLightEntities(
     case SHIPMENT: {
       const { shipments, orders, orderItems } = entities;
       highLightIds.push(`${SHIPMENT}-${highlight.selectedId}`);
-      const { batches = [] } = shipments[highlight.selectedId];
+      const { batches = [] } = shipments[highlight.selectedId] || {};
       batches.forEach(id => {
         highLightIds.push(`${BATCH}-${id}`);
         const [orderItemId] =

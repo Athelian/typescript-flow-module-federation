@@ -1,6 +1,7 @@
 // @flow
+import { intersection } from 'lodash';
 import logger from 'utils/logger';
-import { SHIPMENT, BATCH, ORDER_ITEM } from 'modules/relationMap/constants';
+import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMap/constants';
 import { getByPathWithDefault } from 'utils/fp';
 
 export type UIState = {
@@ -538,8 +539,68 @@ const entitySelector = ({
   state.select.entities.includes(entity) &&
   total === state.targets.filter(item => item.includes(`${entity}-`)).length;
 
+const targetedOrderItemIds = (state: UIState) => {
+  const orderItems = state.targets.filter(item => item.includes(`${ORDER_ITEM}-`));
+  return (orderItems.map(orderItem => {
+    const [, orderItemId] = orderItem.split('-');
+    return orderItemId;
+  }): Array<string>);
+};
+
+function targetedBatchIds(state: UIState) {
+  const batches = state.targets.filter(item => item.includes(`${BATCH}-`));
+  return (batches.map(orderItem => {
+    const [, batchId] = orderItem.split('-');
+    return batchId;
+  }): Array<string>);
+}
+
+const isAllowToConnectOrder = ({ state, orderItems }: { state: UIState, orderItems: Object }) => {
+  if (
+    state.targets.filter(item => item.includes(`${ORDER}-`)).length > 0 ||
+    state.targets.filter(item => item.includes(`${SHIPMENT}-`)).length > 0
+  )
+    return false;
+
+  const batchIds = targetedBatchIds(state);
+
+  const orderItemIds = targetedOrderItemIds(state);
+
+  const matchingBatchIds = [];
+  const exporterIds = [];
+
+  (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
+    if (
+      intersection(batchIds, orderItem.batches).length > 0 &&
+      !orderItemIds.includes(orderItemId)
+    ) {
+      orderItemIds.push(orderItemId);
+    }
+  });
+
+  orderItemIds.forEach(orderItemId => {
+    const orderItem = orderItems[orderItemId];
+    if (orderItem) {
+      matchingBatchIds.push(...orderItem.batches);
+      const {
+        productProvider: {
+          exporter: { id },
+        },
+      } = orderItem;
+      if (!exporterIds.includes(id)) {
+        exporterIds.push(id);
+      }
+    }
+  });
+  return (
+    exporterIds.length === 1 && intersection(batchIds, matchingBatchIds).length === batchIds.length
+  );
+};
+
 export function selectors(state: UIState) {
   return {
+    isAllowToConnectOrder: (orderItems: Object) => isAllowToConnectOrder({ orderItems, state }),
+    isAllowToConnectShipment: () => false,
     isAllowToSplitBatch: () =>
       state.targets.length === 1 &&
       state.targets.filter(item => item.includes(`${BATCH}-`)).length === 1,
@@ -564,19 +625,7 @@ export function selectors(state: UIState) {
       }
       return '';
     },
-    targetedOrderItemIds: () => {
-      const orderItems = state.targets.filter(item => item.includes(`${ORDER_ITEM}-`));
-      return (orderItems.map(orderItem => {
-        const [, orderItemId] = orderItem.split('-');
-        return orderItemId;
-      }): Array<string>);
-    },
-    targetedBatchIds: () => {
-      const batches = state.targets.filter(item => item.includes(`${BATCH}-`));
-      return (batches.map(orderItem => {
-        const [, batchId] = orderItem.split('-');
-        return batchId;
-      }): Array<string>);
-    },
+    targetedOrderItemIds: () => targetedOrderItemIds(state),
+    targetedBatchIds: () => targetedBatchIds(state),
   };
 }
