@@ -114,6 +114,16 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           enableSelectMode: !!getByPathWithDefault(false, 'payload.isEnable', action),
         },
       };
+    case 'TOGGLE_SELECTED_ORDER': {
+      const orderId = getByPathWithDefault('', 'payload.id', action);
+      return {
+        ...state,
+        connectOrder: {
+          ...state.connectOrder,
+          orderId: orderId === state.connectOrder.orderId ? '' : orderId,
+        },
+      };
+    }
     case 'SPLIT_BATCH':
     case 'AUTO_FILL_BATCHES':
     case 'CLONE_ENTITIES':
@@ -667,6 +677,13 @@ export function actionCreators(dispatch: Function) {
           isEnable,
         },
       }),
+    toggleSelectedOrder: (id: string) =>
+      dispatch({
+        type: 'TOGGLE_SELECTED_ORDER',
+        payload: {
+          id,
+        },
+      }),
   };
 }
 
@@ -730,34 +747,16 @@ const isAllowToConnectOrder = (state: UIState) => {
   return exporterId !== '' && (batchIds.length || orderItemIds.length);
 };
 
-const isAllowToSelectOrder = ({
-  orderId,
-  exporterId,
-  state,
-}: {
-  orderId: string,
-  exporterId: string,
-  state: UIState,
-}) => {
-  return (
-    state.connectOrder.enableSelectMode &&
-    state.connectOrder.exporterIds.includes(exporterId) &&
-    state.connectOrder.orderId !== orderId
-  );
+const isAllowToSelectOrder = ({ exporterId, state }: { exporterId: string, state: UIState }) => {
+  return currentExporterId(state) === exporterId;
 };
 
 export function selectors(state: UIState) {
   return {
     isAllowToConnectOrder: () => isAllowToConnectOrder(state),
-    isAllowToSelectOrder: ({
-      orderId,
-      exporterId,
-      orderItems,
-    }: {
-      orderItems: Object,
-      orderId: string,
-      exporterId: string,
-    }) => isAllowToSelectOrder({ orderId, exporterId, orderItems, state }),
+    isShowConnectOrder: () => state.connectOrder.enableSelectMode && state.targets.length > 0,
+    isSelectedOrder: () => state.connectOrder.enableSelectMode && state.connectOrder.orderId !== '',
+    isAllowToSelectOrder: (exporterId: string) => isAllowToSelectOrder({ exporterId, state }),
     isAllowToConnectShipment: () => false,
     isAllowToSplitBatch: () =>
       state.targets.length === 1 &&
@@ -785,5 +784,7 @@ export function selectors(state: UIState) {
     },
     targetedOrderItemIds: () => targetedOrderItemIds(state),
     targetedBatchIds: () => targetedBatchIds(state),
+    currentExporterId: () => currentExporterId(state),
+    selectedConnectOrder: (id: string) => state.connectOrder.orderId === id,
   };
 }

@@ -5,14 +5,14 @@ import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import BaseCard from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
-import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
+import ActionCard, { Action, DisabledAction } from 'modules/relationMap/common/ActionCard';
 import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
 import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
+import SelectedOrder from './SelectedOrder';
 
 type OptionalProps = {
   wrapperClassName?: string,
-  orderItemsCollection?: Object,
 };
 
 type Props = OptionalProps & OrderProps;
@@ -27,7 +27,6 @@ export default function Order({
   id,
   orderItems,
   exporter,
-  orderItemsCollection,
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const { dispatch, state } = context;
@@ -46,14 +45,26 @@ export default function Order({
                 shippedQuantity: totalShipped,
               }}
             />
-            {uiSelectors.isAllowToSelectOrder({
-              orderId: id,
-              exporterId: exporter.id,
-              orderItems: orderItemsCollection,
-            }) ? (
-              <ActionCard show={hovered}>
-                {() => <Action icon="CHECKED" onClick={console.warn} />}
-              </ActionCard>
+            {uiSelectors.isShowConnectOrder() ? (
+              (() => {
+                if (!uiSelectors.isAllowToSelectOrder(exporter.id)) {
+                  return <ActionCard show>{() => <DisabledAction />}</ActionCard>;
+                }
+                if (uiSelectors.selectedConnectOrder(id)) {
+                  return (
+                    <ActionCard show>
+                      {() => <SelectedOrder onClick={() => actions.toggleSelectedOrder(id)} />}
+                    </ActionCard>
+                  );
+                }
+                return (
+                  <ActionCard show={hovered}>
+                    {() => (
+                      <Action icon="CHECKED" onClick={() => actions.toggleSelectedOrder(id)} />
+                    )}
+                  </ActionCard>
+                );
+              })()
             ) : (
               <ActionCard show={hovered}>
                 {({ targeted, toggle }) => (

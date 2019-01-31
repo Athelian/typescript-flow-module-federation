@@ -281,9 +281,9 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                 <MoveToOrderPanel
                   onMoveToNewOrder={console.warn}
                   onMoveToExistOrder={console.warn}
-                  onClearSelectOrder={console.warn}
+                  onClearSelectOrder={() => actions.toggleSelectedOrder('')}
                   onDelete={console.warn}
-                  hasSelectedOrder={false}
+                  hasSelectedOrder={uiSelectors.isSelectedOrder()}
                 />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
