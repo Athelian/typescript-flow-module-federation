@@ -619,12 +619,10 @@ const isAllowToConnectOrder = ({ state, orderItems }: { state: UIState, orderIte
     if (orderItem) {
       matchingBatchIds.push(...orderItem.batches);
       const {
-        productProvider: {
-          exporter: { id },
-        },
+        productProvider: { exporter },
       } = orderItem;
-      if (!exporterIds.includes(id)) {
-        exporterIds.push(id);
+      if (!exporterIds.includes(exporter)) {
+        exporterIds.push(exporter);
       }
     }
   });

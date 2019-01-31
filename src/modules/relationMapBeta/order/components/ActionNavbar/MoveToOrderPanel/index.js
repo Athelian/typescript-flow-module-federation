@@ -17,6 +17,7 @@ type Props = {
   onMoveToNewOrder: Function,
   onMoveToExistOrder: Function,
   onClearSelectOrder: Function,
+  onDelete: Function,
   hasSelectedOrder: boolean,
 };
 
@@ -24,6 +25,7 @@ const MoveToOrderPanel = ({
   hasSelectedOrder,
   onMoveToNewOrder,
   onMoveToExistOrder,
+  onDelete,
   onClearSelectOrder,
 }: Props) => (
   <MoveToOrderPanelWrapper>
@@ -71,7 +73,10 @@ const MoveToOrderPanel = ({
                 onCancel={() => dialogToggle(false)}
                 isOpen={isOpen}
                 message={<DeleteConfirmDialog />}
-                onConfirm={console.warn}
+                onConfirm={() => {
+                  dialogToggle(false);
+                  onDelete();
+                }}
               />
             </>
           )}

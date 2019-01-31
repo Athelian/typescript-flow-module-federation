@@ -283,6 +283,7 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                   onMoveToNewOrder={console.warn}
                   onMoveToExistOrder={console.warn}
                   onClearSelectOrder={console.warn}
+                  onDelete={console.warn}
                   hasSelectedOrder={false}
                 />
               )}

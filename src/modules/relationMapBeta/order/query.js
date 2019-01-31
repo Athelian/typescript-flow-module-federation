@@ -33,6 +33,11 @@ export const orderCardRMFragment = gql`
     batchCount
     batchShippedCount
     shipmentCount
+    exporter {
+      ... on Group {
+        id
+      }
+    }
     tags {
       ...tagFragment
     }

@@ -70,10 +70,9 @@ const Order = ({ intl }: Props) => {
           if (error) {
             return error.message;
           }
-          const {
-            entities: { orders, orderItems, batches, shipments },
-          } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
+          const { entities } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
 
+          const { orders, orderItems, batches, shipments } = entities;
           const highLightEntities = findHighLightEntities(state.highlight, {
             orders,
             orderItems,
