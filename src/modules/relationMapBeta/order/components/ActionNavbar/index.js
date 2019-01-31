@@ -28,6 +28,7 @@ import ClonePanel from './ClonePanel';
 import SplitPanel from './SplitPanel';
 import SplitBalancePanel from './SplitBalancePanel';
 import ConstraintPanel from './ConstraintPanel';
+import MoveToOrderPanel from './MoveToOrderPanel';
 import ErrorPanel from './ErrorPanel';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
@@ -261,6 +262,9 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                     }
                   }}
                 />
+              )}
+              {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder(orderItems) && (
+                <MoveToOrderPanel />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
