@@ -35,15 +35,20 @@ import ErrorPanel from './ErrorPanel';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
 import { cloneBatchMutation } from './ClonePanel/mutation';
+import TableView from '../TableInlineEdit';
 
 type Props = {
   highLightEntities: Array<string>,
-  batches: Object,
-  orders: Object,
-  orderItems: Object,
+  entities: {
+    orders: Object,
+    orderItems: Object,
+    batches: Object,
+    shipments: Object,
+  },
 };
 
-export default function ActionNavbar({ highLightEntities, batches, orders, orderItems }: Props) {
+export default function ActionNavbar({ highLightEntities, entities }: Props) {
+  const { orders, orderItems, batches } = entities;
   const [activeAction, setActiveAction] = React.useState('clone');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
@@ -232,12 +237,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                           })
                         )
                       );
-                      const result = cloneBatches.map((item, index) => {
-                        return {
-                          id: batchIds[index],
-                          batch: getByPathWithDefault([], 'data.batchClone', item),
-                        };
-                      });
+                      const result = cloneBatches.map((item, index) => ({
+                        id: batchIds[index],
+                        batch: getByPathWithDefault([], 'data.batchClone', item),
+                      }));
                       actions.cloneEntitiesSuccess(result);
                     } catch (error) {
                       actions.cloneEntitiesFailed(error);
@@ -274,12 +277,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                           })
                         )
                       );
-                      const result = balanceSplitBatches.map((item, index) => {
-                        return {
-                          id: orderItemIds[index],
-                          batches: getByPathWithDefault([], 'data.batchBalanceSplit.batches', item),
-                        };
-                      });
+                      const result = balanceSplitBatches.map((item, index) => ({
+                        id: orderItemIds[index],
+                        batches: getByPathWithDefault([], 'data.batchBalanceSplit.batches', item),
+                      }));
                       actions.autoFillBatchesSuccess(result);
                     } catch (error) {
                       actions.autoFillBatchesFailed(error);
