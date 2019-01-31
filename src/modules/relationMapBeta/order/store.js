@@ -699,6 +699,21 @@ function targetedBatchIds(state: UIState) {
   }): Array<string>);
 }
 
+const currentExporterId = (state: UIState) => {
+  const result = [];
+
+  state.connectOrder.exporterIds.forEach(item => {
+    const [, exporterId] = item.split('-');
+    if (!result.includes(exporterId)) {
+      result.push(exporterId);
+    }
+  });
+
+  if (result.length === 1) return result[0];
+
+  return '';
+};
+
 const isAllowToConnectOrder = (state: UIState) => {
   if (
     state.targets.filter(item => item.includes(`${ORDER}-`)).length > 0 ||
@@ -710,7 +725,9 @@ const isAllowToConnectOrder = (state: UIState) => {
 
   const orderItemIds = targetedOrderItemIds(state);
 
-  return state.connectOrder.exporterIds.length === 1 && (batchIds.length || orderItemIds.length);
+  const exporterId = currentExporterId(state);
+
+  return exporterId !== '' && (batchIds.length || orderItemIds.length);
 };
 
 const isAllowToSelectOrder = ({
