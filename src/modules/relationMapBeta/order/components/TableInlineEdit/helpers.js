@@ -51,7 +51,6 @@ export const findAllPossibleIds = (targets: Object, entities: Object) => {
     }
     order.shipments.forEach(shipmentId => {
       const shipment = entities.shipments[shipmentId];
-      // shipmentIds.push(shipment.id)
       if (shipmentIds.includes(shipmentId) && shipment.batches) {
         orderIds.push(order.id);
         order.orderItems.forEach(orderItemId => {
@@ -64,7 +63,6 @@ export const findAllPossibleIds = (targets: Object, entities: Object) => {
             });
           }
         });
-        // batchIds.push(...shipment.batches)
       }
     });
 

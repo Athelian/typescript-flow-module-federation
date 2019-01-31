@@ -312,7 +312,6 @@ export default function TableInlineEdit({ allId, onCancel, data }: Props) {
     expandRelation,
     ...mappingObjects
   } = formatOrderData(data);
-
   useEffect(() => {
     if (data.length) {
       if (Object.keys(editData.orders).length === 0) {
@@ -910,109 +909,87 @@ export default function TableInlineEdit({ allId, onCancel, data }: Props) {
                             )}
                           </div>
                           <div>
-                            {shipmentIds.length > 0 ? (
-                              <>
-                                {orderItems.map(orderItem =>
-                                  orderItem.data.batches
-                                    .filter(batch => batchIds.includes(batch.id))
-                                    .map(batch => {
-                                      const shipmentId = batch.shipment && batch.shipment.id;
-                                      if (!shipmentId) {
-                                        return (
-                                          <TableEmptyItem
-                                            key={`empty-shipment-${order.id}-${batch.id}`}
-                                            fields={shipmentColumnFieldsFilter}
-                                            rowNo={getRowCounter(rowCounter, 'shipment')}
-                                            columnNo={columnShipmentNo}
-                                          />
-                                        );
-                                      }
-                                      const shipment = mappingObjects.shipment[batch.shipment.id];
+                            <>
+                              {orderItems.map(orderItem =>
+                                orderItem.data.batches
+                                  .filter(batch => batchIds.includes(batch.id))
+                                  .map(batch => {
+                                    const shipmentId = batch.shipment && batch.shipment.id;
+                                    if (!shipmentId) {
                                       return (
-                                        <TableItem
+                                        <TableEmptyItem
+                                          key={`empty-shipment-${order.id}-${batch.id}`}
+                                          fields={shipmentColumnFieldsFilter}
                                           rowNo={getRowCounter(rowCounter, 'shipment')}
                                           columnNo={columnShipmentNo}
-                                          key={`shipment.${counter + 1}.${shipmentId}`}
-                                          cell={`shipments.${shipment.data.id}`}
-                                          fields={shipmentColumnFieldsFilter}
-                                          values={editData.shipments[shipment.data.id]}
-                                          validator={shipmentValidator}
                                         />
                                       );
-                                    })
-                                )}
-                                {range(totalLines - batches.length).map(index => (
-                                  <TableEmptyItem
-                                    key={index}
-                                    fields={shipmentColumnFieldsFilter}
-                                    rowNo={getRowCounter(rowCounter, 'shipment')}
-                                    columnNo={columnShipmentNo}
-                                  />
-                                ))}
-                              </>
-                            ) : (
-                              range(totalLines).map(index => (
+                                    }
+                                    const shipment = mappingObjects.shipment[batch.shipment.id];
+                                    return (
+                                      <TableItem
+                                        rowNo={getRowCounter(rowCounter, 'shipment')}
+                                        columnNo={columnShipmentNo}
+                                        key={`shipment.${counter + 1}.${shipmentId}`}
+                                        cell={`shipments.${shipment.data.id}`}
+                                        fields={shipmentColumnFieldsFilter}
+                                        values={editData.shipments[shipment.data.id]}
+                                        validator={shipmentValidator}
+                                      />
+                                    );
+                                  })
+                              )}
+                              {range(totalLines - batches.length).map(index => (
                                 <TableEmptyItem
                                   key={index}
                                   fields={shipmentColumnFieldsFilter}
                                   rowNo={getRowCounter(rowCounter, 'shipment')}
                                   columnNo={columnShipmentNo}
                                 />
-                              ))
-                            )}
+                              ))}
+                            </>
                           </div>
 
                           <div>
-                            {shipmentIds.length > 0 ? (
-                              <>
-                                {orderItems.map(orderItem =>
-                                  orderItem.data.batches
-                                    .filter(batch => batchIds.includes(batch.id))
-                                    .map(batch => {
-                                      const shipmentId = batch.shipment && batch.shipment.id;
-                                      if (!shipmentId) {
-                                        return (
-                                          <TableEmptyItem
-                                            key={`empty-shipment-custom-${order.id}-${batch.id}`}
-                                            fields={shipmentCustomFieldsFilter}
-                                            rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
-                                            columnNo={columnShipmentNo}
-                                          />
-                                        );
-                                      }
-                                      const shipment = mappingObjects.shipment[batch.shipment.id];
+                            <>
+                              {orderItems.map(orderItem =>
+                                orderItem.data.batches
+                                  .filter(batch => batchIds.includes(batch.id))
+                                  .map(batch => {
+                                    const shipmentId = batch.shipment && batch.shipment.id;
+                                    if (!shipmentId) {
                                       return (
-                                        <TableItemForCustomFields
-                                          rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
-                                          columnNo={columnShipmentCustomNo}
-                                          cell={`shipments.${shipment.data.id}`}
-                                          key={`shipments.customFields.${shipment.data.id}`}
+                                        <TableEmptyItem
+                                          key={`empty-shipment-custom-${order.id}-${batch.id}`}
                                           fields={shipmentCustomFieldsFilter}
-                                          values={editData.shipments[shipment.data.id]}
-                                          validator={shipmentValidator}
+                                          rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
+                                          columnNo={columnShipmentNo}
                                         />
                                       );
-                                    })
-                                )}
-                                {range(totalLines - batches.length).map(index => (
-                                  <TableEmptyItem
-                                    key={index}
-                                    fields={shipmentCustomFieldsFilter}
-                                    rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
-                                    columnNo={columnShipmentCustomNo}
-                                  />
-                                ))}
-                              </>
-                            ) : (
-                              range(totalLines).map(index => (
+                                    }
+                                    const shipment = mappingObjects.shipment[batch.shipment.id];
+                                    return (
+                                      <TableItemForCustomFields
+                                        rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
+                                        columnNo={columnShipmentCustomNo}
+                                        cell={`shipments.${shipment.data.id}`}
+                                        key={`shipments.customFields.${shipment.data.id}`}
+                                        fields={shipmentCustomFieldsFilter}
+                                        values={editData.shipments[shipment.data.id]}
+                                        validator={shipmentValidator}
+                                      />
+                                    );
+                                  })
+                              )}
+                              {range(totalLines - batches.length).map(index => (
                                 <TableEmptyItem
                                   key={index}
                                   fields={shipmentCustomFieldsFilter}
                                   rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
                                   columnNo={columnShipmentCustomNo}
                                 />
-                              ))
-                            )}
+                              ))}
+                            </>
                           </div>
                         </TableRow>
                       );

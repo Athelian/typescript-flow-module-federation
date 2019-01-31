@@ -216,6 +216,7 @@ const createOrderItemObj = () => {
   let order = {};
   let orderItemId = '';
   const orderItemObj = {};
+  const relatedShipment = {};
   const getOrderItemObj = () => ({ orderItem: orderItemObj });
   const formatOrderItemObj = entity => {
     const { type, data, index } = entity;
@@ -223,11 +224,24 @@ const createOrderItemObj = () => {
     if (type === 'ORDER') {
       orderId = id;
       order = data;
+      const { shipments } = order;
+      shipments.forEach(shipment => {
+        const batches = shipment.batches || [];
+        batches.forEach(batch => {
+          relatedShipment[batch.id] = shipment;
+        });
+      });
     }
     if (type === 'ORDER_ITEM') {
       orderItemId = id;
       if (!orderItemObj[id]) {
         orderItemObj[id] = initOrderItemObj(data, order);
+        orderItemObj[id].data.batches.forEach((batch, batchIndex) => {
+          if (batch) {
+            const batchData = orderItemObj[id].data.batches[batchIndex];
+            batchData.shipment = relatedShipment[batch.id] || {};
+          }
+        });
       }
     }
     if (type === 'BATCH') {

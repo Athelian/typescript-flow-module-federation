@@ -23,7 +23,6 @@ const TableView = (props: Props) => {
   const { state } = React.useContext(ActionDispatch);
   logger.warn('entities', entities);
   const allId = findAllPossibleIds(state.targets, entities);
-  console.log('allId', allId);
   const { orderIds } = allId;
   return (
     <Query
