@@ -1,98 +1,10 @@
 // @flow
-import { pipe, filter, isEmpty, omit } from 'ramda';
 import {
   initOrderObj,
   initOrderItemObj,
   initBatchObj,
   initShipmentObj,
 } from 'modules/relationMap/util';
-import { generateCollapsedRelation, getRelatedIds, createBatchRelation } from './relation';
-
-const prependArray = (arr: Array<any>) => (newArr: Array<any>) => [...arr, ...newArr];
-
-const filterOutNewData = (newData: Array<Object>) => (data: Object) =>
-  !newData ? true : !newData.some(d => d.id === data.id);
-
-const createFilterData = (newData: Array<Object> = []) =>
-  pipe(
-    filter(filterOutNewData(newData || [])),
-    prependArray(newData.map(d => Object.assign(d, { isNew: d.actionType || 'newItem' })))
-  );
-const getIsNew = (item: Object) => item.isNew || false;
-
-export const getIsCollapsed = (result: Object, order: Object) => {
-  const { newOrderItem, newBatch } = result;
-  if (newOrderItem[order.id] && !isEmpty(newOrderItem[order.id])) {
-    return false;
-  }
-  if (!order.orderItems || (order.orderItems && isEmpty(order.orderItems))) {
-    return true;
-  }
-  const hasBatchResult = (order.orderItems || []).some(({ id: orderItemId }) => {
-    if (newBatch[orderItemId] && !isEmpty(newBatch[orderItemId])) {
-      return true;
-    }
-    return false;
-  });
-  return !hasBatchResult;
-};
-
-export const formatNodes = (orders: Array<Object>, result: Object) => {
-  const { order: newOrder = [], orderItem: newOrderItem = {}, batch: newBatch = {} } = result;
-  const filterOrder = createFilterData(newOrder);
-  const nodes: Array<Object> = filterOrder(orders).map(order => {
-    const filterOrderItem = createFilterData(newOrderItem[order.id]);
-    const orderItems = filterOrderItem(order.orderItems || []).map(orderItem => {
-      const filterBatch = createFilterData(newBatch[orderItem.id]);
-      const batches = filterBatch(orderItem.batches || []).map(batch => ({
-        ...batch,
-        id: batch.id,
-        isNew: getIsNew(batch),
-      }));
-      return {
-        ...orderItem,
-        id: orderItem.id,
-        isNew: getIsNew(orderItem),
-        batches,
-      };
-    });
-    return {
-      ...order,
-      id: order.id,
-      isNew: getIsNew(order),
-      isCollapsed: getIsCollapsed({ newOrderItem, newBatch }, order),
-      orderItems,
-    };
-  });
-  return nodes;
-};
-
-export const removeAdditionBatchFields: Function = omit([
-  'index',
-  'rootId',
-  'parentId',
-  'volumeLabel',
-  'metric',
-  'orderId',
-  'orderItemId',
-  'actionType',
-  'batchedQuantity',
-  'isNew',
-  '__typename',
-]);
-export const removeAdditionOrderItemFields: Function = omit([
-  'name',
-  'orderedQuantity',
-  'batchedQuantity',
-  'shippedQuantity',
-  'orderId',
-  'order',
-  'parentId',
-  'index',
-  'isNew',
-  'actionType',
-  '__typename',
-]);
 
 function* iterateOrders(orders: Array<Object>) {
   for (let orderIndex = 0; orderIndex < orders.length; orderIndex += 1) {
@@ -114,6 +26,21 @@ function* iterateOrders(orders: Array<Object>) {
     }
   }
 }
+
+const getBatchedQuantity = (batch: Object) => {
+  const { quantity, batchAdjustments = [] } = batch;
+  return batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, quantity || 0);
+};
+
+const getBatchRelation = (batch: Object, info: Object) => {
+  const { orderId, orderItemId, index } = info;
+  return {
+    ...batch,
+    rootId: orderId,
+    parentId: orderItemId,
+    index,
+  };
+};
 
 const summary = (orders: Array<Object>) => {
   const sumOrders = orders.length;
@@ -143,21 +70,6 @@ const summary = (orders: Array<Object>) => {
   return {
     findSummary,
     getSummary,
-  };
-};
-
-const getBatchedQuantity = (batch: Object) => {
-  const { quantity, batchAdjustments = [] } = batch;
-  return batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, quantity || 0);
-};
-
-const getBatchRelation = (batch: Object, info: Object) => {
-  const { orderId, orderItemId, index } = info;
-  return {
-    ...batch,
-    rootId: orderId,
-    parentId: orderItemId,
-    index,
   };
 };
 
@@ -216,6 +128,7 @@ const createOrderItemObj = () => {
   let order = {};
   let orderItemId = '';
   const orderItemObj = {};
+  const relatedShipment = {};
   const getOrderItemObj = () => ({ orderItem: orderItemObj });
   const formatOrderItemObj = entity => {
     const { type, data, index } = entity;
@@ -223,11 +136,24 @@ const createOrderItemObj = () => {
     if (type === 'ORDER') {
       orderId = id;
       order = data;
+      const { shipments } = order;
+      shipments.forEach(shipment => {
+        const batches = shipment.batches || [];
+        batches.forEach(batch => {
+          relatedShipment[batch.id] = shipment;
+        });
+      });
     }
     if (type === 'ORDER_ITEM') {
       orderItemId = id;
       if (!orderItemObj[id]) {
         orderItemObj[id] = initOrderItemObj(data, order);
+        orderItemObj[id].data.batches.forEach((batch, batchIndex) => {
+          if (batch) {
+            const batchData = orderItemObj[id].data.batches[batchIndex];
+            batchData.shipment = relatedShipment[batch.id] || {};
+          }
+        });
       }
     }
     if (type === 'BATCH') {
@@ -323,74 +249,6 @@ const createShipmentObj = () => {
   };
 };
 
-const createRelation = () => {
-  let orderId = '';
-  let orderItems = [];
-  let batches = [];
-  let noBatch = false;
-  let batchRelation = {};
-  const collapsedRelation = {};
-  const expandRelation = {};
-  const getRelationObj = () => ({ collapsedRelation, expandRelation });
-  const formatRelationObj = entity => {
-    const { type, data, index } = entity;
-    const { id } = data;
-
-    if (type === 'ORDER') {
-      if (!collapsedRelation[id]) {
-        collapsedRelation[id] = generateCollapsedRelation(data, { isCollapsed: true });
-      }
-      if (!expandRelation[id]) {
-        expandRelation[id] = generateCollapsedRelation(data, { isCollapsed: false });
-      }
-      const { orderItems: currentOrderItems } = data;
-      orderId = id;
-      orderItems = currentOrderItems;
-    }
-    if (type === 'ORDER_ITEM') {
-      const relations = expandRelation[orderId];
-      const relatedIds = getRelatedIds(orderItems, index);
-      relations.push({ type: '' });
-      relations.push({
-        id,
-        type: `LINK-4-ORDER_ITEM`,
-        relatedIds,
-      });
-      relations.push({
-        type: 'ORDER_ITEM',
-        id,
-        isNew: data.isNew,
-        relatedIds,
-      });
-
-      batches = data.batches || [];
-      noBatch = batches.length === 0;
-      if (noBatch) {
-        relations.push({ type: '' });
-        relations.push({ type: '' });
-      }
-      batchRelation = createBatchRelation(relations, {
-        orderItems,
-        orderItemIndex: index,
-        relatedOrderItem: relatedIds.filter(relatedId => relatedId !== id),
-      });
-    }
-    if (!noBatch && type === 'BATCH') {
-      const relatedIds = getRelatedIds(batches, index);
-      batchRelation.generateBatchRelation({
-        batchData: data,
-        index,
-        relatedIds,
-        previousIds: [],
-      });
-    }
-  };
-  return {
-    formatRelationObj,
-    getRelationObj,
-  };
-};
-
 export const formatOrders = (orders: Array<Object>) => {
   const orderGenerator = iterateOrders(orders);
   const summaryData = summary(orders);
@@ -398,7 +256,6 @@ export const formatOrders = (orders: Array<Object>) => {
   const itemData = createOrderItemObj();
   const batchData = createBatchObj();
   const shipmentData = createShipmentObj();
-  const relationData = createRelation();
   let result = orderGenerator.next();
   while (!result.done) {
     summaryData.findSummary(result.value);
@@ -406,7 +263,6 @@ export const formatOrders = (orders: Array<Object>) => {
     itemData.formatOrderItemObj(result.value);
     batchData.formatBatchObj(result.value);
     shipmentData.formatShipmentObj(result.value);
-    relationData.formatRelationObj(result.value);
     result = orderGenerator.next();
   }
   return {
@@ -415,6 +271,7 @@ export const formatOrders = (orders: Array<Object>) => {
     ...itemData.getOrderItemObj(),
     ...batchData.getBatchObj(),
     ...shipmentData.getShipmentObj(),
-    ...relationData.getRelationObj(),
   };
 };
+
+export default formatOrders;

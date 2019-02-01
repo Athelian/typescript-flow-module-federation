@@ -23,6 +23,7 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   badRequestFragment,
+  shipmentContainerCardFragment,
 } from 'graphql';
 
 export const entitiesUpdateManyMutation = gql`
@@ -81,6 +82,7 @@ export const entitiesUpdateManyMutation = gql`
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
+  ${shipmentContainerCardFragment}
 `;
 
 export default entitiesUpdateManyMutation;
