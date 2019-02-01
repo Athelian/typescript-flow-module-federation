@@ -32,6 +32,7 @@ export type ContainerFormState = {
   shipment: Object,
   batches: Array<Object>,
   tags?: Array<Object>,
+  representativeBatch: Object,
 };
 
 const initValues = {

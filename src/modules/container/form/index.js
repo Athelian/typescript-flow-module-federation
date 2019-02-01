@@ -85,8 +85,7 @@ export default class containerForm extends React.Component<Props> {
                     title={
                       <>
                         <FormattedMessage id="modules.container.batches" defaultMessage="BATCHES" />{' '}
-                        (
-                        <FormattedNumber value={batches.length} />)
+                        (<FormattedNumber value={batches.length} />)
                       </>
                     }
                   />
