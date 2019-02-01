@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { isEnableBetaFeature } from 'utils/env';
 import { getContainerDatesRange } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import { TimelineDate, TimelinePortName, TimelineWarehouseName } from '../../components';
 import { TimelineDateRange } from './components';
@@ -66,7 +65,7 @@ const VerticalDates = ({ shipment }: Props) => {
       </div>
 
       <div className={BlankGapStyle}>
-        {isEnableBetaFeature && containers && containers.length > 0 ? (
+        {containers && containers.length > 0 ? (
           <TimelineDateRange
             minDate={minAgreedDate}
             maxDate={maxAgreedDate}
@@ -80,7 +79,7 @@ const VerticalDates = ({ shipment }: Props) => {
 
       <TimelineWarehouseName name={warehouse && warehouse.name} vertical containers={containers} />
 
-      {isEnableBetaFeature && containers && containers.length > 0 ? (
+      {containers && containers.length > 0 ? (
         <div className={BlankGapStyle}>
           <TimelineDateRange
             minDate={minActualDate}

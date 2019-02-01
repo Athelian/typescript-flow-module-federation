@@ -8,14 +8,13 @@ import {
   presets,
   borderRadiuses,
 } from 'styles/common';
-import { isEnableBetaFeature } from 'utils/env';
 
 export const BatchCardWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: ${isEnableBetaFeature ? '359px' : '334px'};
+  height: 359px;
 `;
 
 export const ProductWrapperStyle: string = css`
