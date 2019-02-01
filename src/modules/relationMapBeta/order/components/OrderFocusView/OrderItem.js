@@ -12,6 +12,10 @@ import type { OrderItemProps } from 'modules/relationMapBeta/order/type.js.flow'
 
 type OptionalProps = {
   wrapperClassName?: string,
+  /**
+   * Exporter Id for tracking order item is same exporter
+   */
+  exporterId: string,
 };
 
 type Props = OptionalProps & OrderItemProps;
@@ -55,7 +59,7 @@ function getQuantitySummary(item: Object) {
   };
 }
 
-export default function OrderItem({ wrapperClassName, id, batches, ...rest }: Props) {
+export default function OrderItem({ wrapperClassName, id, exporterId, batches, ...rest }: Props) {
   const context = React.useContext(ActionDispatch);
   const { dispatch } = context;
   const actions = actionCreators(dispatch);
@@ -68,27 +72,29 @@ export default function OrderItem({ wrapperClassName, id, batches, ...rest }: Pr
               orderItem={{ ...rest, batches, ...getQuantitySummary({ ...rest, batches }) }}
             />
             <ActionCard show={hovered}>
-              {({ targetted, toggle }) => (
+              {({ targeted, toggle }) => (
                 <>
                   <Action
                     icon="MAGIC"
-                    targetted={targetted}
+                    targeted={targeted}
                     toggle={toggle}
                     onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
                   />
                   <Action
                     icon="BRANCH"
-                    targetted={targetted}
+                    targeted={targeted}
                     toggle={toggle}
                     onClick={() =>
                       actions.selectBranch([
                         {
-                          entity: ORDER_ITEM,
                           id,
+                          entity: ORDER_ITEM,
+                          exporterId: `${ORDER_ITEM}-${exporterId}`,
                         },
                         ...batches.map(batch => ({
                           entity: BATCH,
                           id: batch.id,
+                          exporterId: `${BATCH}-${exporterId}`,
                         })),
                       ])
                     }
@@ -96,9 +102,9 @@ export default function OrderItem({ wrapperClassName, id, batches, ...rest }: Pr
                   />
                   <Action
                     icon="CHECKED"
-                    targetted={targetted}
+                    targeted={targeted}
                     toggle={toggle}
-                    onClick={() => actions.targetEntity(ORDER_ITEM, id)}
+                    onClick={() => actions.targetOrderItemEntity(id, `${ORDER_ITEM}-${exporterId}`)}
                   />
                 </>
               )}
