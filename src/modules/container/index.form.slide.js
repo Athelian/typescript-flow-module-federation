@@ -16,6 +16,7 @@ import validator from './form/validator';
 import ContainerForm from './form/index';
 
 type OptionalProps = {
+  onFormReady: () => void,
   onSave: (newContainer: Object) => void,
 };
 
@@ -24,11 +25,18 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
+  onFormReady: () => {},
   onSave: () => {},
 };
 
 export default class ContainerFormInSlide extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
+
+  componentDidMount() {
+    const { onFormReady } = this.props;
+
+    if (onFormReady) onFormReady();
+  }
 
   onReset = (formState: Object) => {
     resetFormState(formState);

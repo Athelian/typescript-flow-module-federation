@@ -8,6 +8,7 @@ import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
+import ContainerFormContainer from 'modules/container/form/container';
 import {
   ShipmentContainersContainer,
   ShipmentBatchesContainer,
@@ -43,7 +44,10 @@ type Props = {
 function ContainersArea({ intl, selectCardId, setSelected }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
-      {({ state: { containers }, setFieldValue, setDeepFieldValue }, { state: { batches } }) => {
+      {(
+        { state: { containers }, setFieldValue, setDeepFieldValue },
+        { state: { batches }, setFieldValue: updateBatchesState }
+      ) => {
         const batchesInPool = getBatchesInPool(batches);
 
         return (
@@ -150,14 +154,27 @@ function ContainersArea({ intl, selectCardId, setSelected }: Props) {
                               options={{ width: '1030px' }}
                             >
                               {isOpenContainerForm && (
-                                <ContainerFormInSlide
-                                  container={container}
-                                  onCancel={() => toggleContainerForm(false)}
-                                  onSave={newContainer => {
-                                    setDeepFieldValue(`containers.${position}`, newContainer);
-                                    toggleContainerForm(false);
-                                  }}
-                                />
+                                <Subscribe to={[ContainerFormContainer]}>
+                                  {({ initDetailValues }) => (
+                                    <ContainerFormInSlide
+                                      container={container}
+                                      onCancel={() => toggleContainerForm(false)}
+                                      onSave={newContainer => {
+                                        const { batches: newBatches } = newContainer;
+                                        updateBatchesState('batches', [
+                                          ...batches,
+                                          ...newBatches.map(batch => ({
+                                            ...batch,
+                                            container,
+                                          })),
+                                        ]);
+                                        setDeepFieldValue(`containers.${position}`, newContainer);
+                                        toggleContainerForm(false);
+                                      }}
+                                      onFormReady={() => initDetailValues(container)}
+                                    />
+                                  )}
+                                </Subscribe>
                               )}
                             </SlideView>
                           </>
