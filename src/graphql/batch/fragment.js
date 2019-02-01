@@ -70,6 +70,11 @@ export const batchFormFragment = gql`
                 id
               }
             }
+            container {
+              ... on Container {
+                id
+              }
+            }
           }
         }
         order {

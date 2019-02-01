@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Jan 31 2019 16:50:00 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Feb 01 2019 16:29:56 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -30091,6 +30091,7 @@ input OrderItemBatchCreateInput {
   tagIds: [ID!]
   customFields: CustomFieldsInput
   shipmentId: ID
+  containerId: ID
   batchAssignments: [OrderItemBatchAssignmentCreateInput!]
   batchAdjustments: [OrderItemBatchAdjustmentCreateInput!]
 }
@@ -30114,6 +30115,7 @@ input OrderItemBatchUpdateInput {
   customFields: CustomFieldsInput
   id: ID
   shipmentId: ID
+  containerId: ID
   batchAssignments: [OrderItemBatchAssignmentUpdateInput!]
   batchAdjustments: [OrderItemBatchAdjustmentUpdateInput!]
 }
@@ -35750,9 +35752,9 @@ type Tag implements Model & Owned & Memorizable {
 }
 
 input TagCreateInput {
-  name: ID!
-  description: String
+  name: String!
   color: String!
+  description: String
   entityTypes: [TagEntityType!]!
 }
 
@@ -35806,8 +35808,8 @@ input TagSortInput {
 
 input TagUpdateInput {
   name: ID
-  description: String
   color: String
+  description: String
   entityTypes: [TagEntityType!]
 }
 

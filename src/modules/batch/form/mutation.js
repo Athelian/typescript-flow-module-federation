@@ -51,6 +51,7 @@ export const prepareCreateBatchInput = (
   {
     id,
     isNew,
+    container,
     shipment = {},
     tags = [],
     batchAdjustments = [],
@@ -66,6 +67,7 @@ export const prepareCreateBatchInput = (
 ): BatchCreate => ({
   ...rest,
   ...(shipment ? { shipmentId: shipment.id } : {}),
+  ...(container ? { containerId: container.id } : {}),
   ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
   desiredAt: desiredAt ? new Date(desiredAt) : null,
@@ -123,6 +125,7 @@ export const prepareUpdateBatchInput = (
     updatedBy,
     orderItem,
     shipment,
+    container,
     deliveredAt,
     desiredAt,
     expiredAt,
@@ -131,7 +134,6 @@ export const prepareUpdateBatchInput = (
     tags = [],
     batchAdjustments = [],
     archived,
-    container,
     ...rest
   }: Object,
   inShipmentOrBatchForm: boolean = true,
@@ -139,6 +141,7 @@ export const prepareUpdateBatchInput = (
 ): BatchUpdate => ({
   ...rest,
   ...(shipment && !inShipmentOrBatchForm ? { shipmentId: shipment.id } : {}),
+  ...(container && !inShipmentOrBatchForm ? { containerId: container.id } : {}),
   ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   ...(!inBatchForm && !isNew ? { id } : {}),
   deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
