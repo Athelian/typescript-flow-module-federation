@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { intersection } from 'lodash';
+import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -11,6 +12,8 @@ import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
+import SlideView from 'components/SlideView';
+import { BaseButton } from 'components/Buttons';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import { orderDetailQuery } from 'modules/relationMapBeta/order/query';
@@ -33,15 +36,20 @@ import ErrorPanel from './ErrorPanel';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
 import { cloneBatchMutation } from './ClonePanel/mutation';
+import TableView from '../TableInlineEdit';
 
 type Props = {
   highLightEntities: Array<string>,
-  batches: Object,
-  orders: Object,
-  orderItems: Object,
+  entities: {
+    orders: Object,
+    orderItems: Object,
+    batches: Object,
+    shipments: Object,
+  },
 };
 
-export default function ActionNavbar({ highLightEntities, batches, orders, orderItems }: Props) {
+export default function ActionNavbar({ highLightEntities, entities }: Props) {
+  const { orders, orderItems, batches } = entities;
   const [activeAction, setActiveAction] = React.useState('clone');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
@@ -147,6 +155,33 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                     setActiveAction('autoFillBatch');
                   }}
                 />
+                <BooleanValue>
+                  {({ value: opened, set: openTableView }) => (
+                    <>
+                      <BaseButton
+                        icon="EDIT"
+                        label={
+                          <FormattedMessage
+                            id="modules.RelationMaps.label.edit"
+                            defaultMessage="EDIT"
+                          />
+                        }
+                        backgroundColor="TEAL"
+                        hoverBackgroundColor="TEAL_DARK"
+                        onClick={() => openTableView(true)}
+                      />
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={() => openTableView(false)}
+                        options={{ width: '1030px' }}
+                      >
+                        {opened && (
+                          <TableView entities={entities} onCancel={() => openTableView(false)} />
+                        )}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
               </TargetToolBar>
               {['split', 'autoFillBatch', 'connectOrder'].includes(activeAction) && (
                 <ConstraintPanel
@@ -222,12 +257,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                           })
                         )
                       );
-                      const result = cloneBatches.map((item, index) => {
-                        return {
-                          id: batchIds[index],
-                          batch: getByPathWithDefault([], 'data.batchClone', item),
-                        };
-                      });
+                      const result = cloneBatches.map((item, index) => ({
+                        id: batchIds[index],
+                        batch: getByPathWithDefault([], 'data.batchClone', item),
+                      }));
                       actions.cloneEntitiesSuccess(result);
                     } catch (error) {
                       actions.cloneEntitiesFailed(error);
@@ -264,12 +297,10 @@ export default function ActionNavbar({ highLightEntities, batches, orders, order
                           })
                         )
                       );
-                      const result = balanceSplitBatches.map((item, index) => {
-                        return {
-                          id: orderItemIds[index],
-                          batches: getByPathWithDefault([], 'data.batchBalanceSplit.batches', item),
-                        };
-                      });
+                      const result = balanceSplitBatches.map((item, index) => ({
+                        id: orderItemIds[index],
+                        batches: getByPathWithDefault([], 'data.batchBalanceSplit.batches', item),
+                      }));
                       actions.autoFillBatchesSuccess(result);
                     } catch (error) {
                       actions.autoFillBatchesFailed(error);

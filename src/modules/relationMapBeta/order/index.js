@@ -70,8 +70,12 @@ const Order = ({ intl }: Props) => {
           if (error) {
             return error.message;
           }
+    
+          if (loading) {
+            return <LoadingIcon />;
+          }
+   
           const { entities } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
-
           const { orders, orderItems, batches, shipments } = entities;
           const highLightEntities = findHighLightEntities(state.highlight, {
             orders,
@@ -130,9 +134,12 @@ const Order = ({ intl }: Props) => {
               />
               <ActionNavbar
                 highLightEntities={highLightEntities}
-                batches={batches}
-                orders={orders}
-                orderItems={orderItems}
+                entities={{
+                  orders,
+                  orderItems,
+                  batches,
+                  shipments,
+                }}
               />
               {loading ? (
                 <LoadingIcon />
