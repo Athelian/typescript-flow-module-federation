@@ -16,7 +16,7 @@ import { ShipmentBatchesContainer } from './containers';
 import { ShipmentSection } from './components';
 import { ShipmentFormWrapperStyle } from './style';
 
-const AsyncContainerCargoSection = lazy(() => import('./components/ContainerCargoSection'));
+const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
 const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
@@ -126,7 +126,7 @@ class ShipmentForm extends React.Component<Props> {
                 />
               )}
             </Subscribe>
-            <AsyncContainerCargoSection />
+            <AsyncCargoSection />
           </SectionWrapper>
           <SectionWrapper id="shipment_documentsSection">
             <SectionHeader
