@@ -124,7 +124,8 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                               batch={batch}
                               isRepresented={batch.id === representativeBatchId}
                               saveOnBlur={updateBatch => {
-                                setFieldArrayValue(position, updateBatch);
+                                const indexOfAllBatches = batches.indexOf(batch);
+                                setFieldArrayValue(indexOfAllBatches, updateBatch);
                               }}
                               onClick={() => batchSlideToggle(true)}
                               onClear={({ id }) => {
