@@ -124,7 +124,12 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                               batch={batch}
                               isRepresented={batch.id === representativeBatchId}
                               saveOnBlur={updateBatch => {
-                                setFieldArrayValue(position, updateBatch);
+                                const indexOfAllBatches = batches.indexOf(batch);
+                                setFieldArrayValue(indexOfAllBatches, updateBatch);
+                                setDeepFieldValue(
+                                  `containers.${containerIndex}.batches.${position}`,
+                                  updateBatch
+                                );
                               }}
                               onClick={() => batchSlideToggle(true)}
                               onClear={({ id }) => {
@@ -259,6 +264,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                                 },
                               } = orderItem;
                               return injectUid({
+                                isNew: true,
                                 orderItem,
                                 tags: [],
                                 packageName,
@@ -267,7 +273,6 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                                 packageVolume,
                                 packageSize,
                                 quantity: 0,
-                                isNew: true,
                                 batchAdjustments: [],
                                 no: `batch no ${batches.length + counter + 1}`,
                                 autoCalculatePackageQuantity: true,

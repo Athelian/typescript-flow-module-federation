@@ -177,6 +177,7 @@ function ContainersArea({ intl, selectCardId, setSelected }: Props) {
                     ...clonedContainers,
                     injectUid({
                       no: `container no ${containers.length + 1}`,
+                      isNew: true,
                       batches: [],
                       tags: [],
                       totalVolume: {

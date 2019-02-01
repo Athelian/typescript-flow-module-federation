@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
+import { isNullOrUndefined } from 'utils/fp';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
@@ -118,7 +119,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onSave = async (
     formData: Object,
-    saveShipment: any => Promise<?{ data?: CreateShipmentResponse | UpdateShipmentResponse }>,
+    saveShipment: Function,
     onSuccess: () => void,
     onErrors: (Array<Object>) => void
   ) => {
@@ -150,7 +151,9 @@ class ShipmentFormModule extends React.Component<Props> {
         }
       }
     } else if (shipmentId) {
-      const result = await saveShipment({ variables: { input, id: decodeId(shipmentId) } });
+      const result = await saveShipment({
+        variables: { input, id: decodeId(shipmentId) },
+      });
       if (result && result.data) {
         const { data } = result;
         if (data.shipmentUpdate) {
@@ -210,7 +213,6 @@ class ShipmentFormModule extends React.Component<Props> {
         cargoReady,
         voyages,
         containerGroups,
-        containers,
       });
       shipmentFilesState.initDetailValues(files);
     }
@@ -249,15 +251,18 @@ class ShipmentFormModule extends React.Component<Props> {
     }
     if (!isNewOrClone && result.shipmentUpdate) {
       const { shipmentUpdate } = result;
-      this.onFormReady({
-        shipmentBatchesState,
-        shipmentContainersContainer,
-        shipmentFilesState,
-        shipmentInfoState,
-        shipmentTagsState,
-        shipmentTimelineState,
-        shipmentTransportTypeState,
-      })(shipmentUpdate);
+      const { violations } = shipmentUpdate;
+      if (isNullOrUndefined(violations)) {
+        this.onFormReady({
+          shipmentBatchesState,
+          shipmentContainersContainer,
+          shipmentFilesState,
+          shipmentInfoState,
+          shipmentTagsState,
+          shipmentTimelineState,
+          shipmentTransportTypeState,
+        })(shipmentUpdate);
+      }
     }
   };
 
@@ -437,7 +442,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   )
                                 }
                                 isLoading={isLoading}
-                                onClick={() =>
+                                onClick={() => {
                                   this.onSave(
                                     {
                                       ...shipmentBatchesState.state,
@@ -460,8 +465,8 @@ class ShipmentFormModule extends React.Component<Props> {
                                       form.onReset();
                                     },
                                     form.onErrors
-                                  )
-                                }
+                                  );
+                                }}
                               />
                             </>
                           )}

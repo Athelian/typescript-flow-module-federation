@@ -110,7 +110,8 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
                             <ShipmentBatchCard
                               batch={batch}
                               saveOnBlur={updateBatch => {
-                                setFieldArrayValue(position, updateBatch);
+                                const indexOfAllBatches = batches.indexOf(batch);
+                                setFieldArrayValue(indexOfAllBatches, updateBatch);
                               }}
                               onClick={() => batchSlideToggle(true)}
                               onClear={({ id }) => {
