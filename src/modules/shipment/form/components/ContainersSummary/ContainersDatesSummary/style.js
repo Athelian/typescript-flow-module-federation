@@ -7,6 +7,7 @@ export const ContainerDatesSummaryStyle: string = css`
   display: flex;
   flex: 1;
   align-items: flex-end;
+  width: 100%;
 `;
 
 export const ColumnWrapperStyle: string = css`
