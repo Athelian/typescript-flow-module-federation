@@ -747,9 +747,8 @@ const isAllowToConnectOrder = (state: UIState) => {
   return exporterId !== '' && (batchIds.length || orderItemIds.length);
 };
 
-const isAllowToSelectOrder = ({ exporterId, state }: { exporterId: string, state: UIState }) => {
-  return currentExporterId(state) === exporterId;
-};
+const isAllowToSelectOrder = ({ exporterId, state }: { exporterId: string, state: UIState }) =>
+  currentExporterId(state) === exporterId;
 
 export function selectors(state: UIState) {
   return {

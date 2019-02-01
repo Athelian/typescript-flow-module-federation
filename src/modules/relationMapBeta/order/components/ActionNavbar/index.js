@@ -258,8 +258,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         )
                       );
                       const result = cloneBatches.map((item, index) => ({
-                        id: batchIds[index],
-                        batch: getByPathWithDefault([], 'data.batchClone', item),
+                        id: orderItemIds[index],
+                        batches: getByPathWithDefault([], 'data.batchBalanceSplit.batches', item),
                       }));
                       actions.cloneEntitiesSuccess(result);
                     } catch (error) {

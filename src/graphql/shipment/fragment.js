@@ -241,6 +241,16 @@ export const shipmentCardFragment = isEnableBetaFeature
             warehouseArrivalAgreedDateApprovedAt
             warehouseArrivalActualDate
             warehouseArrivalActualDateApprovedAt
+            warehouseArrivalAgreedDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
+            warehouseArrivalActualDateApprovedBy {
+              ... on User {
+                id
+              }
+            }
             warehouse {
               ... on Warehouse {
                 id
