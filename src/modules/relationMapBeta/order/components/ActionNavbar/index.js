@@ -316,7 +316,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   onDelete={console.warn}
                   hasSelectedOrder={uiSelectors.isSelectedOrder()}
                   hasSelectedAllBatches={uiSelectors.hasSelectedAllBatches(orderItems)}
-                  currencies={uiSelectors.findAllCurrencies()}
+                  currencies={uiSelectors.findAllCurrencies(orders, orderItems)}
                 />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (

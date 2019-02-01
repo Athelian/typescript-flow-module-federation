@@ -5,6 +5,7 @@ import {
   portFragment,
   userAvatarFragment,
   metricFragment,
+  priceFragment,
 } from 'graphql';
 
 export const batchCardRMFragment = gql`
@@ -26,6 +27,7 @@ export const orderCardRMFragment = gql`
   fragment orderCardRMFragment on Order {
     id
     poNo
+    currency
     totalOrdered
     totalBatched
     totalShipped
@@ -45,6 +47,9 @@ export const orderCardRMFragment = gql`
       ... on OrderItem {
         id
         quantity
+        price {
+          ...priceFragment
+        }
         productProvider {
           ... on ProductProvider {
             id
@@ -156,6 +161,7 @@ export const orderDetailQuery = gql`
   ${portFragment}
   ${userAvatarFragment}
   ${metricFragment}
+  ${priceFragment}
 `;
 
 export const orderListQuery = gql`
@@ -177,6 +183,7 @@ export const orderListQuery = gql`
   ${portFragment}
   ${userAvatarFragment}
   ${metricFragment}
+  ${priceFragment}
 `;
 
 export const shipmentListQuery = gql`

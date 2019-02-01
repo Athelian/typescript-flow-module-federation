@@ -764,13 +764,25 @@ const hasSelectedAllBatches = ({ state, orderItems }: { state: UIState, orderIte
   return batchIds.length === allBatchIds.length;
 };
 
-const findAllCurrencies = ({ state, orderItems }: { state: UIState, orderItems: Object }) => {
+const findAllCurrencies = ({
+  state,
+  orders,
+  orderItems,
+}: {
+  state: UIState,
+  orders: Object,
+  orderItems: Object,
+}) => {
   const result = [];
-  console.warn({
-    state,
-    orderItems,
-  });
-
+  const selectedOrder = orders[state.connectOrder.orderId];
+  if (selectedOrder) {
+    result.push(selectedOrder.currency);
+    const orderItemIds = targetedOrderItemIds(state);
+    orderItemIds.forEach(orderItemId => {
+      const { price } = orderItems[orderItemId];
+      if (!result.includes(price.currency)) result.push(price.currency);
+    });
+  }
   return result;
 };
 
@@ -810,6 +822,7 @@ export function selectors(state: UIState) {
     currentExporterId: () => currentExporterId(state),
     selectedConnectOrder: (id: string) => state.connectOrder.orderId === id,
     hasSelectedAllBatches: (orderItems: Object) => hasSelectedAllBatches({ state, orderItems }),
-    findAllCurrencies: (orderItems: Object) => findAllCurrencies({ state, orderItems }),
+    findAllCurrencies: (orders: Object, orderItems: Object) =>
+      findAllCurrencies({ state, orders, orderItems }),
   };
 }

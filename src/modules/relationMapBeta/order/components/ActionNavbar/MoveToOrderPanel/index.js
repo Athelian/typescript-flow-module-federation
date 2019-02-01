@@ -20,6 +20,7 @@ type Props = {
   onDelete: Function,
   hasSelectedOrder: boolean,
   hasSelectedAllBatches: boolean,
+  currencies: Array<string>,
 };
 
 const MoveToOrderPanel = ({
@@ -29,6 +30,7 @@ const MoveToOrderPanel = ({
   onMoveToExistOrder,
   onDelete,
   onClearSelectOrder,
+  currencies,
 }: Props) => (
   <MoveToOrderPanelWrapper>
     {hasSelectedOrder ? (
@@ -36,6 +38,7 @@ const MoveToOrderPanel = ({
         hasSelectedAllBatches={hasSelectedAllBatches}
         onConfirm={onMoveToExistOrder}
         onReset={onClearSelectOrder}
+        currencies={currencies}
       />
     ) : (
       <>
