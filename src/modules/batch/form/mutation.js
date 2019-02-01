@@ -142,7 +142,7 @@ export const prepareUpdateBatchInput = (
 ): BatchUpdate => ({
   ...rest,
   ...(shipment && !inShipmentOrBatchForm ? { shipmentId: shipment.id } : {}),
-  ...(container && !inShipmentOrBatchForm ? { containerId: container.id } : {}),
+  ...(container ? { containerId: container.id } : {}),
   ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   ...(!inBatchForm && !isNew ? { id } : {}),
   deliveredAt: deliveredAt ? new Date(deliveredAt) : null,

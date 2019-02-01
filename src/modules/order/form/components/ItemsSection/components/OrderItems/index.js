@@ -223,7 +223,6 @@ class OrderItems extends React.Component<Props> {
                                     expiredAt,
                                     producedAt,
                                     no,
-                                    container,
                                     ...rest
                                   }) => {
                                     changeBatch(
@@ -231,7 +230,6 @@ class OrderItems extends React.Component<Props> {
                                       1,
                                       injectUid({
                                         ...rest,
-                                        ...(container ? { containerId: container.id } : {}),
                                         batchAdjustments: [],
                                         no: `${no}- clone`,
                                         isNew: true,
