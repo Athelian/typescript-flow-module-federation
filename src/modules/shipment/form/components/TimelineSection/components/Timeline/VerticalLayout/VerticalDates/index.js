@@ -35,7 +35,7 @@ const VerticalDates = ({ shipment }: Props) => {
         <TimelineDate timelineDate={cargoReady} vertical />
       </div>
 
-      <div className={BlankGapStyle} />
+      <div className={BlankGapStyle()} />
 
       <TimelinePortName port={loadPort} transportType={transportType} vertical />
 
@@ -58,13 +58,13 @@ const VerticalDates = ({ shipment }: Props) => {
 
       <TimelinePortName port={dischargePort} transportType={transportType} vertical />
 
-      <div className={BlankGapStyle} />
+      <div className={BlankGapStyle()} />
 
       <div className={SingularDateWrapperStyle}>
         <TimelineDate timelineDate={customClearance} vertical />
       </div>
 
-      <div className={BlankGapStyle}>
+      <div className={BlankGapStyle()}>
         {containers && containers.length > 0 ? (
           <TimelineDateRange
             minDate={minAgreedDate}
@@ -80,7 +80,7 @@ const VerticalDates = ({ shipment }: Props) => {
       <TimelineWarehouseName name={warehouse && warehouse.name} vertical containers={containers} />
 
       {containers && containers.length > 0 ? (
-        <div className={BlankGapStyle}>
+        <div className={BlankGapStyle('flex-start')}>
           <TimelineDateRange
             minDate={minActualDate}
             maxDate={maxActualDate}
@@ -89,7 +89,7 @@ const VerticalDates = ({ shipment }: Props) => {
           />
         </div>
       ) : (
-        <div className={BlankGapStyle} />
+        <div className={BlankGapStyle()} />
       )}
 
       <div className={SingularDateWrapperStyle}>

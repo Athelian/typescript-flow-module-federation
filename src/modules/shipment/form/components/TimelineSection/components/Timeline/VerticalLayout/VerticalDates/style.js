@@ -21,9 +21,9 @@ export const VoyageDatesWrapperStyle: string = css`
   justify-content: space-between;
 `;
 
-export const BlankGapStyle: string = css`
+export const BlankGapStyle = (justifyContent?: 'flex-end' | 'flex-start'): string => css`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: ${justifyContent || 'flex-end'};
 `;

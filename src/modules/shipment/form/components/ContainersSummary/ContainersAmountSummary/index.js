@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { FieldItem, Label, Display } from 'components/Form';
+import { Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
-import { ContainersAmountSummaryStyle } from './style';
+import { ContainersAmountSummaryStyle, RowStyle } from './style';
 
 type Props = {
   numOfContainers: number,
@@ -17,51 +17,38 @@ const ContainersAmountSummary = ({
   numOfApprovedActual,
 }: Props) => (
   <div className={ContainersAmountSummaryStyle}>
-    <FieldItem
-      label={
-        <Label>
-          <FormattedMessage
-            id="modules.shipment.noOfContainers"
-            defaultMessage="NO. OF CONTAINERS"
-          />
-        </Label>
-      }
-      input={
-        <Display>
-          <FormattedNumber value={numOfContainers} />
-        </Display>
-      }
-    />
-    <FieldItem
-      label={
-        <Label>
-          <FormattedMessage
-            id="modules.shipment.noOfApprovedAgreedDates"
-            defaultMessage="NO. OF APPROVED AGREED DATES"
-          />
-        </Label>
-      }
-      input={
-        <Display color="BLUE">
-          <FormattedNumber value={numOfApprovedAgreed} />
-        </Display>
-      }
-    />
-    <FieldItem
-      label={
-        <Label>
-          <FormattedMessage
-            id="modules.shipment.noOfApprovedActualDates"
-            defaultMessage="NO. OF APPROVED ACTUAL DATES"
-          />
-        </Label>
-      }
-      input={
-        <Display color="TEAL">
-          <FormattedNumber value={numOfApprovedActual} />
-        </Display>
-      }
-    />
+    <div className={RowStyle}>
+      <Label>
+        <FormattedMessage id="modules.shipment.noOfContainers" defaultMessage="NO. OF CONTAINERS" />
+      </Label>
+      <Display>
+        <FormattedNumber value={numOfContainers} />
+      </Display>
+    </div>
+
+    <div className={RowStyle}>
+      <Label>
+        <FormattedMessage
+          id="modules.shipment.noOfApprovedAgreedDates"
+          defaultMessage="NO. OF APPROVED AGREED DATES"
+        />
+      </Label>
+      <Display color="BLUE">
+        <FormattedNumber value={numOfApprovedAgreed} />
+      </Display>
+    </div>
+
+    <div className={RowStyle}>
+      <Label>
+        <FormattedMessage
+          id="modules.shipment.noOfApprovedActualDates"
+          defaultMessage="NO. OF APPROVED ACTUAL DATES"
+        />
+      </Label>
+      <Display color="TEAL">
+        <FormattedNumber value={numOfApprovedActual} />
+      </Display>
+    </div>
   </div>
 );
 
