@@ -161,7 +161,10 @@ const ContainerBatchCard = ({
           </Link>
           <button
             type="button"
-            onClick={onClickRepresentative}
+            onClick={evt => {
+              evt.stopPropagation();
+              onClickRepresentative();
+            }}
             className={RepresentIconStyle(isRepresented)}
           >
             <Icon icon="STAR" />
