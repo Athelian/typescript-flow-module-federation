@@ -1,6 +1,5 @@
 // @flow
 import CargoSection from './CargoSection';
-import ContainerCargoSection from './ContainerCargoSection';
 import ContainersSlideView from './ContainersSlideView';
 import { ContainersAmountSummary, ContainersDatesSummary } from './ContainersSummary';
 import DocumentsSection from './DocumentsSection';
@@ -12,7 +11,6 @@ import TimelineSection from './TimelineSection';
 
 export {
   CargoSection,
-  ContainerCargoSection,
   ContainersSlideView,
   ContainersAmountSummary,
   ContainersDatesSummary,

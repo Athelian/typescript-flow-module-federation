@@ -6,7 +6,8 @@ import { BooleanValue } from 'react-values';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { ShipmentBatchCard } from 'components/Cards';
-import { NewButton, MoveButton } from 'components/Buttons';
+// import { NewButton, MoveButton } from 'components/Buttons';
+import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
@@ -73,10 +74,12 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
                         (<FormattedNumber value={usefulBatches.length} />)
                       </div>
                     </div>
+
+                    {/* TODO Hide until it works
                     <MoveButton
                       label={intl.formatMessage(messages.moveBatches)}
                       onClick={() => {}}
-                    />
+                    /> */}
                   </div>
                   <div className={BatchesGridStyle}>
                     {usefulBatches.map((batch, position) => (

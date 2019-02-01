@@ -78,15 +78,13 @@ class SideBar extends React.Component<Props, State> {
                       label={<FormattedMessage {...messages.shipment} />}
                       onClick={() => this.setExpandedSubMenu(null)}
                     />
-                    {isEnableBetaFeature && (
-                      <MenuItem
-                        path="/container"
-                        isActive={`/${location.pathname.split('/')[1]}` === '/container'}
-                        icon="CONTAINER"
-                        label={<FormattedMessage {...messages.container} />}
-                        onClick={() => this.setExpandedSubMenu(null)}
-                      />
-                    )}
+                    <MenuItem
+                      path="/container"
+                      isActive={`/${location.pathname.split('/')[1]}` === '/container'}
+                      icon="CONTAINER"
+                      label={<FormattedMessage {...messages.container} />}
+                      onClick={() => this.setExpandedSubMenu(null)}
+                    />
                     <MenuItem
                       path="/product"
                       isActive={`/${location.pathname.split('/')[1]}` === '/product'}

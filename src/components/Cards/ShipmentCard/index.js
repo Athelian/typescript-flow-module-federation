@@ -3,7 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { isEnableBetaFeature } from 'utils/env';
 import Tag from 'components/Tag';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
@@ -95,16 +94,14 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                 </div>
               </div>
 
-              {isEnableBetaFeature && (
-                <div className={ShipmentBadgeWrapperStyle}>
-                  <div className={ShipmentBadgeIconStyle}>
-                    <Icon icon="CONTAINER" />
-                  </div>
-                  <div className={ShipmentBadgeStyle}>
-                    <FormattedNumber value={containers ? containers.length : 0} />
-                  </div>
+              <div className={ShipmentBadgeWrapperStyle}>
+                <div className={ShipmentBadgeIconStyle}>
+                  <Icon icon="CONTAINER" />
                 </div>
-              )}
+                <div className={ShipmentBadgeStyle}>
+                  <FormattedNumber value={containers ? containers.length : 0} />
+                </div>
+              </div>
 
               <div className={ShipmentBadgeWrapperStyle}>
                 <div className={ShipmentBadgeIconStyle}>

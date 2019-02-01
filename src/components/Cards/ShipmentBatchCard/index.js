@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { isNullOrUndefined } from 'utils/fp';
-import { isEnableBetaFeature } from 'utils/env';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import { calculatePackageQuantity } from 'modules/batch/form/container';
@@ -349,34 +348,32 @@ const ShipmentBatchCard = ({
             <Display align="left">{order.poNo}</Display>
           </div>
 
-          {isEnableBetaFeature && (
-            <div className={ContainerWrapperStyle}>
-              {isNullOrUndefined(container) ? (
-                <div
-                  className={ContainerIconStyle(false)}
-                  role="presentation"
+          <div className={ContainerWrapperStyle}>
+            {isNullOrUndefined(container) ? (
+              <div
+                className={ContainerIconStyle(false)}
+                role="presentation"
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="CONTAINER" />
+              </div>
+            ) : (
+              <>
+                <Link
+                  className={ContainerIconStyle(true)}
+                  to={`/container/${encodeId(container.id)}`}
                   onClick={evt => {
                     evt.stopPropagation();
                   }}
                 >
                   <Icon icon="CONTAINER" />
-                </div>
-              ) : (
-                <>
-                  <Link
-                    className={ContainerIconStyle(true)}
-                    to={`/container/${encodeId(container.id)}`}
-                    onClick={evt => {
-                      evt.stopPropagation();
-                    }}
-                  >
-                    <Icon icon="CONTAINER" />
-                  </Link>
-                  <Display align="left">{container.no}</Display>
-                </>
-              )}
-            </div>
-          )}
+                </Link>
+                <Display align="left">{container.no}</Display>
+              </>
+            )}
+          </div>
 
           <div className={OrderInChargeWrapperStyle}>
             <Label>

@@ -3,7 +3,6 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { isEnableBetaFeature } from 'utils/env';
 import {
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
@@ -275,7 +274,7 @@ const TimelineSection = ({ isNew }: Props) => (
               setFieldDeepValue={setFieldDeepValue}
               removeArrayItem={removeArrayItem}
             />
-            {isEnableBetaFeature && containers && containers.length > 0 ? (
+            {containers && containers.length > 0 ? (
               <ContainerWarehouseArrivalSection />
             ) : (
               <TimelineInfoSection
