@@ -12,6 +12,7 @@ type Metric = {
 export type ContainerFormState = {
   id?: ?string,
   no?: ?string,
+  memo?: string,
   archived: boolean,
   warehouse: Object,
   warehouseArrivalAgreedDate: string,
@@ -22,8 +23,6 @@ export type ContainerFormState = {
   warehouseArrivalActualDateAssignedTo: Array<Object>,
   warehouseArrivalActualDateApprovedBy: Object,
   warehouseArrivalActualDateApprovedAt: string,
-  tags?: Array<Object>,
-  memo?: string,
   totalBatchPackages: number,
   totalBatchQuantity: number,
   totalNumberOfUniqueOrderItems: number,
@@ -32,6 +31,7 @@ export type ContainerFormState = {
   totalPrice: ?Metric,
   shipment: Object,
   batches: Array<Object>,
+  tags?: Array<Object>,
 };
 
 const initValues = {
@@ -41,6 +41,8 @@ const initValues = {
   totalVolume: { value: 0, metric: 'm³' },
   totalWeight: { value: 0, metric: 'kg' },
   totalPrice: null,
+  batches: [],
+  tags: [],
 };
 
 export default class ContainerFormContainer extends Container<ContainerFormState> {
