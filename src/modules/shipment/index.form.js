@@ -151,17 +151,21 @@ class ShipmentFormModule extends React.Component<Props> {
         }
       }
     } else if (shipmentId) {
-      const { data } = await saveShipment({
+      const result = await saveShipment({
         variables: { input, id: decodeId(shipmentId) },
       });
-      const {
-        shipmentUpdate: { violations },
-      } = data;
-
-      if (violations && violations.length) {
-        onErrors(violations);
-      } else {
-        onSuccess();
+      if (result && result.data) {
+        const { data } = result;
+        if (data.shipmentUpdate) {
+          const {
+            shipmentUpdate: { violations },
+          } = data;
+          if (violations && violations.length) {
+            onErrors(violations);
+          } else {
+            onSuccess();
+          }
+        }
       }
     }
   };
