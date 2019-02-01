@@ -15,7 +15,6 @@ import { SaveButton, CancelButton, SelectTemplateButton, ExportButton } from 'co
 import { ToggleInput, Label, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
-import { formatOrders as formatOrderData } from 'modules/relationMap/orderFocused/formatter';
 import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
@@ -41,6 +40,7 @@ import {
   TableEmptyItem,
 } from './components';
 import TableItemForCustomFields from './components/TableItem/index.customFields';
+import { formatOrders as formatOrderData } from './formatter';
 import { entitiesUpdateManyMutation } from './mutation';
 import { totalLinePerOrder, parseChangedData, getOrderItemIdsByOrderId } from './helpers';
 import normalize from './normalize';
@@ -303,15 +303,9 @@ export default function TableInlineEdit({ allId, onCancel, data }: Props) {
     }
   }, [templateColumns]);
 
-  const {
-    sumShipments,
-    sumOrders,
-    sumOrderItems,
-    sumBatches,
-    collapsedRelation,
-    expandRelation,
-    ...mappingObjects
-  } = formatOrderData(data);
+  const { sumShipments, sumOrders, sumOrderItems, sumBatches, ...mappingObjects } = formatOrderData(
+    data
+  );
   useEffect(() => {
     if (data.length) {
       if (Object.keys(editData.orders).length === 0) {
