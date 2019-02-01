@@ -14,7 +14,7 @@ type OptionalActionProps = {
   className: string,
   onClick?: Function,
   toggle?: Function,
-  targetted?: string,
+  targeted?: string,
 };
 
 type ActionProps = OptionalActionProps & {
@@ -23,12 +23,12 @@ type ActionProps = OptionalActionProps & {
 
 const DisabledAction = () => <div className={style.DisabledWrapper} />;
 
-const Action = ({ icon, targetted, className, onClick, toggle }: ActionProps) => (
+const Action = ({ icon, targeted, className, onClick, toggle }: ActionProps) => (
   <div
-    className={style.ActionWrapperStyle(targetted === icon)}
+    className={style.ActionWrapperStyle(targeted === icon)}
     role="presentation"
     onClick={() => {
-      const isSelectedAction = targetted === icon;
+      const isSelectedAction = targeted === icon;
       if (toggle) {
         toggle(isSelectedAction ? null : icon);
       }
@@ -38,7 +38,7 @@ const Action = ({ icon, targetted, className, onClick, toggle }: ActionProps) =>
     }}
   >
     <div className={className}>
-      <Icon icon={targetted ? icon : `${icon}_REGULAR`} />
+      <Icon icon={targeted ? icon : `${icon}_REGULAR`} />
     </div>
   </div>
 );
@@ -48,11 +48,11 @@ Action.defaultProps = {
 
 const ActionCard = ({ children, show }: ActionCardProps) => (
   <StringValue>
-    {({ value: targetted, set: toggle }) =>
+    {({ value: targeted, set: toggle }) =>
       show && (
         <div className={cx(style.OverlayStyle, style.CardWrapperStyle)}>
           {children({
-            targetted,
+            targeted,
             toggle,
           })}
         </div>

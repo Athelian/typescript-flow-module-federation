@@ -12,7 +12,14 @@ import Badge from '../Badge';
 
 type OptionalProps = {
   wrapperClassName?: string,
-  parentOrderId?: string,
+  /**
+   * Parent Order Id for quickly find the order id to refetch data after split action
+   */
+  parentOrderId: string,
+  /**
+   * Exporter Id for tracking order item is same exporter
+   */
+  exporterId: string,
 };
 
 type Props = OptionalProps & BatchProps;
@@ -36,6 +43,7 @@ export default function Batch({
   wrapperClassName,
   id,
   parentOrderId,
+  exporterId,
   tags,
   no,
   quantity,
@@ -72,25 +80,31 @@ export default function Batch({
               }}
             />
             <ActionCard show={hovered}>
-              {({ targetted, toggle }) => (
+              {({ targeted, toggle }) => (
                 <>
                   <Action
                     icon="MAGIC"
-                    targetted={targetted}
+                    targeted={targeted}
                     toggle={toggle}
                     onClick={() => actions.toggleHighLight(BATCH, id)}
                   />
                   <Action
                     icon="DOCUMENT"
-                    targetted={targetted}
+                    targeted={targeted}
                     toggle={toggle}
                     onClick={() => actions.showEditForm(BATCH, id)}
                   />
                   <Action
                     icon="CHECKED"
-                    targetted={targetted}
+                    targeted={targeted}
                     toggle={toggle}
-                    onClick={() => actions.targetBatchEntity(id, parentOrderId || '')}
+                    onClick={() =>
+                      actions.targetBatchEntity({
+                        id,
+                        parentOrderId,
+                        exporterId: `${BATCH}-${exporterId}`,
+                      })
+                    }
                   />
                 </>
               )}

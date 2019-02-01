@@ -236,6 +236,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                 uiSelectors.isTarget(ORDER_ITEM, orderItem.id),
                 highlight.type === ORDER_ITEM && highlight.selectedId === orderItem.id
               )}
+              exporterId={item.exporter.id}
               {...orderItem}
             />
             {orderItem.batches.length > 0 ? (
@@ -260,6 +261,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                 />
                 <Batch
                   parentOrderId={item.id}
+                  exporterId={item.exporter.id}
                   wrapperClassName={ItemWrapperStyle(
                     highLightEntities.includes(`${BATCH}-${orderItem.batches[0].id}`),
                     uiSelectors.isTarget(BATCH, orderItem.batches[0].id),
@@ -293,7 +295,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                             (state.highlight.type === ORDER &&
                               state.highlight.selectedId === item.id) ||
                             (uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
-                              item.orderItems.findIndex(currentOrderItem =>
+                              findLastIndex(item.orderItems, currentOrderItem =>
                                 uiSelectors.isSelectEntity(
                                   highLightEntities,
                                   ORDER_ITEM,
@@ -327,6 +329,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                       />
                       <Batch
                         parentOrderId={item.id}
+                        exporterId={item.exporter.id}
                         wrapperClassName={ItemWrapperStyle(
                           highLightEntities.includes(`${BATCH}-${batch.id}`),
                           uiSelectors.isTarget(BATCH, batch.id),

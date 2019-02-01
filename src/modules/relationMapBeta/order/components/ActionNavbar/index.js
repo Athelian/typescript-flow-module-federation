@@ -31,6 +31,7 @@ import ClonePanel from './ClonePanel';
 import SplitPanel from './SplitPanel';
 import SplitBalancePanel from './SplitBalancePanel';
 import ConstraintPanel from './ConstraintPanel';
+import MoveToOrderPanel from './MoveToOrderPanel';
 import ErrorPanel from './ErrorPanel';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
@@ -78,7 +79,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   }
                   icon="CLONE"
                   active={activeAction === 'clone'}
-                  onClick={() => setActiveAction('clone')}
+                  onClick={() => {
+                    actions.selectOrderMode(false);
+                    setActiveAction('clone');
+                  }}
                 />
                 <TabItem
                   className={TabItemStyled}
@@ -92,10 +96,14 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   icon="SPLIT"
                   disabled={!uiSelectors.isAllowToSplitBatch()}
                   active={activeAction === 'split'}
-                  onClick={() => setActiveAction('split')}
+                  onClick={() => {
+                    actions.selectOrderMode(false);
+                    setActiveAction('split');
+                  }}
                 />
                 <TabItem
                   className={TabItemStyled}
+                  allowClickOnDisable
                   label={
                     <div className={MoveToWrapper}>
                       <FormattedMessage {...messages.moveTo} />
@@ -103,12 +111,16 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     </div>
                   }
                   icon="EXCHANGE"
-                  disabled={!uiSelectors.isAllowToConnectOrder(orderItems)}
+                  disabled={!uiSelectors.isAllowToConnectOrder()}
                   active={activeAction === 'connectOrder'}
-                  onClick={() => setActiveAction('connectOrder')}
+                  onClick={() => {
+                    actions.selectOrderMode(true);
+                    setActiveAction('connectOrder');
+                  }}
                 />
                 <TabItem
                   className={TabItemStyled}
+                  allowClickOnDisable
                   label={
                     <div className={MoveToWrapper}>
                       <FormattedMessage {...messages.moveTo} />
@@ -118,7 +130,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   icon="EXCHANGE"
                   disabled={!uiSelectors.isAllowToConnectShipment()}
                   active={activeAction === 'connectShipment'}
-                  onClick={() => setActiveAction('connectShipment')}
+                  onClick={() => {
+                    actions.selectOrderMode(false);
+                    setActiveAction('connectShipment');
+                  }}
                 />
                 <TabItem
                   className={TabItemStyled}
@@ -135,7 +150,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   icon="ORDER_ITEM"
                   disabled={!uiSelectors.isAllowToAutoFillBatch()}
                   active={activeAction === 'autoFillBatch'}
-                  onClick={() => setActiveAction('autoFillBatch')}
+                  onClick={() => {
+                    actions.selectOrderMode(false);
+                    setActiveAction('autoFillBatch');
+                  }}
                 />
                 <BooleanValue>
                   {({ value: opened, set: openTableView }) => (
@@ -173,13 +191,15 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       activeAction === 'autoFillBatch' && !uiSelectors.isAllowToAutoFillBatch(),
                     disabledMoveToShipment: false,
                     disabledMoveToOrder:
-                      activeAction === 'connectOrder' &&
-                      !uiSelectors.isAllowToConnectOrder(orderItems),
+                      activeAction === 'connectOrder' && !uiSelectors.isAllowToConnectOrder(),
                   }}
                 />
               )}
               {state.error && (
-                <ErrorPanel onClickCancel={console.warn} onClickRefresh={console.warn} />
+                <ErrorPanel
+                  onClickCancel={() => actions.clearErrorMessage()}
+                  onClickRefresh={() => window.location.reload()}
+                />
               )}
               {activeAction && (
                 <OutsideClickHandler ignoreClick onOutsideClick={() => {}}>
@@ -286,6 +306,15 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       actions.autoFillBatchesFailed(error);
                     }
                   }}
+                />
+              )}
+              {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder() && (
+                <MoveToOrderPanel
+                  onMoveToNewOrder={console.warn}
+                  onMoveToExistOrder={console.warn}
+                  onClearSelectOrder={() => actions.toggleSelectedOrder('')}
+                  onDelete={console.warn}
+                  hasSelectedOrder={uiSelectors.isSelectedOrder()}
                 />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
