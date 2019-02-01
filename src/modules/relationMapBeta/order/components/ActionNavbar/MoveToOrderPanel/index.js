@@ -19,10 +19,12 @@ type Props = {
   onClearSelectOrder: Function,
   onDelete: Function,
   hasSelectedOrder: boolean,
+  hasSelectedAllBatches: boolean,
 };
 
 const MoveToOrderPanel = ({
   hasSelectedOrder,
+  hasSelectedAllBatches,
   onMoveToNewOrder,
   onMoveToExistOrder,
   onDelete,
@@ -30,7 +32,11 @@ const MoveToOrderPanel = ({
 }: Props) => (
   <MoveToOrderPanelWrapper>
     {hasSelectedOrder ? (
-      <ApplyPanel onConfirm={onMoveToExistOrder} onReset={onClearSelectOrder} />
+      <ApplyPanel
+        hasSelectedAllBatches={hasSelectedAllBatches}
+        onConfirm={onMoveToExistOrder}
+        onReset={onClearSelectOrder}
+      />
     ) : (
       <>
         <div className={style.SubPanel}>

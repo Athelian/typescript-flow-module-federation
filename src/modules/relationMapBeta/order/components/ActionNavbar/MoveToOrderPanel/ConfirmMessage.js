@@ -20,40 +20,37 @@ const ConfirmMessage = ({
   diffCurrency,
   totalDiff,
 }: Props) => {
-  if (selectAllBatch && !hasDiffCurrency) {
-    return (
+  return (
+    <>
+      <div>
+        {!selectAllBatch && (
+          <Label className={ConfirmLabelStyle} align="center">
+            <FormattedMessage {...messages.deleteUnSelectBatch} />
+          </Label>
+        )}
+        {hasDiffCurrency && (
+          <Label className={ConfirmLabelStyle} align="center">
+            <FormattedMessage {...messages.diffCurrency} />
+            <Label className={CurrencyLabelStyle} align="center">
+              {baseCurrency}
+            </Label>
+            {totalDiff === 1 && (
+              <Label align="center">
+                <FormattedMessage {...messages.diffSingleCurrency} />
+                <Label className={CurrencyLabelStyle} align="center">
+                  {diffCurrency}
+                </Label>
+              </Label>
+            )}
+            {totalDiff > 1 && <FormattedMessage {...messages.diffMultipleCurrency} />}
+            <FormattedMessage {...messages.diffCurrencyAction} />
+          </Label>
+        )}
+      </div>
       <Label className={ConfirmLabelStyle} align="center">
         <FormattedMessage {...messages.areYouSure} />
       </Label>
-    );
-  }
-  return (
-    <div>
-      {selectAllBatch && (
-        <Label className={ConfirmLabelStyle} align="center">
-          <FormattedMessage {...messages.deleteUnSelectBatch} />
-        </Label>
-      )}
-      {hasDiffCurrency && (
-        <Label className={ConfirmLabelStyle} align="center">
-          <FormattedMessage {...messages.diffCurrency} />
-          <Label className={CurrencyLabelStyle} align="center">
-            {baseCurrency}
-          </Label>
-          {totalDiff === 1 && (
-            <Label align="center">
-              <FormattedMessage {...messages.diffSingleCurrency} />
-              <Label className={CurrencyLabelStyle} align="center">
-                {diffCurrency}
-              </Label>
-            </Label>
-          )}
-          {totalDiff > 1 && <FormattedMessage {...messages.diffMultipleCurrency} />}
-          <FormattedMessage {...messages.diffCurrencyAction} />
-          <FormattedMessage {...messages.areYouSure} />
-        </Label>
-      )}
-    </div>
+    </>
   );
 };
 
