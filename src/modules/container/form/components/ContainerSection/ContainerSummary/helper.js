@@ -2,7 +2,7 @@
 import { totalAdjustQuantity } from 'components/Cards/utils';
 import { convert as convertVolume } from 'modules/form/helpers/metricInput/volumeInput';
 import { convert as convertWeight } from 'modules/form/helpers/metricInput/weightInput';
-import { getByPath } from 'utils/fp';
+import { getByPath, isNullOrUndefined } from 'utils/fp';
 
 const findBatchQuantity = (batch: Object) => {
   const {
@@ -22,12 +22,14 @@ const findPriceAmount = (batch: Object, totalBatchQuantity: number) => {
 const findVolume = (batch: Object) => {
   const {
     packageQuantity = 0,
-    packageVolume = {},
+    packageVolume,
   }: {
     packageQuantity: number,
     packageVolume: Object,
   } = batch;
-  const volume = convertVolume(packageVolume.value, packageVolume.metric, 'm³');
+  const volume = isNullOrUndefined(packageVolume)
+    ? 0
+    : convertVolume(packageVolume.value, packageVolume.metric, 'm³');
   return packageQuantity * volume;
 };
 
