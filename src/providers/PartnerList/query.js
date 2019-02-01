@@ -20,6 +20,12 @@ export const partnerListQuery = gql`
                         id
                         name
                         types
+                        partner {
+                          ... on Partner {
+                            id
+                            code
+                          }
+                        }
                       }
                     }
                   }

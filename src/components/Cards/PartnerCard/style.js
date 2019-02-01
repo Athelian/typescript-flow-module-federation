@@ -17,7 +17,7 @@ export const PartnerCardStyle = (size: 'full' | 'half' | 'quarter'): string => c
   ${size === 'quarter' &&
     `
       grid-template-columns: 92.5px;
-      grid-template-rows: 30px 105px;
+      grid-template-rows: 20px 90px;
     `};
 `;
 
@@ -30,10 +30,17 @@ export const PartnerCardImageStyle: string = css`
 
 export const PartnerInfoWrapperStyle = (size: 'full' | 'half' | 'quarter'): string => css`
   ${layout.GRID_VERTICAL};
-  grid-template-columns: ${size === 'quarter' ? '92.5px' : '195px'};
-  grid-gap: 5px;
-  padding: 5px 0;
-  width: ${size === 'quarter' ? '92.5px' : '195px'};
+  ${size === 'quarter'
+    ? `
+    grid-template-columns: 92.5px;
+    width: 92.5px
+  `
+    : `
+    grid-template-columns: 195px;
+    grid-gap: 5px;
+    padding: 5px 0;
+    width: 195px;
+  `};
 `;
 
 export const PartnerNameStyle: string = css`
