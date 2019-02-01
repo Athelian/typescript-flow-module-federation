@@ -15,44 +15,42 @@ type Props = {
   onConfirm: Function,
 };
 
-const ApplyPanel = ({ onReset, onConfirm }: Props) => {
-  return (
-    <Panel>
-      <Label className={LabelConnectStyle}>
-        s
-        <FormattedMessage {...messages.connect} />
-        <Icon icon="CONNECT" />
-      </Label>
-      <Label className={GroupLabelButtonStyle}>
-        <FormattedMessage {...messages.askConnectToOrder} />
-        <BaseButton label="CLEAR" className={FlatButtonStyle} onClick={onReset} />
-        <BaseButton
-          icon="CONFIRM"
-          label={<FormattedMessage id="components.NavBar.filter.apply" defaultMessage="APPLY" />}
-          onClick={onConfirm}
-        />
-        <BooleanValue>
-          {({ value: isOpen, set: dialogToggle }) => (
-            <ConfirmDialog
-              isOpen={isOpen}
-              onRequestClose={() => dialogToggle('isOpen', false)}
-              onCancel={() => dialogToggle('isOpen', false)}
-              message={
-                <ConfirmMessage
-                  selectAllBatch
-                  totalDiff={0}
-                  hasDiffCurrency={false}
-                  baseCurrency=""
-                  diffCurrency=""
-                />
-              }
-              onConfirm={onConfirm}
-            />
-          )}
-        </BooleanValue>
-      </Label>
-    </Panel>
-  );
-};
+const ApplyPanel = ({ onReset, onConfirm }: Props) => (
+  <Panel>
+    <Label className={LabelConnectStyle}>
+      s
+      <FormattedMessage {...messages.connect} />
+      <Icon icon="CONNECT" />
+    </Label>
+    <Label className={GroupLabelButtonStyle}>
+      <FormattedMessage {...messages.askConnectToOrder} />
+      <BaseButton label="CLEAR" className={FlatButtonStyle} onClick={onReset} />
+      <BaseButton
+        icon="CONFIRM"
+        label={<FormattedMessage id="components.NavBar.filter.apply" defaultMessage="APPLY" />}
+        onClick={onConfirm}
+      />
+      <BooleanValue>
+        {({ value: isOpen, set: dialogToggle }) => (
+          <ConfirmDialog
+            isOpen={isOpen}
+            onRequestClose={() => dialogToggle('isOpen', false)}
+            onCancel={() => dialogToggle('isOpen', false)}
+            message={
+              <ConfirmMessage
+                selectAllBatch
+                totalDiff={0}
+                hasDiffCurrency={false}
+                baseCurrency=""
+                diffCurrency=""
+              />
+            }
+            onConfirm={onConfirm}
+          />
+        )}
+      </BooleanValue>
+    </Label>
+  </Panel>
+);
 
 export default ApplyPanel;

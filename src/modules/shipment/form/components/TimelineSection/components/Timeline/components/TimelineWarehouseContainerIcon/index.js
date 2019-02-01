@@ -8,9 +8,9 @@ import Ring from './Ring';
 
 type Container = {
   warehouseArrivalAgreedDate: string,
-  warehouseArrivalAgreedDateApprovedBy: string,
+  warehouseArrivalAgreedDateApprovedAt: string,
   warehouseArrivalActualDate: string,
-  warehouseArrivalActualDateApprovedBy: string,
+  warehouseArrivalActualDateApprovedAt: string,
 };
 type Props = {
   containers: Array<Container>,
@@ -28,11 +28,11 @@ const defaultProps = {
 
 const getIconColor = (containers: Array<Container>) => {
   let color = 'TEAL';
-  const allAgreed = containers.every(container => container.warehouseArrivalAgreedDateApprovedBy);
+  const allAgreed = containers.every(container => container.warehouseArrivalAgreedDateApprovedAt);
   containers.forEach(container => {
     const {
-      warehouseArrivalAgreedDateApprovedBy: agreedDateApproved,
-      warehouseArrivalActualDateApprovedBy: actualDateApproved,
+      warehouseArrivalAgreedDateApprovedAt: agreedDateApproved,
+      warehouseArrivalActualDateApprovedAt: actualDateApproved,
     } = container;
     if (!agreedDateApproved && !actualDateApproved) {
       color = 'GRAY_LIGHT';
@@ -52,8 +52,8 @@ const getRingPercent = (containers: Array<Container>) => {
   let actualDates = 0;
   containers.forEach(container => {
     const {
-      warehouseArrivalAgreedDateApprovedBy: agreedDateApproved,
-      warehouseArrivalActualDateApprovedBy: actualDateApproved,
+      warehouseArrivalAgreedDateApprovedAt: agreedDateApproved,
+      warehouseArrivalActualDateApprovedAt: actualDateApproved,
     } = container;
     if (agreedDateApproved) {
       agreedDates += 1;
