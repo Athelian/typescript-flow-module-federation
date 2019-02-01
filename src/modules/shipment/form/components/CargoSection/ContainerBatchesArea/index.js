@@ -6,7 +6,8 @@ import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { ShipmentContainerBatchCard } from 'components/Cards';
-import { NewButton, MoveButton } from 'components/Buttons';
+// import { NewButton, MoveButton } from 'components/Buttons';
+import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
@@ -82,6 +83,8 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                         (<FormattedNumber value={batchesInContainer.length} />)
                       </div>
                     </div>
+
+                    {/* TODO Hide until it works
                     <MoveButton
                       label={
                         <FormattedMessage
@@ -90,7 +93,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                         />
                       }
                       onClick={() => {}}
-                    />
+                    /> */}
                   </div>
                   <div className={BatchesGridStyle}>
                     {batchesInContainer.map((batch, position) => (
