@@ -16,6 +16,7 @@ import {
 } from 'modules/relationMap/style';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
+import scrollIntoView from 'utils/scrollIntoView';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -66,15 +67,26 @@ const Order = ({ intl }: Props) => {
   return (
     <DispatchProvider value={{ dispatch, state }}>
       <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
-        {({ loading, data, fetchMore, error }) => {
+        {({ loading, data, fetchMore, error, refetch, client }) => {
           if (error) {
             return error.message;
           }
-    
+
           if (loading) {
             return <LoadingIcon />;
           }
-   
+
+          if (state.refetchOrder) {
+            actions.refetchQueryBy('ORDER', false);
+            client.clearStore().then(() => {
+              refetch(queryVariables).then(() => {
+                scrollIntoView({
+                  targetId: `order-${uiSelectors.lastNewOrderId()}`,
+                });
+              });
+            });
+          }
+
           const { entities } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
           const { orders, orderItems, batches, shipments } = entities;
           const highLightEntities = findHighLightEntities(state.highlight, {

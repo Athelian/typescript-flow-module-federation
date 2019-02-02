@@ -8,6 +8,8 @@ export type UIState = {
   loading: boolean,
   error: boolean,
   showTag: boolean,
+  refetchOrder: boolean,
+  refetchShipment: boolean,
   expandCards: {
     orders: Array<string>,
     shipments: Array<string>,
@@ -24,6 +26,9 @@ export type UIState = {
   edit: {
     type: string,
     selectedId: string,
+  },
+  new: {
+    orders: Array<string>,
   },
   targets: Array<string>,
   totalShipment: number,
@@ -60,11 +65,16 @@ export const uiInitState: UIState = {
   loading: false,
   error: false,
   showTag: getInitShowTag(),
+  refetchOrder: false,
+  refetchShipment: false,
   expandCards: {
     orders: [],
     shipments: [],
   },
   toggleShipmentList: getInitToggleShipmentList(),
+  new: {
+    orders: [],
+  },
   select: {
     mode: 'SINGLE',
     entities: [],
@@ -115,6 +125,16 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           enableSelectMode: !!getByPathWithDefault(false, 'payload.isEnable', action),
         },
       };
+    case 'NEW_ORDER': {
+      const orderId = getByPathWithDefault('', 'payload.id', action);
+      return {
+        ...state,
+        new: {
+          ...state.new,
+          orders: [...state.new.orders, orderId],
+        },
+      };
+    }
     case 'TOGGLE_SELECTED_ORDER': {
       const orderId = getByPathWithDefault('', 'payload.id', action);
       return {
@@ -123,6 +143,15 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           ...state.connectOrder,
           orderId: orderId === state.connectOrder.orderId ? '' : orderId,
         },
+      };
+    }
+    case 'REFETCH_BY': {
+      const enable = getByPathWithDefault(false, 'payload.refetch', action);
+      const type = getByPathWithDefault('', 'payload.entity', action);
+      return {
+        ...state,
+        refetchOrder: type === 'ORDER' && enable,
+        refetchShipment: type === 'SHIPMENT' && enable,
       };
     }
     case 'SPLIT_BATCH':
@@ -708,6 +737,21 @@ export function actionCreators(dispatch: Function) {
           id,
         },
       }),
+    adddNewOrder: (id: string) =>
+      dispatch({
+        type: 'NEW_ORDER',
+        payload: {
+          id,
+        },
+      }),
+    refetchQueryBy: (entity: string, refetch: boolean) =>
+      dispatch({
+        type: 'REFETCH_BY',
+        payload: {
+          entity,
+          refetch,
+        },
+      }),
   };
 }
 
@@ -859,5 +903,8 @@ export function selectors(state: UIState) {
     hasSelectedAllBatches: (orderItems: Object) => hasSelectedAllBatches({ state, orderItems }),
     findAllCurrencies: (orders: Object, orderItems: Object) =>
       findAllCurrencies({ state, orders, orderItems }),
+    lastNewOrderId: () =>
+      state.new.orders.length > 0 ? state.new.orders[state.new.orders.length - 1] : '',
+    isNewOrder: (id: string) => state.new.orders.includes(id),
   };
 }

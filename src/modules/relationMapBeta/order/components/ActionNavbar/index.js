@@ -316,7 +316,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   hasSelectedOrder={uiSelectors.isSelectedOrder()}
                   hasSelectedAllBatches={uiSelectors.hasSelectedAllBatches(orderItems)}
                   currencies={uiSelectors.findAllCurrencies(orders, orderItems)}
-                  onMoveToNewOrder={console.warn}
+                  onMoveToNewOrder={() => actions.showEditForm('NEW_ORDER', 'new')}
                   onMoveToExistOrder={async ({ currencies }) => {
                     const needToResetPrice = currencies.length > 1;
                     const orderItemIds = uiSelectors.targetedOrderItemIds();
