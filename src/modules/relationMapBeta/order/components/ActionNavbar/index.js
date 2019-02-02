@@ -462,12 +462,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         });
                       });
 
-                      console.warn({
-                        targetOrder,
-                        updateOrdersInput,
-                        processBatchIds,
-                        orderIds,
-                      });
                       actions.moveToOrder();
                       try {
                         const updateOrders = await Promise.all(
@@ -490,7 +484,68 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     }
                   }}
                   onClearSelectOrder={() => actions.toggleSelectedOrder('')}
-                  onDelete={console.warn}
+                  onDelete={async () => {
+                    const orderItemIds = uiSelectors.targetedOrderItemIds();
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const allOrderItemIds = [...orderItemIds];
+                    (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
+                      if (
+                        !allOrderItemIds.includes(orderItemId) &&
+                        intersection(orderItem.batches, batchIds).length > 0
+                      ) {
+                        allOrderItemIds.push(orderItemId);
+                      }
+                    });
+                    const orderIds = [];
+                    (Object.entries(orders): Array<any>).forEach(([orderId, order]) => {
+                      if (
+                        !orderIds.includes(orderId) &&
+                        intersection(order.orderItems, allOrderItemIds).length > 0
+                      ) {
+                        orderIds.push(orderId);
+                      }
+                    });
+
+                    // remove order item and batches from original order
+                    const updateOrdersInput = [];
+                    orderIds.forEach(orderId => {
+                      const { orderItems: currentOrderItems } = orders[orderId];
+                      updateOrdersInput.push({
+                        id: orderId,
+                        orderItems: currentOrderItems
+                          .filter(orderItemId => !orderItemIds.includes(orderItemId))
+                          .map(orderItemId => {
+                            const orderItem = orderItems[orderItemId];
+                            return {
+                              ...orderItem,
+                              batches: orderItem.batches
+                                .filter(batchId => !batchIds.includes(batchId))
+                                .map(batchId => ({ id: batchId, isNew: false })),
+                            };
+                          }),
+                      });
+                    });
+
+                    actions.moveToOrder();
+                    try {
+                      const updateOrders = await Promise.all(
+                        updateOrdersInput.map(item =>
+                          client.mutate({
+                            mutation: updateOrderMutation,
+                            variables: {
+                              id: item.id,
+                              input: prepareUpdateOrderInput({
+                                orderItems: cleanUpData(item.orderItems),
+                              }),
+                            },
+                          })
+                        )
+                      );
+                      actions.moveToOrderSuccess(updateOrders);
+                    } catch (error) {
+                      actions.moveToOrderFailed(error);
+                    }
+                  }}
                 />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (

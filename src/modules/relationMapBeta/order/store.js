@@ -151,7 +151,8 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           ...state.connectOrder,
           orderId: '',
         },
-        targets: [`${ORDER}-${state.connectOrder.orderId}`],
+        targets:
+          state.connectOrder.orderId !== '' ? [`${ORDER}-${state.connectOrder.orderId}`] : [],
       };
     case 'SPLIT_BATCH_SUCCESS': {
       const batchId = getByPathWithDefault('', 'payload.batchId', action);
