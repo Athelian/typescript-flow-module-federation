@@ -31,20 +31,20 @@ const ContainersDatesSummary = ({
   <div className={ContainerDatesSummaryStyle}>
     <div className={ColumnWrapperStyle}>
       <Label>
-        <FormattedMessage id="modules.shipment.agreedArrival" defaultMessage="AGREED ARRIVAL" />
+        <FormattedMessage id="modules.Shipments.agreedArrival" defaultMessage="AGREED ARRIVAL" />
       </Label>
       <Label>
-        <FormattedMessage id="modules.shipment.actualArrival" defaultMessage="ACTUAL ARRIVAL" />
+        <FormattedMessage id="modules.Shipments.actualArrival" defaultMessage="ACTUAL ARRIVAL" />
       </Label>
     </div>
 
     <div className={ColumnWrapperStyle}>
       <Label>
-        <FormattedMessage id="modules.shipment.from" defaultMessage="FROM" />
+        <FormattedMessage id="modules.Shipments.from" defaultMessage="FROM" />
       </Label>
       {isNullOrUndefined(agreedArrivalDateFrom) ? (
         <Display color="GRAY_LIGHT" align="left">
-          <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+          <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         </Display>
       ) : (
         <Display color="BLUE" align="left">
@@ -53,7 +53,7 @@ const ContainersDatesSummary = ({
       )}
       {isNullOrUndefined(actualArrivalDateFrom) ? (
         <Display color="GRAY_LIGHT" align="left">
-          <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+          <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         </Display>
       ) : (
         <Display color="TEAL" align="left">
@@ -64,11 +64,11 @@ const ContainersDatesSummary = ({
 
     <div className={ColumnWrapperStyle}>
       <Label>
-        <FormattedMessage id="modules.shipment.to" defaultMessage="TO" />
+        <FormattedMessage id="modules.Shipments.to" defaultMessage="TO" />
       </Label>
       {isNullOrUndefined(agreedArrivalDateTo) ? (
         <Display color="GRAY_LIGHT" align="left">
-          <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+          <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         </Display>
       ) : (
         <Display color="BLUE" align="left">
@@ -77,7 +77,7 @@ const ContainersDatesSummary = ({
       )}
       {isNullOrUndefined(actualArrivalDateTo) ? (
         <Display color="GRAY_LIGHT" align="left">
-          <FormattedMessage id="modules.shipment.noDate" defaultMessage="No date" />
+          <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         </Display>
       ) : (
         <Display color="TEAL" align="left">
