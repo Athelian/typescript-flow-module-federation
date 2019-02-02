@@ -1,4 +1,5 @@
 // @flow
+import { intersection } from 'lodash';
 import logger from 'utils/logger';
 import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMap/constants';
 import { getByPathWithDefault } from 'utils/fp';
@@ -127,6 +128,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'SPLIT_BATCH':
     case 'AUTO_FILL_BATCHES':
     case 'CLONE_ENTITIES':
+    case 'MOVE_TO_ORDER':
       return {
         ...state,
         loading: true,
@@ -134,10 +136,22 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'SPLIT_BATCH_ERROR':
     case 'AUTO_FILL_BATCHES_ERROR':
     case 'CLONE_ENTITIES_ERROR':
+    case 'MOVE_TO_ORDER_ERROR':
       return {
         ...state,
         loading: false,
         error: true,
+      };
+    case 'MOVE_TO_ORDER_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        connectOrder: {
+          ...state.connectOrder,
+          orderId: '',
+        },
+        targets: [`${ORDER}-${state.connectOrder.orderId}`],
       };
     case 'SPLIT_BATCH_SUCCESS': {
       const batchId = getByPathWithDefault('', 'payload.batchId', action);
@@ -362,23 +376,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         if (targets.includes(`${ORDER}-${payload.id}`)) {
           return {
             ...state,
-            connectOrder: {
-              ...state.connectOrder,
-              exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
-                ? state.connectOrder.exporterIds
-                : [...state.connectOrder.exporterIds, payload.exporterId],
-            },
             targets: (targets.filter(item => item !== `${ORDER}-${payload.id}`): Array<string>),
           };
         }
         return {
           ...state,
-          connectOrder: {
-            ...state.connectOrder,
-            exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
-              ? state.connectOrder.exporterIds
-              : [...state.connectOrder.exporterIds, payload.exporterId],
-          },
           targets: [...targets, `${ORDER}-${payload.id}`],
         };
       }
@@ -670,6 +672,27 @@ export function actionCreators(dispatch: Function) {
           error,
         },
       }),
+    moveToOrder: (entities: Object) =>
+      dispatch({
+        type: 'MOVE_TO_ORDER',
+        payload: {
+          entities,
+        },
+      }),
+    moveToOrderSuccess: (data: Object) =>
+      dispatch({
+        type: 'MOVE_TO_ORDER_SUCCESS',
+        payload: {
+          data,
+        },
+      }),
+    moveToOrderFailed: (error: string) =>
+      dispatch({
+        type: 'MOVE_TO_ORDER_ERROR',
+        payload: {
+          error,
+        },
+      }),
     selectOrderMode: (isEnable: boolean) =>
       dispatch({
         type: 'ENABLE_SELECT_ORDER',
@@ -755,13 +778,13 @@ const hasSelectedAllBatches = ({ state, orderItems }: { state: UIState, orderIte
   const orderItemIds = targetedOrderItemIds(state);
   const allBatchIds = [];
   orderItemIds.forEach(orderItemId => {
-    const { batches = [] } = orderItems[orderItemId];
+    const { batches = [] } = orderItems[orderItemId] || {};
     batches.forEach(id => {
       if (!allBatchIds.includes(id)) allBatchIds.push(id);
     });
   });
 
-  return batchIds.length === allBatchIds.length;
+  return batchIds.length === allBatchIds.length && allBatchIds.length > 0;
 };
 
 const findAllCurrencies = ({
@@ -778,9 +801,21 @@ const findAllCurrencies = ({
   if (selectedOrder) {
     result.push(selectedOrder.currency);
     const orderItemIds = targetedOrderItemIds(state);
-    orderItemIds.forEach(orderItemId => {
-      const { price } = orderItems[orderItemId];
-      if (!result.includes(price.currency)) result.push(price.currency);
+    const batchIds = targetedBatchIds(state);
+    const allOrderItemIds = [...orderItemIds];
+    (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
+      if (
+        !allOrderItemIds.includes(orderItemId) &&
+        intersection(orderItem.batches, batchIds).length > 0
+      ) {
+        allOrderItemIds.push(orderItemId);
+      }
+    });
+    allOrderItemIds.forEach(orderItemId => {
+      if (orderItems[orderItemId]) {
+        const { price } = orderItems[orderItemId];
+        if (!result.includes(price.currency)) result.push(price.currency);
+      }
     });
   }
   return result;
@@ -789,7 +824,6 @@ const findAllCurrencies = ({
 export function selectors(state: UIState) {
   return {
     isAllowToConnectOrder: () => isAllowToConnectOrder(state),
-    isShowConnectOrder: () => state.connectOrder.enableSelectMode && state.targets.length > 0,
     isSelectedOrder: () => state.connectOrder.enableSelectMode && state.connectOrder.orderId !== '',
     isAllowToSelectOrder: (exporterId: string) => isAllowToSelectOrder({ exporterId, state }),
     isAllowToConnectShipment: () => false,

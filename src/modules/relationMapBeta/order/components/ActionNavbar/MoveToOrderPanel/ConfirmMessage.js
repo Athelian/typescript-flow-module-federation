@@ -7,6 +7,7 @@ import { ConfirmLabelStyle, CurrencyLabelStyle } from './style';
 
 type Props = {
   selectAllBatch: boolean,
+  hasSelectedOrderItem: boolean,
   hasDiffCurrency: boolean,
   baseCurrency: string,
   diffCurrency: string,
@@ -15,6 +16,7 @@ type Props = {
 
 const ConfirmMessage = ({
   selectAllBatch,
+  hasSelectedOrderItem,
   hasDiffCurrency,
   baseCurrency,
   diffCurrency,
@@ -23,7 +25,7 @@ const ConfirmMessage = ({
   return (
     <>
       <div>
-        {!selectAllBatch && (
+        {hasSelectedOrderItem && !selectAllBatch && (
           <Label className={ConfirmLabelStyle} align="center">
             <FormattedMessage {...messages.deleteUnSelectBatch} />
           </Label>

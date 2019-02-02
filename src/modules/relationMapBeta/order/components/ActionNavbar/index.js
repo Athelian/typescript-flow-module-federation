@@ -8,6 +8,7 @@ import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
@@ -36,6 +37,7 @@ import ErrorPanel from './ErrorPanel';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
 import { cloneBatchMutation } from './ClonePanel/mutation';
+import { updateOrderMutation, prepareUpdateOrderInput } from './MoveToOrderPanel/mutation';
 import TableView from '../TableInlineEdit';
 
 type Props = {
@@ -258,8 +260,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         )
                       );
                       const result = cloneBatches.map((item, index) => ({
-                        id: orderItemIds[index],
-                        batches: getByPathWithDefault([], 'data.batchBalanceSplit.batches', item),
+                        id: batchIds[index],
+                        batch: getByPathWithDefault([], 'data.batchClone', item),
                       }));
                       actions.cloneEntitiesSuccess(result);
                     } catch (error) {
@@ -310,13 +312,185 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
               )}
               {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder() && (
                 <MoveToOrderPanel
-                  onMoveToNewOrder={console.warn}
-                  onMoveToExistOrder={console.warn}
-                  onClearSelectOrder={() => actions.toggleSelectedOrder('')}
-                  onDelete={console.warn}
+                  hasSelectedOrderItem={uiSelectors.targetedOrderItemIds().length > 0}
                   hasSelectedOrder={uiSelectors.isSelectedOrder()}
                   hasSelectedAllBatches={uiSelectors.hasSelectedAllBatches(orderItems)}
                   currencies={uiSelectors.findAllCurrencies(orders, orderItems)}
+                  onMoveToNewOrder={console.warn}
+                  onMoveToExistOrder={async ({ currencies }) => {
+                    const needToResetPrice = currencies.length > 1;
+                    const orderItemIds = uiSelectors.targetedOrderItemIds();
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const allOrderItemIds = [...orderItemIds];
+                    (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
+                      if (
+                        !allOrderItemIds.includes(orderItemId) &&
+                        intersection(orderItem.batches, batchIds).length > 0
+                      ) {
+                        allOrderItemIds.push(orderItemId);
+                      }
+                    });
+                    const orderIds = [];
+                    (Object.entries(orders): Array<any>).forEach(([orderId, order]) => {
+                      if (
+                        !orderIds.includes(orderId) &&
+                        intersection(order.orderItems, allOrderItemIds).length > 0
+                      ) {
+                        orderIds.push(orderId);
+                      }
+                    });
+                    const targetOrder = orders[state.connectOrder.orderId];
+                    const processBatchIds = [];
+                    const updateOrdersInput = [];
+                    if (targetOrder) {
+                      // add order items and batches to target
+                      const moveOrderItems = [];
+                      orderItemIds.forEach(orderItemId => {
+                        const orderItem = orderItems[orderItemId];
+                        if (orderItem) {
+                          if (
+                            intersection(orderItem.batches, batchIds).length === 0 ||
+                            orderItem.batches.length === 0
+                          ) {
+                            moveOrderItems.push({
+                              ...orderItem,
+                              ...(needToResetPrice
+                                ? {
+                                    price: {
+                                      currency: currencies[0],
+                                      amount: 0,
+                                    },
+                                  }
+                                : {}),
+                              batches: [],
+                              isNew: true,
+                            });
+                          } else {
+                            moveOrderItems.push({
+                              ...orderItem,
+                              ...(needToResetPrice
+                                ? {
+                                    price: {
+                                      currency: currencies[0],
+                                      amount: 0,
+                                    },
+                                  }
+                                : {}),
+                              batches: orderItem.batches
+                                .filter(batchId => batchIds.includes(batchId))
+                                .map(batchId => {
+                                  const { totalAdjusted, ...inputBatchFields } = batches[batchId];
+                                  return { isNew: true, ...inputBatchFields };
+                                }),
+                              isNew: true,
+                            });
+                            processBatchIds.push(...orderItem.batches);
+                          }
+                        }
+                      });
+                      // create each order item for the batch without the parent
+                      batchIds.forEach(batchId => {
+                        if (!processBatchIds.includes(batchId)) {
+                          const batch = batches[batchId];
+                          processBatchIds.push(batchId);
+                          if (batch) {
+                            const [, orderItem] = (Object.entries(orderItems): any).find(
+                              ([, { batches: currentBatches }]) => {
+                                return currentBatches.includes(batch.id);
+                              }
+                            );
+                            const { totalAdjusted, ...inputBatchFields } = batch;
+                            moveOrderItems.push({
+                              ...orderItem,
+                              isNew: true,
+                              ...(needToResetPrice
+                                ? {
+                                    price: {
+                                      currency: currencies[0],
+                                      amount: 0,
+                                    },
+                                  }
+                                : {}),
+                              batches: [{ ...inputBatchFields, isNew: true }],
+                            });
+                          }
+                        }
+                      });
+
+                      updateOrdersInput.push({
+                        id: targetOrder.id,
+                        orderItems: [
+                          ...targetOrder.orderItems.map(orderItemId => {
+                            const orderItem = orderItems[orderItemId];
+                            return {
+                              ...orderItem,
+                              batches: orderItem.batches.map(batchId => {
+                                const { totalAdjusted, ...inputBatchFields } = batches[batchId];
+                                return { isNew: false, ...inputBatchFields };
+                              }),
+                              isNew: false,
+                            };
+                          }),
+                          ...moveOrderItems,
+                        ],
+                      });
+
+                      // remove order item and batches from original order
+                      orderIds.forEach(orderId => {
+                        const { orderItems: currentOrderItems } = orders[orderId];
+                        updateOrdersInput.push({
+                          id: orderId,
+                          orderItems: currentOrderItems
+                            .filter(orderItemId => !orderItemIds.includes(orderItemId))
+                            .map(orderItemId => {
+                              const orderItem = orderItems[orderItemId];
+                              return {
+                                ...orderItem,
+                                ...(needToResetPrice
+                                  ? {
+                                      price: {
+                                        currency: currencies[0],
+                                        amount: 0,
+                                      },
+                                    }
+                                  : {}),
+                                batches: orderItem.batches
+                                  .filter(batchId => !batchIds.includes(batchId))
+                                  .map(batchId => ({ id: batchId, isNew: false })),
+                              };
+                            }),
+                        });
+                      });
+
+                      console.warn({
+                        targetOrder,
+                        updateOrdersInput,
+                        processBatchIds,
+                        orderIds,
+                      });
+                      actions.moveToOrder();
+                      try {
+                        const updateOrders = await Promise.all(
+                          updateOrdersInput.map(item =>
+                            client.mutate({
+                              mutation: updateOrderMutation,
+                              variables: {
+                                id: item.id,
+                                input: prepareUpdateOrderInput({
+                                  orderItems: cleanUpData(item.orderItems),
+                                }),
+                              },
+                            })
+                          )
+                        );
+                        actions.moveToOrderSuccess(updateOrders);
+                      } catch (error) {
+                        actions.moveToOrderFailed(error);
+                      }
+                    }
+                  }}
+                  onClearSelectOrder={() => actions.toggleSelectedOrder('')}
+                  onDelete={console.warn}
                 />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (

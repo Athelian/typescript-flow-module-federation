@@ -12,12 +12,19 @@ import { LabelConnectStyle, GroupLabelButtonStyle, Panel, FlatButtonStyle } from
 
 type Props = {
   hasSelectedAllBatches: boolean,
+  hasSelectedOrderItem: boolean,
   currencies: Array<string>,
   onReset: Function,
   onConfirm: Function,
 };
 
-const ApplyPanel = ({ onReset, onConfirm, hasSelectedAllBatches, currencies }: Props) => {
+const ApplyPanel = ({
+  onReset,
+  onConfirm,
+  hasSelectedAllBatches,
+  hasSelectedOrderItem,
+  currencies,
+}: Props) => {
   return (
     <Panel>
       <Label className={LabelConnectStyle}>
@@ -44,17 +51,20 @@ const ApplyPanel = ({ onReset, onConfirm, hasSelectedAllBatches, currencies }: P
                 message={
                   <ConfirmMessage
                     selectAllBatch={hasSelectedAllBatches}
+                    hasSelectedOrderItem={hasSelectedOrderItem}
                     totalDiff={currencies.length - 1}
                     hasDiffCurrency={currencies.length > 1}
                     baseCurrency={currencies[0]}
                     diffCurrency={currencies.length > 1 ? currencies[1] : ''}
                   />
                 }
-                onConfirm={() =>
+                onConfirm={() => {
+                  dialogToggle(false);
                   onConfirm({
                     hasSelectedAllBatches,
-                  })
-                }
+                    currencies,
+                  });
+                }}
               />
             </>
           )}

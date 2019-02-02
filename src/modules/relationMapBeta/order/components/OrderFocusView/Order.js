@@ -45,7 +45,7 @@ export default function Order({
                 shippedQuantity: totalShipped,
               }}
             />
-            {uiSelectors.isShowConnectOrder() ? (
+            {uiSelectors.isAllowToConnectOrder() ? (
               (() => {
                 if (!uiSelectors.isAllowToSelectOrder(exporter.id)) {
                   return <ActionCard show>{() => <DisabledAction />}</ActionCard>;

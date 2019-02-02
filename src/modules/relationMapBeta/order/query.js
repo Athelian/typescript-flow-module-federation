@@ -86,7 +86,7 @@ export const orderCardRMFragment = gql`
   }
 `;
 
-const shipmentCardRMFragment = gql`
+export const shipmentCardRMFragment = gql`
   fragment shipmentCardRMFragment on Shipment {
     id
     no

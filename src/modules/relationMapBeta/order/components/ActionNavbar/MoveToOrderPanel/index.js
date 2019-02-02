@@ -18,13 +18,24 @@ type Props = {
   onMoveToExistOrder: Function,
   onClearSelectOrder: Function,
   onDelete: Function,
+  /**
+   * Have selected an order for connect
+   */
   hasSelectedOrder: boolean,
+  /**
+   * Have targeted at least one order item
+   */
+  hasSelectedOrderItem: boolean,
+  /**
+   * Have targeted all batches inside an order item
+   */
   hasSelectedAllBatches: boolean,
   currencies: Array<string>,
 };
 
 const MoveToOrderPanel = ({
   hasSelectedOrder,
+  hasSelectedOrderItem,
   hasSelectedAllBatches,
   onMoveToNewOrder,
   onMoveToExistOrder,
@@ -36,6 +47,7 @@ const MoveToOrderPanel = ({
     {hasSelectedOrder ? (
       <ApplyPanel
         hasSelectedAllBatches={hasSelectedAllBatches}
+        hasSelectedOrderItem={hasSelectedOrderItem}
         onConfirm={onMoveToExistOrder}
         onReset={onClearSelectOrder}
         currencies={currencies}
