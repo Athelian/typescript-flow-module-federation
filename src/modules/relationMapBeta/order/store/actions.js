@@ -73,6 +73,13 @@ function actionCreators(dispatch: Function) {
           selectItems,
         },
       }),
+    targetNewEntities: (selectItems: Array<{ entity: string, id: string, exporterId: string }>) =>
+      dispatch({
+        type: 'TARGET_NEW_ENTITY',
+        payload: {
+          selectItems,
+        },
+      }),
     targetShipmentEntity: (id: string) =>
       dispatch({
         type: 'TARGET_SHIPMENT_ENTITY',

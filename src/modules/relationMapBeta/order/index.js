@@ -97,7 +97,9 @@ const Order = ({ intl }: Props) => {
                   },
                 })
               )
-            ).then(result => console.warn({ result }));
+            ).then(result => {
+              console.warn({ result });
+            });
             const queryOption: any = {
               query: orderDetailQuery,
               variables: {
@@ -105,6 +107,7 @@ const Order = ({ intl }: Props) => {
               },
             };
             client.query(queryOption).then(responseData => {
+              console.warn({ responseData });
               updateQuery(prevResult => {
                 // insert on the top
                 if (
@@ -117,6 +120,35 @@ const Order = ({ intl }: Props) => {
                 scrollIntoView({
                   targetId: `order-${newOrderId}`,
                 });
+
+                actions.targetNewEntities([
+                  ...getByPathWithDefault([], 'order.orderItems', responseData.data).map(
+                    orderItem => ({
+                      entity: ORDER_ITEM,
+                      id: orderItem.id,
+                      exporterId: `${ORDER_ITEM}-${getByPathWithDefault(
+                        '',
+                        'order.exporter.id',
+                        responseData.data
+                      )}`,
+                    })
+                  ),
+                  ...getByPathWithDefault([], 'order.orderItems', responseData.data).reduce(
+                    (result, orderItem) =>
+                      result.concat(
+                        orderItem.batches.map(batch => ({
+                          entity: BATCH,
+                          id: batch.id,
+                          exporterId: `${BATCH}-${getByPathWithDefault(
+                            '',
+                            'order.exporter.id',
+                            responseData.data
+                          )}`,
+                        }))
+                      ),
+                    []
+                  ),
+                ]);
                 return prevResult;
               });
             });

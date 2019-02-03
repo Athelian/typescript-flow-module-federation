@@ -294,6 +294,30 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       }
       return state;
     }
+    case 'TARGET_NEW_ENTITY': {
+      const { payload } = action;
+      const targets = [];
+      const exporterIds = [];
+      if (payload) {
+        const { selectItems = [] } = payload;
+        selectItems.forEach(selectItem => {
+          targets.push(`${selectItem.entity}-${selectItem.id}`);
+          exporterIds.push(selectItem.exporterId);
+        });
+      }
+      return {
+        ...state,
+        new: {
+          ...state.new,
+          updateOrdersInput: [],
+        },
+        connectOrder: {
+          ...state.connectOrder,
+          exporterIds,
+        },
+        targets,
+      };
+    }
     case 'SELECT_BRANCH': {
       // TODO: Need to check target all action for split and move to order
       const { payload } = action;
