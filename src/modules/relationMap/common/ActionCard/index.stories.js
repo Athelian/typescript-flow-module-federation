@@ -17,7 +17,7 @@ const ContainerStyle = css`
 storiesOf('RelationMap/ActionCard', module).add('ActionCard', () => (
   <div className={ContainerStyle}>
     <div>XXXXXXXXXXXXXXXXX</div>
-    <ActionCard>
+    <ActionCard show>
       {({ targeted, toggle }) => (
         <>
           <Action icon="MAGIC" targeted={targeted} toggle={toggle} />

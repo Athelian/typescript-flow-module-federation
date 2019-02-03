@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, type IntlShape, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
@@ -15,7 +15,6 @@ import {
 } from 'modules/shipment/form/containers';
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
-import messages from 'modules/shipment/messages';
 import { BATCHES_POOL, isSelectedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormInSlide from 'modules/container/index.form.slide';
@@ -36,12 +35,11 @@ import {
 } from './style';
 
 type Props = {
-  intl: IntlShape,
   selectCardId: ?string,
   setSelected: ({ cardId: string, containerIndex: number }) => void,
 };
 
-function ContainersArea({ intl, selectCardId, setSelected }: Props) {
+function ContainersArea({ selectCardId, setSelected }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {(
@@ -187,7 +185,12 @@ function ContainersArea({ intl, selectCardId, setSelected }: Props) {
             </div>
             <div className={ContainersFooterWrapperStyle}>
               <NewButton
-                label={intl.formatMessage(messages.newContainer)}
+                label={
+                  <FormattedMessage
+                    id="modules.shipment.newContainer"
+                    defaultMessage="NEW CONTAINER"
+                  />
+                }
                 onClick={() => {
                   const clonedContainers = containers.slice(0);
                   setFieldValue('containers', [
@@ -222,4 +225,4 @@ function ContainersArea({ intl, selectCardId, setSelected }: Props) {
   );
 }
 
-export default injectIntl(ContainersArea);
+export default ContainersArea;
