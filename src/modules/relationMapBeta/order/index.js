@@ -29,7 +29,7 @@ import {
 } from 'modules/relationMap/orderFocused/style';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
-import { orderListQuery } from './query';
+import { orderListQuery, orderDetailQuery } from './query';
 import normalize from './normalize';
 import { hasMoreItems, findHighLightEntities } from './helpers';
 import { uiInitState, uiReducer, actionCreators, selectors } from './store';
@@ -67,7 +67,7 @@ const Order = ({ intl }: Props) => {
   return (
     <DispatchProvider value={{ dispatch, state }}>
       <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
-        {({ loading, data, fetchMore, error, refetch, client }) => {
+        {({ loading, data, fetchMore, error, client, updateQuery }) => {
           if (error) {
             return error.message;
           }
@@ -76,13 +76,29 @@ const Order = ({ intl }: Props) => {
             return <LoadingIcon />;
           }
 
-          if (state.refetchOrder) {
-            actions.refetchQueryBy('ORDER', false);
-            client.clearStore().then(() => {
-              refetch(queryVariables).then(() => {
+          if (state.refetchOrderId) {
+            const newOrderId = state.refetchOrderId;
+            actions.refetchQueryBy('ORDER', '');
+            const queryOption: any = {
+              query: orderDetailQuery,
+              variables: {
+                id: newOrderId,
+              },
+            };
+            client.query(queryOption).then(responseData => {
+              updateQuery(prevResult => {
+                // insert on the top
+                if (
+                  prevResult.orders &&
+                  responseData.data.order &&
+                  !prevResult.orders.nodes.includes(responseData.data.order)
+                ) {
+                  prevResult.orders.nodes.splice(0, 0, responseData.data.order);
+                }
                 scrollIntoView({
-                  targetId: `order-${uiSelectors.lastNewOrderId()}`,
+                  targetId: `order-${newOrderId}`,
                 });
+                return prevResult;
               });
             });
           }

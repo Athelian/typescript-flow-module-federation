@@ -31,8 +31,8 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
           isSlideView
           redirectAfterSuccess={false}
           onSuccessCallback={data => {
-            actions.refetchQueryBy('ORDER', true);
             if (data.orderCreate.id) {
+              actions.refetchQueryBy('ORDER', data.orderCreate.id);
               actions.adddNewOrder(data.orderCreate.id);
             }
             onClose();
@@ -50,7 +50,6 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
           redirectAfterSuccess={false}
           onSuccessCallback={() => {
             onClose();
-            actions.refetchQueryBy('SHIPMENT', true);
           }}
           onCancel={onClose}
         />

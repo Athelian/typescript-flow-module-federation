@@ -8,8 +8,8 @@ export type UIState = {
   loading: boolean,
   error: boolean,
   showTag: boolean,
-  refetchOrder: boolean,
-  refetchShipment: boolean,
+  refetchOrderId: string,
+  refetchShipmentId: string,
   expandCards: {
     orders: Array<string>,
     shipments: Array<string>,
@@ -65,8 +65,8 @@ export const uiInitState: UIState = {
   loading: false,
   error: false,
   showTag: getInitShowTag(),
-  refetchOrder: false,
-  refetchShipment: false,
+  refetchOrderId: '',
+  refetchShipmentId: '',
   expandCards: {
     orders: [],
     shipments: [],
@@ -146,12 +146,17 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       };
     }
     case 'REFETCH_BY': {
-      const enable = getByPathWithDefault(false, 'payload.refetch', action);
-      const type = getByPathWithDefault('', 'payload.entity', action);
+      const id = getByPathWithDefault('', 'payload.id', action);
+      const entity = getByPathWithDefault('', 'payload.entity', action);
+      const updateData = {};
+      if (entity === 'ORDER') {
+        updateData.refetchOrderId = id;
+      } else {
+        updateData.refetchShipmentId = id;
+      }
       return {
         ...state,
-        refetchOrder: type === 'ORDER' && enable,
-        refetchShipment: type === 'SHIPMENT' && enable,
+        ...updateData,
       };
     }
     case 'SPLIT_BATCH':
@@ -749,12 +754,12 @@ export function actionCreators(dispatch: Function) {
           id,
         },
       }),
-    refetchQueryBy: (entity: string, refetch: boolean) =>
+    refetchQueryBy: (entity: string, id: string) =>
       dispatch({
         type: 'REFETCH_BY',
         payload: {
           entity,
-          refetch,
+          id,
         },
       }),
   };
