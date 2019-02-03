@@ -6,14 +6,16 @@ import { BooleanValue } from 'react-values';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { ShipmentBatchCard } from 'components/Cards';
-// import { NewButton, MoveButton } from 'components/Buttons';
-import { NewButton } from 'components/Buttons';
+import { NewButton, MoveButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import messages from 'modules/shipment/messages';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
-import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import {
+  ShipmentBatchesContainer,
+  ShipmentContainersContainer,
+} from 'modules/shipment/form/containers';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool } from 'modules/shipment/helpers';
@@ -38,8 +40,8 @@ type Props = {
 
 function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
   return (
-    <Subscribe to={[ShipmentBatchesContainer]}>
-      {({ state: { batches }, setFieldValue, setFieldArrayValue }) => {
+    <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
+      {({ state: { batches }, setFieldValue, setFieldArrayValue }, { state: { containers } }) => {
         const usefulBatches = isSelectedBatchesPool ? getBatchesInPool(batches) : [...batches];
         return (
           <div className={BatchesWrapperStyle}>
@@ -75,11 +77,17 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
                       </div>
                     </div>
 
-                    {/* TODO Hide until it works
-                    <MoveButton
-                      label={intl.formatMessage(messages.moveBatches)}
-                      onClick={() => {}}
-                    /> */}
+                    {usefulBatches.length > 0 && containers.length > 0 && (
+                      <MoveButton
+                        label={
+                          <FormattedMessage
+                            id="modules.shipment.moveBatches"
+                            defaultMessage="MOVE BATCHES"
+                          />
+                        }
+                        onClick={() => {}}
+                      />
+                    )}
                   </div>
                   <div className={BatchesGridStyle}>
                     {usefulBatches.map((batch, position) => (
