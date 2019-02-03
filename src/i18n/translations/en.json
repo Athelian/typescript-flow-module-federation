@@ -176,8 +176,6 @@
   "components.BatchItem.totalVolume": "TOTAL VOLUME",
   "components.BatchItem.active": "ACTIVE",
   "components.BatchItem.completed": "COMPLETED",
-  "modules.container.selectBatches": "SELECT BATCHES",
-  "modules.container.newBatch": "NEW BATCH",
   "modules.container.noBatches": "No batches found",
   "modules.container.totalPackages": "TOTAL PACKAGES",
   "modules.container.totalBatchQuantity": "BATCHED QTY",

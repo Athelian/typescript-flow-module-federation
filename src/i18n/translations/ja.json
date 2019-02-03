@@ -176,8 +176,6 @@
   "components.BatchItem.totalVolume": "容積合計",
   "components.BatchItem.active": "進行中",
   "components.BatchItem.completed": "完了",
-  "modules.container.selectBatches": "SELECT BATCHES",
-  "modules.container.newBatch": "NEW BATCH",
   "modules.container.noBatches": "バッチ情報がありません",
   "modules.container.totalPackages": "梱包数量",
   "modules.container.totalBatchQuantity": "バッチ数量",
