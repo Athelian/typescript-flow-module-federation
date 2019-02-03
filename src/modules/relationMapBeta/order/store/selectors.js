@@ -123,9 +123,11 @@ const findAllCurrencies = ({
 function selectors(state: UIState) {
   return {
     isAllowToConnectOrder: () => isAllowToConnectOrder(state),
+    isAllowToConnectShipment: () =>
+      state.targets.filter(item => item.includes(`${BATCH}-`)).length > 0 &&
+      state.targets.filter(item => item.includes(`${SHIPMENT}-`)).length === 0,
     isSelectedOrder: () => state.connectOrder.enableSelectMode && state.connectOrder.orderId !== '',
     isAllowToSelectOrder: (exporterId: string) => isAllowToSelectOrder({ exporterId, state }),
-    isAllowToConnectShipment: () => false,
     isAllowToSplitBatch: () =>
       state.targets.length === 1 &&
       state.targets.filter(item => item.includes(`${BATCH}-`)).length === 1,
