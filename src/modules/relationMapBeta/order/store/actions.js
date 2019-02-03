@@ -237,6 +237,15 @@ function actionCreators(dispatch: Function) {
           id,
         },
       }),
+    prepareRemoveOrderItemsAndBatches: (
+      updateOrdersInput: Array<{ id: string, orderItems: Array<Object> }>
+    ) =>
+      dispatch({
+        type: 'PREPARE_REMOVE_DATA',
+        payload: {
+          updateOrdersInput,
+        },
+      }),
   };
 }
 

@@ -16,6 +16,7 @@ import {
 } from 'modules/relationMap/style';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
 import scrollIntoView from 'utils/scrollIntoView';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
@@ -39,6 +40,10 @@ import Shipment from './components/Shipment';
 import ShipmentList from './components/ShipmentList';
 import EditForm from './components/EditForm';
 import ActionNavbar from './components/ActionNavbar';
+import {
+  updateOrderMutation,
+  prepareUpdateOrderInput,
+} from './components/ActionNavbar/MoveToOrderPanel/mutation';
 
 type Props = {
   intl: IntlShape,
@@ -78,7 +83,21 @@ const Order = ({ intl }: Props) => {
 
           if (state.refetchOrderId) {
             const newOrderId = state.refetchOrderId;
+            const { updateOrdersInput = [] } = state.new;
             actions.refetchQueryBy('ORDER', '');
+            Promise.all(
+              updateOrdersInput.map(item =>
+                client.mutate({
+                  mutation: updateOrderMutation,
+                  variables: {
+                    id: item.id,
+                    input: prepareUpdateOrderInput({
+                      orderItems: cleanUpData(item.orderItems),
+                    }),
+                  },
+                })
+              )
+            ).then(result => console.warn({ result }));
             const queryOption: any = {
               query: orderDetailQuery,
               variables: {

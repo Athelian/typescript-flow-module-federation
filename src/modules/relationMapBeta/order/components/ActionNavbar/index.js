@@ -326,7 +326,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         actions.reset();
                         setActiveAction('clone');
                       }}
-                      onMoveToNewOrder={({ currencies }) => {
+                      onMoveToNewOrder={() => {
+                        const currencies = [];
                         const needToResetPrice = currencies.length > 1;
                         const orderItemIds = uiSelectors.targetedOrderItemIds();
                         const batchIds = uiSelectors.targetedBatchIds();
@@ -341,6 +342,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             }
                           }
                         );
+                        allOrderItemIds.forEach(orderItemId => {
+                          if (orderItems[orderItemId]) {
+                            const { price } = orderItems[orderItemId];
+                            if (!currencies.includes(price.currency))
+                              currencies.push(price.currency);
+                          }
+                        });
                         const processBatchIds = [];
                         const moveOrderItems = [];
                         orderItemIds.forEach(orderItemId => {
@@ -420,7 +428,35 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           currency: currencies.length === 1 ? currencies[0] : '',
                         });
                         actions.showEditForm('NEW_ORDER', 'new');
-                        // TODO: remove order items and batches when success
+                        // remove order item and batches from original order
+                        const orderIds = [];
+                        (Object.entries(orders): Array<any>).forEach(([orderId, order]) => {
+                          if (
+                            !orderIds.includes(orderId) &&
+                            intersection(order.orderItems, allOrderItemIds).length > 0
+                          ) {
+                            orderIds.push(orderId);
+                          }
+                        });
+                        const updateOrdersInput = [];
+                        orderIds.forEach(orderId => {
+                          const { orderItems: currentOrderItems } = orders[orderId];
+                          updateOrdersInput.push({
+                            id: orderId,
+                            orderItems: currentOrderItems
+                              .filter(orderItemId => !orderItemIds.includes(orderItemId))
+                              .map(orderItemId => {
+                                const orderItem = orderItems[orderItemId];
+                                return {
+                                  ...orderItem,
+                                  batches: orderItem.batches
+                                    .filter(batchId => !batchIds.includes(batchId))
+                                    .map(batchId => ({ id: batchId, isNew: false })),
+                                };
+                              }),
+                          });
+                        });
+                        actions.prepareRemoveOrderItemsAndBatches(updateOrdersInput);
                       }}
                       onMoveToExistOrder={async ({ currencies }) => {
                         const needToResetPrice = currencies.length > 1;

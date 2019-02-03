@@ -29,6 +29,7 @@ export const uiInitState: UIState = {
   toggleShipmentList: getInitToggleShipmentList(),
   new: {
     orders: [],
+    updateOrdersInput: [],
   },
   select: {
     mode: 'SINGLE',
@@ -88,6 +89,16 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         new: {
           ...state.new,
           orders: [...state.new.orders, orderId],
+        },
+      };
+    }
+    case 'PREPARE_REMOVE_DATA': {
+      const updateOrdersInput = getByPathWithDefault([], 'payload.updateOrdersInput', action);
+      return {
+        ...state,
+        new: {
+          ...state.new,
+          updateOrdersInput,
         },
       };
     }
