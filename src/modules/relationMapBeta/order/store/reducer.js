@@ -286,7 +286,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           ...state,
           targets: [],
           connectOrder: {
-            enableSelectMode: false,
+            ...state.connectOrder,
             status: false,
             orderId: '',
             exporterIds: [],
