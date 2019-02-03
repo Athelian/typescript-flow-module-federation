@@ -322,7 +322,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       hasSelectedOrder={uiSelectors.isSelectedOrder()}
                       hasSelectedAllBatches={uiSelectors.hasSelectedAllBatches(orderItems)}
                       currencies={uiSelectors.findAllCurrencies(orders, orderItems)}
-                      onClear={() => actions.reset()}
+                      onClear={() => {
+                        actions.reset();
+                        setActiveAction('clone');
+                      }}
                       onMoveToNewOrder={({ currencies }) => {
                         const needToResetPrice = currencies.length > 1;
                         const orderItemIds = uiSelectors.targetedOrderItemIds();
@@ -417,6 +420,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           currency: currencies.length === 1 ? currencies[0] : '',
                         });
                         actions.showEditForm('NEW_ORDER', 'new');
+                        // TODO: remove order items and batches when success
                       }}
                       onMoveToExistOrder={async ({ currencies }) => {
                         const needToResetPrice = currencies.length > 1;
