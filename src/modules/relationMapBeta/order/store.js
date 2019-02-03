@@ -255,6 +255,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         return {
           ...state,
           targets: [],
+          connectOrder: {
+            enableSelectMode: false,
+            orderId: '',
+            exporterIds: [],
+          },
           select: {
             mode: 'SINGLE',
             entities: [],
@@ -818,7 +823,13 @@ const isAllowToConnectOrder = (state: UIState) => {
 const isAllowToSelectOrder = ({ exporterId, state }: { exporterId: string, state: UIState }) =>
   currentExporterId(state) === exporterId;
 
-const hasSelectedAllBatches = ({ state, orderItems }: { state: UIState, orderItems: Object }) => {
+const hasSelectedAllBatches = ({
+  state,
+  orderItems = {},
+}: {
+  state: UIState,
+  orderItems: Object,
+}) => {
   const batchIds = targetedBatchIds(state);
   const orderItemIds = targetedOrderItemIds(state);
   const allBatchIds = [];
