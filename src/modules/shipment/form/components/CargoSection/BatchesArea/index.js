@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, ArrayValue } from 'react-values';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { ShipmentBatchCard } from 'components/Cards';
@@ -27,6 +27,7 @@ import {
   BatchesBodyWrapperStyle,
   BatchesHeaderWrapperStyle,
   TitleWrapperStyle,
+  SubTitleWrapperStyle,
   IconStyle,
   TitleStyle,
   BatchesGridStyle,
@@ -39,9 +40,26 @@ type Props = {
   isSelectedBatchesPool: boolean,
 };
 
+function onSelectBatch({
+  selected,
+  batch,
+  push,
+  set,
+}: {
+  selected: Array<Object>,
+  batch: Object,
+  push: Function,
+  set: Function,
+}) {
+  if (!selected.includes(batch)) {
+    push(batch);
+  } else {
+    set(selected.filter((selectedBatch: Object) => selectedBatch.id !== batch.id));
+  }
+}
+
 function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
   const [isSelectCardMode, toggleSelectCardMode] = useState(false);
-  // const [selectedCardCount, setSelectedCardCount] = useState(0);
   const prevIsSelectedBatchesPool = usePrevious(isSelectedBatchesPool);
   useEffect(() => {
     if (isSelectedBatchesPool !== prevIsSelectedBatchesPool) {
@@ -66,120 +84,139 @@ function BatchesArea({ intl, isSelectedBatchesPool }: Props) {
                   />
                 </div>
               ) : (
-                <>
-                  <div className={BatchesHeaderWrapperStyle}>
-                    <div className={TitleWrapperStyle}>
-                      <div className={IconStyle}>
-                        <Icon icon="BATCH" />
-                      </div>
-                      <div className={TitleStyle}>
-                        {isSelectedBatchesPool ? (
-                          <FormattedMessage
-                            id="modules.Shipments.batches"
-                            defaultMessage="BATCHES"
-                          />
-                        ) : (
-                          <FormattedMessage
-                            id="modules.Shipments.allBatches"
-                            defaultMessage="ALL BATCHES"
-                          />
-                        )}{' '}
-                        (<FormattedNumber value={usefulBatches.length} />)
-                      </div>
-                    </div>
-
-                    {usefulBatches.length > 0 && containers.length > 0 && (
-                      <>
-                        {isSelectCardMode ? (
-                          <CancelButton onClick={() => toggleSelectCardMode(false)} />
-                        ) : (
-                          <MoveButton
-                            label={
+                <ArrayValue>
+                  {({ value: selected, push, set }) => (
+                    <>
+                      <div className={BatchesHeaderWrapperStyle}>
+                        <div className={TitleWrapperStyle}>
+                          <div className={IconStyle}>
+                            <Icon icon="BATCH" />
+                          </div>
+                          <div className={TitleStyle}>
+                            {isSelectedBatchesPool ? (
                               <FormattedMessage
-                                id="modules.shipment.moveBatches"
-                                defaultMessage="MOVE BATCHES"
+                                id="modules.Shipments.batches"
+                                defaultMessage="BATCHES"
                               />
-                            }
-                            onClick={() => toggleSelectCardMode(true)}
-                          />
-                        )}
-                      </>
-                    )}
-                  </div>
-                  <div className={BatchesGridStyle}>
-                    {usefulBatches.map((batch, position) => (
-                      <React.Fragment key={batch.id}>
-                        {isSelectCardMode ? (
-                          <ShipmentBatchCard batch={batch} selectable />
-                        ) : (
-                          <BooleanValue>
-                            {({ value: opened, set: batchSlideToggle }) => (
-                              <>
-                                <SlideView
-                                  isOpen={opened}
-                                  onRequestClose={() => batchSlideToggle(false)}
-                                  options={{ width: '1030px' }}
-                                >
-                                  {opened && (
-                                    <Subscribe to={[BatchFormContainer]}>
-                                      {({ initDetailValues }) => (
-                                        <BatchFormWrapper
-                                          initDetailValues={initDetailValues}
-                                          batch={batch}
-                                          isNew={!!batch.isNew}
-                                          orderItem={batch.orderItem}
-                                          onCancel={() => batchSlideToggle(false)}
-                                          onSave={updatedBatch => {
-                                            batchSlideToggle(false);
-                                            setFieldArrayValue(position, updatedBatch);
-                                          }}
-                                        />
-                                      )}
-                                    </Subscribe>
-                                  )}
-                                </SlideView>
+                            ) : (
+                              <FormattedMessage
+                                id="modules.Shipments.allBatches"
+                                defaultMessage="ALL BATCHES"
+                              />
+                            )}{' '}
+                            (<FormattedNumber value={usefulBatches.length} />)
+                          </div>
+                        </div>
 
-                                <ShipmentBatchCard
-                                  batch={batch}
-                                  saveOnBlur={updateBatch => {
-                                    const indexOfAllBatches = batches.indexOf(batch);
-                                    setFieldArrayValue(indexOfAllBatches, updateBatch);
-                                  }}
-                                  onClick={() => batchSlideToggle(true)}
-                                  onClear={({ id }) => {
-                                    setFieldValue(
-                                      'batches',
-                                      batches.filter(({ id: batchId }) => id !== batchId)
-                                    );
-                                  }}
-                                  onClone={({
-                                    id,
-                                    deliveredAt,
-                                    desired,
-                                    expiredAt,
-                                    producedAt,
-                                    no,
-                                    ...rest
-                                  }) => {
-                                    setFieldValue('batches', [
-                                      ...batches,
-                                      injectUid({
-                                        ...rest,
-                                        isNew: true,
-                                        batchAdjustments: [],
-                                        no: `${no}- clone`,
-                                      }),
-                                    ]);
-                                  }}
-                                />
+                        {usefulBatches.length > 0 && containers.length > 0 && (
+                          <>
+                            {isSelectCardMode ? (
+                              <>
+                                <div className={SubTitleWrapperStyle}>
+                                  <FormattedMessage
+                                    id="modules.shipment.selected"
+                                    defaultMessage="SELECTED"
+                                  />
+                                  <FormattedNumber value={selected.length} /> <Icon icon="BATCH" />
+                                </div>
+                                <CancelButton onClick={() => toggleSelectCardMode(false)} />
                               </>
+                            ) : (
+                              <MoveButton
+                                label={
+                                  <FormattedMessage
+                                    id="modules.shipment.moveBatches"
+                                    defaultMessage="MOVE BATCHES"
+                                  />
+                                }
+                                onClick={() => toggleSelectCardMode(true)}
+                              />
                             )}
-                          </BooleanValue>
+                          </>
                         )}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </>
+                      </div>
+
+                      <div className={BatchesGridStyle}>
+                        {usefulBatches.map((batch, position) => (
+                          <React.Fragment key={batch.id}>
+                            {isSelectCardMode ? (
+                              <ShipmentBatchCard
+                                batch={batch}
+                                selectable
+                                selected={selected.includes(batch)}
+                                onSelect={() => onSelectBatch({ selected, batch, push, set })}
+                              />
+                            ) : (
+                              <BooleanValue>
+                                {({ value: opened, set: batchSlideToggle }) => (
+                                  <>
+                                    <SlideView
+                                      isOpen={opened}
+                                      onRequestClose={() => batchSlideToggle(false)}
+                                      options={{ width: '1030px' }}
+                                    >
+                                      {opened && (
+                                        <Subscribe to={[BatchFormContainer]}>
+                                          {({ initDetailValues }) => (
+                                            <BatchFormWrapper
+                                              initDetailValues={initDetailValues}
+                                              batch={batch}
+                                              isNew={!!batch.isNew}
+                                              orderItem={batch.orderItem}
+                                              onCancel={() => batchSlideToggle(false)}
+                                              onSave={updatedBatch => {
+                                                batchSlideToggle(false);
+                                                setFieldArrayValue(position, updatedBatch);
+                                              }}
+                                            />
+                                          )}
+                                        </Subscribe>
+                                      )}
+                                    </SlideView>
+
+                                    <ShipmentBatchCard
+                                      batch={batch}
+                                      saveOnBlur={updateBatch => {
+                                        const indexOfAllBatches = batches.indexOf(batch);
+                                        setFieldArrayValue(indexOfAllBatches, updateBatch);
+                                      }}
+                                      onClick={() => batchSlideToggle(true)}
+                                      onClear={({ id }) => {
+                                        setFieldValue(
+                                          'batches',
+                                          batches.filter(({ id: batchId }) => id !== batchId)
+                                        );
+                                      }}
+                                      onClone={({
+                                        id,
+                                        deliveredAt,
+                                        desired,
+                                        expiredAt,
+                                        producedAt,
+                                        no,
+                                        ...rest
+                                      }) => {
+                                        setFieldValue('batches', [
+                                          ...batches,
+                                          injectUid({
+                                            ...rest,
+                                            isNew: true,
+                                            batchAdjustments: [],
+                                            no: `${no}- clone`,
+                                          }),
+                                        ]);
+                                      }}
+                                    />
+                                  </>
+                                )}
+                              </BooleanValue>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </ArrayValue>
               )}
             </div>
             <div className={BatchesFooterWrapperStyle}>

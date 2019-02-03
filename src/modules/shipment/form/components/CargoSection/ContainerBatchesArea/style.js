@@ -57,6 +57,13 @@ export const TitleWrapperStyle: string = css`
   color: ${colors.GRAY_DARK};
 `;
 
+export const SubTitleWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  ${fontSizes.SMALL};
+  color: ${colors.GRAY_DARK};
+`;
+
 export const IconStyle: string = css`
   width: 40px;
   height: 40px;
