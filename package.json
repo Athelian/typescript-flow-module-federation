@@ -148,6 +148,7 @@
     "@babel/node": "^7.2.2",
     "@commitlint/cli": "^7.5.0",
     "@commitlint/config-conventional": "^7.5.0",
+    "@playlyfe/gql": "^2.6.1",
     "@storybook/addon-a11y": "^4.1.11",
     "@storybook/addon-actions": "^4.1.11",
     "@storybook/addon-info": "^4.1.11",
