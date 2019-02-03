@@ -1,6 +1,6 @@
 // @flow
-import * as actionCreators from './actions';
-import * as selectors from './selectors';
-import { getInitShowTag, uiInitState } from './reducer';
+import { actionCreators } from './actions';
+import { selectors } from './selectors';
+import { getInitShowTag, uiInitState, uiReducer } from './reducer';
 
-export { actionCreators, selectors, getInitShowTag, uiInitState };
+export { actionCreators, selectors, getInitShowTag, uiInitState, uiReducer };

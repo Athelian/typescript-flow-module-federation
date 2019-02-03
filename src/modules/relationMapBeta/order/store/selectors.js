@@ -64,7 +64,7 @@ const isAllowToConnectOrder = (state: UIState) => {
 };
 
 const isAllowToSelectOrder = ({ exporterId, state }: { exporterId: string, state: UIState }) =>
-  currentExporterId(state) === exporterId;
+  currentExporterId(state) === exporterId && state.connectOrder.enableSelectMode;
 
 const hasSelectedAllBatches = ({
   state,
@@ -120,7 +120,7 @@ const findAllCurrencies = ({
   return result;
 };
 
-export default function selectors(state: UIState) {
+function selectors(state: UIState) {
   return {
     isAllowToConnectOrder: () => isAllowToConnectOrder(state),
     isSelectedOrder: () => state.connectOrder.enableSelectMode && state.connectOrder.orderId !== '',
@@ -162,3 +162,6 @@ export default function selectors(state: UIState) {
     isNewOrder: (id: string) => state.new.orders.includes(id),
   };
 }
+
+export { selectors };
+export default selectors;

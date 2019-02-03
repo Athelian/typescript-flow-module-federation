@@ -1,7 +1,12 @@
 // @flow
 
-export default function actionCreators(dispatch: Function) {
+function actionCreators(dispatch: Function) {
   return {
+    reset: () =>
+      dispatch({
+        type: 'RESET',
+        payload: {},
+      }),
     clearAllBy: (mode: 'TARGET' | 'HIGHLIGHT') =>
       dispatch({
         type: 'CLEAR_ALL',
@@ -234,3 +239,6 @@ export default function actionCreators(dispatch: Function) {
       }),
   };
 }
+
+export { actionCreators };
+export default actionCreators;

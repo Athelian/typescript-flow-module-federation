@@ -40,6 +40,7 @@ export type UIState = {
   },
   connectOrder: {
     enableSelectMode: boolean,
+    status: boolean,
     orderId: string,
     exporterIds: Array<string>,
   },

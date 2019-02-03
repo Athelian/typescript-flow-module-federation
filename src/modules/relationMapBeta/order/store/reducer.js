@@ -57,6 +57,7 @@ export const uiInitState: UIState = {
   connectOrder: {
     enableSelectMode: false,
     orderId: '',
+    status: false,
     exporterIds: [],
   },
 };
@@ -121,6 +122,10 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       return {
         ...state,
         loading: true,
+        connectOrder: {
+          ...state.connectOrder,
+          status: false,
+        },
       };
     case 'SPLIT_BATCH_ERROR':
     case 'AUTO_FILL_BATCHES_ERROR':
@@ -138,10 +143,9 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         error: false,
         connectOrder: {
           ...state.connectOrder,
+          status: true,
           orderId: '',
         },
-        targets:
-          state.connectOrder.orderId !== '' ? [`${ORDER}-${state.connectOrder.orderId}`] : [],
       };
     case 'SPLIT_BATCH_SUCCESS': {
       const batchId = getByPathWithDefault('', 'payload.batchId', action);
@@ -217,6 +221,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           targets: [],
           connectOrder: {
             enableSelectMode: false,
+            status: false,
             orderId: '',
             exporterIds: [],
           },

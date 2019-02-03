@@ -38,6 +38,7 @@ export const orderCardRMFragment = gql`
     exporter {
       ... on Group {
         id
+        name
       }
     }
     tags {
@@ -63,6 +64,7 @@ export const orderCardRMFragment = gql`
             exporter {
               ... on Group {
                 id
+                name
               }
             }
           }

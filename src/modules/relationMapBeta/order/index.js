@@ -160,15 +160,7 @@ const Order = ({ intl }: Props) => {
                   <AdvancedFilter initialFilter={filterAndSort.filter} onApply={onApplyFilter} />
                 )}
               />
-              <ActionNavbar
-                highLightEntities={highLightEntities}
-                entities={{
-                  orders,
-                  orderItems,
-                  batches,
-                  shipments,
-                }}
-              />
+              <ActionNavbar highLightEntities={highLightEntities} entities={entities} />
               {loading ? (
                 <LoadingIcon />
               ) : (
