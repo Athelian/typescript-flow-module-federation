@@ -47,5 +47,6 @@ export type UIState = {
     status: boolean,
     orderId: string,
     exporterIds: Array<string>,
+    sourceOrder: Object,
   },
 };

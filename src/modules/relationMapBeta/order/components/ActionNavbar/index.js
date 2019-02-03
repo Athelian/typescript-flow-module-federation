@@ -322,10 +322,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       hasSelectedOrder={uiSelectors.isSelectedOrder()}
                       hasSelectedAllBatches={uiSelectors.hasSelectedAllBatches(orderItems)}
                       currencies={uiSelectors.findAllCurrencies(orders, orderItems)}
-                      onClear={() => {
-                        actions.reset();
-                        setActiveAction('clone');
-                      }}
+                      onClear={actions.clearConnectMessage}
                       onMoveToNewOrder={() => {
                         const currencies = [];
                         const needToResetPrice = currencies.length > 1;
@@ -607,7 +604,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             });
                           });
 
-                          actions.moveToOrder();
+                          actions.moveToOrder(targetOrder);
                           try {
                             const updateOrders = await Promise.all(
                               updateOrdersInput.map(item =>
@@ -622,7 +619,11 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 })
                               )
                             );
-                            actions.moveToOrderSuccess(updateOrders);
+                            actions.moveToOrderSuccess(
+                              updateOrders.map(result =>
+                                result.data ? result.data.orderUpdate : {}
+                              )
+                            );
                           } catch (error) {
                             actions.moveToOrderFailed(error);
                           }
@@ -673,9 +674,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           });
                         });
 
-                        actions.moveToOrder();
                         try {
-                          const updateOrders = await Promise.all(
+                          await Promise.all(
                             updateOrdersInput.map(item =>
                               client.mutate({
                                 mutation: updateOrderMutation,
@@ -688,9 +688,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               })
                             )
                           );
-                          actions.moveToOrderSuccess(updateOrders);
                         } catch (error) {
-                          actions.moveToOrderFailed(error);
+                          console.warn(error);
                         }
                       }}
                     />

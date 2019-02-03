@@ -194,11 +194,11 @@ function actionCreators(dispatch: Function) {
           error,
         },
       }),
-    moveToOrder: (entities: Object) =>
+    moveToOrder: (targetOrder: Object) =>
       dispatch({
         type: 'MOVE_TO_ORDER',
         payload: {
-          entities,
+          targetOrder,
         },
       }),
     moveToOrderSuccess: (data: Object) =>
@@ -243,6 +243,11 @@ function actionCreators(dispatch: Function) {
           entity,
           id,
         },
+      }),
+    clearConnectMessage: () =>
+      dispatch({
+        type: 'CLEAR_CONNECT_MESSAGE',
+        payload: {},
       }),
     prepareRemoveOrderItemsAndBatches: (
       updateOrdersInput: Array<{ id: string, orderItems: Array<Object> }>

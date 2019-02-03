@@ -60,6 +60,7 @@ export const uiInitState: UIState = {
     orderId: '',
     status: false,
     exporterIds: [],
+    sourceOrder: {},
   },
 };
 
@@ -136,6 +137,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         connectOrder: {
           ...state.connectOrder,
           status: false,
+          sourceOrder: getByPathWithDefault({}, 'payload.targetOrder', action),
         },
       };
     case 'SPLIT_BATCH_ERROR':
@@ -147,7 +149,46 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         loading: false,
         error: true,
       };
-    case 'MOVE_TO_ORDER_SUCCESS':
+    case 'MOVE_TO_ORDER_SUCCESS': {
+      const orders = getByPathWithDefault([], 'payload.data', action);
+      const targets = [];
+      const exporterIds = [];
+      const { sourceOrder } = state.connectOrder;
+      const updateOrder = orders.find(item => item.id === sourceOrder.id);
+      if (updateOrder) {
+        const { exporter, orderItems } = updateOrder;
+        orderItems.forEach(orderItem => {
+          if (!sourceOrder.orderItems.includes(orderItem.id)) {
+            targets.push(`${ORDER_ITEM}-${orderItem.id}`);
+            exporterIds.push(`${ORDER_ITEM}-${exporter.id}`);
+            orderItem.batches.forEach(batch => {
+              targets.push(`${BATCH}-${batch.id}`);
+              if (!exporterIds.includes(`${BATCH}-${exporter.id}`)) {
+                exporterIds.push(`${BATCH}-${exporter.id}`);
+              }
+            });
+          } else {
+            const findOrderItem = sourceOrder.orderItems.find(item => item.id === orderItem.id);
+            if (findOrderItem) {
+              orderItem.batches.forEach(batch => {
+                if (!findOrderItem.batches.includes(batch)) {
+                  targets.push(`${BATCH}-${batch.id}`);
+                  if (!exporterIds.includes(`${BATCH}-${exporter.id}`)) {
+                    exporterIds.push(`${BATCH}-${exporter.id}`);
+                  }
+                }
+              });
+            } else {
+              orderItem.batches.forEach(batch => {
+                targets.push(`${BATCH}-${batch.id}`);
+                if (!exporterIds.includes(`${BATCH}-${exporter.id}`)) {
+                  exporterIds.push(`${BATCH}-${exporter.id}`);
+                }
+              });
+            }
+          }
+        });
+      }
       return {
         ...state,
         loading: false,
@@ -156,8 +197,22 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           ...state.connectOrder,
           status: true,
           orderId: '',
+          exporterIds,
+        },
+        targets,
+      };
+    }
+    case 'CLEAR_CONNECT_MESSAGE': {
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        connectOrder: {
+          ...state.connectOrder,
+          status: false,
         },
       };
+    }
     case 'SPLIT_BATCH_SUCCESS': {
       const batchId = getByPathWithDefault('', 'payload.batchId', action);
       const [, orderId] = (
@@ -235,6 +290,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             status: false,
             orderId: '',
             exporterIds: [],
+            sourceOrder: {},
           },
           select: {
             mode: 'SINGLE',
