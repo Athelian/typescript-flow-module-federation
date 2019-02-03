@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { findIndex } from 'lodash';
 
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
@@ -38,13 +39,16 @@ import {
 type Props = {
   selectCardId: ?string,
   selectedBatches: Array<Object>,
+  setIsSelectBatchesMode: Function,
 };
 
-function ContainersArea({ selectCardId, selectedBatches }: Props) {
-  console.log(selectedBatches);
+function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
-      {({ state: { containers }, setFieldValue }, { state: { batches } }) => {
+      {(
+        { state: { containers }, setFieldValue: setContainers, setDeepFieldValue },
+        { state: { batches }, setFieldValue: setBatches }
+      ) => {
         const batchesInPool = getBatchesInPool(batches);
         const isSelectedContainerCard = isSelectedContainer(selectCardId);
         return (
@@ -73,7 +77,34 @@ function ContainersArea({ selectCardId, selectedBatches }: Props) {
                   />
                   {isSelectedContainerCard ? (
                     <Action
-                      onClick={() => console.log('action')}
+                      onClick={() => {
+                        const newBatches = batches.map(({ id, container, ...rest }) =>
+                          selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                            ? {
+                                id,
+                                ...rest,
+                              }
+                            : {
+                                id,
+                                container,
+                                ...rest,
+                              }
+                        );
+                        const containerIndex = findIndex(
+                          containers,
+                          ({ id }) => id === selectCardId
+                        );
+                        const updatedContainerBatches = containers[containerIndex].batches.filter(
+                          ({ id }) =>
+                            !selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                        );
+                        setBatches('batches', newBatches);
+                        setDeepFieldValue(
+                          `containers.${containerIndex}.batches`,
+                          updatedContainerBatches
+                        );
+                        setIsSelectBatchesMode(false);
+                      }}
                       message={
                         <FormattedMessage
                           id="modules.shipment.moveToBatchesPool"
@@ -95,7 +126,7 @@ function ContainersArea({ selectCardId, selectedBatches }: Props) {
                 </div>
 
                 <>
-                  {containers.map(container => {
+                  {containers.map((container, index) => {
                     return (
                       <div key={container.id} className={SelectContainerCardWrapperStyle}>
                         <ShipmentContainerCard container={container} />
@@ -111,7 +142,47 @@ function ContainersArea({ selectCardId, selectedBatches }: Props) {
                           />
                         ) : (
                           <Action
-                            onClick={() => console.log('action')}
+                            onClick={() => {
+                              if (isSelectedContainerCard) {
+                                const newBatches = batches.map(
+                                  ({ id, container: currentContainer, ...rest }) =>
+                                    selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                                      ? {
+                                          id,
+                                          container,
+                                          ...rest,
+                                        }
+                                      : {
+                                          id,
+                                          container: currentContainer,
+                                          ...rest,
+                                        }
+                                );
+                                setBatches('batches', newBatches);
+
+                                const sourceContainerIndex = findIndex(
+                                  containers,
+                                  ({ id }) => id === selectCardId
+                                );
+                                const sourceContainerBatches = containers[
+                                  sourceContainerIndex
+                                ].batches.filter(
+                                  ({ id }) =>
+                                    !selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                                );
+
+                                setDeepFieldValue(
+                                  `containers.${sourceContainerIndex}.batches`,
+                                  sourceContainerBatches
+                                );
+                                setDeepFieldValue(`containers.${index}.batches`, selectedBatches);
+                              } else {
+                                // TODO:
+                                console.log('TODO');
+                              }
+
+                              setIsSelectBatchesMode(false);
+                            }}
                             message={
                               <FormattedMessage
                                 id="modules.shipment.moveToContainer"
@@ -136,7 +207,7 @@ function ContainersArea({ selectCardId, selectedBatches }: Props) {
                 }
                 onClick={() => {
                   const clonedContainers = containers.slice(0);
-                  setFieldValue('containers', [
+                  setContainers('containers', [
                     ...clonedContainers,
                     injectUid({
                       no: `container no ${containers.length + 1}`,

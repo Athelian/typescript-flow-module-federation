@@ -58,6 +58,7 @@ class CargoSection extends React.Component<Props, State> {
           <ContainersAreaReadOnly
             selectCardId={selectCardId}
             setSelected={this.setSelected}
+            setIsSelectBatchesMode={this.setIsSelectBatchesMode}
             selectedBatches={selectedBatches}
           />
         ) : (
