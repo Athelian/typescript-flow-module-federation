@@ -62,6 +62,11 @@ export const uiInitState: UIState = {
     exporterIds: [],
     sourceOrder: {},
   },
+  connectShipment: {
+    enableSelectMode: false,
+    status: false,
+    shipmentId: '',
+  },
 };
 
 export function uiReducer(state: UIState, action: { type: string, payload?: Object }) {
@@ -75,14 +80,19 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         loading: false,
         error: false,
       };
-    case 'ENABLE_SELECT_ORDER':
+    case 'CHANGE_SELECT_MODE': {
       return {
         ...state,
         connectOrder: {
           ...state.connectOrder,
-          enableSelectMode: !!getByPathWithDefault(false, 'payload.isEnable', action),
+          enableSelectMode: getByPathWithDefault('', 'payload.entity', action) === 'ORDER',
+        },
+        connectShipment: {
+          ...state.connectShipment,
+          enableSelectMode: getByPathWithDefault('', 'payload.entity', action) === 'SHIPMENT',
         },
       };
+    }
     case 'NEW_ORDER': {
       const orderId = getByPathWithDefault('', 'payload.id', action);
       return {
@@ -110,6 +120,16 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         connectOrder: {
           ...state.connectOrder,
           orderId: orderId === state.connectOrder.orderId ? '' : orderId,
+        },
+      };
+    }
+    case 'TOGGLE_SELECTED_SHIPMENT': {
+      const shipmentId = getByPathWithDefault('', 'payload.id', action);
+      return {
+        ...state,
+        connectShipment: {
+          ...state.connectShipment,
+          shipmentId: shipmentId === state.connectShipment.shipmentId ? '' : shipmentId,
         },
       };
     }

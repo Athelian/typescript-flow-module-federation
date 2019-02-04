@@ -86,7 +86,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   icon="CLONE"
                   active={activeAction === 'clone'}
                   onClick={() => {
-                    actions.selectOrderMode(false);
+                    actions.changeSelectMode('');
                     setActiveAction('clone');
                   }}
                 />
@@ -103,7 +103,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   disabled={!uiSelectors.isAllowToSplitBatch()}
                   active={activeAction === 'split'}
                   onClick={() => {
-                    actions.selectOrderMode(false);
+                    actions.changeSelectMode('');
                     setActiveAction('split');
                   }}
                 />
@@ -123,7 +123,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   disabled={!uiSelectors.isAllowToAutoFillBatch()}
                   active={activeAction === 'autoFillBatch'}
                   onClick={() => {
-                    actions.selectOrderMode(false);
+                    actions.changeSelectMode('');
                     setActiveAction('autoFillBatch');
                   }}
                 />
@@ -140,7 +140,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   disabled={!uiSelectors.isAllowToConnectOrder()}
                   active={activeAction === 'connectOrder'}
                   onClick={() => {
-                    actions.selectOrderMode(true);
+                    actions.changeSelectMode('ORDER');
                     setActiveAction('connectOrder');
                   }}
                 />
@@ -157,7 +157,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   disabled={!uiSelectors.isAllowToConnectShipment()}
                   active={activeAction === 'connectShipment'}
                   onClick={() => {
-                    actions.selectOrderMode(false);
+                    actions.changeSelectMode('SHIPMENT');
                     setActiveAction('connectShipment');
                   }}
                 />
@@ -198,7 +198,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     disabledSplit: activeAction === 'split' && !uiSelectors.isAllowToSplitBatch(),
                     disableAutoFillBatch:
                       activeAction === 'autoFillBatch' && !uiSelectors.isAllowToAutoFillBatch(),
-                    disabledMoveToShipment: false,
+                    disabledMoveToShipment:
+                      activeAction === 'connectShipment' && !uiSelectors.isAllowToConnectShipment(),
                     disabledMoveToOrder:
                       activeAction === 'connectOrder' && !uiSelectors.isAllowToConnectOrder(),
                   }}
@@ -319,10 +320,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
               )}
               {activeAction === 'connectShipment' && uiSelectors.isAllowToConnectOrder() && (
                 <MoveToShipmentPanel
-                  status={false}
-                  hasSelectedShipment={false}
-                  onClear={console.warn}
-                  onClearSelectShipment={console.warn}
+                  status={state.connectShipment.status}
+                  hasSelectedShipment={uiSelectors.isSelectedShipment()}
+                  onClear={actions.clearConnectMessage}
+                  onClearSelectShipment={() => actions.toggleSelectedShipment('')}
                   onDisconnect={console.warn}
                   onMoveToExistShipment={console.warn}
                   onMoveToNewShipment={console.warn}

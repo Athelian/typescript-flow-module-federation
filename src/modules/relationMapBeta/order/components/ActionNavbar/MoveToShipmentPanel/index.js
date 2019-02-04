@@ -38,13 +38,7 @@ const MoveToShipmentPanel = ({
     <MoveToShipmentPanelWrapper>
       {(() => {
         if (hasSelectedShipment)
-          return (
-            <ApplyPanel
-              hasSelectedShipment={hasSelectedShipment}
-              onConfirm={onMoveToExistShipment}
-              onReset={onClearSelectShipment}
-            />
-          );
+          return <ApplyPanel onConfirm={onMoveToExistShipment} onReset={onClearSelectShipment} />;
         return (
           <>
             <div className={style.SubPanel}>
