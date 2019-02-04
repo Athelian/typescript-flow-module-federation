@@ -325,7 +325,31 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   hasSelectedShipment={uiSelectors.isSelectedShipment()}
                   onClear={actions.clearConnectMessage}
                   onClearSelectShipment={() => actions.toggleSelectedShipment('')}
-                  onDisconnect={console.warn}
+                  onDisconnect={async () => {
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const shipmentId = null;
+                    actions.moveToShipment(batchIds);
+                    try {
+                      const updateBatches = await Promise.all(
+                        batchIds.map(id =>
+                          client.mutate({
+                            mutation: updateBatchMutation,
+                            variables: {
+                              id,
+                              input: {
+                                shipmentId,
+                              },
+                            },
+                          })
+                        )
+                      );
+                      actions.moveToShipmentSuccess(
+                        updateBatches.map(result => (result.data ? result.data.BatchUpdate : {}))
+                      );
+                    } catch (error) {
+                      actions.moveToShipmentFailed(error);
+                    }
+                  }}
                   onMoveToExistShipment={async () => {
                     const batchIds = uiSelectors.targetedBatchIds();
                     const { shipmentId } = state.connectShipment;
