@@ -134,6 +134,7 @@ export default function ContainerBatchesArea({
                         {isSelectBatchesMode ? (
                           <ShipmentContainerBatchCard
                             batch={batch}
+                            isRepresented={batch.id === representativeBatchId}
                             selectable
                             selected={selectedBatches.includes(batch)}
                             onSelect={() => setSelectedBatches(batch)}
