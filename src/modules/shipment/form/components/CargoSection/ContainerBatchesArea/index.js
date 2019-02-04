@@ -272,7 +272,7 @@ export default function ContainerBatchesArea({
                                 setFieldValue('batches', [...batches, ...newSelectBatches]);
                                 setDeepFieldValue(`containers.${containerIndex}.batches`, [
                                   ...batchesInContainer,
-                                  ...selectedBatches,
+                                  ...newSelectBatches,
                                 ]);
                                 selectBatchesSlideToggle(false);
                               }}
