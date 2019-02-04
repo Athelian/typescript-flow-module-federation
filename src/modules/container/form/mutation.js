@@ -47,6 +47,7 @@ export const prepareUpdateContainerInput = ({
   warehouseArrivalActualDateAssignedTo,
   totalAdjusted,
   batches,
+  representativeBatch,
   ...rest
 }: Object) => ({
   ...rest,
@@ -65,6 +66,7 @@ export const prepareUpdateContainerInput = ({
   batches: batches
     .map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false))
     .map(({ container, ...batch }) => ({ ...batch })),
+  representativeBatchId: getIdOrReturnNull(representativeBatch),
 });
 
 export default updateContainerMutation;
