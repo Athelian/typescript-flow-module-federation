@@ -1,13 +1,12 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { ShipmentContainerBatchCard } from 'components/Cards';
-// import { NewButton, MoveButton } from 'components/Buttons';
-import { NewButton } from 'components/Buttons';
+import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
@@ -26,6 +25,8 @@ import {
   BatchesBodyWrapperStyle,
   BatchesHeaderWrapperStyle,
   TitleWrapperStyle,
+  SubTitleWrapperStyle,
+  SubTitleIconStyle,
   IconStyle,
   TitleStyle,
   BatchesGridStyle,
@@ -36,9 +37,20 @@ import {
 type Props = {
   containerId: string,
   containerIndex: number,
+  isSelectBatchesMode: boolean,
+  setIsSelectBatchesMode: Function,
+  selectedBatches: Array<Object>,
+  setSelectedBatches: Function,
 };
 
-export default function ContainerBatchesArea({ containerId, containerIndex }: Props) {
+export default function ContainerBatchesArea({
+  containerId,
+  containerIndex,
+  isSelectBatchesMode,
+  setIsSelectBatchesMode,
+  selectedBatches,
+  setSelectedBatches,
+}: Props) {
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -84,111 +96,144 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                       </div>
                     </div>
 
-                    {/* TODO Hide until it works
-                    <MoveButton
-                      label={
-                        <FormattedMessage
-                          id="modules.Shipments.moveBatches"
-                          defaultMessage="MOVE BATCHES"
-                        />
-                      }
-                      onClick={() => {}}
-                    /> */}
+                    {batchesInContainer.length > 0 && (
+                      <>
+                        {isSelectBatchesMode ? (
+                          <>
+                            <div className={SubTitleWrapperStyle}>
+                              <FormattedMessage
+                                id="modules.shipment.selected"
+                                defaultMessage="SELECTED {numOfBatches}"
+                                values={{
+                                  numOfBatches: <FormattedNumber value={selectedBatches.length} />,
+                                }}
+                              />
+                              <div className={SubTitleIconStyle}>
+                                <Icon icon="BATCH" />
+                              </div>
+                            </div>
+                            <CancelButton onClick={() => setIsSelectBatchesMode(false)} />
+                          </>
+                        ) : (
+                          <MoveButton
+                            label={
+                              <FormattedMessage
+                                id="modules.Shipments.moveBatches"
+                                defaultMessage="MOVE BATCHES"
+                              />
+                            }
+                            onClick={() => setIsSelectBatchesMode(true)}
+                          />
+                        )}
+                      </>
+                    )}
                   </div>
                   <div className={BatchesGridStyle}>
                     {batchesInContainer.map((batch, position) => (
-                      <BooleanValue key={batch.id}>
-                        {({ value: opened, set: batchSlideToggle }) => (
-                          <>
-                            <SlideView
-                              isOpen={opened}
-                              onRequestClose={() => batchSlideToggle(false)}
-                              options={{ width: '1030px' }}
-                            >
-                              {opened && (
-                                <Subscribe to={[BatchFormContainer]}>
-                                  {({ initDetailValues }) => (
-                                    <BatchFormWrapper
-                                      initDetailValues={initDetailValues}
-                                      batch={batch}
-                                      isNew={!!batch.isNew}
-                                      orderItem={batch.orderItem}
-                                      onCancel={() => batchSlideToggle(false)}
-                                      onSave={updatedBatch => {
-                                        batchSlideToggle(false);
-                                        setFieldArrayValue(position, updatedBatch);
-                                      }}
-                                    />
+                      <React.Fragment key={batch.id}>
+                        {isSelectBatchesMode ? (
+                          <ShipmentContainerBatchCard
+                            batch={batch}
+                            isRepresented={batch.id === representativeBatchId}
+                            selectable
+                            selected={selectedBatches.includes(batch)}
+                            onSelect={() => setSelectedBatches(batch)}
+                          />
+                        ) : (
+                          <BooleanValue>
+                            {({ value: opened, set: batchSlideToggle }) => (
+                              <>
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => batchSlideToggle(false)}
+                                  options={{ width: '1030px' }}
+                                >
+                                  {opened && (
+                                    <Subscribe to={[BatchFormContainer]}>
+                                      {({ initDetailValues }) => (
+                                        <BatchFormWrapper
+                                          initDetailValues={initDetailValues}
+                                          batch={batch}
+                                          isNew={!!batch.isNew}
+                                          orderItem={batch.orderItem}
+                                          onCancel={() => batchSlideToggle(false)}
+                                          onSave={updatedBatch => {
+                                            batchSlideToggle(false);
+                                            setFieldArrayValue(position, updatedBatch);
+                                          }}
+                                        />
+                                      )}
+                                    </Subscribe>
                                   )}
-                                </Subscribe>
-                              )}
-                            </SlideView>
-                            <ShipmentContainerBatchCard
-                              batch={batch}
-                              isRepresented={batch.id === representativeBatchId}
-                              saveOnBlur={updateBatch => {
-                                const indexOfAllBatches = batches.indexOf(batch);
-                                setFieldArrayValue(indexOfAllBatches, updateBatch);
-                                setDeepFieldValue(
-                                  `containers.${containerIndex}.batches.${position}`,
-                                  updateBatch
-                                );
-                              }}
-                              onClick={() => batchSlideToggle(true)}
-                              onClear={({ id }) => {
-                                setFieldValue(
-                                  'batches',
-                                  batches.filter(({ id: batchId }) => id !== batchId)
-                                );
-                                setDeepFieldValue(
-                                  `containers.${containerIndex}.batches`,
-                                  batchesInContainer.filter(({ id: batchId }) => id !== batchId)
-                                );
-                                if (batch.id === representativeBatchId) {
-                                  setDeepFieldValue(
-                                    `containers.${containerIndex}.representativeBatch`,
-                                    null
-                                  );
-                                }
-                              }}
-                              onClickRepresentative={() =>
-                                setDeepFieldValue(
-                                  `containers.${containerIndex}.representativeBatch`,
-                                  batch
-                                )
-                              }
-                              onClone={({
-                                id,
-                                deliveredAt,
-                                desired,
-                                expiredAt,
-                                producedAt,
-                                no,
-                                ...rest
-                              }) => {
-                                setFieldValue('batches', [
-                                  ...batches,
-                                  injectUid({
-                                    ...rest,
-                                    isNew: true,
-                                    batchAdjustments: [],
-                                    no: `${no}- clone`,
-                                  }),
-                                ]);
-                                setDeepFieldValue(`containers.${containerIndex}.batches`, [
-                                  ...batchesInContainer,
-                                  injectUid({
-                                    ...rest,
-                                    isNew: true,
-                                    batchAdjustments: [],
-                                    no: `${no}- clone`,
-                                  }),
-                                ]);
-                              }}
-                            />
-                          </>
+                                </SlideView>
+                                <ShipmentContainerBatchCard
+                                  batch={batch}
+                                  isRepresented={batch.id === representativeBatchId}
+                                  saveOnBlur={updateBatch => {
+                                    const indexOfAllBatches = batches.indexOf(batch);
+                                    setFieldArrayValue(indexOfAllBatches, updateBatch);
+                                    setDeepFieldValue(
+                                      `containers.${containerIndex}.batches.${position}`,
+                                      updateBatch
+                                    );
+                                  }}
+                                  onClick={() => batchSlideToggle(true)}
+                                  onClear={({ id }) => {
+                                    setFieldValue(
+                                      'batches',
+                                      batches.filter(({ id: batchId }) => id !== batchId)
+                                    );
+                                    setDeepFieldValue(
+                                      `containers.${containerIndex}.batches`,
+                                      batchesInContainer.filter(({ id: batchId }) => id !== batchId)
+                                    );
+                                    if (batch.id === representativeBatchId) {
+                                      setDeepFieldValue(
+                                        `containers.${containerIndex}.representativeBatch`,
+                                        null
+                                      );
+                                    }
+                                  }}
+                                  onClickRepresentative={() =>
+                                    setDeepFieldValue(
+                                      `containers.${containerIndex}.representativeBatch`,
+                                      batch
+                                    )
+                                  }
+                                  onClone={({
+                                    id,
+                                    deliveredAt,
+                                    desired,
+                                    expiredAt,
+                                    producedAt,
+                                    no,
+                                    ...rest
+                                  }) => {
+                                    setFieldValue('batches', [
+                                      ...batches,
+                                      injectUid({
+                                        ...rest,
+                                        isNew: true,
+                                        batchAdjustments: [],
+                                        no: `${no}- clone`,
+                                      }),
+                                    ]);
+                                    setDeepFieldValue(`containers.${containerIndex}.batches`, [
+                                      ...batchesInContainer,
+                                      injectUid({
+                                        ...rest,
+                                        isNew: true,
+                                        batchAdjustments: [],
+                                        no: `${no}- clone`,
+                                      }),
+                                    ]);
+                                  }}
+                                />
+                              </>
+                            )}
+                          </BooleanValue>
                         )}
-                      </BooleanValue>
+                      </React.Fragment>
                     ))}
                   </div>
                 </>
@@ -217,12 +262,12 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                         <SelectBatches
                           selectedBatches={batches}
                           onSelect={selected => {
-                            const selectedBatches = selected.map(selectedBatch => ({
+                            const newSelectBatches = selected.map(selectedBatch => ({
                               ...selectedBatch,
                               container,
                               packageQuantity: calculatePackageQuantity(selectedBatch),
                             }));
-                            setFieldValue('batches', [...batches, ...selectedBatches]);
+                            setFieldValue('batches', [...batches, ...newSelectBatches]);
                             setDeepFieldValue(`containers.${containerIndex}.batches`, [
                               ...batchesInContainer,
                               ...selectedBatches,
