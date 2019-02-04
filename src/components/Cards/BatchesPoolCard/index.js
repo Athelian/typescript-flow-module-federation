@@ -18,23 +18,18 @@ import {
 type Props = {
   totalBatches: number,
   product: ?Object,
-  setSelectedContainerId: string => void,
 };
 
 const defaultProps = {
   product: null,
 };
 
-const BatchesPoolCard = ({ totalBatches, product, setSelectedContainerId }: Props) => {
+const BatchesPoolCard = ({ totalBatches, product }: Props) => {
   const productImage = getProductImage(product);
 
   return (
     <BaseCard icon="BATCH" color="BATCH">
-      <div
-        className={BatchesPoolCardWrapperStyle}
-        onClick={() => setSelectedContainerId('Pool')}
-        role="presentation"
-      >
+      <div className={BatchesPoolCardWrapperStyle} role="presentation">
         <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
         <div className={InfoWrapperStyle}>

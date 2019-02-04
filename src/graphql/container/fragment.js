@@ -72,37 +72,13 @@ export const shipmentContainerCardFragment = gql`
     id
     no
     representativeBatch {
-      ... on Batch {
-        id
-        orderItem {
-          ... on OrderItem {
-            id
-            productProvider {
-              ... on ProductProvider {
-                id
-                product {
-                  ... on Product {
-                    id
-                    files {
-                      ...imageFragment
-                    }
-                    name
-                    serial
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      ...batchFormFragment
     }
     totalVolume {
       ...metricFragment
     }
     batches {
-      ... on Batch {
-        id
-      }
+      ...batchFormFragment
     }
     warehouse {
       ... on Warehouse {
@@ -112,11 +88,13 @@ export const shipmentContainerCardFragment = gql`
     }
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
+    warehouseArrivalAgreedDateApprovedAt
     warehouseArrivalAgreedDateApprovedBy {
       ... on User {
         id
       }
     }
+    warehouseArrivalActualDateApprovedAt
     warehouseArrivalActualDateApprovedBy {
       ... on User {
         id

@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { isNullOrUndefined } from 'utils/fp';
+import { isBefore, isAfter } from 'date-fns';
 import EnumProvider from 'providers/enum';
 
 export const getTimelineColoring = ({
@@ -91,4 +93,103 @@ export const getPortName = (
     );
   }
   return null;
+};
+
+export const getContainerDatesRange = (
+  containers: Array<{
+    warehouseArrivalAgreedDate: ?string,
+    warehouseArrivalAgreedDateApprovedAt?: ?string,
+    warehouseArrivalAgreedDateApprovedBy?: ?Object,
+    warehouseArrivalActualDate: ?string,
+    warehouseArrivalActualDateApprovedAt?: ?string,
+    warehouseArrivalActualDateApprovedBy?: ?Object,
+  }> = []
+) => {
+  let minAgreedDate = null;
+  let maxAgreedDate = null;
+  let agreedApproved = false;
+  let minActualDate = null;
+  let maxActualDate = null;
+  let actualApproved = false;
+
+  let agreedApprovalCounter = 0;
+  let actualApprovalCounter = 0;
+
+  containers.forEach(
+    ({
+      warehouseArrivalAgreedDate,
+      warehouseArrivalAgreedDateApprovedAt,
+      warehouseArrivalAgreedDateApprovedBy,
+      warehouseArrivalActualDate,
+      warehouseArrivalActualDateApprovedAt,
+      warehouseArrivalActualDateApprovedBy,
+    }) => {
+      if (!isNullOrUndefined(warehouseArrivalAgreedDate)) {
+        if (!isNullOrUndefined(minAgreedDate)) {
+          if (isBefore(new Date(warehouseArrivalAgreedDate), new Date(minAgreedDate))) {
+            minAgreedDate = warehouseArrivalAgreedDate;
+          }
+        } else {
+          minAgreedDate = warehouseArrivalAgreedDate;
+        }
+
+        if (!isNullOrUndefined(maxAgreedDate)) {
+          if (isAfter(new Date(warehouseArrivalAgreedDate), new Date(maxAgreedDate))) {
+            maxAgreedDate = warehouseArrivalAgreedDate;
+          }
+        } else {
+          maxAgreedDate = warehouseArrivalAgreedDate;
+        }
+      }
+
+      if (!isNullOrUndefined(warehouseArrivalActualDate)) {
+        if (!isNullOrUndefined(minActualDate)) {
+          if (isBefore(new Date(warehouseArrivalActualDate), new Date(minActualDate))) {
+            minActualDate = warehouseArrivalActualDate;
+          }
+        } else {
+          minActualDate = warehouseArrivalActualDate;
+        }
+
+        if (!isNullOrUndefined(maxActualDate)) {
+          if (isAfter(new Date(warehouseArrivalActualDate), new Date(maxActualDate))) {
+            maxActualDate = warehouseArrivalActualDate;
+          }
+        } else {
+          maxActualDate = warehouseArrivalActualDate;
+        }
+      }
+
+      if (
+        !isNullOrUndefined(warehouseArrivalAgreedDateApprovedAt) ||
+        !isNullOrUndefined(warehouseArrivalAgreedDateApprovedBy)
+      ) {
+        agreedApprovalCounter += 1;
+      }
+
+      if (
+        !isNullOrUndefined(warehouseArrivalActualDateApprovedAt) ||
+        !isNullOrUndefined(warehouseArrivalActualDateApprovedBy)
+      ) {
+        actualApprovalCounter += 1;
+      }
+    }
+  );
+
+  if (agreedApprovalCounter === containers.length) {
+    agreedApproved = true;
+  }
+
+  if (actualApprovalCounter === containers.length) {
+    actualApproved = true;
+  }
+
+  return {
+    minAgreedDate,
+    maxAgreedDate,
+    agreedApproved,
+    minActualDate,
+    maxActualDate,
+    actualApproved,
+  };
 };

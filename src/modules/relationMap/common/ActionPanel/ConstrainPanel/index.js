@@ -23,8 +23,7 @@ const ConstrainPanel = ({ disable }: Props) => {
       {disabledSplit && (
         <Label className={style.LabelStyle} align="center">
           <FormattedMessage {...messages.split} />{' '}
-          <FormattedMessage {...messages.actionAvailable} /> 1 <Icon icon="ORDER_ITEM" />{' '}
-          <FormattedMessage {...messages.expressionOr} /> 1 <Icon icon="BATCH" />
+          <FormattedMessage {...messages.actionAvailable} /> 1 <Icon icon="BATCH" />{' '}
         </Label>
       )}
       {disabledMoveToOrder && (

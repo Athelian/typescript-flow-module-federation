@@ -106,6 +106,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.split',
     defaultMessage: 'Split',
   },
+  autoFill: {
+    id: 'modules.RelationMaps.label.autoFill',
+    defaultMessage: 'AUTOFILL',
+  },
   splitType: {
     id: 'modules.RelationMaps.label.splitType',
     defaultMessage: 'Split Type',
@@ -130,6 +134,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.splitBalance',
     defaultMessage: 'BALANCE',
   },
+  autoFillBatch: {
+    id: 'modules.RelationMaps.label.autoFillBatch',
+    defaultMessage: 'AUTOFILL BATCH',
+  },
   select: {
     id: 'modules.RelationMaps.select',
     defaultMessage: 'SELECT',
@@ -145,6 +153,14 @@ export default defineMessages({
   connect: {
     id: 'modules.RelationMaps.label.connect',
     defaultMessage: 'CONNECT',
+  },
+  connectOrder: {
+    id: 'modules.RelationMaps.label.connectOrder',
+    defaultMessage: 'CONNECT ORDER',
+  },
+  connectShipment: {
+    id: 'modules.RelationMaps.label.connectShipment',
+    defaultMessage: 'CONNECT SHIPMENT',
   },
   connectTo: {
     id: 'modules.RelationMaps.label.connectTo',
@@ -162,8 +178,8 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.askConnectToShipment',
     defaultMessage: 'Do you want to connect to this shipment',
   },
-  connectShipment: {
-    id: 'modules.RelationMaps.label.connectShipment',
+  connectShipmentInfo: {
+    id: 'modules.RelationMaps.label.connectShipmentInfo',
     defaultMessage: 'Connect Shipment on the list',
   },
   disconnect: {

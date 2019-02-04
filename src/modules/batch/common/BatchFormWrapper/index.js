@@ -68,12 +68,12 @@ class BatchFormWrapper extends React.Component<Props> {
                   <EntityIcon icon="BATCH" color="BATCH" />
                   <JumpToSection>
                     <SectionTabs
-                      link="batchSection"
+                      link="batch_batchSection"
                       label={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
                       icon="BATCH"
                     />
                     <SectionTabs
-                      link="quantityAdjustmentsSection"
+                      link="batch_quantityAdjustmentsSection"
                       label={
                         <FormattedMessage
                           id="modules.Batches.quantityAdjustments"
@@ -83,7 +83,7 @@ class BatchFormWrapper extends React.Component<Props> {
                       icon="QUANTITY_ADJUSTMENTS"
                     />
                     <SectionTabs
-                      link="packagingSection"
+                      link="batch_packagingSection"
                       label={
                         <FormattedMessage
                           id="modules.Batches.packaging"
@@ -93,14 +93,24 @@ class BatchFormWrapper extends React.Component<Props> {
                       icon="PACKAGING"
                     />
                     <SectionTabs
-                      link="shipmentSection"
+                      link="batch_shipmentSection"
                       label={
                         <FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />
                       }
                       icon="SHIPMENT"
                     />
                     <SectionTabs
-                      link="orderSection"
+                      link="batch_containerSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Batches.container"
+                          defaultMessage="SHIPMENT"
+                        />
+                      }
+                      icon="CONTAINER"
+                    />
+                    <SectionTabs
+                      link="batch_orderSection"
                       label={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
                       icon="ORDER"
                     />

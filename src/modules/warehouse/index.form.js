@@ -128,7 +128,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                       <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
                       <JumpToSection>
                         <SectionTabs
-                          link="warehouseSection"
+                          link="warehouse_warehouseSection"
                           label={
                             <FormattedMessage
                               id="modules.WareHouses.warehouse"

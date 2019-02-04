@@ -1,5 +1,7 @@
 // @flow
-import format from 'date-fns/format';
+import { format, min, max } from 'date-fns';
+
+export { min as earliest, max as latest };
 
 export const formatToDateInput = (date: string): string => format(new Date(date), 'yyyy-MM-dd');
 
@@ -10,5 +12,3 @@ export const formatToDateTimeGraphql = (date: string): string =>
   format(new Date(date), "yyyy-MM-dd'T'HH:mm:ssZ");
 
 export const formatToDateLabel = (date: string): string => format(new Date(date), 'dd/MM/yyyy');
-
-export default formatToDateInput;

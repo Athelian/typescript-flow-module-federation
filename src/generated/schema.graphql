@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Jan 23 2019 13:18:36 GMT+0900 (Tokyo Standard Time)
+# timestamp: Fri Feb 01 2019 16:29:56 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -26956,6 +26956,9 @@ enum BatchAdjustmentReason {
   """Lost"""
   Lost
 
+  """Split"""
+  Split
+
   """Other"""
   Other
 }
@@ -27134,12 +27137,12 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   batches: [BatchPayload!]!
   totalVolume: MetricValue!
   totalWeight: MetricValue!
-  totalPrice: MetricValue!
+  totalPrice: Price
   totalBatchQuantity: Int!
   totalBatchPackages: Int!
   totalNumberOfUniqueOrderItems: Int!
-  warehouseArrivalActualDateAssignedTo: UserPayload
-  warehouseArrivalAgreedDateAssignedTo: UserPayload
+  warehouseArrivalAgreedDateAssignedTo: [UserPayload!]!
+  warehouseArrivalActualDateAssignedTo: [UserPayload!]!
   archived: Boolean!
   id: ID!
   createdAt: DateTime!
@@ -27217,6 +27220,14 @@ type ContainerGroup implements Model & Owned & Sortable {
   sort: Int!
 }
 
+input ContainerGroupNestedInput {
+  id: ID
+  warehouseId: ID
+  customClearance: TimelineDateNestedInput
+  warehouseArrival: TimelineDateNestedInput
+  deliveryReady: TimelineDateNestedInput
+}
+
 union ContainerGroupPayload = ContainerGroup | BadRequest | Forbidden | NotFound
 
 union ContainerPayload = Container | BadRequest | Forbidden | NotFound
@@ -27246,8 +27257,8 @@ input ContainerUpdateInput {
   warehouseId: ID
   representativeBatchId: ID
   batches: [ContainerBatchInput!]
-  warehouseArrivalAgreedDateAssignedToId: ID
-  warehouseArrivalActualDateAssignedToId: ID
+  warehouseArrivalAgreedDateAssignedToIds: [ID!]
+  warehouseArrivalActualDateAssignedToIds: [ID!]
   memo: String
   tagIds: [ID!]
 }
@@ -28841,6 +28852,9 @@ type Group implements Model {
   avatar: FilePayload
   disabled: Boolean!
   dummy: Boolean!
+
+  """Resolving the current partnership of this group from user's group"""
+  partner: PartnerPayload
   partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnerPayloadPagination!
   id: ID!
   createdAt: DateTime!
@@ -29727,6 +29741,7 @@ type Mutation {
   batchSimpleSplit(id: ID!, input: BatchSimpleSplitInput!): BatchesPayload!
   batchEqualSplit(id: ID!, input: BatchEqualSplitInput!): BatchesPayload!
   batchBalanceSplit(orderItemId: ID!): BatchesPayload!
+  batchClone(id: ID!, input: BatchUpdateInput!): BatchPayload!
   shipmentCreate(input: ShipmentCreateInput!): ShipmentPayload!
   shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
   shipmentUpdateMany(shipments: [ShipmentUpdateWrapperInput!]!): [ShipmentPayload!]!
@@ -30076,6 +30091,7 @@ input OrderItemBatchCreateInput {
   tagIds: [ID!]
   customFields: CustomFieldsInput
   shipmentId: ID
+  containerId: ID
   batchAssignments: [OrderItemBatchAssignmentCreateInput!]
   batchAdjustments: [OrderItemBatchAdjustmentCreateInput!]
 }
@@ -30099,6 +30115,7 @@ input OrderItemBatchUpdateInput {
   customFields: CustomFieldsInput
   id: ID
   shipmentId: ID
+  containerId: ID
   batchAssignments: [OrderItemBatchAssignmentUpdateInput!]
   batchAdjustments: [OrderItemBatchAdjustmentUpdateInput!]
 }
@@ -35556,25 +35573,10 @@ input ShipmentContainerCreateInput {
   warehouseId: ID
   representativeBatchId: ID
   batches: [ShipmentBatchInput!]
-  warehouseArrivalAgreedDateAssignedToId: ID
-  warehouseArrivalActualDateAssignedToId: ID
+  warehouseArrivalAgreedDateAssignedToIds: [ID!]
+  warehouseArrivalActualDateAssignedToIds: [ID!]
   memo: String
   tagIds: [ID!]
-}
-
-input ShipmentContainerGroupCreateInput {
-  warehouseId: ID
-  customClearance: ShipmentTimelineDateCreateInput
-  warehouseArrival: ShipmentTimelineDateCreateInput
-  deliveryReady: ShipmentTimelineDateCreateInput
-}
-
-input ShipmentContainerGroupUpdateInput {
-  id: ID
-  warehouseId: ID
-  customClearance: ShipmentTimelineDateUpdateInput
-  warehouseArrival: ShipmentTimelineDateUpdateInput
-  deliveryReady: ShipmentTimelineDateUpdateInput
 }
 
 input ShipmentContainerUpdateInput {
@@ -35587,8 +35589,8 @@ input ShipmentContainerUpdateInput {
   warehouseId: ID
   representativeBatchId: ID
   batches: [ShipmentBatchInput!]
-  warehouseArrivalAgreedDateAssignedToId: ID
-  warehouseArrivalActualDateAssignedToId: ID
+  warehouseArrivalAgreedDateAssignedToIds: [ID!]
+  warehouseArrivalActualDateAssignedToIds: [ID!]
   memo: String
   tagIds: [ID!]
 }
@@ -35605,13 +35607,13 @@ input ShipmentCreateInput {
   containerType: String
   incoterm: Incoterm
   carrier: String
-  cargoReady: ShipmentTimelineDateCreateInput
+  cargoReady: TimelineDateNestedInput
   tagIds: [ID!]
   inChargeIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
-  voyages: [ShipmentVoyageCreateInput!]
-  containerGroups: [ShipmentContainerGroupCreateInput!]
+  voyages: [VoyageNestedInput!]
+  containerGroups: [ContainerGroupNestedInput!]
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
@@ -35659,35 +35661,6 @@ input ShipmentSortInput {
   updatedAt: SortOrder
 }
 
-input ShipmentTimelineDateCreateInput {
-  date: DateTime
-  assignedToIds: [ID!]
-  approvedById: ID
-  memo: String
-  timelineDateRevisions: [ShipmentTimelineDateRevisionCreateInput!]
-}
-
-input ShipmentTimelineDateRevisionCreateInput {
-  date: DateTime!
-  type: TimelineDateRevisionType!
-  memo: String
-}
-
-input ShipmentTimelineDateRevisionUpdateInput {
-  id: ID
-  date: DateTime
-  type: TimelineDateRevisionType
-  memo: String
-}
-
-input ShipmentTimelineDateUpdateInput {
-  date: DateTime
-  assignedToIds: [ID!]
-  approvedById: ID
-  memo: String
-  timelineDateRevisions: [ShipmentTimelineDateRevisionUpdateInput!]
-}
-
 input ShipmentUpdateInput {
   archived: Boolean
   no: String
@@ -35701,13 +35674,13 @@ input ShipmentUpdateInput {
   containerType: String
   incoterm: Incoterm
   carrier: String
-  cargoReady: ShipmentTimelineDateUpdateInput
+  cargoReady: TimelineDateNestedInput
   tagIds: [ID!]
   inChargeIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
-  voyages: [ShipmentVoyageUpdateInput!]
-  containerGroups: [ShipmentContainerGroupUpdateInput!]
+  voyages: [VoyageNestedInput!]
+  containerGroups: [ContainerGroupNestedInput!]
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
@@ -35717,25 +35690,6 @@ input ShipmentUpdateInput {
 input ShipmentUpdateWrapperInput {
   id: ID!
   input: ShipmentUpdateInput!
-}
-
-input ShipmentVoyageCreateInput {
-  vesselName: String
-  vesselCode: String
-  departure: ShipmentTimelineDateCreateInput
-  departurePort: PortInput
-  arrival: ShipmentTimelineDateCreateInput
-  arrivalPort: PortInput
-}
-
-input ShipmentVoyageUpdateInput {
-  id: ID
-  vesselName: String
-  vesselCode: String
-  departure: ShipmentTimelineDateUpdateInput
-  departurePort: PortInput
-  arrival: ShipmentTimelineDateUpdateInput
-  arrivalPort: PortInput
 }
 
 type Size {
@@ -35798,9 +35752,9 @@ type Tag implements Model & Owned & Memorizable {
 }
 
 input TagCreateInput {
-  name: ID!
-  description: String
+  name: String!
   color: String!
+  description: String
   entityTypes: [TagEntityType!]!
 }
 
@@ -35854,8 +35808,8 @@ input TagSortInput {
 
 input TagUpdateInput {
   name: ID
-  description: String
   color: String
+  description: String
   entityTypes: [TagEntityType!]
 }
 
@@ -35883,6 +35837,14 @@ type TimelineDate implements Model & Owned & Memorizable {
   memo: String
 }
 
+input TimelineDateNestedInput {
+  date: DateTime
+  assignedToIds: [ID!]
+  approvedById: ID
+  memo: String
+  timelineDateRevisions: [TimelineDateRevisionInput!]
+}
+
 union TimelineDatePayload = TimelineDate | BadRequest | Forbidden | NotFound
 
 type TimelineDateRevision implements Model & Owned & Sortable & Memorizable {
@@ -35898,6 +35860,13 @@ type TimelineDateRevision implements Model & Owned & Sortable & Memorizable {
   deletedBy: UserPayload
   ownedBy: GroupPayload!
   sort: Int!
+  memo: String
+}
+
+input TimelineDateRevisionInput {
+  id: ID
+  date: DateTime
+  type: TimelineDateRevisionType
   memo: String
 }
 
@@ -35921,11 +35890,11 @@ type Token {
 union TokenPayload = Token | BadRequest | Forbidden | NotFound
 
 enum TransportType {
-  """Sea"""
-  Sea
-
   """Air"""
   Air
+
+  """Sea"""
+  Sea
 }
 
 type User implements Model & Tagged & Memorizable {
@@ -36047,6 +36016,16 @@ type Voyage implements Model & Owned & Sortable {
   deletedBy: UserPayload
   ownedBy: GroupPayload!
   sort: Int!
+}
+
+input VoyageNestedInput {
+  id: ID
+  vesselName: String
+  vesselCode: String
+  departurePort: PortInput
+  arrivalPort: PortInput
+  departure: TimelineDateNestedInput
+  arrival: TimelineDateNestedInput
 }
 
 union VoyagePayload = Voyage | BadRequest | Forbidden | NotFound

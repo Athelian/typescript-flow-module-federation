@@ -8,6 +8,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 import Tooltip from 'components/Tooltip';
 import { isNullOrUndefined } from 'utils/fp';
+import { findSummary } from './helper';
 
 export default function ContainerSummary() {
   return (
@@ -21,7 +22,7 @@ export default function ContainerSummary() {
           totalVolume,
           totalWeight,
           totalPrice,
-        } = values;
+        } = findSummary(values);
         return (
           <>
             <GridColumn>

@@ -5,7 +5,7 @@ import { presets, borderRadiuses, scrollbars } from 'styles/common';
 export const TimelineSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
-  height: 600px;
+  height: 650px;
   display: flex;
 `;
 
@@ -24,7 +24,7 @@ export const BodyWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   flex: 1;
-  height: 600px;
+  height: 650px;
   ${scrollbars.SMALL};
   overflow: hidden;
   &:hover {

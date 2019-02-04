@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
@@ -10,7 +11,9 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display, DefaultStyle } from 'components/Form';
+
 import { getProductImage } from 'components/Cards/utils';
+import { UserConsumer } from 'modules/user';
 import validator from './validator';
 import BaseCard from '../BaseCard';
 import {
@@ -35,6 +38,7 @@ import {
 } from './style';
 
 type OptionalProps = {
+  onSelectWarehouse: Function,
   onClick: (container: Object) => void,
   onRemove: (container: Object) => void,
   selectable: boolean,
@@ -42,11 +46,13 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  field: string,
   container: Object,
-  saveOnBlur: Function,
+  update: Function,
 };
 
 const defaultProps = {
+  onSelectWarehouse: () => {},
   onClick: () => {},
   onRemove: () => {},
   selectable: false,
@@ -54,10 +60,11 @@ const defaultProps = {
 };
 
 const ShipmentContainerCard = ({
+  field,
   container,
-  onClick,
   onRemove,
-  saveOnBlur,
+  onSelectWarehouse,
+  update,
   selectable,
   ...rest
 }: Props) => {
@@ -92,211 +99,260 @@ const ShipmentContainerCard = ({
     [`container.${id}.no`]: no,
   };
 
-  const newContainer = {
-    ...container,
-    no,
-    totalVolume,
-    warehouseArrivalAgreedDate,
-    warehouseArrivalActualDate,
-  };
-
   return (
-    <BaseCard
-      icon="CONTAINER"
-      color="CONTAINER"
-      showActionsOnHover
-      selectable={selectable}
-      {...rest}
-    >
-      <div className={CardWrapperStyle} onClick={() => onClick(newContainer)} role="presentation">
-        <div
-          className={ImagePartWrapperStyle}
-          onClick={() => onClick(newContainer)}
-          role="presentation"
+    <UserConsumer>
+      {({ user }) => (
+        <BaseCard
+          icon="CONTAINER"
+          color="CONTAINER"
+          showActionsOnHover
+          selectable={selectable}
+          {...rest}
         >
-          <div className={ImageWrapperStyle}>
-            <img className={ImageStyle} src={productImage} alt="product_image" />
-          </div>
-          <div className={InfoInsideImageWrapperStyle}>
-            <div className={NameStyle}>{product.name}</div>
-            <div className={SerialStyle}>{product.serial}</div>
-          </div>
-        </div>
-
-        <div className={InfoPartWrapperStyle}>
-          <div className={InputStyle} onClick={evt => evt.stopPropagation()} role="presentation">
-            <FormField
-              name={`container.${id}.no`}
-              initValue={no}
-              validator={validation}
-              values={values}
-            >
-              {({ name: fieldName, ...inputHandlers }) =>
-                textInputFactory({
-                  width: '185px',
-                  height: '20px',
-                  inputHandlers: {
-                    ...inputHandlers,
-                    onBlur: evt => {
-                      inputHandlers.onBlur(evt);
-                      saveOnBlur({ ...container, no: inputHandlers.value });
-                    },
-                  },
-                  name: fieldName,
-                  isNew: false,
-                  originalValue: no,
-                  align: 'left',
-                })
-              }
-            </FormField>
-          </div>
-
-          <div className={LabelInputStyle}>
-            <Label>
-              <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
-            </Label>
-            <Display align="right">
-              <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
-            </Display>
-          </div>
-
-          <div className={LabelInputStyle}>
-            <Label>
-              <FormattedMessage id="components.cards.batches" defaultMessage="BATCHES" />
-            </Label>
-            <Display align="right">
-              <FormattedNumber value={batches.length} />
-            </Display>
-          </div>
-
-          <div className={DividerStyle} />
-
-          <div className={IconInputStyle}>
-            {isNullOrUndefined(warehouse) ? (
-              <div className={WarehouseIconStyle(false)}>
-                <Icon icon="WAREHOUSE" />
+          <div className={CardWrapperStyle} role="presentation">
+            <div className={ImagePartWrapperStyle} role="presentation">
+              <div className={ImageWrapperStyle}>
+                <img className={ImageStyle} src={productImage} alt="product_image" />
               </div>
-            ) : (
-              <Link
-                className={WarehouseIconStyle(true)}
-                to={`/warehouse/${encodeId(warehouse.id)}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
+              <div className={InfoInsideImageWrapperStyle}>
+                <div className={NameStyle}>{product.name}</div>
+                <div className={SerialStyle}>{product.serial}</div>
+              </div>
+            </div>
+
+            <div className={InfoPartWrapperStyle}>
+              <div
+                className={InputStyle}
+                onClick={evt => evt.stopPropagation()}
+                role="presentation"
               >
-                <Icon icon="WAREHOUSE" />
-              </Link>
-            )}
-            {/* clicking, open slide view */}
-            {/* <button type="button" onClick={openTheSlideView}> */}
-            <DefaultStyle type="button" height="20px">
-              <Display align="left">{isNullOrUndefined(warehouse) ? '' : warehouse.name}</Display>
-            </DefaultStyle>
-            {/* </button> */}
-          </div>
+                <FormField
+                  name={`container.${id}.no`}
+                  initValue={no}
+                  validator={validation}
+                  values={values}
+                >
+                  {({ name: fieldName, ...inputHandlers }) =>
+                    textInputFactory({
+                      width: '185px',
+                      height: '20px',
+                      inputHandlers: {
+                        ...inputHandlers,
+                        onBlur: evt => {
+                          inputHandlers.onBlur(evt);
+                          update({ ...container, no: inputHandlers.value });
+                        },
+                      },
+                      name: fieldName,
+                      isNew: false,
+                      originalValue: no,
+                      align: 'left',
+                    })
+                  }
+                </FormField>
+              </div>
+              <div className={LabelInputStyle}>
+                <Label>
+                  <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
+                </Label>
+                <Display align="right">
+                  <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
+                </Display>
+              </div>
 
-          <div className={LabelStyle}>
-            <Label>
-              <FormattedMessage
-                id="components.cards.agreedArrival"
-                defaultMessage="AGREED ARRIVAL"
-              />
-            </Label>
-          </div>
-          <div
-            className={InputIconStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
-            <FormField
-              name={`container.${id}.warehouseArrivalAgreedDate`}
-              initValue={warehouseArrivalAgreedDate}
-            >
-              {({ name: fieldName, ...inputHandlers }) =>
-                dateTimeInputFactory({
-                  width: '165px',
-                  height: '20px',
-                  name: fieldName,
-                  isNew: false,
-                  originalValue: warehouseArrivalAgreedDate,
-                  inputHandlers: {
-                    ...inputHandlers,
-                    onBlur: evt => {
-                      inputHandlers.onBlur(evt);
-                      saveOnBlur({
+              <div className={LabelInputStyle}>
+                <Label>
+                  <FormattedMessage id="components.cards.batches" defaultMessage="BATCHES" />
+                </Label>
+                <Display align="right">
+                  <FormattedNumber value={batches.length} />
+                </Display>
+              </div>
+
+              <div className={DividerStyle} />
+
+              <div className={IconInputStyle}>
+                {isNullOrUndefined(warehouse) ? (
+                  <div className={WarehouseIconStyle(false)}>
+                    <Icon icon="WAREHOUSE" />
+                  </div>
+                ) : (
+                  <Link
+                    className={WarehouseIconStyle(true)}
+                    to={`/warehouse/${encodeId(warehouse.id)}`}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                    }}
+                  >
+                    <Icon icon="WAREHOUSE" />
+                  </Link>
+                )}
+
+                <button
+                  type="button"
+                  onClick={evt => {
+                    evt.stopPropagation();
+                    onSelectWarehouse();
+                  }}
+                >
+                  <DefaultStyle type="button" height="20px">
+                    <Display align="left">
+                      {isNullOrUndefined(warehouse) ? '' : warehouse.name}
+                    </Display>
+                  </DefaultStyle>
+                </button>
+              </div>
+
+              <div className={LabelStyle}>
+                <Label>
+                  <FormattedMessage
+                    id="components.cards.agreedArrival"
+                    defaultMessage="AGREED ARRIVAL"
+                  />
+                </Label>
+              </div>
+              <div
+                className={InputIconStyle}
+                onClick={evt => evt.stopPropagation()}
+                role="presentation"
+              >
+                <FormField
+                  name={`container.${id}.warehouseArrivalAgreedDate`}
+                  initValue={warehouseArrivalAgreedDate}
+                >
+                  {({ name: fieldName, ...inputHandlers }) =>
+                    dateTimeInputFactory({
+                      width: '165px',
+                      height: '20px',
+                      name: fieldName,
+                      isNew: false,
+                      originalValue: warehouseArrivalAgreedDate,
+                      inputHandlers: {
+                        ...inputHandlers,
+                        onBlur: evt => {
+                          inputHandlers.onBlur(evt);
+                          update({
+                            ...container,
+                            warehouseArrivalAgreedDate: inputHandlers.value
+                              ? inputHandlers.value
+                              : null,
+                          });
+                        },
+                      },
+                    })
+                  }
+                </FormField>
+
+                {warehouseArrivalAgreedDateApprovedBy ? (
+                  <button
+                    type="button"
+                    className={ApprovalIconStyle(true)}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      update({
                         ...container,
-                        warehouseArrivalAgreedDate: inputHandlers.value
-                          ? inputHandlers.value
-                          : null,
+                        warehouseArrivalAgreedDateApprovedBy: null,
                       });
-                    },
-                  },
-                })
-              }
-            </FormField>
-            <div className={ApprovalIconStyle(!!warehouseArrivalAgreedDateApprovedBy)}>
-              {warehouseArrivalAgreedDateApprovedBy ? (
-                <Icon icon="CHECKED" />
-              ) : (
-                <Icon icon="UNCHECKED" />
-              )}
+                    }}
+                  >
+                    <Icon icon="CHECKED" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className={ApprovalIconStyle(false)}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      update({
+                        ...container,
+                        warehouseArrivalAgreedDateApprovedBy: user,
+                      });
+                    }}
+                  >
+                    <Icon icon="UNCHECKED" />
+                  </button>
+                )}
+              </div>
+
+              <div className={LabelStyle}>
+                <Label>
+                  <FormattedMessage
+                    id="components.cards.actualArrival"
+                    defaultMessage="ACTUAL ARRIVAL"
+                  />
+                </Label>
+              </div>
+              <div
+                className={InputIconStyle}
+                onClick={evt => evt.stopPropagation()}
+                role="presentation"
+              >
+                <FormField
+                  name={`container.${id}.warehouseArrivalActualDate`}
+                  initValue={warehouseArrivalActualDate}
+                >
+                  {({ name: fieldName, ...inputHandlers }) =>
+                    dateTimeInputFactory({
+                      width: '165px',
+                      height: '20px',
+                      name: fieldName,
+                      isNew: false,
+                      originalValue: warehouseArrivalActualDate,
+                      inputHandlers: {
+                        ...inputHandlers,
+                        onBlur: evt => {
+                          inputHandlers.onBlur(evt);
+                          update({
+                            ...container,
+                            warehouseArrivalActualDate: inputHandlers.value
+                              ? inputHandlers.value
+                              : null,
+                          });
+                        },
+                      },
+                    })
+                  }
+                </FormField>
+
+                {warehouseArrivalActualDateApprovedBy ? (
+                  <button
+                    type="button"
+                    className={ApprovalIconStyle(true)}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      update({
+                        ...container,
+                        warehouseArrivalActualDateApprovedBy: null,
+                      });
+                    }}
+                  >
+                    <Icon icon="CHECKED" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className={ApprovalIconStyle(false)}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      update({
+                        ...container,
+                        warehouseArrivalActualDateApprovedBy: user,
+                      });
+                    }}
+                  >
+                    <Icon icon="UNCHECKED" />
+                  </button>
+                )}
+              </div>
+
+              <div className={TagsWrapperStyle}>
+                {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              </div>
             </div>
           </div>
-
-          <div className={LabelStyle}>
-            <Label>
-              <FormattedMessage
-                id="components.cards.actualArrival"
-                defaultMessage="ACTUAL ARRIVAL"
-              />
-            </Label>
-          </div>
-          <div
-            className={InputIconStyle}
-            onClick={evt => evt.stopPropagation()}
-            role="presentation"
-          >
-            <FormField
-              name={`container.${id}.warehouseArrivalActualDate`}
-              initValue={warehouseArrivalActualDate}
-            >
-              {({ name: fieldName, ...inputHandlers }) =>
-                dateTimeInputFactory({
-                  width: '165px',
-                  height: '20px',
-                  name: fieldName,
-                  isNew: false,
-                  originalValue: warehouseArrivalActualDate,
-                  inputHandlers: {
-                    ...inputHandlers,
-                    onBlur: evt => {
-                      inputHandlers.onBlur(evt);
-                      saveOnBlur({
-                        ...container,
-                        warehouseArrivalActualDate: inputHandlers.value
-                          ? inputHandlers.value
-                          : null,
-                      });
-                    },
-                  },
-                })
-              }
-            </FormField>
-            <div className={ApprovalIconStyle(!!warehouseArrivalActualDateApprovedBy)}>
-              {warehouseArrivalActualDateApprovedBy ? (
-                <Icon icon="CHECKED" />
-              ) : (
-                <Icon icon="UNCHECKED" />
-              )}
-            </div>
-          </div>
-
-          <div className={TagsWrapperStyle}>
-            {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
-          </div>
-        </div>
-      </div>
-    </BaseCard>
+        </BaseCard>
+      )}
+    </UserConsumer>
   );
 };
 

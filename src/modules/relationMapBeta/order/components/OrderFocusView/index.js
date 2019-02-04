@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { findLastIndex } from 'lodash';
+import logger from 'utils/logger';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
 import { actionCreators, selectors } from 'modules/relationMapBeta/order/store';
@@ -16,6 +17,82 @@ type Props = {
   item: OrderProps,
   highLightEntities: Array<string>,
 };
+
+function findRelateBatches({
+  state,
+  batchId,
+  processBatchIds,
+  batches,
+  orderingBatches,
+}: {
+  state: Object,
+  batchId: string,
+  processBatchIds: Array<string>,
+  batches: Array<Object>,
+  orderingBatches: Array<Object>,
+}) {
+  if (state.split.batches[batchId]) {
+    (Object.entries(state.split.batches[batchId]): Array<any>)
+      .reverse()
+      .forEach(([, currentBatch]) => {
+        processBatchIds.push(currentBatch.id);
+        const selectedBatch = batches.find(item => Number(item.id) === Number(currentBatch.id));
+        if (selectedBatch) {
+          orderingBatches.push(selectedBatch);
+          findRelateBatches({
+            batchId: currentBatch.id,
+            state,
+            processBatchIds,
+            batches,
+            orderingBatches,
+          });
+        }
+      });
+  }
+  if (state.clone.batches[batchId]) {
+    (Object.entries(state.clone.batches[batchId]): Array<any>)
+      .reverse()
+      .forEach(([, currentBatch]) => {
+        processBatchIds.push(currentBatch.id);
+        const selectedBatch = batches.find(item => Number(item.id) === Number(currentBatch.id));
+        if (selectedBatch) {
+          orderingBatches.push(selectedBatch);
+          findRelateBatches({
+            batchId: currentBatch.id,
+            state,
+            processBatchIds,
+            batches,
+            orderingBatches,
+          });
+        }
+      });
+  }
+}
+
+function manualSortByAction(orderItems: Array<Object>, state: Object) {
+  logger.warn({
+    orderItems,
+    state,
+  });
+  return orderItems.map(orderItem => {
+    const { batches } = orderItem;
+    const orderingBatches = [];
+    const processBatchIds = [];
+    batches.forEach(batch => {
+      if (!processBatchIds.includes(batch.id)) {
+        orderingBatches.push(batch);
+        processBatchIds.push(batch.id);
+        const batchId = batch.id;
+        findRelateBatches({ state, batchId, processBatchIds, batches, orderingBatches });
+      }
+    });
+
+    return {
+      ...orderItem,
+      batches: orderingBatches,
+    };
+  });
+}
 
 export default function OrderFocusView({ item, highLightEntities }: Props) {
   const context = React.useContext(ActionDispatch);
@@ -131,7 +208,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
         onToggle={() => actions.toggleExpand(ORDER, item.id)}
       />
       {state.expandCards.orders.includes(item.id) &&
-        item.orderItems.map((orderItem, position) => (
+        manualSortByAction(item.orderItems, state).map((orderItem, position) => (
           <React.Fragment key={orderItem.id}>
             {/* Render order item and first batch if available */}
             <div />
@@ -159,6 +236,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                 uiSelectors.isTarget(ORDER_ITEM, orderItem.id),
                 highlight.type === ORDER_ITEM && highlight.selectedId === orderItem.id
               )}
+              exporterId={item.exporter.id}
               {...orderItem}
             />
             {orderItem.batches.length > 0 ? (
@@ -182,6 +260,8 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                   }
                 />
                 <Batch
+                  parentOrderId={item.id}
+                  exporterId={item.exporter.id}
                   wrapperClassName={ItemWrapperStyle(
                     highLightEntities.includes(`${BATCH}-${orderItem.batches[0].id}`),
                     uiSelectors.isTarget(BATCH, orderItem.batches[0].id),
@@ -212,14 +292,16 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                             ) > position
                           }
                           isFocused={
-                            uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
-                            item.orderItems.findIndex(currentOrderItem =>
-                              uiSelectors.isSelectEntity(
-                                highLightEntities,
-                                ORDER_ITEM,
-                                currentOrderItem.id
-                              )
-                            ) > position
+                            (state.highlight.type === ORDER &&
+                              state.highlight.selectedId === item.id) ||
+                            (uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
+                              findLastIndex(item.orderItems, currentOrderItem =>
+                                uiSelectors.isSelectEntity(
+                                  highLightEntities,
+                                  ORDER_ITEM,
+                                  currentOrderItem.id
+                                )
+                              ) > position)
                           }
                           hasRelation={uiSelectors.isTarget(ORDER_ITEM, orderItem.id)}
                         />
@@ -246,6 +328,8 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                         }
                       />
                       <Batch
+                        parentOrderId={item.id}
+                        exporterId={item.exporter.id}
                         wrapperClassName={ItemWrapperStyle(
                           highLightEntities.includes(`${BATCH}-${batch.id}`),
                           uiSelectors.isTarget(BATCH, batch.id),

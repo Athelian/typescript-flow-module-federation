@@ -59,7 +59,7 @@ class ProductForm extends React.Component<Props> {
 
     return (
       <div className={ProductFormWrapperStyle}>
-        <SectionWrapper id="productSection">
+        <SectionWrapper id="product_productSection">
           <SectionHeader
             icon="PRODUCT"
             title={<FormattedMessage id="modules.Products.product" defaultMessage="PRODUCT" />}
@@ -77,7 +77,6 @@ class ProductForm extends React.Component<Props> {
                           product={product}
                           isOpen={statusDialogIsOpen && !!archived}
                           onRequestClose={() => dialogToggle(false)}
-                          onConfirm={() => window.location.reload()}
                         />
                       }
                       archiveDialog={
@@ -85,7 +84,6 @@ class ProductForm extends React.Component<Props> {
                           product={product}
                           isOpen={statusDialogIsOpen && !archived}
                           onRequestClose={() => dialogToggle(false)}
-                          onConfirm={() => window.location.reload()}
                         />
                       }
                     />
@@ -98,7 +96,7 @@ class ProductForm extends React.Component<Props> {
           <ProductSection isNew={isNewOrClone} />
         </SectionWrapper>
 
-        <SectionWrapper id="productProvidersSection">
+        <SectionWrapper id="product_productProvidersSection">
           <SectionHeader
             icon="PROVIDER"
             title={

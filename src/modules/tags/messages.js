@@ -7,6 +7,14 @@ export default defineMessages({
     id: 'modules.Tags.name',
     defaultMessage: 'NAME',
   },
+  createdAt: {
+    id: 'modules.Tags.createdAt',
+    defaultMessage: 'CREATED ON',
+  },
+  updatedAt: {
+    id: 'modules.Tags.updatedAt',
+    defaultMessage: 'LAST MODIFIED',
+  },
   description: {
     id: 'modules.Tags.description',
     defaultMessage: 'DESCRIPTION',
@@ -61,5 +69,9 @@ export default defineMessages({
   invalidColor: {
     id: 'modules.Tags.validation.invalidColor',
     defaultMessage: 'Invalid color',
+  },
+  container: {
+    id: 'modules.Tags.container',
+    defaultMessage: 'CONTAINER',
   },
 });

@@ -1,331 +1,171 @@
 // @flow
 import gql from 'graphql-tag';
-import { isEnableBetaFeature } from 'utils/env';
 
-export const shipmentFormFragment = isEnableBetaFeature
-  ? gql`
-      fragment shipmentFormFragment on Shipment {
+export const shipmentFormFragment = gql`
+  fragment shipmentFormFragment on Shipment {
+    id
+    archived
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    memo
+    no
+    blNo
+    blDate
+    bookingNo
+    bookingDate
+    invoiceNo
+    incoterm
+    loadType
+    transportType
+    carrier
+    customFields {
+      ...customFieldsFragment
+    }
+    forwarders {
+      ...partnerCardFragment
+    }
+    inCharges {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    files {
+      ...documentFragment
+    }
+    cargoReady {
+      ...timelineDateFullFragment
+    }
+    voyages {
+      ... on Voyage {
         id
-        archived
-        updatedAt
-        updatedBy {
-          ...userAvatarFragment
+        vesselName
+        vesselCode
+        departurePort {
+          ...portFragment
         }
-        memo
-        no
-        blNo
-        blDate
-        bookingNo
-        bookingDate
-        invoiceNo
-        incoterm
-        loadType
-        transportType
-        carrier
-        customFields {
-          ...customFieldsFragment
+        arrivalPort {
+          ...portFragment
         }
-        forwarders {
-          ...partnerCardFragment
-        }
-        inCharges {
-          ...userAvatarFragment
-        }
-        tags {
-          ...tagFragment
-        }
-        files {
-          ...documentFragment
-        }
-        cargoReady {
+        departure {
           ...timelineDateFullFragment
         }
-        voyages {
-          ... on Voyage {
-            id
-            vesselName
-            vesselCode
-            departurePort {
-              ...portFragment
-            }
-            arrivalPort {
-              ...portFragment
-            }
-            departure {
-              ...timelineDateFullFragment
-            }
-            arrival {
-              ...timelineDateFullFragment
-            }
-          }
-        }
-        containerGroups {
-          ... on ContainerGroup {
-            id
-            warehouse {
-              ... on Warehouse {
-                id
-                name
-              }
-            }
-            customClearance {
-              ...timelineDateFullFragment
-            }
-            warehouseArrival {
-              ...timelineDateFullFragment
-            }
-            deliveryReady {
-              ...timelineDateFullFragment
-            }
-          }
-        }
-        containers {
-          ...shipmentContainerCardFragment
-        }
-        totalVolume {
-          ...metricFragment
-        }
-        batches {
-          ...batchFormFragment
-        }
-      }
-    `
-  : gql`
-      fragment shipmentFormFragment on Shipment {
-        id
-        archived
-        updatedAt
-        updatedBy {
-          ...userAvatarFragment
-        }
-        memo
-        no
-        blNo
-        blDate
-        bookingNo
-        bookingDate
-        invoiceNo
-        incoterm
-        loadType
-        transportType
-        carrier
-        customFields {
-          ...customFieldsFragment
-        }
-        forwarders {
-          ...partnerCardFragment
-        }
-        inCharges {
-          ...userAvatarFragment
-        }
-        tags {
-          ...tagFragment
-        }
-        files {
-          ...documentFragment
-        }
-        cargoReady {
+        arrival {
           ...timelineDateFullFragment
         }
-        voyages {
-          ... on Voyage {
+      }
+    }
+    containerGroups {
+      ... on ContainerGroup {
+        id
+        warehouse {
+          ... on Warehouse {
             id
-            vesselName
-            vesselCode
-            departurePort {
-              ...portFragment
-            }
-            arrivalPort {
-              ...portFragment
-            }
-            departure {
-              ...timelineDateFullFragment
-            }
-            arrival {
-              ...timelineDateFullFragment
-            }
+            name
           }
         }
-        containerGroups {
-          ... on ContainerGroup {
-            id
-            warehouse {
-              ... on Warehouse {
-                id
-                name
-              }
-            }
-            customClearance {
-              ...timelineDateFullFragment
-            }
-            warehouseArrival {
-              ...timelineDateFullFragment
-            }
-            deliveryReady {
-              ...timelineDateFullFragment
-            }
-          }
+        customClearance {
+          ...timelineDateFullFragment
         }
-        totalVolume {
-          ...metricFragment
+        warehouseArrival {
+          ...timelineDateFullFragment
         }
-        batches {
-          ...batchFormFragment
+        deliveryReady {
+          ...timelineDateFullFragment
         }
       }
-    `;
+    }
+    containers {
+      ...shipmentContainerCardFragment
+    }
+    totalVolume {
+      ...metricFragment
+    }
+    batches {
+      ...batchFormFragment
+    }
+  }
+`;
 
-export const shipmentCardFragment = isEnableBetaFeature
-  ? gql`
-      fragment shipmentCardFragment on Shipment {
+export const shipmentCardFragment = gql`
+  fragment shipmentCardFragment on Shipment {
+    id
+    archived
+    no
+    blNo
+    transportType
+    batchCount
+    orderItemCount
+    totalVolume {
+      ...metricFragment
+    }
+    cargoReady {
+      ...timelineDateMinimalFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    inCharges {
+      ...userAvatarFragment
+    }
+    voyages {
+      ... on Voyage {
         id
-        archived
-        no
-        blNo
-        transportType
-        batchCount
-        orderItemCount
-        totalVolume {
-          ...metricFragment
+        departurePort {
+          ...portFragment
         }
-        cargoReady {
+        arrivalPort {
+          ...portFragment
+        }
+        departure {
           ...timelineDateMinimalFragment
         }
-        tags {
-          ...tagFragment
+        arrival {
+          ...timelineDateMinimalFragment
         }
-        inCharges {
-          ...userAvatarFragment
+      }
+    }
+    containerGroups {
+      ... on ContainerGroup {
+        id
+        customClearance {
+          ...timelineDateMinimalFragment
         }
-        voyages {
-          ... on Voyage {
+        warehouseArrival {
+          ...timelineDateMinimalFragment
+        }
+        deliveryReady {
+          ...timelineDateMinimalFragment
+        }
+        warehouse {
+          ... on Warehouse {
             id
-            departurePort {
-              ...portFragment
-            }
-            arrivalPort {
-              ...portFragment
-            }
-            departure {
-              ...timelineDateMinimalFragment
-            }
-            arrival {
-              ...timelineDateMinimalFragment
-            }
-          }
-        }
-        containerGroups {
-          ... on ContainerGroup {
-            id
-            customClearance {
-              ...timelineDateMinimalFragment
-            }
-            warehouseArrival {
-              ...timelineDateMinimalFragment
-            }
-            deliveryReady {
-              ...timelineDateMinimalFragment
-            }
-            warehouse {
-              ... on Warehouse {
-                id
-                name
-              }
-            }
-          }
-        }
-        containers {
-          ... on Container {
-            id
-            warehouseArrivalAgreedDate
-            warehouseArrivalAgreedDateApprovedBy {
-              ... on User {
-                id
-              }
-            }
-            warehouseArrivalActualDate
-            warehouseArrivalActualDateApprovedBy {
-              ... on User {
-                id
-              }
-            }
-            warehouse {
-              ... on Warehouse {
-                id
-                name
-              }
-            }
-          }
-        }
-        batches {
-          ... on Batch {
-            id
+            name
           }
         }
       }
-    `
-  : gql`
-      fragment shipmentCardFragment on Shipment {
+    }
+    containers {
+      ... on Container {
         id
-        archived
-        no
-        blNo
-        transportType
-        batchCount
-        orderItemCount
-        totalVolume {
-          ...metricFragment
-        }
-        cargoReady {
-          ...timelineDateMinimalFragment
-        }
-        tags {
-          ...tagFragment
-        }
-        inCharges {
-          ...userAvatarFragment
-        }
-        voyages {
-          ... on Voyage {
+        warehouseArrivalAgreedDate
+        warehouseArrivalAgreedDateApprovedAt
+        warehouseArrivalActualDate
+        warehouseArrivalActualDateApprovedAt
+        warehouse {
+          ... on Warehouse {
             id
-            departurePort {
-              ...portFragment
-            }
-            arrivalPort {
-              ...portFragment
-            }
-            departure {
-              ...timelineDateMinimalFragment
-            }
-            arrival {
-              ...timelineDateMinimalFragment
-            }
-          }
-        }
-        containerGroups {
-          ... on ContainerGroup {
-            id
-            customClearance {
-              ...timelineDateMinimalFragment
-            }
-            warehouseArrival {
-              ...timelineDateMinimalFragment
-            }
-            deliveryReady {
-              ...timelineDateMinimalFragment
-            }
-            warehouse {
-              ... on Warehouse {
-                id
-                name
-              }
-            }
-          }
-        }
-        batches {
-          ... on Batch {
-            id
+            name
           }
         }
       }
-    `;
+    }
+    batches {
+      ... on Batch {
+        id
+      }
+    }
+  }
+`;

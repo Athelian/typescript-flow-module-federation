@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
+import { isNullOrUndefined } from 'utils/fp';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
@@ -73,7 +74,7 @@ type UpdateShipmentResponse = {|
 
 type ShipmentFormState = {
   shipmentBatchesState: Object,
-  shipmentContainersState: Object,
+  shipmentContainersContainer: Object,
   shipmentFilesState: Object,
   shipmentInfoState: Object,
   shipmentTagsState: Object,
@@ -100,7 +101,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onReset = ({
     shipmentBatchesState,
-    shipmentContainersState,
+    shipmentContainersContainer,
     shipmentFilesState,
     shipmentInfoState,
     shipmentTagsState,
@@ -109,7 +110,7 @@ class ShipmentFormModule extends React.Component<Props> {
   }: ShipmentFormState) => {
     resetFormState(shipmentInfoState);
     resetFormState(shipmentBatchesState, 'batches');
-    resetFormState(shipmentContainersState, 'containers');
+    resetFormState(shipmentContainersContainer, 'containers');
     resetFormState(shipmentFilesState, 'files');
     resetFormState(shipmentTagsState, 'tags');
     resetFormState(shipmentTimelineState);
@@ -118,7 +119,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onSave = async (
     formData: Object,
-    saveShipment: any => Promise<?{ data?: CreateShipmentResponse | UpdateShipmentResponse }>,
+    saveShipment: Function,
     onSuccess: () => void,
     onErrors: (Array<Object>) => void
   ) => {
@@ -150,7 +151,9 @@ class ShipmentFormModule extends React.Component<Props> {
         }
       }
     } else if (shipmentId) {
-      const result = await saveShipment({ variables: { input, id: decodeId(shipmentId) } });
+      const result = await saveShipment({
+        variables: { input, id: decodeId(shipmentId) },
+      });
       if (result && result.data) {
         const { data } = result;
         if (data.shipmentUpdate) {
@@ -169,7 +172,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onFormReady = ({
     shipmentBatchesState,
-    shipmentContainersState,
+    shipmentContainersContainer,
     shipmentFilesState,
     shipmentInfoState,
     shipmentTagsState,
@@ -177,7 +180,7 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentTransportTypeState,
   }: {
     shipmentBatchesState: Object,
-    shipmentContainersState: Object,
+    shipmentContainersContainer: Object,
     shipmentFilesState: Object,
     shipmentInfoState: Object,
     shipmentTagsState: Object,
@@ -205,12 +208,11 @@ class ShipmentFormModule extends React.Component<Props> {
     } else {
       shipmentInfoState.initDetailValues(info);
       shipmentBatchesState.initDetailValues(batches);
-      shipmentContainersState.initDetailValues(containers);
+      shipmentContainersContainer.initDetailValues({ containers });
       shipmentTimelineState.initDetailValues({
         cargoReady,
         voyages,
         containerGroups,
-        containers,
       });
       shipmentFilesState.initDetailValues(files);
     }
@@ -220,7 +222,7 @@ class ShipmentFormModule extends React.Component<Props> {
 
   onMutationCompleted = ({
     shipmentBatchesState,
-    shipmentContainersState,
+    shipmentContainersContainer,
     shipmentFilesState,
     shipmentInfoState,
     shipmentTagsState,
@@ -228,7 +230,7 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentTransportTypeState,
   }: {
     shipmentBatchesState: Object,
-    shipmentContainersState: Object,
+    shipmentContainersContainer: Object,
     shipmentFilesState: Object,
     shipmentInfoState: Object,
     shipmentTagsState: Object,
@@ -249,15 +251,18 @@ class ShipmentFormModule extends React.Component<Props> {
     }
     if (!isNewOrClone && result.shipmentUpdate) {
       const { shipmentUpdate } = result;
-      this.onFormReady({
-        shipmentBatchesState,
-        shipmentContainersState,
-        shipmentFilesState,
-        shipmentInfoState,
-        shipmentTagsState,
-        shipmentTimelineState,
-        shipmentTransportTypeState,
-      })(shipmentUpdate);
+      const { violations } = shipmentUpdate;
+      if (isNullOrUndefined(violations)) {
+        this.onFormReady({
+          shipmentBatchesState,
+          shipmentContainersContainer,
+          shipmentFilesState,
+          shipmentInfoState,
+          shipmentTagsState,
+          shipmentTimelineState,
+          shipmentTransportTypeState,
+        })(shipmentUpdate);
+      }
     }
   };
 
@@ -286,7 +291,7 @@ class ShipmentFormModule extends React.Component<Props> {
           >
             {(
               shipmentBatchesState,
-              shipmentContainersState,
+              shipmentContainersContainer,
               shipmentFilesState,
               shipmentInfoState,
               shipmentTagsState,
@@ -298,7 +303,7 @@ class ShipmentFormModule extends React.Component<Props> {
                 mutation={isNewOrClone ? createShipmentMutation : updateShipmentMutation}
                 onCompleted={this.onMutationCompleted({
                   shipmentBatchesState,
-                  shipmentContainersState,
+                  shipmentContainersContainer,
                   shipmentFilesState,
                   shipmentInfoState,
                   shipmentTagsState,
@@ -315,7 +320,7 @@ class ShipmentFormModule extends React.Component<Props> {
                         <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
                         <JumpToSection>
                           <SectionTabs
-                            link="shipmentSection"
+                            link="shipment_shipmentSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.shipment"
@@ -325,7 +330,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             icon="SHIPMENT"
                           />
                           <SectionTabs
-                            link="timelineSection"
+                            link="shipment_timelineSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.timeline"
@@ -335,7 +340,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             icon="TIMELINE"
                           />
                           <SectionTabs
-                            link="cargoSection"
+                            link="shipment_cargoSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.cargo"
@@ -345,7 +350,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             icon="CARGO"
                           />
                           <SectionTabs
-                            link="documentsSection"
+                            link="shipment_documentsSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.document"
@@ -355,7 +360,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             icon="DOCUMENT"
                           />
                           <SectionTabs
-                            link="orderSection"
+                            link="shipment_orderSection"
                             label={
                               <FormattedMessage
                                 id="modules.Shipments.order"
@@ -394,7 +399,7 @@ class ShipmentFormModule extends React.Component<Props> {
                         <>
                           {(isNewOrClone ||
                             shipmentBatchesState.isDirty() ||
-                            shipmentContainersState.isDirty() ||
+                            shipmentContainersContainer.isDirty() ||
                             shipmentFilesState.isDirty() ||
                             shipmentInfoState.isDirty() ||
                             shipmentTagsState.isDirty() ||
@@ -410,7 +415,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   onClick={() =>
                                     this.onReset({
                                       shipmentBatchesState,
-                                      shipmentContainersState,
+                                      shipmentContainersContainer,
                                       shipmentFilesState,
                                       shipmentInfoState,
                                       shipmentTagsState,
@@ -426,7 +431,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   !form.isReady(
                                     {
                                       ...shipmentBatchesState.state,
-                                      ...shipmentContainersState.state,
+                                      ...shipmentContainersContainer.state,
                                       ...shipmentFilesState.state,
                                       ...shipmentInfoState.state,
                                       ...shipmentTagsState.state,
@@ -437,11 +442,11 @@ class ShipmentFormModule extends React.Component<Props> {
                                   )
                                 }
                                 isLoading={isLoading}
-                                onClick={() =>
+                                onClick={() => {
                                   this.onSave(
                                     {
                                       ...shipmentBatchesState.state,
-                                      ...shipmentContainersState.state,
+                                      ...shipmentContainersContainer.state,
                                       ...shipmentFilesState.state,
                                       ...shipmentInfoState.state,
                                       ...shipmentTagsState.state,
@@ -451,7 +456,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     saveShipment,
                                     () => {
                                       shipmentBatchesState.onSuccess();
-                                      shipmentContainersState.onSuccess();
+                                      shipmentContainersContainer.onSuccess();
                                       shipmentFilesState.onSuccess();
                                       shipmentInfoState.onSuccess();
                                       shipmentTagsState.onSuccess();
@@ -460,15 +465,15 @@ class ShipmentFormModule extends React.Component<Props> {
                                       form.onReset();
                                     },
                                     form.onErrors
-                                  )
-                                }
+                                  );
+                                }}
                               />
                             </>
                           )}
                           {shipmentId &&
                             !isNewOrClone &&
                             !shipmentBatchesState.isDirty() &&
-                            !shipmentContainersState.isDirty() &&
+                            !shipmentContainersContainer.isDirty() &&
                             !shipmentFilesState.isDirty() &&
                             !shipmentInfoState.isDirty() &&
                             !shipmentTagsState.isDirty() &&
@@ -500,7 +505,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             onFormReady={() => {
                               this.onFormReady({
                                 shipmentBatchesState,
-                                shipmentContainersState,
+                                shipmentContainersContainer,
                                 shipmentFilesState,
                                 shipmentInfoState,
                                 shipmentTagsState,

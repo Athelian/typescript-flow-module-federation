@@ -56,35 +56,33 @@ type RenderIconOptions = {
 
 const voyagesGenerator = (voyages: Array<Object>, total: number) => {
   if (total === voyages.length) return voyages;
-
   if (voyages.length > total) {
-    voyages.splice(total, voyages.length - total + 1);
-  } else {
-    const {
-      arrivalPort = {
-        seaport: '',
-        airport: '',
-      },
-    } = voyages[voyages.length - 1] || {};
-    for (let counter = 0; counter < total - voyages.length + 1; counter += 1) {
-      voyages.push(
-        injectUid({
-          arrivalPort: {
-            seaport: '',
-            airport: '',
-          },
-          departurePort: counter
-            ? {
-                seaport: '',
-                airport: '',
-              }
-            : arrivalPort,
-        })
-      );
-    }
+    return [...voyages.slice(0, total), ...voyages.slice(total + voyages.length - total + 1)];
   }
-
-  return voyages;
+  const {
+    arrivalPort = {
+      seaport: '',
+      airport: '',
+    },
+  } = voyages[voyages.length - 1] || {};
+  const newVoyages = [];
+  for (let counter = 0; counter < total - voyages.length; counter += 1) {
+    newVoyages.push(
+      injectUid({
+        arrivalPort: {
+          seaport: '',
+          airport: '',
+        },
+        departurePort: counter
+          ? {
+              seaport: '',
+              airport: '',
+            }
+          : arrivalPort,
+      })
+    );
+  }
+  return [...voyages, ...newVoyages];
 };
 
 class VoyageSelector extends React.Component<Props> {
@@ -158,7 +156,6 @@ class VoyageSelector extends React.Component<Props> {
     const {
       shipment: { voyages },
     } = this.props;
-
     return (
       <BooleanValue>
         {({ value: isOptionsOpen, set: selectorToggle }) =>

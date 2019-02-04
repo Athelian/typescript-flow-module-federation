@@ -41,7 +41,17 @@ const defaultProps = {
 const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
   if (!shipment) return '';
 
-  const { id, no, blNo, tags, inCharges, batchCount, orderItemCount, totalVolume } = shipment;
+  const {
+    id,
+    no,
+    blNo,
+    tags,
+    inCharges,
+    batchCount,
+    orderItemCount,
+    totalVolume,
+    containers,
+  } = shipment;
 
   return (
     <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions} {...rest}>
@@ -81,6 +91,15 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                 <div className={ShipmentBadgeStyle}>
                   <FormattedNumber value={totalVolume.value} />
                   {totalVolume.metric}
+                </div>
+              </div>
+
+              <div className={ShipmentBadgeWrapperStyle}>
+                <div className={ShipmentBadgeIconStyle}>
+                  <Icon icon="CONTAINER" />
+                </div>
+                <div className={ShipmentBadgeStyle}>
+                  <FormattedNumber value={containers ? containers.length : 0} />
                 </div>
               </div>
 

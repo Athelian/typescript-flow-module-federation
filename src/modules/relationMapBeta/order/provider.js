@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { UIState } from './store';
+import type { UIState } from './store/type.js.flow';
 import { uiInitState } from './store';
 
 type ContextProps = {

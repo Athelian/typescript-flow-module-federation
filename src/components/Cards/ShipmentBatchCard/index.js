@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { isEnableBetaFeature } from 'utils/env';
+import { isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import { calculatePackageQuantity } from 'modules/batch/form/container';
@@ -348,20 +348,32 @@ const ShipmentBatchCard = ({
             <Display align="left">{order.poNo}</Display>
           </div>
 
-          {isEnableBetaFeature && (
-            <div className={ContainerWrapperStyle}>
-              <Link
-                className={ContainerIconStyle}
-                to={`/container/${container ? encodeId(container.id) : ''}`}
+          <div className={ContainerWrapperStyle}>
+            {isNullOrUndefined(container) ? (
+              <div
+                className={ContainerIconStyle(false)}
+                role="presentation"
                 onClick={evt => {
                   evt.stopPropagation();
                 }}
               >
                 <Icon icon="CONTAINER" />
-              </Link>
-              <Display align="left">{container ? container.no : ''}</Display>
-            </div>
-          )}
+              </div>
+            ) : (
+              <>
+                <Link
+                  className={ContainerIconStyle(true)}
+                  to={`/container/${encodeId(container.id)}`}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon="CONTAINER" />
+                </Link>
+                <Display align="left">{container.no}</Display>
+              </>
+            )}
+          </div>
 
           <div className={OrderInChargeWrapperStyle}>
             <Label>

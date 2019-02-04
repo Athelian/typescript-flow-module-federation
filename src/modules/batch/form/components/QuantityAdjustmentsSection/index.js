@@ -60,13 +60,12 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => (
               values.batchAdjustments.map(
                 (adjustment, index) =>
                   adjustment && (
-                    <Subscribe to={[FormContainer]}>
+                    <Subscribe key={adjustment.id} to={[FormContainer]}>
                       {({ setFieldTouched }) => (
                         <DefaultAdjustmentStyle
                           isNew={isNew}
                           index={index}
                           adjustment={adjustment}
-                          key={adjustment.id}
                           setFieldArrayValue={setFieldArrayValue}
                           removeArrayItem={targetName => {
                             removeArrayItem(targetName);

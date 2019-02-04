@@ -1,6 +1,5 @@
 // @flow
 import { css } from 'react-emotion';
-import { isEnableBetaFeature } from 'utils/env';
 import {
   fontSizes,
   fontSizesWithHeights,
@@ -15,7 +14,7 @@ export const ShipmentBatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: ${isEnableBetaFeature ? '379px' : '354px'};
+  height: 379px;
 `;
 
 export const ProductWrapperStyle: string = css`
@@ -161,17 +160,17 @@ export const ContainerWrapperStyle: string = css`
   grid-gap: 5px;
 `;
 
-export const ContainerIconStyle: string = css`
+export const ContainerIconStyle = (hasContainer: boolean): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
   width: 20px;
   height: 20px;
-  background-color: ${colors.TEAL};
+  background-color: ${hasContainer ? colors.TEAL : colors.GRAY_LIGHT};
   color: ${colors.WHITE};
   font-size: 11px;
   &:hover,
   :focus {
-    background-color: ${colors.TEAL_DARK};
+    background-color: ${hasContainer ? colors.TEAL_DARK : colors.GRAY_LIGHT};
   }
 `;
 

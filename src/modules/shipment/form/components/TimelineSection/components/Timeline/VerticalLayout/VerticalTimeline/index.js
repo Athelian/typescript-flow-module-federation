@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { isEnableBetaFeature } from 'utils/env';
 import {
   TimelineIcon,
   TimelineTransitIcon,
@@ -101,8 +100,12 @@ const VerticalTimeline = ({ shipment }: Props) => {
 
       <TimelineLine color={warehouseArrivalColoring} vertical />
 
-      {isEnableBetaFeature && containers && containers.length > 0 ? (
-        <TimelineWarehouseContainerIcon containers={containers} />
+      {containers && containers.length > 0 ? (
+        <TimelineWarehouseContainerIcon
+          containers={containers}
+          targetId="containersWarehouseArrival"
+          boundaryId="timelineInfoSection"
+        />
       ) : (
         <TimelineIcon
           icon="WAREHOUSE"

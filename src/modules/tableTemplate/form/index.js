@@ -28,7 +28,7 @@ function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
   });
   return (
     <div className={TemplateFormWrapperStyle}>
-      <SectionWrapper id="templateSection">
+      <SectionWrapper id="tableTemplate_templateSection">
         <SectionHeader
           icon="TEMPLATE"
           title={
@@ -43,7 +43,7 @@ function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
         </SectionHeader>
         <TemplateSection isNew={isNew} />
       </SectionWrapper>
-      <SectionWrapper id="editFieldsSection">
+      <SectionWrapper id="tableTemplate_editFieldsSection">
         <SectionHeader
           icon="METADATA"
           title={

@@ -10,3 +10,15 @@ export const HorizontalTimelineWrapperStyle: string = css`
 export const BlankSpaceStyle: string = css`
   flex: 0.5;
 `;
+
+export const WarehouseContainerWrapperStyle: string = css`
+  position: relative;
+`;
+
+export const ContainerIconWrapperStyle: string = css`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -30px;
+  z-index: 1;
+`;

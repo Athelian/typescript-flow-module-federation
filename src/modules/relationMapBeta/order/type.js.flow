@@ -15,6 +15,10 @@ export type BatchProps = {
   quantity: number,
   totalAdjusted: number,
   tags: Array<Object>,
+  packageVolume: ?{
+    value: number,
+    metric: string,
+  },
 };
 
 export type OrderItemProps = {
@@ -25,7 +29,11 @@ export type OrderItemProps = {
   shippedQuantity: number,
   batched?: number,
   shipped?: number,
-  productProvider: Object,
+  productProvider: {
+    exporter: {
+      id: string,
+    },
+  },
   batches: Array<BatchProps>,
 };
 
@@ -43,4 +51,7 @@ export type OrderProps = {
   totalOrdered: number,
   totalShipped: number,
   tags: Array<Object>,
+  exporter: {
+    id: string,
+  },
 };

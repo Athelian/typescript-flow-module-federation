@@ -63,7 +63,7 @@ export default class OrderForm extends React.Component<Props> {
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={OrderFormWrapperStyle}>
-          <SectionWrapper id="orderSection">
+          <SectionWrapper id="order_orderSection">
             <SectionHeader
               icon="ORDER"
               title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
@@ -82,7 +82,6 @@ export default class OrderForm extends React.Component<Props> {
                             order={order}
                             isOpen={isDialogOpen && !!archived}
                             onRequestClose={() => dialogToggle(false)}
-                            onConfirm={() => window.location.reload()}
                           />
                         }
                         archiveDialog={
@@ -90,7 +89,6 @@ export default class OrderForm extends React.Component<Props> {
                             order={order}
                             isOpen={isDialogOpen && !archived}
                             onRequestClose={() => dialogToggle(false)}
-                            onConfirm={() => window.location.reload()}
                           />
                         }
                       />
@@ -102,7 +100,7 @@ export default class OrderForm extends React.Component<Props> {
 
             <OrderSection isNew={isNew} />
           </SectionWrapper>
-          <SectionWrapper id="itemsSection">
+          <SectionWrapper id="order_itemsSection">
             <Subscribe to={[OrderItemsContainer]}>
               {({ state: values }) => (
                 <SectionHeader
@@ -110,7 +108,7 @@ export default class OrderForm extends React.Component<Props> {
                   title={
                     <>
                       <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" /> (
-                      {values.orderItems.length})
+                      {values.orderItems ? values.orderItems.length : 0})
                     </>
                   }
                 />
@@ -118,7 +116,7 @@ export default class OrderForm extends React.Component<Props> {
             </Subscribe>
             <AsyncItemsSection isNew={isNew} />
           </SectionWrapper>
-          <SectionWrapper id="documentsSection">
+          <SectionWrapper id="order_documentsSection">
             <Subscribe to={[OrderFilesContainer]}>
               {({ state: values }) => (
                 <SectionHeader
@@ -134,7 +132,7 @@ export default class OrderForm extends React.Component<Props> {
             </Subscribe>
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <SectionWrapper id="shipmentsSection">
+          <SectionWrapper id="order_shipmentsSection">
             <Subscribe to={[OrderInfoContainer]}>
               {({ state: { shipments } }) => (
                 <>

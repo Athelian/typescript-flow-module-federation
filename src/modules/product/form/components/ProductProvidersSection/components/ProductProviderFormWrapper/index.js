@@ -85,7 +85,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                   <EntityIcon icon="PROVIDER" color="PROVIDER" />
                   <JumpToSection>
                     <SectionTabs
-                      link="productProviderSection"
+                      link="productProvider_productProviderSection"
                       label={
                         <FormattedMessage
                           id="modules.Products.provider"
@@ -95,7 +95,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       icon="PROVIDER"
                     />
                     <SectionTabs
-                      link="specificationsSection"
+                      link="productProvider_specificationsSection"
                       label={
                         <FormattedMessage
                           id="modules.Products.specifications"
@@ -105,7 +105,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       icon="SPECIFICATIONS"
                     />
                     <SectionTabs
-                      link="productProviderPackagingSection"
+                      link="productProvider_productProviderPackagingSection"
                       label={
                         <FormattedMessage
                           id="modules.Products.packaging"
@@ -115,7 +115,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       icon="PACKAGING"
                     />
                     <SectionTabs
-                      link="documentsSection"
+                      link="productProvider_documentsSection"
                       label={
                         <FormattedMessage
                           id="modules.Products.documents"

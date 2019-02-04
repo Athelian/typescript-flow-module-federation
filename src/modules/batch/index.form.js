@@ -13,7 +13,6 @@ import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
-import { isEnableBetaFeature } from 'utils/env';
 import BatchForm from './form';
 import BatchFormContainer from './form/container';
 import validator from './form/validator';
@@ -129,111 +128,62 @@ class BatchFormModule extends React.PureComponent<Props> {
                   navBar={
                     <NavBar>
                       <EntityIcon icon="BATCH" color="BATCH" />
-                      {isEnableBetaFeature ? (
-                        <JumpToSection>
-                          <SectionTabs
-                            link="batchSection"
-                            label={
-                              <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />
-                            }
-                            icon="BATCH"
-                          />
-                          <SectionTabs
-                            link="quantityAdjustmentsSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Batches.quantityAdjustments"
-                                defaultMessage="QUANTITY ADJUSTMENTS"
-                              />
-                            }
-                            icon="QUANTITY_ADJUSTMENTS"
-                          />
-                          <SectionTabs
-                            link="packagingSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Batches.packaging"
-                                defaultMessage="PACKAGING"
-                              />
-                            }
-                            icon="PACKAGING"
-                          />
-                          <SectionTabs
-                            link="shipmentSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Batches.shipment"
-                                defaultMessage="SHIPMENT"
-                              />
-                            }
-                            icon="SHIPMENT"
-                          />
-                          <SectionTabs
-                            link="containerSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Batches.container"
-                                defaultMessage="CONTAINER"
-                              />
-                            }
-                            icon="CONTAINER"
-                          />
-                          <SectionTabs
-                            link="orderSection"
-                            label={
-                              <FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />
-                            }
-                            icon="ORDER"
-                          />
-                        </JumpToSection>
-                      ) : (
-                        <JumpToSection>
-                          <SectionTabs
-                            link="batchSection"
-                            label={
-                              <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />
-                            }
-                            icon="BATCH"
-                          />
-                          <SectionTabs
-                            link="quantityAdjustmentsSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Batches.quantityAdjustments"
-                                defaultMessage="QUANTITY ADJUSTMENTS"
-                              />
-                            }
-                            icon="QUANTITY_ADJUSTMENTS"
-                          />
-                          <SectionTabs
-                            link="packagingSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Batches.packaging"
-                                defaultMessage="PACKAGING"
-                              />
-                            }
-                            icon="PACKAGING"
-                          />
-                          <SectionTabs
-                            link="shipmentSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Batches.shipment"
-                                defaultMessage="SHIPMENT"
-                              />
-                            }
-                            icon="SHIPMENT"
-                          />
-                          <SectionTabs
-                            link="orderSection"
-                            label={
-                              <FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />
-                            }
-                            icon="ORDER"
-                          />
-                        </JumpToSection>
-                      )}
+                      <JumpToSection>
+                        <SectionTabs
+                          link="batch_batchSection"
+                          label={
+                            <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />
+                          }
+                          icon="BATCH"
+                        />
+                        <SectionTabs
+                          link="batch_quantityAdjustmentsSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.quantityAdjustments"
+                              defaultMessage="QUANTITY ADJUSTMENTS"
+                            />
+                          }
+                          icon="QUANTITY_ADJUSTMENTS"
+                        />
+                        <SectionTabs
+                          link="batch_packagingSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.packaging"
+                              defaultMessage="PACKAGING"
+                            />
+                          }
+                          icon="PACKAGING"
+                        />
+                        <SectionTabs
+                          link="batch_shipmentSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.shipment"
+                              defaultMessage="SHIPMENT"
+                            />
+                          }
+                          icon="SHIPMENT"
+                        />
+                        <SectionTabs
+                          link="batch_containerSection"
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.container"
+                              defaultMessage="CONTAINER"
+                            />
+                          }
+                          icon="CONTAINER"
+                        />
+                        <SectionTabs
+                          link="batch_orderSection"
+                          label={
+                            <FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />
+                          }
+                          icon="ORDER"
+                        />
+                      </JumpToSection>
 
                       <Subscribe to={[BatchFormContainer, FormContainer]}>
                         {(formState, form) =>

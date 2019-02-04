@@ -85,7 +85,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                       <EntityIcon icon="CONTAINER" color="CONTAINER" />
                       <JumpToSection>
                         <SectionTabs
-                          link="containerSection"
+                          link="container_containerSection"
                           label={
                             <FormattedMessage
                               id="modules.container.container"
@@ -95,7 +95,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                           icon="CONTAINER"
                         />
                         <SectionTabs
-                          link="shipmentSection"
+                          link="container_shipmentSection"
                           label={
                             <FormattedMessage
                               id="modules.container.shipment"
@@ -105,7 +105,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                           icon="SHIPMENT"
                         />
                         <SectionTabs
-                          link="batchesSection"
+                          link="container_batchesSection"
                           label={
                             <FormattedMessage
                               id="modules.container.batches"
@@ -115,7 +115,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                           icon="BATCH"
                         />
                         <SectionTabs
-                          link="ordersSection"
+                          link="container_ordersSection"
                           label={
                             <FormattedMessage
                               id="modules.container.orders"

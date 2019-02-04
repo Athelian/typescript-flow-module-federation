@@ -6,6 +6,7 @@ import BaseButton from './BaseButton';
 import CancelButton from './CancelButton';
 import ResetButton from './ResetButton';
 import CloneButton from './CloneButton';
+import EditButton from './EditButton';
 import MoveButton from './MoveButton';
 import NewButton from './NewButton';
 import NoButton from './NoButton';
@@ -24,6 +25,7 @@ export {
   CancelButton,
   ResetButton,
   CloneButton,
+  EditButton,
   MoveButton,
   NewButton,
   NoButton,

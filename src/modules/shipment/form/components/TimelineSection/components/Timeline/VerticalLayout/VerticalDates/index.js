@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
+import { getContainerDatesRange } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import { TimelineDate, TimelinePortName, TimelineWarehouseName } from '../../components';
+import { TimelineDateRange } from './components';
 import {
   VerticalDatesWrapperStyle,
   SingularDateWrapperStyle,
@@ -18,13 +20,22 @@ const VerticalDates = ({ shipment }: Props) => {
   const { warehouse } = containers && containers.length > 0 ? containers[0] : containerGroups[0];
   const loadPort = voyages[0].departurePort;
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
+  const {
+    minAgreedDate,
+    maxAgreedDate,
+    agreedApproved,
+    minActualDate,
+    maxActualDate,
+    actualApproved,
+  } = getContainerDatesRange(containers);
+
   return (
     <div className={VerticalDatesWrapperStyle}>
       <div className={SingularDateWrapperStyle}>
         <TimelineDate timelineDate={cargoReady} vertical />
       </div>
 
-      <div className={BlankGapStyle} />
+      <div className={BlankGapStyle()} />
 
       <TimelinePortName port={loadPort} transportType={transportType} vertical />
 
@@ -47,18 +58,39 @@ const VerticalDates = ({ shipment }: Props) => {
 
       <TimelinePortName port={dischargePort} transportType={transportType} vertical />
 
-      <div className={BlankGapStyle} />
+      <div className={BlankGapStyle()} />
 
       <div className={SingularDateWrapperStyle}>
         <TimelineDate timelineDate={customClearance} vertical />
       </div>
 
-      <div className={BlankGapStyle}>
-        <TimelineDate timelineDate={warehouseArrival} vertical />
+      <div className={BlankGapStyle()}>
+        {containers && containers.length > 0 ? (
+          <TimelineDateRange
+            minDate={minAgreedDate}
+            maxDate={maxAgreedDate}
+            approved={agreedApproved}
+            color="BLUE"
+          />
+        ) : (
+          <TimelineDate timelineDate={warehouseArrival} vertical />
+        )}
       </div>
+
       <TimelineWarehouseName name={warehouse && warehouse.name} vertical containers={containers} />
 
-      <div className={BlankGapStyle} />
+      {containers && containers.length > 0 ? (
+        <div className={BlankGapStyle('flex-start')}>
+          <TimelineDateRange
+            minDate={minActualDate}
+            maxDate={maxActualDate}
+            approved={actualApproved}
+            color="TEAL"
+          />
+        </div>
+      ) : (
+        <div className={BlankGapStyle()} />
+      )}
 
       <div className={SingularDateWrapperStyle}>
         <TimelineDate timelineDate={deliveryReady} vertical />

@@ -14,11 +14,18 @@ export const partnerListQuery = gql`
                 nodes {
                   ... on Partner {
                     id
+                    code
                     group {
                       ... on Group {
                         id
                         name
                         types
+                        partner {
+                          ... on Partner {
+                            id
+                            code
+                          }
+                        }
                       }
                     }
                   }

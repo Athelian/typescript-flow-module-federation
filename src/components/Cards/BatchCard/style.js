@@ -14,7 +14,7 @@ export const BatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 334px;
+  height: 359px;
 `;
 
 export const ProductWrapperStyle: string = css`
@@ -142,6 +142,30 @@ export const ShipmentIconStyle = (hasShipment: boolean): string => css`
   color: ${colors.WHITE};
   font-size: 11px;
   ${hasShipment &&
+    `
+      &:hover, :focus {
+        background-color: ${colors.TEAL_DARK};
+      }
+    `};
+`;
+
+export const ContainerWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 20px 160px;
+  width: 100%;
+  padding: 0 0 0 5px;
+  align-items: center;
+`;
+
+export const ContainerIconStyle = (hasContainer: boolean): string => css`
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  width: 20px;
+  height: 20px;
+  background-color: ${hasContainer ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  color: ${colors.WHITE};
+  font-size: 11px;
+  ${hasContainer &&
     `
       &:hover, :focus {
         background-color: ${colors.TEAL_DARK};

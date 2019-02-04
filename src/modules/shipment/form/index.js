@@ -8,7 +8,6 @@ import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { CloneButton } from 'components/Buttons';
 import { encodeId } from 'utils/id';
-import { isEnableBetaFeature } from 'utils/env';
 import scrollIntoView from 'utils/scrollIntoView';
 import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
@@ -18,7 +17,6 @@ import { ShipmentSection } from './components';
 import { ShipmentFormWrapperStyle } from './style';
 
 const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
-const AsyncContainerCargoSection = lazy(() => import('./components/ContainerCargoSection'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
 const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
@@ -71,7 +69,7 @@ class ShipmentForm extends React.Component<Props> {
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={ShipmentFormWrapperStyle}>
-          <SectionWrapper id="shipmentSection">
+          <SectionWrapper id="shipment_shipmentSection">
             <SectionHeader
               icon="SHIPMENT"
               title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
@@ -90,7 +88,6 @@ class ShipmentForm extends React.Component<Props> {
                             shipment={shipment}
                             isOpen={statusDialogIsOpen && !!archived}
                             onRequestClose={() => dialogToggle(false)}
-                            onConfirm={() => window.location.reload()}
                           />
                         }
                         archiveDialog={
@@ -98,7 +95,6 @@ class ShipmentForm extends React.Component<Props> {
                             shipment={shipment}
                             isOpen={statusDialogIsOpen && !archived}
                             onRequestClose={() => dialogToggle(false)}
-                            onConfirm={() => window.location.reload()}
                           />
                         }
                       />
@@ -109,51 +105,30 @@ class ShipmentForm extends React.Component<Props> {
             </SectionHeader>
             <ShipmentSection isNew={isNew} />
           </SectionWrapper>
-          <SectionWrapper id="timelineSection">
+          <SectionWrapper id="shipment_timelineSection">
             <SectionHeader
               icon="TIMELINE"
               title={<FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />}
             />
             <AsyncTimelineSection isNew={isNew} />
           </SectionWrapper>
-          <SectionWrapper id="cargoSection">
-            {isEnableBetaFeature ? (
-              <>
-                <Subscribe to={[ShipmentBatchesContainer]}>
-                  {({ state: { batches } }) => (
-                    <SectionHeader
-                      icon="CARGO"
-                      title={
-                        <>
-                          <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
-                          {batches.length})
-                        </>
-                      }
-                    />
-                  )}
-                </Subscribe>
-                <AsyncContainerCargoSection />
-              </>
-            ) : (
-              <>
-                <Subscribe to={[ShipmentBatchesContainer]}>
-                  {({ state: { batches } }) => (
-                    <SectionHeader
-                      icon="CARGO"
-                      title={
-                        <>
-                          <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
-                          {batches.length})
-                        </>
-                      }
-                    />
-                  )}
-                </Subscribe>
-                <AsyncCargoSection />
-              </>
-            )}
+          <SectionWrapper id="shipment_cargoSection">
+            <Subscribe to={[ShipmentBatchesContainer]}>
+              {({ state: { batches } }) => (
+                <SectionHeader
+                  icon="CARGO"
+                  title={
+                    <>
+                      <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
+                      {batches.length})
+                    </>
+                  }
+                />
+              )}
+            </Subscribe>
+            <AsyncCargoSection />
           </SectionWrapper>
-          <SectionWrapper id="documentsSection">
+          <SectionWrapper id="shipment_documentsSection">
             <SectionHeader
               icon="DOCUMENT"
               title={
@@ -162,7 +137,7 @@ class ShipmentForm extends React.Component<Props> {
             />
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <SectionWrapper id="orderSection">
+          <SectionWrapper id="shipment_orderSection">
             <Subscribe to={[ShipmentBatchesContainer]}>
               {({ state: { batches } }) => {
                 const orders = uniqueOrders(batches);
