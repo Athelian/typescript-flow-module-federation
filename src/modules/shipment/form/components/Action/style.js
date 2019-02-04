@@ -10,7 +10,7 @@ export const ActionOverlayWrapperStyle: string = css`
   width: 100%;
   height: 100%;
   padding: 0 0 0 10px;
-  z-index: 1;
+  z-index: 2;
   &:hover {
     background-color: rgba(255, 255, 255, 0.8);
     & > div {

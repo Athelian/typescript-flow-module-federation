@@ -17,10 +17,8 @@ const defaultProps = {
 };
 
 const Action = ({ onClick, message, disabled }: Props) => (
-  <div className={ActionOverlayWrapperStyle}>
-    <div className={ActionStyle(disabled)} role="presentation" onClick={onClick}>
-      {message}
-    </div>
+  <div className={ActionOverlayWrapperStyle} role="presentation" onClick={onClick}>
+    <div className={ActionStyle(disabled)}>{message}</div>
   </div>
 );
 
