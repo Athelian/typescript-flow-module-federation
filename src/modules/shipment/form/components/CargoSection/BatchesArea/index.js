@@ -108,7 +108,7 @@ function BatchesArea({
                           <MoveButton
                             label={
                               <FormattedMessage
-                                id="modules.shipment.moveBatches"
+                                id="modules.Shipments.moveBatches"
                                 defaultMessage="MOVE BATCHES"
                               />
                             }
@@ -208,7 +208,7 @@ function BatchesArea({
                       data-testid="selectBatchesButton"
                       label={
                         <FormattedMessage
-                          id="modules.shipment.selectBatches"
+                          id="modules.Shipments.selectBatches"
                           defaultMessage="SELECT BATCHES"
                         />
                       }
@@ -243,7 +243,7 @@ function BatchesArea({
                     <NewButton
                       label={
                         <FormattedMessage
-                          id="modules.shipment.newBatch"
+                          id="modules.Shipments.newBatch"
                           defaultMessage="NEW BATCH"
                         />
                       }

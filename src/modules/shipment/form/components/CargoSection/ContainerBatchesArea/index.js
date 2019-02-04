@@ -118,7 +118,7 @@ export default function ContainerBatchesArea({
                           <MoveButton
                             label={
                               <FormattedMessage
-                                id="modules.shipment.moveBatches"
+                                id="modules.Shipments.moveBatches"
                                 defaultMessage="MOVE BATCHES"
                               />
                             }
