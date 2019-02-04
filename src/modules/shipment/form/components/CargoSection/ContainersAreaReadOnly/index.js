@@ -176,11 +176,49 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                                   sourceContainerBatches
                                 );
                                 setDeepFieldValue(`containers.${index}.batches`, selectedBatches);
+                              } else if (isSelectedBatchesPool(selectCardId)) {
+                                const newBatches = batches.map(
+                                  ({ id, container: currentContainer, ...rest }) =>
+                                    selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                                      ? {
+                                          id,
+                                          container,
+                                          ...rest,
+                                        }
+                                      : {
+                                          id,
+                                          container: currentContainer,
+                                          ...rest,
+                                        }
+                                );
+                                setBatches('batches', newBatches);
+                                setDeepFieldValue(`containers.${index}.batches`, selectedBatches);
                               } else {
-                                // TODO:
-                                console.log('TODO');
+                                // const containerMap = new Map<string, Object>();
+                                // containers.forEach(item => containerMap.set(item.id, item));
+                                // const newBatches = [];
+                                // selectedBatches.forEach((item: Object) => {
+                                //   const selectedBatch = { ...item };
+                                //   if (!selectedBatch.container) {
+                                //     selectedBatch.container = containerMap.get(selectCardId);
+                                //   } else if (selectedBatch.container.id !== selectCardId) {
+                                //     const containerId = selectedBatch.container.id;
+                                //     const selectedBatchContainer =
+                                //       containerMap.get(containerId) || {};
+                                //     const containerBatches = [
+                                //       ...selectedBatchContainer.batches,
+                                //     ].filter(({ id }) => selectedBatch.id !== id);
+                                //     containerMap.set(selectedBatch.container.id, {
+                                //       ...containerMap.get(selectedBatch.container.id),
+                                //       batches: containerBatches,
+                                //     });
+                                //     selectedBatch.container = containerMap.get(selectCardId);
+                                //     newBatches.push(selectedBatch);
+                                //   }
+                                // });
+                                // setBatches('batches', newBatches);
+                                // setContainers('containers', containerMap.entries());
                               }
-
                               setIsSelectBatchesMode(false);
                             }}
                             message={
