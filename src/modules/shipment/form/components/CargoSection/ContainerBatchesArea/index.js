@@ -240,107 +240,113 @@ export default function ContainerBatchesArea({
               )}
             </div>
             <div className={BatchesFooterWrapperStyle}>
-              <BooleanValue>
-                {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
-                  <>
-                    <NewButton
-                      data-testid="selectBatchesButton"
-                      label={
-                        <FormattedMessage
-                          id="modules.Shipments.selectBatches"
-                          defaultMessage="SELECT BATCHES"
+              {!isSelectBatchesMode && (
+                <>
+                  <BooleanValue>
+                    {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
+                      <>
+                        <NewButton
+                          data-testid="selectBatchesButton"
+                          label={
+                            <FormattedMessage
+                              id="modules.Shipments.selectBatches"
+                              defaultMessage="SELECT BATCHES"
+                            />
+                          }
+                          onClick={() => selectBatchesSlideToggle(true)}
                         />
-                      }
-                      onClick={() => selectBatchesSlideToggle(true)}
-                    />
-                    <SlideView
-                      isOpen={selectBatchesIsOpen}
-                      onRequestClose={() => selectBatchesSlideToggle(false)}
-                      options={{ width: '1030px' }}
-                    >
-                      {selectBatchesIsOpen && (
-                        <SelectBatches
-                          selectedBatches={batches}
-                          onSelect={selected => {
-                            const newSelectBatches = selected.map(selectedBatch => ({
-                              ...selectedBatch,
-                              container,
-                              packageQuantity: calculatePackageQuantity(selectedBatch),
-                            }));
-                            setFieldValue('batches', [...batches, ...newSelectBatches]);
-                            setDeepFieldValue(`containers.${containerIndex}.batches`, [
-                              ...batchesInContainer,
-                              ...selectedBatches,
-                            ]);
-                            selectBatchesSlideToggle(false);
-                          }}
-                          onCancel={() => selectBatchesSlideToggle(false)}
+                        <SlideView
+                          isOpen={selectBatchesIsOpen}
+                          onRequestClose={() => selectBatchesSlideToggle(false)}
+                          options={{ width: '1030px' }}
+                        >
+                          {selectBatchesIsOpen && (
+                            <SelectBatches
+                              selectedBatches={batches}
+                              onSelect={selected => {
+                                const newSelectBatches = selected.map(selectedBatch => ({
+                                  ...selectedBatch,
+                                  container,
+                                  packageQuantity: calculatePackageQuantity(selectedBatch),
+                                }));
+                                setFieldValue('batches', [...batches, ...newSelectBatches]);
+                                setDeepFieldValue(`containers.${containerIndex}.batches`, [
+                                  ...batchesInContainer,
+                                  ...selectedBatches,
+                                ]);
+                                selectBatchesSlideToggle(false);
+                              }}
+                              onCancel={() => selectBatchesSlideToggle(false)}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                  <BooleanValue>
+                    {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
+                      <>
+                        <NewButton
+                          label={
+                            <FormattedMessage
+                              id="modules.Shipments.newBatch"
+                              defaultMessage="NEW BATCH"
+                            />
+                          }
+                          onClick={() => createBatchesSlideToggle(true)}
                         />
-                      )}
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
-              <BooleanValue>
-                {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
-                  <>
-                    <NewButton
-                      label={
-                        <FormattedMessage
-                          id="modules.Shipments.newBatch"
-                          defaultMessage="NEW BATCH"
-                        />
-                      }
-                      onClick={() => createBatchesSlideToggle(true)}
-                    />
-                    <SlideView
-                      isOpen={createBatchesIsOpen}
-                      onRequestClose={() => createBatchesSlideToggle(false)}
-                      options={{ width: '1030px' }}
-                    >
-                      {createBatchesIsOpen && (
-                        <SelectOrderItems
-                          onSelect={selectedOrderItems => {
-                            const createdBatches = selectedOrderItems.map((orderItem, counter) => {
-                              const {
-                                productProvider: {
-                                  packageName,
-                                  packageCapacity,
-                                  packageGrossWeight,
-                                  packageVolume,
-                                  packageSize,
-                                },
-                              } = orderItem;
-                              return injectUid({
-                                isNew: true,
-                                orderItem,
-                                tags: [],
-                                packageName,
-                                packageCapacity,
-                                packageGrossWeight,
-                                packageVolume,
-                                packageSize,
-                                quantity: 0,
-                                batchAdjustments: [],
-                                no: `batch no ${batches.length + counter + 1}`,
-                                autoCalculatePackageQuantity: true,
-                                container,
-                              });
-                            });
-                            setFieldValue('batches', [...batches, ...createdBatches]);
-                            setDeepFieldValue(`containers.${containerIndex}.batches`, [
-                              ...batchesInContainer,
-                              ...createdBatches,
-                            ]);
-                            createBatchesSlideToggle(false);
-                          }}
-                          onCancel={() => createBatchesSlideToggle(false)}
-                        />
-                      )}
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
+                        <SlideView
+                          isOpen={createBatchesIsOpen}
+                          onRequestClose={() => createBatchesSlideToggle(false)}
+                          options={{ width: '1030px' }}
+                        >
+                          {createBatchesIsOpen && (
+                            <SelectOrderItems
+                              onSelect={selectedOrderItems => {
+                                const createdBatches = selectedOrderItems.map(
+                                  (orderItem, counter) => {
+                                    const {
+                                      productProvider: {
+                                        packageName,
+                                        packageCapacity,
+                                        packageGrossWeight,
+                                        packageVolume,
+                                        packageSize,
+                                      },
+                                    } = orderItem;
+                                    return injectUid({
+                                      isNew: true,
+                                      orderItem,
+                                      tags: [],
+                                      packageName,
+                                      packageCapacity,
+                                      packageGrossWeight,
+                                      packageVolume,
+                                      packageSize,
+                                      quantity: 0,
+                                      batchAdjustments: [],
+                                      no: `batch no ${batches.length + counter + 1}`,
+                                      autoCalculatePackageQuantity: true,
+                                      container,
+                                    });
+                                  }
+                                );
+                                setFieldValue('batches', [...batches, ...createdBatches]);
+                                setDeepFieldValue(`containers.${containerIndex}.batches`, [
+                                  ...batchesInContainer,
+                                  ...createdBatches,
+                                ]);
+                                createBatchesSlideToggle(false);
+                              }}
+                              onCancel={() => createBatchesSlideToggle(false)}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                </>
+              )}
             </div>
           </div>
         );
