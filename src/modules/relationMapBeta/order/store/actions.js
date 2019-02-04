@@ -258,6 +258,18 @@ function actionCreators(dispatch: Function) {
           updateOrdersInput,
         },
       }),
+    removeEntitiesSuccess: () =>
+      dispatch({
+        type: 'REMOTE_ENTITIES_SUCCESS',
+        payload: {},
+      }),
+    removeEntitiesFailed: (error: Object) =>
+      dispatch({
+        type: 'REMOTE_ENTITIES_ERROR',
+        payload: {
+          error,
+        },
+      }),
   };
 }
 

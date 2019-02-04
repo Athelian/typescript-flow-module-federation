@@ -688,8 +688,9 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               })
                             )
                           );
+                          actions.removeEntitiesSuccess();
                         } catch (error) {
-                          console.warn(error);
+                          actions.removeEntitiesFailed(error);
                         }
                       }}
                     />

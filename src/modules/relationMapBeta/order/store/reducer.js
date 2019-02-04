@@ -144,11 +144,27 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'AUTO_FILL_BATCHES_ERROR':
     case 'CLONE_ENTITIES_ERROR':
     case 'MOVE_TO_ORDER_ERROR':
+    case 'REMOTE_ENTITIES_ERROR':
       return {
         ...state,
         loading: false,
         error: true,
       };
+    case 'REMOTE_ENTITIES_SUCCESS': {
+      const targets = [];
+      const exporterIds = [];
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        connectOrder: {
+          ...state.connectOrder,
+          orderId: '',
+          exporterIds,
+        },
+        targets,
+      };
+    }
     case 'MOVE_TO_ORDER_SUCCESS': {
       const orders = getByPathWithDefault([], 'payload.data', action);
       const targets = [];
