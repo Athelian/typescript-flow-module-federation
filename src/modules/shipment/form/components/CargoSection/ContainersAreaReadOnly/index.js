@@ -75,54 +75,72 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                         : null
                     }
                   />
-                  {isSelectedContainerCard ? (
-                    <Action
-                      onClick={() => {
-                        const newBatches = batches.map(({ id, container, ...rest }) =>
-                          selectedBatches.map(({ id: batchId }) => batchId).includes(id)
-                            ? {
-                                id,
-                                ...rest,
-                              }
-                            : {
-                                id,
-                                container,
-                                ...rest,
-                              }
-                        );
-                        const containerIndex = findIndex(
-                          containers,
-                          ({ id }) => id === selectCardId
-                        );
-                        const updatedContainerBatches = containers[containerIndex].batches.filter(
-                          ({ id }) =>
-                            !selectedBatches.map(({ id: batchId }) => batchId).includes(id)
-                        );
-                        setBatches('batches', newBatches);
-                        setDeepFieldValue(
-                          `containers.${containerIndex}.batches`,
-                          updatedContainerBatches
-                        );
-                        setIsSelectBatchesMode(false);
-                      }}
-                      message={
-                        <FormattedMessage
-                          id="modules.shipment.moveToBatchesPool"
-                          defaultMessage="MOVE TO BATCHES POOL"
+                  {(() => {
+                    if (isSelectedBatchesPoolCard) {
+                      return (
+                        <Action
+                          disabled
+                          message={
+                            <FormattedMessage
+                              id="modules.shipment.cantMove"
+                              defaultMessage="CAN NOT MOVE TO ORIGIN"
+                            />
+                          }
                         />
-                      }
-                    />
-                  ) : (
-                    <Action
-                      disabled
-                      message={
-                        <FormattedMessage
-                          id="modules.shipment.cantMove"
-                          defaultMessage="CAN NOT MOVE TO ORIGIN"
+                      );
+                    }
+                    if (selectedBatches.length === 0) {
+                      return (
+                        <Action
+                          disabled
+                          message={
+                            <FormattedMessage
+                              id="modules.shipment.selectBatchesFirst"
+                              defaultMessage="PLEASE SELECT SOME BATCHES FIRST"
+                            />
+                          }
                         />
-                      }
-                    />
-                  )}
+                      );
+                    }
+                    return (
+                      <Action
+                        onClick={() => {
+                          const newBatches = batches.map(({ id, container, ...rest }) =>
+                            selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                              ? {
+                                  id,
+                                  ...rest,
+                                }
+                              : {
+                                  id,
+                                  container,
+                                  ...rest,
+                                }
+                          );
+                          const containerIndex = findIndex(
+                            containers,
+                            ({ id }) => id === selectCardId
+                          );
+                          const updatedContainerBatches = containers[containerIndex].batches.filter(
+                            ({ id }) =>
+                              !selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                          );
+                          setBatches('batches', newBatches);
+                          setDeepFieldValue(
+                            `containers.${containerIndex}.batches`,
+                            updatedContainerBatches
+                          );
+                          setIsSelectBatchesMode(false);
+                        }}
+                        message={
+                          <FormattedMessage
+                            id="modules.shipment.moveToBatchesPool"
+                            defaultMessage="MOVE TO BATCHES POOL"
+                          />
+                        }
+                      />
+                    );
+                  })()}
                 </div>
 
                 <>
@@ -130,93 +148,114 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                     return (
                       <div key={container.id} className={SelectContainerCardWrapperStyle}>
                         <ShipmentContainerCard container={container} />
-                        {isSelectedContainerCard && selectCardId === container.id ? (
-                          <Action
-                            disabled
-                            message={
-                              <FormattedMessage
-                                id="modules.shipment.cantMove"
-                                defaultMessage="CAN NOT MOVE TO ORIGIN"
+                        {(() => {
+                          if (isSelectedContainerCard && selectCardId === container.id) {
+                            return (
+                              <Action
+                                disabled
+                                message={
+                                  <FormattedMessage
+                                    id="modules.shipment.cantMove"
+                                    defaultMessage="CAN NOT MOVE TO ORIGIN"
+                                  />
+                                }
                               />
-                            }
-                          />
-                        ) : (
-                          <Action
-                            onClick={() => {
-                              if (isNullOrUndefined(selectCardId)) {
-                                const newContainers = containers.map(
-                                  ({ id, batches: containerBatches = [], ...rest }) => {
-                                    if (id === container.id) {
+                            );
+                          }
+                          if (selectedBatches.length === 0) {
+                            return (
+                              <Action
+                                disabled
+                                message={
+                                  <FormattedMessage
+                                    id="modules.shipment.selectBatchesFirst"
+                                    defaultMessage="PLEASE SELECT SOME BATCHES FIRST"
+                                  />
+                                }
+                              />
+                            );
+                          }
+                          return (
+                            <Action
+                              onClick={() => {
+                                if (isNullOrUndefined(selectCardId)) {
+                                  const newContainers = containers.map(
+                                    ({ id, batches: containerBatches = [], ...rest }) => {
+                                      if (id === container.id) {
+                                        return {
+                                          id,
+                                          ...rest,
+                                          batches: [
+                                            ...containerBatches,
+                                            ...selectedBatches.filter(
+                                              ({ container: batchContainer }) =>
+                                                isNullOrUndefined(batchContainer) ||
+                                                batchContainer.id !== id
+                                            ),
+                                          ],
+                                        };
+                                      }
                                       return {
                                         id,
                                         ...rest,
-                                        batches: [
-                                          ...containerBatches,
-                                          ...selectedBatches.filter(
-                                            ({ container: batchContainer }) =>
-                                              isNullOrUndefined(batchContainer) ||
-                                              batchContainer.id !== id
-                                          ),
-                                        ],
+                                        batches: containerBatches.filter(
+                                          ({ id: batchId }) =>
+                                            !includesById(batchId, selectedBatches)
+                                        ),
                                       };
                                     }
-                                    return {
-                                      id,
-                                      ...rest,
-                                      batches: containerBatches.filter(
-                                        ({ id: batchId }) => !includesById(batchId, selectedBatches)
-                                      ),
-                                    };
-                                  }
-                                );
+                                  );
 
-                                setContainers('containers', newContainers);
-                              } else if (isSelectedBatchesPoolCard) {
-                                setDeepFieldValue(`containers.${index}.batches`, [
-                                  ...container.batches,
-                                  ...selectedBatches,
-                                ]);
-                              } else if (isSelectedContainerCard) {
-                                const sourceContainerIndex = findIndex(
-                                  containers,
-                                  ({ id }) => id === selectCardId
-                                );
-                                const sourceContainerBatches = containers[
-                                  sourceContainerIndex
-                                ].batches.filter(
-                                  ({ id }) =>
-                                    !selectedBatches.map(({ id: batchId }) => batchId).includes(id)
-                                );
+                                  setContainers('containers', newContainers);
+                                } else if (isSelectedBatchesPoolCard) {
+                                  setDeepFieldValue(`containers.${index}.batches`, [
+                                    ...container.batches,
+                                    ...selectedBatches,
+                                  ]);
+                                } else if (isSelectedContainerCard) {
+                                  const sourceContainerIndex = findIndex(
+                                    containers,
+                                    ({ id }) => id === selectCardId
+                                  );
+                                  const sourceContainerBatches = containers[
+                                    sourceContainerIndex
+                                  ].batches.filter(
+                                    ({ id }) =>
+                                      !selectedBatches
+                                        .map(({ id: batchId }) => batchId)
+                                        .includes(id)
+                                  );
 
-                                setDeepFieldValue(
-                                  `containers.${sourceContainerIndex}.batches`,
-                                  sourceContainerBatches
+                                  setDeepFieldValue(
+                                    `containers.${sourceContainerIndex}.batches`,
+                                    sourceContainerBatches
+                                  );
+                                  setDeepFieldValue(`containers.${index}.batches`, [
+                                    ...container.batches,
+                                    ...selectedBatches,
+                                  ]);
+                                }
+                                const newBatches = batches.map(
+                                  ({ id, container: currentContainer, ...rest }) => ({
+                                    id,
+                                    ...(includesById(id, selectedBatches)
+                                      ? { container }
+                                      : { container: currentContainer }),
+                                    ...rest,
+                                  })
                                 );
-                                setDeepFieldValue(`containers.${index}.batches`, [
-                                  ...container.batches,
-                                  ...selectedBatches,
-                                ]);
+                                setBatches('batches', newBatches);
+                                setIsSelectBatchesMode(false);
+                              }}
+                              message={
+                                <FormattedMessage
+                                  id="modules.shipment.moveToContainer"
+                                  defaultMessage="MOVE TO THIS CONTAINER"
+                                />
                               }
-                              const newBatches = batches.map(
-                                ({ id, container: currentContainer, ...rest }) => ({
-                                  id,
-                                  ...(includesById(id, selectedBatches)
-                                    ? { container }
-                                    : { container: currentContainer }),
-                                  ...rest,
-                                })
-                              );
-                              setBatches('batches', newBatches);
-                              setIsSelectBatchesMode(false);
-                            }}
-                            message={
-                              <FormattedMessage
-                                id="modules.shipment.moveToContainer"
-                                defaultMessage="MOVE TO THIS CONTAINER"
-                              />
-                            }
-                          />
-                        )}
+                            />
+                          );
+                        })()}
                       </div>
                     );
                   })}
