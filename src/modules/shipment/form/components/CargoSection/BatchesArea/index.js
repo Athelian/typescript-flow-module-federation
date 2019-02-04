@@ -86,7 +86,7 @@ function BatchesArea({
                       </div>
                     </div>
 
-                    {usefulBatches.length > 0 && containers.length > 0 && (
+                    {isSelectedBatchesPool && usefulBatches.length > 0 && containers.length > 0 && (
                       <>
                         {isSelectBatchesMode ? (
                           <>
