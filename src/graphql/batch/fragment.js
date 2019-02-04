@@ -134,11 +134,7 @@ export const batchFormFragment = gql`
                       ... on Product {
                         id
                         files {
-                          ... on File {
-                            id
-                            name
-                            type
-                          }
+                          ...imageFragment
                         }
                         name
                         serial
